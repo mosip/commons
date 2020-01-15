@@ -1,23 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	
-	<modelVersion>4.0.0</modelVersion>	
-	<groupId>io.mosip</groupId>
-	<artifactId>mosip-parent</artifactId>
-	<version>1.0.5</version>
-	<packaging>pom</packaging>	
-	
-	<name>MOSIP Project Parent POM</name>	
 
-	<modules>
-		<module>kernel</module>
-		<module>pre-registration</module>
-		<module>registration</module>
-		<module>registration-processor</module>
-		<module>authentication</module>
-		<module>id-repository</module>
-		<module>admin</module>
-		<module>resident</module>
-		</modules>
+        <modelVersion>4.0.0</modelVersion>
+        <groupId>io.mosip</groupId>
+        <artifactId>commons</artifactId>
+        <version>1.0.6-SNAPSHOT</version>
+        <packaging>pom</packaging>
+
+        <name>MOSIP Commons Parent POM</name>
+        <description>Mosip Commons Project</description>
+        <url>https://github.com/mosip/commons</url>
+
+        <licenses>
+          <license>
+                <name>MPL 2.0</name>
+                <url>https://www.mozilla.org/en-US/MPL/2.0/</url>
+          </license>
+        </licenses>
+
+        <scm>
+                <connection>scm:git:git://github.com/mosip/commons.git</connection>
+                <developerConnection>scm:git:ssh://github.com:mosip/commons.git</developerConnection>
+                <url>https://github.com/mosip/commons</url>
+                <tag>HEAD</tag>
+        </scm>
+
+        <developers>
+                <developer>
+                  <name>Mosip</name>
+                  <email>mosip.emailnotifier@gmail.com</email>
+                  <organization>io.mosip</organization>
+                  <organizationUrl>https://github.com/mosip/commons</organizationUrl>
+                </developer>
+        </developers>
+
+        <distributionManagement>
+                <snapshotRepository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+        </distributionManagement>
+        <build>
+          <plugins>
+                <plugin>
+                  <groupId>org.sonatype.plugins</groupId>
+                  <artifactId>nexus-staging-maven-plugin</artifactId>
+                  <version>1.6.7</version>
+                  <extensions>true</extensions>
+                  <configuration>
+                        <serverId>ossrh</serverId>
+                        <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                        <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                  </configuration>
+                </plugin>
+
+<!--       <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-source-plugin</artifactId>
+                  <version>2.2.1</version>
+                  <executions>
+                        <execution>
+                          <id>attach-sources</id>
+                          <goals>
+                                <goal>jar-no-fork</goal>
+                          </goals>
+                        </execution>
+                  </executions>
+                </plugin>
+
+              <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-javadoc-plugin</artifactId>
+                  <version>2.9.1</version>
+                  <executions>
+                        <execution>
+                          <id>attach-javadocs</id>
+                          <goals>
+                                <goal>jar</goal>
+                          </goals>
+                        </execution>
+                  </executions>
+                  <configuration>
+                          <additionalJOption>-Xdoclint:none</additionalJOption>
+                  </configuration>
+                </plugin>
+                <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-gpg-plugin</artifactId>
+                  <version>1.5</version>
+                  <executions>
+                        <execution>
+                          <id>sign-artifacts</id>
+                          <phase>verify</phase>
+                          <goals>
+                                <goal>sign</goal>
+                          </goals>
+                        </execution>
+                  </executions>
+                </plugin>
+-->
+          </plugins>
+        </build>
+
+        <modules>
+           <module>kernel</module>
+           <module>id-repository</module>
+        </modules>
 
 </project>

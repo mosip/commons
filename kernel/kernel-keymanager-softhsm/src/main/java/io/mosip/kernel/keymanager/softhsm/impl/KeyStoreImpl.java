@@ -1,5 +1,6 @@
 package io.mosip.kernel.keymanager.softhsm.impl;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.Key;
 import java.security.KeyPair;
@@ -31,12 +32,14 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import io.mosip.kernel.core.keymanager.exception.KeystoreProcessingException;
 import io.mosip.kernel.core.keymanager.exception.NoSuchSecurityProviderException;
 import io.mosip.kernel.keymanager.softhsm.constant.KeymanagerErrorCode;
 import io.mosip.kernel.keymanager.softhsm.util.CertificateUtility;
 import sun.security.pkcs11.SunPKCS11;
+
 
 /**
  * Softhsm Keymanager implementation based on OpenDNSSEC that handles and stores
@@ -76,15 +79,15 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	private String country;
 
 	/**
-	 * Path of SoftHSM config file
+	 * Path of HSM PKCS11 config file or the Keystore in caes of bouncy castle provider
 	 */
 	@Value("${mosip.kernel.keymanager.softhsm.config-path}")
 	private String configPath;
 
 	/**
-	 * The type of keystore, e.g. PKCS11
+	 * The type of keystore, e.g. PKCS11, BouncyCastleProvider
 	 */
-	@Value("${mosip.kernel.keymanager.softhsm.keystore-type}")
+	@Value("${mosip.kernel.keymanager.softhsm.keystore-type:PKCS11}")
 	private String keystoreType;
 
 	/**
@@ -113,19 +116,31 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	 * Setup a new SunPKCS11 provider
 	 * 
 	 * @param configPath
-	 *            The path of config file
+	 *            The path of config file or keyStore in case of bouncycastle provider
 	 * @return Provider
 	 */
 	private Provider setupProvider(String configPath) {
 		Provider provider = null;
 		try {
-			provider = new SunPKCS11(configPath);
+			switch(keystoreType){
+				case "PKCS11":
+					provider = new SunPKCS11(configPath);
+					break;
+				case "BouncyCastleProvider":
+					provider = new BouncyCastleProvider();
+					break;
+				default:
+					provider = new SunPKCS11(configPath);
+					break;
+
+			}
 		} catch (ProviderException providerException) {
 			throw new NoSuchSecurityProviderException(KeymanagerErrorCode.INVALID_CONFIG_FILE.getErrorCode(),
 					KeymanagerErrorCode.INVALID_CONFIG_FILE.getErrorMessage(), providerException);
 		}
 		return provider;
 	}
+
 
 	/**
 	 * Adds a provider to the next position available.
@@ -192,7 +207,18 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	private void loadKeystore() {
 
 		try {
-			keyStore.load(null, keystorePass.toCharArray());
+			switch(keystoreType){
+				case "PKCS11":
+					keyStore.load(null, keystorePass.toCharArray());
+					break;
+				case "BouncyCastleProvider":
+					keyStore.load(new FileInputStream(configPath), keystorePass.toCharArray());
+					break;
+				default:
+					keyStore.load(null, keystorePass.toCharArray());
+					break;
+			}
+			
 		} catch (NoSuchAlgorithmException | CertificateException | IOException e) {
 			throw new KeystoreProcessingException(KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorCode(),
 					KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorMessage() + e.getMessage(), e);
