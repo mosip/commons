@@ -344,7 +344,7 @@ public class RegistrationCenterValidator {
 		zoneStartEndTimeGtrValidation(registrationCenterDto, errors);
 		lunchStartEndTimeGrtValidation(registrationCenterDto, errors);
 		formatValidationLongitudeLatitude(errors, latitude, longitude);
-		holidayVlidation(registrationCenterDto, errors);
+		//holidayVlidation(registrationCenterDto, errors);
 
 	}
 	
@@ -775,7 +775,7 @@ public class RegistrationCenterValidator {
 		zoneStartEndTimeGtrValidation(registrationCenterDto, errors);
 		lunchStartEndTimeGrtValidation(registrationCenterDto, errors);
 		formatValidationLongitudeLatitude(errors, latitude, longitude);
-		holidayVlidation(registrationCenterDto, errors);
+		//holidayVlidation(registrationCenterDto, errors);
 		
 	}
 	
