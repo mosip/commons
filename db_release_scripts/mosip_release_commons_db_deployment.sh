@@ -15,6 +15,10 @@ echo "`date` : You logged on to DB deplyment server as : `whoami`"
 echo "`date` : MOSIP Database objects deployment for the release started.... Release Number : $1"
 
 echo "=============================================================================================================="
+bash ./mosip_master/master_release_db_deploy.sh ./mosip_master/master_release_deploy.properties $1
+echo "=============================================================================================================="
+
+echo "=============================================================================================================="
 bash ./mosip_kernel/kernel_release_db_deploy.sh ./mosip_kernel/kernel_release_deploy.properties $1
 echo "=============================================================================================================="
 

@@ -15,6 +15,10 @@ echo "`date` : You logged on to DB deplyment server as : `whoami`"
 echo "`date` : MOSIP Database objects release deployment revoke started.... Release Number : $1"
 
 echo "=============================================================================================================="
+bash ./mosip_master/master_revoke_db_deploy.sh ./mosip_master/master_release_deploy.properties $1
+echo "=============================================================================================================="
+
+echo "=============================================================================================================="
 bash ./mosip_kernel/kernel_revoke_db_deploy.sh ./mosip_kernel/kernel_release_deploy.properties $1
 echo "=============================================================================================================="
 

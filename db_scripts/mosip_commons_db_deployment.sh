@@ -1,6 +1,6 @@
 ### -- ---------------------------------------------------------------------------------------------------------
 ### -- Script Name		: MOSIP ALL DB Artifacts deployment script
-### -- Deploy Module 	: MOSIP Common Module
+### -- Deploy Module 	: MOSIP Commons Module
 ### -- Purpose    		: To deploy MOSIP Common Module Database DB Artifacts.       
 ### -- Create By   		: Sadanandegowda DM
 ### -- Created Date		: 07-Jan-2020
@@ -11,6 +11,10 @@
 #! bin/bash
 echo "`date` : You logged on to DB deplyment server as : `whoami`"
 echo "`date` : MOSIP Database objects deployment started...."
+
+echo "=============================================================================================================="
+bash ./mosip_master/mosip_master_db_deploy.sh ./mosip_master/mosip_master_deploy.properties
+echo "=============================================================================================================="
 
 echo "=============================================================================================================="
 bash ./mosip_kernel/mosip_kernel_db_deploy.sh ./mosip_kernel/mosip_kernel_deploy.properties
