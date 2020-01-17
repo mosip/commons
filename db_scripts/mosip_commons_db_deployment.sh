@@ -1,5 +1,5 @@
 ### -- ---------------------------------------------------------------------------------------------------------
-### -- Script Name		: MOSIP ALL DB Artifacts deployment script
+### -- Script Name		: MOSIP ALL DB Artifacts deployment for Commons Module
 ### -- Deploy Module 	: MOSIP Commons Module
 ### -- Purpose    		: To deploy MOSIP Common Module Database DB Artifacts.       
 ### -- Create By   		: Sadanandegowda DM
