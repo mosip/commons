@@ -43,7 +43,7 @@
 
 * **mosip_revoke_commons_db_deployment.sh:**  DB revoke deployment script for all commons module database deployment.
 
-**Note:** SQL script files name under sql folder are appended with release version numbers( like **1.0.0**_master-scripts_release.sql), Same version number has to be passed as argument while executing release/revoke shell scripts. Ex. **$bash mosip_release_db_deployment.sh 1.0.0**
+**Note:** SQL script files name under sql folder are appended with release version numbers( like **1.0.0**_master-scripts_release.sql), Same version number has to be passed as argument while executing release/revoke shell scripts. Ex. **$bash mosip_release_commons_db_deployment.sh 1.0.0**
 
 **Note :** No need of shell script update unless it is really causing any problem or any further implementation is being introduced.
 
