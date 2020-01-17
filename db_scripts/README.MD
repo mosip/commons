@@ -1,4 +1,4 @@
-## MOSIP Common module Database scripts inventory and deployment guidelines on postgresql database. 
+## MOSIP Commons module Databases (**mosip_master, mosip_kernel, mosip_idrepo, mosip_idmap, mosip_iam, mosip_audit**) scripts inventory and deployment guidelines on postgresql database. 
 
 #### The details disclosed below gives a clear information on complete database script structure with the instructions for database scripts deployments.
 

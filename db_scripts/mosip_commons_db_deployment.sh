@@ -25,7 +25,7 @@ bash ./mosip_idrepo/mosip_idrepo_db_deploy.sh ./mosip_idrepo/mosip_idrepo_deploy
 echo "=============================================================================================================="
 
 echo "=============================================================================================================="
-bash ./mosip_regprc/mosip_regprc_db_deploy.sh ./mosip_regprc/mosip_regprc_deploy.properties
+bash ./mosip_regprc/mosip_idmap_db_deploy.sh ./mosip_regprc/mosip_idmap_deploy.properties
 echo "=============================================================================================================="
 
 echo "=============================================================================================================="
