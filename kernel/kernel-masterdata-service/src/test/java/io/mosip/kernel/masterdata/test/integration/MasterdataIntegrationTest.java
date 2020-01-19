@@ -6,17 +6,14 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
- 
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -50,7 +47,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -68,7 +69,10 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.http.RequestWrapper;
+import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.idgenerator.spi.MachineIdGenerator;
+import io.mosip.kernel.core.util.CryptoUtil;
+import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.masterdata.constant.MachinePutReqDto;
 import io.mosip.kernel.masterdata.dto.BiometricAttributeDto;
 import io.mosip.kernel.masterdata.dto.BlacklistedWordsDto;
@@ -78,7 +82,6 @@ import io.mosip.kernel.masterdata.dto.DevicePutReqDto;
 import io.mosip.kernel.masterdata.dto.DeviceSpecificationDto;
 import io.mosip.kernel.masterdata.dto.DeviceTypeDto;
 import io.mosip.kernel.masterdata.dto.DigitalIdDeviceRegisterDto;
-import io.mosip.kernel.masterdata.dto.DigitalIdDto;
 import io.mosip.kernel.masterdata.dto.DocumentCategoryDto;
 import io.mosip.kernel.masterdata.dto.DocumentTypeDto;
 import io.mosip.kernel.masterdata.dto.FoundationalTrustProviderDto;
@@ -112,6 +115,11 @@ import io.mosip.kernel.masterdata.dto.TitleDto;
 import io.mosip.kernel.masterdata.dto.ValidDocumentDto;
 import io.mosip.kernel.masterdata.dto.getresponse.IndividualTypeResponseDto;
 import io.mosip.kernel.masterdata.dto.getresponse.RegistrationCenterUserMachineMappingHistoryResponseDto;
+import io.mosip.kernel.masterdata.dto.registerdevice.DeviceData;
+import io.mosip.kernel.masterdata.dto.registerdevice.DeviceInfo;
+import io.mosip.kernel.masterdata.dto.registerdevice.DigitalId;
+import io.mosip.kernel.masterdata.dto.registerdevice.RegisteredDevicePostDto;
+import io.mosip.kernel.masterdata.dto.registerdevice.SignResponseDto;
 import io.mosip.kernel.masterdata.entity.BiometricAttribute;
 import io.mosip.kernel.masterdata.entity.BlacklistedWords;
 import io.mosip.kernel.masterdata.entity.Device;
@@ -4710,87 +4718,6 @@ public class MasterdataIntegrationTest {
 		mockMvc.perform(get("/validdocuments/eng")).andExpect(status().isInternalServerError());
 	}
 
-	/*
-	 * @Autowired RegistrationCenterValidator registrationCenterValidator;
-	 * 
-	 * @Test
-	 * 
-	 * @WithUserDetails("zonal-admin") public void
-	 * createRegistrationCenterExceptionTest() throws Exception {
-	 * RequestWrapper<RegistrationCenterDto> requestDto = new RequestWrapper<>();
-	 * requestDto.setId("mosip.idtype.create"); requestDto.setVersion("1.0");
-	 * RegistrationCenterDto registrationCenterDto = getRegCenterDto();
-	 * 
-	 * requestDto.setRequest(registrationCenterDto); String contentJson =
-	 * mapper.writeValueAsString(requestDto);
-	 * when(registrationCenterValidator.validatePrimarySencodaryLangMandatoryFields(
-	 * Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(),
-	 * Mockito.any())); when(registrationCenterRepository.create(Mockito.any()))
-	 * .thenThrow(new DataAccessLayerException("", "cannot execute statement",
-	 * null)); mockMvc.perform(post("/registrationcenters").contentType(MediaType.
-	 * APPLICATION_JSON).content(contentJson))
-	 * .andExpect(status().isInternalServerError()); }
-	 */
-
-	/*
-	 * @Test
-	 * 
-	 * @WithUserDetails("global-admin") public void
-	 * createRegistrationCenterLangExceptionTest() throws Exception {
-	 * RequestWrapper<RegistrationCenterDto> requestDto = new RequestWrapper<>();
-	 * requestDto.setId("mosip.idtype.create"); requestDto.setVersion("1.0");
-	 * RegistrationCenterDto registrationCenterDto = getRegCenterDto();
-	 * registrationCenterDto.setLangCode(null);
-	 * 
-	 * requestDto.setRequest(registrationCenterDto); String contentJson =
-	 * mapper.writeValueAsString(requestDto);
-	 * mockMvc.perform(post("/registrationcenters").contentType(MediaType.
-	 * APPLICATION_JSON).content(contentJson)) .andExpect(status().isOk());
-	 * 
-	 * registrationCenterDto.setLangCode("fsadgdsagdsaf"); contentJson =
-	 * mapper.writeValueAsString(requestDto);
-	 * mockMvc.perform(post("/registrationcenters").contentType(MediaType.
-	 * APPLICATION_JSON).content(contentJson)) .andExpect(status().isOk());
-	 * 
-	 * Mockito.when(restTemplate.getForObject(Mockito.anyString(),
-	 * Mockito.any())).thenReturn(null); registrationCenterDto.setLangCode("eng");
-	 * contentJson = mapper.writeValueAsString(requestDto);
-	 * mockMvc.perform(post("/registrationcenters").contentType(MediaType.
-	 * APPLICATION_JSON).content(contentJson))
-	 * .andExpect(status().is5xxServerError());
-	 * 
-	 * }
-	 */
-
-	/*
-	 * @Test
-	 * 
-	 * @WithUserDetails("global-admin") public void registrationCenterInvalidTest() throws
-	 * Exception { RequestWrapper<RegistrationCenterDto> requestDto = new
-	 * RequestWrapper<>(); requestDto.setId("mosip.idtype.create");
-	 * requestDto.setVersion("1.0"); RegistrationCenterDto invalidRegCntrDto =
-	 * getRegCenterDto(); invalidRegCntrDto.setId("ID3456789102787");// more than 10
-	 * to check for invalid requestDto.setRequest(invalidRegCntrDto); String
-	 * contentJson = mapper.writeValueAsString(requestDto);
-	 * mockMvc.perform(post("/registrationcenters").contentType(MediaType.
-	 * APPLICATION_JSON).content(contentJson)) .andExpect(status().isOk()); }
-	 */
-
-	private RegistrationCenterDto getRegCenterDto() {
-
-		RegistrationCenterDto dto = new RegistrationCenterDto();
-		dto.setIsActive(true);
-		dto.setId("ID");
-		dto.setName("testname");
-		dto.setAddressLine1("test");
-		dto.setAddressLine2("test");
-		dto.setAddressLine3("test");
-		dto.setLangCode("eng");
-		dto.setLocationCode("LOC01");
-		dto.setLatitude("12.9135636");
-		dto.setLongitude("77.5950804");
-		return dto;
-	}
 
 	/*------------------------- deviceSecification update and delete ----------------------------*/
 	@Test
@@ -8262,18 +8189,48 @@ public class MasterdataIntegrationTest {
 		device.setSerialNum("123456789");
 		dList.add(device);	
 	}
+	
+	RequestWrapper<RegisteredDevicePostDto> requestDto = null;
+	RegisteredDevicePostDto registeredDevicePostDto = null;
+	
+	private RegisteredDevicePostDto getDeviceDataForRegisterDevice() throws Exception
+	{
+		registeredDevicePostDto = new RegisteredDevicePostDto();
+		DigitalId dig = new DigitalId();
+		dig.setDateTime(DateUtils.getUTCCurrentDateTimeString());
+		dig.setDeviceProvider("SYNCBYTE");
+		dig.setDeviceProviderId("SYNCBYTE.MC01A");
+		dig.setMake("MC01A");
+		dig.setModel("SMIDCL");
+		dig.setSerialNo("1801160991");
+		dig.setSubType("Single");
+		dig.setType("Fingerprint");
+		DeviceData device = new DeviceData();
+		device.setDeviceId("70959dd5-e45f-438a-9ff8-9b263908e572");
+		device.setFoundationalTrustProviderId("");
+		device.setPurpose("AUTH");
+		DeviceInfo deviceInfo = new DeviceInfo();
+		deviceInfo.setCertification("L0");
+		deviceInfo.setDeviceSubId("1");
+		deviceInfo.setDeviceExpiry(LocalDateTime.now());
+		deviceInfo.setFirmware("firmware");
+		deviceInfo.setDigitalId(CryptoUtil.encodeBase64String(objectMapper.writeValueAsBytes(dig)));
+		deviceInfo.setTimeStamp(LocalDateTime.now());
+		device.setDeviceInfo(deviceInfo);
+		registeredDevicePostDto.setDeviceData(CryptoUtil.encodeBase64String(objectMapper.writeValueAsBytes(device)));
+		return registeredDevicePostDto;
+	}
 
+	@SuppressWarnings("unchecked")
 	@Test
-	@Ignore
 	@WithUserDetails("zonal-admin")
 	public void createRegisteredDevice() throws Exception {
-		RequestWrapper<RegisteredDevicePostReqDto> requestDto = null;
 		requestDto = new RequestWrapper<>();
 		requestDto.setId("mosip.match.regcentr.machineid");
 		requestDto.setVersion("1.0.0");
-		requestDto.setRequest(registeredDeviceDto);
-
-		String regcenterJson = mapper.writeValueAsString(requestDto);
+		requestDto.setRequesttime(LocalDateTime.now());
+		requestDto.setRequest(getDeviceDataForRegisterDevice());
+		String regcenterJson = objectMapper.writeValueAsString(requestDto);
 		when(deviceProviderRepository.findByIdAndNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.any(),
 				Mockito.any())).thenReturn(devProvider);
 		when(registrationDeviceTypeRepository
@@ -8286,6 +8243,19 @@ public class MasterdataIntegrationTest {
 				Mockito.anyString())).thenReturn(dList);
 		when(registeredDeviceRepository.create(Mockito.any())).thenReturn(registeredDevice);
 		when(registeredDeviceHistoryRepo.create(Mockito.any())).thenReturn(registeredDeviceHistory);
+		SignResponseDto signResponseDto = new SignResponseDto();
+		signResponseDto.setTimestamp(LocalDateTime.now());
+		signResponseDto.setSignature(".TGlqZ0lPaUU0MTVHTHEwekxlSkZMb2I4MktTeHdnazc0YkgzZUdwTE9tdm4xVFNYUS8rZHFuemZoM2x2cjZhOVRHb1ZzYjFIeEJqRFdpOStWNlV5THBJVm82VlVwVnppaCtVRno4c0xDSjJsUWJWajhKdm5ybDdPWlpTQWZwVHZnYkxsZ3pNV3FDR0JrVzdITnFTRHVVZFRPblE3azc5RHlQam5sSjlHQkdFaWpMRERUSVNDKzUyT2JpdjdZemUxWVBjbkl4MGNtYVI4bWF2bmYvN09qdmk5VFZQQlppYkx3eVlFZDgvQnJ4OVpReWlXUmJ5bVNIUGo2L1dqVFBsSnJQZGdXTEVONVhrdWFLQldWN1BrR1R2d3Fydit4RjRtc3FvdElGTGs0cnZ3R0JYTTJ3K2pCeUhNT3c1SmpTMXUxNFh1ejhTK3N0eTMrNGNXcVZ0bVZRPT0=");
+		
+		ResponseWrapper<SignResponseDto> responseWrapper = new ResponseWrapper<>();
+		responseWrapper.setResponse(signResponseDto);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		String response = objectMapper.writeValueAsString(responseWrapper);
+		when(restTemplate.exchange(
+				Mockito.anyString(),
+				Mockito.any(HttpMethod.class),
+				Mockito.any(HttpEntity.class),Mockito.any(Class.class))
+		        ).thenReturn(new ResponseEntity<String>(response, HttpStatus.OK));
 		mockMvc.perform(post("/registereddevices").contentType(MediaType.APPLICATION_JSON).content(regcenterJson))
 				.andExpect(status().isOk());
 	}
@@ -8293,13 +8263,12 @@ public class MasterdataIntegrationTest {
 	@Test
 	@WithUserDetails("zonal-admin")
 	public void createRegisteredDeviceDevProviderNull() throws Exception {
-		RequestWrapper<RegisteredDevicePostReqDto> requestDto = null;
 		requestDto = new RequestWrapper<>();
 		requestDto.setId("mosip.match.regcentr.machineid");
 		requestDto.setVersion("1.0.0");
-		requestDto.setRequest(registeredDeviceDto);
-
-		String regcenterJson = mapper.writeValueAsString(requestDto);
+		requestDto.setRequesttime(LocalDateTime.now());
+		requestDto.setRequest(getDeviceDataForRegisterDevice());
+		String regcenterJson = objectMapper.writeValueAsString(requestDto);
 		when(deviceProviderRepository.findByIdAndNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.any(),
 				Mockito.any())).thenReturn(null);
 		mockMvc.perform(post("/registereddevices").contentType(MediaType.APPLICATION_JSON).content(regcenterJson))
@@ -8309,13 +8278,12 @@ public class MasterdataIntegrationTest {
 	@Test
 	@WithUserDetails("zonal-admin")
 	public void createRegisteredDeviceRegDeviceTypeNull() throws Exception {
-		RequestWrapper<RegisteredDevicePostReqDto> requestDto = null;
 		requestDto = new RequestWrapper<>();
 		requestDto.setId("mosip.match.regcentr.machineid");
 		requestDto.setVersion("1.0.0");
-		requestDto.setRequest(registeredDeviceDto);
-
-		String regcenterJson = mapper.writeValueAsString(requestDto);
+		requestDto.setRequesttime(LocalDateTime.now());
+		requestDto.setRequest(getDeviceDataForRegisterDevice());
+		String regcenterJson = objectMapper.writeValueAsString(requestDto);
 		when(deviceProviderRepository.findByIdAndNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.any(),
 				Mockito.any())).thenReturn(devProvider);
 		when(registrationDeviceTypeRepository
@@ -8328,13 +8296,12 @@ public class MasterdataIntegrationTest {
 	@Test
 	@WithUserDetails("zonal-admin")
 	public void createRegisteredDeviceRegDeviceSubTypeNull() throws Exception {
-		RequestWrapper<RegisteredDevicePostReqDto> requestDto = null;
 		requestDto = new RequestWrapper<>();
 		requestDto.setId("mosip.match.regcentr.machineid");
 		requestDto.setVersion("1.0.0");
-		requestDto.setRequest(registeredDeviceDto);
-
-		String regcenterJson = mapper.writeValueAsString(requestDto);
+		requestDto.setRequesttime(LocalDateTime.now());
+		requestDto.setRequest(getDeviceDataForRegisterDevice());
+		String regcenterJson = objectMapper.writeValueAsString(requestDto);
 		when(deviceProviderRepository.findByIdAndNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.any(),
 				Mockito.any())).thenReturn(devProvider);
 		when(registrationDeviceTypeRepository
@@ -8350,14 +8317,12 @@ public class MasterdataIntegrationTest {
 	@Test
 	@WithUserDetails("zonal-admin")
 	public void createRegisteredDeviceSerialNumberNotFound() throws Exception {
-		RequestWrapper<RegisteredDevicePostReqDto> requestDto = null;
 		requestDto = new RequestWrapper<>();
 		requestDto.setId("mosip.match.regcentr.machineid");
 		requestDto.setVersion("1.0.0");
-		requestDto.setRequest(registeredDeviceDto);
-		List<Device> list = new ArrayList<>();
-
-		String regcenterJson = mapper.writeValueAsString(requestDto);
+		requestDto.setRequesttime(LocalDateTime.now());
+		requestDto.setRequest(getDeviceDataForRegisterDevice());
+		String regcenterJson = objectMapper.writeValueAsString(requestDto);
 		when(deviceProviderRepository.findByIdAndNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.any(),
 				Mockito.any())).thenReturn(devProvider);
 		when(registrationDeviceTypeRepository
@@ -8369,32 +8334,32 @@ public class MasterdataIntegrationTest {
 		when(deviceRepository.findDeviceBySerialNumberAndIsDeletedFalseorIsDeletedIsNullNoIsActive(
 				Mockito.anyString())).thenReturn(list);
 		mockMvc.perform(post("/registereddevices").contentType(MediaType.APPLICATION_JSON).content(regcenterJson))
-				.andExpect(status().isOk());
+				.andExpect(status().is5xxServerError());
 	}
 	
+
 	@Test
 	@WithUserDetails("zonal-admin")
 	public void createRegisteredDeviceDataAccessExcp() throws Exception {
-		RequestWrapper<RegisteredDevicePostReqDto> requestDto = null;
-		requestDto = new RequestWrapper<>();
-		requestDto.setId("mosip.match.regcentr.machineid");
-		requestDto.setVersion("1.0.0");
-		requestDto.setRequest(registeredDeviceDto);
-
-		String regcenterJson = mapper.writeValueAsString(requestDto);
-		when(deviceProviderRepository.findByIdAndNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.any(),
-				Mockito.any())).thenReturn(devProvider);
-		when(registrationDeviceTypeRepository
-				.findByCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.any()))
-						.thenReturn(registrationDeviceType);
-		when(registrationDeviceSubTypeRepository
-				.findByCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.any()))
-						.thenReturn(registrationDeviceSubType);
-		when(deviceRepository.findDeviceBySerialNumberAndIsDeletedFalseorIsDeletedIsNullNoIsActive(
-				Mockito.anyString())).thenReturn(dList);
-		when(registeredDeviceRepository.create(Mockito.any())).thenThrow(new DataAccessLayerException("", "cannot insert", null));
-		mockMvc.perform(post("/registereddevices").contentType(MediaType.APPLICATION_JSON).content(regcenterJson))
-		.andExpect(status().isInternalServerError());
+	requestDto = new RequestWrapper<>();
+	requestDto.setId("mosip.match.regcentr.machineid");
+	requestDto.setVersion("1.0.0");
+	requestDto.setRequesttime(LocalDateTime.now());
+	requestDto.setRequest(getDeviceDataForRegisterDevice());
+	String regcenterJson = objectMapper.writeValueAsString(requestDto);
+	when(deviceProviderRepository.findByIdAndNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.any(),
+			Mockito.any())).thenReturn(devProvider);
+	when(registrationDeviceTypeRepository
+			.findByCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.any()))
+					.thenReturn(registrationDeviceType);
+	when(registrationDeviceSubTypeRepository
+			.findByCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.any()))
+					.thenReturn(registrationDeviceSubType);
+	when(deviceRepository.findDeviceBySerialNumberAndIsDeletedFalseorIsDeletedIsNullNoIsActive(
+			Mockito.anyString())).thenReturn(dList);
+	when(registeredDeviceRepository.create(Mockito.any())).thenThrow(new MasterDataServiceException("ADM-DPM-035","Error occurred while storing Registered Device Details"));
+	mockMvc.perform(post("/registereddevices").contentType(MediaType.APPLICATION_JSON).content(regcenterJson))
+	.andExpect(status().is5xxServerError());
 	}
 	
 	//-------------------------update Device-------------------------
