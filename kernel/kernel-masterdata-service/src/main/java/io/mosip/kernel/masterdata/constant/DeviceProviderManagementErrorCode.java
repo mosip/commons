@@ -22,7 +22,8 @@ public enum DeviceProviderManagementErrorCode {
 	DEVICE_PROVIDER_INSERTION_EXCEPTION("ADM-DPM-012", "Error occurred while registering Device Provider"),
 	DEVICE_PROVIDER_EXIST("ADM-DPM-011","%s Device Provider already exist"),
 	DEVICE_PROVIDER_UPDATE_EXCEPTION("ADM-DPM-014", "Error occurred while updating a Device Provider"),
-	DEVICE_PROVIDER_DEVICE_CODE_NOT_MAPPED("ADM-DPM-015","Device code not mapped against device provider");
+	DEVICE_PROVIDER_DEVICE_CODE_NOT_MAPPED("ADM-DPM-015","Device code not mapped against device provider"),
+	NO_SUCH_FIELD_EXCEPTION("ADM-DPM-016","No such field present");
 
 	private final String errorCode;
 	private final String errorMessage;

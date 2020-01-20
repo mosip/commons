@@ -127,7 +127,7 @@ public class DeviceProviderManagementIntegrationTest {
 		registeredDevice.setDp("INTEL");
 		registeredDevice.setMake("make-updated");
 		registeredDevice.setModel("model-updated");
-		registeredDevice.setSerialNo("GV3434343M");
+		registeredDevice.setSerialNo("BS563Q2230890");
 
 		registeredDevice.setDeviceTypeCode("Face");
 		registeredDevice.setDeviceSTypeCode("Slab");
@@ -174,7 +174,7 @@ public class DeviceProviderManagementIntegrationTest {
 		registeredDeviceHistory.setDp("INTEL");
 		registeredDeviceHistory.setMake("make-updated");
 		registeredDeviceHistory.setModel("model-updated");
-		registeredDeviceHistory.setSerialNo("GV3434343M");
+		registeredDeviceHistory.setSerialNo("BS563Q2230890");
 		registeredDeviceHistory.setDeviceTypeCode("Face");
 		registeredDeviceHistory.setDeviceSTypeCode("Slab");
 		registeredDeviceHistory.setEffectivetimes(LocalDateTime.now(ZoneOffset.UTC));

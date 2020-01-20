@@ -81,12 +81,12 @@ public class DeviceProviderServiceImpl implements
 	@Override
 	public ResponseDto validateDeviceProviders(ValidateDeviceDto validateDeviceDto) {
 		ResponseDto responseDto = new ResponseDto();
-		findRegisteredDevice(validateDeviceDto.getDeviceCode());
+		RegisteredDevice registeredDevice = findRegisteredDevice(validateDeviceDto.getDeviceCode());
 		isDeviceProviderPresent(validateDeviceDto.getDigitalId().getDpId());
 		isValidServiceSoftwareVersion(validateDeviceDto.getDeviceServiceVersion());
 		checkMappingBetweenSwVersionDeviceTypeAndDeviceSubType(validateDeviceDto.getDeviceServiceVersion(),
 				validateDeviceDto.getDeviceCode());
-		validateDeviceCodeAndDigitalId(validateDeviceDto.getDeviceCode(), validateDeviceDto.getDigitalId());
+		validateDeviceCodeAndDigitalId(registeredDevice, validateDeviceDto.getDigitalId());
 		responseDto.setStatus(MasterDataConstant.VALID);
 		responseDto.setMessage("Device  details validated successfully");
 
@@ -248,8 +248,7 @@ public class DeviceProviderServiceImpl implements
 
 	}
 
-	private void validateDeviceCodeAndDigitalId(String deviceCode, DigitalIdDto digitalIdDto) {
-		RegisteredDevice registeredDevice = findRegisteredDevice(deviceCode);
+	private void validateDeviceCodeAndDigitalId(RegisteredDevice registeredDevice, DigitalIdDto digitalIdDto) {
 		List<ServiceError> serviceErrors = new ArrayList<>();
 		if (!registeredDevice.getMake().equals(digitalIdDto.getMake())) {
 			ServiceError serviceError = new ServiceError();
@@ -257,7 +256,7 @@ public class DeviceProviderServiceImpl implements
 					.setErrorCode(DeviceProviderManagementErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorCode());
 			serviceError.setMessage(String.format(
 					DeviceProviderManagementErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorMessage(),
-					digitalIdDto.getMake()));
+					MasterDataConstant.MAKE));
 			serviceErrors.add(serviceError);
 		}
 		if (!registeredDevice.getModel().equals(digitalIdDto.getModel())) {
@@ -266,7 +265,7 @@ public class DeviceProviderServiceImpl implements
 					.setErrorCode(DeviceProviderManagementErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorCode());
 			serviceError.setMessage(String.format(
 					DeviceProviderManagementErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorMessage(),
-					digitalIdDto.getModel()));
+					MasterDataConstant.MODEL));
 			serviceErrors.add(serviceError);
 		}
 		if (!registeredDevice.getDpId().equals(digitalIdDto.getDpId())) {
@@ -275,7 +274,7 @@ public class DeviceProviderServiceImpl implements
 					.setErrorCode(DeviceProviderManagementErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorCode());
 			serviceError.setMessage(String.format(
 					DeviceProviderManagementErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorMessage(),
-					digitalIdDto.getDp()));
+					MasterDataConstant.DP_ID));
 			serviceErrors.add(serviceError);
 		}
 		if (!registeredDevice.getDp().equals(digitalIdDto.getDp())) {
@@ -284,7 +283,7 @@ public class DeviceProviderServiceImpl implements
 					.setErrorCode(DeviceProviderManagementErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorCode());
 			serviceError.setMessage(String.format(
 					DeviceProviderManagementErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorMessage(),
-					digitalIdDto.getDp()));
+					MasterDataConstant.DP));
 			serviceErrors.add(serviceError);
 		}
 		if (!registeredDevice.getSerialNo().equals(digitalIdDto.getSerialNo())) {
@@ -293,7 +292,7 @@ public class DeviceProviderServiceImpl implements
 					.setErrorCode(DeviceProviderManagementErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorCode());
 			serviceError.setMessage(String.format(
 					DeviceProviderManagementErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorMessage(),
-					digitalIdDto.getSerialNo()));
+					MasterDataConstant.SERIAL_NO));
 			serviceErrors.add(serviceError);
 		}
 		if (!registeredDevice.getDeviceTypeCode().equals(digitalIdDto.getType())) {
@@ -350,7 +349,7 @@ public class DeviceProviderServiceImpl implements
 					.setErrorCode(DeviceProviderManagementErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorCode());
 			serviceError.setMessage(String.format(
 					DeviceProviderManagementErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorMessage(),
-					digitalIdDto.getMake()));
+					MasterDataConstant.MAKE));
 			serviceErrors.add(serviceError);
 		}
 		if (!registeredDevice.getModel().equals(digitalIdDto.getModel())) {
@@ -359,7 +358,7 @@ public class DeviceProviderServiceImpl implements
 					.setErrorCode(DeviceProviderManagementErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorCode());
 			serviceError.setMessage(String.format(
 					DeviceProviderManagementErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorMessage(),
-					digitalIdDto.getModel()));
+					MasterDataConstant.MODEL));
 			serviceErrors.add(serviceError);
 		}
 		if (!registeredDevice.getDpId().equals(digitalIdDto.getDpId())) {
@@ -368,7 +367,7 @@ public class DeviceProviderServiceImpl implements
 					.setErrorCode(DeviceProviderManagementErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorCode());
 			serviceError.setMessage(String.format(
 					DeviceProviderManagementErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorMessage(),
-					digitalIdDto.getDp()));
+					MasterDataConstant.DP_ID));
 			serviceErrors.add(serviceError);
 		}
 		if (!registeredDevice.getDp().equals(digitalIdDto.getDp())) {
@@ -377,7 +376,7 @@ public class DeviceProviderServiceImpl implements
 					.setErrorCode(DeviceProviderManagementErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorCode());
 			serviceError.setMessage(String.format(
 					DeviceProviderManagementErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorMessage(),
-					digitalIdDto.getDp()));
+					MasterDataConstant.DP));
 			serviceErrors.add(serviceError);
 		}
 		if (!registeredDevice.getSerialNo().equals(digitalIdDto.getSerialNo())) {
@@ -386,7 +385,7 @@ public class DeviceProviderServiceImpl implements
 					.setErrorCode(DeviceProviderManagementErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorCode());
 			serviceError.setMessage(String.format(
 					DeviceProviderManagementErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorMessage(),
-					digitalIdDto.getSerialNo()));
+					MasterDataConstant.SERIAL_NO));
 			serviceErrors.add(serviceError);
 		}
 		if (!registeredDevice.getDeviceTypeCode().equals(digitalIdDto.getType())) {
