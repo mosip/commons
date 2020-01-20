@@ -37,9 +37,9 @@ COMMENT ON TABLE kernel.otp_transaction IS 'OTP Transaction: All OTP related dat
 -- ddl-end --
 COMMENT ON COLUMN kernel.otp_transaction.id IS 'ID: Unique transaction id for each otp transaction request';
 -- ddl-end --
-COMMENT ON COLUMN kernel.otp_transaction.ref_id IS 'Reference ID: Reference ID is a reference information received from OTP requester which can be used while validating the OTP.';
+COMMENT ON COLUMN kernel.otp_transaction.ref_id IS 'Reference ID: Reference ID is a reference information received from OTP requester which can be used while validating the OTP. AM: please give examples of ref_id';
 -- ddl-end --
-COMMENT ON COLUMN kernel.otp_transaction.ref_id_type IS 'Reference ID Type: Type of information in Reference ID field, used to reference this OTP request.';
+COMMENT ON COLUMN kernel.otp_transaction.ref_id_type IS 'Reference ID Type: Type of information in Reference ID field, used to reference this OTP request. AM: i guess only email & ph are the types. Please specify';
 -- ddl-end --
 COMMENT ON COLUMN kernel.otp_transaction.otp IS 'OTP: One Time Pin which is generated based on the configuration setup and sent to the requester application / module.';
 -- ddl-end --
