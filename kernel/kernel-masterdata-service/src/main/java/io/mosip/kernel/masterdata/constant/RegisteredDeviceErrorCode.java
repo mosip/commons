@@ -4,7 +4,7 @@ public enum RegisteredDeviceErrorCode {
 	
 	
 	DEVICE_PROVIDER_NOT_EXIST("ADM-DPM-032","Device Provider ID/Name does not exist in the list of Registered Device Providers"),
-	REGISTERED_DEVICE_INSERTION_EXCEPTION(" ADM-DPM-035","Error occurred while storing Registered Device Details"),
+	REGISTERED_DEVICE_INSERTION_EXCEPTION("ADM-DPM-035","Error occurred while storing Registered Device Details"),
 	SERIALNUM_NOT_EXIST("ADM-DPM-042","%s Cannot register device as it is not a white-listed device"),
 	STATUS_CODE_VALIDATION_EXCEPTION("ADM-DPM-028", "Error occured while validating Status Code"),
 	TYPE_VALIDATION_EXCEPTION("KER-DPM-sss", "Error occured while validating Type Value"),

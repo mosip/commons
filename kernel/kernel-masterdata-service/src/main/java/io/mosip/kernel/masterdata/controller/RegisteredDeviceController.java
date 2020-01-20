@@ -21,15 +21,11 @@ import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.masterdata.dto.DeviceDeRegisterResponse;
 import io.mosip.kernel.masterdata.dto.DeviceRegisterResponseDto;
-import io.mosip.kernel.masterdata.dto.EncodedRegisteredDeviceResponse;
-import io.mosip.kernel.masterdata.dto.RegisteredDevicePostReqDto;
 import io.mosip.kernel.masterdata.dto.getresponse.ResponseDto;
-import io.mosip.kernel.masterdata.dto.getresponse.extn.RegisteredDeviceExtnDto;
+import io.mosip.kernel.masterdata.dto.registerdevice.RegisteredDevicePostDto;
 import io.mosip.kernel.masterdata.service.RegisteredDeviceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 
 /**
  * Controller for CURD operation on Registered Device Details
@@ -45,27 +41,23 @@ public class RegisteredDeviceController {
 
 	@Autowired
 	RegisteredDeviceService registeredDeviceService;
+	
 
 	/**
 	 * Api to Register Device.
 	 * 
-	 * @param registeredDevicePostReqDto
-	 *            the request DTO.
-	 * @return response
+	 * Digitally signed device
+	 * 
+	 * @param registeredDevicePostDto
+	 * @return ResponseWrapper<String>
 	 */
-	
 	@ResponseFilter
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN')")
 	@PostMapping
-	@ApiOperation(value = "Service to save Registered Device", notes = "Saves Registered Device Detail and return Registered Device")
-	@ApiResponses({ @ApiResponse(code = 201, message = "When Registered Device successfully created"),
-			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
-			@ApiResponse(code = 404, message = "When No Registered Device found"),
-			@ApiResponse(code = 500, message = "While creating Registered Device any error occured") })
-	public ResponseWrapper<RegisteredDeviceExtnDto> createRegisteredDevice(
-			@Valid @RequestBody RequestWrapper<RegisteredDevicePostReqDto> registeredDevicePostReqDto) {
-		ResponseWrapper<RegisteredDeviceExtnDto> response = new ResponseWrapper<>();
-		response.setResponse(registeredDeviceService.createRegisteredDevice(registeredDevicePostReqDto.getRequest()));
+	public ResponseWrapper<String> signedRegisteredDevice(
+			@Valid @RequestBody RequestWrapper<RegisteredDevicePostDto> registeredDevicePostDto) {
+		ResponseWrapper<String> response = new ResponseWrapper<>();
+		response.setResponse(registeredDeviceService.signedRegisteredDevice(registeredDevicePostDto.getRequest()));
 		return response;
 	}
 	
