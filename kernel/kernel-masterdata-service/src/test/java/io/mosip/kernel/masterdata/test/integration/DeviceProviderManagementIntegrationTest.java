@@ -345,7 +345,7 @@ public class DeviceProviderManagementIntegrationTest {
 				.andExpect(status().isInternalServerError());
 	}
 
-	@WithUserDetails("zonal-admin")
+	/*@WithUserDetails("zonal-admin")
 	@Test
 	public void validateDeviceProviderWhenMappingDBException() throws Exception {
 		mockSuccessTestCases();
@@ -356,9 +356,9 @@ public class DeviceProviderManagementIntegrationTest {
 						.thenThrow(DataRetrievalFailureException.class);
 		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
 				.andExpect(status().isInternalServerError());
-	}
+	}*/
 
-	@WithUserDetails("zonal-admin")
+	/*@WithUserDetails("zonal-admin")
 	@Test
 	public void validateDeviceProviderWhenDeviceCodeIsNull() throws Exception {
 		mockSuccessTestCases();
@@ -369,7 +369,7 @@ public class DeviceProviderManagementIntegrationTest {
 						.thenThrow(DataRetrievalFailureException.class);
 		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
 				.andExpect(status().isInternalServerError());
-	}
+	}*/
 
 	@WithUserDetails("zonal-admin")
 	@Test
