@@ -43,16 +43,12 @@ public class SortUtils {
 		if (toBeSorted(list, sortCriteria)) {
 			T data = list.get(0);
 			fields = extractField(data);
-			FieldComparator<T> comparator = null;
+			List<FieldComparator<T>> comparatorlist = new ArrayList<>();
 			for (int i = 0; i < sortCriteria.size(); i++) {
-				SearchSort sort = sortCriteria.get(i);
-				if (i == 0) {
-					comparator = new FieldComparator<>(findField(fields, sort.getSortField()), sort);
-				} else {
-					comparator.thenComparing(new FieldComparator<>(findField(fields, sort.getSortField()), sort));
-				}
+				SearchSort sort = sortCriteria.get(i);		
+					comparatorlist.add( new FieldComparator<T>(findField(fields, sort.getSortField()), sort));
 			}
-			return list.parallelStream().sorted(comparator).collect(Collectors.toList());
+			return  list.parallelStream().sorted(new MultiFieldComparator<T>(comparatorlist)).collect(Collectors.toList());
 		}
 		return list;
 	}

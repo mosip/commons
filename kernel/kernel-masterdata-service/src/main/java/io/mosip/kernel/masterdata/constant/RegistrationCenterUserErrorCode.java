@@ -13,7 +13,7 @@ public enum RegistrationCenterUserErrorCode {
 	REGISTRATION_CENTER_USER_UNMAPPING_EXCEPTION("KER-MSD-425","Error occurred while unmapping User to Registration Center "),
 	REGISTRATION_CENTER_USER_ALREADY_MAPPED_EXCEPTION("KER-MSD-426", "Registration Center-User mapping already exist"),
 	REGISTRATION_CENTER_USER_INSERT_EXCEPTION("KER-MSD-424","Error occurred while mapping User to Registration Center"),
-	REGISTRATION_CENTER_NOT_FOUND ("KER-MSD-428", "Registration Center is Decommission state or deoes not exist"),
+	REGISTRATION_CENTER_NOT_FOUND ("KER-MSD-428", "Cannot map as the Registration Center is Decommissioned State or does not exist"),
 	INVALIDE_USER_ZONE("KER-MSD-429", "Admin not authorized to map/un-map this User"),
 	INVALIDE_CENTER_ZONE("KER-MSD-430", "Admin not authorized to map/unmap to this Registration Center"),
 	INVALIDE_CENTER_USER_ZONE("KER-MSD-431", "User cannot be mapped/un-mappped to the Center as Center and User does not belong to the same Administrative Zone"),

@@ -100,7 +100,7 @@ public class MasterDataFilterHelper {
 		}
 		Predicate caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
 				.like(criteriaBuilder.lower(rootType.get(filterDto.getColumnName())), criteriaBuilder.lower(
-						criteriaBuilder.literal(WILD_CARD_CHARACTER + filterDto.getText() + WILD_CARD_CHARACTER))));
+						criteriaBuilder.literal(  filterDto.getText() ))));
 		if (!(rootType.get(columnName).getJavaType().equals(Boolean.class))) {
 			predicates.add(caseSensitivePredicate);
 		}
@@ -143,7 +143,7 @@ public class MasterDataFilterHelper {
 				filterValueDto.getLanguageCode());
 		Predicate caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
 				.like(criteriaBuilder.lower(rootType.get(filterDto.getColumnName())), criteriaBuilder.lower(
-						criteriaBuilder.literal(WILD_CARD_CHARACTER + filterDto.getText() + WILD_CARD_CHARACTER))));
+						criteriaBuilder.literal( filterDto.getText() ))));
 
 		criteriaQueryByType.multiselect(rootType.get(fieldCodeColumnName), rootType.get(columnName));
 
