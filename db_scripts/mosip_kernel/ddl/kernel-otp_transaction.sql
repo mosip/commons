@@ -49,7 +49,7 @@ COMMENT ON COLUMN kernel.otp_transaction.expiry_dtimes IS 'Expiry Date Time: Dat
 -- ddl-end --
 COMMENT ON COLUMN kernel.otp_transaction.validation_retry_count IS 'Validation Retry Count: Validation retry counts of this OTP request. If the validation retry crosses the threshold limit, then the OTP will be de-activated.';
 -- ddl-end --
-COMMENT ON COLUMN kernel.otp_transaction.status_code IS 'Status Code: Status of the OTP whether it is active or expired.';
+COMMENT ON COLUMN kernel.otp_transaction.status_code IS 'Status Code: Status of the OTP whether it is active or expired. AM: please enumerate the status types. They are only a few, not infinite';
 -- ddl-end --
 COMMENT ON COLUMN kernel.otp_transaction.lang_code IS 'Language Code : For multilanguage implementation this attribute Refers master.language.code. The value of some of the attributes in current record is stored in this respective language. ';
 -- ddl-end --
