@@ -1,18 +1,10 @@
 package io.mosip.kernel.crypto.jce.util;
 
-import java.security.InvalidKeyException;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.SignatureException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 import org.jose4j.jws.AlgorithmIdentifiers;
@@ -20,14 +12,18 @@ import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.lang.JoseException;
 import org.springframework.stereotype.Component;
 
+import io.mosip.kernel.core.crypto.spi.CryptoCoreSpec;
 import io.mosip.kernel.core.crypto.spi.JwsSpec;
-import io.mosip.kernel.core.util.HMACUtils;
 
 /**
  * 
  * @author M1037717 This class will verify and sign the JWT
+ * 
+ * @deprecated(This class is deprecated from version 1.0.5, Please use {@link CryptoCoreSpec#sign(Object, Object)} and
+ * {@link CryptoCoreSpec#verifySignature(Object, Object, Object)} instead of these methods)
  *
  */
+@Deprecated
 @Component
 public class JWSValidation implements JwsSpec<String, String, X509Certificate,PrivateKey> {
 

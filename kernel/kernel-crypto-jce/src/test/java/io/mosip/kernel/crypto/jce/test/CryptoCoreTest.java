@@ -120,7 +120,7 @@ public class CryptoCoreTest {
 		assertThat(cryptoCore.sign(data,rsaPair.getPrivate()), isA(String.class));
 	}
 	
-	@Test(expected = InvalidKeyException.class)
+	@Test(expected = SignatureException.class)
 	public void testSignInvalidKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
 		KeyPairGenerator generator = KeyPairGenerator.getInstance("DSA");
 		generator.initialize(2048, random);
@@ -144,7 +144,7 @@ public class CryptoCoreTest {
 		assertThat(cryptoCore.verifySignature(data, null, rsaPair.getPublic()), is(true));
 	}
 	
-	@Test(expected = InvalidKeyException.class)
+	@Test(expected = SignatureException.class)
 	public void testVerifyInvalidKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
 		KeyPairGenerator generator = KeyPairGenerator.getInstance("DSA");
 		generator.initialize(2048, random);
