@@ -142,11 +142,27 @@ public class LocationControllerIntegrationTest {
 		dto1.setIsActive(true);
 		request.setRequest(dto1);
 		String requestJson = mapper.writeValueAsString(request);
+		when(repo.findLocationHierarchyByCodeAndLanguageCode(Mockito.any(),Mockito.any())).thenReturn(Arrays.asList(location1));
 		when(masterdataCreationUtil.updateMasterData(Location.class, dto1)).thenReturn(dto1);
 		when(repo.findLocationByCodeAndLanguageCode(Mockito.any(),Mockito.any())).thenReturn(location1);
 		when(repo.update(Mockito.any())).thenReturn(location1);
 		mockMvc.perform(put("/locations").contentType(MediaType.APPLICATION_JSON).content(requestJson))
 				.andExpect(status().isOk());
+	}
+	
+	@Test	
+	@WithUserDetails("global-admin")	
+	public void updateParentLocationNotFoundException() throws Exception {	
+		location1.setIsActive(true);	
+		dto1.setIsActive(true);	
+		request.setRequest(dto1);	
+		String requestJson = mapper.writeValueAsString(request);	
+		when(repo.findLocationHierarchyByCodeAndLanguageCode(Mockito.any(),Mockito.any())).thenReturn(null);	
+		when(masterdataCreationUtil.updateMasterData(Location.class, dto1)).thenReturn(dto1);	
+		when(repo.findLocationByCodeAndLanguageCode(Mockito.any(),Mockito.any())).thenReturn(location1);	
+		when(repo.update(Mockito.any())).thenReturn(location1);	
+		mockMvc.perform(put("/locations").contentType(MediaType.APPLICATION_JSON).content(requestJson))	
+				.andExpect(status().is5xxServerError());	
 	}
 	
 	@Test
