@@ -85,5 +85,10 @@ public class DeviceExtnDto extends BaseDto {
 	private LocalDateTime validityDateTime;
 	
 	
+	@NotBlank
+	@Size(min = 1, max = 36)
+	@ApiModelProperty(value = "zoneCode", required = true, dataType = "java.lang.String")
+	private String zoneCode;
+	
 
 }
