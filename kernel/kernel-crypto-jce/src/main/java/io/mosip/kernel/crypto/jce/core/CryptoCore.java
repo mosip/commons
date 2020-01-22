@@ -86,7 +86,7 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 	@Value("${mosip.kernel.crypto.hash-algorithm-name:PBKDF2WithHmacSHA512}")
 	private String passwordAlgorithm;
 
-	@Value("${mosip.kernel.crypto.sign-algorithm-name:SHA512withRSA}")
+	@Value("${mosip.kernel.crypto.sign-algorithm-name:RS256}")
 	private String signAlgorithm;
 
 	@Value("${mosip.kernel.crypto.hash-symmetric-key-length:256}")
@@ -357,7 +357,7 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 		CryptoUtils.verifyData(data);
 		JsonWebSignature jws = new JsonWebSignature();
 		jws.setPayload(new String(data));
-		jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA256);
+		jws.setAlgorithmHeaderValue(signAlgorithm);
 		jws.setKey(privateKey);
 		jws.setDoKeyValidation(false);
 		try {
