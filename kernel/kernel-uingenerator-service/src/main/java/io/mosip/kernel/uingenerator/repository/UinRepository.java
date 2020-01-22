@@ -2,8 +2,6 @@ package io.mosip.kernel.uingenerator.repository;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -38,9 +36,8 @@ public interface UinRepository extends JpaRepository<UinEntity, String> {
 	 * 
 	 * @return an unused uin
 	 */
-	@Query(value="select uu.uin, uu.cr_by, uu.cr_dtimes, uu.del_dtimes, uu.is_deleted, uu.upd_by, uu.upd_dtimes, uu.uin_status from kernel.uin uu where uu.uin_status=? limit 1",nativeQuery = true)
+	@Query(value="select uu.uin, uu.cr_by, uu.cr_dtimes, uu.del_dtimes, uu.is_deleted, uu.upd_by, uu.upd_dtimes, uu.uin_status from kernel.uin uu where uu.uin_status=? limit 1 FOR UPDATE",nativeQuery = true)
 	public UinEntity findFirstByStatus(String status);
-	
 
 	/**
 	 * find a UIN in pool
