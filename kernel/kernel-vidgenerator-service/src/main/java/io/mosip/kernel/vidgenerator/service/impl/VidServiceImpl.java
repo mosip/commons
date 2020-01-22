@@ -57,8 +57,6 @@ public class VidServiceImpl implements VidService {
 			if (vidExpiry != null) {
 				vidEntity.setVidExpiry(vidExpiry);
 			}
-			//vidEntity.setStatus(VidLifecycleStatus.ASSIGNED);
-			//metaDataUtil.setUpdateMetaData(vidEntity);
 			vidFetchResponseDto.setVid(vidEntity.getVid());
 			try {
 				vidRepository.updateVid(VidLifecycleStatus.ASSIGNED,VIDGeneratorConstant.DEFAULTADMIN_MOSIP_IO,DateUtils.getUTCCurrentDateTime(),vidEntity.getVid());
