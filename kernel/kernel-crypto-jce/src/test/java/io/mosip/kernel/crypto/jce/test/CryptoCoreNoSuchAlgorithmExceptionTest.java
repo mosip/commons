@@ -1,6 +1,5 @@
 package io.mosip.kernel.crypto.jce.test;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.isA;
 import static org.junit.Assert.assertThat;
 
@@ -105,13 +104,4 @@ public class CryptoCoreNoSuchAlgorithmExceptionTest {
 		assertThat(cryptoCore.hash(data, keyBytes), isA(String.class));
 	}
 	
-	@Test(expected = NoSuchAlgorithmException.class)
-	public void testSignNoSuchAlgorithmException() throws NoSuchAlgorithmException, InvalidKeySpecException {
-		assertThat(cryptoCore.sign(data,rsaPair.getPrivate()), isA(String.class));
-	}
-	
-	@Test(expected = NoSuchAlgorithmException.class)
-	public void testVerifyNoSuchAlgorithmException() throws NoSuchAlgorithmException, InvalidKeySpecException {
-		assertThat(cryptoCore.verifySignature(data, "InvalidSignature", rsaPair.getPublic()), is(true));
-	}
 }

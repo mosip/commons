@@ -234,7 +234,7 @@ public class RegistrationCenterUserServiceImpl implements RegistrationCenterUser
 					registrationCenterUserHistoryRepository.create(registrationCenterUserHistory);
 
 					// ------set success response------
-					responseDto.setStatus(MasterDataConstant.MAPPED_SUCCESSFULLY);
+					responseDto.setStatus(MasterDataConstant.SUCCESS);
 					responseDto.setMessage(
 							String.format(MasterDataConstant.USER_AND_REGISTRATION_CENTER_MAPPING_SUCCESS_MESSAGE,
 									userId, regCenterId));
@@ -264,7 +264,7 @@ public class RegistrationCenterUserServiceImpl implements RegistrationCenterUser
 				registrationCenterUserDto.setLangCode(primaryLanguage);
 				RegistrationCenterUserID registrationCenterUserID = createRegistrationCenterUser(
 						registrationCenterUserDto);
-				responseDto.setStatus(MasterDataConstant.MAPPED_SUCCESSFULLY);
+				responseDto.setStatus(MasterDataConstant.SUCCESS);
 				responseDto.setMessage(
 						String.format(MasterDataConstant.USER_AND_REGISTRATION_CENTER_MAPPING_SUCCESS_MESSAGE,
 								registrationCenterUserID.getUserId(), registrationCenterUserID.getRegCenterId()));

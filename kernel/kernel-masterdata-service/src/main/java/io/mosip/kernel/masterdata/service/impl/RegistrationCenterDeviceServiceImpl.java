@@ -19,8 +19,6 @@ import org.springframework.stereotype.Service;
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.masterdata.constant.DeviceErrorCode;
-import io.mosip.kernel.masterdata.constant.MOSIPDeviceServiceErrorCode;
-import io.mosip.kernel.masterdata.constant.MachineErrorCode;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.constant.RegistrationCenterDeviceErrorCode;
 import io.mosip.kernel.masterdata.dto.DeviceAndRegCenterMappingResponseDto;
@@ -28,7 +26,6 @@ import io.mosip.kernel.masterdata.dto.RegistrationCenterDeviceDto;
 import io.mosip.kernel.masterdata.dto.ResponseRegistrationCenterDeviceDto;
 import io.mosip.kernel.masterdata.dto.getresponse.ResponseDto;
 import io.mosip.kernel.masterdata.entity.Device;
-import io.mosip.kernel.masterdata.entity.MOSIPDeviceService;
 import io.mosip.kernel.masterdata.entity.RegistrationCenter;
 import io.mosip.kernel.masterdata.entity.RegistrationCenterDevice;
 import io.mosip.kernel.masterdata.entity.RegistrationCenterDeviceHistory;
@@ -331,18 +328,31 @@ public class RegistrationCenterDeviceServiceImpl implements RegistrationCenterDe
 			}
 		}
 
-		if (!isMachineMappedToUserZone || !isRegCenterMappedToUserZone) {
-			auditUtil.auditRequest(
-					String.format(MasterDataConstant.FAILURE_MAP, RegistrationCenterDevice.class.getCanonicalName()),
-					MasterDataConstant.AUDIT_SYSTEM,
-					String.format(MasterDataConstant.FAILURE_DESC,
-							RegistrationCenterDeviceErrorCode.REGISTRATION_CENTER_DEVICE_ZONE_INVALID.getErrorCode(),
-							RegistrationCenterDeviceErrorCode.REGISTRATION_CENTER_DEVICE_ZONE_INVALID
-									.getErrorMessage()),
-					"ADM-731");
-			throw new RequestException(
-					RegistrationCenterDeviceErrorCode.REGISTRATION_CENTER_DEVICE_ZONE_INVALID.getErrorCode(),
-					RegistrationCenterDeviceErrorCode.REGISTRATION_CENTER_DEVICE_ZONE_INVALID.getErrorMessage());
+		if (!isRegCenterMappedToUserZone ) {	
+			auditUtil.auditRequest(	
+					String.format(MasterDataConstant.FAILURE_MAP, RegistrationCenterDevice.class.getCanonicalName()),	
+					MasterDataConstant.AUDIT_SYSTEM,	
+					String.format(MasterDataConstant.FAILURE_DESC,	
+							RegistrationCenterDeviceErrorCode.INVALIDE_CENTER_ZONE.getErrorCode(),	
+							RegistrationCenterDeviceErrorCode.INVALIDE_CENTER_ZONE	
+									.getErrorMessage()),	
+					"ADM-731");	
+			throw new RequestException(	
+					RegistrationCenterDeviceErrorCode.INVALIDE_CENTER_ZONE.getErrorCode(),	
+					RegistrationCenterDeviceErrorCode.INVALIDE_CENTER_ZONE.getErrorMessage());	
+		}	
+		if (!isMachineMappedToUserZone) {	
+			auditUtil.auditRequest(	
+					String.format(MasterDataConstant.FAILURE_MAP, RegistrationCenterDevice.class.getCanonicalName()),	
+					MasterDataConstant.AUDIT_SYSTEM,	
+					String.format(MasterDataConstant.FAILURE_DESC,	
+							RegistrationCenterDeviceErrorCode.INVALIDE_DEVICE_ZONE.getErrorCode(),	
+							RegistrationCenterDeviceErrorCode.INVALIDE_DEVICE_ZONE	
+									.getErrorMessage()),	
+					"ADM-731");	
+			throw new RequestException(	
+					RegistrationCenterDeviceErrorCode.INVALIDE_DEVICE_ZONE.getErrorCode(),	
+					RegistrationCenterDeviceErrorCode.INVALIDE_DEVICE_ZONE.getErrorMessage());	
 		}
 		Objects.requireNonNull(registrationCenterZone, "registrationCenterZone is empty");
 		String hierarchyPath = registrationCenterZone.getHierarchyPath();
@@ -524,8 +534,8 @@ public class RegistrationCenterDeviceServiceImpl implements RegistrationCenterDe
 			Device device = deviceRepository.findByIdAndLangCode(deviceId, langCode);
 
 			if (device == null) {
-				throw new RequestException(DeviceErrorCode.DEVICE_NOT_FOUND_EXCEPTION.getErrorCode(),
-						DeviceErrorCode.DEVICE_NOT_FOUND_EXCEPTION.getErrorMessage());
+				throw new RequestException(RegistrationCenterDeviceErrorCode.DEVICE_NOT_FOUND_EXCEPTION.getErrorCode(),
+						RegistrationCenterDeviceErrorCode.DEVICE_NOT_FOUND_EXCEPTION.getErrorMessage());
 			}
 			return device;
 		} catch (DataAccessException | DataAccessLayerException e) {
@@ -549,8 +559,8 @@ public class RegistrationCenterDeviceServiceImpl implements RegistrationCenterDe
 					.findByRegIdAndLangCode(regCenterId, langCode);
 			if (registrationCenters.isEmpty()) {
 				throw new RequestException(
-						RegistrationCenterDeviceErrorCode.DEVICE_REGISTRATION_CENTER_NOT_FOUND_EXCEPTION.getErrorCode(),
-						RegistrationCenterDeviceErrorCode.DEVICE_REGISTRATION_CENTER_NOT_FOUND_EXCEPTION
+						RegistrationCenterDeviceErrorCode.REGISTRATION_CENTER_NOT_FOUND_EXCEPTION.getErrorCode(),
+						RegistrationCenterDeviceErrorCode.REGISTRATION_CENTER_NOT_FOUND_EXCEPTION
 								.getErrorMessage());
 			}
 

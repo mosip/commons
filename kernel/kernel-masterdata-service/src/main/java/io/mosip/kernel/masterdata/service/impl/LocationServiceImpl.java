@@ -291,6 +291,20 @@ public class LocationServiceImpl implements LocationService {
 	public LocationPutResponseDto updateLocationDetails(LocationDto locationDto) {
 		LocationPutResponseDto postLocationCodeResponseDto = new LocationPutResponseDto();
 		try {
+			if (!EmptyCheckUtils.isNullEmpty(locationDto.getParentLocCode())) {
+			List<Location> parentLocList = locationRepository
+					.findLocationHierarchyByCodeAndLanguageCode(locationDto.getParentLocCode(), locationDto.getLangCode());
+			if(CollectionUtils.isEmpty(parentLocList)) {
+				throw new MasterDataServiceException(LocationErrorCode.PARENT_LOC_NOT_FOUND.getErrorCode(),
+						LocationErrorCode.PARENT_LOC_NOT_FOUND.getErrorMessage());
+			}
+			}
+			if(!CollectionUtils.isEmpty(locationRepository.findLocationHierarchyByParentLocCodeAndLanguageCode(locationDto.getCode(),locationDto.getLangCode()))) {
+				if(!locationDto.getIsActive()) {
+					throw new MasterDataServiceException(LocationErrorCode.LOCATION_CHILD_STATUS_EXCEPTION.getErrorCode(),
+							LocationErrorCode.LOCATION_CHILD_STATUS_EXCEPTION.getErrorMessage());
+				}
+			}
 			locationDto = masterDataCreateUtil.updateMasterData(Location.class, locationDto);
 			Location location = locationRepository.findLocationByCodeAndLanguageCode(locationDto.getCode(),locationDto.getLangCode());
 			if(location==null)
