@@ -78,7 +78,7 @@ public class MasterdataCreationUtil {
 	}
 
 	private <E, T> T secondaryBehaviour(String id, Class<E> entity, String primaryKeyCol, boolean activePrimary,
-			boolean activeDto, Class<?> dtoClass, T t)
+			boolean activeDto, Class<?> dtoClass, T t,boolean priSecIdentical)
 			throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		if (StringUtils.isBlank(id)) {
 			throw new MasterDataServiceException(RequestErrorCode.REQUEST_INVALID_SEC_LANG_ID.getErrorCode(),
@@ -118,8 +118,9 @@ public class MasterdataCreationUtil {
 		String langCode = null, id = null;
 		String primaryId = null;
 		boolean activeDto = false, activePrimary = false;
-		String primaryKeyCol = null, nameCol = null, nameValue = null;
+		String primaryKeyCol = null;
 		Class<?> dtoClass = t.getClass();
+		boolean priSecIdentical=false;
 		if(StringUtils.isEmpty(primaryLang))
 		{
 			throw new MasterDataServiceException(RegistrationCenterErrorCode.PRIMARY_LANGUAGE_EMPTY_EXCEPTION.getErrorCode(),
@@ -130,14 +131,14 @@ public class MasterdataCreationUtil {
 			throw new MasterDataServiceException(RegistrationCenterErrorCode.SECONDARY_LANGUAGE_EMPTY_EXCEPTION.getErrorCode(),
 					RegistrationCenterErrorCode.SECONDARY_LANGUAGE_EMPTY_EXCEPTION.getErrorMessage());
 		}
+		if (primaryLang == secondaryLang) {
+			priSecIdentical = true;
+		}
 		for (Field entField : entity.getDeclaredFields()) {
 			if (entField.isAnnotationPresent(Id.class)) {
 				entField.setAccessible(true);
 				if (entField.getName() != null && !entField.getName().equals(LANGCODE_COLUMN_NAME)) {
 					primaryKeyCol = entField.getName();
-				}
-				if (entField.getName() != null && !entField.getName().equals(NAME_COLUMN_NAME)) {
-					nameCol = entField.getName();
 				}
 			}
 		}
@@ -154,26 +155,22 @@ public class MasterdataCreationUtil {
 			if (field.getName() != null && field.getName().equals(ISACTIVE_COLUMN_NAME)) {
 				activeDto = (boolean) field.get(t);
 			}
-
-			if (field.getName() != null && field.getName().equals(NAME_COLUMN_NAME)) {
-				nameValue = (String) field.get(t);
-			}
 		}
-		if (primaryLang == secondaryLang) {
+		if (priSecIdentical) {
 
 			if (StringUtils.isBlank(id)) {
-				return primaryBehaviour(primaryKeyCol, dtoClass, entity, primaryId, activeDto, t);
+				return primaryBehaviour(primaryKeyCol, dtoClass, entity, primaryId, activeDto, t,priSecIdentical);
 			}
 			else {
-				return secondaryBehaviour(id, entity, primaryKeyCol, activePrimary, activeDto, dtoClass, t);
+				return secondaryBehaviour(id, entity, primaryKeyCol, activePrimary, activeDto, dtoClass, t,priSecIdentical);
 			} 
 
-		} else if ((langCode.equals(primaryLang)) && (primaryLang != secondaryLang)) {
-			return primaryBehaviour(primaryKeyCol, dtoClass, entity, primaryId, activeDto, t);
+		} else if ((langCode.equals(primaryLang)) && !priSecIdentical) {
+			return primaryBehaviour(primaryKeyCol, dtoClass, entity, primaryId, activeDto, t,priSecIdentical);
 		}
 
-		else if (langCode.equals(secondaryLang) && primaryLang != secondaryLang) {
-			return secondaryBehaviour(id, entity, primaryKeyCol, activePrimary, activeDto, dtoClass, t);
+		else if (langCode.equals(secondaryLang) && !priSecIdentical) {
+			return secondaryBehaviour(id, entity, primaryKeyCol, activePrimary, activeDto, dtoClass, t,priSecIdentical);
 		} else {
 			throw new MasterDataServiceException(RegistrationCenterErrorCode.LANGUAGE_EXCEPTION.getErrorCode(),
 					String.format(RegistrationCenterErrorCode.LANGUAGE_EXCEPTION.getErrorMessage(), langCode));
@@ -182,7 +179,7 @@ public class MasterdataCreationUtil {
 	}
 
 	private <E, T> T primaryBehaviour(String primaryKeyCol, Class<?> dtoClass, Class<E> entity, String primaryId,
-			boolean activeDto, T t)
+			boolean activeDto, T t,boolean priSecIdentical)
 			throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 
 		Field isActive = null;
@@ -213,7 +210,7 @@ public class MasterdataCreationUtil {
 				}
 			}
 		}
-		if (activeDto == true) {
+		if (activeDto == true && priSecIdentical) {
 			isActive = dtoClass.getDeclaredField(ISACTIVE_COLUMN_NAME);
 			isActive.setAccessible(true);
 			isActive.set(t, Boolean.TRUE);
