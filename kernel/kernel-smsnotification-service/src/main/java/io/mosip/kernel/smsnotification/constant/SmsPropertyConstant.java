@@ -10,7 +10,7 @@ package io.mosip.kernel.smsnotification.constant;
 public enum SmsPropertyConstant {
 
 	AUTH_KEY("authkey"), SMS_MESSAGE("message"), RECIPIENT_NUMBER("mobiles"), COUNTRY_CODE("country"), ROUTE("route"),
-	SENDER_ID("sender"), VENDOR_RESPONSE_SUCCESS("success"), SUCCESS_RESPONSE("Sms Request Sent"),
+	SENDER_ID("sender"), VENDOR_RESPONSE_SUCCESS("success"), SUCCESS_RESPONSE("Sms Request Sent"),UNICODE("unicode"),
 	PROJECT_NAME("kernel-notification-sms"), SUFFIX_MESSAGE(" digits");
 
 	/**
