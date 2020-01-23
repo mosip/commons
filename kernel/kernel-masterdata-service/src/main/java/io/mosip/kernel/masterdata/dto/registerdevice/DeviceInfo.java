@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import io.mosip.kernel.masterdata.validator.registereddevice.ValidCertificateLevel;
 import lombok.Data;
 
 /**
@@ -18,6 +19,7 @@ public class DeviceInfo {
 	
 	private String deviceSubId;
 	
+	@ValidCertificateLevel(message = "Invalid Certification level received")
 	private String certification;
 	
 	private String digitalId;

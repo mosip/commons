@@ -63,8 +63,8 @@ public class MOSIPDeviceServiceExtDto extends BaseDto {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private LocalDateTime swExpiryDateTime;
 
-	@NotNull
+	@NotBlank
 	@ApiModelProperty(value = "softBinaryHash", required = true, dataType = "java.lang.Byte")
-	private byte[] swBinaryHash;
+	private String swBinaryHash;
 
 }
