@@ -67,6 +67,9 @@ public class SmsNotificationServiceImpl implements SmsNotification<SmsResponseDt
 
 	@Value("${mosip.kernel.sms.authkey:null}")
 	String authkey;
+	
+	@Value("${mosip.kernel.sms.unicode:1}")
+	String unicode;
 
 	/*
 	 * (non-Javadoc)
@@ -86,8 +89,7 @@ public class SmsNotificationServiceImpl implements SmsNotification<SmsResponseDt
 			case "infobip":
 				infoBipSmsGateway(contactNumber, contentMessage);
 				break;
-			default:
-				
+			default:			
 				break;
 			}
 		} 
@@ -115,14 +117,13 @@ public class SmsNotificationServiceImpl implements SmsNotification<SmsResponseDt
 				.queryParam(SmsPropertyConstant.ROUTE.getProperty(), route)
 				.queryParam(SmsPropertyConstant.SENDER_ID.getProperty(), sender)
 				.queryParam(SmsPropertyConstant.RECIPIENT_NUMBER.getProperty(), contactNumber)
+				.queryParam(SmsPropertyConstant.UNICODE.getProperty(), unicode)
 				.queryParam(SmsPropertyConstant.COUNTRY_CODE.getProperty(), countryCode);
 		ResponseEntity<String> responseEnt = null;
 		try {
 			responseEnt = restTemplate.getForEntity(sms.toUriString(), String.class);
 		} catch (HttpClientErrorException | HttpServerErrorException e) {
-			System.out.println("HttpErrorException: " + e.getMessage());
-			System.out.println(e.getResponseBodyAsString());
-			// throw new RuntimeException(e.getResponseBodyAsString());
+			 throw new RuntimeException(e.getResponseBodyAsString());
 		}
 	}
 
