@@ -380,13 +380,13 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 		Objects.requireNonNull(publicKey, SecurityExceptionCodeConstant.MOSIP_INVALID_KEY_EXCEPTION.getErrorMessage());
 		CryptoUtils.verifyData(data);
 		JsonWebSignature jws = new JsonWebSignature();
-		String parts[]=sign.split(PERIOD_SEPARATOR_REGEX);
-		parts[1]=CryptoUtil.encodeBase64(data);
 		try {
+			String[] parts=sign.split(PERIOD_SEPARATOR_REGEX);
+			parts[1]=CryptoUtil.encodeBase64(data);
 			jws.setCompactSerialization(CompactSerializer.serialize(parts));
 			jws.setKey(publicKey);
 			return jws.verifySignature();
-		} catch (JoseException e) {
+		} catch (ArrayIndexOutOfBoundsException | JoseException e) {
 			throw new SignatureException(SecurityExceptionCodeConstant.MOSIP_SIGNATURE_EXCEPTION.getErrorCode(),
 					e.getMessage(), e);
 		}
