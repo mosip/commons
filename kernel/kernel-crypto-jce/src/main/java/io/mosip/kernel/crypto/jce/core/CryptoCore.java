@@ -23,8 +23,8 @@ import javax.crypto.spec.PSource.PSpecified;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
-import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
+import org.jose4j.jwx.CompactSerializer;
 import org.jose4j.lang.JoseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -35,6 +35,7 @@ import io.mosip.kernel.core.crypto.exception.InvalidParamSpecException;
 import io.mosip.kernel.core.crypto.exception.SignatureException;
 import io.mosip.kernel.core.crypto.spi.CryptoCoreSpec;
 import io.mosip.kernel.core.exception.NoSuchAlgorithmException;
+import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.kernel.crypto.jce.constant.SecurityExceptionCodeConstant;
 import io.mosip.kernel.crypto.jce.util.CryptoUtils;
@@ -61,6 +62,8 @@ import io.mosip.kernel.crypto.jce.util.CryptoUtils;
 @Component
 public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, PublicKey, PrivateKey, String> {
 
+	private static final String PERIOD_SEPARATOR_REGEX = "\\.";
+
 	// Used as a hack for softhsm oeap padding decryption usecase will be when we
 	// will use in HSM
 	private static final String RSA_ECB_NO_PADDING = "RSA/ECB/NoPadding";
@@ -86,7 +89,7 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 	@Value("${mosip.kernel.crypto.hash-algorithm-name:PBKDF2WithHmacSHA512}")
 	private String passwordAlgorithm;
 
-	@Value("${mosip.kernel.crypto.sign-algorithm-name:SHA512withRSA}")
+	@Value("${mosip.kernel.crypto.sign-algorithm-name:RS256}")
 	private String signAlgorithm;
 
 	@Value("${mosip.kernel.crypto.hash-symmetric-key-length:256}")
@@ -356,12 +359,12 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 		Objects.requireNonNull(privateKey, SecurityExceptionCodeConstant.MOSIP_INVALID_KEY_EXCEPTION.getErrorMessage());
 		CryptoUtils.verifyData(data);
 		JsonWebSignature jws = new JsonWebSignature();
-		jws.setPayload(new String(data));
-		jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA256);
+		jws.setPayloadBytes(data);
+		jws.setAlgorithmHeaderValue(signAlgorithm);
 		jws.setKey(privateKey);
 		jws.setDoKeyValidation(false);
 		try {
-			return jws.getCompactSerialization();
+			return jws.getDetachedContentCompactSerialization();
 		} catch (JoseException e) {
 			throw new SignatureException(SecurityExceptionCodeConstant.MOSIP_SIGNATURE_EXCEPTION.getErrorCode(),
 					e.getMessage(), e);
@@ -378,10 +381,12 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 		CryptoUtils.verifyData(data);
 		JsonWebSignature jws = new JsonWebSignature();
 		try {
-			jws.setCompactSerialization(sign);
+			String[] parts=sign.split(PERIOD_SEPARATOR_REGEX);
+			parts[1]=CryptoUtil.encodeBase64(data);
+			jws.setCompactSerialization(CompactSerializer.serialize(parts));
 			jws.setKey(publicKey);
 			return jws.verifySignature();
-		} catch (JoseException e) {
+		} catch (ArrayIndexOutOfBoundsException | JoseException e) {
 			throw new SignatureException(SecurityExceptionCodeConstant.MOSIP_SIGNATURE_EXCEPTION.getErrorCode(),
 					e.getMessage(), e);
 		}
