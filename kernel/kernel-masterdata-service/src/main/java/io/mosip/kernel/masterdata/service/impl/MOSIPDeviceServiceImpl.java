@@ -2,6 +2,7 @@ package io.mosip.kernel.masterdata.service.impl;
 
 import java.util.UUID;
 
+import org.assertj.core.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -63,6 +64,7 @@ public class MOSIPDeviceServiceImpl implements MOSIPDeviceServices {
 	public MOSIPDeviceServiceExtDto createMOSIPDeviceService(MOSIPDeviceServiceDto dto) {
 		MOSIPDeviceService crtMosipDeviceService = null;
 		MOSIPDeviceService entity = null;
+		MOSIPDeviceServiceExtDto mosipDeviceServiceExtDto =null;
 
 		try {
 
@@ -110,14 +112,19 @@ public class MOSIPDeviceServiceImpl implements MOSIPDeviceServices {
 			entity = MetaDataUtils.setCreateMetaData(dto, MOSIPDeviceService.class);
 			String id  = UUID.randomUUID().toString();
 			entity.setId(id);
+			byte[] swNinaryHashArr = dto.getSwBinaryHash().getBytes();
+			entity.setSwBinaryHash(swNinaryHashArr);
 			crtMosipDeviceService = mosipDeviceServiceRepository.create(entity);
 
 			MOSIPDeviceServiceHistory entityHistory = new MOSIPDeviceServiceHistory();
-			MapperUtils.map(crtMosipDeviceService, entityHistory);
-			MapperUtils.setBaseFieldValue(crtMosipDeviceService, entityHistory);
-			entityHistory.setEffectDateTime(crtMosipDeviceService.getCreatedDateTime());
-			entityHistory.setCreatedDateTime(crtMosipDeviceService.getCreatedDateTime());
+			MapperUtils.map(entity, entityHistory);
+			MapperUtils.setBaseFieldValue(entity, entityHistory);
+			entityHistory.setEffectDateTime(entity.getCreatedDateTime());
+			entityHistory.setCreatedDateTime(entity.getCreatedDateTime());
 			mosipDeviceServiceHistoryRepository.create(entityHistory);
+			mosipDeviceServiceExtDto =MapperUtils.map(entity, MOSIPDeviceServiceExtDto.class);
+			mosipDeviceServiceExtDto.setSwBinaryHash(new String(entity.getSwBinaryHash()));
+			
 
 		} catch (DataAccessLayerException | DataAccessException exception) {
 			auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_CREATE, MOSIPDeviceService.class.getCanonicalName()),
@@ -129,7 +136,9 @@ public class MOSIPDeviceServiceImpl implements MOSIPDeviceServices {
 					MOSIPDeviceServiceErrorCode.MDS_INSERTION_EXCEPTION.getErrorMessage() + " "
 							+ ExceptionUtils.parseException(exception));
 		}
-		return MapperUtils.map(crtMosipDeviceService, MOSIPDeviceServiceExtDto.class);
+		
+				
+				return mosipDeviceServiceExtDto;
 
 	}
 
@@ -142,6 +151,7 @@ public class MOSIPDeviceServiceImpl implements MOSIPDeviceServices {
 		MOSIPDeviceService updMosipDeviceService =null;
 		MOSIPDeviceService renEntity=null;
 		MOSIPDeviceService entity = null;
+		MOSIPDeviceServiceExtDto mosipDeviceServiceExtDto=null;
 		try {
 			renEntity = mosipDeviceServiceRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(dto.getId());
 			if(renEntity == null) {
@@ -160,7 +170,8 @@ public class MOSIPDeviceServiceImpl implements MOSIPDeviceServices {
 			
 			entity = MetaDataUtils.setUpdateMetaData(dto, renEntity, false);
 			entity.setIsActive(dto.getIsActive());
-			
+			byte[] swNinaryHashArr = dto.getSwBinaryHash().getBytes();
+			entity.setSwBinaryHash(swNinaryHashArr);
 			updMosipDeviceService = mosipDeviceServiceRepository.update(entity);
 
 			MOSIPDeviceServiceHistory entityHistory = new MOSIPDeviceServiceHistory();
@@ -181,7 +192,10 @@ public class MOSIPDeviceServiceImpl implements MOSIPDeviceServices {
 					MOSIPDeviceServiceErrorCode.MDS_DB_UPDATION_ERROR.getErrorMessage() + " "
 							+ ExceptionUtils.parseException(exception));
 		}
-		return MapperUtils.map(updMosipDeviceService, MOSIPDeviceServiceExtDto.class);
+		 
+		mosipDeviceServiceExtDto = MapperUtils.map(updMosipDeviceService, MOSIPDeviceServiceExtDto.class);
+		mosipDeviceServiceExtDto.setSwBinaryHash(new String(updMosipDeviceService.getSwBinaryHash()));
+		return mosipDeviceServiceExtDto; 
 	}
 
 }
