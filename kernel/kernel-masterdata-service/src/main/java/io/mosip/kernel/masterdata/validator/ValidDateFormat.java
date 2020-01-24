@@ -14,7 +14,7 @@ import javax.validation.Payload;
 @Target({ ElementType.FIELD, ElementType.TYPE_USE, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidDateFormat {
-	String message() default "Date Format Not Valid";
+	String message() default "Invalid Date Format";
 
 	Class<?>[] groups() default {};
 
