@@ -7564,7 +7564,7 @@ public class MasterdataIntegrationTest {
 		mosipDeviceServiceDto.setRegDeviceSubCode("10001");
 		mosipDeviceServiceDto.setRegDeviceTypeCode("10003");
 		mosipDeviceServiceDto.setDeviceProviderId("10003");
-		mosipDeviceServiceDto.setSwBinaryHash(binary);
+		mosipDeviceServiceDto.setSwBinaryHash("test");
 		mosipDeviceServiceDto.setIsActive(true);
 
 
