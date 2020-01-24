@@ -79,7 +79,7 @@ public class KernelPridgeneratorServiceApplication {
 
 	@PostConstruct
 	private static void initPool() {
-		LOGGER.info("Service will be started after pooling vids..");
+		LOGGER.info("Service will be started after pooling prids..");
 		EventBus eventBus = vertx.eventBus();
 		LOGGER.info("eventBus deployer {}", eventBus);
 		eventBus.publish(EventType.INITPOOL, EventType.INITPOOL);

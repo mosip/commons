@@ -32,35 +32,30 @@ public class PridServiceImpl implements PridService {
 		PridFetchResponseDto pridFetchResponseDto = new PridFetchResponseDto();
 		PridEntity pridEntity = null;
 		try {
-			pridEntity = pridRepository.findFirstByStatus(PridLifecycleStatus.AVAILABLE);
+			synchronized (this) {
+				pridEntity = pridRepository.findFirstByStatus(PridLifecycleStatus.AVAILABLE);
+				if (pridEntity != null) {
+					pridFetchResponseDto.setPrid(pridEntity.getPrid());
+					pridRepository.updatePrid(PridLifecycleStatus.ASSIGNED, PRIDGeneratorConstant.DEFAULTADMIN_MOSIP_IO,
+							DateUtils.getUTCCurrentDateTime(), pridEntity.getPrid());
+				} else {
+					LOGGER.info("prid not available");
+					throw new PridGeneratorServiceException(PRIDGeneratorErrorCode.PRID_NOT_AVAILABLE.getErrorCode(),
+							PRIDGeneratorErrorCode.PRID_NOT_AVAILABLE.getErrorMessage());
+				}
+
+			}
 		} catch (DataAccessException exception) {
 			LOGGER.error(ExceptionUtils.parseException(exception));
 			throw new PridGeneratorServiceException(PRIDGeneratorErrorCode.INTERNAL_SERVER_ERROR.getErrorCode(),
 					exception.getMessage(), exception.getCause());
+
 		} catch (Exception exception) {
 			LOGGER.error(ExceptionUtils.parseException(exception));
 			throw new PridGeneratorServiceException(PRIDGeneratorErrorCode.INTERNAL_SERVER_ERROR.getErrorCode(),
 					exception.getMessage(), exception.getCause());
 		}
-		if (pridEntity != null) {
-			pridFetchResponseDto.setPrid(pridEntity.getPrid());
-			try {
-				pridRepository.updatePrid(PridLifecycleStatus.ASSIGNED, PRIDGeneratorConstant.DEFAULTADMIN_MOSIP_IO,
-						DateUtils.getUTCCurrentDateTime(), pridEntity.getPrid());
-			} catch (DataAccessException exception) {
-				LOGGER.error(ExceptionUtils.parseException(exception));
-				throw new PridGeneratorServiceException(PRIDGeneratorErrorCode.INTERNAL_SERVER_ERROR.getErrorCode(),
-						exception.getMessage(), exception.getCause());
-			} catch (Exception exception) {
-				LOGGER.error(ExceptionUtils.parseException(exception));
-				throw new PridGeneratorServiceException(PRIDGeneratorErrorCode.INTERNAL_SERVER_ERROR.getErrorCode(),
-						exception.getMessage(), exception.getCause());
-			}
-		} else {
-			LOGGER.info("prid not available");
-			throw new PridGeneratorServiceException(PRIDGeneratorErrorCode.PRID_NOT_AVAILABLE.getErrorCode(),
-					PRIDGeneratorErrorCode.PRID_NOT_AVAILABLE.getErrorMessage());
-		}
+
 		return pridFetchResponseDto;
 	}
 

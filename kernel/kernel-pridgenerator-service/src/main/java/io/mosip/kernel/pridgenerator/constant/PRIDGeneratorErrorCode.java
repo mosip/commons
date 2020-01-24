@@ -1,9 +1,9 @@
 package io.mosip.kernel.pridgenerator.constant;
 
 /**
- * Error Code for VID generator
+ * Error Code for PRID generator
  * 
- * @author Dharmesh Khandelwal
+ * @author Ajay J
  * @since 1.0.0
  *
  */

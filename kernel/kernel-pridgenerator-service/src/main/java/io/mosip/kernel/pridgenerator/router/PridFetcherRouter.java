@@ -68,7 +68,7 @@ public class PridFetcherRouter {
 			executor.executeBlocking(blockingCodeHandler -> {
 				PridFetchResponseDto pridFetchResponseDto = null;
 				try {
-					pridFetchResponseDto = pridService.fetchPrid();
+						pridFetchResponseDto = pridService.fetchPrid();
 				} catch (PridGeneratorServiceException exception) {
 					ServiceError error = new ServiceError(exception.getErrorCode(), exception.getMessage());
 					setError(routingContext, error, blockingCodeHandler);
@@ -78,7 +78,7 @@ public class PridFetcherRouter {
 				reswrp.setResponse(pridFetchResponseDto);
 				reswrp.setErrors(null);
 				blockingCodeHandler.complete();
-			}, false, resultHandler -> {
+			}, true, resultHandler -> {
 				if (resultHandler.succeeded()) {
 					try {
 						routingContext.response().end(objectMapper.writeValueAsString(reswrp));
