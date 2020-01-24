@@ -1204,7 +1204,7 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 				regExceptionalHoliday = MetaDataUtils.setCreateMetaData(registrationCenterEntity,
 						RegExceptionalHoliday.class);
 				regExceptionalHoliday.setRegistrationCenterId(registrationCenterEntity.getId());
-				regExceptionalHoliday.setExceptionHolidayDate(expHoliday.getExceptionHolidayDate());
+				regExceptionalHoliday.setExceptionHolidayDate(LocalDate.parse(expHoliday.getExceptionHolidayDate()));
 				regExceptionalHoliday.setExceptionHolidayName(expHoliday.getExceptionHolidayName());
 				regExceptionalHoliday.setExceptionHolidayReson(expHoliday.getExceptionHolidayReson());
 				regExceptionalHoliday.setIsActive(true);
@@ -1448,7 +1448,7 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 			Set<LocalDate> dbRegExceptionalHolidays, Set<LocalDate> reqHolidayDates) {
 		for (ExceptionalHolidayPutPostDto reqExpHoliday : regCenterPutReqDto.getExceptionalHolidayPutPostDto()) {
 			if (dbRegExceptionalHolidays.contains(reqExpHoliday.getExceptionHolidayDate())) {
-				reqHolidayDates.add(reqExpHoliday.getExceptionHolidayDate());
+				reqHolidayDates.add(LocalDate.parse(reqExpHoliday.getExceptionHolidayDate()));
 			} else {
 				List<ExceptionalHolidayPutPostDto> addExpHoliday = new ArrayList<>();
 				addExpHoliday.add(reqExpHoliday);
@@ -1456,7 +1456,7 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 				createExpHoliday(addExpHoliday, regCenterPutReqDto.getHolidayLocationCode(),
 						updRegistrationCenter);
 			}
-			reqHolidayDates.add(reqExpHoliday.getExceptionHolidayDate());
+			reqHolidayDates.add(LocalDate.parse(reqExpHoliday.getExceptionHolidayDate()));
 		}
 	}
 	
