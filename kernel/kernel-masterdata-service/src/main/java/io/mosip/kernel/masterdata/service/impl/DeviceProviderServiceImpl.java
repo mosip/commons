@@ -333,13 +333,50 @@ public class DeviceProviderServiceImpl implements
 				effTimes);
 		isDeviceProviderHistoryPresent(validateDeviceDto.getDigitalId().getDpId(), effTimes);
 		isValidServiceVersionFromHistory(validateDeviceDto.getDeviceServiceVersion(), effTimes);
-		checkMappingBetweenSwVersionDeviceTypeAndDeviceSubType(validateDeviceDto.getDeviceServiceVersion(),
-				validateDeviceDto.getDeviceCode());
+		checkMappingBetweenSWVerDTypeAndDSubTypeHistory(validateDeviceDto.getDeviceServiceVersion(),
+				registeredDeviceHistory, effTimes);
 		validateDigitalIdWithRegisteredDeviceHistory(registeredDeviceHistory, validateDeviceDto.getDigitalId());
 		responseDto.setStatus(MasterDataConstant.VALID);
 		responseDto.setMessage("Device details history validated successfully");
 
 		return responseDto;
+	}
+	
+	private boolean checkMappingBetweenSWVerDTypeAndDSubTypeHistory(String swVersion,
+			RegisteredDeviceHistory registeredDevice, LocalDateTime effTimes) {
+		MOSIPDeviceServiceHistory mosipDeviceService = null;
+		try {
+			mosipDeviceService = deviceServiceHistoryRepository.findByDeviceDetailHistory(swVersion,
+					registeredDevice.getDeviceTypeCode(), registeredDevice.getDeviceSTypeCode(),
+					registeredDevice.getMake(), registeredDevice.getModel(), registeredDevice.getDpId(), effTimes);
+		} catch (DataAccessException | DataAccessLayerException e) {
+			auditUtil.auditRequest(
+					MasterDataConstant.DEVICE_VALIDATION_FAILURE + ValidateDeviceDto.class.getSimpleName(),
+					MasterDataConstant.AUDIT_SYSTEM,
+					String.format(MasterDataConstant.FAILURE_DESC,
+							DeviceProviderManagementErrorCode.DATABASE_EXCEPTION.getErrorCode(),
+							DeviceProviderManagementErrorCode.DATABASE_EXCEPTION.getErrorMessage()),
+					"ADM-611");
+			throw new MasterDataServiceException(DeviceProviderManagementErrorCode.DATABASE_EXCEPTION.getErrorCode(),
+					String.format(DeviceProviderManagementErrorCode.DATABASE_EXCEPTION.getErrorMessage(),
+							MasterDataConstant.ERROR_OCCURED_MOSIP_DEVICE_SERVICE));
+		}
+
+		if (mosipDeviceService == null) {
+			auditUtil.auditRequest(
+					MasterDataConstant.DEVICE_VALIDATION_FAILURE + ValidateDeviceDto.class.getSimpleName(),
+					MasterDataConstant.AUDIT_SYSTEM,
+					String.format(MasterDataConstant.FAILURE_DESC,
+							DeviceProviderManagementErrorCode.SOFTWARE_VERSION_IS_NOT_A_MATCH.getErrorCode(),
+							DeviceProviderManagementErrorCode.SOFTWARE_VERSION_IS_NOT_A_MATCH.getErrorMessage()),
+					"ADM-612");
+			throw new DataNotFoundException(
+					DeviceProviderManagementErrorCode.SOFTWARE_VERSION_IS_NOT_A_MATCH.getErrorCode(),
+					DeviceProviderManagementErrorCode.SOFTWARE_VERSION_IS_NOT_A_MATCH.getErrorMessage());
+		}
+
+		return true;
+
 	}
 
 	private void validateDigitalIdWithRegisteredDeviceHistory(RegisteredDeviceHistory registeredDevice,
