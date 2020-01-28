@@ -17,10 +17,12 @@ import io.mosip.kernel.masterdata.dto.WorkingDaysResponseDto;
 import io.mosip.kernel.masterdata.dto.getresponse.WeekDaysDto;
 import io.mosip.kernel.masterdata.dto.getresponse.WorkingDaysDto;
 import io.mosip.kernel.masterdata.entity.DaysOfWeek;
+import io.mosip.kernel.masterdata.entity.RegistrationCenter;
 import io.mosip.kernel.masterdata.exception.DataNotFoundException;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
 import io.mosip.kernel.masterdata.repository.DaysOfWeekListRepo;
 import io.mosip.kernel.masterdata.repository.RegWorkingNonWorkingRepo;
+import io.mosip.kernel.masterdata.repository.RegistrationCenterRepository;
 import io.mosip.kernel.masterdata.service.RegWorkingNonWorkingService;
 import io.mosip.kernel.masterdata.utils.ExceptionUtils;
 
@@ -35,18 +37,26 @@ public class RegWorkingNonWorkingServiceImpl implements RegWorkingNonWorkingServ
 	@Qualifier("daysOfWeekRepo")
 	private DaysOfWeekListRepo daysOfWeekRepo;
 
+	/**
+	 * Reference to RegistrationCenterRepository.
+	 */
+	@Autowired
+	private RegistrationCenterRepository registrationCenterRepository;
+
 	@Override
 	public WeekDaysResponseDto getWeekDaysList(String regCenterId, String langCode) {
 
 		List<WeekDaysDto> weekdayList = null;
 		List<DayNameAndSeqListDto> nameSeqList = null;
 		WeekDaysResponseDto weekdays = new WeekDaysResponseDto();
+		RegistrationCenter registrationCenter = null;
 
 		Objects.requireNonNull(regCenterId);
 		Objects.requireNonNull(langCode);
 
 		try {
 			nameSeqList = workingDaysRepo.findByregistrationCenterIdAndlanguagecodeForWeekDays(regCenterId, langCode);
+			registrationCenter = registrationCenterRepository.findByIdAndLangCode(regCenterId, langCode);
 		} catch (DataAccessException | DataAccessLayerException e) {
 			throw new MasterDataServiceException(
 					WorkingNonWorkingDayErrorCode.WORKING_DAY_TABLE_NOT_ACCESSIBLE.getErrorCode(),
@@ -54,21 +64,28 @@ public class RegWorkingNonWorkingServiceImpl implements RegWorkingNonWorkingServ
 							+ ExceptionUtils.parseException(e));
 		}
 
-		if (nameSeqList != null && !nameSeqList.isEmpty()) {
-
-			nameSeqList.sort((d1, d2) -> d1.getDaySeq() - d2.getDaySeq());
-			weekdayList = nameSeqList.stream().map(nameSeq -> {
-				WeekDaysDto dto = new WeekDaysDto();
-				dto.setLanguageCode(langCode);
-				dto.setName(nameSeq.getName());
-				dto.setOrder(nameSeq.getDaySeq());
-				return dto;
-			}).collect(Collectors.toList());
-			weekdays.setWeekdays(weekdayList);
-
+		if (registrationCenter == null) {
+			throw new DataNotFoundException(WorkingNonWorkingDayErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorCode(),
+					WorkingNonWorkingDayErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorMessage());
 		} else {
-			throw new DataNotFoundException(WorkingNonWorkingDayErrorCode.WEEK_DAY_DATA_FOUND_EXCEPTION.getErrorCode(),
-					WorkingNonWorkingDayErrorCode.WEEK_DAY_DATA_FOUND_EXCEPTION.getErrorMessage());
+			if (nameSeqList != null && !nameSeqList.isEmpty()) {
+
+				nameSeqList.sort((d1, d2) -> d1.getDaySeq() - d2.getDaySeq());
+				weekdayList = nameSeqList.stream().map(nameSeq -> {
+					WeekDaysDto dto = new WeekDaysDto();
+					dto.setLanguageCode(langCode);
+					dto.setName(nameSeq.getName());
+					dto.setOrder(nameSeq.getDaySeq());
+					return dto;
+				}).collect(Collectors.toList());
+				weekdays.setWeekdays(weekdayList);
+
+			} else {
+				throw new DataNotFoundException(
+						WorkingNonWorkingDayErrorCode.WEEK_DAY_DATA_FOUND_EXCEPTION.getErrorCode(),
+						WorkingNonWorkingDayErrorCode.WEEK_DAY_DATA_FOUND_EXCEPTION.getErrorMessage());
+			}
+
 		}
 
 		return weekdays;
