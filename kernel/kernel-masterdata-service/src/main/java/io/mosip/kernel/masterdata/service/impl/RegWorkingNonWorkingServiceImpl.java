@@ -25,6 +25,7 @@ import io.mosip.kernel.masterdata.repository.RegWorkingNonWorkingRepo;
 import io.mosip.kernel.masterdata.repository.RegistrationCenterRepository;
 import io.mosip.kernel.masterdata.service.RegWorkingNonWorkingService;
 import io.mosip.kernel.masterdata.utils.ExceptionUtils;
+import io.mosip.kernel.masterdata.validator.ValidLangCode;
 
 @Service
 public class RegWorkingNonWorkingServiceImpl implements RegWorkingNonWorkingService {
@@ -44,7 +45,7 @@ public class RegWorkingNonWorkingServiceImpl implements RegWorkingNonWorkingServ
 	private RegistrationCenterRepository registrationCenterRepository;
 
 	@Override
-	public WeekDaysResponseDto getWeekDaysList(String regCenterId, String langCode) {
+	public WeekDaysResponseDto getWeekDaysList(String regCenterId,String langCode) {
 
 		List<WeekDaysDto> weekdayList = null;
 		List<DayNameAndSeqListDto> nameSeqList = null;
@@ -92,7 +93,7 @@ public class RegWorkingNonWorkingServiceImpl implements RegWorkingNonWorkingServ
 	}
 
 	@Override
-	public WorkingDaysResponseDto getWorkingDays(String regCenterId, String langCode) {
+	public WorkingDaysResponseDto getWorkingDays(String regCenterId,String langCode) {
 
 		List<WorkingDaysDto> workingDayList = null;
 		WorkingDaysResponseDto responseDto = new WorkingDaysResponseDto();
