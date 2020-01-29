@@ -1093,10 +1093,10 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 				if(((primaryLang.equals(regCenterPostReqDto.getLangCode()) || regCenterPostReqDto.getWorkingNonWorkingDays() != null)  || secondaryLang.equals(regCenterPostReqDto.getLangCode()))){
 					//set response for working_non_working for both primary and sencodary language
 					setResponseDtoWorkingNonWorking(registrationCenter, registrationCenterExtnDto);
-					setRegExpHolidayDto(registrationCenter, registrationCenterExtnDto, exceptionalHolidayPutPostDtoList);
+					
 				}
 					//set ExpHoliday Dto
-					
+					setRegExpHolidayDto(registrationCenter, registrationCenterExtnDto, exceptionalHolidayPutPostDtoList);
 					
 
 					// creating registration center history
@@ -1136,6 +1136,7 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 			for(RegExceptionalHoliday regExceptionalHoliday : dbRegExpHolidays) {
 				ExceptionalHolidayPutPostDto exceptionalHolidayDto = MapperUtils.map(regExceptionalHoliday,
 						ExceptionalHolidayPutPostDto.class);
+				exceptionalHolidayDto.setExceptionHolidayDate(regExceptionalHoliday.getExceptionHolidayDate().toString());
 				exceptionalHolidayDtoList.add(exceptionalHolidayDto);
 			}
 			registrationCenterExtnDto.setExceptionalHolidayPutPostDto(exceptionalHolidayDtoList);
@@ -1350,10 +1351,15 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 						//set response for working_non_working for both primary and sencodary language
 						setResponseDtoWorkingNonWorking(updRegistrationCenter, registrationCenterExtnDto);
 						
+					
+					}
+					
+					if((primaryLang.equals(regCenterPutReqDto.getLangCode()) || regCenterPutReqDto.getExceptionalHolidayPutPostDto() != null)  || secondaryLang.equals(regCenterPutReqDto.getLangCode())  ){
 						//set expHolidayDto 
 						setRegExpHolidayDto(updRegistrationCenter,registrationCenterExtnDto,exceptionalHolidayPutPostDtoList);
-					}
 
+					}
+					
 					// creating registration center history
 					RegistrationCenterHistory registrationCenterHistory = new RegistrationCenterHistory();
 					MapperUtils.map(updRegistrationCenter, registrationCenterHistory);

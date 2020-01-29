@@ -100,18 +100,9 @@ public class MasterDataFilterHelper {
 		if (!filterValueDto.getLanguageCode().equals("all")) {
 			predicates.add(langCodePredicate);
 		}
-		if(StringUtils.isNotBlank(filterDto.getText()))
-		{
-			caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
-					.like(criteriaBuilder.lower(rootType.get(filterDto.getColumnName())), criteriaBuilder.lower(
-							criteriaBuilder.literal(filterDto.getText()))));
-		}
-		else
-		{
-			caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
+		caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
 					.like(criteriaBuilder.lower(rootType.get(filterDto.getColumnName())), criteriaBuilder.lower(
 							criteriaBuilder.literal(WILD_CARD_CHARACTER+filterDto.getText()+WILD_CARD_CHARACTER))));
-		}
 		if (!(rootType.get(columnName).getJavaType().equals(Boolean.class))) {
 			predicates.add(caseSensitivePredicate);
 		}
@@ -153,19 +144,10 @@ public class MasterDataFilterHelper {
 
 		Predicate langCodePredicate = criteriaBuilder.equal(rootType.get(LANGCODE_COLUMN_NAME),
 				filterValueDto.getLanguageCode());
-		if(StringUtils.isNotBlank(filterDto.getText()))
-		{
-			caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
-					.like(criteriaBuilder.lower(rootType.get(filterDto.getColumnName())), criteriaBuilder.lower(
-							criteriaBuilder.literal(filterDto.getText()))));
-		}
-		else
-		{
 			caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
 					.like(criteriaBuilder.lower(rootType.get(filterDto.getColumnName())), criteriaBuilder.lower(
 							criteriaBuilder.literal(WILD_CARD_CHARACTER+filterDto.getText()+WILD_CARD_CHARACTER))));
-		}
-	
+
 		criteriaQueryByType.multiselect(rootType.get(fieldCodeColumnName), rootType.get(columnName));
 
 		columnTypeValidator(rootType, columnName);
