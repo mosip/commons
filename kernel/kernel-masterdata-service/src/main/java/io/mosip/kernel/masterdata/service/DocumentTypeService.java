@@ -3,6 +3,7 @@ package io.mosip.kernel.masterdata.service;
 import java.util.List;
 
 import io.mosip.kernel.masterdata.dto.DocumentTypeDto;
+import io.mosip.kernel.masterdata.dto.DocumentTypePutReqDto;
 import io.mosip.kernel.masterdata.dto.getresponse.DocumentTypeResponseDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.DocumentTypeExtnDto;
@@ -55,7 +56,7 @@ public interface DocumentTypeService {
 	 *            DTO of document type.
 	 * @return {@link CodeAndLanguageCodeID}.
 	 */
-	public DocumentTypePutResponseDto updateDocumentType(DocumentTypeDto documentTypeDto);
+	public DocumentTypePutResponseDto updateDocumentType(DocumentTypePutReqDto documentTypeDto);
 
 	/**
 	 * Method to delete document type.
