@@ -1,5 +1,7 @@
 package io.mosip.kernel.masterdata.dto;
 
+
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -16,13 +18,12 @@ import lombok.Data;
  *
  */
 @Data
-// @ApiModel(value = "DocumentCType", description = "DocumentType resource
-// representation")
+//@ApiModel(value = "DocumentCType", description = "DocumentType resource representation")
 public class DocumentTypePutReqDto {
 
-	@NotBlank
-	@Size(min = 1, max = 36)
-	@ApiModelProperty(value = "code", required = true, dataType = "java.lang.String")
+    @NotBlank
+    @Size(min = 1, max = 36)
+    @ApiModelProperty(value = "code", required = true, dataType = "java.lang.String")
 	private String code;
 
 	@NotBlank
@@ -34,8 +35,8 @@ public class DocumentTypePutReqDto {
 	@ApiModelProperty(value = "Application description", required = false, dataType = "java.lang.String")
 	private String description;
 
-	// @NotBlank
-	// @Size(min = 1, max = 3)
+	//@NotBlank
+	//@Size(min = 1, max = 3)
 	@ValidLangCode(message = "Language Code is Invalid")
 	@ApiModelProperty(value = "Language Code", required = true, dataType = "java.lang.String")
 	private String langCode;
