@@ -2379,9 +2379,14 @@ public class MasterDataServiceTest {
 		daysDto.setOrder((short) 1);
 		weekdayList.add(daysDto);
 		weekdays.setWeekdays(weekdayList);
+		RegistrationCenter registCent = new RegistrationCenter();
+		registCent.setId("10001");
+		registCent.setLangCode("eng");
 
 		Mockito.when(regWorkingNonWorkingRepo.findByregistrationCenterIdAndlanguagecodeForWeekDays(Mockito.anyString(),
 				Mockito.anyString())).thenReturn(nameSeqDtoList);
+		Mockito.when(registrationCenterRepository.findByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
+				.thenReturn(registCent);
 		assertEquals("Monday",
 				regWorkingNonWorkingService.getWeekDaysList("10001", "eng").getWeekdays().get(0).getName());
 	}
@@ -2394,6 +2399,11 @@ public class MasterDataServiceTest {
 		workingDaysDto.setName("Monday");
 		workingDaysDto.setLanguagecode("eng");
 		workingDaysDtos.add(workingDaysDto);
+		RegistrationCenter registCent = new RegistrationCenter();
+		registCent.setId("10001");
+		registCent.setLangCode("eng");
+		Mockito.when(registrationCenterRepository.findByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
+		.thenReturn(registCent);
 
 		Mockito.when(regWorkingNonWorkingRepo.findByregistrationCenterIdAndlangCodeForWorkingDays("10001", "eng"))
 				.thenReturn(workingDaysDtos);
@@ -2411,9 +2421,14 @@ public class MasterDataServiceTest {
 		daysOfWeek.setLangCode("eng");
 		daysOfWeek.setName("Monday");
 		globalDaysList.add(daysOfWeek);
+		RegistrationCenter registCent = new RegistrationCenter();
+		registCent.setId("10001");
+		registCent.setLangCode("eng");
 
 		Mockito.when(regWorkingNonWorkingRepo.findByregistrationCenterIdAndlangCodeForWorkingDays("10001", "eng"))
 				.thenReturn(null);
+		Mockito.when(registrationCenterRepository.findByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
+		.thenReturn(registCent);
 		Mockito.when(daysOfWeekRepo.findByAllGlobalWorkingTrue(Mockito.anyString()))
 		.thenReturn(globalDaysList);
 
@@ -2423,8 +2438,13 @@ public class MasterDataServiceTest {
 	@Test(expected=DataNotFoundException.class)
 	public void getWorkingDaysServiceGlobalFailTest() {
 
+		RegistrationCenter registCent = new RegistrationCenter();
+		registCent.setId("10001");
+		registCent.setLangCode("eng");
 		Mockito.when(regWorkingNonWorkingRepo.findByregistrationCenterIdAndlangCodeForWorkingDays("10001", "eng"))
 				.thenReturn(null);
+		Mockito.when(registrationCenterRepository.findByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
+		.thenReturn(registCent);
 		Mockito.when(daysOfWeekRepo.findByAllGlobalWorkingTrue(Mockito.anyString()))
 		.thenReturn(null);
 
