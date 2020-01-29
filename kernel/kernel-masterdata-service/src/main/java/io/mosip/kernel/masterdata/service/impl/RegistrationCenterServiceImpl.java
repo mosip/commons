@@ -1351,10 +1351,15 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 						//set response for working_non_working for both primary and sencodary language
 						setResponseDtoWorkingNonWorking(updRegistrationCenter, registrationCenterExtnDto);
 						
+					
+					}
+					
+					if((primaryLang.equals(regCenterPutReqDto.getLangCode()) || regCenterPutReqDto.getExceptionalHolidayPutPostDto() != null)  || secondaryLang.equals(regCenterPutReqDto.getLangCode())  ){
 						//set expHolidayDto 
 						setRegExpHolidayDto(updRegistrationCenter,registrationCenterExtnDto,exceptionalHolidayPutPostDtoList);
-					}
 
+					}
+					
 					// creating registration center history
 					RegistrationCenterHistory registrationCenterHistory = new RegistrationCenterHistory();
 					MapperUtils.map(updRegistrationCenter, registrationCenterHistory);
