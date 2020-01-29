@@ -8,20 +8,15 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-/**
- * 
- * @author Megha Tanga
- *
- */
 @Data
-//@ApiModel(value = "Device Provider", description = "Device Provider Detail resource")
-public class DeviceProviderDto {
+@ApiModel(value = "Device Provider", description = "Device Provider Detail resource")
+public class DeviceProviderPutDto {
 
-	/** The id. 
+	/** The id. */
 	@NotBlank
 	@Size(min = 1, max = 36)
 	@ApiModelProperty(value = "id", required = true, dataType = "java.lang.String")
-	private String id;*/
+	private String id;
 
 	/** The vendor name. */
 	@NotBlank
@@ -48,10 +43,11 @@ public class DeviceProviderDto {
 	private String contactNumber;
 
 	/** The certificate alias. */
+	@NotBlank
 	@Size(min = 1, max = 36)
 	@ApiModelProperty(value = "certificateAlias", dataType = "java.lang.String")
 	private String certificateAlias;
-	
+
 	/**
 	 * Field for is active
 	 */

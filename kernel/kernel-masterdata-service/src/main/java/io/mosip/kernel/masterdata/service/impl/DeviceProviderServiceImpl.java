@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -16,6 +17,7 @@ import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.masterdata.constant.DeviceProviderManagementErrorCode;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.dto.DeviceProviderDto;
+import io.mosip.kernel.masterdata.dto.DeviceProviderPutDto;
 import io.mosip.kernel.masterdata.dto.DigitalIdDto;
 import io.mosip.kernel.masterdata.dto.ValidateDeviceDto;
 import io.mosip.kernel.masterdata.dto.ValidateDeviceHistoryDto;
@@ -51,7 +53,7 @@ import io.mosip.kernel.masterdata.utils.MetaDataUtils;
  */
 @Service
 public class DeviceProviderServiceImpl implements
-		DeviceProviderService<ResponseDto, ValidateDeviceDto, ValidateDeviceHistoryDto, DeviceProviderDto, DeviceProviderExtnDto> {
+		DeviceProviderService<ResponseDto, ValidateDeviceDto, ValidateDeviceHistoryDto, DeviceProviderDto, DeviceProviderExtnDto,DeviceProviderPutDto> {
 
 	private static final String UTC_DATETIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
@@ -542,20 +544,9 @@ public class DeviceProviderServiceImpl implements
 		DeviceProvider crtDeviceProvider = null;
 		try {
 
-			if (deviceProviderRepository.findById(DeviceProvider.class, dto.getId()) != null) {
-				auditUtil.auditRequest(
-						String.format(MasterDataConstant.FAILURE_CREATE, DeviceProvider.class.getCanonicalName()),
-						MasterDataConstant.AUDIT_SYSTEM,
-						String.format(MasterDataConstant.FAILURE_DESC,
-								DeviceProviderManagementErrorCode.DEVICE_PROVIDER_EXIST.getErrorCode(),
-								DeviceProviderManagementErrorCode.DEVICE_PROVIDER_EXIST.getErrorMessage()),
-						"ADM-723");
-				throw new RequestException(DeviceProviderManagementErrorCode.DEVICE_PROVIDER_EXIST.getErrorCode(),
-						String.format(DeviceProviderManagementErrorCode.DEVICE_PROVIDER_EXIST.getErrorMessage(),
-								dto.getId()));
-			}
+			
 			entity = MetaDataUtils.setCreateMetaData(dto, DeviceProvider.class);
-			entity.setIsActive(true);
+			entity.setId(UUID.randomUUID().toString());
 			crtDeviceProvider = deviceProviderRepository.create(entity);
 
 			// add new row to the history table
@@ -592,7 +583,7 @@ public class DeviceProviderServiceImpl implements
 	 */
 	@Override
 	@Transactional
-	public DeviceProviderExtnDto updateDeviceProvider(DeviceProviderDto dto) {
+	public DeviceProviderExtnDto updateDeviceProvider(DeviceProviderPutDto dto) {
 		DeviceProvider entity = null;
 		DeviceProvider updtDeviceProvider = null;
 		DeviceProvider renDeviceProvider = null;

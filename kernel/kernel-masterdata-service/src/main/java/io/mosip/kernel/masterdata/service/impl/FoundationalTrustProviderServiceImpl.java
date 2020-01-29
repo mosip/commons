@@ -4,6 +4,7 @@
 package io.mosip.kernel.masterdata.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import javax.transaction.Transactional;
 
@@ -49,7 +50,7 @@ public class FoundationalTrustProviderServiceImpl implements FoundationalTrustPr
 		FoundationalTrustProvider foundationalTrustProviderEntity = null;
 		FoundationalTrustProviderResDto foundationalTrustProviderResDto = null;
 		ResponseWrapper<FoundationalTrustProviderResDto> response = new ResponseWrapper<>();
-		foundationalTrustProvider = foundationalTrustProviderRepository.findByDetails(foundationalTrustProviderDto.getName(),foundationalTrustProviderDto.getEmail(),foundationalTrustProviderDto.getAddress(),foundationalTrustProviderDto.getCertAlias(),foundationalTrustProviderDto.isActive());
+		foundationalTrustProvider = foundationalTrustProviderRepository.findByDetails(foundationalTrustProviderDto.getName(),foundationalTrustProviderDto.getEmail(),foundationalTrustProviderDto.getAddress(),foundationalTrustProviderDto.getCertAlias(),foundationalTrustProviderDto.getIsActive());
 		if(foundationalTrustProvider!=null)
 		{
 			auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_CREATE, FoundationalTrustProvider.class.getCanonicalName()),
@@ -62,7 +63,8 @@ public class FoundationalTrustProviderServiceImpl implements FoundationalTrustPr
 		else
 		{
 			foundationalTrustProvider = MetaDataUtils.setCreateMetaData(foundationalTrustProviderDto, FoundationalTrustProvider.class);
-			foundationalTrustProvider.setIsActive(foundationalTrustProviderDto.isActive());	
+			foundationalTrustProvider.setIsActive(foundationalTrustProviderDto.getIsActive());
+			foundationalTrustProvider.setId(UUID.randomUUID().toString());
 			foundationalTrustProviderEntity = foundationalTrustProviderRepository.create(foundationalTrustProvider);
 			if(foundationalTrustProviderEntity!=null)
 			{
@@ -70,7 +72,7 @@ public class FoundationalTrustProviderServiceImpl implements FoundationalTrustPr
 				response.setResponse(foundationalTrustProviderResDto);
 				response.setResponsetime(LocalDateTime.now());
 				FoundationalTrustProviderHistory foundationalTrustProviderHistory = MetaDataUtils.setCreateMetaData(foundationalTrustProviderEntity, FoundationalTrustProviderHistory.class);
-				foundationalTrustProviderHistory.setIsActive(foundationalTrustProviderDto.isActive());
+				foundationalTrustProviderHistory.setIsActive(foundationalTrustProviderDto.getIsActive());
 				foundationalTrustProviderHistory.setEffectivetimes(foundationalTrustProvider.getCreatedDateTime());
 				foundationalTrustProviderHistory.setCreatedDateTime(foundationalTrustProvider.getCreatedDateTime());
 				foundationalTrustProviderRepositoryHistory.create(foundationalTrustProviderHistory);
