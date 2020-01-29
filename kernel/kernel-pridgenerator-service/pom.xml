@@ -30,7 +30,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-idgenerator-prid</artifactId>
-			<version>0.10.3</version>
+			<version>1.0.6-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
