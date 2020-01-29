@@ -1,7 +1,7 @@
 package io.mosip.kernel.masterdata.constant;
 
 public enum LocationErrorCode {
-	LOCATION_FETCH_EXCEPTION("KER-MSD-025", "Error occured while fetching Location Hierarchy"),
+	LOCATION_FETCH_EXCEPTION("KER-MSD-025", "Error occurred while fetching Location Hierarchy"),
 	LOCATION_NOT_FOUND_EXCEPTION("KER-MSD-026", "Location not found"),
 	LOCATION_LEVEL_FETCH_EXCEPTION("KER-MSD-027", "Error occured while fetching Location Hierarchy Levels"),
 	LOCATION_INSERT_EXCEPTION("KER-MSD-064", "Error occured while inserting location hierarchy details"),
