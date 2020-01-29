@@ -87,7 +87,7 @@ public class DeviceProviderServiceImpl implements
 		isDeviceProviderPresent(validateDeviceDto.getDigitalId().getDpId());
 		isValidServiceSoftwareVersion(validateDeviceDto.getDeviceServiceVersion());
 		checkMappingBetweenSwVersionDeviceTypeAndDeviceSubType(validateDeviceDto.getDeviceServiceVersion(),
-				validateDeviceDto.getDeviceCode());
+				registeredDevice);
 		validateDeviceCodeAndDigitalId(registeredDevice, validateDeviceDto.getDigitalId());
 		responseDto.setStatus(MasterDataConstant.VALID);
 		responseDto.setMessage("Device  details validated successfully");
@@ -211,12 +211,10 @@ public class DeviceProviderServiceImpl implements
 	 *            the device code
 	 * @return true, if successful
 	 */
-	private boolean checkMappingBetweenSwVersionDeviceTypeAndDeviceSubType(String swVersion, String deviceCode) {
-		RegisteredDevice registeredDevice = null;
+	private boolean checkMappingBetweenSwVersionDeviceTypeAndDeviceSubType(String swVersion, RegisteredDevice registeredDevice) {
+		
 		MOSIPDeviceService mosipDeviceService = null;
 		try {
-			registeredDevice = registeredDeviceRepository.findByCodeAndIsActiveIsTrue(deviceCode);
-
 			mosipDeviceService = deviceServiceRepository.findByDeviceDetail(swVersion,
 					registeredDevice.getDeviceTypeCode(), registeredDevice.getDeviceSTypeCode(),
 					registeredDevice.getMake(), registeredDevice.getModel(), registeredDevice.getDpId());
