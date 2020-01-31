@@ -131,7 +131,7 @@ public class DeviceController {
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While creating device any error occured") })
 	public ResponseWrapper<DeviceExtnDto> createDevice(
-			@RequestBody RequestWrapper<DeviceDto> request) {
+			@Valid @RequestBody RequestWrapper<DeviceDto> request) {
 		ResponseWrapper<DeviceExtnDto> responseWrapper = new ResponseWrapper<>();
 		auditUtil.auditRequest(MasterDataConstant.CREATE_API_IS_CALLED + DeviceDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,
