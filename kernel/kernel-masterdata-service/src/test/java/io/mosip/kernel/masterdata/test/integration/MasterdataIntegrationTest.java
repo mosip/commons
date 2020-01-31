@@ -85,6 +85,7 @@ import io.mosip.kernel.masterdata.dto.DeviceTypeDto;
 import io.mosip.kernel.masterdata.dto.DigitalIdDeviceRegisterDto;
 import io.mosip.kernel.masterdata.dto.DocumentCategoryDto;
 import io.mosip.kernel.masterdata.dto.DocumentTypeDto;
+import io.mosip.kernel.masterdata.dto.DocumentTypePutReqDto;
 import io.mosip.kernel.masterdata.dto.FoundationalTrustProviderDto;
 import io.mosip.kernel.masterdata.dto.FoundationalTrustProviderPutDto;
 import io.mosip.kernel.masterdata.dto.GenderTypeDto;
@@ -4304,10 +4305,10 @@ public class MasterdataIntegrationTest {
 	@Test
 	@WithUserDetails("global-admin")
 	public void updateDocumentTypeTest() throws Exception {
-		RequestWrapper<DocumentTypeDto> requestDto = new RequestWrapper<>();
+		RequestWrapper<DocumentTypePutReqDto> requestDto = new RequestWrapper<>();
 		requestDto.setId("mosip.idtype.create");
 		requestDto.setVersion("1.0");
-		DocumentTypeDto documentTypeDto = new DocumentTypeDto();
+		DocumentTypePutReqDto documentTypeDto = new DocumentTypePutReqDto();
 		documentTypeDto.setCode("D001");
 		documentTypeDto.setDescription("Proof Of Identity");
 		documentTypeDto.setIsActive(true);
@@ -4326,10 +4327,10 @@ public class MasterdataIntegrationTest {
 	@Test
 	@WithUserDetails("global-admin")
 	public void updateDocumentTypeLangValidationTest() throws Exception {
-		RequestWrapper<DocumentTypeDto> requestDto = new RequestWrapper<>();
+		RequestWrapper<DocumentTypePutReqDto> requestDto = new RequestWrapper<>();
 		requestDto.setId("mosip.idtype.create");
 		requestDto.setVersion("1.0");
-		DocumentTypeDto documentTypeDto = new DocumentTypeDto();
+		DocumentTypePutReqDto documentTypeDto = new DocumentTypePutReqDto();
 		documentTypeDto.setCode("D001");
 		documentTypeDto.setDescription("Proof Of Identity");
 		documentTypeDto.setIsActive(true);
@@ -4347,10 +4348,10 @@ public class MasterdataIntegrationTest {
 	@Test
 	@WithUserDetails("global-admin")
 	public void updateDocumentTypeNotFoundExceptionTest() throws Exception {
-		RequestWrapper<DocumentTypeDto> requestDto = new RequestWrapper<>();
+		RequestWrapper<DocumentTypePutReqDto> requestDto = new RequestWrapper<>();
 		requestDto.setId("mosip.idtype.create");
 		requestDto.setVersion("1.0");
-		DocumentTypeDto documentTypeDto = new DocumentTypeDto();
+		DocumentTypePutReqDto documentTypeDto = new DocumentTypePutReqDto();
 		documentTypeDto.setCode("D001");
 		documentTypeDto.setDescription("Proof Of Identity");
 		documentTypeDto.setIsActive(true);
@@ -4367,10 +4368,10 @@ public class MasterdataIntegrationTest {
 	@Test
 	@WithUserDetails("global-admin")
 	public void updateDocumentTypeDatabaseConnectionExceptionTest() throws Exception {
-		RequestWrapper<DocumentTypeDto> requestDto = new RequestWrapper<>();
+		RequestWrapper<DocumentTypePutReqDto> requestDto = new RequestWrapper<>();
 		requestDto.setId("mosip.idtype.create");
 		requestDto.setVersion("1.0");
-		DocumentTypeDto documentTypeDto = new DocumentTypeDto();
+		DocumentTypePutReqDto documentTypeDto = new DocumentTypePutReqDto();
 		documentTypeDto.setCode("D001");
 		documentTypeDto.setDescription("Proof Of Identity");
 		documentTypeDto.setIsActive(true);
