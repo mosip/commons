@@ -31,7 +31,7 @@ public enum RegistrationCenterErrorCode {
 	NO_LOCATION_DATA_AVAILABLE("KER-MSD-320","No Location found for value %s"),
 	NO_CENTERTYPE_AVAILABLE("KER-MSD-321","No Registration Center type found for value %s"),
 	NO_ZONE_AVAILABLE("KER-MSD-340","Zone %s doesn't exist"),
-
+	WORKING_NONWORKING_EXCEPTION("KER-MSD-803","Cannot create as data for all seven days is not received"),
 	
 	PRIMARY_LANGUAGE_EXCEPTION("KER-MSD-XXX", "Received data is not present in Primary Language supported by MOSIP"),
 	SECONDARY_LANGUAGE_EXCEPTION("KER-MSD-XXX", "%s Language does not supported by MOSIP"),
