@@ -92,8 +92,8 @@ public class MasterDataConstant {
 	public static final String SUCCESSFUL_UNMAP="UNMAP %s - Success";
 	public static final String FAILURE_MAP="MAP %s - Failure";
 	public static final String FAILURE_UNMAP="UNMAP %s - Failure";
-	public static final String MODEL="make";
-	public static final String MAKE="model";
+	public static final String MODEL="model";
+	public static final String MAKE="make";
 	public static final String DP_ID="dpId";
 	public static final String DP="dp";
 	public static final String SERIAL_NO="serialNo";
