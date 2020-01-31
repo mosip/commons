@@ -21,8 +21,7 @@ import io.mosip.kernel.masterdata.constant.DocumentTypeErrorCode;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.dto.DeviceTypeDto;
 import io.mosip.kernel.masterdata.dto.DocumentTypeDto;
-import io.mosip.kernel.masterdata.dto.HolidayDto;
-import io.mosip.kernel.masterdata.dto.HolidayUpdateDto;
+import io.mosip.kernel.masterdata.dto.DocumentTypePutReqDto;
 import io.mosip.kernel.masterdata.dto.getresponse.DocumentTypeResponseDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.DocumentTypeExtnDto;
@@ -184,7 +183,7 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 	 * mosip.kernel.masterdata.dto.RequestDto)
 	 */
 	@Override
-	public DocumentTypePutResponseDto updateDocumentType(DocumentTypeDto documentTypeDto) {
+	public DocumentTypePutResponseDto updateDocumentType(DocumentTypePutReqDto documentTypeDto) {
 		try {
 			DocumentType documentType = documentTypeRepository.findByCodeAndLangCode(documentTypeDto.getCode(),
 					documentTypeDto.getLangCode());

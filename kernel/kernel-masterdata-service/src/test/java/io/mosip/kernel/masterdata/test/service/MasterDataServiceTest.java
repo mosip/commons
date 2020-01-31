@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.orm.hibernate5.HibernateObjectRetrievalFailureException;
@@ -40,6 +39,7 @@ import io.mosip.kernel.masterdata.dto.DayNameAndSeqListDto;
 import io.mosip.kernel.masterdata.dto.DeviceSpecificationDto;
 import io.mosip.kernel.masterdata.dto.DocumentCategoryDto;
 import io.mosip.kernel.masterdata.dto.DocumentTypeDto;
+import io.mosip.kernel.masterdata.dto.DocumentTypePutReqDto;
 import io.mosip.kernel.masterdata.dto.ExceptionalHolidayDto;
 import io.mosip.kernel.masterdata.dto.LanguageDto;
 import io.mosip.kernel.masterdata.dto.LocationDto;
@@ -2083,7 +2083,7 @@ public class MasterDataServiceTest {
 	@Test
 	public void updateDocumentTypeSuccessTest() {
 
-		DocumentTypeDto documentTypeDto = new DocumentTypeDto();
+		DocumentTypePutReqDto documentTypeDto = new DocumentTypePutReqDto();
 		documentTypeDto.setCode("code");
 		documentTypeDto.setIsActive(Boolean.TRUE);
 		documentTypeDto.setLangCode("eng");
