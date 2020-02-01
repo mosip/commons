@@ -32,6 +32,7 @@ import io.mosip.kernel.masterdata.dto.ValidDocumentDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.DocumentCategoryExtnDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.DocumentCategoryTypeMappingExtnDto;
+import io.mosip.kernel.masterdata.dto.getresponse.extn.DocumentCategoryTypeMappingFilterDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.DocumentTypeExtnDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.ValidDocumentExtnDto;
 import io.mosip.kernel.masterdata.dto.postresponse.DocCategoryAndTypeResponseDto;
@@ -239,7 +240,7 @@ public class ValidDocumentServiceImpl implements ValidDocumentService {
 		List<SearchFilter> addList = new ArrayList<>();
 		List<SearchFilter> removeList = new ArrayList<>();
 		List<SearchFilter> addList1 = new ArrayList<>();
-		if(filterTypeValidator.validate(DocumentCategoryTypeMappingExtnDto.class, dto.getFilters()))
+		if(filterTypeValidator.validate(DocumentCategoryTypeMappingFilterDto.class, dto.getFilters()))
 		{
 			for (SearchFilter filter : dto.getFilters()) {
 				String column = filter.getColumnName();
