@@ -12,14 +12,6 @@ import io.mosip.kernel.masterdata.dto.getresponse.ResponseDto;
  * @since 1.0.0
  */
 public interface DeviceRegisterService {
-	/**
-	 * Method to register Device.
-	 * 
-	 * @param request
-	 *            the {@link DeviceRegisterDto}.
-	 * @return the {@link DeviceRegisterResponseDto}.
-	 */
-	public DeviceRegisterResponseDto registerDevice(DeviceRegisterDto request);
 
 	/**
 	 * Method to de register Device.

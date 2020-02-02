@@ -42,20 +42,6 @@ public class DeviceRegisterController {
 	@Autowired
 	private DeviceRegisterService deviceRegisterService;
 
-	/**
-	 * Api to register Device.
-	 * 
-	 * @param request
-	 *            the request DTO.
-	 * @return the {@link DeviceRegisterResponseDto}.
-	 */
-	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER')")
-	@ApiOperation(value = "Register Device")
-	@PostMapping("/register")
-	public ResponseEntity<DeviceRegisterResponseDto> registerDevice(
-			@ApiParam("foundationTrustCertificate in BASE64 encoded") @RequestBody DeviceRegisterDto request) {
-		return new ResponseEntity<>(deviceRegisterService.registerDevice(request), HttpStatus.OK);
-	}
 
 	/**
 	 * Api to de register Device.

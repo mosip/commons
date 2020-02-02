@@ -69,52 +69,6 @@ public class DeviceRegisterServiceImpl implements DeviceRegisterService {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * io.mosip.kernel.masterdata.service.DeviceRegisterService#registerDevice(io.
-	 * mosip.kernel.masterdata.dto.DeviceRegisterDto)
-	 */
-	@Override
-	public DeviceRegisterResponseDto registerDevice(DeviceRegisterDto request) {
-		DeviceRegister deviceRegisterEntity = new DeviceRegister();
-		DeviceRegisterHistory deviceRegisterHistory = new DeviceRegisterHistory();
-		DeviceDataDto deviceDataDTO = request.getDeviceData();
-		DeviceInfoDto deviceInfoDto = deviceDataDTO.getDeviceInfo();
-		MapperUtils.map(deviceDataDTO, deviceRegisterEntity);
-		MapperUtils.map(deviceInfoDto, deviceRegisterEntity);
-		MapperUtils.map(deviceDataDTO, deviceRegisterHistory);
-		MapperUtils.map(deviceInfoDto, deviceRegisterHistory);
-		deviceRegisterEntity.setDpSignature(request.getDpSignature());
-		deviceRegisterEntity.setFoundationTrustCertificate(
-				CryptoUtil.decodeBase64(request.getDeviceData().getFoundationTrustCertificate()));
-		LocalDateTime createdTime = DateUtils.getUTCCurrentDateTime();
-		deviceRegisterEntity.setPurpose("mosip-process");
-		deviceRegisterEntity.setCreatedDateTime(createdTime);
-		deviceRegisterEntity.setCreatedBy(MetaDataUtils.getContextUser());
-		deviceRegisterHistory.setDpSignature(request.getDpSignature());
-		deviceRegisterHistory.setFoundationTrustCertificate(
-				CryptoUtil.decodeBase64(request.getDeviceData().getFoundationTrustCertificate()));
-		deviceRegisterHistory.setPurpose("mosip-process");
-		deviceRegisterHistory.setCreatedDateTime(createdTime);
-		deviceRegisterHistory.setCreatedBy(MetaDataUtils.getContextUser());
-		deviceRegisterHistory.setEffectivetimes(LocalDateTime.now(ZoneId.of("UTC")));
-		try {
-			deviceRegisterRepository.create(deviceRegisterEntity);
-			deviceRegisterHistoryRepository.create(deviceRegisterHistory);
-		} catch (DataAccessLayerException e) {
-			throw new DeviceRegisterException("KER-MSD-xx",
-					"Error occur while registering device details " + ExceptionUtils.parseException(e));
-		}
-		DeviceRegisterResponseDto responseDto = new DeviceRegisterResponseDto();
-		DeviceRegResponseDto regResponseDto = new DeviceRegResponseDto();
-		regResponseDto.setDeviceCode(request.getDeviceData().getDeviceCode());
-		regResponseDto.setStatus("success");
-		responseDto.setResponse(regResponseDto);
-		return responseDto;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
 	 * io.mosip.kernel.masterdata.service.DeviceRegisterService#deRegisterDevice(io.
 	 * mosip.kernel.masterdata.dto.DeRegisterDeviceRequestDto)
 	 */
