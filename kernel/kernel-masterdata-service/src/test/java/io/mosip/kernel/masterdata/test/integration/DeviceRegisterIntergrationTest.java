@@ -93,13 +93,6 @@ public class DeviceRegisterIntergrationTest {
 		when(deviceRegisterHistoryRepository.create(Mockito.any())).thenReturn(null);
 	}
 
-	@Test
-	@WithUserDetails("device-provider")
-	public void registerDeviceTest() throws Exception {
-		mockMvc.perform(post("/device/register").content(objectMapper.writeValueAsString(deviceRegisterDto))
-				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
-	}
-
 //	@Test
 //	@WithUserDetails("device-provider")
 //	public void deRegisterDeviceTest() throws JsonProcessingException, Exception {
