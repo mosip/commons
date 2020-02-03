@@ -64,6 +64,7 @@ public class MOSIPDeviceServicePUTDto {
 	private LocalDateTime swExpiryDateTime;
 
 	@NotBlank
+	@Size(min = 1, max = 36)
 	@ApiModelProperty(value = "softBinaryHash", required = true, dataType = "java.lang.Byte")
 	private String swBinaryHash;
 	

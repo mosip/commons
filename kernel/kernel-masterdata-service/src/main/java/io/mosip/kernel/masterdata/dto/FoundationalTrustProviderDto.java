@@ -3,6 +3,7 @@
  */
 package io.mosip.kernel.masterdata.dto;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -24,23 +25,23 @@ public class FoundationalTrustProviderDto {
 	@Size(min = 1, max = 36)
 	private String id;*/
 
-	@NotEmpty(message="name must not be blank or null")
+	@NotBlank
 	@Size(min = 1, max = 128)
 	private String name;
 
-	@NotEmpty(message="address must not be blank or null")
+	@NotBlank
 	@Size(min = 1, max = 512)
 	private String address;
 
-	@NotEmpty(message="email must not be blank or null")
+	@NotBlank
 	@Size(min = 1, max = 256)
 	private String email;
 
-	@NotEmpty(message="contactNo must not be blank or null")
+	@NotBlank
 	@Size(min = 1, max = 16)
 	private String contactNo;
 
-	@NotEmpty(message="certAlias must not be blank or null")
+	@NotBlank
 	@Size(min = 1, max = 36)
 	private String certAlias;
 
