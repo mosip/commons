@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -58,6 +59,8 @@ public class MachineDto{
 	 * Field for machine IP address
 	 */
 
+	@Pattern(regexp="/^[^ ][\\w\\W ]*[^ ]/")
+	@NotNull
 	@Size(min = 1, max = 17)
 	@ApiModelProperty(value = "ipAddress", required = true, dataType = "java.lang.String")
 	private String ipAddress;
