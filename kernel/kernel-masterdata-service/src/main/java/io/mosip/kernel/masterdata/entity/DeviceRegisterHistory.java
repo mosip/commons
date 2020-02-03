@@ -76,15 +76,6 @@ public class DeviceRegisterHistory extends BaseEntity {
 	@Column(name = "foundational_trust_provider_iD")
 	private String foundationalTrustProviderID;
 
-	@Column(name = "foundational_trust_signature")
-	private String foundationalTrustSignature;
-
-	@Column(name = "foundational_trust_certificate")
-	private byte[] foundationTrustCertificate;
-
-	@Column(name = "dprovider_signature")
-	private String dpSignature;
-
 	@Column(name = "serial_number", nullable = false)
 	private String serialNumber;
 
