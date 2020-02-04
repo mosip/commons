@@ -167,7 +167,27 @@ public class MOSIPDeviceServiceImpl implements MOSIPDeviceServices {
 				throw new RequestException(MOSIPDeviceServiceErrorCode.DEVICE_PROVIDER_NOT_FOUND.getErrorCode(),
 						MOSIPDeviceServiceErrorCode.DEVICE_PROVIDER_NOT_FOUND.getErrorMessage());
 			}
-			
+			if ((registrationDeviceTypeRepository
+					.findByCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(dto.getRegDeviceTypeCode())) == null) {
+				auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_CREATE, MOSIPDeviceService.class.getCanonicalName()),
+						MasterDataConstant.AUDIT_SYSTEM,
+						String.format(MasterDataConstant.FAILURE_DESC,
+								MOSIPDeviceServiceErrorCode.REG_DEVICE_TYPE_NOT_FOUND.getErrorCode(),
+								MOSIPDeviceServiceErrorCode.REG_DEVICE_TYPE_NOT_FOUND.getErrorMessage()),"ADM-712");
+				throw new RequestException(MOSIPDeviceServiceErrorCode.REG_DEVICE_TYPE_NOT_FOUND.getErrorCode(),
+						MOSIPDeviceServiceErrorCode.REG_DEVICE_TYPE_NOT_FOUND.getErrorMessage());
+			}
+			if ((registrationDeviceSubTypeRepository
+					.findByCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(dto.getRegDeviceSubCode())) == null) {
+				auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_CREATE, MOSIPDeviceService.class.getCanonicalName()),
+						MasterDataConstant.AUDIT_SYSTEM,
+						String.format(MasterDataConstant.FAILURE_DESC,
+								MOSIPDeviceServiceErrorCode.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorCode(),
+								MOSIPDeviceServiceErrorCode.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorMessage()),"ADM-713");
+				
+				throw new RequestException(MOSIPDeviceServiceErrorCode.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorCode(),
+						MOSIPDeviceServiceErrorCode.REG_DEVICE_SUB_TYPE_NOT_FOUND.getErrorMessage());
+			}
 			entity = MetaDataUtils.setUpdateMetaData(dto, renEntity, false);
 			entity.setIsActive(dto.getIsActive());
 			byte[] swNinaryHashArr = dto.getSwBinaryHash().getBytes();
