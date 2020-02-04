@@ -819,8 +819,26 @@ public class RegistrationCenterValidator {
 
 	private void checkWorkingNonworking(List<ServiceError> errors, RegCenterPutReqDto registrationCenterDto) {
 		if (registrationCenterDto.getWorkingNonWorkingDays() != null) {
+			String fieldName = null;
+			Boolean value = null;
+			Map<String,Boolean> workMap = new HashMap<>();
 			Field[] fieldList = registrationCenterDto.getWorkingNonWorkingDays().getClass().getDeclaredFields();
-			if (fieldList.length < 7) {
+			for(Field field : fieldList)
+			{
+				try {
+					field.setAccessible(true);
+					value = (Boolean) field.get(registrationCenterDto.getWorkingNonWorkingDays());
+					fieldName = field.getName();
+					if(value!=null)
+					{
+						workMap.put(fieldName, value);
+					}
+					
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			}
+			if (workMap.size()<7) {
 				errors.add(new ServiceError(RegistrationCenterErrorCode.WORKING_NONWORKING_EXCEPTION.getErrorCode(),
 						RegistrationCenterErrorCode.WORKING_NONWORKING_EXCEPTION.getErrorMessage()));
 			}
