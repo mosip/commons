@@ -444,6 +444,8 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 	 */
 	@Override
 	public ResponseWrapper<VidResponseDTO> deactivateVIDsForUIN(String uin) throws IdRepoAppException {
+		auditHelper.audit(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.DEACTIVATE_VID,
+				securityManager.hash(uin.getBytes()), IdType.VID, "Deactivate VID Requested");
 		return applyVIDStatus(uin, env.getProperty(VID_DEACTIVATED), DEACTIVATE, env.getProperty(VID_ACTIVE_STATUS));
 	}
 
@@ -456,6 +458,8 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 	 */
 	@Override
 	public ResponseWrapper<VidResponseDTO> reactivateVIDsForUIN(String uin) throws IdRepoAppException {
+		auditHelper.audit(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.REACTIVATE_VID,
+				securityManager.hash(uin.getBytes()), IdType.VID, "Reactivate VID Requested");
 		return applyVIDStatus(uin, env.getProperty(VID_ACTIVE_STATUS), REACTIVATE, env.getProperty(VID_DEACTIVATED));
 	}
 

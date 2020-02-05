@@ -22,6 +22,8 @@ public interface CbeffUtil {
 	public byte[] updateXML(List<BIR> cbeffPackList, byte[] fileBytes) throws Exception;
 
 	public boolean validateXML(byte[] xmlBytes, byte[] xsdBytes) throws Exception;
+	
+	public boolean validateXML(byte[] xmlBytes) throws Exception;
 
 	public Map<String, String> getBDBBasedOnType(byte[] fileBytes, String type, String subType) throws Exception;
 
@@ -34,4 +36,5 @@ public interface CbeffUtil {
 	public List<BIR> convertBIRTypeToBIR(List<BIRType> birType);
 	
 	public List<BIRType> getBIRDataFromXMLType(byte[] xmlBytes,String type) throws Exception;
+	
 }

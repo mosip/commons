@@ -104,7 +104,7 @@ public class IdRepoExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	/**
 	 * Handles bean creation exception.{@code BeanCreationException} is handled because
-	 * IdObjetMasterDataValidator is loaded lazily and maskes use of RestTemplate in
+	 * IdObjetMasterDataValidator is loaded lazily and makes use of RestTemplate in
 	 * PostConstruct. When RestTemplate throws any exception inside PostConstruct,
 	 * it is wrapped as BeanCreationException and thrown by Spring.
 	 *
