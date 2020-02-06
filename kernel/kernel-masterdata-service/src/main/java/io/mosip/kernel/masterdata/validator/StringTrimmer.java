@@ -4,8 +4,6 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import lombok.Data;
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class StringTrimmer.
  */

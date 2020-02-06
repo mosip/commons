@@ -26,7 +26,7 @@ public @interface StringFormatter {
 		 *
 		 * @return the string
 		 */
-		String message() default "Should not be blank or should be between mentioned length";
+		String message() default "Should not be blank or {javax.validation.constraints.Size.message}";
 
 		/**
 		 * Groups.
