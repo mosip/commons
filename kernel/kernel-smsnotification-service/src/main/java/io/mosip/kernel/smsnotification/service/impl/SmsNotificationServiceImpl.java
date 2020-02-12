@@ -70,6 +70,17 @@ public class SmsNotificationServiceImpl implements SmsNotification<SmsResponseDt
 	
 	@Value("${mosip.kernel.sms.unicode:1}")
 	String unicode;
+	
+	@Value("${mosip.kernel.sms.default.api}")
+	String defaultApi;
+	
+	@Value("${mosip.kernel.sms.default.authkey}")
+	String defaultAuthKey;
+	
+	@Value("${mosip.kernel.sms.default.sender}")
+	String defaultSender;
+	
+	
 
 	/*
 	 * (non-Javadoc)
@@ -89,7 +100,8 @@ public class SmsNotificationServiceImpl implements SmsNotification<SmsResponseDt
 			case "infobip":
 				infoBipSmsGateway(contactNumber, contentMessage);
 				break;
-			default:			
+			default:	
+				defaultGateway(contactNumber, contentMessage);
 				break;
 			}
 		} 
@@ -99,6 +111,22 @@ public class SmsNotificationServiceImpl implements SmsNotification<SmsResponseDt
 		return result;
 
 	}
+
+	private void defaultGateway(String contactNumber, String contentMessage) {
+		validateInput(contactNumber);
+		UriComponentsBuilder sms = UriComponentsBuilder.fromHttpUrl(defaultApi)
+				.queryParam(SmsPropertyConstant.AUTH_KEY.getProperty(), defaultAuthKey)
+				.queryParam(SmsPropertyConstant.SMS_MESSAGE.getProperty(), contentMessage)
+				.queryParam(SmsPropertyConstant.SENDER_ID.getProperty(), defaultSender)
+				.queryParam(SmsPropertyConstant.NUMBERS.getProperty(), contactNumber);
+		ResponseEntity<String> responseEnt = null;
+		try {
+			responseEnt = restTemplate.getForEntity(sms.toUriString(), String.class);
+		} catch (HttpClientErrorException | HttpServerErrorException e) {
+			 throw new RuntimeException(e.getResponseBodyAsString());
+		}
+	}
+		
 
 	private void validateInput(String contactNumber) {
 		if (!StringUtils.isNumeric(contactNumber) || contactNumber.length() < numberLength
