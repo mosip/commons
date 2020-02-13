@@ -415,7 +415,7 @@ public class LdapDataStore implements DataStore {
 	}
 
 	@Override
-	public MosipUserSaltListDto getAllUserDetailsWithSalt() throws Exception {
+	public MosipUserSaltListDto getAllUserDetailsWithSalt(List<String> userDetails) throws Exception {
 		MosipUserSaltListDto mosipUserSaltList = new MosipUserSaltListDto();
 		List<MosipUserSalt> mosipUserDtos = new ArrayList<>();
 		LdapConnection connection = null;

@@ -260,7 +260,7 @@ public class DBDataStore implements DataStore {
 	}
 
 	@Override
-	public MosipUserSaltListDto getAllUserDetailsWithSalt() throws Exception {
+	public MosipUserSaltListDto getAllUserDetailsWithSalt(List<String> userDetails) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

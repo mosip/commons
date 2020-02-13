@@ -38,7 +38,7 @@ public interface AuthService extends AuthZService, AuthNService {
 
 	public MosipUserListDto getListOfUsersDetails(List<String> userDetails, String appId) throws Exception;
 
-	public MosipUserSaltListDto getAllUserDetailsWithSalt(String appId) throws Exception;
+	public MosipUserSaltListDto getAllUserDetailsWithSalt(List<String> userDetails,String  appId) throws Exception;
 
 	public RIdDto getRidBasedOnUid(String userId, String appId) throws Exception;
 

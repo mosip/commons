@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import io.mosip.kernel.auth.adapter.constant.AuthAdapterConstant;
 import io.mosip.kernel.auth.config.MosipEnvironment;
 import io.mosip.kernel.auth.constant.AuthConstant;
 import io.mosip.kernel.auth.constant.AuthErrorCode;
@@ -392,11 +391,11 @@ public class AuthController {
 	}
 
 	@ResponseFilter
-	@GetMapping(value = "/usersaltdetails/{appid}")
-	public ResponseWrapper<MosipUserSaltListDto> getUserDetailsWithSalt(@PathVariable("appid") String appId)
+	@PostMapping(value = "/usersaltdetails/{appid}")
+	public ResponseWrapper<MosipUserSaltListDto> getUserDetailsWithSalt(@RequestBody RequestWrapper<UserDetailsRequestDto> userDetails,@PathVariable("appid") String appId)
 			throws Exception {
 		ResponseWrapper<MosipUserSaltListDto> responseWrapper = new ResponseWrapper<>();
-		MosipUserSaltListDto mosipUsers = authService.getAllUserDetailsWithSalt(appId);
+		MosipUserSaltListDto mosipUsers = authService.getAllUserDetailsWithSalt(userDetails.getRequest().getUserDetails(),appId);
 		responseWrapper.setResponse(mosipUsers);
 		return responseWrapper;
 	}

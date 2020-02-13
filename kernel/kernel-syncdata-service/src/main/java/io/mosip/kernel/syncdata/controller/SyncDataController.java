@@ -22,6 +22,7 @@ import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.syncdata.dto.ConfigDto;
 import io.mosip.kernel.syncdata.dto.PublicKeyResponse;
 import io.mosip.kernel.syncdata.dto.SyncUserDetailDto;
+import io.mosip.kernel.syncdata.dto.SyncUserSaltDto;
 import io.mosip.kernel.syncdata.dto.UploadPublicKeyRequestDto;
 import io.mosip.kernel.syncdata.dto.UploadPublicKeyResponseDto;
 import io.mosip.kernel.syncdata.dto.response.MasterDataResponseDto;
@@ -234,6 +235,25 @@ public class SyncDataController {
 		SyncUserDetailDto syncUserDetailDto = syncUserDetailsService.getAllUserDetail(regId);
 		syncUserDetailDto.setLastSyncTime(currentTimeStamp);
 		ResponseWrapper<SyncUserDetailDto> response = new ResponseWrapper<>();
+		response.setResponse(syncUserDetailDto);
+		return response;
+	}
+	
+	/**
+	 * API will all the userDetails from LDAP server
+	 * 
+	 * @param regId - registration center Id
+	 * 
+	 * @return UserDetailResponseDto - user detail response
+	 */
+	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN')")
+	@ResponseFilter
+	@GetMapping("/usersalt/{regid}")
+	public ResponseWrapper<SyncUserSaltDto> getUserSalts(@PathVariable("regid") String regId) {
+		String currentTimeStamp = DateUtils.getUTCCurrentDateTimeString();
+		SyncUserSaltDto syncUserDetailDto = syncUserDetailsService.getUserSalts(regId);
+		syncUserDetailDto.setLastSyncTime(currentTimeStamp);
+		ResponseWrapper<SyncUserSaltDto> response = new ResponseWrapper<>();
 		response.setResponse(syncUserDetailDto);
 		return response;
 	}
