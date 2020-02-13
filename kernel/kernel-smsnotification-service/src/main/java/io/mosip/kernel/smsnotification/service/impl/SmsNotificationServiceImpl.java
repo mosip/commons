@@ -71,13 +71,13 @@ public class SmsNotificationServiceImpl implements SmsNotification<SmsResponseDt
 	@Value("${mosip.kernel.sms.unicode:1}")
 	String unicode;
 	
-	@Value("${mosip.kernel.sms.default.api:https://api.txtlocal.com/send/}")
+	@Value("${mosip.kernel.sms.default.api:dummy_uri}")
 	String defaultApi;
 	
-	@Value("${mosip.kernel.sms.default.authkey:SFSETWTAFAFAFGHH0234FG}")
+	@Value("${mosip.kernel.sms.default.authkey:dummy_auth_key}")
 	String defaultAuthKey;
 	
-	@Value("${mosip.kernel.sms.default.sender:TXTLOCAL}")
+	@Value("${mosip.kernel.sms.default.sender:dummy_sender}")
 	String defaultSender;
 	
 	
