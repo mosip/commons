@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>io.mosip.idrepository</groupId>
 		<artifactId>id-repository-parent</artifactId>
-		<version>1.0.6</version>
+		<version>1.0.7-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>id-repository-core</artifactId>
@@ -20,7 +20,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-auth-adapter</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.auth.adapter.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -50,7 +50,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-logger-logback</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.logger.logback.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.springfox</groupId>
@@ -85,4 +85,5 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<version>1.0.7-SNAPSHOT</version>
 </project>

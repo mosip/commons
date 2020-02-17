@@ -16,7 +16,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -71,4 +71,8 @@
 			</resource>
 		</resources>
 	</build>
+	<properties>
+		<kernel.core.version>1.0.7-SNAPSHOT</kernel.core.version>
+	</properties>
+	<version>1.0.7-SNAPSHOT</version>
 </project>

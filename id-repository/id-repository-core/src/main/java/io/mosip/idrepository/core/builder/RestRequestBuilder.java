@@ -36,10 +36,6 @@ import lombok.NoArgsConstructor;
  *
  */
 @Component
-
-/**
- * Instantiates a new rest request builder.
- */
 @NoArgsConstructor
 public class RestRequestBuilder {
 

@@ -46,8 +46,10 @@ import io.mosip.kernel.core.util.StringUtils;
 @Component
 public class IdRequestValidator extends BaseIdRepoValidator implements Validator {
 
+	/** The Constant UIN. */
 	private static final String UIN = "uin";
 
+	/** The Constant READ. */
 	private static final String READ = "read";
 
 	/** The Constant DOC_VALUE. */
@@ -187,6 +189,11 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 		}
 	}
 
+	/**
+	 * Validate rid.
+	 *
+	 * @param registrationId the registration id
+	 */
 	public void validateRid(String registrationId) {
 		ridValidator.validateId(registrationId);
 	}
@@ -348,6 +355,13 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 		}
 	}
 
+	/**
+	 * Validate uin.
+	 *
+	 * @param uin the uin
+	 * @param idType the id type
+	 * @throws IdRepoAppException the id repo app exception
+	 */
 	public void validateUin(String uin,String idType) throws IdRepoAppException {
 		try {
 			uinValidator.validateId(uin);

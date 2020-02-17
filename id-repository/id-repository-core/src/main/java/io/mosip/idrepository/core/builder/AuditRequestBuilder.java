@@ -30,10 +30,6 @@ import lombok.NoArgsConstructor;
  * @author Manoj SP
  */
 @Component
-
-/**
- * Instantiates a new audit request builder.
- */
 @NoArgsConstructor
 public class AuditRequestBuilder {
 

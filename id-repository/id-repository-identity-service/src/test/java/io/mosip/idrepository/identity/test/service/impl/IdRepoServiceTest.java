@@ -329,9 +329,10 @@ public class IdRepoServiceTest {
 
 	@Test
 	public void testAddIdentityDocumentStoreFailed()
-			throws IdRepoAppException, JsonParseException, JsonMappingException, IOException {
+			throws Exception {
 		try {
 			when(fpProvider.convertFIRtoFMR(Mockito.any())).thenReturn(Collections.singletonList(rFinger));
+			when(cbeffUtil.validateXML(Mockito.any())).thenReturn(true);
 			when(connection.storeFile(Mockito.any(), Mockito.any(), Mockito.any()))
 					.thenThrow(new FSAdapterException(IdRepoErrorConstants.FILE_STORAGE_ACCESS_ERROR.getErrorCode(),
 							IdRepoErrorConstants.FILE_STORAGE_ACCESS_ERROR.getErrorMessage()));
@@ -361,7 +362,7 @@ public class IdRepoServiceTest {
 	public void testAddIdentityWithBioDocuments() throws Exception {
 		when(fpProvider.convertFIRtoFMR(Mockito.any())).thenReturn(Collections.singletonList(rFinger));
 		when(connection.storeFile(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
-		when(cbeffUtil.validateXML(Mockito.any(), Mockito.any())).thenReturn(true);
+		when(cbeffUtil.validateXML(Mockito.any())).thenReturn(true);
 		when(cbeffUtil.updateXML(Mockito.any(), Mockito.any())).thenReturn("data".getBytes());
 		when(cbeffUtil.createXML(Mockito.any())).thenReturn("data".getBytes());
 		Uin uinObj = new Uin();
@@ -1193,7 +1194,7 @@ public class IdRepoServiceTest {
 		when(cbeffUtil.getBIRDataFromXML(Mockito.any()))
 				.thenReturn(Collections.singletonList(rFinger.toBIRType(rFinger)));
 		when(cbeffUtil.updateXML(Mockito.any(), Mockito.any())).thenReturn("value".getBytes());
-		when(cbeffUtil.createXML(Mockito.any())).thenReturn("value".getBytes());
+		when(cbeffUtil.validateXML(Mockito.any())).thenReturn(true);
 		when(connection.getFile(Mockito.any(), Mockito.any()))
 				.thenReturn(IOUtils.toInputStream("dGVzdA", Charset.defaultCharset()));
 		IdResponseDTO updateIdentity = proxyService.updateIdentity(request, "1234");
