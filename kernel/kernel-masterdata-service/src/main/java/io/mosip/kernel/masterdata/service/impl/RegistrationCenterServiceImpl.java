@@ -1101,6 +1101,7 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 								RegistrationCenterErrorCode.WORKING_NON_WORKING_NULL.getErrorMessage()));
 					}
 				}
+
 			} catch (NullPointerException e) {
 				auditUtil.auditRequest(
 						String.format(MasterDataConstant.FAILURE_CREATE, RegCenterPostReqDto.class.getSimpleName()),
@@ -1113,7 +1114,8 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 						RegistrationCenterErrorCode.WORKING_NON_WORKING_NULL.getErrorMessage()));
 			}
 
-			if (((primaryLang.equals(regCenterPostReqDto.getLangCode())
+
+			if ((regCenterPostReqDto!=null && (primaryLang.equals(regCenterPostReqDto.getLangCode())
 					|| regCenterPostReqDto.getWorkingNonWorkingDays() != null)
 					|| secondaryLang.equals(regCenterPostReqDto.getLangCode()))) {
 				// set response for working_non_working for both primary and
