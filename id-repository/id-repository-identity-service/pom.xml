@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>io.mosip.idrepository</groupId>
 		<artifactId>id-repository-parent</artifactId>
-		<version>1.0.7-snapshot</version>
+		<version>1.0.7-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>id-repository-identity-service</artifactId>
@@ -81,5 +81,5 @@
 			</plugin>
 		</plugins>
 	</build>
-	<version>1.0.7-snapshot</version>
+	<version>1.0.7-SNAPSHOT</version>
 </project>

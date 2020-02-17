@@ -72,7 +72,7 @@
 		</resources>
 	</build>
 	<properties>
-		<kernel.core.version>1.0.7-snapshot</kernel.core.version>
+		<kernel.core.version>1.0.7-SNAPSHOT</kernel.core.version>
 	</properties>
-	<version>1.0.7-snapshot</version>
+	<version>1.0.7-SNAPSHOT</version>
 </project>
