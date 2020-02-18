@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/mosip/commons.svg?branch=master)](https://travis-ci.com/mosip/commons)
+
 # mosip-platform
 This repository contains the source code of the Modular Open Source Identity Platform. To know more about MOSIP, its architecture, external integrations, releases, etc., please check the [Platform Documentation](https://github.com/mosip/mosip-docs/wiki)
 
