@@ -21,6 +21,7 @@ import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.constant.OrderEnum;
 import io.mosip.kernel.masterdata.dto.DocumentTypeDto;
+import io.mosip.kernel.masterdata.dto.DocumentTypePutReqDto;
 import io.mosip.kernel.masterdata.dto.getresponse.DocumentTypeResponseDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
 import io.mosip.kernel.masterdata.dto.getresponse.ValidDocumentTypeResponseDto;
@@ -123,7 +124,7 @@ auditUtil.auditRequest(MasterDataConstant.CREATE_API_IS_CALLED + DocumentTypeDto
 	@PutMapping("/documenttypes")
 	@ApiOperation(value = "Service to update document type")
 	public ResponseWrapper<DocumentTypePutResponseDto> updateDocumentType(
-			@ApiParam("Document Type DTO to update") @Valid @RequestBody RequestWrapper<DocumentTypeDto> types) {
+			@ApiParam("Document Type DTO to update") @Valid @RequestBody RequestWrapper<DocumentTypePutReqDto> types) {
 auditUtil.auditRequest(
 				MasterDataConstant.UPDATE_API_IS_CALLED + DocumentTypeDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,

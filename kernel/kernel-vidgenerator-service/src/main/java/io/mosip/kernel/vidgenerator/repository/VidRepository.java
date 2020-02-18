@@ -12,7 +12,7 @@ import io.mosip.kernel.vidgenerator.entity.VidEntity;
 
 public interface VidRepository extends JpaRepository<VidEntity, String> {
 
-	@Query(value = "select v.vid,v.vid_status,v.expiry_dtimes,v.cr_by, v.cr_dtimes, v.del_dtimes, v.is_deleted, v.upd_by, v.upd_dtimes from kernel.vid v where v.vid_status=? limit 1", nativeQuery = true)
+	@Query(value = "select v.vid,v.vid_status,v.expiry_dtimes,v.cr_by, v.cr_dtimes, v.del_dtimes, v.is_deleted, v.upd_by, v.upd_dtimes from kernel.vid v where v.vid_status=? limit 1 FOR UPDATE", nativeQuery = true)
 	VidEntity findFirstByStatus(String status);
 
 	long countByStatusAndIsDeletedFalse(String status);

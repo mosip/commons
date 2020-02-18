@@ -15,6 +15,7 @@ import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.dto.DeviceProviderDto;
+import io.mosip.kernel.masterdata.dto.DeviceProviderPutDto;
 import io.mosip.kernel.masterdata.dto.ValidateDeviceDto;
 import io.mosip.kernel.masterdata.dto.ValidateDeviceHistoryDto;
 import io.mosip.kernel.masterdata.dto.getresponse.ResponseDto;
@@ -40,7 +41,7 @@ public class DeviceProviderController {
 	AuditUtil auditUtil;
 	
 	@Autowired
-	private DeviceProviderService<ResponseDto,ValidateDeviceDto,ValidateDeviceHistoryDto,DeviceProviderDto,DeviceProviderExtnDto> deviceProviderSerice;
+	private DeviceProviderService<ResponseDto,ValidateDeviceDto,ValidateDeviceHistoryDto,DeviceProviderDto,DeviceProviderExtnDto,DeviceProviderPutDto> deviceProviderSerice;
 
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN')")
 	@PostMapping
@@ -71,7 +72,7 @@ public class DeviceProviderController {
 			@ApiResponse(code = 404, message = "When No Device Provider found"),
 			@ApiResponse(code = 500, message = "While creating Device Provider any error occured") })
 	public ResponseWrapper<DeviceProviderExtnDto> updateDeviceProvider(
-			@Valid @RequestBody RequestWrapper<DeviceProviderDto> deviceProviderDto) {
+			@Valid @RequestBody RequestWrapper<DeviceProviderPutDto> deviceProviderDto) {
 		auditUtil.auditRequest(MasterDataConstant.UPDATE_API_IS_CALLED + DeviceProviderDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,
 				MasterDataConstant.UPDATE_API_IS_CALLED + DeviceProviderDto.class.getCanonicalName(),"ADM-721");

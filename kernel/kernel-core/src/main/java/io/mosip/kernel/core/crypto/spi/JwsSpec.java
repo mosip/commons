@@ -10,12 +10,16 @@ package io.mosip.kernel.core.crypto.spi;
  * @author Rajath
  * 
  * @since 1.0.0
+ * 
+ * @deprecated(This class is deprecated from version 1.0.5, Please use {@link CryptoCoreSpec#sign(Object, Object)} and
+ * {@link CryptoCoreSpec#verifySignature(Object, Object, Object)} instead of these methods,)
  *
  * @param <R> the return type of data
  * @param <D> the type of input data
  * @param <C> the type of Certificate key
  * @param <P> the type of private key
  */
+@Deprecated
 public interface JwsSpec<R, D, C, P> {
 	
 	/**

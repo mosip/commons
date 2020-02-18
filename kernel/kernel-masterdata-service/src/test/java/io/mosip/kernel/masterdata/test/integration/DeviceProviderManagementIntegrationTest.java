@@ -127,7 +127,7 @@ public class DeviceProviderManagementIntegrationTest {
 		registeredDevice.setDp("INTEL");
 		registeredDevice.setMake("make-updated");
 		registeredDevice.setModel("model-updated");
-		registeredDevice.setSerialNo("GV3434343M");
+		registeredDevice.setSerialNo("BS563Q2230890");
 
 		registeredDevice.setDeviceTypeCode("Face");
 		registeredDevice.setDeviceSTypeCode("Slab");
@@ -174,7 +174,7 @@ public class DeviceProviderManagementIntegrationTest {
 		registeredDeviceHistory.setDp("INTEL");
 		registeredDeviceHistory.setMake("make-updated");
 		registeredDeviceHistory.setModel("model-updated");
-		registeredDeviceHistory.setSerialNo("GV3434343M");
+		registeredDeviceHistory.setSerialNo("BS563Q2230890");
 		registeredDeviceHistory.setDeviceTypeCode("Face");
 		registeredDeviceHistory.setDeviceSTypeCode("Slab");
 		registeredDeviceHistory.setEffectivetimes(LocalDateTime.now(ZoneOffset.UTC));
@@ -209,6 +209,8 @@ public class DeviceProviderManagementIntegrationTest {
 		when(regDeviceRepository.findByCodeAndIsActiveIsTrue(Mockito.anyString())).thenReturn(registeredDevice);
 		when(deviceServiceRepository.findByDeviceDetail(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
 				Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(deviceService);
+		when(deviceServiceHistoryRepository.findByDeviceDetailHistory(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
+				Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),Mockito.any())).thenReturn(deviceServiceHistory);
 		when(deviceServiceRepository.findByDeviceProviderIdAndSwVersionAndMakeAndModel(Mockito.anyString(),
 				Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(deviceService);
 		doNothing().when(auditUtil).auditRequest(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
@@ -240,6 +242,39 @@ public class DeviceProviderManagementIntegrationTest {
 		String req = objectMapper.writeValueAsString(requestWrapper);
 		when(regDeviceRepository.findByCodeAndIsActiveIsTrue(Mockito.anyString())).thenReturn(null);
 		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req)).andExpect(status().isOk());
+	}
+	
+	@WithUserDetails("zonal-admin")
+	@Test
+	public void validateDeviceProviderWhenMappingHistoryNull() throws Exception {
+		mockSuccessTestCases();
+		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
+		String req = objectMapper.writeValueAsString(requestWrapperHistory);
+		when(deviceServiceHistoryRepository.findByDeviceDetailHistory(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
+				Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),Mockito.any())).thenReturn(null);
+		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req)).andExpect(status().isOk());
+	}
+	
+	@WithUserDetails("zonal-admin")
+	@Test
+	public void validateDeviceProviderWhenMappingHistoryDBException() throws Exception {
+		mockSuccessTestCases();
+		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
+		String req = objectMapper.writeValueAsString(requestWrapperHistory);
+		when(deviceServiceHistoryRepository.findByDeviceDetailHistory(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
+				Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),Mockito.any())).thenThrow(DataRetrievalFailureException.class);
+		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req)).andExpect(status().isInternalServerError());
+	}
+	
+	@WithUserDetails("zonal-admin")
+	@Test
+	public void validateDeviceDetailDbException() throws Exception {
+		mockSuccessTestCases();
+		requestWrapper.setRequest(validateDeviceDto);
+		String req = objectMapper.writeValueAsString(requestWrapper);
+		when(deviceServiceRepository.findByDeviceDetail(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
+				Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenThrow(DataRetrievalFailureException.class);
+		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req)).andExpect(status().isInternalServerError());
 	}
 
 	@WithUserDetails("zonal-admin")
@@ -345,7 +380,7 @@ public class DeviceProviderManagementIntegrationTest {
 				.andExpect(status().isInternalServerError());
 	}
 
-	@WithUserDetails("zonal-admin")
+	/*@WithUserDetails("zonal-admin")
 	@Test
 	public void validateDeviceProviderWhenMappingDBException() throws Exception {
 		mockSuccessTestCases();
@@ -356,9 +391,9 @@ public class DeviceProviderManagementIntegrationTest {
 						.thenThrow(DataRetrievalFailureException.class);
 		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
 				.andExpect(status().isInternalServerError());
-	}
+	}*/
 
-	@WithUserDetails("zonal-admin")
+	/*@WithUserDetails("zonal-admin")
 	@Test
 	public void validateDeviceProviderWhenDeviceCodeIsNull() throws Exception {
 		mockSuccessTestCases();
@@ -369,7 +404,7 @@ public class DeviceProviderManagementIntegrationTest {
 						.thenThrow(DataRetrievalFailureException.class);
 		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
 				.andExpect(status().isInternalServerError());
-	}
+	}*/
 
 	@WithUserDetails("zonal-admin")
 	@Test
@@ -459,7 +494,7 @@ public class DeviceProviderManagementIntegrationTest {
 				.andExpect(status().isOk());
 	}
 
-	@Ignore
+	
 	@Test
 	@WithUserDetails("zonal-admin")
 	public void validateHistoryWithRegisteredDevicesHistoryDBException() throws Exception {
@@ -469,7 +504,7 @@ public class DeviceProviderManagementIntegrationTest {
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
 		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req))
-				.andExpect(status().isOk());
+				.andExpect(status().isInternalServerError());
 	}
 
 	@Test

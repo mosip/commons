@@ -17,11 +17,11 @@ import lombok.Data;
 //@ApiModel(value = "Device Provider", description = "Device Provider Detail resource")
 public class DeviceProviderDto {
 
-	/** The id. */
+	/** The id. 
 	@NotBlank
 	@Size(min = 1, max = 36)
 	@ApiModelProperty(value = "id", required = true, dataType = "java.lang.String")
-	private String id;
+	private String id;*/
 
 	/** The vendor name. */
 	@NotBlank

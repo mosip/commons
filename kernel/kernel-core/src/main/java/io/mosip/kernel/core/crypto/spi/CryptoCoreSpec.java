@@ -1,5 +1,7 @@
 package io.mosip.kernel.core.crypto.spi;
 
+import java.security.cert.X509Certificate;
+
 /**
  * This interface is specification for <b> Core Cryptographic Operations</b>.
  * 
@@ -307,6 +309,37 @@ public interface CryptoCoreSpec<R, D, S, P, K, T> {
 	T sign(D data, K privateKey);
 
 	/**
+	 * This method is responsible for core <b> Digital Signature </b> with 
+	 * <a href ="https://tools.ietf.org/html/rfc7515"> JSON WEB SIGNATURE</a>
+	 * specification
+	 * 
+	 * This method is for signing data.
+	 * 
+	 * A digital signature is a mathematical technique used to validate the
+	 * authenticity and integrity of a message, software or digital document. As the
+	 * digital equivalent of a handwritten signature or stamped seal, a digital
+	 * signature offers far more inherent security, and it is intended to solve the
+	 * problem of tampering and impersonation in digital communications.
+	 * 
+	 * Digital signatures can provide the added assurances of evidence of origin,
+	 * identity and status of an electronic document, transaction or message and can
+	 * acknowledge informed consent by the signer.
+	 * 
+	 * In many countries, including the United States, digital signatures are
+	 * considered legally binding in the same way as traditional document
+	 * signatures.
+	 * 
+	 * Digital Signature is described in <a href=
+	 * "https://en.wikipedia.org/wiki/Digital_signature">Digital_signature</a>.
+	 * 
+	 * @param data       data to sign
+	 * @param privateKey privateKey of owner
+	 * @param x509Certificate {@link X509Certificate) of owner
+	 * @return signed data
+	 */
+	T sign(D data, K privateKey,X509Certificate x509Certificate);
+	
+	/**
 	 * This method is responsible for core <b> Digital Signature </b>.
 	 * 
 	 * This method verifies signature.
@@ -334,6 +367,35 @@ public interface CryptoCoreSpec<R, D, S, P, K, T> {
 	 * @return True; if signature is verified;False otherwise
 	 */
 	boolean verifySignature(D data, T signature, P publicKey);
+	
+	/**
+	 * This method is responsible for core <b> Digital Signature </b> with 
+	 * <a href ="https://tools.ietf.org/html/rfc7515"> JSON WEB SIGNATURE</a>
+	 * specification
+	 * 
+	 * This method verifies signature.
+	 * 
+	 * A digital signature is a mathematical technique used to validate the
+	 * authenticity and integrity of a message, software or digital document. As the
+	 * digital equivalent of a handwritten signature or stamped seal, a digital
+	 * signature offers far more inherent security, and it is intended to solve the
+	 * problem of tampering and impersonation in digital communications.
+	 * 
+	 * Digital signatures can provide the added assurances of evidence of origin,
+	 * identity and status of an electronic document, transaction or message and can
+	 * acknowledge informed consent by the signer.
+	 * 
+	 * In many countries, including the United States, digital signatures are
+	 * considered legally binding in the same way as traditional document
+	 * signatures.
+	 * 
+	 * Digital Signature is described in <a href=
+	 * "https://en.wikipedia.org/wiki/Digital_signature">Digital_signature</a>
+	 * 
+	 * @param signature signed data
+	 * @return True; if signature is verified;False otherwise
+	 */
+	boolean verifySignature(T signature);
 
 	/**
 	 * This method is responsible for Cryptographically Secure Pseudorandom Number

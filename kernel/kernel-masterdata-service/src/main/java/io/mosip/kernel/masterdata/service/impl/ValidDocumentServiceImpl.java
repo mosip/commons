@@ -32,6 +32,7 @@ import io.mosip.kernel.masterdata.dto.ValidDocumentDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.DocumentCategoryExtnDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.DocumentCategoryTypeMappingExtnDto;
+import io.mosip.kernel.masterdata.dto.getresponse.extn.DocumentCategoryTypeMappingFilterDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.DocumentTypeExtnDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.ValidDocumentExtnDto;
 import io.mosip.kernel.masterdata.dto.postresponse.DocCategoryAndTypeResponseDto;
@@ -63,6 +64,7 @@ import io.mosip.kernel.masterdata.utils.OptionalFilter;
 import io.mosip.kernel.masterdata.utils.PageUtils;
 import io.mosip.kernel.masterdata.validator.FilterColumnValidator;
 import io.mosip.kernel.masterdata.validator.FilterTypeEnum;
+import io.mosip.kernel.masterdata.validator.FilterTypeValidator;
 
 /**
  * This service class contains methods that create and delete valid document.
@@ -105,6 +107,9 @@ public class ValidDocumentServiceImpl implements ValidDocumentService {
 
 	@Autowired
 	private PageUtils pageUtils;
+	
+	@Autowired
+	private FilterTypeValidator filterTypeValidator;
 
 	/*
 	 * (non-Javadoc)
@@ -235,71 +240,75 @@ public class ValidDocumentServiceImpl implements ValidDocumentService {
 		List<SearchFilter> addList = new ArrayList<>();
 		List<SearchFilter> removeList = new ArrayList<>();
 		List<SearchFilter> addList1 = new ArrayList<>();
-		for (SearchFilter filter : dto.getFilters()) {
-			String column = filter.getColumnName();
-			if (column.equalsIgnoreCase("docCategoryCode")) {
+		if(filterTypeValidator.validate(DocumentCategoryTypeMappingFilterDto.class, dto.getFilters()))
+		{
+			for (SearchFilter filter : dto.getFilters()) {
+				String column = filter.getColumnName();
+				if (column.equalsIgnoreCase("docCategoryCode")) {
 
-				Page<ValidDocument> documents = masterdataSearchHelper.searchMasterdata(ValidDocument.class,
-						new SearchDto(Arrays.asList(filter), Collections.emptyList(),
-								new Pagination(0, Integer.MAX_VALUE), null),
-						null);
-				if (!documents.hasContent()) {
-					throw new RequestException(ValidDocumentErrorCode.DOCUMENT_CATEGORY_NOT_FOUND.getErrorCode(),
-							ValidDocumentErrorCode.DOCUMENT_CATEGORY_NOT_FOUND.getErrorMessage());
+					Page<ValidDocument> documents = masterdataSearchHelper.searchMasterdata(ValidDocument.class,
+							new SearchDto(Arrays.asList(filter), Collections.emptyList(),
+									new Pagination(0, Integer.MAX_VALUE), null),
+							null);
+					if (!documents.hasContent()) {
+						throw new RequestException(ValidDocumentErrorCode.DOCUMENT_CATEGORY_NOT_FOUND.getErrorCode(),
+								ValidDocumentErrorCode.DOCUMENT_CATEGORY_NOT_FOUND.getErrorMessage());
+					}
+					removeList.add(filter);
+					addList.addAll(buildValidDocumentTypeSearchFilter(documents.getContent()));
+					addList1.addAll(buildValidDocumentCategorySearchFilter(documents.getContent()));
 				}
-				removeList.add(filter);
-				addList.addAll(buildValidDocumentTypeSearchFilter(documents.getContent()));
-				addList1.addAll(buildValidDocumentCategorySearchFilter(documents.getContent()));
 			}
-		}
-		dto.getFilters().removeAll(removeList);
-		Pagination pagination = dto.getPagination();
-		List<SearchSort> sort = dto.getSort();
-		pageUtils.validateSortField(DocumentCategory.class, sort);
-		dto.setPagination(new Pagination(0, Integer.MAX_VALUE));
-		dto.setSort(Collections.emptyList());
-		Page<DocumentCategory> pageCategory = masterdataSearchHelper.searchMasterdata(DocumentCategory.class, dto,
-				new OptionalFilter[] { new OptionalFilter(addList1) });
-		dto.setSort(sort);
-		Page<DocumentType> page = masterdataSearchHelper.searchMasterdata(DocumentType.class, dto,
-				new OptionalFilter[] { new OptionalFilter(addList) });
-		if ((page.getContent() != null && !page.getContent().isEmpty())
-				&& (pageCategory.getContent() != null && !pageCategory.getContent().isEmpty())) {
+			dto.getFilters().removeAll(removeList);
+			Pagination pagination = dto.getPagination();
+			List<SearchSort> sort = dto.getSort();
+			pageUtils.validateSortField(DocumentCategory.class, sort);
+			dto.setPagination(new Pagination(0, Integer.MAX_VALUE));
+			dto.setSort(Collections.emptyList());
+			Page<DocumentCategory> pageCategory = masterdataSearchHelper.searchMasterdata(DocumentCategory.class, dto,
+					new OptionalFilter[] { new OptionalFilter(addList1) });
+			dto.setSort(sort);
+			Page<DocumentType> page = masterdataSearchHelper.searchMasterdata(DocumentType.class, dto,
+					new OptionalFilter[] { new OptionalFilter(addList) });
+			if ((page.getContent() != null && !page.getContent().isEmpty())
+					&& (pageCategory.getContent() != null && !pageCategory.getContent().isEmpty())) {
 
-			page.getContent().forEach(documentType -> {
-				DocumentCategoryTypeMappingExtnDto documentTypeExtnDto = new DocumentCategoryTypeMappingExtnDto();
-				pageCategory.getContent().forEach(documentCategory -> {
+				page.getContent().forEach(documentType -> {
+					DocumentCategoryTypeMappingExtnDto documentTypeExtnDto = new DocumentCategoryTypeMappingExtnDto();
+					pageCategory.getContent().forEach(documentCategory -> {
 
-					new DocumentCategoryExtnDto();
-					documentTypeExtnDto.setCode(documentCategory.getCode());
+						new DocumentCategoryExtnDto();
+						documentTypeExtnDto.setCode(documentCategory.getCode());
 
-					documentTypeExtnDto.setDescription(documentCategory.getDescription());
-					documentTypeExtnDto.setIsActive(documentCategory.getIsActive());
+						documentTypeExtnDto.setDescription(documentCategory.getDescription());
+						documentTypeExtnDto.setIsActive(documentCategory.getIsActive());
 
-					documentTypeExtnDto.setLangCode(documentCategory.getLangCode());
-					documentTypeExtnDto.setName(documentCategory.getName());
+						documentTypeExtnDto.setLangCode(documentCategory.getLangCode());
+						documentTypeExtnDto.setName(documentCategory.getName());
 
+					});
+
+					DocumentTypeExtnDto documentDto = new DocumentTypeExtnDto();
+
+					documentDto.setCreatedBy(documentType.getCreatedBy());
+					documentDto.setCreatedDateTime(documentType.getCreatedDateTime());
+					documentDto.setDeletedDateTime(documentType.getDeletedDateTime());
+					documentDto.setIsDeleted(documentType.getIsDeleted());
+					documentDto.setDescription(documentType.getDescription());
+					documentDto.setCode(documentType.getCode());
+					documentDto.setIsActive(documentType.getIsActive());
+					documentDto.setUpdatedBy(documentType.getUpdatedBy());
+					documentDto.setUpdatedDateTime(documentType.getUpdatedDateTime());
+					documentDto.setLangCode(documentType.getLangCode());
+					documentDto.setName(documentType.getName());
+					documentTypeExtnDto.setDocumentType(documentDto);
+					validDocs.add(documentTypeExtnDto);
 				});
 
-				DocumentTypeExtnDto documentDto = new DocumentTypeExtnDto();
-
-				documentDto.setCreatedBy(documentType.getCreatedBy());
-				documentDto.setCreatedDateTime(documentType.getCreatedDateTime());
-				documentDto.setDeletedDateTime(documentType.getDeletedDateTime());
-				documentDto.setIsDeleted(documentType.getIsDeleted());
-				documentDto.setDescription(documentType.getDescription());
-				documentDto.setCode(documentType.getCode());
-				documentDto.setIsActive(documentType.getIsActive());
-				documentDto.setUpdatedBy(documentType.getUpdatedBy());
-				documentDto.setUpdatedDateTime(documentType.getUpdatedDateTime());
-				documentDto.setLangCode(documentType.getLangCode());
-				documentDto.setName(documentType.getName());
-				documentTypeExtnDto.setDocumentType(documentDto);
-				validDocs.add(documentTypeExtnDto);
-			});
-
-			pageDto = pageUtils.applyPagination(validDocs, pagination);
+				pageDto = pageUtils.applyPagination(validDocs, pagination);
+			}
 		}
+		
 		return pageDto;
 
 	}

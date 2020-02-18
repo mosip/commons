@@ -35,8 +35,8 @@ public class MasterDataConstant {
 	public static final String UNMAPPED_SUCCESSFULLY = "un-mapped";
 	public static final String DOC_CATEGORY_AND_DOC_TYPE_UNMAPPING_SUCCESS_MESSAGE = "Document Category %s - Document Type Mapping %s is updated successfully";
 	public static final String DEVICE_AND_REGISTRATION_CENTER_UNMAPPING_SUCCESS_MESSAGE = "Device %s is successfully Un-Mapped to the Registration Center %s ";
-    public static final String USER_AND_REGISTRATION_CENTER_UNMAPPING_SUCCESS_MESSAGE = "User %s - Registration Center Mapping %s is updated successfully";
-    public static final String USER_AND_REGISTRATION_CENTER_MAPPING_SUCCESS_MESSAGE = "User %s - Registration Center Mapping %s is added successfully";
+	public static final String USER_AND_REGISTRATION_CENTER_UNMAPPING_SUCCESS_MESSAGE = "User %s is successfully Un-Mapped to the Registration Center %s";
+    public static final String USER_AND_REGISTRATION_CENTER_MAPPING_SUCCESS_MESSAGE = "User %s is successfully mapped to the Registration Center %s";
     public static final String SUCCESS="Success"; 
     public static final String IS_ACTIVE="isActive";
     public static final String DEVICE_REGISTER_UPDATE_MESSAGE="Device status updated successfully";
@@ -92,6 +92,13 @@ public class MasterDataConstant {
 	public static final String SUCCESSFUL_UNMAP="UNMAP %s - Success";
 	public static final String FAILURE_MAP="MAP %s - Failure";
 	public static final String FAILURE_UNMAP="UNMAP %s - Failure";
+	public static final String MODEL="model";
+	public static final String MAKE="make";
+	public static final String DP_ID="dpId";
+	public static final String DP="dp";
+	public static final String SERIAL_NO="serialNo";
+	public static final String TYPE="type";
+	public static final String SUBTYPE="subType";
 	
 	
 	public static final String AUDIT_SYSTEM = "SYSTEM";

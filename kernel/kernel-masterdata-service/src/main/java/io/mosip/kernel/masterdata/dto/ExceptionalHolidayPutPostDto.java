@@ -1,14 +1,14 @@
 
 package io.mosip.kernel.masterdata.dto;
 
-import java.time.LocalDate;
-
+import io.mosip.kernel.masterdata.validator.ValidDateFormat;
 import lombok.Data;
 
 @Data
 public class ExceptionalHolidayPutPostDto {
 	
- private LocalDate exceptionHolidayDate;
+	@ValidDateFormat
+	private String exceptionHolidayDate;
 	
 	private String exceptionHolidayName;
 	

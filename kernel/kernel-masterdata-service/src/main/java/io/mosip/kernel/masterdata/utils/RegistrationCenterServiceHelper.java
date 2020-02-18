@@ -149,6 +149,7 @@ public class RegistrationCenterServiceHelper {
 			{
 				ExceptionalHolidayPutPostDto exceptionalHolidayDto = MapperUtils.map(regExceptionalHoliday,
 						ExceptionalHolidayPutPostDto.class);
+				exceptionalHolidayDto.setExceptionHolidayDate(regExceptionalHoliday.getExceptionHolidayDate().toString());
 				exceptionalHolidayPutPostDtoList.add(exceptionalHolidayDto);
 			}
 		}

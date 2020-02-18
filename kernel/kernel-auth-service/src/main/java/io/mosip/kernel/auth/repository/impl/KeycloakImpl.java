@@ -134,7 +134,7 @@ public class KeycloakImpl implements DataStore {
 	private int idleTimeout;
 	@Value("${hikari.minimumIdle:0}")
 	private int minimumIdle;
-	
+
 	@Value("${mosip.keycloak.max-no-of-users:100}")
 	private String maxUsers;
 
@@ -260,18 +260,27 @@ public class KeycloakImpl implements DataStore {
 		pathParams.put(AuthConstant.REALM_ID, realmId);
 		HttpHeaders httpHeaders = new HttpHeaders();
 		HttpEntity<String> httpEntity = new HttpEntity<>(null, httpHeaders);
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(keycloakAdminUrl + users);
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
+				.fromUriString(keycloakAdminUrl + users + "?username=" + userId);
 		String response = callKeycloakService(uriComponentsBuilder.buildAndExpand(pathParams).toString(),
 				HttpMethod.GET, httpEntity);
+		if (response == null || response.isEmpty()) {
+			throw new AuthManagerException(AuthErrorCode.USER_NOT_FOUND.getErrorCode(),
+					AuthErrorCode.USER_NOT_FOUND.getErrorMessage());
+		}
 		try {
 			JsonNode node = objectMapper.readTree(response);
 			for (JsonNode jsonNode : node) {
-				if (jsonNode.get("username").textValue().equals(userId)) {
+				if (jsonNode.get(AuthConstant.USER_NAME).textValue().equals(userId)) {
 					JsonNode attriNode = jsonNode.get("attributes");
-					String rid = attriNode.get("rid").get(0).textValue();
+					String rid = attriNode.get(AuthConstant.RID).get(0).textValue();
 					rIdDto.setRId(rid);
 					break;
 				}
+			}
+			if (rIdDto.getRId() == null) {
+				throw new AuthManagerException(AuthErrorCode.USER_NOT_FOUND.getErrorCode(),
+						AuthErrorCode.USER_NOT_FOUND.getErrorMessage());
 			}
 
 		} catch (IOException e) {
@@ -564,7 +573,7 @@ public class KeycloakImpl implements DataStore {
 		for (JsonNode jsonNode : node) {
 			mosipUserDto = new MosipUserDto();
 			String userName = jsonNode.get("username").textValue();
-             System.out.println(userName);
+			System.out.println(userName);
 			if (userDetails.stream().anyMatch(user -> user.equals(userName))) {
 				String email = jsonNode.get("email").textValue();
 				JsonNode attributeNodes = jsonNode.get("attributes");

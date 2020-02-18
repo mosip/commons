@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import io.mosip.kernel.core.util.StringUtils;
 import io.mosip.kernel.masterdata.constant.ValidationErrorCode;
 import io.mosip.kernel.masterdata.dto.FilterData;
 import io.mosip.kernel.masterdata.dto.request.FilterDto;
@@ -80,6 +81,7 @@ public class MasterDataFilterHelper {
 		String columnName = filterDto.getColumnName();
 		String columnType = filterDto.getType();
 		List<Predicate> predicates = new ArrayList<>();
+		Predicate caseSensitivePredicate = null;
 		if (columnName.equals(MAP_STATUS_COLUMN_NAME)
 				&& (columnType.equals(FILTER_VALUE_UNIQUE) || columnType.equals(FILTER_VALUE_ALL))) {
 			return (List<T>) valuesForMapStatusColumn();
@@ -98,9 +100,9 @@ public class MasterDataFilterHelper {
 		if (!filterValueDto.getLanguageCode().equals("all")) {
 			predicates.add(langCodePredicate);
 		}
-		Predicate caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
-				.like(criteriaBuilder.lower(rootType.get(filterDto.getColumnName())), criteriaBuilder.lower(
-						criteriaBuilder.literal(WILD_CARD_CHARACTER + filterDto.getText() + WILD_CARD_CHARACTER))));
+		caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
+					.like(criteriaBuilder.lower(rootType.get(filterDto.getColumnName())), criteriaBuilder.lower(
+							criteriaBuilder.literal(WILD_CARD_CHARACTER+filterDto.getText()+WILD_CARD_CHARACTER))));
 		if (!(rootType.get(columnName).getJavaType().equals(Boolean.class))) {
 			predicates.add(caseSensitivePredicate);
 		}
@@ -135,15 +137,16 @@ public class MasterDataFilterHelper {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		String columnName = filterDto.getColumnName();
 		String columnType = filterDto.getType();
+		Predicate caseSensitivePredicate = null;
 		List<FilterData> results;
 		CriteriaQuery<FilterData> criteriaQueryByType = criteriaBuilder.createQuery(FilterData.class);
 		Root<E> rootType = criteriaQueryByType.from(entity);
 
 		Predicate langCodePredicate = criteriaBuilder.equal(rootType.get(LANGCODE_COLUMN_NAME),
 				filterValueDto.getLanguageCode());
-		Predicate caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
-				.like(criteriaBuilder.lower(rootType.get(filterDto.getColumnName())), criteriaBuilder.lower(
-						criteriaBuilder.literal(WILD_CARD_CHARACTER + filterDto.getText() + WILD_CARD_CHARACTER))));
+			caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
+					.like(criteriaBuilder.lower(rootType.get(filterDto.getColumnName())), criteriaBuilder.lower(
+							criteriaBuilder.literal(WILD_CARD_CHARACTER+filterDto.getText()+WILD_CARD_CHARACTER))));
 
 		criteriaQueryByType.multiselect(rootType.get(fieldCodeColumnName), rootType.get(columnName));
 

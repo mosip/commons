@@ -28,6 +28,10 @@ import io.mosip.kernel.masterdata.dto.ReasonListDto;
 import io.mosip.kernel.masterdata.dto.RegisteredDevicePostReqDto;
 import io.mosip.kernel.masterdata.dto.getresponse.LocationHierarchyDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.BaseDto;
+import io.mosip.kernel.masterdata.dto.registerdevice.DeviceData;
+import io.mosip.kernel.masterdata.dto.registerdevice.DigitalId;
+import io.mosip.kernel.masterdata.dto.registerdevice.RegisterDeviceResponse;
+import io.mosip.kernel.masterdata.dto.registerdevice.RegisteredDevicePostDto;
 import io.mosip.kernel.masterdata.entity.BaseEntity;
 import io.mosip.kernel.masterdata.entity.ExceptionalHoliday;
 import io.mosip.kernel.masterdata.entity.Holiday;
@@ -616,6 +620,46 @@ public class MapperUtils {
 		
 		return entity;
 		
+	}
+	
+	public static RegisteredDevice mapRegisteredDeviceDto(RegisteredDevicePostDto registeredDevicePostDto,
+			String digitalIdJson, DeviceData deviceData, DigitalId digitalId) {
+
+		
+		RegisteredDevice entity = new RegisteredDevice();
+		entity.setDeviceTypeCode(digitalId.getType());
+        entity.setDeviceSTypeCode(digitalId.getSubType());
+        entity.setStatusCode("REGISTERED");
+        entity.setDeviceId(deviceData.getDeviceId());
+		entity.setDeviceSubId(deviceData.getDeviceInfo().getDeviceSubId());
+		
+
+		entity.setDigitalId(digitalIdJson);        
+        entity.setSerialNo(digitalId.getSerialNo());
+        entity.setDpId(digitalId.getDeviceProviderId());
+        entity.setDp(digitalId.getDeviceProvider());
+        entity.setMake(digitalId.getMake());
+        entity.setModel(digitalId.getModel());
+        
+       
+		entity.setPurpose(deviceData.getPurpose());
+        entity.setFirmware(deviceData.getDeviceInfo().getFirmware());
+		entity.setExpiryDate(deviceData.getDeviceInfo().getDeviceExpiry());
+		entity.setCertificationLevel(deviceData.getDeviceInfo().getCertification());
+        entity.setFoundationalTPId(deviceData.getFoundationalTrustProviderId());
+       /* entity.setFoundationalTrustSignature(dto.getFoundationalTrustSignature());
+        entity.setFoundationalTrustCertificate(dto.getFoundationalTrustCertificate());      
+        entity.setDeviceProviderSignature(dto.getDeviceProviderSignature());*/
+		
+		return entity;
+	}
+	
+	public static RegisterDeviceResponse mapRegisteredDeviceResponse(RegisteredDevice entity) {
+		RegisterDeviceResponse registerDeviceResponse = new RegisterDeviceResponse();
+		registerDeviceResponse.setDeviceCode(entity.getCode());
+		registerDeviceResponse.setStatus(entity.getStatusCode());
+		registerDeviceResponse.setTimeStamp(LocalDateTime.now());
+		return registerDeviceResponse;
 	}
 
 }

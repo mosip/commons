@@ -67,6 +67,20 @@ public class SmsNotificationServiceImpl implements SmsNotification<SmsResponseDt
 
 	@Value("${mosip.kernel.sms.authkey:null}")
 	String authkey;
+	
+	@Value("${mosip.kernel.sms.unicode:1}")
+	String unicode;
+	
+	@Value("${mosip.kernel.sms.default.api:dummy_uri}")
+	String defaultApi;
+	
+	@Value("${mosip.kernel.sms.default.authkey:dummy_auth_key}")
+	String defaultAuthKey;
+	
+	@Value("${mosip.kernel.sms.default.sender:dummy_sender}")
+	String defaultSender;
+	
+	
 
 	/*
 	 * (non-Javadoc)
@@ -86,8 +100,8 @@ public class SmsNotificationServiceImpl implements SmsNotification<SmsResponseDt
 			case "infobip":
 				infoBipSmsGateway(contactNumber, contentMessage);
 				break;
-			default:
-				
+			default:	
+				defaultGateway(contactNumber, contentMessage);
 				break;
 			}
 		} 
@@ -97,6 +111,22 @@ public class SmsNotificationServiceImpl implements SmsNotification<SmsResponseDt
 		return result;
 
 	}
+
+	private void defaultGateway(String contactNumber, String contentMessage) {
+		validateInput(contactNumber);
+		UriComponentsBuilder sms = UriComponentsBuilder.fromHttpUrl(defaultApi)
+				.queryParam(SmsPropertyConstant.AUTH_KEY.getProperty(), defaultAuthKey)
+				.queryParam(SmsPropertyConstant.SMS_MESSAGE.getProperty(), contentMessage)
+				.queryParam(SmsPropertyConstant.SENDER_ID.getProperty(), defaultSender)
+				.queryParam(SmsPropertyConstant.NUMBERS.getProperty(), contactNumber);
+		ResponseEntity<String> responseEnt = null;
+		try {
+			responseEnt = restTemplate.getForEntity(sms.toUriString(), String.class);
+		} catch (HttpClientErrorException | HttpServerErrorException e) {
+			 throw new RuntimeException(e.getResponseBodyAsString());
+		}
+	}
+		
 
 	private void validateInput(String contactNumber) {
 		if (!StringUtils.isNumeric(contactNumber) || contactNumber.length() < numberLength
@@ -115,14 +145,13 @@ public class SmsNotificationServiceImpl implements SmsNotification<SmsResponseDt
 				.queryParam(SmsPropertyConstant.ROUTE.getProperty(), route)
 				.queryParam(SmsPropertyConstant.SENDER_ID.getProperty(), sender)
 				.queryParam(SmsPropertyConstant.RECIPIENT_NUMBER.getProperty(), contactNumber)
+				.queryParam(SmsPropertyConstant.UNICODE.getProperty(), unicode)
 				.queryParam(SmsPropertyConstant.COUNTRY_CODE.getProperty(), countryCode);
 		ResponseEntity<String> responseEnt = null;
 		try {
 			responseEnt = restTemplate.getForEntity(sms.toUriString(), String.class);
 		} catch (HttpClientErrorException | HttpServerErrorException e) {
-			System.out.println("HttpErrorException: " + e.getMessage());
-			System.out.println(e.getResponseBodyAsString());
-			// throw new RuntimeException(e.getResponseBodyAsString());
+			 throw new RuntimeException(e.getResponseBodyAsString());
 		}
 	}
 

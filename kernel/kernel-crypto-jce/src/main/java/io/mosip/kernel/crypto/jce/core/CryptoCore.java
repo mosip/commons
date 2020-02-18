@@ -4,10 +4,14 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
-import java.security.Signature;
+import java.security.cert.CertificateExpiredException;
+import java.security.cert.CertificateNotYetValidException;
+import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.MGF1ParameterSpec;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.PostConstruct;
@@ -24,6 +28,9 @@ import javax.crypto.spec.PSource.PSpecified;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
+import org.jose4j.jws.JsonWebSignature;
+import org.jose4j.jwx.CompactSerializer;
+import org.jose4j.lang.JoseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -45,12 +52,12 @@ import io.mosip.kernel.crypto.jce.util.CryptoUtils;
  * Cryptographic functions.
  * 
  * @author Urvil Joshi
+ * @author Rajath
  * @since 1.0.0
  * 
  * @see CryptoCoreSpec
  * @see PrivateKey
  * @see PublicKey
- * @see Signature
  * @see SecretKey
  * @see Cipher
  * @see GCMParameterSpec
@@ -59,6 +66,8 @@ import io.mosip.kernel.crypto.jce.util.CryptoUtils;
 //Code optimization remaining (Code Dupe)
 @Component
 public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, PublicKey, PrivateKey, String> {
+
+	private static final String PERIOD_SEPARATOR_REGEX = "\\.";
 
 	// Used as a hack for softhsm oeap padding decryption usecase will be when we
 	// will use in HSM
@@ -85,7 +94,7 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 	@Value("${mosip.kernel.crypto.hash-algorithm-name:PBKDF2WithHmacSHA512}")
 	private String passwordAlgorithm;
 
-	@Value("${mosip.kernel.crypto.sign-algorithm-name:SHA512withRSA}")
+	@Value("${mosip.kernel.crypto.sign-algorithm-name:RS256}")
 	private String signAlgorithm;
 
 	@Value("${mosip.kernel.crypto.hash-symmetric-key-length:256}")
@@ -96,15 +105,10 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 
 	private SecureRandom secureRandom;
 
-	private SecretKeyFactory secretKeyFactory;
-
-	private Signature signature;
-
 	@PostConstruct
 	public void init() {
 		secureRandom = new SecureRandom();
 	}
-	
 
 	@Override
 	public byte[] symmetricEncrypt(SecretKey key, byte[] data, byte[] aad) {
@@ -122,7 +126,7 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 		byte[] randomIV = generateIV(cipher.getBlockSize());
 		try {
 			SecretKeySpec keySpec = new SecretKeySpec(key.getEncoded(), AES);
-		 	GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(tagLength, randomIV);
+			GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(tagLength, randomIV);
 			cipher.init(Cipher.ENCRYPT_MODE, keySpec, gcmParameterSpec);
 			output = new byte[cipher.getOutputSize(data.length) + cipher.getBlockSize()];
 			if (aad != null && aad.length != 0) {
@@ -337,6 +341,7 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 		CryptoUtils.verifyData(data);
 		CryptoUtils.verifyData(salt, SecurityExceptionCodeConstant.SALT_PROVIDED_IS_NULL_OR_EMPTY.getErrorCode(),
 				SecurityExceptionCodeConstant.SALT_PROVIDED_IS_NULL_OR_EMPTY.getErrorMessage());
+		SecretKeyFactory secretKeyFactory;
 		char[] convertedData = new String(data).toCharArray();
 		PBEKeySpec pbeKeySpec = new PBEKeySpec(convertedData, salt, iterations, symmetricKeyLength);
 		SecretKey key;
@@ -346,8 +351,7 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 		} catch (InvalidKeySpecException e) {
 			throw new InvalidParamSpecException(
 					SecurityExceptionCodeConstant.MOSIP_INVALID_PARAM_SPEC_EXCEPTION.getErrorCode(), e.getMessage(), e);
-		}
-		catch (java.security.NoSuchAlgorithmException e) {
+		} catch (java.security.NoSuchAlgorithmException e) {
 			throw new NoSuchAlgorithmException(
 					SecurityExceptionCodeConstant.MOSIP_NO_SUCH_ALGORITHM_EXCEPTION.getErrorCode(),
 					SecurityExceptionCodeConstant.MOSIP_NO_SUCH_ALGORITHM_EXCEPTION.getErrorMessage(), e);
@@ -359,21 +363,16 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 	public String sign(byte[] data, PrivateKey privateKey) {
 		Objects.requireNonNull(privateKey, SecurityExceptionCodeConstant.MOSIP_INVALID_KEY_EXCEPTION.getErrorMessage());
 		CryptoUtils.verifyData(data);
+		JsonWebSignature jws = new JsonWebSignature();
+		jws.setPayloadBytes(data);
+		jws.setAlgorithmHeaderValue(signAlgorithm);
+		jws.setKey(privateKey);
+		jws.setDoKeyValidation(false);
 		try {
-			signature = Signature.getInstance(signAlgorithm);
-			signature.initSign(privateKey);
-			signature.update(data);
-			return CryptoUtil.encodeBase64String(signature.sign());
-		} catch (java.security.InvalidKeyException e) {
-			throw new InvalidKeyException(SecurityExceptionCodeConstant.MOSIP_INVALID_KEY_EXCEPTION.getErrorCode(),
+			return jws.getDetachedContentCompactSerialization();
+		} catch (JoseException e) {
+			throw new SignatureException(SecurityExceptionCodeConstant.MOSIP_SIGNATURE_EXCEPTION.getErrorCode(),
 					e.getMessage(), e);
-		} catch (java.security.SignatureException e) {
-			throw new SignatureException(SecurityExceptionCodeConstant.MOSIP_INVALID_KEY_EXCEPTION.getErrorCode(),
-					e.getMessage(), e);
-		} catch (java.security.NoSuchAlgorithmException e) {
-			throw new NoSuchAlgorithmException(
-					SecurityExceptionCodeConstant.MOSIP_NO_SUCH_ALGORITHM_EXCEPTION.getErrorCode(),
-					SecurityExceptionCodeConstant.MOSIP_NO_SUCH_ALGORITHM_EXCEPTION.getErrorMessage(), e);
 		}
 	}
 
@@ -385,22 +384,16 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 		}
 		Objects.requireNonNull(publicKey, SecurityExceptionCodeConstant.MOSIP_INVALID_KEY_EXCEPTION.getErrorMessage());
 		CryptoUtils.verifyData(data);
+		JsonWebSignature jws = new JsonWebSignature();
 		try {
-			signature = Signature.getInstance(signAlgorithm);
-			signature.initVerify(publicKey);
-			signature.update(data);
-			return signature.verify(CryptoUtil.decodeBase64(sign));
-		} catch (java.security.InvalidKeyException e) {
-			throw new InvalidKeyException(SecurityExceptionCodeConstant.MOSIP_INVALID_KEY_EXCEPTION.getErrorCode(),
+			String[] parts=sign.split(PERIOD_SEPARATOR_REGEX);
+			parts[1]=CryptoUtil.encodeBase64(data);
+			jws.setCompactSerialization(CompactSerializer.serialize(parts));
+			jws.setKey(publicKey);
+			return jws.verifySignature();
+		} catch (ArrayIndexOutOfBoundsException | JoseException e) {
+			throw new SignatureException(SecurityExceptionCodeConstant.MOSIP_SIGNATURE_EXCEPTION.getErrorCode(),
 					e.getMessage(), e);
-		} catch (java.security.SignatureException e) {
-			throw new SignatureException(SecurityExceptionCodeConstant.MOSIP_INVALID_KEY_EXCEPTION.getErrorCode(),
-					e.getMessage(), e);
-		}
-		catch (java.security.NoSuchAlgorithmException e) {
-			throw new NoSuchAlgorithmException(
-					SecurityExceptionCodeConstant.MOSIP_NO_SUCH_ALGORITHM_EXCEPTION.getErrorCode(),
-					SecurityExceptionCodeConstant.MOSIP_NO_SUCH_ALGORITHM_EXCEPTION.getErrorMessage(), e);
 		}
 
 	}
@@ -434,5 +427,56 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 					SecurityExceptionCodeConstant.MOSIP_INVALID_ENCRYPTED_DATA_CORRUPT_EXCEPTION.getErrorCode(),
 					e.getMessage(), e);
 		}
+	}
+
+	/*
+	 *  This two methods here are for temporary, Unit test for this will be
+	 *  written in next versions 
+	 */
+	@Override
+	public String sign(byte[] data, PrivateKey privateKey, X509Certificate x509Certificate) {
+		Objects.requireNonNull(privateKey, SecurityExceptionCodeConstant.MOSIP_INVALID_KEY_EXCEPTION.getErrorMessage());
+		CryptoUtils.verifyData(data);
+		JsonWebSignature jws = new JsonWebSignature();
+		List<X509Certificate> certList= new ArrayList<>();
+		certList.add(x509Certificate);
+		X509Certificate[] certArray=certList.toArray(new X509Certificate[]{});
+		jws.setCertificateChainHeaderValue(certArray); 
+		jws.setPayloadBytes(data);
+		jws.setAlgorithmHeaderValue(signAlgorithm);
+		jws.setKey(privateKey);
+		jws.setDoKeyValidation(false);
+		try {
+			return jws.getCompactSerialization();
+		} catch (JoseException e) {
+			throw new SignatureException(SecurityExceptionCodeConstant.MOSIP_SIGNATURE_EXCEPTION.getErrorCode(),
+					e.getMessage(), e);
+		}
+	}
+
+	/*
+	 *  This two methods here are for temporary, Unit test for this will be
+	 *  written in next versions 
+	 */
+	@Override
+	public boolean verifySignature(String sign) {
+		if (EmptyCheckUtils.isNullEmpty(sign)) {
+			throw new SignatureException(SecurityExceptionCodeConstant.MOSIP_SIGNATURE_EXCEPTION.getErrorCode(),
+					SecurityExceptionCodeConstant.MOSIP_SIGNATURE_EXCEPTION.getErrorMessage());
+		}
+		JsonWebSignature jws = new JsonWebSignature();
+		try {
+		jws.setCompactSerialization(sign);
+		List<X509Certificate> certificateChainHeaderValue = jws.getCertificateChainHeaderValue();
+        X509Certificate certificate = certificateChainHeaderValue.get(0);
+		certificate.checkValidity();
+		PublicKey publicKey = certificate.getPublicKey();
+		jws.setKey(publicKey);
+		return jws.verifySignature();
+		} catch ( JoseException | CertificateExpiredException | CertificateNotYetValidException e) {
+			throw new SignatureException(SecurityExceptionCodeConstant.MOSIP_SIGNATURE_EXCEPTION.getErrorCode(),
+					e.getMessage(), e);
+		}
+
 	}
 }

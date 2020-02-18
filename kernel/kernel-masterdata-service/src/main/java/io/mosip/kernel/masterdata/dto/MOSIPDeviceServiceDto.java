@@ -48,12 +48,12 @@ public class MOSIPDeviceServiceDto {
 	private String regDeviceSubCode;
 
 	@NotBlank
-	@Size(min = 1, max = 36)
+	@Size(min = 0, max = 36)
 	@ApiModelProperty(value = "make", required = true, dataType = "java.lang.String")
 	private String make;
 
 	@NotBlank
-	@Size(min = 1, max = 36)
+	@Size(min = 0, max = 36)
 	@ApiModelProperty(value = "model", required = true, dataType = "java.lang.String")
 	private String model;
 
@@ -63,9 +63,9 @@ public class MOSIPDeviceServiceDto {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private LocalDateTime swExpiryDateTime;
 
-	@NotNull
+	@NotBlank
 	@ApiModelProperty(value = "softBinaryHash", required = true, dataType = "java.lang.Byte")
-	private byte[] swBinaryHash;
+	private String swBinaryHash;
 	
 	@NotNull
 	@ApiModelProperty(value = "isActive", dataType = "java.lang.Boolean")

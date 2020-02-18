@@ -452,7 +452,9 @@ public class MasterdataSearchHelper {
 			if (LocalDateTime.class.getName().equals(fieldType)) {
 				LocalDateTime start = DateUtils.parseToLocalDateTime(value);
 				predicate = builder.between(root.get(column), start, start.plusNanos(1000000l));
-			} else {
+			} 	else if(String.class.getName().equals(fieldType)) {
+				predicate = builder.equal(builder.lower(root.get(column)), builder.lower(builder.literal(value)));
+			}	else {
 				predicate = builder.equal(root.get(column), parseDataType(root, column, value));
 			}
 		}
