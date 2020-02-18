@@ -200,6 +200,10 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>${maven.surefire.plugin.version}</version>
+					<configuration>
+						<skipTests>${skipTests}</skipTests>
+						<skip>false</skip>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.jacoco</groupId>
