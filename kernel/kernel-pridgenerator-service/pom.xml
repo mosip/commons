@@ -36,7 +36,11 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-idgenerator-prid</artifactId>
+<<<<<<< HEAD
 			<version>${kernel.prid-generator.version}</version>
+=======
+			<version>${project.version}</version>
+>>>>>>> Resolve the dependcy issues. Do not hard code until unless necessary
 		</dependency>
 
 		<dependency>
