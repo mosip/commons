@@ -8,7 +8,7 @@
 		<version>1.0.6</version>
 	</parent>
 
-
+	<version>1.0.7-SNAPSHOT</version>
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-parent</artifactId>
 	<packaging>pom</packaging>

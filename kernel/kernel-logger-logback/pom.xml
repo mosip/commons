@@ -10,6 +10,7 @@
 	</parent>
 
 	<artifactId>kernel-logger-logback</artifactId>
+	<version>1.0.7-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
