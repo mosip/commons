@@ -106,8 +106,4 @@
 			<version>${swagger.annotations.version}</version>
 		</dependency>
 	</dependencies>
-
-
-
-	<version>1.0.7-SNAPSHOT</version>
 </project>

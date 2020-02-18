@@ -13,7 +13,6 @@
 	<artifactId>kernel-datamapper-orika</artifactId>
 	<name>kernel-datamapper-orika</name>
 	<url>http://maven.apache.org</url>
-	<version>1.0.7-SNAPSHOT</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -21,7 +20,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>1.0.6</version>
 		</dependency>
 		<dependency>
 			<groupId>ma.glasnost.orika</groupId>

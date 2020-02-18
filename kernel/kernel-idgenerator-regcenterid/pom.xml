@@ -9,17 +9,17 @@
 		<version>1.0.6</version>
 	</parent>
 	<artifactId>kernel-idgenerator-regcenterid</artifactId>
-	<version>1.0.7-SNAPSHOT</version>
+	<version>1.0.6</version>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>1.0.6</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-dataaccess-hibernate</artifactId>
-			<version>${project.version}</version>
+			<version>1.0.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
