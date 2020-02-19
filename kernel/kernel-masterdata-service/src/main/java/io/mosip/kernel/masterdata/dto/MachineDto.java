@@ -5,10 +5,12 @@ import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import io.mosip.kernel.masterdata.validator.StringFormatter;
 import io.mosip.kernel.masterdata.validator.ValidLangCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -23,8 +25,8 @@ import lombok.Data;
  */
 
 @Data
-//@ApiModel(value = "Machine", description = "Machine Detail resource")
-public class MachineDto{
+// @ApiModel(value = "Machine", description = "Machine Detail resource")
+public class MachineDto {
 
 	/**
 	 * Field for machine id
@@ -58,7 +60,8 @@ public class MachineDto{
 	 * Field for machine IP address
 	 */
 
-	@Size(min = 1, max = 17)
+	@NotNull
+	@StringFormatter(min = 0, max = 17)
 	@ApiModelProperty(value = "ipAddress", required = true, dataType = "java.lang.String")
 	private String ipAddress;
 	/**
@@ -72,8 +75,8 @@ public class MachineDto{
 	 * Field for language code
 	 */
 	@ValidLangCode(message = "Language Code is Invalid")
-	//@NotBlank
-	//@Size(min = 1, max = 3)
+	// @NotBlank
+	// @Size(min = 1, max = 3)
 	@ApiModelProperty(value = "langCode", required = true, dataType = "java.lang.String")
 	private String langCode;
 	/**

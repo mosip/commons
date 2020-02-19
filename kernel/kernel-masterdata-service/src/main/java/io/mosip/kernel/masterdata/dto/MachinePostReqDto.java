@@ -5,17 +5,21 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import io.mosip.kernel.masterdata.validator.StringFormatter;
+import io.mosip.kernel.masterdata.validator.StringTrimmer;
 import io.mosip.kernel.masterdata.validator.ValidLangCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
- * Request dto to create Machine 
+ * Request dto to create Machine
  * 
  * @author Megha Tanga
  * @since 1.0.0
@@ -23,8 +27,8 @@ import lombok.Data;
  */
 
 @Data
-//@ApiModel(value = "Machine", description = "Machine Detail resource")
-public class MachinePostReqDto{
+// @ApiModel(value = "Machine", description = "Machine Detail resource")
+public class MachinePostReqDto {
 
 	/**
 	 * Field for machine id
@@ -57,7 +61,8 @@ public class MachinePostReqDto{
 	 * Field for machine IP address
 	 */
 
-	@Size(min = 1, max = 17)
+	@NotNull
+	@StringFormatter(min = 0, max = 17)
 	@ApiModelProperty(value = "ipAddress", required = true, dataType = "java.lang.String")
 	private String ipAddress;
 	/**
@@ -85,12 +90,10 @@ public class MachinePostReqDto{
 	 */
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private LocalDateTime validityDateTime;
-	
-	
+
 	@NotBlank
 	@Size(min = 1, max = 36)
 	@ApiModelProperty(value = "zoneCode", required = true, dataType = "java.lang.String")
 	private String zoneCode;
 
 }
-
