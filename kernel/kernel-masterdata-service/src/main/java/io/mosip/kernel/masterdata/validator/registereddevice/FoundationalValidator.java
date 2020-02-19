@@ -8,6 +8,7 @@ import org.springframework.web.client.RestClientException;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.kernel.masterdata.constant.RegisteredDeviceErrorCode;
 import io.mosip.kernel.masterdata.dto.RegisteredDevicePostReqDto;
+import io.mosip.kernel.masterdata.dto.registerdevice.DeviceData;
 import io.mosip.kernel.masterdata.exception.RequestException;
 
 /**
@@ -19,7 +20,7 @@ import io.mosip.kernel.masterdata.exception.RequestException;
  */
 
 // @SupportedValidationTarget(ValidationTarget.PARAMETERS)
-public class FoundationalValidator implements ConstraintValidator<ValidFoundational, RegisteredDevicePostReqDto> {
+public class FoundationalValidator implements ConstraintValidator<ValidFoundational, DeviceData> {
 
 	/*
 	 * (non-Javadoc)
@@ -28,24 +29,24 @@ public class FoundationalValidator implements ConstraintValidator<ValidFoundatio
 	 * javax.validation.ConstraintValidatorContext)
 	 */
 	@Override
-	public boolean isValid(RegisteredDevicePostReqDto value, ConstraintValidatorContext context) {
-		if (value.getCertificationLevel() == null || value.getFoundationalTPId() == null) {
+	public boolean isValid(DeviceData deviceData, ConstraintValidatorContext context) {
+		if (deviceData.getDeviceInfo()==null || deviceData.getDeviceInfo().getCertification() == null || deviceData.getFoundationalTrustProviderId() == null) {
 			return false;
 		} else {
 			try {
-				if (value.getCertificationLevel().equals(RegisteredDeviceConstant.L1)) {
-					if (EmptyCheckUtils.isNullEmpty(value.getFoundationalTPId()) 
+				if (deviceData.getDeviceInfo().getCertification().equals(RegisteredDeviceConstant.L1)) {
+					if (EmptyCheckUtils.isNullEmpty(deviceData.getFoundationalTrustProviderId()) 
 							/*|| EmptyCheckUtils.isNullEmpty(value.getFoundationalTrustSignature()) 
 							|| EmptyCheckUtils.isNullEmpty(value.getFoundationalTrustCertificate())*/
 							) 
 						return false;
-				} else if (value.getCertificationLevel().equals(RegisteredDeviceConstant.L0)) {
-					if (EmptyCheckUtils.isNullEmpty(value.getFoundationalTPId())
+				} else if (deviceData.getDeviceInfo().getCertification().equals(RegisteredDeviceConstant.L0)) {
+					if (EmptyCheckUtils.isNullEmpty(deviceData.getFoundationalTrustProviderId())
 							/*|| EmptyCheckUtils.isNullEmpty(value.getFoundationalTrustSignature()) 
 							|| EmptyCheckUtils.isNullEmpty(value.getFoundationalTrustCertificate())*/ ) 
 						return true;
 				} else {
-					if (EmptyCheckUtils.isNullEmpty(value.getFoundationalTPId())
+					if (EmptyCheckUtils.isNullEmpty(deviceData.getFoundationalTrustProviderId())
 							/*|| EmptyCheckUtils.isNullEmpty(value.getFoundationalTrustSignature()) 
 							|| EmptyCheckUtils.isNullEmpty(value.getFoundationalTrustCertificate())*/ ) 
 						return true;

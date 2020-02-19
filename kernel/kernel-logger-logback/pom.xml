@@ -10,11 +10,12 @@
 	</parent>
 
 	<artifactId>kernel-logger-logback</artifactId>
+	<version>1.0.6</version>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>1.0.6</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
