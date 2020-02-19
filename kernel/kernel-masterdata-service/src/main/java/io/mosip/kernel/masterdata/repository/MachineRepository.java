@@ -18,6 +18,7 @@ import io.mosip.kernel.masterdata.entity.Machine;
  * 
  * @author Megha Tanga
  * @author Sidhant Agarwal
+ * @author Ravi Kant
  * @since 1.0.0
  *
  */
@@ -153,7 +154,7 @@ public interface MachineRepository extends BaseRepository<Machine, String> {
 	 *            date and time at which the center was decommissioned.
 	 * @return the number of machine decommissioned.
 	 */
-	@Query("UPDATE Machine m SET m.isDeleted = true, m.isActive = false, m.updatedBy = ?2, m.deletedDateTime=?3 WHERE m.id=?1 and (m.isDeleted is null or m.isDeleted =false)")
+	@Query("UPDATE Machine m SET m.isDeleted = true, m.isActive = false, m.updatedBy = ?2, m.updatedDateTime=?3, m.deletedDateTime=?3 WHERE m.id=?1 and (m.isDeleted is null or m.isDeleted =false)")
 	@Modifying
 	@Transactional
 	int decommissionMachine(String id, String deCommissionedBy, LocalDateTime deCommissionedDateTime);
