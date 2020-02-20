@@ -644,17 +644,30 @@ public class LocationServiceImpl implements LocationService {
 		if (dto.getFilters().isEmpty()) {
 			responseDto = emptyFilterLocationSearch(tree);
 		} else {
+			int count=0;
 			for (SearchFilter filter : dto.getFilters()) {
 				validateFilters(filter);
 				String type = filter.getType();
 				if (type.equalsIgnoreCase(FilterTypeEnum.EQUALS.toString())) {
+					if(count ==0) {
 					responseDto = getEqualsLocationSearch(filter, dto, tree, isActive);
+					}else {
+						responseDto.retainAll(getEqualsLocationSearch(filter, dto, tree, isActive));
+					}
 				} else {
 					if (type.equalsIgnoreCase(FilterTypeEnum.CONTAINS.toString())) {
+						if(count ==0) {
 						responseDto = getContainsLocationSearch(filter, dto, tree, isActive);
+						}else {
+							responseDto.retainAll(getContainsLocationSearch(filter, dto, tree, isActive));
+						}
 					} else {
 						if (type.equalsIgnoreCase(FilterTypeEnum.STARTSWITH.toString())) {
+							if(count ==0) {
 							responseDto = getStartsWithLocationSearch(filter, dto, tree, isActive);
+							}else {
+								responseDto.retainAll(getStartsWithLocationSearch(filter, dto, tree, isActive));
+							}
 						} else {
 							auditUtil.auditRequest(
 									String.format(MasterDataConstant.FAILURE_UPDATE, LocationDto.class.getSimpleName()),
@@ -672,7 +685,7 @@ public class LocationServiceImpl implements LocationService {
 					}
 
 				}
-
+				count++;
 			}
 		}
 		Pagination pagination = dto.getPagination();
