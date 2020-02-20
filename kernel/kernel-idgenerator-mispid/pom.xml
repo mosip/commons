@@ -13,17 +13,21 @@
 	<artifactId>kernel-idgenerator-mispid</artifactId>
 
 	<name>kernel-idgenerator-mispid</name>
-
+    <properties>
+       <kernel.core.version>1.0.6</kernel.core.version>
+		 <kernel.dataaccess-hibernate.version>1.0.6</kernel.dataaccess-hibernate.version>
+		<kernel.logger.version>1.0.6</kernel.logger.version>
+    </properties>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-dataaccess-hibernate</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.dataaccess-hibernate.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>

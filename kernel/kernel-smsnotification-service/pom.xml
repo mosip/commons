@@ -9,7 +9,12 @@
 		<artifactId>kernel-parent</artifactId>
 		<version>1.0.6</version>
 	</parent>
-
+	<properties>
+		<kernel.core.version>1.0.6</kernel.core.version>
+		<kernel.auth.adaptor.version>1.0.6</kernel.auth.adaptor.version>
+		<kernel.crypto.signature.version>1.0.6</kernel.crypto.signature.version>
+		<kernel.logger.logback.version>1.0.6</kernel.logger.logback.version>
+	</properties>
 	<artifactId>kernel-smsnotification-service</artifactId>
 
 	<name>kernel-smsnotification-service</name>
@@ -18,12 +23,12 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-auth-adapter</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.auth.adaptor.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -33,7 +38,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-logger-logback</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.logger.logback.version}</version>
 		</dependency>
 	</dependencies>
 	<build>

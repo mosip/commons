@@ -13,27 +13,31 @@
 	<name>kernel-applicanttype-service</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<kernel.core.version>1.0.6</kernel.core.version>
+		<kernel.auth-adapter.version>1.0.6</kernel.auth-adapter.version>
+		<kernel.applicant-type.version>1.0.6</kernel.applicant-type.version>
+		<kernel.logger.version>1.0.6</kernel.logger.version>
 	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-auth-adapter</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.auth-adapter.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-applicanttype-api</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.applicant-type.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-logger-logback</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.logger.version}</version>
 		</dependency>
 
 	</dependencies>
