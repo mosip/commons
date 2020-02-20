@@ -117,6 +117,7 @@ import io.mosip.kernel.masterdata.validator.FilterTypeValidator;
  * @author Sidhant Agarwal
  * @author Uday Kumar
  * @author Megha Tanga
+ * @author Ravi Kant
  * @since 1.0.0
  *
  */
@@ -845,30 +846,31 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 	@Override
 	@Transactional
 	public IdResponseDto decommissionRegCenter(String regCenterID) {
-		if (regCenterID.length() != regCenterIDLength) {
+		if (regCenterID.length() > regCenterIDLength) {
 			auditException(RegistrationCenterErrorCode.INVALID_RCID_LENGTH.getErrorCode(),
 					RegistrationCenterErrorCode.INVALID_RCID_LENGTH.getErrorMessage());
 			throw new RequestException(RegistrationCenterErrorCode.INVALID_RCID_LENGTH.getErrorCode(),
 					RegistrationCenterErrorCode.INVALID_RCID_LENGTH.getErrorMessage());
 		}
-		List<String> zoneIds;
-		// get user zone and child zones list
-		List<Zone> userZones = zoneUtils.getUserZones();
-		zoneIds = userZones.parallelStream().map(Zone::getCode).collect(Collectors.toList());
 
-		// get given registration center zone id
-		RegistrationCenter regCenterZone = registrationCenterRepository.findByLangCodeAndId(regCenterID, primaryLang);
+		// get given registration center
+		RegistrationCenter regCenter = registrationCenterRepository.findByLangCodeAndId(regCenterID, primaryLang);
 
-		if (regCenterZone == null) {
+		if (regCenter == null) {
 			auditException(RegistrationCenterErrorCode.DECOMMISSIONED.getErrorCode(),
 					RegistrationCenterErrorCode.DECOMMISSIONED.getErrorMessage());
 			throw new RequestException(RegistrationCenterErrorCode.DECOMMISSIONED.getErrorCode(),
 					RegistrationCenterErrorCode.DECOMMISSIONED.getErrorMessage());
 		}
-
-		// check the given device and registration center zones are come under
+		
+		List<String> zoneIds;
+		// get user zone and child zones list
+		List<Zone> userZones = zoneUtils.getUserZones();
+		zoneIds = userZones.parallelStream().map(Zone::getCode).collect(Collectors.toList());
+		
+		// check the given registration center zone are come under
 		// user zone
-		if (!zoneIds.contains(regCenterZone.getZoneCode())) {
+		if (!zoneIds.contains(regCenter.getZoneCode())) {
 			auditException(RegistrationCenterErrorCode.REG_CENTER_INVALIDE_ZONE.getErrorCode(),
 					RegistrationCenterErrorCode.REG_CENTER_INVALIDE_ZONE.getErrorMessage());
 			throw new RequestException(RegistrationCenterErrorCode.REG_CENTER_INVALIDE_ZONE.getErrorCode(),
@@ -876,7 +878,7 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 		}
 
 		IdResponseDto idResponseDto = new IdResponseDto();
-		int decommissionedDevices = 0;
+		int decommissionedCenters = 0;
 		try {
 			if (!registrationCenterUserRepository.registrationCenterUserMappings(regCenterID).isEmpty()) {
 				auditException(RegistrationCenterErrorCode.MAPPED_TO_USER.getErrorCode(),
@@ -901,7 +903,7 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 							RegistrationCenterErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorCode(),
 							RegistrationCenterErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorMessage());
 				}
-				decommissionedDevices = registrationCenterRepository.decommissionRegCenter(regCenterID,
+				decommissionedCenters = registrationCenterRepository.decommissionRegCenter(regCenterID,
 						MetaDataUtils.getContextUser(), MetaDataUtils.getCurrentDateTime());
 			}
 		} catch (DataAccessException | DataAccessLayerException exception) {
@@ -910,7 +912,7 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 			throw new MasterDataServiceException(RegistrationCenterErrorCode.DECOMMISSION_FAILED.getErrorCode(),
 					RegistrationCenterErrorCode.DECOMMISSION_FAILED.getErrorMessage() + exception.getCause());
 		}
-		if (decommissionedDevices > 0) {
+		if (decommissionedCenters > 0) {
 			idResponseDto.setId(regCenterID);
 		}
 		auditUtil.auditRequest(

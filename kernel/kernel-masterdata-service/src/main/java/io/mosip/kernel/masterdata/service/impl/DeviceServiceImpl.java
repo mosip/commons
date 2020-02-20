@@ -80,6 +80,7 @@ import io.mosip.kernel.masterdata.validator.FilterTypeValidator;
  * 
  * @author Megha Tanga
  * @author Sidhant Agarwal
+ * @author Ravi Kant
  * @since 1.0.0
  *
  */
@@ -747,17 +748,12 @@ public class DeviceServiceImpl implements DeviceService {
 	public IdResponseDto decommissionDevice(String deviceId) {
 		IdResponseDto idResponseDto = new IdResponseDto();
 		int decommissionedDevice = 0;
-		List<String> zoneIds;
 
-		// get user zone and child zones list
-		List<Zone> userZones = zoneUtils.getUserZones();
-		zoneIds = userZones.parallelStream().map(Zone::getCode).collect(Collectors.toList());
-
-		// get machine from DB by given id
-		List<Device> renDevices = deviceRepository.findDeviceByIdAndIsDeletedFalseorIsDeletedIsNullNoIsActive(deviceId);
+		// get devices from DB by given id
+		List<Device> devices = deviceRepository.findDeviceByIdAndIsDeletedFalseorIsDeletedIsNullNoIsActive(deviceId);
 
 		// device is not in DB
-		if (renDevices.isEmpty()) {
+		if (devices.isEmpty()) {
 			auditUtil
 					.auditRequest(
 							String.format(MasterDataConstant.FAILURE_DECOMMISSION, DeviceDto.class.getSimpleName()),
@@ -769,9 +765,15 @@ public class DeviceServiceImpl implements DeviceService {
 			throw new RequestException(DeviceErrorCode.DEVICE_NOT_EXISTS_EXCEPTION.getErrorCode(),
 					String.format(DeviceErrorCode.DEVICE_NOT_EXISTS_EXCEPTION.getErrorMessage(), deviceId));
 		}
+		
+		List<String> zoneIds;
 
+		// get user zone and child zones list
+		List<Zone> userZones = zoneUtils.getUserZones();
+		zoneIds = userZones.parallelStream().map(Zone::getCode).collect(Collectors.toList());
+		
 		// check the given device and registration center zones are come under user zone
-		if (!zoneIds.contains(renDevices.get(0).getZoneCode())) {
+		if (!zoneIds.contains(devices.get(0).getZoneCode())) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_DECOMMISSION, DeviceDto.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
@@ -799,7 +801,7 @@ public class DeviceServiceImpl implements DeviceService {
 					MetaDataUtils.getCurrentDateTime());
 
 			// create Device history
-			for (Device device : renDevices) {
+			for (Device device : devices) {
 				DeviceHistory deviceHistory = new DeviceHistory();
 				MapperUtils.map(device, deviceHistory);
 				MapperUtils.setBaseFieldValue(device, deviceHistory);

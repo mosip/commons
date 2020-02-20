@@ -20,6 +20,7 @@ import io.mosip.kernel.masterdata.entity.Machine;
  * 
  * @author Megha Tanga
  * @author Sidhant Agarwal
+ * @author Ravi Kant
  * @since 1.0.0
  *
  */
@@ -171,7 +172,7 @@ public interface DeviceRepository extends BaseRepository<Device, String> {
 	 *            date and time at which the center was decommissioned.
 	 * @return the number of device decommissioned.
 	 */
-	@Query("UPDATE Device d SET d.isDeleted = true, d.isActive = false, d.updatedBy = ?2, d.deletedDateTime=?3 WHERE d.id=?1 and (d.isDeleted is null or d.isDeleted =false)")
+	@Query("UPDATE Device d SET d.isDeleted = true, d.isActive = false, d.updatedBy = ?2, d.updatedDateTime = ?3, d.deletedDateTime=?3 WHERE d.id=?1 and (d.isDeleted is null or d.isDeleted =false)")
 	@Modifying
 	@Transactional
 	int decommissionDevice(String id, String deCommissionedBy, LocalDateTime deCommissionedDateTime);

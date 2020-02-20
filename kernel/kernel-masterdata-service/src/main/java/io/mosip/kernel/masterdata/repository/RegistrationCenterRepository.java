@@ -21,6 +21,7 @@ import io.mosip.kernel.masterdata.entity.RegistrationCenter;
  * @author Sidhant Agarwal
  * @author Sagar Mahapatra
  * @author Uday Kumar
+ * @author Ravi Kant
  * @since 1.0.0
  *
  */
@@ -200,7 +201,7 @@ public interface RegistrationCenterRepository extends BaseRepository<Registratio
 	 *            date and time at which the center was decommissioned.
 	 * @return the number of registration centers decommissioned.
 	 */
-	@Query("UPDATE RegistrationCenter rc SET rc.isDeleted = true, rc.isActive = false, rc.updatedBy = ?2, rc.updatedDateTime = ?3 WHERE rc.id = ?1 and (rc.isDeleted is null or rc.isDeleted =false)")
+	@Query("UPDATE RegistrationCenter rc SET rc.isDeleted = true, rc.isActive = false, rc.updatedBy = ?2, rc.updatedDateTime = ?3, rc.deletedDateTime = ?3 WHERE rc.id = ?1 and (rc.isDeleted is null or rc.isDeleted =false)")
 	@Modifying
 	int decommissionRegCenter(String regCenterID, String deCommissionedBy, LocalDateTime deCommissionedDateTime);
 

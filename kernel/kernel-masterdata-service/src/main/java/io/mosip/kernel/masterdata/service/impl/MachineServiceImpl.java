@@ -90,6 +90,7 @@ import io.mosip.kernel.masterdata.validator.FilterTypeValidator;
  * @author Megha Tanga
  * @author Ritesh Sinha
  * @author Sidhant Agarwal
+ * @author Ravi Kant
  * @since 1.0.0
  *
  */
@@ -711,18 +712,13 @@ public class MachineServiceImpl implements MachineService {
 	public IdResponseDto decommissionMachine(String machineId) {
 		IdResponseDto idResponseDto = new IdResponseDto();
 		int decommissionedMachine = 0;
-		List<String> zoneIds;
-
-		// get user zone and child zones list
-		List<Zone> userZones = zoneUtils.getUserZones();
-		zoneIds = userZones.parallelStream().map(Zone::getCode).collect(Collectors.toList());
 
 		// get machine from DB by given id
-		List<Machine> renMachines = machineRepository
+		List<Machine> machines = machineRepository
 				.findMachineByIdAndIsDeletedFalseorIsDeletedIsNullNoIsActive(machineId);
 
 		// machine is not in DB
-		if (renMachines.isEmpty()) {
+		if (machines.isEmpty()) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_DECOMMISSION, MachineSearchDto.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
@@ -734,8 +730,14 @@ public class MachineServiceImpl implements MachineService {
 					String.format(MachineErrorCode.MACHINE_NOT_EXIST_EXCEPTION.getErrorMessage(), machineId));
 		}
 
+		List<String> zoneIds;
+
+		// get user zone and child zones list
+		List<Zone> userZones = zoneUtils.getUserZones();
+		zoneIds = userZones.parallelStream().map(Zone::getCode).collect(Collectors.toList());
+		
 		// check the given device and registration center zones are come under user zone
-		if (!zoneIds.contains(renMachines.get(0).getZoneCode())) {
+		if (!zoneIds.contains(machines.get(0).getZoneCode())) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_DECOMMISSION, MachineSearchDto.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
@@ -763,7 +765,7 @@ public class MachineServiceImpl implements MachineService {
 					MetaDataUtils.getCurrentDateTime());
 
 			// create Machine history
-			for (Machine machine : renMachines) {
+			for (Machine machine : machines) {
 				MachineHistory machineHistory = new MachineHistory();
 				MapperUtils.map(machine, machineHistory);
 				MapperUtils.setBaseFieldValue(machine, machineHistory);
