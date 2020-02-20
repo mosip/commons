@@ -43,9 +43,9 @@ public class HolidaySearchDto extends BaseDto {
 	@Size(min = 0, max = 128)
 	private String holidayDesc;
 
-	//@Size(min = 1, max = 3)
+	// @Size(min = 1, max = 3)
 	@ValidLangCode(message = "Language Code is Invalid")
-	//@NotBlank
+	// @NotBlank
 	private String langCode;
 
 }

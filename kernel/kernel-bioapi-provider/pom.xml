@@ -11,17 +11,20 @@
 	<name>kernel-bioapi-provider</name>
 	<description>bioapi provider</description>
 	<packaging>jar</packaging>
-	
+	<properties>
+		<kernel.core.version>1.0.6</kernel.core.version>
+		<kernel.cbeff.version>1.0.6</kernel.cbeff.version>
+	</properties>	
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 				<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-cbeffutil-api</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.cbeff.version}</version>
 		</dependency>
 	</dependencies>
 </project>

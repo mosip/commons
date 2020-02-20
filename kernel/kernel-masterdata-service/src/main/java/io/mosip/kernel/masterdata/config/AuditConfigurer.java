@@ -9,7 +9,6 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-
 /**
  * The Class AuditConfigurer.
  *
@@ -28,16 +27,20 @@ public class AuditConfigurer implements WebMvcConfigurer {
 		return new String[] { "http://localhost:8086/v1/masterdata/devices/search" };
 
 	}
-	
+
 	@Autowired
 	private AuditInterceptor auditInterceptor;
 
-	/* (non-Javadoc)
-	 * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurer#addInterceptors(org.springframework.web.servlet.config.annotation.InterceptorRegistry)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurer#
+	 * addInterceptors(org.springframework.web.servlet.config.annotation.
+	 * InterceptorRegistry)
 	 */
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-         System.out.println("add Intercpetors called");
+		System.out.println("add Intercpetors called");
 		registry.addInterceptor(auditInterceptor).addPathPatterns("/**/search");
 	}
 }

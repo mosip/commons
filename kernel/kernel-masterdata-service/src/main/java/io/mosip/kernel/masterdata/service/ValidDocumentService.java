@@ -27,8 +27,7 @@ public interface ValidDocumentService {
 	/**
 	 * This method create valid document in table.
 	 * 
-	 * @param document
-	 *            the dto.
+	 * @param document the dto.
 	 * @return {@link ValidDocumentID}
 	 */
 	public ValidDocumentID createValidDocument(ValidDocumentDto document);
@@ -36,10 +35,8 @@ public interface ValidDocumentService {
 	/**
 	 * This method delete valid document.
 	 * 
-	 * @param docCatCode
-	 *            the document category code.
-	 * @param docTypeCode
-	 *            the docuemnt type code.
+	 * @param docCatCode  the document category code.
+	 * @param docTypeCode the docuemnt type code.
 	 * @return {@link DocCategoryAndTypeResponseDto}.
 	 */
 	public DocCategoryAndTypeResponseDto deleteValidDocuemnt(String docCatCode, String docTypeCode);
@@ -47,8 +44,7 @@ public interface ValidDocumentService {
 	/**
 	 * This method to get all the valid document category along with doc type
 	 * 
-	 * @param langCode
-	 *            the language code
+	 * @param langCode the language code
 	 * @return {@link ValidDocCategoryAndDocTypeResponseDto}
 	 */
 	public ValidDocCategoryAndDocTypeResponseDto getValidDocumentByLangCode(String langCode);
@@ -56,14 +52,10 @@ public interface ValidDocumentService {
 	/**
 	 * This method provides with all valid document category
 	 * 
-	 * @param pageNumber
-	 *            the page number
-	 * @param pageSize
-	 *            the size of each page
-	 * @param sortBy
-	 *            the attributes by which it should be ordered
-	 * @param orderBy
-	 *            the order to be used
+	 * @param pageNumber the page number
+	 * @param pageSize   the size of each page
+	 * @param sortBy     the attributes by which it should be ordered
+	 * @param orderBy    the order to be used
 	 * 
 	 * @return the response i.e. pages containing the valid document category
 	 */
@@ -72,8 +64,7 @@ public interface ValidDocumentService {
 	/**
 	 * Service method to search document category-type mapping
 	 * 
-	 * @param dto
-	 *            input from user
+	 * @param dto input from user
 	 * @return dto containing mapped values
 	 */
 	public PageResponseDto<DocumentCategoryTypeMappingExtnDto> searchValidDocument(SearchDto dto);
@@ -81,8 +72,7 @@ public interface ValidDocumentService {
 	/**
 	 * Service Method to filter doc cat-type mapping
 	 * 
-	 * @param filterValueDto
-	 *            input from user
+	 * @param filterValueDto input from user
 	 * @return filter dto containing column names
 	 */
 	public FilterResponseDto categoryTypeFilterValues(FilterValueDto filterValueDto);
@@ -90,10 +80,8 @@ public interface ValidDocumentService {
 	/**
 	 * This method maps a Document Category to a Document Type.
 	 * 
-	 * @param docCatCode
-	 *            the document category code.
-	 * @param docTypeCode
-	 *            the document type code.
+	 * @param docCatCode  the document category code.
+	 * @param docTypeCode the document type code.
 	 * @return {@link DocCategoryAndTypeMappingResponseDto}.
 	 */
 	public DocCategoryAndTypeMappingResponseDto mapDocCategoryAndDocType(String docCatCode, String docTypeCode);
@@ -101,10 +89,8 @@ public interface ValidDocumentService {
 	/**
 	 * This method un-maps a Document Category from a Document Type.
 	 * 
-	 * @param docCatCode
-	 *            the document category code.
-	 * @param docTypeCode
-	 *            the document type code.
+	 * @param docCatCode  the document category code.
+	 * @param docTypeCode the document type code.
 	 * @return {@link DocCategoryAndTypeMappingResponseDto}.
 	 */
 	public DocCategoryAndTypeMappingResponseDto unmapDocCategoryAndDocType(String docCatCode, String docTypeCode);

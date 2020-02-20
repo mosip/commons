@@ -32,7 +32,6 @@ public class SmsNotificationServiceTest {
 
 	@MockBean
 	RestTemplate restTemplate;
-	
 
 	@Value("${mosip.kernel.sms.api}")
 	String api;
@@ -62,7 +61,7 @@ public class SmsNotificationServiceTest {
 				.queryParam(SmsPropertyConstant.SENDER_ID.getProperty(), senderId)
 				.queryParam(SmsPropertyConstant.RECIPIENT_NUMBER.getProperty(), "8987876473")
 				.queryParam(SmsPropertyConstant.COUNTRY_CODE.getProperty(), countryCode);
-		
+
 		SmsServerResponseDto serverResponse = new SmsServerResponseDto();
 		serverResponse.setType("success");
 		SmsResponseDto dto = new SmsResponseDto();
@@ -94,12 +93,12 @@ public class SmsNotificationServiceTest {
 	public void contactNumberMaximumThresholdTest() {
 		service.sendSmsNotification("7897897458673484376", "hello your otp is 45373");
 	}
-	
+
 	@Test
 	public void validGateWayTest() {
 		service.sendSmsNotification("1234567890", "hello your otp is 45373");
 	}
-	
+
 	@Test
 	public void validInfoBibTest() {
 		ReflectionTestUtils.setField(service, "smsGateway", "infobip");

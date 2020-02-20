@@ -22,11 +22,11 @@ import lombok.EqualsAndHashCode;
 //@ApiModel(value = "DocumentType", description = "DocumentType resource representation")
 public class DocumentTypeExtnDto extends BaseDto {
 
-	@FilterType(types = { FilterTypeEnum.EQUALS})
+	@FilterType(types = { FilterTypeEnum.EQUALS })
 	@ApiModelProperty(value = "code", required = true, dataType = "java.lang.String")
 	private String code;
 
-	@FilterType(types= {FilterTypeEnum.EQUALS,FilterTypeEnum.STARTSWITH,FilterTypeEnum.CONTAINS})
+	@FilterType(types = { FilterTypeEnum.EQUALS, FilterTypeEnum.STARTSWITH, FilterTypeEnum.CONTAINS })
 	@ApiModelProperty(value = "name", required = true, dataType = "java.lang.String")
 	private String name;
 

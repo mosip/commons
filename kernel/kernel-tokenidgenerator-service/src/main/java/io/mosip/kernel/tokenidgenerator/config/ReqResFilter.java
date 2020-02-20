@@ -35,15 +35,15 @@ public class ReqResFilter implements Filter {
 		ContentCachingRequestWrapper requestWrapper = null;
 		ContentCachingResponseWrapper responseWrapper = null;
 
-			// Default processing for url ends with .stream
-			if (httpServletRequest.getRequestURI().endsWith(".stream")) {
-				chain.doFilter(request, response);
-				return;
-			}
-			requestWrapper = new ContentCachingRequestWrapper(httpServletRequest);
-			responseWrapper = new ContentCachingResponseWrapper(httpServletResponse);
-			chain.doFilter(requestWrapper, responseWrapper);
-			responseWrapper.copyBodyToResponse();
+		// Default processing for url ends with .stream
+		if (httpServletRequest.getRequestURI().endsWith(".stream")) {
+			chain.doFilter(request, response);
+			return;
+		}
+		requestWrapper = new ContentCachingRequestWrapper(httpServletRequest);
+		responseWrapper = new ContentCachingResponseWrapper(httpServletResponse);
+		chain.doFilter(requestWrapper, responseWrapper);
+		responseWrapper.copyBodyToResponse();
 
 	}
 

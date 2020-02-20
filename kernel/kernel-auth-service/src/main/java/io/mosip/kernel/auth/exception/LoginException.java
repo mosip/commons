@@ -22,7 +22,7 @@ public class LoginException extends RuntimeException {
 	public void setErrorCode(String errorCode) {
 		this.errorCode = errorCode;
 	}
-	
+
 	public LoginException(String errorCode, String errorMessage, Throwable rootCause) {
 		super(errorMessage, rootCause);
 		this.errorCode = errorCode;

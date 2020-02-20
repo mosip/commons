@@ -5,7 +5,6 @@ import java.util.List;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 import io.mosip.kernel.core.exception.ServiceError;
 
-
 public class SyncServiceException extends BaseUncheckedException {
 	/**
 	 * Serializable version ID.

@@ -30,15 +30,14 @@ public class IdObjectValidationFailedException extends BaseCheckedException {
 	public IdObjectValidationFailedException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);
 	}
-	
+
 	/**
 	 * Instantiates a new id object validation processing exception.
 	 *
 	 * @param errorConstant the error constant
-	 * @param errors the errors
+	 * @param errors        the errors
 	 */
-	public IdObjectValidationFailedException(IdObjectValidatorErrorConstant errorConstant,
-			List<ServiceError> errors) {
+	public IdObjectValidationFailedException(IdObjectValidatorErrorConstant errorConstant, List<ServiceError> errors) {
 		errors.stream().forEach(error -> super.addInfo(error.getErrorCode(), error.getMessage()));
 	}
 

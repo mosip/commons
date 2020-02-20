@@ -40,15 +40,14 @@ public class MOSIPDeviceServiceController {
 
 	@Autowired
 	AuditUtil auditUtil;
-	
+
 	@Autowired
 	MOSIPDeviceServices mosipDeviceServices;
 
 	/**
 	 * Post API to insert a new row of MOSIPDeviceService data
 	 * 
-	 * @param MOSIPDeviceServiceRequestDto
-	 *            input parameter deviceRequestDto
+	 * @param MOSIPDeviceServiceRequestDto input parameter deviceRequestDto
 	 * 
 	 * @return ResponseEntity MOSIPDeviceService which is inserted successfully
 	 *         {@link ResponseEntity}
@@ -64,14 +63,15 @@ public class MOSIPDeviceServiceController {
 			@Valid @RequestBody RequestWrapper<MOSIPDeviceServiceDto> mosipDeviceServiceRequestDto) {
 		auditUtil.auditRequest(MasterDataConstant.CREATE_API_IS_CALLED + MOSIPDeviceServiceDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,
-				MasterDataConstant.CREATE_API_IS_CALLED + MOSIPDeviceServiceDto.class.getCanonicalName(),"ADM-707");
+				MasterDataConstant.CREATE_API_IS_CALLED + MOSIPDeviceServiceDto.class.getCanonicalName(), "ADM-707");
 		ResponseWrapper<MOSIPDeviceServiceExtDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper
 				.setResponse(mosipDeviceServices.createMOSIPDeviceService(mosipDeviceServiceRequestDto.getRequest()));
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.SUCCESSFUL_CREATE, MOSIPDeviceServiceDto.class.getCanonicalName()),
-				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC, MOSIPDeviceServiceDto.class.getCanonicalName()),"ADM-708");
+				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC,
+						MOSIPDeviceServiceDto.class.getCanonicalName()),
+				"ADM-708");
 		return responseWrapper;
 
 	}
@@ -79,8 +79,7 @@ public class MOSIPDeviceServiceController {
 	/**
 	 * Put API to update a row of MOSIPDeviceService data
 	 * 
-	 * @param MOSIPDeviceServiceRequestDto
-	 *            input parameter deviceRequestDto
+	 * @param MOSIPDeviceServiceRequestDto input parameter deviceRequestDto
 	 * 
 	 * @return ResponseEntity MOSIPDeviceService which is updated successfully
 	 *         {@link ResponseEntity}
@@ -94,15 +93,15 @@ public class MOSIPDeviceServiceController {
 			@ApiResponse(code = 500, message = "While updating MOSIPDeviceService any error occured") })
 	public ResponseWrapper<MOSIPDeviceServiceExtDto> udpateMOSIPDeviceService(
 			@Valid @RequestBody RequestWrapper<MOSIPDeviceServicePUTDto> mosipDeviceServiceRequestDto) {
-				auditUtil.auditRequest(MasterDataConstant.UPDATE_API_IS_CALLED + MOSIPDeviceServiceDto.class.getCanonicalName(),
+		auditUtil.auditRequest(MasterDataConstant.UPDATE_API_IS_CALLED + MOSIPDeviceServiceDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,
-				MasterDataConstant.UPDATE_API_IS_CALLED + MOSIPDeviceServiceDto.class.getCanonicalName(),"ADM-709");
+				MasterDataConstant.UPDATE_API_IS_CALLED + MOSIPDeviceServiceDto.class.getCanonicalName(), "ADM-709");
 		ResponseWrapper<MOSIPDeviceServiceExtDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper
 				.setResponse(mosipDeviceServices.updateMOSIPDeviceService(mosipDeviceServiceRequestDto.getRequest()));
 		auditUtil.auditRequest(MasterDataConstant.UPDATE_API_IS_CALLED + MOSIPDeviceServiceDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,
-				MasterDataConstant.UPDATE_API_IS_CALLED + MOSIPDeviceServiceDto.class.getCanonicalName(),"ADM-710");
+				MasterDataConstant.UPDATE_API_IS_CALLED + MOSIPDeviceServiceDto.class.getCanonicalName(), "ADM-710");
 		return responseWrapper;
 
 	}

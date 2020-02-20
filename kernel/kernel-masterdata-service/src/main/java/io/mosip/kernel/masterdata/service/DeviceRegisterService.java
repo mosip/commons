@@ -16,12 +16,11 @@ public interface DeviceRegisterService {
 	/**
 	 * Method to de register Device.
 	 * 
-	 * @param deviceCode
-	 *            the {@link DeRegisterDeviceRequestDto}.
+	 * @param deviceCode the {@link DeRegisterDeviceRequestDto}.
 	 * @return the {@link DeviceRegisterResponseDto}.
 	 */
 	public DeviceRegisterResponseDto deRegisterDevice(String deviceCode);
-	
+
 	/**
 	 * Update status.
 	 *
@@ -29,5 +28,5 @@ public interface DeviceRegisterService {
 	 * @param statusCode the status code
 	 * @return the response dto
 	 */
-	public ResponseDto updateStatus(String deviceCode,String statusCode);
+	public ResponseDto updateStatus(String deviceCode, String statusCode);
 }

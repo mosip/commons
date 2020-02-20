@@ -27,10 +27,8 @@ public enum MispIdExceptionConstant {
 	/**
 	 * Constructor for MispIdExceptionConstant.
 	 * 
-	 * @param errorCode
-	 *            the errorCode.
-	 * @param errorMessage
-	 *            the errorMessage.
+	 * @param errorCode    the errorCode.
+	 * @param errorMessage the errorMessage.
 	 */
 	MispIdExceptionConstant(String errorCode, String errorMessage) {
 		this.errorCode = errorCode;

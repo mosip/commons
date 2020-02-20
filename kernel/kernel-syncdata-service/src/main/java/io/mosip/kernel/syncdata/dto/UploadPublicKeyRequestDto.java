@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @ApiModel(description = "Model representing a Upload Public Key Request")
 public class UploadPublicKeyRequestDto {
-	
+
 	@NotBlank(message = SyncDataConstant.INVALID_REQUEST)
 	private String machineName;
-	
+
 	@NotBlank(message = SyncDataConstant.INVALID_REQUEST)
 	private String publicKey;
 

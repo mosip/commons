@@ -3,20 +3,18 @@ package io.mosip.kernel.core.deviceprovidermanager.spi;
 /**
  * @author M1046464
  *
- * @param <T>
- *            -
+ * @param <T> -
  * @param <D>
  * @param <S>
  * @param <U>
  */
 
-public interface DeviceProviderService<ResponseDto, ValidateDeviceDto, ValidateDeviceHistoryDto, DeviceProviderDto, DeviceProviderExtnDto,DeviceProviderPutDto > {
+public interface DeviceProviderService<ResponseDto, ValidateDeviceDto, ValidateDeviceHistoryDto, DeviceProviderDto, DeviceProviderExtnDto, DeviceProviderPutDto> {
 
 	/**
 	 * Validate device providers.
 	 *
-	 * @param validateDeviceDto
-	 *            the validate device dto
+	 * @param validateDeviceDto the validate device dto
 	 * @return {@link ResponseDto}
 	 */
 	public ResponseDto validateDeviceProviders(ValidateDeviceDto validateDeviceDto);
@@ -24,8 +22,7 @@ public interface DeviceProviderService<ResponseDto, ValidateDeviceDto, ValidateD
 	/**
 	 * Validate device provider history.
 	 *
-	 * @param validateDeviceDto
-	 *            the validate device dto
+	 * @param validateDeviceDto the validate device dto
 	 * @return {@link ResponseDto} the response dto
 	 */
 	public ResponseDto validateDeviceProviderHistory(ValidateDeviceHistoryDto validateDeviceHistoryDto);
@@ -33,8 +30,7 @@ public interface DeviceProviderService<ResponseDto, ValidateDeviceDto, ValidateD
 	/**
 	 * Method to create Device Provider
 	 * 
-	 * @param dto
-	 *            Device Provider dto from user
+	 * @param dto Device Provider dto from user
 	 * @return DeviceProviderExtnDto device Provider dto which has created
 	 */
 	public DeviceProviderExtnDto createDeviceProvider(DeviceProviderDto dto);
@@ -42,9 +38,8 @@ public interface DeviceProviderService<ResponseDto, ValidateDeviceDto, ValidateD
 	/**
 	 * Method to update Device Provider
 	 * 
-	 * @param dto
-	 *            Device Provider dto from user
+	 * @param dto Device Provider dto from user
 	 * @return DeviceProviderExtnDto device Provider dto which has updated
 	 */
-	public DeviceProviderExtnDto updateDeviceProvider(DeviceProviderPutDto  dto);
+	public DeviceProviderExtnDto updateDeviceProvider(DeviceProviderPutDto dto);
 }

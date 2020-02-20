@@ -5,19 +5,21 @@
 // Generated on: 2019.05.13 at 03:22:53 PM IST 
 //
 
-
 package io.mosip.kernel.core.cbeffutil.jaxbclasses;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for SingleTypeType.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
+ * Java class for SingleTypeType.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
+ * <p>
+ * 
  * <pre>
  * &lt;simpleType name="SingleTypeType">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
@@ -63,6 +65,7 @@ public enum SingleType {
 	KEYSTROKE("Keystroke"), @XmlEnumValue("LipMovement")
 	LIP_MOVEMENT("LipMovement"), @XmlEnumValue("SignatureSign")
 	SIGNATURE_SIGN("SignatureSign");
+
 	private final String value;
 
 	SingleType(String v) {

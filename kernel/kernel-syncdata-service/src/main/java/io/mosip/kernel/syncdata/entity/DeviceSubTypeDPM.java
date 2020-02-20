@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@EqualsAndHashCode(callSuper=true)
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "reg_device_sub_type", schema = "master")
 public class DeviceSubTypeDPM extends BaseEntity {

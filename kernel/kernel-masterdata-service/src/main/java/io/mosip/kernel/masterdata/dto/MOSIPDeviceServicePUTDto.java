@@ -67,11 +67,9 @@ public class MOSIPDeviceServicePUTDto {
 	@Size(min = 0, max = 36)
 	@ApiModelProperty(value = "softBinaryHash", required = true, dataType = "java.lang.Byte")
 	private String swBinaryHash;
-	
+
 	@NotNull
 	@ApiModelProperty(value = "isActive", dataType = "java.lang.Boolean")
 	private Boolean isActive;
-	
 
 }
-

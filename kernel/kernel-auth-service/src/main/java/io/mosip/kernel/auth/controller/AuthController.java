@@ -120,7 +120,7 @@ public class AuthController {
 			res.addCookie(cookie);
 			authNResponse.setStatus(authResponseDto.getStatus());
 			authNResponse.setMessage(authResponseDto.getMessage());
-	
+
 		}
 		responseWrapper.setResponse(authNResponse);
 		return responseWrapper;
@@ -221,10 +221,10 @@ public class AuthController {
 			res.addCookie(cookie);
 			authNResponse.setStatus(authResponseDto.getStatus());
 			authNResponse.setMessage(authResponseDto.getMessage());
-			System.out.println("Token added in response "+authResponseDto.getToken());
-			
+			System.out.println("Token added in response " + authResponseDto.getToken());
+
 		}
-		System.out.println("Token in response header :::"+res.getHeader("Set-Cookie"));
+		System.out.println("Token in response header :::" + res.getHeader("Set-Cookie"));
 		responseWrapper.setResponse(authNResponse);
 		return responseWrapper;
 	}
@@ -258,7 +258,7 @@ public class AuthController {
 						AuthErrorCode.TOKEN_NOTPRESENT_ERROR.getErrorMessage());
 			}
 			mosipUserDtoToken = authService.validateToken(authToken);
-			System.out.println("Token check after validate :::"+mosipUserDtoToken.getToken());
+			System.out.println("Token check after validate :::" + mosipUserDtoToken.getToken());
 			if (mosipUserDtoToken != null) {
 				mosipUserDtoToken.setMessage(AuthConstant.TOKEN_SUCCESS_MESSAGE);
 			}
@@ -282,15 +282,14 @@ public class AuthController {
 	 */
 	@ResponseFilter
 	@GetMapping(value = "/authorize/admin/validateToken")
-	public ResponseWrapper<MosipUserDto> validateAdminToken(
-			HttpServletRequest request,HttpServletResponse res){
+	public ResponseWrapper<MosipUserDto> validateAdminToken(HttpServletRequest request, HttpServletResponse res) {
 		String authToken = null;
 		Cookie[] cookies = request.getCookies();
 		if (cookies == null) {
 			throw new AuthManagerException(AuthErrorCode.COOKIE_NOTPRESENT_ERROR.getErrorCode(),
 					AuthErrorCode.COOKIE_NOTPRESENT_ERROR.getErrorMessage());
 		}
-		MosipUserDto mosipUserDto =null;
+		MosipUserDto mosipUserDto = null;
 		try {
 			for (Cookie cookie : cookies) {
 				if (cookie.getName().contains(AuthConstant.AUTH_COOOKIE_HEADER)) {
@@ -301,11 +300,11 @@ public class AuthController {
 				throw new AuthManagerException(AuthErrorCode.TOKEN_NOTPRESENT_ERROR.getErrorCode(),
 						AuthErrorCode.TOKEN_NOTPRESENT_ERROR.getErrorMessage());
 			}
-		
-		mosipUserDto = authService.valdiateToken(authToken);
-		Cookie cookie = createCookie(mosipUserDto.getToken(), mosipEnvironment.getTokenExpiry());
-		res.addCookie(cookie);
-		}catch (NonceExpiredException exp) {
+
+			mosipUserDto = authService.valdiateToken(authToken);
+			Cookie cookie = createCookie(mosipUserDto.getToken(), mosipEnvironment.getTokenExpiry());
+			res.addCookie(cookie);
+		} catch (NonceExpiredException exp) {
 			throw new AuthManagerException(AuthErrorCode.UNAUTHORIZED.getErrorCode(), exp.getMessage());
 		}
 		ResponseWrapper<MosipUserDto> responseWrapper = new ResponseWrapper<>();
@@ -392,10 +391,12 @@ public class AuthController {
 
 	@ResponseFilter
 	@PostMapping(value = "/usersaltdetails/{appid}")
-	public ResponseWrapper<MosipUserSaltListDto> getUserDetailsWithSalt(@RequestBody RequestWrapper<UserDetailsRequestDto> userDetails,@PathVariable("appid") String appId)
+	public ResponseWrapper<MosipUserSaltListDto> getUserDetailsWithSalt(
+			@RequestBody RequestWrapper<UserDetailsRequestDto> userDetails, @PathVariable("appid") String appId)
 			throws Exception {
 		ResponseWrapper<MosipUserSaltListDto> responseWrapper = new ResponseWrapper<>();
-		MosipUserSaltListDto mosipUsers = authService.getAllUserDetailsWithSalt(userDetails.getRequest().getUserDetails(),appId);
+		MosipUserSaltListDto mosipUsers = authService
+				.getAllUserDetailsWithSalt(userDetails.getRequest().getUserDetails(), appId);
 		responseWrapper.setResponse(mosipUsers);
 		return responseWrapper;
 	}
@@ -403,10 +404,8 @@ public class AuthController {
 	/**
 	 * This API will fetch RID based on appId and userId.
 	 * 
-	 * @param appId
-	 *            - application Id
-	 * @param userId
-	 *            - user Id
+	 * @param appId  - application Id
+	 * @param userId - user Id
 	 * @return {@link RIdDto}
 	 * @throws Exception
 	 */
@@ -423,13 +422,10 @@ public class AuthController {
 	/**
 	 * Fetch username based on the user id.
 	 * 
-	 * @param appId
-	 *            - application id
-	 * @param userId
-	 *            - user id
+	 * @param appId  - application id
+	 * @param userId - user id
 	 * @return {@link UserNameDto}
-	 * @throws Exception
-	 *             - exception is thrown if
+	 * @throws Exception - exception is thrown if
 	 */
 	@ResponseFilter
 	@GetMapping(value = "unblock/{appid}/{userid}")
@@ -444,10 +440,8 @@ public class AuthController {
 	/**
 	 * This API will change the password of the particular user
 	 * 
-	 * @param appId
-	 *            - applicationId
-	 * @param passwordDto
-	 *            - {@link PasswordDto}
+	 * @param appId       - applicationId
+	 * @param passwordDto - {@link PasswordDto}
 	 * @return {@link AuthZResponseDto}
 	 * @throws Exception
 	 */
@@ -464,10 +458,8 @@ public class AuthController {
 	/**
 	 * This API will reset the password of the particular user
 	 * 
-	 * @param appId
-	 *            - applicationId
-	 * @param passwordDto
-	 *            -{@link PasswordDto}
+	 * @param appId       - applicationId
+	 * @param passwordDto -{@link PasswordDto}
 	 * @return {@link AuthZResponseDto}
 	 * @throws Exception
 	 */
@@ -483,10 +475,8 @@ public class AuthController {
 
 	/**
 	 * 
-	 * @param mobile
-	 *            - mobile number
-	 * @param appId
-	 *            - applicationId
+	 * @param mobile - mobile number
+	 * @param appId  - applicationId
 	 * @return {@link UserNameDto}
 	 * @throws Exception
 	 */
@@ -503,18 +493,21 @@ public class AuthController {
 	/**
 	 * Create a user account in Data Store
 	 * 
-	 * @param userCreationRequestDto
-	 *            {@link UserRegistrationRequestDto}
+	 * @param userCreationRequestDto {@link UserRegistrationRequestDto}
 	 * @return {@link UserRegistrationResponseDto}
 	 */
-/*	@ResponseFilter
-	@PostMapping(value = "/user")
-	public ResponseWrapper<UserRegistrationResponseDto> registerUser(
-			@RequestBody @Valid RequestWrapper<UserRegistrationRequestDto> userCreationRequestDto) {
-		ResponseWrapper<UserRegistrationResponseDto> responseWrapper = new ResponseWrapper<>();
-		responseWrapper.setResponse(authService.registerUser(userCreationRequestDto.getRequest()));
-		return responseWrapper;
-	}*/
+	/*
+	 * @ResponseFilter
+	 * 
+	 * @PostMapping(value = "/user") public
+	 * ResponseWrapper<UserRegistrationResponseDto> registerUser(
+	 * 
+	 * @RequestBody @Valid RequestWrapper<UserRegistrationRequestDto>
+	 * userCreationRequestDto) { ResponseWrapper<UserRegistrationResponseDto>
+	 * responseWrapper = new ResponseWrapper<>();
+	 * responseWrapper.setResponse(authService.registerUser(userCreationRequestDto.
+	 * getRequest())); return responseWrapper; }
+	 */
 
 	@ResponseFilter
 	@PostMapping(value = "/user/addpassword")
@@ -537,10 +530,8 @@ public class AuthController {
 
 	/**
 	 * 
-	 * @param mobile
-	 *            - mobile number
-	 * @param appId
-	 *            - applicationId
+	 * @param mobile - mobile number
+	 * @param appId  - applicationId
 	 * @return {@link MosipUserDto}
 	 * @throws Exception
 	 */
@@ -556,10 +547,8 @@ public class AuthController {
 
 	/**
 	 * 
-	 * @param mobile
-	 *            - mobile number
-	 * @param appId
-	 *            - applicationId
+	 * @param mobile - mobile number
+	 * @param appId  - applicationId
 	 * @return {@link MosipUserDto}
 	 * @throws Exception
 	 */
@@ -573,11 +562,10 @@ public class AuthController {
 		return responseWrapper;
 	}
 
-	
 	/**
 	 * Gets the user detail based on user id.
 	 *
-	 * @param appId the app id
+	 * @param appId  the app id
 	 * @param userId the user id
 	 * @return {@link UserDetailsDto}
 	 */
@@ -585,7 +573,8 @@ public class AuthController {
 	@PostMapping(value = "/userdetail/regid/{appid}")
 	public ResponseWrapper<UserDetailsResponseDto> getUserDetailBasedOnUserId(@PathVariable("appid") String appId,
 			@RequestBody RequestWrapper<UserDetailsRequestDto> userDetails) {
-		UserDetailsResponseDto userDetailsDto = authService.getUserDetailBasedOnUserId(appId, userDetails.getRequest().getUserDetails());
+		UserDetailsResponseDto userDetailsDto = authService.getUserDetailBasedOnUserId(appId,
+				userDetails.getRequest().getUserDetails());
 		ResponseWrapper<UserDetailsResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(userDetailsDto);
 		return responseWrapper;
@@ -593,15 +582,14 @@ public class AuthController {
 
 	/**
 	 * 
-	 * @param req
-	 *            - {@link HttpServletRequest}
-	 * @param res
-	 *            - {@link HttpServletResponse}
+	 * @param req - {@link HttpServletRequest}
+	 * @param res - {@link HttpServletResponse}
 	 * @return {@link ResponseWrapper}
 	 */
 	@ResponseFilter
 	@DeleteMapping(value = "/logout/user")
-	public ResponseWrapper<AuthResponseDto> logoutUser(@CookieValue(value = "Authorization", required = false) String token, HttpServletResponse res) {
+	public ResponseWrapper<AuthResponseDto> logoutUser(
+			@CookieValue(value = "Authorization", required = false) String token, HttpServletResponse res) {
 		AuthResponseDto authResponseDto = authService.logoutUser(token);
 		ResponseWrapper<AuthResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(authResponseDto);
@@ -632,8 +620,7 @@ public class AuthController {
 	/**
 	 * Gets Access token from cookie
 	 * 
-	 * @param req
-	 *            - {@link HttpServletRequest}
+	 * @param req - {@link HttpServletRequest}
 	 * @return {@link String} - accessToken
 	 */
 	private String getTokenFromCookie(HttpServletRequest req) {
@@ -661,8 +648,7 @@ public class AuthController {
 	/**
 	 * Erases Cookie from browser
 	 * 
-	 * @param cookie
-	 *            - {@link Cookie}
+	 * @param cookie - {@link Cookie}
 	 */
 	private void removeCookie(Cookie cookie) {
 		cookie.setValue("");

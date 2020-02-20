@@ -29,8 +29,7 @@ public enum MispIdPropertyConstant {
 	/**
 	 * Constructor for MispIdPropertyConstant.
 	 * 
-	 * @param property
-	 *            the property.
+	 * @param property the property.
 	 */
 	MispIdPropertyConstant(String property) {
 		this.property = property;

@@ -33,12 +33,9 @@ public class RegistrationCenterHistoryController {
 	/**
 	 * Get api to fetch list of registration centers
 	 * 
-	 * @param registrationCenterId
-	 *            The id of registration center
-	 * @param langCode
-	 *            The language code
-	 * @param effectiveDate
-	 *            The effective date
+	 * @param registrationCenterId The id of registration center
+	 * @param langCode             The language code
+	 * @param effectiveDate        The effective date
 	 * @return {@link RegistrationCenterResponseDto} instance
 	 */
 	@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")

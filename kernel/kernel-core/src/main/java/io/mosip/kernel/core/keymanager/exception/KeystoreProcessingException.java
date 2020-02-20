@@ -28,11 +28,10 @@ public class KeystoreProcessingException extends BaseUncheckedException {
 	/**
 	 * @param errorCode    The errorcode for this exception
 	 * @param errorMessage The error message for this exception
-	 * @param rootCause cause of the error occurred
+	 * @param rootCause    cause of the error occurred
 	 */
 	public KeystoreProcessingException(String errorCode, String errorMessage, Throwable rootCause) {
 		super(errorCode, errorMessage, rootCause);
 	}
-	
-	
+
 }

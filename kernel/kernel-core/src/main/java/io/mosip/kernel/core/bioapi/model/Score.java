@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @Data
 public class Score {
-	private float scaleScore ; //0 - 100, used for internal classification and	efficacy analysis
-	private long internalScore ; // used against threshold specified in config file
-	private KeyValuePair [] analyticsInfo ; // detailed breakdown and other	information
+	private float scaleScore; // 0 - 100, used for internal classification and efficacy analysis
+	private long internalScore; // used against threshold specified in config file
+	private KeyValuePair[] analyticsInfo; // detailed breakdown and other information
 }

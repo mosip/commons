@@ -49,20 +49,21 @@ public class DigitalIdDto {
 	private String model;
 
 	/** type *//*
-	@ApiModelProperty(value = "type", dataType = "java.lang.String")
-	private String type;
-	
-	/** type */
+				 * @ApiModelProperty(value = "type", dataType = "java.lang.String") private
+				 * String type;
+				 * 
+				 * /** type
+				 */
 	@NotBlank
 	@ApiModelProperty(value = "subType", dataType = "java.lang.String")
 	private String subType;
-	//@ValidType(message = "Type Value is Invalid")
+	// @ValidType(message = "Type Value is Invalid")
 	@NotBlank
 	@ApiModelProperty(value = "type", dataType = "java.lang.String")
 	private String type;
 
 	/** The date time. */
-	
+
 	private String dateTime;
-	
+
 }

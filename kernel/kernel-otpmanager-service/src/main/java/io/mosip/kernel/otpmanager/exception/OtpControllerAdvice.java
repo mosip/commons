@@ -44,13 +44,10 @@ public class OtpControllerAdvice {
 	/**
 	 * This method handles MethodArgumentNotValidException.
 	 * 
-	 * @param httpServletRequest
-	 *            the request
-	 * @param e
-	 *            The exception
+	 * @param httpServletRequest the request
+	 * @param e                  The exception
 	 * @return The response entity.
-	 * @throws IOException
-	 *             the IO Exception
+	 * @throws IOException the IO Exception
 	 */
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> otpGeneratorValidity(
@@ -69,14 +66,11 @@ public class OtpControllerAdvice {
 	/**
 	 * This method handles OtpInvalidArgumentException.
 	 * 
-	 * @param httpServletRequest
-	 *            the request
+	 * @param httpServletRequest the request
 	 * 
-	 * @param exception
-	 *            The exception.
+	 * @param exception          The exception.
 	 * @return The response entity.
-	 * @throws IOException
-	 *             the IO Exception
+	 * @throws IOException the IO Exception
 	 */
 	@ExceptionHandler(OtpInvalidArgumentException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> otpValidationArgumentValidity(
@@ -91,14 +85,11 @@ public class OtpControllerAdvice {
 	/**
 	 * This method handles RequiredKeyNotFoundException.
 	 * 
-	 * @param httpServletRequest
-	 *            the request
+	 * @param httpServletRequest the request
 	 * 
-	 * @param exception
-	 *            The exception.
+	 * @param exception          The exception.
 	 * @return The response entity.
-	 * @throws IOException
-	 *             the IO Exception
+	 * @throws IOException the IO Exception
 	 */
 	@ExceptionHandler(RequiredKeyNotFoundException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> otpValidationKeyNullValidity(

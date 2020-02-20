@@ -11,17 +11,20 @@
 	</parent>
 
 	<artifactId>kernel-auditmanager-api</artifactId>
-
+     <properties>
+     <kernel.core.version>1.0.6</kernel.core.version>
+     <kernel.dataaccess-hibernate.version>1.0.6</kernel.dataaccess-hibernate.version>
+     </properties>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-dataaccess-hibernate</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.dataaccess-hibernate.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>

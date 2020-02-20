@@ -17,13 +17,13 @@ import lombok.Data;
 public class RegisterDeviceResponse {
 
 	private String status;
-	
+
 	private String digitalId;
-	
+
 	private String deviceCode;
-	
+
 	private String env;
-	
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private LocalDateTime timeStamp;
 }

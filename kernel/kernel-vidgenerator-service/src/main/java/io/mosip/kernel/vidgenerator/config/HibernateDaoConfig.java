@@ -32,7 +32,7 @@ import io.mosip.kernel.vidgenerator.constant.HibernatePersistenceConstant;
  * Configuration class for UinGenerator
  * 
  * @author Dharmesh Khandelwal
- * @author Raj Jha 
+ * @author Raj Jha
  * @since 1.0.0
  *
  */
@@ -41,7 +41,8 @@ import io.mosip.kernel.vidgenerator.constant.HibernatePersistenceConstant;
 @PropertySource({ "classpath:bootstrap.properties" })
 @PropertySource(value = "classpath:application-${spring.profiles.active}.properties", ignoreResourceNotFound = true)
 @EnableJpaRepositories(basePackages = { "io.mosip.kernel.vidgenerator.repository" })
-@ComponentScan(basePackages = { "io.mosip.kernel.vidgenerator.*","io.mosip.kernel.idgenerator.vid.*","io.mosip.kernel.crypto.*","io.mosip.kernel.auth.adapter.*"})
+@ComponentScan(basePackages = { "io.mosip.kernel.vidgenerator.*", "io.mosip.kernel.idgenerator.vid.*",
+		"io.mosip.kernel.crypto.*", "io.mosip.kernel.auth.adapter.*" })
 @EnableTransactionManagement
 public class HibernateDaoConfig implements EnvironmentAware {
 

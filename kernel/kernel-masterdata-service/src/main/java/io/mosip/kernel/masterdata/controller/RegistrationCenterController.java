@@ -71,12 +71,10 @@ public class RegistrationCenterController {
 	 * Function to fetch registration centers list using location code and language
 	 * code.
 	 * 
-	 * @param langCode
-	 *            language code for which the registration center needs to be
-	 *            searched.
-	 * @param locationCode
-	 *            location code for which the registration center needs to be
-	 *            searched.
+	 * @param langCode     language code for which the registration center needs to
+	 *                     be searched.
+	 * @param locationCode location code for which the registration center needs to
+	 *                     be searched.
 	 * @return {@link RegistrationCenterResponseDto} RegistrationCenterResponseDto
 	 */
 	@ResponseFilter
@@ -94,12 +92,9 @@ public class RegistrationCenterController {
 	 * Function to fetch specific registration center holidays by registration
 	 * center id , year and language code.
 	 * 
-	 * @param langCode
-	 *            langCode of required center.
-	 * @param registrationCenterId
-	 *            centerId of required center
-	 * @param year
-	 *            the year provided by user.
+	 * @param langCode             langCode of required center.
+	 * @param registrationCenterId centerId of required center
+	 * @param year                 the year provided by user.
 	 * @return {@link RegistrationCenterHolidayDto} RegistrationCenterHolidayDto
 	 */
 	@PreAuthorize("hasAnyRole('INDIVIDUAL','PRE_REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR')")
@@ -118,14 +113,10 @@ public class RegistrationCenterController {
 	/**
 	 * Function to fetch nearby registration centers using coordinates
 	 * 
-	 * @param langCode
-	 *            langCode of required centers.
-	 * @param longitude
-	 *            the longitude provided by user.
-	 * @param latitude
-	 *            the latitude provided by user.
-	 * @param proximityDistance
-	 *            the proximity distance provided by user.
+	 * @param langCode          langCode of required centers.
+	 * @param longitude         the longitude provided by user.
+	 * @param latitude          the latitude provided by user.
+	 * @param proximityDistance the proximity distance provided by user.
 	 * @return {@link RegistrationCenterResponseDto} RegistrationCenterResponseDto
 	 */
 	@PreAuthorize("hasAnyRole('INDIVIDUAL')")
@@ -144,10 +135,8 @@ public class RegistrationCenterController {
 	/**
 	 * Function to fetch registration center using centerId and language code.
 	 * 
-	 * @param registrationCenterId
-	 *            centerId of required center.
-	 * @param langCode
-	 *            langCode of required center.
+	 * @param registrationCenterId centerId of required center.
+	 * @param langCode             langCode of required center.
 	 * @return {@link RegistrationCenterResponseDto} RegistrationCenterResponseDto
 	 */
 	@ResponseFilter
@@ -178,12 +167,9 @@ public class RegistrationCenterController {
 	 * Function to fetch list of registration centers based on hierarchy level,text
 	 * and language code
 	 * 
-	 * @param langCode
-	 *            input from user
-	 * @param hierarchyLevel
-	 *            input from user
-	 * @param name
-	 *            input from user
+	 * @param langCode       input from user
+	 * @param hierarchyLevel input from user
+	 * @param name           input from user
 	 * @return {@link RegistrationCenterResponseDto} RegistrationCenterResponseDto
 	 */
 	@PreAuthorize("hasAnyRole('INDIVIDUAL')")
@@ -204,12 +190,9 @@ public class RegistrationCenterController {
 	 * Check whether the time stamp sent for the given registration center id is not
 	 * a holiday and is in between working hours.
 	 * 
-	 * @param regId
-	 *            - registration center id
-	 * @param langCode
-	 *            - language code
-	 * @param timeStamp
-	 *            - timestamp based on the format YYYY-MM-ddTHH:mm:ss.SSSZ
+	 * @param regId     - registration center id
+	 * @param langCode  - language code
+	 * @param timeStamp - timestamp based on the format YYYY-MM-ddTHH:mm:ss.SSSZ
 	 * @return {@link ResgistrationCenterStatusResponseDto} -
 	 *         RegistrationCenterStatusResponseDto
 	 */
@@ -239,12 +222,9 @@ public class RegistrationCenterController {
 	 * Function to fetch list of registration centers based on hierarchy level,List
 	 * of text and language code
 	 * 
-	 * @param langCode
-	 *            input from user
-	 * @param hierarchyLevel
-	 *            input from user
-	 * @param names
-	 *            input from user
+	 * @param langCode       input from user
+	 * @param hierarchyLevel input from user
+	 * @param names          input from user
 	 * @return {@link RegistrationCenterResponseDto} RegistrationCenterResponseDto
 	 */
 	@PreAuthorize("hasAnyRole('INDIVIDUAL')")
@@ -282,8 +262,7 @@ public class RegistrationCenterController {
 	/**
 	 * Api to search the registration center based on the search input
 	 * 
-	 * @param request
-	 *            search input for registration center search
+	 * @param request search input for registration center search
 	 * @return list of registration center  
 	 */
 	@ResponseFilter
@@ -295,21 +274,22 @@ public class RegistrationCenterController {
 				String.format(MasterDataConstant.SEARCH_API_IS_CALLED,
 						RegistrationCenterSearchDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SEARCH_API_IS_CALLED,
-						RegistrationCenterSearchDto.class.getSimpleName()),"ADM-517");
+						RegistrationCenterSearchDto.class.getSimpleName()),
+				"ADM-517");
 		ResponseWrapper<PageResponseDto<RegistrationCenterSearchDto>> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(registrationCenterService.searchRegistrationCenter(request.getRequest()));
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.SUCCESSFUL_SEARCH, RegistrationCenterSearchDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_SEARCH_DESC,
-						RegistrationCenterSearchDto.class.getSimpleName()),"ADM-518");
+						RegistrationCenterSearchDto.class.getSimpleName()),
+				"ADM-518");
 		return responseWrapper;
 	}
 
 	/**
 	 * Api to filter Registration Center based on column and type provided.
 	 * 
-	 * @param request
-	 *            the request DTO.
+	 * @param request the request DTO.
 	 * @return the {@link FilterResponseDto}.
 	 */
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
@@ -321,21 +301,23 @@ public class RegistrationCenterController {
 				String.format(MasterDataConstant.FILTER_API_IS_CALLED,
 						RegistrationCenterSearchDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.FILTER_API_IS_CALLED,
-						RegistrationCenterSearchDto.class.getSimpleName()),"ADM-519");
+						RegistrationCenterSearchDto.class.getSimpleName()),
+				"ADM-519");
 		ResponseWrapper<FilterResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(registrationCenterService.registrationCenterFilterValues(request.getRequest()));
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.SUCCESSFUL_FILTER, RegistrationCenterSearchDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_FILTER_DESC,
-						RegistrationCenterSearchDto.class.getSimpleName()),"ADM-520");
+						RegistrationCenterSearchDto.class.getSimpleName()),
+				"ADM-520");
 		return responseWrapper;
 	}
 
 	/**
 	 * This method creates registration center by Admin.
 	 * 
-	 * @param reqRegistrationCenterDto
-	 *            the request DTO for creating registration center.
+	 * @param reqRegistrationCenterDto the request DTO for creating registration
+	 *                                 center.
 	 * @return RegistrationCenterPostResponseDto return the created registration
 	 *         center DTO.
 	 */
@@ -348,7 +330,8 @@ public class RegistrationCenterController {
 				String.format(MasterDataConstant.CREATE_API_IS_CALLED,
 						RegistrationCenterSearchDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.CREATE_API_IS_CALLED,
-						RegistrationCenterSearchDto.class.getSimpleName()),"ADM-521");
+						RegistrationCenterSearchDto.class.getSimpleName()),
+				"ADM-521");
 		ResponseWrapper<RegistrationCenterExtnDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper
 				.setResponse(registrationCenterService.createRegistrationCenter(reqRegistrationCenterDto.getRequest()));
@@ -359,8 +342,8 @@ public class RegistrationCenterController {
 	/**
 	 * This method updates registration center by Admin.
 	 * 
-	 * @param reqRegistrationCenterDto
-	 *            the request DTO for updating registration center.
+	 * @param reqRegistrationCenterDto the request DTO for updating registration
+	 *                                 center.
 	 * @return the response i.e. the id of the registration center updated.
 	 */
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
@@ -372,7 +355,8 @@ public class RegistrationCenterController {
 				String.format(MasterDataConstant.UPDATE_API_IS_CALLED,
 						RegistrationCenterSearchDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.UPDATE_API_IS_CALLED,
-						RegistrationCenterSearchDto.class.getSimpleName()),"ADM-522");
+						RegistrationCenterSearchDto.class.getSimpleName()),
+				"ADM-522");
 		ResponseWrapper<RegistrationCenterExtnDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper
 				.setResponse(registrationCenterService.updateRegistrationCenter(reqRegistrationCenterDto.getRequest()));
@@ -382,8 +366,8 @@ public class RegistrationCenterController {
 	/**
 	 * API to decommission registration center based on ID.
 	 * 
-	 * @param regCenterID
-	 *            the center ID of the reg-center which needs to be decommissioned.
+	 * @param regCenterID the center ID of the reg-center which needs to be
+	 *                    decommissioned.
 	 * @return ID Response : returns the ID in response, if the reg-center gets
 	 *         decommissioned
 	 */
@@ -395,7 +379,8 @@ public class RegistrationCenterController {
 				String.format(MasterDataConstant.DECOMMISION_API_CALLED,
 						RegistrationCenterSearchDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.DECOMMISION_API_CALLED,
-						RegistrationCenterSearchDto.class.getSimpleName()),"ADM-523");
+						RegistrationCenterSearchDto.class.getSimpleName()),
+				"ADM-523");
 		ResponseWrapper<IdResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(registrationCenterService.decommissionRegCenter(regCenterID));
 		return responseWrapper;

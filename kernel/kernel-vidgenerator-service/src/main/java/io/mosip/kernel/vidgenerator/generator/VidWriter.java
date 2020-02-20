@@ -20,6 +20,6 @@ public class VidWriter {
 	private VidService vidService;
 
 	public boolean persistVids(VidEntity vid) {
-			return this.vidService.saveVID(vid);
+		return this.vidService.saveVID(vid);
 	}
 }

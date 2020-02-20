@@ -25,13 +25,13 @@ import io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator;
  */
 @Configuration
 public class IdObjectValidatorConfig {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(IdObjectValidatorConfig.class);
 
 	/** The env. */
 	@Autowired
 	private Environment env;
-	
+
 	/**
 	 * Validate reference validator.
 	 *
@@ -60,8 +60,7 @@ public class IdObjectValidatorConfig {
 			throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		if (StringUtils.isNotBlank(env.getProperty(REFERENCE_VALIDATOR))) {
 			logger.debug("instance of referenceValidator is created");
-			return (IdObjectValidator) Class
-					.forName(env.getProperty(REFERENCE_VALIDATOR)).newInstance();
+			return (IdObjectValidator) Class.forName(env.getProperty(REFERENCE_VALIDATOR)).newInstance();
 		} else {
 			logger.debug("no reference validator is provided");
 			return new IdObjectValidator() {

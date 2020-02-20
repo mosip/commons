@@ -74,8 +74,8 @@ public class KeymanagerExceptionHandler {
 	public ResponseEntity<ResponseWrapper<ServiceError>> noSuchAlgorithmException(HttpServletRequest httpServletRequest,
 			final NoSuchAlgorithmException e) throws IOException {
 		ExceptionUtils.logRootCause(e);
-		return new ResponseEntity<>(getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText(),
-				HttpStatus.OK), HttpStatus.OK);
+		return new ResponseEntity<>(
+				getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText(), HttpStatus.OK), HttpStatus.OK);
 	}
 
 	@ExceptionHandler(InvalidFormatException.class)
@@ -120,18 +120,18 @@ public class KeymanagerExceptionHandler {
 	public ResponseEntity<ResponseWrapper<ServiceError>> cryptoException(HttpServletRequest httpServletRequest,
 			final CryptoException e) throws IOException {
 		ExceptionUtils.logRootCause(e);
-		return new ResponseEntity<>(getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText(),
-				HttpStatus.OK), HttpStatus.OK);
+		return new ResponseEntity<>(
+				getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText(), HttpStatus.OK), HttpStatus.OK);
 	}
-	
+
 	@ExceptionHandler(KeymanagerServiceException.class)
-	public ResponseEntity<ResponseWrapper<ServiceError>> keymanagerServiceException(HttpServletRequest httpServletRequest,
-			final CryptoException e) throws IOException {
+	public ResponseEntity<ResponseWrapper<ServiceError>> keymanagerServiceException(
+			HttpServletRequest httpServletRequest, final CryptoException e) throws IOException {
 		ExceptionUtils.logRootCause(e);
-		return new ResponseEntity<>(getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText(),
-				HttpStatus.OK), HttpStatus.OK);
+		return new ResponseEntity<>(
+				getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText(), HttpStatus.OK), HttpStatus.OK);
 	}
-	
+
 	@ExceptionHandler(InvalidApplicationIdException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> invalidApplicationIdException(
 			HttpServletRequest httpServletRequest, final InvalidApplicationIdException e) throws IOException {

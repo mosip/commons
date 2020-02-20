@@ -16,19 +16,18 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 //@ApiModel(value = "Registered Device", description = "Registered Device resource")
-public class RegisteredDeviceExtnDto extends BaseDto{
-	
+public class RegisteredDeviceExtnDto extends BaseDto {
+
 	@NotBlank
 	@Size(min = 1, max = 36)
 	@ApiModelProperty(value = "code", required = true, dataType = "java.lang.String")
 	private String code;
-	
+
 	/**
 	 * Field for deviceTypeCode
 	 */
@@ -44,11 +43,10 @@ public class RegisteredDeviceExtnDto extends BaseDto{
 	@Size(min = 1, max = 36)
 	@ApiModelProperty(value = "devicesTypeCode", required = true, dataType = "java.lang.String")
 	private String deviceSTypeCode;
-	
-	
+
 	/**
-	 * Field for Status Code
-	 * Status should only have standard values - “Registered”, “Retired”, “Revoked”
+	 * Field for Status Code Status should only have standard values - “Registered”,
+	 * “Retired”, “Revoked”
 	 */
 	@NotBlank
 	@Size(min = 1, max = 64)
@@ -66,13 +64,13 @@ public class RegisteredDeviceExtnDto extends BaseDto{
 	/**
 	 * Field for device name
 	 */
-	
+
 	@Size(min = 0, max = 256)
 	@ApiModelProperty(value = "deviceSubId", required = true, dataType = "java.lang.String")
 	private String deviceSubId;
 	/**
-	 * Field for device name
-	 * Purpose level should only accept two values, “Registration” or “Auth”.
+	 * Field for device name Purpose level should only accept two values,
+	 * “Registration” or “Auth”.
 	 */
 	@NotBlank
 	@Size(min = 1, max = 64)
@@ -90,13 +88,13 @@ public class RegisteredDeviceExtnDto extends BaseDto{
 	/**
 	 * Field for device name
 	 */
-	
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private LocalDateTime expiryDate;
 
 	/**
-	 * Field for device name
-	 * Certificate level should only accept two values. “L0” or “L1”
+	 * Field for device name Certificate level should only accept two values. “L0”
+	 * or “L1”
 	 */
 	@NotBlank
 	@Size(min = 1, max = 3)
@@ -106,36 +104,41 @@ public class RegisteredDeviceExtnDto extends BaseDto{
 	/**
 	 * Field for device name
 	 */
-	
+
 	@Size(min = 0, max = 36)
 	@ApiModelProperty(value = "foundationalTPId", required = true, dataType = "java.lang.String")
 	private String foundationalTPId;
 
 	/**
 	 * Field for device name
-	 *//*
-	
-	@Size(min = 0, max = 512)
-	@ApiModelProperty(value = "foundationalTrustSignature", required = true, dataType = "java.lang.String")
-	private String foundationalTrustSignature;
+	 */
+	/*
+	 * 
+	 * @Size(min = 0, max = 512)
+	 * 
+	 * @ApiModelProperty(value = "foundationalTrustSignature", required = true,
+	 * dataType = "java.lang.String") private String foundationalTrustSignature;
+	 * 
+	 *//**
+		 * Field for device name
+		 */
+	/*
+	 * @ApiModelProperty(value = "foundationalTrustCertificate", required = true,
+	 * dataType = "java.lang.String") private byte[] foundationalTrustCertificate;
+	 * 
+	 *//**
+		 * Field for device name
+		 *//*
+			 * @NotBlank
+			 * 
+			 * @Size(min = 1, max = 512)
+			 * 
+			 * @ApiModelProperty(value = "dProviderSignature", required = true, dataType =
+			 * "java.lang.String") private String deviceProviderSignature;
+			 */
 
-	*//**
-	 * Field for device name
-	 *//*
-	@ApiModelProperty(value = "foundationalTrustCertificate", required = true, dataType = "java.lang.String")
-	private byte[] foundationalTrustCertificate;
-
-	*//**
-	 * Field for device name
-	 *//*
-	@NotBlank
-	@Size(min = 1, max = 512)
-	@ApiModelProperty(value = "dProviderSignature", required = true, dataType = "java.lang.String")
-	private String deviceProviderSignature;*/
-	
-	
 	private DigitalIdDeviceRegisterDto digitalIdDto;
-	
+
 	private String ecodedEntity;
 
 }

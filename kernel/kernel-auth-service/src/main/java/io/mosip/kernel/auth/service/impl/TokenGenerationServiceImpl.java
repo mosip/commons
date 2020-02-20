@@ -18,30 +18,33 @@ import io.mosip.kernel.auth.service.TokenGenerationService;
  */
 @Component
 public class TokenGenerationServiceImpl implements TokenGenerationService {
-	
+
 	@Autowired
 	AuthService authService;
-	
+
 	@Value("${mosip.kernel.auth.app.id}")
 	private String authAppId;
-	
+
 	@Value("${mosip.kernel.auth.client.id}")
 	private String clientId;
-	
+
 	@Value("${mosip.kernel.auth.secret.key}")
 	private String secretKey;
-	
+
 	@Value("${mosip.kernel.ida.app.id}")
 	private String idaAppId;
-	
+
 	@Value("${mosip.kernel.ida.client.id}")
 	private String idaClientId;
-	
+
 	@Value("${mosip.kernel.ida.secret.key}")
 	private String idaSecretKey;
 
-	/* (non-Javadoc)
-	 * @see io.mosip.kernel.auth.service.TokenGenerationService#getInternalTokenGenerationService()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.mosip.kernel.auth.service.TokenGenerationService#
+	 * getInternalTokenGenerationService()
 	 */
 	@Override
 	public String getInternalTokenGenerationService() throws Exception {

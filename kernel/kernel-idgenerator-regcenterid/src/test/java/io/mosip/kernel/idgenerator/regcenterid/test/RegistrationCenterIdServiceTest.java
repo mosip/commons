@@ -35,7 +35,7 @@ public class RegistrationCenterIdServiceTest {
 
 	@MockBean
 	RegistrationCenterIdRepository repository;
-	
+
 	@MockBean
 	private RestTemplate restTemplate;
 

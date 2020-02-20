@@ -12,7 +12,7 @@ import io.mosip.kernel.core.signatureutil.model.SignatureResponse;
  * @since 1.0.0
  */
 public interface SignatureUtil {
-	
+
 	public SignatureResponse sign(String data, String timestamp);
 
 	/**
@@ -20,7 +20,7 @@ public interface SignatureUtil {
 	 *
 	 * @param signature the response signature
 	 * @param data      the response body
-	 * @param publickey         the base64 encoded public key string
+	 * @param publickey the base64 encoded public key string
 	 * @return true, if successful
 	 * @throws InvalidKeySpecException  the invalid key spec exception
 	 * @throws NoSuchAlgorithmException the no such algorithm exception

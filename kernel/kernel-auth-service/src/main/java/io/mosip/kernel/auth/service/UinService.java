@@ -13,6 +13,6 @@ import io.mosip.kernel.auth.dto.otp.OtpUser;
 public interface UinService {
 
 	MosipUserDto getDetailsFromUin(OtpUser otpUser) throws Exception;
-	
+
 	MosipUserDto getDetailsForValidateOtp(String uin) throws Exception;
 }

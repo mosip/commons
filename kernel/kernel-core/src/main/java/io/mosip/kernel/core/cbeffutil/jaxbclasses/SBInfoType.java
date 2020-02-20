@@ -5,7 +5,6 @@
 // Generated on: 2019.05.13 at 03:22:53 PM IST 
 //
 
-
 package io.mosip.kernel.core.cbeffutil.jaxbclasses;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,11 +12,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for SBInfoType complex type.
+ * <p>
+ * Java class for SBInfoType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="SBInfoType">
@@ -34,36 +35,30 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "SBInfoType", propOrder = {
-    "format"
-})
+@XmlType(name = "SBInfoType", propOrder = { "format" })
 public class SBInfoType {
 
-    @XmlElement(name = "Format")
-    protected RegistryIDType format;
+	@XmlElement(name = "Format")
+	protected RegistryIDType format;
 
-    /**
-     * Gets the value of the format property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link RegistryIDType }
-     *     
-     */
-    public RegistryIDType getFormat() {
-        return format;
-    }
+	/**
+	 * Gets the value of the format property.
+	 * 
+	 * @return possible object is {@link RegistryIDType }
+	 * 
+	 */
+	public RegistryIDType getFormat() {
+		return format;
+	}
 
-    /**
-     * Sets the value of the format property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link RegistryIDType }
-     *     
-     */
-    public void setFormat(RegistryIDType value) {
-        this.format = value;
-    }
+	/**
+	 * Sets the value of the format property.
+	 * 
+	 * @param value allowed object is {@link RegistryIDType }
+	 * 
+	 */
+	public void setFormat(RegistryIDType value) {
+		this.format = value;
+	}
 
 }

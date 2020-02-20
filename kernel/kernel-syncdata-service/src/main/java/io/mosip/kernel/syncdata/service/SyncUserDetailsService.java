@@ -19,12 +19,12 @@ public interface SyncUserDetailsService {
 	 * @return {@link SyncUserDetailDto}
 	 */
 	SyncUserDetailDto getAllUserDetail(String regId);
-	
+
 	/**
 	 * Gets the user salts.
 	 *
 	 * @param regId the reg id
 	 * @return the user salts
 	 */
-	SyncUserSaltDto  getUserSalts(String regId);
+	SyncUserSaltDto getUserSalts(String regId);
 }

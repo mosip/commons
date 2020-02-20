@@ -7,8 +7,8 @@ import io.mosip.kernel.core.crypto.spi.JwsSpec;
 import io.mosip.kernel.crypto.jce.util.JWSValidation;
 
 public class JwsFactory {
-	
-	public JwsSpec<String, String , X509Certificate,PrivateKey> getJWS(){
+
+	public JwsSpec<String, String, X509Certificate, PrivateKey> getJWS() {
 		return new JWSValidation();
 	}
 

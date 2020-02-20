@@ -68,7 +68,7 @@ public class SaltGeneratorException extends BaseCheckedException {
 	 *
 	 * @param errorCode    the error code
 	 * @param errorMessage the error message
-	 * @param operation the operation
+	 * @param operation    the operation
 	 */
 	public SaltGeneratorException(String errorCode, String errorMessage, String operation) {
 		super(errorCode, errorMessage);
@@ -81,7 +81,7 @@ public class SaltGeneratorException extends BaseCheckedException {
 	 * @param errorCode    the error code
 	 * @param errorMessage the error message
 	 * @param rootCause    the root cause
-	 * @param operation the operation
+	 * @param operation    the operation
 	 */
 	public SaltGeneratorException(String errorCode, String errorMessage, Throwable rootCause, String operation) {
 		super(errorCode, errorMessage, rootCause);
@@ -92,7 +92,7 @@ public class SaltGeneratorException extends BaseCheckedException {
 	 * Instantiates a new SaltGeneratorException.
 	 *
 	 * @param exceptionConstant the exception constant
-	 * @param operation the operation
+	 * @param operation         the operation
 	 */
 	public SaltGeneratorException(SaltGeneratorErrorConstants exceptionConstant, String operation) {
 		this(exceptionConstant.getErrorCode(), exceptionConstant.getErrorMessage());
@@ -104,9 +104,10 @@ public class SaltGeneratorException extends BaseCheckedException {
 	 *
 	 * @param exceptionConstant the exception constant
 	 * @param rootCause         the root cause
-	 * @param operation the operation
+	 * @param operation         the operation
 	 */
-	public SaltGeneratorException(SaltGeneratorErrorConstants exceptionConstant, Throwable rootCause, String operation) {
+	public SaltGeneratorException(SaltGeneratorErrorConstants exceptionConstant, Throwable rootCause,
+			String operation) {
 		this(exceptionConstant.getErrorCode(), exceptionConstant.getErrorMessage(), rootCause);
 		this.operation = operation;
 	}

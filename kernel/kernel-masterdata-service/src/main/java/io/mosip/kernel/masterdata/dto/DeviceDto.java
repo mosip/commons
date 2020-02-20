@@ -84,5 +84,5 @@ public class DeviceDto {
 
 	@Size(min = 1, max = 36)
 	private String zoneCode;
-	
+
 }

@@ -61,14 +61,14 @@ public class PridFetcherRouter {
 		router.get().handler(routingContext -> {
 			LOGGER.info("publishing event to CHECKPOOL");
 			// send a publish event to prid pool checker
-			routingContext.response().headers().add("Content-Type","application/json");
+			routingContext.response().headers().add("Content-Type", "application/json");
 			vertx.eventBus().publish(EventType.CHECKPOOL, EventType.CHECKPOOL);
 			ResponseWrapper<PridFetchResponseDto> reswrp = new ResponseWrapper<>();
 			WorkerExecutor executor = vertx.createSharedWorkerExecutor("get-prid", workerExecutorPool);
 			executor.executeBlocking(blockingCodeHandler -> {
 				PridFetchResponseDto pridFetchResponseDto = null;
 				try {
-						pridFetchResponseDto = pridService.fetchPrid();
+					pridFetchResponseDto = pridService.fetchPrid();
 				} catch (PridGeneratorServiceException exception) {
 					ServiceError error = new ServiceError(exception.getErrorCode(), exception.getMessage());
 					setError(routingContext, error, blockingCodeHandler);

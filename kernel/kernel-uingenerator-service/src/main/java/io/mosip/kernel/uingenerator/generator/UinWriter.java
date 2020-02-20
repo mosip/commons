@@ -39,8 +39,7 @@ public class UinWriter {
 	/**
 	 * Persist a uin in database. If that uin already exists than rollback
 	 * 
-	 * @param item
-	 *            the item
+	 * @param item the item
 	 */
 	public void persistUin(UinEntity item) {
 		Session currentSession = getSession();
