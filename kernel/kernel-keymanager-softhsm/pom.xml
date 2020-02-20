@@ -11,16 +11,20 @@
 	<artifactId>kernel-keymanager-softhsm</artifactId>
 	<packaging>jar</packaging>
 	<name>kernel-keymanager-softhsm</name>
+	<properties>
+	<kernel.core.version>1.0.6</kernel.core.version>
+	<kernel.keygenerator.bouncycastle.version>1.0.6</kernel.keygenerator.bouncycastle.version>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-keygenerator-bouncycastle</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.keygenerator.bouncycastle.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
