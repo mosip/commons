@@ -101,7 +101,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-templatemanager-velocity</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.templatemanager.velocity.version}</version>
 		</dependency>
 	</dependencies>
 	<!-- <build> <plugins> <plugin> <groupId>org.apache.maven.plugins</groupId> 
