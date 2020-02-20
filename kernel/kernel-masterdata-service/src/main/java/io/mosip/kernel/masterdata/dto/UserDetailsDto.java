@@ -41,7 +41,7 @@ public class UserDetailsDto {
 	@NotBlank
 	@Size(min = 1, max = 16)
 	private String statusCode;
-	
+
 	@NotNull
 	private Boolean isActive;
 

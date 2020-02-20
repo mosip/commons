@@ -20,10 +20,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FoundationalTrustProviderDto {
-	
-	/*@NotEmpty(message="Id must not be blank or null")
-	@Size(min = 1, max = 36)
-	private String id;*/
+
+	/*
+	 * @NotEmpty(message="Id must not be blank or null")
+	 * 
+	 * @Size(min = 1, max = 36) private String id;
+	 */
 
 	@NotBlank
 	@Size(min = 0, max = 128)
@@ -53,7 +55,7 @@ public class FoundationalTrustProviderDto {
 	}
 
 	public void setIsActive(boolean isActive) {
-	    this.isActive = isActive;
+		this.isActive = isActive;
 	}
 
 }

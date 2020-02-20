@@ -63,8 +63,7 @@ public class BlacklistedWordsController {
 	/**
 	 * Fetch the list of blacklisted words based on language code.
 	 * 
-	 * @param langCode
-	 *            language code
+	 * @param langCode language code
 	 * @return {@link BlacklistedWordsResponseDto}
 	 */
 	@PreAuthorize("hasAnyRole('INDIVIDUAL','ZONAL_ADMIN','ZONAL_APPROVER')")
@@ -82,8 +81,7 @@ public class BlacklistedWordsController {
 	 * Takes the list of string as an argument and checks if the list contains any
 	 * blacklisted words.
 	 * 
-	 * @param blacklistedwords
-	 *            list of blacklisted words
+	 * @param blacklistedwords list of blacklisted words
 	 * @return Valid if word does not belongs to black listed word and Invalid if
 	 *         word belongs to black listed word
 	 */
@@ -110,8 +108,8 @@ public class BlacklistedWordsController {
 	/**
 	 * Method to add blacklisted word.
 	 * 
-	 * @param blackListedWordsRequestDto
-	 *            the request dto that holds the blacklisted word to be added.
+	 * @param blackListedWordsRequestDto the request dto that holds the blacklisted
+	 *                                   word to be added.
 	 * @return the response entity i.e. the word and language code of the word
 	 *         added.
 	 */
@@ -122,8 +120,9 @@ public class BlacklistedWordsController {
 			@RequestBody @Valid RequestWrapper<BlacklistedWordsDto> blackListedWordsRequestDto) {
 		auditUtil.auditRequest(
 				MasterDataConstant.CREATE_API_IS_CALLED + BlacklistedWordListRequestDto.class.getCanonicalName(),
-				MasterDataConstant.AUDIT_SYSTEM, MasterDataConstant.CREATE_API_IS_CALLED
-						+ BlacklistedWordListRequestDto.class.getCanonicalName(), "ADM-545");
+				MasterDataConstant.AUDIT_SYSTEM,
+				MasterDataConstant.CREATE_API_IS_CALLED + BlacklistedWordListRequestDto.class.getCanonicalName(),
+				"ADM-545");
 		ResponseWrapper<WordAndLanguageCodeID> responseWrapper = new ResponseWrapper<>();
 		responseWrapper
 				.setResponse(blacklistedWordsService.createBlackListedWord(blackListedWordsRequestDto.getRequest()));
@@ -133,8 +132,8 @@ public class BlacklistedWordsController {
 	/**
 	 * Method to update the blacklisted word
 	 * 
-	 * @param blackListedWordsRequestDto
-	 *            the request dto that holds the blacklisted word to be updated .
+	 * @param blackListedWordsRequestDto the request dto that holds the blacklisted
+	 *                                   word to be updated .
 	 * @return the response entity i.e. the word and language code of the word
 	 *         updated.
 	 */
@@ -147,7 +146,8 @@ public class BlacklistedWordsController {
 		auditUtil.auditRequest(
 				MasterDataConstant.UPDATE_API_IS_CALLED + BlackListedWordsUpdateDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,
-				MasterDataConstant.UPDATE_API_IS_CALLED + BlackListedWordsUpdateDto.class.getCanonicalName(),"ADM-546");
+				MasterDataConstant.UPDATE_API_IS_CALLED + BlackListedWordsUpdateDto.class.getCanonicalName(),
+				"ADM-546");
 		ResponseWrapper<WordAndLanguageCodeID> responseWrapper = new ResponseWrapper<>();
 		responseWrapper
 				.setResponse(blacklistedWordsService.updateBlackListedWord(blackListedWordsRequestDto.getRequest()));
@@ -163,7 +163,8 @@ public class BlacklistedWordsController {
 		auditUtil.auditRequest(
 				MasterDataConstant.UPDATE_API_IS_CALLED + BlackListedWordsUpdateDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,
-				MasterDataConstant.UPDATE_API_IS_CALLED + BlackListedWordsUpdateDto.class.getCanonicalName(),"ADM-547");
+				MasterDataConstant.UPDATE_API_IS_CALLED + BlackListedWordsUpdateDto.class.getCanonicalName(),
+				"ADM-547");
 		ResponseWrapper<WordAndLanguageCodeID> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(
 				blacklistedWordsService.updateBlackListedWordExceptWord(blackListedWordsRequestDto.getRequest()));
@@ -173,8 +174,7 @@ public class BlacklistedWordsController {
 	/**
 	 * Method to deleted blacklisted word.
 	 * 
-	 * @param word
-	 *            input blacklisted word to be deleted.
+	 * @param word input blacklisted word to be deleted.
 	 * @return deleted word.
 	 */
 	@ResponseFilter
@@ -214,9 +214,8 @@ public class BlacklistedWordsController {
 	/**
 	 * API to search BlackListedWords.
 	 * 
-	 * @param request
-	 *            the request DTO {@link SearchDto} wrapped in
-	 *            {@link RequestWrapper}.
+	 * @param request the request DTO {@link SearchDto} wrapped in
+	 *                {@link RequestWrapper}.
 	 * @return the response i.e. multiple entities based on the search values
 	 *         required.
 	 */
@@ -228,22 +227,22 @@ public class BlacklistedWordsController {
 		auditUtil.auditRequest(
 				MasterDataConstant.SEARCH_API_IS_CALLED + BlacklistedWordsExtnDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,
-				MasterDataConstant.SEARCH_API_IS_CALLED + BlacklistedWordsExtnDto.class.getCanonicalName(),"ADM-548");
+				MasterDataConstant.SEARCH_API_IS_CALLED + BlacklistedWordsExtnDto.class.getCanonicalName(), "ADM-548");
 		ResponseWrapper<PageResponseDto<BlacklistedWordsExtnDto>> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(blacklistedWordsService.searchBlackListedWords(request.getRequest()));
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.SUCCESSFUL_SEARCH, BlacklistedWordsExtnDto.class.getCanonicalName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SUCCESSFUL_SEARCH_DESC, MachineSearchDto.class.getCanonicalName()),"ADM-549");
+				String.format(MasterDataConstant.SUCCESSFUL_SEARCH_DESC, MachineSearchDto.class.getCanonicalName()),
+				"ADM-549");
 		return responseWrapper;
 	}
 
 	/**
 	 * API that returns the values required for the column filter columns.
 	 * 
-	 * @param request
-	 *            the request DTO {@link FilterResponseDto} wrapper in
-	 *            {@link RequestWrapper}.
+	 * @param request the request DTO {@link FilterResponseDto} wrapper in
+	 *                {@link RequestWrapper}.
 	 * @return the response i.e. the list of values for the specific filter column
 	 *         name and type.
 	 */
@@ -255,12 +254,13 @@ public class BlacklistedWordsController {
 		auditUtil.auditRequest(
 				MasterDataConstant.FILTER_API_IS_CALLED + BlacklistedWordsExtnDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,
-				MasterDataConstant.FILTER_API_IS_CALLED + BlacklistedWordsExtnDto.class.getCanonicalName(),"ADM-550");
+				MasterDataConstant.FILTER_API_IS_CALLED + BlacklistedWordsExtnDto.class.getCanonicalName(), "ADM-550");
 		ResponseWrapper<FilterResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(blacklistedWordsService.blackListedWordsFilterValues(requestWrapper.getRequest()));
 		auditUtil.auditRequest(MasterDataConstant.SUCCESSFUL_FILTER + BlacklistedWordsExtnDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,
-				MasterDataConstant.SUCCESSFUL_FILTER_DESC + BlacklistedWordsExtnDto.class.getCanonicalName(),"ADM-551");
+				MasterDataConstant.SUCCESSFUL_FILTER_DESC + BlacklistedWordsExtnDto.class.getCanonicalName(),
+				"ADM-551");
 		return responseWrapper;
 	}
 }

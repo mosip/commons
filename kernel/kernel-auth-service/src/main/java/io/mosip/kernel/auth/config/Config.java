@@ -63,21 +63,20 @@ public class Config {
 		return filter;
 	}
 
-	@Bean(name="keycloakRestTemplate")
+	@Bean(name = "keycloakRestTemplate")
 	public RestTemplate getRestTemplate() {
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.setInterceptors(Collections.singletonList(restInterceptor));
 		return restTemplate;
 	}
-	
-	
-	@Bean(name="authRestTemplate")
+
+	@Bean(name = "authRestTemplate")
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
 	}
-	
+
 	@Bean
-	public MemoryCache<String, AccessTokenResponse> memoryCache(){
+	public MemoryCache<String, AccessTokenResponse> memoryCache() {
 		return new MemoryCache<>(1);
 	}
 

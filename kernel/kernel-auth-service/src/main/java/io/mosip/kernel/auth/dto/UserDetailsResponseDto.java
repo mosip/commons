@@ -4,10 +4,10 @@ import java.util.List;
 
 import lombok.Data;
 
-
 /**
  * 
  * Instantiates a new user details response dto.
+ * 
  * @author Srinivasan
  * @since 1.0.0
  */

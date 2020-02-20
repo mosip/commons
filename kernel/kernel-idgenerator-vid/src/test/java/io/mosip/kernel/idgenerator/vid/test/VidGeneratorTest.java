@@ -1,4 +1,5 @@
 package io.mosip.kernel.idgenerator.vid.test;
+
 import static org.hamcrest.CoreMatchers.isA;
 import static org.junit.Assert.assertThat;
 

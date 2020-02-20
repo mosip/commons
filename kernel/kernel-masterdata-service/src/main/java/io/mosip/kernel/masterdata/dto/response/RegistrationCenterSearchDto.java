@@ -127,9 +127,9 @@ public class RegistrationCenterSearchDto extends BaseDto {
 	private String zoneCode;
 
 	private String zone;
-	
+
 	private WorkingNonWorkingDaysDto workingNonWorkingDays;
-	
+
 	private List<ExceptionalHolidayPutPostDto> exceptionalHolidayPutPostDto;
 
 }

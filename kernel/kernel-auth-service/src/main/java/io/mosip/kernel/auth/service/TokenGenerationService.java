@@ -8,7 +8,7 @@ package io.mosip.kernel.auth.service;
  *
  */
 public interface TokenGenerationService {
-	
+
 	String getInternalTokenGenerationService() throws Exception;
 
 	String getUINBasedToken() throws Exception;

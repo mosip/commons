@@ -40,7 +40,7 @@ public class DeviceSpecificationExtnDto extends BaseDto {
 	@FilterType(types = { FilterTypeEnum.EQUALS })
 	@ApiModelProperty(value = "langCode", required = true, dataType = "java.lang.String")
 	private String langCode;
-	
+
 	/**
 	 * Device Type Name.
 	 */

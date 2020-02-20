@@ -32,10 +32,8 @@ public class FilterColumnValidator {
 	private static final String TYPE_FIELD = "type";
 
 	/**
-	 * @param target
-	 *            the entity name for which the filters needs to be validated.
-	 * @param filters
-	 *            list of filters.
+	 * @param target  the entity name for which the filters needs to be validated.
+	 * @param filters list of filters.
 	 * @return true if validation is successful.
 	 */
 	public <T, E> boolean validate(Class<T> target, List<FilterDto> filters, Class<E> entity) {
@@ -54,12 +52,9 @@ public class FilterColumnValidator {
 	/**
 	 * Method to validate filter column values.
 	 * 
-	 * @param target
-	 *            Entity class type.
-	 * @param errors
-	 *            errors to be returned if validation fails.
-	 * @param filter
-	 *            the filter column type value.
+	 * @param target Entity class type.
+	 * @param errors errors to be returned if validation fails.
+	 * @param filter the filter column type value.
 	 */
 	private <T, E> void validateFilterColumn(Class<T> target, List<ServiceError> errors, FilterDto filter,
 			Class<E> entity) {
@@ -75,9 +70,8 @@ public class FilterColumnValidator {
 				Optional<Field> renField = fieldList.stream()
 						.filter(i -> i.getName().equalsIgnoreCase(filter.getColumnName())).findFirst();
 				if (!renField.isPresent()) {
-					errors.add(new ServiceError(ValidationErrorCode.COLUMN_DOESNT_EXIST.getErrorCode(),
-							String.format(ValidationErrorCode.COLUMN_DOESNT_EXIST.getErrorMessage(),
-									filter.getColumnName())));
+					errors.add(new ServiceError(ValidationErrorCode.COLUMN_DOESNT_EXIST.getErrorCode(), String.format(
+							ValidationErrorCode.COLUMN_DOESNT_EXIST.getErrorMessage(), filter.getColumnName())));
 				}
 //				if (!renField.isPresent()) {
 //					errors.add(new ServiceError(ValidationErrorCode.COLUMN_DOESNT_EXIST_FILTER.getErrorCode(),
@@ -102,10 +96,8 @@ public class FilterColumnValidator {
 	/**
 	 * Method to validate filter column values.
 	 * 
-	 * @param field
-	 *            the name of the filter column variable.
-	 * @param filterColumn
-	 *            the value of the filter column.
+	 * @param field        the name of the filter column variable.
+	 * @param filterColumn the value of the filter column.
 	 * @return true if the value is same as in {@link FilterColumnEnum}.
 	 */
 	public boolean containsFilterColumn(Field field, String filterColumn) {
@@ -121,8 +113,7 @@ public class FilterColumnValidator {
 	/**
 	 * Method to validate whether the field value is empty or null.
 	 * 
-	 * @param filterType
-	 *            the filter type to be validated.
+	 * @param filterType the filter type to be validated.
 	 * @return true if it neither empty nor null.
 	 */
 	private boolean validateFilterColumnType(String filterType) {

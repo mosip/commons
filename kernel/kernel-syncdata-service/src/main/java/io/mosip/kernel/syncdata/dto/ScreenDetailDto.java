@@ -3,13 +3,12 @@ package io.mosip.kernel.syncdata.dto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-
-/** @author Srinivasan
- *  @since 1.0.0
- * Instantiates a new screen detail dto.
+/**
+ * @author Srinivasan
+ * @since 1.0.0 Instantiates a new screen detail dto.
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class ScreenDetailDto extends BaseDto {
 
 	/** The id. */

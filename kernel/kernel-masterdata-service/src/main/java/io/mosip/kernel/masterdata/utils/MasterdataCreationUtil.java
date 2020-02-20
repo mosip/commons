@@ -70,15 +70,14 @@ public class MasterdataCreationUtil {
 	/**
 	 * Constructor for MasterdataSearchHelper having EntityManager
 	 * 
-	 * @param entityManager
-	 *            The entityManager
+	 * @param entityManager The entityManager
 	 */
 	public MasterdataCreationUtil(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
 
 	private <E, T> T secondaryBehaviour(String id, Class<E> entity, String primaryKeyCol, boolean activePrimary,
-			boolean activeDto, Class<?> dtoClass, T t,boolean priSecIdentical)
+			boolean activeDto, Class<?> dtoClass, T t, boolean priSecIdentical)
 			throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		if (StringUtils.isBlank(id)) {
 			throw new MasterDataServiceException(RequestErrorCode.REQUEST_INVALID_SEC_LANG_ID.getErrorCode(),
@@ -120,15 +119,14 @@ public class MasterdataCreationUtil {
 		boolean activeDto = false, activePrimary = false;
 		String primaryKeyCol = null;
 		Class<?> dtoClass = t.getClass();
-		boolean priSecIdentical=false;
-		if(StringUtils.isEmpty(primaryLang))
-		{
-			throw new MasterDataServiceException(RegistrationCenterErrorCode.PRIMARY_LANGUAGE_EMPTY_EXCEPTION.getErrorCode(),
+		boolean priSecIdentical = false;
+		if (StringUtils.isEmpty(primaryLang)) {
+			throw new MasterDataServiceException(
+					RegistrationCenterErrorCode.PRIMARY_LANGUAGE_EMPTY_EXCEPTION.getErrorCode(),
 					RegistrationCenterErrorCode.PRIMARY_LANGUAGE_EMPTY_EXCEPTION.getErrorMessage());
-		}
-		else if(StringUtils.isEmpty(secondaryLang))
-		{
-			throw new MasterDataServiceException(RegistrationCenterErrorCode.SECONDARY_LANGUAGE_EMPTY_EXCEPTION.getErrorCode(),
+		} else if (StringUtils.isEmpty(secondaryLang)) {
+			throw new MasterDataServiceException(
+					RegistrationCenterErrorCode.SECONDARY_LANGUAGE_EMPTY_EXCEPTION.getErrorCode(),
 					RegistrationCenterErrorCode.SECONDARY_LANGUAGE_EMPTY_EXCEPTION.getErrorMessage());
 		}
 		if (primaryLang == secondaryLang) {
@@ -159,18 +157,19 @@ public class MasterdataCreationUtil {
 		if (priSecIdentical) {
 
 			if (StringUtils.isBlank(id)) {
-				return primaryBehaviour(primaryKeyCol, dtoClass, entity, primaryId, activeDto, t,priSecIdentical);
+				return primaryBehaviour(primaryKeyCol, dtoClass, entity, primaryId, activeDto, t, priSecIdentical);
+			} else {
+				return secondaryBehaviour(id, entity, primaryKeyCol, activePrimary, activeDto, dtoClass, t,
+						priSecIdentical);
 			}
-			else {
-				return secondaryBehaviour(id, entity, primaryKeyCol, activePrimary, activeDto, dtoClass, t,priSecIdentical);
-			} 
 
 		} else if ((langCode.equals(primaryLang)) && !priSecIdentical) {
-			return primaryBehaviour(primaryKeyCol, dtoClass, entity, primaryId, activeDto, t,priSecIdentical);
+			return primaryBehaviour(primaryKeyCol, dtoClass, entity, primaryId, activeDto, t, priSecIdentical);
 		}
 
 		else if (langCode.equals(secondaryLang) && !priSecIdentical) {
-			return secondaryBehaviour(id, entity, primaryKeyCol, activePrimary, activeDto, dtoClass, t,priSecIdentical);
+			return secondaryBehaviour(id, entity, primaryKeyCol, activePrimary, activeDto, dtoClass, t,
+					priSecIdentical);
 		} else {
 			throw new MasterDataServiceException(RegistrationCenterErrorCode.LANGUAGE_EXCEPTION.getErrorCode(),
 					String.format(RegistrationCenterErrorCode.LANGUAGE_EXCEPTION.getErrorMessage(), langCode));
@@ -179,7 +178,7 @@ public class MasterdataCreationUtil {
 	}
 
 	private <E, T> T primaryBehaviour(String primaryKeyCol, Class<?> dtoClass, Class<E> entity, String primaryId,
-			boolean activeDto, T t,boolean priSecIdentical)
+			boolean activeDto, T t, boolean priSecIdentical)
 			throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 
 		Field isActive = null;
@@ -400,12 +399,9 @@ public class MasterdataCreationUtil {
 	/**
 	 * Method to add the Language Code in the criteria query
 	 * 
-	 * @param builder
-	 *            used to construct the criteria query
-	 * @param root
-	 *            root type in the from clause,always refers entity
-	 * @param langCode
-	 *            language code
+	 * @param builder  used to construct the criteria query
+	 * @param root     root type in the from clause,always refers entity
+	 * @param langCode language code
 	 * @return {@link Predicate}
 	 */
 	private <E> Predicate setLangCode(CriteriaBuilder builder, Root<E> root, String langCode) {

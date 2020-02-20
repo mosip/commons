@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import io.mosip.kernel.tokenidgenerator.dto.TokenIDResponseDto;
 import io.mosip.kernel.tokenidgenerator.test.TokenIdGeneratorTestBootApplication;
 
-@SpringBootTest(classes=TokenIdGeneratorTestBootApplication.class)
+@SpringBootTest(classes = TokenIdGeneratorTestBootApplication.class)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 public class TokenIdGeneratorIntegrationTest {
@@ -24,7 +24,6 @@ public class TokenIdGeneratorIntegrationTest {
 	@Autowired
 	private MockMvc mockMvc;
 
-	
 	@Test
 	@WithUserDetails("id-auth")
 	public void generateTokenIDTest() throws Exception {

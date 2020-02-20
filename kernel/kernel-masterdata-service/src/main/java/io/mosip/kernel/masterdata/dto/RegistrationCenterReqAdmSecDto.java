@@ -8,12 +8,8 @@ import lombok.Data;
 
 @Data
 public class RegistrationCenterReqAdmSecDto {
-	
 
 	@NotBlank
 	List<RegCenterPostReqDto> registrationCenterDtos;
-	
-	
-
 
 }

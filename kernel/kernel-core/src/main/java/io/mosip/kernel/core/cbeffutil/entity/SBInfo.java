@@ -30,7 +30,6 @@ public class SBInfo {
 			return this;
 		}
 
-
 		public SBInfo build() {
 			return new SBInfo(this);
 		}
@@ -38,7 +37,7 @@ public class SBInfo {
 
 	public SBInfoType toSBInfoType() {
 		SBInfoType sBInfoType = new SBInfoType();
-		if (getFormat() !=null) {
+		if (getFormat() != null) {
 			sBInfoType.setFormat(getFormat());
 		}
 		return sBInfoType;

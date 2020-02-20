@@ -42,12 +42,10 @@ public class DeviceRegisterController {
 	@Autowired
 	private DeviceRegisterService deviceRegisterService;
 
-
 	/**
 	 * Api to de register Device.
 	 * 
-	 * @param request
-	 *            the request DTO.
+	 * @param request the request DTO.
 	 * @return the {@link DeviceRegisterResponseDto}.
 	 */
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN')")
@@ -56,13 +54,13 @@ public class DeviceRegisterController {
 	public ResponseEntity<DeviceRegisterResponseDto> deRegisterDevice(@Valid @PathVariable String deviceCode) {
 		return new ResponseEntity<>(deviceRegisterService.deRegisterDevice(deviceCode), HttpStatus.OK);
 	}
-	
-	
+
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN')")
 	@ApiOperation(value = "Update status of the devive")
 	@PutMapping("/update/status")
-	public ResponseEntity<ResponseDto> deRegisterDevice(@NotBlank @RequestParam(value="devicecode",required=true) String deviceCode,
-			@NotBlank @RequestParam(value="statuscode",required=true) String statusCode) {
+	public ResponseEntity<ResponseDto> deRegisterDevice(
+			@NotBlank @RequestParam(value = "devicecode", required = true) String deviceCode,
+			@NotBlank @RequestParam(value = "statuscode", required = true) String statusCode) {
 		return new ResponseEntity<>(deviceRegisterService.updateStatus(deviceCode, statusCode), HttpStatus.OK);
 	}
 }

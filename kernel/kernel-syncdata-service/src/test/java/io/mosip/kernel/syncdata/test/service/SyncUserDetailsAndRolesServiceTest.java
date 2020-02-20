@@ -72,7 +72,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 
 	@Value("${mosip.kernel.syncdata.auth-manager-base-uri}")
 	private String authUserDetailsBaseUri;
-	
+
 	/** The auth user details uri. */
 	@Value("${mosip.kernel.syncdata.auth-salt-details:/usersaltdetails}")
 	private String authUserSaltUri;
@@ -87,7 +87,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 	private String authAllRolesUri;
 
 	private StringBuilder userDetailsUri;
-	
+
 	private StringBuilder userSaltsUri;
 
 	private StringBuilder builder;
@@ -107,7 +107,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 		registrationCenterUsers.add(registrationCenterUser);
 
 		userDetailsUri = new StringBuilder();
-		userSaltsUri=new StringBuilder();
+		userSaltsUri = new StringBuilder();
 		userSaltsUri.append(authUserDetailsBaseUri).append(authUserSaltUri);
 		userDetailsUri.append(authUserDetailsBaseUri).append(authUserDetailsUri);
 		builder = new StringBuilder();
@@ -119,7 +119,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 	@Test
 	public void getAllUserDetail() throws JsonParseException, JsonMappingException, IOException {
 		String response = "{\"id\":\"SYNCDATA.REQUEST\",\"version\":\"v1.0\",\"responsetime\":\"2019-03-31T10:40:29.935Z\",\"metadata\":null,\"response\":{\"mosipUserDtoList\":[{\"userId\":\"110001\",\"mobile\":\"9663175928\",\"mail\":\"110001@mosip.io\",\"langCode\":null,\"userPassword\":\"e1NTSEE1MTJ9L25EVy9tajdSblBMZFREYjF0dXB6TzdCTmlWczhKVnY1TXJ1aXRSZlBrSCtNVmJDTXVIM2lyb2thcVhsdlR6WkNKYXAwSncrSXc5SFc3aWRYUnpnaHBTQktrNXRSVTA3\",\"name\":\"user\",\"role\":\"REGISTRATION_ADMIN,REGISTRATION_OFFICER\"}]},\"errors\":null}";
-		
+
 		String regId = "10044";
 
 		when(registrationCenterUserRepository.findByRegistrationCenterUserByRegCenterId(regId))
@@ -130,11 +130,11 @@ public class SyncUserDetailsAndRolesServiceTest {
 				.andRespond(withSuccess().body(response).contentType(MediaType.APPLICATION_JSON));
 		syncUserDetailsService.getAllUserDetail(regId);
 	}
-	
+
 	@Test
 	public void getAllUserSaltDetail() throws JsonParseException, JsonMappingException, IOException {
 		String responseSalt = "{\"id\":\"SYNCDATA.REQUEST\",\"version\":\"v1.0\",\"responsetime\":\"2019-03-31T10:40:29.935Z\",\"metadata\":null,\"response\":{\"mosipUserSaltList\":[{\"userId\":\"110001\",\"salt\":\"9663175928\"}]},\"errors\":null}";
-		
+
 		String regId = "10044";
 
 		when(registrationCenterUserRepository.findByRegistrationCenterUserByRegCenterId(regId))
@@ -145,7 +145,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 				.andRespond(withSuccess().body(responseSalt).contentType(MediaType.APPLICATION_JSON));
 		syncUserDetailsService.getUserSalts(regId);
 	}
-	
+
 	@Test(expected = SyncDataServiceException.class)
 	public void getAllUserDetailExcp() {
 
@@ -201,7 +201,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 				.andRespond(withSuccess().body(response));
 		syncUserDetailsService.getAllUserDetail(regId);
 	}
-	
+
 	@Test(expected = SyncDataServiceException.class)
 	public void getAllUserSaltServiceException() {
 		String response = "{ \"id\": null, \"version\": null, \"responsetime\": \"2019-03-31T11:40:39.847Z\", \"metadata\": null, \"response\": null, \"errors\": [ { \"errorCode\": \"KER-SNC-303\", \"message\": \"Registration center user not found \" } ] }";
@@ -215,8 +215,6 @@ public class SyncUserDetailsAndRolesServiceTest {
 				.andRespond(withBadRequest().body(response));
 		syncUserDetailsService.getUserSalts(regId);
 	}
-	
-	
 
 	@Test(expected = AuthNException.class)
 	public void getAllUserDetailServiceAuthNException() {
@@ -231,7 +229,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 				.andRespond(withUnauthorizedRequest().body(response));
 		syncUserDetailsService.getAllUserDetail(regId);
 	}
-	
+
 	@Test(expected = AuthNException.class)
 	public void getAllUserDetailSaltAuthNException() {
 		String response = "{ \"id\": null, \"version\": null, \"responsetime\": \"2019-05-11T11:02:20.521Z\", \"metadata\": null, \"response\": null, \"errors\": [ { \"errorCode\": \"KER-ATH-402\", \"message\": \"Token expired\" } ] }";
@@ -259,7 +257,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 				.andRespond(withUnauthorizedRequest());
 		syncUserDetailsService.getAllUserDetail(regId);
 	}
-	
+
 	@Test(expected = BadCredentialsException.class)
 	public void getAllUserSaltServiceBadCredentialsException() {
 
@@ -287,7 +285,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 				.andRespond(MockRestResponseCreators.withStatus(HttpStatus.FORBIDDEN).body(response));
 		syncUserDetailsService.getAllUserDetail(regId);
 	}
-	
+
 	@Test(expected = AuthZException.class)
 	public void getUserSaltServiceAuthzException() {
 		String response = "{ \"id\": null, \"version\": null, \"responsetime\": \"2019-05-11T11:02:20.521Z\", \"metadata\": null, \"response\": null, \"errors\": [ { \"errorCode\": \"KER-ATH-403\", \"message\": \"Forbidden\" } ] }";
@@ -315,7 +313,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 				.andRespond(MockRestResponseCreators.withStatus(HttpStatus.FORBIDDEN));
 		syncUserDetailsService.getAllUserDetail(regId);
 	}
-	
+
 	@Test(expected = AccessDeniedException.class)
 	public void getAllUserSaltServicesAuthNException() {
 

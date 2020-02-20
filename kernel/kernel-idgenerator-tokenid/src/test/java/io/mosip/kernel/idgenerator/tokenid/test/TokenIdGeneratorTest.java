@@ -50,7 +50,7 @@ public class TokenIdGeneratorTest {
 
 	@MockBean
 	private TokenIdSequenceRepository counterRepository;
-	
+
 	@MockBean
 	private RestTemplate restTemplate;
 

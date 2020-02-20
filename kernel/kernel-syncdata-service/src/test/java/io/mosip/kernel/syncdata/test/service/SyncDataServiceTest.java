@@ -139,7 +139,7 @@ public class SyncDataServiceTest {
 		masterDataResponseDto.setHolidays(holidays);
 		machines = new ArrayList<>();
 		machines.add(new MachineDto("1001", "Laptop", "QWE23456", "1223:23:31:23", "172.12.128.1", "1",
-				LocalDateTime.parse("2018-01-01T01:01:01"),null,null));
+				LocalDateTime.parse("2018-01-01T01:01:01"), null, null));
 		masterDataResponseDto.setMachineDetails(machines);
 		machineSpecifications = new ArrayList<>();
 		machineSpecifications
@@ -350,8 +350,7 @@ public class SyncDataServiceTest {
 		// Query parameters
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(publicKeyUrl)
 				// Add query parameter
-				.queryParam("referenceId", "referenceId")
-				.queryParam("timeStamp", "2019-09-09T09:00:00.000Z");
+				.queryParam("referenceId", "referenceId").queryParam("timeStamp", "2019-09-09T09:00:00.000Z");
 		MockRestServiceServer mockRestServer = MockRestServiceServer.bindTo(restTemplate).build();
 
 		mockRestServer.expect(MockRestRequestMatchers.requestTo(builder.buildAndExpand(uriParams).toString()))
@@ -370,8 +369,7 @@ public class SyncDataServiceTest {
 		// Query parameters
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(publicKeyUrl)
 				// Add query parameter
-				.queryParam("referenceId", "referenceId")
-				.queryParam("timeStamp", "2019-09-09T09:00:00.000Z");
+				.queryParam("referenceId", "referenceId").queryParam("timeStamp", "2019-09-09T09:00:00.000Z");
 		MockRestServiceServer mockRestServer = MockRestServiceServer.bindTo(restTemplate).build();
 
 		mockRestServer.expect(MockRestRequestMatchers.requestTo(builder.buildAndExpand(uriParams).toString()))
@@ -380,7 +378,7 @@ public class SyncDataServiceTest {
 		syncConfigDetailsService.getPublicKey("REGISTRATION", "2019-09-09T09:00:00.000Z", "referenceId");
 	}
 
-	@Test(expected=SyncInvalidArgumentException.class)
+	@Test(expected = SyncInvalidArgumentException.class)
 	public void getPublicErrorList() throws IOException {
 		uriParams = new HashMap<>();
 		uriParams.put("applicationId", "REGISTRATION");
@@ -388,8 +386,7 @@ public class SyncDataServiceTest {
 		// Query parameters
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(publicKeyUrl)
 				// Add query parameter
-				.queryParam("referenceId", "referenceId")
-				.queryParam("timeStamp", "2019-09-09T09:00:00.000Z");
+				.queryParam("referenceId", "referenceId").queryParam("timeStamp", "2019-09-09T09:00:00.000Z");
 		MockRestServiceServer mockRestServer = MockRestServiceServer.bindTo(restTemplate).build();
 
 		mockRestServer.expect(MockRestRequestMatchers.requestTo(builder.buildAndExpand(uriParams).toString()))
@@ -407,8 +404,7 @@ public class SyncDataServiceTest {
 		// Query parameters
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(publicKeyUrl)
 				// Add query parameter
-				.queryParam("referenceId", "referenceId")
-				.queryParam("timeStamp", "2019-09-09T09:00:00.000Z");
+				.queryParam("referenceId", "referenceId").queryParam("timeStamp", "2019-09-09T09:00:00.000Z");
 		MockRestServiceServer mockRestServer = MockRestServiceServer.bindTo(restTemplate).build();
 
 		mockRestServer.expect(MockRestRequestMatchers.requestTo(builder.buildAndExpand(uriParams).toString()))

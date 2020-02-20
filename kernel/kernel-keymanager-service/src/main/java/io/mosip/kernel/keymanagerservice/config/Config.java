@@ -29,9 +29,8 @@ public class Config {
 	public Filter getReqResFilter() {
 		return new ReqResFilter();
 	}
-	
-	
-	//TODO: Logging To Be removed - added temporarily 
+
+	// TODO: Logging To Be removed - added temporarily
 	@Bean
 	public CommonsRequestLoggingFilter logFilter() {
 		CommonsRequestLoggingFilter filter = new CommonsRequestLoggingFilter();

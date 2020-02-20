@@ -18,13 +18,11 @@ public interface RegisteredDeviceRepository extends BaseRepository<RegisteredDev
 	/**
 	 * Find by code and is active is true.
 	 *
-	 * @param deviceCode
-	 *            the device code
+	 * @param deviceCode the device code
 	 * @return the registered device
 	 */
 	RegisteredDevice findByCodeAndIsActiveIsTrue(String deviceCode);
 
-	
 	/**
 	 * Find by code and dp id.
 	 *

@@ -45,7 +45,7 @@ public class RegistrationCenterDevice extends BaseEntity implements Serializable
 
 	@Column(name = "lang_code", nullable = false, length = 3)
 	private String langCode;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumns({ @JoinColumn(name = "device_id", referencedColumnName = "id", insertable = false, updatable = false),
 			@JoinColumn(name = "lang_code", referencedColumnName = "lang_code", insertable = false, updatable = false) })

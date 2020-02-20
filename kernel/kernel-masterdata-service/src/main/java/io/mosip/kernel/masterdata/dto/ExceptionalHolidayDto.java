@@ -16,8 +16,8 @@ import lombok.Data;
  *
  */
 @Data
-public class ExceptionalHolidayDto implements Serializable{
-	
+public class ExceptionalHolidayDto implements Serializable {
+
 	/**
 	 * 
 	 */
@@ -25,7 +25,7 @@ public class ExceptionalHolidayDto implements Serializable{
 
 	@NotNull
 	private LocalDate holidayDate;
-	
+
 	/**
 	 * Holiday day is day of week as integer value, week start from Monday , Monday
 	 * is 1 and Sunday is 7
@@ -36,24 +36,23 @@ public class ExceptionalHolidayDto implements Serializable{
 	 */
 	private String holidayMonth;
 	private String holidayYear;
-	
+
 	@NotBlank
 	@Size(min = 1, max = 64)
 	private String holidayName;
 
 	@Size(min = 0, max = 128)
 	private String holidayReason;
-	
+
 	private String registrationCenterID;
-	
+
 	@NotNull
 	private Boolean isDeleted;
 
 	@ValidLangCode(message = "Language Code is Invalid")
 	private String langCode;
-	
+
 	@NotNull
 	private Boolean isActive;
 
 }
-

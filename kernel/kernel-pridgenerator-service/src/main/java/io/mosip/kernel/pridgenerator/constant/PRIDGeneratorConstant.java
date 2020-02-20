@@ -175,7 +175,6 @@ public final class PRIDGeneratorConstant {
 	 * The enable signing property key
 	 */
 	public static final String SIGNING_ENABLE = "mosip.kernel.prid.response-signing-enable";
-	
-	
-	public static final String GET_EXECUTOR_POOL_ENABLE ="mosip.kernel.prid.get_executor_pool";
+
+	public static final String GET_EXECUTOR_POOL_ENABLE = "mosip.kernel.prid.get_executor_pool";
 }

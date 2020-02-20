@@ -84,9 +84,8 @@ public class DeviceRegisterIntergrationTest {
 		deviceRegisterDto.setDeviceData(deviceDataDto);
 		deviceRegisterDto.setDpSignature("1234567");
 
-		
 	}
-	
+
 	private void successTest() {
 		when(deviceRegisterRepository.findById(Mockito.any(), Mockito.anyString())).thenReturn(deviceRegister);
 		when(deviceRegisterRepository.update(Mockito.any())).thenReturn(deviceRegister);
@@ -101,70 +100,64 @@ public class DeviceRegisterIntergrationTest {
 //						.contentType(MediaType.APPLICATION_JSON))
 //				.andExpect(status().isOk());
 //	}
-	
+
 	@Test
 	@WithUserDetails("zonal-admin")
 	public void updateDevicesTest() throws JsonProcessingException, Exception {
 		successTest();
-		mockMvc.perform(
-				put("/device/update/status").param("devicecode", "10001").param("statuscode", "Registered").content(objectMapper.writeValueAsString(deRegisterDeviceRequestDto))
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk());
+		mockMvc.perform(put("/device/update/status").param("devicecode", "10001").param("statuscode", "Registered")
+				.content(objectMapper.writeValueAsString(deRegisterDeviceRequestDto))
+				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 	}
-	
+
 	@Test
 	@WithUserDetails("zonal-admin")
 	public void updateDevicesInvalidStatusTest() throws JsonProcessingException, Exception {
 		successTest();
-		mockMvc.perform(
-				put("/device/update/status").param("devicecode", "10001").param("statuscode", "Registereds").content(objectMapper.writeValueAsString(deRegisterDeviceRequestDto))
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk());
+		mockMvc.perform(put("/device/update/status").param("devicecode", "10001").param("statuscode", "Registereds")
+				.content(objectMapper.writeValueAsString(deRegisterDeviceRequestDto))
+				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 	}
-	
+
 	@Test
 	@WithUserDetails("zonal-admin")
 	public void updateDevicesInvalidStatusDbExceptionTest() throws JsonProcessingException, Exception {
 		successTest();
-		when(deviceRegisterRepository.findById(Mockito.any(), Mockito.anyString())).thenThrow(DataRetrievalFailureException.class);
-		mockMvc.perform(
-				put("/device/update/status").param("devicecode", "10001").param("statuscode", "Registered").content(objectMapper.writeValueAsString(deRegisterDeviceRequestDto))
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isInternalServerError());
+		when(deviceRegisterRepository.findById(Mockito.any(), Mockito.anyString()))
+				.thenThrow(DataRetrievalFailureException.class);
+		mockMvc.perform(put("/device/update/status").param("devicecode", "10001").param("statuscode", "Registered")
+				.content(objectMapper.writeValueAsString(deRegisterDeviceRequestDto))
+				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isInternalServerError());
 	}
-	
+
 	@Test
 	@WithUserDetails("zonal-admin")
 	public void updateDevicesInvalidStatusDataNotFoundTest() throws JsonProcessingException, Exception {
 		successTest();
 		when(deviceRegisterRepository.findById(Mockito.any(), Mockito.anyString())).thenReturn(null);
-		mockMvc.perform(
-				put("/device/update/status").param("devicecode", "10001").param("statuscode", "Registered").content(objectMapper.writeValueAsString(deRegisterDeviceRequestDto))
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk());
+		mockMvc.perform(put("/device/update/status").param("devicecode", "10001").param("statuscode", "Registered")
+				.content(objectMapper.writeValueAsString(deRegisterDeviceRequestDto))
+				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 	}
-	
+
 	@Test
 	@WithUserDetails("zonal-admin")
 	public void updateDevicesInvalidStatusDbUpdateExceptionTest() throws JsonProcessingException, Exception {
 		successTest();
 		when(deviceRegisterRepository.update(Mockito.any())).thenThrow(DataRetrievalFailureException.class);
-		mockMvc.perform(
-				put("/device/update/status").param("devicecode", "10001").param("statuscode", "Registered").content(objectMapper.writeValueAsString(deRegisterDeviceRequestDto))
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isInternalServerError());
+		mockMvc.perform(put("/device/update/status").param("devicecode", "10001").param("statuscode", "Registered")
+				.content(objectMapper.writeValueAsString(deRegisterDeviceRequestDto))
+				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isInternalServerError());
 	}
-	
+
 	@Test
 	@WithUserDetails("zonal-admin")
 	public void updateDevicesInvalidStatusDbCreateExceptionTest() throws JsonProcessingException, Exception {
 		successTest();
 		when(deviceRegisterHistoryRepository.create(Mockito.any())).thenThrow(DataRetrievalFailureException.class);
-		mockMvc.perform(
-				put("/device/update/status").param("devicecode", "10001").param("statuscode", "Registered").content(objectMapper.writeValueAsString(deRegisterDeviceRequestDto))
-						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isInternalServerError());
+		mockMvc.perform(put("/device/update/status").param("devicecode", "10001").param("statuscode", "Registered")
+				.content(objectMapper.writeValueAsString(deRegisterDeviceRequestDto))
+				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isInternalServerError());
 	}
-	
-	
+
 }

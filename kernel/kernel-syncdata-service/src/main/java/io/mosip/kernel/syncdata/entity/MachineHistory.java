@@ -84,13 +84,13 @@ public class MachineHistory extends BaseEntity implements Serializable {
 	 */
 	@Column(name = "validity_end_dtimes")
 	private LocalDateTime validityDateTime;
-	
+
 	/**
 	 * Field for publicKey
 	 */
 	@Column(name = "public_key")
 	private byte[] publicKey;
-	
+
 	/**
 	 * Field for public key pringerprint
 	 */

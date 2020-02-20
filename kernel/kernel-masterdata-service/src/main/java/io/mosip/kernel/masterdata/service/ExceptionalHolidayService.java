@@ -10,16 +10,14 @@ import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
  *
  */
 public interface ExceptionalHolidayService {
-	
+
 	/**
 	 * To fetch all the holidays
 	 * 
 	 * @return {@linkplain HolidayResponseDto}
-	 * @throws MasterDataServiceException
-	 *             when data not fetched from DB
-	 * @throws DataNotFoundException
-	 *             when data not found
+	 * @throws MasterDataServiceException when data not fetched from DB
+	 * @throws DataNotFoundException      when data not found
 	 */
-	ExceptionalHolidayResponseDto getAllExceptionalHolidays(String regCenterId , String langCode );
+	ExceptionalHolidayResponseDto getAllExceptionalHolidays(String regCenterId, String langCode);
 
 }

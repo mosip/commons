@@ -15,17 +15,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FoundationalTrustProviderDto {
-	
+
 	private String id;
-	
+
 	private String name;
-	
+
 	private String address;
-	
+
 	private String email;
-	
+
 	private String contactNo;
-	
+
 	private String certAlias;
 
 }

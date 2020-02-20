@@ -52,21 +52,22 @@ public class KeymanagerUtilTest {
 	private KeyPair keyPairMaster;
 
 	private KeyPair keyPair;
-	
+
 	private X509Certificate[] chain;
 
 	private PrivateKeyEntry privateKeyEntry;
-	
+
 	@Before
 	public void setupKey() throws NoSuchAlgorithmException {
 		KeyPairGenerator keyGen = KeyPairGenerator.getInstance(KeymanagerConstant.RSA);
 		keyGen.initialize(2048);
 		keyPairMaster = keyGen.generateKeyPair();
 		keyPair = keyGen.generateKeyPair();
-		X509Certificate x509Certificate=CertificateUtility.generateX509Certificate(keyPair, "mosip", "mosip", "mosip", "india", LocalDateTime.of(2010, 1, 1, 12, 00), LocalDateTime.of(2011, 1, 1, 12, 00));
-	    chain = new X509Certificate[1];
-		chain[0]=x509Certificate;
-		privateKeyEntry=new PrivateKeyEntry(keyPair.getPrivate(), chain);
+		X509Certificate x509Certificate = CertificateUtility.generateX509Certificate(keyPair, "mosip", "mosip", "mosip",
+				"india", LocalDateTime.of(2010, 1, 1, 12, 00), LocalDateTime.of(2011, 1, 1, 12, 00));
+		chain = new X509Certificate[1];
+		chain[0] = x509Certificate;
+		privateKeyEntry = new PrivateKeyEntry(keyPair.getPrivate(), chain);
 	}
 
 	@Test
@@ -75,13 +76,12 @@ public class KeymanagerUtilTest {
 		assertThat(key, isA(byte[].class));
 		assertThat(keymanagerUtil.decryptKey(key, keyPairMaster.getPrivate()), isA(byte[].class));
 	}
-	
-	
-	
-	@Test(expected=KeystoreProcessingException.class)
+
+	@Test(expected = KeystoreProcessingException.class)
 	public void isCertificateValidExceptionTest() {
-		CertificateEntry<X509Certificate, PrivateKey> certificateEntry= new CertificateEntry<X509Certificate, PrivateKey>(chain, keyPair.getPrivate());
+		CertificateEntry<X509Certificate, PrivateKey> certificateEntry = new CertificateEntry<X509Certificate, PrivateKey>(
+				chain, keyPair.getPrivate());
 		keymanagerUtil.isCertificateValid(certificateEntry, DateUtils.parseUTCToDate("2019-05-01T12:00:00.00Z"));
-     }
+	}
 
 }

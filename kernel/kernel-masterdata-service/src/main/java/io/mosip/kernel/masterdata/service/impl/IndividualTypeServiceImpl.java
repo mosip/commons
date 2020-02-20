@@ -61,7 +61,7 @@ public class IndividualTypeServiceImpl implements IndividualTypeService {
 
 	@Autowired
 	MasterDataFilterHelper masterDataFilterHelper;
-	
+
 	@Autowired
 	private PageUtils pageUtils;
 

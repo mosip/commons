@@ -5,7 +5,6 @@
 // Generated on: 2019.05.13 at 03:22:53 PM IST 
 //
 
-
 package io.mosip.kernel.core.cbeffutil.jaxbclasses;
 
 import java.time.LocalDateTime;
@@ -20,11 +19,13 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import io.mosip.kernel.core.cbeffutil.common.DateAdapter;
 
-
 /**
- * <p>Java class for BIRInfoType complex type.
+ * <p>
+ * Java class for BIRInfoType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="BIRInfoType">
@@ -47,194 +48,163 @@ import io.mosip.kernel.core.cbeffutil.common.DateAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "BIRInfoType", propOrder = {
-    "creator",
-    "index",
-    "payload",
-    "integrity",
-    "creationDate",
-    "notValidBefore",
-    "notValidAfter"
-})
+@XmlType(name = "BIRInfoType", propOrder = { "creator", "index", "payload", "integrity", "creationDate",
+		"notValidBefore", "notValidAfter" })
 public class BIRInfoType {
 
-    @XmlElement(name = "Creator")
-    protected String creator;
-    @XmlElement(name = "Index")
-    protected String index;
-    @XmlElement(name = "Payload")
-    protected byte[] payload;
-    @XmlElement(name = "Integrity")
-    protected boolean integrity;
-    @XmlElement(name = "CreationDate")
-    @XmlSchemaType(name = "dateTime")
-    @XmlJavaTypeAdapter(DateAdapter.class)
-    protected LocalDateTime creationDate;
-    @XmlElement(name = "NotValidBefore")
-    @XmlSchemaType(name = "dateTime")
-    @XmlJavaTypeAdapter(DateAdapter.class)
-    protected LocalDateTime notValidBefore;
-    @XmlElement(name = "NotValidAfter")
-    @XmlSchemaType(name = "dateTime")
-    @XmlJavaTypeAdapter(DateAdapter.class)
-    protected LocalDateTime notValidAfter;
+	@XmlElement(name = "Creator")
+	protected String creator;
+	@XmlElement(name = "Index")
+	protected String index;
+	@XmlElement(name = "Payload")
+	protected byte[] payload;
+	@XmlElement(name = "Integrity")
+	protected boolean integrity;
+	@XmlElement(name = "CreationDate")
+	@XmlSchemaType(name = "dateTime")
+	@XmlJavaTypeAdapter(DateAdapter.class)
+	protected LocalDateTime creationDate;
+	@XmlElement(name = "NotValidBefore")
+	@XmlSchemaType(name = "dateTime")
+	@XmlJavaTypeAdapter(DateAdapter.class)
+	protected LocalDateTime notValidBefore;
+	@XmlElement(name = "NotValidAfter")
+	@XmlSchemaType(name = "dateTime")
+	@XmlJavaTypeAdapter(DateAdapter.class)
+	protected LocalDateTime notValidAfter;
 
-    /**
-     * Gets the value of the creator property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getCreator() {
-        return creator;
-    }
+	/**
+	 * Gets the value of the creator property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getCreator() {
+		return creator;
+	}
 
-    /**
-     * Sets the value of the creator property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setCreator(String value) {
-        this.creator = value;
-    }
+	/**
+	 * Sets the value of the creator property.
+	 * 
+	 * @param value allowed object is {@link String }
+	 * 
+	 */
+	public void setCreator(String value) {
+		this.creator = value;
+	}
 
-    /**
-     * Gets the value of the index property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getIndex() {
-        return index;
-    }
+	/**
+	 * Gets the value of the index property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getIndex() {
+		return index;
+	}
 
-    /**
-     * Sets the value of the index property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setIndex(String value) {
-        this.index = value;
-    }
+	/**
+	 * Sets the value of the index property.
+	 * 
+	 * @param value allowed object is {@link String }
+	 * 
+	 */
+	public void setIndex(String value) {
+		this.index = value;
+	}
 
-    /**
-     * Gets the value of the payload property.
-     * 
-     * @return
-     *     possible object is
-     *     byte[]
-     */
-    public byte[] getPayload() {
-        return payload;
-    }
+	/**
+	 * Gets the value of the payload property.
+	 * 
+	 * @return possible object is byte[]
+	 */
+	public byte[] getPayload() {
+		return payload;
+	}
 
-    /**
-     * Sets the value of the payload property.
-     * 
-     * @param value
-     *     allowed object is
-     *     byte[]
-     */
-    public void setPayload(byte[] value) {
-        this.payload = value;
-    }
+	/**
+	 * Sets the value of the payload property.
+	 * 
+	 * @param value allowed object is byte[]
+	 */
+	public void setPayload(byte[] value) {
+		this.payload = value;
+	}
 
-    /**
-     * Gets the value of the integrity property.
-     * 
-     */
-    public boolean isIntegrity() {
-        return integrity;
-    }
+	/**
+	 * Gets the value of the integrity property.
+	 * 
+	 */
+	public boolean isIntegrity() {
+		return integrity;
+	}
 
-    /**
-     * Sets the value of the integrity property.
-     * 
-     */
-    public void setIntegrity(boolean value) {
-        this.integrity = value;
-    }
+	/**
+	 * Sets the value of the integrity property.
+	 * 
+	 */
+	public void setIntegrity(boolean value) {
+		this.integrity = value;
+	}
 
-    /**
-     * Gets the value of the creationDate property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link XMLGregorianCalendar }
-     *     
-     */
-    public LocalDateTime getCreationDate() {
-        return creationDate;
-    }
+	/**
+	 * Gets the value of the creationDate property.
+	 * 
+	 * @return possible object is {@link XMLGregorianCalendar }
+	 * 
+	 */
+	public LocalDateTime getCreationDate() {
+		return creationDate;
+	}
 
-    /**
-     * Sets the value of the creationDate property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link XMLGregorianCalendar }
-     *     
-     */
-    public void setCreationDate(LocalDateTime value) {
-        this.creationDate = value;
-    }
+	/**
+	 * Sets the value of the creationDate property.
+	 * 
+	 * @param value allowed object is {@link XMLGregorianCalendar }
+	 * 
+	 */
+	public void setCreationDate(LocalDateTime value) {
+		this.creationDate = value;
+	}
 
-    /**
-     * Gets the value of the notValidBefore property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link XMLGregorianCalendar }
-     *     
-     */
-    public LocalDateTime getNotValidBefore() {
-        return notValidBefore;
-    }
+	/**
+	 * Gets the value of the notValidBefore property.
+	 * 
+	 * @return possible object is {@link XMLGregorianCalendar }
+	 * 
+	 */
+	public LocalDateTime getNotValidBefore() {
+		return notValidBefore;
+	}
 
-    /**
-     * Sets the value of the notValidBefore property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link XMLGregorianCalendar }
-     *     
-     */
-    public void setNotValidBefore(LocalDateTime value) {
-        this.notValidBefore = value;
-    }
+	/**
+	 * Sets the value of the notValidBefore property.
+	 * 
+	 * @param value allowed object is {@link XMLGregorianCalendar }
+	 * 
+	 */
+	public void setNotValidBefore(LocalDateTime value) {
+		this.notValidBefore = value;
+	}
 
-    /**
-     * Gets the value of the notValidAfter property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link XMLGregorianCalendar }
-     *     
-     */
-    public LocalDateTime getNotValidAfter() {
-        return notValidAfter;
-    }
+	/**
+	 * Gets the value of the notValidAfter property.
+	 * 
+	 * @return possible object is {@link XMLGregorianCalendar }
+	 * 
+	 */
+	public LocalDateTime getNotValidAfter() {
+		return notValidAfter;
+	}
 
-    /**
-     * Sets the value of the notValidAfter property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link XMLGregorianCalendar }
-     *     
-     */
-    public void setNotValidAfter(LocalDateTime value) {
-        this.notValidAfter = value;
-    }
+	/**
+	 * Sets the value of the notValidAfter property.
+	 * 
+	 * @param value allowed object is {@link XMLGregorianCalendar }
+	 * 
+	 */
+	public void setNotValidAfter(LocalDateTime value) {
+		this.notValidAfter = value;
+	}
 
 }

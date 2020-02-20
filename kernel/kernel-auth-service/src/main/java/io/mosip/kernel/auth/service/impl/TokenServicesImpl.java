@@ -80,21 +80,17 @@ public class TokenServicesImpl implements TokenService {
 	@Override
 	public void StoreToken(AuthToken token) {
 		String userName = checkUser(token.getUserId());
-		if(userName!=null)
-		{
+		if (userName != null) {
 			UpdateToken(token);
-			
-		}
-		else
-		{
-			jdbcTemplate.update(insertTokenSQL, new MapSqlParameterSource()
-					.addValue("userName", token.getUserId())
-					.addValue("token",token.getAccessToken() ).addValue("refreshToken", token.getRefreshToken())
-					.addValue("expTime", new Date(token.getExpirationTime()))
-					.addValue("crdTimes", new Date()));
+
+		} else {
+			jdbcTemplate.update(insertTokenSQL,
+					new MapSqlParameterSource().addValue("userName", token.getUserId())
+							.addValue("token", token.getAccessToken()).addValue("refreshToken", token.getRefreshToken())
+							.addValue("expTime", new Date(token.getExpirationTime())).addValue("crdTimes", new Date()));
 		}
 	}
-	
+
 	@Override
 	public void UpdateToken(AuthToken token) {
 		String userName = checkUser(token.getUserId());
@@ -105,8 +101,6 @@ public class TokenServicesImpl implements TokenService {
 							.addValue("expTime", new Date(token.getExpirationTime())).addValue("crdTimes", new Date()));
 		}
 	}
-	
-	
 
 	private String checkUser(String userId) {
 		return jdbcTemplate.query(checkUserTokenSQL, new MapSqlParameterSource().addValue("userName", userId),
@@ -146,8 +140,6 @@ public class TokenServicesImpl implements TokenService {
 
 				});
 	}
-	
-	
 
 	@Override
 	@Transactional
@@ -157,39 +149,36 @@ public class TokenServicesImpl implements TokenService {
 						.addValue("expTime", new Date(newAccessToken.getExpTime())));
 		return getTokenBasedOnName(userName);
 	}
-	
+
 	@Override
-	public AuthToken getTokenBasedOnName(String userName)
-	{
-		return jdbcTemplate.query(selectTokenFromName, new MapSqlParameterSource().addValue("userName", userName.trim()),
-				new ResultSetExtractor<AuthToken>() {
+	public AuthToken getTokenBasedOnName(String userName) {
+		return jdbcTemplate.query(selectTokenFromName,
+				new MapSqlParameterSource().addValue("userName", userName.trim()), new ResultSetExtractor<AuthToken>() {
 
-			@Override
-			public AuthToken extractData(ResultSet rs) throws SQLException, DataAccessException {
-				while (rs.next()) {
-					AuthToken authToken = new AuthToken();
-					authToken.setAccessToken(rs.getString("auth_token"));
-					authToken.setUserId(rs.getString("user_id"));
-					authToken.setExpirationTime(rs.getTimestamp("expiration_time").getTime());
-					authToken.setRefreshToken(rs.getString("refresh_token"));
-					return authToken;
-				}
-				return null;
-			}
+					@Override
+					public AuthToken extractData(ResultSet rs) throws SQLException, DataAccessException {
+						while (rs.next()) {
+							AuthToken authToken = new AuthToken();
+							authToken.setAccessToken(rs.getString("auth_token"));
+							authToken.setUserId(rs.getString("user_id"));
+							authToken.setExpirationTime(rs.getTimestamp("expiration_time").getTime());
+							authToken.setRefreshToken(rs.getString("refresh_token"));
+							return authToken;
+						}
+						return null;
+					}
 
-		});
+				});
 	}
 
 	@Override
 	public void revokeToken(String token) {
 		AuthToken authToken = getTokenDetails(token);
-		if(authToken!=null)
-		{
-		removeAccessToken(authToken.getUserId());
-		}
-		else
-		{
-			throw new AuthManagerException(AuthErrorCode.TOKEN_DATASTORE_ERROR.getErrorCode(),AuthErrorCode.TOKEN_DATASTORE_ERROR.getErrorMessage());
+		if (authToken != null) {
+			removeAccessToken(authToken.getUserId());
+		} else {
+			throw new AuthManagerException(AuthErrorCode.TOKEN_DATASTORE_ERROR.getErrorCode(),
+					AuthErrorCode.TOKEN_DATASTORE_ERROR.getErrorMessage());
 		}
 	}
 

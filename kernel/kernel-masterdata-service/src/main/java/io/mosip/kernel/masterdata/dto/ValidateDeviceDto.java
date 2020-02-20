@@ -7,9 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 /**
  * The Class ValidateDeviceDto.
+ * 
  * @author Srinivasan
  * @since 1.0.0
  */
@@ -27,6 +27,6 @@ public class ValidateDeviceDto {
 	private DigitalIdDto digitalId;
 
 	/** The device service version. */
-	@NotBlank 
+	@NotBlank
 	private String deviceServiceVersion;
 }

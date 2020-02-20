@@ -210,7 +210,7 @@ public class DeviceServiceImpl implements DeviceService {
 		Device device = null;
 		Device entity = null;
 		DeviceHistory entityHistory = null;
-		DeviceExtnDto deviceExtnDto=new DeviceExtnDto();
+		DeviceExtnDto deviceExtnDto = new DeviceExtnDto();
 		try {
 			deviceDto = masterdataCreationUtil.createMasterData(Device.class, deviceDto);
 			if (deviceDto != null) {
@@ -477,10 +477,8 @@ public class DeviceServiceImpl implements DeviceService {
 	/**
 	 * Method to set each device zone meta data.
 	 * 
-	 * @param list
-	 *            list of {@link DeviceSearchDto}.
-	 * @param zones
-	 *            the list of zones.
+	 * @param list  list of {@link DeviceSearchDto}.
+	 * @param zones the list of zones.
 	 */
 	private void setDeviceMetadata(List<DeviceSearchDto> list, List<Zone> zones) {
 		list.forEach(i -> setZoneMetadata(i, zones));
@@ -489,8 +487,7 @@ public class DeviceServiceImpl implements DeviceService {
 	/**
 	 * Method to set DeviceType Name for each Device.
 	 * 
-	 * @param list
-	 *            the {@link DeviceSearchDto}.
+	 * @param list the {@link DeviceSearchDto}.
 	 */
 	private void setDeviceTypeNames(List<DeviceSearchDto> list) {
 		List<DeviceSpecification> deviceSpecifications = deviceUtil.getDeviceSpec();
@@ -513,8 +510,7 @@ public class DeviceServiceImpl implements DeviceService {
 	/**
 	 * Method to set Map status of each Device.
 	 * 
-	 * @param list
-	 *            the {@link DeviceSearchDto}.
+	 * @param list the {@link DeviceSearchDto}.
 	 */
 	private void setMapStatus(List<DeviceSearchDto> list, String langCode) {
 
@@ -539,10 +535,8 @@ public class DeviceServiceImpl implements DeviceService {
 	/**
 	 * Method to set Zone metadata
 	 * 
-	 * @param devices
-	 *            metadata to be added
-	 * @param zones
-	 *            list of zones
+	 * @param devices metadata to be added
+	 * @param zones   list of zones
 	 * 
 	 */
 	private void setZoneMetadata(DeviceSearchDto devices, List<Zone> zones) {
@@ -557,8 +551,7 @@ public class DeviceServiceImpl implements DeviceService {
 	/**
 	 * Search the zone in the based on the received input filter
 	 * 
-	 * @param filter
-	 *            search input
+	 * @param filter search input
 	 * @return {@link Zone} if successful otherwise throws
 	 *         {@link MasterDataServiceException}
 	 */
@@ -577,8 +570,7 @@ public class DeviceServiceImpl implements DeviceService {
 	/**
 	 * Creating Search filter from the passed zones
 	 * 
-	 * @param zones
-	 *            filter to be created with the zones
+	 * @param zones filter to be created with the zones
 	 * @return list of {@link SearchFilter}
 	 */
 	public List<SearchFilter> buildZoneFilter(List<Zone> zones) {
@@ -592,8 +584,7 @@ public class DeviceServiceImpl implements DeviceService {
 	/**
 	 * Method to create SearchFilter for the recieved zoneCode
 	 * 
-	 * @param zoneCode
-	 *            input from the {@link SearchFilter} has to be created
+	 * @param zoneCode input from the {@link SearchFilter} has to be created
 	 * @return {@link SearchFilter}
 	 */
 	private SearchFilter buildZoneFilter(String zoneCode) {
@@ -607,8 +598,7 @@ public class DeviceServiceImpl implements DeviceService {
 	/**
 	 * This method return Device Id list filters.
 	 * 
-	 * @param deviceIdList
-	 *            the Device Id list.
+	 * @param deviceIdList the Device Id list.
 	 * @return the list of {@link SearchFilter}.
 	 */
 	private List<SearchFilter> buildRegistrationCenterDeviceTypeSearchFilter(List<String> deviceIdList) {
@@ -621,8 +611,7 @@ public class DeviceServiceImpl implements DeviceService {
 	/**
 	 * This method return Device Types list filters.
 	 * 
-	 * @param deviceTypes
-	 *            the list of Device Type.
+	 * @param deviceTypes the list of Device Type.
 	 * @return the list of {@link SearchFilter}.
 	 */
 	/*
@@ -635,8 +624,7 @@ public class DeviceServiceImpl implements DeviceService {
 	/**
 	 * This method return Device Specification list filters.
 	 * 
-	 * @param deviceSpecs
-	 *            the list of Device Specification.
+	 * @param deviceSpecs the list of Device Specification.
 	 * @return the list of {@link SearchFilter}.
 	 */
 	private List<SearchFilter> buildDeviceSpecificationSearchFilter(List<Object[]> deviceSpecs) {
@@ -657,8 +645,7 @@ public class DeviceServiceImpl implements DeviceService {
 	/**
 	 * This method provide search filter for provided device id.
 	 * 
-	 * @param deviceId
-	 *            the device id.
+	 * @param deviceId the device id.
 	 * @return the {@link SearchFilter}.
 	 */
 	private SearchFilter buildRegistrationCenterDeviceType(String deviceId) {
@@ -672,8 +659,7 @@ public class DeviceServiceImpl implements DeviceService {
 	/**
 	 * This method provide search filter for provided Device specification.
 	 * 
-	 * @param deviceSpecification
-	 *            the device specification.
+	 * @param deviceSpecification the device specification.
 	 * @return the {@link SearchFilter}.
 	 */
 	/*
@@ -687,8 +673,7 @@ public class DeviceServiceImpl implements DeviceService {
 	/**
 	 * This method provide search filter for provided Device Type.
 	 * 
-	 * @param deviceType
-	 *            the device type.
+	 * @param deviceType the device type.
 	 * @return the {@link SearchFilter}.
 	 */
 	/*
@@ -765,13 +750,13 @@ public class DeviceServiceImpl implements DeviceService {
 			throw new RequestException(DeviceErrorCode.DEVICE_NOT_EXISTS_EXCEPTION.getErrorCode(),
 					String.format(DeviceErrorCode.DEVICE_NOT_EXISTS_EXCEPTION.getErrorMessage(), deviceId));
 		}
-		
+
 		List<String> zoneIds;
 
 		// get user zone and child zones list
 		List<Zone> userZones = zoneUtils.getUserZones();
 		zoneIds = userZones.parallelStream().map(Zone::getCode).collect(Collectors.toList());
-		
+
 		// check the given device and registration center zones are come under user zone
 		if (!zoneIds.contains(devices.get(0).getZoneCode())) {
 			auditUtil.auditRequest(

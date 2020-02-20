@@ -38,7 +38,7 @@ public interface AuthService extends AuthZService, AuthNService {
 
 	public MosipUserListDto getListOfUsersDetails(List<String> userDetails, String appId) throws Exception;
 
-	public MosipUserSaltListDto getAllUserDetailsWithSalt(List<String> userDetails,String  appId) throws Exception;
+	public MosipUserSaltListDto getAllUserDetailsWithSalt(List<String> userDetails, String appId) throws Exception;
 
 	public RIdDto getRidBasedOnUid(String userId, String appId) throws Exception;
 
@@ -57,16 +57,17 @@ public interface AuthService extends AuthZService, AuthNService {
 	public UserRoleDto getUserRole(String appId, String userId) throws Exception;
 
 	public MosipUserDto getUserDetailBasedonMobileNumber(String appId, String mobileNumber) throws Exception;
-	
-	public ValidationResponseDto validateUserName(String appId,String userName);
-	
-	public UserDetailsResponseDto getUserDetailBasedOnUserId(String appId,List<String> userIds);
-	
+
+	public ValidationResponseDto validateUserName(String appId, String userName);
+
+	public UserDetailsResponseDto getUserDetailBasedOnUserId(String appId, List<String> userIds);
+
 	public MosipUserDto valdiateToken(String token);
-	
+
 	public AuthResponseDto logoutUser(String token);
-	
-	AccessTokenResponseDTO loginRedirect(String state, String sessionState, String code, String stateCookie, String redirectURI);
+
+	AccessTokenResponseDTO loginRedirect(String state, String sessionState, String code, String stateCookie,
+			String redirectURI);
 
 	String getKeycloakURI(String redirectURI, String state);
 

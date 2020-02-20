@@ -11,12 +11,12 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.provider.ProviderConfigProperty;
 
-public class CustomAuthFactory implements AuthenticatorFactory,ConfigurableAuthenticatorFactory  {
+public class CustomAuthFactory implements AuthenticatorFactory, ConfigurableAuthenticatorFactory {
 
 	@Override
 	public void close() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -34,13 +34,13 @@ public class CustomAuthFactory implements AuthenticatorFactory,ConfigurableAuthe
 	@Override
 	public void init(Scope arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void postInit(KeycloakSessionFactory arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

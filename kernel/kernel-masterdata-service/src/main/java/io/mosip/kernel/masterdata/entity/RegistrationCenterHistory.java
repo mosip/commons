@@ -109,7 +109,7 @@ public class RegistrationCenterHistory extends BaseEntity implements Serializabl
 			@JoinColumn(name = "location_code", referencedColumnName = "code", insertable = false, updatable = false),
 			@JoinColumn(name = "lang_code", referencedColumnName = "lang_code", insertable = false, updatable = false), })
 	private Location location;
-	
+
 	@Column(name = "zone_code", length = 36)
 	private String zoneCode;
 

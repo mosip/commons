@@ -68,13 +68,12 @@ public class ApiExceptionHandler {
 	public ResponseEntity<ResponseWrapper<ServiceError>> defaultErrorHandler(HttpServletRequest httpServletRequest,
 			Exception exception) throws IOException {
 		ResponseWrapper<ServiceError> errorResponse = setErrors(httpServletRequest);
-		ServiceError error = new ServiceError("KER-500",
-				exception.getMessage());
+		ServiceError error = new ServiceError("KER-500", exception.getMessage());
 		errorResponse.getErrors().add(error);
 		ExceptionUtils.logRootCause(exception);
 		return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
+
 	private ResponseWrapper<ServiceError> setErrors(HttpServletRequest httpServletRequest) throws IOException {
 		ResponseWrapper<ServiceError> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponsetime(LocalDateTime.now(ZoneId.of("UTC")));

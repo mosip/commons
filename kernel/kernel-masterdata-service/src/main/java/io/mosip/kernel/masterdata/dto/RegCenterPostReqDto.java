@@ -24,7 +24,7 @@ import lombok.Data;
 
 @Data
 public class RegCenterPostReqDto {
-	
+
 	@NotBlank
 	@Size(min = 0, max = 128)
 	private String name;
@@ -44,12 +44,12 @@ public class RegCenterPostReqDto {
 
 	@Size(min = 0, max = 128)
 	private String contactPerson;
-	
+
 	@NotNull
 	private Boolean isActive;
-	
+
 	private String id;
-	
+
 	@NotBlank
 	@Size(min = 0, max = 36)
 	private String centerTypeCode;
@@ -101,12 +101,11 @@ public class RegCenterPostReqDto {
 	@NotNull
 	@Size(min = 0, max = 36)
 	private String zoneCode;
-	
+
 	@Valid
 	private WorkingNonWorkingDaysDto workingNonWorkingDays;
-	
+
 	@Valid
-	private List<ExceptionalHolidayPutPostDto>	 exceptionalHolidayPutPostDto;
-	
-	
+	private List<ExceptionalHolidayPutPostDto> exceptionalHolidayPutPostDto;
+
 }

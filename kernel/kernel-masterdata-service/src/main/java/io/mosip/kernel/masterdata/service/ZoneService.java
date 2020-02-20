@@ -17,8 +17,7 @@ public interface ZoneService {
 	/**
 	 * Method to fetch the user's zone hierarchy
 	 * 
-	 * @param langCode
-	 *            input language code
+	 * @param langCode input language code
 	 * 
 	 * @return {@link List} of {@link ZoneExtnDto}
 	 */
@@ -27,15 +26,14 @@ public interface ZoneService {
 	/**
 	 * Method to fetch the user leaf zone in hierarchy
 	 * 
-	 * @param langCode
-	 *            input language code
+	 * @param langCode input language code
 	 * @return {@link List} of {@link ZoneExtnDto}
 	 */
 	public List<ZoneExtnDto> getUserLeafZone(String langCode);
 
 	public ZoneNameResponseDto getZoneNameBasedOnLangCodeAndUserID(String userID, String langCode);
-	
-	public boolean getUserValidityZoneHierarchy(String langCode,String zoneCode);
-	
+
+	public boolean getUserValidityZoneHierarchy(String langCode, String zoneCode);
+
 	public boolean authorizeZone(String rId);
 }

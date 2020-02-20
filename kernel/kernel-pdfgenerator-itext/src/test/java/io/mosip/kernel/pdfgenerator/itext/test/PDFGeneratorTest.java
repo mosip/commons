@@ -64,21 +64,22 @@ import io.mosip.kernel.pdfgenerator.itext.impl.PDFGeneratorImpl;
 public class PDFGeneratorTest {
 	@Autowired
 	private PDFGenerator pdfGenerator;
-	
+
 	@Autowired
 	private ResourceLoader resourceLoader;
 
 	private static BufferedImage bufferedImage;
 	private static BufferedImage bufferedImage2;
-	
+
 	private static BouncyCastleProvider bouncyCastleProvider;
-	
+
 	private static CertificateEntry<X509Certificate, PrivateKey> certificateEntry;
 
 	private static List<BufferedImage> bufferedImages = new ArrayList<>();
 
 	@BeforeClass
-	public static void initialize() throws IOException, java.io.IOException, NoSuchAlgorithmException, InvalidKeyException, NoSuchProviderException, SecurityException, SignatureException {
+	public static void initialize() throws IOException, java.io.IOException, NoSuchAlgorithmException,
+			InvalidKeyException, NoSuchProviderException, SecurityException, SignatureException {
 		URL url = PDFGeneratorTest.class.getResource("/Change.jpg");
 		URL url2 = PDFGeneratorTest.class.getResource("/nelsonmandela1-2x.jpg");
 
@@ -87,33 +88,32 @@ public class PDFGeneratorTest {
 
 		bufferedImage2 = ImageIO.read(url2);
 		bufferedImages.add(bufferedImage2);
-		
-		
+
 		bouncyCastleProvider = new BouncyCastleProvider();
 		Security.addProvider(bouncyCastleProvider);
 		KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
 		generator.initialize(2048, new SecureRandom());
-		KeyPair keyPair=generator.generateKeyPair();
+		KeyPair keyPair = generator.generateKeyPair();
 		X509Certificate[] serverChain = new X509Certificate[1];
 		X509V3CertificateGenerator serverCertGen = new X509V3CertificateGenerator();
 		X500Principal serverSubjectName = new X500Principal("CN=OrganizationName");
 		serverCertGen.setSerialNumber(new BigInteger("123456789"));
 		// X509Certificate caCert=null;
 		serverCertGen.setIssuerDN(serverSubjectName);
-		serverCertGen.setNotBefore(Date.from(LocalDate.now().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
-		serverCertGen.setNotAfter(Date.from(LocalDate.now().plusDays(21).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+		serverCertGen
+				.setNotBefore(Date.from(LocalDate.now().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+		serverCertGen.setNotAfter(
+				Date.from(LocalDate.now().plusDays(21).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
 		serverCertGen.setSubjectDN(serverSubjectName);
 		serverCertGen.setPublicKey(keyPair.getPublic());
 		serverCertGen.setSignatureAlgorithm("MD5WithRSA");
-	
+
 		serverChain[0] = serverCertGen.generateX509Certificate(keyPair.getPrivate(), "BC"); // note: private key of CA
-        
-		certificateEntry= new CertificateEntry<X509Certificate, PrivateKey>(serverChain, keyPair.getPrivate());			
-				
-				
-		
-	
+
+		certificateEntry = new CertificateEntry<X509Certificate, PrivateKey>(serverChain, keyPair.getPrivate());
+
 	}
+
 	@Test
 	public void testPdfGenerationWithInputStream() throws IOException {
 		ClassLoader classLoader = getClass().getClassLoader();
@@ -273,12 +273,14 @@ public class PDFGeneratorTest {
 			op.close();
 		}
 	}
-	
+
 	@Test
-	public void testsignAndEncryptPDF() throws IOException, GeneralSecurityException, io.mosip.kernel.core.exception.IOException{
-		byte[] pdf=FileUtils.readFileToByteArray(resourceLoader.getResource("classpath:dummy.pdf").getFile());
+	public void testsignAndEncryptPDF()
+			throws IOException, GeneralSecurityException, io.mosip.kernel.core.exception.IOException {
+		byte[] pdf = FileUtils.readFileToByteArray(resourceLoader.getResource("classpath:dummy.pdf").getFile());
 		Rectangle rectangle = new Rectangle(100, 100, 200, 200);
-		assertThat(pdfGenerator.signAndEncryptPDF(pdf, rectangle, "check", 1, bouncyCastleProvider, certificateEntry, "mosip") ,isA(OutputStream.class));
+		assertThat(pdfGenerator.signAndEncryptPDF(pdf, rectangle, "check", 1, bouncyCastleProvider, certificateEntry,
+				"mosip"), isA(OutputStream.class));
 	}
 
 	@AfterClass
@@ -318,7 +320,7 @@ public class PDFGeneratorTest {
 		if (OutPutPdfFile2.exists()) {
 			OutPutPdfFile2.delete();
 		}
-		File OutPutPdfFile3 = new File("protected"+ outputFileExtension);
+		File OutPutPdfFile3 = new File("protected" + outputFileExtension);
 		if (OutPutPdfFile3.exists()) {
 			OutPutPdfFile3.delete();
 		}

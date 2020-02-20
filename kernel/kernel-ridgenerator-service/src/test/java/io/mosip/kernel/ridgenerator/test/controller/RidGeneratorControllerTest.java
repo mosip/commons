@@ -23,7 +23,7 @@ import io.mosip.kernel.ridgenerator.service.RidGeneratorService;
 @AutoConfigureMockMvc
 @SpringBootTest
 public class RidGeneratorControllerTest {
-	
+
 	@Autowired
 	private MockMvc mockMvc;
 

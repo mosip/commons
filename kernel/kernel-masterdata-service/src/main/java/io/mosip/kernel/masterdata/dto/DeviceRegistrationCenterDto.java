@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
 /**
  * 
  * @author Megha Tanga
@@ -21,7 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class DeviceRegistrationCenterDto extends BaseDto {
-	
+
 	/**
 	 * Field for registration Center Id
 	 */

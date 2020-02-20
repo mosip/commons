@@ -27,5 +27,5 @@ public class SignatureResponseDto {
 	 * Data Encrypted/Decrypted in BASE64 encoding
 	 */
 	private String data;
-	
+
 }

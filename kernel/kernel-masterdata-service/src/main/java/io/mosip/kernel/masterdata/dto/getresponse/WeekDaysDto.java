@@ -13,17 +13,17 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class WeekDaysDto implements Serializable{
+public class WeekDaysDto implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -3763349609534307197L;
-	
+
 	private String name;
-	
+
 	private short order;
-	
+
 	private String languageCode;
 
 }

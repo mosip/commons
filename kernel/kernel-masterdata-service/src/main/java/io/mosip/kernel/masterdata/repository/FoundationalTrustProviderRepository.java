@@ -15,10 +15,10 @@ import io.mosip.kernel.masterdata.entity.FoundationalTrustProvider;
  *
  */
 @Repository
-public interface FoundationalTrustProviderRepository extends BaseRepository<FoundationalTrustProvider,String>
-{
+public interface FoundationalTrustProviderRepository extends BaseRepository<FoundationalTrustProvider, String> {
 
 	@Query("from FoundationalTrustProvider WHERE name = ?1 and email=?2 and address=?3 and certAlias=?4 and (isDeleted is null or isDeleted =false) AND isActive = ?5")
-	FoundationalTrustProvider findByDetails(String name, String email, String address, String certAlias,boolean isActive);
+	FoundationalTrustProvider findByDetails(String name, String email, String address, String certAlias,
+			boolean isActive);
 
 }

@@ -7,17 +7,18 @@ import io.mosip.kernel.masterdata.dto.getresponse.extn.RegistrationCenterExtnDto
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 /**
  * This response DTO for update Registration center by Admin
  * 
- * @author Megha Tanga 
+ * @author Megha Tanga
  *
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegistrationCenterPutResponseDto {
-	private List<RegistrationCenterExtnDto> registrationCenters ;
+	private List<RegistrationCenterExtnDto> registrationCenters;
 	private List<RegCenterPutReqDto> notUpdatedRegistrationCenters;
 	private List<RegistrationCenterExtnDto> newRegistartionCenters;
 

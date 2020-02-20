@@ -48,13 +48,10 @@ public class ApiExceptionHandler {
 	/**
 	 * This method handle MethodArgumentNotValidException.
 	 * 
-	 * @param httpServletRequest
-	 *            the request
-	 * @param e
-	 *            the exception
+	 * @param httpServletRequest the request
+	 * @param e                  the exception
 	 * @return the response entity.
-	 * @throws IOException
-	 *             the IO Exception
+	 * @throws IOException the IO Exception
 	 */
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> methodArgumentNotValidException(

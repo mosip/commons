@@ -32,7 +32,8 @@ public class CryptoUtilTest {
 
 	@Test(expected = InvalidDataException.class)
 	public void testverifyDataEmptyDataWithErrorCode() {
-		CryptoUtils.verifyData(new byte[0],SecurityExceptionCodeConstant.MOSIP_NULL_DATA_EXCEPTION.getErrorCode(),SecurityExceptionCodeConstant.MOSIP_NULL_DATA_EXCEPTION.getErrorMessage());
+		CryptoUtils.verifyData(new byte[0], SecurityExceptionCodeConstant.MOSIP_NULL_DATA_EXCEPTION.getErrorCode(),
+				SecurityExceptionCodeConstant.MOSIP_NULL_DATA_EXCEPTION.getErrorMessage());
 	}
 
 }

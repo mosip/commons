@@ -113,17 +113,15 @@ public class OTPServiceImpl implements OTPService {
 
 	@Value("${mosip.kernel.ida.secret.key}")
 	private String idaSecret;
-	
+
 	@Value("${mosip.admin.clientid}")
 	private String mosipAdminClientID;
 
 	@Value("${mosip.admin.clientsecret}")
 	private String mosipAdminSecret;
-	
 
 	@Value("${mosip.admin.pre-reg_user_password}")
 	private String preRegUserPassword;
-	
 
 	@Override
 	public AuthNResponseDto sendOTP(MosipUserDto mosipUserDto, List<String> otpChannel, String appId) {

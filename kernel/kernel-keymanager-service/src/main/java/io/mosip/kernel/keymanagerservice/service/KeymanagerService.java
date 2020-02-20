@@ -37,10 +37,10 @@ public interface KeymanagerService {
 	 */
 	public PublicKeyResponse<String> getPublicKey(String applicationId, String timeStamp, Optional<String> referenceId);
 
-
 	public SignatureResponseDto sign(SignatureRequestDto signatureRequestDto);
 
-	public PublicKeyResponse<String> getSignPublicKey(String applicationId, String timeStamp, Optional<String> referenceId);
-	
+	public PublicKeyResponse<String> getSignPublicKey(String applicationId, String timeStamp,
+			Optional<String> referenceId);
+
 	public SignatureResponseDto signPDF(PDFSignatureRequestDto request);
 }

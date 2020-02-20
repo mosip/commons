@@ -40,7 +40,7 @@ public class BDBInfo {
 	public BDBInfo(BDBInfoBuilder bDBInfoBuilder) {
 		this.challengeResponse = bDBInfoBuilder.challengeResponse;
 		this.index = bDBInfoBuilder.index;
-		this.format	=bDBInfoBuilder.format;
+		this.format = bDBInfoBuilder.format;
 		this.encryption = bDBInfoBuilder.encryption;
 		this.creationDate = bDBInfoBuilder.creationDate;
 		this.notValidBefore = bDBInfoBuilder.notValidBefore;
@@ -137,8 +137,6 @@ public class BDBInfo {
 		return compressionAlgorithm;
 	}
 
-
-
 	public static class BDBInfoBuilder {
 		private byte[] challengeResponse;
 		private String index;
@@ -226,22 +224,22 @@ public class BDBInfo {
 		public BDBInfo build() {
 			return new BDBInfo(this);
 		}
-		
+
 		public BDBInfoBuilder withCaptureDevice(RegistryIDType captureDevice) {
 			this.captureDevice = captureDevice;
 			return this;
 		}
-		
+
 		public BDBInfoBuilder withFeatureExtractionAlgorithm(RegistryIDType featureExtractionAlgorithm) {
 			this.featureExtractionAlgorithm = featureExtractionAlgorithm;
 			return this;
 		}
-		
+
 		public BDBInfoBuilder withComparisonAlgorithm(RegistryIDType comparisonAlgorithm) {
 			this.comparisonAlgorithm = comparisonAlgorithm;
 			return this;
 		}
-		
+
 		public BDBInfoBuilder withCompressionAlgorithm(RegistryIDType compressionAlgorithm) {
 			this.compressionAlgorithm = compressionAlgorithm;
 			return this;

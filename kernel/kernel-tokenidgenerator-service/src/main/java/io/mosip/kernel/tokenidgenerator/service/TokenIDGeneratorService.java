@@ -5,7 +5,6 @@ package io.mosip.kernel.tokenidgenerator.service;
 
 import io.mosip.kernel.tokenidgenerator.dto.TokenIDResponseDto;
 
-
 /**
  * @author Urvil Joshi
  * @author Ritesh Sinha

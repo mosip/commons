@@ -38,7 +38,7 @@ public class RestInterceptor implements ClientHttpRequestInterceptor {
 
 	@Autowired
 	private MemoryCache<String, AccessTokenResponse> memoryCache;
-	
+
 	@Autowired
 	private TokenValidator tokenValidator;
 
@@ -51,13 +51,13 @@ public class RestInterceptor implements ClientHttpRequestInterceptor {
 
 	@Value("${mosip.master.realm-id}")
 	private String realmId;
-	
+
 	@Value("${mosip.keycloak.admin.client.id}")
 	private String adminClientID;
-	
+
 	@Value("${mosip.keycloak.admin.user.id}")
 	private String adminUserName;
-	
+
 	@Value("${mosip.keycloak.admin.secret.key}")
 	private String adminSecret;
 
@@ -66,15 +66,15 @@ public class RestInterceptor implements ClientHttpRequestInterceptor {
 			throws IOException {
 		AccessTokenResponse accessTokenResponse = null;
 		if ((accessTokenResponse = memoryCache.get("adminToken")) != null) {
-			boolean accessTokenExpired=tokenValidator.isExpired(accessTokenResponse.getAccess_token());
-			boolean refreshTokenExpired=tokenValidator.isExpired(accessTokenResponse.getRefresh_token());
-			System.out.println("access token "+accessTokenResponse.getAccess_token());
-			System.out.println("refresh token "+accessTokenResponse.getRefresh_token());
+			boolean accessTokenExpired = tokenValidator.isExpired(accessTokenResponse.getAccess_token());
+			boolean refreshTokenExpired = tokenValidator.isExpired(accessTokenResponse.getRefresh_token());
+			System.out.println("access token " + accessTokenResponse.getAccess_token());
+			System.out.println("refresh token " + accessTokenResponse.getRefresh_token());
 			System.out.println(accessTokenExpired);
 			System.out.println(refreshTokenExpired);
 			if (accessTokenExpired && refreshTokenExpired) {
 				accessTokenResponse = getAdminToken(false, null);
-			}else if(accessTokenExpired) {
+			} else if (accessTokenExpired) {
 				accessTokenResponse = getAdminToken(true, accessTokenResponse.getRefresh_token());
 			}
 		} else {

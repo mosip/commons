@@ -59,7 +59,8 @@ public class VidServiceImpl implements VidService {
 			}
 			vidFetchResponseDto.setVid(vidEntity.getVid());
 			try {
-				vidRepository.updateVid(VidLifecycleStatus.ASSIGNED,VIDGeneratorConstant.DEFAULTADMIN_MOSIP_IO,DateUtils.getUTCCurrentDateTime(),vidEntity.getVid());
+				vidRepository.updateVid(VidLifecycleStatus.ASSIGNED, VIDGeneratorConstant.DEFAULTADMIN_MOSIP_IO,
+						DateUtils.getUTCCurrentDateTime(), vidEntity.getVid());
 			} catch (DataAccessException exception) {
 				LOGGER.error(ExceptionUtils.parseException(exception));
 				throw new VidGeneratorServiceException(VIDGeneratorErrorCode.INTERNAL_SERVER_ERROR.getErrorCode(),

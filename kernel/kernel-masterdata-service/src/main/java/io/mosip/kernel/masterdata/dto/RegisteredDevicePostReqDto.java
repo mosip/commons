@@ -20,25 +20,32 @@ import lombok.Data;
 @Data
 //@ApiModel(value = "Device", description = "Device Detail resource")
 @ValidFoundational(baseField = "certificationLevel", matchField = { "foundationalTPId" })
-		/*"foundationalTrustSignature",
-		"foundationalTrustCertificate"*/ 
+/*
+ * "foundationalTrustSignature", "foundationalTrustCertificate"
+ */
 public class RegisteredDevicePostReqDto {
 
-/*	*//**
-	 * Field for deviceTypeCode
-	 *//*
-	@NotBlank
-	@Size(min = 1, max = 36)
-	@ApiModelProperty(value = "deviceTypeCode", required = true, dataType = "java.lang.String")
-	private String deviceTypeCode;
-
-	*//**
-	 * Field for deviceSubTypeCode
-	 *//*
-	@NotBlank
-	@Size(min = 1, max = 36)
-	@ApiModelProperty(value = "deviceSTypeCode", required = true, dataType = "java.lang.String")
-	private String deviceSTypeCode;*/
+	/*	*//**
+			 * Field for deviceTypeCode
+			 */
+	/*
+	 * @NotBlank
+	 * 
+	 * @Size(min = 1, max = 36)
+	 * 
+	 * @ApiModelProperty(value = "deviceTypeCode", required = true, dataType =
+	 * "java.lang.String") private String deviceTypeCode;
+	 * 
+	 *//**
+		 * Field for deviceSubTypeCode
+		 *//*
+			 * @NotBlank
+			 * 
+			 * @Size(min = 1, max = 36)
+			 * 
+			 * @ApiModelProperty(value = "deviceSTypeCode", required = true, dataType =
+			 * "java.lang.String") private String deviceSTypeCode;
+			 */
 
 	/**
 	 * Field for Status Code Status should only have standard values - “Registered”,
@@ -83,7 +90,7 @@ public class RegisteredDevicePostReqDto {
 	@Size(min = 0, max = 128)
 	@ApiModelProperty(value = "firmware", required = true, dataType = "java.lang.String")
 	private String firmware;
-	
+
 	/**
 	 * Field for device name
 	 */
@@ -112,25 +119,31 @@ public class RegisteredDevicePostReqDto {
 	 * Field for device name
 	 */
 
-	/*@Size(min = 0, max = 512)
-	@ApiModelProperty(value = "foundationalTrustSignature", required = true, dataType = "java.lang.String")
-	private String foundationalTrustSignature;
+	/*
+	 * @Size(min = 0, max = 512)
+	 * 
+	 * @ApiModelProperty(value = "foundationalTrustSignature", required = true,
+	 * dataType = "java.lang.String") private String foundationalTrustSignature;
+	 * 
+	 *//**
+		 * Field for device name
+		 */
+	/*
+	 * 
+	 * @ApiModelProperty(value = "foundationalTrustCertificate", required = true,
+	 * dataType = "java.lang.byte") private byte[] foundationalTrustCertificate;
+	 * 
+	 *//**
+		 * Field for device name
+		 *//*
+			 * @NotBlank
+			 * 
+			 * @Size(min = 1, max = 512)
+			 * 
+			 * @ApiModelProperty(value = "dProviderSignature", required = true, dataType =
+			 * "java.lang.String") private String deviceProviderSignature;
+			 */
 
-	*//**
-	 * Field for device name
-	 *//*
-
-	@ApiModelProperty(value = "foundationalTrustCertificate", required = true, dataType = "java.lang.byte")
-	private byte[] foundationalTrustCertificate;
-
-	*//**
-	 * Field for device name
-	 *//*
-	@NotBlank
-	@Size(min = 1, max = 512)
-	@ApiModelProperty(value = "dProviderSignature", required = true, dataType = "java.lang.String")
-	private String deviceProviderSignature;*/
-	
 	@NotNull
 	@Valid
 	private DigitalIdDeviceRegisterDto digitalIdDto;

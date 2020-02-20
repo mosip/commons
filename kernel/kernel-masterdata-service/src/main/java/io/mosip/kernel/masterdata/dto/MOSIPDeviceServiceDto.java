@@ -22,10 +22,14 @@ import lombok.Data;
 //@ApiModel(value = "MOSIP Device Service", description = "MOSIP Device Service Detail resource")
 public class MOSIPDeviceServiceDto {
 
-	/*@NotBlank
-	@Size(min = 0, max = 36)
-	@ApiModelProperty(value = "id", required = true, dataType = "java.lang.String")
-	private String id;*/
+	/*
+	 * @NotBlank
+	 * 
+	 * @Size(min = 0, max = 36)
+	 * 
+	 * @ApiModelProperty(value = "id", required = true, dataType =
+	 * "java.lang.String") private String id;
+	 */
 
 	@NotBlank
 	@Size(min = 0, max = 64)
@@ -66,10 +70,9 @@ public class MOSIPDeviceServiceDto {
 	@NotBlank
 	@ApiModelProperty(value = "softBinaryHash", required = true, dataType = "java.lang.Byte")
 	private String swBinaryHash;
-	
+
 	@NotNull
 	@ApiModelProperty(value = "isActive", dataType = "java.lang.Boolean")
 	private Boolean isActive;
-	
 
 }

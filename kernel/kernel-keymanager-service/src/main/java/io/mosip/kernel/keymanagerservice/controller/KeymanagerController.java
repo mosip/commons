@@ -92,11 +92,10 @@ public class KeymanagerController {
 	@PostMapping(value = "/decrypt")
 	public ResponseWrapper<SymmetricKeyResponseDto> decryptSymmetricKey(
 			@ApiParam("Data to decrypt in BASE64 encoding with meta-data") @RequestBody RequestWrapper<SymmetricKeyRequestDto> symmetricKeyRequestDto) {
-        ResponseWrapper<SymmetricKeyResponseDto> response = new ResponseWrapper<>();
+		ResponseWrapper<SymmetricKeyResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(keymanagerService.decryptSymmetricKey(symmetricKeyRequestDto.getRequest()));
 		return response;
 	}
-
 
 	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
@@ -108,34 +107,37 @@ public class KeymanagerController {
 		response.setResponse(keymanagerService.sign(signatureResponseDto.getRequest()));
 		return response;
 	}
-	
+
 	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
-	
+
 	@ResponseFilter
 	@PostMapping("/pdf/sign")
-	public ResponseWrapper<SignatureResponseDto> signPDF(@RequestBody @Valid RequestWrapper<PDFSignatureRequestDto> signatureResponseDto
-			) {
+	public ResponseWrapper<SignatureResponseDto> signPDF(
+			@RequestBody @Valid RequestWrapper<PDFSignatureRequestDto> signatureResponseDto) {
 		ResponseWrapper<SignatureResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(keymanagerService.signPDF(signatureResponseDto.getRequest()));
 		return response;
 	}
 
-/*	
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN')")
-	@ResponseFilter
-	@GetMapping(value = "/encrypt/{data}")
-	public ResponseWrapper<String> encrypt(@PathVariable(required = true) String data) {
-		ResponseWrapper<String> response = new ResponseWrapper<>();
-		response.setResponse(simpleAES.encrypt(data));
-		return response;
-	}
-
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN')")
-	@ResponseFilter
-	@GetMapping(value = "/decrypt/{data}")
-	public ResponseWrapper<String> decrypt(@PathVariable(required = true) String data) {
-		ResponseWrapper<String> response = new ResponseWrapper<>();
-		response.setResponse(simpleAES.decrypt(data));
-		return response;
-	}*/
+	/*
+	 * @PreAuthorize(
+	 * "hasAnyRole('INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN')")
+	 * 
+	 * @ResponseFilter
+	 * 
+	 * @GetMapping(value = "/encrypt/{data}") public ResponseWrapper<String>
+	 * encrypt(@PathVariable(required = true) String data) { ResponseWrapper<String>
+	 * response = new ResponseWrapper<>();
+	 * response.setResponse(simpleAES.encrypt(data)); return response; }
+	 * 
+	 * @PreAuthorize(
+	 * "hasAnyRole('INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN')")
+	 * 
+	 * @ResponseFilter
+	 * 
+	 * @GetMapping(value = "/decrypt/{data}") public ResponseWrapper<String>
+	 * decrypt(@PathVariable(required = true) String data) { ResponseWrapper<String>
+	 * response = new ResponseWrapper<>();
+	 * response.setResponse(simpleAES.decrypt(data)); return response; }
+	 */
 }

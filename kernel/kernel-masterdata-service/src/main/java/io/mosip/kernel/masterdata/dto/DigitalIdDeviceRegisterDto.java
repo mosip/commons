@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 /**
  * 
  * @author Srinivasan
@@ -48,13 +49,14 @@ public class DigitalIdDeviceRegisterDto {
 	private String model;
 
 	/** type *//*
-	@ApiModelProperty(value = "type", dataType = "java.lang.String")
-    @ValidType(message = "Type Value is Invalid")
-	private String type;*/
+				 * @ApiModelProperty(value = "type", dataType = "java.lang.String")
+				 * 
+				 * @ValidType(message = "Type Value is Invalid") private String type;
+				 */
 
 	/** The date time. */
 	private String dateTime;
-	
+
 	/**
 	 * Field for deviceTypeCode
 	 */
