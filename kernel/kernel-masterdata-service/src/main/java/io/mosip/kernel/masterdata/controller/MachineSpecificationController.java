@@ -60,8 +60,7 @@ public class MachineSpecificationController {
 	/**
 	 * Post API to insert a new row of Machine Specification data
 	 * 
-	 * @param machineSpecification
-	 *            input Machine specification DTO from user
+	 * @param machineSpecification input Machine specification DTO from user
 	 * @return ResponseEntity Machine Specification ID which is successfully
 	 *         inserted
 	 */
@@ -92,8 +91,7 @@ public class MachineSpecificationController {
 	/**
 	 * Put API to update a new row of Machine Specification data
 	 * 
-	 * @param machineSpecification
-	 *            input Machine specification DTO from user
+	 * @param machineSpecification input Machine specification DTO from user
 	 * @return ResponseEntity Machine Specification ID which is successfully updated
 	 */
 	@ResponseFilter
@@ -124,8 +122,7 @@ public class MachineSpecificationController {
 	/**
 	 * Put API to delete a new row of Machine Specification data
 	 * 
-	 * @param id
-	 *            input Machine specification id
+	 * @param id input Machine specification id
 	 * @return ResponseEntity Machine Specification ID which is successfully deleted
 	 */
 	@ResponseFilter
@@ -157,14 +154,10 @@ public class MachineSpecificationController {
 	/**
 	 * This controller method provides with all machine specifications.
 	 * 
-	 * @param pageNumber
-	 *            the page number
-	 * @param pageSize
-	 *            the size of each page
-	 * @param sortBy
-	 *            the attributes by which it should be ordered
-	 * @param orderBy
-	 *            the order to be used
+	 * @param pageNumber the page number
+	 * @param pageSize   the size of each page
+	 * @param sortBy     the attributes by which it should be ordered
+	 * @param orderBy    the order to be used
 	 * @return the response i.e. pages containing the machine specifications.
 	 */
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','CENTRAL_ADMIN')")
@@ -187,8 +180,7 @@ public class MachineSpecificationController {
 	/**
 	 * Api to search machine specification based on filters provided.
 	 * 
-	 * @param request
-	 *            the request DTO.
+	 * @param request the request DTO.
 	 * @return the pages of {@link MachineSpecificationExtnDto}.
 	 */
 	@ResponseFilter
@@ -214,8 +206,7 @@ public class MachineSpecificationController {
 	/**
 	 * Api to filter machine specification based on column and type provided.
 	 * 
-	 * @param request
-	 *            the request DTO.
+	 * @param request the request DTO.
 	 * @return the {@link FilterResponseDto}.
 	 */
 	@ResponseFilter

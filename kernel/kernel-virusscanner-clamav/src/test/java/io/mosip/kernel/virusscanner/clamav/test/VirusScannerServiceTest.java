@@ -61,7 +61,7 @@ public class VirusScannerServiceTest {
 	public void setup() throws FileNotFoundException {
 		ClassLoader classLoader = getClass().getClassLoader();
 		file = new File(classLoader.getResource("files/0000.zip").getFile());
-		is=new FileInputStream(file);
+		is = new FileInputStream(file);
 		folder = new File(classLoader.getResource("files").getFile());
 		virusNotFound = new ScanResult(Status.OK);
 		virusFound = new ScanResult(Status.VIRUS_FOUND);
@@ -75,9 +75,9 @@ public class VirusScannerServiceTest {
 		Boolean result = virusScanner.scanFile(file.getAbsolutePath());
 		assertEquals(Boolean.FALSE, result);
 	}
+
 	@Test
-	public void infectedFileCheckForInputStream() throws ClamavException
-	{
+	public void infectedFileCheckForInputStream() throws ClamavException {
 		Mockito.when(clamavClient.scan(any(InputStream.class))).thenReturn(virusFound);
 		Boolean result = virusScanner.scanFile(is);
 		assertEquals(Boolean.FALSE, result);
@@ -89,9 +89,9 @@ public class VirusScannerServiceTest {
 		Boolean result = virusScanner.scanFile(file.getAbsolutePath());
 		assertEquals(Boolean.TRUE, result);
 	}
+
 	@Test
-	public void nonInfectedFileCheckForInputStream() throws ClamavException
-	{
+	public void nonInfectedFileCheckForInputStream() throws ClamavException {
 		Mockito.when(clamavClient.scan(any(InputStream.class))).thenReturn(virusNotFound);
 		Boolean result = virusScanner.scanFile(is);
 		assertEquals(Boolean.TRUE, result);

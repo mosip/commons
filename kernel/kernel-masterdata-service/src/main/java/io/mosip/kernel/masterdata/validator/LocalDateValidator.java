@@ -8,13 +8,13 @@ import javax.validation.ConstraintValidatorContext;
 import lombok.Data;
 
 @Data
-public class LocalDateValidator implements ConstraintValidator<ValidDateFormat, String>{
-	
+public class LocalDateValidator implements ConstraintValidator<ValidDateFormat, String> {
+
 	@Override
 	public boolean isValid(String localDate, ConstraintValidatorContext context) {
-		try	{
+		try {
 			LocalDate.parse(localDate);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			return false;
 		}
 		return true;

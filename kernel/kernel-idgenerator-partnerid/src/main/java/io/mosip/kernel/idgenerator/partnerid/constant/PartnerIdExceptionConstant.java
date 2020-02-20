@@ -26,10 +26,8 @@ public enum PartnerIdExceptionConstant {
 	/**
 	 * Constructor for partnerIdExceptionConstant.
 	 * 
-	 * @param errorCode
-	 *            the errorCode.
-	 * @param errorMessage
-	 *            the errorMessage.
+	 * @param errorCode    the errorCode.
+	 * @param errorMessage the errorMessage.
 	 */
 	PartnerIdExceptionConstant(String errorCode, String errorMessage) {
 		this.errorCode = errorCode;

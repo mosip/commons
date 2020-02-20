@@ -19,41 +19,40 @@ import javax.validation.Payload;
 @Target({ ElementType.FIELD, ElementType.TYPE_USE, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface StringFormatter {
-	
 
-		/**
-		 * Message.
-		 *
-		 * @return the string
-		 */
-		String message() default "Should not be blank or {javax.validation.constraints.Size.message}";
+	/**
+	 * Message.
+	 *
+	 * @return the string
+	 */
+	String message() default "Should not be blank or {javax.validation.constraints.Size.message}";
 
-		/**
-		 * Groups.
-		 *
-		 * @return the class[]
-		 */
-		Class<?>[] groups() default {};
+	/**
+	 * Groups.
+	 *
+	 * @return the class[]
+	 */
+	Class<?>[] groups() default {};
 
-		/**
-		 * Payload.
-		 *
-		 * @return the class<? extends payload>[]
-		 */
-		Class<? extends Payload>[] payload() default {};
-		
-		/**
-		 * Min.
-		 *
-		 * @return the int
-		 */
-		int min() default 0;
-		
-		/**
-		 * Max.
-		 *
-		 * @return the int
-		 */
-		int max() default Integer.MAX_VALUE;
+	/**
+	 * Payload.
+	 *
+	 * @return the class<? extends payload>[]
+	 */
+	Class<? extends Payload>[] payload() default {};
+
+	/**
+	 * Min.
+	 *
+	 * @return the int
+	 */
+	int min() default 0;
+
+	/**
+	 * Max.
+	 *
+	 * @return the int
+	 */
+	int max() default Integer.MAX_VALUE;
 
 }

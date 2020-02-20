@@ -154,14 +154,14 @@ public class SyncDataController {
 			@RequestParam(value = "macaddress", required = false) String macId,
 			@RequestParam(value = "serialnumber", required = false) String serialNumber,
 			@RequestParam(value = "lastupdated", required = false) String lastUpdated,
-			@RequestParam(value="keyindex",required=false)String keyIndex)
+			@RequestParam(value = "keyindex", required = false) String keyIndex)
 			throws InterruptedException, ExecutionException {
 
 		LocalDateTime currentTimeStamp = LocalDateTime.now(ZoneOffset.UTC);
 		LocalDateTime timestamp = localDateTimeUtil.getLocalDateTimeFromTimeStamp(currentTimeStamp, lastUpdated);
 		String regCenterId = null;
 		MasterDataResponseDto masterDataResponseDto = masterDataService.syncData(regCenterId, macId, serialNumber,
-				timestamp, currentTimeStamp,keyIndex);
+				timestamp, currentTimeStamp, keyIndex);
 
 		masterDataResponseDto.setLastSyncTime(DateUtils.formatToISOString(currentTimeStamp));
 
@@ -188,13 +188,13 @@ public class SyncDataController {
 			@RequestParam(value = "macaddress", required = false) String macId,
 			@RequestParam(value = "serialnumber", required = false) String serialNumber,
 			@RequestParam(value = "lastupdated", required = false) String lastUpdated,
-			@RequestParam(value="keyindex",required=false)String keyIndex)
+			@RequestParam(value = "keyindex", required = false) String keyIndex)
 			throws InterruptedException, ExecutionException {
 
 		LocalDateTime currentTimeStamp = LocalDateTime.now(ZoneOffset.UTC);
 		LocalDateTime timestamp = localDateTimeUtil.getLocalDateTimeFromTimeStamp(currentTimeStamp, lastUpdated);
 		MasterDataResponseDto masterDataResponseDto = masterDataService.syncData(regCenterId, macId, serialNumber,
-				timestamp, currentTimeStamp,keyIndex);
+				timestamp, currentTimeStamp, keyIndex);
 
 		masterDataResponseDto.setLastSyncTime(DateUtils.formatToISOString(currentTimeStamp));
 
@@ -238,7 +238,7 @@ public class SyncDataController {
 		response.setResponse(syncUserDetailDto);
 		return response;
 	}
-	
+
 	/**
 	 * API will all the userDetails from LDAP server
 	 * 
@@ -271,8 +271,8 @@ public class SyncDataController {
 	@GetMapping(value = "/publickey/{applicationId}")
 	public ResponseWrapper<PublicKeyResponse<String>> getPublicKey(
 			@ApiParam("Id of application") @PathVariable("applicationId") String applicationId,
-			@ApiParam("Timestamp as metadata") @RequestParam(value="timeStamp",required=false) String timeStamp,
-			@ApiParam("Refrence Id as metadata") @RequestParam(value="referenceId",required=false) String referenceId) {
+			@ApiParam("Timestamp as metadata") @RequestParam(value = "timeStamp", required = false) String timeStamp,
+			@ApiParam("Refrence Id as metadata") @RequestParam(value = "referenceId", required = false) String referenceId) {
 
 		String currentTimeStamp = DateUtils.getUTCCurrentDateTimeString();
 		PublicKeyResponse<String> publicKeyResponse = syncConfigDetailsService.getPublicKey(applicationId, timeStamp,
@@ -283,11 +283,12 @@ public class SyncDataController {
 		response.setResponse(publicKeyResponse);
 		return response;
 	}
-	
+
 	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN')")
 	@ResponseFilter
 	@PostMapping(value = "/tpm/publickey", produces = "application/json")
-	public ResponseWrapper<UploadPublicKeyResponseDto> uploadpublickey(@ApiParam("public key in BASE64 encoded")@RequestBody @Valid RequestWrapper<UploadPublicKeyRequestDto> uploadPublicKeyRequestDto) {
+	public ResponseWrapper<UploadPublicKeyResponseDto> uploadpublickey(
+			@ApiParam("public key in BASE64 encoded") @RequestBody @Valid RequestWrapper<UploadPublicKeyRequestDto> uploadPublicKeyRequestDto) {
 		ResponseWrapper<UploadPublicKeyResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(masterDataService.uploadpublickey(uploadPublicKeyRequestDto.getRequest()));
 		return response;

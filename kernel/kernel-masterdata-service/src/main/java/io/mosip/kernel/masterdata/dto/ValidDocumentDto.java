@@ -25,8 +25,8 @@ public class ValidDocumentDto {
 	private String docCategoryCode;
 
 	@ValidLangCode(message = "Language Code is Invalid")
-	//@NotBlank
-	//@Size(min = 1, max = 3)
+	// @NotBlank
+	// @Size(min = 1, max = 3)
 	private String langCode;
 
 	@NotNull

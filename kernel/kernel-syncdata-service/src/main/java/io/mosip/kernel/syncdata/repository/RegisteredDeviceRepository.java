@@ -20,8 +20,7 @@ public interface RegisteredDeviceRepository extends JpaRepository<RegisteredDevi
 	/**
 	 * Find by code and is active is true.
 	 *
-	 * @param deviceCode
-	 *            the device code
+	 * @param deviceCode the device code
 	 * @return the registered device
 	 */
 	RegisteredDevice findByCodeAndIsActiveIsTrue(String deviceCode);
@@ -29,10 +28,8 @@ public interface RegisteredDeviceRepository extends JpaRepository<RegisteredDevi
 	/**
 	 * Find all latest created update deleted.
 	 *
-	 * @param lastUpdated
-	 *            the last updated
-	 * @param currentTimeStamp
-	 *            the current time stamp
+	 * @param lastUpdated      the last updated
+	 * @param currentTimeStamp the current time stamp
 	 * @return List of {@link RegisteredDevice}
 	 */
 	@Query(value = "Select * from master.registered_device_master where code IN(select device_id from master.reg_center_device where regcntr_id=?1) and (cr_dtimes > ?2 AND cr_dtimes <=?3) OR (upd_dtimes > ?2 AND upd_dtimes <=?3)  OR (del_dtimes > ?2 AND del_dtimes <=?3)", nativeQuery = true)

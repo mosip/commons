@@ -88,26 +88,21 @@ public class RegistrationCenterServiceHelper {
 
 	@Autowired
 	private UBtree<Location> locationTree;
-	
+
 	@Autowired
 	private RegWorkingNonWorkingRepo regWorkingNonWorkingRepo;
-	
+
 	@Autowired
 	private RegExceptionalHolidayRepository regExceptionalHolidayRepository;
 
 	/**
 	 * Method to search center
 	 * 
-	 * @param dto
-	 *            search inputs
-	 * @param locationFilter
-	 *            filter to be applied for location
-	 * @param zoneFilter
-	 *            filter to be applied for zone
-	 * @param zones
-	 *            list of zones
-	 * @param locations
-	 *            list of locations
+	 * @param dto            search inputs
+	 * @param locationFilter filter to be applied for location
+	 * @param zoneFilter     filter to be applied for zone
+	 * @param zones          list of zones
+	 * @param locations      list of locations
 	 * @return list of {@link RegistrationCenterSearchDto} with page Metadata
 	 */
 	public PageResponseDto<RegistrationCenterSearchDto> searchCenter(SearchDto dto, List<SearchFilter> locationFilter,
@@ -120,36 +115,38 @@ public class RegistrationCenterServiceHelper {
 		List<SearchSort> sort = dto.getSort();
 		dto.setPagination(new Pagination(0, Integer.MAX_VALUE));
 		dto.setSort(Collections.emptyList());
-		List<RegWorkingNonWorking> workingNonWorkingDays =regWorkingNonWorkingRepo.findByLanguagecode(dto.getLanguageCode());
-		List<RegExceptionalHoliday> exceptionalHoliday = regExceptionalHolidayRepository.findByLangcode(dto.getLanguageCode());
+		List<RegWorkingNonWorking> workingNonWorkingDays = regWorkingNonWorkingRepo
+				.findByLanguagecode(dto.getLanguageCode());
+		List<RegExceptionalHoliday> exceptionalHoliday = regExceptionalHolidayRepository
+				.findByLangcode(dto.getLanguageCode());
 		Page<RegistrationCenter> page = masterdataSearchHelper.searchMasterdata(RegistrationCenter.class, dto,
 				new OptionalFilter[] { optionalFilter, zoneOptionalFilter });
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			registrationCenters = MapperUtils.mapAll(page.getContent(), RegistrationCenterSearchDto.class);
 			setCenterMetadata(registrationCenters, locations, zones);
-			setWorkingNonWorking(registrationCenters,workingNonWorkingDays);
-			setExceptionalHoliday(registrationCenters,exceptionalHoliday);
+			setWorkingNonWorking(registrationCenters, workingNonWorkingDays);
+			setExceptionalHoliday(registrationCenters, exceptionalHoliday);
 			pageDto = pageUtils.sortPage(registrationCenters, sort, pagination);
 		}
 
 		return pageDto;
 	}
-	
+
 	private void setExceptionalHoliday(List<RegistrationCenterSearchDto> registrationCenters,
 			List<RegExceptionalHoliday> exceptionalHoliday) {
-		registrationCenters.forEach(i->setExceptionalHoliday(i,exceptionalHoliday));
-		
+		registrationCenters.forEach(i -> setExceptionalHoliday(i, exceptionalHoliday));
+
 	}
 
 	private void setExceptionalHoliday(RegistrationCenterSearchDto registrationCenterSearchDto,
 			List<RegExceptionalHoliday> exceptionalHoliday) {
 		List<ExceptionalHolidayPutPostDto> exceptionalHolidayPutPostDtoList = new ArrayList<>();
-		for(RegExceptionalHoliday regExceptionalHoliday : exceptionalHoliday) {		
-			if(registrationCenterSearchDto.getId().equals(regExceptionalHoliday.getRegistrationCenterId()))
-			{
+		for (RegExceptionalHoliday regExceptionalHoliday : exceptionalHoliday) {
+			if (registrationCenterSearchDto.getId().equals(regExceptionalHoliday.getRegistrationCenterId())) {
 				ExceptionalHolidayPutPostDto exceptionalHolidayDto = MapperUtils.map(regExceptionalHoliday,
 						ExceptionalHolidayPutPostDto.class);
-				exceptionalHolidayDto.setExceptionHolidayDate(regExceptionalHoliday.getExceptionHolidayDate().toString());
+				exceptionalHolidayDto
+						.setExceptionHolidayDate(regExceptionalHoliday.getExceptionHolidayDate().toString());
 				exceptionalHolidayPutPostDtoList.add(exceptionalHolidayDto);
 			}
 		}
@@ -158,44 +155,44 @@ public class RegistrationCenterServiceHelper {
 
 	private void setWorkingNonWorking(List<RegistrationCenterSearchDto> registrationCenters,
 			List<RegWorkingNonWorking> workingNonWorkingDays) {
-		
-		registrationCenters.stream().forEach(i->setWorking(i,workingNonWorkingDays));
+
+		registrationCenters.stream().forEach(i -> setWorking(i, workingNonWorkingDays));
 	}
 
-	private void setWorking(RegistrationCenterSearchDto registrationCenterSearchDto,List<RegWorkingNonWorking> workingNonWorkingDays) {
-		
+	private void setWorking(RegistrationCenterSearchDto registrationCenterSearchDto,
+			List<RegWorkingNonWorking> workingNonWorkingDays) {
+
 		WorkingNonWorkingDaysDto workDays = new WorkingNonWorkingDaysDto();
-		if(!workingNonWorkingDays.isEmpty()) {
-		for( RegWorkingNonWorking working : workingNonWorkingDays)
-			if(working.getRegistrationCenterId().equals(registrationCenterSearchDto.getId()))
-			{
-				 switch (working.getDayCode()) { 
-			        case "101": 
-			        	workDays.setSun(working.isWorking());
-			            break; 
-			        case "102": 
-			        	workDays.setMon(working.isWorking());
-			            break; 
-			        case "103": 
-			        	workDays.setTue(working.isWorking());
-			            break; 
-			        case "104": 
-			        	workDays.setWed(working.isWorking());
-			            break; 
-			        case "105": 
-			        	workDays.setThu(working.isWorking());
-			            break; 
-			        case "106": 
-			        	workDays.setFri(working.isWorking());
-			            break; 
-			        case "107": 
-			        	workDays.setSat(working.isWorking());
-			            break; 
-			        default: 
-			  
-			            break; 
-			        } 
-			}
+		if (!workingNonWorkingDays.isEmpty()) {
+			for (RegWorkingNonWorking working : workingNonWorkingDays)
+				if (working.getRegistrationCenterId().equals(registrationCenterSearchDto.getId())) {
+					switch (working.getDayCode()) {
+					case "101":
+						workDays.setSun(working.isWorking());
+						break;
+					case "102":
+						workDays.setMon(working.isWorking());
+						break;
+					case "103":
+						workDays.setTue(working.isWorking());
+						break;
+					case "104":
+						workDays.setWed(working.isWorking());
+						break;
+					case "105":
+						workDays.setThu(working.isWorking());
+						break;
+					case "106":
+						workDays.setFri(working.isWorking());
+						break;
+					case "107":
+						workDays.setSat(working.isWorking());
+						break;
+					default:
+
+						break;
+					}
+				}
 		}
 		registrationCenterSearchDto.setWorkingNonWorkingDays(workDays);
 	}
@@ -223,8 +220,7 @@ public class RegistrationCenterServiceHelper {
 	/**
 	 * Method to fetch logged in user zones
 	 * 
-	 * @param zoneFilter
-	 *            zone search inputs
+	 * @param zoneFilter zone search inputs
 	 * @return list of {@link Zone}
 	 */
 	public List<Zone> fetchUserZone(List<SearchFilter> zoneFilter, String langCode) {
@@ -241,12 +237,9 @@ public class RegistrationCenterServiceHelper {
 	/**
 	 * Method to fetch registration center type
 	 * 
-	 * @param addList
-	 *            filter to be added for further operation
-	 * @param removeList
-	 *            filter to be removed from further operations
-	 * @param filter
-	 *            list of request search filters
+	 * @param addList    filter to be added for further operation
+	 * @param removeList filter to be removed from further operations
+	 * @param filter     list of request search filters
 	 */
 	public void centerTypeSearch(List<SearchFilter> addList, List<SearchFilter> removeList, SearchFilter filter) {
 		filter.setColumnName(MasterDataConstant.NAME);
@@ -268,8 +261,7 @@ public class RegistrationCenterServiceHelper {
 	/**
 	 * Method to search the location based the filter.
 	 * 
-	 * @param filter
-	 *            input for search
+	 * @param filter input for search
 	 * @return {@link Location}
 	 */
 	public Location locationSearch(SearchFilter filter) {
@@ -296,14 +288,11 @@ public class RegistrationCenterServiceHelper {
 		}
 		return null;
 	}
-	
-	
 
 	/**
 	 * Method to find out the hierrachy level from the column name
 	 * 
-	 * @param columnName
-	 *            input column name
+	 * @param columnName input column name
 	 * @return hierarchy level
 	 */
 	public String getHierarchyLevel(String columnName) {
@@ -331,8 +320,7 @@ public class RegistrationCenterServiceHelper {
 	 * Method to prepare search filters based on the registration center type code
 	 * list passed
 	 * 
-	 * @param regCenterTypes
-	 *            list of registration center types
+	 * @param regCenterTypes list of registration center types
 	 * @return list of search filters
 	 */
 	private List<SearchFilter> buildRegistrationCenterTypeSearchFilter(List<RegistrationCenterType> regCenterTypes) {
@@ -345,8 +333,7 @@ public class RegistrationCenterServiceHelper {
 	/**
 	 * Method to prepare search filters based on the location code list passed.
 	 * 
-	 * @param location
-	 *            list of location codes
+	 * @param location list of location codes
 	 * @return list of search filter
 	 */
 	public List<SearchFilter> buildLocationSearchFilter(List<Location> location) {
@@ -360,8 +347,7 @@ public class RegistrationCenterServiceHelper {
 	 * Method to build search filter by the registration center type id to fetch the
 	 * exact registration center
 	 * 
-	 * @param centerType
-	 *            request registration center
+	 * @param centerType request registration center
 	 * @return search filter
 	 */
 	private SearchFilter buildRegCenterType(RegistrationCenterType centerType) {
@@ -375,8 +361,7 @@ public class RegistrationCenterServiceHelper {
 	/**
 	 * Method to build location search filter
 	 * 
-	 * @param location
-	 *            search filter
+	 * @param location search filter
 	 * @return search filter
 	 */
 	private SearchFilter buildLocationFilter(String location) {
@@ -390,8 +375,7 @@ public class RegistrationCenterServiceHelper {
 	/**
 	 * Method to create SearchFilter for the recieved zoneCode
 	 * 
-	 * @param zoneCode
-	 *            input from the {@link SearchFilter} has to be created
+	 * @param zoneCode input from the {@link SearchFilter} has to be created
 	 * @return {@link SearchFilter}
 	 */
 	private SearchFilter buildZoneFilter(String zoneCode) {
@@ -405,8 +389,7 @@ public class RegistrationCenterServiceHelper {
 	/**
 	 * Method to check whether columnName is belong to location
 	 * 
-	 * @param filter
-	 *            to search the column name
+	 * @param filter to search the column name
 	 * @return true if column is location type false otherwise
 	 */
 	public boolean isLocationSearch(String filter) {
@@ -431,8 +414,7 @@ public class RegistrationCenterServiceHelper {
 	 * Method to fetch no. of machines for the registration center and set the
 	 * response to registration center response dto
 	 * 
-	 * @param dto
-	 *            response to be mapped
+	 * @param dto response to be mapped
 	 * @return true if successful otherwise exception
 	 */
 
@@ -447,10 +429,8 @@ public class RegistrationCenterServiceHelper {
 	/**
 	 * Method to set Zone metadata
 	 * 
-	 * @param centers
-	 *            metadata to be added
-	 * @param zones
-	 *            list of zones
+	 * @param centers metadata to be added
+	 * @param zones   list of zones
 	 * 
 	 */
 	private void setZoneMetadata(RegistrationCenterSearchDto centers, List<Zone> zones) {
@@ -466,8 +446,7 @@ public class RegistrationCenterServiceHelper {
 	 * Method to fetch no. of devices for the registration center and set the
 	 * response to registration center response dto
 	 * 
-	 * @param dto
-	 *            response to be mapped
+	 * @param dto response to be mapped
 	 * @return true if successful otherwise exception
 	 */
 	private boolean setDevices(RegistrationCenterSearchDto centerDto) {
@@ -486,8 +465,7 @@ public class RegistrationCenterServiceHelper {
 	 * Method to fetch no. of machines for the registration center and set the
 	 * response to registration center response dto
 	 * 
-	 * @param dto
-	 *            response to be mapped
+	 * @param dto response to be mapped
 	 * @return true if successful otherwise exception
 	 */
 	private boolean setMachines(RegistrationCenterSearchDto centerDto) {
@@ -506,8 +484,7 @@ public class RegistrationCenterServiceHelper {
 	 * Method to fetch no. of machines for the registration center and set the
 	 * response to registration center response dto
 	 * 
-	 * @param dto
-	 *            response to be mapped
+	 * @param dto response to be mapped
 	 * @return true if successful otherwise exception
 	 */
 	private boolean setUsers(RegistrationCenterSearchDto centerDto) {
@@ -525,10 +502,8 @@ public class RegistrationCenterServiceHelper {
 	/**
 	 * Setting Location metadata for the received center
 	 * 
-	 * @param center
-	 *            input for location metadata to be set
-	 * @param locations
-	 *            contains the location information
+	 * @param center    input for location metadata to be set
+	 * @param locations contains the location information
 	 * @return true if successful
 	 */
 	private void setLocationMetadata(List<RegistrationCenterSearchDto> centers, List<Location> locations) {
@@ -573,8 +548,7 @@ public class RegistrationCenterServiceHelper {
 	 * Method to fetch registration center type and set the response to registration
 	 * center response dto
 	 * 
-	 * @param dto
-	 *            response to be mapped
+	 * @param dto response to be mapped
 	 * @return true if successful otherwise exception
 	 */
 	private boolean setRegistrationCenterType(RegistrationCenterSearchDto dto) {
@@ -593,8 +567,7 @@ public class RegistrationCenterServiceHelper {
 	/**
 	 * Search the zone in the based on the received inpu filter
 	 * 
-	 * @param filter
-	 *            search input
+	 * @param filter search input
 	 * @return {@link Zone} if successful otherwise throws
 	 *         {@link MasterDataServiceException}
 	 */
@@ -613,8 +586,7 @@ public class RegistrationCenterServiceHelper {
 	/**
 	 * Creating Search filter from the passed zones
 	 * 
-	 * @param zones
-	 *            filter to be created with the zones
+	 * @param zones filter to be created with the zones
 	 * @return list of {@link SearchFilter}
 	 */
 	public List<SearchFilter> buildZoneFilter(List<Zone> zones) {
@@ -628,10 +600,8 @@ public class RegistrationCenterServiceHelper {
 	/**
 	 * Setting location holiday metadata
 	 * 
-	 * @param center
-	 *            holiday information to be added
-	 * @param locations
-	 *            fetch the name of the holiday location name
+	 * @param center    holiday information to be added
+	 * @param locations fetch the name of the holiday location name
 	 * @return true if successful
 	 */
 	private boolean setHolidayMetadata(RegistrationCenterSearchDto center, List<Location> locations) {

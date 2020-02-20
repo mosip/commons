@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class RegistrationCenterUserID implements Serializable{
-	
+public class RegistrationCenterUserID implements Serializable {
+
 	/**
 	 * Generated SerialVersionUID
 	 */

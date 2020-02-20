@@ -9,6 +9,7 @@ package io.mosip.kernel.masterdata.constant;
 
 public enum TemplateTypeErrorCode {
 	TEMPLATE_TYPE_INSERT_EXCEPTION("KER-MSD-072", "Error occurred while inserting Template Type details into db");
+
 	private final String errorCode;
 	private final String errorMessage;
 

@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CryptoManagerResponseDto {
-	
+
 	/** Data Encrypted in BASE64 encoding. */
 	@ApiModelProperty(notes = "Data encrypted in BASE64 encoding")
 	private String data;

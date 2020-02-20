@@ -61,7 +61,7 @@ public class MachineController {
 	 */
 	@Autowired
 	private MachineService machineService;
-	
+
 	@Autowired
 	private AuditUtil auditUtil;
 
@@ -69,10 +69,8 @@ public class MachineController {
 	 * 
 	 * Function to fetch machine detail based on given Machine ID and Language code.
 	 * 
-	 * @param machineId
-	 *            pass Machine ID as String
-	 * @param langCode
-	 *            pass language code as String
+	 * @param machineId pass Machine ID as String
+	 * @param langCode  pass language code as String
 	 * @return MachineResponseDto machine detail based on given Machine ID and
 	 *         Language code {@link MachineResponseDto}
 	 */
@@ -95,8 +93,7 @@ public class MachineController {
 	 * 
 	 * Function to fetch machine detail based on given Language code
 	 * 
-	 * @param langCode
-	 *            pass language code as String
+	 * @param langCode pass language code as String
 	 * 
 	 * @return MachineResponseDto machine detail based on given Language code
 	 *         {@link MachineResponseDto}
@@ -135,8 +132,7 @@ public class MachineController {
 	/**
 	 * Post API to deleted a row of Machine data
 	 * 
-	 * @param id
-	 *            input from user Machine id
+	 * @param id input from user Machine id
 	 * 
 	 * @return ResponseEntity Machine Id which is deleted successfully
 	 *         {@link ResponseEntity}
@@ -158,33 +154,43 @@ public class MachineController {
 	/**
 	 * Post API to update a row of Machine data
 	 * 
-	 * @param machine
-	 *            input from user Machine DTO
+	 * @param machine input from user Machine DTO
 	 * 
 	 * @return ResponseEntity Machine Id which is update successfully
 	 *         {@link ResponseEntity}
 	 *//*
-	@ResponseFilter
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
-	@PutMapping("/machines")
-	@ApiOperation(value = "Service to update Machine", notes = "update Machine Detail and return Machine id")
-	@ApiResponses({ @ApiResponse(code = 200, message = "When Machine successfully udated"),
-			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
-			@ApiResponse(code = 404, message = "When No Machine found"),
-			@ApiResponse(code = 500, message = "While updating Machine any error occured") })
-	public ResponseWrapper<MachineExtnDto> updateMachine(@Valid @RequestBody RequestWrapper<MachinePutReqDto> machine) {
-
-		ResponseWrapper<MachineExtnDto> responseWrapper = new ResponseWrapper<>();
-		responseWrapper.setResponse(machineService.updateMachine(machine.getRequest()));
-		return responseWrapper;
-	}*/
+		 * @ResponseFilter
+		 * 
+		 * @PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
+		 * 
+		 * @PutMapping("/machines")
+		 * 
+		 * @ApiOperation(value = "Service to update Machine", notes =
+		 * "update Machine Detail and return Machine id")
+		 * 
+		 * @ApiResponses({ @ApiResponse(code = 200, message =
+		 * "When Machine successfully udated"),
+		 * 
+		 * @ApiResponse(code = 400, message =
+		 * "When Request body passed  is null or invalid"),
+		 * 
+		 * @ApiResponse(code = 404, message = "When No Machine found"),
+		 * 
+		 * @ApiResponse(code = 500, message =
+		 * "While updating Machine any error occured") }) public
+		 * ResponseWrapper<MachineExtnDto> updateMachine(@Valid @RequestBody
+		 * RequestWrapper<MachinePutReqDto> machine) {
+		 * 
+		 * ResponseWrapper<MachineExtnDto> responseWrapper = new ResponseWrapper<>();
+		 * responseWrapper.setResponse(machineService.updateMachine(machine.getRequest()
+		 * )); return responseWrapper; }
+		 */
 
 	/**
 	 * 
 	 * Function to fetch machine detail those are mapped with given registration Id
 	 * 
-	 * @param regCenterId
-	 *            pass registration Id as String
+	 * @param regCenterId pass registration Id as String
 	 * 
 	 * @return MachineResponseDto all machines details those are mapped with given
 	 *         registration Id {@link MachineResponseDto}
@@ -214,8 +220,7 @@ public class MachineController {
 	/**
 	 * Api to search Machine based on filters provided.
 	 * 
-	 * @param request
-	 *            the request DTO.
+	 * @param request the request DTO.
 	 * @return the pages of {@link MachineExtnDto}.
 	 */
 	@ResponseFilter
@@ -223,18 +228,22 @@ public class MachineController {
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	public ResponseWrapper<PageResponseDto<MachineSearchDto>> searchMachine(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
-		auditUtil.auditRequest(MasterDataConstant.SEARCH_API_IS_CALLED+MachineSearchDto.class.getCanonicalName(), MasterDataConstant.AUDIT_SYSTEM, MasterDataConstant.SEARCH_API_IS_CALLED+MachineSearchDto.class.getCanonicalName());
+		auditUtil.auditRequest(MasterDataConstant.SEARCH_API_IS_CALLED + MachineSearchDto.class.getCanonicalName(),
+				MasterDataConstant.AUDIT_SYSTEM,
+				MasterDataConstant.SEARCH_API_IS_CALLED + MachineSearchDto.class.getCanonicalName());
 		ResponseWrapper<PageResponseDto<MachineSearchDto>> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(machineService.searchMachine(request.getRequest()));
-		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_SEARCH,MachineSearchDto.class.getCanonicalName()), MasterDataConstant.AUDIT_SYSTEM,String.format(MasterDataConstant.SUCCESSFUL_SEARCH_DESC,MachineSearchDto.class.getCanonicalName()));
+		auditUtil.auditRequest(
+				String.format(MasterDataConstant.SUCCESSFUL_SEARCH, MachineSearchDto.class.getCanonicalName()),
+				MasterDataConstant.AUDIT_SYSTEM,
+				String.format(MasterDataConstant.SUCCESSFUL_SEARCH_DESC, MachineSearchDto.class.getCanonicalName()));
 		return responseWrapper;
 	}
 
 	/**
 	 * Api to filter Machine based on column and type provided.
 	 * 
-	 * @param request
-	 *            the request DTO.
+	 * @param request the request DTO.
 	 * @return the {@link FilterResponseDto}.
 	 */
 	@ResponseFilter
@@ -242,18 +251,21 @@ public class MachineController {
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	public ResponseWrapper<FilterResponseDto> machineFilterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
-		auditUtil.auditRequest(MasterDataConstant.FILTER_API_IS_CALLED+MachineDto.class.getCanonicalName(), MasterDataConstant.AUDIT_SYSTEM, MasterDataConstant.FILTER_API_IS_CALLED+MachineDto.class.getCanonicalName());
+		auditUtil.auditRequest(MasterDataConstant.FILTER_API_IS_CALLED + MachineDto.class.getCanonicalName(),
+				MasterDataConstant.AUDIT_SYSTEM,
+				MasterDataConstant.FILTER_API_IS_CALLED + MachineDto.class.getCanonicalName());
 		ResponseWrapper<FilterResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(machineService.machineFilterValues(request.getRequest()));
-		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_FILTER,MachineDto.class.getCanonicalName()), MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_SEARCH_DESC,MachineDto.class.getCanonicalName()));
+		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_FILTER, MachineDto.class.getCanonicalName()),
+				MasterDataConstant.AUDIT_SYSTEM,
+				String.format(MasterDataConstant.SUCCESSFUL_SEARCH_DESC, MachineDto.class.getCanonicalName()));
 		return responseWrapper;
 	}
 
 	/**
 	 * PUT API to decommission machines
 	 * 
-	 * @param machineId
-	 *            input from user
+	 * @param machineId input from user
 	 * @return machineID of decommissioned machine
 	 */
 	@ResponseFilter
@@ -261,18 +273,21 @@ public class MachineController {
 	@PutMapping("/machines/decommission/{machineId}")
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	public ResponseWrapper<IdResponseDto> decommissionMachine(@PathVariable("machineId") String machineId) {
-		auditUtil.auditRequest(MasterDataConstant.DECOMMISION_API_CALLED+DeviceDto.class.getCanonicalName(), MasterDataConstant.AUDIT_SYSTEM, MasterDataConstant.DECOMMISION_API_CALLED+DeviceDto.class.getCanonicalName());
+		auditUtil.auditRequest(MasterDataConstant.DECOMMISION_API_CALLED + DeviceDto.class.getCanonicalName(),
+				MasterDataConstant.AUDIT_SYSTEM,
+				MasterDataConstant.DECOMMISION_API_CALLED + DeviceDto.class.getCanonicalName());
 		ResponseWrapper<IdResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(machineService.decommissionMachine(machineId));
-		auditUtil.auditRequest(MasterDataConstant.DECOMMISSION_SUCCESS+DeviceDto.class.getCanonicalName(), MasterDataConstant.AUDIT_SYSTEM, MasterDataConstant.DECOMMISSION_SUCCESS_DESC+DeviceDto.class.getCanonicalName());
+		auditUtil.auditRequest(MasterDataConstant.DECOMMISSION_SUCCESS + DeviceDto.class.getCanonicalName(),
+				MasterDataConstant.AUDIT_SYSTEM,
+				MasterDataConstant.DECOMMISSION_SUCCESS_DESC + DeviceDto.class.getCanonicalName());
 		return responseWrapper;
 	}
 
 	/**
 	 * Post API to insert a new row of Machine data
 	 * 
-	 * @param machineRequest
-	 *            input from user Machine DTO
+	 * @param machineRequest input from user Machine DTO
 	 * 
 	 * @return Responding with Machine which is inserted successfully
 	 *         {@link ResponseEntity}
@@ -285,19 +300,21 @@ public class MachineController {
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 404, message = "When No Machine found"),
 			@ApiResponse(code = 500, message = "While creating Machine any error occured") })
-	public ResponseWrapper<MachineExtnDto> createMachine(@Valid @RequestBody RequestWrapper<MachinePostReqDto> machineRequest) {
-		auditUtil.auditRequest(MasterDataConstant.CREATE_API_IS_CALLED+MachinePostReqDto.class.getCanonicalName(), MasterDataConstant.AUDIT_SYSTEM, MasterDataConstant.CREATE_API_IS_CALLED+MachinePostReqDto.class.getCanonicalName());
+	public ResponseWrapper<MachineExtnDto> createMachine(
+			@Valid @RequestBody RequestWrapper<MachinePostReqDto> machineRequest) {
+		auditUtil.auditRequest(MasterDataConstant.CREATE_API_IS_CALLED + MachinePostReqDto.class.getCanonicalName(),
+				MasterDataConstant.AUDIT_SYSTEM,
+				MasterDataConstant.CREATE_API_IS_CALLED + MachinePostReqDto.class.getCanonicalName());
 		ResponseWrapper<MachineExtnDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(machineService.createMachine(machineRequest.getRequest()));
-		
+
 		return responseWrapper;
 	}
 
 	/**
 	 * This method updates Machine by Admin.
 	 * 
-	 * @param machineCenterDto
-	 *            the request DTO for updating machine.
+	 * @param machineCenterDto the request DTO for updating machine.
 	 * @return the response i.e. the updated machine.
 	 */
 	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
@@ -310,7 +327,9 @@ public class MachineController {
 			@ApiResponse(code = 500, message = "While updating Machine any error occured") })
 	public ResponseWrapper<MachineExtnDto> updateMachienAdmin(
 			@RequestBody @Valid RequestWrapper<MachinePutReqDto> machineCenterDto) {
-		auditUtil.auditRequest(MasterDataConstant.UPDATE_API_IS_CALLED+MachinePutReqDto.class.getCanonicalName(), MasterDataConstant.AUDIT_SYSTEM, MasterDataConstant.UPDATE_API_IS_CALLED+MachinePutReqDto.class.getCanonicalName());
+		auditUtil.auditRequest(MasterDataConstant.UPDATE_API_IS_CALLED + MachinePutReqDto.class.getCanonicalName(),
+				MasterDataConstant.AUDIT_SYSTEM,
+				MasterDataConstant.UPDATE_API_IS_CALLED + MachinePutReqDto.class.getCanonicalName());
 		ResponseWrapper<MachineExtnDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(machineService.updateMachine(machineCenterDto.getRequest()));
 		return responseWrapper;

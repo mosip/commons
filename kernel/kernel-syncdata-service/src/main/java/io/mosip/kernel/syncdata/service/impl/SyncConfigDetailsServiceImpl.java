@@ -136,8 +136,7 @@ public class SyncConfigDetailsServiceImpl implements SyncConfigDetailsService {
 	/**
 	 * This method will consume a REST API based on the filename passed.
 	 * 
-	 * @param fileName
-	 *            - name of the file
+	 * @param fileName - name of the file
 	 * @return JSONObject
 	 */
 	private JSONObject getConfigDetailsResponse(String fileName) {

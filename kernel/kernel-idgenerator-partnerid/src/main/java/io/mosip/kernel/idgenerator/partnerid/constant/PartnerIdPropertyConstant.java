@@ -28,8 +28,7 @@ public enum PartnerIdPropertyConstant {
 	/**
 	 * Constructor for PartnerIdPropertyConstant.
 	 * 
-	 * @param property
-	 *            the property.
+	 * @param property the property.
 	 */
 	PartnerIdPropertyConstant(String property) {
 		this.property = property;

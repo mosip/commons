@@ -51,10 +51,10 @@ import io.mosip.kernel.keymanagerservice.entity.KeyAlias;
 public class KeymanagerUtil {
 
 	private static final String UTC_DATETIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-	
+
 	@Value("${mosip.kernel.keygenerator.asymmetric-algorithm-name}")
 	private String asymmetricAlgorithmName;
-	
+
 	/**
 	 * KeySplitter for splitting key and data
 	 */
@@ -119,7 +119,7 @@ public class KeymanagerUtil {
 	/**
 	 * Function to set metadata
 	 * 
-	 * @param        <T> is a type parameter
+	 * @param <T>    is a type parameter
 	 * @param entity entity of T type
 	 * @return Entity with metadata
 	 */
@@ -141,7 +141,7 @@ public class KeymanagerUtil {
 	 */
 	public byte[] encryptKey(PrivateKey privateKey, PublicKey masterKey) {
 		SecretKey symmetricKey = keyGenerator.getSymmetricKey();
-		byte[] encryptedPrivateKey = cryptoCore.symmetricEncrypt(symmetricKey, privateKey.getEncoded(),null);
+		byte[] encryptedPrivateKey = cryptoCore.symmetricEncrypt(symmetricKey, privateKey.getEncoded(), null);
 		byte[] encryptedSymmetricKey = cryptoCore.asymmetricEncrypt(masterKey, symmetricKey.getEncoded());
 		return CryptoUtil.combineByteArray(encryptedPrivateKey, encryptedSymmetricKey, keySplitter);
 	}
@@ -154,8 +154,7 @@ public class KeymanagerUtil {
 	 * @return decrypted key
 	 */
 	public byte[] decryptKey(byte[] key, PrivateKey privateKey) {
-		
-		
+
 		int keyDemiliterIndex = 0;
 		final int cipherKeyandDataLength = key.length;
 		final int keySplitterLength = keySplitter.length();
@@ -165,7 +164,7 @@ public class KeymanagerUtil {
 		byte[] decryptedSymmetricKey = cryptoCore.asymmetricDecrypt(privateKey, encryptedKey);
 		SecretKey symmetricKey = new SecretKeySpec(decryptedSymmetricKey, 0, decryptedSymmetricKey.length,
 				symmetricAlgorithmName);
-		return cryptoCore.symmetricDecrypt(symmetricKey, encryptedData,null);
+		return cryptoCore.symmetricDecrypt(symmetricKey, encryptedData, null);
 	}
 
 	/**
@@ -178,9 +177,8 @@ public class KeymanagerUtil {
 	public LocalDateTime parseToLocalDateTime(String dateTime) {
 		return LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern(UTC_DATETIME_PATTERN));
 	}
-	
-	
-	public void isCertificateValid(CertificateEntry<X509Certificate, PrivateKey> certificateEntry,Date inputDate) {
+
+	public void isCertificateValid(CertificateEntry<X509Certificate, PrivateKey> certificateEntry, Date inputDate) {
 		try {
 			certificateEntry.getChain()[0].checkValidity(inputDate);
 		} catch (CertificateExpiredException | CertificateNotYetValidException e) {
@@ -188,22 +186,22 @@ public class KeymanagerUtil {
 					KeymanagerErrorCode.CERTIFICATE_PROCESSING_ERROR.getErrorMessage() + e.getMessage());
 		}
 	}
-	
+
 	public PrivateKey privateKeyExtractor(InputStream privateKeyInputStream) {
 
 		KeyFactory kf = null;
 		PKCS8EncodedKeySpec keySpec = null;
 		PrivateKey privateKey = null;
 		try {
-			StringWriter stringWriter= new StringWriter();
+			StringWriter stringWriter = new StringWriter();
 			IOUtils.copy(privateKeyInputStream, stringWriter, StandardCharsets.UTF_8);
-			String privateKeyPEMString= stringWriter.toString(); 
+			String privateKeyPEMString = stringWriter.toString();
 			byte[] decodedKey = Base64.decodeBase64(privateKeyPEMString);
 			kf = KeyFactory.getInstance(asymmetricAlgorithmName);
 			keySpec = new PKCS8EncodedKeySpec(decodedKey);
 			privateKey = kf.generatePrivate(keySpec);
 
-		} catch ( NoSuchAlgorithmException | InvalidKeySpecException | IOException e) {
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException | IOException e) {
 			throw new KeystoreProcessingException(KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorCode(),
 					KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorMessage() + e.getMessage());
 		}

@@ -13,6 +13,7 @@ public enum JsonUtilConstants {
 	MOSIP_JSON_MAPPING_ERROR_CODE("KER-UTL-103", "Json mapping Exception"),
 	MOSIP_JSON_PARSE_ERROR_CODE("KER-UTL-104", "Json not parsed successfully"),
 	MOSIP_JSON_PROCESSING_EXCEPTION("KER-UTL-105", "json not processed successfully");
+
 	public final String errorCode;
 	public final String errorMessage;
 

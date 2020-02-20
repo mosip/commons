@@ -58,7 +58,7 @@
 
 // 	@MockBean
 // 	private PridSequenceRepository counterRepository;
-	
+
 // 	@MockBean
 // 	private RestTemplate restTemplate;
 
@@ -132,7 +132,5 @@
 // 		when(counterRepository.findMaxSequence()).thenReturn(nullSequenceEntity);
 // 		assertThat(pridGenerator.generateId(), isA(String.class));
 // 	}
-	
-	
 
 //}

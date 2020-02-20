@@ -5,7 +5,6 @@
 // Generated on: 2019.05.13 at 03:22:53 PM IST 
 //
 
-
 package io.mosip.kernel.core.cbeffutil.jaxbclasses;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -14,11 +13,13 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for VersionType complex type.
+ * <p>
+ * Java class for VersionType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="VersionType">
@@ -36,49 +37,46 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "VersionType", propOrder = {
-    "major",
-    "minor"
-})
+@XmlType(name = "VersionType", propOrder = { "major", "minor" })
 public class VersionType {
 
-    @XmlElement(name = "Major")
-    @XmlSchemaType(name = "unsignedInt")
-    protected long major;
-    @XmlElement(name = "Minor")
-    @XmlSchemaType(name = "unsignedInt")
-    protected long minor;
+	@XmlElement(name = "Major")
+	@XmlSchemaType(name = "unsignedInt")
+	protected long major;
+	@XmlElement(name = "Minor")
+	@XmlSchemaType(name = "unsignedInt")
+	protected long minor;
 
-    /**
-     * Gets the value of the major property.
-     * 
-     */
-    public long getMajor() {
-        return major;
-    }
+	/**
+	 * Gets the value of the major property.
+	 * 
+	 */
+	public long getMajor() {
+		return major;
+	}
 
-    /**
-     * Sets the value of the major property.
-     * 
-     */
-    public void setMajor(long value) {
-        this.major = value;
-    }
+	/**
+	 * Sets the value of the major property.
+	 * 
+	 */
+	public void setMajor(long value) {
+		this.major = value;
+	}
 
-    /**
-     * Gets the value of the minor property.
-     * 
-     */
-    public long getMinor() {
-        return minor;
-    }
+	/**
+	 * Gets the value of the minor property.
+	 * 
+	 */
+	public long getMinor() {
+		return minor;
+	}
 
-    /**
-     * Sets the value of the minor property.
-     * 
-     */
-    public void setMinor(long value) {
-        this.minor = value;
-    }
+	/**
+	 * Sets the value of the minor property.
+	 * 
+	 */
+	public void setMinor(long value) {
+		this.minor = value;
+	}
 
 }

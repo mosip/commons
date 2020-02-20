@@ -18,7 +18,6 @@ public class TokenIDGeneratorController {
 	@Autowired
 	private TokenIDGeneratorService tokenIDGeneratorService;
 
-	
 	@ResponseFilter
 	@GetMapping(value = "/{uin}/{partnercode}")
 	@PreAuthorize("hasAnyRole('ID_AUTHENTICATION','RESIDENT')")

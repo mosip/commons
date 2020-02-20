@@ -42,10 +42,8 @@ public class ApiExceptionalHandler {
 	/**
 	 * Method to handle {@link InputLengthException}.
 	 * 
-	 * @param httpServletRequest
-	 *            servelet request.
-	 * @param e
-	 *            the exception.
+	 * @param httpServletRequest servelet request.
+	 * @param e                  the exception.
 	 * @return the response.
 	 * @throws IOException
 	 */
@@ -58,14 +56,12 @@ public class ApiExceptionalHandler {
 		return new ResponseEntity<>(responseWrapper, HttpStatus.OK);
 
 	}
-	
+
 	/**
 	 * Method to handle {@link EmptyInputException}.
 	 * 
-	 * @param httpServletRequest
-	 *            servelet request.
-	 * @param e
-	 *            the exception.
+	 * @param httpServletRequest servelet request.
+	 * @param e                  the exception.
 	 * @return the response.
 	 * @throws IOException
 	 */
@@ -82,8 +78,7 @@ public class ApiExceptionalHandler {
 	/**
 	 * Method to handle {@link HttpMessageNotReadableException}.
 	 * 
-	 * @param exception
-	 *            the exception.
+	 * @param exception the exception.
 	 * @return {@link ErrorResponse}.
 	 * @throws IOException
 	 */
@@ -102,10 +97,8 @@ public class ApiExceptionalHandler {
 	/**
 	 * Method to handle {@link RuntimeException}.
 	 * 
-	 * @param request
-	 *            the servlet request.
-	 * @param exception
-	 *            the exception.
+	 * @param request   the servlet request.
+	 * @param exception the exception.
 	 * @return {@link ErrorResponse}.
 	 * @throws IOException
 	 */

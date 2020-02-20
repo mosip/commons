@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 
 import lombok.Data;
+
 /**
  * 
  * @author Ramadurai Pandian
@@ -13,19 +14,19 @@ import lombok.Data;
 
 @Data
 public class DocumentTypePutResponseDto {
-	
+
 	private String code;
-	
+
 	private String langCode;
-	
+
 	private String name;
-	
+
 	private String description;
-	
+
 	private Boolean isActive;
-	
+
 	private String createdBy;
-	
+
 	private LocalDateTime createdDateTime;
 
 	private String updatedBy;
@@ -33,7 +34,7 @@ public class DocumentTypePutResponseDto {
 	private LocalDateTime updatedDateTime;
 
 	private Boolean isDeleted;
-	
+
 	private LocalDateTime deletedDateTime;
-	
+
 }

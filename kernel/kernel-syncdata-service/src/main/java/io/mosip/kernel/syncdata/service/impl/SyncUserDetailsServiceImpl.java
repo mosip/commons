@@ -149,8 +149,7 @@ public class SyncUserDetailsServiceImpl implements SyncUserDetailsService {
 	/**
 	 * Gets the http request.
 	 *
-	 * @param userIds
-	 *            the user ids
+	 * @param userIds the user ids
 	 * @return {@link HttpEntity}
 	 */
 	private HttpEntity<RequestWrapper<?>> getHttpRequest(List<String> userIds) {
@@ -171,8 +170,7 @@ public class SyncUserDetailsServiceImpl implements SyncUserDetailsService {
 	 * 
 	 * @param <T>
 	 *
-	 * @param responseBody
-	 *            the response body
+	 * @param responseBody the response body
 	 * @return {@link UserDetailResponseDto}
 	 */
 	private UserDetailResponseDto getUserDetailFromResponse(String responseBody) {

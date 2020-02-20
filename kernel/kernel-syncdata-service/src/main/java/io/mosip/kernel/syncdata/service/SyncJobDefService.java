@@ -11,7 +11,7 @@ import io.mosip.kernel.syncdata.dto.SyncJobDefDto;
  *
  */
 public interface SyncJobDefService {
-	
-	public List<SyncJobDefDto> getSyncJobDefDetails(LocalDateTime lastUpdatedTime,LocalDateTime currentTimeStamp);
-	
+
+	public List<SyncJobDefDto> getSyncJobDefDetails(LocalDateTime lastUpdatedTime, LocalDateTime currentTimeStamp);
+
 }

@@ -17,5 +17,5 @@ import io.mosip.kernel.masterdata.entity.id.ExcptionalHolidayId;
 public interface ExceptionalHolidayRepository extends BaseRepository<ExceptionalHoliday, ExcptionalHolidayId> {
 
 	@Query("From ExceptionalHoliday where regcntr_id=?1 and lang_code=?2 and (isDeleted = false or isDeleted is null) and isActive = true")
-	List<ExceptionalHoliday>  findAllNonDeletedExceptionalHoliday(String regCenterId, String langcode);
+	List<ExceptionalHoliday> findAllNonDeletedExceptionalHoliday(String regCenterId, String langcode);
 }

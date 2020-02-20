@@ -159,7 +159,7 @@ public class IntegrationTest {
 						client.close();
 						async.complete();
 					} else {
-						LOGGER.error( response.cause().getMessage());
+						LOGGER.error(response.cause().getMessage());
 					}
 				});
 
@@ -206,7 +206,7 @@ public class IntegrationTest {
 						client.close();
 						async.complete();
 					} else {
-						LOGGER.error( response.cause().getMessage());
+						LOGGER.error(response.cause().getMessage());
 					}
 				});
 

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
  *
  */
 @Data
-@EqualsAndHashCode(callSuper=true)
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegisteredDeviceDto extends BaseDto {
@@ -39,7 +39,7 @@ public class RegisteredDeviceDto extends BaseDto {
 	private String purpose;
 
 	private String firmware;
-	
+
 	private String digitalId;
 
 	private String make;

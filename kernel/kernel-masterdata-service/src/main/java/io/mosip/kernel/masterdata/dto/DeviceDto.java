@@ -62,15 +62,15 @@ public class DeviceDto {
 	 * Field for device ip address
 	 */
 
-	//@Size(min = 1, max = 17)
+	// @Size(min = 1, max = 17)
 	@ApiModelProperty(value = "ipAddress", required = true, dataType = "java.lang.String")
 	private String ipAddress;
 	/**
 	 * Field for language code
 	 */
 	@ValidLangCode(message = "Language Code is Invalid")
-	//@NotBlank
-	//@Size(min = 1, max = 3)
+	// @NotBlank
+	// @Size(min = 1, max = 3)
 	@ApiModelProperty(value = "langCode", required = true, dataType = "java.lang.String")
 	private String langCode;
 	/**
@@ -83,5 +83,5 @@ public class DeviceDto {
 	private LocalDateTime validityDateTime;
 
 	private String zoneCode;
-	
+
 }

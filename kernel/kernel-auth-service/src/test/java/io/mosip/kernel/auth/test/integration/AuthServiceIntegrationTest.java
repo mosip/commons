@@ -11,20 +11,18 @@ import org.springframework.test.web.servlet.MockMvc;
 //@AutoConfigureMockMvc
 public class AuthServiceIntegrationTest {
 
-	//@Autowired
+	// @Autowired
 	MockMvc mockMvc;
-	
-	//@MockBean
+
+	// @MockBean
 	LdapContext ldapContext;
-	
-	//@MockBean
+
+	// @MockBean
 	NamingEnumeration<SearchResult> searchresult;
 
-	//@Before
+	// @Before
 	public void setUp() {
-      
+
 	}
-	
-	
 
 }

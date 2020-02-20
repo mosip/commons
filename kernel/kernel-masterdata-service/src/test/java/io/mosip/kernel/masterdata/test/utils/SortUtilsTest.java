@@ -90,7 +90,7 @@ public class SortUtilsTest {
 		List<TestPojo> list = sortUtils.sort(pojos, sort);
 		assertEquals(2, list.get(0).getId());
 	}
-	
+
 	@Test
 	public void sortByLocalDateDataType() {
 		List<SearchSort> sort = new ArrayList<>();
@@ -98,7 +98,7 @@ public class SortUtilsTest {
 		List<TestPojo> list = sortUtils.sort(pojos, sort);
 		assertEquals(2, list.get(0).getId());
 	}
-	
+
 	@Test
 	public void sortByLocalDateTimeDateType() {
 		List<SearchSort> sort = new ArrayList<>();
@@ -106,7 +106,7 @@ public class SortUtilsTest {
 		List<TestPojo> list = sortUtils.sort(pojos, sort);
 		assertEquals(2, list.get(0).getId());
 	}
-	
+
 	@Test
 	public void sortByShortDateType() {
 		List<SearchSort> sort = new ArrayList<>();
@@ -114,7 +114,7 @@ public class SortUtilsTest {
 		List<TestPojo> list = sortUtils.sort(pojos, sort);
 		assertEquals(1, list.get(0).getId());
 	}
-	
+
 	@Test
 	public void sortByBooleanType() {
 		List<SearchSort> sort = new ArrayList<>();

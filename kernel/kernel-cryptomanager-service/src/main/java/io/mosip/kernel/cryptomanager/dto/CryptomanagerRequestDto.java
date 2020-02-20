@@ -58,19 +58,19 @@ public class CryptomanagerRequestDto {
 	@NotBlank(message = CryptomanagerConstant.INVALID_REQUEST)
 	private String data;
 	/**
-	 *  Salt to be passed as IV
+	 * Salt to be passed as IV
 	 */
-	@Pattern(regexp=CryptomanagerConstant.EMPTY_REGEX,message=CryptomanagerConstant.EMPTY_ATTRIBUTE)
+	@Pattern(regexp = CryptomanagerConstant.EMPTY_REGEX, message = CryptomanagerConstant.EMPTY_ATTRIBUTE)
 	@ApiModelProperty(notes = " Base64 Encoded Salt to be send as IV", example = "LA7YcvP9DdLIVI5CwFt1SQ")
 	private String salt;
-	
+
 	/**
 	 * AAD to be passed
 	 */
 	@Pattern(regexp = CryptomanagerConstant.EMPTY_REGEX, message = CryptomanagerConstant.EMPTY_ATTRIBUTE)
 	@ApiModelProperty(notes = " Base64 Encoded AAD(Advance Authentication Data)", example = "VGhpcyBpcyBzYW1wbGUgYWFk")
 	private String aad;
-	
+
 	@Override
 	public String toString() {
 		return "CryptomanagerRequestDto [applicationId=" + applicationId + ", referenceId=" + referenceId

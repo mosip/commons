@@ -263,7 +263,7 @@ public class VidServiceHealthCheckerhandler implements HealthCheckHandler {
 	/**
 	 * Copy actual response to Spring actuator like response
 	 * 
-	 * @param json  Summary json
+	 * @param json   Summary json
 	 * @param checks Json array of all registered parameters with details
 	 */
 	private void createResponse(JsonObject json, JsonArray checks) {
@@ -334,7 +334,6 @@ public class VidServiceHealthCheckerhandler implements HealthCheckHandler {
 		json.put(VIDHealthConstants.STATUS, outcome);
 		return json.encode();
 	}
-
 
 	static class JSONResultBuilder {
 

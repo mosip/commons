@@ -21,19 +21,18 @@ import io.mosip.kernel.masterdata.utils.MasterdataCreationUtil;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class MasterdataCreationUtilTest {
-	
+
 	@MockBean
 	private MasterdataCreationUtil masterdataCreationUtil;
-	
+
 	private String id;
-	
-	
+
 	@Test
 	@WithUserDetails("zonal-admin")
-	public void createPrimaryMasterDataTest() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException
-	{
+	public void createPrimaryMasterDataTest()
+			throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		LocationDto location = new LocationDto();
-		short hlevel = (short)4;
+		short hlevel = (short) 4;
 		location.setCode("");
 		location.setLangCode("eng");
 		location.setHierarchyLevel(hlevel);
@@ -43,13 +42,13 @@ public class MasterdataCreationUtilTest {
 		location.setParentLocCode("RAB");
 		location = masterdataCreationUtil.createMasterData(Location.class, location);
 	}
-	
+
 	@Test
 	@WithUserDetails("zonal-admin")
-	public void createSecondaryMasterDataTest() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException
-	{
+	public void createSecondaryMasterDataTest()
+			throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		LocationDto location = new LocationDto();
-		short hlevel = (short)4;
+		short hlevel = (short) 4;
 		location.setCode("test");
 		location.setLangCode("ara");
 		location.setHierarchyLevel(hlevel);
@@ -59,7 +58,5 @@ public class MasterdataCreationUtilTest {
 		location.setParentLocCode("RAB");
 		location = masterdataCreationUtil.createMasterData(Location.class, location);
 	}
-	
-	
 
 }

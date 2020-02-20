@@ -45,7 +45,7 @@ import io.mosip.kernel.keygenerator.bouncycastle.KeyGenerator;
  * 
  * @author Srinivasan
  * @author Urvil Joshi
- * @author Raj Jha 
+ * @author Raj Jha
  * @since 1.0.0
  */
 @Component
@@ -77,8 +77,6 @@ public class SignatureUtilImpl implements SignatureUtil {
 	/** The object mapper. */
 	@Autowired
 	private ObjectMapper objectMapper;
-
-
 
 	/** The sign applicationid. */
 	@Value("${mosip.sign.applicationid:KERNEL}")
@@ -136,7 +134,7 @@ public class SignatureUtilImpl implements SignatureUtil {
 				throw new SignatureUtilClientException(validationErrorsList);
 			} else {
 				throw new SignatureUtilException(SigningDataErrorCode.REST_CRYPTO_CLIENT_EXCEPTION.getErrorCode(),
-						SigningDataErrorCode.REST_CRYPTO_CLIENT_EXCEPTION.getErrorMessage(),ex);
+						SigningDataErrorCode.REST_CRYPTO_CLIENT_EXCEPTION.getErrorMessage(), ex);
 			}
 		}
 		ExceptionHandler.throwExceptionIfExist(responseEntity);

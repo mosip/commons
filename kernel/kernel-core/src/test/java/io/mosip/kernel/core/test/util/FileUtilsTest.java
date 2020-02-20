@@ -41,8 +41,7 @@ import io.mosip.kernel.core.util.FileUtils;
 //@SpringBootTest
 //@RunWith(SpringRunner.class)
 public class FileUtilsTest {
-	
-	
+
 	FileUtils fileutils;
 
 	@Test
@@ -165,7 +164,7 @@ public class FileUtilsTest {
 		}
 
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void cleanDirectoryIOExceptionTest() throws IOException {
 		File dir1 = new File("");
@@ -728,7 +727,7 @@ public class FileUtilsTest {
 		}
 	}
 
-	//@Test
+	// @Test
 	public void moveDirectoryTest() throws IOException {
 		try {
 			File dirSource = folder.newFolder("dirSource");

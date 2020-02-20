@@ -78,7 +78,6 @@ public class CryptographicServiceIntegrationExceptionTest {
 	@Autowired
 	private ObjectMapper mapper;
 
-
 	private MockRestServiceServer server;
 
 	private UriComponentsBuilder builder;
@@ -88,7 +87,7 @@ public class CryptographicServiceIntegrationExceptionTest {
 	private CryptomanagerRequestDto requestDto;
 
 	private RequestWrapper<CryptomanagerRequestDto> requestWrapper;
-	
+
 	/**
 	 * {@link CryptoCoreSpec} instance for cryptographic functionalities.
 	 */
@@ -107,7 +106,7 @@ public class CryptographicServiceIntegrationExceptionTest {
 		requestWrapper.setId(ID);
 		requestWrapper.setVersion(VERSION);
 		requestWrapper.setRequesttime(LocalDateTime.now(ZoneId.of("UTC")));
-        server = MockRestServiceServer.bindTo(restTemplate).build();
+		server = MockRestServiceServer.bindTo(restTemplate).build();
 		uriParams = new HashMap<>();
 		uriParams.put("applicationId", "REGISTRATION");
 		builder = UriComponentsBuilder.fromUriString(publicKeyUrl).queryParam("timeStamp", "2018-12-06T12:07:44.403Z")
@@ -134,10 +133,14 @@ public class CryptographicServiceIntegrationExceptionTest {
 		requestDto.setTimeStamp(DateUtils.parseToLocalDateTime("2018-12-06T12:07:44.403Z"));
 
 		String requestBody = objectMapper.writeValueAsString(requestWrapper);
-		MvcResult result = mockMvc.perform(post("/encrypt").contentType(MediaType.APPLICATION_JSON).content(requestBody))
+		MvcResult result = mockMvc
+				.perform(post("/encrypt").contentType(MediaType.APPLICATION_JSON).content(requestBody))
 				.andExpect(status().isOk()).andReturn();
-		ResponseWrapper<CryptomanagerResponseDto> responseWrapper=objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<ResponseWrapper<CryptomanagerResponseDto>>(){});
-	    assertThat(responseWrapper.getErrors().get(0).getErrorCode(),is("KER-CRY-002"));
+		ResponseWrapper<CryptomanagerResponseDto> responseWrapper = objectMapper.readValue(
+				result.getResponse().getContentAsString(),
+				new TypeReference<ResponseWrapper<CryptomanagerResponseDto>>() {
+				});
+		assertThat(responseWrapper.getErrors().get(0).getErrorCode(), is("KER-CRY-002"));
 	}
 
 	@WithUserDetails("reg-processor")
@@ -151,10 +154,14 @@ public class CryptographicServiceIntegrationExceptionTest {
 		requestDto.setReferenceId("ref123");
 		requestDto.setTimeStamp(DateUtils.parseToLocalDateTime("2018-12-06T12:07:44.403Z"));
 		String requestBody = objectMapper.writeValueAsString(requestWrapper);
-		MvcResult result = mockMvc.perform(post("/encrypt").contentType(MediaType.APPLICATION_JSON).content(requestBody))
+		MvcResult result = mockMvc
+				.perform(post("/encrypt").contentType(MediaType.APPLICATION_JSON).content(requestBody))
 				.andExpect(status().isOk()).andReturn();
-		ResponseWrapper<CryptomanagerResponseDto> responseWrapper=objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<ResponseWrapper<CryptomanagerResponseDto>>(){});
-	    assertThat(responseWrapper.getErrors().get(0).getErrorCode(),is("KER-CRY-004"));
+		ResponseWrapper<CryptomanagerResponseDto> responseWrapper = objectMapper.readValue(
+				result.getResponse().getContentAsString(),
+				new TypeReference<ResponseWrapper<CryptomanagerResponseDto>>() {
+				});
+		assertThat(responseWrapper.getErrors().get(0).getErrorCode(), is("KER-CRY-004"));
 	}
 
 	@WithUserDetails("reg-processor")
@@ -164,10 +171,14 @@ public class CryptographicServiceIntegrationExceptionTest {
 				+ "\"metadata\":{},\r\n" + "\"request\":{\r\n" + "  \"applicationId\": \"REGISTRATION\",\r\n"
 				+ "  \"data\": \"dXJ2aWwKCgoKam9zaGk=\",\r\n" + "  \"referenceId\": \"REF01\",\r\n"
 				+ "  \"timeStamp\": \"2018-12-1\"\r\n" + "}\r\n" + "}";
-		MvcResult result = mockMvc.perform(post("/encrypt").contentType(MediaType.APPLICATION_JSON).content(requestBody))
+		MvcResult result = mockMvc
+				.perform(post("/encrypt").contentType(MediaType.APPLICATION_JSON).content(requestBody))
 				.andExpect(status().isOk()).andReturn();
-		ResponseWrapper<CryptomanagerResponseDto> responseWrapper=objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<ResponseWrapper<CryptomanagerResponseDto>>(){});
-	    assertThat(responseWrapper.getErrors().get(0).getErrorCode(),is("KER-CRY-004"));
+		ResponseWrapper<CryptomanagerResponseDto> responseWrapper = objectMapper.readValue(
+				result.getResponse().getContentAsString(),
+				new TypeReference<ResponseWrapper<CryptomanagerResponseDto>>() {
+				});
+		assertThat(responseWrapper.getErrors().get(0).getErrorCode(), is("KER-CRY-004"));
 	}
 
 	@WithUserDetails("reg-processor")
@@ -181,10 +192,14 @@ public class CryptographicServiceIntegrationExceptionTest {
 		requestDto.setReferenceId("ref123");
 		requestDto.setTimeStamp(DateUtils.parseToLocalDateTime("2018-12-06T12:07:44.403Z"));
 		String requestBody = objectMapper.writeValueAsString(requestWrapper);
-		MvcResult result =mockMvc.perform(post("/decrypt").contentType(MediaType.APPLICATION_JSON).content(requestBody))
+		MvcResult result = mockMvc
+				.perform(post("/decrypt").contentType(MediaType.APPLICATION_JSON).content(requestBody))
 				.andExpect(status().isOk()).andReturn();
-		ResponseWrapper<CryptomanagerResponseDto> responseWrapper=objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<ResponseWrapper<CryptomanagerResponseDto>>(){});
-	    assertThat(responseWrapper.getErrors().get(0).getErrorCode(),is("KER-CRY-003"));
+		ResponseWrapper<CryptomanagerResponseDto> responseWrapper = objectMapper.readValue(
+				result.getResponse().getContentAsString(),
+				new TypeReference<ResponseWrapper<CryptomanagerResponseDto>>() {
+				});
+		assertThat(responseWrapper.getErrors().get(0).getErrorCode(), is("KER-CRY-003"));
 	}
 
 	@WithUserDetails("reg-processor")
@@ -206,10 +221,14 @@ public class CryptographicServiceIntegrationExceptionTest {
 		requestDto.setReferenceId("ref123");
 		requestDto.setTimeStamp(DateUtils.parseToLocalDateTime("2018-12-06T12:07:44.403Z"));
 		String requestBody = objectMapper.writeValueAsString(requestWrapper);
-		MvcResult result =mockMvc.perform(post("/encrypt").contentType(MediaType.APPLICATION_JSON).content(requestBody))
+		MvcResult result = mockMvc
+				.perform(post("/encrypt").contentType(MediaType.APPLICATION_JSON).content(requestBody))
 				.andExpect(status().isOk()).andReturn();
-		ResponseWrapper<CryptomanagerResponseDto> responseWrapper=objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<ResponseWrapper<CryptomanagerResponseDto>>(){});
-	    assertThat(responseWrapper.getErrors().get(0).getErrorCode(),is("KER-KMS-003"));
+		ResponseWrapper<CryptomanagerResponseDto> responseWrapper = objectMapper.readValue(
+				result.getResponse().getContentAsString(),
+				new TypeReference<ResponseWrapper<CryptomanagerResponseDto>>() {
+				});
+		assertThat(responseWrapper.getErrors().get(0).getErrorCode(), is("KER-KMS-003"));
 
 	}
 
@@ -223,7 +242,7 @@ public class CryptographicServiceIntegrationExceptionTest {
 		errorResponse.setErrors(errors);
 		server.expect(requestTo(symmetricKeyUrl))
 				.andRespond(withSuccess(objectMapper.writeValueAsString(errorResponse), MediaType.APPLICATION_JSON));
-		when(cryptoCore.symmetricDecrypt(Mockito.any(), Mockito.any(),Mockito.any())).thenReturn("dXJ2aWw".getBytes());
+		when(cryptoCore.symmetricDecrypt(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn("dXJ2aWw".getBytes());
 		requestDto = new CryptomanagerRequestDto();
 		requestWrapper.setRequest(requestDto);
 
@@ -233,9 +252,13 @@ public class CryptographicServiceIntegrationExceptionTest {
 		requestDto.setReferenceId("ref123");
 		requestDto.setTimeStamp(DateUtils.parseToLocalDateTime("2018-12-06T12:07:44.403Z"));
 		String requestBody = objectMapper.writeValueAsString(requestWrapper);
-		MvcResult result = mockMvc.perform(post("/decrypt").contentType(MediaType.APPLICATION_JSON).content(requestBody))
+		MvcResult result = mockMvc
+				.perform(post("/decrypt").contentType(MediaType.APPLICATION_JSON).content(requestBody))
 				.andExpect(status().isOk()).andReturn();
-		ResponseWrapper<CryptomanagerResponseDto> responseWrapper=objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<ResponseWrapper<CryptomanagerResponseDto>>(){});
-	    assertThat(responseWrapper.getErrors().get(0).getErrorCode(),is("KER-KMS-003"));
+		ResponseWrapper<CryptomanagerResponseDto> responseWrapper = objectMapper.readValue(
+				result.getResponse().getContentAsString(),
+				new TypeReference<ResponseWrapper<CryptomanagerResponseDto>>() {
+				});
+		assertThat(responseWrapper.getErrors().get(0).getErrorCode(), is("KER-KMS-003"));
 	}
 }

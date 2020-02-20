@@ -11,6 +11,6 @@ public class OtpUser {
 	private List<String> otpChannel;
 	private String appId;
 	private String useridtype;
-	private Map<String,Object> templateVariables;
+	private Map<String, Object> templateVariables;
 	private String context;
 }

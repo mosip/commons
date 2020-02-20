@@ -137,7 +137,8 @@ public class PridServiceHealthCheckerhandler implements HealthCheckHandler {
 		if (diskFreeInBytes >= THRESHOLD) {
 			final JsonObject result = resultBuilder.create()
 					.add(PRIDHealthConstants.TOTAL, this.currentWorkingDirPath.getTotalSpace())
-					.add(PRIDHealthConstants.FREE, diskFreeInBytes).add(PRIDHealthConstants.THRESHOLD, THRESHOLD).build();
+					.add(PRIDHealthConstants.FREE, diskFreeInBytes).add(PRIDHealthConstants.THRESHOLD, THRESHOLD)
+					.build();
 			future.complete(Status.OK(result));
 		} else {
 			final JsonObject result = resultBuilder.create().add(PRIDHealthConstants.ERROR,
@@ -263,7 +264,7 @@ public class PridServiceHealthCheckerhandler implements HealthCheckHandler {
 	/**
 	 * Copy actual response to Spring actuator like response
 	 * 
-	 * @param json  Summary json
+	 * @param json   Summary json
 	 * @param checks Json array of all registered parameters with details
 	 */
 	private void createResponse(JsonObject json, JsonArray checks) {
@@ -334,7 +335,6 @@ public class PridServiceHealthCheckerhandler implements HealthCheckHandler {
 		json.put(PRIDHealthConstants.STATUS, outcome);
 		return json.encode();
 	}
-
 
 	static class JSONResultBuilder {
 

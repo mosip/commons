@@ -25,6 +25,7 @@ import io.mosip.kernel.emailnotification.constant.MailNotifierExceptionClassName
 public class EmailNotificationAsyncHandler implements AsyncUncaughtExceptionHandler {
 
 	Logger mosipLogger = LoggerConfiguration.logConfig(EmailNotificationAsyncHandler.class);
+
 	/*
 	 * (non-Javadoc)
 	 * 

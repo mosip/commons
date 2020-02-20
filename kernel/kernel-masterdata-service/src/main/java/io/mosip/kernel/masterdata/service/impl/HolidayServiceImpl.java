@@ -228,15 +228,14 @@ public class HolidayServiceImpl implements HolidayService {
 			int noOfRowAffected = holidayRepository.createQueryUpdateOrDelete(UPDATE_HOLIDAY_QUERY, params);
 			if (noOfRowAffected != 0) {
 				idDto = mapToHolidayIdDto(holidayDto);
-			}
-			else {
+			} else {
 				auditUtil.auditRequest(
 						String.format(MasterDataConstant.FAILURE_UPDATE, HolidayUpdateDto.class.getSimpleName()),
 						MasterDataConstant.AUDIT_SYSTEM, String.format(HolidayErrorCode.HOLIDAY_NOTFOUND.getErrorCode(),
 								HolidayErrorCode.HOLIDAY_NOTFOUND.getErrorMessage()),
 						"ADM-801");
-			throw new RequestException(HolidayErrorCode.HOLIDAY_NOTFOUND.getErrorCode(),
-					HolidayErrorCode.HOLIDAY_NOTFOUND.getErrorMessage());
+				throw new RequestException(HolidayErrorCode.HOLIDAY_NOTFOUND.getErrorCode(),
+						HolidayErrorCode.HOLIDAY_NOTFOUND.getErrorMessage());
 			}
 
 		} catch (DataAccessException | DataAccessLayerException e) {
@@ -283,8 +282,7 @@ public class HolidayServiceImpl implements HolidayService {
 	/**
 	 * Bind {@link HolidayUpdateDto} dto to {@link Map}
 	 * 
-	 * @param dto
-	 *            input {@link HolidayUpdateDto}
+	 * @param dto input {@link HolidayUpdateDto}
 	 * @return {@link Map} with the named parameter and value
 	 */
 	private Map<String, Object> bindDtoToMap(HolidayUpdateDto dto) {
@@ -315,8 +313,7 @@ public class HolidayServiceImpl implements HolidayService {
 	/**
 	 * Bind the {@link HolidayUpdateDto} to {@link HolidayIDDto}
 	 * 
-	 * @param dto
-	 *            input {@link HolidayUpdateDto} to be bind
+	 * @param dto input {@link HolidayUpdateDto} to be bind
 	 * @return {@link HolidayIDDto} holiday id
 	 */
 	private HolidayIDDto mapToHolidayIdDto(HolidayUpdateDto dto) {
@@ -461,8 +458,7 @@ public class HolidayServiceImpl implements HolidayService {
 	/**
 	 * This method return Machine Types list filters.
 	 * 
-	 * @param machineTypes
-	 *            the list of Machine Type.
+	 * @param machineTypes the list of Machine Type.
 	 * @return the list of {@link SearchFilter}.
 	 */
 	private List<SearchFilter> buildLocationSearchFilter(List<Location> locations) {
@@ -474,8 +470,7 @@ public class HolidayServiceImpl implements HolidayService {
 	/**
 	 * This method provide search filter for provided Machine Type.
 	 * 
-	 * @param machineType
-	 *            the machine type.
+	 * @param machineType the machine type.
 	 * @return the {@link SearchFilter}.
 	 */
 	private SearchFilter buildLocations(Location location) {

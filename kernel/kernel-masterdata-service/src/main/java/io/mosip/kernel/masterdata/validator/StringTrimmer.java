@@ -4,6 +4,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import lombok.Data;
+
 /**
  * The Class StringTrimmer.
  */
@@ -20,8 +21,11 @@ public class StringTrimmer implements ConstraintValidator<StringFormatter, Strin
 	/** The max. */
 	private int max = Integer.MAX_VALUE;
 
-	/* (non-Javadoc)
-	 * @see javax.validation.ConstraintValidator#initialize(java.lang.annotation.Annotation)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.validation.ConstraintValidator#initialize(java.lang.annotation.
+	 * Annotation)
 	 */
 	@Override
 	public void initialize(StringFormatter constraintAnnotation) {
@@ -29,8 +33,11 @@ public class StringTrimmer implements ConstraintValidator<StringFormatter, Strin
 		min = constraintAnnotation.min();
 	}
 
-	/* (non-Javadoc)
-	 * @see javax.validation.ConstraintValidator#isValid(java.lang.Object, javax.validation.ConstraintValidatorContext)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.validation.ConstraintValidator#isValid(java.lang.Object,
+	 * javax.validation.ConstraintValidatorContext)
 	 */
 	@Override
 	public boolean isValid(String arg0, ConstraintValidatorContext arg1) {

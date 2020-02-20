@@ -13,8 +13,7 @@ public interface PacketStatusUpdateService {
 	/**
 	 * Gets the status.
 	 *
-	 * @param rid
-	 *            the rid
+	 * @param rid the rid
 	 * @return the status
 	 */
 	public PacketStatusUpdateDto getStatus(String rid);

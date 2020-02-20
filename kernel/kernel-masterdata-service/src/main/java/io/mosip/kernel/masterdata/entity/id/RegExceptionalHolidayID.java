@@ -12,18 +12,16 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegExceptionalHolidayID implements Serializable{
+public class RegExceptionalHolidayID implements Serializable {
 
-
-	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 499662213516904291L;
 
-	@Column(name="regcntr_id",nullable=false,length=10)
+	@Column(name = "regcntr_id", nullable = false, length = 10)
 	private String registrationCenterId;
-	
-	@Column(name="hol_date",nullable=false)
+
+	@Column(name = "hol_date", nullable = false)
 	private LocalDate exceptionHolidayDate;
 }

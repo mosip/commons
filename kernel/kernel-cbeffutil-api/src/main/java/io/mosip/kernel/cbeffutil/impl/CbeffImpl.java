@@ -41,10 +41,10 @@ public class CbeffImpl implements CbeffUtil {
 	/** The schema name. */
 	@Value("${mosip.kernel.xsdfile}")
 	private String schemaName;
-	
+
 	/** The xsd. */
 	private byte[] xsd;
-	
+
 	/**
 	 * Load XSD.
 	 *
@@ -90,7 +90,7 @@ public class CbeffImpl implements CbeffUtil {
 	/**
 	 * Method used for updating Cbeff XML.
 	 *
-	 * @param birList pass List of BIR for creating Cbeff data
+	 * @param birList   pass List of BIR for creating Cbeff data
 	 * @param fileBytes the file bytes
 	 * @return return byte array of XML data
 	 * @throws Exception Exception
@@ -115,8 +115,10 @@ public class CbeffImpl implements CbeffUtil {
 		CbeffContainerImpl cbeffContainer = new CbeffContainerImpl();
 		return cbeffContainer.validateXML(xmlBytes, xsdBytes);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.mosip.kernel.core.cbeffutil.spi.CbeffUtil#validateXML(byte[])
 	 */
 	@Override
@@ -167,20 +169,28 @@ public class CbeffImpl implements CbeffUtil {
 		return CbeffValidator.getAllBDBData(bir, type, subType);
 	}
 
-	/* (non-Javadoc)
-	 * @see io.mosip.kernel.core.cbeffutil.spi.CbeffUtil#convertBIRTypeToBIR(java.util.List)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.mosip.kernel.core.cbeffutil.spi.CbeffUtil#convertBIRTypeToBIR(java.util.
+	 * List)
 	 */
 	@Override
 	public List<BIR> convertBIRTypeToBIR(List<BIRType> birType) {
 		return CbeffValidator.convertBIRTypeToBIR(birType);
 	}
-	
-	/* (non-Javadoc)
-	 * @see io.mosip.kernel.core.cbeffutil.spi.CbeffUtil#getBIRDataFromXMLType(byte[], java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.mosip.kernel.core.cbeffutil.spi.CbeffUtil#getBIRDataFromXMLType(byte[],
+	 * java.lang.String)
 	 */
 	@Override
-	public List<BIRType> getBIRDataFromXMLType(byte[] xmlBytes,String type) throws Exception {
-		return CbeffValidator.getBIRDataFromXMLType(xmlBytes,type);
+	public List<BIRType> getBIRDataFromXMLType(byte[] xmlBytes, String type) throws Exception {
+		return CbeffValidator.getBIRDataFromXMLType(xmlBytes, type);
 	}
 
 }

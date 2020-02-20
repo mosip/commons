@@ -29,5 +29,5 @@ public class SignatureResponseDto {
 	 */
 	@ApiModelProperty(notes = "Data encrypted/decrypted in BASE64 encoding")
 	private String data;
-	
+
 }

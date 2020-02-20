@@ -63,10 +63,8 @@ public class RegistrationCenterMachineController {
 	/**
 	 * Delete the mapping of registration center and machine
 	 * 
-	 * @param regCenterId
-	 *            Registration center id to be deleted
-	 * @param machineId
-	 *            MachineId id to be deleted
+	 * @param regCenterId Registration center id to be deleted
+	 * @param machineId   MachineId id to be deleted
 	 * @return {@link RegistrationCenterMachineID}
 	 */
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")

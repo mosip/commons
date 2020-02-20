@@ -14,14 +14,14 @@ import lombok.Data;
 @Data
 @ValidFoundational(baseField = "certificationLevel", matchField = { "foundationalTrustProviderId" })
 public class DeviceData {
-	
+
 	private String deviceId;
-	
+
 	@ValidPurpose(message = "Invalid Purpose received")
 	private String purpose;
-	
+
 	private DeviceInfo deviceInfo;
-	
+
 	private String foundationalTrustProviderId;
 
 }

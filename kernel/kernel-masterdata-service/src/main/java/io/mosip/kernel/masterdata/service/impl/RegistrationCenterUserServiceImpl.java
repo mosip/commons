@@ -340,7 +340,7 @@ public class RegistrationCenterUserServiceImpl implements RegistrationCenterUser
 			throw new RequestException(RegistrationCenterUserErrorCode.USER_NOT_FOUND.getErrorCode(),
 					RegistrationCenterUserErrorCode.USER_NOT_FOUND.getErrorMessage());
 		}
-		
+
 		List<String> zoneIds;
 		// get user zone and child zones list
 		List<Zone> userZones = zoneUtils.getUserZones();

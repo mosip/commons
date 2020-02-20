@@ -24,11 +24,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 //@ApiModel(value = "Device", description = "Device Detail resource")
 public class DeviceSearchDto extends BaseDto {
-	
+
 	/**
 	 * Field for device id
 	 */
-	@FilterType(types = { FilterTypeEnum.EQUALS})
+	@FilterType(types = { FilterTypeEnum.EQUALS })
 	@NotBlank
 	@Size(min = 1, max = 36)
 	@ApiModelProperty(value = "id", required = true, dataType = "java.lang.String")
@@ -84,17 +84,17 @@ public class DeviceSearchDto extends BaseDto {
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private LocalDateTime validityDateTime;
-	
+
 	/**
 	 * Zone Code for Device.
 	 */
 	private String zoneCode;
-	
+
 	/**
 	 * Zone name for Device.
 	 */
 	private String zone;
-	
+
 	/**
 	 * Device Type name of Device.
 	 */

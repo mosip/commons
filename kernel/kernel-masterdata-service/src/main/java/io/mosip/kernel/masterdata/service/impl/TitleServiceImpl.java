@@ -211,7 +211,8 @@ public class TitleServiceImpl implements TitleService {
 		}
 		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_UPDATE, TitleDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC,
-						TitleDto.class.getSimpleName(), titleId.getCode()),"ADM-823");
+						TitleDto.class.getSimpleName(), titleId.getCode()),
+				"ADM-823");
 		return titleId;
 	}
 

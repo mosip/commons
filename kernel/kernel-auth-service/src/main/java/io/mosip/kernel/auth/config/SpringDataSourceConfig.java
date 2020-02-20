@@ -16,7 +16,7 @@ import com.zaxxer.hikari.HikariDataSource;
 
 /**
  * @author Ramadurai Saravana Pandian
- * @author Raj Jha 
+ * @author Raj Jha
  *
  */
 @Configuration

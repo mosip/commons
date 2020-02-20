@@ -51,9 +51,9 @@ public class MachineDto extends BaseDto {
 	 * Field for is validity of the Device
 	 */
 	private LocalDateTime validityDateTime;
-	
+
 	private String keyIndex;
-	
+
 	private String publicKey;
 
 }

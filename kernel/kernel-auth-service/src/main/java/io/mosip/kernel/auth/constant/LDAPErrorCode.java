@@ -12,7 +12,7 @@ public enum LDAPErrorCode {
 	 * RESPONSE_PARSE_ERROR
 	 */
 	LDAP_CONNECTION_ERROR("KER-ATH-101", "Error while connecting ldap request,Please check credentials"),
-	
+
 	/**
 	 * RESPONSE_PARSE_ERROR
 	 */
@@ -21,6 +21,7 @@ public enum LDAPErrorCode {
 	 * Email not registered
 	 */
 	LDAP_ROLES_REQUEST_ERROR("KER-ATH-103", "Unable to fetch details from LDAP");
+
 	/**
 	 * The error code
 	 */

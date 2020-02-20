@@ -94,91 +94,76 @@ public class ApiExceptionHandler {
 		final List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
 		fieldErrors.forEach(x -> {
 			ServiceError error = null;
-			if(x!=null && x.getDefaultMessage().contains("Language Code is Invalid"))
-			{
-				error = new ServiceError(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(),
-						x.getDefaultMessage());
-			}
-			else
-			{
+			if (x != null && x.getDefaultMessage().contains("Language Code is Invalid")) {
+				error = new ServiceError(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), x.getDefaultMessage());
+			} else {
 				error = new ServiceError(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(),
 						x.getField() + ": " + x.getDefaultMessage());
 			}
-			
+
 			errorResponse.getErrors().add(error);
 		});
 		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
 	}
-	
-	@ExceptionHandler( ConstraintViolationException.class)
+
+	@ExceptionHandler(ConstraintViolationException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> constraintVoilationException(
 			final HttpServletRequest httpServletRequest, final ConstraintViolationException e) throws IOException {
 		ResponseWrapper<ServiceError> errorResponse = setErrors(httpServletRequest);
 		ServiceError error = null;
-			if(e.getMessage()!=null && e.getMessage().contains("Language Code is Invalid"))
-			{
-				error = new ServiceError(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(),
-						"Language Code is Invalid");
-			}
-			else
-			{
-				error = new ServiceError(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(),
-						e.getMessage());
-			}
-			
-			errorResponse.getErrors().add(error);
+		if (e.getMessage() != null && e.getMessage().contains("Language Code is Invalid")) {
+			error = new ServiceError(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(),
+					"Language Code is Invalid");
+		} else {
+			error = new ServiceError(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), e.getMessage());
+		}
+
+		errorResponse.getErrors().add(error);
 		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
 	}
-	
+
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> onHttpMessageNotReadable(
 			final HttpServletRequest httpServletRequest, final HttpMessageNotReadableException e) throws IOException {
-		if(e.getCause() instanceof InvalidFormatException)
-		{
+		if (e.getCause() instanceof InvalidFormatException) {
 			JsonMappingException jme = (JsonMappingException) e.getCause();
-			 List<JsonMappingException.Reference> references = jme.getPath();
-			    List<String> ret = new LinkedList<>();
-			    if (references != null) {
-			      for (JsonMappingException.Reference reference : references) {
-			    	  if(!reference.getFieldName().equals("request"))
-			    		  ret.add(reference.getFieldName());
-			      }
-			    }	
-			    String exField = StringUtils.join(ret);
-			    ResponseWrapper<ServiceError> errorResponse = setHttpMessageNotReadableErrors(httpServletRequest);
-				ServiceError error = new ServiceError(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(),
-						"Invalid Format in field : "+exField);
-				errorResponse.getErrors().add(error);
-				return new ResponseEntity<>(errorResponse, HttpStatus.OK);
-		}
-		else if(e.getCause() instanceof MismatchedInputException)
-		{
+			List<JsonMappingException.Reference> references = jme.getPath();
+			List<String> ret = new LinkedList<>();
+			if (references != null) {
+				for (JsonMappingException.Reference reference : references) {
+					if (!reference.getFieldName().equals("request"))
+						ret.add(reference.getFieldName());
+				}
+			}
+			String exField = StringUtils.join(ret);
+			ResponseWrapper<ServiceError> errorResponse = setHttpMessageNotReadableErrors(httpServletRequest);
+			ServiceError error = new ServiceError(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(),
+					"Invalid Format in field : " + exField);
+			errorResponse.getErrors().add(error);
+			return new ResponseEntity<>(errorResponse, HttpStatus.OK);
+		} else if (e.getCause() instanceof MismatchedInputException) {
 			ResponseWrapper<ServiceError> errorResponse = setHttpMessageNotReadableErrors(httpServletRequest);
 			ServiceError error = new ServiceError(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(),
 					e.getCause().getMessage());
 			errorResponse.getErrors().add(error);
 			return new ResponseEntity<>(errorResponse, HttpStatus.OK);
-		}
-		else if(e.getCause() instanceof JsonMappingException)
-		{
+		} else if (e.getCause() instanceof JsonMappingException) {
 			JsonMappingException jme = (JsonMappingException) e.getCause();
-			 List<JsonMappingException.Reference> references = jme.getPath();
-			    List<String> ret = new LinkedList<>();
-			    if (references != null) {
-			      for (JsonMappingException.Reference reference : references) {
-			    	  if(!reference.getFieldName().equals("request"))
-			    		  ret.add(reference.getFieldName());
-			      }
-			    }	
-			    String exField = StringUtils.join(ret);
-			    ResponseWrapper<ServiceError> errorResponse = setHttpMessageNotReadableErrors(httpServletRequest);
-				ServiceError error = new ServiceError(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(),
-						"Invalid Format in field : "+exField);
-				errorResponse.getErrors().add(error);
-				return new ResponseEntity<>(errorResponse, HttpStatus.OK);
-		}
-		else
-		{
+			List<JsonMappingException.Reference> references = jme.getPath();
+			List<String> ret = new LinkedList<>();
+			if (references != null) {
+				for (JsonMappingException.Reference reference : references) {
+					if (!reference.getFieldName().equals("request"))
+						ret.add(reference.getFieldName());
+				}
+			}
+			String exField = StringUtils.join(ret);
+			ResponseWrapper<ServiceError> errorResponse = setHttpMessageNotReadableErrors(httpServletRequest);
+			ServiceError error = new ServiceError(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(),
+					"Invalid Format in field : " + exField);
+			errorResponse.getErrors().add(error);
+			return new ResponseEntity<>(errorResponse, HttpStatus.OK);
+		} else {
 			ResponseWrapper<ServiceError> errorResponse = setHttpMessageNotReadableErrors(httpServletRequest);
 			ServiceError error = new ServiceError(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(),
 					e.getCause().getMessage());
@@ -186,8 +171,6 @@ public class ApiExceptionHandler {
 			return new ResponseEntity<>(errorResponse, HttpStatus.OK);
 		}
 	}
-	
-	
 
 	@ExceptionHandler(value = { Exception.class, RuntimeException.class })
 	public ResponseEntity<ResponseWrapper<ServiceError>> defaultErrorHandler(
@@ -238,7 +221,7 @@ public class ApiExceptionHandler {
 		ServiceError error = new ServiceError();
 		error.setErrorCode(e.getErrorCode());
 		error.setMessage(e.getErrorText());
-		DeviceRegResponseDto regResponse=new DeviceRegResponseDto();
+		DeviceRegResponseDto regResponse = new DeviceRegResponseDto();
 		regResponse.setError(error);
 		response.setResponse(regResponse);
 		return new ResponseEntity<>(response, HttpStatus.OK);
@@ -256,11 +239,11 @@ public class ApiExceptionHandler {
 		} else {
 			try {
 				JSONObject json = new JSONObject(requestBody);
-				responseWrapper.setId((String)json.get("id"));
-				responseWrapper.setVersion((String)json.get("version"));
+				responseWrapper.setId((String) json.get("id"));
+				responseWrapper.setVersion((String) json.get("version"));
 			} catch (JSONException e) {
 				e.printStackTrace();
-			}     
+			}
 //			int idIndex = requestBody.indexOf("id") + 5;
 //			int verIndex = requestBody.indexOf("version");
 //			String arr[] = requestBody.substring(idIndex).split(",");

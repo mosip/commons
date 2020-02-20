@@ -36,10 +36,8 @@ public class RegistrationCenterUserController {
 	/**
 	 * Api to un-map User from a Registration Center .
 	 * 
-	 * @param userId
-	 *            the user Id
-	 * @param regCenterId
-	 *            the Registration Center ID.
+	 * @param userId      the user Id
+	 * @param regCenterId the Registration Center ID.
 	 * @return the UserAndRegCenterMappingResponseDto.
 	 */
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
@@ -66,10 +64,8 @@ public class RegistrationCenterUserController {
 	/**
 	 * Api to map User to a Registration Center.
 	 * 
-	 * @param userId
-	 *            the user Id
-	 * @param regCenterId
-	 *            the registration center id
+	 * @param userId      the user Id
+	 * @param regCenterId the registration center id
 	 * @return the UserAndRegCenterMappingResponseDto.
 	 */
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
