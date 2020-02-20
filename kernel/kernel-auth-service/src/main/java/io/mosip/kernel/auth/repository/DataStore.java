@@ -33,7 +33,7 @@ public interface DataStore  {
 
 	public MosipUserListDto getListOfUsersDetails(List<String> userDetails) throws Exception;
 
-	public MosipUserSaltListDto getAllUserDetailsWithSalt() throws Exception;
+	public MosipUserSaltListDto getAllUserDetailsWithSalt(List<String> userDetails) throws Exception;
 
 	public RIdDto getRidFromUserId(String userId) throws Exception;
 	

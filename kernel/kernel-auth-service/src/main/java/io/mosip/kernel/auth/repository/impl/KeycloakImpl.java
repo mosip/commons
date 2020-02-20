@@ -12,8 +12,6 @@ import java.util.Objects;
 import javax.annotation.PostConstruct;
 import javax.xml.bind.DatatypeConverter;
 
-import org.apache.commons.collections.MultiMap;
-import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.directory.api.ldap.model.password.PasswordDetails;
 import org.apache.directory.api.ldap.model.password.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,10 +138,7 @@ public class KeycloakImpl implements DataStore {
 
 	private NamedParameterJdbcTemplate jdbcTemplate;
 
-	private static final String FETCH_ALL_SALTS = "select ue.username,ua.value from public.user_entity ue, public.user_attribute ua where ue.id=ua.user_id and ua.name='userPassword'"; // and
-	// ue.username
-	// IN
-	// (:username)";
+	private static final String FETCH_ALL_SALTS = "select ue.username,ua.value from public.user_entity ue, public.user_attribute ua where ue.id=ua.user_id and ua.name='userPassword' and ue.username IN(:username)";
 
 	private static final String FETCH_PASSWORD = "select cr.value from public.credential cr, public.user_entity ue where cr.user_id=ue.id and ue.username=:username";
 	@Autowired
@@ -221,37 +216,29 @@ public class KeycloakImpl implements DataStore {
 	}
 
 	@Override
-	public MosipUserSaltListDto getAllUserDetailsWithSalt() throws Exception {
-		return jdbcTemplate.query(FETCH_ALL_SALTS, new MapSqlParameterSource(),
-				new ResultSetExtractor<MosipUserSaltListDto>() {
+	public MosipUserSaltListDto getAllUserDetailsWithSalt(List<String> userDetails) throws Exception {
+		
+			return jdbcTemplate.query(FETCH_ALL_SALTS, new MapSqlParameterSource("username",userDetails),
+					new ResultSetExtractor<MosipUserSaltListDto>() {
 
-					@Override
-					public MosipUserSaltListDto extractData(ResultSet rs) throws SQLException, DataAccessException {
-						MosipUserSaltListDto mosipUserSaltListDto = new MosipUserSaltListDto();
-						List<MosipUserSalt> mosipUserSaltList = new ArrayList<>();
-						while (rs.next()) {
-							MosipUserSalt mosipUserSalt = new MosipUserSalt();
-							mosipUserSalt.setUserId(rs.getString("username"));
-							// System.out.println(rs.getString("value"));
-							PasswordDetails password = PasswordUtil
-									.splitCredentials(CryptoUtil.decodeBase64(rs.getString("value")));
-							// System.out.println(rs.getString("username"));
-							// System.out.println("userPasword salt= "+rs.getString("value"));
-							// System.out.println("password salt=
-							// "+DatatypeConverter.printHexBinary(password.getPassword()));
-							// System.out.println("salt salt=
-							// "+CryptoUtil.encodeBase64String(password.getSalt()));
-							// mosipUserSalt.setSalt(CryptoUtil.encodeBase64(password.getSalt()));
-							mosipUserSalt.setSalt(CryptoUtil.encodeBase64String(password.getSalt()));
-							// System.out.println(mosipUserSalt.getSalt());
-							mosipUserSaltList.add(mosipUserSalt);
+						@Override
+						public MosipUserSaltListDto extractData(ResultSet rs) throws SQLException, DataAccessException {
+							MosipUserSaltListDto mosipUserSaltListDto = new MosipUserSaltListDto();
+							List<MosipUserSalt> mosipUserSaltList = new ArrayList<>();
+							while (rs.next()) {
+								MosipUserSalt mosipUserSalt = new MosipUserSalt();
+								mosipUserSalt.setUserId(rs.getString("username"));
+								PasswordDetails password = PasswordUtil
+										.splitCredentials(CryptoUtil.decodeBase64(rs.getString("value")));
+								mosipUserSalt.setSalt(CryptoUtil.encodeBase64String(password.getSalt()));
+								mosipUserSaltList.add(mosipUserSalt);
+							}
+							mosipUserSaltListDto.setMosipUserSaltList(mosipUserSaltList);
+							return mosipUserSaltListDto;
 						}
-						mosipUserSaltListDto.setMosipUserSaltList(mosipUserSaltList);
-						return mosipUserSaltListDto;
-					}
 
-				});
-	}
+					});
+		}
 
 	@Override
 	public RIdDto getRidFromUserId(String userId) throws Exception {
