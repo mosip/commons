@@ -8,18 +8,25 @@
 		<artifactId>kernel-parent</artifactId>
 		<version>1.0.6</version>
 	</parent>
+	<properties>
+		<kernel.core.version>1.0.6</kernel.core.version>
+		<kernel.dataaccess-hibernate.version>1.0.6</kernel.dataaccess-hibernate.version>
+		<kernel.logger.version>1.0.6</kernel.logger.version>
+		<kernel.idvalidator-prid.version>1.0.6</kernel.idvalidator-prid.version>
+		<kernel.crypto-jce.version>1.0.6</kernel.crypto-jce.version>
+	</properties>
 	<artifactId>kernel-idgenerator-regcenterid</artifactId>
 	<version>1.0.6</version>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>1.0.6</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-dataaccess-hibernate</artifactId>
-			<version>1.0.6</version>
+			<version>${kernel.dataaccess-hibernate.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>

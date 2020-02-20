@@ -8,21 +8,26 @@
 		<version>1.0.6</version>
 	</parent>
 	<artifactId>kernel-idgenerator-vid</artifactId>
+	<properties>
+		<kernel.core.version>1.0.6</kernel.core.version>
+		<kernel.idvalidator-vid.version>1.0.6</kernel.idvalidator-vid.version>
+		<kernel.crypto-jce.version>1.0.6</kernel.crypto-jce.version>
+    </properties>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-crypto-jce</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.crypto-jce.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-idvalidator-vid</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.idvalidator-vid.version}</version>
 		</dependency>
 
 	</dependencies>

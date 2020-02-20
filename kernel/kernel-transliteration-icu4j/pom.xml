@@ -12,7 +12,9 @@
 	</parent>
 
 	<artifactId>kernel-transliteration-icu4j</artifactId>
-
+    <properties>
+    <kernel.core.version>1.0.6</kernel.core.version>
+    </properties>
 	<name>kernel-transliteration-icu4j</name>
 
 	<dependencies>
@@ -47,7 +49,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 
 

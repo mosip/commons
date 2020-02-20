@@ -9,6 +9,9 @@
 		<artifactId>kernel-parent</artifactId>
 		<version>1.0.6</version>
 	</parent>
+	<properties>
+	<kernel.core.version>1.0.6</kernel.core.version>
+	</properties>
 
 	<artifactId>kernel-dataaccess-hibernate</artifactId>
 	<version>1.0.6</version>
@@ -16,7 +19,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>1.0.6</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

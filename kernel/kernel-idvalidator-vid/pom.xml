@@ -10,11 +10,15 @@
 	<artifactId>kernel-idvalidator-vid</artifactId>
 	<name>kernel-idvalidator-vid</name>
 	<description>kernel-idvalidator-vid</description>
+	<properties>
+		<kernel.core.version>1.0.6</kernel.core.version>
+    </properties>
 	<dependencies>
+	
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 	</dependencies>
 	<build>

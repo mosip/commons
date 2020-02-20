@@ -1,17 +1,22 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>io.mosip.kernel</groupId>
-    <artifactId>kernel-parent</artifactId>
-    <version>1.0.6</version>
-  </parent>
-  <artifactId>kernel-templatemanager-velocity</artifactId>
-  <description>Mosip Template Manager Using Velocity Template Engine</description>
-  <dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>io.mosip.kernel</groupId>
+		<artifactId>kernel-parent</artifactId>
+		<version>1.0.6</version>
+	</parent>
+	<artifactId>kernel-templatemanager-velocity</artifactId>
+	<description>Mosip Template Manager Using Velocity Template Engine</description>
+	<properties>
+		<kernel.core.version>1.0.6</kernel.core.version>
+	</properties>
+	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.velocity</groupId>
