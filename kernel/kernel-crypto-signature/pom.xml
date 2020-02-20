@@ -12,26 +12,32 @@
 
 	<artifactId>kernel-crypto-signature</artifactId>
 	<name>kernel-crypto-signature</name>
+	<properties>
+	<kernel.core.version>1.0.6</kernel.core.version>
+	<kernel.auth.adaptor.version>1.0.6</kernel.auth.adaptor.version>
+	<kernel.crypto.jce.version>1.0.6</kernel.crypto.jce.version>
+	<kernel.keygenerator.bouncycastle.version>1.0.6</kernel.keygenerator.bouncycastle.version>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-auth-adapter</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.auth.adaptor.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-crypto-jce</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.crypto.jce.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-keygenerator-bouncycastle</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.keygenerator.bouncycastle.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.powermock</groupId>
