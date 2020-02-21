@@ -5899,7 +5899,7 @@ public class MasterdataIntegrationTest {
 	@Test
 	public void validateLocationNameInvalidTest() throws Exception {
 		Mockito.when(locationRepository.isLocationNamePresent(Mockito.anyString())).thenReturn(false);
-		mockMvc.perform(get("/locations/validate/Morocco")).andExpect(status().isOk()).andReturn();
+		mockMvc.perform(get("/locations/validate/MyCountry")).andExpect(status().isOk()).andReturn();
 
 	}
 
@@ -5907,7 +5907,7 @@ public class MasterdataIntegrationTest {
 	@Test
 	public void validateLocationNameValidTest() throws Exception {
 		Mockito.when(locationRepository.isLocationNamePresent(Mockito.anyString())).thenReturn(true);
-		mockMvc.perform(get("/locations/validate/Morroco")).andExpect(status().isOk()).andReturn();
+		mockMvc.perform(get("/locations/validate/MyCountry")).andExpect(status().isOk()).andReturn();
 
 	}
 
@@ -5916,7 +5916,7 @@ public class MasterdataIntegrationTest {
 	public void validateLocationNameExceptionTest() throws Exception {
 		Mockito.when(locationRepository.isLocationNamePresent(Mockito.anyString()))
 				.thenThrow(DataRetrievalFailureException.class);
-		mockMvc.perform(get("/locations/validate/Morroco")).andExpect(status().is5xxServerError());
+		mockMvc.perform(get("/locations/validate/MyCountry")).andExpect(status().is5xxServerError());
 
 	}
 
