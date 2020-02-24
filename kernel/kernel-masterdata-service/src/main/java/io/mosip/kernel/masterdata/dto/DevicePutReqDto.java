@@ -85,5 +85,5 @@ public class DevicePutReqDto {
 	@ApiModelProperty(value = "zoneCode", required = true, dataType = "java.lang.String")
 	@Size(min = 1, max = 36)
 	private String zoneCode;
-	
+
 }

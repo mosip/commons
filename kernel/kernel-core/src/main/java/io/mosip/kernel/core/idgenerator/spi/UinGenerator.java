@@ -1,8 +1,6 @@
 
 package io.mosip.kernel.core.idgenerator.spi;
 
-
-
 /**
  * Interface having a function to generate an Id
  * 

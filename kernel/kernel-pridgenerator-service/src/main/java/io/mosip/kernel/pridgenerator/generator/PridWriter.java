@@ -20,6 +20,6 @@ public class PridWriter {
 	private PridService pridService;
 
 	public boolean persistPrids(PridEntity prid) {
-			return this.pridService.savePRID(prid);
+		return this.pridService.savePRID(prid);
 	}
 }

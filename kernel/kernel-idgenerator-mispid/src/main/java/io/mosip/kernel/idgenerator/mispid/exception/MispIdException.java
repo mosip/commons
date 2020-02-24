@@ -20,12 +20,9 @@ public class MispIdException extends BaseUncheckedException {
 	/**
 	 * Constructor for MispIdException.
 	 * 
-	 * @param errorCode
-	 *            the error code.
-	 * @param errorMessage
-	 *            the error message.
-	 * @param rootCause
-	 *            the cause.
+	 * @param errorCode    the error code.
+	 * @param errorMessage the error message.
+	 * @param rootCause    the cause.
 	 */
 	public MispIdException(String errorCode, String errorMessage, Throwable rootCause) {
 		super(errorCode, errorMessage, rootCause);

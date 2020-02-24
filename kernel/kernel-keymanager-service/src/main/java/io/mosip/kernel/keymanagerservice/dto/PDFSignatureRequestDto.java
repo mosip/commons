@@ -37,39 +37,39 @@ public class PDFSignatureRequestDto extends SignatureRequestDto {
 	@ApiModelProperty(notes = "The lower left x value of sign rectangle.", required = true)
 	@Min(value = 0)
 	@Max(value = Integer.MAX_VALUE)
-	private int lowerLeftX; 
-	
+	private int lowerLeftX;
+
 	/**
 	 * The lower left y value of sign rectangle.
 	 */
 	@ApiModelProperty(notes = "The lower left y value of sign rectangle.", required = true)
 	@Min(value = 0)
 	@Max(value = Integer.MAX_VALUE)
-	private int lowerLeftY; 
-	
+	private int lowerLeftY;
+
 	/**
 	 * The upper right x value of sign rectangle.
 	 */
 	@ApiModelProperty(notes = "The upper right x value of sign rectangle.", required = true)
 	@Min(value = 0)
 	@Max(value = Integer.MAX_VALUE)
-	private int upperRightX; 
-	
+	private int upperRightX;
+
 	/**
-	 *  The upper right y value of sign rectangle.
+	 * The upper right y value of sign rectangle.
 	 */
 	@ApiModelProperty(notes = "The upper right y value of sign rectangle.", required = true)
 	@Min(value = 0)
 	@Max(value = Integer.MAX_VALUE)
 	private int upperRightY;
-	
+
 	/**
-	 *  Reason for signing.
+	 * Reason for signing.
 	 */
 	@ApiModelProperty(notes = "Reason for signing.", required = true)
 	@NotBlank(message = KeymanagerConstant.INVALID_REQUEST)
 	private String reason;
-	
+
 	/**
 	 * Page number for signature.
 	 */
@@ -77,7 +77,7 @@ public class PDFSignatureRequestDto extends SignatureRequestDto {
 	@Min(value = 0)
 	@Max(value = Integer.MAX_VALUE)
 	private int pageNumber;
-	
+
 	/**
 	 * Password for protecting PDF
 	 */

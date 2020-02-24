@@ -64,7 +64,7 @@ public class CryptographicServiceIntegrationTest {
 
 	@Value("${mosip.kernel.keymanager-service-encrypt-url}")
 	private String encryptUrl;
-	
+
 	/**
 	 * {@link CryptoCoreSpec} instance for cryptographic functionalities.
 	 */
@@ -126,8 +126,10 @@ public class CryptographicServiceIntegrationTest {
 		response.setResponse(keymanagerPublicKeyResponseDto);
 		server.expect(requestTo(builder.buildAndExpand(uriParams).toUriString()))
 				.andRespond(withSuccess(objectMapper.writeValueAsString(response), MediaType.APPLICATION_JSON));
-        when(cryptoCore.symmetricEncrypt(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn("MOCKENCRYPTEDDATA".getBytes());
-		when(cryptoCore.asymmetricEncrypt(Mockito.any(), Mockito.any())).thenReturn("MOCKENCRYPTEDSESSIONKEY".getBytes());
+		when(cryptoCore.symmetricEncrypt(Mockito.any(), Mockito.any(), Mockito.any()))
+				.thenReturn("MOCKENCRYPTEDDATA".getBytes());
+		when(cryptoCore.asymmetricEncrypt(Mockito.any(), Mockito.any()))
+				.thenReturn("MOCKENCRYPTEDSESSIONKEY".getBytes());
 		requestDto = new CryptomanagerRequestDto();
 		requestWrapper.setRequest(requestDto);
 
@@ -135,13 +137,13 @@ public class CryptographicServiceIntegrationTest {
 		requestDto.setData("dXJ2aWw");
 		requestDto.setReferenceId("ref123");
 		requestDto.setTimeStamp(DateUtils.parseToLocalDateTime("2018-12-06T12:07:44.403Z"));
-		
+
 		String requestBody = objectMapper.writeValueAsString(requestWrapper);
 
 		MvcResult result = mockMvc
 				.perform(post("/encrypt").contentType(MediaType.APPLICATION_JSON).content(requestBody))
 				.andExpect(status().isOk()).andReturn();
-        System.out.println(result);
+		System.out.println(result);
 		ResponseWrapper<?> responseWrapper = objectMapper.readValue(result.getResponse().getContentAsString(),
 				ResponseWrapper.class);
 		CryptomanagerResponseDto cryptomanagerResponseDto = objectMapper.readValue(
@@ -159,7 +161,7 @@ public class CryptographicServiceIntegrationTest {
 		response.setResponse(keymanagerSymmetricKeyResponseDto);
 		server.expect(requestTo(symmetricKeyUrl))
 				.andRespond(withSuccess(objectMapper.writeValueAsString(response), MediaType.APPLICATION_JSON));
-		when(cryptoCore.symmetricDecrypt(Mockito.any(), Mockito.any(),Mockito.any())).thenReturn("dXJ2aWw".getBytes());
+		when(cryptoCore.symmetricDecrypt(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn("dXJ2aWw".getBytes());
 
 		requestDto = new CryptomanagerRequestDto();
 		requestWrapper.setRequest(requestDto);

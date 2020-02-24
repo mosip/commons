@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserPasswordRequestDto {
-	@NotBlank(message=AuthConstant.INVALID_REQUEST)
+	@NotBlank(message = AuthConstant.INVALID_REQUEST)
 	private String appId;
-	@NotBlank(message=AuthConstant.INVALID_REQUEST)
+	@NotBlank(message = AuthConstant.INVALID_REQUEST)
 	private String userName;
-	@NotBlank(message=AuthConstant.INVALID_REQUEST)
+	@NotBlank(message = AuthConstant.INVALID_REQUEST)
 	private String rid;
-	@NotBlank(message=AuthConstant.INVALID_REQUEST)
+	@NotBlank(message = AuthConstant.INVALID_REQUEST)
 	private String password;
 
 }

@@ -16,12 +16,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SignatureResponse {
-	
+
 	/**
 	 * encrypted data
 	 */
 	private String data;
-	
+
 	/**
 	 * response time.
 	 */

@@ -52,7 +52,5 @@ public class SignatureCertificate {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	@ApiModelProperty(notes = "Timestamp of expiry of public key", required = true)
 	private LocalDateTime expiryAt;
-	
-	
 
 }

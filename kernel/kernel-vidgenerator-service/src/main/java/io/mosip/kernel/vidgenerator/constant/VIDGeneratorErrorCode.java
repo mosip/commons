@@ -23,7 +23,8 @@ public enum VIDGeneratorErrorCode {
 	/**
 	 * VID_NOT_ISSUED
 	 */
-	VID_EXPIRY_DATE_PATTERN_INVALID("KER-VID-004", "Vid expiry date pattern is invalid, should be in yyyy-MM-dd'T'HH:mm:ss.SSS'Z' pattern"),
+	VID_EXPIRY_DATE_PATTERN_INVALID("KER-VID-004",
+			"Vid expiry date pattern is invalid, should be in yyyy-MM-dd'T'HH:mm:ss.SSS'Z' pattern"),
 	/**
 	 * INTERNAL_SERVER_ERROR
 	 */

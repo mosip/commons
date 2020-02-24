@@ -29,7 +29,8 @@ public interface SyncMasterDataService {
 	 * @throws ExecutionException   -this method will throw interrupted exception
 	 */
 	MasterDataResponseDto syncData(String regCenterId, String macAddress, String serialNumber,
-			LocalDateTime lastUpdated, LocalDateTime currentTimestamp,String keyIndex) throws InterruptedException, ExecutionException;
+			LocalDateTime lastUpdated, LocalDateTime currentTimestamp, String keyIndex)
+			throws InterruptedException, ExecutionException;
 
 	/**
 	 * Upload a public key to identify a machine

@@ -38,7 +38,7 @@ public class DeviceProviderManagementController {
 	private AuditUtil auditUtil;
 
 	@Autowired
-	private DeviceProviderService<ResponseDto, ValidateDeviceDto, ValidateDeviceHistoryDto, DeviceProviderDto, DeviceProviderExtnDto,DeviceProviderPutDto> deviceProviderService;
+	private DeviceProviderService<ResponseDto, ValidateDeviceDto, ValidateDeviceHistoryDto, DeviceProviderDto, DeviceProviderExtnDto, DeviceProviderPutDto> deviceProviderService;
 
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','ID_AUTHENTICATION','REGISTRATION_PROCESSOR','RESIDENT')")
 	@PostMapping("/validate")
@@ -78,7 +78,8 @@ public class DeviceProviderManagementController {
 		auditUtil.auditRequest(
 				MasterDataConstant.DEVICE_VALIDATION_HISTORY_SUCCESS + ValidateDeviceHistoryDto.class.getSimpleName(),
 				MasterDataConstant.AUDIT_SYSTEM,
-				MasterDataConstant.DEVICE_VALIDATION_HISTORY_SUCCESS_DESC + ValidateDeviceDto.class.getSimpleName(), "ADM-604");
+				MasterDataConstant.DEVICE_VALIDATION_HISTORY_SUCCESS_DESC + ValidateDeviceDto.class.getSimpleName(),
+				"ADM-604");
 
 		return responseWrapper;
 	}

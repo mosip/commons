@@ -6,6 +6,5 @@ import lombok.Data;
 public class RegisteredDevicePostDto {
 
 	private String deviceData;
-	
 
 }

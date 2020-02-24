@@ -65,7 +65,7 @@ public class CryptographicUtilTest {
 
 	@Value("${mosip.kernel.keymanager-service-decrypt-url}")
 	private String symmetricKeyUrl;
-	
+
 	@Autowired
 	private CryptomanagerUtils cryptomanagerUtil;
 
@@ -114,8 +114,9 @@ public class CryptographicUtilTest {
 				withSuccess(map.writeValueAsString(keymanagerPublicKeyResponseDto), MediaType.APPLICATION_JSON));
 		when(objectMapper.readValue(Mockito.anyString(), Mockito.eq(KeymanagerPublicKeyResponseDto.class)))
 				.thenThrow(new IOException("IOEXCEPTION"));
-		cryptomanagerUtil.getPublicKey(new CryptomanagerRequestDto("REGISTRATION", "ref123",
-				LocalDateTime.parse("2018-12-06T12:07:44.403"), "dXJ2aWw","ykrkpgjjtChlVdvDNJJEnQ","VGhpcyBpcyBzYW1wbGUgYWFk"));
+		cryptomanagerUtil.getPublicKey(
+				new CryptomanagerRequestDto("REGISTRATION", "ref123", LocalDateTime.parse("2018-12-06T12:07:44.403"),
+						"dXJ2aWw", "ykrkpgjjtChlVdvDNJJEnQ", "VGhpcyBpcyBzYW1wbGUgYWFk"));
 	}
 
 	@Test(expected = ParseResponseException.class)
@@ -126,94 +127,98 @@ public class CryptographicUtilTest {
 				withSuccess(map.writeValueAsString(keymanagerSymmetricKeyResponseDto), MediaType.APPLICATION_JSON));
 		when(objectMapper.readValue(Mockito.anyString(), Mockito.eq(KeymanagerSymmetricKeyResponseDto.class)))
 				.thenThrow(new IOException("IOEXCEPTION"));
-		when(cryptoCore.symmetricDecrypt(Mockito.any(), Mockito.any(),Mockito.any())).thenReturn("dXJ2aWw".getBytes());
-		cryptomanagerUtil.getDecryptedSymmetricKey(new CryptomanagerRequestDto("REGISTRATION", "ref123",
-				LocalDateTime.parse("2018-12-06T12:07:44.403"), "dXJ2aWwjS0VZX1NQTElUVEVSI3Vydmls","ykrkpgjjtChlVdvDNJJEnQ","VGhpcyBpcyBzYW1wbGUgYWFk"));
+		when(cryptoCore.symmetricDecrypt(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn("dXJ2aWw".getBytes());
+		cryptomanagerUtil.getDecryptedSymmetricKey(
+				new CryptomanagerRequestDto("REGISTRATION", "ref123", LocalDateTime.parse("2018-12-06T12:07:44.403"),
+						"dXJ2aWwjS0VZX1NQTElUVEVSI3Vydmls", "ykrkpgjjtChlVdvDNJJEnQ", "VGhpcyBpcyBzYW1wbGUgYWFk"));
 	}
-	
-	
-	@Test(expected=BadCredentialsException.class)
+
+	@Test(expected = BadCredentialsException.class)
 	public void testAuthenticationDecrypt() throws Exception {
-		server.expect(requestTo(symmetricKeyUrl)).andRespond(
-				withUnauthorizedRequest());
-		when(cryptoCore.symmetricDecrypt(Mockito.any(), Mockito.any(),Mockito.any())).thenReturn("dXJ2aWw".getBytes());
-		cryptomanagerUtil.getDecryptedSymmetricKey(new CryptomanagerRequestDto("REGISTRATION", "ref123",
-				LocalDateTime.parse("2018-12-06T12:07:44.403"), "dXJ2aWwjS0VZX1NQTElUVEVSI3Vydmls","ykrkpgjjtChlVdvDNJJEnQ","VGhpcyBpcyBzYW1wbGUgYWFk"));
+		server.expect(requestTo(symmetricKeyUrl)).andRespond(withUnauthorizedRequest());
+		when(cryptoCore.symmetricDecrypt(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn("dXJ2aWw".getBytes());
+		cryptomanagerUtil.getDecryptedSymmetricKey(
+				new CryptomanagerRequestDto("REGISTRATION", "ref123", LocalDateTime.parse("2018-12-06T12:07:44.403"),
+						"dXJ2aWwjS0VZX1NQTElUVEVSI3Vydmls", "ykrkpgjjtChlVdvDNJJEnQ", "VGhpcyBpcyBzYW1wbGUgYWFk"));
 	}
-	
-	@Test(expected=AccessDeniedException.class)
+
+	@Test(expected = AccessDeniedException.class)
 	public void testAuthorizationDecrypt() throws Exception {
-		server.expect(requestTo(symmetricKeyUrl)).andRespond(
-				withStatus(HttpStatus.FORBIDDEN));
-		when(cryptoCore.symmetricDecrypt(Mockito.any(), Mockito.any(),Mockito.any())).thenReturn("dXJ2aWw".getBytes());
-		cryptomanagerUtil.getDecryptedSymmetricKey(new CryptomanagerRequestDto("REGISTRATION", "ref123",
-				LocalDateTime.parse("2018-12-06T12:07:44.403"), "dXJ2aWwjS0VZX1NQTElUVEVSI3Vydmls","ykrkpgjjtChlVdvDNJJEnQ","VGhpcyBpcyBzYW1wbGUgYWFk"));
+		server.expect(requestTo(symmetricKeyUrl)).andRespond(withStatus(HttpStatus.FORBIDDEN));
+		when(cryptoCore.symmetricDecrypt(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn("dXJ2aWw".getBytes());
+		cryptomanagerUtil.getDecryptedSymmetricKey(
+				new CryptomanagerRequestDto("REGISTRATION", "ref123", LocalDateTime.parse("2018-12-06T12:07:44.403"),
+						"dXJ2aWwjS0VZX1NQTElUVEVSI3Vydmls", "ykrkpgjjtChlVdvDNJJEnQ", "VGhpcyBpcyBzYW1wbGUgYWFk"));
 	}
-	
-	@Test(expected=AuthNException.class)
+
+	@Test(expected = AuthNException.class)
 	public void testAuthenticationWithValidationListDecrypt() throws Exception {
-		ResponseWrapper<?> responseWrapper= new ResponseWrapper<>();
+		ResponseWrapper<?> responseWrapper = new ResponseWrapper<>();
 		List<ServiceError> errors = new ArrayList<>();
-		ServiceError error= new ServiceError("KER-CRY-401", "Authentication failed");
+		ServiceError error = new ServiceError("KER-CRY-401", "Authentication failed");
 		errors.add(error);
 		responseWrapper.setErrors(errors);
-		server.expect(requestTo(symmetricKeyUrl)).andRespond(
-				withUnauthorizedRequest().body(map.writeValueAsString(responseWrapper)));
-		when(cryptoCore.symmetricDecrypt(Mockito.any(), Mockito.any(),Mockito.any())).thenReturn("dXJ2aWw".getBytes());
-		cryptomanagerUtil.getDecryptedSymmetricKey(new CryptomanagerRequestDto("REGISTRATION", "ref123",
-				LocalDateTime.parse("2018-12-06T12:07:44.403"), "dXJ2aWwjS0VZX1NQTElUVEVSI3Vydmls","ykrkpgjjtChlVdvDNJJEnQ","VGhpcyBpcyBzYW1wbGUgYWFk"));
+		server.expect(requestTo(symmetricKeyUrl))
+				.andRespond(withUnauthorizedRequest().body(map.writeValueAsString(responseWrapper)));
+		when(cryptoCore.symmetricDecrypt(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn("dXJ2aWw".getBytes());
+		cryptomanagerUtil.getDecryptedSymmetricKey(
+				new CryptomanagerRequestDto("REGISTRATION", "ref123", LocalDateTime.parse("2018-12-06T12:07:44.403"),
+						"dXJ2aWwjS0VZX1NQTElUVEVSI3Vydmls", "ykrkpgjjtChlVdvDNJJEnQ", "VGhpcyBpcyBzYW1wbGUgYWFk"));
 	}
-	
-	@Test(expected=AuthZException.class)
+
+	@Test(expected = AuthZException.class)
 	public void testAuthWithValidationListDecrypt() throws Exception {
-		ResponseWrapper<?> responseWrapper= new ResponseWrapper<>();
+		ResponseWrapper<?> responseWrapper = new ResponseWrapper<>();
 		List<ServiceError> errors = new ArrayList<>();
-		ServiceError error= new ServiceError("KER-CRY-403", "Authorization failed");
+		ServiceError error = new ServiceError("KER-CRY-403", "Authorization failed");
 		errors.add(error);
 		responseWrapper.setErrors(errors);
-		server.expect(requestTo(symmetricKeyUrl)).andRespond(
-				withStatus(HttpStatus.FORBIDDEN).body(map.writeValueAsString(responseWrapper)));
-		when(cryptoCore.symmetricDecrypt(Mockito.any(), Mockito.any(),Mockito.any())).thenReturn("dXJ2aWw".getBytes());
-		cryptomanagerUtil.getDecryptedSymmetricKey(new CryptomanagerRequestDto("REGISTRATION", "ref123",
-				LocalDateTime.parse("2018-12-06T12:07:44.403"), "dXJ2aWwjS0VZX1NQTElUVEVSI3Vydmls","ykrkpgjjtChlVdvDNJJEnQ","VGhpcyBpcyBzYW1wbGUgYWFk"));
+		server.expect(requestTo(symmetricKeyUrl))
+				.andRespond(withStatus(HttpStatus.FORBIDDEN).body(map.writeValueAsString(responseWrapper)));
+		when(cryptoCore.symmetricDecrypt(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn("dXJ2aWw".getBytes());
+		cryptomanagerUtil.getDecryptedSymmetricKey(
+				new CryptomanagerRequestDto("REGISTRATION", "ref123", LocalDateTime.parse("2018-12-06T12:07:44.403"),
+						"dXJ2aWwjS0VZX1NQTElUVEVSI3Vydmls", "ykrkpgjjtChlVdvDNJJEnQ", "VGhpcyBpcyBzYW1wbGUgYWFk"));
 	}
-	
-	@Test(expected=CryptoManagerSerivceException.class)
+
+	@Test(expected = CryptoManagerSerivceException.class)
 	public void testInternelServerException() throws Exception {
-		server.expect(requestTo(symmetricKeyUrl)).andRespond(
-				withServerError());
-	   when(cryptoCore.symmetricDecrypt(Mockito.any(), Mockito.any(),Mockito.any())).thenReturn("dXJ2aWw".getBytes());
-		cryptomanagerUtil.getDecryptedSymmetricKey(new CryptomanagerRequestDto("REGISTRATION", "ref123",
-				LocalDateTime.parse("2018-12-06T12:07:44.403"), "dXJ2aWwjS0VZX1NQTElUVEVSI3Vydmls","ykrkpgjjtChlVdvDNJJEnQ","VGhpcyBpcyBzYW1wbGUgYWFk"));
+		server.expect(requestTo(symmetricKeyUrl)).andRespond(withServerError());
+		when(cryptoCore.symmetricDecrypt(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn("dXJ2aWw".getBytes());
+		cryptomanagerUtil.getDecryptedSymmetricKey(
+				new CryptomanagerRequestDto("REGISTRATION", "ref123", LocalDateTime.parse("2018-12-06T12:07:44.403"),
+						"dXJ2aWwjS0VZX1NQTElUVEVSI3Vydmls", "ykrkpgjjtChlVdvDNJJEnQ", "VGhpcyBpcyBzYW1wbGUgYWFk"));
 	}
-	
-	@Test(expected=KeymanagerServiceException.class)
+
+	@Test(expected = KeymanagerServiceException.class)
 	public void testInternelServerWithValidationListException() throws Exception {
-		ResponseWrapper<?> responseWrapper= new ResponseWrapper<>();
+		ResponseWrapper<?> responseWrapper = new ResponseWrapper<>();
 		List<ServiceError> errors = new ArrayList<>();
-		ServiceError error= new ServiceError("KER-CRY-500", "Internal Server Error");
+		ServiceError error = new ServiceError("KER-CRY-500", "Internal Server Error");
 		errors.add(error);
 		responseWrapper.setErrors(errors);
-		server.expect(requestTo(symmetricKeyUrl)).andRespond(
-				withServerError().body(map.writeValueAsString(responseWrapper)));
-	    when(cryptoCore.symmetricDecrypt(Mockito.any(), Mockito.any(),Mockito.any())).thenReturn("dXJ2aWw".getBytes());
-		cryptomanagerUtil.getDecryptedSymmetricKey(new CryptomanagerRequestDto("REGISTRATION", "ref123",
-				LocalDateTime.parse("2018-12-06T12:07:44.403"), "dXJ2aWwjS0VZX1NQTElUVEVSI3Vydmls","ykrkpgjjtChlVdvDNJJEnQ","VGhpcyBpcyBzYW1wbGUgYWFk"));
+		server.expect(requestTo(symmetricKeyUrl))
+				.andRespond(withServerError().body(map.writeValueAsString(responseWrapper)));
+		when(cryptoCore.symmetricDecrypt(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn("dXJ2aWw".getBytes());
+		cryptomanagerUtil.getDecryptedSymmetricKey(
+				new CryptomanagerRequestDto("REGISTRATION", "ref123", LocalDateTime.parse("2018-12-06T12:07:44.403"),
+						"dXJ2aWwjS0VZX1NQTElUVEVSI3Vydmls", "ykrkpgjjtChlVdvDNJJEnQ", "VGhpcyBpcyBzYW1wbGUgYWFk"));
 	}
-	
-	@Test(expected=KeymanagerServiceException.class)
+
+	@Test(expected = KeymanagerServiceException.class)
 	public void testPublicKeyInternelServerWithValidationListException() throws Exception {
-		ResponseWrapper<?> responseWrapper= new ResponseWrapper<>();
+		ResponseWrapper<?> responseWrapper = new ResponseWrapper<>();
 		List<ServiceError> errors = new ArrayList<>();
-		ServiceError error= new ServiceError("KER-CRY-500", "Internal Server Error");
+		ServiceError error = new ServiceError("KER-CRY-500", "Internal Server Error");
 		errors.add(error);
 		responseWrapper.setErrors(errors);
-		server.expect(requestTo(builder.buildAndExpand(uriParams).toUriString())).andRespond(
-				withServerError().body(map.writeValueAsString(responseWrapper)));
+		server.expect(requestTo(builder.buildAndExpand(uriParams).toUriString()))
+				.andRespond(withServerError().body(map.writeValueAsString(responseWrapper)));
 		when(objectMapper.readValue(Mockito.anyString(), Mockito.eq(KeymanagerPublicKeyResponseDto.class)))
 				.thenThrow(new IOException("IOEXCEPTION"));
-		cryptomanagerUtil.getPublicKey(new CryptomanagerRequestDto("REGISTRATION", "ref123",
-				LocalDateTime.parse("2018-12-06T12:07:44.403"), "dXJ2aWw","ykrkpgjjtChlVdvDNJJEnQ","VGhpcyBpcyBzYW1wbGUgYWFk"));
+		cryptomanagerUtil.getPublicKey(
+				new CryptomanagerRequestDto("REGISTRATION", "ref123", LocalDateTime.parse("2018-12-06T12:07:44.403"),
+						"dXJ2aWw", "ykrkpgjjtChlVdvDNJJEnQ", "VGhpcyBpcyBzYW1wbGUgYWFk"));
 	}
 
 }

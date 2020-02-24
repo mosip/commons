@@ -74,7 +74,7 @@ public class CbeffValidator {
 						throw new CbeffException("Type value needs to be provided");
 					}
 					if (!validateFormatType(Long.valueOf(bdbInfo.getFormat().getType()), singleTypeList)) {
-					throw new CbeffException("Patron Format type is invalid");
+						throw new CbeffException("Patron Format type is invalid");
 					}
 				} else {
 					throw new CbeffException("BDB information can't be empty");
@@ -166,10 +166,11 @@ public class CbeffValidator {
 		return savedData;
 	}
 
-	/*private static byte[] readXSD(String name) throws IOException {
-		byte[] fileContent = Files.readAllBytes(Paths.get(tempPath + "/schema/" + name + ".xsd"));
-		return fileContent;
-	}*/
+	/*
+	 * private static byte[] readXSD(String name) throws IOException { byte[]
+	 * fileContent = Files.readAllBytes(Paths.get(tempPath + "/schema/" + name +
+	 * ".xsd")); return fileContent; }
+	 */
 
 	/**
 	 * Method used for BIR Type
@@ -393,7 +394,7 @@ public class CbeffValidator {
 		}
 		return bdbMap;
 	}
-	
+
 	public static List<BIR> convertBIRTypeToBIR(List<BIRType> birType) {
 		List<BIR> birTypeList = getBIRList(birType);
 		return birTypeList;
@@ -401,19 +402,16 @@ public class CbeffValidator {
 
 	private static List<BIR> getBIRList(List<BIRType> birTypeList) {
 		List<BIR> birList = new ArrayList<>();
-		for(BIRType birType:birTypeList)
-		{
+		for (BIRType birType : birTypeList) {
 			RegistryIDType format = new RegistryIDType();
 			format.setOrganization(birType.getBDBInfo().getFormat().getOrganization());
 			format.setType(birType.getBDBInfo().getFormat().getType());
 			BIR bir = new BIR.BIRBuilder().withBdb(birType.getBDB()).withElement(birType.getAny())
 					.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(birType.getBIRInfo().isIntegrity()).build())
 					.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format)
-							.withQuality(birType.getBDBInfo().getQuality())
-							.withType(birType.getBDBInfo().getType())
+							.withQuality(birType.getBDBInfo().getQuality()).withType(birType.getBDBInfo().getType())
 							.withSubtype(birType.getBDBInfo().getSubtype())
-							.withPurpose(birType.getBDBInfo().getPurpose())
-							.withLevel(birType.getBDBInfo().getLevel())
+							.withPurpose(birType.getBDBInfo().getPurpose()).withLevel(birType.getBDBInfo().getLevel())
 							.withCreationDate(birType.getBDBInfo().getCreationDate()).build())
 					.build();
 			birList.add(bir);
@@ -429,16 +427,13 @@ public class CbeffValidator {
 		JAXBElement<BIRType> jaxBir = unmarshaller.unmarshal(new StreamSource(new ByteArrayInputStream(xmlBytes)),
 				BIRType.class);
 		BIRType bir = jaxBir.getValue();
-		for(BIRType birType : bir.getBIR())
-		{
+		for (BIRType birType : bir.getBIR()) {
 			if (type != null) {
 				singleType = getSingleType(type);
 				BDBInfoType bdbInfo = birType.getBDBInfo();
-				if(bdbInfo!=null)
-				{
+				if (bdbInfo != null) {
 					List<SingleType> singleTypeList = bdbInfo.getType();
-					if(singleTypeList!=null && singleTypeList.contains(singleType))
-					{
+					if (singleTypeList != null && singleTypeList.contains(singleType)) {
 						updatedBIRList.add(birType);
 					}
 				}

@@ -23,7 +23,7 @@ import io.mosip.kernel.masterdata.repository.RegistrationCenterRepository;
 
 @Component
 public class DeviceUtils {
-	
+
 	@Autowired
 	private DeviceTypeRepository deviceTypeRepository;
 

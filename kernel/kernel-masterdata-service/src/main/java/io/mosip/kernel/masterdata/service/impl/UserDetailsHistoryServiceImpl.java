@@ -55,7 +55,8 @@ public class UserDetailsHistoryServiceImpl implements UserDetailsHistoryService 
 		try {
 			userDetails = userDetailsHistoryRepository.getByUserIdAndTimestamp(userId, localDateTime);
 		} catch (DataAccessLayerException | DataAccessException e) {
-			throw new MasterDataServiceException(UserDetailsHistoryErrorCode.USER_HISTORY_FETCH_EXCEPTION.getErrorCode(),
+			throw new MasterDataServiceException(
+					UserDetailsHistoryErrorCode.USER_HISTORY_FETCH_EXCEPTION.getErrorCode(),
 					UserDetailsHistoryErrorCode.USER_HISTORY_FETCH_EXCEPTION.getErrorMessage()
 							+ ExceptionUtils.parseException(e));
 		}

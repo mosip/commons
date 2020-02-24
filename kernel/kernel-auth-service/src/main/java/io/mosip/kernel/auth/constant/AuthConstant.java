@@ -32,10 +32,10 @@ public class AuthConstant {
 	public static final String OTP_SENT_MESSAGE = "OTP Sent Successfully";
 
 	public static final String OTP_VALIDATION_MESSAGE = "OTP validated Successfully";
-	
-	public static final String AUTH_COOOKIE_HEADER="Authorization";
-	
-	public static final String AUTH_HEADER="Authorization=";
+
+	public static final String AUTH_COOOKIE_HEADER = "Authorization";
+
+	public static final String AUTH_HEADER = "Authorization=";
 
 	public static final String TOKEN_INVALID_MESSAGE = "Token has been invalidated successfully";
 
@@ -48,27 +48,27 @@ public class AuthConstant {
 	public static final int RETURN_EXP_TIME = -10;
 
 	public static final String ALL_CHANNELS_MESSAGE = "OTP message sent across all the channels";
-	
+
 	public static final String SUCCESS_STATUS = "success";
-	
+
 	public static final String IDA = "ida";
-	
-	public static final String COOKIE="Cookie";
+
+	public static final String COOKIE = "Cookie";
 
 	public static final String FAILURE_STATUS = "failure";
-	
-    public static final String LDAP_INITAL_CONTEXT_FACTORY="com.sun.jndi.ldap.LdapCtxFactory";
-	
-	public static final String PWD_ACCOUNT_LOCKED_TIME_ATTRIBUTE="pwdAccountLockedTime";
-	
-	public static final String PWD_FAILURE_TIME_ATTRIBUTE="pwdFailureTime";
-	
+
+	public static final String LDAP_INITAL_CONTEXT_FACTORY = "com.sun.jndi.ldap.LdapCtxFactory";
+
+	public static final String PWD_ACCOUNT_LOCKED_TIME_ATTRIBUTE = "pwdAccountLockedTime";
+
+	public static final String PWD_FAILURE_TIME_ATTRIBUTE = "pwdFailureTime";
+
 	public static final String INVALID_REQUEST = "should not be null or empty";
 
 	public static final String WHITESPACE = " ";
-	
+
 	public static final String SMS_NOTIFYTYPE = "SMS";
-	
+
 	public static final String EMAIL_NOTIFYTYPE = "EMAIL";
 
 	public static final String CLIENT_CREDENTIALS = "client_credentials";

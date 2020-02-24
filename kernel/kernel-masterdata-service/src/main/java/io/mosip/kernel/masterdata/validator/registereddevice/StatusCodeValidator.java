@@ -19,13 +19,17 @@ import lombok.Data;
  */
 @Data
 public class StatusCodeValidator implements ConstraintValidator<ValidStatusCode, String> {
-	
 
-	/*private static final String REGISTERED = "registered";
-	private static final String RETIRED = "retired";
-	private static final String REVOKED = "revoked";*/
+	/*
+	 * private static final String REGISTERED = "registered"; private static final
+	 * String RETIRED = "retired"; private static final String REVOKED = "revoked";
+	 */
 
-	/*private static final String STATUSARR[] = { RegisteredDeviceConstant.REGISTERED, RegisteredDeviceConstant.RETIRED, RegisteredDeviceConstant.REVOKED }*/;
+	/*
+	 * private static final String STATUSARR[] = {
+	 * RegisteredDeviceConstant.REGISTERED, RegisteredDeviceConstant.RETIRED,
+	 * RegisteredDeviceConstant.REVOKED }
+	 */;
 
 	/*
 	 * (non-Javadoc)

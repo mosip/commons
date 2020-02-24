@@ -9,10 +9,8 @@ import io.mosip.kernel.masterdata.dto.postresponse.UserDetailsHistoryResponseDto
  */
 public interface UserDetailsHistoryService {
 	/**
-	 * @param userId
-	 *            input from user
-	 * @param effDTimes
-	 *            input from user
+	 * @param userId    input from user
+	 * @param effDTimes input from user
 	 * @return user detail DTO for the particular input data
 	 */
 	UserDetailsHistoryResponseDto getByUserIdAndTimestamp(String userId, String effDTimes);

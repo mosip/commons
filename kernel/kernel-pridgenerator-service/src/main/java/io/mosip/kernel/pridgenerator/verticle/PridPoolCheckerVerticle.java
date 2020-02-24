@@ -44,7 +44,8 @@ public class PridPoolCheckerVerticle extends AbstractVerticle {
 		EventBus eventBus = vertx.eventBus();
 		MessageConsumer<String> checkPoolConsumer = eventBus.consumer(EventType.CHECKPOOL);
 		DeliveryOptions deliveryOptions = new DeliveryOptions();
-		deliveryOptions.setSendTimeout(environment.getProperty("mosip.kernel.prid.pool-population-timeout", Long.class));
+		deliveryOptions
+				.setSendTimeout(environment.getProperty("mosip.kernel.prid.pool-population-timeout", Long.class));
 		checkPoolConsumer.handler(handler -> {
 			long noOfFreeprids = PridService.fetchPridCount(PridLifecycleStatus.AVAILABLE);
 			LOGGER.info("no of prid free present are {}", noOfFreeprids);
@@ -67,7 +68,7 @@ public class PridPoolCheckerVerticle extends AbstractVerticle {
 
 		MessageConsumer<String> initPoolConsumer = eventBus.consumer(EventType.INITPOOL);
 		initPoolConsumer.handler(initPoolHandler -> {
-			long start =System.currentTimeMillis();
+			long start = System.currentTimeMillis();
 			long noOfFreeprids = PridService.fetchPridCount(PridLifecycleStatus.AVAILABLE);
 			LOGGER.info("no of prid free present are {}", noOfFreeprids);
 			LOGGER.info("value of threshold is {} and lock is {}", threshold, locked.get());
@@ -92,19 +93,19 @@ public class PridPoolCheckerVerticle extends AbstractVerticle {
 		});
 	}
 
-	private  void deployHttpVerticle(long start) {
-		Verticle httpVerticle =  new PridFetcherVerticle(context);
+	private void deployHttpVerticle(long start) {
+		Verticle httpVerticle = new PridFetcherVerticle(context);
 		DeploymentOptions opts = new DeploymentOptions();
 		vertx.deployVerticle(httpVerticle, opts, res -> {
 			if (res.failed()) {
-				LOGGER.info("Failed to deploy verticle " + httpVerticle.getClass().getSimpleName()+" "+res.cause());
-			} else if(res.succeeded()) {
+				LOGGER.info("Failed to deploy verticle " + httpVerticle.getClass().getSimpleName() + " " + res.cause());
+			} else if (res.succeeded()) {
 				LOGGER.info("population of pool is done starting fetcher verticle");
-			    LOGGER.info("Starting pridgenerator service... ");
-			    LOGGER.info("service took {} ms to pool and start",(System.currentTimeMillis()-start));
-			    LOGGER.info("Deployed verticle " + httpVerticle.getClass().getSimpleName());
+				LOGGER.info("Starting pridgenerator service... ");
+				LOGGER.info("service took {} ms to pool and start", (System.currentTimeMillis() - start));
+				LOGGER.info("Deployed verticle " + httpVerticle.getClass().getSimpleName());
 			}
 		});
 
-}
+	}
 }

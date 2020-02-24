@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegistrationCenterPostResponseDto {
-	private List<RegistrationCenterExtnDto> registrationCenters ;
+	private List<RegistrationCenterExtnDto> registrationCenters;
 	private List<RegCenterPostReqDto> constraintViolatedDataList;
 	private List<ServiceError> constraintViolationError;
 }

@@ -5,7 +5,6 @@
 // Generated on: 2019.05.13 at 03:22:53 PM IST 
 //
 
-
 package io.mosip.kernel.core.cbeffutil.jaxbclasses;
 
 import java.time.LocalDateTime;
@@ -22,11 +21,13 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import io.mosip.kernel.core.cbeffutil.common.DateAdapter;
 
-
 /**
- * <p>Java class for BDBInfoType complex type.
+ * <p>
+ * Java class for BDBInfoType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="BDBInfoType">
@@ -59,333 +60,284 @@ import io.mosip.kernel.core.cbeffutil.common.DateAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "BDBInfoType", propOrder = {
-    "challengeResponse",
-    "index",
-    "format",
-    "encryption",
-    "creationDate",
-    "notValidBefore",
-    "notValidAfter",
-    "type",
-    "subtype",
-    "level",
-    "product",
-    "captureDevice",
-    "featureExtractionAlgorithm",
-    "comparisonAlgorithm",
-    "compressionAlgorithm",
-    "purpose",
-    "quality"
-})
+@XmlType(name = "BDBInfoType", propOrder = { "challengeResponse", "index", "format", "encryption", "creationDate",
+		"notValidBefore", "notValidAfter", "type", "subtype", "level", "product", "captureDevice",
+		"featureExtractionAlgorithm", "comparisonAlgorithm", "compressionAlgorithm", "purpose", "quality" })
 public class BDBInfoType {
 
-    @XmlElement(name = "ChallengeResponse")
-    protected byte[] challengeResponse;
-    @XmlElement(name = "Index")
-    protected String index;
-    @XmlElement(name = "Format")
-    protected RegistryIDType format;
-    @XmlElement(name = "Encryption")
-    protected Boolean encryption;
-    @XmlElement(name = "CreationDate")
-    @XmlSchemaType(name = "dateTime")
-    @XmlJavaTypeAdapter(DateAdapter.class)
-    protected LocalDateTime creationDate;
-    @XmlElement(name = "NotValidBefore")
-    @XmlSchemaType(name = "dateTime")
-    @XmlJavaTypeAdapter(DateAdapter.class)
-    protected LocalDateTime notValidBefore;
-    @XmlElement(name = "NotValidAfter")
-    @XmlSchemaType(name = "dateTime")
-    @XmlJavaTypeAdapter(DateAdapter.class)
-    protected LocalDateTime notValidAfter;
-    @XmlList
-    @XmlElement(name = "Type")
-    protected List<SingleType> type;
-    @XmlList
-    @XmlElement(name = "Subtype")
-    protected List<String> subtype;
-    @XmlElement(name = "Level")
-    @XmlSchemaType(name = "string")
-    protected ProcessedLevelType level;
-    @XmlElement(name = "Product")
-    protected RegistryIDType product;
-    @XmlElement(name = "CaptureDevice")
-    protected RegistryIDType captureDevice;
-    @XmlElement(name = "FeatureExtractionAlgorithm")
-    protected RegistryIDType featureExtractionAlgorithm;
-    @XmlElement(name = "ComparisonAlgorithm")
-    protected RegistryIDType comparisonAlgorithm;
-    @XmlElement(name = "CompressionAlgorithm")
-    protected RegistryIDType compressionAlgorithm;
-    @XmlElement(name = "Purpose")
-    @XmlSchemaType(name = "string")
-    protected PurposeType purpose;
-    @XmlElement(name = "Quality")
-    protected QualityType quality;
+	@XmlElement(name = "ChallengeResponse")
+	protected byte[] challengeResponse;
+	@XmlElement(name = "Index")
+	protected String index;
+	@XmlElement(name = "Format")
+	protected RegistryIDType format;
+	@XmlElement(name = "Encryption")
+	protected Boolean encryption;
+	@XmlElement(name = "CreationDate")
+	@XmlSchemaType(name = "dateTime")
+	@XmlJavaTypeAdapter(DateAdapter.class)
+	protected LocalDateTime creationDate;
+	@XmlElement(name = "NotValidBefore")
+	@XmlSchemaType(name = "dateTime")
+	@XmlJavaTypeAdapter(DateAdapter.class)
+	protected LocalDateTime notValidBefore;
+	@XmlElement(name = "NotValidAfter")
+	@XmlSchemaType(name = "dateTime")
+	@XmlJavaTypeAdapter(DateAdapter.class)
+	protected LocalDateTime notValidAfter;
+	@XmlList
+	@XmlElement(name = "Type")
+	protected List<SingleType> type;
+	@XmlList
+	@XmlElement(name = "Subtype")
+	protected List<String> subtype;
+	@XmlElement(name = "Level")
+	@XmlSchemaType(name = "string")
+	protected ProcessedLevelType level;
+	@XmlElement(name = "Product")
+	protected RegistryIDType product;
+	@XmlElement(name = "CaptureDevice")
+	protected RegistryIDType captureDevice;
+	@XmlElement(name = "FeatureExtractionAlgorithm")
+	protected RegistryIDType featureExtractionAlgorithm;
+	@XmlElement(name = "ComparisonAlgorithm")
+	protected RegistryIDType comparisonAlgorithm;
+	@XmlElement(name = "CompressionAlgorithm")
+	protected RegistryIDType compressionAlgorithm;
+	@XmlElement(name = "Purpose")
+	@XmlSchemaType(name = "string")
+	protected PurposeType purpose;
+	@XmlElement(name = "Quality")
+	protected QualityType quality;
 
-    /**
-     * Gets the value of the challengeResponse property.
-     * 
-     * @return
-     *     possible object is
-     *     byte[]
-     */
-    public byte[] getChallengeResponse() {
-        return challengeResponse;
-    }
+	/**
+	 * Gets the value of the challengeResponse property.
+	 * 
+	 * @return possible object is byte[]
+	 */
+	public byte[] getChallengeResponse() {
+		return challengeResponse;
+	}
 
-    /**
-     * Sets the value of the challengeResponse property.
-     * 
-     * @param value
-     *     allowed object is
-     *     byte[]
-     */
-    public void setChallengeResponse(byte[] value) {
-        this.challengeResponse = value;
-    }
+	/**
+	 * Sets the value of the challengeResponse property.
+	 * 
+	 * @param value allowed object is byte[]
+	 */
+	public void setChallengeResponse(byte[] value) {
+		this.challengeResponse = value;
+	}
 
-    /**
-     * Gets the value of the index property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getIndex() {
-        return index;
-    }
+	/**
+	 * Gets the value of the index property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getIndex() {
+		return index;
+	}
 
-    /**
-     * Sets the value of the index property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setIndex(String value) {
-        this.index = value;
-    }
+	/**
+	 * Sets the value of the index property.
+	 * 
+	 * @param value allowed object is {@link String }
+	 * 
+	 */
+	public void setIndex(String value) {
+		this.index = value;
+	}
 
-    /**
-     * Gets the value of the format property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link RegistryIDType }
-     *     
-     */
-    public RegistryIDType getFormat() {
-        return format;
-    }
+	/**
+	 * Gets the value of the format property.
+	 * 
+	 * @return possible object is {@link RegistryIDType }
+	 * 
+	 */
+	public RegistryIDType getFormat() {
+		return format;
+	}
 
-    /**
-     * Sets the value of the format property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link RegistryIDType }
-     *     
-     */
-    public void setFormat(RegistryIDType value) {
-        this.format = value;
-    }
+	/**
+	 * Sets the value of the format property.
+	 * 
+	 * @param value allowed object is {@link RegistryIDType }
+	 * 
+	 */
+	public void setFormat(RegistryIDType value) {
+		this.format = value;
+	}
 
-    /**
-     * Gets the value of the encryption property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
-     */
-    public Boolean isEncryption() {
-        return encryption;
-    }
+	/**
+	 * Gets the value of the encryption property.
+	 * 
+	 * @return possible object is {@link Boolean }
+	 * 
+	 */
+	public Boolean isEncryption() {
+		return encryption;
+	}
 
-    /**
-     * Sets the value of the encryption property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
-     */
-    public void setEncryption(Boolean value) {
-        this.encryption = value;
-    }
+	/**
+	 * Sets the value of the encryption property.
+	 * 
+	 * @param value allowed object is {@link Boolean }
+	 * 
+	 */
+	public void setEncryption(Boolean value) {
+		this.encryption = value;
+	}
 
-    /**
-     * Gets the value of the creationDate property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link LocalDateTime }
-     *     
-     */
-    public LocalDateTime getCreationDate() {
-        return creationDate;
-    }
+	/**
+	 * Gets the value of the creationDate property.
+	 * 
+	 * @return possible object is {@link LocalDateTime }
+	 * 
+	 */
+	public LocalDateTime getCreationDate() {
+		return creationDate;
+	}
 
-    /**
-     * Sets the value of the creationDate property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link LocalDateTime }
-     *     
-     */
-    public void setCreationDate(LocalDateTime value) {
-        this.creationDate = value;
-    }
+	/**
+	 * Sets the value of the creationDate property.
+	 * 
+	 * @param value allowed object is {@link LocalDateTime }
+	 * 
+	 */
+	public void setCreationDate(LocalDateTime value) {
+		this.creationDate = value;
+	}
 
-    /**
-     * Gets the value of the notValidBefore property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link LocalDateTime }
-     *     
-     */
-    public LocalDateTime getNotValidBefore() {
-        return notValidBefore;
-    }
+	/**
+	 * Gets the value of the notValidBefore property.
+	 * 
+	 * @return possible object is {@link LocalDateTime }
+	 * 
+	 */
+	public LocalDateTime getNotValidBefore() {
+		return notValidBefore;
+	}
 
-    /**
-     * Sets the value of the notValidBefore property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link LocalDateTime }
-     *     
-     */
-    public void setNotValidBefore(LocalDateTime value) {
-        this.notValidBefore = value;
-    }
+	/**
+	 * Sets the value of the notValidBefore property.
+	 * 
+	 * @param value allowed object is {@link LocalDateTime }
+	 * 
+	 */
+	public void setNotValidBefore(LocalDateTime value) {
+		this.notValidBefore = value;
+	}
 
-    /**
-     * Gets the value of the notValidAfter property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link LocalDateTime }
-     *     
-     */
-    public LocalDateTime getNotValidAfter() {
-        return notValidAfter;
-    }
+	/**
+	 * Gets the value of the notValidAfter property.
+	 * 
+	 * @return possible object is {@link LocalDateTime }
+	 * 
+	 */
+	public LocalDateTime getNotValidAfter() {
+		return notValidAfter;
+	}
 
-    /**
-     * Sets the value of the notValidAfter property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link LocalDateTime }
-     *     
-     */
-    public void setNotValidAfter(LocalDateTime value) {
-        this.notValidAfter = value;
-    }
+	/**
+	 * Sets the value of the notValidAfter property.
+	 * 
+	 * @param value allowed object is {@link LocalDateTime }
+	 * 
+	 */
+	public void setNotValidAfter(LocalDateTime value) {
+		this.notValidAfter = value;
+	}
 
-    /**
-     * Gets the value of the type property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the type property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getType().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link SingleTypeType }
-     * 
-     * 
-     */
-    public List<SingleType> getType() {
-        if (type == null) {
-            type = new ArrayList<SingleType>();
-        }
-        return this.type;
-    }
+	/**
+	 * Gets the value of the type property.
+	 * 
+	 * <p>
+	 * This accessor method returns a reference to the live list, not a snapshot.
+	 * Therefore any modification you make to the returned list will be present
+	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
+	 * for the type property.
+	 * 
+	 * <p>
+	 * For example, to add a new item, do as follows:
+	 * 
+	 * <pre>
+	 * getType().add(newItem);
+	 * </pre>
+	 * 
+	 * 
+	 * <p>
+	 * Objects of the following type(s) are allowed in the list
+	 * {@link SingleTypeType }
+	 * 
+	 * 
+	 */
+	public List<SingleType> getType() {
+		if (type == null) {
+			type = new ArrayList<SingleType>();
+		}
+		return this.type;
+	}
 
-    /**
-     * Gets the value of the subtype property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the subtype property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getSubtype().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link String }
-     * 
-     * 
-     */
-    public List<String> getSubtype() {
-        if (subtype == null) {
-            subtype = new ArrayList<String>();
-        }
-        return this.subtype;
-    }
+	/**
+	 * Gets the value of the subtype property.
+	 * 
+	 * <p>
+	 * This accessor method returns a reference to the live list, not a snapshot.
+	 * Therefore any modification you make to the returned list will be present
+	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
+	 * for the subtype property.
+	 * 
+	 * <p>
+	 * For example, to add a new item, do as follows:
+	 * 
+	 * <pre>
+	 * getSubtype().add(newItem);
+	 * </pre>
+	 * 
+	 * 
+	 * <p>
+	 * Objects of the following type(s) are allowed in the list {@link String }
+	 * 
+	 * 
+	 */
+	public List<String> getSubtype() {
+		if (subtype == null) {
+			subtype = new ArrayList<String>();
+		}
+		return this.subtype;
+	}
 
-    /**
-     * Gets the value of the level property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ProcessedLevelType }
-     *     
-     */
-    public ProcessedLevelType getLevel() {
-        return level;
-    }
+	/**
+	 * Gets the value of the level property.
+	 * 
+	 * @return possible object is {@link ProcessedLevelType }
+	 * 
+	 */
+	public ProcessedLevelType getLevel() {
+		return level;
+	}
 
-    /**
-     * Sets the value of the level property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ProcessedLevelType }
-     *     
-     */
-    public void setLevel(ProcessedLevelType value) {
-        this.level = value;
-    }
+	/**
+	 * Sets the value of the level property.
+	 * 
+	 * @param value allowed object is {@link ProcessedLevelType }
+	 * 
+	 */
+	public void setLevel(ProcessedLevelType value) {
+		this.level = value;
+	}
 
-    /**
-     * Gets the value of the product property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link RegistryIDType }
-     *     
-     */
-    public RegistryIDType getProduct() {
-        return product;
-    }
+	/**
+	 * Gets the value of the product property.
+	 * 
+	 * @return possible object is {@link RegistryIDType }
+	 * 
+	 */
+	public RegistryIDType getProduct() {
+		return product;
+	}
 
-    /**
+	/**
 	 * @param type the type to set
 	 */
 	public void setType(List<SingleType> type) {
@@ -400,159 +352,133 @@ public class BDBInfoType {
 	}
 
 	/**
-     * Sets the value of the product property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link RegistryIDType }
-     *     
-     */
-    public void setProduct(RegistryIDType value) {
-        this.product = value;
-    }
+	 * Sets the value of the product property.
+	 * 
+	 * @param value allowed object is {@link RegistryIDType }
+	 * 
+	 */
+	public void setProduct(RegistryIDType value) {
+		this.product = value;
+	}
 
-    /**
-     * Gets the value of the captureDevice property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link RegistryIDType }
-     *     
-     */
-    public RegistryIDType getCaptureDevice() {
-        return captureDevice;
-    }
+	/**
+	 * Gets the value of the captureDevice property.
+	 * 
+	 * @return possible object is {@link RegistryIDType }
+	 * 
+	 */
+	public RegistryIDType getCaptureDevice() {
+		return captureDevice;
+	}
 
-    /**
-     * Sets the value of the captureDevice property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link RegistryIDType }
-     *     
-     */
-    public void setCaptureDevice(RegistryIDType value) {
-        this.captureDevice = value;
-    }
+	/**
+	 * Sets the value of the captureDevice property.
+	 * 
+	 * @param value allowed object is {@link RegistryIDType }
+	 * 
+	 */
+	public void setCaptureDevice(RegistryIDType value) {
+		this.captureDevice = value;
+	}
 
-    /**
-     * Gets the value of the featureExtractionAlgorithm property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link RegistryIDType }
-     *     
-     */
-    public RegistryIDType getFeatureExtractionAlgorithm() {
-        return featureExtractionAlgorithm;
-    }
+	/**
+	 * Gets the value of the featureExtractionAlgorithm property.
+	 * 
+	 * @return possible object is {@link RegistryIDType }
+	 * 
+	 */
+	public RegistryIDType getFeatureExtractionAlgorithm() {
+		return featureExtractionAlgorithm;
+	}
 
-    /**
-     * Sets the value of the featureExtractionAlgorithm property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link RegistryIDType }
-     *     
-     */
-    public void setFeatureExtractionAlgorithm(RegistryIDType value) {
-        this.featureExtractionAlgorithm = value;
-    }
+	/**
+	 * Sets the value of the featureExtractionAlgorithm property.
+	 * 
+	 * @param value allowed object is {@link RegistryIDType }
+	 * 
+	 */
+	public void setFeatureExtractionAlgorithm(RegistryIDType value) {
+		this.featureExtractionAlgorithm = value;
+	}
 
-    /**
-     * Gets the value of the comparisonAlgorithm property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link RegistryIDType }
-     *     
-     */
-    public RegistryIDType getComparisonAlgorithm() {
-        return comparisonAlgorithm;
-    }
+	/**
+	 * Gets the value of the comparisonAlgorithm property.
+	 * 
+	 * @return possible object is {@link RegistryIDType }
+	 * 
+	 */
+	public RegistryIDType getComparisonAlgorithm() {
+		return comparisonAlgorithm;
+	}
 
-    /**
-     * Sets the value of the comparisonAlgorithm property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link RegistryIDType }
-     *     
-     */
-    public void setComparisonAlgorithm(RegistryIDType value) {
-        this.comparisonAlgorithm = value;
-    }
+	/**
+	 * Sets the value of the comparisonAlgorithm property.
+	 * 
+	 * @param value allowed object is {@link RegistryIDType }
+	 * 
+	 */
+	public void setComparisonAlgorithm(RegistryIDType value) {
+		this.comparisonAlgorithm = value;
+	}
 
-    /**
-     * Gets the value of the compressionAlgorithm property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link RegistryIDType }
-     *     
-     */
-    public RegistryIDType getCompressionAlgorithm() {
-        return compressionAlgorithm;
-    }
+	/**
+	 * Gets the value of the compressionAlgorithm property.
+	 * 
+	 * @return possible object is {@link RegistryIDType }
+	 * 
+	 */
+	public RegistryIDType getCompressionAlgorithm() {
+		return compressionAlgorithm;
+	}
 
-    /**
-     * Sets the value of the compressionAlgorithm property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link RegistryIDType }
-     *     
-     */
-    public void setCompressionAlgorithm(RegistryIDType value) {
-        this.compressionAlgorithm = value;
-    }
+	/**
+	 * Sets the value of the compressionAlgorithm property.
+	 * 
+	 * @param value allowed object is {@link RegistryIDType }
+	 * 
+	 */
+	public void setCompressionAlgorithm(RegistryIDType value) {
+		this.compressionAlgorithm = value;
+	}
 
-    /**
-     * Gets the value of the purpose property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link PurposeType }
-     *     
-     */
-    public PurposeType getPurpose() {
-        return purpose;
-    }
+	/**
+	 * Gets the value of the purpose property.
+	 * 
+	 * @return possible object is {@link PurposeType }
+	 * 
+	 */
+	public PurposeType getPurpose() {
+		return purpose;
+	}
 
-    /**
-     * Sets the value of the purpose property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link PurposeType }
-     *     
-     */
-    public void setPurpose(PurposeType value) {
-        this.purpose = value;
-    }
+	/**
+	 * Sets the value of the purpose property.
+	 * 
+	 * @param value allowed object is {@link PurposeType }
+	 * 
+	 */
+	public void setPurpose(PurposeType value) {
+		this.purpose = value;
+	}
 
-    /**
-     * Gets the value of the quality property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link QualityType }
-     *     
-     */
-    public QualityType getQuality() {
-        return quality;
-    }
+	/**
+	 * Gets the value of the quality property.
+	 * 
+	 * @return possible object is {@link QualityType }
+	 * 
+	 */
+	public QualityType getQuality() {
+		return quality;
+	}
 
-    /**
-     * Sets the value of the quality property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link QualityType }
-     *     
-     */
-    public void setQuality(QualityType value) {
-        this.quality = value;
-    }
+	/**
+	 * Sets the value of the quality property.
+	 * 
+	 * @param value allowed object is {@link QualityType }
+	 * 
+	 */
+	public void setQuality(QualityType value) {
+		this.quality = value;
+	}
 
 }

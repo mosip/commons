@@ -81,9 +81,8 @@ public class TitleController {
 	/**
 	 * Method to return list of titles for a particular language code
 	 * 
-	 * @param langCode
-	 *            input to fetch all titles belonging to the particular language
-	 *            code
+	 * @param langCode input to fetch all titles belonging to the particular
+	 *                 language code
 	 * @return list of all titles for the particular language code
 	 */
 	@ResponseFilter
@@ -98,8 +97,7 @@ public class TitleController {
 	/**
 	 * Method to add a new row of title data
 	 * 
-	 * @param title
-	 *            input from user
+	 * @param title input from user
 	 * @return primary key of entered row
 	 */
 	@ResponseFilter
@@ -117,8 +115,7 @@ public class TitleController {
 	/**
 	 * Controller class to update title data
 	 * 
-	 * @param titles
-	 *            input DTO for updated row
+	 * @param titles input DTO for updated row
 	 * @return composite primary key of updated row
 	 */
 	@ResponseFilter
@@ -141,8 +138,7 @@ public class TitleController {
 	/**
 	 * Controller class to delete title data
 	 * 
-	 * @param code
-	 *            input from user
+	 * @param code input from user
 	 * @return composite key of deleted row of data
 	 */
 	@ResponseFilter
@@ -162,14 +158,10 @@ public class TitleController {
 	/**
 	 * This controller method provides with all titles.
 	 * 
-	 * @param pageNumber
-	 *            the page number
-	 * @param pageSize
-	 *            the size of each page
-	 * @param sortBy
-	 *            the attributes by which it should be ordered
-	 * @param orderBy
-	 *            the order to be used
+	 * @param pageNumber the page number
+	 * @param pageSize   the size of each page
+	 * @param sortBy     the attributes by which it should be ordered
+	 * @param orderBy    the order to be used
 	 * 
 	 * @return the response i.e. pages containing the titles.
 	 */
@@ -194,8 +186,7 @@ public class TitleController {
 	/**
 	 * Search titles.
 	 *
-	 * @param request
-	 *            the request
+	 * @param request the request
 	 * @return response wrapper
 	 */
 
@@ -209,20 +200,19 @@ public class TitleController {
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
 		auditUtil.auditRequest(String.format(MasterDataConstant.SEARCH_API_IS_CALLED, TitleDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SEARCH_API_IS_CALLED, TitleDto.class.getSimpleName()),"ADM-819");
+				String.format(MasterDataConstant.SEARCH_API_IS_CALLED, TitleDto.class.getSimpleName()), "ADM-819");
 		ResponseWrapper<PageResponseDto<TitleExtnDto>> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(titleService.searchTitles(request.getRequest()));
 		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_SEARCH, TitleDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SUCCESSFUL_SEARCH_DESC, TitleDto.class.getSimpleName()),"ADM-820");
+				String.format(MasterDataConstant.SUCCESSFUL_SEARCH_DESC, TitleDto.class.getSimpleName()), "ADM-820");
 		return responseWrapper;
 	}
 
 	/**
 	 * Filter templates.
 	 *
-	 * @param request
-	 *            the request
+	 * @param request the request
 	 * @return {@link FilterResponseDto}
 	 */
 	@ResponseFilter
@@ -235,12 +225,12 @@ public class TitleController {
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
 		auditUtil.auditRequest(String.format(MasterDataConstant.FILTER_API_IS_CALLED, TitleDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.FILTER_API_IS_CALLED, TitleDto.class.getSimpleName()),"ADM-821");
+				String.format(MasterDataConstant.FILTER_API_IS_CALLED, TitleDto.class.getSimpleName()), "ADM-821");
 		ResponseWrapper<FilterResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(titleService.filterTitles(request.getRequest()));
 		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_FILTER, TitleDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SUCCESSFUL_FILTER_DESC, TitleDto.class.getSimpleName()),"ADM-822");
+				String.format(MasterDataConstant.SUCCESSFUL_FILTER_DESC, TitleDto.class.getSimpleName()), "ADM-822");
 		return responseWrapper;
 	}
 }

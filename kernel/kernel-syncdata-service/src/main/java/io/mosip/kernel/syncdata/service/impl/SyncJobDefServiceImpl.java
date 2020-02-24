@@ -111,8 +111,8 @@ public class SyncJobDefServiceImpl implements SyncJobDefService {
 //		return syncJobDefDtos;
 //	}
 
-@Autowired
-private SyncJobDefRepository syncJobDefRepository;
+	@Autowired
+	private SyncJobDefRepository syncJobDefRepository;
 
 	/*
 	 * (non-Javadoc)

@@ -3,7 +3,7 @@ package io.mosip.kernel.core.signatureutil.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- *  ParseResponseException class.
+ * ParseResponseException class.
  *
  * @author Srinivasan
  */
@@ -15,12 +15,9 @@ public class ParseResponseException extends BaseUncheckedException {
 	/**
 	 * Instantiates a new parses the response exception.
 	 *
-	 * @param errorCode
-	 *            the error code
-	 * @param errorMessage
-	 *            the error message
-	 * @param rootCause
-	 *            the root cause
+	 * @param errorCode    the error code
+	 * @param errorMessage the error message
+	 * @param rootCause    the root cause
 	 */
 	public ParseResponseException(String errorCode, String errorMessage, Throwable rootCause) {
 		super(errorCode, errorMessage, rootCause);
@@ -30,10 +27,8 @@ public class ParseResponseException extends BaseUncheckedException {
 	/**
 	 * Instantiates a new parses the response exception.
 	 *
-	 * @param errorCode
-	 *            the error code
-	 * @param errorMessage
-	 *            the error message
+	 * @param errorCode    the error code
+	 * @param errorMessage the error message
 	 */
 	public ParseResponseException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);

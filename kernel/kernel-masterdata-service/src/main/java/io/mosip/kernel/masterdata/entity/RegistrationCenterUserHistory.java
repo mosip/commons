@@ -28,10 +28,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "reg_center_user_h", schema = "master")
-public class RegistrationCenterUserHistory  extends BaseEntity implements Serializable {
-	
+public class RegistrationCenterUserHistory extends BaseEntity implements Serializable {
+
 	private static final long serialVersionUID = -8541947587557590379L;
-	
+
 	@EmbeddedId
 	@AttributeOverrides({ @AttributeOverride(name = "regCenterId", column = @Column(name = "regcntr_id")),
 			@AttributeOverride(name = "effectivetimes", column = @Column(name = "eff_dtimes")),

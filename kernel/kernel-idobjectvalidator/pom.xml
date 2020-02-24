@@ -7,6 +7,10 @@
 		<artifactId>kernel-parent</artifactId>
 		<version>1.0.6</version>
 	</parent>
+	<properties>
+		<kernel.core.version>1.0.7-SNAPSHOT</kernel.core.version>
+	</properties>
+	<version>1.0.7-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>com.github.java-json-tools</groupId>
@@ -16,7 +20,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -71,4 +75,5 @@
 			</resource>
 		</resources>
 	</build>
+	
 </project>

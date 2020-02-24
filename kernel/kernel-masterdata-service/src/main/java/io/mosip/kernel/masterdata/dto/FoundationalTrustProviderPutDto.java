@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FoundationalTrustProviderPutDto {
-	
+
 	@NotBlank
 	@Size(min = 0, max = 36)
 	private String id;

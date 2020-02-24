@@ -18,19 +18,18 @@ public enum MachineErrorCode {
 	DEPENDENCY_EXCEPTION("KER-MSD-148", "Cannot delete as dependency found"),
 	REGISTRATION_CENTER_MACHINE_FETCH_EXCEPTION("KER-MSD-331",
 			"Error occurred while fetching a Machine details mapped with the given Registration Center"),
-	MAPPED_MACHINE_ID_NOT_FOUND_EXCEPTION("KER-MSD-326","No assigned Machines found"),
-	MACHINE_ID_ALREADY_MAPPED_EXCEPTION("KER-MSD-327","No unassigned Machines found"),
-	INVALID_MACHINE_FILTER_VALUE_EXCEPTION("KER-MSD-328","Invalid Filter value for Mapstatus column"),
-	MACHINE_ID_NOT_FOUND_FOR_NAME_EXCEPTION("KER-MSD-329","No Machine exist for Machine Type name:%s"),
-	MACHINE_SPECIFICATION_ID_NOT_FOUND_FOR_NAME_EXCEPTION("KER-MSD-330","No Machine Specification found for the Machine Type name:%s"),
-	MACHINE_NOT_TAGGED_TO_ZONE("KER-MSD-342","No zone assigned to the user"),
+	MAPPED_MACHINE_ID_NOT_FOUND_EXCEPTION("KER-MSD-326", "No assigned Machines found"),
+	MACHINE_ID_ALREADY_MAPPED_EXCEPTION("KER-MSD-327", "No unassigned Machines found"),
+	INVALID_MACHINE_FILTER_VALUE_EXCEPTION("KER-MSD-328", "Invalid Filter value for Mapstatus column"),
+	MACHINE_ID_NOT_FOUND_FOR_NAME_EXCEPTION("KER-MSD-329", "No Machine exist for Machine Type name:%s"),
+	MACHINE_SPECIFICATION_ID_NOT_FOUND_FOR_NAME_EXCEPTION("KER-MSD-330",
+			"No Machine Specification found for the Machine Type name:%s"),
+	MACHINE_NOT_TAGGED_TO_ZONE("KER-MSD-342", "No zone assigned to the user"),
 	MACHINE_ZONE_NOT_FOUND_EXCEPTION("KER-MSD-395", "User is not authorized to decommission the machine "),
 	INVALIDE_MACHINE_ZONE("KER-MSD-436", "Admin not authorized to access this Machine for this Zone"),
-	ZONE_NOT_EXIST("KER-MSD-343","Zone %s doesn't exist"),
-	MACHINE_ID("KER-MSD-437","Machine ID %s does not exist for primary language"),
-	MAPPED_TO_REGCENTER("KER-MSD-352","Machine cannot Decommissioned as some Registration centers are mapped");
-
-
+	ZONE_NOT_EXIST("KER-MSD-343", "Zone %s doesn't exist"),
+	MACHINE_ID("KER-MSD-437", "Machine ID %s does not exist for primary language"),
+	MAPPED_TO_REGCENTER("KER-MSD-352", "Machine cannot Decommissioned as some Registration centers are mapped");
 
 	private final String errorCode;
 	private final String errorMessage;

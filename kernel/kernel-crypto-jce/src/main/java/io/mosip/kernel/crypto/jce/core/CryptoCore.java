@@ -386,8 +386,8 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 		CryptoUtils.verifyData(data);
 		JsonWebSignature jws = new JsonWebSignature();
 		try {
-			String[] parts=sign.split(PERIOD_SEPARATOR_REGEX);
-			parts[1]=CryptoUtil.encodeBase64(data);
+			String[] parts = sign.split(PERIOD_SEPARATOR_REGEX);
+			parts[1] = CryptoUtil.encodeBase64(data);
 			jws.setCompactSerialization(CompactSerializer.serialize(parts));
 			jws.setKey(publicKey);
 			return jws.verifySignature();
@@ -430,18 +430,18 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 	}
 
 	/*
-	 *  This two methods here are for temporary, Unit test for this will be
-	 *  written in next versions 
+	 * This two methods here are for temporary, Unit test for this will be written
+	 * in next versions
 	 */
 	@Override
 	public String sign(byte[] data, PrivateKey privateKey, X509Certificate x509Certificate) {
 		Objects.requireNonNull(privateKey, SecurityExceptionCodeConstant.MOSIP_INVALID_KEY_EXCEPTION.getErrorMessage());
 		CryptoUtils.verifyData(data);
 		JsonWebSignature jws = new JsonWebSignature();
-		List<X509Certificate> certList= new ArrayList<>();
+		List<X509Certificate> certList = new ArrayList<>();
 		certList.add(x509Certificate);
-		X509Certificate[] certArray=certList.toArray(new X509Certificate[]{});
-		jws.setCertificateChainHeaderValue(certArray); 
+		X509Certificate[] certArray = certList.toArray(new X509Certificate[] {});
+		jws.setCertificateChainHeaderValue(certArray);
 		jws.setPayloadBytes(data);
 		jws.setAlgorithmHeaderValue(signAlgorithm);
 		jws.setKey(privateKey);
@@ -455,8 +455,8 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 	}
 
 	/*
-	 *  This two methods here are for temporary, Unit test for this will be
-	 *  written in next versions 
+	 * This two methods here are for temporary, Unit test for this will be written
+	 * in next versions
 	 */
 	@Override
 	public boolean verifySignature(String sign) {
@@ -466,14 +466,14 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 		}
 		JsonWebSignature jws = new JsonWebSignature();
 		try {
-		jws.setCompactSerialization(sign);
-		List<X509Certificate> certificateChainHeaderValue = jws.getCertificateChainHeaderValue();
-        X509Certificate certificate = certificateChainHeaderValue.get(0);
-		certificate.checkValidity();
-		PublicKey publicKey = certificate.getPublicKey();
-		jws.setKey(publicKey);
-		return jws.verifySignature();
-		} catch ( JoseException | CertificateExpiredException | CertificateNotYetValidException e) {
+			jws.setCompactSerialization(sign);
+			List<X509Certificate> certificateChainHeaderValue = jws.getCertificateChainHeaderValue();
+			X509Certificate certificate = certificateChainHeaderValue.get(0);
+			certificate.checkValidity();
+			PublicKey publicKey = certificate.getPublicKey();
+			jws.setKey(publicKey);
+			return jws.verifySignature();
+		} catch (JoseException | CertificateExpiredException | CertificateNotYetValidException e) {
 			throw new SignatureException(SecurityExceptionCodeConstant.MOSIP_SIGNATURE_EXCEPTION.getErrorCode(),
 					e.getMessage(), e);
 		}

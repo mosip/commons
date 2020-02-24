@@ -55,8 +55,7 @@ public class MachineTypeController {
 	/**
 	 * Post API to insert a new row of Machine Type data
 	 * 
-	 * @param machineType
-	 *            input Machine Type DTO from user
+	 * @param machineType input Machine Type DTO from user
 	 * 
 	 * @return ResponseEntity Machine Type Code and Language Code which is
 	 *         successfully inserted
@@ -87,14 +86,10 @@ public class MachineTypeController {
 	/**
 	 * This controller method provides with all machine types.
 	 * 
-	 * @param pageNumber
-	 *            the page number
-	 * @param pageSize
-	 *            the size of each page
-	 * @param sortBy
-	 *            the attributes by which it should be ordered
-	 * @param orderBy
-	 *            the order to be used
+	 * @param pageNumber the page number
+	 * @param pageSize   the size of each page
+	 * @param sortBy     the attributes by which it should be ordered
+	 * @param orderBy    the order to be used
 	 * @return the response i.e. pages containing the machine types.
 	 */
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','CENTRAL_ADMIN')")
@@ -117,8 +112,7 @@ public class MachineTypeController {
 	/**
 	 * Api to search Machine Types.
 	 * 
-	 * @param request
-	 *            the request DTO.
+	 * @param request the request DTO.
 	 * @return the {@link MachineTypeExtnDto}.
 	 */
 	@ResponseFilter
@@ -143,8 +137,7 @@ public class MachineTypeController {
 	/**
 	 * Api to filter Machine Types based on column and type provided.
 	 * 
-	 * @param request
-	 *            the request DTO.
+	 * @param request the request DTO.
 	 * @return the {@link FilterResponseDto}.
 	 */
 	@ResponseFilter

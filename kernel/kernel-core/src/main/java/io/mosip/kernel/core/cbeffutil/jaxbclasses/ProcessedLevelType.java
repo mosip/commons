@@ -5,18 +5,21 @@
 // Generated on: 2019.05.13 at 03:22:53 PM IST 
 //
 
-
 package io.mosip.kernel.core.cbeffutil.jaxbclasses;
+
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for ProcessedLevelType.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
+ * Java class for ProcessedLevelType.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
+ * <p>
+ * 
  * <pre>
  * &lt;simpleType name="ProcessedLevelType">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
@@ -32,29 +35,28 @@ import javax.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum ProcessedLevelType {
 
-    @XmlEnumValue("Raw")
-    RAW("Raw"),
-    @XmlEnumValue("Intermediate")
-    INTERMEDIATE("Intermediate"),
-    @XmlEnumValue("Processed")
-    PROCESSED("Processed");
-    private final String value;
+	@XmlEnumValue("Raw")
+	RAW("Raw"), @XmlEnumValue("Intermediate")
+	INTERMEDIATE("Intermediate"), @XmlEnumValue("Processed")
+	PROCESSED("Processed");
 
-    ProcessedLevelType(String v) {
-        value = v;
-    }
+	private final String value;
 
-    public String value() {
-        return value;
-    }
+	ProcessedLevelType(String v) {
+		value = v;
+	}
 
-    public static ProcessedLevelType fromValue(String v) {
-        for (ProcessedLevelType c: ProcessedLevelType.values()) {
-            if (c.value.equals(v)) {
-                return c;
-            }
-        }
-        throw new IllegalArgumentException(v);
-    }
+	public String value() {
+		return value;
+	}
+
+	public static ProcessedLevelType fromValue(String v) {
+		for (ProcessedLevelType c : ProcessedLevelType.values()) {
+			if (c.value.equals(v)) {
+				return c;
+			}
+		}
+		throw new IllegalArgumentException(v);
+	}
 
 }

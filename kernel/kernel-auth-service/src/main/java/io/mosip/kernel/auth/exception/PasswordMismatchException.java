@@ -8,7 +8,7 @@ public class PasswordMismatchException extends BaseUncheckedException {
 	 * 
 	 */
 	private static final long serialVersionUID = -4849582696173207678L;
-	
+
 	/**
 	 * 
 	 */
@@ -22,8 +22,6 @@ public class PasswordMismatchException extends BaseUncheckedException {
 	public void setErrorCode(String errorCode) {
 		this.errorCode = errorCode;
 	}
-
-	
 
 	/**
 	 * Constructor the initialize Handler exception

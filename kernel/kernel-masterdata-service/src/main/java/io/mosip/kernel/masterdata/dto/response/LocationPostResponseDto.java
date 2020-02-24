@@ -32,7 +32,7 @@ public class LocationPostResponseDto {
 	private String langCode;
 
 	private Boolean isActive;
-	
+
 	private String createdBy;
 
 	private LocalDateTime createdDateTime;

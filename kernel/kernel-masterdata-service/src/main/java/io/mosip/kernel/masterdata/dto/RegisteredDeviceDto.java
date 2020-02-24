@@ -16,12 +16,11 @@ import lombok.NoArgsConstructor;
  *
  */
 @Data
-@EqualsAndHashCode(callSuper=true)
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegisteredDeviceDto extends BaseDto {
 
-	
 	private String dTypeCode;
 
 	private String dsTypeCode;

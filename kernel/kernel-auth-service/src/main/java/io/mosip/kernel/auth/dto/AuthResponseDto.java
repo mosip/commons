@@ -16,7 +16,7 @@ public class AuthResponseDto {
 
 	/** The status. */
 	private String status;
-	
+
 	/** The message. */
 	private String message;
 }

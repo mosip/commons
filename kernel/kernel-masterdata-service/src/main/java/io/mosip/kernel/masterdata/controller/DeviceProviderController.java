@@ -39,9 +39,9 @@ public class DeviceProviderController {
 
 	@Autowired
 	AuditUtil auditUtil;
-	
+
 	@Autowired
-	private DeviceProviderService<ResponseDto,ValidateDeviceDto,ValidateDeviceHistoryDto,DeviceProviderDto,DeviceProviderExtnDto,DeviceProviderPutDto> deviceProviderSerice;
+	private DeviceProviderService<ResponseDto, ValidateDeviceDto, ValidateDeviceHistoryDto, DeviceProviderDto, DeviceProviderExtnDto, DeviceProviderPutDto> deviceProviderSerice;
 
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN')")
 	@PostMapping
@@ -54,16 +54,17 @@ public class DeviceProviderController {
 			@Valid @RequestBody RequestWrapper<DeviceProviderDto> deviceProviderDto) {
 		auditUtil.auditRequest(MasterDataConstant.CREATE_API_IS_CALLED + DeviceProviderDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,
-				MasterDataConstant.CREATE_API_IS_CALLED + DeviceProviderDto.class.getCanonicalName(),"ADM-719");
+				MasterDataConstant.CREATE_API_IS_CALLED + DeviceProviderDto.class.getCanonicalName(), "ADM-719");
 		ResponseWrapper<DeviceProviderExtnDto> response = new ResponseWrapper<>();
 		response.setResponse(deviceProviderSerice.createDeviceProvider(deviceProviderDto.getRequest()));
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.SUCCESSFUL_CREATE, DeviceProviderDto.class.getCanonicalName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC, DeviceProviderDto.class.getCanonicalName()),"ADM-720");
+				String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC, DeviceProviderDto.class.getCanonicalName()),
+				"ADM-720");
 		return response;
 	}
-	
+
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN')")
 	@PutMapping
 	@ApiOperation(value = "Service to save Device Provide", notes = "Saves Device Provider Detail and return Device Provider")
@@ -75,13 +76,14 @@ public class DeviceProviderController {
 			@Valid @RequestBody RequestWrapper<DeviceProviderPutDto> deviceProviderDto) {
 		auditUtil.auditRequest(MasterDataConstant.UPDATE_API_IS_CALLED + DeviceProviderDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,
-				MasterDataConstant.UPDATE_API_IS_CALLED + DeviceProviderDto.class.getCanonicalName(),"ADM-721");
+				MasterDataConstant.UPDATE_API_IS_CALLED + DeviceProviderDto.class.getCanonicalName(), "ADM-721");
 		ResponseWrapper<DeviceProviderExtnDto> response = new ResponseWrapper<>();
 		response.setResponse(deviceProviderSerice.updateDeviceProvider(deviceProviderDto.getRequest()));
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.SUCCESSFUL_UPDATE, DeviceProviderDto.class.getCanonicalName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC, DeviceProviderDto.class.getCanonicalName()),"ADM-722");
+				String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC, DeviceProviderDto.class.getCanonicalName()),
+				"ADM-722");
 		return response;
 	}
 

@@ -37,14 +37,14 @@ import net.minidev.json.JSONArray;
 @Component("pattern")
 @ConfigurationProperties("mosip.id")
 public class IdObjectPatternValidator implements IdObjectValidator {
-	
+
 	/** The mapper. */
 	@Autowired
 	private ObjectMapper mapper;
-	
+
 	/** The validation. */
 	private Map<String, String> validation;
-	
+
 	/**
 	 * Sets the validation.
 	 *
@@ -53,9 +53,13 @@ public class IdObjectPatternValidator implements IdObjectValidator {
 	public void setValidation(Map<String, String> validation) {
 		this.validation = validation;
 	}
-	
-	/* (non-Javadoc)
-	 * @see io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator#validateIdObject(java.lang.Object)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator#validateIdObject
+	 * (java.lang.Object)
 	 */
 	@Override
 	public boolean validateIdObject(Object identityObject, IdObjectValidatorSupportedOperations operation)
@@ -67,8 +71,7 @@ public class IdObjectPatternValidator implements IdObjectValidator {
 			if (errorList.isEmpty()) {
 				return true;
 			} else {
-				throw new IdObjectValidationFailedException(
-						ID_OBJECT_VALIDATION_FAILED, errorList);
+				throw new IdObjectValidationFailedException(ID_OBJECT_VALIDATION_FAILED, errorList);
 			}
 		} catch (JsonProcessingException e) {
 			ExceptionUtils.logRootCause(e);
@@ -79,32 +82,28 @@ public class IdObjectPatternValidator implements IdObjectValidator {
 	/**
 	 * Validates json attributes configured in the external properties.
 	 *
-	 * @param identity the request
+	 * @param identity  the request
 	 * @param errorList the error list
 	 */
 	private void validateAttributes(String identity, List<ServiceError> errorList) {
 		validation.entrySet().parallelStream().forEach(entry -> {
 			JsonPath jsonPath = JsonPath.compile(entry.getKey());
 			Pattern pattern = Pattern.compile(entry.getValue());
-			JSONArray data = jsonPath.read(identity, Configuration.defaultConfiguration()
-					.addOptions(SUPPRESS_EXCEPTIONS, ALWAYS_RETURN_LIST));
+			JSONArray data = jsonPath.read(identity,
+					Configuration.defaultConfiguration().addOptions(SUPPRESS_EXCEPTIONS, ALWAYS_RETURN_LIST));
 			if (Objects.nonNull(data) && !data.isEmpty()) {
-				IntStream.range(0, data.size())
-					.parallel()
-					.filter(index -> !pattern.matcher(String.valueOf(data.get(index))).matches())
-					.forEach(index -> {
-						JSONArray pathList = jsonPath.read(identity, 
-								Configuration.defaultConfiguration()
-								.addOptions(SUPPRESS_EXCEPTIONS, ALWAYS_RETURN_LIST, AS_PATH_LIST));
-						errorList.add(new ServiceError(
-								INVALID_INPUT_PARAMETER.getErrorCode(),
-								String.format(INVALID_INPUT_PARAMETER.getMessage(),
-										convertToPath(String.valueOf(pathList.get(index))))));
+				IntStream.range(0, data.size()).parallel()
+						.filter(index -> !pattern.matcher(String.valueOf(data.get(index))).matches()).forEach(index -> {
+							JSONArray pathList = jsonPath.read(identity, Configuration.defaultConfiguration()
+									.addOptions(SUPPRESS_EXCEPTIONS, ALWAYS_RETURN_LIST, AS_PATH_LIST));
+							errorList.add(new ServiceError(INVALID_INPUT_PARAMETER.getErrorCode(),
+									String.format(INVALID_INPUT_PARAMETER.getMessage(),
+											convertToPath(String.valueOf(pathList.get(index))))));
 						});
 			}
 		});
 	}
-	
+
 	/**
 	 * Convert to path.
 	 *

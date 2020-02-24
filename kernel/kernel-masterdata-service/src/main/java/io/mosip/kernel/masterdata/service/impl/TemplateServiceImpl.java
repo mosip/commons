@@ -63,19 +63,19 @@ public class TemplateServiceImpl implements TemplateService {
 	private List<TemplateDto> templateDtoList;
 
 	private TemplateResponseDto templateResponseDto = new TemplateResponseDto();
-	
+
 	@Autowired
 	private FilterTypeValidator filterTypeValidator;
-	
+
 	@Autowired
 	private FilterColumnValidator filterColumnValidator;
-	
+
 	@Autowired
 	private MasterdataSearchHelper masterDataSearchHelper;
-	
+
 	@Autowired
-	private MasterDataFilterHelper  masterDataFilterHelper;
-	
+	private MasterDataFilterHelper masterDataFilterHelper;
+
 	@Autowired
 	private AuditUtil auditUtil;
 
@@ -174,19 +174,22 @@ public class TemplateServiceImpl implements TemplateService {
 		} catch (DataAccessLayerException | DataAccessException e) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.CREATE_ERROR_AUDIT, TemplateDto.class.getSimpleName()),
-					MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.FAILURE_DESC,
+					MasterDataConstant.AUDIT_SYSTEM,
+					String.format(MasterDataConstant.FAILURE_DESC,
 							TemplateErrorCode.TEMPLATE_INSERT_EXCEPTION.getErrorCode(),
-							TemplateErrorCode.TEMPLATE_INSERT_EXCEPTION.getErrorMessage()),"ADM-812");
+							TemplateErrorCode.TEMPLATE_INSERT_EXCEPTION.getErrorMessage()),
+					"ADM-812");
 			throw new MasterDataServiceException(TemplateErrorCode.TEMPLATE_INSERT_EXCEPTION.getErrorCode(),
 					TemplateErrorCode.TEMPLATE_INSERT_EXCEPTION.getErrorMessage() + ExceptionUtils.parseException(e));
-			
+
 		}
 
 		IdAndLanguageCodeID idAndLanguageCodeID = new IdAndLanguageCodeID();
 		MapperUtils.map(templateEntity, idAndLanguageCodeID);
 		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_CREATE, TemplateDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC,
-						TemplateDto.class.getSimpleName(), idAndLanguageCodeID.getId()),"ADM-813");
+						TemplateDto.class.getSimpleName(), idAndLanguageCodeID.getId()),
+				"ADM-813");
 		return idAndLanguageCodeID;
 	}
 
@@ -211,24 +214,29 @@ public class TemplateServiceImpl implements TemplateService {
 			} else {
 				auditUtil.auditRequest(
 						String.format(MasterDataConstant.FAILURE_UPDATE, TemplateDto.class.getSimpleName()),
-						MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.FAILURE_DESC,
+						MasterDataConstant.AUDIT_SYSTEM,
+						String.format(MasterDataConstant.FAILURE_DESC,
 								TemplateErrorCode.TEMPLATE_NOT_FOUND.getErrorCode(),
-								TemplateErrorCode.TEMPLATE_NOT_FOUND.getErrorMessage()),"ADM-814");
+								TemplateErrorCode.TEMPLATE_NOT_FOUND.getErrorMessage()),
+						"ADM-814");
 				throw new RequestException(TemplateErrorCode.TEMPLATE_NOT_FOUND.getErrorCode(),
 						TemplateErrorCode.TEMPLATE_NOT_FOUND.getErrorMessage());
 			}
 		} catch (DataAccessLayerException | DataAccessException e) {
-			auditUtil.auditRequest(
-					String.format(MasterDataConstant.FAILURE_UPDATE, TemplateDto.class.getSimpleName()),
-					MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.FAILURE_DESC,
+			auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_UPDATE, TemplateDto.class.getSimpleName()),
+					MasterDataConstant.AUDIT_SYSTEM,
+					String.format(MasterDataConstant.FAILURE_DESC,
 							TemplateErrorCode.TEMPLATE_UPDATE_EXCEPTION.getErrorCode(),
-							TemplateErrorCode.TEMPLATE_UPDATE_EXCEPTION.getErrorMessage() + ExceptionUtils.parseException(e)),"ADM-815");
+							TemplateErrorCode.TEMPLATE_UPDATE_EXCEPTION.getErrorMessage()
+									+ ExceptionUtils.parseException(e)),
+					"ADM-815");
 			throw new MasterDataServiceException(TemplateErrorCode.TEMPLATE_UPDATE_EXCEPTION.getErrorCode(),
 					TemplateErrorCode.TEMPLATE_UPDATE_EXCEPTION.getErrorMessage() + ExceptionUtils.parseException(e));
 		}
 		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_UPDATE, TemplateDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC,
-						TemplateDto.class.getSimpleName(), idAndLanguageCodeID.getId()),"ADM-816");
+						TemplateDto.class.getSimpleName(), idAndLanguageCodeID.getId()),
+				"ADM-816");
 		return idAndLanguageCodeID;
 	}
 
@@ -317,8 +325,12 @@ public class TemplateServiceImpl implements TemplateService {
 		return pageDto;
 	}
 
-	/* (non-Javadoc)
-	 * @see io.mosip.kernel.masterdata.service.TemplateService#searchTemplates(io.mosip.kernel.masterdata.dto.request.SearchDto)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.mosip.kernel.masterdata.service.TemplateService#searchTemplates(io.mosip.
+	 * kernel.masterdata.dto.request.SearchDto)
 	 */
 	@Override
 	public PageResponseDto<TemplateExtnDto> searchTemplates(SearchDto searchDto) {
@@ -333,32 +345,35 @@ public class TemplateServiceImpl implements TemplateService {
 			}
 		}
 		return pageDto;
-		
+
 	}
 
-	/* (non-Javadoc)
-	 * @see io.mosip.kernel.masterdata.service.TemplateService#filterTemplates(io.mosip.kernel.masterdata.dto.request.FilterValueDto)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.mosip.kernel.masterdata.service.TemplateService#filterTemplates(io.mosip.
+	 * kernel.masterdata.dto.request.FilterValueDto)
 	 */
 	@Override
 	public FilterResponseDto filterTemplates(FilterValueDto filterValueDto) {
 		FilterResponseDto filterResponseDto = new FilterResponseDto();
 		List<ColumnValue> columnValueList = new ArrayList<>();
-		
-	       if(filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), Template.class)) {
-	    	  filterValueDto.getFilters().stream().forEach(filter ->{
-	    		  masterDataFilterHelper.filterValues(Template.class, filter, filterValueDto).forEach(filteredValue ->{
-	    			  if(filteredValue!=null) {
-	    				  ColumnValue columnValue = new ColumnValue();
-							columnValue.setFieldID(filter.getColumnName());
-							columnValue.setFieldValue(filteredValue.toString());
-							columnValueList.add(columnValue);
-	    			  }
-	    		  });
-	    	  });
-	    	  filterResponseDto.setFilters(columnValueList);
-	       }
+
+		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), Template.class)) {
+			filterValueDto.getFilters().stream().forEach(filter -> {
+				masterDataFilterHelper.filterValues(Template.class, filter, filterValueDto).forEach(filteredValue -> {
+					if (filteredValue != null) {
+						ColumnValue columnValue = new ColumnValue();
+						columnValue.setFieldID(filter.getColumnName());
+						columnValue.setFieldValue(filteredValue.toString());
+						columnValueList.add(columnValue);
+					}
+				});
+			});
+			filterResponseDto.setFilters(columnValueList);
+		}
 		return filterResponseDto;
 	}
 
-	
 }

@@ -30,13 +30,14 @@ public class JsonUtilTest {
 	Car car = new Car("Black", "BMW");
 	Car car2;
 	ParentCar2 parentCar2;
-/*	@Test
-	public void testJavaObjectToJsonFile()
-			throws JsonGenerationException, JsonMappingException, IOException {
-		ClassLoader classLoader = getClass().getClassLoader();
-		File file = new File(classLoader.getResource("sample.json").getFile());
-		assertThat(JsonUtils.javaObjectToJsonFile(car, file.getAbsolutePath()), is(true));
-	}*/
+	/*
+	 * @Test public void testJavaObjectToJsonFile() throws JsonGenerationException,
+	 * JsonMappingException, IOException { ClassLoader classLoader =
+	 * getClass().getClassLoader(); File file = new
+	 * File(classLoader.getResource("sample.json").getFile());
+	 * assertThat(JsonUtils.javaObjectToJsonFile(car, file.getAbsolutePath()),
+	 * is(true)); }
+	 */
 
 	@Test
 	public void testJavaObjectToJsonString() throws JsonProcessingException {
@@ -56,15 +57,15 @@ public class JsonUtilTest {
 
 	}
 
-/*	@Test
-	public void testJsonFileToJavaObject() throws JsonParseException, JsonMappingException, IOException {
-		ClassLoader classLoader = getClass().getClassLoader();
-		File file = new File(classLoader.getResource("sample2.json").getFile());
-		Car car2 = (Car) JsonUtils.jsonFileToJavaObject(Car.class, file.getAbsolutePath());
-		assertNotNull(car2);
-		assertThat(car2.getColor(), is("Blue"));
-		assertThat(car2.getType(), is("Audi"));
-	}*/
+	/*
+	 * @Test public void testJsonFileToJavaObject() throws JsonParseException,
+	 * JsonMappingException, IOException { ClassLoader classLoader =
+	 * getClass().getClassLoader(); File file = new
+	 * File(classLoader.getResource("sample2.json").getFile()); Car car2 = (Car)
+	 * JsonUtils.jsonFileToJavaObject(Car.class, file.getAbsolutePath());
+	 * assertNotNull(car2); assertThat(car2.getColor(), is("Blue"));
+	 * assertThat(car2.getType(), is("Audi")); }
+	 */
 
 	@Test
 	public void testJsonToJacksonJsonNode() throws IOException {
@@ -84,12 +85,13 @@ public class JsonUtilTest {
 		assertThat(mapElements.toString(), is("{color=Black, type=FIAT}"));
 	}
 
-	/*@Test(expected = IOException.class)
-	public void testJavaObjectToJsonFileWithIOException()
-			throws JsonGenerationException, JsonMappingException, IOException {
-
-		JsonUtils.javaObjectToJsonFile("", "C:/InvalidLocation");
-	}*/
+	/*
+	 * @Test(expected = IOException.class) public void
+	 * testJavaObjectToJsonFileWithIOException() throws JsonGenerationException,
+	 * JsonMappingException, IOException {
+	 * 
+	 * JsonUtils.javaObjectToJsonFile("", "C:/InvalidLocation"); }
+	 */
 
 	@Test(expected = JsonParseException.class)
 	public void testjsonStringtoJavaObjectWithParseException()
@@ -105,30 +107,33 @@ public class JsonUtilTest {
 		JsonUtils.jsonStringToJavaObject(Car.class, JsonUtilTestConstants.jsonCarArray2);
 	}
 
-	/*@Test(expected = JsonParseException.class)
-	public void testjsonFiletoJavaObjectWithParseException()
-			throws JsonParseException, JsonMappingException, IOException {
-		ClassLoader classLoader = getClass().getClassLoader();
-		File file = new File(classLoader.getResource("sampleParse.json").getFile());
+	/*
+	 * @Test(expected = JsonParseException.class) public void
+	 * testjsonFiletoJavaObjectWithParseException() throws JsonParseException,
+	 * JsonMappingException, IOException { ClassLoader classLoader =
+	 * getClass().getClassLoader(); File file = new
+	 * File(classLoader.getResource("sampleParse.json").getFile());
+	 * 
+	 * JsonUtils.jsonFileToJavaObject(SampleClass.class, file.getAbsolutePath()); }
+	 */
 
-		JsonUtils.jsonFileToJavaObject(SampleClass.class, file.getAbsolutePath());
-	}*/
+	/*
+	 * @Test(expected = JsonMappingException.class) public void
+	 * testjsonFiletoJavaObjectWithMappingException() throws JsonParseException,
+	 * JsonMappingException, IOException { ClassLoader classLoader =
+	 * getClass().getClassLoader(); File file = new
+	 * File(classLoader.getResource("samplex.json").getFile());
+	 * 
+	 * JsonUtils.jsonFileToJavaObject(ParentCar2.class, file.getAbsolutePath()); }
+	 */
 
-	/*@Test(expected = JsonMappingException.class)
-	public void testjsonFiletoJavaObjectWithMappingException()
-			throws JsonParseException, JsonMappingException, IOException {
-		ClassLoader classLoader = getClass().getClassLoader();
-		File file = new File(classLoader.getResource("samplex.json").getFile());
-
-		JsonUtils.jsonFileToJavaObject(ParentCar2.class, file.getAbsolutePath());
-	}*/
-
-	/*@Test(expected = IOException.class)
-	public void testjsonFiletoJavaObjectWithIOException()
-			throws JsonParseException, JsonMappingException, IOException {
-
-		JsonUtils.jsonFileToJavaObject(ParentCar2.class, "C:/InvalidLocation");
-	}*/
+	/*
+	 * @Test(expected = IOException.class) public void
+	 * testjsonFiletoJavaObjectWithIOException() throws JsonParseException,
+	 * JsonMappingException, IOException {
+	 * 
+	 * JsonUtils.jsonFileToJavaObject(ParentCar2.class, "C:/InvalidLocation"); }
+	 */
 
 	@Test(expected = IOException.class)
 	public void testJsonToJacksonJsonWithIOException() throws IOException {

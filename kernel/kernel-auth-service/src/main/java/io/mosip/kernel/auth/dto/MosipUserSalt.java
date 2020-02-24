@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MosipUserSalt {
-	
+
 	private String userId;
 	private String salt;
 

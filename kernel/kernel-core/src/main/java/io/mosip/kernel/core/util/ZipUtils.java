@@ -130,25 +130,26 @@ public class ZipUtils {
 	 * 
 	 */
 
-	/*public static boolean zipFile(String inputFile, String outputFile) throws IOException {
-
-		try (ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(outputFile));
-				FileInputStream fis = new FileInputStream(new File(inputFile))) {
-
-			ZipEntry zipEntry = new ZipEntry(new File(inputFile).getName());
-			zipOut.putNextEntry(zipEntry);
-			readFile(zipOut, fis);
-
-		} catch (java.io.FileNotFoundException e) {
-			throw new FileNotFoundException(ZipUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getErrorCode(),
-					ZipUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getMessage(), e.getCause());
-		} catch (java.io.IOException e) {
-			throw new IOException(ZipUtilConstants.IO_ERROR_CODE.getErrorCode(),
-					ZipUtilConstants.IO_ERROR_CODE.getMessage(), e.getCause());
-		}
-
-		return true;
-	}*/
+	/*
+	 * public static boolean zipFile(String inputFile, String outputFile) throws
+	 * IOException {
+	 * 
+	 * try (ZipOutputStream zipOut = new ZipOutputStream(new
+	 * FileOutputStream(outputFile)); FileInputStream fis = new FileInputStream(new
+	 * File(inputFile))) {
+	 * 
+	 * ZipEntry zipEntry = new ZipEntry(new File(inputFile).getName());
+	 * zipOut.putNextEntry(zipEntry); readFile(zipOut, fis);
+	 * 
+	 * } catch (java.io.FileNotFoundException e) { throw new
+	 * FileNotFoundException(ZipUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getErrorCode
+	 * (), ZipUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getMessage(), e.getCause()); }
+	 * catch (java.io.IOException e) { throw new
+	 * IOException(ZipUtilConstants.IO_ERROR_CODE.getErrorCode(),
+	 * ZipUtilConstants.IO_ERROR_CODE.getMessage(), e.getCause()); }
+	 * 
+	 * return true; }
+	 */
 
 	/**
 	 * This is inner method to read a file
@@ -182,28 +183,27 @@ public class ZipUtils {
 	 * @throws IOException           when file unable to read
 	 */
 
-	/*public static boolean zipMultipleFile(String[] inputMultFile, String outputFile) throws IOException {
-
-		List<String> srcFiles = new ArrayList<>(Arrays.asList(inputMultFile));
-		for (String srcFile : srcFiles) {
-			File fileToZip = new File(srcFile);
-
-			try (ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(outputFile));
-					FileInputStream fis = new FileInputStream(fileToZip)) {
-
-				ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
-				zipOut.putNextEntry(zipEntry);
-				readFile(zipOut, fis);
-			} catch (java.io.FileNotFoundException e) {
-				throw new FileNotFoundException(ZipUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getErrorCode(),
-						ZipUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getMessage(), e.getCause());
-			} catch (java.io.IOException e) {
-				throw new IOException(ZipUtilConstants.IO_ERROR_CODE.getErrorCode(),
-						ZipUtilConstants.IO_ERROR_CODE.getMessage(), e.getCause());
-			}
-		}
-		return true;
-	}*/
+	/*
+	 * public static boolean zipMultipleFile(String[] inputMultFile, String
+	 * outputFile) throws IOException {
+	 * 
+	 * List<String> srcFiles = new ArrayList<>(Arrays.asList(inputMultFile)); for
+	 * (String srcFile : srcFiles) { File fileToZip = new File(srcFile);
+	 * 
+	 * try (ZipOutputStream zipOut = new ZipOutputStream(new
+	 * FileOutputStream(outputFile)); FileInputStream fis = new
+	 * FileInputStream(fileToZip)) {
+	 * 
+	 * ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
+	 * zipOut.putNextEntry(zipEntry); readFile(zipOut, fis); } catch
+	 * (java.io.FileNotFoundException e) { throw new
+	 * FileNotFoundException(ZipUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getErrorCode
+	 * (), ZipUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getMessage(), e.getCause()); }
+	 * catch (java.io.IOException e) { throw new
+	 * IOException(ZipUtilConstants.IO_ERROR_CODE.getErrorCode(),
+	 * ZipUtilConstants.IO_ERROR_CODE.getMessage(), e.getCause()); } } return true;
+	 * }
+	 */
 
 	/**
 	 * Method used for zipping a directory
@@ -220,22 +220,23 @@ public class ZipUtils {
 	 * 
 	 * @throws IOException           when file unable to read
 	 */
-	/*public static boolean zipDirectory(String inputDir, String destDirectory) throws IOException {
-
-		try (ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(destDirectory))) {
-
-			File fileToZip = new File(inputDir);
-			zipFileInDir(fileToZip, fileToZip.getName(), zipOut);
-
-		} catch (java.io.FileNotFoundException e) {
-			throw new FileNotFoundException(ZipUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getErrorCode(),
-					ZipUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getMessage(), e.getCause());
-		} catch (java.io.IOException e) {
-			throw new IOException(ZipUtilConstants.IO_ERROR_CODE.getErrorCode(),
-					ZipUtilConstants.IO_ERROR_CODE.getMessage(), e.getCause());
-		}
-		return true;
-	}*/
+	/*
+	 * public static boolean zipDirectory(String inputDir, String destDirectory)
+	 * throws IOException {
+	 * 
+	 * try (ZipOutputStream zipOut = new ZipOutputStream(new
+	 * FileOutputStream(destDirectory))) {
+	 * 
+	 * File fileToZip = new File(inputDir); zipFileInDir(fileToZip,
+	 * fileToZip.getName(), zipOut);
+	 * 
+	 * } catch (java.io.FileNotFoundException e) { throw new
+	 * FileNotFoundException(ZipUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getErrorCode
+	 * (), ZipUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getMessage(), e.getCause()); }
+	 * catch (java.io.IOException e) { throw new
+	 * IOException(ZipUtilConstants.IO_ERROR_CODE.getErrorCode(),
+	 * ZipUtilConstants.IO_ERROR_CODE.getMessage(), e.getCause()); } return true; }
+	 */
 
 	/**
 	 * Inner method of zipDirectory Method, called for zip all files of the given
@@ -291,29 +292,25 @@ public class ZipUtils {
 	 * @throws IOException           when file unable to read
 	 */
 
-	/*public static boolean unZipFile(String inputZipFile, String outputUnZip) throws IOException {
-
-		try (ZipInputStream zis = new ZipInputStream(new FileInputStream(inputZipFile))) {
-			ZipEntry zipEntry = zis.getNextEntry();
-
-			while (zipEntry != null) {
-				String fileName = zipEntry.getName();
-				File newFile = new File(outputUnZip + fileName);
-				createOutputFile(zis, newFile);
-				zipEntry = zis.getNextEntry();
-			}
-		} catch (java.io.FileNotFoundException e) {
-			throw new FileNotFoundException(ZipUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getErrorCode(),
-					ZipUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getMessage(), e.getCause());
-		} catch (java.lang.NullPointerException e) {
-			throw new NullPointerException(ZipUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getErrorCode(),
-					ZipUtilConstants.NULL_POINTER_ERROR_CODE.getMessage(), e.getCause());
-		} catch (java.io.IOException e) {
-			throw new IOException(ZipUtilConstants.IO_ERROR_CODE.getErrorCode(),
-					ZipUtilConstants.IO_ERROR_CODE.getMessage(), e.getCause());
-		}
-		return true;
-	}*/
+	/*
+	 * public static boolean unZipFile(String inputZipFile, String outputUnZip)
+	 * throws IOException {
+	 * 
+	 * try (ZipInputStream zis = new ZipInputStream(new
+	 * FileInputStream(inputZipFile))) { ZipEntry zipEntry = zis.getNextEntry();
+	 * 
+	 * while (zipEntry != null) { String fileName = zipEntry.getName(); File newFile
+	 * = new File(outputUnZip + fileName); createOutputFile(zis, newFile); zipEntry
+	 * = zis.getNextEntry(); } } catch (java.io.FileNotFoundException e) { throw new
+	 * FileNotFoundException(ZipUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getErrorCode
+	 * (), ZipUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getMessage(), e.getCause()); }
+	 * catch (java.lang.NullPointerException e) { throw new
+	 * NullPointerException(ZipUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getErrorCode(
+	 * ), ZipUtilConstants.NULL_POINTER_ERROR_CODE.getMessage(), e.getCause()); }
+	 * catch (java.io.IOException e) { throw new
+	 * IOException(ZipUtilConstants.IO_ERROR_CODE.getErrorCode(),
+	 * ZipUtilConstants.IO_ERROR_CODE.getMessage(), e.getCause()); } return true; }
+	 */
 
 	/**
 	 * This is inner method for unZipFile method used for created output folder
@@ -356,8 +353,8 @@ public class ZipUtils {
 	public static boolean unZipDirectory(String zipFilePath, String destDirectory) throws IOException {
 		File destDir = new File(destDirectory);
 		if (!destDir.exists()) {
-			boolean isCreated=destDir.mkdir();
-			if(!isCreated) {
+			boolean isCreated = destDir.mkdir();
+			if (!isCreated) {
 				throw new IOException(ZipUtilConstants.IO_ERROR_CODE.getErrorCode(),
 						ZipUtilConstants.IO_ERROR_CODE.getMessage());
 			}
@@ -368,18 +365,18 @@ public class ZipUtils {
 			ZipEntry entry = zipIn.getNextEntry();
 			while (entry != null) {
 				String filePath = destDirectory + File.separator + entry.getName();
-				
+
 				if (!entry.isDirectory()) {
-					boolean isCreated=new File(filePath).getParentFile().mkdirs();
-					if(!isCreated) {
+					boolean isCreated = new File(filePath).getParentFile().mkdirs();
+					if (!isCreated) {
 						throw new IOException(ZipUtilConstants.IO_ERROR_CODE.getErrorCode(),
 								ZipUtilConstants.IO_ERROR_CODE.getMessage());
 					}
 					extractFile(zipIn, filePath);
 				} else {
 					File dir = new File(filePath);
-					boolean isCreated=dir.mkdirs();
-					if(!isCreated) {
+					boolean isCreated = dir.mkdirs();
+					if (!isCreated) {
 						throw new IOException(ZipUtilConstants.IO_ERROR_CODE.getErrorCode(),
 								ZipUtilConstants.IO_ERROR_CODE.getMessage());
 					}

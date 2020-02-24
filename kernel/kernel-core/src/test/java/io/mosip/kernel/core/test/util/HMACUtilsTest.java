@@ -31,15 +31,15 @@ public class HMACUtilsTest {
 	public void testDigestAsPlainText() {
 		assertNotNull(HMACUtils.digestAsPlainText("Bal Vikash Sharma".getBytes()));
 	}
-	
+
 	@Test
-	public void testGenerateRandomIV(){
-		assertThat(HMACUtils.generateSalt(),isA(byte[].class));
+	public void testGenerateRandomIV() {
+		assertThat(HMACUtils.generateSalt(), isA(byte[].class));
 	}
-	
+
 	@Test
-	public void testGenerateRandomIVInputBytes(){
-		assertThat(HMACUtils.generateSalt(16),isA(byte[].class));
+	public void testGenerateRandomIVInputBytes() {
+		assertThat(HMACUtils.generateSalt(16), isA(byte[].class));
 	}
 
 }

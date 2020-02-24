@@ -49,7 +49,7 @@ import io.mosip.kernel.auth.adapter.handler.AuthSuccessHandler;
  *
  * @author Sabbu Uday Kumar
  * @author Ramadurai Saravana Pandian
- * @author Raj Jha 
+ * @author Raj Jha
  * 
  * @since 1.0.0
  **/
@@ -70,24 +70,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public AuthFilter authFilter() {
-	    RequestMatcher requestMatcher = new AntPathRequestMatcher("*");
+		RequestMatcher requestMatcher = new AntPathRequestMatcher("*");
 		AuthFilter filter = new AuthFilter(requestMatcher);
 		filter.setAuthenticationManager(authenticationManager());
 		filter.setAuthenticationSuccessHandler(new AuthSuccessHandler());
 		return filter;
 	}
-	
+
 	@Bean
 	public FilterRegistrationBean<AuthFilter> registration(AuthFilter filter) {
-	    FilterRegistrationBean<AuthFilter> registration = new FilterRegistrationBean<AuthFilter>(filter);
-	    registration.setEnabled(false);
-	    return registration;
+		FilterRegistrationBean<AuthFilter> registration = new FilterRegistrationBean<AuthFilter>(filter);
+		registration.setEnabled(false);
+		return registration;
 	}
-	
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		
+
 		http.csrf().disable().authorizeRequests().antMatchers("*").authenticated().and().exceptionHandling()
 				.authenticationEntryPoint(new AuthEntryPoint()).and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);

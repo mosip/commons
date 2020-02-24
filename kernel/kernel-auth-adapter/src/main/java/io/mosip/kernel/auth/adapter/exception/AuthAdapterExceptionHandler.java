@@ -73,7 +73,7 @@ public class AuthAdapterExceptionHandler {
 		ExceptionUtils.logRootCause(e);
 		return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
 	}
-	
+
 	@ExceptionHandler(AuthZException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> authZException(final HttpServletRequest httpServletRequest,
 			final AuthZException e) throws IOException {

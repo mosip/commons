@@ -18,11 +18,11 @@ import lombok.EqualsAndHashCode;
 //@ApiModel(value = "Blacklisted word", description = "blacklisted words details")
 public class BlacklistedWordsExtnDto extends BaseDto {
 
-	@FilterType(types= {FilterTypeEnum.EQUALS,FilterTypeEnum.STARTSWITH,FilterTypeEnum.CONTAINS})
+	@FilterType(types = { FilterTypeEnum.EQUALS, FilterTypeEnum.STARTSWITH, FilterTypeEnum.CONTAINS })
 	@ApiModelProperty(value = "word", required = true, dataType = "java.lang.String")
 	private String word;
 
-	@FilterType(types= {FilterTypeEnum.EQUALS,FilterTypeEnum.STARTSWITH,FilterTypeEnum.CONTAINS})
+	@FilterType(types = { FilterTypeEnum.EQUALS, FilterTypeEnum.STARTSWITH, FilterTypeEnum.CONTAINS })
 	@ApiModelProperty(value = "langCode", required = true, dataType = "java.lang.String")
 	private String langCode;
 

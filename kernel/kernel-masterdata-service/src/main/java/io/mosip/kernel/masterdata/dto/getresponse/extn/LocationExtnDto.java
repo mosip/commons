@@ -22,22 +22,21 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 //@ApiModel(value = "Location", description = "Location details")
 public class LocationExtnDto extends BaseDto {
-	@FilterType(types = { FilterTypeEnum.EQUALS})
+	@FilterType(types = { FilterTypeEnum.EQUALS })
 	@ApiModelProperty(value = "code", required = true, dataType = "java.lang.String")
 	private String code;
-	
-	@FilterType(types= {FilterTypeEnum.EQUALS,FilterTypeEnum.CONTAINS,FilterTypeEnum.STARTSWITH})
+
+	@FilterType(types = { FilterTypeEnum.EQUALS, FilterTypeEnum.CONTAINS, FilterTypeEnum.STARTSWITH })
 	@ApiModelProperty(value = "name", required = true, dataType = "java.lang.String")
 	private String name;
-	
-	
-	@FilterType(types= {FilterTypeEnum.EQUALS,FilterTypeEnum.CONTAINS,FilterTypeEnum.STARTSWITH})
+
+	@FilterType(types = { FilterTypeEnum.EQUALS, FilterTypeEnum.CONTAINS, FilterTypeEnum.STARTSWITH })
 	@JsonDeserialize(using = CustomIntegerDeserializer.class)
 	@Range(min = 0)
 	@ApiModelProperty(value = "hierarchyLevel", required = true, dataType = "java.lang.Integer")
 	private int hierarchyLevel;
 
-	@FilterType(types= {FilterTypeEnum.EQUALS,FilterTypeEnum.CONTAINS,FilterTypeEnum.STARTSWITH})
+	@FilterType(types = { FilterTypeEnum.EQUALS, FilterTypeEnum.CONTAINS, FilterTypeEnum.STARTSWITH })
 	@ApiModelProperty(value = "hierarchyName", required = true, dataType = "java.lang.String")
 	private String hierarchyName;
 

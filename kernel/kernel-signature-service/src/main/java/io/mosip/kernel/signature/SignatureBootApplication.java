@@ -10,14 +10,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 1.0.0
  *
  */
-@SpringBootApplication(scanBasePackages = {"io.mosip.kernel.signature.*" ,"io.mosip.kernel.auth.*" })
+@SpringBootApplication(scanBasePackages = { "io.mosip.kernel.signature.*", "io.mosip.kernel.auth.*" })
 public class SignatureBootApplication {
 
 	/**
 	 * Main method to run spring boot application
 	 * 
-	 * @param args
-	 *            args
+	 * @param args args
 	 */
 	public static void main(String[] args) {
 		SpringApplication.run(SignatureBootApplication.class, args);

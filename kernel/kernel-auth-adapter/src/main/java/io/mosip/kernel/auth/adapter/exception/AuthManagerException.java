@@ -33,12 +33,12 @@ public class AuthManagerException extends AuthenticationException {
 		super(errorMessage);
 		this.errorCode = errorCode;
 	}
-	
+
 	public AuthManagerException(String errorCode, String errorMessage, Throwable rootCause) {
 		super(errorMessage, rootCause);
 		this.errorCode = errorCode;
 	}
-	
+
 	/**
 	 * This variable holds the MosipErrors list.
 	 */
@@ -47,7 +47,7 @@ public class AuthManagerException extends AuthenticationException {
 	/**
 	 * @param list The error list.
 	 */
-	public AuthManagerException(String errorCode,List<ServiceError> list) {
+	public AuthManagerException(String errorCode, List<ServiceError> list) {
 		super(errorCode);
 		this.list = list;
 	}

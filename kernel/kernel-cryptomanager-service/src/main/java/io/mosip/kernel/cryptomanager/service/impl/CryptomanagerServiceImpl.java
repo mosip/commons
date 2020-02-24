@@ -72,13 +72,11 @@ public class CryptomanagerServiceImpl implements CryptomanagerService {
 		SecretKey secretKey = keyGenerator.getSymmetricKey();
 		final byte[] encryptedData;
 		if (cryptomanagerUtil.isValidSalt(CryptomanagerUtils.nullOrTrim(cryptoRequestDto.getSalt()))) {
-			encryptedData = cryptoCore.symmetricEncrypt(secretKey,
-					CryptoUtil.decodeBase64(cryptoRequestDto.getData()),
+			encryptedData = cryptoCore.symmetricEncrypt(secretKey, CryptoUtil.decodeBase64(cryptoRequestDto.getData()),
 					CryptoUtil.decodeBase64(CryptomanagerUtils.nullOrTrim(cryptoRequestDto.getSalt())),
-							CryptoUtil.decodeBase64(CryptomanagerUtils.nullOrTrim(cryptoRequestDto.getAad())));
+					CryptoUtil.decodeBase64(CryptomanagerUtils.nullOrTrim(cryptoRequestDto.getAad())));
 		} else {
-			encryptedData = cryptoCore.symmetricEncrypt(secretKey,
-					CryptoUtil.decodeBase64(cryptoRequestDto.getData()),
+			encryptedData = cryptoCore.symmetricEncrypt(secretKey, CryptoUtil.decodeBase64(cryptoRequestDto.getData()),
 					CryptoUtil.decodeBase64(CryptomanagerUtils.nullOrTrim(cryptoRequestDto.getAad())));
 		}
 		PublicKey publicKey = cryptomanagerUtil.getPublicKey(cryptoRequestDto);
