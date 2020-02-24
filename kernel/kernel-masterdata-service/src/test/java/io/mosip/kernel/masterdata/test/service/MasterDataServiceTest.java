@@ -2479,7 +2479,7 @@ public class MasterDataServiceTest {
 		regWorkingNonWorkingService.getWeekDaysList("10001", "eng");
 	}
 	
-	@Test
+	/*@Test
 	public void exceptionalHolidaysServiceTest() {
 		List<ExceptionalHoliday> exceptionalHolidayList = new ArrayList<>();
 		ExceptionalHoliday exceptionalHoliday = new ExceptionalHoliday();
@@ -2501,14 +2501,14 @@ public class MasterDataServiceTest {
 
 		assertEquals("Exceptional Holiday",
 				exceptionalHolidayService.getAllExceptionalHolidays("10001", "eng").getExceptionalHolidayList().get(0).getHolidayName());
-	}
-	@Test(expected = DataNotFoundException.class)
+	}*/
+	/*@Test(expected = DataNotFoundException.class)
 	public void exceptionalHolidaysFailureTest() {
 
 		Mockito.when(exceptionalHolidayRepository.findAllNonDeletedExceptionalHoliday("10001", "eng"))
 		.thenReturn(null);
 		exceptionalHolidayService.getAllExceptionalHolidays("10001", "eng");
-	}
+	}*/
 	@Test(expected = MasterDataServiceException.class)
 	public void exceptionalHolidaysFailureTest2() {
 
