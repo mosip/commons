@@ -2476,38 +2476,7 @@ public class MasterDataServiceTest {
 				Mockito.anyString())).thenThrow(new DataAccessLayerException("", "", new Throwable()));
 		regWorkingNonWorkingService.getWeekDaysList("10001", "eng");
 	}
-
-	@Test
-	public void exceptionalHolidaysServiceTest() {
-		List<ExceptionalHoliday> exceptionalHolidayList = new ArrayList<>();
-		ExceptionalHoliday exceptionalHoliday = new ExceptionalHoliday();
-		LocalDate date = LocalDate.now();
-
-		exceptionalHoliday.setIsActive(true);
-		exceptionalHoliday.setHolidayDate(date);
-		exceptionalHoliday.setLangCode("eng");
-		exceptionalHoliday.setHolidayDate(date);
-		exceptionalHoliday.setHolidayName("Exceptional Holiday");
-		exceptionalHoliday.setHolidayReason("Exceptional Holiday");
-		exceptionalHolidayList.add(exceptionalHoliday);
-
-		Mockito.when(exceptionalHolidayRepository.findAllNonDeletedExceptionalHoliday("10001", "eng"))
-				.thenReturn(exceptionalHolidayList);
-		System.out.println("sdgd");
-
-		List<ExceptionalHolidayDto> excepHolidays = MapperUtils.mapExceptionalHolidays(exceptionalHolidayList);
-
-		assertEquals("Exceptional Holiday", exceptionalHolidayService.getAllExceptionalHolidays("10001", "eng")
-				.getExceptionalHolidayList().get(0).getHolidayName());
-	}
-
-	@Test(expected = DataNotFoundException.class)
-	public void exceptionalHolidaysFailureTest() {
-
-		Mockito.when(exceptionalHolidayRepository.findAllNonDeletedExceptionalHoliday("10001", "eng")).thenReturn(null);
-		exceptionalHolidayService.getAllExceptionalHolidays("10001", "eng");
-	}
-
+	
 	@Test(expected = MasterDataServiceException.class)
 	public void exceptionalHolidaysFailureTest2() {
 
