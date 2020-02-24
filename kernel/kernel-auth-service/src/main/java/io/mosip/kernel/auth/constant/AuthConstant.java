@@ -96,5 +96,7 @@ public class AuthConstant {
 	public static final String REALM_ID = "realmId";
 
 	public static final String REFRESH_TOKEN = "refresh_token";
+	
+	public static final String PRE_REGISTRATION="preregistration";
 
 }

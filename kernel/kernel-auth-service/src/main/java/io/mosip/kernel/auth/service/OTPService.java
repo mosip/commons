@@ -19,7 +19,7 @@ public interface OTPService {
 
 	AuthNResponseDto sendOTP(MosipUserDto mosipUserDto, List<String> channel, String appId);
 
-	MosipUserTokenDto validateOTP(MosipUserDto mosipUser, String otp);
+	MosipUserTokenDto validateOTP(MosipUserDto mosipUser, String otp,String appId);
 
 	AuthNResponseDto sendOTPForUin(MosipUserDto mosipUserDto, OtpUser otpUser, String appId);
 

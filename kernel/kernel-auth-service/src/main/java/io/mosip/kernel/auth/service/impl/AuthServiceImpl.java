@@ -317,16 +317,20 @@ public class AuthServiceImpl implements AuthService {
 	public AuthNResponseDto authenticateUserWithOtp(UserOtp userOtp) throws Exception {
 		AuthNResponseDto authNResponseDto = new AuthNResponseDto();
 		MosipUserTokenDto mosipToken = null;
-		MosipUserDto mosipUser = null;
-		if (keycloakImpl.isUserAlreadyPresent(userOtp.getUserId())) {
-			mosipUser = new MosipUserDto();
+		MosipUserDto mosipUser= null;
+		String realm=realmId;
+		if(userOtp.getAppId().equalsIgnoreCase(AuthConstant.PRE_REGISTRATION)) {
+			realm=userOtp.getAppId();
+		}
+		if(keycloakImpl.isUserAlreadyPresent(userOtp.getUserId(),realm)) {
+			mosipUser=new MosipUserDto();
 			mosipUser.setUserId(userOtp.getUserId());
 		}
 		if (mosipUser == null && AuthConstant.IDA.toLowerCase().equals(userOtp.getAppId().toLowerCase())) {
 			mosipUser = uinService.getDetailsForValidateOtp(userOtp.getUserId());
 		}
 		if (mosipUser != null) {
-			mosipToken = oTPService.validateOTP(mosipUser, userOtp.getOtp());
+			mosipToken = oTPService.validateOTP(mosipUser, userOtp.getOtp(),userOtp.getAppId());
 		} else {
 			throw new AuthManagerException(AuthErrorCode.USER_VALIDATION_ERROR.getErrorCode(),
 					AuthErrorCode.USER_VALIDATION_ERROR.getErrorMessage());
@@ -536,14 +540,13 @@ public class AuthServiceImpl implements AuthService {
 		if (EmptyCheckUtils.isNullEmpty(token)) {
 			throw new AuthenticationServiceException(AuthErrorCode.INVALID_TOKEN.getErrorMessage());
 		}
-
-		// token =
-		// token.substring(AuthAdapterConstant.AUTH_ADMIN_COOKIE_PREFIX.length());
-		pathparams.put(KeycloakConstants.REALM_ID, "mosip");
+          String issuer=tokenValidator.getissuer(token);
+		//token = token.substring(AuthAdapterConstant.AUTH_ADMIN_COOKIE_PREFIX.length());
+		//pathparams.put(KeycloakConstants.REALM_ID, azp);
 		ResponseEntity<String> response = null;
 		MosipUserDto mosipUserDto = null;
-		System.out.println("validate token url " + openIdUrl);
-		StringBuilder urlBuilder = new StringBuilder().append(openIdUrl).append("userinfo");
+		System.out.println("validate token url "+openIdUrl);
+		StringBuilder urlBuilder = new StringBuilder().append(issuer).append("/protocol/openid-connect/userinfo");
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(urlBuilder.toString());
 		HttpHeaders headers = new HttpHeaders();
 		System.out.println(token);

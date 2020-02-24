@@ -104,6 +104,12 @@ public class OTPServiceImpl implements OTPService {
 
 	@Value("${mosip.kernel.auth.client.id}")
 	private String authClientID;
+	
+	@Value("${mosip.kernel.prereg.client.id}")
+	private String preregClientId;
+	
+	@Value("${mosip.kernel.prereg.secret.key}")
+	private String preregSecretKey;
 
 	@Value("${mosip.kernel.auth.secret.key}")
 	private String authSecret;
@@ -122,6 +128,10 @@ public class OTPServiceImpl implements OTPService {
 
 	@Value("${mosip.admin.pre-reg_user_password}")
 	private String preRegUserPassword;
+	
+	@Value("${mosip.kernel.prereg.realm-id}")
+	private String preregRealmId;
+	
 
 	@Override
 	public AuthNResponseDto sendOTP(MosipUserDto mosipUserDto, List<String> otpChannel, String appId) {
@@ -133,7 +143,7 @@ public class OTPServiceImpl implements OTPService {
 		try {
 			// token = tokenService.getInternalTokenGenerationService();
 			AccessTokenResponse accessTokenResponse = getAuthAccessToken(authClientID,
-					"050c7e61-e415-4390-a1ac-03e1624e2b1d");
+					"050c7e61-e415-4390-a1ac-03e1624e2b1d",realmId);
 			token = AuthAdapterConstant.AUTH_ADMIN_COOKIE_PREFIX + accessTokenResponse.getAccess_token();
 		} catch (HttpClientErrorException | HttpServerErrorException ex) {
 			List<ServiceError> validationErrorsList = ExceptionUtils.getServiceErrorList(ex.getResponseBodyAsString());
@@ -351,7 +361,7 @@ public class OTPServiceImpl implements OTPService {
 	}
 
 	@Override
-	public MosipUserTokenDto validateOTP(MosipUserDto mosipUser, String otp) {
+	public MosipUserTokenDto validateOTP(MosipUserDto mosipUser, String otp,String appId) {
 		String key = new OtpGenerateRequest(mosipUser).getKey();
 		MosipUserTokenDto mosipUserDtoToken = null;
 		ResponseEntity<String> response = null;
@@ -359,9 +369,10 @@ public class OTPServiceImpl implements OTPService {
 		String token = null;
 		AccessTokenResponse accessTokenResponse = null;
 		AccessTokenResponse responseAccessTokenResponse = null;
+		String realm=appId.equalsIgnoreCase("preregistration")?appId:realmId;
 		try {
-			// token = tokenService.getInternalTokenGenerationService();
-			accessTokenResponse = getAuthAccessToken(authClientID, authSecret);
+			
+			accessTokenResponse = getAuthAccessToken(authClientID, authSecret,realm);
 
 			token = accessTokenResponse.getAccess_token();
 		} catch (Exception e) {
@@ -381,7 +392,7 @@ public class OTPServiceImpl implements OTPService {
 			if (!validationErrorsList.isEmpty()) {
 				throw new AuthManagerServiceException(validationErrorsList);
 			}
-			responseAccessTokenResponse = getUserAccessToken(mosipUser.getUserId());
+			responseAccessTokenResponse = getUserAccessToken(mosipUser.getUserId(),realm);
 			OtpValidatorResponseDto otpResponse = null;
 			ResponseWrapper<?> responseObject;
 			try {
@@ -420,7 +431,7 @@ public class OTPServiceImpl implements OTPService {
 		authOtpValidator.validateOTPUser(otpUser);
 		try {
 			// token = tokenService.getInternalTokenGenerationService();
-			accessTokenResponse = getAuthAccessToken(idaClientID, idaSecret);
+			accessTokenResponse = getAuthAccessToken(idaClientID, idaSecret,realmId);
 		} catch (HttpClientErrorException | HttpServerErrorException ex) {
 			List<ServiceError> validationErrorsList = ExceptionUtils.getServiceErrorList(ex.getResponseBodyAsString());
 
@@ -497,7 +508,7 @@ public class OTPServiceImpl implements OTPService {
 		authOtpValidator.validateOTPUser(otpUser);
 		try {
 			// token = tokenService.getInternalTokenGenerationService();
-			accessTokenResponse = getAuthAccessToken(authClientID, authSecret);
+			accessTokenResponse = getAuthAccessToken(authClientID, authSecret,otpUser.getAppId());
 		} catch (HttpClientErrorException | HttpServerErrorException ex) {
 			List<ServiceError> validationErrorsList = ExceptionUtils.getServiceErrorList(ex.getResponseBodyAsString());
 
@@ -621,22 +632,26 @@ public class OTPServiceImpl implements OTPService {
 		return otpEmailSendResponseDto;
 	}
 
-	private AccessTokenResponse getUserAccessToken(String username) {
+	private AccessTokenResponse getUserAccessToken(String username,String realm) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		MultiValueMap<String, String> tokenRequestBody = null;
 		Map<String, String> pathParams = new HashMap<>();
-		pathParams.put(AuthConstant.REALM_ID, realmId);
+		pathParams.put(AuthConstant.REALM_ID, realm);
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(keycloakOpenIdUrl + "/token");
-		tokenRequestBody = getAdminValueMap(username);
+		tokenRequestBody = getAdminValueMap(username,realm);
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(tokenRequestBody, headers);
 		ResponseEntity<AccessTokenResponse> response = restTemplate.postForEntity(
 				uriComponentsBuilder.buildAndExpand(pathParams).toUriString(), request, AccessTokenResponse.class);
 		return response.getBody();
 	}
 
-	private AccessTokenResponse getAuthAccessToken(String clientID, String clientSecret) {
+	private AccessTokenResponse getAuthAccessToken(String clientID, String clientSecret,String realmId) {
 		HttpHeaders headers = new HttpHeaders();
+		if(realmId.equalsIgnoreCase(preregRealmId)) {
+			clientID=preregClientId;
+			clientSecret=preregSecretKey;
+		}
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		MultiValueMap<String, String> tokenRequestBody = null;
 		Map<String, String> pathParams = new HashMap<>();
@@ -649,13 +664,18 @@ public class OTPServiceImpl implements OTPService {
 		return response.getBody();
 	}
 
-	private MultiValueMap<String, String> getAdminValueMap(String username) {
+	private MultiValueMap<String, String> getAdminValueMap(String username,String realm) {
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		if(realm.equalsIgnoreCase(preregRealmId)) {
+			map.add(AuthConstant.CLIENT_ID, preregClientId);
+			map.add(AuthConstant.CLIENT_SECRET, preregSecretKey);
+		}else {
+			map.add(AuthConstant.CLIENT_ID, mosipAdminClientID);
+			map.add(AuthConstant.CLIENT_SECRET, mosipAdminSecret);
+		}
 		map.add(AuthConstant.GRANT_TYPE, AuthConstant.PASSWORDCONSTANT);
 		map.add(AuthConstant.USER_NAME, username);
 		map.add(AuthConstant.PASSWORDCONSTANT, preRegUserPassword);
-		map.add(AuthConstant.CLIENT_ID, mosipAdminClientID);
-		map.add(AuthConstant.CLIENT_SECRET, mosipAdminSecret);
 		return map;
 	}
 

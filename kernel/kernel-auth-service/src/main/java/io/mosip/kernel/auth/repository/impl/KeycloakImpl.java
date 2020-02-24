@@ -289,15 +289,20 @@ public class KeycloakImpl implements DataStore {
 	public MosipUserDto registerUser(UserRegistrationRequestDto userId) {
 		Map<String, String> pathParams = new HashMap<>();
 		KeycloakRequestDto keycloakRequestDto = mapUserRequestToKeycloakRequestDto(userId);
-		pathParams.put(AuthConstant.REALM_ID, realmId);
-		HttpEntity<KeycloakRequestDto> httpEntity = new HttpEntity<KeycloakRequestDto>(keycloakRequestDto);
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(keycloakAdminUrl + users);
-		if (!isUserAlreadyPresent(userId.getUserName())) {
+		String realm=realmId;
+		if(userId.getAppId().equalsIgnoreCase(AuthConstant.PRE_REGISTRATION)) {
+			realm=userId.getAppId();
+		}
+		pathParams.put(AuthConstant.REALM_ID, realm);
+		HttpEntity<KeycloakRequestDto> httpEntity = new HttpEntity<>(keycloakRequestDto);
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
+				.fromUriString(keycloakBaseUrl.concat("/users"));
+		if (!isUserAlreadyPresent(userId.getUserName(),realm)) {
 			callKeycloakService(uriComponentsBuilder.buildAndExpand(pathParams).toString(), HttpMethod.POST,
 					httpEntity);
 			if (keycloakRequestDto.getRealmRoles().contains(INDIVIDUAL)) {
-				String userID = getIDfromUserID(userId.getUserName());
-				roleMapper(userID);
+				String userID = getIDfromUserID(userId.getUserName(),realm);
+				roleMapper(userID, realm);
 			}
 		}
 
@@ -307,8 +312,9 @@ public class KeycloakImpl implements DataStore {
 
 	}
 
-	private void roleMapper(String userID) {
+	private void roleMapper(String userID, String realmId) {
 		Map<String, String> pathParams = new HashMap<>();
+
 		pathParams.put(AuthConstant.REALM_ID, realmId);
 		pathParams.put("userID", userID);
 		Roles role = new Roles(individualRoleID, INDIVIDUAL);
@@ -317,16 +323,15 @@ public class KeycloakImpl implements DataStore {
 		pathParams.put(AuthConstant.REALM_ID, realmId);
 		HttpEntity<List<Roles>> httpEntity = new HttpEntity<>(roles);
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
-				.fromUriString(keycloakAdminUrl + users + "/{userID}/role-mappings/realm");
-		String response = callKeycloakService(uriComponentsBuilder.buildAndExpand(pathParams).toString(),
-				HttpMethod.POST, httpEntity);
+				.fromUriString(keycloakBaseUrl.concat("/users/{userID}/role-mappings/realm"));
+		callKeycloakService(uriComponentsBuilder.buildAndExpand(pathParams).toString(), HttpMethod.POST, httpEntity);
 	}
 
-	private String getIDfromUserID(String userName) {
+	private String getIDfromUserID(String userName,String realmId) {
 		Map<String, String> pathParams = new HashMap<>();
 		pathParams.put(AuthConstant.REALM_ID, realmId);
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
-				.fromUriString(keycloakAdminUrl + users + "?username=" + userName);
+				.fromUriString(keycloakBaseUrl.concat("/users?username=").concat(userName));
 		String response = callKeycloakService(uriComponentsBuilder.buildAndExpand(pathParams).toString(),
 				HttpMethod.GET, null);
 		JsonNode jsonNodes;
@@ -357,11 +362,11 @@ public class KeycloakImpl implements DataStore {
 	 * @return true, if successful
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public boolean isUserAlreadyPresent(String userName) {
+	public boolean isUserAlreadyPresent(String userName,String realmId) {
 		Map<String, String> pathParams = new HashMap<>();
 		pathParams.put(AuthConstant.REALM_ID, realmId);
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
-				.fromUriString(keycloakAdminUrl + users + "?username=" + userName);
+				.fromUriString(keycloakBaseUrl.concat("/users?username=").concat(userName));
 		String response = callKeycloakService(uriComponentsBuilder.buildAndExpand(pathParams).toString(),
 				HttpMethod.GET, null);
 		JsonNode jsonNodes;
@@ -531,6 +536,9 @@ public class KeycloakImpl implements DataStore {
 					throw new AccessDeniedException("Access denied from AuthManager");
 				}
 			}
+
+			throw new AuthManagerException(AuthErrorCode.SERVER_ERROR.getErrorCode(),
+					AuthErrorCode.SERVER_ERROR.getErrorMessage());
 
 		}
 		if (responseEntity != null && responseEntity.hasBody() && responseEntity.getStatusCode() == HttpStatus.OK) {
