@@ -18,6 +18,8 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -99,8 +101,14 @@ public class RestInterceptor implements ClientHttpRequestInterceptor {
 		}
 
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(tokenRequestBody, headers);
-		ResponseEntity<AccessTokenResponse> response = restTemplate.postForEntity(
+		ResponseEntity<AccessTokenResponse> response=null;
+		try {
+		 response = restTemplate.postForEntity(
 				uriComponentsBuilder.buildAndExpand(pathParams).toUriString(), request, AccessTokenResponse.class);
+		}catch(HttpServerErrorException | HttpClientErrorException ex) {
+			ex.printStackTrace();
+		}
+		
 		return response.getBody();
 	}
 
