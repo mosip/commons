@@ -214,8 +214,7 @@ public class SignatureUtilImplTest {
 				.andRespond(withSuccess(objectMapper.writeValueAsString(response), MediaType.APPLICATION_JSON));
 		PrivateKey privateKey = keyPair.getPrivate();
 		String signature = cryptoCore.sign("MOCKEDDATATOSIGN".getBytes(), privateKey);
-		boolean isVerfied = signingUtil.validate(signature, "MOCKEDDATATOSIGN",
-				"2019-09-09T09:09:09.000Z");
+		boolean isVerfied = signingUtil.validate(signature, "MOCKEDDATATOSIGN", "2019-09-09T09:09:09.000Z");
 		assertTrue(isVerfied);
 	}
 

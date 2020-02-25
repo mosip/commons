@@ -54,7 +54,7 @@ public class HolidayController {
 
 	@Autowired
 	private HolidayService holidayService;
-	
+
 	@Autowired
 	private AuditUtil auditUtil;
 
@@ -75,8 +75,7 @@ public class HolidayController {
 	/**
 	 * This method returns list of holidays for a particular holiday id
 	 * 
-	 * @param holidayId
-	 *            input parameter holiday id
+	 * @param holidayId input parameter holiday id
 	 * @return list of holidays for a particular holiday id
 	 */
 	@ResponseFilter
@@ -92,10 +91,8 @@ public class HolidayController {
 	 * This method returns a list of holidays containing a particular language code
 	 * and holiday id
 	 * 
-	 * @param holidayId
-	 *            input parameter holiday id
-	 * @param langCode
-	 *            input parameter language code
+	 * @param holidayId input parameter holiday id
+	 * @param langCode  input parameter language code
 	 * @return {@link HolidayResponseDto}
 	 */
 	@ResponseFilter
@@ -110,8 +107,7 @@ public class HolidayController {
 	/**
 	 * This method creates a new row of holiday data
 	 * 
-	 * @param holiday
-	 *            input values to add a new row of data
+	 * @param holiday input values to add a new row of data
 	 * @return primary key of inserted Holiday data
 	 */
 	@ResponseFilter
@@ -129,8 +125,7 @@ public class HolidayController {
 	/**
 	 * Method to update a holiday
 	 * 
-	 * @param holiday
-	 *            input values to update the data
+	 * @param holiday input values to update the data
 	 * @return id of updated Holiday data
 	 */
 	@ResponseFilter
@@ -149,8 +144,7 @@ public class HolidayController {
 	/**
 	 * Method to delete holidays
 	 * 
-	 * @param request
-	 *            input values to delete
+	 * @param request input values to delete
 	 * @return id of the deleted Holiday data
 	 */
 	@ResponseFilter
@@ -166,14 +160,10 @@ public class HolidayController {
 	/**
 	 * This controller method provides with all holidays.
 	 * 
-	 * @param pageNumber
-	 *            the page number
-	 * @param pageSize
-	 *            the size of each page
-	 * @param sortBy
-	 *            the attributes by which it should be ordered
-	 * @param orderBy
-	 *            the order to be used
+	 * @param pageNumber the page number
+	 * @param pageSize   the size of each page
+	 * @param sortBy     the attributes by which it should be ordered
+	 * @param orderBy    the order to be used
 	 * 
 	 * @return the response i.e. pages containing the holidays.
 	 */
@@ -196,8 +186,7 @@ public class HolidayController {
 	/**
 	 * Api to search Holiday based on filters provided.
 	 * 
-	 * @param request
-	 *            the request DTO.
+	 * @param request the request DTO.
 	 * @return the pages of {@link HolidaySearchDto}.
 	 */
 	@ResponseFilter
@@ -206,24 +195,25 @@ public class HolidayController {
 	public ResponseWrapper<PageResponseDto<HolidaySearchDto>> searchMachine(
 
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
-			auditUtil.auditRequest(
+		auditUtil.auditRequest(
 				String.format(MasterDataConstant.SEARCH_API_IS_CALLED, HolidaySearchDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SEARCH_API_IS_CALLED, HolidaySearchDto.class.getSimpleName()),"ADM-595");
+				String.format(MasterDataConstant.SEARCH_API_IS_CALLED, HolidaySearchDto.class.getSimpleName()),
+				"ADM-595");
 		ResponseWrapper<PageResponseDto<HolidaySearchDto>> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(holidayService.searchHolidays(request.getRequest()));
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.SUCCESSFUL_SEARCH, HolidaySearchDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SUCCESSFUL_SEARCH_DESC, HolidaySearchDto.class.getSimpleName()),"ADM-596");
+				String.format(MasterDataConstant.SUCCESSFUL_SEARCH_DESC, HolidaySearchDto.class.getSimpleName()),
+				"ADM-596");
 		return responseWrapper;
 	}
 
 	/**
 	 * Api to filter Holiday based on column and type provided.
 	 * 
-	 * @param request
-	 *            the request DTO.
+	 * @param request the request DTO.
 	 * @return the {@link FilterResponseDto}.
 	 */
 	@ResponseFilter
@@ -235,8 +225,5 @@ public class HolidayController {
 		responseWrapper.setResponse(holidayService.holidaysFilterValues(request.getRequest()));
 		return responseWrapper;
 	}
-	
-
-	
 
 }

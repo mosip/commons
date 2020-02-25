@@ -40,12 +40,9 @@ public class MachineHistoryController {
 	 * Get api to fetch a machine history details based on given Machine ID,
 	 * Language code and effective date time
 	 * 
-	 * @param id
-	 *            input machine Id from User
-	 * @param langCode
-	 *            input Language Code from user
-	 * @param dateAndTime
-	 *            input effective date and time from user
+	 * @param id          input machine Id from User
+	 * @param langCode    input Language Code from user
+	 * @param dateAndTime input effective date and time from user
 	 * 
 	 * @return MachineHistoryResponseDto returning machine history detail based on
 	 *         given Machine ID, Language code and effective date time

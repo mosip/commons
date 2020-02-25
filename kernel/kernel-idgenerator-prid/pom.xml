@@ -8,20 +8,26 @@
 	<parent>
 		<groupId>io.mosip.kernel</groupId>
 		<artifactId>kernel-parent</artifactId>
-		<version>1.0.6-SNAPSHOT</version>
+		<version>1.0.6</version>
 	</parent>
-
+	<properties>
+		<kernel.core.version>1.0.6</kernel.core.version>
+		<kernel.dataaccess-hibernate.version>1.0.6</kernel.dataaccess-hibernate.version>
+		<kernel.logger.version>1.0.6</kernel.logger.version>
+		<kernel.idvalidator-prid.version>1.0.6</kernel.idvalidator-prid.version>
+		<kernel.crypto-jce.version>1.0.6</kernel.crypto-jce.version>
+	</properties>
 	<artifactId>kernel-idgenerator-prid</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-dataaccess-hibernate</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.dataaccess-hibernate.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -37,12 +43,12 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-idvalidator-prid</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.idvalidator-prid.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-crypto-jce</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.crypto-jce.version}</version>
 		</dependency>
 	</dependencies>
 	<build>

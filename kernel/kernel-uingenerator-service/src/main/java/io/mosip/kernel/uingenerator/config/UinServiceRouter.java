@@ -141,7 +141,7 @@ public class UinServiceRouter {
 				ServiceError error = new ServiceError(UinGeneratorErrorCode.UIN_NOT_FOUND.getErrorCode(),
 						UinGeneratorErrorCode.UIN_NOT_FOUND.getErrorMessage());
 				setError(routingContext, error, blockingCodeHandler);
-			} 
+			}
 			/*
 			 * catch (Exception e) { ExceptionUtils.logRootCause(e); ServiceError error =
 			 * new ServiceError(UinGeneratorErrorCode.INTERNAL_SERVER_ERROR.getErrorCode(),
@@ -152,10 +152,10 @@ public class UinServiceRouter {
 				if (isSignEnable) {
 					String signedData = null;
 					String resWrpJsonString = null;
-					SignatureResponse cryptoManagerResponseDto=null;
+					SignatureResponse cryptoManagerResponseDto = null;
 					try {
 						resWrpJsonString = objectMapper.writeValueAsString(reswrp);
-                        cryptoManagerResponseDto = signatureUtil.sign(resWrpJsonString, timestamp);
+						cryptoManagerResponseDto = signatureUtil.sign(resWrpJsonString, timestamp);
 					} catch (JsonProcessingException e) {
 
 					} catch (SignatureUtilClientException e1) {
@@ -179,7 +179,8 @@ public class UinServiceRouter {
 			} else {
 				try {
 					routingContext.response().putHeader("content-type", UinGeneratorConstant.APPLICATION_JSON)
-							.setStatusCode(200).end(objectMapper.writeValueAsString(resultHandler.cause().getMessage()));
+							.setStatusCode(200)
+							.end(objectMapper.writeValueAsString(resultHandler.cause().getMessage()));
 				} catch (JsonProcessingException e1) {
 
 				}

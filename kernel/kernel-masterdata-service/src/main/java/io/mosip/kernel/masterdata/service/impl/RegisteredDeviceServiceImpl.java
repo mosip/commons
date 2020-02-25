@@ -112,8 +112,12 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 	@Value("${masterdata.registerdevice.timestamp.validate:+5}")
 	private String registerDeviceTimeStamp;
 
-	/* (non-Javadoc)
-	 * @see io.mosip.kernel.masterdata.service.RegisteredDeviceService#signedRegisteredDevice(io.mosip.kernel.masterdata.dto.registerdevice.RegisteredDevicePostDto)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.mosip.kernel.masterdata.service.RegisteredDeviceService#
+	 * signedRegisteredDevice(io.mosip.kernel.masterdata.dto.registerdevice.
+	 * RegisteredDevicePostDto)
 	 */
 	@Override
 	public String signedRegisteredDevice(RegisteredDevicePostDto registeredDevicePostDto) {
@@ -352,8 +356,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 	/**
 	 * Creates the history details.
 	 *
-	 * @param deviceRegister
-	 *            the device register
+	 * @param deviceRegister the device register
 	 */
 	private void createHistoryDetails(RegisteredDevice deviceRegister) {
 		RegisteredDeviceHistory deviceRegisterHistory = new RegisteredDeviceHistory();
@@ -373,8 +376,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 	/**
 	 * Update register details.
 	 *
-	 * @param deviceRegister
-	 *            the device register
+	 * @param deviceRegister the device register
 	 */
 	private void updateRegisterDetails(RegisteredDevice deviceRegister) {
 		try {

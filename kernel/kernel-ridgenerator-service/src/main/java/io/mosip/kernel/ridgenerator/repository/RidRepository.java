@@ -21,10 +21,8 @@ public interface RidRepository extends BaseRepository<Rid, CenterAndMachineId> {
 	/**
 	 * This method fetch entity for provided center and machine id.
 	 * 
-	 * @param centerId
-	 *            the center id.
-	 * @param machineId
-	 *            the machine id.
+	 * @param centerId  the center id.
+	 * @param machineId the machine id.
 	 * @return the entity.
 	 */
 	@Query("from Rid r WHERE r.centerId=?1 AND r.machineId=?2")
@@ -33,12 +31,9 @@ public interface RidRepository extends BaseRepository<Rid, CenterAndMachineId> {
 	/**
 	 * This method update sequence number against provided center and machine id.
 	 * 
-	 * @param currentSequence
-	 *            the current sequence number.
-	 * @param centerId
-	 *            the center id.
-	 * @param machineId
-	 *            the machine id.
+	 * @param currentSequence the current sequence number.
+	 * @param centerId        the center id.
+	 * @param machineId       the machine id.
 	 * @return the number of updated rows.
 	 */
 	@Modifying

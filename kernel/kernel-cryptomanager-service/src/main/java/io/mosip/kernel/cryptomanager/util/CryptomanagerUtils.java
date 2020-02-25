@@ -70,7 +70,6 @@ import io.mosip.kernel.cryptomanager.exception.ParseResponseException;
 @Component
 public class CryptomanagerUtils {
 
-	
 	private static final String RESPONSE = "response";
 
 	private static final String ACCESS_DENIED = "Access denied for ";
@@ -84,7 +83,7 @@ public class CryptomanagerUtils {
 	private static final String APPLICATION_ID = "applicationId";
 
 	private static final String UTC_DATETIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-	
+
 	@Autowired
 	private ObjectMapper objectMapper;
 
@@ -105,7 +104,6 @@ public class CryptomanagerUtils {
 	 */
 	@Value("${mosip.kernel.keymanager-service-publickey-url}")
 	private String getPublicKeyUrl;
-
 
 	/**
 	 * Keymanager URL to Decrypt Symmetric key
@@ -129,9 +127,7 @@ public class CryptomanagerUtils {
 
 	@Value("${mosip.kernel.cryptomanager.request_version}")
 	private String cryptomanagerRequestVersion;
-	
-	
-	
+
 	/**
 	 * {@link DataMapper} instance.
 	 */
@@ -143,10 +139,10 @@ public class CryptomanagerUtils {
 	 */
 	@Autowired
 	private RestTemplate restTemplate;
-	
-	private static final String KEYMANAGER="Keymanager";
-	
-	private static final String PUBLIC_KEY="Public Key";
+
+	private static final String KEYMANAGER = "Keymanager";
+
+	private static final String PUBLIC_KEY = "Public Key";
 
 	/**
 	 * Calls Key-Manager-Service to get public key of an application
@@ -171,7 +167,8 @@ public class CryptomanagerUtils {
 
 		}
 		throwExceptionIfExist(response);
-		KeymanagerPublicKeyResponseDto keyManagerResponseDto = getResponse(response, KeymanagerPublicKeyResponseDto.class);
+		KeymanagerPublicKeyResponseDto keyManagerResponseDto = getResponse(response,
+				KeymanagerPublicKeyResponseDto.class);
 
 		try {
 			key = KeyFactory.getInstance(asymmetricAlgorithmName).generatePublic(
@@ -210,14 +207,15 @@ public class CryptomanagerUtils {
 			response = restTemplate.exchange(decryptSymmetricKeyUrl, HttpMethod.POST, keyManagerRequestEntity,
 					String.class);
 		} catch (HttpClientErrorException | HttpServerErrorException ex) {
-          authExceptionHandler(ex,KEYMANAGER);
+			authExceptionHandler(ex, KEYMANAGER);
 		}
 		throwExceptionIfExist(response);
-		KeymanagerSymmetricKeyResponseDto keyManagerSymmetricKeyResponseDto = getResponse(response, KeymanagerSymmetricKeyResponseDto.class);
+		KeymanagerSymmetricKeyResponseDto keyManagerSymmetricKeyResponseDto = getResponse(response,
+				KeymanagerSymmetricKeyResponseDto.class);
 		byte[] symmetricKey = CryptoUtil.decodeBase64(keyManagerSymmetricKeyResponseDto.getSymmetricKey());
 		return new SecretKeySpec(symmetricKey, 0, symmetricKey.length, symmetricAlgorithmName);
 	}
-	
+
 	/**
 	 * Change Parameter form to trim if not null
 	 * 
@@ -227,7 +225,7 @@ public class CryptomanagerUtils {
 	public static String nullOrTrim(String parameter) {
 		return parameter == null ? null : parameter.trim();
 	}
-	
+
 	/**
 	 * Function to check is salt is valid
 	 * 
@@ -237,26 +235,24 @@ public class CryptomanagerUtils {
 	public boolean isValidSalt(String salt) {
 		return salt != null && !salt.trim().isEmpty();
 	}
-	
-	
+
 	private void authExceptionHandler(HttpStatusCodeException ex, String source) {
 		List<ServiceError> validationErrorsList = ExceptionUtils.getServiceErrorList(ex.getResponseBodyAsString());
-		
+
 		if (ex.getRawStatusCode() == 401) {
 			if (!validationErrorsList.isEmpty()) {
 				throw new AuthNException(validationErrorsList);
 			} else {
-				throw new BadCredentialsException(AUTHENTICATION_FAILED+source);
+				throw new BadCredentialsException(AUTHENTICATION_FAILED + source);
 			}
 		}
 		if (ex.getRawStatusCode() == 403) {
 			if (!validationErrorsList.isEmpty()) {
 				throw new AuthZException(validationErrorsList);
 			} else {
-				throw new AccessDeniedException(ACCESS_DENIED+source);
+				throw new AccessDeniedException(ACCESS_DENIED + source);
 			}
 		}
-		
 
 		if (!validationErrorsList.isEmpty()) {
 			throw new KeymanagerServiceException(validationErrorsList);
@@ -266,11 +262,11 @@ public class CryptomanagerUtils {
 							+ ex.getResponseBodyAsString());
 		}
 	}
-	
+
 	public void throwExceptionIfExist(ResponseEntity<String> response) {
-		if(response == null) {
+		if (response == null) {
 			throw new ParseResponseException(CryptomanagerErrorCode.CANNOT_CONNECT_TO_KEYMANAGER_SERVICE.getErrorCode(),
-					CryptomanagerErrorCode.CANNOT_CONNECT_TO_KEYMANAGER_SERVICE.getErrorMessage() );
+					CryptomanagerErrorCode.CANNOT_CONNECT_TO_KEYMANAGER_SERVICE.getErrorMessage());
 		}
 		String responseBody = response.getBody();
 		List<ServiceError> validationErrorList = ExceptionUtils.getServiceErrorList(responseBody);
@@ -278,17 +274,17 @@ public class CryptomanagerUtils {
 			throw new KeymanagerServiceException(validationErrorList);
 		}
 	}
-	
+
 	public <S> S getResponse(ResponseEntity<String> response, Class<S> clazz) {
 		try {
-			JsonNode res =objectMapper.readTree(response.getBody());
+			JsonNode res = objectMapper.readTree(response.getBody());
 			return objectMapper.readValue(res.get(RESPONSE).toString(), clazz);
-		} catch (IOException|NullPointerException exception) {
+		} catch (IOException | NullPointerException exception) {
 			throw new ParseResponseException(CryptomanagerErrorCode.RESPONSE_PARSE_ERROR.getErrorCode(),
 					CryptomanagerErrorCode.RESPONSE_PARSE_ERROR.getErrorMessage() + exception.getMessage(), exception);
 		}
 	}
-	
+
 	/**
 	 * Parse a date string of pattern UTC_DATETIME_PATTERN into
 	 * {@link LocalDateTime}

@@ -23,8 +23,8 @@ public class TemplateTypeDto {
 	/**
 	 * Field for language code
 	 */
-	//@NotBlank
-	//@Size(min = 1, max = 3)
+	// @NotBlank
+	// @Size(min = 1, max = 3)
 	@ValidLangCode(message = "Language Code is Invalid")
 	@ApiModelProperty(value = "Language Code", required = true, dataType = "java.lang.String")
 	private String langCode;

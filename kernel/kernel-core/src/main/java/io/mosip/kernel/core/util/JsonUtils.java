@@ -37,28 +37,31 @@ public class JsonUtils {
 	 * @throws JsonMappingException    when JSON is not properly mapped
 	 * @throws IOException             when file is not found
 	 */
-	/*public static boolean javaObjectToJsonFile(Object className, String location)
-			throws JsonGenerationException, JsonMappingException, IOException {
-		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-
-		File file = new File(location);
-		try {
-			objectMapper.writeValue(file, className);
-		} catch (com.fasterxml.jackson.core.JsonGenerationException e) {
-			throw new JsonGenerationException(JsonUtilConstants.MOSIP_JSON_GENERATION_ERROR_CODE.getErrorCode(),
-					JsonUtilConstants.MOSIP_JSON_GENERATION_ERROR_CODE.getErrorMessage(), e.getCause());
-		} catch (com.fasterxml.jackson.databind.JsonMappingException e) {
-			throw new JsonMappingException(JsonUtilConstants.MOSIP_JSON_MAPPING_ERROR_CODE.getErrorCode(),
-					JsonUtilConstants.MOSIP_JSON_MAPPING_ERROR_CODE.getErrorMessage(), e.getCause());
-		} catch (java.io.IOException e) {
-			throw new IOException(JsonUtilConstants.MOSIP_IO_EXCEPTION_ERROR_CODE.getErrorCode(),
-					JsonUtilConstants.MOSIP_IO_EXCEPTION_ERROR_CODE.getErrorMessage(), e.getCause());
-		}
-		return (file.exists());
-
-	}*/
+	/*
+	 * public static boolean javaObjectToJsonFile(Object className, String location)
+	 * throws JsonGenerationException, JsonMappingException, IOException {
+	 * ObjectMapper objectMapper = new ObjectMapper();
+	 * objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+	 * objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+	 * 
+	 * File file = new File(location); try { objectMapper.writeValue(file,
+	 * className); } catch (com.fasterxml.jackson.core.JsonGenerationException e) {
+	 * throw new
+	 * JsonGenerationException(JsonUtilConstants.MOSIP_JSON_GENERATION_ERROR_CODE.
+	 * getErrorCode(),
+	 * JsonUtilConstants.MOSIP_JSON_GENERATION_ERROR_CODE.getErrorMessage(),
+	 * e.getCause()); } catch (com.fasterxml.jackson.databind.JsonMappingException
+	 * e) { throw new
+	 * JsonMappingException(JsonUtilConstants.MOSIP_JSON_MAPPING_ERROR_CODE.
+	 * getErrorCode(),
+	 * JsonUtilConstants.MOSIP_JSON_MAPPING_ERROR_CODE.getErrorMessage(),
+	 * e.getCause()); } catch (java.io.IOException e) { throw new
+	 * IOException(JsonUtilConstants.MOSIP_IO_EXCEPTION_ERROR_CODE.getErrorCode(),
+	 * JsonUtilConstants.MOSIP_IO_EXCEPTION_ERROR_CODE.getErrorMessage(),
+	 * e.getCause()); } return (file.exists());
+	 * 
+	 * }
+	 */
 
 	/**
 	 * This function converts the java object and returns a JSON String
@@ -129,27 +132,27 @@ public class JsonUtils {
 	 * @throws JsonMappingException when JSON is not properly mapped
 	 * @throws IOException          when file is not found
 	 */
-	/*public static Object jsonFileToJavaObject(Class<?> className, String fileLocation)
-			throws JsonParseException, JsonMappingException, IOException {
-		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-		Object returnObject = null;
-		try {
-			returnObject = objectMapper.readValue(new File(fileLocation), className);
-		} catch (com.fasterxml.jackson.core.JsonParseException e) {
-			throw new JsonParseException(JsonUtilConstants.MOSIP_JSON_PARSE_ERROR_CODE.getErrorCode(),
-					JsonUtilConstants.MOSIP_JSON_PARSE_ERROR_CODE.getErrorMessage(), e.getCause());
-		} catch (com.fasterxml.jackson.databind.JsonMappingException e) {
-			throw new JsonMappingException(JsonUtilConstants.MOSIP_JSON_MAPPING_ERROR_CODE.getErrorCode(),
-					JsonUtilConstants.MOSIP_JSON_MAPPING_ERROR_CODE.getErrorMessage(), e.getCause());
-		} catch (java.io.IOException e) {
-			throw new IOException(JsonUtilConstants.MOSIP_IO_EXCEPTION_ERROR_CODE.getErrorCode(),
-					JsonUtilConstants.MOSIP_IO_EXCEPTION_ERROR_CODE.getErrorMessage(), e.getCause());
-		}
-		return returnObject;
-	}
-*/
+	/*
+	 * public static Object jsonFileToJavaObject(Class<?> className, String
+	 * fileLocation) throws JsonParseException, JsonMappingException, IOException {
+	 * ObjectMapper objectMapper = new ObjectMapper();
+	 * objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+	 * objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS); Object
+	 * returnObject = null; try { returnObject = objectMapper.readValue(new
+	 * File(fileLocation), className); } catch
+	 * (com.fasterxml.jackson.core.JsonParseException e) { throw new
+	 * JsonParseException(JsonUtilConstants.MOSIP_JSON_PARSE_ERROR_CODE.getErrorCode
+	 * (), JsonUtilConstants.MOSIP_JSON_PARSE_ERROR_CODE.getErrorMessage(),
+	 * e.getCause()); } catch (com.fasterxml.jackson.databind.JsonMappingException
+	 * e) { throw new
+	 * JsonMappingException(JsonUtilConstants.MOSIP_JSON_MAPPING_ERROR_CODE.
+	 * getErrorCode(),
+	 * JsonUtilConstants.MOSIP_JSON_MAPPING_ERROR_CODE.getErrorMessage(),
+	 * e.getCause()); } catch (java.io.IOException e) { throw new
+	 * IOException(JsonUtilConstants.MOSIP_IO_EXCEPTION_ERROR_CODE.getErrorCode(),
+	 * JsonUtilConstants.MOSIP_IO_EXCEPTION_ERROR_CODE.getErrorMessage(),
+	 * e.getCause()); } return returnObject; }
+	 */
 	/**
 	 * This function returns the value associated with the label of the input JSON
 	 * 

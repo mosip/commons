@@ -56,8 +56,7 @@ public class DeviceTypeController {
 	/**
 	 * Save list of device Type details to the Database
 	 * 
-	 * @param deviceTypes
-	 *            input from user Device Type DTO
+	 * @param deviceTypes input from user Device Type DTO
 	 * 
 	 * @return {@link CodeAndLanguageCodeID}
 	 */
@@ -87,14 +86,10 @@ public class DeviceTypeController {
 	/**
 	 * This controller method provides with all device types.
 	 * 
-	 * @param pageNumber
-	 *            the page number
-	 * @param pageSize
-	 *            the size of each page
-	 * @param sortBy
-	 *            the attributes by which it should be ordered
-	 * @param orderBy
-	 *            the order to be used
+	 * @param pageNumber the page number
+	 * @param pageSize   the size of each page
+	 * @param sortBy     the attributes by which it should be ordered
+	 * @param orderBy    the order to be used
 	 * @return the response i.e. pages containing the device types.
 	 */
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','CENTRAL_ADMIN')")
@@ -116,8 +111,7 @@ public class DeviceTypeController {
 	/**
 	 * Api to search Device Type based on filters provided.
 	 * 
-	 * @param request
-	 *            the request DTO.
+	 * @param request the request DTO.
 	 * @return the pages of {@link DeviceTypeExtnDto}.
 	 */
 	@ResponseFilter
@@ -142,8 +136,7 @@ public class DeviceTypeController {
 	/**
 	 * Api to filter Device Type based on column and type provided.
 	 * 
-	 * @param request
-	 *            the request DTO.
+	 * @param request the request DTO.
 	 * @return the {@link FilterResponseDto}.
 	 */
 	@ResponseFilter

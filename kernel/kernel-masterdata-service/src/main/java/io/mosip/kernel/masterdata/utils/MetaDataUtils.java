@@ -41,8 +41,8 @@ public class MetaDataUtils {
 	 * must extends {@link BaseEntity} and map all values from DTO object to the
 	 * <code>destination</code> object and return it.
 	 * 
-	 * @param               <S> is a type parameter
-	 * @param               <D> is a type parameter
+	 * @param <S>           is a type parameter
+	 * @param <D>           is a type parameter
 	 * @param source        is the source
 	 * @param destination   is the destination
 	 * @param mapNullvalues if marked as false then field inside source which are
@@ -66,7 +66,7 @@ public class MetaDataUtils {
 	/**
 	 * This method is used to set meta data used for delete.
 	 * 
-	 * @param        <E> is a type parameter
+	 * @param <E>    is a type parameter
 	 * 
 	 * @param entity which extends base entity
 	 * @return entity having isDeleted value as true and deleted times
@@ -87,8 +87,8 @@ public class MetaDataUtils {
 	 * must extends {@link BaseEntity} and map all values from DTO object to the
 	 * <code>destinationClass</code> object and return it.
 	 * 
-	 * @param                  <T> is a type parameter
-	 * @param                  <D> is a type parameter
+	 * @param <T>              is a type parameter
+	 * @param <D>              is a type parameter
 	 * @param source           is the source
 	 * @param destinationClass is the destination class
 	 * @return an entity class which extends {@link BaseEntity}

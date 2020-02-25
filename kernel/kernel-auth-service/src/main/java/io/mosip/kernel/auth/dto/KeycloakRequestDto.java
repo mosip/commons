@@ -15,23 +15,23 @@ import lombok.NoArgsConstructor;
 @Data
 public class KeycloakRequestDto {
 
-	@JsonInclude(value=Include.NON_NULL)
+	@JsonInclude(value = Include.NON_NULL)
 	private String username;
 
-	@JsonInclude(value=Include.NON_NULL)
+	@JsonInclude(value = Include.NON_NULL)
 	private String firstName;
 
-	@JsonInclude(value=Include.NON_NULL)
+	@JsonInclude(value = Include.NON_NULL)
 	private String email;
 
-	@JsonInclude(value=Include.NON_EMPTY)
-	private Map<String,List<Object>> attributes;
-	
-	@JsonInclude(value=Include.NON_EMPTY)
+	@JsonInclude(value = Include.NON_EMPTY)
+	private Map<String, List<Object>> attributes;
+
+	@JsonInclude(value = Include.NON_EMPTY)
 	private List<KeycloakPasswordDTO> credentials;
-	
-	@JsonInclude(value=Include.NON_EMPTY)
+
+	@JsonInclude(value = Include.NON_EMPTY)
 	private List<String> realmRoles;
-	
+
 	private boolean enabled;
 }

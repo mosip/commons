@@ -21,7 +21,7 @@ public interface DeviceProviderRepository extends JpaRepository<DeviceProvider, 
 	/**
 	 * Find all latest created update deleted.
 	 *
-	 * @param lastUpdated the last updated
+	 * @param lastUpdated      the last updated
 	 * @param currentTimeStamp the current time stamp
 	 * @return the list
 	 */

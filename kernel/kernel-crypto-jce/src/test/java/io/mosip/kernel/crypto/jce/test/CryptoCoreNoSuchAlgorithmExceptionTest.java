@@ -39,9 +39,9 @@ public class CryptoCoreNoSuchAlgorithmExceptionTest {
 	private KeyPair rsaPair;
 
 	private byte[] data;
-	
+
 	private byte[] keyBytes;
-	
+
 	private final SecureRandom random = new SecureRandom();
 
 	@Before
@@ -50,13 +50,13 @@ public class CryptoCoreNoSuchAlgorithmExceptionTest {
 		generator.initialize(2048, random);
 		rsaPair = generator.generateKeyPair();
 		data = "test".getBytes();
-	    keyBytes = new byte[16];
+		keyBytes = new byte[16];
 		random.nextBytes(keyBytes);
 		ReflectionTestUtils.setField(cryptoCore, "asymmetricAlgorithm", "INVALIDALGO");
 		ReflectionTestUtils.setField(cryptoCore, "symmetricAlgorithm", "INVALIDALGO");
 		ReflectionTestUtils.setField(cryptoCore, "signAlgorithm", "INVALIDALGO");
 		ReflectionTestUtils.setField(cryptoCore, "passwordAlgorithm", "INVALIDALGO");
-	 }
+	}
 
 	private SecretKeySpec setSymmetricUp(int length, String algo) throws java.security.NoSuchAlgorithmException {
 		SecureRandom random = new SecureRandom();
@@ -70,17 +70,18 @@ public class CryptoCoreNoSuchAlgorithmExceptionTest {
 		assertThat(cryptoCore.asymmetricEncrypt(rsaPair.getPublic(), data), isA(byte[].class));
 	}
 
-	
 	@Test(expected = NoSuchAlgorithmException.class)
 	public void testAESSymmetricEncryptNoSuchAlgorithmException() throws java.security.NoSuchAlgorithmException {
-		assertThat(cryptoCore.symmetricEncrypt(setSymmetricUp(32, "AES"), data,null, MOCKAAD.getBytes()), isA(byte[].class));
+		assertThat(cryptoCore.symmetricEncrypt(setSymmetricUp(32, "AES"), data, null, MOCKAAD.getBytes()),
+				isA(byte[].class));
 	}
-	
+
 	@Test(expected = NoSuchAlgorithmException.class)
 	public void testAESSymmetricSaltEncryptNoSuchAlgorithmException() throws java.security.NoSuchAlgorithmException {
-		assertThat(cryptoCore.symmetricEncrypt(setSymmetricUp(32, "AES"), data,keyBytes, MOCKAAD.getBytes()), isA(byte[].class));
+		assertThat(cryptoCore.symmetricEncrypt(setSymmetricUp(32, "AES"), data, keyBytes, MOCKAAD.getBytes()),
+				isA(byte[].class));
 	}
-	
+
 	@Test(expected = NoSuchAlgorithmException.class)
 	public void testAsymmetricDecryptNoSuchAlgorithmException() {
 		byte[] encryptedData = cryptoCore.asymmetricEncrypt(rsaPair.getPublic(), data);
@@ -90,18 +91,20 @@ public class CryptoCoreNoSuchAlgorithmExceptionTest {
 	@Test(expected = NoSuchAlgorithmException.class)
 	public void testAESSymmetricDecryptNoSuchAlgorithmException() throws java.security.NoSuchAlgorithmException {
 		SecretKeySpec secretKeySpec = setSymmetricUp(32, "AES");
-		assertThat(cryptoCore.symmetricDecrypt(secretKeySpec, "encryptedData".getBytes(),MOCKAAD.getBytes()), isA(byte[].class));
+		assertThat(cryptoCore.symmetricDecrypt(secretKeySpec, "encryptedData".getBytes(), MOCKAAD.getBytes()),
+				isA(byte[].class));
 	}
-	
+
 	@Test(expected = NoSuchAlgorithmException.class)
 	public void testAESSymmetricSaltDecryptNoSuchAlgorithmException() throws java.security.NoSuchAlgorithmException {
 		SecretKeySpec secretKeySpec = setSymmetricUp(32, "AES");
-		assertThat(cryptoCore.symmetricDecrypt(secretKeySpec, "encryptedData".getBytes(),MOCKAAD.getBytes(),keyBytes), isA(byte[].class));
+		assertThat(cryptoCore.symmetricDecrypt(secretKeySpec, "encryptedData".getBytes(), MOCKAAD.getBytes(), keyBytes),
+				isA(byte[].class));
 	}
-	
+
 	@Test(expected = NoSuchAlgorithmException.class)
 	public void testHashNoSuchAlgorithmException() throws NoSuchAlgorithmException, InvalidKeySpecException {
 		assertThat(cryptoCore.hash(data, keyBytes), isA(String.class));
 	}
-	
+
 }

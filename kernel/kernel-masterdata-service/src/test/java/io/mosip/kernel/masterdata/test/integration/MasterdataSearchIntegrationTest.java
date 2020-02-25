@@ -164,7 +164,7 @@ public class MasterdataSearchIntegrationTest {
 
 	@MockBean
 	private DeviceUtils deviceUtil;
-	
+
 	@MockBean
 	private AuditUtil auditUtil;
 
@@ -216,7 +216,7 @@ public class MasterdataSearchIntegrationTest {
 	private RequestWrapper<SearchDto> titleRequestDto;
 	private RequestWrapper<SearchDto> holidayRequestDto;
 	private RequestWrapper<SearchDto> locationRequestDto;
-	
+
 	private SearchFilter locationFilter;
 
 	private DocumentType documentType;
@@ -406,7 +406,7 @@ public class MasterdataSearchIntegrationTest {
 		holidaySearchDto.setSort(Arrays.asList());
 		holidaySearchDto.setPagination(pagination);
 		holidayRequestDto.setRequest(holidaySearchDto);
-		
+
 		locationRequestDto = new RequestWrapper<>();
 		locationFilter = new SearchFilter();
 		locationFilter.setColumnName("isActive");
@@ -418,16 +418,15 @@ public class MasterdataSearchIntegrationTest {
 		locationSearchDto.setSort(Arrays.asList());
 		locationSearchDto.setPagination(pagination);
 		locationRequestDto.setRequest(locationSearchDto);
-		
-		machines=new ArrayList<>();
-		Machine machine=new Machine();
+
+		machines = new ArrayList<>();
+		Machine machine = new Machine();
 		machine.setId("10001");
 		machine.setZoneCode("CST");
 		machine.setMachineSpecId("1001");
 		machine.setMapStatus("assigned");
 		machine.setLangCode("eng");
 		machines.add(machine);
-				
 
 		when(filterTypeValidator.validate(Mockito.eq(LocationExtnDto.class), Mockito.anyList())).thenReturn(true);
 		when(filterTypeValidator.validate(Mockito.eq(RegistrationCenterTypeExtnDto.class), Mockito.anyList()))
@@ -864,7 +863,6 @@ public class MasterdataSearchIntegrationTest {
 				.andExpect(status().isOk());
 	}
 
-	
 	@Test
 	@WithUserDetails("global-admin")
 	public void searchMachineByMachineTypeNameWithCorrespondingSpecificationIdNotFoundExceptionTest() throws Exception {
@@ -979,8 +977,6 @@ public class MasterdataSearchIntegrationTest {
 		mockMvc.perform(post("/machines/search").contentType(MediaType.APPLICATION_JSON).content(json))
 				.andExpect(status().isOk());
 	}
-	
-	
 
 	@Test
 	@WithUserDetails("global-admin")
@@ -1124,7 +1120,6 @@ public class MasterdataSearchIntegrationTest {
 		mockMvc.perform(post("/devices/search").contentType(MediaType.APPLICATION_JSON).content(json))
 				.andExpect(status().isOk());
 	}
-	
 
 	@Test
 	@WithUserDetails("global-admin")
@@ -2322,7 +2317,7 @@ public class MasterdataSearchIntegrationTest {
 		mockMvc.perform(post("/holidays/filtervalues").contentType(MediaType.APPLICATION_JSON).content(json))
 				.andExpect(status().isOk());
 	}
-	
+
 	@Test
 	@WithUserDetails("global-admin")
 	public void filterLocationTest() throws Exception {
@@ -2343,15 +2338,17 @@ public class MasterdataSearchIntegrationTest {
 		mockMvc.perform(post("/locations/filtervalues").contentType(MediaType.APPLICATION_JSON).content(json))
 				.andExpect(status().isOk());
 	}
-	
+
 	@Test
 	@WithUserDetails("global-admin")
-	public void SearchLocationTest() throws Exception
-	{
-		//Page<Location> pageContentData = new PageImpl<>(Arrays.asList(locationRegionEntity));
+	public void SearchLocationTest() throws Exception {
+		// Page<Location> pageContentData = new
+		// PageImpl<>(Arrays.asList(locationRegionEntity));
 		String json = objectMapper.writeValueAsString(locationRequestDto);
-		//when(masterdataSearchHelper.searchMasterdata(Mockito.eq(Location.class), Mockito.any(), Mockito.any()))
-		//.thenReturn(pageContentData);
-		mockMvc.perform(post("/locations/search").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isOk());
+		// when(masterdataSearchHelper.searchMasterdata(Mockito.eq(Location.class),
+		// Mockito.any(), Mockito.any()))
+		// .thenReturn(pageContentData);
+		mockMvc.perform(post("/locations/search").contentType(MediaType.APPLICATION_JSON).content(json))
+				.andExpect(status().isOk());
 	}
 }

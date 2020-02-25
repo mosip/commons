@@ -27,7 +27,7 @@ import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
  *
  * @author Sabbu Uday Kumar
  * @author Ramadurai Saravana Pandian
- * @author Raj Jha 
+ * @author Raj Jha
  * @since 1.0.0
  **********************************************************************************************************************/
 
@@ -48,7 +48,7 @@ public class RestTemplateInterceptor implements ClientHttpRequestInterceptor {
 		AuthUserDetails authUserDetails = getAuthUserDetails();
 		if (authUserDetails != null)
 			headers.set(AuthAdapterConstant.AUTH_HEADER_COOKIE,
-					AuthAdapterConstant.AUTH_COOOKIE_HEADER+authUserDetails.getToken());
+					AuthAdapterConstant.AUTH_COOOKIE_HEADER + authUserDetails.getToken());
 	}
 
 	private AuthUserDetails getAuthUserDetails() {

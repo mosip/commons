@@ -85,19 +85,19 @@ public class Machine extends BaseEntity implements Serializable {
 	 */
 	@Column(name = "validity_end_dtimes")
 	private LocalDateTime validityDateTime;
-	
+
 	/**
 	 * Field for publicKey
 	 */
 	@Column(name = "public_key")
 	private byte[] publicKey;
-	
+
 	/**
 	 * Field for public key pringerprint
 	 */
 	@Column(name = "key_index")
 	private String keyIndex;
-	
+
 	@Column(name = "zone_code", length = 36)
 	private String zoneCode;
 

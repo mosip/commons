@@ -48,7 +48,7 @@ public class DigitalId {
 
 	/** The date time. */
 	private String dateTime;
-	
+
 	/**
 	 * Field for deviceTypeCode
 	 */
@@ -64,7 +64,5 @@ public class DigitalId {
 	@Size(min = 1, max = 36)
 	@ApiModelProperty(value = "subType", required = true, dataType = "java.lang.String")
 	private String subType;
-
-
 
 }

@@ -7,23 +7,34 @@
 	<parent>
 		<groupId>io.mosip.kernel</groupId>
 		<artifactId>kernel-parent</artifactId>
-		<version>1.0.6-SNAPSHOT</version>
+		<version>1.0.6</version>
 	</parent>
 
 	<artifactId>kernel-keymanager-service</artifactId>
 
 	<name>kernel-keymanager-service</name>
+	
+	<properties>
+	<kernel.core.version>1.0.6</kernel.core.version>
+	<kernel.auth.adaptor.version>1.0.6</kernel.auth.adaptor.version>
+	<kernel.datamapper.orika.version>1.0.6</kernel.datamapper.orika.version>
+	<kernel.crypto.jce.version>1.0.6</kernel.crypto.jce.version>
+	<kernel.keygenerator.bouncycastle.version>1.0.6</kernel.keygenerator.bouncycastle.version>
+	<kernel.logger.logback.version>1.0.6</kernel.logger.logback.version>
+	<kernel.keymanager.softhsm.version>1.0.6</kernel.keymanager.softhsm.version>
+	<kernel.pdfgenerator.itext.version>1.0.6</kernel.pdfgenerator.itext.version>
+	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-auth-adapter</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.auth.adaptor.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -33,32 +44,32 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-logger-logback</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.logger.logback.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-keymanager-softhsm</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.keymanager.softhsm.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-dataaccess-hibernate</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.datamapper.orika.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-keygenerator-bouncycastle</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.keygenerator.bouncycastle.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-crypto-jce</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.crypto.jce.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-pdfgenerator-itext</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.pdfgenerator.itext.version}</version>
         </dependency>
 	</dependencies>
 	<build>

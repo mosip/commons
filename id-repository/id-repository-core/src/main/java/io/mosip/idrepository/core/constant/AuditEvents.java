@@ -23,7 +23,11 @@ public enum AuditEvents {
 	
 	REGENERATE_VID("IDR-008", "System Event"),
 	
-	UPDATE_VID_STATUS("IDR-009", "System Event");
+	UPDATE_VID_STATUS("IDR-009", "System Event"),
+	
+	DEACTIVATE_VID("IDR-010", "System Event"),
+	
+	REACTIVATE_VID("IDR-011", "System Event");
 	
 	
 

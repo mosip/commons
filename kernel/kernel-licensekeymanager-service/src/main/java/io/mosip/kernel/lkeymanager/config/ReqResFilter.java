@@ -46,15 +46,15 @@ public class ReqResFilter implements Filter {
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 		ContentCachingRequestWrapper requestWrapper = null;
 		ContentCachingResponseWrapper responseWrapper = null;
-	
-			if (httpServletRequest.getRequestURI().endsWith(".stream")) {
-				chain.doFilter(request, response);
-				return;
-			}
-			requestWrapper = new ContentCachingRequestWrapper(httpServletRequest);
-			responseWrapper = new ContentCachingResponseWrapper(httpServletResponse);
-			chain.doFilter(requestWrapper, responseWrapper);
-			responseWrapper.copyBodyToResponse();
+
+		if (httpServletRequest.getRequestURI().endsWith(".stream")) {
+			chain.doFilter(request, response);
+			return;
+		}
+		requestWrapper = new ContentCachingRequestWrapper(httpServletRequest);
+		responseWrapper = new ContentCachingResponseWrapper(httpServletResponse);
+		chain.doFilter(requestWrapper, responseWrapper);
+		responseWrapper.copyBodyToResponse();
 	}
 
 	/*

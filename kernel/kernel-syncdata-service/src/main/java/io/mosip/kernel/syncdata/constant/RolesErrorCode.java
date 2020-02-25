@@ -3,6 +3,7 @@ package io.mosip.kernel.syncdata.constant;
 public enum RolesErrorCode {
 
 	ROLES_FETCH_EXCEPTION("KER-SNC-401", "Error occured while fetching roles");
+
 	private final String errorCode;
 	private final String errorMessage;
 

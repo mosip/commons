@@ -23,37 +23,37 @@ import lombok.Data;
 public class MOSIPDeviceServicePUTDto {
 
 	@NotBlank
-	@Size(min = 1, max = 36)
+	@Size(min = 0, max = 36)
 	@ApiModelProperty(value = "id", required = true, dataType = "java.lang.String")
 	private String id;
 
 	@NotBlank
-	@Size(min = 1, max = 64)
+	@Size(min = 0, max = 64)
 	@ApiModelProperty(value = "softwareVersion", required = true, dataType = "java.lang.String")
 	private String swVersion;
 
 	@NotBlank
-	@Size(min = 1, max = 36)
+	@Size(min = 0, max = 36)
 	@ApiModelProperty(value = "providerId", required = true, dataType = "java.lang.String")
 	private String deviceProviderId;
 
 	@NotBlank
-	@Size(min = 1, max = 36)
+	@Size(min = 0, max = 36)
 	@ApiModelProperty(value = "deviceTypeCode", required = true, dataType = "java.lang.String")
 	private String regDeviceTypeCode;
 
 	@NotBlank
-	@Size(min = 1, max = 36)
+	@Size(min = 0, max = 36)
 	@ApiModelProperty(value = "deviceSubCode", required = true, dataType = "java.lang.String")
 	private String regDeviceSubCode;
 
 	@NotBlank
-	@Size(min = 1, max = 36)
+	@Size(min = 0, max = 36)
 	@ApiModelProperty(value = "make", required = true, dataType = "java.lang.String")
 	private String make;
 
 	@NotBlank
-	@Size(min = 1, max = 36)
+	@Size(min = 0, max = 36)
 	@ApiModelProperty(value = "model", required = true, dataType = "java.lang.String")
 	private String model;
 
@@ -64,14 +64,12 @@ public class MOSIPDeviceServicePUTDto {
 	private LocalDateTime swExpiryDateTime;
 
 	@NotBlank
-	@Size(min = 1, max = 36)
+	@Size(min = 0, max = 36)
 	@ApiModelProperty(value = "softBinaryHash", required = true, dataType = "java.lang.Byte")
 	private String swBinaryHash;
-	
+
 	@NotNull
 	@ApiModelProperty(value = "isActive", dataType = "java.lang.Boolean")
 	private Boolean isActive;
-	
 
 }
-

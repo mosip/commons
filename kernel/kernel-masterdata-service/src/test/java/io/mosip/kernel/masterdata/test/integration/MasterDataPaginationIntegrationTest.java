@@ -150,7 +150,7 @@ public class MasterDataPaginationIntegrationTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-	
+
 	@MockBean
 	private AuditUtil auditUtil;
 

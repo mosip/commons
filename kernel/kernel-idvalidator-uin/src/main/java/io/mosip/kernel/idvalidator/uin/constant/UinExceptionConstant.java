@@ -23,6 +23,7 @@ public enum UinExceptionConstant {
 			"UIN First configured no.of digits should be different from the reverse of last configured no. of digits"),
 	UIN_VAL_ILLEGAL_EQUAL_LIMIT("KER-IDV-208",
 			"UIN First configured no.of digits should be different from the last configured no.of digits");
+
 	/**
 	 * This variable holds the error code.
 	 */

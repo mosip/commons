@@ -15,13 +15,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class WeekDaysResponseDto implements Serializable{
+public class WeekDaysResponseDto implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 8647424243157540833L;
-	
+
 	private List<WeekDaysDto> weekdays;
 
 }

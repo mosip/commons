@@ -87,7 +87,7 @@ import io.mosip.kernel.core.util.UUIDUtils;
 import io.mosip.kernel.fsadapter.hdfs.constant.HDFSAdapterErrorCode;
 
 /**
- * The Class IdRepoServiceImpl - Service implementation for VID service.
+ * The Class IdRepoServiceImpl - Service implementation for Identity service.
  */
 @Component
 @Transactional(rollbackFor = { IdRepoAppException.class, IdRepoAppUncheckedException.class })
@@ -365,8 +365,13 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 						fpProvider.convertFIRtoFMR(
 								cbeffUtil.convertBIRTypeToBIR(cbeffUtil.getBIRDataFromXML(cbeffFileData))),
 						cbeffFileData);
+			} else if (cbeffUtil.validateXML(cbeffFileData)) {
+				return cbeffFileData;
 			} else {
-				return cbeffUtil.createXML(cbeffUtil.convertBIRTypeToBIR(cbeffUtil.getBIRDataFromXML(cbeffFileData)));
+				mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, "convertToFMR",
+						"\n" + "cbeff validation failed");
+				throw new IdRepoAppException(INVALID_INPUT_PARAMETER.getErrorCode(),
+						String.format(INVALID_INPUT_PARAMETER.getErrorMessage(), DOCUMENTS + " - " + category));
 			}
 		} catch (Exception e) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, ADD_IDENTITY,

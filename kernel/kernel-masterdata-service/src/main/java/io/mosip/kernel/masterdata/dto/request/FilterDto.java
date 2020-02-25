@@ -23,11 +23,11 @@ public class FilterDto {
 	private String type = FilterColumnEnum.UNIQUE.toString();
 
 	private String text;
-	
+
 	@Builder
-    private FilterDto(String columnName, String type, String text) {
-        this.columnName = columnName;
-        this.type = Optional.ofNullable(type).orElse(this.type);
-        this.text = text;
-    }
+	private FilterDto(String columnName, String type, String text) {
+		this.columnName = columnName;
+		this.type = Optional.ofNullable(type).orElse(this.type);
+		this.text = text;
+	}
 }

@@ -15,7 +15,7 @@ import io.mosip.kernel.uingenerator.exception.UinGeneratorServiceException;
  * Utility class to fetch config server related URLs.
  * 
  * @author Sagar Mahapatra
- * @author Raj Jha 
+ * @author Raj Jha
  * @since 1.0.0
  *
  */

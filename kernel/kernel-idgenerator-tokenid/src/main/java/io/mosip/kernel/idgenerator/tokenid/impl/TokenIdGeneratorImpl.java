@@ -115,7 +115,7 @@ public class TokenIdGeneratorImpl implements TokenIdGenerator<String> {
 			}
 			SecretKey secretKey = new SecretKeySpec(counterSecureRandom.getBytes(),
 					TokenIdPropertyConstant.ENCRYPTION_ALGORITHM.getProperty());
-			byte[] encryptedData = cryptoCore.symmetricEncrypt(secretKey, randomSeed.getBytes(),null);
+			byte[] encryptedData = cryptoCore.symmetricEncrypt(secretKey, randomSeed.getBytes(), null);
 			BigInteger bigInteger = new BigInteger(encryptedData);
 			tokenId = String.valueOf(bigInteger.abs());
 		} catch (DataAccessLayerException | DataAccessException e) {

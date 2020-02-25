@@ -5,10 +5,10 @@
 	<parent>
 		<groupId>io.mosip</groupId>
 		<artifactId>commons</artifactId>
-		<version>1.0.6-SNAPSHOT</version>
+		<version>1.0.6</version>
 	</parent>
 
-
+	<version>1.0.7-SNAPSHOT</version>
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-parent</artifactId>
 	<packaging>pom</packaging>
@@ -114,6 +114,7 @@
 		<byte.buddy.version>1.9.12</byte.buddy.version>
 		<io.jsonwebtoken.jjwt.version>0.6.0</io.jsonwebtoken.jjwt.version>
 		<apache.directory.api.version>2.0.0.AM2</apache.directory.api.version>
+		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 
 
 
@@ -201,9 +202,8 @@
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>${maven.surefire.plugin.version}</version>
 					<configuration>
-					    <skipTests>false</skipTests>
+						<skipTests>${skipTests}</skipTests>
 						<skip>false</skip>
-						<useFile>false</useFile>
 					</configuration>
 				</plugin>
 				<plugin>

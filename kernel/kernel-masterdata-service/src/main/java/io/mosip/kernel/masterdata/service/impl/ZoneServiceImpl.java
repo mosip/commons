@@ -47,16 +47,15 @@ public class ZoneServiceImpl implements ZoneService {
 
 	@Autowired
 	ZoneRepository zoneRepository;
-	
+
 	@Autowired
 	private RegistrationCenterRepository registrationCenterRepo;
-	
+
 	@Value("${mosip.kernel.registrationcenterid.length}")
 	private int centerIdLength;
-	
+
 	@Value("${mosip.primary-language}")
 	private String primaryLangCode;
-
 
 	/*
 	 * (non-Javadoc)
@@ -117,34 +116,32 @@ public class ZoneServiceImpl implements ZoneService {
 		zoneNameResponseDto.setZoneName(zone.getName());
 		return zoneNameResponseDto;
 	}
-	
+
 	@Override
-	public boolean getUserValidityZoneHierarchy(String langCode,String zoneCode) {
+	public boolean getUserValidityZoneHierarchy(String langCode, String zoneCode) {
 		List<Zone> zones = zoneUtils.getUserZones();
 		boolean zoneValid = false;
 		List<ZoneExtnDto> zoneExtnList = new ArrayList<>();
 		if (zones != null && !zones.isEmpty()) {
 			List<Zone> zoneList = zones.parallelStream().filter(z -> z.getLangCode().equals(langCode))
 					.collect(Collectors.toList());
-			zoneExtnList =  MapperUtils.mapAll(zoneList, ZoneExtnDto.class);
+			zoneExtnList = MapperUtils.mapAll(zoneList, ZoneExtnDto.class);
 		}
-		for(ZoneExtnDto zoneExtnDto : zoneExtnList)
-		{
-				if(zoneCode.equals(zoneExtnDto.getCode()))
-				{
-					zoneValid = true;
-				}
+		for (ZoneExtnDto zoneExtnDto : zoneExtnList) {
+			if (zoneCode.equals(zoneExtnDto.getCode())) {
+				zoneValid = true;
+			}
 		}
-		return zoneValid;	
+		return zoneValid;
 	}
 
 	@Override
 	public boolean authorizeZone(String rId) {
 		String centerId = rId.substring(0, centerIdLength);
-		String zoneCode=getZoneBasedOnTheRId(centerId, primaryLangCode);
+		String zoneCode = getZoneBasedOnTheRId(centerId, primaryLangCode);
 		return isPresentInTheHierarchy(zoneCode, primaryLangCode);
 	}
-	
+
 	private String getZoneBasedOnTheRId(String centerId, String primaryLangCode) {
 		RegistrationCenter registrationCenter = null;
 		try {
@@ -156,14 +153,14 @@ public class ZoneServiceImpl implements ZoneService {
 		return registrationCenter.getZoneCode();
 	}
 
-	private boolean isPresentInTheHierarchy(String zoneCode,String primaryLangCode) {
+	private boolean isPresentInTheHierarchy(String zoneCode, String primaryLangCode) {
 		List<Zone> zones = zoneUtils.getUserLeafZones(primaryLangCode);
 		boolean isAuthorized = zones.stream().anyMatch(zone -> zone.getCode().equals(zoneCode));
 		if (!isAuthorized) {
 			throw new RequestException(ZoneErrorCode.ADMIN_UNAUTHORIZED.getErrorCode(),
 					ZoneErrorCode.ADMIN_UNAUTHORIZED.getErrorMessage());
 		}
-		
+
 		return isAuthorized;
 	}
 }

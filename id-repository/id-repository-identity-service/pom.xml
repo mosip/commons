@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>io.mosip.idrepository</groupId>
 		<artifactId>id-repository-parent</artifactId>
-		<version>1.0.6-SNAPSHOT</version>
+		<version>1.0.7-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>id-repository-identity-service</artifactId>
@@ -16,17 +16,17 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-idvalidator-uin</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.idvalidator.uin.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-idvalidator-rid</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.idvalidator.rid.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -36,28 +36,28 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-cbeffutil-api</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.cbeffutil.api.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-fsadapter-hdfs</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.fsadapter.hdfs.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.idrepository</groupId>
 			<artifactId>id-repository-core</artifactId>
-			<version>${project.version}</version>
+			<version>${id.repository.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-idobjectvalidator</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.idobjectvalidator.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-bioapi-provider</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.bioapi.provider.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -81,4 +81,5 @@
 			</plugin>
 		</plugins>
 	</build>
+	<version>1.0.7-SNAPSHOT</version>
 </project>

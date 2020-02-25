@@ -36,17 +36,25 @@ public class Title extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1323331283383315822L;
 
-	/*@EmbeddedId
-	@AttributeOverrides({
-			@AttributeOverride(name = "code", column = @Column(name = "code", nullable = false, length = 16)),
-			@AttributeOverride(name = "langCode", column = @Column(name = "lang_code", nullable = false, length = 3)) })
-	@Column(name = "code", unique = true, nullable = false, length = 16)
-	private CodeAndLanguageCodeID id;*/
+	/*
+	 * @EmbeddedId
+	 * 
+	 * @AttributeOverrides({
+	 * 
+	 * @AttributeOverride(name = "code", column = @Column(name = "code", nullable =
+	 * false, length = 16)),
+	 * 
+	 * @AttributeOverride(name = "langCode", column = @Column(name = "lang_code",
+	 * nullable = false, length = 3)) })
+	 * 
+	 * @Column(name = "code", unique = true, nullable = false, length = 16) private
+	 * CodeAndLanguageCodeID id;
+	 */
 	@Id
-	@Column(name="code")
+	@Column(name = "code")
 	private String code;
 	@Id
-	@Column(name="lang_code",nullable=false)
+	@Column(name = "lang_code", nullable = false)
 	private String langCode;
 
 	@Column(name = "name", unique = true, nullable = false, length = 64)

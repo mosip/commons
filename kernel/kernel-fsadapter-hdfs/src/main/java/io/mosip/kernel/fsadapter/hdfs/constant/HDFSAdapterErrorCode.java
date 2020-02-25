@@ -15,7 +15,7 @@ public enum HDFSAdapterErrorCode {
 	URI_SYNTAX_EXCEPTION("KER-FSA-003", "URL cannot be converted to URI"),
 
 	LOGIN_EXCEPTION("KER-FSA-004", "Authentication Failed"),
-	
+
 	KEYTAB_FILE_NOT_FOUND_EXCEPTION("KER-FSA-005", "Keytab file not found");
 
 	private final String errorCode;

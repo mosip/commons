@@ -14,9 +14,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class Roles {
-	@JsonInclude(value=Include.NON_NULL)
+	@JsonInclude(value = Include.NON_NULL)
 	private String id;
 
-	@JsonInclude(value=Include.NON_NULL)
+	@JsonInclude(value = Include.NON_NULL)
 	private String name;
 }

@@ -7,16 +7,22 @@
 	<parent>
 		<groupId>io.mosip.kernel</groupId>
 		<artifactId>kernel-parent</artifactId>
-		<version>1.0.6-SNAPSHOT</version>
+		<version>1.0.6</version>
 	</parent>
 
 	<artifactId>kernel-fsadapter-hdfs</artifactId>
-
+    <properties>
+    <kernel.core.version>1.0.6</kernel.core.version>
+		<kernel.auth-adapter.version>1.0.6</kernel.auth-adapter.version>
+		<kernel.applicant-type.version>1.0.6</kernel.applicant-type.version>
+		 <kernel.dataaccess-hibernate.version>1.0.6</kernel.dataaccess-hibernate.version>
+		<kernel.logger.version>1.0.6</kernel.logger.version>
+    </properties> 
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>

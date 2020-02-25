@@ -38,8 +38,7 @@ public class PageUtils {
 	 * 
 	 * @param <D>
 	 * 
-	 * @param page
-	 *            request to be
+	 * @param page request to be
 	 * @return {@link PageResponseDto}
 	 */
 	public static <T, D> PageResponseDto<D> pageResponse(Page<T> page) {
@@ -58,13 +57,14 @@ public class PageUtils {
 	public <T extends BaseEntity> void validateSortField(Class<T> clazz, List<SearchSort> searchSorts) {
 		sortUtils.validateSortField(clazz, searchSorts);
 	}
-	
-	public <T> void validateSortFieldLocation(Class<LocationSearchDto> class1, Class<Location> class2,List<SearchSort> list) {
-		sortUtils.validateSortLocationField(class1, class2,list);
+
+	public <T> void validateSortFieldLocation(Class<LocationSearchDto> class1, Class<Location> class2,
+			List<SearchSort> list) {
+		sortUtils.validateSortLocationField(class1, class2, list);
 	}
-	
-	public <T extends BaseEntity,E> void validateSortField(Class<E> class1, Class<T> class2,List<SearchSort> list) {
-		sortUtils.validateSortField(class1, class2,list);
+
+	public <T extends BaseEntity, E> void validateSortField(Class<E> class1, Class<T> class2, List<SearchSort> list) {
+		sortUtils.validateSortField(class1, class2, list);
 	}
 
 	public <D> PageResponseDto<D> sortPage(List<D> content, List<SearchSort> sort, Pagination page) {

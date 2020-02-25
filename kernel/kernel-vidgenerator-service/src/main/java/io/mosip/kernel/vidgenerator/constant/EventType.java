@@ -8,6 +8,6 @@ public class EventType {
 
 	public static final String CHECKPOOL = "CHECK_POOL";
 	public static final String GENERATEPOOL = "GENERATE_POOL";
-	public static final String INITPOOL ="INIT_POOL";
-	public static final String INITPOOLGENERATE ="INIT_POOL_GENERATE";
+	public static final String INITPOOL = "INIT_POOL";
+	public static final String INITPOOLGENERATE = "INIT_POOL_GENERATE";
 }

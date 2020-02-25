@@ -13,6 +13,6 @@ import lombok.Data;
  */
 @Data
 public class ValidDocCategoryAndDocTypeResponseDto {
-	
+
 	private List<ValidDocCategoryDto> documentcategories;
 }

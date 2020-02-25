@@ -35,7 +35,7 @@ public class PartnerIdServiceTest {
 
 	@MockBean
 	PartnerRepository partnerRepository;
-	
+
 	@MockBean
 	private RestTemplate restTemplate;
 

@@ -67,22 +67,19 @@ public class RegistrationCenterValidator {
 	private int minDegits;
 
 	/**
-	 * get list of secondary languages supported by MOSIP from configuration
-	 * file
+	 * get list of secondary languages supported by MOSIP from configuration file
 	 */
 	@Value("#{'${mosip.secondary-language}'.split(',')}")
 	private Set<String> secondaryLangList;
 
 	/**
-	 * get list of secondary languages supported by MOSIP from configuration
-	 * file
+	 * get list of secondary languages supported by MOSIP from configuration file
 	 */
 	@Value("${mosip.primary-language}")
 	private String primaryLang;
 
 	/**
-	 * get list of secondary languages supported by MOSIP from configuration
-	 * file
+	 * get list of secondary languages supported by MOSIP from configuration file
 	 */
 	@Value("${mosip.secondary-language}")
 	private String secondaryLang;
@@ -358,24 +355,22 @@ public class RegistrationCenterValidator {
 		if (registrationCenterDto.getWorkingNonWorkingDays() != null) {
 			String fieldName = null;
 			Boolean value = null;
-			Map<String,Boolean> workMap = new HashMap<>();
+			Map<String, Boolean> workMap = new HashMap<>();
 			Field[] fieldList = registrationCenterDto.getWorkingNonWorkingDays().getClass().getDeclaredFields();
-			for(Field field : fieldList)
-			{
+			for (Field field : fieldList) {
 				try {
 					field.setAccessible(true);
 					value = (Boolean) field.get(registrationCenterDto.getWorkingNonWorkingDays());
 					fieldName = field.getName();
-					if(value!=null)
-					{
+					if (value != null) {
 						workMap.put(fieldName, value);
 					}
-					
+
 				} catch (IllegalArgumentException | IllegalAccessException e) {
 					e.printStackTrace();
 				}
 			}
-			if (workMap.size()<7) {
+			if (workMap.size() < 7) {
 				errors.add(new ServiceError(RegistrationCenterErrorCode.WORKING_NONWORKING_EXCEPTION.getErrorCode(),
 						RegistrationCenterErrorCode.WORKING_NONWORKING_EXCEPTION.getErrorMessage()));
 			}
@@ -819,8 +814,24 @@ public class RegistrationCenterValidator {
 
 	private void checkWorkingNonworking(List<ServiceError> errors, RegCenterPutReqDto registrationCenterDto) {
 		if (registrationCenterDto.getWorkingNonWorkingDays() != null) {
+			String fieldName = null;
+			Boolean value = null;
+			Map<String, Boolean> workMap = new HashMap<>();
 			Field[] fieldList = registrationCenterDto.getWorkingNonWorkingDays().getClass().getDeclaredFields();
-			if (fieldList.length < 7) {
+			for (Field field : fieldList) {
+				try {
+					field.setAccessible(true);
+					value = (Boolean) field.get(registrationCenterDto.getWorkingNonWorkingDays());
+					fieldName = field.getName();
+					if (value != null) {
+						workMap.put(fieldName, value);
+					}
+
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			}
+			if (workMap.size() < 7) {
 				errors.add(new ServiceError(RegistrationCenterErrorCode.WORKING_NONWORKING_EXCEPTION.getErrorCode(),
 						RegistrationCenterErrorCode.WORKING_NONWORKING_EXCEPTION.getErrorMessage()));
 			}

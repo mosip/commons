@@ -10,8 +10,8 @@ package io.mosip.kernel.idvalidator.mispid.constant;
  *
  */
 public enum MispIdExceptionProperty {
-	INVALID_MISPID_LENGTH("KER-IDV-401", "Mispid Length Must Be "), INVALID_MISPID("KER-IDV-402",
-			"Mispid cannot be null or empty");
+	INVALID_MISPID_LENGTH("KER-IDV-401", "Mispid Length Must Be "),
+	INVALID_MISPID("KER-IDV-402", "Mispid cannot be null or empty");
 
 	/**
 	 * the errorCode.
@@ -25,10 +25,8 @@ public enum MispIdExceptionProperty {
 	/**
 	 * Constructor of RidExceptionProperty.
 	 * 
-	 * @param errorCode
-	 *            the errorCode.
-	 * @param errorMessage
-	 *            the errorMessage.
+	 * @param errorCode    the errorCode.
+	 * @param errorMessage the errorMessage.
 	 */
 	MispIdExceptionProperty(String errorCode, String errorMessage) {
 		this.errorCode = errorCode;

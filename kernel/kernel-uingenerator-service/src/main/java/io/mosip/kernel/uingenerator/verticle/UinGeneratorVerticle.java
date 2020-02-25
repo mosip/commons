@@ -45,21 +45,21 @@ public class UinGeneratorVerticle extends AbstractVerticle {
 	@Override
 	public void start() {
 		vertx.eventBus().consumer(UinGeneratorConstant.UIN_GENERATOR_ADDRESS, receivedMessage -> {
-   			if (receivedMessage.body().equals(UinGeneratorConstant.GENERATE_UIN) && uinProcesser.shouldGenerateUins()) {
-   				vertx.executeBlocking(future -> {
+			if (receivedMessage.body().equals(UinGeneratorConstant.GENERATE_UIN) && uinProcesser.shouldGenerateUins()) {
+				vertx.executeBlocking(future -> {
 					uinProcesser.generateUins();
 					future.complete();
 				}, result -> {
 					if (result.succeeded()) {
-						
+
 						// LOGGER.info("Generated and persisted uins");
 					} else {
-						
+
 						// LOGGER.info("Uin Genaration failed", result.cause());
 					}
 				});
 			}
-   			receivedMessage.reply(UINHealthConstants.ACTIVE);
+			receivedMessage.reply(UINHealthConstants.ACTIVE);
 		});
 	}
 }

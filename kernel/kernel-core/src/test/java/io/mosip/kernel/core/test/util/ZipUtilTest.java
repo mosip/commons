@@ -56,103 +56,98 @@ public class ZipUtilTest {
 		file.delete();
 	}
 
-	/*@Test
-	public void zipFileTest() throws FileNotFoundException, IOException, java.io.IOException {
+	/*
+	 * @Test public void zipFileTest() throws FileNotFoundException, IOException,
+	 * java.io.IOException {
+	 * 
+	 * String outputFile = "compressed.zip"; ClassLoader classLoader =
+	 * getClass().getClassLoader(); String inputFile =
+	 * classLoader.getResource("SampleFile.txt").getFile(); boolean ren =
+	 * ZipUtils.zipFile(inputFile, outputFile); assertTrue(ren);
+	 * 
+	 * File file = new File(outputFile); file.delete(); }
+	 */
 
-		String outputFile = "compressed.zip";
-		ClassLoader classLoader = getClass().getClassLoader();
-		String inputFile = classLoader.getResource("SampleFile.txt").getFile();
-		boolean ren = ZipUtils.zipFile(inputFile, outputFile);
-		assertTrue(ren);
+	/*
+	 * @Test(expected = FileNotFoundException.class) public void
+	 * zipFileFileNotFoundExceptionTestWithInputFile() throws FileNotFoundException,
+	 * IOException { String inputFile = null; String outputFile = "";
+	 * ZipUtils.zipFile(inputFile, outputFile); }
+	 */
 
-		File file = new File(outputFile);
-		file.delete();
-	}*/
+	/*
+	 * @Test public void zipMultipleFileTest() throws FileNotFoundException,
+	 * IOException {
+	 * 
+	 * ClassLoader classLoader = getClass().getClassLoader(); String inputMultFile1
+	 * = classLoader.getResource("File1.txt").getFile(); String inputMultFile2 =
+	 * classLoader.getResource("File2.txt").getFile(); String outputMulFile =
+	 * "compressedMulty.zip"; String[] inputMultFile = { inputMultFile1,
+	 * inputMultFile2 };
+	 * 
+	 * boolean ren = ZipUtils.zipMultipleFile(inputMultFile, outputMulFile);
+	 * assertTrue(ren);
+	 * 
+	 * File file = new File(outputMulFile); file.delete(); }
+	 */
+	/*
+	 * @Test(expected = FileNotFoundException.class) public void
+	 * zipMultFileNotFoundExceptionTest() throws FileNotFoundException, IOException
+	 * { String[] inputMultFile = { "" }; String outputMulFile = "";
+	 * 
+	 * ZipUtils.zipMultipleFile(inputMultFile, outputMulFile); }
+	 */
 
-	/*@Test(expected = FileNotFoundException.class)
-	public void zipFileFileNotFoundExceptionTestWithInputFile() throws FileNotFoundException, IOException {
-		String inputFile = null;
-		String outputFile = "";
-		ZipUtils.zipFile(inputFile, outputFile);
-	}*/
+	/*
+	 * @Test public void zipDirectoryTest() throws FileNotFoundException,
+	 * IOException {
+	 * 
+	 * String outputDir = "compressedDir.zip"; ClassLoader classLoader =
+	 * getClass().getClassLoader(); String inputDir =
+	 * classLoader.getResource("test").getFile();
+	 * 
+	 * boolean ren = ZipUtils.zipDirectory(inputDir, outputDir); assertTrue(ren);
+	 * 
+	 * File file = new File(outputDir); file.delete(); }
+	 */
 
-/*	@Test
-	public void zipMultipleFileTest() throws FileNotFoundException, IOException {
+	/*
+	 * @Test(expected = FileNotFoundException.class) public void
+	 * zipDirFileNotFoundExceptionTest() throws FileNotFoundException, IOException {
+	 * String inputDir = ""; String outputDir = "";
+	 * 
+	 * ZipUtils.zipDirectory(inputDir, outputDir); }
+	 */
 
-		ClassLoader classLoader = getClass().getClassLoader();
-		String inputMultFile1 = classLoader.getResource("File1.txt").getFile();
-		String inputMultFile2 = classLoader.getResource("File2.txt").getFile();
-		String outputMulFile = "compressedMulty.zip";
-		String[] inputMultFile = { inputMultFile1, inputMultFile2 };
+	/*
+	 * @Test public void unZipFileTest() throws FileNotFoundException, IOException {
+	 * 
+	 * String outputUnZip = "unzip"; ClassLoader classLoader =
+	 * getClass().getClassLoader(); String inputZipFile =
+	 * classLoader.getResource("File1.zip").getFile();
+	 * 
+	 * boolean ren = ZipUtils.unZipFile(inputZipFile, outputUnZip); assertTrue(ren);
+	 * 
+	 * File file = new File(outputUnZip + "File1.txt"); file.delete(); }
+	 */
 
-		boolean ren = ZipUtils.zipMultipleFile(inputMultFile, outputMulFile);
-		assertTrue(ren);
+	/*
+	 * @Test(expected = FileNotFoundException.class) public void
+	 * unZipFileNotFoundExceptionTest() throws FileNotFoundException, IOException {
+	 * 
+	 * String inputZipFile = ""; String outputUnZip = "";
+	 * ZipUtils.unZipFile(inputZipFile, outputUnZip); }
+	 */
 
-		File file = new File(outputMulFile);
-		file.delete();
-	}
-*/
-	/*@Test(expected = FileNotFoundException.class)
-	public void zipMultFileNotFoundExceptionTest() throws FileNotFoundException, IOException {
-		String[] inputMultFile = { "" };
-		String outputMulFile = "";
+	/*
+	 * @Test(expected = NullPointerException.class) public void
+	 * unZipNullPointerException() throws FileNotFoundException, IOException {
+	 * 
+	 * String inputZipFile = null; String outputUnZip = null;
+	 * ZipUtils.unZipFile(inputZipFile, outputUnZip); }
+	 */
 
-		ZipUtils.zipMultipleFile(inputMultFile, outputMulFile);
-	}*/
-
-/*	@Test
-	public void zipDirectoryTest() throws FileNotFoundException, IOException {
-
-		String outputDir = "compressedDir.zip";
-		ClassLoader classLoader = getClass().getClassLoader();
-		String inputDir = classLoader.getResource("test").getFile();
-
-		boolean ren = ZipUtils.zipDirectory(inputDir, outputDir);
-		assertTrue(ren);
-
-		File file = new File(outputDir);
-		file.delete();
-	}*/
-
-/*	@Test(expected = FileNotFoundException.class)
-	public void zipDirFileNotFoundExceptionTest() throws FileNotFoundException, IOException {
-		String inputDir = "";
-		String outputDir = "";
-
-		ZipUtils.zipDirectory(inputDir, outputDir);
-	}*/
-
-	/*@Test
-	public void unZipFileTest() throws FileNotFoundException, IOException {
-
-		String outputUnZip = "unzip";
-		ClassLoader classLoader = getClass().getClassLoader();
-		String inputZipFile = classLoader.getResource("File1.zip").getFile();
-
-		boolean ren = ZipUtils.unZipFile(inputZipFile, outputUnZip);
-		assertTrue(ren);
-
-		File file = new File(outputUnZip + "File1.txt");
-		file.delete();
-	}*/
-
-	/*@Test(expected = FileNotFoundException.class)
-	public void unZipFileNotFoundExceptionTest() throws FileNotFoundException, IOException {
-
-		String inputZipFile = "";
-		String outputUnZip = "";
-		ZipUtils.unZipFile(inputZipFile, outputUnZip);
-	}*/
-
-/*	@Test(expected = NullPointerException.class)
-	public void unZipNullPointerException() throws FileNotFoundException, IOException {
-
-		String inputZipFile = null;
-		String outputUnZip = null;
-		ZipUtils.unZipFile(inputZipFile, outputUnZip);
-	}*/
-
-	//@Test
+	// @Test
 	public void unzipDTest() throws FileNotFoundException, IOException, java.io.IOException {
 
 		String outputUnZip = "unzip";

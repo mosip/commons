@@ -32,7 +32,7 @@ import io.mosip.kernel.pridgenerator.constant.HibernatePersistenceConstant;
  * Configuration class for UinGenerator
  * 
  * @author Dharmesh Khandelwal
- * @author Raj Jha 
+ * @author Raj Jha
  * @since 1.0.0
  *
  */
@@ -41,7 +41,8 @@ import io.mosip.kernel.pridgenerator.constant.HibernatePersistenceConstant;
 @PropertySource({ "classpath:bootstrap.properties" })
 @PropertySource(value = "classpath:application-${spring.profiles.active}.properties", ignoreResourceNotFound = true)
 @EnableJpaRepositories(basePackages = { "io.mosip.kernel.pridgenerator.repository" })
-@ComponentScan(basePackages = { "io.mosip.kernel.pridgenerator.*","io.mosip.kernel.idgenerator.prid.*","io.mosip.kernel.crypto.*","io.mosip.kernel.auth.adapter.*"})
+@ComponentScan(basePackages = { "io.mosip.kernel.pridgenerator.*", "io.mosip.kernel.idgenerator.prid.*",
+		"io.mosip.kernel.crypto.*", "io.mosip.kernel.auth.adapter.*" })
 @EnableTransactionManagement
 public class HibernateDaoConfig implements EnvironmentAware {
 

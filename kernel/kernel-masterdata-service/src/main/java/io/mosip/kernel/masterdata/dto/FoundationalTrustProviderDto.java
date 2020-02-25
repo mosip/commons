@@ -20,29 +20,31 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FoundationalTrustProviderDto {
-	
-	/*@NotEmpty(message="Id must not be blank or null")
-	@Size(min = 1, max = 36)
-	private String id;*/
+
+	/*
+	 * @NotEmpty(message="Id must not be blank or null")
+	 * 
+	 * @Size(min = 1, max = 36) private String id;
+	 */
 
 	@NotBlank
-	@Size(min = 1, max = 128)
+	@Size(min = 0, max = 128)
 	private String name;
 
 	@NotBlank
-	@Size(min = 1, max = 512)
+	@Size(min = 0, max = 512)
 	private String address;
 
 	@NotBlank
-	@Size(min = 1, max = 256)
+	@Size(min = 0, max = 256)
 	private String email;
 
 	@NotBlank
-	@Size(min = 1, max = 16)
+	@Size(min = 0, max = 16)
 	private String contactNo;
 
 	@NotBlank
-	@Size(min = 1, max = 36)
+	@Size(min = 0, max = 36)
 	private String certAlias;
 
 	@NotNull
@@ -53,7 +55,7 @@ public class FoundationalTrustProviderDto {
 	}
 
 	public void setIsActive(boolean isActive) {
-	    this.isActive = isActive;
+		this.isActive = isActive;
 	}
 
 }

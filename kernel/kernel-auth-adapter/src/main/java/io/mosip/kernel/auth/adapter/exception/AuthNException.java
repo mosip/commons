@@ -23,8 +23,7 @@ public class AuthNException extends BaseUncheckedException {
 	private final List<ServiceError> list;
 
 	/**
-	 * @param list
-	 *            The error list.
+	 * @param list The error list.
 	 */
 	public AuthNException(List<ServiceError> list) {
 		this.list = list;

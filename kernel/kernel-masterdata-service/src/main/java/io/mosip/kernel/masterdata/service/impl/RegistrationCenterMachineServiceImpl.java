@@ -305,10 +305,8 @@ public class RegistrationCenterMachineServiceImpl implements RegistrationCenterM
 	/**
 	 * Gets the zone from reg center repo by reg center id.
 	 *
-	 * @param regCenterId
-	 *            the reg center id
-	 * @param langCode
-	 *            the lang code
+	 * @param regCenterId the reg center id
+	 * @param langCode    the lang code
 	 * @return the zone from reg center repo by reg center id
 	 */
 	private List<RegistrationCenter> getZoneFromRegCenterRepoByRegCenterId(String regCenterId, String langCode) {

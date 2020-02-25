@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>io.mosip</groupId>
 		<artifactId>commons</artifactId>
-		<version>1.0.6-SNAPSHOT</version>
+		<version>1.0.6</version>
 	</parent>
 
 	<groupId>io.mosip.idrepository</groupId>
@@ -54,6 +54,19 @@
 		<sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/dto/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/security/**,**/*Config.java,**/*BootApplication.java,**/*VertxApplication.java,**/cbeffutil/**</sonar.coverage.exclusions>
 		<sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**</sonar.cpd.exclusions>
 		<powermock.version>2.0.0</powermock.version>
+		<kernel.core.version>1.0.7-SNAPSHOT</kernel.core.version>
+		<kernel.idvalidator.uin.version>1.0.6</kernel.idvalidator.uin.version>
+		<kernel.idvalidator.rid.version>1.0.6</kernel.idvalidator.rid.version>
+		<kernel.cbeffutil.api.version>1.1.0-SNAPSHOT</kernel.cbeffutil.api.version>
+		<kernel.fsadapter.hdfs.version>1.0.6</kernel.fsadapter.hdfs.version>
+		<id.repository.core.version>1.0.7-SNAPSHOT</id.repository.core.version>
+		<kernel.idobjectvalidator.version>1.0.6</kernel.idobjectvalidator.version>
+		<kernel.bioapi.provider.version>1.0.6</kernel.bioapi.provider.version>
+		<kernel.auth.adapter.version>1.0.6</kernel.auth.adapter.version>
+		<kernel.logger.logback.version>1.0.6</kernel.logger.logback.version>
+		<kernel.idgenerator.vid.version>1.0.6</kernel.idgenerator.vid.version>
+		<kernel.idvalidator.vid.version>1.0.6</kernel.idvalidator.vid.version>
+		<kernel.dataaccess.hibernate.version>1.0.6</kernel.dataaccess.hibernate.version>
 	</properties>
 
 	<build>
@@ -120,5 +133,6 @@
 			</plugin>
 		</plugins>
 	</build>
+	<version>1.0.7-SNAPSHOT</version>
 </project>
 

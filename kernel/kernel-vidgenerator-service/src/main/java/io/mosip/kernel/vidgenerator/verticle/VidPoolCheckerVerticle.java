@@ -67,7 +67,7 @@ public class VidPoolCheckerVerticle extends AbstractVerticle {
 
 		MessageConsumer<String> initPoolConsumer = eventBus.consumer(EventType.INITPOOL);
 		initPoolConsumer.handler(initPoolHandler -> {
-			long start =System.currentTimeMillis();
+			long start = System.currentTimeMillis();
 			long noOfFreeVids = vidService.fetchVidCount(VidLifecycleStatus.AVAILABLE);
 			LOGGER.info("no of vid free present are {}", noOfFreeVids);
 			LOGGER.info("value of threshold is {} and lock is {}", threshold, locked.get());
@@ -92,19 +92,19 @@ public class VidPoolCheckerVerticle extends AbstractVerticle {
 		});
 	}
 
-	private  void deployHttpVerticle(long start) {
-		Verticle httpVerticle =  new VidFetcherVerticle(context);
+	private void deployHttpVerticle(long start) {
+		Verticle httpVerticle = new VidFetcherVerticle(context);
 		DeploymentOptions opts = new DeploymentOptions();
 		vertx.deployVerticle(httpVerticle, opts, res -> {
 			if (res.failed()) {
-				LOGGER.info("Failed to deploy verticle " + httpVerticle.getClass().getSimpleName()+" "+res.cause());
-			} else if(res.succeeded()) {
+				LOGGER.info("Failed to deploy verticle " + httpVerticle.getClass().getSimpleName() + " " + res.cause());
+			} else if (res.succeeded()) {
 				LOGGER.info("population of pool is done starting fetcher verticle");
-			    LOGGER.info("Starting vidgenerator service... ");
-			    LOGGER.info("service took {} ms to pool and start",(System.currentTimeMillis()-start));
-			    LOGGER.info("Deployed verticle " + httpVerticle.getClass().getSimpleName());
+				LOGGER.info("Starting vidgenerator service... ");
+				LOGGER.info("service took {} ms to pool and start", (System.currentTimeMillis() - start));
+				LOGGER.info("Deployed verticle " + httpVerticle.getClass().getSimpleName());
 			}
 		});
 
-}
+	}
 }

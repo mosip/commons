@@ -16,41 +16,44 @@ public enum OTPErrorCode {
 	 * Email not registered
 	 */
 	EMAILNOTREGISTERED("KER-SOT-002", "Email not registered"),
-	
+
 	/**
 	 * Email and Phone not registered
 	 */
 	EMAILPHONENOTREGISTERED("KER-SOT-003", "Both Phone No and E-mail not registered"),
-	
+
 	/**
 	 * SMS not configured
 	 */
 	SMSNOTCONFIGURED("KER-SOT-004", "SMS could not be triggered as it is not a configured channel for notification"),
-	
+
 	/**
 	 * EMAIL not configured
 	 */
-	EMAILNOTCONFIGURED("KER-SOT-005", "Email could not be triggered as it is not a configured channel for notification"),
-	
+	EMAILNOTCONFIGURED("KER-SOT-005",
+			"Email could not be triggered as it is not a configured channel for notification"),
+
 	/**
 	 * EMAIL and SMS not configured
 	 */
-	EMAILSMSNOTCONFIGURED("KER-SOT-006", "Email and SMS could not be triggered as it is not a configured channel for notification"),
-	
+	EMAILSMSNOTCONFIGURED("KER-SOT-006",
+			"Email and SMS could not be triggered as it is not a configured channel for notification"),
+
 	/**
 	 * EMAIL and SMS not configured
 	 */
 	UNABLETOSENDNOTIFICATION("KER-SOT-007", "Could not generate/send OTP"),
-	
+
 	/**
 	 * User blocked
 	 */
 	USERBLOCKED("KER-SOT-008", "Not able to Generate OTP for a frozen Account/locked UIN"),
-	
+
 	/**
 	 * User blocked
 	 */
 	LANGUAGENOTCONFIGURED("KER-SOT-009", "Unable to find a primary and/or secondary language configured");
+
 	/**
 	 * The error code
 	 */

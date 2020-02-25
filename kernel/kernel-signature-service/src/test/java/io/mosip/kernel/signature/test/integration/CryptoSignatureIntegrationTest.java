@@ -70,7 +70,7 @@ public class CryptoSignatureIntegrationTest {
 		mockMvc.perform(post("/public/validate").contentType(MediaType.APPLICATION_JSON).content(VALIDATEWITHPUBLICKEY))
 				.andExpect(status().isOk());
 	}
-	
+
 	@Test
 	@WithUserDetails("reg-processor")
 	public void signResponseTimeStampValidationInvalid() throws Exception {
@@ -78,7 +78,7 @@ public class CryptoSignatureIntegrationTest {
 		mockMvc.perform(post("/validate").contentType(MediaType.APPLICATION_JSON).content(VALIDATEWITHTIMESTAMP))
 				.andExpect(status().isOk());
 	}
-	
+
 	@Test
 	@WithUserDetails("reg-processor")
 	public void signResponseTimeStampValidationValid() throws Exception {
@@ -86,20 +86,21 @@ public class CryptoSignatureIntegrationTest {
 		mockMvc.perform(post("/validate").contentType(MediaType.APPLICATION_JSON).content(VALIDATEWITHTIMESTAMP))
 				.andExpect(status().isOk());
 	}
-	
+
 	@Test
 	@WithUserDetails("reg-processor")
 	public void signResponsStatusFalse() throws Exception {
 		when(signatureUtil.validateWithPublicKey(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
-		.thenReturn(false);
+				.thenReturn(false);
 		mockMvc.perform(post("/public/validate").contentType(MediaType.APPLICATION_JSON).content(VALIDATEWITHPUBLICKEY))
 				.andExpect(status().isOk());
 	}
-	
+
 	@Test
 	@WithUserDetails("reg-processor")
 	public void signResponseTimeStampValidationException() throws Exception {
-		when(signatureUtil.validate(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenThrow(InvalidKeySpecException.class);
+		when(signatureUtil.validate(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+				.thenThrow(InvalidKeySpecException.class);
 		mockMvc.perform(post("/validate").contentType(MediaType.APPLICATION_JSON).content(VALIDATEWITHTIMESTAMP))
 				.andExpect(status().isInternalServerError());
 	}

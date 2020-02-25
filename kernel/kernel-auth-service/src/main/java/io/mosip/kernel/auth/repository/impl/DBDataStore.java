@@ -260,7 +260,7 @@ public class DBDataStore implements DataStore {
 	}
 
 	@Override
-	public MosipUserSaltListDto getAllUserDetailsWithSalt() throws Exception {
+	public MosipUserSaltListDto getAllUserDetailsWithSalt(List<String> userDetails) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -319,16 +319,16 @@ public class DBDataStore implements DataStore {
 		return null;
 	}
 
-@Override
-public ValidationResponseDto validateUserName(String userId) {
-	// TODO Auto-generated method stub
-	return null;
-}
+	@Override
+	public ValidationResponseDto validateUserName(String userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-@Override
-public UserDetailsResponseDto getUserDetailBasedOnUid(List<String> userId) {
-	// TODO Auto-generated method stub
-	return null;
-}
+	@Override
+	public UserDetailsResponseDto getUserDetailBasedOnUid(List<String> userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

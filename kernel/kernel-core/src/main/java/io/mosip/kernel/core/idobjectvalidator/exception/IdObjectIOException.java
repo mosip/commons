@@ -4,7 +4,8 @@ import io.mosip.kernel.core.exception.BaseCheckedException;
 import io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorErrorConstant;
 
 /**
- * Exception class when there is any IO interrupt while reading/converting Id Object String.
+ * Exception class when there is any IO interrupt while reading/converting Id
+ * Object String.
  * 
  * @author Manoj SP
  * @author Swati Raj
@@ -17,7 +18,7 @@ public class IdObjectIOException extends BaseCheckedException {
 	 * Generated serialization ID.
 	 */
 	private static final long serialVersionUID = 795618868850353876L;
-	
+
 	/**
 	 * Instantiates a new id object IO exception.
 	 *
@@ -26,7 +27,7 @@ public class IdObjectIOException extends BaseCheckedException {
 	public IdObjectIOException(IdObjectValidatorErrorConstant errorConstant) {
 		super(errorConstant.getErrorCode(), errorConstant.getMessage());
 	}
-	
+
 	/**
 	 * Constructor for JsonIOException class.
 	 * 
@@ -36,12 +37,12 @@ public class IdObjectIOException extends BaseCheckedException {
 	public IdObjectIOException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);
 	}
-	
+
 	/**
 	 * Instantiates a new id object IO exception.
 	 *
 	 * @param errorConstant the error constant
-	 * @param rootCause the root cause
+	 * @param rootCause     the root cause
 	 */
 	public IdObjectIOException(IdObjectValidatorErrorConstant errorConstant, Throwable rootCause) {
 		super(errorConstant.getErrorCode(), errorConstant.getMessage(), rootCause);

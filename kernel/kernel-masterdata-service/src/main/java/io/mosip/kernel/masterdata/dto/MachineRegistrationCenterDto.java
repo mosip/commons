@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
 /**
  * 
  * @author M1047717
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class MachineRegistrationCenterDto extends BaseDto{
+public class MachineRegistrationCenterDto extends BaseDto {
 	/**
 	 * Field for registration Center Id
 	 */
@@ -73,11 +74,9 @@ public class MachineRegistrationCenterDto extends BaseDto{
 	 * Field for language code
 	 */
 	@ValidLangCode(message = "Language Code is Invalid")
-	//@NotBlank
-	//@Size(min = 1, max = 3)
+	// @NotBlank
+	// @Size(min = 1, max = 3)
 	@ApiModelProperty(value = "langCode", required = true, dataType = "java.lang.String")
 	private String langCode;
-	
-
 
 }

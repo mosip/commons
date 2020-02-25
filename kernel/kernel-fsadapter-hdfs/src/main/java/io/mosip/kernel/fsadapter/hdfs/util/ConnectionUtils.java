@@ -211,10 +211,8 @@ public class ConnectionUtils {
 	/**
 	 * Login User with keytab
 	 * 
-	 * @param user
-	 *            username with the kdc, eg. test@kdc.example.com
-	 * @param keytabPath
-	 *            path of the keytab file
+	 * @param user       username with the kdc, eg. test@kdc.example.com
+	 * @param keytabPath path of the keytab file
 	 * @throws IOException
 	 */
 	private void loginWithKeyTab(String user, String keytabPath) throws IOException {

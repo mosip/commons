@@ -25,8 +25,7 @@ public interface UBtree<T> {
 	/**
 	 * Method to create an unbalanced tree using the input list
 	 * 
-	 * @param list
-	 *            input list
+	 * @param list input list
 	 * @return list of {@link Node}
 	 */
 	public default List<Node<T>> createTree(List<T> list) {
@@ -60,8 +59,7 @@ public interface UBtree<T> {
 	/**
 	 * Method to find the leaf nodes using the passed node
 	 * 
-	 * @param node
-	 *            input node
+	 * @param node input node
 	 * @return {@link List} of leaf {@link Node}
 	 */
 	public default List<Node<T>> findLeafs(Node<T> node) {
@@ -103,8 +101,7 @@ public interface UBtree<T> {
 	/**
 	 * Method to find the root node for the input node
 	 * 
-	 * @param node
-	 *            input node
+	 * @param node input node
 	 * @return root {@link Node}
 	 */
 	public default Node<T> findRootNode(Node<T> node) {
@@ -127,8 +124,7 @@ public interface UBtree<T> {
 	/**
 	 * Method to find the root node and their value
 	 * 
-	 * @param node
-	 *            input node
+	 * @param node input node
 	 * @return node value
 	 */
 	public default T findRootNodeValue(Node<T> node) {
@@ -141,8 +137,7 @@ public interface UBtree<T> {
 	/**
 	 * Method to fetch the hierarchy for the input node
 	 * 
-	 * @param node
-	 *            input node
+	 * @param node input node
 	 * @return {@link List} of node value
 	 */
 	public default List<T> getChildHierarchy(Node<T> node) {
@@ -189,10 +184,8 @@ public interface UBtree<T> {
 	/**
 	 * Method to Search Node the specified node
 	 * 
-	 * @param root
-	 *            input root node
-	 * @param id
-	 *            id of the node
+	 * @param root input root node
+	 * @param id   id of the node
 	 * @return {@link Node}
 	 */
 	public default Node<T> searchNode(Node<T> root, String id) {
@@ -220,10 +213,8 @@ public interface UBtree<T> {
 	/**
 	 * Method to find the {@link Node} from the list of {@link Node}
 	 * 
-	 * @param list
-	 *            input list of {@link Node}
-	 * @param id
-	 *            input to search the Node
+	 * @param list input list of {@link Node}
+	 * @param id   input to search the Node
 	 * @return {@link Node}
 	 */
 	public default Node<T> findNode(List<Node<T>> list, String id) {

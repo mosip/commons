@@ -6,9 +6,9 @@ import io.mosip.kernel.vidgenerator.dto.VidFetchResponseDto;
 import io.mosip.kernel.vidgenerator.entity.VidEntity;
 
 public interface VidService {
-	
+
 	VidFetchResponseDto fetchVid(LocalDateTime expiry);
-	
+
 	long fetchVidCount(String status);
 
 	void expireAndRenew();

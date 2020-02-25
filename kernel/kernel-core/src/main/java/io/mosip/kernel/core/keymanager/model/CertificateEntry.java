@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**Certificate Key Entry from SoftHsm
+/**
+ * Certificate Key Entry from SoftHsm
  * 
  * @author Urvil Joshi
  *
@@ -14,12 +15,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CertificateEntry<C,P> {
+public class CertificateEntry<C, P> {
 
 	private C[] chain;
-	
+
 	private P privateKey;
-	
-	
-	
+
 }

@@ -29,20 +29,15 @@ public class EmailNotificationController {
 	EmailNotification<MultipartFile[], ResponseDto> emailNotificationService;
 
 	/**
-	 * @param mailTo
-	 *            array of email id's, to which mail should be sent.
-	 * @param mailCc
-	 *            array of email id's, to which the email should be sent as carbon
-	 *            copy.
-	 * @param mailSubject
-	 *            the subject.
-	 * @param mailContent
-	 *            the content.
-	 * @param attachments
-	 *            the attachments.
+	 * @param mailTo      array of email id's, to which mail should be sent.
+	 * @param mailCc      array of email id's, to which the email should be sent as
+	 *                    carbon copy.
+	 * @param mailSubject the subject.
+	 * @param mailContent the content.
+	 * @param attachments the attachments.
 	 * @return the dto response.
 	 */
-    @PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','AUTH','ZONAL_ADMIN','PRE_REGISTRATION_ADMIN','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','AUTH','ZONAL_ADMIN','PRE_REGISTRATION_ADMIN','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@PostMapping(value = "/email/send", consumes = "multipart/form-data")
 	public @ResponseBody ResponseWrapper<ResponseDto> sendEMail(String[] mailTo, String[] mailCc, String mailSubject,

@@ -90,13 +90,10 @@ public class ApiExceptionHandler {
 	/**
 	 * This method handle HttpMessageNotReadableException type of exception.
 	 * 
-	 * @param httpServletRequest
-	 *            the request.
-	 * @param e
-	 *            the exception.
+	 * @param httpServletRequest the request.
+	 * @param e                  the exception.
 	 * @return the response entity.
-	 * @throws IOException
-	 *             IOException.
+	 * @throws IOException IOException.
 	 */
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> onHttpMessageNotReadable(
@@ -110,13 +107,10 @@ public class ApiExceptionHandler {
 	/**
 	 * This method handle HttpClientErrorException type of exception.
 	 * 
-	 * @param httpServletRequest
-	 *            the request.
-	 * @param e
-	 *            the exception.
+	 * @param httpServletRequest the request.
+	 * @param e                  the exception.
 	 * @return the response entity.
-	 * @throws IOException
-	 *             IOException.
+	 * @throws IOException IOException.
 	 */
 	@ExceptionHandler(HttpClientErrorException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> smsVendorServiceException(

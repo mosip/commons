@@ -20,16 +20,14 @@ public class VidGeneratorServiceException extends BaseUncheckedException {
 	 * Constructor for the exception class with errorCode and errorMessage as the
 	 * argument.
 	 * 
-	 * @param errorCode
-	 *            the error code.
-	 * @param errorMessage
-	 *            the error message.
+	 * @param errorCode    the error code.
+	 * @param errorMessage the error message.
 	 */
 	public VidGeneratorServiceException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);
 	}
-	
-	public VidGeneratorServiceException(String errorCode, String errorMessage,Throwable cause) {
-		super(errorCode, errorMessage,cause);
+
+	public VidGeneratorServiceException(String errorCode, String errorMessage, Throwable cause) {
+		super(errorCode, errorMessage, cause);
 	}
 }

@@ -18,24 +18,24 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper=false)
-public class FoundationalTrustProviderResDto  extends BaseEntity implements Serializable {
-	
+@EqualsAndHashCode(callSuper = false)
+public class FoundationalTrustProviderResDto extends BaseEntity implements Serializable {
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 7789639319339045489L;
-	
+
 	private String id;
 
 	private String name;
-	
+
 	private String address;
-	
+
 	private String email;
-	
+
 	private String contactNo;
-	
+
 	private String certAlias;
 
 }

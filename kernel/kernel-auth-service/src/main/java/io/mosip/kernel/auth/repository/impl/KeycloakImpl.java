@@ -12,8 +12,6 @@ import java.util.Objects;
 import javax.annotation.PostConstruct;
 import javax.xml.bind.DatatypeConverter;
 
-import org.apache.commons.collections.MultiMap;
-import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.directory.api.ldap.model.password.PasswordDetails;
 import org.apache.directory.api.ldap.model.password.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,10 +138,7 @@ public class KeycloakImpl implements DataStore {
 
 	private NamedParameterJdbcTemplate jdbcTemplate;
 
-	private static final String FETCH_ALL_SALTS = "select ue.username,ua.value from public.user_entity ue, public.user_attribute ua where ue.id=ua.user_id and ua.name='userPassword'"; // and
-	// ue.username
-	// IN
-	// (:username)";
+	private static final String FETCH_ALL_SALTS = "select ue.username,ua.value from public.user_entity ue, public.user_attribute ua where ue.id=ua.user_id and ua.name='userPassword' and ue.username IN(:username)";
 
 	private static final String FETCH_PASSWORD = "select cr.value from public.credential cr, public.user_entity ue where cr.user_id=ue.id and ue.username=:username";
 	@Autowired
@@ -221,8 +216,9 @@ public class KeycloakImpl implements DataStore {
 	}
 
 	@Override
-	public MosipUserSaltListDto getAllUserDetailsWithSalt() throws Exception {
-		return jdbcTemplate.query(FETCH_ALL_SALTS, new MapSqlParameterSource(),
+	public MosipUserSaltListDto getAllUserDetailsWithSalt(List<String> userDetails) throws Exception {
+
+		return jdbcTemplate.query(FETCH_ALL_SALTS, new MapSqlParameterSource("username", userDetails),
 				new ResultSetExtractor<MosipUserSaltListDto>() {
 
 					@Override
@@ -232,18 +228,9 @@ public class KeycloakImpl implements DataStore {
 						while (rs.next()) {
 							MosipUserSalt mosipUserSalt = new MosipUserSalt();
 							mosipUserSalt.setUserId(rs.getString("username"));
-							// System.out.println(rs.getString("value"));
 							PasswordDetails password = PasswordUtil
 									.splitCredentials(CryptoUtil.decodeBase64(rs.getString("value")));
-							// System.out.println(rs.getString("username"));
-							// System.out.println("userPasword salt= "+rs.getString("value"));
-							// System.out.println("password salt=
-							// "+DatatypeConverter.printHexBinary(password.getPassword()));
-							// System.out.println("salt salt=
-							// "+CryptoUtil.encodeBase64String(password.getSalt()));
-							// mosipUserSalt.setSalt(CryptoUtil.encodeBase64(password.getSalt()));
 							mosipUserSalt.setSalt(CryptoUtil.encodeBase64String(password.getSalt()));
-							// System.out.println(mosipUserSalt.getSalt());
 							mosipUserSaltList.add(mosipUserSalt);
 						}
 						mosipUserSaltListDto.setMosipUserSaltList(mosipUserSaltList);
@@ -302,15 +289,20 @@ public class KeycloakImpl implements DataStore {
 	public MosipUserDto registerUser(UserRegistrationRequestDto userId) {
 		Map<String, String> pathParams = new HashMap<>();
 		KeycloakRequestDto keycloakRequestDto = mapUserRequestToKeycloakRequestDto(userId);
-		pathParams.put(AuthConstant.REALM_ID, realmId);
-		HttpEntity<KeycloakRequestDto> httpEntity = new HttpEntity<KeycloakRequestDto>(keycloakRequestDto);
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(keycloakAdminUrl + users);
-		if (!isUserAlreadyPresent(userId.getUserName())) {
+		String realm=realmId;
+		if(userId.getAppId().equalsIgnoreCase(AuthConstant.PRE_REGISTRATION)) {
+			realm=userId.getAppId();
+		}
+		pathParams.put(AuthConstant.REALM_ID, realm);
+		HttpEntity<KeycloakRequestDto> httpEntity = new HttpEntity<>(keycloakRequestDto);
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
+				.fromUriString(keycloakBaseUrl.concat("/users"));
+		if (!isUserAlreadyPresent(userId.getUserName(),realm)) {
 			callKeycloakService(uriComponentsBuilder.buildAndExpand(pathParams).toString(), HttpMethod.POST,
 					httpEntity);
 			if (keycloakRequestDto.getRealmRoles().contains(INDIVIDUAL)) {
-				String userID = getIDfromUserID(userId.getUserName());
-				roleMapper(userID);
+				String userID = getIDfromUserID(userId.getUserName(),realm);
+				roleMapper(userID, realm);
 			}
 		}
 
@@ -320,8 +312,9 @@ public class KeycloakImpl implements DataStore {
 
 	}
 
-	private void roleMapper(String userID) {
+	private void roleMapper(String userID, String realmId) {
 		Map<String, String> pathParams = new HashMap<>();
+
 		pathParams.put(AuthConstant.REALM_ID, realmId);
 		pathParams.put("userID", userID);
 		Roles role = new Roles(individualRoleID, INDIVIDUAL);
@@ -330,16 +323,15 @@ public class KeycloakImpl implements DataStore {
 		pathParams.put(AuthConstant.REALM_ID, realmId);
 		HttpEntity<List<Roles>> httpEntity = new HttpEntity<>(roles);
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
-				.fromUriString(keycloakAdminUrl + users + "/{userID}/role-mappings/realm");
-		String response = callKeycloakService(uriComponentsBuilder.buildAndExpand(pathParams).toString(),
-				HttpMethod.POST, httpEntity);
+				.fromUriString(keycloakBaseUrl.concat("/users/{userID}/role-mappings/realm"));
+		callKeycloakService(uriComponentsBuilder.buildAndExpand(pathParams).toString(), HttpMethod.POST, httpEntity);
 	}
 
-	private String getIDfromUserID(String userName) {
+	private String getIDfromUserID(String userName,String realmId) {
 		Map<String, String> pathParams = new HashMap<>();
 		pathParams.put(AuthConstant.REALM_ID, realmId);
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
-				.fromUriString(keycloakAdminUrl + users + "?username=" + userName);
+				.fromUriString(keycloakBaseUrl.concat("/users?username=").concat(userName));
 		String response = callKeycloakService(uriComponentsBuilder.buildAndExpand(pathParams).toString(),
 				HttpMethod.GET, null);
 		JsonNode jsonNodes;
@@ -366,17 +358,15 @@ public class KeycloakImpl implements DataStore {
 	/**
 	 * Checks if is user already present.
 	 *
-	 * @param userName
-	 *            the user name
+	 * @param userName the user name
 	 * @return true, if successful
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public boolean isUserAlreadyPresent(String userName) {
+	public boolean isUserAlreadyPresent(String userName,String realmId) {
 		Map<String, String> pathParams = new HashMap<>();
 		pathParams.put(AuthConstant.REALM_ID, realmId);
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
-				.fromUriString(keycloakAdminUrl + users + "?username=" + userName);
+				.fromUriString(keycloakBaseUrl.concat("/users?username=").concat(userName));
 		String response = callKeycloakService(uriComponentsBuilder.buildAndExpand(pathParams).toString(),
 				HttpMethod.GET, null);
 		JsonNode jsonNodes;
@@ -518,12 +508,9 @@ public class KeycloakImpl implements DataStore {
 	/**
 	 * Call keycloak service.
 	 *
-	 * @param url
-	 *            the url
-	 * @param httpMethod
-	 *            the http method
-	 * @param requestEntity
-	 *            the request entity
+	 * @param url           the url
+	 * @param httpMethod    the http method
+	 * @param requestEntity the request entity
 	 * @return the string
 	 */
 	private String callKeycloakService(String url, HttpMethod httpMethod, HttpEntity<?> requestEntity) {
@@ -550,6 +537,9 @@ public class KeycloakImpl implements DataStore {
 				}
 			}
 
+			throw new AuthManagerException(AuthErrorCode.SERVER_ERROR.getErrorCode(),
+					AuthErrorCode.SERVER_ERROR.getErrorMessage());
+
 		}
 		if (responseEntity != null && responseEntity.hasBody() && responseEntity.getStatusCode() == HttpStatus.OK) {
 			response = responseEntity.getBody();
@@ -561,8 +551,7 @@ public class KeycloakImpl implements DataStore {
 	/**
 	 * Map users to user detail dto.
 	 *
-	 * @param node
-	 *            the node
+	 * @param node        the node
 	 * @param userDetails
 	 * @return the list
 	 */
@@ -648,11 +637,10 @@ public class KeycloakImpl implements DataStore {
 	/**
 	 * Gets the roles as string.
 	 *
-	 * @param userId
-	 *            the id generated by keycloak for that user not username or userid
+	 * @param userId the id generated by keycloak for that user not username or
+	 *               userid
 	 * @return role as string
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private String getRolesAsString(String userId) throws IOException {
 		StringBuilder roleBuilder = new StringBuilder();

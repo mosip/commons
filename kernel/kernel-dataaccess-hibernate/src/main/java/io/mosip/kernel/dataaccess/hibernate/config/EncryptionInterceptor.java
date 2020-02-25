@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestTemplate;
 
-
 public class EncryptionInterceptor extends EmptyInterceptor {
 
 	@Value("${mosip.kernel.encrypt.url:http://localhost:8088/v1/keymanager/encrypt}")

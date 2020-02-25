@@ -332,11 +332,6 @@ public class RegistrationCenterUserServiceImpl implements RegistrationCenterUser
 	// method to validate the zone
 	private void validateRegistrationCenterUserIdZones(String userId, String regCenterId) {
 
-		List<String> zoneIds;
-		// get user zone and child zones list
-		List<Zone> userZones = zoneUtils.getUserZones();
-		zoneIds = userZones.parallelStream().map(Zone::getCode).collect(Collectors.toList());
-
 		// get given user id zone
 		ZoneUser zoneUser = zoneUserRepository.findByIdAndLangCode(userId);
 
@@ -345,6 +340,11 @@ public class RegistrationCenterUserServiceImpl implements RegistrationCenterUser
 			throw new RequestException(RegistrationCenterUserErrorCode.USER_NOT_FOUND.getErrorCode(),
 					RegistrationCenterUserErrorCode.USER_NOT_FOUND.getErrorMessage());
 		}
+
+		List<String> zoneIds;
+		// get user zone and child zones list
+		List<Zone> userZones = zoneUtils.getUserZones();
+		zoneIds = userZones.parallelStream().map(Zone::getCode).collect(Collectors.toList());
 
 		// check the given user zones will come under access user zone
 		if (!(zoneIds.contains(zoneUser.getZoneCode()))) {

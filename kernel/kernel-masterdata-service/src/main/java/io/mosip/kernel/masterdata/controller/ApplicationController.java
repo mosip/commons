@@ -53,8 +53,7 @@ public class ApplicationController {
 	/**
 	 * API to fetch all Application details by language code
 	 * 
-	 * @param langCode
-	 *            the language code
+	 * @param langCode the language code
 	 * 
 	 * @return All Application details
 	 */
@@ -70,11 +69,9 @@ public class ApplicationController {
 	/**
 	 * API to fetch all Application details by language code
 	 * 
-	 * @param code
-	 *            the code
+	 * @param code     the code
 	 * 
-	 * @param langCode
-	 *            the language code
+	 * @param langCode the language code
 	 * 
 	 * @return Application detail
 	 */
@@ -90,8 +87,7 @@ public class ApplicationController {
 	/**
 	 * API to create Application detail
 	 * 
-	 * @param application
-	 *            the application detail
+	 * @param application the application detail
 	 * 
 	 * @return {@linkplain CodeAndLanguageCodeID}
 	 */
