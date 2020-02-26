@@ -29,6 +29,7 @@ import io.swagger.annotations.ApiResponses;
  * Controller with api to save and get Device Details
  * 
  * @author Megha Tanga
+ * @author Ramadurai Pandian
  * @since 1.0.0
  *
  */

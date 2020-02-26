@@ -11,6 +11,7 @@ import io.mosip.kernel.masterdata.entity.RegisteredDevice;
  * 
  * @author Srinivasan
  * @author Megha Tanga
+ * @author Ramadurai Pandian
  */
 @Repository
 public interface RegisteredDeviceRepository extends BaseRepository<RegisteredDevice, String> {
@@ -31,4 +32,14 @@ public interface RegisteredDeviceRepository extends BaseRepository<RegisteredDev
 	 * @return the registered device
 	 */
 	RegisteredDevice findByCodeAndDpId(String deviceCode, String providerId);
+	
+	/**
+	 * Find by serial no and dp id.
+	 *
+	 *
+	 * @param providerId the provider id
+	 *  @param serialno the serial no
+	 * @return the registered device
+	 */	
+	RegisteredDevice findByDpIdAndSerialNoAndIsActiveIsTrue(String providerId,String serialno);
 }
