@@ -9,6 +9,7 @@
 	</parent>
 
 	<artifactId>id-repository-identity-service</artifactId>
+	<version>1.0.7-SNAPSHOT</version>
 	<name>identity-service</name>
 	<description>ID-Repository Identity service</description>
 
@@ -81,5 +82,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<version>1.0.7-SNAPSHOT</version>
 </project>
