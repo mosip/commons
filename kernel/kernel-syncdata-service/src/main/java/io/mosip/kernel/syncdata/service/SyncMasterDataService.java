@@ -6,6 +6,7 @@ import java.util.concurrent.ExecutionException;
 import io.mosip.kernel.syncdata.dto.UploadPublicKeyRequestDto;
 import io.mosip.kernel.syncdata.dto.UploadPublicKeyResponseDto;
 import io.mosip.kernel.syncdata.dto.response.MasterDataResponseDto;
+import io.mosip.kernel.syncdata.dto.response.SyncDataResponseDto;
 
 /**
  * Masterdata sync handler service
@@ -27,8 +28,25 @@ public interface SyncMasterDataService {
 	 * @return {@link MasterDataResponseDto}
 	 * @throws InterruptedException - this method will throw execution exception
 	 * @throws ExecutionException   -this method will throw interrupted exception
-	 */
+	 */	
+	@Deprecated
 	MasterDataResponseDto syncData(String regCenterId, String macAddress, String serialNumber,
+			LocalDateTime lastUpdated, LocalDateTime currentTimestamp, String keyIndex)
+			throws InterruptedException, ExecutionException;
+	
+	
+	/**
+	 * TODO need to accept only clientRefId instead of regCenterId / macaddress / serialNumber
+	 * @param regCenterId      - registration center id
+	 * @param macAddress       - MAC address of the machine
+	 * @param serialNumber     - serial number for either desktop or dongle
+	 * @param lastUpdated      - last updated time stamp
+	 * @param currentTimestamp - current time stamp
+	 * @return {@link SyncDataResponseDto}
+	 * @throws InterruptedException - this method will throw execution exception
+	 * @throws ExecutionException   -this method will throw interrupted exception
+	 */	
+	SyncDataResponseDto syncClientSettings(String regCenterId, String macAddress, String serialNumber,
 			LocalDateTime lastUpdated, LocalDateTime currentTimestamp, String keyIndex)
 			throws InterruptedException, ExecutionException;
 
