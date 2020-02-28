@@ -638,6 +638,7 @@ public class DeviceProviderServiceImpl implements
 		DeviceProvider entity = null;
 		DeviceProvider updtDeviceProvider = null;
 		DeviceProvider renDeviceProvider = null;
+		DeviceProvider existingDeviceProvider = null;
 		try {
 			renDeviceProvider = deviceProviderRepository.findById(DeviceProvider.class, dto.getId());
 
@@ -654,9 +655,9 @@ public class DeviceProviderServiceImpl implements
 								dto.getId()));
 			}
 			
-			renDeviceProvider = deviceProviderRepository.findByNameAndAddressAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(dto.getVendorName(),dto.getAddress());
+			existingDeviceProvider = deviceProviderRepository.findByNameAndAddressAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(dto.getVendorName(),dto.getAddress());
 			
-			if(renDeviceProvider!=null)
+			if(existingDeviceProvider!=null)
 			{
 				auditUtil.auditRequest(
 						String.format(MasterDataConstant.FAILURE_UPDATE, DeviceProvider.class.getCanonicalName()),
