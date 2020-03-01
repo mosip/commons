@@ -30,7 +30,7 @@ import io.mosip.kernel.uingenerator.constant.HibernatePersistenceConstant;
  * Configuration class for UinGenerator
  * 
  * @author Dharmesh Khandelwal
- * @author Raj Jha 
+ * @author Raj Jha
  * @since 1.0.0
  *
  */

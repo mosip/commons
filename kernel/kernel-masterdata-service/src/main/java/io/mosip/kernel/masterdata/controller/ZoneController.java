@@ -40,8 +40,7 @@ public class ZoneController {
 	/**
 	 * api to fetch the logged-in user zone hierarchy
 	 * 
-	 * @param langCode
-	 *            input language code
+	 * @param langCode input language code
 	 * @return {@link List} of {@link ZoneExtnDto}
 	 */
 	@PreAuthorize("hasRole('ZONAL_ADMIN')")
@@ -56,8 +55,7 @@ public class ZoneController {
 	/**
 	 * api to fetch the logged-in user zone hierarchy leaf zones
 	 * 
-	 * @param langCode
-	 *            input language code
+	 * @param langCode input language code
 	 * @return {@link List} of {@link ZoneExtnDto}
 	 */
 	@PreAuthorize("hasRole('ZONAL_ADMIN')")
@@ -71,7 +69,8 @@ public class ZoneController {
 
 	@GetMapping("/zonename")
 	public ResponseWrapper<ZoneNameResponseDto> getZoneNameBasedOnUserIDAndLangCode(
-			@RequestParam("userID") String userID, @ValidLangCode(message = "Language Code is Invalid") @RequestParam("langCode") String langCode) {
+			@RequestParam("userID") String userID,
+			@ValidLangCode(message = "Language Code is Invalid") @RequestParam("langCode") String langCode) {
 		ResponseWrapper<ZoneNameResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(zoneService.getZoneNameBasedOnLangCodeAndUserID(userID, langCode));
 		return responseWrapper;
@@ -80,7 +79,7 @@ public class ZoneController {
 	@GetMapping("/authorize")
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','REGISTRATION_ADMIN')")
 	@ResponseFilter
-	public ResponseWrapper<Boolean> authorizeZone(@NotBlank @RequestParam("rid") String rId){
+	public ResponseWrapper<Boolean> authorizeZone(@NotBlank @RequestParam("rid") String rId) {
 		ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(zoneService.authorizeZone(rId));
 		return responseWrapper;

@@ -189,8 +189,7 @@ public class HibernateDaoConfig implements BaseDaoConfig {
 				HibernatePersistenceConstant.EMPTY_INTERCEPTOR);
 		return jpaProperties;
 	}
-	
-	
+
 //	@Bean
 //	public RestTemplate restTemplate()
 //	{
@@ -207,12 +206,9 @@ public class HibernateDaoConfig implements BaseDaoConfig {
 	 * If the map previously contained a mapping for the key, the old value is
 	 * replaced.
 	 * 
-	 * @param jpaProperties
-	 *            The map of jpa properties
-	 * @param property
-	 *            The property whose value is to be set
-	 * @param defaultValue
-	 *            The default value to set
+	 * @param jpaProperties The map of jpa properties
+	 * @param property      The property whose value is to be set
+	 * @param defaultValue  The default value to set
 	 * @return The map of jpa properties with properties set
 	 */
 	private HashMap<String, Object> getProperty(HashMap<String, Object> jpaProperties, String property,
@@ -225,7 +221,7 @@ public class HibernateDaoConfig implements BaseDaoConfig {
 			try {
 				if (environment.containsProperty(property)) {
 					jpaProperties.put(property,
-							//encryptionInterceptor());
+							// encryptionInterceptor());
 							BeanUtils.instantiateClass(Class.forName(environment.getProperty(property))));
 				}
 				/**
@@ -240,6 +236,5 @@ public class HibernateDaoConfig implements BaseDaoConfig {
 		}
 		return jpaProperties;
 	}
-
 
 }

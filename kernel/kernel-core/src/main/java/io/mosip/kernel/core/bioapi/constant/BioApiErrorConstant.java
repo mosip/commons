@@ -10,16 +10,16 @@ public enum BioApiErrorConstant {
 
 	/** Thrown when data provided as input is invalid. */
 	INVALID_INPUT_PARAMETER("KER-BIO-001", "Invalid Input Parameter - %s"),
-	
+
 	/** Thrown when data required as input is missing. */
 	MISSING_INPUT_PARAMETER("KER-BIO-002", "Missing Input Parameter - %s"),
-	
+
 	/** Thrown when data provided is valid but quality check cannot be performed. */
 	QUALITY_CHECK_FAILED("KER-BIO-003", "Quality check of Biometric data failed"),
-	
+
 	/** Thrown when data provided is valid but matching cannot be performed. */
 	MATCHING_FAILED("KER-BIO-004", "Matching of Biometric data failed"),
-	
+
 	/** Thrown when some other error occurred. */
 	UNKNOWN_ERROR("KER-BIO-005", "Unknown error occurred");
 
@@ -33,7 +33,7 @@ public enum BioApiErrorConstant {
 	 * Instantiates a new error constant.
 	 *
 	 * @param errorCode the error code
-	 * @param message the message
+	 * @param message   the message
 	 */
 	BioApiErrorConstant(final String errorCode, final String message) {
 		this.errorCode = errorCode;

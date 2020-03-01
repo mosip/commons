@@ -18,8 +18,7 @@ public class CryptoManagerServiceException extends BaseUncheckedException {
 	private final List<ServiceError> list;
 
 	/**
-	 * @param list
-	 *            The error list.
+	 * @param list The error list.
 	 */
 	public CryptoManagerServiceException(List<ServiceError> list) {
 		this.list = list;

@@ -13,7 +13,7 @@ import io.mosip.kernel.auth.dto.TimeToken;
 public interface TokenService {
 
 	void StoreToken(AuthToken token);
-	
+
 	void UpdateToken(AuthToken token);
 
 	AuthToken getTokenDetails(String token);
@@ -21,7 +21,7 @@ public interface TokenService {
 	AuthToken getUpdatedAccessToken(String token, TimeToken newAccessToken, String userName);
 
 	void revokeToken(String token);
-	
+
 	AuthToken getTokenBasedOnName(String userName);
 
 }

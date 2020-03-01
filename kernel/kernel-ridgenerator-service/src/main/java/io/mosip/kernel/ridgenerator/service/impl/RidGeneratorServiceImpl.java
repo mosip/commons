@@ -87,12 +87,9 @@ public class RidGeneratorServiceImpl implements RidGeneratorService<RidGenerator
 	/**
 	 * This method generate sequence based on center id and machine id combination.
 	 * 
-	 * @param centerId
-	 *            the center id.
-	 * @param machineId
-	 *            the machine id.
-	 * @param sequenceLength
-	 *            the sequence length.
+	 * @param centerId       the center id.
+	 * @param machineId      the machine id.
+	 * @param sequenceLength the sequence length.
 	 * @return the sequence.
 	 */
 	private String sequenceNumberGenerator(String centerId, String machineId, int sequenceLength) {
@@ -152,10 +149,8 @@ public class RidGeneratorServiceImpl implements RidGeneratorService<RidGenerator
 	/**
 	 * This method appends the different strings to generate the RID
 	 * 
-	 * @param randomDigitRid
-	 *            5 digit no. generated
-	 * @param currentTimeStamp
-	 *            current timestamp generated
+	 * @param randomDigitRid   5 digit no. generated
+	 * @param currentTimeStamp current timestamp generated
 	 * @return generated RID
 	 */
 	private String appendString(String randomDigitRid, String currentTimeStamp, String centreId, String machineId) {
@@ -167,10 +162,8 @@ public class RidGeneratorServiceImpl implements RidGeneratorService<RidGenerator
 	/**
 	 * This method is used to validate the input given by user
 	 * 
-	 * @param centreId
-	 *            input by user
-	 * @param machineId
-	 *            input by user
+	 * @param centreId  input by user
+	 * @param machineId input by user
 	 */
 	private void validateInput(String centreId, String machineId, int centerIdLength, int machineIdLength) {
 		if (centreId.isEmpty() || machineId.isEmpty()) {

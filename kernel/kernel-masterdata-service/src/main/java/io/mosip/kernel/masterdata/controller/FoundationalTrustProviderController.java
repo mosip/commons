@@ -23,11 +23,12 @@ import io.mosip.kernel.masterdata.service.FoundationalTrustProviderService;
 import io.mosip.kernel.masterdata.utils.AuditUtil;
 import io.swagger.annotations.Api;
 
-
 /**
  * 
  * Class handles REST calls with appropriate URLs.Service class
- * {@link FoundationalTrustProviderService} is called wherein the business logics are handled.
+ * {@link FoundationalTrustProviderService} is called wherein the business
+ * logics are handled.
+ * 
  * @author Ramadurai Pandian
  *
  */
@@ -35,39 +36,46 @@ import io.swagger.annotations.Api;
 @Api(tags = { "FoundationalTrustProvider" })
 @RequestMapping(value = "/foundationaltrustprovider")
 public class FoundationalTrustProviderController {
-	
+
 	@Autowired
 	AuditUtil auditUtil;
-	
+
 	@Autowired
 	private FoundationalTrustProviderService foundationalTrustProviderService;
-	
+
 	@ResponseFilter
 	@PostMapping
-	public ResponseWrapper<FoundationalTrustProviderResDto> registerFoundationalTrustProvider(@RequestBody @Valid RequestWrapper<FoundationalTrustProviderDto> foundationalTrustProviderDto)
-	{
-		auditUtil.auditRequest(MasterDataConstant.CREATE_API_IS_CALLED + FoundationalTrustProviderDto.class.getCanonicalName(),
+	public ResponseWrapper<FoundationalTrustProviderResDto> registerFoundationalTrustProvider(
+			@RequestBody @Valid RequestWrapper<FoundationalTrustProviderDto> foundationalTrustProviderDto) {
+		auditUtil.auditRequest(
+				MasterDataConstant.CREATE_API_IS_CALLED + FoundationalTrustProviderDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,
-				MasterDataConstant.CREATE_API_IS_CALLED + FoundationalTrustProviderDto.class.getCanonicalName(),"ADM-701");
-		ResponseWrapper<FoundationalTrustProviderResDto> response=foundationalTrustProviderService.registerFoundationalTrustProvider(foundationalTrustProviderDto.getRequest());
-		
+				MasterDataConstant.CREATE_API_IS_CALLED + FoundationalTrustProviderDto.class.getCanonicalName(),
+				"ADM-701");
+		ResponseWrapper<FoundationalTrustProviderResDto> response = foundationalTrustProviderService
+				.registerFoundationalTrustProvider(foundationalTrustProviderDto.getRequest());
+
 		return response;
 	}
-	
+
 	@ResponseFilter
 	@PutMapping
-	public ResponseWrapper<FoundationalTrustProviderResDto> updateFoundationalTrustProvider(@RequestBody @Valid RequestWrapper<FoundationalTrustProviderPutDto> foundationalTrustProviderDto)
-	{
-		auditUtil.auditRequest(MasterDataConstant.UPDATE_API_IS_CALLED + FoundationalTrustProviderDto.class.getCanonicalName(),
-				MasterDataConstant.AUDIT_SYSTEM,
-				MasterDataConstant.UPDATE_API_IS_CALLED + FoundationalTrustProviderDto.class.getCanonicalName(),"ADM-703");
-		ResponseWrapper<FoundationalTrustProviderResDto> response= foundationalTrustProviderService.updateFoundationalTrustProvider(foundationalTrustProviderDto.getRequest());
+	public ResponseWrapper<FoundationalTrustProviderResDto> updateFoundationalTrustProvider(
+			@RequestBody @Valid RequestWrapper<FoundationalTrustProviderPutDto> foundationalTrustProviderDto) {
 		auditUtil.auditRequest(
-				String.format(MasterDataConstant.SUCCESSFUL_UPDATE, FoundationalTrustProviderDto.class.getCanonicalName()),
+				MasterDataConstant.UPDATE_API_IS_CALLED + FoundationalTrustProviderDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC, FoundationalTrustProviderDto.class.getCanonicalName()),"ADM-704");
+				MasterDataConstant.UPDATE_API_IS_CALLED + FoundationalTrustProviderDto.class.getCanonicalName(),
+				"ADM-703");
+		ResponseWrapper<FoundationalTrustProviderResDto> response = foundationalTrustProviderService
+				.updateFoundationalTrustProvider(foundationalTrustProviderDto.getRequest());
+		auditUtil.auditRequest(
+				String.format(MasterDataConstant.SUCCESSFUL_UPDATE,
+						FoundationalTrustProviderDto.class.getCanonicalName()),
+				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC,
+						FoundationalTrustProviderDto.class.getCanonicalName()),
+				"ADM-704");
 		return response;
 	}
-	
 
 }

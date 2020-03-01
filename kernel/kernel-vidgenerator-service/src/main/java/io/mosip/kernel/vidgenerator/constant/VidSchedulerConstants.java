@@ -1,13 +1,13 @@
 package io.mosip.kernel.vidgenerator.constant;
 
 public class VidSchedulerConstants {
-	
+
 	private VidSchedulerConstants() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public static final String CEYLON_SCHEDULER = "ceylon:herd.schedule.chime/0.2.0";
-	public static final String TIMER_EVENT= "scheduler:vid_revoker";
+	public static final String TIMER_EVENT = "scheduler:vid_revoker";
 	public static final String TYPE = "type";
 	public static final String SECONDS = "seconds";
 	public static final String MINUTES = "minutes";

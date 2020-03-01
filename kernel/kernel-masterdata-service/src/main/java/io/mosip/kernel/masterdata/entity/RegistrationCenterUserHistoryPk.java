@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 /**
  * 
  * @author Megha Tanga
@@ -20,8 +19,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class RegistrationCenterUserHistoryPk implements Serializable{
-	
+public class RegistrationCenterUserHistoryPk implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "regcntr_id", unique = true, nullable = false, length = 10)

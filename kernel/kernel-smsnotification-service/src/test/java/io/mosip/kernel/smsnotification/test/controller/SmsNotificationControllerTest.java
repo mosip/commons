@@ -68,7 +68,7 @@ public class SmsNotificationControllerTest {
 		mockMvc.perform(post("/sms/send").contentType(MediaType.APPLICATION_JSON).content(json))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.response.status", is("success")));
 	}
-	
+
 	@WithUserDetails("individual")
 	@Test
 	public void controllerExpTest() throws Exception {

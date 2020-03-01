@@ -20,10 +20,8 @@ public class UinGeneratorServiceException extends BaseUncheckedException {
 	 * Constructor for the exception class with errorCode and errorMessage as the
 	 * argument.
 	 * 
-	 * @param errorCode
-	 *            the error code.
-	 * @param errorMessage
-	 *            the error message.
+	 * @param errorCode    the error code.
+	 * @param errorMessage the error message.
 	 */
 	public UinGeneratorServiceException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);

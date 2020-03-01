@@ -34,7 +34,6 @@ import io.mosip.kernel.masterdata.utils.ExceptionUtils;
 import io.mosip.kernel.masterdata.utils.MapperUtils;
 import io.mosip.kernel.masterdata.utils.MetaDataUtils;
 
-
 /**
  * Service class to register and de register Device.
  * 
@@ -116,7 +115,8 @@ public class DeviceRegisterServiceImpl implements DeviceRegisterService {
 			deviceRegister = deviceRegisterRepository.findById(DeviceRegister.class, deviceCode);
 		} catch (DataAccessException | DataAccessLayerException e) {
 			throw new MasterDataServiceException(DeviceRegisterErrorCode.DEVICE_REGISTER_FETCH_EXCEPTION.getErrorCode(),
-					DeviceRegisterErrorCode.DEVICE_REGISTER_FETCH_EXCEPTION.getErrorMessage() + " " + ExceptionUtils.parseException(e));
+					DeviceRegisterErrorCode.DEVICE_REGISTER_FETCH_EXCEPTION.getErrorMessage() + " "
+							+ ExceptionUtils.parseException(e));
 		}
 
 		if (deviceRegister == null) {
@@ -138,8 +138,7 @@ public class DeviceRegisterServiceImpl implements DeviceRegisterService {
 	/**
 	 * Creates the history details.
 	 *
-	 * @param deviceRegister
-	 *            the device register
+	 * @param deviceRegister the device register
 	 */
 	private void createHistoryDetails(DeviceRegister deviceRegister) {
 		DeviceRegisterHistory deviceRegisterHistory = new DeviceRegisterHistory();
@@ -161,8 +160,7 @@ public class DeviceRegisterServiceImpl implements DeviceRegisterService {
 	/**
 	 * Update register details.
 	 *
-	 * @param deviceRegister
-	 *            the device register
+	 * @param deviceRegister the device register
 	 */
 	private void updateRegisterDetails(DeviceRegister deviceRegister) {
 		try {

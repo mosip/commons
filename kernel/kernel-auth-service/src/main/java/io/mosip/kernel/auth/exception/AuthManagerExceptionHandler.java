@@ -39,7 +39,6 @@ public class AuthManagerExceptionHandler {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> methodArgumentNotValidException(
 			HttpServletRequest httpServletRequest, final MethodArgumentNotValidException e) throws IOException {
@@ -52,7 +51,7 @@ public class AuthManagerExceptionHandler {
 		});
 		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
 	}
-	
+
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> onHttpMessageNotReadable(HttpServletRequest httpServletRequest,
 			final HttpMessageNotReadableException e) throws IOException {
@@ -61,8 +60,6 @@ public class AuthManagerExceptionHandler {
 		errorResponse.getErrors().add(error);
 		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
 	}
-
-	
 
 	private ResponseWrapper<ServiceError> setErrors(HttpServletRequest httpServletRequest) throws IOException {
 		ResponseWrapper<ServiceError> responseWrapper = new ResponseWrapper<>();
@@ -98,7 +95,7 @@ public class AuthManagerExceptionHandler {
 		ExceptionUtils.logRootCause(e);
 		return new ResponseEntity<>(responseWrapper, HttpStatus.OK);
 	}
-	
+
 	@ExceptionHandler(value = { LoginException.class })
 	public ResponseEntity<ResponseWrapper<ServiceError>> loginException(HttpServletRequest request,
 			LoginException exception) throws IOException {
@@ -108,7 +105,7 @@ public class AuthManagerExceptionHandler {
 		ExceptionUtils.logRootCause(exception);
 		return new ResponseEntity<>(responseWrapper, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
+
 	@ExceptionHandler(value = { Exception.class, RuntimeException.class })
 	public ResponseEntity<ResponseWrapper<ServiceError>> defaultErrorHandler(HttpServletRequest request, Exception e)
 			throws IOException {

@@ -12,11 +12,11 @@ import org.springframework.context.annotation.ComponentScan;
  *
  */
 @SpringBootApplication
-@ComponentScan({"io.mosip.kernel.*"})
+@ComponentScan({ "io.mosip.kernel.*" })
 public class PartnerIdGeneratorBootApplication {
 
 	public static void main(String[] args) {
-		
+
 		SpringApplication.run(PartnerIdGeneratorBootApplication.class, args);
 
 	}

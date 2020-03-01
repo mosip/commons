@@ -99,7 +99,7 @@ public class RegistrationCenterUserMachineController {
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	public ResponseWrapper<RegCenterMachineUserResponseDto> createOrUpdateRegistrationCentersMachineUserMapping(
 			@ApiParam("Registration center id,user id and ,machine id with metadata") @RequestBody @Valid RegCenterMachineUserReqDto<RegistrationCenterUserMachineMappingDto> regCenterMachineUserReqDto) {
-		
+
 		ResponseWrapper<RegCenterMachineUserResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(registrationCenterMachineUserService
 				.createOrUpdateRegistrationCentersMachineUserMapping(regCenterMachineUserReqDto));

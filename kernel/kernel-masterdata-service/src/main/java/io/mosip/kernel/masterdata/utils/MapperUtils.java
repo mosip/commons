@@ -51,9 +51,10 @@ import io.mosip.kernel.masterdata.entity.RegisteredDevice;
 @Component
 @SuppressWarnings("unchecked")
 public class MapperUtils {
-	
-	/*@Autowired
-	private ObjectMapper mapper;*/
+
+	/*
+	 * @Autowired private ObjectMapper mapper;
+	 */
 
 	private MapperUtils() {
 		super();
@@ -72,8 +73,7 @@ public class MapperUtils {
 	 * Parse a date string of pattern UTC_DATETIME_PATTERN into
 	 * {@link LocalDateTime}
 	 * 
-	 * @param dateTime
-	 *            of type {@link String} of pattern UTC_DATETIME_PATTERN
+	 * @param dateTime of type {@link String} of pattern UTC_DATETIME_PATTERN
 	 * @return a {@link LocalDateTime} of given pattern
 	 */
 	public static LocalDateTime parseToLocalDateTime(String dateTime) {
@@ -94,20 +94,15 @@ public class MapperUtils {
 	 * name fields value will be set but not the embedded IDs and super class
 	 * values.
 	 * 
-	 * @param <S>
-	 *            is a type parameter
-	 * @param <D>
-	 *            is a type parameter
-	 * @param source
-	 *            which value is going to be mapped
-	 * @param destination
-	 *            where values is going to be mapped
-	 * @param mapNullValues
-	 *            by default marked as true so, it will map null values but if
-	 *            marked as false then null values will be ignored
+	 * @param <S>           is a type parameter
+	 * @param <D>           is a type parameter
+	 * @param source        which value is going to be mapped
+	 * @param destination   where values is going to be mapped
+	 * @param mapNullValues by default marked as true so, it will map null values
+	 *                      but if marked as false then null values will be ignored
 	 * @return the <code>destination</code> object
-	 * @throws NullPointerException
-	 *             if either <code>source</code> or <code>destination</code> is null
+	 * @throws NullPointerException if either <code>source</code> or
+	 *                              <code>destination</code> is null
 	 */
 	public static <S, D> D map(final S source, D destination, Boolean mapNullValues) {
 		MapperUtils.mapNullValues = mapNullValues;
@@ -124,17 +119,13 @@ public class MapperUtils {
 	 * name fields value will be set but not the embedded IDs and super class
 	 * values.
 	 * 
-	 * @param <S>
-	 *            is a type parameter
-	 * @param <D>
-	 *            is a type parameter
-	 * @param source
-	 *            which value is going to be mapped
-	 * @param destination
-	 *            where values is going to be mapped
+	 * @param <S>         is a type parameter
+	 * @param <D>         is a type parameter
+	 * @param source      which value is going to be mapped
+	 * @param destination where values is going to be mapped
 	 * @return the <code>destination</code> object
-	 * @throws NullPointerException
-	 *             if either <code>source</code> or <code>destination</code> is null
+	 * @throws NullPointerException if either <code>source</code> or
+	 *                              <code>destination</code> is null
 	 */
 	public static <S, D> D map(final S source, D destination) {
 		Objects.requireNonNull(source, SOURCE_NULL_MESSAGE);
@@ -157,21 +148,15 @@ public class MapperUtils {
 	 * Entity type field is their then only matched name fields value will be set
 	 * but not the embedded IDs and super class values.
 	 * 
-	 * @param <S>
-	 *            is a type parameter
-	 * @param <D>
-	 *            is a type parameter
-	 * @param source
-	 *            which value is going to be mapped
-	 * @param destinationClass
-	 *            where values is going to be mapped
+	 * @param <S>              is a type parameter
+	 * @param <D>              is a type parameter
+	 * @param source           which value is going to be mapped
+	 * @param destinationClass where values is going to be mapped
 	 * @return the object of <code>destinationClass</code>
-	 * @throws DataAccessLayerException
-	 *             if exception occur during creating of
-	 *             <code>destinationClass</code> object
-	 * @throws NullPointerException
-	 *             if either <code>source</code> or <code>destinationClass</code> is
-	 *             null
+	 * @throws DataAccessLayerException if exception occur during creating of
+	 *                                  <code>destinationClass</code> object
+	 * @throws NullPointerException     if either <code>source</code> or
+	 *                                  <code>destinationClass</code> is null
 	 */
 	public static <S, D> D map(final S source, Class<D> destinationClass) {
 		Objects.requireNonNull(source, SOURCE_NULL_MESSAGE);
@@ -192,22 +177,16 @@ public class MapperUtils {
 	 * <code>destinationClass</code> and map all the values from source to
 	 * destination if field name and type is same.
 	 * 
-	 * @param <S>
-	 *            is a type parameter
+	 * @param <S>              is a type parameter
 	 * 
-	 * @param <D>
-	 *            is a type parameter
-	 * @param sourceList
-	 *            which value is going to be mapped
-	 * @param destinationClass
-	 *            where values is going to be mapped
+	 * @param <D>              is a type parameter
+	 * @param sourceList       which value is going to be mapped
+	 * @param destinationClass where values is going to be mapped
 	 * @return list of destinationClass objects
-	 * @throws DataAccessLayerException
-	 *             if exception occur during creating of
-	 *             <code>destinationClass</code> object
-	 * @throws NullPointerException
-	 *             if either <code>sourceList</code> or
-	 *             <code>destinationClass</code> is null
+	 * @throws DataAccessLayerException if exception occur during creating of
+	 *                                  <code>destinationClass</code> object
+	 * @throws NullPointerException     if either <code>sourceList</code> or
+	 *                                  <code>destinationClass</code> is null
 	 */
 	public static <S, D> List<D> mapAll(final Collection<S> sourceList, Class<D> destinationClass) {
 		Objects.requireNonNull(sourceList, "sourceList should not be null");
@@ -221,21 +200,17 @@ public class MapperUtils {
 	 * and same type for the fields. It will not map any field which is static or
 	 * final.It will simply ignore those values.
 	 * 
-	 * @param <S>
-	 *            is a type parameter
+	 * @param <S>         is a type parameter
 	 * 
-	 * @param <D>
-	 *            is a type parameter
-	 * @param source
-	 *            is any object which should not be null and have data which is
-	 *            going to be copied
-	 * @param destination
-	 *            is an object in which source field values is going to be matched
+	 * @param <D>         is a type parameter
+	 * @param source      is any object which should not be null and have data which
+	 *                    is going to be copied
+	 * @param destination is an object in which source field values is going to be
+	 *                    matched
 	 * 
-	 * @throws DataAccessLayerException
-	 *             if error raised during mapping values
-	 * @throws NullPointerException
-	 *             if either <code>source</code> or <code>destination</code> is null
+	 * @throws DataAccessLayerException if error raised during mapping values
+	 * @throws NullPointerException     if either <code>source</code> or
+	 *                                  <code>destination</code> is null
 	 */
 	public static <S, D> void mapFieldValues(S source, D destination) {
 
@@ -254,14 +229,10 @@ public class MapperUtils {
 	 * entity to entity. Like when both <code>source</code> and
 	 * <code>destination</code> are object which extends {@link BaseEntity}.
 	 * 
-	 * @param <S>
-	 *            is a type parameter
-	 * @param <D>
-	 *            is a type parameter
-	 * @param source
-	 *            which value is going to be mapped
-	 * @param destination
-	 *            where values is going to be mapped
+	 * @param <S>         is a type parameter
+	 * @param <D>         is a type parameter
+	 * @param source      which value is going to be mapped
+	 * @param destination where values is going to be mapped
 	 */
 	public static <S, D> void setBaseFieldValue(S source, D destination) {
 		Objects.requireNonNull(source, SOURCE_NULL_MESSAGE);
@@ -318,19 +289,13 @@ public class MapperUtils {
 	/**
 	 * Map values from source object to destination object.
 	 * 
-	 * @param <S>
-	 *            is a type parameter
-	 * @param <D>
-	 *            is a type parameter
-	 * @param source
-	 *            which value is going to be mapped
-	 * @param destination
-	 *            where values is going to be mapped
-	 * @throws InstantiationException
-	 *             if not able to create instance of field having annotation
-	 *             {@link EmbeddedId}
-	 * @throws IllegalAccessException
-	 *             if provided fields are not accessible
+	 * @param <S>         is a type parameter
+	 * @param <D>         is a type parameter
+	 * @param source      which value is going to be mapped
+	 * @param destination where values is going to be mapped
+	 * @throws InstantiationException if not able to create instance of field having
+	 *                                annotation {@link EmbeddedId}
+	 * @throws IllegalAccessException if provided fields are not accessible
 	 */
 	private static <S, D> void mapValues(S source, D destination)
 			throws IllegalAccessException, InstantiationException {
@@ -347,19 +312,13 @@ public class MapperUtils {
 	/**
 	 * This method map source DTO to a class object which extends {@link BaseEntity}
 	 * 
-	 * @param <S>
-	 *            is a type parameter
-	 * @param <D>
-	 *            is a type parameter
-	 * @param source
-	 *            which value is going to be mapped
-	 * @param destination
-	 *            where values is going to be mapped
-	 * @throws InstantiationException
-	 *             if not able to create instance of field having annotation
-	 *             {@link EmbeddedId}
-	 * @throws IllegalAccessException
-	 *             if provided fields are not accessible
+	 * @param <S>         is a type parameter
+	 * @param <D>         is a type parameter
+	 * @param source      which value is going to be mapped
+	 * @param destination where values is going to be mapped
+	 * @throws InstantiationException if not able to create instance of field having
+	 *                                annotation {@link EmbeddedId}
+	 * @throws IllegalAccessException if provided fields are not accessible
 	 */
 	private static <S, D> void mapDtoToEntity(S source, D destination)
 			throws InstantiationException, IllegalAccessException {
@@ -383,16 +342,11 @@ public class MapperUtils {
 	/**
 	 * Map source which extends {@link BaseEntity} to a DTO object.
 	 * 
-	 * @param <S>
-	 *            is a type parameter
-	 * @param <D>
-	 *            is a type parameter
-	 * @param source
-	 *            which value is going to be mapped
-	 * @param destination
-	 *            where values is going to be mapped
-	 * @throws IllegalAccessException
-	 *             if provided fields are not accessible
+	 * @param <S>         is a type parameter
+	 * @param <D>         is a type parameter
+	 * @param source      which value is going to be mapped
+	 * @param destination where values is going to be mapped
+	 * @throws IllegalAccessException if provided fields are not accessible
 	 */
 	private static <S, D> void mapEntityToDto(S source, D destination) throws IllegalAccessException {
 		Field[] sourceFields = source.getClass().getDeclaredFields();
@@ -426,18 +380,12 @@ public class MapperUtils {
 	/**
 	 * Map values from source field to destination.
 	 * 
-	 * @param <S>
-	 *            is a type parameter
-	 * @param <D>
-	 *            is a type parameter
-	 * @param source
-	 *            which value is going to be mapped
-	 * @param destination
-	 *            where values is going to be mapped
-	 * @param sf
-	 *            source fields
-	 * @param dtf
-	 *            destination fields
+	 * @param <S>         is a type parameter
+	 * @param <D>         is a type parameter
+	 * @param source      which value is going to be mapped
+	 * @param destination where values is going to be mapped
+	 * @param sf          source fields
+	 * @param dtf         destination fields
 	 */
 	private static <D, S> void mapFieldValues(S source, D destination, Field[] sourceFields,
 			Field[] destinationFields) {
@@ -476,20 +424,13 @@ public class MapperUtils {
 	/**
 	 * Take value from source field and insert value into destination field.
 	 * 
-	 * @param <S>
-	 *            is a type parameter
-	 * @param <D>
-	 *            is a type parameter
-	 * @param source
-	 *            which value is going to be mapped
-	 * @param destination
-	 *            where values is going to be mapped
-	 * @param sf
-	 *            source fields
-	 * @param dtf
-	 *            destination fields
-	 * @throws IllegalAccessException
-	 *             if provided fields are not accessible
+	 * @param <S>         is a type parameter
+	 * @param <D>         is a type parameter
+	 * @param source      which value is going to be mapped
+	 * @param destination where values is going to be mapped
+	 * @param sf          source fields
+	 * @param dtf         destination fields
+	 * @throws IllegalAccessException if provided fields are not accessible
 	 */
 	private static <S, D> void setFieldValue(S source, D destination, Field sf, Field dtf)
 			throws IllegalAccessException {
@@ -523,7 +464,7 @@ public class MapperUtils {
 		});
 		return holidayDtos;
 	}
-	
+
 	public static List<ExceptionalHolidayDto> mapExceptionalHolidays(List<ExceptionalHoliday> exeptionalHolidayList) {
 		Objects.requireNonNull(exeptionalHolidayList);
 		List<ExceptionalHolidayDto> holidayDtos = new ArrayList<>();
@@ -590,70 +531,69 @@ public class MapperUtils {
 		});
 		return deviceLangCodeDtypeDtoList;
 	}
-	
+
 	public static RegisteredDevice mapRegisteredDeviceDto(RegisteredDevicePostReqDto dto, String digitalIdJson) {
-		
+
 		RegisteredDevice entity = new RegisteredDevice();
 		entity.setDeviceTypeCode(dto.getDigitalIdDto().getDeviceTypeCode());
-        entity.setDeviceSTypeCode(dto.getDigitalIdDto().getDeviceSTypeCode());
-        entity.setStatusCode(dto.getStatusCode());
-        entity.setDeviceId(dto.getDeviceId());
+		entity.setDeviceSTypeCode(dto.getDigitalIdDto().getDeviceSTypeCode());
+		entity.setStatusCode(dto.getStatusCode());
+		entity.setDeviceId(dto.getDeviceId());
 		entity.setDeviceSubId(dto.getDeviceSubId());
-		
 
-		entity.setDigitalId(digitalIdJson);        
-        entity.setSerialNo(dto.getDigitalIdDto().getSerialNo());
-        entity.setDpId(dto.getDigitalIdDto().getDpId());
-        entity.setDp(dto.getDigitalIdDto().getDp());
-        entity.setMake(dto.getDigitalIdDto().getMake());
-        entity.setModel(dto.getDigitalIdDto().getModel());
-        
-       
+		entity.setDigitalId(digitalIdJson);
+		entity.setSerialNo(dto.getDigitalIdDto().getSerialNo());
+		entity.setDpId(dto.getDigitalIdDto().getDpId());
+		entity.setDp(dto.getDigitalIdDto().getDp());
+		entity.setMake(dto.getDigitalIdDto().getMake());
+		entity.setModel(dto.getDigitalIdDto().getModel());
+
 		entity.setPurpose(dto.getPurpose());
-        entity.setFirmware(dto.getFirmware());
+		entity.setFirmware(dto.getFirmware());
 		entity.setExpiryDate(dto.getExpiryDate());
 		entity.setCertificationLevel(dto.getCertificationLevel());
-        entity.setFoundationalTPId(dto.getFoundationalTPId());
-       /* entity.setFoundationalTrustSignature(dto.getFoundationalTrustSignature());
-        entity.setFoundationalTrustCertificate(dto.getFoundationalTrustCertificate());      
-        entity.setDeviceProviderSignature(dto.getDeviceProviderSignature());*/
-		
+		entity.setFoundationalTPId(dto.getFoundationalTPId());
+		/*
+		 * entity.setFoundationalTrustSignature(dto.getFoundationalTrustSignature());
+		 * entity.setFoundationalTrustCertificate(dto.getFoundationalTrustCertificate())
+		 * ; entity.setDeviceProviderSignature(dto.getDeviceProviderSignature());
+		 */
+
 		return entity;
-		
+
 	}
-	
+
 	public static RegisteredDevice mapRegisteredDeviceDto(RegisteredDevicePostDto registeredDevicePostDto,
 			String digitalIdJson, DeviceData deviceData, DigitalId digitalId) {
 
-		
 		RegisteredDevice entity = new RegisteredDevice();
 		entity.setDeviceTypeCode(digitalId.getType());
-        entity.setDeviceSTypeCode(digitalId.getSubType());
-        entity.setStatusCode("REGISTERED");
-        entity.setDeviceId(deviceData.getDeviceId());
+		entity.setDeviceSTypeCode(digitalId.getSubType());
+		entity.setStatusCode("REGISTERED");
+		entity.setDeviceId(deviceData.getDeviceId());
 		entity.setDeviceSubId(deviceData.getDeviceInfo().getDeviceSubId());
-		
 
-		entity.setDigitalId(digitalIdJson);        
-        entity.setSerialNo(digitalId.getSerialNo());
-        entity.setDpId(digitalId.getDeviceProviderId());
-        entity.setDp(digitalId.getDeviceProvider());
-        entity.setMake(digitalId.getMake());
-        entity.setModel(digitalId.getModel());
-        
-       
+		entity.setDigitalId(digitalIdJson);
+		entity.setSerialNo(digitalId.getSerialNo());
+		entity.setDpId(digitalId.getDeviceProviderId());
+		entity.setDp(digitalId.getDeviceProvider());
+		entity.setMake(digitalId.getMake());
+		entity.setModel(digitalId.getModel());
+
 		entity.setPurpose(deviceData.getPurpose());
-        entity.setFirmware(deviceData.getDeviceInfo().getFirmware());
+		entity.setFirmware(deviceData.getDeviceInfo().getFirmware());
 		entity.setExpiryDate(deviceData.getDeviceInfo().getDeviceExpiry());
 		entity.setCertificationLevel(deviceData.getDeviceInfo().getCertification());
-        entity.setFoundationalTPId(deviceData.getFoundationalTrustProviderId());
-       /* entity.setFoundationalTrustSignature(dto.getFoundationalTrustSignature());
-        entity.setFoundationalTrustCertificate(dto.getFoundationalTrustCertificate());      
-        entity.setDeviceProviderSignature(dto.getDeviceProviderSignature());*/
-		
+		entity.setFoundationalTPId(deviceData.getFoundationalTrustProviderId());
+		/*
+		 * entity.setFoundationalTrustSignature(dto.getFoundationalTrustSignature());
+		 * entity.setFoundationalTrustCertificate(dto.getFoundationalTrustCertificate())
+		 * ; entity.setDeviceProviderSignature(dto.getDeviceProviderSignature());
+		 */
+
 		return entity;
 	}
-	
+
 	public static RegisterDeviceResponse mapRegisteredDeviceResponse(RegisteredDevice entity) {
 		RegisterDeviceResponse registerDeviceResponse = new RegisterDeviceResponse();
 		registerDeviceResponse.setDeviceCode(entity.getCode());

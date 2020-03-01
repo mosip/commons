@@ -71,8 +71,7 @@ public class LocationController {
 	/**
 	 * This API fetches all location hierachy details irrespective of the arguments.
 	 * 
-	 * @param langcode
-	 *            language code
+	 * @param langcode language code
 	 * @return list of location hierarchies
 	 */
 	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION','REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER','REGISTRATION_PROCESSOR','ZONAL_ADMIN','ZONAL_APPROVER','RESIDENT')")
@@ -83,15 +82,13 @@ public class LocationController {
 		responseWrapper.setResponse(locationHierarchyService.getLocationDetails(langcode));
 		return responseWrapper;
 	}
-	
 
 	/**
 	 * 
 	 * @param RequestWrapper<LocationDto>
-	 *            
+	 * 
 	 * @return ResponseWrapper<LocationPostResponseDto>
 	 */
-	
 
 	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
 	@ResponseFilter
@@ -108,10 +105,8 @@ public class LocationController {
 
 	/**
 	 * 
-	 * @param locationCode
-	 *            location code
-	 * @param langCode
-	 *            language code
+	 * @param locationCode location code
+	 * @param langCode     language code
 	 * @return list of location hierarchies
 	 */
 	@ResponseFilter
@@ -125,8 +120,7 @@ public class LocationController {
 	}
 
 	/**
-	 * @param hierarchyName
-	 *            hierarchy Name
+	 * @param hierarchyName hierarchy Name
 	 * @return list of location hierarchies
 	 */
 	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION','REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER','REGISTRATION_PROCESSOR','RESIDENT')")
@@ -144,7 +138,7 @@ public class LocationController {
 	/**
 	 * 
 	 * @param RequestWrapper<LocationDto>
-	 *            
+	 * 
 	 * @return ResponseWrapper<LocationPutResponseDto>
 	 */
 	@ResponseFilter
@@ -163,8 +157,7 @@ public class LocationController {
 	/**
 	 * This API call would update isDeleted to true when called.
 	 * 
-	 * @param locationCode
-	 *            -location code
+	 * @param locationCode -location code
 	 * @return CodeResponseDto
 	 */
 	@ResponseFilter
@@ -178,10 +171,8 @@ public class LocationController {
 
 	/**
 	 * 
-	 * @param locationCode
-	 *            location code
-	 * @param langCode
-	 *            language code
+	 * @param locationCode location code
+	 * @param langCode     language code
 	 * @return list of location hierarchies
 	 */
 	@PreAuthorize("hasAnyRole('INDIVIDUAL','ZONAL_ADMIN')")
@@ -215,14 +206,10 @@ public class LocationController {
 	/**
 	 * This controller method provides with all locations.
 	 * 
-	 * @param pageNumber
-	 *            the page number
-	 * @param pageSize
-	 *            the size of each page
-	 * @param sortBy
-	 *            the attributes by which it should be ordered
-	 * @param orderBy
-	 *            the order to be used
+	 * @param pageNumber the page number
+	 * @param pageSize   the size of each page
+	 * @param sortBy     the attributes by which it should be ordered
+	 * @param orderBy    the order to be used
 	 * 
 	 * @return the response i.e. pages containing the locations.
 	 */
@@ -246,8 +233,7 @@ public class LocationController {
 	/**
 	 * POST API to search location
 	 * 
-	 * @param request
-	 *            input from user
+	 * @param request input from user
 	 * @return location values
 	 */
 	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
@@ -257,21 +243,21 @@ public class LocationController {
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
 		auditUtil.auditRequest(MasterDataConstant.SEARCH_API_IS_CALLED + LocationSearchDto.class.getSimpleName(),
 				MasterDataConstant.AUDIT_SYSTEM,
-				MasterDataConstant.SEARCH_API_IS_CALLED + LocationSearchDto.class.getSimpleName(),"ADM-570");
+				MasterDataConstant.SEARCH_API_IS_CALLED + LocationSearchDto.class.getSimpleName(), "ADM-570");
 		ResponseWrapper<PageResponseDto<LocationSearchDto>> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(locationHierarchyService.searchLocation(request.getRequest()));
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.SUCCESSFUL_SEARCH, LocationSearchDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SUCCESSFUL_SEARCH_DESC, LocationSearchDto.class.getSimpleName()),"ADM-571");
+				String.format(MasterDataConstant.SUCCESSFUL_SEARCH_DESC, LocationSearchDto.class.getSimpleName()),
+				"ADM-571");
 		return responseWrapper;
 	}
 
 	/**
 	 * POST API to filter location
 	 * 
-	 * @param request
-	 *            input from user
+	 * @param request input from user
 	 * @return column values corresponding to entered dto
 	 */
 	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
@@ -281,21 +267,20 @@ public class LocationController {
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
 		auditUtil.auditRequest(MasterDataConstant.FILTER_API_IS_CALLED + LocationDto.class.getSimpleName(),
 				MasterDataConstant.AUDIT_SYSTEM,
-				MasterDataConstant.FILTER_API_IS_CALLED + LocationDto.class.getSimpleName(),"ADM-572");
+				MasterDataConstant.FILTER_API_IS_CALLED + LocationDto.class.getSimpleName(), "ADM-572");
 		ResponseWrapper<FilterResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(locationHierarchyService.locationFilterValues(request.getRequest()));
 		auditUtil.auditRequest(MasterDataConstant.SUCCESSFUL_FILTER + LocationDto.class.getSimpleName(),
 				MasterDataConstant.AUDIT_SYSTEM,
-				MasterDataConstant.SUCCESSFUL_FILTER_DESC + LocationDto.class.getSimpleName(),"ADM-573");
+				MasterDataConstant.SUCCESSFUL_FILTER_DESC + LocationDto.class.getSimpleName(), "ADM-573");
 		return responseWrapper;
 	}
-	
+
 	/**
 	 * This method returns a list of holidays containing a particular language code
 	 * for the given country level
 	 * 
-	 * @param langCode
-	 *            input parameter language code
+	 * @param langCode input parameter language code
 	 * @return {@link LocationLevelResponseDto}
 	 */
 	@ResponseFilter

@@ -73,17 +73,18 @@ public class CryptographicUtilExceptionTest {
 
 	@Test(expected = NoSuchAlgorithmException.class)
 	public void testNoSuchAlgorithmEncrypt() throws Exception {
-		ResponseWrapper<KeymanagerPublicKeyResponseDto> responseWrapper= new ResponseWrapper<>();
+		ResponseWrapper<KeymanagerPublicKeyResponseDto> responseWrapper = new ResponseWrapper<>();
 		List<ServiceError> errors = new ArrayList<>();
 		responseWrapper.setErrors(errors);
 		KeymanagerPublicKeyResponseDto keymanagerPublicKeyResponseDto = new KeymanagerPublicKeyResponseDto(
 				CryptoUtil.encodeBase64("badprivatekey".getBytes()), LocalDateTime.now(),
 				LocalDateTime.now().plusDays(100));
 		responseWrapper.setResponse(keymanagerPublicKeyResponseDto);
-		server.expect(requestTo(builder.buildAndExpand(uriParams).toUriString())).andRespond(withSuccess(
-				objectMapper.writeValueAsString(responseWrapper), MediaType.APPLICATION_JSON));
+		server.expect(requestTo(builder.buildAndExpand(uriParams).toUriString()))
+				.andRespond(withSuccess(objectMapper.writeValueAsString(responseWrapper), MediaType.APPLICATION_JSON));
 		CryptomanagerRequestDto cryptomanagerRequestDto = new CryptomanagerRequestDto("REGISTRATION", "ref123",
-				LocalDateTime.parse("2018-12-06T12:07:44.403Z", DateTimeFormatter.ISO_DATE_TIME), "test", "ykrkpgjjtChlVdvDNJJEnQ","VGhpcyBpcyBzYW1wbGUgYWFk");
+				LocalDateTime.parse("2018-12-06T12:07:44.403Z", DateTimeFormatter.ISO_DATE_TIME), "test",
+				"ykrkpgjjtChlVdvDNJJEnQ", "VGhpcyBpcyBzYW1wbGUgYWFk");
 		cryptomanagerUtil.getPublicKey(cryptomanagerRequestDto);
 	}
 }

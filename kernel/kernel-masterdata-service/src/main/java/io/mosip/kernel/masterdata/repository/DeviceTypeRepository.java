@@ -17,7 +17,7 @@ import io.mosip.kernel.masterdata.entity.DeviceType;
  */
 @Repository
 public interface DeviceTypeRepository extends BaseRepository<DeviceType, String> {
-	
+
 	@Query("FROM DeviceType d where (isDeleted is null OR isDeleted = false) AND isActive = true")
 	List<DeviceType> findAllDeviceTypeByIsActiveAndIsDeletedFalseOrNull();
 

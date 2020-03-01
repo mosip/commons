@@ -11,7 +11,7 @@ import lombok.Data;
  */
 @Data
 public class DeviceDeRegisterResponse {
-	
+
 	private String status;
 	private String message;
 

@@ -20,8 +20,7 @@ public interface DeviceProviderHistoryRepository extends BaseRepository<DevicePr
 	/**
 	 * Find by id and is active is true.
 	 *
-	 * @param id
-	 *            the id
+	 * @param id the id
 	 * @return the device provider
 	 */
 	@Query(value = "(select * from device_provider_h dph WHERE id = ?1 AND eff_dtimes<= ?2 and (is_deleted is null or is_deleted =false) ORDER BY eff_dtimes DESC) LIMIT 1 ", nativeQuery = true)

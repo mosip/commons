@@ -19,39 +19,39 @@ import io.mosip.kernel.core.signatureutil.exception.ParseResponseException;
 import io.mosip.kernel.core.signatureutil.exception.SignatureUtilClientException;
 import io.mosip.kernel.cryptosignature.constant.SigningDataErrorCode;
 
-
-/** Crypto Signature Utils
+/**
+ * Crypto Signature Utils
  * 
  * @author Urvil Joshi
  *
  */
 public class ExceptionHandler {
 
-	
 	private ExceptionHandler() {
 	}
-	
-	public static  void authExceptionHandler(HttpStatusCodeException ex, List<ServiceError> validationErrorsList, String source) {
+
+	public static void authExceptionHandler(HttpStatusCodeException ex, List<ServiceError> validationErrorsList,
+			String source) {
 		if (ex.getRawStatusCode() == 401) {
 			if (!validationErrorsList.isEmpty()) {
 				throw new AuthNException(validationErrorsList);
 			} else {
-				throw new BadCredentialsException("Authentication failed for "+source);
+				throw new BadCredentialsException("Authentication failed for " + source);
 			}
 		}
 		if (ex.getRawStatusCode() == 403) {
 			if (!validationErrorsList.isEmpty()) {
 				throw new AuthZException(validationErrorsList);
 			} else {
-				throw new AccessDeniedException("Access denied for "+source);
+				throw new AccessDeniedException("Access denied for " + source);
 			}
 		}
 	}
-	
+
 	public static void throwExceptionIfExist(ResponseEntity<String> response) {
-		if(response == null) {
+		if (response == null) {
 			throw new ParseResponseException(SigningDataErrorCode.REST_CRYPTO_CLIENT_EXCEPTION.getErrorCode(),
-					SigningDataErrorCode.REST_CRYPTO_CLIENT_EXCEPTION.getErrorMessage() );
+					SigningDataErrorCode.REST_CRYPTO_CLIENT_EXCEPTION.getErrorMessage());
 		}
 		String responseBody = response.getBody();
 		List<ServiceError> validationErrorList = ExceptionUtils.getServiceErrorList(responseBody);
@@ -59,15 +59,16 @@ public class ExceptionHandler {
 			throw new SignatureUtilClientException(validationErrorList);
 		}
 	}
-	
-	public static <S> S getResponse(ObjectMapper objectMapper,ResponseEntity<String> response, Class<S> clazz) {
+
+	public static <S> S getResponse(ObjectMapper objectMapper, ResponseEntity<String> response, Class<S> clazz) {
 		try {
-			JsonNode res =objectMapper.readTree(response.getBody());
+			JsonNode res = objectMapper.readTree(response.getBody());
 			return objectMapper.readValue(res.get("response").toString(), clazz);
-		} catch (IOException|NullPointerException exception) {
+		} catch (IOException | NullPointerException exception) {
 			throw new ParseResponseException(SigningDataErrorCode.RESPONSE_PARSE_EXCEPTION.getErrorCode(),
-					SigningDataErrorCode.RESPONSE_PARSE_EXCEPTION.getErrorMessage() + exception.getMessage(), exception);
+					SigningDataErrorCode.RESPONSE_PARSE_EXCEPTION.getErrorMessage() + exception.getMessage(),
+					exception);
 		}
 	}
-	
+
 }

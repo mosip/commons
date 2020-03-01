@@ -9,5 +9,5 @@ import lombok.Data;
  */
 @Data
 public class QualityScore {
-	private long internalScore ; // used against threshold specified in config file
+	private long internalScore; // used against threshold specified in config file
 }

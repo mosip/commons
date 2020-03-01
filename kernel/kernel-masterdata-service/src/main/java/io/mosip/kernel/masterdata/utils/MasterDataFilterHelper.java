@@ -101,8 +101,8 @@ public class MasterDataFilterHelper {
 			predicates.add(langCodePredicate);
 		}
 		caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
-					.like(criteriaBuilder.lower(rootType.get(filterDto.getColumnName())), criteriaBuilder.lower(
-							criteriaBuilder.literal(WILD_CARD_CHARACTER+filterDto.getText()+WILD_CARD_CHARACTER))));
+				.like(criteriaBuilder.lower(rootType.get(filterDto.getColumnName())), criteriaBuilder.lower(
+						criteriaBuilder.literal(WILD_CARD_CHARACTER + filterDto.getText() + WILD_CARD_CHARACTER))));
 		if (!(rootType.get(columnName).getJavaType().equals(Boolean.class))) {
 			predicates.add(caseSensitivePredicate);
 		}
@@ -144,15 +144,16 @@ public class MasterDataFilterHelper {
 
 		Predicate langCodePredicate = criteriaBuilder.equal(rootType.get(LANGCODE_COLUMN_NAME),
 				filterValueDto.getLanguageCode());
-			caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
-					.like(criteriaBuilder.lower(rootType.get(filterDto.getColumnName())), criteriaBuilder.lower(
-							criteriaBuilder.literal(WILD_CARD_CHARACTER+filterDto.getText()+WILD_CARD_CHARACTER))));
+		caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
+				.like(criteriaBuilder.lower(rootType.get(filterDto.getColumnName())), criteriaBuilder.lower(
+						criteriaBuilder.literal(WILD_CARD_CHARACTER + filterDto.getText() + WILD_CARD_CHARACTER))));
 
 		criteriaQueryByType.multiselect(rootType.get(fieldCodeColumnName), rootType.get(columnName));
 
 		columnTypeValidator(rootType, columnName);
 
-		if (filterValueDto.getLanguageCode().equals("all") && !(rootType.get(columnName).getJavaType().equals(Boolean.class))) {
+		if (filterValueDto.getLanguageCode().equals("all")
+				&& !(rootType.get(columnName).getJavaType().equals(Boolean.class))) {
 			criteriaQueryByType.where(criteriaBuilder.and(caseSensitivePredicate));
 		} else if (!(rootType.get(columnName).getJavaType().equals(Boolean.class))) {
 			criteriaQueryByType.where(criteriaBuilder.and(langCodePredicate, caseSensitivePredicate));
@@ -226,7 +227,6 @@ public class MasterDataFilterHelper {
 		String value = filter.getValue();
 
 		return builder.equal(root.get(columnName), value);
-		
 
 	}
 }

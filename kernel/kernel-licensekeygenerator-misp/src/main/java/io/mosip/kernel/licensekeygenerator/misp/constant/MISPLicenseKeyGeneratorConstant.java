@@ -14,6 +14,7 @@ public enum MISPLicenseKeyGeneratorConstant {
 	 * specified one.
 	 */
 	LENGTH_NOT_SAME("KER-MLK-001", "Length of generated key is not same as the length specified in the configuration");
+
 	/**
 	 * The error code.
 	 */
@@ -26,10 +27,8 @@ public enum MISPLicenseKeyGeneratorConstant {
 	/**
 	 * Constructor to initialize the error code and message.
 	 * 
-	 * @param errorCode
-	 *            the error code.
-	 * @param errorMessage
-	 *            the error message.
+	 * @param errorCode    the error code.
+	 * @param errorMessage the error message.
 	 */
 	private MISPLicenseKeyGeneratorConstant(String errorCode, String errorMessage) {
 		this.errorCode = errorCode;

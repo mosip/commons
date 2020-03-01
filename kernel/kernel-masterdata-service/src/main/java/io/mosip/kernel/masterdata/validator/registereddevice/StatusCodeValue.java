@@ -1,6 +1,5 @@
 package io.mosip.kernel.masterdata.validator.registereddevice;
 
-
 /**
  * Filter field value
  * 
@@ -8,10 +7,8 @@ package io.mosip.kernel.masterdata.validator.registereddevice;
  * @since 1.0.0
  */
 public enum StatusCodeValue {
-	REGISTERED("registered"),
-	RETIRED("retired"),
-	REVOKED("revoked");
-	
+	REGISTERED("registered"), RETIRED("retired"), REVOKED("revoked");
+
 	private String type;
 
 	private StatusCodeValue(String type) {
@@ -23,4 +20,3 @@ public enum StatusCodeValue {
 		return type;
 	}
 }
-

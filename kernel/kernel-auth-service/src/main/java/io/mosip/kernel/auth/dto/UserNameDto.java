@@ -4,6 +4,7 @@ import lombok.Data;
 
 /**
  * The Class UserNameDto.
+ * 
  * @author Srinivasan
  */
 @Data

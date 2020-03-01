@@ -8,33 +8,40 @@
 		<version>1.0.6</version>
 	</parent>
 	<artifactId>kernel-signature-service</artifactId>
+	<properties>
+	<kernel.core.version>1.0.6</kernel.core.version>
+	<kernel.auth.adaptor.version>1.0.6</kernel.auth.adaptor.version>
+	<kernel.crypto.signature.version>1.0.6</kernel.crypto.signature.version>
+	<kernel.logger.logback.version>1.0.6</kernel.logger.logback.version>
+	<aspectjweaver.version>1.8.12</aspectjweaver.version>
+	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-auth-adapter</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.auth.adaptor.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-crypto-signature</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.crypto.signature.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-logger-logback</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.logger.logback.version}</version>
 		</dependency>
   		
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjweaver</artifactId>
-			<version>1.8.12</version>
+			<version>${aspectjweaver.version}</version>
 		</dependency>
 	
 

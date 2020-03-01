@@ -32,7 +32,7 @@ public class SignatureServiceImpl implements SignatureService {
 
 	@Override
 	public SignatureResponse sign(SignRequestDto signRequestDto) {
-		return signatureUtil.sign(signRequestDto.getData(),DateUtils.getUTCCurrentDateTimeString());
+		return signatureUtil.sign(signRequestDto.getData(), DateUtils.getUTCCurrentDateTimeString());
 	}
 
 	@Override
@@ -58,10 +58,11 @@ public class SignatureServiceImpl implements SignatureService {
 
 		boolean status;
 		try {
-			status = signatureUtil.validate(timestampRequestDto.getSignature(),
-					timestampRequestDto.getData(), DateUtils.formatToISOString(timestampRequestDto.getTimestamp()));
-		} catch (InvalidKeySpecException| NoSuchAlgorithmException exception) {
-			throw new  PublicKeyParseException(SignatureErrorCode.INTERNAL_SERVER_ERROR.getErrorCode(), exception.getMessage(), exception);
+			status = signatureUtil.validate(timestampRequestDto.getSignature(), timestampRequestDto.getData(),
+					DateUtils.formatToISOString(timestampRequestDto.getTimestamp()));
+		} catch (InvalidKeySpecException | NoSuchAlgorithmException exception) {
+			throw new PublicKeyParseException(SignatureErrorCode.INTERNAL_SERVER_ERROR.getErrorCode(),
+					exception.getMessage(), exception);
 		}
 
 		if (status) {
@@ -75,6 +76,5 @@ public class SignatureServiceImpl implements SignatureService {
 		}
 
 	}
-
 
 }

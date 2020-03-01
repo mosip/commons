@@ -10,11 +10,16 @@
 	</parent>
 	<artifactId>kernel-licensekeymanager-service</artifactId>
 	<name>kernel-licensekeymanager-service</name>
+	<properties>
+		<kernel.core.version>1.0.6</kernel.core.version>
+		<kernel.dataacess-hibernate.version>1.0.6</kernel.dataacess-hibernate.version>
+		<kernel.logger.version>1.0.6</kernel.logger.version>
+    </properties>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -34,7 +39,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-dataaccess-hibernate</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.dataacess-hibernate.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -44,7 +49,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-logger-logback</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.logger.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.springfox</groupId>

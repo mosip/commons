@@ -77,8 +77,7 @@ public class GenderTypeController {
 	/**
 	 * Get API to fetch all gender types for a particular language code
 	 * 
-	 * @param langCode
-	 *            the language code whose gender is to be returned
+	 * @param langCode the language code whose gender is to be returned
 	 * @return list of all gender types for the given language code
 	 */
 	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION')")
@@ -94,8 +93,7 @@ public class GenderTypeController {
 	/**
 	 * Post API to enter a new Gender Type Data
 	 * 
-	 * @param gender
-	 *            input dto to enter a new gender data
+	 * @param gender input dto to enter a new gender data
 	 * @return primary key of entered row of gender
 	 */
 	@ResponseFilter
@@ -116,8 +114,7 @@ public class GenderTypeController {
 	/**
 	 * Update a Gender Type
 	 * 
-	 * @param gender
-	 *            input dto to update a gender data
+	 * @param gender input dto to update a gender data
 	 * @return key of updated row
 	 */
 	@ResponseFilter
@@ -137,8 +134,7 @@ public class GenderTypeController {
 	/**
 	 * Delete a Gender Type
 	 * 
-	 * @param code
-	 *            the code whose gender is to be deleted
+	 * @param code the code whose gender is to be deleted
 	 * @return code of deleted rows
 	 */
 	@ResponseFilter
@@ -155,8 +151,7 @@ public class GenderTypeController {
 	/**
 	 * Validate Gender name
 	 * 
-	 * @param genderName
-	 *            gender Name
+	 * @param genderName gender Name
 	 * @return {@link StatusResponseDto } StatusResponseDto
 	 */
 	@ResponseFilter
@@ -172,14 +167,10 @@ public class GenderTypeController {
 	/**
 	 * This controller method provides with all gender types.
 	 * 
-	 * @param page
-	 *            the page number
-	 * @param size
-	 *            the size of each page
-	 * @param sort
-	 *            the attributes by which it should be ordered
-	 * @param order
-	 *            the order to be used
+	 * @param page  the page number
+	 * @param size  the size of each page
+	 * @param sort  the attributes by which it should be ordered
+	 * @param order the order to be used
 	 * 
 	 * @return the response i.e. pages containing the data
 	 */
@@ -202,9 +193,8 @@ public class GenderTypeController {
 	/**
 	 * API to search Genders.
 	 * 
-	 * @param request
-	 *            the request DTO {@link SearchDto} wrapped in
-	 *            {@link RequestWrapper}.
+	 * @param request the request DTO {@link SearchDto} wrapped in
+	 *                {@link RequestWrapper}.
 	 * @return the response i.e. multiple entities based on the search values
 	 *         required.
 	 */
@@ -215,21 +205,21 @@ public class GenderTypeController {
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
 		auditUtil.auditRequest(MasterDataConstant.SEARCH_API_IS_CALLED + GenderExtnDto.class.getSimpleName(),
 				MasterDataConstant.AUDIT_SYSTEM,
-				MasterDataConstant.SEARCH_API_IS_CALLED + GenderExtnDto.class.getSimpleName(),"ADM-560");
+				MasterDataConstant.SEARCH_API_IS_CALLED + GenderExtnDto.class.getSimpleName(), "ADM-560");
 		ResponseWrapper<PageResponseDto<GenderExtnDto>> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(genderTypeService.searchGenderTypes(request.getRequest()));
 		auditUtil.auditRequest(MasterDataConstant.SUCCESSFUL_SEARCH + BlacklistedWordsExtnDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,
-				MasterDataConstant.SUCCESSFUL_SEARCH_DESC + BlacklistedWordsExtnDto.class.getCanonicalName(),"ADM-561");
+				MasterDataConstant.SUCCESSFUL_SEARCH_DESC + BlacklistedWordsExtnDto.class.getCanonicalName(),
+				"ADM-561");
 		return responseWrapper;
 	}
 
 	/**
 	 * API that returns the values required for the column filter columns.
 	 * 
-	 * @param request
-	 *            the request DTO {@link FilterResponseDto} wrapper in
-	 *            {@link RequestWrapper}.
+	 * @param request the request DTO {@link FilterResponseDto} wrapper in
+	 *                {@link RequestWrapper}.
 	 * @return the response i.e. the list of values for the specific filter column
 	 *         name and type.
 	 */
@@ -240,12 +230,13 @@ public class GenderTypeController {
 			@RequestBody @Valid RequestWrapper<FilterValueDto> requestWrapper) {
 		auditUtil.auditRequest(MasterDataConstant.FILTER_API_IS_CALLED + GenderTypeDto.class.getSimpleName(),
 				MasterDataConstant.AUDIT_SYSTEM,
-				MasterDataConstant.FILTER_API_IS_CALLED + GenderTypeDto.class.getSimpleName(),"ADM-562");
+				MasterDataConstant.FILTER_API_IS_CALLED + GenderTypeDto.class.getSimpleName(), "ADM-562");
 		ResponseWrapper<FilterResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(genderTypeService.genderFilterValues(requestWrapper.getRequest()));
 		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_FILTER, GenderTypeDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SUCCESSFUL_FILTER_DESC, GenderTypeDto.class.getSimpleName()),"ADM-563");
+				String.format(MasterDataConstant.SUCCESSFUL_FILTER_DESC, GenderTypeDto.class.getSimpleName()),
+				"ADM-563");
 		return responseWrapper;
 	}
 }

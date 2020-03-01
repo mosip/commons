@@ -23,15 +23,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegistrationDeviceType extends BaseEntity {
-	
+
 	@Id
-	@Column(name="code", nullable=false, length=36)
+	@Column(name = "code", nullable = false, length = 36)
 	String code;
-	
-	@Column(name="name", nullable=false, length=64)
+
+	@Column(name = "name", nullable = false, length = 64)
 	String name;
-	
-	@Column(name="descr", length=512)
+
+	@Column(name = "descr", length = 512)
 	String description;
-	
+
 }

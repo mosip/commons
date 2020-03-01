@@ -42,19 +42,19 @@ public interface RegistrationCenterMachineRepository
 	/**
 	 * Method that returns the list of registration centers mapped to machines.
 	 * 
-	 * @param regCenterID
-	 *            the center ID of the reg-center which needs to be decommissioned.
+	 * @param regCenterID the center ID of the reg-center which needs to be
+	 *                    decommissioned.
 	 * @return the list of registration centers mapped to machines.
 	 */
 	@Query(value = "FROM RegistrationCenterMachine rm WHERE rm.registrationCenterMachinePk.regCenterId =?1 and (rm.isDeleted is null or rm.isDeleted =false) ")
 	List<RegistrationCenterMachine> findRegCenterMachineMappings(String regCenterID);
-	
+
 	@Query("FROM RegistrationCenterMachine rm where  (rm.isDeleted is null or rm.isDeleted =false) and rm.isActive = true")
 	List<RegistrationCenterMachine> findAllCenterMachines();
-    
+
 	@Query("FROM RegistrationCenterMachine rm where rm.registrationCenterMachinePk.regCenterId=?1 and rm.registrationCenterMachinePk.machineId=?2 and rm.langCode=?3")
-	RegistrationCenterMachine findByRegIdAndMachineId(String regId,String machineId,String langCode);
-	
+	RegistrationCenterMachine findByRegIdAndMachineId(String regId, String machineId, String langCode);
+
 	@Query("FROM RegistrationCenterMachine rm where rm.registrationCenterMachinePk.machineId=?1 and rm.langCode=?2 and rm.isActive=true")
-	RegistrationCenterMachine findByMachineId(String machineId,String langCode);
+	RegistrationCenterMachine findByMachineId(String machineId, String langCode);
 }

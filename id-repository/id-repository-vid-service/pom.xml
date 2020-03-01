@@ -7,6 +7,7 @@
 		<version>1.0.7-SNAPSHOT</version>
 	</parent>
 	<artifactId>id-repository-vid-service</artifactId>
+	<version>1.0.7-SNAPSHOT</version>
 	<name>vid-service</name>
 	<description>ID-Repository Virtual ID Service</description>
 	<dependencies>
@@ -61,5 +62,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<version>1.0.7-SNAPSHOT</version>
 </project>

@@ -87,7 +87,7 @@ public class BlacklistedWordsServiceImpl implements BlacklistedWordsService {
 
 	@Autowired
 	private PageUtils pageUtils;
-	
+
 	@Autowired
 	private AuditUtil auditUtil;
 
@@ -179,9 +179,12 @@ public class BlacklistedWordsServiceImpl implements BlacklistedWordsService {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_CREATE, BlacklistedWordsDto.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
-					String.format(MasterDataConstant.FAILURE_DESC,MachineErrorCode.MACHINE_DELETE_EXCEPTION.getErrorCode(),
-							MachineErrorCode.MACHINE_DELETE_EXCEPTION.getErrorMessage()),"ADM-552");
-			throw new MasterDataServiceException(BlacklistedWordsErrorCode.BLACKLISTED_WORDS_INSERT_EXCEPTION.getErrorCode(),
+					String.format(MasterDataConstant.FAILURE_DESC,
+							MachineErrorCode.MACHINE_DELETE_EXCEPTION.getErrorCode(),
+							MachineErrorCode.MACHINE_DELETE_EXCEPTION.getErrorMessage()),
+					"ADM-552");
+			throw new MasterDataServiceException(
+					BlacklistedWordsErrorCode.BLACKLISTED_WORDS_INSERT_EXCEPTION.getErrorCode(),
 					BlacklistedWordsErrorCode.BLACKLISTED_WORDS_INSERT_EXCEPTION.getErrorMessage() + " "
 							+ ExceptionUtils.parseException(e));
 		}
@@ -214,10 +217,13 @@ public class BlacklistedWordsServiceImpl implements BlacklistedWordsService {
 				wordAndLanguageCodeID = mapToWordAndLanguageCodeID(wordDto);
 			else {
 				auditUtil.auditRequest(
-						String.format(MasterDataConstant.FAILURE_UPDATE, BlackListedWordsUpdateDto.class.getSimpleName()),
+						String.format(
+								MasterDataConstant.FAILURE_UPDATE, BlackListedWordsUpdateDto.class.getSimpleName()),
 						MasterDataConstant.AUDIT_SYSTEM,
-						String.format(MasterDataConstant.FAILURE_DESC,BlacklistedWordsErrorCode.NO_BLACKLISTED_WORDS_FOUND.getErrorCode(),
-								BlacklistedWordsErrorCode.NO_BLACKLISTED_WORDS_FOUND.getErrorMessage()),"ADM-553");
+						String.format(MasterDataConstant.FAILURE_DESC,
+								BlacklistedWordsErrorCode.NO_BLACKLISTED_WORDS_FOUND.getErrorCode(),
+								BlacklistedWordsErrorCode.NO_BLACKLISTED_WORDS_FOUND.getErrorMessage()),
+						"ADM-553");
 				throw new RequestException(BlacklistedWordsErrorCode.NO_BLACKLISTED_WORDS_FOUND.getErrorCode(),
 						BlacklistedWordsErrorCode.NO_BLACKLISTED_WORDS_FOUND.getErrorMessage());
 			}
@@ -225,8 +231,10 @@ public class BlacklistedWordsServiceImpl implements BlacklistedWordsService {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_UPDATE, BlackListedWordsUpdateDto.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
-					String.format(MasterDataConstant.FAILURE_DESC,BlacklistedWordsErrorCode.BLACKLISTED_WORDS_UPDATE_EXCEPTION.getErrorCode(),
-							BlacklistedWordsErrorCode.BLACKLISTED_WORDS_UPDATE_EXCEPTION.getErrorMessage()),"ADM-554");
+					String.format(MasterDataConstant.FAILURE_DESC,
+							BlacklistedWordsErrorCode.BLACKLISTED_WORDS_UPDATE_EXCEPTION.getErrorCode(),
+							BlacklistedWordsErrorCode.BLACKLISTED_WORDS_UPDATE_EXCEPTION.getErrorMessage()),
+					"ADM-554");
 			throw new MasterDataServiceException(
 					BlacklistedWordsErrorCode.BLACKLISTED_WORDS_UPDATE_EXCEPTION.getErrorCode(),
 					BlacklistedWordsErrorCode.BLACKLISTED_WORDS_UPDATE_EXCEPTION.getErrorMessage());
@@ -234,7 +242,8 @@ public class BlacklistedWordsServiceImpl implements BlacklistedWordsService {
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.SUCCESSFUL_UPDATE, BlackListedWordsUpdateDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC,
-						BlackListedWordsUpdateDto.class.getSimpleName(), wordAndLanguageCodeID.getWord()),"ADM-555");
+						BlackListedWordsUpdateDto.class.getSimpleName(), wordAndLanguageCodeID.getWord()),
+				"ADM-555");
 		return wordAndLanguageCodeID;
 	}
 
@@ -337,8 +346,10 @@ public class BlacklistedWordsServiceImpl implements BlacklistedWordsService {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_UPDATE, BlackListedWordsUpdateDto.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
-					String.format(MasterDataConstant.FAILURE_DESC,BlacklistedWordsErrorCode.BLACKLISTED_WORDS_UPDATE_EXCEPTION.getErrorCode(),
-							BlacklistedWordsErrorCode.BLACKLISTED_WORDS_UPDATE_EXCEPTION.getErrorMessage()),"ADM-556");
+					String.format(MasterDataConstant.FAILURE_DESC,
+							BlacklistedWordsErrorCode.BLACKLISTED_WORDS_UPDATE_EXCEPTION.getErrorCode(),
+							BlacklistedWordsErrorCode.BLACKLISTED_WORDS_UPDATE_EXCEPTION.getErrorMessage()),
+					"ADM-556");
 			throw new MasterDataServiceException(
 					BlacklistedWordsErrorCode.BLACKLISTED_WORDS_UPDATE_EXCEPTION.getErrorCode(),
 					BlacklistedWordsErrorCode.BLACKLISTED_WORDS_UPDATE_EXCEPTION.getErrorMessage());
@@ -348,15 +359,18 @@ public class BlacklistedWordsServiceImpl implements BlacklistedWordsService {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_UPDATE, BlackListedWordsUpdateDto.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
-					String.format(MasterDataConstant.FAILURE_DESC,BlacklistedWordsErrorCode.NO_BLACKLISTED_WORDS_FOUND.getErrorCode(),
-							BlacklistedWordsErrorCode.NO_BLACKLISTED_WORDS_FOUND.getErrorMessage()),"ADM-557");
+					String.format(MasterDataConstant.FAILURE_DESC,
+							BlacklistedWordsErrorCode.NO_BLACKLISTED_WORDS_FOUND.getErrorCode(),
+							BlacklistedWordsErrorCode.NO_BLACKLISTED_WORDS_FOUND.getErrorMessage()),
+					"ADM-557");
 			throw new RequestException(BlacklistedWordsErrorCode.NO_BLACKLISTED_WORDS_FOUND.getErrorCode(),
 					BlacklistedWordsErrorCode.NO_BLACKLISTED_WORDS_FOUND.getErrorMessage());
 		}
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.SUCCESSFUL_UPDATE, BlackListedWordsUpdateDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC,
-						BlackListedWordsUpdateDto.class.getSimpleName(), id.getWord()),"ADM-558");
+						BlackListedWordsUpdateDto.class.getSimpleName(), id.getWord()),
+				"ADM-558");
 		return id;
 	}
 

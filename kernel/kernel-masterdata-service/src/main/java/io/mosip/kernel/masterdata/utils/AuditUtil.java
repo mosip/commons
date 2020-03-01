@@ -74,23 +74,18 @@ public class AuditUtil {
 	/**
 	 * Audit request.
 	 *
-	 * @param auditRequestDto
-	 *            the audit request dto
+	 * @param auditRequestDto the audit request dto
 	 */
 	@PostConstruct
 	private void init() {
-		if(System.getProperty("seqGen")==null) {
-		eventCounter = new AtomicInteger(500);
-		}else {
-			Integer eventCount=Integer.getInteger(System.getProperty("seqGen"));
-			eventCounter=new AtomicInteger(eventCount);
+		if (System.getProperty("seqGen") == null) {
+			eventCounter = new AtomicInteger(500);
+		} else {
+			Integer eventCount = Integer.getInteger(System.getProperty("seqGen"));
+			eventCounter = new AtomicInteger(eventCount);
 		}
-		
+
 	}
-	
-	
-		
-	
 
 	public void auditRequest(String eventName, String eventType, String description) {
 
@@ -106,8 +101,7 @@ public class AuditUtil {
 	/**
 	 * Sets the audit request dto.
 	 *
-	 * @param auditRequestDto
-	 *            the new audit request dto
+	 * @param auditRequestDto the new audit request dto
 	 */
 	private void setAuditRequestDto(String eventName, String eventType, String description, String eventId) {
 		AuditRequestDto auditRequestDto = new AuditRequestDto();

@@ -49,8 +49,8 @@ import io.vertx.core.logging.SLF4JLogDelegateFactory;
  */
 @SpringBootApplication
 public class VinGeneratorVertxApplication {
-	
-	private static  Vertx vertx;
+
+	private static Vertx vertx;
 
 	/**
 	 * The field for Logger
@@ -84,12 +84,12 @@ public class VinGeneratorVertxApplication {
 			LOGGER.warn(e.getMessage());
 		}
 	}
-	
+
 	@PostConstruct
-	private static  void initPool() {
+	private static void initPool() {
 		LOGGER.info("Service will be started after pooling vids..");
-		EventBus eventBus=vertx.eventBus();
-		LOGGER.info("eventBus deployer {}",eventBus);
+		EventBus eventBus = vertx.eventBus();
+		LOGGER.info("eventBus deployer {}", eventBus);
 		eventBus.publish(EventType.INITPOOL, EventType.INITPOOL);
 	}
 
@@ -150,29 +150,29 @@ public class VinGeneratorVertxApplication {
 		}
 	}
 
-	
-
 	/**
 	 * This method sets the Application Context, deploys the verticles.
-	 * @throws InterruptedException 
+	 * 
+	 * @throws InterruptedException
 	 */
 	private static void startApplication() {
 		ApplicationContext context = new AnnotationConfigApplicationContext(HibernateDaoConfig.class);
 		VertxOptions options = new VertxOptions();
 		DeploymentOptions workerOptions = new DeploymentOptions().setWorker(true);
 		vertx = Vertx.vertx(options);
-		Verticle[] workerVerticles = {new VidPoolCheckerVerticle(context),new VidPopulatorVerticle(context),new VidExpiryVerticle(context)};
-		Stream.of(workerVerticles).forEach(verticle -> deploy(verticle, workerOptions, vertx));		
-	    vertx.setTimer(1000, handler -> initPool());
+		Verticle[] workerVerticles = { new VidPoolCheckerVerticle(context), new VidPopulatorVerticle(context),
+				new VidExpiryVerticle(context) };
+		Stream.of(workerVerticles).forEach(verticle -> deploy(verticle, workerOptions, vertx));
+		vertx.setTimer(1000, handler -> initPool());
 	}
 
 	private static void deploy(Verticle verticle, DeploymentOptions opts, Vertx vertx) {
 		vertx.deployVerticle(verticle, opts, res -> {
 			if (res.failed()) {
-				LOGGER.info("Failed to deploy verticle " + verticle.getClass().getSimpleName()+" "+res.cause());
-			} else if(res.succeeded()) {
+				LOGGER.info("Failed to deploy verticle " + verticle.getClass().getSimpleName() + " " + res.cause());
+			} else if (res.succeeded()) {
 				LOGGER.info("Deployed verticle " + verticle.getClass().getSimpleName());
-			
+
 			}
 		});
 	}

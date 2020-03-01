@@ -22,7 +22,6 @@ import io.mosip.kernel.core.idgenerator.exception.TokenIdGeneratorException;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.kernel.tokenidgenerator.constant.TokenIDGeneratorErrorCode;
 
-
 @RestControllerAdvice
 public class ApiExceptionHandler {
 	/**
@@ -30,7 +29,7 @@ public class ApiExceptionHandler {
 	 */
 	@Autowired
 	private ObjectMapper objectMapper;
-	
+
 	@ExceptionHandler(TokenIdGeneratorException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> emptyLengthException(
 			final HttpServletRequest httpServletRequest, final TokenIdGeneratorException e) throws IOException {
@@ -40,13 +39,12 @@ public class ApiExceptionHandler {
 		return new ResponseEntity<>(responseWrapper, HttpStatus.OK);
 
 	}
+
 	/**
 	 * Method to handle {@link RuntimeException}.
 	 * 
-	 * @param request
-	 *            the servlet request.
-	 * @param exception
-	 *            the exception.
+	 * @param request   the servlet request.
+	 * @param exception the exception.
 	 * @return {@link ErrorResponse}.
 	 * @throws IOException
 	 */

@@ -39,7 +39,7 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
 
 /**
  * @author Ramadurai Saravana Pandian
- * @author Raj Jha 
+ * @author Raj Jha
  * @author Urvil Joshi
  *
  */
@@ -51,8 +51,9 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
 		return new String[] { "/**/assets/**", "/**/icons/**", "/**/screenshots/**", "/favicon**", "/**/favicon**",
 				"/**/css/**", "/**/js/**", "/**/error**", "/**/webjars/**", "/**/v2/api-docs", "/**/configuration/ui",
 				"/**/configuration/security", "/**/swagger-resources/**", "/**/swagger-ui.html", "/**/csrf", "/*/",
-				"**/authenticate/**", "/**/actuator/**", "/**/authmanager/**","/sendOtp",
-				"/validateOtp", "/invalidateToken", "/config", "/login", "/logout","/validateOTP","/sendOTP","/**/login","/**/logout"};
+				"**/authenticate/**", "/**/actuator/**", "/**/authmanager/**", "/sendOtp", "/validateOtp",
+				"/invalidateToken", "/config", "/login", "/logout", "/validateOTP", "/sendOTP", "/**/login",
+				"/**/logout" };
 
 	}
 
@@ -79,8 +80,7 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
 			throws AuthenticationException, JsonProcessingException, IOException {
 		String token = null;
 		Cookie[] cookies = null;
-		try
-		{
+		try {
 			cookies = httpServletRequest.getCookies();
 			if (cookies != null) {
 				for (Cookie cookie : cookies) {
@@ -89,11 +89,10 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
 					}
 				}
 			}
-		}catch(Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		if (token == null) {
 			ResponseWrapper<ServiceError> errorResponse = setErrors(httpServletRequest);
 			ServiceError error = new ServiceError(AuthAdapterErrorCode.UNAUTHORIZED.getErrorCode(),

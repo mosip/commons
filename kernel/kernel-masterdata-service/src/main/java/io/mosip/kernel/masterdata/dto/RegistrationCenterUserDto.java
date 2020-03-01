@@ -14,7 +14,7 @@ import lombok.Data;
  */
 @Data
 public class RegistrationCenterUserDto {
-	
+
 	@NotBlank
 	@Size(min = 1, max = 10)
 	private String regCenterId;

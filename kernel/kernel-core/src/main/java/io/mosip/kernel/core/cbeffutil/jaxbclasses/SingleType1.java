@@ -61,6 +61,7 @@ public enum SingleType1 {
 	KEYSTROKE("Keystroke"), @XmlEnumValue("LipMovement")
 	LIP_MOVEMENT("LipMovement"), @XmlEnumValue("SignatureSign")
 	SIGNATURE_SIGN("SignatureSign");
+
 	private final String value;
 
 	SingleType1(String v) {

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @ApiModel(description = "Model representing a Upload Public Key Response")
 public class UploadPublicKeyResponseDto {
-	
+
 	private String keyIndex;
 
 }

@@ -10,11 +10,14 @@
 		<version>1.0.6</version>
 	</parent>
 	<artifactId>kernel-licensekeygenerator-misp</artifactId>
+	<properties>
+		<kernel.core.version>1.0.6</kernel.core.version>
+    </properties>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.powermock</groupId>

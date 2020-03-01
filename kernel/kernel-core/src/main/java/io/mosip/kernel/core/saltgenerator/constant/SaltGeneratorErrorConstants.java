@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * The Enum SaltGeneratorErrorConstants - contains error constants
- * for kernel salt generator.
+ * The Enum SaltGeneratorErrorConstants - contains error constants for kernel
+ * salt generator.
  *
  * @author Manoj SP
  */
 public enum SaltGeneratorErrorConstants {
-	
+
 	/** The record exists. */
 	RECORD_EXISTS("KER-SGR-001", "Record(s) already exists in DB");
 
@@ -51,7 +51,7 @@ public enum SaltGeneratorErrorConstants {
 	public String getErrorMessage() {
 		return errorMessage;
 	}
-	
+
 	/**
 	 * Gets the all error codes.
 	 *

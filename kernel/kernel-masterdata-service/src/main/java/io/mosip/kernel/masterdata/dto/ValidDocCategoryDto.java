@@ -54,9 +54,9 @@ public class ValidDocCategoryDto {
 	 * Is active or not.
 	 */
 	@NotNull
-	@ApiModelProperty(value = "Application isActive Status", required =  true, dataType = "java.lang.Boolean")
+	@ApiModelProperty(value = "Application isActive Status", required = true, dataType = "java.lang.Boolean")
 	private Boolean isActive;
-	
+
 	private List<DocumentTypeDto> documenttypes;
-	
+
 }

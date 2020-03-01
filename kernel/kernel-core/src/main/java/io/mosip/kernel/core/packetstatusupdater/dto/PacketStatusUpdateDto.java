@@ -15,6 +15,6 @@ import lombok.NoArgsConstructor;
 public class PacketStatusUpdateDto {
 
 	private String registrationId;
-	
+
 	private String statusCode;
 }

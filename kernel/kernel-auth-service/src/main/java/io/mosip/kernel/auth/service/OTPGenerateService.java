@@ -14,6 +14,7 @@ import io.mosip.kernel.auth.dto.otp.OtpUser;
 public interface OTPGenerateService {
 
 	OtpGenerateResponseDto generateOTP(MosipUserDto mosipUserDto, String token);
-	OtpGenerateResponseDto generateOTPMultipleChannels(MosipUserDto mosipUserDto , OtpUser otpUser,String token);
+
+	OtpGenerateResponseDto generateOTPMultipleChannels(MosipUserDto mosipUserDto, OtpUser otpUser, String token);
 
 }

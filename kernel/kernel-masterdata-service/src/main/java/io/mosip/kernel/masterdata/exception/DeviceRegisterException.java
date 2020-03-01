@@ -2,7 +2,7 @@ package io.mosip.kernel.masterdata.exception;
 
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
-public class DeviceRegisterException extends BaseUncheckedException{
+public class DeviceRegisterException extends BaseUncheckedException {
 
 	/**
 	 * 

@@ -87,7 +87,7 @@ ldap.admin.dn=uid=admin,ou=system
 ldap.admin.password=secret
 ldap.userdn.prefix=uid=
 ldap.userdn.suffix=,ou=people,c=mindtree
-ldap.roles.base=ou=roles,c=morocco
+ldap.roles.base=ou=roles,c=mycountry
 ldap.roles.search.prefix=(&(objectClass=organizationalRole)(roleOccupant=
 ldap.roles.search.suffix=))
 ldap.roles.class=(objectClass=organizationalRole)

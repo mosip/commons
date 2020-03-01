@@ -31,7 +31,7 @@ import io.vertx.core.logging.LoggerFactory;
  */
 @Component
 public class UinServiceImpl implements UinService {
-	
+
 	private Logger LOGGER = LoggerFactory.getLogger(UinServiceImpl.class);
 
 	/**
@@ -57,7 +57,8 @@ public class UinServiceImpl implements UinService {
 		UinResponseDto uinResponseDto = new UinResponseDto();
 		UinEntity uinBean = uinRepository.findFirstByStatus(UinGeneratorConstant.UNUSED);
 		if (uinBean != null) {
-			uinRepository.updateStatus(UinGeneratorConstant.ISSUED,UinGeneratorConstant.DEFAULTADMIN_MOSIP_IO,DateUtils.getUTCCurrentDateTime(),uinBean.getUin());
+			uinRepository.updateStatus(UinGeneratorConstant.ISSUED, UinGeneratorConstant.DEFAULTADMIN_MOSIP_IO,
+					DateUtils.getUTCCurrentDateTime(), uinBean.getUin());
 			uinResponseDto.setUin(uinBean.getUin());
 		} else {
 			throw new UinNotFoundException(UinGeneratorErrorCode.UIN_NOT_FOUND.getErrorCode(),

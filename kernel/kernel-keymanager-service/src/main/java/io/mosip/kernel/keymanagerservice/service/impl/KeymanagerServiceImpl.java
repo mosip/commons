@@ -122,7 +122,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 	 */
 	@Autowired
 	private CryptoCoreSpec<byte[], byte[], SecretKey, PublicKey, PrivateKey, String> cryptoCore;
-	
+
 	/**
 	 * {@link KeyAliasRepository} instance
 	 */
@@ -146,7 +146,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 	 */
 	@Autowired
 	KeymanagerUtil keymanagerUtil;
-	
+
 	@Autowired
 	private PDFGenerator pdfGenerator;
 
@@ -445,7 +445,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 				throw new NoUniqueAliasException(KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorCode(),
 						KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorMessage());
 			}
-			PrivateKey masterPrivateKey = keyStore.getPrivateKey(dbKeyStore.get().getMasterAlias());			
+			PrivateKey masterPrivateKey = keyStore.getPrivateKey(dbKeyStore.get().getMasterAlias());
 			/**
 			 * If the private key is in dbstore, then it will be first decrypted with
 			 * application's master private key from softhsm's keystore
@@ -458,7 +458,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 			} catch (InvalidDataException | InvalidKeyException | NullDataException | NullKeyException
 					| NullMethodException | InvalidKeySpecException | NoSuchAlgorithmException e) {
 				throw new CryptoException(KeymanagerErrorConstant.CRYPTO_EXCEPTION.getErrorCode(),
-						KeymanagerErrorConstant.CRYPTO_EXCEPTION.getErrorMessage()+e.getMessage());
+						KeymanagerErrorConstant.CRYPTO_EXCEPTION.getErrorMessage() + e.getMessage());
 			}
 		}
 	}
@@ -572,7 +572,8 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 				DateUtils.parseUTCToDate(signatureRequestDto.getTimeStamp()));
 		String encryptedSignedData = null;
 		if (certificateResponse.getCertificateEntry() != null) {
-			encryptedSignedData = cryptoCore.sign(signatureRequestDto.getData().getBytes(), certificateResponse.getCertificateEntry().getPrivateKey());
+			encryptedSignedData = cryptoCore.sign(signatureRequestDto.getData().getBytes(),
+					certificateResponse.getCertificateEntry().getPrivateKey());
 		}
 		return new SignatureResponseDto(encryptedSignedData);
 	}
@@ -741,18 +742,22 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 
 	@Override
 	public SignatureResponseDto signPDF(PDFSignatureRequestDto request) {
-		SignatureCertificate signatureCertificate=getSigningCertificate(request.getApplicationId(), Optional.of(request.getReferenceId()), request.getTimeStamp());
-		Rectangle rectangle = new Rectangle(request.getLowerLeftX(), request.getLowerLeftY(), request.getUpperRightX(), request.getUpperRightY());
+		SignatureCertificate signatureCertificate = getSigningCertificate(request.getApplicationId(),
+				Optional.of(request.getReferenceId()), request.getTimeStamp());
+		Rectangle rectangle = new Rectangle(request.getLowerLeftX(), request.getLowerLeftY(), request.getUpperRightX(),
+				request.getUpperRightY());
 		OutputStream outputStream;
 		try {
-			outputStream = pdfGenerator.signAndEncryptPDF(CryptoUtil.decodeBase64(request.getData()), rectangle, request.getReason(), request.getPageNumber(), Security.getProvider("SunPKCS11-SoftHSM2"), signatureCertificate.getCertificateEntry(),request.getPassword());
+			outputStream = pdfGenerator.signAndEncryptPDF(CryptoUtil.decodeBase64(request.getData()), rectangle,
+					request.getReason(), request.getPageNumber(), Security.getProvider("SunPKCS11-SoftHSM2"),
+					signatureCertificate.getCertificateEntry(), request.getPassword());
 		} catch (IOException | GeneralSecurityException e) {
-			throw new KeymanagerServiceException(KeymanagerErrorConstant.INTERNAL_SERVER_ERROR.getErrorCode(), KeymanagerErrorConstant.INTERNAL_SERVER_ERROR.getErrorMessage()+" "+e.getMessage());
+			throw new KeymanagerServiceException(KeymanagerErrorConstant.INTERNAL_SERVER_ERROR.getErrorCode(),
+					KeymanagerErrorConstant.INTERNAL_SERVER_ERROR.getErrorMessage() + " " + e.getMessage());
 		}
-		SignatureResponseDto signatureResponseDto= new SignatureResponseDto();
-		signatureResponseDto.setData(CryptoUtil.encodeBase64(((ByteArrayOutputStream)outputStream).toByteArray()));
+		SignatureResponseDto signatureResponseDto = new SignatureResponseDto();
+		signatureResponseDto.setData(CryptoUtil.encodeBase64(((ByteArrayOutputStream) outputStream).toByteArray()));
 		return signatureResponseDto;
 	}
-
 
 }

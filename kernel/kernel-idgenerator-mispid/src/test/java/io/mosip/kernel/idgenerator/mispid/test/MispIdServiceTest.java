@@ -42,7 +42,7 @@ public class MispIdServiceTest {
 
 	@MockBean
 	MispRepository mispRepository;
-	
+
 	@MockBean
 	private RestTemplate restTemplate;
 

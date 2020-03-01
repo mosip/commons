@@ -12,13 +12,14 @@
 	<packaging>jar</packaging>
 	<name>kernel-keygenerator-bouncycastle</name>
 	<properties>
+	    <kernel.core.version>1.0.6</kernel.core.version>
 		<sonar.skip>true</sonar.skip>
 	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.bouncycastle</groupId>

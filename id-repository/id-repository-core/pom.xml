@@ -8,6 +8,7 @@
 	</parent>
 
 	<artifactId>id-repository-core</artifactId>
+	<version>1.0.7-SNAPSHOT</version>
 	<name>idrepo-core</name>
 	<description>ID-Repository core</description>
 
@@ -85,5 +86,4 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<version>1.0.7-SNAPSHOT</version>
 </project>

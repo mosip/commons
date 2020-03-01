@@ -74,7 +74,7 @@ public class GenderTypeServiceImpl implements GenderTypeService {
 
 	@Autowired
 	GenderTypeRepository genderTypeRepository;
-	
+
 	@Autowired
 	private AuditUtil auditUtil;
 
@@ -156,18 +156,20 @@ public class GenderTypeServiceImpl implements GenderTypeService {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_CREATE, GenderTypeDto.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
-					String.format(MasterDataConstant.FAILURE_DESC,ApplicationErrorCode.APPLICATION_INSERT_EXCEPTION.getErrorCode(),
-					ApplicationErrorCode.APPLICATION_INSERT_EXCEPTION.getErrorMessage()
-							+ ExceptionUtils.parseException(e)),"ADM-564");
+					String.format(MasterDataConstant.FAILURE_DESC,
+							ApplicationErrorCode.APPLICATION_INSERT_EXCEPTION.getErrorCode(),
+							ApplicationErrorCode.APPLICATION_INSERT_EXCEPTION.getErrorMessage()
+									+ ExceptionUtils.parseException(e)),
+					"ADM-564");
 			throw new MasterDataServiceException(GenderTypeErrorCode.GENDER_TYPE_INSERT_EXCEPTION.getErrorCode(),
 					ExceptionUtils.parseException(e));
 		}
 		CodeAndLanguageCodeID codeLangCodeId = new CodeAndLanguageCodeID();
 		MapperUtils.map(gender, codeLangCodeId);
-		auditUtil.auditRequest(
-				String.format(MasterDataConstant.SUCCESSFUL_CREATE, GenderTypeDto.class.getSimpleName()),
+		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_CREATE, GenderTypeDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC,
-						GenderTypeDto.class.getSimpleName(), codeLangCodeId.getCode()),"ADM-565");
+						GenderTypeDto.class.getSimpleName(), codeLangCodeId.getCode()),
+				"ADM-565");
 
 		return codeLangCodeId;
 
@@ -197,17 +199,19 @@ public class GenderTypeServiceImpl implements GenderTypeService {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_UPDATE, GenderTypeDto.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
-					String.format(MasterDataConstant.FAILURE_DESC,GenderTypeErrorCode.GENDER_TYPE_UPDATE_EXCEPTION.getErrorCode(),
-					GenderTypeErrorCode.GENDER_TYPE_UPDATE_EXCEPTION.getErrorMessage()
-							+ ExceptionUtils.parseException(e)),"ADM-566");
+					String.format(MasterDataConstant.FAILURE_DESC,
+							GenderTypeErrorCode.GENDER_TYPE_UPDATE_EXCEPTION.getErrorCode(),
+							GenderTypeErrorCode.GENDER_TYPE_UPDATE_EXCEPTION.getErrorMessage()
+									+ ExceptionUtils.parseException(e)),
+					"ADM-566");
 			throw new MasterDataServiceException(GenderTypeErrorCode.GENDER_TYPE_UPDATE_EXCEPTION.getErrorCode(),
 					GenderTypeErrorCode.GENDER_TYPE_UPDATE_EXCEPTION.getErrorMessage()
 							+ ExceptionUtils.parseException(e));
 		}
-		auditUtil.auditRequest(
-				String.format(MasterDataConstant.SUCCESSFUL_UPDATE, GenderTypeDto.class.getSimpleName()),
+		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_UPDATE, GenderTypeDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC,
-						GenderTypeDto.class.getSimpleName(), genderTypeId.getCode()),"ADM-567");
+						GenderTypeDto.class.getSimpleName(), genderTypeId.getCode()),
+				"ADM-567");
 
 		return genderTypeId;
 	}

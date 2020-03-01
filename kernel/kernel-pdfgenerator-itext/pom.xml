@@ -10,11 +10,14 @@
 	<artifactId>kernel-pdfgenerator-itext</artifactId>
 	<name>kernel-pdfgenerator</name>
 	<description>generate pdf for given  template</description>
+	<properties>
+		<kernel.core.version>1.0.6</kernel.core.version>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.itextpdf</groupId>

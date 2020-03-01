@@ -24,8 +24,8 @@ public interface RegistrationCenterUserRepository
 	/**
 	 * Method that returns the list of registration centers mapped to users.
 	 * 
-	 * @param regCenterID
-	 *            the center ID of the reg-center which needs to be decommissioned.
+	 * @param regCenterID the center ID of the reg-center which needs to be
+	 *                    decommissioned.
 	 * @return the list of registration centers mapped to users.
 	 */
 	@Query(value = "FROM RegistrationCenterUser ru WHERE ru.registrationCenterUserID.regCenterId =?1 and (ru.isDeleted is null or ru.isDeleted =false) ")
@@ -35,10 +35,8 @@ public interface RegistrationCenterUserRepository
 	 * Method to find valid RegistrationCenterUser based on User Id and Registration
 	 * Center Id Type code provided.
 	 * 
-	 * @param userId
-	 *            the User Id.
-	 * @param regCenterId
-	 *            the registration center Id .
+	 * @param userId      the User Id.
+	 * @param regCenterId the registration center Id .
 	 * @return RegistrationCenterUser
 	 */
 	@Query(value = "FROM RegistrationCenterUser rc WHERE rc.registrationCenterUserID.userId = ?1 and rc.registrationCenterUserID.regCenterId = ?2 AND (rc.isDeleted is null OR rc.isDeleted = false)")
@@ -47,8 +45,7 @@ public interface RegistrationCenterUserRepository
 	/**
 	 * Method that returns the list of registration centers mapped to users.
 	 * 
-	 * @param userID
-	 *            the user ID
+	 * @param userID the user ID
 	 * @return the list of registration centers mapped to users.
 	 */
 	@Query(value = "FROM RegistrationCenterUser ru WHERE ru.registrationCenterUserID.userId =?1 and (ru.isDeleted is null or ru.isDeleted =false) and ru.isActive = true")

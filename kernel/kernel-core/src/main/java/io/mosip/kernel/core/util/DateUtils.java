@@ -75,7 +75,7 @@ public final class DateUtils {
 	 * @param days the number of days to add, may be negative
 	 * @return the new Date with the number of days added
 	 * @throws io.mosip.kernel.core.exception.IllegalArgumentException if the date
-	 *         is null
+	 *                                                                 is null
 	 */
 	public static Date addDays(final Date date, final int days) {
 		try {
@@ -96,7 +96,7 @@ public final class DateUtils {
 	 * @param hours the hours to add, may be negative
 	 * @return the new Date with the hours added
 	 * @throws io.mosip.kernel.core.exception.IllegalArgumentException if the date
-	 *         is null
+	 *                                                                 is null
 	 */
 	public static Date addHours(final Date date, final int hours) {
 		try {
@@ -117,7 +117,7 @@ public final class DateUtils {
 	 * @param minutes the minutes to add, may be negative
 	 * @return the new Date with the minutes added
 	 * @throws io.mosip.kernel.core.exception.IllegalArgumentException if the date
-	 *         is null
+	 *                                                                 is null
 	 */
 	public static Date addMinutes(final Date date, final int minutes) {
 		try {
@@ -138,7 +138,7 @@ public final class DateUtils {
 	 * @param seconds the seconds to add, may be negative
 	 * @return the new Date with the seconds added
 	 * @throws io.mosip.kernel.core.exception.IllegalArgumentException if the date
-	 *         is null
+	 *                                                                 is null
 	 */
 	public static Date addSeconds(final Date date, final int seconds) {
 		try {
@@ -159,7 +159,8 @@ public final class DateUtils {
 	 * @param pattern the pattern to use to format the date, not null
 	 * @return the formatted date
 	 * @throws io.mosip.kernel.core.exception.IllegalArgumentException if the
-	 *         date/pattern is null
+	 *                                                                 date/pattern
+	 *                                                                 is null
 	 */
 	public static String formatDate(final Date date, final String pattern) {
 		try {
@@ -181,7 +182,8 @@ public final class DateUtils {
 	 * @param timeZone the time zone to use, may be null
 	 * @return the formatted date
 	 * @throws io.mosip.kernel.core.exception.IllegalArgumentException if the
-	 *         date/pattern/timeZone is null
+	 *                                                                 date/pattern/timeZone
+	 *                                                                 is null
 	 */
 	public static String formatDate(final Date date, final String pattern, final TimeZone timeZone) {
 		try {
@@ -198,13 +200,14 @@ public final class DateUtils {
 	 * Formats a date/time into a specific pattern in a time zone and locale.
 	 * </p>
 	 *
-	 * @param date, the date to format, not null
-	 * @param pattern, the pattern to use to format the date, not null
+	 * @param date,     the date to format, not null
+	 * @param pattern,  the pattern to use to format the date, not null
 	 * @param timeZone, the time zone to use, may be null
-	 * @param locale, the locale to use, may be null
+	 * @param locale,   the locale to use, may be null
 	 * @return the formatted date
 	 * @throws io.mosip.kernel.core.exception.IllegalArgumentException if the
-	 *         date/pattern/timeZone is null
+	 *                                                                 date/pattern/timeZone
+	 *                                                                 is null
 	 */
 	public static String formatDate(final Date date, final String pattern, final TimeZone timeZone,
 			final Locale locale) {
@@ -221,10 +224,11 @@ public final class DateUtils {
 	 * Formats a calendar into a specific pattern.
 	 *
 	 * @param calendar, the calendar to format, not null
-	 * @param pattern, the pattern to use to format the calendar, not null
+	 * @param pattern,  the pattern to use to format the calendar, not null
 	 * @return the formatted calendar
 	 * @throws io.mosip.kernel.core.exception.IllegalArgumentException if the
-	 *         calendar/pattern is null
+	 *                                                                 calendar/pattern
+	 *                                                                 is null
 	 */
 	public static String formatCalendar(final Calendar calendar, final String pattern) {
 		try {
@@ -240,11 +244,12 @@ public final class DateUtils {
 	 * Formats a calendar into a specific pattern in a time zone.
 	 *
 	 * @param calendar, the calendar to format, not null
-	 * @param pattern, the pattern to use to format the calendar, not null
+	 * @param pattern,  the pattern to use to format the calendar, not null
 	 * @param timeZone, the time zone to use, may be null
 	 * @return the formatted calendar
 	 * @throws io.mosip.kernel.core.exception.IllegalArgumentException if the
-	 *         calendar/pattern/timeZone is null
+	 *                                                                 calendar/pattern/timeZone
+	 *                                                                 is null
 	 */
 	public static String formatCalendar(final Calendar calendar, final String pattern, final TimeZone timeZone) {
 		try {
@@ -260,11 +265,12 @@ public final class DateUtils {
 	 * Formats a calendar into a specific pattern in a time zone and locale.
 	 *
 	 * @param calendar, the calendar to format, not null
-	 * @param pattern, the pattern to use to format the calendar, not null
-	 * @param locale, the locale to use, may be null
+	 * @param pattern,  the pattern to use to format the calendar, not null
+	 * @param locale,   the locale to use, may be null
 	 * @return the formatted calendar
 	 * @throws io.mosip.kernel.core.exception.IllegalArgumentException if the
-	 *         calendar/pattern/locale is null
+	 *                                                                 calendar/pattern/locale
+	 *                                                                 is null
 	 */
 	public static String formatCalendar(final Calendar calendar, final String pattern, final Locale locale) {
 		try {
@@ -280,12 +286,13 @@ public final class DateUtils {
 	 * Formats a calendar into a specific pattern in a time zone and locale.
 	 *
 	 * @param calendar, the calendar to format, not null
-	 * @param pattern, the pattern to use to format the calendar, not null
+	 * @param pattern,  the pattern to use to format the calendar, not null
 	 * @param timeZone, the time zone to use, may be null
-	 * @param locale, the locale to use, may be null
+	 * @param locale,   the locale to use, may be null
 	 * @return the formatted calendar
 	 * @throws io.mosip.kernel.core.exception.IllegalArgumentException if the
-	 *         calendar/pattern/timeZone is null
+	 *                                                                 calendar/pattern/timeZone
+	 *                                                                 is null
 	 */
 	public static String formatCalendar(final Calendar calendar, final String pattern, final TimeZone timeZone,
 			final Locale locale) {
@@ -310,7 +317,10 @@ public final class DateUtils {
 	 *         by <tt>d2</tt>; <b>false</b> otherwise.
 	 * 
 	 * @throws io.mosip.kernel.core.exception.IllegalArgumentException if the
-	 *         <code>d1</code> , <code>d2</code> is null
+	 *                                                                 <code>d1</code>
+	 *                                                                 ,
+	 *                                                                 <code>d2</code>
+	 *                                                                 is null
 	 * 
 	 * @see io.mosip.kernel.core.exception.IllegalArgumentException
 	 * 
@@ -336,7 +346,10 @@ public final class DateUtils {
 	 *         by <tt>d2</tt>; <b>false</b> otherwise.
 	 * 
 	 * @throws io.mosip.kernel.core.exception.IllegalArgumentException if the
-	 *         <code>d1</code> , <code>d2</code> is null
+	 *                                                                 <code>d1</code>
+	 *                                                                 ,
+	 *                                                                 <code>d2</code>
+	 *                                                                 is null
 	 * 
 	 * @see io.mosip.kernel.core.exception.IllegalArgumentException
 	 * 
@@ -363,7 +376,10 @@ public final class DateUtils {
 	 * @return <b>true</b> if they represent the same day
 	 * 
 	 * @throws io.mosip.kernel.core.exception.IllegalArgumentException if the
-	 *         <code>d1</code> , <code>d2</code> is null
+	 *                                                                 <code>d1</code>
+	 *                                                                 ,
+	 *                                                                 <code>d2</code>
+	 *                                                                 is null
 	 * 
 	 * @see io.mosip.kernel.core.exception.IllegalArgumentException
 	 * 
@@ -390,7 +406,10 @@ public final class DateUtils {
 	 * @return <code>true</code> if they represent the same millisecond instant
 	 * 
 	 * @throws io.mosip.kernel.core.exception.IllegalArgumentException if the
-	 *         <code>d1</code> , <code>d2</code> is null
+	 *                                                                 <code>d1</code>
+	 *                                                                 ,
+	 *                                                                 <code>d2</code>
+	 *                                                                 is null
 	 * 
 	 * @see io.mosip.kernel.core.exception.IllegalArgumentException
 	 * 
@@ -419,7 +438,10 @@ public final class DateUtils {
 	 *         represented by <tt>d2</tt>; <b>false</b> otherwise.
 	 * 
 	 * @throws io.mosip.kernel.core.exception.IllegalArgumentException if the
-	 *         <code>d1</code> , <code>d2</code> is null
+	 *                                                                 <code>d1</code>
+	 *                                                                 ,
+	 *                                                                 <code>d2</code>
+	 *                                                                 is null
 	 * 
 	 * @see io.mosip.kernel.core.exception.IllegalArgumentException
 	 * 
@@ -446,7 +468,10 @@ public final class DateUtils {
 	 *         represented by <tt>d2</tt>; <b>false</b> otherwise.
 	 * 
 	 * @throws io.mosip.kernel.core.exception.IllegalArgumentException if the
-	 *         <code>d1</code> , <code>d2</code> is null
+	 *                                                                 <code>d1</code>
+	 *                                                                 ,
+	 *                                                                 <code>d2</code>
+	 *                                                                 is null
 	 * 
 	 * @see io.mosip.kernel.core.exception.IllegalArgumentException
 	 * 
@@ -473,7 +498,10 @@ public final class DateUtils {
 	 * @return <b>true</b> if they represent the same day
 	 * 
 	 * @throws io.mosip.kernel.core.exception.IllegalArgumentException if the
-	 *         <code>d1</code> , <code>d2</code> is null
+	 *                                                                 <code>d1</code>
+	 *                                                                 ,
+	 *                                                                 <code>d2</code>
+	 *                                                                 is null
 	 * 
 	 * @see io.mosip.kernel.core.exception.IllegalArgumentException
 	 * 
@@ -500,7 +528,10 @@ public final class DateUtils {
 	 * @return <b>true</b> if they represent the same millisecond instant
 	 * 
 	 * @throws io.mosip.kernel.core.exception.IllegalArgumentException if the
-	 *         <code>d1</code> , <code>d2</code> is null
+	 *                                                                 <code>d1</code>
+	 *                                                                 ,
+	 *                                                                 <code>d2</code>
+	 *                                                                 is null
 	 * 
 	 * @see io.mosip.kernel.core.exception.IllegalArgumentException
 	 * 
@@ -572,16 +603,16 @@ public final class DateUtils {
 	/**
 	 * Provides UTC Current DateTime string in default ISO pattern.
 	 * 
-	 *  Obtains the current date-time from the system clock in the default time-zone.
-     * <p>
-     * This will query the {@link Clock#systemDefaultZone() system clock} in the default
-     * time-zone to obtain the current date-time.
-     * The offset will be calculated from the time-zone in the clock.
-     * <p>
-     * Using this method will prevent the ability to use an alternate clock for testing
-     * because the clock is hard-coded.
-     *
-     * @return the current date-time using the system clock, not null
+	 * Obtains the current date-time from the system clock in the default time-zone.
+	 * <p>
+	 * This will query the {@link Clock#systemDefaultZone() system clock} in the
+	 * default time-zone to obtain the current date-time. The offset will be
+	 * calculated from the time-zone in the clock.
+	 * <p>
+	 * Using this method will prevent the ability to use an alternate clock for
+	 * testing because the clock is hard-coded.
+	 *
+	 * @return the current date-time using the system clock, not null
 	 * 
 	 * @return a date String
 	 */
@@ -618,7 +649,8 @@ public final class DateUtils {
 	 * @return a LocalDateTime
 	 * 
 	 * @throws java.time.format.DateTimeParseException if not able to parse the
-	 *         utcDateTime string for the pattern.
+	 *                                                 utcDateTime string for the
+	 *                                                 pattern.
 	 * 
 	 * 
 	 * @see java.time.LocalDateTime
@@ -651,7 +683,8 @@ public final class DateUtils {
 	 * @return a LocalDateTime
 	 * 
 	 * @throws java.time.format.DateTimeParseException if not able to parse the
-	 *         utcDateTime string for the pattern
+	 *                                                 utcDateTime string for the
+	 *                                                 pattern
 	 * 
 	 * @see java.time.LocalDateTime
 	 */
@@ -674,7 +707,8 @@ public final class DateUtils {
 	 * @return LocalDateTime
 	 * 
 	 * @throws io.mosip.kernel.core.exception.ParseException if not able to parse
-	 *         the utcDateTime string for the pattern.
+	 *                                                       the utcDateTime string
+	 *                                                       for the pattern.
 	 * 
 	 * @see io.mosip.kernel.core.exception.ParseException
 	 * 
@@ -716,8 +750,11 @@ public final class DateUtils {
 	 * @return a Date
 	 * 
 	 * @throws io.mosip.kernel.core.exception.ParseException if not able to parse
-	 *         the <code>utcDateTime</code> string in given Default utcDateTime
-	 *         pattern - <b>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</b>.
+	 *                                                       the
+	 *                                                       <code>utcDateTime</code>
+	 *                                                       string in given Default
+	 *                                                       utcDateTime pattern -
+	 *                                                       <b>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</b>.
 	 * 
 	 * @see io.mosip.kernel.core.exception.ParseException
 	 */
@@ -744,7 +781,8 @@ public final class DateUtils {
 	 * @return a Date
 	 * 
 	 * @throws io.mosip.kernel.core.exception.ParseException if not able to parse
-	 *         the dateTime string in given string pattern.
+	 *                                                       the dateTime string in
+	 *                                                       given string pattern.
 	 * 
 	 * @see io.mosip.kernel.core.exception.ParseException
 	 */
@@ -772,7 +810,8 @@ public final class DateUtils {
 	 * @return a Date
 	 * 
 	 * @throws io.mosip.kernel.core.exception.ParseException if not able to parse
-	 *         the dateTime string in given string pattern.
+	 *                                                       the dateTime string in
+	 *                                                       given string pattern.
 	 * 
 	 * @see io.mosip.kernel.core.exception.ParseException
 	 * 
@@ -797,11 +836,17 @@ public final class DateUtils {
 	 * @param pattern    The date format pattern which should respect the
 	 *                   SimpleDateFormat rules.
 	 * @return The parsed date object.
-	 * @throws io.mosip.kernel.core.exception.ParseException If the given date
-	 *         string or its actual date is invalid based on the given date format
-	 *         pattern.
+	 * @throws io.mosip.kernel.core.exception.ParseException       If the given date
+	 *                                                             string or its
+	 *                                                             actual date is
+	 *                                                             invalid based on
+	 *                                                             the given date
+	 *                                                             format pattern.
 	 * @throws io.mosip.kernel.core.exception.NullPointerException If
-	 *         <code>dateString</code> or <code>dateFormat</code> is null.
+	 *                                                             <code>dateString</code>
+	 *                                                             or
+	 *                                                             <code>dateFormat</code>
+	 *                                                             is null.
 	 * @see SimpleDateFormat
 	 */
 	public static Date parseToDate(String dateString, String pattern) {

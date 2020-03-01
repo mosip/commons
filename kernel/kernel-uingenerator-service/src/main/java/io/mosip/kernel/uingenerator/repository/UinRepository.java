@@ -36,7 +36,7 @@ public interface UinRepository extends JpaRepository<UinEntity, String> {
 	 * 
 	 * @return an unused uin
 	 */
-	@Query(value="select uu.uin, uu.cr_by, uu.cr_dtimes, uu.del_dtimes, uu.is_deleted, uu.upd_by, uu.upd_dtimes, uu.uin_status from kernel.uin uu where uu.uin_status=? limit 1 FOR UPDATE",nativeQuery = true)
+	@Query(value = "select uu.uin, uu.cr_by, uu.cr_dtimes, uu.del_dtimes, uu.is_deleted, uu.upd_by, uu.upd_dtimes, uu.uin_status from kernel.uin uu where uu.uin_status=? limit 1 FOR UPDATE", nativeQuery = true)
 	public UinEntity findFirstByStatus(String status);
 
 	/**
@@ -49,6 +49,7 @@ public interface UinRepository extends JpaRepository<UinEntity, String> {
 	public UinEntity findByUin(String uin);
 
 	@Modifying
-	@Query(value="UPDATE kernel.uin SET uin_status=:status, upd_by=:contextUser, upd_dtimes=:uptimes where uin=:uin",nativeQuery = true)
-	public void updateStatus(@Param("status") String status, @Param("contextUser") String contextUser, @Param("uptimes") LocalDateTime uptimes,@Param("uin")  String uin);
+	@Query(value = "UPDATE kernel.uin SET uin_status=:status, upd_by=:contextUser, upd_dtimes=:uptimes where uin=:uin", nativeQuery = true)
+	public void updateStatus(@Param("status") String status, @Param("contextUser") String contextUser,
+			@Param("uptimes") LocalDateTime uptimes, @Param("uin") String uin);
 }

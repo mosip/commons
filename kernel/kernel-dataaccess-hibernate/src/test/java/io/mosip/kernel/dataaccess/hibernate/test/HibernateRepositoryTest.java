@@ -48,7 +48,7 @@ public class HibernateRepositoryTest {
 
 	@Mock
 	EntityManager em;
-	
+
 	@MockBean
 	RestTemplate restTemplate;
 
@@ -69,7 +69,7 @@ public class HibernateRepositoryTest {
 
 	@Before
 	public void setUp() {
-       // when(restTemplate.exchange(Mockito.anyString(), String.class)).
+		// when(restTemplate.exchange(Mockito.anyString(), String.class)).
 		when(em.getDelegate()).thenReturn(em);
 		when(information.getJavaType()).thenReturn(Person.class);
 		when(em.getCriteriaBuilder()).thenReturn(builder);

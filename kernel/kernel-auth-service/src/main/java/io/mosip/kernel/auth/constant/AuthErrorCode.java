@@ -8,7 +8,7 @@ package io.mosip.kernel.auth.constant;
  *
  */
 public enum AuthErrorCode {
-	
+
 	/**
 	 * UNAUTHORIZED
 	 */
@@ -96,8 +96,8 @@ public enum AuthErrorCode {
 
 	INVALID_DN("KER-ATH-018", "Exception occured while creating DN"),
 
-	IO_EXCEPTION("KER-ATH-020", "IO Exception occured while passing paging request"), RUNTIME_EXCEPTION("KER-ATH-021",
-			"Runtime exception"),
+	IO_EXCEPTION("KER-ATH-020", "IO Exception occured while passing paging request"),
+	RUNTIME_EXCEPTION("KER-ATH-021", "Runtime exception"),
 
 	INVALID_REQUEST("KER-ATH-019", "should not be null or empty"),
 
@@ -106,11 +106,11 @@ public enum AuthErrorCode {
 	IS_ACTIVE_FLAG_NOT_FOUND("KER-ATH-023", "IsActive flag is not present for this user"),
 
 	MOBILE_NOT_REGISTERED("KER-ATH-024", "Mobile is registered/not present"),
-	
-	REST_EXCEPTION("KER-ATH-025","Exception occured while consuming service"),
 
-KEYCLOAK_ACESSTOKEN_EXCEPTION("KER-ATH-021","Error Occured while getting access token from keycloak"),
-	KEYCLOAK_STATE_EXCEPTION("KER-ATH-022","state is not maching");
+	REST_EXCEPTION("KER-ATH-025", "Exception occured while consuming service"),
+
+	KEYCLOAK_ACESSTOKEN_EXCEPTION("KER-ATH-021", "Error Occured while getting access token from keycloak"),
+	KEYCLOAK_STATE_EXCEPTION("KER-ATH-022", "state is not maching");
 
 	/**
 	 * The error code
@@ -124,10 +124,8 @@ KEYCLOAK_ACESSTOKEN_EXCEPTION("KER-ATH-021","Error Occured while getting access 
 	/**
 	 * Constructor to set error code and message
 	 * 
-	 * @param errorCode
-	 *            the error code
-	 * @param errorMessage
-	 *            the error message
+	 * @param errorCode    the error code
+	 * @param errorMessage the error message
 	 */
 	private AuthErrorCode(final String errorCode, final String errorMessage) {
 		this.errorCode = errorCode;

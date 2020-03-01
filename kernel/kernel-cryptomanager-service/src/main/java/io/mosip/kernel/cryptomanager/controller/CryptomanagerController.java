@@ -58,7 +58,7 @@ public class CryptomanagerController {
 		response.setResponse(cryptomanagerService.encrypt(cryptomanagerRequestDto.getRequest()));
 		return response;
 	}
-	
+
 	/**
 	 * Controller for Decrypt the data
 	 * 

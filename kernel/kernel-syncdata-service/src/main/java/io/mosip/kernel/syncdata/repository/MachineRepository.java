@@ -48,14 +48,16 @@ public interface MachineRepository extends JpaRepository<Machine, String> {
 	 */
 	@Query(value = "SELECT mm.id, mm.name, mm.mac_address, mm.serial_num, mm.ip_address, mm.mspec_id, mm.lang_code, mm.is_active, mm.cr_by, mm.cr_dtimes, mm.upd_by, mm.upd_dtimes, mm.is_deleted, mm.del_dtimes, mm.validity_end_dtimes,mm.zone_code FROM master.machine_master mm where mm.id=?1 and mm.is_active=true ", nativeQuery = true)
 	List<Machine> findByMachineIdAndIsActive(String machineId);
-	
-	/** Get machine by name
+
+	/**
+	 * Get machine by name
+	 * 
 	 * @param name machine name
 	 * @return {@link Machine}
 	 *//*
-	@Query("FROM Machine m WHERE m.name=?1 and (m.isDeleted is null or m.isDeleted =false) and m.isActive = true")
-	Optional<Machine> findByMachineNameActiveNondeleted(String name);
-	*/
+		 * @Query("FROM Machine m WHERE m.name=?1 and (m.isDeleted is null or m.isDeleted =false) and m.isActive = true"
+		 * ) Optional<Machine> findByMachineNameActiveNondeleted(String name);
+		 */
 	@Query("From Machine m WHERE lower(m.name) = lower(?1)  and (m.isDeleted is null or m.isDeleted =false) and m.isActive = true")
 	List<Machine> findByMachineNameAndIsActive(String machineName);
 }

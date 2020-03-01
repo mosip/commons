@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DayNameAndSeqListDto {
-	
+
 	private String name;
-	
+
 	private short daySeq;
 
 }

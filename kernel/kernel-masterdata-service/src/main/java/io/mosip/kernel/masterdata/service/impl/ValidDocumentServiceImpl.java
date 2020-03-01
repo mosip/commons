@@ -107,7 +107,7 @@ public class ValidDocumentServiceImpl implements ValidDocumentService {
 
 	@Autowired
 	private PageUtils pageUtils;
-	
+
 	@Autowired
 	private FilterTypeValidator filterTypeValidator;
 
@@ -240,8 +240,7 @@ public class ValidDocumentServiceImpl implements ValidDocumentService {
 		List<SearchFilter> addList = new ArrayList<>();
 		List<SearchFilter> removeList = new ArrayList<>();
 		List<SearchFilter> addList1 = new ArrayList<>();
-		if(filterTypeValidator.validate(DocumentCategoryTypeMappingFilterDto.class, dto.getFilters()))
-		{
+		if (filterTypeValidator.validate(DocumentCategoryTypeMappingFilterDto.class, dto.getFilters())) {
 			for (SearchFilter filter : dto.getFilters()) {
 				String column = filter.getColumnName();
 				if (column.equalsIgnoreCase("docCategoryCode")) {
@@ -308,7 +307,7 @@ public class ValidDocumentServiceImpl implements ValidDocumentService {
 				pageDto = pageUtils.applyPagination(validDocs, pagination);
 			}
 		}
-		
+
 		return pageDto;
 
 	}
@@ -316,8 +315,7 @@ public class ValidDocumentServiceImpl implements ValidDocumentService {
 	/**
 	 * Method to map to document type table to search doc cat-type mapping
 	 * 
-	 * @param validDoc
-	 *            list of valid document values
+	 * @param validDoc list of valid document values
 	 * @return list of search filter
 	 */
 	private List<SearchFilter> buildValidDocumentTypeSearchFilter(List<ValidDocument> validDoc) {
@@ -330,8 +328,7 @@ public class ValidDocumentServiceImpl implements ValidDocumentService {
 	/**
 	 * method to return list of document type code
 	 * 
-	 * @param doc
-	 *            value of valid document table
+	 * @param doc value of valid document table
 	 * @return list of document type code in search filter
 	 */
 	public SearchFilter buildFilterDocumentType(ValidDocument doc) {
@@ -345,8 +342,7 @@ public class ValidDocumentServiceImpl implements ValidDocumentService {
 	/**
 	 * Method to map to document category table to search doc cat-type mapping
 	 * 
-	 * @param validDoc
-	 *            list of valid document values
+	 * @param validDoc list of valid document values
 	 * @return list of search filter
 	 */
 	private List<SearchFilter> buildValidDocumentCategorySearchFilter(List<ValidDocument> validDoc) {
@@ -359,8 +355,7 @@ public class ValidDocumentServiceImpl implements ValidDocumentService {
 	/**
 	 * method to return list of doc-category code
 	 * 
-	 * @param value
-	 *            of valid document table
+	 * @param value of valid document table
 	 * @return list of document category code in search filter
 	 */
 	public SearchFilter buildFilterDocumentCategory(ValidDocument doc) {

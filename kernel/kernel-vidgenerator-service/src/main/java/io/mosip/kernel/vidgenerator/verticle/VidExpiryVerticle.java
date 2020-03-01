@@ -53,7 +53,7 @@ public class VidExpiryVerticle extends AbstractVerticle {
 		EventBus eventBus = vertx.eventBus();
 
 		MessageConsumer<JsonObject> consumer = eventBus.consumer(VidSchedulerConstants.NAME_VALUE);
-		
+
 		// handle chime event
 		consumer.handler(message -> vidService.expireAndRenew());
 

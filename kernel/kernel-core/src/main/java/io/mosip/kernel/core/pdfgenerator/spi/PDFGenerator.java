@@ -14,7 +14,6 @@ import java.util.List;
 import io.mosip.kernel.core.keymanager.model.CertificateEntry;
 import io.mosip.kernel.core.pdfgenerator.model.Rectangle;
 
-
 /**
  * This interface is has specifications for PDF generation from different types.
  * 
@@ -60,7 +59,8 @@ public interface PDFGenerator {
 	/**
 	 * This method will convert InputStream to OutputStream.
 	 * 
-	 * @param dataStream          the processedTemplate in the form of a {@link InputStream}.
+	 * @param dataStream  the processedTemplate in the form of a
+	 *                    {@link InputStream}.
 	 * @param resourceLoc resourceLoction {@link String}.
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 * @return outpustStream PDF Output Stream (PDF stream).
@@ -71,7 +71,7 @@ public interface PDFGenerator {
 	 * This method will convert BufferedImage list to Byte Array.
 	 * 
 	 * @param bufferedImages the input image to convert as PDF.
-	 * @return  array comprising PDF.
+	 * @return array comprising PDF.
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public byte[] asPDF(List<BufferedImage> bufferedImages) throws IOException;
@@ -85,18 +85,24 @@ public interface PDFGenerator {
 	 */
 	public byte[] mergePDF(List<URL> pdfLists) throws IOException;
 
-	/** Signs a PDF and protect it with password
-	 * @param pdf byte array of pdf.
-	 * @param rectangle {@link Rectangle} class to enclose signing
-	 * @param reason reason of signing.
-	 * @param pageNumber page number of rectangle.
-	 * @param provider {@link Provider}.
-	 * @param certificateEntry {@link CertificateEntry} class for certificate and private key as Input;
-	 * @param password password for protecting pdf.
+	/**
+	 * Signs a PDF and protect it with password
+	 * 
+	 * @param pdf              byte array of pdf.
+	 * @param rectangle        {@link Rectangle} class to enclose signing
+	 * @param reason           reason of signing.
+	 * @param pageNumber       page number of rectangle.
+	 * @param provider         {@link Provider}.
+	 * @param certificateEntry {@link CertificateEntry} class for certificate and
+	 *                         private key as Input;
+	 * @param password         password for protecting pdf.
 	 * @return {@link OutputStream} of signed PDF.
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws GeneralSecurityException Signals general security exception while signing.
+	 * @throws IOException              Signals that an I/O exception has occurred.
+	 * @throws GeneralSecurityException Signals general security exception while
+	 *                                  signing.
 	 */
-	OutputStream signAndEncryptPDF(byte[] pdf,Rectangle rectangle,String reason,int pageNumber,Provider provider,CertificateEntry<X509Certificate, PrivateKey> certificateEntry,String password) throws IOException, GeneralSecurityException;
+	OutputStream signAndEncryptPDF(byte[] pdf, Rectangle rectangle, String reason, int pageNumber, Provider provider,
+			CertificateEntry<X509Certificate, PrivateKey> certificateEntry, String password)
+			throws IOException, GeneralSecurityException;
 
 }

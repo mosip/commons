@@ -53,7 +53,7 @@ import io.mosip.kernel.masterdata.utils.MetaDataUtils;
  */
 @Service
 public class DeviceProviderServiceImpl implements
-		DeviceProviderService<ResponseDto, ValidateDeviceDto, ValidateDeviceHistoryDto, DeviceProviderDto, DeviceProviderExtnDto,DeviceProviderPutDto> {
+		DeviceProviderService<ResponseDto, ValidateDeviceDto, ValidateDeviceHistoryDto, DeviceProviderDto, DeviceProviderExtnDto, DeviceProviderPutDto> {
 
 	private static final String UTC_DATETIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
@@ -207,12 +207,12 @@ public class DeviceProviderServiceImpl implements
 	/**
 	 * Check mapping between sw version device type and device sub type.
 	 *
-	 * @param deviceCode
-	 *            the device code
+	 * @param deviceCode the device code
 	 * @return true, if successful
 	 */
-	private boolean checkMappingBetweenSwVersionDeviceTypeAndDeviceSubType(String swVersion, RegisteredDevice registeredDevice) {
-		
+	private boolean checkMappingBetweenSwVersionDeviceTypeAndDeviceSubType(String swVersion,
+			RegisteredDevice registeredDevice) {
+
 		MOSIPDeviceService mosipDeviceService = null;
 		try {
 			mosipDeviceService = deviceServiceRepository.findByDeviceDetail(swVersion,
@@ -339,7 +339,7 @@ public class DeviceProviderServiceImpl implements
 
 		return responseDto;
 	}
-	
+
 	private boolean checkMappingBetweenSWVerDTypeAndDSubTypeHistory(String swVersion,
 			RegisteredDeviceHistory registeredDevice, LocalDateTime effTimes) {
 		MOSIPDeviceServiceHistory mosipDeviceService = null;
@@ -579,7 +579,6 @@ public class DeviceProviderServiceImpl implements
 		DeviceProvider crtDeviceProvider = null;
 		try {
 
-			
 			entity = MetaDataUtils.setCreateMetaData(dto, DeviceProvider.class);
 			entity.setId(UUID.randomUUID().toString());
 			crtDeviceProvider = deviceProviderRepository.create(entity);

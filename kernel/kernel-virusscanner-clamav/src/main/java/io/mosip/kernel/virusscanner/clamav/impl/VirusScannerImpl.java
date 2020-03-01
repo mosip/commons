@@ -157,12 +157,10 @@ public class VirusScannerImpl implements VirusScanner<Boolean, InputStream> {
 	/**
 	 * This Method is used to scan byte array
 	 * 
-	 * @param docArray
-	 *            array
+	 * @param docArray array
 	 * 
 	 * @return a true if file is virus free and false if file is infected
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 
 	@Override
@@ -195,12 +193,10 @@ public class VirusScannerImpl implements VirusScanner<Boolean, InputStream> {
 	/**
 	 * This Method is used to scan File
 	 * 
-	 * @param doc
-	 *            object
+	 * @param doc object
 	 * 
 	 * @return a true if file is virus free and false if file is infected
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@Override
 	public Boolean scanDocument(File doc) throws IOException {

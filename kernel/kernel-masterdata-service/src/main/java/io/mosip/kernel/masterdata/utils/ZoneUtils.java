@@ -46,8 +46,7 @@ public class ZoneUtils {
 
 	@Value("mosip.kernel.masterdata.zone-heirarchy-path-delimiter:/")
 	private String hierarchyPathDelimiter;
-	
-	
+
 	@Value("${mosip.primary-language}")
 	private String primaryLangugage;
 
@@ -55,8 +54,7 @@ public class ZoneUtils {
 	 * Method to get the all the users zones based on the passed list of zone and
 	 * will fetch all the child hierarchy.
 	 * 
-	 * @param zones
-	 *            input to search the users zones
+	 * @param zones input to search the users zones
 	 * @return list of zones
 	 */
 	public List<Zone> getUserZones(List<Zone> zones) {
@@ -77,12 +75,9 @@ public class ZoneUtils {
 	/**
 	 * Method to search the all the child zones as per input.
 	 * 
-	 * @param zones
-	 *            list of zones
-	 * @param zoneIds
-	 *            zone id's to be searched
-	 * @param zu
-	 *            zone user
+	 * @param zones   list of zones
+	 * @param zoneIds zone id's to be searched
+	 * @param zu      zone user
 	 */
 	private void searchZones(List<Zone> zones, List<Zone> zoneIds, ZoneUser zu) {
 		Optional<Zone> zoneOptional = zones.stream()
@@ -126,8 +121,7 @@ public class ZoneUtils {
 	/**
 	 * Method to fetch all the child zones of the passed zone.
 	 * 
-	 * @param zone
-	 *            input for which search the child zones
+	 * @param zone input for which search the child zones
 	 * @return list of zones
 	 */
 	public List<Zone> getZones(Zone zone) {
@@ -152,10 +146,8 @@ public class ZoneUtils {
 	/**
 	 * Method to fetch the all the child zones as per the input
 	 * 
-	 * @param zones
-	 *            input list of zone to search from
-	 * @param zone
-	 *            zone to be search
+	 * @param zones input list of zone to search from
+	 * @param zone  zone to be search
 	 * @return list of zones
 	 */
 	private List<Zone> getDescedants(List<Zone> zones, Zone zone) {
@@ -169,8 +161,7 @@ public class ZoneUtils {
 	/**
 	 * Method to fetch the user's zone
 	 * 
-	 * @param userName
-	 *            input username
+	 * @param userName input username
 	 * @return {@link List} of {@link ZoneUser}
 	 */
 	private List<ZoneUser> getZoneUser(String userName) {
@@ -187,8 +178,7 @@ public class ZoneUtils {
 	/**
 	 * Method to fetch the user's zone hierarchy leaf zones
 	 * 
-	 * @param langCode
-	 *            input language code
+	 * @param langCode input language code
 	 * @return {@link List} of {@link Zone}
 	 */
 	public List<Zone> getUserLeafZones(String langCode) {
@@ -219,10 +209,8 @@ public class ZoneUtils {
 	 * Method to get the all the users zones based on the passed list of zone and
 	 * will fetch all the child hierarchy.
 	 * 
-	 * @param zones
-	 *            input to search the users zones
-	 * @param userId
-	 *            user id for that need zones and child zones
+	 * @param zones  input to search the users zones
+	 * @param userId user id for that need zones and child zones
 	 * @return list of zones
 	 */
 	public List<Zone> getUserZonesByUserId(List<Zone> zones, String userId) {

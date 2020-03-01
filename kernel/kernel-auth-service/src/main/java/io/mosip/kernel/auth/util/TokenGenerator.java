@@ -180,7 +180,8 @@ public class TokenGenerator {
 		String secret = mosipEnvironment.getJwtSecret();
 
 		if (token == null || !token.startsWith(token_base)) {
-			throw new AuthManagerException(AuthErrorCode.INVALID_TOKEN.getErrorCode(),AuthErrorCode.INVALID_TOKEN.getErrorMessage());
+			throw new AuthManagerException(AuthErrorCode.INVALID_TOKEN.getErrorCode(),
+					AuthErrorCode.INVALID_TOKEN.getErrorMessage());
 		}
 
 		try {
@@ -189,7 +190,7 @@ public class TokenGenerator {
 
 			return claims;
 		} catch (Exception e) {
-			throw new AuthManagerException(AuthErrorCode.UNAUTHORIZED.getErrorCode(), e.getMessage(),e);
+			throw new AuthManagerException(AuthErrorCode.UNAUTHORIZED.getErrorCode(), e.getMessage(), e);
 		}
 	}
 }

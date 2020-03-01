@@ -20,11 +20,11 @@ public interface RegisteredDeviceService {
 	/**
 	 * Method to create Registered Device Provider
 	 * 
-	 * @param dto
-	 *            Regisetered Device Provider Dto from user
+	 * @param dto Regisetered Device Provider Dto from user
 	 * @return RegisteredDeviceExtnDto Registered device Dto which has created
 	 */
-	//public RegisteredDeviceExtnDto createRegisteredDevice(RegisteredDevicePostReqDto dto);
+	// public RegisteredDeviceExtnDto
+	// createRegisteredDevice(RegisteredDevicePostReqDto dto);
 
 	/**
 	 * Method to De-Register a device
@@ -45,6 +45,7 @@ public interface RegisteredDeviceService {
 
 	/**
 	 * Method to create a signed Register device
+	 * 
 	 * @param registeredDevicePostDto
 	 * @return String
 	 */

@@ -32,20 +32,13 @@ import lombok.NoArgsConstructor;
 /**
  * Instantiates a new sync job def.
  *
- * @param id
- *            the id
- * @param name
- *            the name
- * @param apiName
- *            the api name
- * @param parentSyncJobId
- *            the parent sync job id
- * @param syncFreq
- *            the sync freq
- * @param lockDuration
- *            the lock duration
- * @param langCode
- *            the lang code
+ * @param id              the id
+ * @param name            the name
+ * @param apiName         the api name
+ * @param parentSyncJobId the parent sync job id
+ * @param syncFreq        the sync freq
+ * @param lockDuration    the lock duration
+ * @param langCode        the lang code
  */
 @AllArgsConstructor
 

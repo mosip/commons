@@ -82,8 +82,7 @@ public class TemplateController {
 	/**
 	 * Method to fetch all Template details based on language code
 	 * 
-	 * @param langCode
-	 *            the language code
+	 * @param langCode the language code
 	 * @return All {@link TemplateDto}
 	 */
 	@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_PROCESSOR','ID_AUTHENTICATION','AUTH','PRE_REGISTRATION_ADMIN')")
@@ -105,10 +104,8 @@ public class TemplateController {
 	 * Method to fetch all Template details based on language code and template type
 	 * code
 	 * 
-	 * @param langCode
-	 *            the language code
-	 * @param templateTypeCode
-	 *            the template type code
+	 * @param langCode         the language code
+	 * @param templateTypeCode the template type code
 	 * @return All {@link TemplateDto}
 	 */
 	@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_PROCESSOR','ID_AUTHENTICATION','AUTH','PRE_REGISTRATION_ADMIN','RESIDENT')")
@@ -126,8 +123,7 @@ public class TemplateController {
 	/**
 	 * This method creates template based on provided details.
 	 * 
-	 * @param template
-	 *            the template detail
+	 * @param template the template detail
 	 * @return {@link IdResponseDto}
 	 */
 	@ResponseFilter
@@ -150,8 +146,7 @@ public class TemplateController {
 	/**
 	 * This method update template based on provided details.
 	 * 
-	 * @param template
-	 *            the template detail
+	 * @param template the template detail
 	 * @return {@link IdResponseDto}
 	 */
 	@ResponseFilter
@@ -174,8 +169,7 @@ public class TemplateController {
 	/**
 	 * This method delete template based on provided details.
 	 * 
-	 * @param id
-	 *            the template id
+	 * @param id the template id
 	 * @return {@link IdResponseDto}
 	 */
 	@ResponseFilter
@@ -195,8 +189,7 @@ public class TemplateController {
 	/**
 	 * Method to fetch all Template details based on template type code
 	 * 
-	 * @param templateTypeCode
-	 *            the template type code
+	 * @param templateTypeCode the template type code
 	 * @return All {@link TemplateDto}
 	 */
 	@GetMapping("/templatetypecodes/{code}")
@@ -213,14 +206,10 @@ public class TemplateController {
 	/**
 	 * This controller method provides with all templates.
 	 * 
-	 * @param pageNumber
-	 *            the page number
-	 * @param pageSize
-	 *            the size of each page
-	 * @param sortBy
-	 *            the attributes by which it should be ordered
-	 * @param orderBy
-	 *            the order to be used
+	 * @param pageNumber the page number
+	 * @param pageSize   the size of each page
+	 * @param sortBy     the attributes by which it should be ordered
+	 * @param orderBy    the order to be used
 	 * 
 	 * @return the response i.e. pages containing the templates.
 	 */
@@ -243,8 +232,7 @@ public class TemplateController {
 	/**
 	 * Search templates.
 	 *
-	 * @param request
-	 *            the request
+	 * @param request the request
 	 * @return {@link PageResponseDto}
 	 */
 	@ResponseFilter
@@ -258,20 +246,19 @@ public class TemplateController {
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.SEARCH_API_IS_CALLED, TemplateDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SEARCH_API_IS_CALLED, TemplateDto.class.getSimpleName()),"ADM-808");
+				String.format(MasterDataConstant.SEARCH_API_IS_CALLED, TemplateDto.class.getSimpleName()), "ADM-808");
 		ResponseWrapper<PageResponseDto<TemplateExtnDto>> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(templateService.searchTemplates(request.getRequest()));
 		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_SEARCH, TemplateDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SUCCESSFUL_SEARCH_DESC, TemplateDto.class.getSimpleName()),"ADM-809");
+				String.format(MasterDataConstant.SUCCESSFUL_SEARCH_DESC, TemplateDto.class.getSimpleName()), "ADM-809");
 		return responseWrapper;
 	}
 
 	/**
 	 * Filter templates.
 	 *
-	 * @param request
-	 *            the request
+	 * @param request the request
 	 * @return {@link FilterResponseDto}
 	 */
 	@ResponseFilter
@@ -285,12 +272,12 @@ public class TemplateController {
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.FILTER_API_IS_CALLED, TemplateDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.FILTER_API_IS_CALLED, TemplateDto.class.getSimpleName()),"ADM-810");
+				String.format(MasterDataConstant.FILTER_API_IS_CALLED, TemplateDto.class.getSimpleName()), "ADM-810");
 		ResponseWrapper<FilterResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(templateService.filterTemplates(request.getRequest()));
 		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_FILTER, TemplateDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SUCCESSFUL_FILTER_DESC, TemplateDto.class.getSimpleName()),"ADM-811");
+				String.format(MasterDataConstant.SUCCESSFUL_FILTER_DESC, TemplateDto.class.getSimpleName()), "ADM-811");
 		return responseWrapper;
 	}
 }

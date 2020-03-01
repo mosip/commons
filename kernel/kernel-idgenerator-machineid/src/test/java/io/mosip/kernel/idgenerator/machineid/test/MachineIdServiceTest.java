@@ -35,7 +35,7 @@ public class MachineIdServiceTest {
 
 	@MockBean
 	MachineIdRepository repository;
-	
+
 	@MockBean
 	private RestTemplate restTemplate;
 

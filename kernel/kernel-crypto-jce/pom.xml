@@ -10,16 +10,20 @@
 	<artifactId>kernel-crypto-jce</artifactId>
 	<packaging>jar</packaging>
 	<name>kernel-crypto-jce</name>
+	<properties>
+		<kernel.core.version>1.0.6</kernel.core.version>
+		<jose4j.version>0.6.5</jose4j.version>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
-                     <groupId>org.bitbucket.b_c</groupId>
-                     <artifactId>jose4j</artifactId>
-                     <version>0.6.5</version>
-              </dependency> 	
+			<groupId>org.bitbucket.b_c</groupId>
+			<artifactId>jose4j</artifactId>
+			<version>${jose4j.version}</version>
+		</dependency>
 	</dependencies>
 </project>
