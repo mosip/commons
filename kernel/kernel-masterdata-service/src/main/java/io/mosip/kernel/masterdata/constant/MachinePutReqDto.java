@@ -56,7 +56,7 @@ public class MachinePutReqDto {
 	 * Field for machine IP address
 	 */
 
-	@Size(min = 1, max = 17)
+	//@Size(min = 1, max = 17)
 	@ApiModelProperty(value = "ipAddress", required = true, dataType = "java.lang.String")
 	private String ipAddress;
 	/**

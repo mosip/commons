@@ -3,13 +3,21 @@ package io.mosip.kernel.masterdata.service.impl;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import javax.transaction.Transactional;
+import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,19 +29,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
+import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.util.CryptoUtil;
+import io.mosip.kernel.core.util.StringUtils;
 import io.mosip.kernel.masterdata.constant.DeviceRegisterErrorCode;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.constant.RegisteredDeviceErrorCode;
+import io.mosip.kernel.masterdata.constant.RequestErrorCode;
 import io.mosip.kernel.masterdata.dto.DeviceDeRegisterResponse;
 import io.mosip.kernel.masterdata.dto.getresponse.ResponseDto;
 import io.mosip.kernel.masterdata.dto.registerdevice.DeviceData;
+import io.mosip.kernel.masterdata.dto.registerdevice.DeviceInfo;
 import io.mosip.kernel.masterdata.dto.registerdevice.DeviceResponse;
 import io.mosip.kernel.masterdata.dto.registerdevice.DigitalId;
 import io.mosip.kernel.masterdata.dto.registerdevice.HeaderRequest;
@@ -48,6 +61,7 @@ import io.mosip.kernel.masterdata.entity.RegisteredDeviceHistory;
 import io.mosip.kernel.masterdata.exception.DataNotFoundException;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
 import io.mosip.kernel.masterdata.exception.RequestException;
+import io.mosip.kernel.masterdata.exception.ValidationException;
 import io.mosip.kernel.masterdata.repository.DeviceProviderRepository;
 import io.mosip.kernel.masterdata.repository.DeviceRepository;
 import io.mosip.kernel.masterdata.repository.RegisteredDeviceHistoryRepository;
@@ -64,6 +78,7 @@ import io.mosip.kernel.masterdata.validator.registereddevice.RegisteredDeviceCon
  * Service Class for Create RegisteredDevice
  * 
  * @author Megha Tanga
+ * @author Ramadurai Pandian
  *
  */
 
@@ -132,32 +147,37 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 		RegisterDeviceResponse registerDeviceResponse = new RegisterDeviceResponse();
 		String deviceDataPayLoad = getPayLoad(registeredDevicePostDto.getDeviceData());
 		String headerString, signedResponse, registerDevice = null;
+
 		try {
 			deviceData = mapper.readValue(CryptoUtil.decodeBase64(deviceDataPayLoad), DeviceData.class);
 			validate(deviceData);
 			digitalId = mapper.readValue(CryptoUtil.decodeBase64(deviceData.getDeviceInfo().getDigitalId()),
 					DigitalId.class);
+			validate(digitalId);
 			deviceProvider = deviceProviderRepository.findByIdAndNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(
 					digitalId.getDeviceProviderId(), digitalId.getDeviceProvider());
-			if (deviceProvider == null) {
-				throw new RequestException(RegisteredDeviceErrorCode.DEVICE_PROVIDER_NOT_EXIST.getErrorCode(),
-						RegisteredDeviceErrorCode.DEVICE_PROVIDER_NOT_EXIST.getErrorMessage());
-			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-			if (registrationDeviceTypeRepository
-					.findByCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(digitalId.getType()) == null) {
-				throw new RequestException(RegisteredDeviceErrorCode.DEVICE_TYPE_NOT_EXIST.getErrorCode(),
-						String.format(RegisteredDeviceErrorCode.DEVICE_TYPE_NOT_EXIST.getErrorMessage(),
-								digitalId.getType()));
-			}
+		if (deviceProvider == null) {
+			throw new RequestException(RegisteredDeviceErrorCode.DEVICE_PROVIDER_NOT_EXIST.getErrorCode(),
+					RegisteredDeviceErrorCode.DEVICE_PROVIDER_NOT_EXIST.getErrorMessage());
+		}
 
-			if (registrationDeviceSubTypeRepository
-					.findByCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(digitalId.getSubType()) == null) {
-				throw new RequestException(RegisteredDeviceErrorCode.DEVICE_SUB_TYPE_NOT_EXIST.getErrorCode(),
-						String.format(RegisteredDeviceErrorCode.DEVICE_SUB_TYPE_NOT_EXIST.getErrorMessage(),
-								digitalId.getSubType()));
-			}
+		if (registrationDeviceTypeRepository
+				.findByCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(digitalId.getType()) == null) {
+			throw new RequestException(RegisteredDeviceErrorCode.DEVICE_TYPE_NOT_EXIST.getErrorCode(), String
+					.format(RegisteredDeviceErrorCode.DEVICE_TYPE_NOT_EXIST.getErrorMessage(), digitalId.getType()));
+		}
 
+		if (registrationDeviceSubTypeRepository
+				.findByCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(digitalId.getSubType()) == null) {
+			throw new RequestException(RegisteredDeviceErrorCode.DEVICE_SUB_TYPE_NOT_EXIST.getErrorCode(),
+					String.format(RegisteredDeviceErrorCode.DEVICE_SUB_TYPE_NOT_EXIST.getErrorMessage(),
+							digitalId.getSubType()));
+		}
+		try {
 			digitalIdJson = mapper.writeValueAsString(digitalId);
 			mapEntity = MapperUtils.mapRegisteredDeviceDto(registeredDevicePostDto, digitalIdJson, deviceData,
 					digitalId);
@@ -199,23 +219,82 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 		return response.getResponse();
 	}
 
+	private void validate(DigitalId digitalId) {
+		List<ServiceError> errors = new ArrayList<>();
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		Validator validator = factory.getValidator();
+		Set<ConstraintViolation<DigitalId>> constraintSet = validator.validate(digitalId);
+		for (ConstraintViolation<DigitalId> c : constraintSet) {
+			errors.add(new ServiceError(RegisteredDeviceErrorCode.DEVICE_DATA_NOT_EXIST.getErrorCode(),
+					c.getPropertyPath() + " " + c.getMessage()));
+		}
+		if (!errors.isEmpty()) {
+
+			throw new ValidationException(errors);
+		}
+		RegisteredDevice regDevice = registeredDeviceRepository.
+				findByDpIdAndSerialNoAndIsActiveIsTrue(digitalId.getDeviceProviderId(), digitalId.getSerialNo());
+		
+		if(regDevice!=null)
+		{
+			throw new RequestException(RegisteredDeviceErrorCode.SERIALNO_DPID_ALREADY_EXIST.getErrorCode(),
+					RegisteredDeviceErrorCode.SERIALNO_DPID_ALREADY_EXIST.getErrorMessage());
+		}
+
+	}
+
 	private void validate(DeviceData deviceData) {
+		List<ServiceError> errors = new ArrayList<>();
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		Validator validator = factory.getValidator();
+		Set<ConstraintViolation<DeviceData>> constraintSet = validator.validate(deviceData);
+		for (ConstraintViolation<DeviceData> c : constraintSet) {
+			if (c.getPropertyPath().toString().equalsIgnoreCase("purpose")) {
+				errors.add(new ServiceError(RegisteredDeviceErrorCode.DEVICE_DATA_NOT_EXIST.getErrorCode(),
+						c.getMessage()));
+			} else {
+				errors.add(new ServiceError(RegisteredDeviceErrorCode.DEVICE_DATA_NOT_EXIST.getErrorCode(),
+						c.getPropertyPath() + " " + c.getMessage()));
+			}
+		}
+		if (!errors.isEmpty()) {
+
+			throw new ValidationException(errors);
+		}
+
 		if (deviceData.getDeviceInfo() != null) {
 			LocalDateTime timeStamp = deviceData.getDeviceInfo().getTimeStamp();
 			String prefix = registerDeviceTimeStamp.substring(0, 1);
 			String timeString = registerDeviceTimeStamp.replaceAll("\\" + prefix, "");
 			if (prefix.equals("+")) {
-				if (timeStamp.isAfter(timeStamp.plusMinutes(TimeUnit.MINUTES.toMillis(Long.valueOf(timeString))))) {
-					throw new MasterDataServiceException("MSD-RDS-001", "Time Stamp is not proper");
+				if (LocalDateTime.now(ZoneOffset.UTC)
+						.isAfter(timeStamp.plus(Long.valueOf(timeString),ChronoUnit.MINUTES))) {
+					throw new MasterDataServiceException(RegisteredDeviceErrorCode.TIMESTAMP_AFTER_CURRENTTIME.getErrorCode(), String.format(
+							RegisteredDeviceErrorCode.TIMESTAMP_AFTER_CURRENTTIME.getErrorMessage(), timeString));
 				}
 			} else if (prefix.equals("-")) {
-				if (timeStamp.isBefore(timeStamp.plusMinutes(TimeUnit.MINUTES.toMillis(Long.valueOf(timeString))))) {
-					throw new MasterDataServiceException("MSD-RDS-001", "Time Stamp is not proper");
+				if (LocalDateTime.now(ZoneOffset.UTC)
+						.isBefore(timeStamp.plus(Long.valueOf(timeString),ChronoUnit.MINUTES))) {
+					throw new MasterDataServiceException(RegisteredDeviceErrorCode.TIMESTAMP_BEFORE_CURRENTTIME.getErrorCode(), String.format(
+							RegisteredDeviceErrorCode.TIMESTAMP_BEFORE_CURRENTTIME.getErrorMessage(), timeString));
 				}
 			}
 
 		}
+		Set<ConstraintViolation<DeviceInfo>> deviceInfoSet = validator.validate(deviceData.getDeviceInfo());
+		for (ConstraintViolation<DeviceInfo> d : deviceInfoSet) {
+			if (d.getPropertyPath().toString().equalsIgnoreCase("certification")) {
+				errors.add(new ServiceError(RegisteredDeviceErrorCode.DEVICE_DATA_NOT_EXIST.getErrorCode(),
+						d.getMessage()));
+			} else {
+				errors.add(new ServiceError(RegisteredDeviceErrorCode.DEVICE_DATA_NOT_EXIST.getErrorCode(),
+						d.getPropertyPath() + " " + d.getMessage()));
+			}
+		}
+		if (!errors.isEmpty()) {
 
+			throw new ValidationException(errors);
+		}
 	}
 
 	private String getPayLoad(String jws) {
@@ -356,7 +435,8 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 	/**
 	 * Creates the history details.
 	 *
-	 * @param deviceRegister the device register
+	 * @param deviceRegister
+	 *            the device register
 	 */
 	private void createHistoryDetails(RegisteredDevice deviceRegister) {
 		RegisteredDeviceHistory deviceRegisterHistory = new RegisteredDeviceHistory();
@@ -376,7 +456,8 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 	/**
 	 * Update register details.
 	 *
-	 * @param deviceRegister the device register
+	 * @param deviceRegister
+	 *            the device register
 	 */
 	private void updateRegisterDetails(RegisteredDevice deviceRegister) {
 		try {

@@ -4,7 +4,7 @@ public class RegisteredDeviceConstant {
 	// PurposeValidator values
 	public static final String REGISTRATION = "Registration";
 	public static final String AUTH = "Auth";
-	protected static final String PURPOSEARR[] = { REGISTRATION, AUTH };
+	public static final String PURPOSEARR[] = { REGISTRATION, AUTH };
 
 	// PurposeValidator values
 	public static final String REGISTERED = "registered";

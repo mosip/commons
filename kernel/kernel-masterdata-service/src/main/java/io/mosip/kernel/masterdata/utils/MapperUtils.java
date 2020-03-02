@@ -598,7 +598,7 @@ public class MapperUtils {
 		RegisterDeviceResponse registerDeviceResponse = new RegisterDeviceResponse();
 		registerDeviceResponse.setDeviceCode(entity.getCode());
 		registerDeviceResponse.setStatus(entity.getStatusCode());
-		registerDeviceResponse.setTimeStamp(LocalDateTime.now());
+		registerDeviceResponse.setTimeStamp(entity.getCreatedDateTime());
 		return registerDeviceResponse;
 	}
 

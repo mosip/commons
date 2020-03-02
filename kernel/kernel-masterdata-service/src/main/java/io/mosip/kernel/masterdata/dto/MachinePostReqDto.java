@@ -22,6 +22,7 @@ import lombok.Data;
  * Request dto to create Machine
  * 
  * @author Megha Tanga
+ * @author Ramadurai Pandian
  * @since 1.0.0
  *
  */
@@ -61,8 +62,8 @@ public class MachinePostReqDto {
 	 * Field for machine IP address
 	 */
 
-	@NotNull
-	@StringFormatter(min = 0, max = 17)
+	//@NotNull
+	//@StringFormatter(min = 0, max = 17)
 	@ApiModelProperty(value = "ipAddress", required = true, dataType = "java.lang.String")
 	private String ipAddress;
 	/**
