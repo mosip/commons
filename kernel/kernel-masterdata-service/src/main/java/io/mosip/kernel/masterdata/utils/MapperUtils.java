@@ -579,6 +579,7 @@ public class MapperUtils {
 		entity.setDp(digitalId.getDeviceProvider());
 		entity.setMake(digitalId.getMake());
 		entity.setModel(digitalId.getModel());
+		entity.setCreatedDateTime(deviceData.getDeviceInfo().getTimeStamp());
 
 		entity.setPurpose(deviceData.getPurpose());
 		entity.setFirmware(deviceData.getDeviceInfo().getFirmware());
