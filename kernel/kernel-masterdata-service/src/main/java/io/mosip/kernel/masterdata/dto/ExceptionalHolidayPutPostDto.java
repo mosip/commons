@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class ExceptionalHolidayPutPostDto {
 
-	@ValidDateFormat
+	@ValidDateFormat(message = "Invalid Date Format")
 	private String exceptionHolidayDate;
 
 	private String exceptionHolidayName;
