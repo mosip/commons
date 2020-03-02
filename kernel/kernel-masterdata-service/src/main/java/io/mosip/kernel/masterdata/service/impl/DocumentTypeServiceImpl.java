@@ -205,7 +205,7 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 				documentTypeRepository.update(documentType);
 			} else {
 				auditUtil.auditRequest(
-						String.format(MasterDataConstant.FAILURE_UPDATE, DocumentTypeDto.class.getCanonicalName()),
+						String.format(MasterDataConstant.FAILURE_UPDATE, DocumentTypePutReqDto.class.getCanonicalName()),
 						MasterDataConstant.AUDIT_SYSTEM,
 						String.format(MasterDataConstant.FAILURE_DESC,
 								DocumentTypeErrorCode.DOCUMENT_TYPE_NOT_FOUND_EXCEPTION.getErrorCode(),
@@ -217,7 +217,7 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 
 		} catch (DataAccessLayerException | DataAccessException e) {
 			auditUtil.auditRequest(
-					String.format(MasterDataConstant.FAILURE_UPDATE, DocumentTypeDto.class.getCanonicalName()),
+					String.format(MasterDataConstant.FAILURE_UPDATE, DocumentTypePutReqDto.class.getCanonicalName()),
 					MasterDataConstant.AUDIT_SYSTEM,
 					String.format(MasterDataConstant.FAILURE_DESC,
 							DocumentTypeErrorCode.DOCUMENT_TYPE_UPDATE_EXCEPTION.getErrorCode(),
@@ -234,9 +234,9 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 		MapperUtils.mapFieldValues(documentTypeDto, documentTypePutResponseDto);
 		auditUtil
 				.auditRequest(
-						String.format(MasterDataConstant.SUCCESSFUL_UPDATE, DocumentTypeDto.class.getSimpleName()),
+						String.format(MasterDataConstant.SUCCESSFUL_UPDATE, DocumentTypePutReqDto.class.getSimpleName()),
 						MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC,
-								DocumentTypeDto.class.getSimpleName(), documentTypePutResponseDto.getCode()),
+								DocumentTypePutReqDto.class.getSimpleName(), documentTypePutResponseDto.getCode()),
 						"ADM-826");
 		return documentTypePutResponseDto;
 	}
