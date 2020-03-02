@@ -659,11 +659,13 @@ public class AuthServiceImpl implements AuthService {
 		map.add(KeycloakConstants.CLIENT_SECRET, clientSecret);
 		map.add(KeycloakConstants.CODE, code);
 		map.add(KeycloakConstants.REDIRECT_URI, this.redirectURI + redirectURI);
-
+		Map<String, String> pathParam= new HashMap<>();
+		pathParam.put("realmId", realmID);
+        UriComponentsBuilder uriBuilder= UriComponentsBuilder.fromPath(tokenEndpoint);
 		HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
 		ResponseEntity<String> responseEntity = null;
 		try {
-			responseEntity = restTemplate.exchange(tokenEndpoint, HttpMethod.POST, entity, String.class);
+			responseEntity = restTemplate.exchange(uriBuilder.buildAndExpand(pathParam).toString(), HttpMethod.POST, entity, String.class);
 
 		} catch (HttpClientErrorException | HttpServerErrorException e) {
 			KeycloakErrorResponseDto keycloakErrorResponseDto = parseKeyClockErrorResponse(e);
@@ -699,12 +701,15 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public String getKeycloakURI(String redirectURI, String state) {
+		Map<String, String> pathParam= new HashMap<>();
+		pathParam.put("realmId", realmID);
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(authorizationEndpoint);
 		uriComponentsBuilder.queryParam(KeycloakConstants.CLIENT_ID, clientID);
 		uriComponentsBuilder.queryParam(KeycloakConstants.REDIRECT_URI, this.redirectURI + redirectURI);
 		uriComponentsBuilder.queryParam(KeycloakConstants.STATE, state);
 		uriComponentsBuilder.queryParam(KeycloakConstants.RESPONSE_TYPE, responseType);
 		uriComponentsBuilder.queryParam(KeycloakConstants.SCOPE, scope);
+		
 		return uriComponentsBuilder.build().toString();
 	}
 
