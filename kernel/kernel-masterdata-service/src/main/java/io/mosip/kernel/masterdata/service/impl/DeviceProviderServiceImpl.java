@@ -579,9 +579,26 @@ public class DeviceProviderServiceImpl implements
 		DeviceProvider crtDeviceProvider = null;
 		try {
 
+			DeviceProvider renDeviceProvider = deviceProviderRepository.findByNameAndAddressAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(dto.getVendorName(),dto.getAddress());
+			
+			if(renDeviceProvider!=null)
+			{
+				auditUtil.auditRequest(
+						String.format(MasterDataConstant.FAILURE_UPDATE, DeviceProvider.class.getCanonicalName()),
+						MasterDataConstant.AUDIT_SYSTEM,
+						String.format(MasterDataConstant.FAILURE_DESC,
+								DeviceProviderManagementErrorCode.DEVICE_PROVIDER_EXIST.getErrorCode(),
+								DeviceProviderManagementErrorCode.DEVICE_PROVIDER_EXIST.getErrorMessage()),
+						"ADM-725");
+				throw new RequestException(DeviceProviderManagementErrorCode.DEVICE_PROVIDER_EXIST.getErrorCode(),
+						String.format(DeviceProviderManagementErrorCode.DEVICE_PROVIDER_EXIST.getErrorMessage(),
+								dto.getVendorName()));
+			}
 			entity = MetaDataUtils.setCreateMetaData(dto, DeviceProvider.class);
 			entity.setId(UUID.randomUUID().toString());
 			crtDeviceProvider = deviceProviderRepository.create(entity);
+			
+			
 
 			// add new row to the history table
 			DeviceProviderHistory entityHistory = new DeviceProviderHistory();
@@ -621,6 +638,7 @@ public class DeviceProviderServiceImpl implements
 		DeviceProvider entity = null;
 		DeviceProvider updtDeviceProvider = null;
 		DeviceProvider renDeviceProvider = null;
+		DeviceProvider existingDeviceProvider = null;
 		try {
 			renDeviceProvider = deviceProviderRepository.findById(DeviceProvider.class, dto.getId());
 
@@ -636,6 +654,23 @@ public class DeviceProviderServiceImpl implements
 						String.format(DeviceProviderManagementErrorCode.DEVICE_PROVIDER_NOT_EXIST.getErrorMessage(),
 								dto.getId()));
 			}
+			
+			existingDeviceProvider = deviceProviderRepository.findByNameAndAddressAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(dto.getVendorName(),dto.getAddress());
+			
+			if(existingDeviceProvider!=null)
+			{
+				auditUtil.auditRequest(
+						String.format(MasterDataConstant.FAILURE_UPDATE, DeviceProvider.class.getCanonicalName()),
+						MasterDataConstant.AUDIT_SYSTEM,
+						String.format(MasterDataConstant.FAILURE_DESC,
+								DeviceProviderManagementErrorCode.DEVICE_PROVIDER_EXIST.getErrorCode(),
+								DeviceProviderManagementErrorCode.DEVICE_PROVIDER_EXIST.getErrorMessage()),
+						"ADM-725");
+				throw new RequestException(DeviceProviderManagementErrorCode.DEVICE_PROVIDER_EXIST.getErrorCode(),
+						String.format(DeviceProviderManagementErrorCode.DEVICE_PROVIDER_EXIST.getErrorMessage(),
+								dto.getVendorName()));
+			}
+			
 			entity = MetaDataUtils.setUpdateMetaData(dto, renDeviceProvider, false);
 			updtDeviceProvider = deviceProviderRepository.update(entity);
 
