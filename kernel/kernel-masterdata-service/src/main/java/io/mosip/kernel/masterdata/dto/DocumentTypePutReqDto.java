@@ -26,12 +26,13 @@ public class DocumentTypePutReqDto {
 	@ApiModelProperty(value = "code", required = true, dataType = "java.lang.String")
 	private String code;
 
-	@NotBlank
-	@Size(min = 1, max = 64)
+	@NotNull
+	@StringFormatter(min = 1, max = 64)
 	@ApiModelProperty(value = "name", required = true, dataType = "java.lang.String")
 	private String name;
 
-	@Size(min = 0, max = 128)
+	@NotNull
+	@StringFormatter(min = 0, max = 128)
 	@ApiModelProperty(value = "Application description", required = false, dataType = "java.lang.String")
 	private String description;
 

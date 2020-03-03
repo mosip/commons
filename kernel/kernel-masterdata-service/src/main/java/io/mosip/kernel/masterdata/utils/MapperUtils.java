@@ -579,7 +579,7 @@ public class MapperUtils {
 		entity.setDp(digitalId.getDeviceProvider());
 		entity.setMake(digitalId.getMake());
 		entity.setModel(digitalId.getModel());
-		entity.setCreatedDateTime(deviceData.getDeviceInfo().getTimeStamp());
+		//entity.setCreatedDateTime(deviceData.getDeviceInfo().getTimeStamp());
 
 		entity.setPurpose(deviceData.getPurpose());
 		entity.setFirmware(deviceData.getDeviceInfo().getFirmware());
@@ -595,11 +595,11 @@ public class MapperUtils {
 		return entity;
 	}
 
-	public static RegisterDeviceResponse mapRegisteredDeviceResponse(RegisteredDevice entity) {
+	public static RegisterDeviceResponse mapRegisteredDeviceResponse(RegisteredDevice entity, DeviceData deviceData) {
 		RegisterDeviceResponse registerDeviceResponse = new RegisterDeviceResponse();
 		registerDeviceResponse.setDeviceCode(entity.getCode());
 		registerDeviceResponse.setStatus(entity.getStatusCode());
-		registerDeviceResponse.setTimeStamp(entity.getCreatedDateTime());
+		registerDeviceResponse.setTimeStamp(deviceData.getDeviceInfo().getTimeStamp());
 		return registerDeviceResponse;
 	}
 
