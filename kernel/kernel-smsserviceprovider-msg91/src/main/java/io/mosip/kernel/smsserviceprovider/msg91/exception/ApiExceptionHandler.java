@@ -1,4 +1,4 @@
-package io.mosip.kernel.smsnotification.exception;
+package io.mosip.kernel.smsserviceprovider.msg91.exception;
 
 import java.io.IOException;
 import java.util.List;
@@ -6,6 +6,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -14,6 +16,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
@@ -24,17 +27,18 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
+import io.mosip.kernel.core.notification.exception.InvalidNumberException;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
-import io.mosip.kernel.smsnotification.constant.SmsExceptionConstant;
+import io.mosip.kernel.smsserviceprovider.msg91.constant.SmsExceptionConstant;
 
 /**
- * Central class for handling exceptions.
+ * Class for handling exceptions.
  * 
- * @author Ritesh Sinha
+ * @author Urvil Joshi
  * @since 1.0.0
  *
  */
-
+@Order(Ordered.HIGHEST_PRECEDENCE-1)
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
@@ -70,6 +74,24 @@ public class ApiExceptionHandler {
 	}
 
 	/**
+	 * This method handles MosipInvalidNumberException type of exceptions.
+	 * 
+	 * @param httpServletRequest the request
+	 * @param e                  The exception
+	 * @return The response entity.
+	 * @throws IOException the IOException
+	 */
+	@ExceptionHandler(InvalidNumberException.class)
+	public ResponseEntity<ResponseWrapper<ServiceError>> smsNotificationInvalidNumber(
+			final HttpServletRequest httpServletRequest, final InvalidNumberException e) throws IOException {
+		ResponseWrapper<ServiceError> errorResponse = setErrors(httpServletRequest);
+		ServiceError error = new ServiceError(e.getErrorCode(), e.getErrorText());
+		errorResponse.getErrors().add(error);
+		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
+
+	}
+
+	/**
 	 * This method handle HttpMessageNotReadableException type of exception.
 	 * 
 	 * @param httpServletRequest the request.
@@ -86,6 +108,31 @@ public class ApiExceptionHandler {
 		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
 	}
 
+	/**
+	 * This method handle HttpClientErrorException type of exception.
+	 * 
+	 * @param httpServletRequest the request.
+	 * @param e                  the exception.
+	 * @return the response entity.
+	 * @throws IOException IOException.
+	 */
+	@ExceptionHandler(HttpClientErrorException.class)
+	public ResponseEntity<ResponseWrapper<ServiceError>> smsVendorServiceException(
+			final HttpServletRequest httpServletRequest, final HttpClientErrorException e) throws IOException {
+		ResponseWrapper<ServiceError> errorResponse = setErrors(httpServletRequest);
+
+		JsonNode responseTree = objectMapper.readTree(e.getResponseBodyAsString());
+		String errorMessage = null;
+		if (responseTree != null) {
+			responseTree = responseTree.get("requestError").get("serviceException");
+			errorMessage = responseTree.get("text").asText();
+		} else {
+			errorMessage = e.getMessage();
+		}
+		ServiceError error = new ServiceError(SmsExceptionConstant.SMS_INVALID_CREDENTIAL.getErrorCode(), errorMessage);
+		errorResponse.getErrors().add(error);
+		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
+	}
 
 	@ExceptionHandler(HttpServerErrorException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> httpServerErrorException(HttpServletRequest httpServletRequest,

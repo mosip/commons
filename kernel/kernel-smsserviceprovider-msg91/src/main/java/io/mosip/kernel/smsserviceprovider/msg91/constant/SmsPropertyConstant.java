@@ -1,4 +1,4 @@
-package io.mosip.kernel.smsnotification.constant;
+package io.mosip.kernel.smsserviceprovider.msg91.constant;
 
 /**
  * This enum provides all the constant for sms notification.

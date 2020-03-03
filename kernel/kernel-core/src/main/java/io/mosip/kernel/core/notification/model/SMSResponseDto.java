@@ -1,16 +1,16 @@
-package io.mosip.kernel.smsnotification.dto;
+package io.mosip.kernel.core.notification.model;
 
 import lombok.Data;
 
 /**
  * The DTO class for sms notification response.
  * 
- * @author Ritesh Sinha
+ * @author Urvil Joshi
  * @since 1.0.0
  *
  */
 @Data
-public class SmsResponseDto {
+public class SMSResponseDto {
 
 	/**
 	 * Response status.

@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 1.0.0
  *
  */
-@SpringBootApplication(scanBasePackages = { "io.mosip.kernel.smsnotification.*" })
+@SpringBootApplication(scanBasePackages = { "io.mosip.kernel.smsnotification.*"})
 public class SmsNotificationTestBootApplication {
 
 	/**
