@@ -405,7 +405,7 @@ public class HolidayServiceImpl implements HolidayService {
 			dto.setPagination(new Pagination(0, Integer.MAX_VALUE));
 			dto.setSort(Collections.emptyList());
 			List<HolidaySearchDto> resultDto = new ArrayList<>();
-			pageUtils.validateSortField(HolidaySearchDto.class, Holiday.class, dto.getSort());
+			pageUtils.validateSortField(HolidaySearchDto.class, Holiday.class, sort);
 			if (filterValidator.validate(HolidaySearchDto.class, dto.getFilters())) {
 				OptionalFilter optionalFilter = new OptionalFilter(addList);
 				Page<Holiday> page = masterdataSearchHelper.searchMasterdata(Holiday.class, dto,

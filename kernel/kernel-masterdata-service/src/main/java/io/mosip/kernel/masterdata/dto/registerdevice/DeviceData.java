@@ -18,8 +18,8 @@ import lombok.Data;
 @ValidFoundational(baseField = "certificationLevel", matchField = { "foundationalTrustProviderId" })
 public class DeviceData {
 
-	@StringFormatter
-	@Size(min = 1, max = 36)
+	
+	@StringFormatter(min = 1, max = 36)
 	private String deviceId;
 
 	@ValidPurpose(message = "Invalid Purpose received")

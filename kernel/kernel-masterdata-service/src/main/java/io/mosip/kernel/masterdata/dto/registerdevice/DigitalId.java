@@ -17,32 +17,27 @@ import lombok.Data;
 public class DigitalId {
 
 	/** The serial no. */
-	@StringFormatter
-	@Size(min = 1, max = 64)
+	@StringFormatter(min = 1, max = 64)
 	@ApiModelProperty(value = "serialNumber", required = true, dataType = "java.lang.String")
 	private String serialNo;
 
 	/** The Device Provider Name. */
-	@StringFormatter
-	@Size(min = 1, max = 128)
+	@StringFormatter(min = 1, max = 128)
 	@ApiModelProperty(value = "providerName", required = true, dataType = "java.lang.String")
 	private String deviceProvider;
 
 	/** The Device Provider id. */
-	@StringFormatter
-	@Size(min = 1, max = 36)
+	@StringFormatter(min = 1, max = 36)
 	@ApiModelProperty(value = "providerId", required = true, dataType = "java.lang.String")
 	private String deviceProviderId;
 
 	/** The make. */
-	@StringFormatter
-	@Size(min = 1, max = 36)
+	@StringFormatter(min = 1, max = 36)
 	@ApiModelProperty(value = "make", required = true, dataType = "java.lang.String")
 	private String make;
 
 	/** The model. */
-	@StringFormatter
-	@Size(min = 1, max = 36)
+	@StringFormatter(min = 1, max = 36)
 	@ApiModelProperty(value = "model", required = true, dataType = "java.lang.String")
 	private String model;
 
@@ -52,16 +47,14 @@ public class DigitalId {
 	/**
 	 * Field for deviceTypeCode
 	 */
-	@StringFormatter
-	@Size(min = 1, max = 36)
+	@StringFormatter(min = 1, max = 36)
 	@ApiModelProperty(value = "type", required = true, dataType = "java.lang.String")
 	private String type;
 
 	/**
 	 * Field for deviceSubTypeCode
 	 */
-	@StringFormatter
-	@Size(min = 1, max = 36)
+	@StringFormatter(min = 1, max = 36)
 	@ApiModelProperty(value = "subType", required = true, dataType = "java.lang.String")
 	private String subType;
 

@@ -197,7 +197,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 
 			digitalId = mapper.readValue(digitalIdJson, DigitalId.class);
 
-			registerDeviceResponse = MapperUtils.mapRegisteredDeviceResponse(entity);
+			registerDeviceResponse = MapperUtils.mapRegisteredDeviceResponse(entity,deviceData);
 			registerDeviceResponse
 					.setDigitalId(CryptoUtil.encodeBase64(mapper.writeValueAsString(digitalId).getBytes("UTF-8")));
 			registerDeviceResponse.setEnv(activeProfile);
