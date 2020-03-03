@@ -1,4 +1,4 @@
-package io.mosip.kernel.smsnotification.exception;
+package io.mosip.kernel.core.notification.exception;
 
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 

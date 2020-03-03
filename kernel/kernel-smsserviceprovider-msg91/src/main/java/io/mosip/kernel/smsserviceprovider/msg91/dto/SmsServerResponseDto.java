@@ -1,4 +1,4 @@
-package io.mosip.kernel.smsnotification.dto;
+package io.mosip.kernel.smsserviceprovider.msg91.dto;
 
 import lombok.Data;
 
