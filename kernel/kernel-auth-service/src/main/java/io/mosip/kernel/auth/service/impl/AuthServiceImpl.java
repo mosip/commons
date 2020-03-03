@@ -710,7 +710,7 @@ public class AuthServiceImpl implements AuthService {
 		uriComponentsBuilder.queryParam(KeycloakConstants.RESPONSE_TYPE, responseType);
 		uriComponentsBuilder.queryParam(KeycloakConstants.SCOPE, scope);
 		
-		return uriComponentsBuilder.build().toString();
+		return uriComponentsBuilder.buildAndExpand(pathParam).toString();
 	}
 
 	private MultiValueMap<String, String> getPasswordValueMap(String clientID, String clientSecret, String username,
