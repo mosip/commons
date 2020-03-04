@@ -37,10 +37,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.JsonPathException;
 
+import io.mosip.idrepository.core.constant.AuditEvents;
+import io.mosip.idrepository.core.constant.AuditModules;
+import io.mosip.idrepository.core.constant.IdType;
 import io.mosip.idrepository.core.dto.IdRequestDTO;
 import io.mosip.idrepository.core.dto.IdResponseDTO;
 import io.mosip.idrepository.core.exception.IdRepoAppException;
 import io.mosip.idrepository.core.exception.IdRepoDataValidationException;
+import io.mosip.idrepository.core.helper.AuditHelper;
 import io.mosip.idrepository.core.logger.IdRepoLogger;
 import io.mosip.idrepository.core.security.IdRepoSecurityManager;
 import io.mosip.idrepository.core.spi.IdRepoService;
@@ -120,6 +124,9 @@ public class IdRepoController {
 	/** The mapper. */
 	@Autowired
 	private ObjectMapper mapper;
+	
+	@Autowired
+	private AuditHelper auditHelper;
 
 	/** The env. */
 	@Autowired
@@ -155,11 +162,18 @@ public class IdRepoController {
 			validator.validateUin(uin, CREATE);
 			return new ResponseEntity<>(idRepoService.addIdentity(request, uin), HttpStatus.OK);
 		} catch (IdRepoDataValidationException e) {
+			auditHelper.auditError(AuditModules.ID_REPO_CORE_SERVICE, AuditEvents.CREATE_IDENTITY_REQUEST_RESPONSE,
+					request.getRequest().getRegistrationId(), IdType.REG_ID, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_CONTROLLER, ADD_IDENTITY, e.getMessage());
 			throw new IdRepoAppException(DATA_VALIDATION_FAILED, e);
 		} catch (IdRepoAppException e) {
+			auditHelper.auditError(AuditModules.ID_REPO_CORE_SERVICE, AuditEvents.CREATE_IDENTITY_REQUEST_RESPONSE,
+					request.getRequest().getRegistrationId(), IdType.REG_ID, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_CONTROLLER, RETRIEVE_IDENTITY, e.getMessage());
 			throw new IdRepoAppException(e.getErrorCode(), e.getErrorText(), e);
+		} finally {
+			auditHelper.audit(AuditModules.ID_REPO_CORE_SERVICE, AuditEvents.CREATE_IDENTITY_REQUEST_RESPONSE,
+					request.getRequest().getRegistrationId(), IdType.REG_ID, "Create Identity requested");
 		}
 	}
 
@@ -181,8 +195,13 @@ public class IdRepoController {
 			validator.validateUin(uin,READ);
 			return new ResponseEntity<>(idRepoService.retrieveIdentityByUin(uin, type), HttpStatus.OK);
 		} catch (IdRepoAppException e) {
+			auditHelper.auditError(AuditModules.ID_REPO_CORE_SERVICE,
+					AuditEvents.RETRIEVE_IDENTITY_REQUEST_RESPONSE_UIN, uin, IdType.UIN, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_CONTROLLER, RETRIEVE_IDENTITY, e.getMessage());
 			throw new IdRepoAppException(e.getErrorCode(), e.getErrorText(), e);
+		} finally {
+			auditHelper.audit(AuditModules.ID_REPO_CORE_SERVICE, AuditEvents.RETRIEVE_IDENTITY_REQUEST_RESPONSE_UIN,
+					uin, IdType.UIN, "Retrieve Identity requested");
 		}
 	}
 
@@ -203,12 +222,19 @@ public class IdRepoController {
 			validator.validateRid(rid);
 			return new ResponseEntity<>(idRepoService.retrieveIdentityByRid(rid, type), HttpStatus.OK);
 		} catch (InvalidIDException e) {
+			auditHelper.auditError(AuditModules.ID_REPO_CORE_SERVICE,
+					AuditEvents.RETRIEVE_IDENTITY_REQUEST_RESPONSE_RID, rid, IdType.REG_ID, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_CONTROLLER, RETRIEVE_IDENTITY_BY_RID, e.getMessage());
 			throw new IdRepoAppException(INVALID_INPUT_PARAMETER.getErrorCode(),
 					String.format(INVALID_INPUT_PARAMETER.getErrorMessage(), REGISTRATION_ID));
 		} catch (IdRepoAppException e) {
+			auditHelper.auditError(AuditModules.ID_REPO_CORE_SERVICE,
+					AuditEvents.RETRIEVE_IDENTITY_REQUEST_RESPONSE_RID, rid, IdType.REG_ID, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_CONTROLLER, RETRIEVE_IDENTITY_BY_RID, e.getMessage());
 			throw new IdRepoAppException(e.getErrorCode(), e.getErrorText(), e);
+		} finally {
+			auditHelper.audit(AuditModules.ID_REPO_CORE_SERVICE, AuditEvents.RETRIEVE_IDENTITY_REQUEST_RESPONSE_RID,
+					rid, IdType.REG_ID, "Retrieve Identity requested");
 		}
 	}
 
@@ -231,11 +257,18 @@ public class IdRepoController {
 			validator.validateUin(uin, UPDATE);
 			return new ResponseEntity<>(idRepoService.updateIdentity(request, uin), HttpStatus.OK);
 		} catch (IdRepoDataValidationException e) {
+			auditHelper.auditError(AuditModules.ID_REPO_CORE_SERVICE, AuditEvents.UPDATE_IDENTITY_REQUEST_RESPONSE,
+					request.getRequest().getRegistrationId(), IdType.REG_ID, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_CONTROLLER, UPDATE_IDENTITY, e.getMessage());
 			throw new IdRepoAppException(DATA_VALIDATION_FAILED, e);
 		} catch (IdRepoAppException e) {
+			auditHelper.auditError(AuditModules.ID_REPO_CORE_SERVICE, AuditEvents.UPDATE_IDENTITY_REQUEST_RESPONSE,
+					request.getRequest().getRegistrationId(), IdType.REG_ID, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_CONTROLLER, RETRIEVE_IDENTITY, e.getMessage());
 			throw new IdRepoAppException(e.getErrorCode(), e.getErrorText(), e);
+		} finally {
+			auditHelper.audit(AuditModules.ID_REPO_CORE_SERVICE, AuditEvents.UPDATE_IDENTITY_REQUEST_RESPONSE,
+					request.getRequest().getRegistrationId(), IdType.REG_ID, "Update Identity requested");
 		}
 	}
 

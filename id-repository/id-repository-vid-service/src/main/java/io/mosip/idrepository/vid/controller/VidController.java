@@ -3,8 +3,6 @@ package io.mosip.idrepository.vid.controller;
 import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.DATA_VALIDATION_FAILED;
 import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.INVALID_INPUT_PARAMETER;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,10 +19,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.mosip.idrepository.core.constant.AuditEvents;
+import io.mosip.idrepository.core.constant.AuditModules;
+import io.mosip.idrepository.core.constant.IdType;
 import io.mosip.idrepository.core.dto.VidRequestDTO;
 import io.mosip.idrepository.core.dto.VidResponseDTO;
 import io.mosip.idrepository.core.exception.IdRepoAppException;
 import io.mosip.idrepository.core.exception.IdRepoDataValidationException;
+import io.mosip.idrepository.core.helper.AuditHelper;
 import io.mosip.idrepository.core.logger.IdRepoLogger;
 import io.mosip.idrepository.core.security.IdRepoSecurityManager;
 import io.mosip.idrepository.core.spi.VidService;
@@ -68,10 +70,6 @@ public class VidController {
 	/** The Constant REGENERATE_VID. */
 	private static final String REGENERATE_VID = "regenerateVid";
 
-	/** The data source. */
-	@Autowired
-	DataSource dataSource;
-
 	/** The Constant RETRIEVE_UIN_BY_VID. */
 	private static final String RETRIEVE_UIN_BY_VID = "retrieveUinByVid";
 
@@ -94,6 +92,10 @@ public class VidController {
 	/** The Vid Request Validator. */
 	@Autowired
 	private VidRequestValidator validator;
+
+	/** The Audit Helper. */
+	@Autowired
+	private AuditHelper auditHelper;
 
 	/** The mosip logger. */
 	Logger mosipLogger = IdRepoLogger.getLogger(VidController.class);
@@ -127,8 +129,14 @@ public class VidController {
 			request.getRequest().setVidType(request.getRequest().getVidType().toUpperCase());
 			return new ResponseEntity<>(vidService.generateVid(request.getRequest()), HttpStatus.OK);
 		} catch (IdRepoAppException e) {
+			auditHelper.auditError(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.CREATE_VID,
+					request.getRequest().getUin().toString(), IdType.VID, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), VID_CONTROLLER, RETRIEVE_UIN_BY_VID, e.getMessage());
 			throw new IdRepoAppException(e.getErrorCode(), e.getErrorText(), e, CREATE);
+		} finally {
+			auditHelper.audit(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.CREATE_VID,
+					request.getRequest().getUin().toString(), IdType.VID,
+					"Create VID requested for " + request.getRequest().getVidType());
 		}
 	}
 
@@ -153,8 +161,12 @@ public class VidController {
 			throw new IdRepoAppException(INVALID_INPUT_PARAMETER.getErrorCode(),
 					String.format(INVALID_INPUT_PARAMETER.getErrorMessage(), VID));
 		} catch (IdRepoAppException e) {
+			auditHelper.auditError(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.RETRIEVE_VID_UIN, vid, IdType.VID, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), VID_CONTROLLER, RETRIEVE_UIN_BY_VID, e.getMessage());
 			throw new IdRepoAppException(e.getErrorCode(), e.getErrorText(), e);
+		} finally {
+			auditHelper.audit(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.RETRIEVE_VID_UIN, vid, IdType.VID,
+					"Retrieve Uin By VID requested");
 		}
 	}
 
@@ -180,15 +192,21 @@ public class VidController {
 			DataValidationUtil.validate(errors);
 			return new ResponseEntity<>(vidService.updateVid(vid, request.getRequest()), HttpStatus.OK);
 		} catch (InvalidIDException e) {
+			auditHelper.auditError(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.UPDATE_VID_STATUS, vid, IdType.VID, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), VID_CONTROLLER, UPDATE_VID_STATUS, e.getMessage());
 			throw new IdRepoAppException(INVALID_INPUT_PARAMETER.getErrorCode(),
 					String.format(INVALID_INPUT_PARAMETER.getErrorMessage(), VID));
 		} catch (IdRepoDataValidationException e) {
+			auditHelper.auditError(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.UPDATE_VID_STATUS, vid, IdType.VID, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), VID_CONTROLLER, UPDATE_VID_STATUS, e.getMessage());
 			throw new IdRepoAppException(DATA_VALIDATION_FAILED, e);
 		} catch (IdRepoAppException e) {
+			auditHelper.auditError(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.UPDATE_VID_STATUS, vid, IdType.VID, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), VID_CONTROLLER, UPDATE_VID_STATUS, e.getMessage());
 			throw new IdRepoAppException(e.getErrorCode(), e.getErrorText(), e);
+		} finally {
+			auditHelper.audit(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.UPDATE_VID_STATUS, vid, IdType.VID,
+					"Update VID requested");
 		}
 	}
 
@@ -210,12 +228,17 @@ public class VidController {
 			validator.validateVid(vid);
 			return new ResponseEntity<>(vidService.regenerateVid(vid), HttpStatus.OK);
 		} catch (InvalidIDException e) {
+			auditHelper.auditError(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.REGENERATE_VID, vid, IdType.VID, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), VID_CONTROLLER, REGENERATE_VID, e.getMessage());
 			throw new IdRepoAppException(INVALID_INPUT_PARAMETER.getErrorCode(),
 					String.format(INVALID_INPUT_PARAMETER.getErrorMessage(), VID));
 		} catch (IdRepoAppException e) {
+			auditHelper.auditError(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.REGENERATE_VID, vid, IdType.VID, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), VID_CONTROLLER, REGENERATE_VID, e.getMessage());
 			throw new IdRepoAppException(e.getErrorCode(), e.getErrorText(), e, REGENERATE);
+		} finally {
+			auditHelper.audit(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.REGENERATE_VID, vid, IdType.VID,
+					"Regenerate VID requested");
 		}
 	}
 
@@ -240,12 +263,19 @@ public class VidController {
 			return new ResponseEntity<>(vidService.deactivateVIDsForUIN(String.valueOf(request.getRequest().getUin())),
 					HttpStatus.OK);
 		} catch (InvalidIDException e) {
+			auditHelper.auditError(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.DEACTIVATE_VID,
+					request.getRequest().getUin().toString(), IdType.VID, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), VID_CONTROLLER, DEACTIVATE_VID, e.getMessage());
 			throw new IdRepoAppException(INVALID_INPUT_PARAMETER.getErrorCode(),
 					String.format(INVALID_INPUT_PARAMETER.getErrorMessage(), UIN));
 		} catch (IdRepoAppException e) {
+			auditHelper.auditError(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.DEACTIVATE_VID,
+					request.getRequest().getUin().toString(), IdType.VID, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), VID_CONTROLLER, DEACTIVATE_VID, e.getMessage());
 			throw new IdRepoAppException(e.getErrorCode(), e.getErrorText(), e, DEACTIVATE);
+		} finally {
+			auditHelper.audit(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.DEACTIVATE_VID,
+					request.getRequest().getUin().toString(), IdType.VID, "Deactivate VID Requested");
 		}
 
 	}
@@ -272,12 +302,19 @@ public class VidController {
 			return new ResponseEntity<>(vidService.reactivateVIDsForUIN(String.valueOf(request.getRequest().getUin())),
 					HttpStatus.OK);
 		} catch (InvalidIDException e) {
+			auditHelper.auditError(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.REACTIVATE_VID,
+					request.getRequest().getUin().toString(), IdType.VID, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), VID_CONTROLLER, DEACTIVATE_VID, e.getMessage());
 			throw new IdRepoAppException(INVALID_INPUT_PARAMETER.getErrorCode(),
 					String.format(INVALID_INPUT_PARAMETER.getErrorMessage(), UIN));
 		} catch (IdRepoAppException e) {
+			auditHelper.auditError(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.REACTIVATE_VID,
+					request.getRequest().getUin().toString(), IdType.VID, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), VID_CONTROLLER, DEACTIVATE_VID, e.getMessage());
 			throw new IdRepoAppException(e.getErrorCode(), e.getErrorText(), e, REACTIVATE);
+		} finally {
+			auditHelper.audit(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.REACTIVATE_VID,
+					request.getRequest().getUin().toString(), IdType.VID, "Reactivate VID Requested");
 		}
 
 	}

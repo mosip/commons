@@ -36,6 +36,7 @@ import io.mosip.idrepository.core.constant.IdRepoErrorConstants;
 import io.mosip.idrepository.core.dto.VidRequestDTO;
 import io.mosip.idrepository.core.dto.VidResponseDTO;
 import io.mosip.idrepository.core.exception.IdRepoAppException;
+import io.mosip.idrepository.core.helper.AuditHelper;
 import io.mosip.idrepository.core.spi.VidService;
 import io.mosip.idrepository.vid.validator.VidRequestValidator;
 import io.mosip.kernel.core.http.RequestWrapper;
@@ -79,6 +80,9 @@ public class VidControllerTest {
 
 	@Mock
 	private UinValidator<String> uinValidator;
+
+	@Mock
+	private AuditHelper auditHelper;
 
 	@Before
 	public void before() {
