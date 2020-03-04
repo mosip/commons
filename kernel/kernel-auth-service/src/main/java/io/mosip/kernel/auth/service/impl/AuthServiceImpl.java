@@ -661,7 +661,7 @@ public class AuthServiceImpl implements AuthService {
 		map.add(KeycloakConstants.REDIRECT_URI, this.redirectURI + redirectURI);
 		Map<String, String> pathParam= new HashMap<>();
 		pathParam.put("realmId", realmID);
-        UriComponentsBuilder uriBuilder= UriComponentsBuilder.fromPath(tokenEndpoint);
+        UriComponentsBuilder uriBuilder= UriComponentsBuilder.fromUriString(tokenEndpoint);
 		System.out.println(tokenEndpoint);
 		HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
 		ResponseEntity<String> responseEntity = null;
