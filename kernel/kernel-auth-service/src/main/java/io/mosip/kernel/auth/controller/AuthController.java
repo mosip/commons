@@ -600,6 +600,7 @@ public class AuthController {
 	public void login(@CookieValue("state") String state, @PathVariable("redirectURI") String redirectURI,
 			HttpServletResponse res) throws IOException {
 		String uri = authService.getKeycloakURI(redirectURI, state);
+		System.out.println(uri);
 		res.setStatus(302);
 		res.sendRedirect(uri);
 	}
@@ -612,6 +613,7 @@ public class AuthController {
 				redirectURI);
 		String uri = new String(Base64.decodeBase64(redirectURI.getBytes()));
 		Cookie cookie = createCookie(jwtResponseDTO.getAccessToken(), Integer.parseInt(jwtResponseDTO.getExpiresIn()));
+		System.out.println(uri);
 		res.addCookie(cookie);
 		res.setStatus(302);
 		res.sendRedirect(uri);
