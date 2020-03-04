@@ -662,6 +662,7 @@ public class AuthServiceImpl implements AuthService {
 		Map<String, String> pathParam= new HashMap<>();
 		pathParam.put("realmId", realmID);
         UriComponentsBuilder uriBuilder= UriComponentsBuilder.fromPath(tokenEndpoint);
+		System.out.println(tokenEndpoint);
 		HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
 		ResponseEntity<String> responseEntity = null;
 		try {
