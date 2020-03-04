@@ -177,6 +177,15 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 					String.format(RegisteredDeviceErrorCode.DEVICE_SUB_TYPE_NOT_EXIST.getErrorMessage(),
 							digitalId.getSubType()));
 		}
+		
+		RegisteredDevice regDevice = registeredDeviceRepository.
+				findByDpIdAndSerialNoAndIsActiveIsTrue(digitalId.getDeviceProviderId(), digitalId.getSerialNo());
+		
+		if(regDevice!=null)
+		{
+			throw new RequestException(RegisteredDeviceErrorCode.SERIALNO_DPID_ALREADY_EXIST.getErrorCode(),
+					RegisteredDeviceErrorCode.SERIALNO_DPID_ALREADY_EXIST.getErrorMessage());
+		}
 		try {
 			digitalIdJson = mapper.writeValueAsString(digitalId);
 			mapEntity = MapperUtils.mapRegisteredDeviceDto(registeredDevicePostDto, digitalIdJson, deviceData,
@@ -232,14 +241,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 
 			throw new ValidationException(errors);
 		}
-		RegisteredDevice regDevice = registeredDeviceRepository.
-				findByDpIdAndSerialNoAndIsActiveIsTrue(digitalId.getDeviceProviderId(), digitalId.getSerialNo());
 		
-		if(regDevice!=null)
-		{
-			throw new RequestException(RegisteredDeviceErrorCode.SERIALNO_DPID_ALREADY_EXIST.getErrorCode(),
-					RegisteredDeviceErrorCode.SERIALNO_DPID_ALREADY_EXIST.getErrorMessage());
-		}
 
 	}
 
