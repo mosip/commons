@@ -185,10 +185,6 @@ public class AuthController {
 			res.addCookie(cookie);
 			authNResponse.setStatus(authResponseDto.getStatus());
 			authNResponse.setMessage(authResponseDto.getMessage());
-			/*
-			 * AuthToken token = getAuthToken(authResponseDto); if (token != null &&
-			 * token.getUserId() != null) { customTokenServices.StoreToken(token); }
-			 */
 		} else {
 			authNResponse = new AuthNResponse();
 			authNResponse.setStatus(authResponseDto.getStatus());
@@ -300,7 +296,7 @@ public class AuthController {
 				throw new AuthManagerException(AuthErrorCode.TOKEN_NOTPRESENT_ERROR.getErrorCode(),
 						AuthErrorCode.TOKEN_NOTPRESENT_ERROR.getErrorMessage());
 			}
-
+  
 			mosipUserDto = authService.valdiateToken(authToken);
 			Cookie cookie = createCookie(mosipUserDto.getToken(), mosipEnvironment.getTokenExpiry());
 			res.addCookie(cookie);
@@ -496,19 +492,6 @@ public class AuthController {
 	 * @param userCreationRequestDto {@link UserRegistrationRequestDto}
 	 * @return {@link UserRegistrationResponseDto}
 	 */
-	/*
-	 * @ResponseFilter
-	 * 
-	 * @PostMapping(value = "/user") public
-	 * ResponseWrapper<UserRegistrationResponseDto> registerUser(
-	 * 
-	 * @RequestBody @Valid RequestWrapper<UserRegistrationRequestDto>
-	 * userCreationRequestDto) { ResponseWrapper<UserRegistrationResponseDto>
-	 * responseWrapper = new ResponseWrapper<>();
-	 * responseWrapper.setResponse(authService.registerUser(userCreationRequestDto.
-	 * getRequest())); return responseWrapper; }
-	 */
-
 	@ResponseFilter
 	@PostMapping(value = "/user/addpassword")
 	public ResponseWrapper<UserPasswordResponseDto> addPassword(

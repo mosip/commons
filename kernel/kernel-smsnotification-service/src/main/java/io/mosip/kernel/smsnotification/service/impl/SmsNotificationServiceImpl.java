@@ -1,12 +1,14 @@
 package io.mosip.kernel.smsnotification.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 
 import io.mosip.kernel.core.notification.model.SMSResponseDto;
 import io.mosip.kernel.core.notification.spi.SMSServiceProvider;
 import io.mosip.kernel.smsnotification.service.SmsNotification;
+import io.mosip.kernel.smsserviceprovider.msg91.constant.SmsPropertyConstant;
 
 /**
  * This service class send SMS on the contact number provided.
@@ -19,9 +21,12 @@ import io.mosip.kernel.smsnotification.service.SmsNotification;
 @Service
 public class SmsNotificationServiceImpl implements SmsNotification {
 
+	@Value("${spring.profiles.active}")
+	String activeProfile;
+
 	@Autowired
 	private SMSServiceProvider smsServiceProvider;
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -31,6 +36,12 @@ public class SmsNotificationServiceImpl implements SmsNotification {
 	 */
 	@Override
 	public SMSResponseDto sendSmsNotification(String contactNumber, String contentMessage) {
+		if (activeProfile.equalsIgnoreCase("local")) {
+			SMSResponseDto smsResponseDTO = new SMSResponseDto();
+			smsResponseDTO.setMessage(SmsPropertyConstant.SUCCESS_RESPONSE.getProperty());
+			smsResponseDTO.setStatus("success");
+			return smsResponseDTO;
+		}
 		return smsServiceProvider.sendSms(contactNumber, contentMessage);
 	}
 }

@@ -55,6 +55,12 @@ public class OtpValidatorServiceImpl implements OtpValidator<ResponseEntity<OtpV
 
 	@Value("${mosip.kernel.otp.expiry-time}")
 	String otpExpiryLimit;
+	
+	@Value("${spring.profiles.active}")
+	String activeProfile;
+	
+	@Value("${local.env.otp:111111}")
+	String localOtp;
 
 	/*
 	 * (non-Javadoc)
@@ -65,10 +71,19 @@ public class OtpValidatorServiceImpl implements OtpValidator<ResponseEntity<OtpV
 	 */
 	@Override
 	public ResponseEntity<OtpValidatorResponseDto> validateOtp(String key, String otp) {
+		ResponseEntity<OtpValidatorResponseDto> validationResponseEntity;
+		// Verify in case of local otp
+		if(activeProfile.equalsIgnoreCase("local") && otp.equalsIgnoreCase(localOtp)) {
+			OtpValidatorResponseDto responseDto = new OtpValidatorResponseDto();
+			responseDto.setStatus(OtpStatusConstants.SUCCESS_STATUS.getProperty());
+			responseDto.setMessage(OtpStatusConstants.SUCCESS_MESSAGE.getProperty());
+			validationResponseEntity = new ResponseEntity<>(responseDto, HttpStatus.OK);
+		    return validationResponseEntity;
+        }
 		// This method validates the input parameters.
 		otpUtils.validateOtpRequestArguments(key, otp);
 		OtpValidatorResponseDto responseDto;
-		ResponseEntity<OtpValidatorResponseDto> validationResponseEntity;
+	
 		// The OTP entity for a specific key.
 		OtpEntity otpResponse = otpRepository.findById(OtpEntity.class, key);
 		responseDto = new OtpValidatorResponseDto();

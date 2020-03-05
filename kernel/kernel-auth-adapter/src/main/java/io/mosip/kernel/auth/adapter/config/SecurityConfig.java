@@ -53,7 +53,6 @@ import io.mosip.kernel.auth.adapter.handler.AuthSuccessHandler;
  * 
  * @since 1.0.0
  **/
-@Profile("!local")
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
