@@ -57,7 +57,7 @@ public class SMSServiceProviderImpl implements SMSServiceProvider {
 
 	@Override
 	public SMSResponseDto sendSms(String contactNumber, String message) {
-		SMSResponseDto smsResPonseDTO = new SMSResponseDto();
+		SMSResponseDto smsResponseDTO = new SMSResponseDto();
 		validateInput(contactNumber);
 		UriComponentsBuilder sms = UriComponentsBuilder.fromHttpUrl(api)
 				.queryParam(SmsPropertyConstant.AUTH_KEY.getProperty(), authkey)
@@ -72,9 +72,9 @@ public class SMSServiceProviderImpl implements SMSServiceProvider {
 		} catch (HttpClientErrorException | HttpServerErrorException e) {
 			throw new RuntimeException(e.getResponseBodyAsString());
 		}
-		smsResPonseDTO.setMessage(SmsPropertyConstant.SUCCESS_RESPONSE.getProperty());
-		smsResPonseDTO.setStatus("success");
-		return smsResPonseDTO;
+		smsResponseDTO.setMessage(SmsPropertyConstant.SUCCESS_RESPONSE.getProperty());
+		smsResponseDTO.setStatus("success");
+		return smsResponseDTO;
 	}
 
 	private void validateInput(String contactNumber) {
