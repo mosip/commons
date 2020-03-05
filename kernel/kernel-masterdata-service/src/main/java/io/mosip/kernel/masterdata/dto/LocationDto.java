@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LocationDto {
 
-	@Size(min = 0, max = 36)
+	@Size(min = 1, max = 36)
 	@NotBlank
 	private String code;
 

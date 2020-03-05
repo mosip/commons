@@ -49,12 +49,13 @@ public class RegisteredDeviceController {
 	 * 
 	 * @param registeredDevicePostDto
 	 * @return ResponseWrapper<String>
+	 * @throws Exception 
 	 */
 	@ResponseFilter
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN')")
 	@PostMapping
 	public ResponseWrapper<String> signedRegisteredDevice(
-			@Valid @RequestBody RequestWrapper<RegisteredDevicePostDto> registeredDevicePostDto) {
+			@Valid @RequestBody RequestWrapper<RegisteredDevicePostDto> registeredDevicePostDto) throws Exception {
 		ResponseWrapper<String> response = new ResponseWrapper<>();
 		response.setResponse(registeredDeviceService.signedRegisteredDevice(registeredDevicePostDto.getRequest()));
 		return response;

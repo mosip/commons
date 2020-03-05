@@ -26,11 +26,14 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
@@ -135,7 +138,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 	 * RegisteredDevicePostDto)
 	 */
 	@Override
-	public String signedRegisteredDevice(RegisteredDevicePostDto registeredDevicePostDto) {
+	public String signedRegisteredDevice(RegisteredDevicePostDto registeredDevicePostDto) throws Exception {
 		RegisteredDevice entity = null;
 		RegisteredDevice mapEntity = null;
 		RegisteredDevice crtRegisteredDevice = null;
@@ -148,18 +151,13 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 		String deviceDataPayLoad = getPayLoad(registeredDevicePostDto.getDeviceData());
 		String headerString, signedResponse, registerDevice = null;
 
-		try {
-			deviceData = mapper.readValue(CryptoUtil.decodeBase64(deviceDataPayLoad), DeviceData.class);
-			validate(deviceData);
-			digitalId = mapper.readValue(CryptoUtil.decodeBase64(deviceData.getDeviceInfo().getDigitalId()),
-					DigitalId.class);
-			validate(digitalId);
-			deviceProvider = deviceProviderRepository.findByIdAndNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(
-					digitalId.getDeviceProviderId(), digitalId.getDeviceProvider());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+		deviceData = mapper.readValue(CryptoUtil.decodeBase64(deviceDataPayLoad), DeviceData.class);
+		validate(deviceData);
+		digitalId = mapper.readValue(CryptoUtil.decodeBase64(deviceData.getDeviceInfo().getDigitalId()),
+				DigitalId.class);
+		validate(digitalId);
+		deviceProvider = deviceProviderRepository.findByIdAndNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(
+				digitalId.getDeviceProviderId(), digitalId.getDeviceProvider());
 		if (deviceProvider == null) {
 			throw new RequestException(RegisteredDeviceErrorCode.DEVICE_PROVIDER_NOT_EXIST.getErrorCode(),
 					RegisteredDeviceErrorCode.DEVICE_PROVIDER_NOT_EXIST.getErrorMessage());
@@ -177,12 +175,11 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 					String.format(RegisteredDeviceErrorCode.DEVICE_SUB_TYPE_NOT_EXIST.getErrorMessage(),
 							digitalId.getSubType()));
 		}
-		
-		RegisteredDevice regDevice = registeredDeviceRepository.
-				findByDpIdAndSerialNoAndIsActiveIsTrue(digitalId.getDeviceProviderId(), digitalId.getSerialNo());
-		
-		if(regDevice!=null)
-		{
+
+		RegisteredDevice regDevice = registeredDeviceRepository
+				.findByDpIdAndSerialNoAndIsActiveIsTrue(digitalId.getDeviceProviderId(), digitalId.getSerialNo());
+
+		if (regDevice != null) {
 			throw new RequestException(RegisteredDeviceErrorCode.SERIALNO_DPID_ALREADY_EXIST.getErrorCode(),
 					RegisteredDeviceErrorCode.SERIALNO_DPID_ALREADY_EXIST.getErrorMessage());
 		}
@@ -206,7 +203,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 
 			digitalId = mapper.readValue(digitalIdJson, DigitalId.class);
 
-			registerDeviceResponse = MapperUtils.mapRegisteredDeviceResponse(entity,deviceData);
+			registerDeviceResponse = MapperUtils.mapRegisteredDeviceResponse(entity, deviceData);
 			registerDeviceResponse
 					.setDigitalId(CryptoUtil.encodeBase64(mapper.writeValueAsString(digitalId).getBytes("UTF-8")));
 			registerDeviceResponse.setEnv(activeProfile);
@@ -241,7 +238,6 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 
 			throw new ValidationException(errors);
 		}
-		
 
 	}
 
@@ -270,15 +266,19 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 			String timeString = registerDeviceTimeStamp.replaceAll("\\" + prefix, "");
 			if (prefix.equals("+")) {
 				if (LocalDateTime.now(ZoneOffset.UTC)
-						.isAfter(timeStamp.plus(Long.valueOf(timeString),ChronoUnit.MINUTES))) {
-					throw new MasterDataServiceException(RegisteredDeviceErrorCode.TIMESTAMP_AFTER_CURRENTTIME.getErrorCode(), String.format(
-							RegisteredDeviceErrorCode.TIMESTAMP_AFTER_CURRENTTIME.getErrorMessage(), timeString));
+						.isAfter(timeStamp.plus(Long.valueOf(timeString), ChronoUnit.MINUTES))) {
+					throw new MasterDataServiceException(
+							RegisteredDeviceErrorCode.TIMESTAMP_AFTER_CURRENTTIME.getErrorCode(),
+							String.format(RegisteredDeviceErrorCode.TIMESTAMP_AFTER_CURRENTTIME.getErrorMessage(),
+									timeString));
 				}
 			} else if (prefix.equals("-")) {
 				if (LocalDateTime.now(ZoneOffset.UTC)
-						.isBefore(timeStamp.plus(Long.valueOf(timeString),ChronoUnit.MINUTES))) {
-					throw new MasterDataServiceException(RegisteredDeviceErrorCode.TIMESTAMP_BEFORE_CURRENTTIME.getErrorCode(), String.format(
-							RegisteredDeviceErrorCode.TIMESTAMP_BEFORE_CURRENTTIME.getErrorMessage(), timeString));
+						.isBefore(timeStamp.plus(Long.valueOf(timeString), ChronoUnit.MINUTES))) {
+					throw new MasterDataServiceException(
+							RegisteredDeviceErrorCode.TIMESTAMP_BEFORE_CURRENTTIME.getErrorCode(),
+							String.format(RegisteredDeviceErrorCode.TIMESTAMP_BEFORE_CURRENTTIME.getErrorMessage(),
+									timeString));
 				}
 			}
 

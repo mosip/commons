@@ -33,7 +33,7 @@ public class DocumentTypeDto {
 	@ApiModelProperty(value = "name", required = true, dataType = "java.lang.String")
 	private String name;
 
-	@Size(min = 0, max = 128)
+	@Size(max = 128)
 	@ApiModelProperty(value = "Application description", required = false, dataType = "java.lang.String")
 	private String description;
 
