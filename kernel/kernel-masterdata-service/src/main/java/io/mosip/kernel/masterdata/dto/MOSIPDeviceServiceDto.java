@@ -66,7 +66,8 @@ public class MOSIPDeviceServiceDto {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private LocalDateTime swExpiryDateTime;
 
-	
+	@NotNull
+	@StringFormatter(min = 1, max = 36)
 	@ApiModelProperty(value = "softBinaryHash", required = true, dataType = "java.lang.Byte")
 	private String swBinaryHash;
 

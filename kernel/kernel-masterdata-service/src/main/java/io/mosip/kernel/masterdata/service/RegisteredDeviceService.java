@@ -49,6 +49,6 @@ public interface RegisteredDeviceService {
 	 * @param registeredDevicePostDto
 	 * @return String
 	 */
-	public String signedRegisteredDevice(RegisteredDevicePostDto registeredDevicePostDto);
+	public String signedRegisteredDevice(RegisteredDevicePostDto registeredDevicePostDto) throws Exception;
 
 }

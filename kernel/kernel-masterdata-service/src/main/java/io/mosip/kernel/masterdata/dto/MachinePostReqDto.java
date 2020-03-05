@@ -62,8 +62,8 @@ public class MachinePostReqDto {
 	 * Field for machine IP address
 	 */
 
-	//@NotNull
-	//@StringFormatter(min = 0, max = 17)
+	@NotNull
+	@Size(max = 17)
 	@ApiModelProperty(value = "ipAddress", required = true, dataType = "java.lang.String")
 	private String ipAddress;
 	/**

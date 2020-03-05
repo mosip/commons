@@ -164,7 +164,7 @@ public class LocationControllerIntegrationTest {
 		when(repo.findLocationByCodeAndLanguageCode(Mockito.any(), Mockito.any())).thenReturn(location1);
 		when(repo.update(Mockito.any())).thenReturn(location1);
 		mockMvc.perform(put("/locations").contentType(MediaType.APPLICATION_JSON).content(requestJson))
-				.andExpect(status().is5xxServerError());
+				.andExpect(status().isOk());
 	}
 
 	@Test
@@ -176,7 +176,7 @@ public class LocationControllerIntegrationTest {
 		String requestJson = mapper.writeValueAsString(request);
 		when(repo.update(Mockito.any())).thenThrow(new IllegalArgumentException());
 		mockMvc.perform(put("/locations").contentType(MediaType.APPLICATION_JSON).content(requestJson))
-				.andExpect(status().is5xxServerError());
+				.andExpect(status().isOk());
 	}
 
 	@Test
