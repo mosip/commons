@@ -317,11 +317,11 @@ public class AuthServiceImpl implements AuthService {
 		if (userOtp.getAppId().equalsIgnoreCase(AuthConstant.PRE_REGISTRATION)) {
 			realm = userOtp.getAppId();
 		}
-		if (!activeProfile.equalsIgnoreCase("local") && keycloakImpl.isUserAlreadyPresent(userOtp.getUserId(), realm)) {
+		
+		if (activeProfile.equalsIgnoreCase("local")) {
 			mosipUser = new MosipUserDto();
 			mosipUser.setUserId(userOtp.getUserId());
-		}
-		else if (activeProfile.equalsIgnoreCase("local")) {
+		}else if (keycloakImpl.isUserAlreadyPresent(userOtp.getUserId(), realm)) {
 			mosipUser = new MosipUserDto();
 			mosipUser.setUserId(userOtp.getUserId());
 		}
