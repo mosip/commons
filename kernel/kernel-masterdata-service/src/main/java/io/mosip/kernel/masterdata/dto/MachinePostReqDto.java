@@ -22,6 +22,7 @@ import lombok.Data;
  * Request dto to create Machine
  * 
  * @author Megha Tanga
+ * @author Ramadurai Pandian
  * @since 1.0.0
  *
  */
@@ -33,28 +34,28 @@ public class MachinePostReqDto {
 	/**
 	 * Field for machine id
 	 */
-	@Size(min = 0, max = 10)
+	@StringFormatter(min = 0, max = 10)
 	@ApiModelProperty(value = "id", required = true, dataType = "java.lang.String")
 	private String id;
 	/**
 	 * Field for machine name
 	 */
-	@NotBlank
-	@Size(min = 1, max = 64)
+	@NotNull
+	@StringFormatter(min = 1, max = 64)
 	@ApiModelProperty(value = "name", required = true, dataType = "java.lang.String")
 	private String name;
 	/**
 	 * Field for machine serial number
 	 */
-	@NotBlank
-	@Size(min = 1, max = 64)
+	@NotNull
+	@StringFormatter(min = 1, max = 64)
 	@ApiModelProperty(value = "serialNum", required = true, dataType = "java.lang.String")
 	private String serialNum;
 	/**
 	 * Field for machine mac address
 	 */
-	@NotBlank
-	@Size(min = 1, max = 64)
+	@NotNull
+	@StringFormatter(min = 1, max = 64)
 	@ApiModelProperty(value = "macAddress", required = true, dataType = "java.lang.String")
 	private String macAddress;
 	/**
@@ -62,22 +63,22 @@ public class MachinePostReqDto {
 	 */
 
 	@NotNull
-	@StringFormatter(min = 0, max = 17)
+	@Size(max = 17)
 	@ApiModelProperty(value = "ipAddress", required = true, dataType = "java.lang.String")
 	private String ipAddress;
 	/**
 	 * Field for machine specification Id
 	 */
-	@NotBlank
-	@Size(min = 1, max = 36)
+	@NotNull
+	@StringFormatter(min = 1, max = 36)
 	@ApiModelProperty(value = "machineSpecId", required = true, dataType = "java.lang.String")
 	private String machineSpecId;
 	/**
 	 * Field for language code
 	 */
 	@ValidLangCode(message = "Language Code is Invalid")
-	@NotBlank
-	@Size(min = 1, max = 3)
+//	@NotNull
+//	@Size(min = 1, max = 3)
 	@ApiModelProperty(value = "langCode", required = true, dataType = "java.lang.String")
 	private String langCode;
 	/**
@@ -91,8 +92,8 @@ public class MachinePostReqDto {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private LocalDateTime validityDateTime;
 
-	@NotBlank
-	@Size(min = 1, max = 36)
+	@NotNull
+	@StringFormatter(min = 1, max = 36)
 	@ApiModelProperty(value = "zoneCode", required = true, dataType = "java.lang.String")
 	private String zoneCode;
 

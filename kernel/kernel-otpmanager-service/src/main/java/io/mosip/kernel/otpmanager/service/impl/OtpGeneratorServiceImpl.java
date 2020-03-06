@@ -48,6 +48,12 @@ public class OtpGeneratorServiceImpl implements OtpGenerator<OtpGeneratorRequest
 
 	@Value("${javax.persistence.jdbc.url}")
 	String jdbcUrl;
+	
+	@Value("${spring.profiles.active}")
+	String activeProfile;
+	
+	@Value("${local.env.otp:111111}")
+	String localOtp;
 
 	/*
 	 * (non-Javadoc)
@@ -65,6 +71,15 @@ public class OtpGeneratorServiceImpl implements OtpGenerator<OtpGeneratorRequest
 		 * Creating object to return the generation response.
 		 */
 		OtpGeneratorResponseDto response = new OtpGeneratorResponseDto();
+		/*
+		 * Skipping OTP creation for local profile 
+		 */
+        if(activeProfile.equalsIgnoreCase("local")) {
+        	response.setOtp(localOtp);
+			response.setStatus(OtpStatusConstants.GENERATION_SUCCESSFUL.getProperty());
+		    return response;
+        }
+		
 		/*
 		 * Checking whether the key exists in the repository.
 		 */

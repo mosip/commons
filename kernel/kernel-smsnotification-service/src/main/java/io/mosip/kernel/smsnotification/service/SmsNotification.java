@@ -1,4 +1,6 @@
-package io.mosip.kernel.core.notification.spi;
+package io.mosip.kernel.smsnotification.service;
+
+import io.mosip.kernel.core.notification.model.SMSResponseDto;
 
 /**
  * This service class send SMS on the contact number provided.
@@ -8,7 +10,7 @@ package io.mosip.kernel.core.notification.spi;
  *
  */
 
-public interface SmsNotification<D> {
+public interface SmsNotification {
 
 	/**
 	 * This method sends Sms with message provided on the requested number.
@@ -17,6 +19,6 @@ public interface SmsNotification<D> {
 	 * @param contentMessage the message provided.
 	 * @return the response dto.
 	 */
-	public D sendSmsNotification(String contactNumber, String contentMessage);
+	public SMSResponseDto sendSmsNotification(String contactNumber, String contentMessage);
 
 }

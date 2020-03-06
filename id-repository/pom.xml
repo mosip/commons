@@ -9,6 +9,7 @@
 
 	<groupId>io.mosip.idrepository</groupId>
 	<artifactId>id-repository-parent</artifactId>
+	<version>1.0.8-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>ID-Repository</name>
@@ -59,7 +60,7 @@
 		<kernel.idvalidator.rid.version>1.0.6</kernel.idvalidator.rid.version>
 		<kernel.cbeffutil.api.version>1.1.0-SNAPSHOT</kernel.cbeffutil.api.version>
 		<kernel.fsadapter.hdfs.version>1.0.6</kernel.fsadapter.hdfs.version>
-		<id.repository.core.version>1.0.7-SNAPSHOT</id.repository.core.version>
+		<id.repository.core.version>1.0.8-SNAPSHOT</id.repository.core.version>
 		<kernel.idobjectvalidator.version>1.0.6</kernel.idobjectvalidator.version>
 		<kernel.bioapi.provider.version>1.0.6</kernel.bioapi.provider.version>
 		<kernel.auth.adapter.version>1.0.6</kernel.auth.adapter.version>
@@ -131,8 +132,41 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>${maven.jar.plugin.version}</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+						<manifestEntries>
+							<Project-Name>${project.name}</Project-Name>
+							<Project-Version>${project.version}</Project-Version>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>${maven.war.plugin.version}</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+						<manifestEntries>
+							<Project-Name>${project.name}</Project-Name>
+							<Project-Version>${project.version}</Project-Version>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
-	<version>1.0.7-SNAPSHOT</version>
 </project>
 

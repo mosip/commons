@@ -7883,6 +7883,7 @@ public class MasterdataIntegrationTest {
 		requestMSDDto.setRequest(deviceProviderPutDto);
 
 		String deviceProviderJson = mapper.writeValueAsString(requestMSDDto);
+		when(deviceProviderRepository.findByNameAndAddressAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.any(), Mockito.any())).thenReturn(null);
 		when(deviceProviderRepository.findById(Mockito.any(), Mockito.any())).thenReturn(deviceProviderEnt);
 		when(deviceProviderRepository.update(Mockito.any())).thenReturn(deviceProviderEnt);
 		when(deviceProviderHistoryRepository.create(Mockito.any())).thenReturn(deviceProviderHistory);

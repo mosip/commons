@@ -296,9 +296,26 @@ public class LocationServiceImpl implements LocationService {
 				List<Location> parentLocList = locationRepository.findLocationHierarchyByCodeAndLanguageCode(
 						locationDto.getParentLocCode(), locationDto.getLangCode());
 				if (CollectionUtils.isEmpty(parentLocList)) {
-					throw new MasterDataServiceException(LocationErrorCode.PARENT_LOC_NOT_FOUND.getErrorCode(),
-							LocationErrorCode.PARENT_LOC_NOT_FOUND.getErrorMessage());
+					throw new RequestException(LocationErrorCode.PARENT_LOC_NOT_EXIST.getErrorCode(),
+							String.format(LocationErrorCode.PARENT_LOC_NOT_EXIST.getErrorMessage(),
+									locationDto.getParentLocCode()));
 				}
+			}
+			List<Location> list = locationRepository.findByNameAndLevelLangCode(locationDto.getName(),
+					locationDto.getHierarchyLevel(), locationDto.getLangCode());
+			if (list != null && !list.isEmpty()) {
+				auditUtil.auditRequest(
+						String.format(MasterDataConstant.FAILURE_CREATE, LocationDto.class.getSimpleName()),
+						MasterDataConstant.AUDIT_SYSTEM,
+						String.format(MasterDataConstant.FAILURE_DESC,
+								LocationErrorCode.LOCATION_ALREDAY_EXIST_UNDER_HIERARCHY.getErrorCode(),
+								String.format(
+										LocationErrorCode.LOCATION_ALREDAY_EXIST_UNDER_HIERARCHY.getErrorMessage(),
+										locationDto.getName())),
+						"ADM-575");
+				throw new RequestException(LocationErrorCode.LOCATION_ALREDAY_EXIST_UNDER_HIERARCHY.getErrorCode(),
+						String.format(LocationErrorCode.LOCATION_ALREDAY_EXIST_UNDER_HIERARCHY.getErrorMessage(),
+								locationDto.getName()));
 			}
 			if (!CollectionUtils.isEmpty(locationRepository.findLocationHierarchyByParentLocCodeAndLanguageCode(
 					locationDto.getCode(), locationDto.getLangCode()))) {

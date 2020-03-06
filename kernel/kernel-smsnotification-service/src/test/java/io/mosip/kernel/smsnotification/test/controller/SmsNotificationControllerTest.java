@@ -23,8 +23,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.http.RequestWrapper;
+import io.mosip.kernel.core.notification.model.SMSResponseDto;
 import io.mosip.kernel.smsnotification.dto.SmsRequestDto;
-import io.mosip.kernel.smsnotification.dto.SmsResponseDto;
 import io.mosip.kernel.smsnotification.service.impl.SmsNotificationServiceImpl;
 import io.mosip.kernel.smsnotification.test.SmsNotificationTestBootApplication;
 
@@ -47,7 +47,7 @@ public class SmsNotificationControllerTest {
 	@Test
 	public void controllerTest() throws Exception {
 
-		SmsResponseDto responseDto = new SmsResponseDto();
+		SMSResponseDto responseDto = new SMSResponseDto();
 
 		responseDto.setStatus("success");
 
@@ -73,7 +73,7 @@ public class SmsNotificationControllerTest {
 	@Test
 	public void controllerExpTest() throws Exception {
 
-		SmsResponseDto responseDto = new SmsResponseDto();
+		SMSResponseDto responseDto = new SMSResponseDto();
 
 		responseDto.setStatus("success");
 

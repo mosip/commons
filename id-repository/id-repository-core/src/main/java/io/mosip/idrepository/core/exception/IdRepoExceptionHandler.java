@@ -271,31 +271,36 @@ public class IdRepoExceptionHandler extends ResponseEntityExceptionHandler {
 			response.setId(id.get(UPDATE));
 		}
 
+		response.setErrors(getAllErrors(e));
+
+		response.setVersion(env.getProperty(APPLICATION_VERSION));
+
+		return response;
+	}
+
+	public static List<ServiceError> getAllErrors(Throwable e) {
+		List<ServiceError> errors = null;
 		if (e instanceof BaseCheckedException) {
 			List<String> errorCodes = ((BaseCheckedException) e).getCodes();
 			List<String> errorTexts = ((BaseCheckedException) e).getErrorTexts();
 
-			List<ServiceError> errors = errorTexts.parallelStream()
+			errors = errorTexts.parallelStream()
 					.map(errMsg -> new ServiceError(errorCodes.get(errorTexts.indexOf(errMsg)), errMsg)).distinct()
 					.collect(Collectors.toList());
 
-			response.setErrors(errors);
 		}
 
 		if (e instanceof BaseUncheckedException) {
 			List<String> errorCodes = ((BaseUncheckedException) e).getCodes();
 			List<String> errorTexts = ((BaseUncheckedException) e).getErrorTexts();
 
-			List<ServiceError> errors = errorTexts.parallelStream()
+			errors = errorTexts.parallelStream()
 					.map(errMsg -> new ServiceError(errorCodes.get(errorTexts.indexOf(errMsg)), errMsg)).distinct()
 					.collect(Collectors.toList());
 
-			response.setErrors(errors);
 		}
-
-		response.setVersion(env.getProperty(APPLICATION_VERSION));
-
-		return response;
+		
+		return errors;
 	}
 
 	/**

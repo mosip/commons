@@ -99,4 +99,6 @@ public class AuthConstant {
 	
 	public static final String PRE_REGISTRATION="preregistration";
 
+	public static final String ROLES = "roles";
+
 }

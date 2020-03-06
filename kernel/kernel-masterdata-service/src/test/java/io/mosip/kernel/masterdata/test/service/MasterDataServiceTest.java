@@ -1811,7 +1811,8 @@ public class MasterDataServiceTest {
 	public void updateLocationDetailsExceptionTest() {
 		Mockito.when(locationHierarchyRepository.findById(Mockito.any(), Mockito.any())).thenReturn(locationHierarchy);
 		Mockito.when(locationHierarchyRepository.update(Mockito.any())).thenThrow(DataRetrievalFailureException.class);
-
+		Mockito.when(locationHierarchyRepository.findByNameAndLevelLangCode(Mockito.any(),Mockito.anyShort(), Mockito.any())).thenReturn(null);
+		Mockito.when(locationHierarchyRepository.findLocationHierarchyByCodeAndLanguageCode(Mockito.any(), Mockito.any())).thenReturn(locationHierarchyList);
 		locationHierarchyService.updateLocationDetails(requestLocationDto.getRequest());
 	}
 

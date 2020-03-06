@@ -45,15 +45,15 @@ public class MachineDto {
 	/**
 	 * Field for machine serial number
 	 */
-	@NotBlank
-	@Size(min = 1, max = 64)
+	@NotNull
+	@StringFormatter(min = 1, max = 64)
 	@ApiModelProperty(value = "serialNum", required = true, dataType = "java.lang.String")
 	private String serialNum;
 	/**
 	 * Field for machine mac address
 	 */
-	@NotBlank
-	@Size(min = 1, max = 64)
+	@NotNull
+	@StringFormatter(min = 1, max = 64)
 	@ApiModelProperty(value = "macAddress", required = true, dataType = "java.lang.String")
 	private String macAddress;
 	/**

@@ -171,6 +171,26 @@ public class ApiExceptionHandler {
 			return new ResponseEntity<>(errorResponse, HttpStatus.OK);
 		}
 	}
+	
+	@ExceptionHandler(JsonMappingException.class)
+	public ResponseEntity<ResponseWrapper<ServiceError>> onJsonMappingException(
+			final HttpServletRequest httpServletRequest, final JsonMappingException e) throws IOException {
+	
+			List<JsonMappingException.Reference> references = e.getPath();
+			List<String> ret = new LinkedList<>();
+			if (references != null) {
+				for (JsonMappingException.Reference reference : references) {
+					if (!reference.getFieldName().equals("request"))
+						ret.add(reference.getFieldName());
+				}
+			}
+			String exField = StringUtils.join(ret);
+			ResponseWrapper<ServiceError> errorResponse = setHttpMessageNotReadableErrors(httpServletRequest);
+			ServiceError error = new ServiceError(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(),
+					"Invalid Format in field : " + exField);
+			errorResponse.getErrors().add(error);
+			return new ResponseEntity<>(errorResponse, HttpStatus.OK);
+		} 
 
 	@ExceptionHandler(value = { Exception.class, RuntimeException.class })
 	public ResponseEntity<ResponseWrapper<ServiceError>> defaultErrorHandler(

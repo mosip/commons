@@ -594,11 +594,11 @@ public class MapperUtils {
 		return entity;
 	}
 
-	public static RegisterDeviceResponse mapRegisteredDeviceResponse(RegisteredDevice entity) {
+	public static RegisterDeviceResponse mapRegisteredDeviceResponse(RegisteredDevice entity, DeviceData deviceData) {
 		RegisterDeviceResponse registerDeviceResponse = new RegisterDeviceResponse();
 		registerDeviceResponse.setDeviceCode(entity.getCode());
 		registerDeviceResponse.setStatus(entity.getStatusCode());
-		registerDeviceResponse.setTimeStamp(LocalDateTime.now());
+		registerDeviceResponse.setTimeStamp(deviceData.getDeviceInfo().getTimeStamp());
 		return registerDeviceResponse;
 	}
 

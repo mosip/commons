@@ -122,15 +122,17 @@ public class DocumentTypeController {
 	@ApiOperation(value = "Service to update document type")
 	public ResponseWrapper<DocumentTypePutResponseDto> updateDocumentType(
 			@ApiParam("Document Type DTO to update") @Valid @RequestBody RequestWrapper<DocumentTypePutReqDto> types) {
-		auditUtil.auditRequest(MasterDataConstant.UPDATE_API_IS_CALLED + DocumentTypeDto.class.getCanonicalName(),
+
+		auditUtil.auditRequest(MasterDataConstant.UPDATE_API_IS_CALLED + DocumentTypePutReqDto.class.getCanonicalName(),
+
 				MasterDataConstant.AUDIT_SYSTEM,
-				MasterDataConstant.UPDATE_API_IS_CALLED + DocumentTypeDto.class.getCanonicalName(), "ADM-681");
+				MasterDataConstant.UPDATE_API_IS_CALLED + DocumentTypePutReqDto.class.getCanonicalName(), "ADM-681");
 		ResponseWrapper<DocumentTypePutResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(documentTypeService.updateDocumentType(types.getRequest()));
 		auditUtil.auditRequest(
-				String.format(MasterDataConstant.SUCCESSFUL_UPDATE, DocumentTypeDto.class.getCanonicalName()),
+				String.format(MasterDataConstant.SUCCESSFUL_UPDATE, DocumentTypePutReqDto.class.getCanonicalName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC, DocumentTypeDto.class.getCanonicalName()),
+				String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC, DocumentTypePutReqDto.class.getCanonicalName()),
 				"ADM-682");
 		return responseWrapper;
 	}
