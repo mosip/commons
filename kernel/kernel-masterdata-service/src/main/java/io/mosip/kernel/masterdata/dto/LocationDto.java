@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.Range;
 
 import io.mosip.kernel.masterdata.validator.FilterType;
 import io.mosip.kernel.masterdata.validator.FilterTypeEnum;
+import io.mosip.kernel.masterdata.validator.StringFormatter;
 import io.mosip.kernel.masterdata.validator.ValidLangCode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,8 +25,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LocationDto {
 
-	@Size(min = 1, max = 36)
-	@NotBlank
+	@NotNull
+	@StringFormatter(min = 1, max = 36)
 	private String code;
 
 	@Size(min = 0, max = 128)

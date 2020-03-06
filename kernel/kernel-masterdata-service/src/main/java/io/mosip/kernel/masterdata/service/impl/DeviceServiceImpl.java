@@ -212,6 +212,7 @@ public class DeviceServiceImpl implements DeviceService {
 		DeviceHistory entityHistory = null;
 		DeviceExtnDto deviceExtnDto = new DeviceExtnDto();
 		try {
+			validateZone(deviceDto.getZoneCode());
 			deviceDto = masterdataCreationUtil.createMasterData(Device.class, deviceDto);
 			if (deviceDto != null) {
 				entity = MetaDataUtils.setCreateMetaData(deviceDto, Device.class);
@@ -762,11 +763,11 @@ public class DeviceServiceImpl implements DeviceService {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_DECOMMISSION, DeviceDto.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
-					String.format(MasterDataConstant.FAILURE_DESC, DeviceErrorCode.INVALIDE_DEVICE_ZONE.getErrorCode(),
-							DeviceErrorCode.INVALIDE_DEVICE_ZONE.getErrorMessage()),
+					String.format(MasterDataConstant.FAILURE_DESC, DeviceErrorCode.INVALID_DEVICE_ZONE.getErrorCode(),
+							DeviceErrorCode.INVALID_DEVICE_ZONE.getErrorMessage()),
 					"ADM-512");
-			throw new RequestException(DeviceErrorCode.INVALIDE_DEVICE_ZONE.getErrorCode(),
-					DeviceErrorCode.INVALIDE_DEVICE_ZONE.getErrorMessage());
+			throw new RequestException(DeviceErrorCode.INVALID_DEVICE_ZONE.getErrorCode(),
+					DeviceErrorCode.INVALID_DEVICE_ZONE.getErrorMessage());
 		}
 		try {
 			// check the device has mapped to any reg-Center
@@ -910,8 +911,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 		if (!(zoneIds.contains(deviceZone))) {
 			// check the given device zones will come under accessed user zones
-			throw new RequestException(DeviceErrorCode.INVALIDE_DEVICE_ZONE.getErrorCode(),
-					DeviceErrorCode.INVALIDE_DEVICE_ZONE.getErrorMessage());
+			throw new RequestException(DeviceErrorCode.INVALID_DEVICE_ZONE.getErrorCode(),
+					DeviceErrorCode.INVALID_DEVICE_ZONE.getErrorMessage());
 		}
 	}
 
