@@ -21,7 +21,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -8267,10 +8269,10 @@ public class MasterdataIntegrationTest {
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setCertification("L0");
 		deviceInfo.setDeviceSubId("1");
-		deviceInfo.setDeviceExpiry(LocalDateTime.now());
+		deviceInfo.setDeviceExpiry(LocalDateTime.now(ZoneOffset.UTC));
 		deviceInfo.setFirmware("firmware");
 		deviceInfo.setDigitalId(CryptoUtil.encodeBase64String(objectMapper.writeValueAsBytes(dig)));
-		deviceInfo.setTimeStamp(LocalDateTime.now());
+		deviceInfo.setTimeStamp(LocalDateTime.now(ZoneOffset.UTC).plus(Long.valueOf("2"), ChronoUnit.MINUTES));
 		device.setDeviceInfo(deviceInfo);
 		registeredDevicePostDto.setDeviceData(CryptoUtil.encodeBase64String(objectMapper.writeValueAsBytes(device)));
 		return registeredDevicePostDto;
@@ -8352,7 +8354,7 @@ public class MasterdataIntegrationTest {
 		requestDto.setId("mosip.match.regcentr.machineid");
 		requestDto.setVersion("1.0.0");
 		requestDto.setRequesttime(LocalDateTime.now());
-		requestDto.setRequest(getDeviceDataForRegisterDevice());
+		RegisteredDevicePostDto postDto = getDeviceDataForRegisterDevice();
 		String regcenterJson = objectMapper.writeValueAsString(requestDto);
 		when(deviceProviderRepository.findByIdAndNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(Mockito.any(),
 				Mockito.any())).thenReturn(devProvider);

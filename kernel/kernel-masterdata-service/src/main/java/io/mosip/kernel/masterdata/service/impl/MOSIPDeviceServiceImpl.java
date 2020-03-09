@@ -66,15 +66,20 @@ public class MOSIPDeviceServiceImpl implements MOSIPDeviceServices {
 
 		try {
 
-//			if (mosipDeviceServiceRepository.findById(MOSIPDeviceService.class, dto.getId()) != null) {
-//				auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_CREATE, MOSIPDeviceService.class.getCanonicalName()),
-//						MasterDataConstant.AUDIT_SYSTEM,
-//						String.format(MasterDataConstant.FAILURE_DESC,
-//								MOSIPDeviceServiceErrorCode.MDS_EXIST.getErrorCode(),
-//								MOSIPDeviceServiceErrorCode.MDS_EXIST.getErrorMessage()),"ADM-711");
-//				throw new RequestException(MOSIPDeviceServiceErrorCode.MDS_EXIST.getErrorCode(),
-//						String.format(MOSIPDeviceServiceErrorCode.MDS_EXIST.getErrorMessage(), dto.getId()));
-//			}
+			// if
+			// (mosipDeviceServiceRepository.findById(MOSIPDeviceService.class,
+			// dto.getId()) != null) {
+			// auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_CREATE,
+			// MOSIPDeviceService.class.getCanonicalName()),
+			// MasterDataConstant.AUDIT_SYSTEM,
+			// String.format(MasterDataConstant.FAILURE_DESC,
+			// MOSIPDeviceServiceErrorCode.MDS_EXIST.getErrorCode(),
+			// MOSIPDeviceServiceErrorCode.MDS_EXIST.getErrorMessage()),"ADM-711");
+			// throw new
+			// RequestException(MOSIPDeviceServiceErrorCode.MDS_EXIST.getErrorCode(),
+			// String.format(MOSIPDeviceServiceErrorCode.MDS_EXIST.getErrorMessage(),
+			// dto.getId()));
+			// }
 			if ((registrationDeviceTypeRepository
 					.findByCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(dto.getRegDeviceTypeCode())) == null) {
 				auditUtil.auditRequest(
@@ -111,6 +116,19 @@ public class MOSIPDeviceServiceImpl implements MOSIPDeviceServices {
 						"ADM-70314");
 				throw new RequestException(MOSIPDeviceServiceErrorCode.DEVICE_PROVIDER_NOT_FOUND.getErrorCode(),
 						MOSIPDeviceServiceErrorCode.DEVICE_PROVIDER_NOT_FOUND.getErrorMessage());
+			}
+
+			if (mosipDeviceServiceRepository.findByDeviceDetail(dto.getSwVersion(), dto.getRegDeviceTypeCode(),
+					dto.getRegDeviceSubCode(), dto.getMake(), dto.getModel(), dto.getDeviceProviderId()) != null) {
+				auditUtil.auditRequest(
+						String.format(MasterDataConstant.FAILURE_CREATE, MOSIPDeviceService.class.getCanonicalName()),
+						MasterDataConstant.AUDIT_SYSTEM,
+						String.format(MasterDataConstant.FAILURE_DESC,
+								MOSIPDeviceServiceErrorCode.MDS_EXIST.getErrorCode(),
+								MOSIPDeviceServiceErrorCode.MDS_EXIST.getErrorMessage()),
+						"ADM-70315");
+				throw new RequestException(MOSIPDeviceServiceErrorCode.MDS_EXIST.getErrorCode(),
+						MOSIPDeviceServiceErrorCode.MDS_EXIST.getErrorMessage());
 			}
 
 			entity = MetaDataUtils.setCreateMetaData(dto, MOSIPDeviceService.class);
