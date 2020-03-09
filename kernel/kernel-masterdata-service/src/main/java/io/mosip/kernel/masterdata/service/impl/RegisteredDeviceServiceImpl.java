@@ -264,9 +264,9 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 			LocalDateTime timeStamp = deviceData.getDeviceInfo().getTimeStamp();
 			String prefix = registerDeviceTimeStamp.substring(0, 1);
 			String timeString = registerDeviceTimeStamp.replaceAll("\\" + prefix, "");
+			boolean isBetween = timeStamp.isAfter(LocalDateTime.now(ZoneOffset.UTC)) && timeStamp.isBefore(LocalDateTime.now(ZoneOffset.UTC).plus(Long.valueOf(timeString), ChronoUnit.MINUTES));
 			if (prefix.equals("+")) {
-				if (LocalDateTime.now(ZoneOffset.UTC)
-						.isAfter(timeStamp.plus(Long.valueOf(timeString), ChronoUnit.MINUTES))) {
+				if (!isBetween) {
 					throw new MasterDataServiceException(
 							RegisteredDeviceErrorCode.TIMESTAMP_AFTER_CURRENTTIME.getErrorCode(),
 							String.format(RegisteredDeviceErrorCode.TIMESTAMP_AFTER_CURRENTTIME.getErrorMessage(),
