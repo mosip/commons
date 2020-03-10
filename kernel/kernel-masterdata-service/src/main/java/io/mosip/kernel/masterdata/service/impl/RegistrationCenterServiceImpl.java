@@ -1110,7 +1110,6 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 
 
 			if ((regCenterPostReqDto!=null && ((primaryLang.equals(regCenterPostReqDto.getLangCode())
-
 					|| regCenterPostReqDto.getWorkingNonWorkingDays() != null)
 					|| secondaryLang.equals(regCenterPostReqDto.getLangCode())))) {
 				// set response for working_non_working for both primary and
@@ -1501,6 +1500,7 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 	}
 
 	// db is not empty and req is not empty
+
 	// NEVER USED. HAD TO BE COMMENTED
 	// private void createReqExpHolidayAndBDNotEmpt(RegistrationCenter
 	// updRegistrationCenter,
@@ -1549,6 +1549,7 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 	// reqHolidayDates.add(LocalDate.parse(reqExpHoliday.getExceptionHolidayDate()));
 	// }*/
 	// }
+
 
 	@Transactional
 	private void deleteExpHoliday(RegistrationCenter updRegistrationCenter, LocalDate dbHoliday) {
