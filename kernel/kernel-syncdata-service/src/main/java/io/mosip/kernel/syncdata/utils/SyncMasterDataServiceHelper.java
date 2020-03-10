@@ -295,7 +295,7 @@ public class SyncMasterDataServiceHelper {
 	@Async
 	public CompletableFuture<List<MachineDto>> getMachines(String regCenterId, LocalDateTime lastUpdated,
 			LocalDateTime currentTimeStamp) {
-		List<Machine> machineDetailList = new ArrayList<>();
+		List<Machine> machineDetailList = null;
 		List<MachineDto> machineDetailDtoList = new ArrayList<>();
 		try {
 			if (lastUpdated == null) {

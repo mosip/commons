@@ -165,12 +165,13 @@ public class DeviceSpecificationServiceImpl implements DeviceSpecificationServic
 	 */
 	@Override
 	public IdAndLanguageCodeID createDeviceSpecification(DeviceSpecificationDto deviceSpecifications) {
-		DeviceSpecification renDeviceSpecification = new DeviceSpecification();
+		DeviceSpecification renDeviceSpecification = null;
 
 		DeviceSpecification entity = MetaDataUtils.setCreateMetaData(deviceSpecifications, DeviceSpecification.class);
 		try {
 			renDeviceSpecification = deviceSpecificationRepository.create(entity);
-		} catch (DataAccessLayerException | DataAccessException e) {
+			Objects.requireNonNull(renDeviceSpecification);
+		} catch (DataAccessLayerException | DataAccessException | NullPointerException e) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_CREATE, DeviceSpecification.class.getCanonicalName()),
 					MasterDataConstant.AUDIT_SYSTEM,

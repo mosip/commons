@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.transaction.Transactional;
 
@@ -138,15 +139,16 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 	@Override
 	public DocumentTypePostResponseDto createDocumentType(DocumentTypeDto documentTypeDto) {
 
-		DocumentType documentType = new DocumentType();
+		DocumentType documentType = null;
 		DocumentTypePostResponseDto documentTypePostResponseDto = new DocumentTypePostResponseDto();
 		try {
 			documentTypeDto = masterdataCreationUtil.createMasterData(DocumentType.class, documentTypeDto);
 			DocumentType entity = MetaDataUtils.setCreateMetaData(documentTypeDto, DocumentType.class);
 			documentType = documentTypeRepository.create(entity);
+			Objects.requireNonNull(documentType);
 			MapperUtils.map(documentType, documentTypePostResponseDto);
 
-		} catch (DataAccessLayerException | DataAccessException e) {
+		} catch (DataAccessLayerException | DataAccessException | NullPointerException e) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_CREATE, DeviceType.class.getCanonicalName()),
 					MasterDataConstant.AUDIT_SYSTEM,
@@ -205,7 +207,8 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 				documentTypeRepository.update(documentType);
 			} else {
 				auditUtil.auditRequest(
-						String.format(MasterDataConstant.FAILURE_UPDATE, DocumentTypePutReqDto.class.getCanonicalName()),
+						String.format(
+								MasterDataConstant.FAILURE_UPDATE, DocumentTypePutReqDto.class.getCanonicalName()),
 						MasterDataConstant.AUDIT_SYSTEM,
 						String.format(MasterDataConstant.FAILURE_DESC,
 								DocumentTypeErrorCode.DOCUMENT_TYPE_NOT_FOUND_EXCEPTION.getErrorCode(),
@@ -232,12 +235,11 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 		DocumentTypePutResponseDto documentTypePutResponseDto = new DocumentTypePutResponseDto();
 
 		MapperUtils.mapFieldValues(documentTypeDto, documentTypePutResponseDto);
-		auditUtil
-				.auditRequest(
-						String.format(MasterDataConstant.SUCCESSFUL_UPDATE, DocumentTypePutReqDto.class.getSimpleName()),
-						MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC,
-								DocumentTypePutReqDto.class.getSimpleName(), documentTypePutResponseDto.getCode()),
-						"ADM-826");
+		auditUtil.auditRequest(
+				String.format(MasterDataConstant.SUCCESSFUL_UPDATE, DocumentTypePutReqDto.class.getSimpleName()),
+				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC,
+						DocumentTypePutReqDto.class.getSimpleName(), documentTypePutResponseDto.getCode()),
+				"ADM-826");
 		return documentTypePutResponseDto;
 	}
 
@@ -365,10 +367,11 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 	public DocumentTypeResponseDto getAllDocumentTypeByLaguageCode(String langCode) {
 		DocumentTypeResponseDto documentTypeResponseDto = new DocumentTypeResponseDto();
 		List<DocumentTypeDto> documentTypeDtoList = new ArrayList<>();
-		List<DocumentType> documentTypesList = new ArrayList<>();
+		List<DocumentType> documentTypesList = null;
 		try {
 			documentTypesList = documentTypeRepository.findAllByLangCodeAndIsDeletedFalseOrIsDeletedIsNull(langCode);
-		} catch (DataAccessException | DataAccessLayerException e) {
+			Objects.requireNonNull(documentTypesList);
+		} catch (DataAccessException | DataAccessLayerException | NullPointerException e) {
 			throw new MasterDataServiceException(DocumentTypeErrorCode.DOCUMENT_TYPE_FETCH_EXCEPTION.getErrorCode(),
 					e.getMessage() + ExceptionUtils.parseException(e));
 		}

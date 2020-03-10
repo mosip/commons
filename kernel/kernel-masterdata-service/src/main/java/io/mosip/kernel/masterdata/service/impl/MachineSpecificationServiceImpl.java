@@ -108,12 +108,13 @@ public class MachineSpecificationServiceImpl implements MachineSpecificationServ
 	@Override
 	public IdAndLanguageCodeID createMachineSpecification(MachineSpecificationDto machineSpecification) {
 
-		MachineSpecification renMachineSpecification = new MachineSpecification();
+		MachineSpecification renMachineSpecification = null;
 
 		MachineSpecification entity = MetaDataUtils.setCreateMetaData(machineSpecification, MachineSpecification.class);
 		try {
 			renMachineSpecification = machineSpecificationRepository.create(entity);
-		} catch (DataAccessLayerException | DataAccessException e) {
+			Objects.requireNonNull(renMachineSpecification);
+		} catch (DataAccessLayerException | DataAccessException | NullPointerException e) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_CREATE, MachineSpecification.class.getCanonicalName()),
 					MasterDataConstant.AUDIT_SYSTEM,

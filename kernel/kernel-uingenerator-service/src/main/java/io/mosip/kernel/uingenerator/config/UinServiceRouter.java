@@ -196,7 +196,7 @@ public class UinServiceRouter {
 	 * @return Router
 	 */
 	private void updateRouter(RoutingContext routingContext) {
-		UinStatusUpdateReponseDto uinresponse = new UinStatusUpdateReponseDto();
+		UinStatusUpdateReponseDto uinresponse = null;
 		UinEntity uin;
 		RequestWrapper<UinEntity> reqwrp;
 		try {
