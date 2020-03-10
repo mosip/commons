@@ -1117,7 +1117,7 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 				setResponseDtoWorkingNonWorking(registrationCenter, registrationCenterExtnDto);
 
 			}
-			if(registrationCenter==null) {
+			if(registrationCenter==null || registrationCenterEntity==null) {
 				throw new MasterDataServiceException(RegistrationCenterErrorCode.REGISTRATION_CENTER_INSERT_EXCEPTION.getErrorCode(),
 					RegistrationCenterErrorCode.REGISTRATION_CENTER_INSERT_EXCEPTION.getErrorMessage());
 			}
@@ -1125,7 +1125,7 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 			setRegExpHolidayDto(registrationCenter, registrationCenterExtnDto, exceptionalHolidayPutPostDtoList);
 
 			// creating registration center history
-			registrationCenterHistoryEntity = MetaDataUtils.setCreateMetaData(registrationCenterEntity!=null? registrationCenterEntity:null,
+			registrationCenterHistoryEntity = MetaDataUtils.setCreateMetaData(registrationCenterEntity,
 					RegistrationCenterHistory.class);
 			registrationCenterHistoryEntity.setEffectivetimes(registrationCenterEntity.getCreatedDateTime());
 			registrationCenterHistoryEntity.setCreatedDateTime(registrationCenterEntity.getCreatedDateTime());
