@@ -245,7 +245,7 @@ public class DeviceServiceImpl implements DeviceService {
 		// MapperUtils.map(device, idAndLanguageCodeID);
 		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_CREATE, DeviceExtnDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC, device.getId()), "ADM-508");
+				String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC, device!=null?device.getId():null), "ADM-508");
 		return deviceExtnDto;
 
 	}
