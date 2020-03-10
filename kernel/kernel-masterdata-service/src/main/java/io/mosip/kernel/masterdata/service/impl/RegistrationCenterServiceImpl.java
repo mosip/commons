@@ -1245,7 +1245,7 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 									RegistrationCenterErrorCode.EXP_HOLIDAY_DATE.getErrorMessage());
 
 						}
-						RegExceptionalHoliday regExceptionalHoliday = new RegExceptionalHoliday();
+						RegExceptionalHoliday regExceptionalHoliday = null;
 						regExceptionalHoliday = MetaDataUtils.setCreateMetaData(registrationCenterEntity,
 								RegExceptionalHoliday.class);
 						regExceptionalHoliday.setRegistrationCenterId(registrationCenterEntity.getId());
@@ -1457,7 +1457,7 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 	private void updateExpHoliday(RegistrationCenter updRegistrationCenter, RegCenterPutReqDto regCenterPutReqDto,
 			List<ServiceError> errors) {
 		try {
-			Set<LocalDate> dbRegExceptionalHolidays = new HashSet<>();
+			Set<LocalDate> dbRegExceptionalHolidays = null;
 			// get data from DB for the ID
 			List<RegExceptionalHoliday> dbRegExcpHoliday = regExceptionalHolidayRepository
 					.findByRegIdAndLangcode(updRegistrationCenter.getId(), primaryLang);

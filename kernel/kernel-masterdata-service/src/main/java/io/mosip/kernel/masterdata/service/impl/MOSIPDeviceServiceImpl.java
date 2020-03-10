@@ -2,7 +2,6 @@ package io.mosip.kernel.masterdata.service.impl;
 
 import java.util.UUID;
 
-import org.assertj.core.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -60,7 +59,6 @@ public class MOSIPDeviceServiceImpl implements MOSIPDeviceServices {
 	@Override
 	@Transactional
 	public MOSIPDeviceServiceExtDto createMOSIPDeviceService(MOSIPDeviceServiceDto dto) {
-		MOSIPDeviceService crtMosipDeviceService = null;
 		MOSIPDeviceService entity = null;
 		MOSIPDeviceServiceExtDto mosipDeviceServiceExtDto = null;
 
@@ -136,7 +134,7 @@ public class MOSIPDeviceServiceImpl implements MOSIPDeviceServices {
 			entity.setId(id);
 			byte[] swNinaryHashArr = dto.getSwBinaryHash().getBytes();
 			entity.setSwBinaryHash(swNinaryHashArr);
-			crtMosipDeviceService = mosipDeviceServiceRepository.create(entity);
+			mosipDeviceServiceRepository.create(entity);
 
 			MOSIPDeviceServiceHistory entityHistory = new MOSIPDeviceServiceHistory();
 			MapperUtils.map(entity, entityHistory);

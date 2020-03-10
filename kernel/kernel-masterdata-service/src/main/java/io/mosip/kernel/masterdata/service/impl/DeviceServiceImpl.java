@@ -259,12 +259,12 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	@Transactional
 	public IdResponseDto deleteDevice(String id) {
-		List<Device> foundDeviceList = new ArrayList<>();
+		List<Device> foundDeviceList = null;
 		Device deletedDevice = null;
 		try {
 			foundDeviceList = deviceRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(id);
 
-			if (!foundDeviceList.isEmpty()) {
+			if (foundDeviceList!=null && !foundDeviceList.isEmpty()) {
 				for (Device foundDevice : foundDeviceList) {
 
 					List<RegistrationCenterMachineDevice> registrationCenterMachineDeviceList = registrationCenterMachineDeviceRepository

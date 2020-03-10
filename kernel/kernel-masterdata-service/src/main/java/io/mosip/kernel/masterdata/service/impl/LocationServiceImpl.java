@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
-import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.masterdata.util.model.Node;
 import io.mosip.kernel.core.masterdata.util.spi.UBtree;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
@@ -207,7 +206,6 @@ public class LocationServiceImpl implements LocationService {
 	@Override
 	@Transactional
 	public LocationPostResponseDto createLocation(LocationCreateDto dto) {
-		List<ServiceError> errors = new ArrayList<>();
 		Location locationEntity = null;
 		LocationPostResponseDto locationPostResponseDto = new LocationPostResponseDto();
 
