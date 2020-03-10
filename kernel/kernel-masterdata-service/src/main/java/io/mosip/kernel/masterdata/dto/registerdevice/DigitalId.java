@@ -3,6 +3,8 @@
  */
 package io.mosip.kernel.masterdata.dto.registerdevice;
 
+import java.time.LocalDateTime;
+
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -44,8 +46,7 @@ public class DigitalId {
 	private String model;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-	/** The date time. */
-	private String dateTime;
+	private LocalDateTime dateTime;
 
 	/**
 	 * Field for deviceTypeCode

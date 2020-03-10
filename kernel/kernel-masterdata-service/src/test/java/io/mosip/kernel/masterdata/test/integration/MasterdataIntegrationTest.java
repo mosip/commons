@@ -8254,7 +8254,7 @@ public class MasterdataIntegrationTest {
 	private RegisteredDevicePostDto getDeviceDataForRegisterDevice() throws Exception {
 		registeredDevicePostDto = new RegisteredDevicePostDto();
 		DigitalId dig = new DigitalId();
-		dig.setDateTime(DateUtils.getUTCCurrentDateTimeString());
+		dig.setDateTime(LocalDateTime.now(ZoneOffset.UTC));
 		dig.setDeviceProvider("SYNCBYTE");
 		dig.setDeviceProviderId("SYNCBYTE.MC01A");
 		dig.setMake("MC01A");
