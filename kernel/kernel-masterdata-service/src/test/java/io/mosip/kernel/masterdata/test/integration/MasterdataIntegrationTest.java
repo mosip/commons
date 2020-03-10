@@ -8272,7 +8272,7 @@ public class MasterdataIntegrationTest {
 		deviceInfo.setDeviceExpiry(LocalDateTime.now(ZoneOffset.UTC));
 		deviceInfo.setFirmware("firmware");
 		deviceInfo.setDigitalId(CryptoUtil.encodeBase64String(objectMapper.writeValueAsBytes(dig)));
-		deviceInfo.setTimeStamp(LocalDateTime.now(ZoneOffset.UTC).plus(Long.valueOf("2"), ChronoUnit.MINUTES));
+		deviceInfo.setTimeStamp(LocalDateTime.now(ZoneOffset.UTC));
 		device.setDeviceInfo(deviceInfo);
 		registeredDevicePostDto.setDeviceData(CryptoUtil.encodeBase64String(objectMapper.writeValueAsBytes(device)));
 		return registeredDevicePostDto;
