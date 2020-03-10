@@ -334,21 +334,19 @@ public class MasterdataCreationUtil {
 				throw new MasterDataServiceException(RequestErrorCode.REQUEST_INVALID_SEC_LANG_ID.getErrorCode(),
 						RequestErrorCode.REQUEST_INVALID_SEC_LANG_ID.getErrorMessage());
 			}
-			if (primaryEntity != null) {
 				for (Field field : primaryEntity.getClass().getDeclaredFields()) {
 					field.setAccessible(true);
 					if (field.getName() != null && field.getName().equals(ISACTIVE_COLUMN_NAME)) {
 						activePrimary = (boolean) field.get(t);
 					}
 				}
-			}
-			if (activeDto == true) {
+			if (activeDto) {
 				isActive = dtoClass.getDeclaredField(ISACTIVE_COLUMN_NAME);
 				isActive.setAccessible(true);
 				isActive.set(t, Boolean.TRUE);
 				updatePrimaryToTrue(primaryEntity.getClass(), id, primaryKeyCol, true);
 			}
-			if (activeDto == false) {
+			if (!activeDto) {
 				isActive = dtoClass.getDeclaredField(ISACTIVE_COLUMN_NAME);
 				isActive.setAccessible(true);
 				isActive.set(t, Boolean.FALSE);
