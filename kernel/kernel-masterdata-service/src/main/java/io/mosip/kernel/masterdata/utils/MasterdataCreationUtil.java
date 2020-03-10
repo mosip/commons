@@ -22,7 +22,6 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -90,9 +89,9 @@ public class MasterdataCreationUtil {
 		}
 		for (Field field : primaryEntity.getClass().getDeclaredFields()) {
 			field.setAccessible(true);
-			if (field.getName() != null && field.getName().equals(ISACTIVE_COLUMN_NAME)) {
-				activePrimary = (boolean) field.get(t);
-			}
+//			if (field.getName() != null && field.getName().equals(ISACTIVE_COLUMN_NAME)) {
+//				activePrimary = (boolean) field.get(t);
+//			}
 
 			if (activeDto == true) {
 				Field isActive = dtoClass.getDeclaredField(ISACTIVE_COLUMN_NAME);
