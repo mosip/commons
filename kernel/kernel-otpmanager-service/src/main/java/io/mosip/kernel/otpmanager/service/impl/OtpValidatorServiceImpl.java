@@ -55,10 +55,10 @@ public class OtpValidatorServiceImpl implements OtpValidator<ResponseEntity<OtpV
 
 	@Value("${mosip.kernel.otp.expiry-time}")
 	String otpExpiryLimit;
-	
+
 	@Value("${spring.profiles.active}")
 	String activeProfile;
-	
+
 	@Value("${local.env.otp:111111}")
 	String localOtp;
 
@@ -72,14 +72,9 @@ public class OtpValidatorServiceImpl implements OtpValidator<ResponseEntity<OtpV
 	@Override
 	public ResponseEntity<OtpValidatorResponseDto> validateOtp(String key, String otp) {
 		ResponseEntity<OtpValidatorResponseDto> validationResponseEntity;
-		// Verify in case of local otp
-		if(activeProfile.equalsIgnoreCase("local") && otp.equalsIgnoreCase(localOtp)) {
-			OtpValidatorResponseDto responseDto = new OtpValidatorResponseDto();
-			responseDto.setStatus(OtpStatusConstants.SUCCESS_STATUS.getProperty());
-			responseDto.setMessage(OtpStatusConstants.SUCCESS_MESSAGE.getProperty());
-			validationResponseEntity = new ResponseEntity<>(responseDto, HttpStatus.OK);
-		    return validationResponseEntity;
-        }
+		if(activeProfile.equalsIgnoreCase("local")) {
+		proxyForLocalProfile(otp);
+		}
 		// This method validates the input parameters.
 		otpUtils.validateOtpRequestArguments(key, otp);
 		OtpValidatorResponseDto responseDto;
@@ -91,16 +86,7 @@ public class OtpValidatorServiceImpl implements OtpValidator<ResponseEntity<OtpV
 		responseDto.setStatus(OtpStatusConstants.FAILURE_STATUS.getProperty());
 		validationResponseEntity = new ResponseEntity<>(responseDto, HttpStatus.OK);
 
-		/*
-		 * Checking whether the key exists in repository or not. If not, throw an
-		 * exception.
-		 */
-		if (otpResponse == null) {
-			List<ServiceError> validationErrorsList = new ArrayList<>();
-			validationErrorsList.add(new ServiceError(OtpErrorConstants.OTP_VAL_KEY_NOT_FOUND.getErrorCode(),
-					OtpErrorConstants.OTP_VAL_KEY_NOT_FOUND.getErrorMessage()));
-			throw new RequiredKeyNotFoundException(validationErrorsList);
-		}
+		requireKeyNotFound(otpResponse);
 		// This variable holds the update query to be performed.
 		String updateString;
 		// This variable holds the count of number
@@ -159,6 +145,36 @@ public class OtpValidatorServiceImpl implements OtpValidator<ResponseEntity<OtpV
 			return new ResponseEntity<>(responseDto, HttpStatus.OK);
 		}
 		return validationResponseEntity;
+	}
+
+	private void requireKeyNotFound(OtpEntity otpResponse) {
+		/*
+		 * Checking whether the key exists in repository or not. If not, throw an
+		 * exception.
+		 */
+		if (otpResponse == null) {
+			List<ServiceError> validationErrorsList = new ArrayList<>();
+			validationErrorsList.add(new ServiceError(OtpErrorConstants.OTP_VAL_KEY_NOT_FOUND.getErrorCode(),
+					OtpErrorConstants.OTP_VAL_KEY_NOT_FOUND.getErrorMessage()));
+			throw new RequiredKeyNotFoundException(validationErrorsList);
+		}
+	}
+
+	private ResponseEntity<OtpValidatorResponseDto> proxyForLocalProfile(String otp) {
+		ResponseEntity<OtpValidatorResponseDto> validationResponseEntity;
+		OtpValidatorResponseDto responseDto = new OtpValidatorResponseDto();
+		// Verify in case of local otp
+		if (otp.equalsIgnoreCase(localOtp)) {
+			responseDto.setStatus(OtpStatusConstants.SUCCESS_STATUS.getProperty());
+			responseDto.setMessage(OtpStatusConstants.SUCCESS_MESSAGE.getProperty());
+			validationResponseEntity = new ResponseEntity<>(responseDto, HttpStatus.OK);
+			return validationResponseEntity;
+		} else {
+			responseDto.setStatus(OtpStatusConstants.FAILURE_STATUS.getProperty());
+			responseDto.setMessage(OtpStatusConstants.FAILURE_MESSAGE.getProperty());
+			validationResponseEntity = new ResponseEntity<>(responseDto, HttpStatus.OK);
+			return validationResponseEntity;
+		}
 	}
 
 	/**
