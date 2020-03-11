@@ -438,19 +438,24 @@ public class MasterdataSearchHelper {
 	private boolean validateFilters(SearchFilter filter) {
 		if (filter != null) {
 			if (filter.getColumnName() != null && !filter.getColumnName().trim().isEmpty()) {
-				if (filter.getType() != null && !filter.getType().trim().isEmpty()) {
-					if (validateFilter(filter)) {
-						return true;
-					}
-				} else {
-					throw new RequestException(MasterdataSearchErrorCode.FILTER_TYPE_NOT_AVAILABLE.getErrorCode(),
-							String.format(MasterdataSearchErrorCode.FILTER_TYPE_NOT_AVAILABLE.getErrorMessage(),
-									filter.getColumnName()));
-				}
+				return FilterTypes(filter);
 			} else {
 				throw new RequestException(MasterdataSearchErrorCode.MISSING_FILTER_COLUMN.getErrorCode(),
 						MasterdataSearchErrorCode.MISSING_FILTER_COLUMN.getErrorMessage());
 			}
+		}
+		return false;
+	}
+
+	private boolean FilterTypes(SearchFilter filter) {
+		if (filter.getType() != null && !filter.getType().trim().isEmpty()) {
+			if (validateFilter(filter)) {
+				return true;
+			}
+		} else {
+			throw new RequestException(MasterdataSearchErrorCode.FILTER_TYPE_NOT_AVAILABLE.getErrorCode(),
+					String.format(MasterdataSearchErrorCode.FILTER_TYPE_NOT_AVAILABLE.getErrorMessage(),
+							filter.getColumnName()));
 		}
 		return false;
 	}
