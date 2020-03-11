@@ -33,7 +33,6 @@ import org.springframework.stereotype.Service;
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.idgenerator.spi.RegistrationCenterIdGenerator;
-import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.kernel.masterdata.constant.HolidayErrorCode;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
@@ -1117,7 +1116,7 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 				setResponseDtoWorkingNonWorking(registrationCenter, registrationCenterExtnDto);
 
 			}
-			if(registrationCenter==null || registrationCenterEntity==null) {
+			if(registrationCenter==null) {
 				throw new MasterDataServiceException(RegistrationCenterErrorCode.REGISTRATION_CENTER_INSERT_EXCEPTION.getErrorCode(),
 					RegistrationCenterErrorCode.REGISTRATION_CENTER_INSERT_EXCEPTION.getErrorMessage());
 			}
@@ -1125,7 +1124,7 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 			setRegExpHolidayDto(registrationCenter, registrationCenterExtnDto, exceptionalHolidayPutPostDtoList);
 
 			// creating registration center history
-			registrationCenterHistoryEntity = MetaDataUtils.setCreateMetaData(registrationCenterEntity,
+			registrationCenterHistoryEntity = MetaDataUtils.setCreateMetaData(registrationCenterEntity!=null? registrationCenterEntity:null,
 					RegistrationCenterHistory.class);
 			registrationCenterHistoryEntity.setEffectivetimes(registrationCenterEntity.getCreatedDateTime());
 			registrationCenterHistoryEntity.setCreatedDateTime(registrationCenterEntity.getCreatedDateTime());

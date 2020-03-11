@@ -384,6 +384,11 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 					MasterDataErrorCode.REG_CENTER_MACHINE_FETCH_EXCEPTION.getErrorMessage());
 		}
 
+		return getRegistrationMachines(machineList, regMachineDto);
+	}
+
+	private RegistrationCenterMachineDto getRegistrationMachines(List<Object[]> machineList,
+			RegistrationCenterMachineDto regMachineDto) {
 		if (machineList.isEmpty()) {
 			throw new RequestException(MasterDataErrorCode.INVALID_MAC_OR_SERIAL_NUMBER.getErrorCode(),
 					MasterDataErrorCode.INVALID_MAC_OR_SERIAL_NUMBER.getErrorMessage());
