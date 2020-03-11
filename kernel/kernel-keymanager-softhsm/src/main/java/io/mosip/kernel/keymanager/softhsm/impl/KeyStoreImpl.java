@@ -208,7 +208,10 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 				keyStore.load(null, keystorePass.toCharArray());
 				break;
 			case "BouncyCastleProvider":
-				keyStore.load(new FileInputStream(configPath), keystorePass.toCharArray());
+				// added try with res for sonar bug fix
+				try (FileInputStream fis = new FileInputStream(configPath)) {
+					keyStore.load(fis, keystorePass.toCharArray());
+				}
 				break;
 			default:
 				keyStore.load(null, keystorePass.toCharArray());
