@@ -249,35 +249,12 @@ public class BDBInfo {
 
 	public BDBInfoType toBDBInfo() {
 		BDBInfoType bDBInfoType = new BDBInfoType();
-		if (getChallengeResponse() != null && getChallengeResponse().length > 0) {
-			bDBInfoType.setChallengeResponse(getChallengeResponse());
-		}
-		if (getIndex() != null && getIndex().length() > 0) {
-			bDBInfoType.setIndex(getIndex());
-		}
-		if (getFormat() != null) {
-			bDBInfoType.setFormat(getFormat());
-		}
+		challengeIndexFormatPopolation(bDBInfoType);
+		bdbTimePopolation(bDBInfoType);
+		typeSubTypeLevelPopolation(bDBInfoType);
+		featureExtractionComparissionAlgoPopolation(bDBInfoType);
 		if (getEncryption() != null) {
 			bDBInfoType.setEncryption(getEncryption());
-		}
-		if (getCreationDate() != null) {
-			bDBInfoType.setCreationDate(getCreationDate());
-		}
-		if (getNotValidBefore() != null) {
-			bDBInfoType.setNotValidBefore(getNotValidBefore());
-		}
-		if (getNotValidAfter() != null) {
-			bDBInfoType.setNotValidAfter(getNotValidAfter());
-		}
-		if (getType() != null) {
-			bDBInfoType.setType(getType());
-		}
-		if (getSubtype() != null) {
-			bDBInfoType.setSubtype(getSubtype());
-		}
-		if (getLevel() != null) {
-			bDBInfoType.setLevel(getLevel());
 		}
 		if (getProduct() != null) {
 			bDBInfoType.setProduct(getProduct());
@@ -294,15 +271,51 @@ public class BDBInfo {
 		if (getCaptureDevice() != null) {
 			bDBInfoType.setCaptureDevice(getCaptureDevice());
 		}
+		return bDBInfoType;
+	}
+
+	private void featureExtractionComparissionAlgoPopolation(BDBInfoType bDBInfoType) {
 		if (getFeatureExtractionAlgorithm() != null) {
 			bDBInfoType.setFeatureExtractionAlgorithm(getFeatureExtractionAlgorithm());
 		}
 		if (getComparisonAlgorithm() != null) {
 			bDBInfoType.setComparisonAlgorithm(getComparisonAlgorithm());
 		}
-		if (getCompressionAlgorithm() != null) {
-			bDBInfoType.setCompressionAlgorithm(getCompressionAlgorithm());
+	}
+
+	private void typeSubTypeLevelPopolation(BDBInfoType bDBInfoType) {
+		if (getType() != null) {
+			bDBInfoType.setType(getType());
 		}
-		return bDBInfoType;
+		if (getSubtype() != null) {
+			bDBInfoType.setSubtype(getSubtype());
+		}
+		if (getLevel() != null) {
+			bDBInfoType.setLevel(getLevel());
+		}
+	}
+
+	private void challengeIndexFormatPopolation(BDBInfoType bDBInfoType) {
+		if (getChallengeResponse() != null && getChallengeResponse().length > 0) {
+			bDBInfoType.setChallengeResponse(getChallengeResponse());
+		}
+		if (getIndex() != null && getIndex().length() > 0) {
+			bDBInfoType.setIndex(getIndex());
+		}
+		if (getFormat() != null) {
+			bDBInfoType.setFormat(getFormat());
+		}
+	}
+
+	private void bdbTimePopolation(BDBInfoType bDBInfoType) {
+		if (getCreationDate() != null) {
+			bDBInfoType.setCreationDate(getCreationDate());
+		}
+		if (getNotValidBefore() != null) {
+			bDBInfoType.setNotValidBefore(getNotValidBefore());
+		}
+		if (getNotValidAfter() != null) {
+			bDBInfoType.setNotValidAfter(getNotValidAfter());
+		}
 	}
 }
