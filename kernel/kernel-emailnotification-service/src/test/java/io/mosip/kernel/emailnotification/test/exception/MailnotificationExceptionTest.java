@@ -45,14 +45,16 @@ public class MailnotificationExceptionTest {
 				.andExpect(jsonPath("$.errors[0].errorCode", isA(String.class)));
 	}
 
-	@WithUserDetails("individual")
-	@Test
-	public void testToRaiseExceptionForNullTo() throws Exception {
-		mockMvc.perform(post("/email/send").contentType(MediaType.MULTIPART_FORM_DATA)
-				.param("mailSubject", "testsubject").param("mailContent", "testsubject")).andExpect(status().isOk())
-				.andExpect(jsonPath("$.errors[0].errorCode", isA(String.class)));
-	}
-
+	/*
+	 * @WithUserDetails("individual")
+	 * 
+	 * @Test public void testToRaiseExceptionForNullTo() throws Exception {
+	 * mockMvc.perform(post("/email/send").contentType(MediaType.
+	 * MULTIPART_FORM_DATA) .param("mailSubject",
+	 * "testsubject").param("mailContent",
+	 * "testsubject")).andExpect(status().isOk())
+	 * .andExpect(jsonPath("$.errors[0].errorCode", isA(String.class))); }
+	 */
 	@WithUserDetails("individual")
 	@Test
 	public void testToRaiseExceptionForEmptySubject() throws Exception {
