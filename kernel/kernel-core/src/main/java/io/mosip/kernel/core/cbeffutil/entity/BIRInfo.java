@@ -111,16 +111,11 @@ public class BIRInfo {
 
 	public BIRInfoType toBIRInfo() {
 		BIRInfoType bIRInfoType = new BIRInfoType();
-		if (getCreator() != null && getCreator().length() > 0) {
-			bIRInfoType.setCreator(getCreator());
-		}
+		createrPopolation(bIRInfoType);
 		if (isIntegrity() != null) {
 			bIRInfoType.setIntegrity(isIntegrity());
-			;
 		}
-		if (getCreator() != null && getCreator().length() > 0) {
-			bIRInfoType.setCreator(getCreator());
-		}
+
 		if (getPayload() != null && getPayload().length > 0) {
 			bIRInfoType.setPayload(getPayload());
 		}
@@ -135,6 +130,12 @@ public class BIRInfo {
 		}
 
 		return bIRInfoType;
+	}
+
+	private void createrPopolation(BIRInfoType bIRInfoType) {
+		if (getCreator() != null && getCreator().length() > 0) {
+			bIRInfoType.setCreator(getCreator());
+		}
 	}
 
 }
