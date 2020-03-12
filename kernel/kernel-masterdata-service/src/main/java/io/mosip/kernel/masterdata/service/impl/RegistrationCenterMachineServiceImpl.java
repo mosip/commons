@@ -172,6 +172,20 @@ public class RegistrationCenterMachineServiceImpl implements RegistrationCenterM
 		Zone registrationCenterZone = null;
 		userZones = userZones.stream().filter(zone -> zone.getLangCode().equals(primaryLang))
 				.collect(Collectors.toList());
+		if(regRepo.findByIdAndIsDeletedFalseOrNull(regCenterId)==null)
+		{
+			auditUtil.auditRequest(
+					String.format(MasterDataConstant.FAILURE_MAP, RegistrationCenterMachine.class.getCanonicalName()),
+					MasterDataConstant.AUDIT_SYSTEM,
+					String.format(MasterDataConstant.FAILURE_DESC,
+							RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorCode(),
+							RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_NOT_FOUND
+									.getErrorMessage()),
+					"ADM-754");
+			throw new RequestException(
+					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorCode(),
+					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorMessage());
+		}
 		Machine machine = getZoneFromMachineRepoByMachineId(machineId, primaryLang);
 		List<RegistrationCenter> registrationCenters = getZoneFromRegCenterRepoByRegCenterId(regCenterId, primaryLang);
 		for (Zone zone : userZones) {
@@ -356,6 +370,20 @@ public class RegistrationCenterMachineServiceImpl implements RegistrationCenterM
 		userZones = userZones.stream().filter(zone -> zone.getLangCode().equals(primaryLang))
 				.collect(Collectors.toList());
 		Machine machine = getZoneFromMachineRepoByMachineId(machineId, primaryLang);
+		if(regRepo.findByIdAndIsDeletedFalseOrNull(regCenterId)==null)
+		{
+			auditUtil.auditRequest(
+					String.format(MasterDataConstant.FAILURE_MAP, RegistrationCenterMachine.class.getCanonicalName()),
+					MasterDataConstant.AUDIT_SYSTEM,
+					String.format(MasterDataConstant.FAILURE_DESC,
+							RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorCode(),
+							RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_NOT_FOUND
+									.getErrorMessage()),
+					"ADM-762");
+			throw new RequestException(
+					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorCode(),
+					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorMessage());
+		}
 		List<RegistrationCenter> registrationCenters = getZoneFromRegCenterRepoByRegCenterId(regCenterId, primaryLang);
 		for (Zone zone : userZones) {
 			if (zone.getCode().equals(machine.getZoneCode())) {
