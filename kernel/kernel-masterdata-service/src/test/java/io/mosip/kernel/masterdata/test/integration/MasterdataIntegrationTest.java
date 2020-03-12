@@ -6549,6 +6549,7 @@ public class MasterdataIntegrationTest {
 	@WithUserDetails("zonal-admin")
 	public void testMapException() throws Exception {
 		registrationCenters.get(0).setNumberOfKiosks((short) 9);
+		when(registrationCenterRepository.findByIdAndIsDeletedFalseOrNull(Mockito.anyString())).thenReturn(registrationCenter);
 		when(zoneUtils.getUserZones()).thenReturn(getZones());
 		when(registrationCenterRepository.findByRegIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(registrationCenters);
@@ -6569,6 +6570,7 @@ public class MasterdataIntegrationTest {
 	public void testMapDecommisioned() throws Exception {
 		registrationCenters.get(0).setNumberOfKiosks((short) 9);
 		when(zoneUtils.getUserZones()).thenReturn(getZones());
+		when(registrationCenterRepository.findByIdAndIsDeletedFalseOrNull(Mockito.anyString())).thenReturn(registrationCenter);
 		when(registrationCenterRepository.findByRegIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(registrationCenters);
 		registrationCenters.get(0).setZoneCode("JRD");
@@ -6590,6 +6592,7 @@ public class MasterdataIntegrationTest {
 	public void testAlreadyMapped() throws Exception {
 		registrationCenters.get(0).setNumberOfKiosks((short) 9);
 		when(zoneUtils.getUserZones()).thenReturn(getZones());
+		when(registrationCenterRepository.findByIdAndIsDeletedFalseOrNull(Mockito.anyString())).thenReturn(registrationCenter);
 		when(registrationCenterRepository.findByRegIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(registrationCenters);
 		registrationCenters.get(0).setZoneCode("TZT");
@@ -6641,6 +6644,7 @@ public class MasterdataIntegrationTest {
 
 		registrationCenters.get(0).setNumberOfKiosks((short) 9);
 		when(zoneUtils.getUserZones()).thenReturn(getZones());
+		when(registrationCenterRepository.findByIdAndIsDeletedFalseOrNull(Mockito.anyString())).thenReturn(registrationCenter);
 		when(registrationCenterRepository.findByRegIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenThrow(DataRetrievalFailureException.class);
 		when(machineRepository.findMachineByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
@@ -6656,6 +6660,7 @@ public class MasterdataIntegrationTest {
 	@WithUserDetails("zonal-admin")
 	public void testIsAlreadyMappedToAnotherMachine() throws Exception {
 		registrationCenters.get(0).setNumberOfKiosks((short) 9);
+		when(registrationCenterRepository.findByIdAndIsDeletedFalseOrNull(Mockito.anyString())).thenReturn(registrationCenter);
 		when(zoneUtils.getUserZones()).thenReturn(getZones());
 		when(registrationCenterRepository.findByRegIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(registrationCenters);
@@ -6704,6 +6709,7 @@ public class MasterdataIntegrationTest {
 	public void testCreateMappingException() throws Exception {
 		registrationCenters.get(0).setNumberOfKiosks((short) 9);
 		when(zoneUtils.getUserZones()).thenReturn(getZones());
+		when(registrationCenterRepository.findByIdAndIsDeletedFalseOrNull(Mockito.anyString())).thenReturn(registrationCenter);
 		when(registrationCenterRepository.findByRegIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(registrationCenters);
 		registrationCenters.get(0).setZoneCode("JRD");
