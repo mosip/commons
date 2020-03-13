@@ -45,7 +45,7 @@ public class RegistrationCenterDataHelper {
 		this.regCenterId = regCenterId;
 	}
 	
-	public void retrieveData(SyncMasterDataServiceHelper serviceHelper, List<CompletableFuture> futures) {
+	public void retrieveData(final SyncMasterDataServiceHelper serviceHelper, final List<CompletableFuture> futures) {
 		this.registrationCenterTypes = serviceHelper.getRegistrationCenterType(this.machineId, this.lastUpdated, this.currentTimestamp);
 		this.registrationCenters = serviceHelper.getRegistrationCenter(this.machineId, this.lastUpdated, this.currentTimestamp);
 		this.registrationCenterMachines = serviceHelper.getRegistrationCenterMachines(this.machineId, this.lastUpdated, this.currentTimestamp);
@@ -63,7 +63,7 @@ public class RegistrationCenterDataHelper {
 		futures.add(this.registrationCenterUsers);
 	}
 	
-	public void fillRetrievedData(SyncMasterDataServiceHelper serviceHelper, List<SyncDataBaseDto> list) 
+	public void fillRetrievedData(final SyncMasterDataServiceHelper serviceHelper, final List<SyncDataBaseDto> list) 
 			throws InterruptedException, ExecutionException {
 		list.add(serviceHelper.getSyncDataBaseDto(RegistrationCenterType.class, "structured", this.registrationCenterTypes.get()));
 		list.add(serviceHelper.getSyncDataBaseDto(RegistrationCenter.class, "structured", this.registrationCenters.get()));

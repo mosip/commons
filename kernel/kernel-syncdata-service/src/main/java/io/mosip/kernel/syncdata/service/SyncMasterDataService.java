@@ -36,18 +36,16 @@ public interface SyncMasterDataService {
 	
 	
 	/**
-	 * TODO need to accept only clientRefId instead of regCenterId / macaddress / serialNumber
 	 * @param regCenterId      - registration center id
-	 * @param macAddress       - MAC address of the machine
-	 * @param serialNumber     - serial number for either desktop or dongle
+	 * @param keyIndex         - registration client TPM EK public key SHA256 
 	 * @param lastUpdated      - last updated time stamp
 	 * @param currentTimestamp - current time stamp
 	 * @return {@link SyncDataResponseDto}
 	 * @throws InterruptedException - this method will throw execution exception
 	 * @throws ExecutionException   -this method will throw interrupted exception
 	 */	
-	SyncDataResponseDto syncClientSettings(String regCenterId, String macAddress, String serialNumber,
-			LocalDateTime lastUpdated, LocalDateTime currentTimestamp, String keyIndex)
+	SyncDataResponseDto syncClientSettings(String regCenterId, String keyIndex,
+			LocalDateTime lastUpdated, LocalDateTime currentTimestamp)
 			throws InterruptedException, ExecutionException;
 
 	/**

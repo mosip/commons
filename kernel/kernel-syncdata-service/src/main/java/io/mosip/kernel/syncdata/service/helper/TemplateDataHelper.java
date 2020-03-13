@@ -28,7 +28,7 @@ public class TemplateDataHelper {
 		this.currentTimestamp = currentTimestamp;
 	}
 	
-	public void retrieveData(SyncMasterDataServiceHelper serviceHelper, List<CompletableFuture> futures) {
+	public void retrieveData(final SyncMasterDataServiceHelper serviceHelper, final List<CompletableFuture> futures) {
 		this.templates = serviceHelper.getTemplates(this.lastUpdated, this.currentTimestamp);
 		this.templateFileFormats = serviceHelper.getTemplateFileFormats(this.lastUpdated, this.currentTimestamp);
 		this.templateTypes = serviceHelper.getTemplateTypes(this.lastUpdated, this.currentTimestamp);	
@@ -38,7 +38,7 @@ public class TemplateDataHelper {
 		futures.add(this.templateTypes);
 	}
 	
-	public void fillRetrievedData(SyncMasterDataServiceHelper serviceHelper, List<SyncDataBaseDto> list) 
+	public void fillRetrievedData(final SyncMasterDataServiceHelper serviceHelper, final List<SyncDataBaseDto> list) 
 			throws InterruptedException, ExecutionException {
 		list.add(serviceHelper.getSyncDataBaseDto(Template.class, "structured", this.templates.get()));
 		list.add(serviceHelper.getSyncDataBaseDto(TemplateFileFormat.class, "structured", this.templateFileFormats.get()));

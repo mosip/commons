@@ -30,7 +30,7 @@ public class MachineDataHelper {
 		this.currentTimestamp = currentTimestamp;
 	}
 	
-	public void retrieveData(SyncMasterDataServiceHelper serviceHelper, List<CompletableFuture> futures) {
+	public void retrieveData(final SyncMasterDataServiceHelper serviceHelper, final List<CompletableFuture> futures) {
 		this.machineDetails = serviceHelper.getMachines(this.regCenterId, this.lastUpdated, this.currentTimestamp);
 		this.machineSpecification = serviceHelper.getMachineSpecification(this.regCenterId, this.lastUpdated, this.currentTimestamp);
 		this.machineType = serviceHelper.getMachineType(this.regCenterId, this.lastUpdated, this.currentTimestamp);
@@ -40,7 +40,7 @@ public class MachineDataHelper {
 		futures.add(this.machineType);
 	}
 	
-	public void fillRetrievedData(SyncMasterDataServiceHelper serviceHelper, List<SyncDataBaseDto> list) 
+	public void fillRetrievedData(final SyncMasterDataServiceHelper serviceHelper, final List<SyncDataBaseDto> list) 
 			throws InterruptedException, ExecutionException {
 		list.add(serviceHelper.getSyncDataBaseDto(Machine.class, "structured", this.machineDetails.get()));
 		list.add(serviceHelper.getSyncDataBaseDto(MachineSpecification.class, "structured", this.machineSpecification.get()));

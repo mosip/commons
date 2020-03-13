@@ -219,17 +219,15 @@ public class SyncDataController {
 	@ResponseFilter
 	@GetMapping("/clientsettings")
 	public ResponseWrapper<SyncDataResponseDto> syncClientSettings(
-			@RequestParam(value = "macaddress", required = false) String macId,
-			@RequestParam(value = "serialnumber", required = false) String serialNumber,
-			@RequestParam(value = "lastupdated", required = false) String lastUpdated,
-			@RequestParam(value = "keyindex", required = false) String keyIndex)
+			@RequestParam(value = "keyindex", required = true) String keyIndex,
+			@RequestParam(value = "lastupdated", required = false) String lastUpdated)
 			throws InterruptedException, ExecutionException {
 
 		LocalDateTime currentTimeStamp = LocalDateTime.now(ZoneOffset.UTC);
 		LocalDateTime timestamp = localDateTimeUtil.getLocalDateTimeFromTimeStamp(currentTimeStamp, lastUpdated);
 		
-		SyncDataResponseDto syncDataResponseDto = masterDataService.syncClientSettings(null, macId, serialNumber,
-				timestamp, currentTimeStamp, keyIndex);
+		SyncDataResponseDto syncDataResponseDto = masterDataService.syncClientSettings(null, keyIndex,
+				timestamp, currentTimeStamp);
 
 		syncDataResponseDto.setLastSyncTime(DateUtils.formatToISOString(currentTimeStamp));
 
@@ -250,20 +248,18 @@ public class SyncDataController {
 	 */
 	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN')")
 	@ResponseFilter
-	@GetMapping("/clientsettings/{regcenterId}")
+	@GetMapping("/clientsettings/{regcenterid}")
 	public ResponseWrapper<SyncDataResponseDto> syncClientSettingsWithRegCenterId(
-			@PathVariable("regcenterId") String regCenterId,
-			@RequestParam(value = "macaddress", required = false) String macId,
-			@RequestParam(value = "serialnumber", required = false) String serialNumber,
+			@PathVariable("regcenterid") String regCenterId,
 			@RequestParam(value = "lastupdated", required = false) String lastUpdated,
-			@RequestParam(value = "keyindex", required = false) String keyIndex)
+			@RequestParam(value = "keyindex", required = true) String keyIndex)
 			throws InterruptedException, ExecutionException {
 
 		LocalDateTime currentTimeStamp = LocalDateTime.now(ZoneOffset.UTC);
 		LocalDateTime timestamp = localDateTimeUtil.getLocalDateTimeFromTimeStamp(currentTimeStamp, lastUpdated);
 		
-		SyncDataResponseDto syncDataResponseDto = masterDataService.syncClientSettings(regCenterId, macId, serialNumber,
-				timestamp, currentTimeStamp, keyIndex);
+		SyncDataResponseDto syncDataResponseDto = masterDataService.syncClientSettings(regCenterId, keyIndex,
+				timestamp, currentTimeStamp);
 
 		syncDataResponseDto.setLastSyncTime(DateUtils.formatToISOString(currentTimeStamp));
 

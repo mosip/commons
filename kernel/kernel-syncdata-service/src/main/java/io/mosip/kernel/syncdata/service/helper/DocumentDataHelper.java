@@ -31,7 +31,7 @@ public class DocumentDataHelper {
 		this.currentTimestamp = currentTimestamp;
 	}
 	
-	public void retrieveData(SyncMasterDataServiceHelper serviceHelper, List<CompletableFuture> futures) {
+	public void retrieveData(final SyncMasterDataServiceHelper serviceHelper, final List<CompletableFuture> futures) {
 		this.documentCategories = serviceHelper.getDocumentCategories(this.lastUpdated, this.currentTimestamp);
 		this.documentTypes = serviceHelper.getDocumentTypes(this.lastUpdated, this.currentTimestamp);								
 		this.validDocumentsMapping = serviceHelper.getValidDocuments(this.lastUpdated, this.currentTimestamp);		
@@ -43,7 +43,7 @@ public class DocumentDataHelper {
 		futures.add(this.applicantValidDocumentList);
 	}
 	
-	public void fillRetrievedData(SyncMasterDataServiceHelper serviceHelper, List<SyncDataBaseDto> list) 
+	public void fillRetrievedData(final SyncMasterDataServiceHelper serviceHelper, final List<SyncDataBaseDto> list) 
 			throws InterruptedException, ExecutionException {
 		list.add(serviceHelper.getSyncDataBaseDto(DocumentCategory.class, "structured", this.documentCategories.get()));
 		list.add(serviceHelper.getSyncDataBaseDto(DocumentType.class, "structured", this.documentTypes.get()));		

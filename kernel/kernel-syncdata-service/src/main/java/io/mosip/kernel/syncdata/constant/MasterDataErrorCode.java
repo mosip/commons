@@ -76,7 +76,11 @@ public enum MasterDataErrorCode {
 	REGISTERED_DEVICE_FETCH_EXCEPTION("KER-SNC-159", "Error while fetching registered devices"),
 	DEVICE_TYPE_FETCH_FETCH_EXCEPTION("KER-SNC-160", "Error while fetching device type"),
 	DEVICE_SUB_TYPE_FETCH_EXCEPTION("KER-SNC-161", "Error while fetching device sub type"),
-	FOUNDATIONAL_TRUST_RPOVIDER_FETCH_EXCEPTION("KER-SNC-162", "Error while fetching foundation trust provider");
+	FOUNDATIONAL_TRUST_RPOVIDER_FETCH_EXCEPTION("KER-SNC-162", "Error while fetching foundation trust provider"),
+	
+	INVALID_KEY_INDEX("KER-SNC-163", "Key Index does not exist"),
+	MACHINE_PUBLIC_KEY_NOT_WHITELISTED("KER-SNC-164","Public key not whitelisted"),
+	MACHINE_INVALID_PUBLIC_KEY("KER-SNC-165", "Invalid public key provided");
 
 	private final String errorCode;
 	private final String errorMessage;

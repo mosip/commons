@@ -47,7 +47,7 @@ public class DeviceDataHelper {
 		this.regCenterId = regCenterId;
 	}
 	
-	public void retrieveData(SyncMasterDataServiceHelper serviceHelper, List<CompletableFuture> futures) {
+	public void retrieveData(final SyncMasterDataServiceHelper serviceHelper, final List<CompletableFuture> futures) {
 		this.devices = serviceHelper.getDevices(this.regCenterId, this.lastUpdated, this.currentTimestamp);
 		this.deviceSpecifications = serviceHelper.getDeviceSpecifications(this.regCenterId, this.lastUpdated, this.currentTimestamp);
 		this.deviceTypes = serviceHelper.getDeviceType(this.regCenterId, this.lastUpdated, this.currentTimestamp);
@@ -67,7 +67,7 @@ public class DeviceDataHelper {
 		futures.add(this.registeredDevices);
 	}
 	
-	public void fillRetrievedData(SyncMasterDataServiceHelper serviceHelper, List<SyncDataBaseDto> list) 
+	public void fillRetrievedData(final SyncMasterDataServiceHelper serviceHelper, final List<SyncDataBaseDto> list) 
 			throws InterruptedException, ExecutionException {
 		list.add(serviceHelper.getSyncDataBaseDto(Device.class, "structured", this.devices.get()));
 		list.add(serviceHelper.getSyncDataBaseDto(DeviceSpecification.class, "structured", this.deviceSpecifications.get()));

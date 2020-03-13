@@ -38,7 +38,7 @@ public class HistoryDataHelper {
 		this.currentTimestamp = currentTimestamp;
 	}
 	
-	public void retrieveData(SyncMasterDataServiceHelper serviceHelper, List<CompletableFuture> futures) {
+	public void retrieveData(final SyncMasterDataServiceHelper serviceHelper, final List<CompletableFuture> futures) {
 		this.registrationCenterUserHistoryList = serviceHelper.getRegistrationCenterUserHistory(this.regCenterId, this.lastUpdated, this.currentTimestamp);
 		this.registrationCenterUserMachineMappingHistoryList = serviceHelper
 				.getRegistrationCenterUserMachineMapping(this.regCenterId, this.lastUpdated, this.currentTimestamp);
@@ -53,7 +53,7 @@ public class HistoryDataHelper {
 		futures.add(this.registrationCenterMachineHistoryList);
 	}
 	
-	public void fillRetrievedData(SyncMasterDataServiceHelper serviceHelper, List<SyncDataBaseDto> list) 
+	public void fillRetrievedData(final SyncMasterDataServiceHelper serviceHelper, final List<SyncDataBaseDto> list) 
 			throws InterruptedException, ExecutionException {
 		list.add(serviceHelper.getSyncDataBaseDto(RegistrationCenterUserHistory.class, "structured", this.registrationCenterUserHistoryList.get()));
 		list.add(serviceHelper.getSyncDataBaseDto(RegistrationCenterUserMachineHistory.class, "structured", this.registrationCenterUserMachineMappingHistoryList.get()));		

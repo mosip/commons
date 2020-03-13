@@ -49,7 +49,7 @@ public class IndividualDataHelper {
 		this.currentTimestamp = currentTimestamp;
 	}
 	
-	public void retrieveData(SyncMasterDataServiceHelper serviceHelper, List<CompletableFuture> futures) {
+	public void retrieveData(final SyncMasterDataServiceHelper serviceHelper, final List<CompletableFuture> futures) {
 		this.titles = serviceHelper.getTitles(this.lastUpdated, this.currentTimestamp);
 		this.languages = serviceHelper.getLanguages(this.lastUpdated, this.currentTimestamp);
 		this.genders = serviceHelper.getGenders(this.lastUpdated, this.currentTimestamp);
@@ -73,7 +73,7 @@ public class IndividualDataHelper {
 		futures.add(this.biometricAttributes);
 	}
 	
-	public void fillRetrievedData(SyncMasterDataServiceHelper serviceHelper, List<SyncDataBaseDto> list) 
+	public void fillRetrievedData(final SyncMasterDataServiceHelper serviceHelper, final List<SyncDataBaseDto> list) 
 			throws InterruptedException, ExecutionException {
 		list.add(serviceHelper.getSyncDataBaseDto(Title.class, "structured", this.titles.get()));
 		list.add(serviceHelper.getSyncDataBaseDto(Language.class, "structured", this.languages.get()));

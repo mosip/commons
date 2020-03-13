@@ -36,7 +36,7 @@ public class ApplicationDataHelper {
 		this.currentTimestamp = currentTimestamp;
 	}
 
-	public void retrieveData(SyncMasterDataServiceHelper serviceHelper, List<CompletableFuture> futures) {
+	public void retrieveData(final SyncMasterDataServiceHelper serviceHelper, final List<CompletableFuture> futures) {
 		this.applications = serviceHelper.getApplications(this.lastUpdated, this.currentTimestamp);
 		this.appAuthenticationMethods = serviceHelper.getAppAuthenticationMethodDetails(this.lastUpdated, this.currentTimestamp);
 		this.appDetails = serviceHelper.getAppDetails(this.lastUpdated, this.currentTimestamp);
@@ -48,7 +48,7 @@ public class ApplicationDataHelper {
 		futures.add(this.appRolePriorities);
 	}	
 	
-	public void fillRetrievedData(SyncMasterDataServiceHelper serviceHelper, List<SyncDataBaseDto> list) 
+	public void fillRetrievedData(final SyncMasterDataServiceHelper serviceHelper, final List<SyncDataBaseDto> list) 
 			throws InterruptedException, ExecutionException {
 		list.add(serviceHelper.getSyncDataBaseDto(Application.class, "structured", this.applications.get()));
 		list.add(serviceHelper.getSyncDataBaseDto(AppAuthenticationMethod.class, "structured", this.appAuthenticationMethods.get()));

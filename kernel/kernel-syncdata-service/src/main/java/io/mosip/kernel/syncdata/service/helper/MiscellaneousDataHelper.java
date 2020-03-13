@@ -42,7 +42,7 @@ public class MiscellaneousDataHelper {
 		this.currentTimestamp = currentTimestamp;
 	}
 	
-	public void retrieveData(SyncMasterDataServiceHelper serviceHelper, List<CompletableFuture> futures) {
+	public void retrieveData(final SyncMasterDataServiceHelper serviceHelper, final List<CompletableFuture> futures) {
 		this.holidays = serviceHelper.getHolidays(this.lastUpdated, this.machineId, this.currentTimestamp);
 		this.blacklistedWords = serviceHelper.getBlackListedWords(this.lastUpdated, this.currentTimestamp);
 	
@@ -66,7 +66,7 @@ public class MiscellaneousDataHelper {
 		futures.add(this.syncJobDefDtos);
 	}
 	
-	public void fillRetrievedData(SyncMasterDataServiceHelper serviceHelper, List<SyncDataBaseDto> list) 
+	public void fillRetrievedData(final SyncMasterDataServiceHelper serviceHelper, final List<SyncDataBaseDto> list) 
 			throws InterruptedException, ExecutionException {
 		list.add(serviceHelper.getSyncDataBaseDto(Holiday.class, "structured", this.holidays.get()));
 		list.add(serviceHelper.getSyncDataBaseDto(BlacklistedWords.class, "structured", this.blacklistedWords.get()));
