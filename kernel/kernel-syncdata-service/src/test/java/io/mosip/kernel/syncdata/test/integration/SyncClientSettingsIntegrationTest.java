@@ -339,7 +339,7 @@ public class SyncClientSettingsIntegrationTest {
 		applications.add(new Application("101", "ENG", "MOSIP", "MOSIP"));
 		machines = new ArrayList<>();
 		machine = new Machine("1001", "Laptop", "9876427", "172.12.01.128", "21:21:21:12", "1001", "ENG", localdateTime,
-				encodedTPMPublicKey, keyIndex, "ZONE", null);
+				tpmPublicKey, keyIndex, "ZONE", null);
 		machines.add(machine);
 		machineSpecification = new ArrayList<>();
 		machineSpecification.add(
