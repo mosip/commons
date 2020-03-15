@@ -13,7 +13,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
-import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,7 +47,7 @@ import io.mosip.kernel.fsadapter.ceph.util.ConnectionUtils;
 public class FilesystemCephAdapterImplTest {
 
 	/** The api. */
-	private S3Mock api;
+	private static S3Mock api;
 
 	/** The client. */
 	private AmazonS3 client;
@@ -70,6 +71,13 @@ public class FilesystemCephAdapterImplTest {
 	@Mock
 	private ConnectionUtils connectionUtil;
 
+
+	@BeforeClass
+	public static void init() throws IOException {
+		api = new S3Mock.Builder().withPort(6001).withInMemoryBackend().build();
+		api.start();
+	}
+
 	/**
 	 * This method sets up the required configuration before execution of test
 	 * cases.
@@ -81,8 +89,7 @@ public class FilesystemCephAdapterImplTest {
 
 		this.checkEnrolmentId = env.getProperty("mosip.kernel.fsadapter.ceph.test.check.enrolment.id");
 		this.fileExtension = env.getProperty("mosip.kernel.fsadapter.ceph.test.file.extension");
-		api = new S3Mock.Builder().withPort(6001).withInMemoryBackend().build();
-		api.start();
+		
 		EndpointConfiguration endpoint = new EndpointConfiguration("http://localhost:6001", "us-west-2");
 		client = AmazonS3ClientBuilder.standard().withPathStyleAccessEnabled(true).withEndpointConfiguration(endpoint)
 				.withCredentials(new AWSStaticCredentialsProvider(new AnonymousAWSCredentials())).build();
@@ -206,12 +213,13 @@ public class FilesystemCephAdapterImplTest {
 	 */
 	@Test(expected = FSAdapterException.class)
 	public void testStorePacketConnectionUnavailableException() {
-		EndpointConfiguration endpoint = new EndpointConfiguration("http://localhost:6001", "us-west-2");
+		EndpointConfiguration endpoint = new EndpointConfiguration("http://localhost:6002", "us-west-2");
 		AmazonS3 client1 = AmazonS3ClientBuilder.standard().withPathStyleAccessEnabled(true)
 				.withEndpointConfiguration(endpoint).withCredentials(null).build();
 
 		when(connectionUtil.getConnection()).thenReturn(client1);
 		dfsAdapter = new CephAdapterImpl(connectionUtil);
+		System.out.println("ok can u see this?");
 		InputStream packet = new InputStream() {
 			@Override
 			public int read() throws IOException {
@@ -241,15 +249,15 @@ public class FilesystemCephAdapterImplTest {
 
 	@Test
 	public void fileExistenceFailureTest() {
-		boolean result = this.dfsAdapter.checkFileExistence(checkEnrolmentId, PacketFiles.BIOMETRIC.name());
+		boolean result = this.dfsAdapter.checkFileExistence("ThisShouldNotExist", PacketFiles.BIOMETRIC.name());
 		assertEquals(false, result);
 	}
 
 	/**
 	 * This method destroys the dummy DFS connection.
 	 */
-	@After
-	public void destroy() {
+	@AfterClass
+	public static void destroy() {
 		api.stop();
 	}
 
