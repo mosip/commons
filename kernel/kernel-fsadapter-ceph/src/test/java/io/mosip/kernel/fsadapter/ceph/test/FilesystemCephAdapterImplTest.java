@@ -219,7 +219,6 @@ public class FilesystemCephAdapterImplTest {
 
 		when(connectionUtil.getConnection()).thenReturn(client1);
 		dfsAdapter = new CephAdapterImpl(connectionUtil);
-		System.out.println("ok can u see this?");
 		InputStream packet = new InputStream() {
 			@Override
 			public int read() throws IOException {
