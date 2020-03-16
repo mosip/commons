@@ -208,7 +208,7 @@ public class SyncDataController {
 	
 	/**
 	 * 
-	 * @param keyindex     - keyIndex mapped to machine
+	 * @param keyIndex     - keyIndex mapped to machine
 	 * @param lastUpdated  - last sync updated time stamp
 	 * @return {@link SyncDataResponseDto}
 	 * @throws InterruptedException - this method will throw interrupted Exception
@@ -237,7 +237,7 @@ public class SyncDataController {
 	
 	/**
 	 * 
-	 * @param keyindex     - keyIndex mapped to machine
+	 * @param keyIndex     - keyIndex mapped to machine
 	 * @param regCenterId  - reg Center Id
 	 * @param lastUpdated  - last sync updated time stamp
 	 * @return {@link SyncDataResponseDto}
