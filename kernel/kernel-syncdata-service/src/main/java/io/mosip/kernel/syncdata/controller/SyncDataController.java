@@ -208,10 +208,9 @@ public class SyncDataController {
 	
 	/**
 	 * 
-	 * @param macId        - MAC address of the machine
-	 * @param serialNumber - Serial number of the machine
-	 * @param lastUpdated  - last updated time stamp
-	 * @return {@link MasterDataResponseDto}
+	 * @param keyindex     - keyIndex mapped to machine
+	 * @param lastUpdated  - last sync updated time stamp
+	 * @return {@link SyncDataResponseDto}
 	 * @throws InterruptedException - this method will throw interrupted Exception
 	 * @throws ExecutionException   - this method will throw exeution exception
 	 */
@@ -238,11 +237,10 @@ public class SyncDataController {
 	
 	/**
 	 * 
-	 * @param macId        - MAC address of the machine
-	 * @param serialNumber - Serial number of the machine
+	 * @param keyindex     - keyIndex mapped to machine
 	 * @param regCenterId  - reg Center Id
-	 * @param lastUpdated  - last updated time stamp
-	 * @return {@link MasterDataResponseDto}
+	 * @param lastUpdated  - last sync updated time stamp
+	 * @return {@link SyncDataResponseDto}
 	 * @throws InterruptedException - this method will throw interrupted Exception
 	 * @throws ExecutionException   - this method will throw exeution exception
 	 */
