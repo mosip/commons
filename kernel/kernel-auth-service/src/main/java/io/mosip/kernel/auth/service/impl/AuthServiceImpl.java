@@ -272,6 +272,7 @@ public class AuthServiceImpl implements AuthService {
 		
 		MosipUserDto mosipUser = null;
 		otpUser.getOtpChannel().replaceAll(String::toLowerCase);
+		otpUser.setAppId(otpUser.getAppId().toLowerCase());
 		otpUser.setOtpChannel(otpUser.getOtpChannel());
 		if (AuthConstant.APPTYPE_UIN.equals(otpUser.getUseridtype())) {
 			mosipUser = uinService.getDetailsFromUin(otpUser);
