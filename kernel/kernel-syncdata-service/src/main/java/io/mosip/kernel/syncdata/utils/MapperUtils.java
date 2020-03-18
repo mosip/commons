@@ -12,10 +12,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.syncdata.dto.BaseDto;
@@ -33,7 +38,15 @@ import io.mosip.kernel.syncdata.entity.id.HolidayID;
  */
 @Component
 public class MapperUtils {
-
+	
+	private final ObjectMapper objectMapper = new ObjectMapper();
+	
+	@PostConstruct
+	private void setupObjectMapper() {
+		objectMapper.registerModule(new JavaTimeModule());
+		objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+	}
+	
 	public List<HolidayDto> mapHolidays(List<Holiday> holidays) {
 		Objects.requireNonNull(holidays);
 		List<HolidayDto> holidayDtos = new ArrayList<>();
@@ -360,6 +373,9 @@ public class MapperUtils {
 
 		}
 		return userDetailMapDtoList;
-
+	}
+	
+	public String getObjectAsJsonString(Object object) throws Exception {
+		return (null != object) ? objectMapper.writeValueAsString(object) : null;
 	}
 }

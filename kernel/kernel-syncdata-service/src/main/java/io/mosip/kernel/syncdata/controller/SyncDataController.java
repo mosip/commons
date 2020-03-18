@@ -27,6 +27,7 @@ import io.mosip.kernel.syncdata.dto.UploadPublicKeyRequestDto;
 import io.mosip.kernel.syncdata.dto.UploadPublicKeyResponseDto;
 import io.mosip.kernel.syncdata.dto.response.MasterDataResponseDto;
 import io.mosip.kernel.syncdata.dto.response.RolesResponseDto;
+import io.mosip.kernel.syncdata.dto.response.SyncDataResponseDto;
 import io.mosip.kernel.syncdata.service.SyncConfigDetailsService;
 import io.mosip.kernel.syncdata.service.SyncMasterDataService;
 import io.mosip.kernel.syncdata.service.SyncRolesService;
@@ -150,6 +151,7 @@ public class SyncDataController {
 	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN')")
 	@ResponseFilter
 	@GetMapping("/masterdata")
+	@Deprecated
 	public ResponseWrapper<MasterDataResponseDto> syncMasterData(
 			@RequestParam(value = "macaddress", required = false) String macId,
 			@RequestParam(value = "serialnumber", required = false) String serialNumber,
@@ -183,6 +185,7 @@ public class SyncDataController {
 	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN')")
 	@ResponseFilter
 	@GetMapping("/masterdata/{regcenterId}")
+	@Deprecated
 	public ResponseWrapper<MasterDataResponseDto> syncMasterDataWithRegCenterId(
 			@PathVariable("regcenterId") String regCenterId,
 			@RequestParam(value = "macaddress", required = false) String macId,
@@ -202,6 +205,67 @@ public class SyncDataController {
 		response.setResponse(masterDataResponseDto);
 		return response;
 	}
+	
+	/**
+	 * 
+	 * @param keyIndex     - keyIndex mapped to machine
+	 * @param lastUpdated  - last sync updated time stamp
+	 * @return {@link SyncDataResponseDto}
+	 * @throws InterruptedException - this method will throw interrupted Exception
+	 * @throws ExecutionException   - this method will throw exeution exception
+	 */
+	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN')")
+	@ResponseFilter
+	@GetMapping("/clientsettings")
+	public ResponseWrapper<SyncDataResponseDto> syncClientSettings(
+			@RequestParam(value = "keyindex", required = true) String keyIndex,
+			@RequestParam(value = "lastupdated", required = false) String lastUpdated)
+			throws InterruptedException, ExecutionException {
+
+		LocalDateTime currentTimeStamp = LocalDateTime.now(ZoneOffset.UTC);
+		LocalDateTime timestamp = localDateTimeUtil.getLocalDateTimeFromTimeStamp(currentTimeStamp, lastUpdated);
+		
+		SyncDataResponseDto syncDataResponseDto = masterDataService.syncClientSettings(null, keyIndex,
+				timestamp, currentTimeStamp);
+
+		syncDataResponseDto.setLastSyncTime(DateUtils.formatToISOString(currentTimeStamp));
+
+		ResponseWrapper<SyncDataResponseDto> response = new ResponseWrapper<>();
+		response.setResponse(syncDataResponseDto);
+		return response;
+	}
+	
+	/**
+	 * 
+	 * @param keyIndex     - keyIndex mapped to machine
+	 * @param regCenterId  - reg Center Id
+	 * @param lastUpdated  - last sync updated time stamp
+	 * @return {@link SyncDataResponseDto}
+	 * @throws InterruptedException - this method will throw interrupted Exception
+	 * @throws ExecutionException   - this method will throw exeution exception
+	 */
+	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN')")
+	@ResponseFilter
+	@GetMapping("/clientsettings/{regcenterid}")
+	public ResponseWrapper<SyncDataResponseDto> syncClientSettingsWithRegCenterId(
+			@PathVariable("regcenterid") String regCenterId,
+			@RequestParam(value = "lastupdated", required = false) String lastUpdated,
+			@RequestParam(value = "keyindex", required = true) String keyIndex)
+			throws InterruptedException, ExecutionException {
+
+		LocalDateTime currentTimeStamp = LocalDateTime.now(ZoneOffset.UTC);
+		LocalDateTime timestamp = localDateTimeUtil.getLocalDateTimeFromTimeStamp(currentTimeStamp, lastUpdated);
+		
+		SyncDataResponseDto syncDataResponseDto = masterDataService.syncClientSettings(regCenterId, keyIndex,
+				timestamp, currentTimeStamp);
+
+		syncDataResponseDto.setLastSyncTime(DateUtils.formatToISOString(currentTimeStamp));
+
+		ResponseWrapper<SyncDataResponseDto> response = new ResponseWrapper<>();
+		response.setResponse(syncDataResponseDto);
+		return response;
+	}
+	
 
 	/**
 	 * API will fetch all roles from Auth server
