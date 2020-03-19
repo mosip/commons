@@ -35,10 +35,15 @@
         </developers>
 
         <distributionManagement>
-                <snapshotRepository>
+		<snapshotRepository>
+     			<id>github</id>
+     			<name>GitHub MOSIP Snapshots Packages</name>
+     			<url>https://maven.pkg.github.com/MOSIP/commons</url>
+   		</snapshotRepository>
+		<!--                <snapshotRepository>
                         <id>ossrh</id>
                         <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-                </snapshotRepository>
+		</snapshotRepository> -->
                 <repository>
                         <id>ossrh</id>
                         <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
