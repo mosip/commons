@@ -6513,6 +6513,7 @@ public class MasterdataIntegrationTest {
 		registrationCenters.get(0).setIsActive(Boolean.TRUE);
 		registrationCenters.get(0).setIsDeleted(Boolean.FALSE);
 		when(zoneUtils.getUserZones()).thenReturn(getZones());
+		when(registrationCenterRepository.findByIdAndIsDeletedFalseOrNull(Mockito.anyString())).thenReturn(registrationCenters.get(0));
 		when(registrationCenterRepository.findByRegIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(registrationCenters);
 		machine.setZoneCode("JRD");
@@ -6531,6 +6532,26 @@ public class MasterdataIntegrationTest {
 	
 	@Test
 	@WithUserDetails("zonal-admin")
+	public void testUnMapUnAuthorized() throws Exception {
+
+		registrationCenters.get(0).setNumberOfKiosks((short) 9);
+		registrationCenters.get(0).setZoneCode("JRK");
+		registrationCenters.get(0).setIsActive(Boolean.TRUE);
+		registrationCenters.get(0).setIsDeleted(Boolean.FALSE);
+		when(zoneUtils.getUserZones()).thenReturn(getZones());
+		when(registrationCenterRepository.findByIdAndIsDeletedFalseOrNull(Mockito.anyString())).thenReturn(registrationCenters.get(0));
+		when(registrationCenterRepository.findByRegIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
+				.thenReturn(registrationCenters);
+		machine.setZoneCode("JOD");
+		when(machineRepository.findMachineByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
+				.thenReturn(machine);
+		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/unmap/10001/10001"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+
+	}
+	
+	@Test
+	@WithUserDetails("zonal-admin")
 	public void testUnMapCenterMachineNotActive() throws Exception {
 
 		registrationCenters.get(0).setNumberOfKiosks((short) 9);
@@ -6538,6 +6559,7 @@ public class MasterdataIntegrationTest {
 		registrationCenters.get(0).setIsActive(Boolean.TRUE);
 		registrationCenters.get(0).setIsDeleted(Boolean.FALSE);
 		when(zoneUtils.getUserZones()).thenReturn(getZones());
+		when(registrationCenterRepository.findByIdAndIsDeletedFalseOrNull(Mockito.anyString())).thenReturn(registrationCenters.get(0));
 		when(registrationCenterRepository.findByRegIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(registrationCenters);
 		machine.setZoneCode("TZT");
@@ -6561,6 +6583,7 @@ public class MasterdataIntegrationTest {
 		registrationCenters.get(0).setIsActive(Boolean.TRUE);
 		registrationCenters.get(0).setIsDeleted(Boolean.FALSE);
 		when(zoneUtils.getUserZones()).thenReturn(getZones());
+		when(registrationCenterRepository.findByIdAndIsDeletedFalseOrNull(Mockito.anyString())).thenReturn(registrationCenters.get(0));
 		when(registrationCenterRepository.findByRegIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(registrationCenters);
 		machine.setZoneCode("TTA");
@@ -6580,6 +6603,7 @@ public class MasterdataIntegrationTest {
 		registrationCenters.get(0).setIsActive(Boolean.TRUE);
 		registrationCenters.get(0).setIsDeleted(Boolean.FALSE);
 		when(zoneUtils.getUserZones()).thenReturn(getZones());
+		when(registrationCenterRepository.findByIdAndIsDeletedFalseOrNull(Mockito.anyString())).thenReturn(registrationCenters.get(0));
 		when(registrationCenterRepository.findByRegIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(registrationCenters);
 		machine.setZoneCode("TZT");
@@ -6599,8 +6623,7 @@ public class MasterdataIntegrationTest {
 
 		registrationCenters.get(0).setNumberOfKiosks((short) 9);
 		when(zoneUtils.getUserZones()).thenReturn(getZones());
-		when(registrationCenterRepository.findByRegIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
-				.thenReturn(null);
+		when(registrationCenterRepository.findByIdAndIsDeletedFalseOrNull(Mockito.anyString())).thenReturn(null);
 		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/unmap/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
@@ -6642,13 +6665,60 @@ public class MasterdataIntegrationTest {
 	@Test
 	@WithUserDetails("zonal-admin")
 	public void testMap() throws Exception {
+		registrationCenters.get(0).setZoneCode("JRD");
+		registrationCenters.get(0).setIsDeleted(Boolean.FALSE);
+		registrationCenters.get(0).setIsActive(Boolean.TRUE);
 		registrationCenters.get(0).setNumberOfKiosks((short) 9);
+		machine.setZoneCode("JRD");
 		when(zoneUtils.getUserZones()).thenReturn(getZones());
+		when(registrationCenterRepository.findByIdAndIsDeletedFalseOrNull(Mockito.anyString())).thenReturn(registrationCenters.get(0));
 		when(registrationCenterRepository.findByRegIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(registrationCenters);
 		when(machineRepository.findMachineByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(machine);
 
+		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/map/10001/10001"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+
+	}
+	
+	@Test
+	@WithUserDetails("zonal-admin")
+	public void testMapUnAuthorized() throws Exception {
+		registrationCenters.get(0).setZoneCode("JRK");
+		registrationCenters.get(0).setIsDeleted(Boolean.FALSE);
+		registrationCenters.get(0).setIsActive(Boolean.TRUE);
+		registrationCenters.get(0).setNumberOfKiosks((short) 9);
+		machine.setZoneCode("JOD");
+		when(zoneUtils.getUserZones()).thenReturn(getZones());
+		when(registrationCenterRepository.findByIdAndIsDeletedFalseOrNull(Mockito.anyString())).thenReturn(registrationCenters.get(0));
+		when(registrationCenterRepository.findByRegIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
+				.thenReturn(registrationCenters);
+		when(machineRepository.findMachineByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
+				.thenReturn(machine);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/map/10001/10001"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+
+	}
+	
+	@Test
+	@WithUserDetails("zonal-admin")
+	public void testMapMachineNotActive() throws Exception {
+		registrationCenters.get(0).setZoneCode("JRD");
+		registrationCenters.get(0).setIsDeleted(Boolean.FALSE);
+		registrationCenters.get(0).setIsActive(Boolean.TRUE);
+		registrationCenters.get(0).setNumberOfKiosks((short) 9);
+		machine.setZoneCode("JRD");
+		when(zoneUtils.getUserZones()).thenReturn(getZones());
+		when(registrationCenterRepository.findByIdAndIsDeletedFalseOrNull(Mockito.anyString())).thenReturn(registrationCenters.get(0));
+		when(registrationCenterRepository.findByRegIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
+				.thenReturn(registrationCenters);
+		when(machineRepository.findMachineByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
+				.thenReturn(machine);
+		registrationCenterMachine.setIsActive(false);
+		when(registrationCenterMachineRepository.findByRegIdAndMachineId(Mockito.anyString(), Mockito.anyString(),
+				Mockito.anyString())).thenReturn(registrationCenterMachine);
 		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/map/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
@@ -6685,9 +6755,9 @@ public class MasterdataIntegrationTest {
 		registrationCenters.get(0).setZoneCode("JRD");
 		registrationCenters.get(0).setIsActive(Boolean.FALSE);
 		registrationCenters.get(0).setIsDeleted(Boolean.TRUE);
+		machine.setZoneCode("JRD");
 		when(machineRepository.findMachineByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(machine);
-		machine.setZoneCode("NTH");
 		when(registrationCenterMachineRepository.findByRegIdAndMachineId(Mockito.anyString(), Mockito.anyString(),
 				Mockito.anyString())).thenReturn(registrationCenterMachine);
 
