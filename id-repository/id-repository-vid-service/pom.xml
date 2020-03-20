@@ -4,10 +4,10 @@
 	<parent>
 		<groupId>io.mosip.idrepository</groupId>
 		<artifactId>id-repository-parent</artifactId>
-		<version>1.0.8-SNAPSHOT</version>
+		<version>1.0.7-SNAPSHOT</version>
 	</parent>
 	<artifactId>id-repository-vid-service</artifactId>
-	<version>1.0.8-SNAPSHOT</version>
+	<version>1.0.7-SNAPSHOT</version>
 	<name>vid-service</name>
 	<description>ID-Repository Virtual ID Service</description>
 	<dependencies>
