@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.web.authentication.www.NonceExpiredException;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -30,6 +31,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -74,6 +76,7 @@ import io.mosip.kernel.auth.service.AuthService;
 import io.mosip.kernel.auth.service.OTPService;
 import io.mosip.kernel.auth.service.TokenService;
 import io.mosip.kernel.auth.service.UinService;
+import io.mosip.kernel.auth.util.ProxyTokenGenerator;
 import io.mosip.kernel.auth.util.TokenGenerator;
 import io.mosip.kernel.auth.util.TokenValidator;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
@@ -86,9 +89,9 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
  * @author Srinivasan
  *
  */
-@Profile("!local")
+@Profile("local")
 @Service
-public class AuthServiceImpl implements AuthService {
+public class ProxyAuthServiceImpl implements AuthService {
 
 	private static final String CLIENTID_AND_TOKEN_COMBINATION_HAD_BEEN_VALIDATED_SUCCESSFULLY = "Clientid and Token combination had been validated successfully";
 
@@ -99,6 +102,9 @@ public class AuthServiceImpl implements AuthService {
 	private static final String SUCCESS = "Success";
 
 	private static final String SUCCESSFULLY_LOGGED_OUT = "successfully loggedout";
+
+	@Autowired
+	private ProxyTokenGenerator proxyTokenGenarator;
 
 	@Value("${mosip.kernel.open-id-url}")
 	private String keycloakOpenIdUrl;
@@ -165,7 +171,16 @@ public class AuthServiceImpl implements AuthService {
 
 	@Value("${mosip.admin_realm_id}")
 	private String realmID;
-	
+
+	@Value("${spring.profiles.active}")
+	String activeProfile;
+
+	@Value("${auth.local.exp:1000000}")
+	long localExp;
+
+	@Value("${auth.local.secret:secret}")
+	String localSecret;
+
 	@Qualifier("authRestTemplate")
 	@Autowired
 	private RestTemplate authRestTemplate;
@@ -209,31 +224,8 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public AuthNResponseDto authenticateUser(LoginUser loginUser) throws Exception {
-		AuthNResponseDto authNResponseDto = null;
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		MultiValueMap<String, String> tokenRequestBody = null;
-		ResponseEntity<AccessTokenResponse> response = null;
-		Map<String, String> pathParams = new HashMap<>();
-		pathParams.put(AuthConstant.REALM_ID, realmId);
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(keycloakOpenIdUrl + "/token");
-		tokenRequestBody = getPasswordValueMap(clientID, clientSecret, loginUser.getUserName(),
-				loginUser.getPassword());
-		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(tokenRequestBody, headers);
-		try {
-			response = authRestTemplate.postForEntity(uriComponentsBuilder.buildAndExpand(pathParams).toUriString(),
-					request, AccessTokenResponse.class);
-		} catch (HttpClientErrorException | HttpServerErrorException ex) {
-			System.out.println(ex.getResponseBodyAsString());
-		}
-		AccessTokenResponse accessTokenResponse = response.getBody();
-		authNResponseDto = new AuthNResponseDto();
-		authNResponseDto.setToken(accessTokenResponse.getAccess_token());
-		authNResponseDto.setRefreshToken(accessTokenResponse.getRefresh_token());
-		authNResponseDto.setExpiryTime(Long.parseLong(accessTokenResponse.getExpires_in()));
-		authNResponseDto.setStatus(AuthConstant.SUCCESS_STATUS);
-		authNResponseDto.setMessage(AuthConstant.USERPWD_SUCCESS_MESSAGE);
-		return authNResponseDto;
+		return proxyTokenForLocalEnv(loginUser.getUserName(), AuthConstant.SUCCESS_STATUS,
+				AuthConstant.USERPWD_SUCCESS_MESSAGE);
 	}
 
 	/**
@@ -250,7 +242,7 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public AuthNResponseDto authenticateWithOtp(OtpUser otpUser) throws Exception {
 		AuthNResponseDto authNResponseDto = null;
-		
+
 		MosipUserDto mosipUser = null;
 		otpUser.getOtpChannel().replaceAll(String::toLowerCase);
 		otpUser.setAppId(otpUser.getAppId().toLowerCase());
@@ -264,8 +256,9 @@ public class AuthServiceImpl implements AuthService {
 			UserRegistrationRequestDto userCreationRequestDto = new UserRegistrationRequestDto();
 			userCreationRequestDto.setUserName(otpUser.getUserId());
 			userCreationRequestDto.setAppId(otpUser.getAppId());
-			mosipUser = registerUser(userCreationRequestDto);
-            authNResponseDto = oTPService.sendOTP(mosipUser, otpUser);
+			mosipUser = new MosipUserDto();
+			mosipUser.setUserId(otpUser.getUserId());
+			authNResponseDto = oTPService.sendOTP(mosipUser, otpUser);
 			authNResponseDto.setStatus(authNResponseDto.getStatus());
 			authNResponseDto.setMessage(authNResponseDto.getMessage());
 		} else {
@@ -294,11 +287,8 @@ public class AuthServiceImpl implements AuthService {
 		if (userOtp.getAppId().equalsIgnoreCase(AuthConstant.PRE_REGISTRATION)) {
 			realm = userOtp.getAppId();
 		}
-		
-		if (keycloakImpl.isUserAlreadyPresent(userOtp.getUserId(), realm)) {
-			mosipUser = new MosipUserDto();
-			mosipUser.setUserId(userOtp.getUserId());
-		}
+		mosipUser = new MosipUserDto();
+		mosipUser.setUserId(userOtp.getUserId());
 		if (mosipUser == null && AuthConstant.IDA.toLowerCase().equals(userOtp.getAppId().toLowerCase())) {
 			mosipUser = uinService.getDetailsForValidateOtp(userOtp.getUserId());
 		}
@@ -335,23 +325,19 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public AuthNResponseDto authenticateWithSecretKey(ClientSecret clientSecret) throws Exception {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		MultiValueMap<String, String> tokenRequestBody = null;
-		Map<String, String> pathParams = new HashMap<>();
-		pathParams.put(AuthConstant.REALM_ID, realmId);
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(keycloakOpenIdUrl + "/token");
-		tokenRequestBody = getClientSecretValueMap(clientSecret.getClientId(), clientSecret.getSecretKey());
-		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(tokenRequestBody, headers);
-		ResponseEntity<AccessTokenResponse> response = authRestTemplate.postForEntity(
-				uriComponentsBuilder.buildAndExpand(pathParams).toUriString(), request, AccessTokenResponse.class);
-		AccessTokenResponse accessTokenResponse = response.getBody();
+		return proxyTokenForLocalEnv(clientSecret.getClientId(), SUCCESS,
+				CLIENTID_AND_TOKEN_COMBINATION_HAD_BEEN_VALIDATED_SUCCESSFULLY);
+	}
+
+	private AuthNResponseDto proxyTokenForLocalEnv(String subject, String status, String message) {
+		long exp = System.currentTimeMillis() + localExp;
+		String token = proxyTokenGenarator.getProxyToken(subject, exp);
 		AuthNResponseDto authNResponseDto = new AuthNResponseDto();
-		authNResponseDto.setToken(accessTokenResponse.getAccess_token());
-		authNResponseDto.setRefreshToken(accessTokenResponse.getRefresh_token());
-		authNResponseDto.setExpiryTime(Long.parseLong(accessTokenResponse.getExpires_in()));
-		authNResponseDto.setStatus(SUCCESS);
-		authNResponseDto.setMessage(CLIENTID_AND_TOKEN_COMBINATION_HAD_BEEN_VALIDATED_SUCCESSFULLY);
+		authNResponseDto.setToken(token);
+		authNResponseDto.setRefreshToken(null);
+		authNResponseDto.setExpiryTime(exp);
+		authNResponseDto.setStatus(status);
+		authNResponseDto.setMessage(message);
 		return authNResponseDto;
 	}
 
@@ -494,44 +480,16 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public MosipUserDto valdiateToken(String token) {
-		Map<String, String> pathparams = new HashMap<>();
-		if (EmptyCheckUtils.isNullEmpty(token)) {
-			throw new AuthenticationServiceException(AuthErrorCode.INVALID_TOKEN.getErrorMessage());
-		}
-		String issuer = tokenValidator.getissuer(token);
-		ResponseEntity<String> response = null;
-		MosipUserDto mosipUserDto = null;
-		System.out.println("validate token url " + openIdUrl);
-		StringBuilder urlBuilder = new StringBuilder().append(issuer).append("/protocol/openid-connect/userinfo");
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(urlBuilder.toString());
-		HttpHeaders headers = new HttpHeaders();
-		System.out.println(token);
-		String accessToken = "Bearer " + token;
-		headers.add("Authorization", accessToken);
-
-		HttpEntity<String> httpRequest = new HttpEntity<>(headers);
-		try {
-			response = restTemplate.exchange(uriComponentsBuilder.buildAndExpand(pathparams).toUriString(),
-					HttpMethod.GET, httpRequest, String.class);
-		} catch (HttpClientErrorException | HttpServerErrorException e) {
-			KeycloakErrorResponseDto keycloakErrorResponseDto = parseKeyClockErrorResponse(e);
-			if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-				throw new AuthenticationServiceException(AuthErrorCode.INVALID_TOKEN.getErrorMessage()
-						+ keycloakErrorResponseDto.getError_description());
-			} else if (e.getStatusCode() == HttpStatus.FORBIDDEN) {
-				throw new AccessDeniedException(
-						AuthErrorCode.FORBIDDEN.getErrorMessage() + keycloakErrorResponseDto.getError_description());
-			} else {
-				throw new AuthManagerException(AuthErrorCode.REST_EXCEPTION.getErrorCode(),
-						AuthErrorCode.REST_EXCEPTION.getErrorMessage() + " " + e.getResponseBodyAsString());
-			}
-		}
-
-		if (response.getStatusCode().is2xxSuccessful()) {
-			mosipUserDto = getClaims(token);
-		}
+		DecodedJWT decodedJWT = JWT.require(Algorithm.none()).build().verify(token);
+		MosipUserDto mosipUserDto = new MosipUserDto();
+		String user = decodedJWT.getSubject();
+		mosipUserDto.setToken(token);
+		mosipUserDto.setMail(decodedJWT.getClaim(AuthConstant.EMAIL).asString());
+		mosipUserDto.setMobile(decodedJWT.getClaim(AuthConstant.MOBILE).asString());
+		mosipUserDto.setRole(decodedJWT.getClaim(AuthConstant.ROLES).asString());
+		mosipUserDto.setName(user);
+		mosipUserDto.setUserId(user);
 		return mosipUserDto;
-
 	}
 
 	Logger logger = LoggerFactory.getLogger(this.getClass().getName());
@@ -615,11 +573,12 @@ public class AuthServiceImpl implements AuthService {
 		map.add(KeycloakConstants.REDIRECT_URI, this.redirectURI + redirectURI);
 		Map<String, String> pathParam = new HashMap<>();
 		pathParam.put("realmId", realmID);
-        UriComponentsBuilder uriBuilder= UriComponentsBuilder.fromUriString(tokenEndpoint);
+		UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(tokenEndpoint);
 		HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
 		ResponseEntity<String> responseEntity = null;
 		try {
-			responseEntity = restTemplate.exchange(uriBuilder.buildAndExpand(pathParam).toUriString(), HttpMethod.POST, entity, String.class);
+			responseEntity = restTemplate.exchange(uriBuilder.buildAndExpand(pathParam).toUriString(), HttpMethod.POST,
+					entity, String.class);
 
 		} catch (HttpClientErrorException | HttpServerErrorException e) {
 			KeycloakErrorResponseDto keycloakErrorResponseDto = parseKeyClockErrorResponse(e);
