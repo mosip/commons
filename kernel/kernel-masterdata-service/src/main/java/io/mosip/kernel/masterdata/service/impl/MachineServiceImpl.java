@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
+import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.StringUtils;
 import io.mosip.kernel.masterdata.constant.MachineErrorCode;
 import io.mosip.kernel.masterdata.constant.MachinePutReqDto;
@@ -812,6 +813,9 @@ public class MachineServiceImpl implements MachineService {
 				uniqueId = registrationCenterValidator.generateMachineIdOrvalidateWithDB(uniqueId);
 				machineEntity.setId(uniqueId);
 			}
+			
+			machineEntity.setPublicKey(machineUtil.getX509EncodedPublicKey(machinePostReqDto.getPublicKey()));
+			machineEntity.setKeyIndex(CryptoUtil.computeFingerPrint(machineEntity.getPublicKey(), null));
 
 			// creating a Machine
 			crtMachine = machineRepository.create(machineEntity);
