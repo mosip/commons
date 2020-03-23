@@ -122,6 +122,15 @@ public class ZoneIntegrationTest {
 				.thenThrow(DataRetrievalFailureException.class);
 		mockMvc.perform(get("/zones/authorize?rid=12234234234234234")).andExpect(status().isInternalServerError());
 	}
+	
+	@Test
+	@WithUserDetails("zonal-admin")
+	public void authorizeZoneEmptyTest() throws Exception {
+
+		when(registrationCenterRepo.findByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
+				.thenReturn(null);
+		mockMvc.perform(get("/zones/authorize?rid=12234234234234234")).andExpect(status().isOk());
+	}
 
 	@Test
 	@WithUserDetails("zonal-admin")
