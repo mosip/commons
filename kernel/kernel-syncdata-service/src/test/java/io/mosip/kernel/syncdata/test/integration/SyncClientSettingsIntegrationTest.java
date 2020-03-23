@@ -1,6 +1,7 @@
 package io.mosip.kernel.syncdata.test.integration;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -641,29 +642,14 @@ public class SyncClientSettingsIntegrationTest {
 
 	private void mockSuccess() {
 		when(registrationCenterMachineRepository
-				.getRegistrationCenterMachineWithSerialNumberAndKeyIndex(Mockito.anyString(), Mockito.anyString()))
+				.getRegistrationCenterMachineWithKeyIndex(Mockito.anyString()))
 						.thenReturn(objectArrayList);
-		;
-		when(registrationCenterMachineRepository
-				.getRegistrationCenterMachineWithMacAddressAndKeyIndex(Mockito.anyString(), Mockito.anyString()))
-						.thenReturn(objectArrayList);
-		;
-		when(registrationCenterMachineRepository.getRegistrationCenterMachineWithMacAddressAndSerialNumAndKeyIndex(
-				Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(objectArrayList);
-		;
-		when(registrationCenterMachineRepository.getRegistrationCenterMachineWithKeyIndex(Mockito.anyString()))
-				.thenReturn(objectArrayList);
+				
 		when(registrationCenterRepository.findRegistrationCenterByIdAndIsActiveIsTrue(Mockito.anyString()))
 				.thenReturn(registrationCenters);
+		
 		when(registrationCenterMachineRepository.getRegCenterIdWithRegIdAndMachineId(Mockito.anyString(),
 				Mockito.anyString())).thenReturn(registrationCenterMachines.get(0));
-		when(registrationCenterMachineRepository.getRegistrationCenterMachineWithMacAddress(Mockito.anyString()))
-				.thenReturn(objectArrayList);
-		when(registrationCenterMachineRepository.getRegistrationCenterMachineWithSerialNumber(Mockito.anyString()))
-				.thenReturn(objectArrayList);
-		when(registrationCenterMachineRepository
-				.getRegistrationCenterMachineWithMacAddressAndSerialNum(Mockito.anyString(), Mockito.anyString()))
-						.thenReturn(objectArrayList);
 		
 		when(applicationRepository.findAll()).thenReturn(applications);
 		when(applicationRepository.findAllLatestCreatedUpdateDeleted(Mockito.any(), Mockito.any()))
@@ -824,15 +810,15 @@ public class SyncClientSettingsIntegrationTest {
 	private String syncDataUrlWithInvalidTimestamp = "/clientsettings/{regcenterId}?lastupdated=2018-15-01T123:101:01.021Z&macaddress=00:11:22:33&keyindex=abcd";
 	*/
 	
-	private String syncDataUrl = "/clientsettings?lastupdated=2018-11-01T12:10:01.021&keyindex=abcd";	
+	private String syncDataUrl = "/clientsettings?lastupdated=2018-11-01T12:10:01.021Z&keyindex=abcd";	
 		
 	private String syncDataUrlWithoutInput = "/clientsettings";
-	private String syncDataUrlWithOnlyLastUpdated = "/clientsettings?lastupdated=2018-11-01T12:10:01.021";	
+	private String syncDataUrlWithOnlyLastUpdated = "/clientsettings?lastupdated=2018-11-01T12:10:01.021Z";	
 	private String syncDataUrlWithOnlyKeyIndex = "/clientsettings?keyindex=abcd";
 	
 	private String syncDataUrlRegCenterId = "/clientsettings/{regcenterId}";
 	private String syncDataUrlRegCenterIdWithKeyIndex = "/clientsettings/{regcenterId}?keyindex=abcd";
-	private String syncDataUrlRegCenterIdWithKeyIndexAndLastUpdated = "/clientsettings/{regcenterId}?keyindex=abcd&lastupdated=2018-11-01T12:10:01.021";	
+	private String syncDataUrlRegCenterIdWithKeyIndexAndLastUpdated = "/clientsettings/{regcenterId}?keyindex=abcd&lastupdated=2018-11-01T12:10:01.021Z";	
 	
 	private String syncDataUrlWithInvalidTimestamp = "/clientsettings?lastupdated=2018-15-01T123:101:01.021Z&keyindex=abcd";
 
@@ -846,7 +832,13 @@ public class SyncClientSettingsIntegrationTest {
 	@WithUserDetails(value = "reg-officer")
 	public void syncSuccess() throws Exception {
 		mockSuccess();
-		mockMvc.perform(get(syncDataUrl)).andExpect(status().isOk());
+		MvcResult result = mockMvc.perform(get(syncDataUrl)).andExpect(status().isOk()).andReturn();
+		try {
+			JSONObject jsonObject = new JSONObject(result.getResponse().getContentAsString());
+			assertNotNull(jsonObject.get("response"));
+		} catch(Throwable t) {
+			Assert.fail("Not expected response!");
+		}
 	}
 	
 	@Test
