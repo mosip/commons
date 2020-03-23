@@ -1755,7 +1755,7 @@ public class SyncMasterDataServiceHelper {
 			entities.parallelStream().filter(Objects::nonNull).forEach(obj -> {
 				try {
 					String json = mapper.getObjectAsJsonString(obj);
-					if(json != null) { list.add(mapper.getObjectAsJsonString(obj)); }
+					if(json != null) { list.add(json); }
 				} catch (Exception e) {
 					logger.error("Failed to map "+ entityClass.getSimpleName() +" to json", e);
 				}
