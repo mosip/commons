@@ -8,6 +8,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -147,7 +148,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 		DeviceData deviceData = null;
 		DigitalId digitalId = null;
 		DeviceProvider deviceProvider = null;
-		RegisterDeviceResponse registerDeviceResponse = new RegisterDeviceResponse();
+		RegisterDeviceResponse registerDeviceResponse = null;
 		String deviceDataPayLoad = getPayLoad(registeredDevicePostDto.getDeviceData());
 		String headerString, signedResponse, registerDevice = null;
 
@@ -211,11 +212,12 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 			header.setAlg("RS256");
 			header.setType("JWS");
 			headerString = mapper.writeValueAsString(header);
+			Objects.requireNonNull(registerDeviceResponse);
 			signedResponse = getSignedResponse(registerDeviceResponse);
 			registerDevice = mapper.writeValueAsString(registerDeviceResponse);
 			response.setResponse(convertToJWS(headerString, registerDevice, signedResponse));
 
-		} catch (DataAccessLayerException | DataAccessException | IOException ex) {
+		} catch (DataAccessLayerException | DataAccessException | IOException | NullPointerException ex) {
 			throw new MasterDataServiceException(
 					RegisteredDeviceErrorCode.REGISTERED_DEVICE_INSERTION_EXCEPTION.getErrorCode(),
 					RegisteredDeviceErrorCode.REGISTERED_DEVICE_INSERTION_EXCEPTION.getErrorMessage() + " "
@@ -264,9 +266,9 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 			LocalDateTime timeStamp = deviceData.getDeviceInfo().getTimeStamp();
 			String prefix = registerDeviceTimeStamp.substring(0, 1);
 			String timeString = registerDeviceTimeStamp.replaceAll("\\" + prefix, "");
+			boolean isBetween = timeStamp.isAfter(LocalDateTime.now(ZoneOffset.UTC).minus(Long.valueOf("2"), ChronoUnit.MINUTES)) && timeStamp.isBefore(LocalDateTime.now(ZoneOffset.UTC).plus(Long.valueOf(timeString), ChronoUnit.MINUTES));
 			if (prefix.equals("+")) {
-				if (LocalDateTime.now(ZoneOffset.UTC)
-						.isAfter(timeStamp.plus(Long.valueOf(timeString), ChronoUnit.MINUTES))) {
+				if (!isBetween) {
 					throw new MasterDataServiceException(
 							RegisteredDeviceErrorCode.TIMESTAMP_AFTER_CURRENTTIME.getErrorCode(),
 							String.format(RegisteredDeviceErrorCode.TIMESTAMP_AFTER_CURRENTTIME.getErrorMessage(),

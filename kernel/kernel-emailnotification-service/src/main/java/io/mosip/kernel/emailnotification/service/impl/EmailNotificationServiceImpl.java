@@ -3,6 +3,8 @@ package io.mosip.kernel.emailnotification.service.impl;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -24,6 +26,8 @@ import io.mosip.kernel.emailnotification.util.EmailNotificationUtils;
  */
 @Service
 public class EmailNotificationServiceImpl implements EmailNotification<MultipartFile[], ResponseDto> {
+
+	Logger LOGGER = LoggerFactory.getLogger(EmailNotificationServiceImpl.class);
 	/**
 	 * Autowired reference for {@link JavaMailSender}
 	 */
@@ -39,20 +43,23 @@ public class EmailNotificationServiceImpl implements EmailNotification<Multipart
 	/**
 	 * SendEmail
 	 * 
-	 * @param mailTo      email address to which mail will be sent.
-	 * @param mailCc      email addresses to be cc'ed.
-	 * @param mailSubject the subject.
-	 * @param mailContent the content.
-	 * @param attachments the attachments.
+	 * @param mailTo
+	 *            email address to which mail will be sent.
+	 * @param mailCc
+	 *            email addresses to be cc'ed.
+	 * @param mailSubject
+	 *            the subject.
+	 * @param mailContent
+	 *            the content.
+	 * @param attachments
+	 *            the attachments.
 	 * @return the response dto.
 	 */
 	@Override
 	public ResponseDto sendEmail(String[] mailTo, String[] mailCc, String mailSubject, String mailContent,
 			MultipartFile[] attachments) {
 		ResponseDto dto = new ResponseDto();
-		if (mailTo != null) {
-			System.out.println("To Request : " + String.join(",", mailTo));
-		}
+		LOGGER.info("To Request : " + String.join(",", mailTo));
 		send(mailTo, mailCc, mailSubject, mailContent, attachments);
 		dto.setStatus(MailNotifierConstants.MESSAGE_SUCCESS_STATUS.getValue());
 		dto.setMessage(MailNotifierConstants.MESSAGE_REQUEST_SENT.getValue());

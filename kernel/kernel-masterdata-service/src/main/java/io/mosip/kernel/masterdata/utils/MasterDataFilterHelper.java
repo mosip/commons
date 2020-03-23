@@ -82,8 +82,7 @@ public class MasterDataFilterHelper {
 		String columnType = filterDto.getType();
 		List<Predicate> predicates = new ArrayList<>();
 		Predicate caseSensitivePredicate = null;
-		if (columnName.equals(MAP_STATUS_COLUMN_NAME)
-				&& (columnType.equals(FILTER_VALUE_UNIQUE) || columnType.equals(FILTER_VALUE_ALL))) {
+		if (checkColNameAndType(columnName, columnType)) {
 			return (List<T>) valuesForMapStatusColumn();
 		}
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -115,8 +114,7 @@ public class MasterDataFilterHelper {
 		criteriaQueryByType.orderBy(criteriaBuilder.asc(rootType.get(columnName)));
 
 		// check if column type is boolean then return true/false
-		if (rootType.get(columnName).getJavaType().equals(Boolean.class) && (columnType.equals(FILTER_VALUE_UNIQUE)
-				|| columnType.equals(FILTER_VALUE_ALL) || columnType.equals(FILTER_VALUE_EMPTY))) {
+		if (checkColNameTypeAndRootType(columnName, columnType, rootType)) {
 			return (List<T>) valuesForStatusColumn();
 		}
 
@@ -129,6 +127,16 @@ public class MasterDataFilterHelper {
 		results = typedQuery.setMaxResults(filterValueMaxColumns).getResultList();
 		return results;
 
+	}
+
+	private boolean checkColNameAndType(String columnName, String columnType) {
+		return columnName.equals(MAP_STATUS_COLUMN_NAME)
+				&& (columnType.equals(FILTER_VALUE_UNIQUE) || columnType.equals(FILTER_VALUE_ALL));
+	}
+
+	private <E> boolean checkColNameTypeAndRootType(String columnName, String columnType, Root<E> rootType) {
+		return rootType.get(columnName).getJavaType().equals(Boolean.class) && (columnType.equals(FILTER_VALUE_UNIQUE)
+				|| columnType.equals(FILTER_VALUE_ALL) || columnType.equals(FILTER_VALUE_EMPTY));
 	}
 
 	public <E> List<FilterData> filterValuesWithCode(Class<E> entity, FilterDto filterDto,

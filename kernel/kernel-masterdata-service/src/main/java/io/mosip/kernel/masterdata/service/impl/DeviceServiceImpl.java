@@ -212,6 +212,7 @@ public class DeviceServiceImpl implements DeviceService {
 		DeviceHistory entityHistory = null;
 		DeviceExtnDto deviceExtnDto = new DeviceExtnDto();
 		try {
+			validateZone(deviceDto.getZoneCode());
 			deviceDto = masterdataCreationUtil.createMasterData(Device.class, deviceDto);
 			if (deviceDto != null) {
 				entity = MetaDataUtils.setCreateMetaData(deviceDto, Device.class);
@@ -244,7 +245,7 @@ public class DeviceServiceImpl implements DeviceService {
 		// MapperUtils.map(device, idAndLanguageCodeID);
 		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_CREATE, DeviceExtnDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC, device.getId()), "ADM-508");
+				String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC, device!=null?device.getId():null), "ADM-508");
 		return deviceExtnDto;
 
 	}
@@ -258,12 +259,12 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	@Transactional
 	public IdResponseDto deleteDevice(String id) {
-		List<Device> foundDeviceList = new ArrayList<>();
+		List<Device> foundDeviceList = null;
 		Device deletedDevice = null;
 		try {
 			foundDeviceList = deviceRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(id);
 
-			if (!foundDeviceList.isEmpty()) {
+			if (foundDeviceList!=null && !foundDeviceList.isEmpty()) {
 				for (Device foundDevice : foundDeviceList) {
 
 					List<RegistrationCenterMachineDevice> registrationCenterMachineDeviceList = registrationCenterMachineDeviceRepository
@@ -762,11 +763,11 @@ public class DeviceServiceImpl implements DeviceService {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_DECOMMISSION, DeviceDto.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
-					String.format(MasterDataConstant.FAILURE_DESC, DeviceErrorCode.INVALIDE_DEVICE_ZONE.getErrorCode(),
-							DeviceErrorCode.INVALIDE_DEVICE_ZONE.getErrorMessage()),
+					String.format(MasterDataConstant.FAILURE_DESC, DeviceErrorCode.INVALID_DEVICE_ZONE.getErrorCode(),
+							DeviceErrorCode.INVALID_DEVICE_ZONE.getErrorMessage()),
 					"ADM-512");
-			throw new RequestException(DeviceErrorCode.INVALIDE_DEVICE_ZONE.getErrorCode(),
-					DeviceErrorCode.INVALIDE_DEVICE_ZONE.getErrorMessage());
+			throw new RequestException(DeviceErrorCode.INVALID_DEVICE_ZONE.getErrorCode(),
+					DeviceErrorCode.INVALID_DEVICE_ZONE.getErrorMessage());
 		}
 		try {
 			// check the device has mapped to any reg-Center
@@ -910,8 +911,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 		if (!(zoneIds.contains(deviceZone))) {
 			// check the given device zones will come under accessed user zones
-			throw new RequestException(DeviceErrorCode.INVALIDE_DEVICE_ZONE.getErrorCode(),
-					DeviceErrorCode.INVALIDE_DEVICE_ZONE.getErrorMessage());
+			throw new RequestException(DeviceErrorCode.INVALID_DEVICE_ZONE.getErrorCode(),
+					DeviceErrorCode.INVALID_DEVICE_ZONE.getErrorMessage());
 		}
 	}
 

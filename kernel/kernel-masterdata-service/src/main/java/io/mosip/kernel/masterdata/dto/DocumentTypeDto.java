@@ -24,7 +24,7 @@ import lombok.Data;
 public class DocumentTypeDto {
 
 //	@NotBlank
-//	@Size(min = 1, max = 36)
+	@Size(max = 36)
 //	@ApiModelProperty(value = "code", required = true, dataType = "java.lang.String")
 	private String code;
 

@@ -3,13 +3,17 @@ package io.mosip.kernel.syncdata.service.impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 
 import javax.persistence.PersistenceException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -72,6 +76,9 @@ import io.mosip.kernel.syncdata.dto.UploadPublicKeyRequestDto;
 import io.mosip.kernel.syncdata.dto.UploadPublicKeyResponseDto;
 import io.mosip.kernel.syncdata.dto.ValidDocumentDto;
 import io.mosip.kernel.syncdata.dto.response.MasterDataResponseDto;
+import io.mosip.kernel.syncdata.dto.response.SyncDataBaseDto;
+import io.mosip.kernel.syncdata.dto.response.SyncDataResponseDto;
+import io.mosip.kernel.syncdata.entity.AppAuthenticationMethod;
 import io.mosip.kernel.syncdata.entity.Machine;
 import io.mosip.kernel.syncdata.entity.MachineHistory;
 import io.mosip.kernel.syncdata.entity.RegistrationCenter;
@@ -85,10 +92,73 @@ import io.mosip.kernel.syncdata.repository.MachineRepository;
 import io.mosip.kernel.syncdata.repository.RegistrationCenterMachineRepository;
 import io.mosip.kernel.syncdata.repository.RegistrationCenterRepository;
 import io.mosip.kernel.syncdata.service.SyncMasterDataService;
+import io.mosip.kernel.syncdata.service.helper.ApplicationDataHelper;
+import io.mosip.kernel.syncdata.service.helper.DeviceDataHelper;
+import io.mosip.kernel.syncdata.service.helper.DocumentDataHelper;
+import io.mosip.kernel.syncdata.service.helper.HistoryDataHelper;
+import io.mosip.kernel.syncdata.service.helper.IndividualDataHelper;
+import io.mosip.kernel.syncdata.service.helper.MachineDataHelper;
+import io.mosip.kernel.syncdata.service.helper.MiscellaneousDataHelper;
+import io.mosip.kernel.syncdata.service.helper.RegistrationCenterDataHelper;
+import io.mosip.kernel.syncdata.service.helper.TemplateDataHelper;
 import io.mosip.kernel.syncdata.utils.ExceptionUtils;
 import io.mosip.kernel.syncdata.utils.MapperUtils;
 import io.mosip.kernel.syncdata.utils.MetaDataUtils;
 import io.mosip.kernel.syncdata.utils.SyncMasterDataServiceHelper;
+
+import io.mosip.kernel.syncdata.entity.AppAuthenticationMethod;
+import io.mosip.kernel.syncdata.entity.AppDetail;
+import io.mosip.kernel.syncdata.entity.AppRolePriority;
+import io.mosip.kernel.syncdata.entity.ApplicantValidDocument;
+import io.mosip.kernel.syncdata.entity.Application;
+import io.mosip.kernel.syncdata.entity.BaseEntity;
+import io.mosip.kernel.syncdata.entity.BiometricAttribute;
+import io.mosip.kernel.syncdata.entity.BiometricType;
+import io.mosip.kernel.syncdata.entity.BlacklistedWords;
+import io.mosip.kernel.syncdata.entity.Device;
+import io.mosip.kernel.syncdata.entity.DeviceProvider;
+import io.mosip.kernel.syncdata.entity.DeviceService;
+import io.mosip.kernel.syncdata.entity.DeviceSpecification;
+import io.mosip.kernel.syncdata.entity.DeviceSubTypeDPM;
+import io.mosip.kernel.syncdata.entity.DeviceType;
+import io.mosip.kernel.syncdata.entity.DeviceTypeDPM;
+import io.mosip.kernel.syncdata.entity.DocumentCategory;
+import io.mosip.kernel.syncdata.entity.DocumentType;
+import io.mosip.kernel.syncdata.entity.FoundationalTrustProvider;
+import io.mosip.kernel.syncdata.entity.Gender;
+import io.mosip.kernel.syncdata.entity.Holiday;
+import io.mosip.kernel.syncdata.entity.IdType;
+import io.mosip.kernel.syncdata.entity.IndividualType;
+import io.mosip.kernel.syncdata.entity.Language;
+import io.mosip.kernel.syncdata.entity.Location;
+import io.mosip.kernel.syncdata.entity.Machine;
+import io.mosip.kernel.syncdata.entity.MachineHistory;
+import io.mosip.kernel.syncdata.entity.MachineSpecification;
+import io.mosip.kernel.syncdata.entity.MachineType;
+import io.mosip.kernel.syncdata.entity.ProcessList;
+import io.mosip.kernel.syncdata.entity.ReasonCategory;
+import io.mosip.kernel.syncdata.entity.ReasonList;
+import io.mosip.kernel.syncdata.entity.RegisteredDevice;
+import io.mosip.kernel.syncdata.entity.RegistrationCenter;
+import io.mosip.kernel.syncdata.entity.RegistrationCenterDevice;
+import io.mosip.kernel.syncdata.entity.RegistrationCenterDeviceHistory;
+import io.mosip.kernel.syncdata.entity.RegistrationCenterMachine;
+import io.mosip.kernel.syncdata.entity.RegistrationCenterMachineDevice;
+import io.mosip.kernel.syncdata.entity.RegistrationCenterMachineDeviceHistory;
+import io.mosip.kernel.syncdata.entity.RegistrationCenterMachineHistory;
+import io.mosip.kernel.syncdata.entity.RegistrationCenterType;
+import io.mosip.kernel.syncdata.entity.RegistrationCenterUser;
+import io.mosip.kernel.syncdata.entity.RegistrationCenterUserHistory;
+import io.mosip.kernel.syncdata.entity.RegistrationCenterUserMachine;
+import io.mosip.kernel.syncdata.entity.RegistrationCenterUserMachineHistory;
+import io.mosip.kernel.syncdata.entity.ScreenAuthorization;
+import io.mosip.kernel.syncdata.entity.ScreenDetail;
+import io.mosip.kernel.syncdata.entity.SyncJobDef;
+import io.mosip.kernel.syncdata.entity.Template;
+import io.mosip.kernel.syncdata.entity.TemplateFileFormat;
+import io.mosip.kernel.syncdata.entity.TemplateType;
+import io.mosip.kernel.syncdata.entity.Title;
+import io.mosip.kernel.syncdata.entity.ValidDocument;
 
 /**
  * Masterdata sync handler service impl
@@ -101,6 +171,8 @@ import io.mosip.kernel.syncdata.utils.SyncMasterDataServiceHelper;
  */
 @Service
 public class SyncMasterDataServiceImpl implements SyncMasterDataService {
+	
+	private Logger logger = LogManager.getLogger(SyncMasterDataServiceImpl.class);
 
 	@Autowired
 	SyncMasterDataServiceHelper serviceHelper;
@@ -116,6 +188,9 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 
 	@Autowired
 	private MachineHistoryRepository machineHistoryRepo;
+	
+	@Autowired
+	private MapperUtils mapper;
 
 	/*
 	 * (non-Javadoc)
@@ -384,6 +459,11 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 					MasterDataErrorCode.REG_CENTER_MACHINE_FETCH_EXCEPTION.getErrorMessage());
 		}
 
+		return getRegistrationMachines(machineList, regMachineDto);
+	}
+
+	private RegistrationCenterMachineDto getRegistrationMachines(List<Object[]> machineList,
+			RegistrationCenterMachineDto regMachineDto) {
 		if (machineList.isEmpty()) {
 			throw new RequestException(MasterDataErrorCode.INVALID_MAC_OR_SERIAL_NUMBER.getErrorCode(),
 					MasterDataErrorCode.INVALID_MAC_OR_SERIAL_NUMBER.getErrorMessage());
@@ -480,6 +560,115 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 							+ ExceptionUtils.parseException(e));
 		}
 		return new UploadPublicKeyResponseDto(keyIndex);
+	}
+
+	@Override
+	public SyncDataResponseDto syncClientSettings(String regCenterId, String keyIndex,
+			LocalDateTime lastUpdated, LocalDateTime currentTimestamp) 
+					throws InterruptedException, ExecutionException {
+				
+		RegistrationCenterMachineDto regCenterMachineDto = getRegistrationCenterMachine(regCenterId, keyIndex);
+		
+		String machineId = regCenterMachineDto.getMachineId();
+		String registrationCenterId = regCenterMachineDto.getRegCenterId();
+		
+		SyncDataResponseDto response = new SyncDataResponseDto();
+		
+		List<CompletableFuture> futures = new ArrayList<CompletableFuture>();
+		
+		ApplicationDataHelper applicationDataHelper = new ApplicationDataHelper(lastUpdated, currentTimestamp);
+		applicationDataHelper.retrieveData(serviceHelper, futures);		
+		
+		MachineDataHelper machineDataHelper = new MachineDataHelper(registrationCenterId, lastUpdated, currentTimestamp);
+		machineDataHelper.retrieveData(serviceHelper, futures);		
+		
+		DeviceDataHelper deviceDataHelper = new DeviceDataHelper(registrationCenterId, lastUpdated, currentTimestamp);
+		deviceDataHelper.retrieveData(serviceHelper, futures);
+		
+		IndividualDataHelper individualDataHelper = new IndividualDataHelper(lastUpdated, currentTimestamp);
+		individualDataHelper.retrieveData(serviceHelper, futures);
+		
+		RegistrationCenterDataHelper RegistrationCenterDataHelper = new RegistrationCenterDataHelper(registrationCenterId, machineId, 
+				lastUpdated, currentTimestamp);
+		RegistrationCenterDataHelper.retrieveData(serviceHelper, futures);
+		
+		TemplateDataHelper templateDataHelper = new TemplateDataHelper(lastUpdated, currentTimestamp);
+		templateDataHelper.retrieveData(serviceHelper, futures);
+		
+		DocumentDataHelper documentDataHelper = new DocumentDataHelper(lastUpdated, currentTimestamp);
+		documentDataHelper.retrieveData(serviceHelper, futures);
+		
+		HistoryDataHelper historyDataHelper = new HistoryDataHelper(registrationCenterId, lastUpdated, currentTimestamp);
+		historyDataHelper.retrieveData(serviceHelper, futures);
+		
+		MiscellaneousDataHelper miscellaneousDataHelper = new MiscellaneousDataHelper(machineId, lastUpdated, currentTimestamp);
+		miscellaneousDataHelper.retrieveData(serviceHelper, futures);
+		
+		CompletableFuture array [] = new CompletableFuture[futures.size()];
+		CompletableFuture<Void> future = CompletableFuture.allOf(futures.toArray(array));		
+
+		try {
+			future.join();
+		} catch (CompletionException e) {
+			if (e.getCause() instanceof SyncDataServiceException) {
+				throw (SyncDataServiceException) e.getCause();
+			} else {
+				throw (RuntimeException) e.getCause();
+			}
+		}
+		
+		List<SyncDataBaseDto> list = new ArrayList<SyncDataBaseDto>();		
+		applicationDataHelper.fillRetrievedData(serviceHelper, list);
+		machineDataHelper.fillRetrievedData(serviceHelper, list);
+		deviceDataHelper.fillRetrievedData(serviceHelper, list);
+		individualDataHelper.fillRetrievedData(serviceHelper, list);
+		RegistrationCenterDataHelper.fillRetrievedData(serviceHelper, list);
+		templateDataHelper.fillRetrievedData(serviceHelper, list);
+		documentDataHelper.fillRetrievedData(serviceHelper, list);
+		historyDataHelper.fillRetrievedData(serviceHelper, list);
+		miscellaneousDataHelper.fillRetrievedData(serviceHelper, list);
+		
+		response.setDataToSync(list);
+		return response;
+	}
+	
+	/**
+	 * This method queries registrationCenterMachineRepository to fetch active registrationCenterMachine 
+	 * with input keyIndex.
+	 * 
+	 * KeyIndex is mandatory param
+	 * registrationCenterId is optional, if provided validates, if this matches the mapped registration center
+	 * 
+	 * @param registrationCenterId
+	 * @param keyIndex
+	 * @return RegistrationCenterMachineDto(machineId , registrationCenterId)
+	 * @throws SyncDataServiceException
+	 */
+	private RegistrationCenterMachineDto getRegistrationCenterMachine(String registrationCenterId, String keyIndex) throws SyncDataServiceException {
+		try {			
+			
+			List<Object[]> regCenterMachines = registrationCenterMachineRepository.getRegistrationCenterMachineWithKeyIndex(keyIndex);
+			
+			if (regCenterMachines.isEmpty()) {
+				throw new RequestException(MasterDataErrorCode.INVALID_KEY_INDEX.getErrorCode(),
+						MasterDataErrorCode.INVALID_KEY_INDEX.getErrorMessage());
+			}
+			
+			String mappedRegCenterId = (String)((Object[])regCenterMachines.get(0))[1];
+			
+			if(mappedRegCenterId == null || ( registrationCenterId != null &&  !mappedRegCenterId.equals(registrationCenterId) ) )
+				throw new RequestException(MasterDataErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorCode(),
+						MasterDataErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorMessage());
+			
+			return new RegistrationCenterMachineDto(mappedRegCenterId, (String)((Object[])regCenterMachines.get(0))[0]);
+			
+					
+		} catch (DataAccessException | DataAccessLayerException e) {
+			logger.error("Failed to fetch registrationCenterMachine : ", e);
+		}
+		
+		throw new SyncDataServiceException(MasterDataErrorCode.REG_CENTER_MACHINE_FETCH_EXCEPTION.getErrorCode(),
+				MasterDataErrorCode.REG_CENTER_MACHINE_FETCH_EXCEPTION.getErrorMessage());
 	}
 
 }

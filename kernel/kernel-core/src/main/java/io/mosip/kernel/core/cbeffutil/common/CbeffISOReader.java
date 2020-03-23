@@ -31,20 +31,21 @@ public class CbeffISOReader {
 	 */
 	public static byte[] readISOImage(String path, String type) throws Exception {
 		File testFile = new File(path);
-		DataInputStream in = new DataInputStream(new FileInputStream(testFile));
-		int formatId = in.readInt();
-		if (checkFormatIdentifier(formatId, type)) {
-			byte[] result = new byte[(int) testFile.length()];
-			FileInputStream fileIn = new FileInputStream(testFile);
-			int bytesRead = 0;
-			while (bytesRead < result.length) {
-				bytesRead += fileIn.read(result, bytesRead, result.length - bytesRead);
+		try (DataInputStream in = new DataInputStream(new FileInputStream(testFile))) {
+			int formatId = in.readInt();
+			if (checkFormatIdentifier(formatId, type)) {
+				byte[] result = new byte[(int) testFile.length()];
+				FileInputStream fileIn = new FileInputStream(testFile);
+				int bytesRead = 0;
+				while (bytesRead < result.length) {
+					bytesRead += fileIn.read(result, bytesRead, result.length - bytesRead);
+				}
+				fileIn.close();
+				return result;
+			} else {
+				throw new CbeffException(
+						"Format Identifier is wrong for the image,Please upload correct image of type : " + type);
 			}
-			fileIn.close();
-			return result;
-		} else {
-			throw new CbeffException(
-					"Format Identifier is wrong for the image,Please upload correct image of type : " + type);
 		}
 	}
 

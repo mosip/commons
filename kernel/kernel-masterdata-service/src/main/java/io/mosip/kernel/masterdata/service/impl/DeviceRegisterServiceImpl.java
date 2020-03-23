@@ -120,8 +120,8 @@ public class DeviceRegisterServiceImpl implements DeviceRegisterService {
 		}
 
 		if (deviceRegister == null) {
-			throw new DataNotFoundException(DeviceRegisterErrorCode.DATA_NOT_FOUND_EXCEPTION.getErrorCode(),
-					DeviceRegisterErrorCode.DATA_NOT_FOUND_EXCEPTION.getErrorMessage());
+			throw new DataNotFoundException(DeviceRegisterErrorCode.DATA_NOT_FOUND_DEVICE_REGISTER.getErrorCode(),
+					DeviceRegisterErrorCode.DATA_NOT_FOUND_DEVICE_REGISTER.getErrorMessage());
 		}
 		if (!Arrays.asList(REGISTERED, REVOKED, RETIRED).contains(statusCode)) {
 			throw new RequestException(DeviceRegisterErrorCode.INVALID_STATUS_CODE.getErrorCode(),

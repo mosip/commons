@@ -3,7 +3,11 @@
  */
 package io.mosip.kernel.masterdata.dto.registerdevice;
 
+import java.time.LocalDateTime;
+
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.mosip.kernel.masterdata.validator.StringFormatter;
 import io.swagger.annotations.ApiModelProperty;
@@ -41,8 +45,8 @@ public class DigitalId {
 	@ApiModelProperty(value = "model", required = true, dataType = "java.lang.String")
 	private String model;
 
-	/** The date time. */
-	private String dateTime;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+	private LocalDateTime dateTime;
 
 	/**
 	 * Field for deviceTypeCode

@@ -192,8 +192,7 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 	@Autowired
 	private LocationRepository locationRepository;
 	/**
-	 * get list of secondary languages supported by MOSIP from configuration
-	 * file
+	 * get list of secondary languages supported by MOSIP from configuration file
 	 */
 	@Value("${mosip.primary-language}")
 	private String primaryLang;
@@ -202,15 +201,13 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 	private AuditUtil auditUtil;
 
 	/**
-	 * get list of secondary languages supported by MOSIP from configuration
-	 * file
+	 * get list of secondary languages supported by MOSIP from configuration file
 	 */
 	@Value("${mosip.secondary-language}")
 	private String secondaryLang;
 
 	/**
-	 * get list of secondary languages supported by MOSIP from configuration
-	 * file
+	 * get list of secondary languages supported by MOSIP from configuration file
 	 */
 	@Value("#{'${mosip.secondary-language}'.split(',')}")
 	private Set<String> secondaryLangList;
@@ -312,8 +309,7 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 	 * (non-Javadoc)
 	 * 
 	 * @see io.mosip.kernel.masterdata.service.RegistrationCenterService#
-	 * getRegistrationCentersByCoordinates(double, double, int,
-	 * java.lang.String)
+	 * getRegistrationCentersByCoordinates(double, double, int, java.lang.String)
 	 */
 	@Override
 	public RegistrationCenterResponseDto getRegistrationCentersByCoordinates(double longitude, double latitude,
@@ -481,8 +477,7 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 	 * (non-Javadoc)
 	 * 
 	 * @see io.mosip.kernel.masterdata.service.RegistrationCenterService#
-	 * validateTimestampWithRegistrationCenter(java.lang.String,
-	 * java.lang.String)
+	 * validateTimestampWithRegistrationCenter(java.lang.String, java.lang.String)
 	 */
 	@Override
 	public ResgistrationCenterStatusResponseDto validateTimeStampWithRegistrationCenter(String id, String langCode,
@@ -501,8 +496,8 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 		ResgistrationCenterStatusResponseDto resgistrationCenterStatusResponseDto = new ResgistrationCenterStatusResponseDto();
 		try {
 			/**
-			 * a query is written in RegistrationCenterRepository which would
-			 * check if the date is not a holiday for that center
+			 * a query is written in RegistrationCenterRepository which would check if the
+			 * date is not a holiday for that center
 			 *
 			 */
 			RegistrationCenter registrationCenter = registrationCenterRepository.findByIdAndLangCode(id, langCode);
@@ -751,8 +746,7 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 	 * (non-Javadoc)
 	 * 
 	 * @see io.mosip.kernel.masterdata.service.RegistrationCenterService#
-	 * searchRegistrationCenter(io.mosip.kernel.masterdata.dto.request.
-	 * SearchDto)
+	 * searchRegistrationCenter(io.mosip.kernel.masterdata.dto.request. SearchDto)
 	 */
 	@Override
 	public PageResponseDto<RegistrationCenterSearchDto> searchRegistrationCenter(SearchDto dto) {
@@ -790,11 +784,9 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 				removeList.add(filter);
 			}
 			/*
-			 * // if zone based search if
-			 * (MasterDataConstant.ZONE.equalsIgnoreCase(column)) { Location
-			 * zone = serviceHelper.getZone(filter); if (zone != null) {
-			 * List<Location> descendants =
-			 * locationUtils.getDescedants(locations, zone); }
+			 * // if zone based search if (MasterDataConstant.ZONE.equalsIgnoreCase(column))
+			 * { Location zone = serviceHelper.getZone(filter); if (zone != null) {
+			 * List<Location> descendants = locationUtils.getDescedants(locations, zone); }
 			 * removeList.add(filter); flag = false; }
 			 */
 		}
@@ -946,8 +938,8 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.mosip.kernel.masterdata.service.RegistrationCenterService#
-	 * <<<<<<< HEAD createRegistrationCenterAdminPriSecLang(java.util.List)
+	 * @see io.mosip.kernel.masterdata.service.RegistrationCenterService# <<<<<<<
+	 * HEAD createRegistrationCenterAdminPriSecLang(java.util.List)
 	 */
 	@Transactional
 	@Override
@@ -1101,6 +1093,7 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 								RegistrationCenterErrorCode.WORKING_NON_WORKING_NULL.getErrorMessage()));
 					}
 				}
+
 			} catch (NullPointerException e) {
 				auditUtil.auditRequest(
 						String.format(MasterDataConstant.FAILURE_CREATE, RegCenterPostReqDto.class.getSimpleName()),
@@ -1113,19 +1106,25 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 						RegistrationCenterErrorCode.WORKING_NON_WORKING_NULL.getErrorMessage()));
 			}
 
-			if (((primaryLang.equals(regCenterPostReqDto.getLangCode())
+
+
+			if ((regCenterPostReqDto!=null && ((primaryLang.equals(regCenterPostReqDto.getLangCode())
 					|| regCenterPostReqDto.getWorkingNonWorkingDays() != null)
-					|| secondaryLang.equals(regCenterPostReqDto.getLangCode()))) {
+					|| secondaryLang.equals(regCenterPostReqDto.getLangCode())))) {
 				// set response for working_non_working for both primary and
 				// sencodary language
 				setResponseDtoWorkingNonWorking(registrationCenter, registrationCenterExtnDto);
 
 			}
+			if(registrationCenter==null) {
+				throw new MasterDataServiceException(RegistrationCenterErrorCode.REGISTRATION_CENTER_INSERT_EXCEPTION.getErrorCode(),
+					RegistrationCenterErrorCode.REGISTRATION_CENTER_INSERT_EXCEPTION.getErrorMessage());
+			}
 			// set ExpHoliday Dto
 			setRegExpHolidayDto(registrationCenter, registrationCenterExtnDto, exceptionalHolidayPutPostDtoList);
 
 			// creating registration center history
-			registrationCenterHistoryEntity = MetaDataUtils.setCreateMetaData(registrationCenterEntity,
+			registrationCenterHistoryEntity = MetaDataUtils.setCreateMetaData(registrationCenterEntity!=null? registrationCenterEntity:null,
 					RegistrationCenterHistory.class);
 			registrationCenterHistoryEntity.setEffectivetimes(registrationCenterEntity.getCreatedDateTime());
 			registrationCenterHistoryEntity.setCreatedDateTime(registrationCenterEntity.getCreatedDateTime());
@@ -1232,13 +1231,13 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 				// reqExceptionalHolidayDto;
 				if (!reqExceptionalHolidayDtos.isEmpty()) { // ***
 					for (ExceptionalHolidayPutPostDto expHoliday : reqExceptionalHolidayDtos) {
-						if (dbHolidayList.contains(expHoliday.getExceptionHolidayDate())) {
+						if (dbHolidayList.contains(LocalDate.parse((expHoliday.getExceptionHolidayDate())))) {
 							throw new MasterDataServiceException(
 									RegistrationCenterErrorCode.EXP_HOLIDAY_DATE.getErrorCode(),
 									RegistrationCenterErrorCode.EXP_HOLIDAY_DATE.getErrorMessage());
 
 						}
-						RegExceptionalHoliday regExceptionalHoliday = new RegExceptionalHoliday();
+						RegExceptionalHoliday regExceptionalHoliday = null;
 						regExceptionalHoliday = MetaDataUtils.setCreateMetaData(registrationCenterEntity,
 								RegExceptionalHoliday.class);
 						regExceptionalHoliday.setRegistrationCenterId(registrationCenterEntity.getId());
@@ -1450,41 +1449,36 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 	private void updateExpHoliday(RegistrationCenter updRegistrationCenter, RegCenterPutReqDto regCenterPutReqDto,
 			List<ServiceError> errors) {
 		try {
-			Set<LocalDate> dbRegExceptionalHolidays = new HashSet<>();
+			Set<LocalDate> dbRegExceptionalHolidays = null;
 			// get data from DB for the ID
 			List<RegExceptionalHoliday> dbRegExcpHoliday = regExceptionalHolidayRepository
 					.findByRegIdAndLangcode(updRegistrationCenter.getId(), primaryLang);
 
 			dbRegExceptionalHolidays = dbRegExcpHoliday.stream().map(date -> date.getExceptionHolidayDate())
 					.collect(Collectors.toSet());
-			
-			
+
 			Set<LocalDate> holidayDates = regCenterPutReqDto.getExceptionalHolidayPutPostDto().stream()
 					.map(s -> LocalDate.parse(s.getExceptionHolidayDate())).collect(Collectors.toSet());
-			
-			 Collection<LocalDate> insertCollection = CollectionUtils.removeAll(holidayDates, dbRegExceptionalHolidays);
-			 Set<LocalDate> insertSet = new HashSet<>(insertCollection);
-			 
-			 Collection<LocalDate> deleteCollection = CollectionUtils.removeAll(dbRegExceptionalHolidays, holidayDates);
-			 Set<LocalDate> deleteSet = new HashSet<>(deleteCollection);
-			 
-			 List<ExceptionalHolidayPutPostDto> addExpHoliday = regCenterPutReqDto.getExceptionalHolidayPutPostDto().stream().filter(s->insertSet.contains(LocalDate.parse(s.getExceptionHolidayDate())))
-					 .map(s->s).collect(Collectors.toList());
-			 
-			 if(dbRegExceptionalHolidays.isEmpty())
-			 {
-				 createReqExpHoldayAndDBEmpty(updRegistrationCenter, regCenterPutReqDto);
-			 }
-			 else if(CollectionUtils.isNotEmpty(insertSet) && CollectionUtils.isNotEmpty(addExpHoliday))
-			 {
-				 createExpHoliday(addExpHoliday, regCenterPutReqDto.getHolidayLocationCode(), updRegistrationCenter);
-			 }
-			 else if(CollectionUtils.isNotEmpty(deleteSet))
-			 {
-				 for (LocalDate dbHoliday : deleteSet) {
-						deleteExpHoliday(updRegistrationCenter, dbHoliday);
-					}
-			 }
+
+			Collection<LocalDate> insertCollection = CollectionUtils.removeAll(holidayDates, dbRegExceptionalHolidays);
+			Set<LocalDate> insertSet = new HashSet<>(insertCollection);
+
+			Collection<LocalDate> deleteCollection = CollectionUtils.removeAll(dbRegExceptionalHolidays, holidayDates);
+			Set<LocalDate> deleteSet = new HashSet<>(deleteCollection);
+
+			List<ExceptionalHolidayPutPostDto> addExpHoliday = regCenterPutReqDto.getExceptionalHolidayPutPostDto()
+					.stream().filter(s -> insertSet.contains(LocalDate.parse(s.getExceptionHolidayDate()))).map(s -> s)
+					.collect(Collectors.toList());
+
+			if (dbRegExceptionalHolidays.isEmpty()) {
+				createReqExpHoldayAndDBEmpty(updRegistrationCenter, regCenterPutReqDto);
+			} else if (CollectionUtils.isNotEmpty(insertSet) && CollectionUtils.isNotEmpty(addExpHoliday)) {
+				createExpHoliday(addExpHoliday, regCenterPutReqDto.getHolidayLocationCode(), updRegistrationCenter);
+			} else if (CollectionUtils.isNotEmpty(deleteSet)) {
+				for (LocalDate dbHoliday : deleteSet) {
+					deleteExpHoliday(updRegistrationCenter, dbHoliday);
+				}
+			}
 
 		} catch (NullPointerException exp) {
 			errors.add(new ServiceError(RegistrationCenterErrorCode.EXP_HOLIDAY_NULL.getErrorCode(),
@@ -1505,43 +1499,56 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 	}
 
 	// db is not empty and req is not empty
-	private void createReqExpHolidayAndBDNotEmpt(RegistrationCenter updRegistrationCenter,
-			RegCenterPutReqDto regCenterPutReqDto, Set<LocalDate> dbRegExceptionalHolidays,
-			Set<LocalDate> reqHolidayDates) {
-		Set<LocalDate> holidayDates = regCenterPutReqDto.getExceptionalHolidayPutPostDto().stream()
-				.map(s -> LocalDate.parse(s.getExceptionHolidayDate())).collect(Collectors.toSet());
-		Set<LocalDate> symmetricDiff = new HashSet<>(dbRegExceptionalHolidays);
-		symmetricDiff.addAll(holidayDates);
-		// symmetricDiff now contains the union
-		Set<LocalDate> tmp = new HashSet<>(dbRegExceptionalHolidays);
-		tmp.retainAll(holidayDates);
-		// tmp now contains the intersection
-		symmetricDiff.removeAll(tmp);
-		List<ExceptionalHolidayPutPostDto> addExpHoliday = new ArrayList<>();
-		for (ExceptionalHolidayPutPostDto reqExpHoliday : regCenterPutReqDto.getExceptionalHolidayPutPostDto()) {
-			for(LocalDate expDate:symmetricDiff)
-			{
-				if(reqExpHoliday.equals(expDate))
-				{
-					addExpHoliday.add(reqExpHoliday);
-				}
-			}
-				
-		}
-		createExpHoliday(addExpHoliday, regCenterPutReqDto.getHolidayLocationCode(), updRegistrationCenter);
-		reqHolidayDates = new HashSet<>(holidayDates);
 
-	/*	for (ExceptionalHolidayPutPostDto reqExpHoliday : regCenterPutReqDto.getExceptionalHolidayPutPostDto()) {
-			if (dbRegExceptionalHolidays.contains(reqExpHoliday.getExceptionHolidayDate().trim())) {
-				reqHolidayDates.add(LocalDate.parse(reqExpHoliday.getExceptionHolidayDate()));
-			} else {
-				List<ExceptionalHolidayPutPostDto> addExpHoliday = new ArrayList<>();
-				addExpHoliday.add(reqExpHoliday);
-				createExpHoliday(addExpHoliday, regCenterPutReqDto.getHolidayLocationCode(), updRegistrationCenter);
-			}
-			reqHolidayDates.add(LocalDate.parse(reqExpHoliday.getExceptionHolidayDate()));
-		}*/
-	}
+	// NEVER USED. HAD TO BE COMMENTED
+	// private void createReqExpHolidayAndBDNotEmpt(RegistrationCenter
+	// updRegistrationCenter,
+	// RegCenterPutReqDto regCenterPutReqDto, Set<LocalDate>
+	// dbRegExceptionalHolidays,
+	// Set<LocalDate> reqHolidayDates) {
+	// Set<LocalDate> holidayDates =
+	// regCenterPutReqDto.getExceptionalHolidayPutPostDto().stream()
+	// .map(s ->
+	// LocalDate.parse(s.getExceptionHolidayDate())).collect(Collectors.toSet());
+	// Set<LocalDate> symmetricDiff = new HashSet<>(dbRegExceptionalHolidays);
+	// symmetricDiff.addAll(holidayDates);
+	// // symmetricDiff now contains the union
+	// Set<LocalDate> tmp = new HashSet<>(dbRegExceptionalHolidays);
+	// tmp.retainAll(holidayDates);
+	// // tmp now contains the intersection
+	// symmetricDiff.removeAll(tmp);
+	// List<ExceptionalHolidayPutPostDto> addExpHoliday = new ArrayList<>();
+	// for (ExceptionalHolidayPutPostDto reqExpHoliday :
+	// regCenterPutReqDto.getExceptionalHolidayPutPostDto()) {
+	// for(LocalDate expDate:symmetricDiff)
+	// {
+	// if(reqExpHoliday.equals(expDate))
+	// {
+	// addExpHoliday.add(reqExpHoliday);
+	// }
+	// }
+	//
+	// }
+	// createExpHoliday(addExpHoliday, regCenterPutReqDto.getHolidayLocationCode(),
+	// updRegistrationCenter);
+	// reqHolidayDates = new HashSet<>(holidayDates);
+	//
+	// /* for (ExceptionalHolidayPutPostDto reqExpHoliday :
+	// regCenterPutReqDto.getExceptionalHolidayPutPostDto()) {
+	// if
+	// (dbRegExceptionalHolidays.contains(reqExpHoliday.getExceptionHolidayDate().trim()))
+	// {
+	// reqHolidayDates.add(LocalDate.parse(reqExpHoliday.getExceptionHolidayDate()));
+	// } else {
+	// List<ExceptionalHolidayPutPostDto> addExpHoliday = new ArrayList<>();
+	// addExpHoliday.add(reqExpHoliday);
+	// createExpHoliday(addExpHoliday, regCenterPutReqDto.getHolidayLocationCode(),
+	// updRegistrationCenter);
+	// }
+	// reqHolidayDates.add(LocalDate.parse(reqExpHoliday.getExceptionHolidayDate()));
+	// }*/
+	// }
+
 
 	@Transactional
 	private void deleteExpHoliday(RegistrationCenter updRegistrationCenter, LocalDate dbHoliday) {
@@ -1661,5 +1668,5 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 		filter.setValue(zoneCode);
 		return filter;
 	}
-	
+
 }

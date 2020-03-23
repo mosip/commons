@@ -1,9 +1,14 @@
 package io.mosip.kernel.masterdata.utils;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 
-public class MultiFieldComparator<T> implements Comparator<T> {
+public class MultiFieldComparator<T> implements Comparator<T>,Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 721977042013245480L;
 	private List<FieldComparator<T>> listComparators;
 
 	public MultiFieldComparator(List<FieldComparator<T>> listComparators) {

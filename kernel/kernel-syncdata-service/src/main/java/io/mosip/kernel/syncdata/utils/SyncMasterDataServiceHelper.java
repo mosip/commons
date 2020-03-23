@@ -4,8 +4,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.scheduling.annotation.Async;
@@ -65,6 +68,7 @@ import io.mosip.kernel.syncdata.dto.TemplateFileFormatDto;
 import io.mosip.kernel.syncdata.dto.TemplateTypeDto;
 import io.mosip.kernel.syncdata.dto.TitleDto;
 import io.mosip.kernel.syncdata.dto.ValidDocumentDto;
+import io.mosip.kernel.syncdata.dto.response.SyncDataBaseDto;
 import io.mosip.kernel.syncdata.entity.AppAuthenticationMethod;
 import io.mosip.kernel.syncdata.entity.AppDetail;
 import io.mosip.kernel.syncdata.entity.AppRolePriority;
@@ -115,6 +119,7 @@ import io.mosip.kernel.syncdata.entity.TemplateFileFormat;
 import io.mosip.kernel.syncdata.entity.TemplateType;
 import io.mosip.kernel.syncdata.entity.Title;
 import io.mosip.kernel.syncdata.entity.ValidDocument;
+import io.mosip.kernel.syncdata.exception.ParseResponseException;
 import io.mosip.kernel.syncdata.exception.SyncDataServiceException;
 import io.mosip.kernel.syncdata.repository.AppAuthenticationMethodRepository;
 import io.mosip.kernel.syncdata.repository.AppDetailRepository;
@@ -167,6 +172,7 @@ import io.mosip.kernel.syncdata.repository.TemplateTypeRepository;
 import io.mosip.kernel.syncdata.repository.TitleRepository;
 import io.mosip.kernel.syncdata.repository.ValidDocumentRepository;
 import io.mosip.kernel.syncdata.service.SyncJobDefService;
+import io.mosip.kernel.syncdata.service.impl.SyncMasterDataServiceImpl;
 
 /**
  * Sync handler masterData service helper
@@ -177,6 +183,8 @@ import io.mosip.kernel.syncdata.service.SyncJobDefService;
  */
 @Component
 public class SyncMasterDataServiceHelper {
+	
+	private Logger logger = LogManager.getLogger(SyncMasterDataServiceHelper.class);
 
 	@Autowired
 	private MapperUtils mapper;
@@ -295,7 +303,7 @@ public class SyncMasterDataServiceHelper {
 	@Async
 	public CompletableFuture<List<MachineDto>> getMachines(String regCenterId, LocalDateTime lastUpdated,
 			LocalDateTime currentTimeStamp) {
-		List<Machine> machineDetailList = new ArrayList<>();
+		List<Machine> machineDetailList = null;
 		List<MachineDto> machineDetailDtoList = new ArrayList<>();
 		try {
 			if (lastUpdated == null) {
@@ -1736,6 +1744,25 @@ public class SyncMasterDataServiceHelper {
 			deviceSubTypeDPMDtos = MapperUtils.mapAll(deviceSubTypeDPMs, DeviceSubTypeDPMDto.class);
 		}
 		return CompletableFuture.completedFuture(deviceSubTypeDPMDtos);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public SyncDataBaseDto getSyncDataBaseDto(Class entityClass, String entityType, List entities) {
+		
+		List<String> list = new ArrayList<String>();
+		
+		if(null != entities) {
+			entities.parallelStream().filter(Objects::nonNull).forEach(obj -> {
+				try {
+					String json = mapper.getObjectAsJsonString(obj);
+					if(json != null) { list.add(mapper.getObjectAsJsonString(obj)); }
+				} catch (Exception e) {
+					logger.error("Failed to map "+ entityClass.getSimpleName() +" to json", e);
+				}
+			});
+		}		
+		
+		return new SyncDataBaseDto(entityClass.getSimpleName(), entityType, list);		
 	}
 
 }

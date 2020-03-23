@@ -2,7 +2,6 @@ package io.mosip.kernel.masterdata.service.impl;
 
 import java.util.UUID;
 
-import org.assertj.core.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -60,21 +59,25 @@ public class MOSIPDeviceServiceImpl implements MOSIPDeviceServices {
 	@Override
 	@Transactional
 	public MOSIPDeviceServiceExtDto createMOSIPDeviceService(MOSIPDeviceServiceDto dto) {
-		MOSIPDeviceService crtMosipDeviceService = null;
 		MOSIPDeviceService entity = null;
 		MOSIPDeviceServiceExtDto mosipDeviceServiceExtDto = null;
 
 		try {
 
-//			if (mosipDeviceServiceRepository.findById(MOSIPDeviceService.class, dto.getId()) != null) {
-//				auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_CREATE, MOSIPDeviceService.class.getCanonicalName()),
-//						MasterDataConstant.AUDIT_SYSTEM,
-//						String.format(MasterDataConstant.FAILURE_DESC,
-//								MOSIPDeviceServiceErrorCode.MDS_EXIST.getErrorCode(),
-//								MOSIPDeviceServiceErrorCode.MDS_EXIST.getErrorMessage()),"ADM-711");
-//				throw new RequestException(MOSIPDeviceServiceErrorCode.MDS_EXIST.getErrorCode(),
-//						String.format(MOSIPDeviceServiceErrorCode.MDS_EXIST.getErrorMessage(), dto.getId()));
-//			}
+			// if
+			// (mosipDeviceServiceRepository.findById(MOSIPDeviceService.class,
+			// dto.getId()) != null) {
+			// auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_CREATE,
+			// MOSIPDeviceService.class.getCanonicalName()),
+			// MasterDataConstant.AUDIT_SYSTEM,
+			// String.format(MasterDataConstant.FAILURE_DESC,
+			// MOSIPDeviceServiceErrorCode.MDS_EXIST.getErrorCode(),
+			// MOSIPDeviceServiceErrorCode.MDS_EXIST.getErrorMessage()),"ADM-711");
+			// throw new
+			// RequestException(MOSIPDeviceServiceErrorCode.MDS_EXIST.getErrorCode(),
+			// String.format(MOSIPDeviceServiceErrorCode.MDS_EXIST.getErrorMessage(),
+			// dto.getId()));
+			// }
 			if ((registrationDeviceTypeRepository
 					.findByCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(dto.getRegDeviceTypeCode())) == null) {
 				auditUtil.auditRequest(
@@ -113,12 +116,25 @@ public class MOSIPDeviceServiceImpl implements MOSIPDeviceServices {
 						MOSIPDeviceServiceErrorCode.DEVICE_PROVIDER_NOT_FOUND.getErrorMessage());
 			}
 
+			if (mosipDeviceServiceRepository.findByDeviceDetail(dto.getSwVersion(), dto.getRegDeviceTypeCode(),
+					dto.getRegDeviceSubCode(), dto.getMake(), dto.getModel(), dto.getDeviceProviderId()) != null) {
+				auditUtil.auditRequest(
+						String.format(MasterDataConstant.FAILURE_CREATE, MOSIPDeviceService.class.getCanonicalName()),
+						MasterDataConstant.AUDIT_SYSTEM,
+						String.format(MasterDataConstant.FAILURE_DESC,
+								MOSIPDeviceServiceErrorCode.MDS_EXIST.getErrorCode(),
+								MOSIPDeviceServiceErrorCode.MDS_EXIST.getErrorMessage()),
+						"ADM-70315");
+				throw new RequestException(MOSIPDeviceServiceErrorCode.MDS_EXIST.getErrorCode(),
+						MOSIPDeviceServiceErrorCode.MDS_EXIST.getErrorMessage());
+			}
+
 			entity = MetaDataUtils.setCreateMetaData(dto, MOSIPDeviceService.class);
 			String id = UUID.randomUUID().toString();
 			entity.setId(id);
 			byte[] swNinaryHashArr = dto.getSwBinaryHash().getBytes();
 			entity.setSwBinaryHash(swNinaryHashArr);
-			crtMosipDeviceService = mosipDeviceServiceRepository.create(entity);
+			mosipDeviceServiceRepository.create(entity);
 
 			MOSIPDeviceServiceHistory entityHistory = new MOSIPDeviceServiceHistory();
 			MapperUtils.map(entity, entityHistory);
