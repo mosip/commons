@@ -654,13 +654,13 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 						MasterDataErrorCode.INVALID_KEY_INDEX.getErrorMessage());
 			}
 			
-			String mappedRegCenterId = (String)((Object[])regCenterMachines.get(0))[1];
+			String mappedRegCenterId = (String)((Object[])regCenterMachines.get(0))[0];
 			
 			if(mappedRegCenterId == null || ( registrationCenterId != null &&  !mappedRegCenterId.equals(registrationCenterId) ) )
 				throw new RequestException(MasterDataErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorCode(),
 						MasterDataErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorMessage());
 			
-			return new RegistrationCenterMachineDto(mappedRegCenterId, (String)((Object[])regCenterMachines.get(0))[0]);
+			return new RegistrationCenterMachineDto(mappedRegCenterId, (String)((Object[])regCenterMachines.get(0))[1]);
 			
 					
 		} catch (DataAccessException | DataAccessLayerException e) {
