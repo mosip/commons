@@ -1,6 +1,7 @@
 package io.mosip.kernel.auth.controller;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +33,6 @@ import io.mosip.kernel.auth.dto.AccessTokenResponseDTO;
 import io.mosip.kernel.auth.dto.AuthNResponse;
 import io.mosip.kernel.auth.dto.AuthNResponseDto;
 import io.mosip.kernel.auth.dto.AuthResponseDto;
-import io.mosip.kernel.auth.dto.AuthToken;
 import io.mosip.kernel.auth.dto.AuthZResponseDto;
 import io.mosip.kernel.auth.dto.ClientSecret;
 import io.mosip.kernel.auth.dto.ClientSecretDto;
@@ -43,6 +43,8 @@ import io.mosip.kernel.auth.dto.MosipUserSaltListDto;
 import io.mosip.kernel.auth.dto.MosipUserTokenDto;
 import io.mosip.kernel.auth.dto.PasswordDto;
 import io.mosip.kernel.auth.dto.RIdDto;
+import io.mosip.kernel.auth.dto.RefreshTokenRequest;
+import io.mosip.kernel.auth.dto.RefreshTokenResponse;
 import io.mosip.kernel.auth.dto.RolesListDto;
 import io.mosip.kernel.auth.dto.UserDetailsDto;
 import io.mosip.kernel.auth.dto.UserDetailsRequestDto;
@@ -58,7 +60,6 @@ import io.mosip.kernel.auth.dto.ValidationResponseDto;
 import io.mosip.kernel.auth.dto.otp.OtpUser;
 import io.mosip.kernel.auth.exception.AuthManagerException;
 import io.mosip.kernel.auth.service.AuthService;
-import io.mosip.kernel.auth.service.TokenService;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -92,13 +93,6 @@ public class AuthController {
 	private AuthService authService;
 
 	/**
-	 * Autowired reference for {@link CustomTokenServices}
-	 */
-
-	@Autowired
-	private TokenService customTokenServices;
-
-	/**
 	 * API to authenticate using userName and password
 	 * 
 	 * request is of type {@link LoginUser}
@@ -124,11 +118,6 @@ public class AuthController {
 		}
 		responseWrapper.setResponse(authNResponse);
 		return responseWrapper;
-	}
-
-	private AuthToken getAuthToken(AuthNResponseDto authResponseDto) {
-		return new AuthToken(authResponseDto.getUserId(), authResponseDto.getToken(), authResponseDto.getExpiryTime(),
-				authResponseDto.getRefreshToken());
 	}
 
 	private Cookie createCookie(final String content, final int expirationTimeSeconds) {
@@ -296,7 +285,7 @@ public class AuthController {
 				throw new AuthManagerException(AuthErrorCode.TOKEN_NOTPRESENT_ERROR.getErrorCode(),
 						AuthErrorCode.TOKEN_NOTPRESENT_ERROR.getErrorMessage());
 			}
-  
+
 			mosipUserDto = authService.valdiateToken(authToken);
 			Cookie cookie = createCookie(mosipUserDto.getToken(), mosipEnvironment.getTokenExpiry());
 			res.addCookie(cookie);
@@ -315,21 +304,23 @@ public class AuthController {
 	 * @return ResponseEntity with MosipUserDto
 	 */
 	@ResponseFilter
-	@PostMapping(value = "/authorize/refreshToken")
-	public ResponseWrapper<MosipUserDto> retryToken(HttpServletRequest request, HttpServletResponse res)
-			throws Exception {
-		ResponseWrapper<MosipUserDto> responseWrapper = new ResponseWrapper<>();
-		String authToken = null;
+	@PostMapping(value = "/authorize/refreshToken/{appid}")
+	public ResponseWrapper<AuthNResponse> refreshToken(@PathVariable("appid") String appId,@RequestBody RefreshTokenRequest refreshTokenRequest,
+			HttpServletRequest request, HttpServletResponse res) throws Exception {
+		ResponseWrapper<AuthNResponse> responseWrapper = new ResponseWrapper<>();
+		String refreshToken = null;
 		Cookie[] cookies = request.getCookies();
 		for (Cookie cookie : cookies) {
-			if (cookie.getName().contains(AuthConstant.AUTH_COOOKIE_HEADER)) {
-				authToken = cookie.getValue();
+			if (cookie.getName().contains(AuthConstant.REFRESH_TOKEN)) {
+				refreshToken = cookie.getValue();
 			}
 		}
-		MosipUserTokenDto mosipUserDtoToken = authService.retryToken(authToken);
-		Cookie cookie = createCookie(mosipUserDtoToken.getToken(), mosipEnvironment.getTokenExpiry());
+		Objects.requireNonNull(refreshToken, "No refresh token cookie found");
+		RefreshTokenResponse mosipUserDtoToken = authService.refreshToken(appId,refreshToken, refreshTokenRequest);
+		Cookie cookie = createCookie(mosipUserDtoToken.getAccesstoken(), mosipEnvironment.getTokenExpiry());
 		res.addCookie(cookie);
-		responseWrapper.setResponse(mosipUserDtoToken.getMosipUserDto());
+		res.addCookie(new Cookie("refresh_token", mosipUserDtoToken.getRefreshToken()));
+		responseWrapper.setResponse(mosipUserDtoToken.getAuthNResponse());
 		return responseWrapper;
 	}
 
@@ -598,34 +589,6 @@ public class AuthController {
 		res.addCookie(cookie);
 		res.setStatus(302);
 		res.sendRedirect(uri);
-	}
-
-	/**
-	 * Gets Access token from cookie
-	 * 
-	 * @param req - {@link HttpServletRequest}
-	 * @return {@link String} - accessToken
-	 */
-	private String getTokenFromCookie(HttpServletRequest req) {
-		Cookie[] cookies = req.getCookies();
-		String token = null;
-		if (cookies == null) {
-			throw new AuthManagerException(AuthErrorCode.COOKIE_NOTPRESENT_ERROR.getErrorCode(),
-					AuthErrorCode.COOKIE_NOTPRESENT_ERROR.getErrorMessage());
-		}
-		for (Cookie cookie : cookies) {
-			if (cookie.getName().contains(AuthConstant.AUTH_COOOKIE_HEADER)) {
-				token = cookie.getValue();
-				removeCookie(cookie);
-				break;
-			}
-		}
-		if (token == null) {
-			throw new AuthManagerException(AuthErrorCode.TOKEN_NOTPRESENT_ERROR.getErrorCode(),
-					AuthErrorCode.TOKEN_NOTPRESENT_ERROR.getErrorMessage());
-		}
-
-		return token;
 	}
 
 	/**

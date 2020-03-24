@@ -33,6 +33,8 @@ import io.mosip.kernel.auth.dto.MosipUserSaltListDto;
 import io.mosip.kernel.auth.dto.MosipUserTokenDto;
 import io.mosip.kernel.auth.dto.PasswordDto;
 import io.mosip.kernel.auth.dto.RIdDto;
+import io.mosip.kernel.auth.dto.RefreshTokenRequest;
+import io.mosip.kernel.auth.dto.RefreshTokenResponse;
 import io.mosip.kernel.auth.dto.RolesListDto;
 import io.mosip.kernel.auth.dto.UserDetailsResponseDto;
 import io.mosip.kernel.auth.dto.UserNameDto;
@@ -318,7 +320,7 @@ public class ProxyAuthServiceImpl implements AuthService {
 	 */
 
 	@Override
-	public MosipUserTokenDto retryToken(String existingToken) throws Exception {
+	public RefreshTokenResponse refreshToken(String appID,String refereshToken,RefreshTokenRequest refreshTokenRequest) throws Exception {
 		throw new UnsupportedOperationException("This openeration is not supported in local profile for now");
 	}
 

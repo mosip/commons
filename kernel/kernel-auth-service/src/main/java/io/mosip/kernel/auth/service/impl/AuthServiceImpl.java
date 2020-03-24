@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,8 +56,9 @@ import io.mosip.kernel.auth.dto.MosipUserTokenDto;
 import io.mosip.kernel.auth.dto.PasswordDto;
 import io.mosip.kernel.auth.dto.RIdDto;
 import io.mosip.kernel.auth.dto.RealmAccessDto;
+import io.mosip.kernel.auth.dto.RefreshTokenRequest;
+import io.mosip.kernel.auth.dto.RefreshTokenResponse;
 import io.mosip.kernel.auth.dto.RolesListDto;
-import io.mosip.kernel.auth.dto.TimeToken;
 import io.mosip.kernel.auth.dto.UserDetailsResponseDto;
 import io.mosip.kernel.auth.dto.UserNameDto;
 import io.mosip.kernel.auth.dto.UserOtp;
@@ -89,6 +91,8 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
 @Profile("!local")
 @Service
 public class AuthServiceImpl implements AuthService {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(AuthServiceImpl.class);
 
 	private static final String CLIENTID_AND_TOKEN_COMBINATION_HAD_BEEN_VALIDATED_SUCCESSFULLY = "Clientid and Token combination had been validated successfully";
 
@@ -165,7 +169,10 @@ public class AuthServiceImpl implements AuthService {
 
 	@Value("${mosip.admin_realm_id}")
 	private String realmID;
-	
+
+	@Value("${mosip.kernel.prereg.realm-id}")
+	private String preRegRealmID;
+
 	@Qualifier("authRestTemplate")
 	@Autowired
 	private RestTemplate authRestTemplate;
@@ -250,7 +257,7 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public AuthNResponseDto authenticateWithOtp(OtpUser otpUser) throws Exception {
 		AuthNResponseDto authNResponseDto = null;
-		
+
 		MosipUserDto mosipUser = null;
 		otpUser.getOtpChannel().replaceAll(String::toLowerCase);
 		otpUser.setAppId(otpUser.getAppId().toLowerCase());
@@ -265,7 +272,7 @@ public class AuthServiceImpl implements AuthService {
 			userCreationRequestDto.setUserName(otpUser.getUserId());
 			userCreationRequestDto.setAppId(otpUser.getAppId());
 			mosipUser = registerUser(userCreationRequestDto);
-            authNResponseDto = oTPService.sendOTP(mosipUser, otpUser);
+			authNResponseDto = oTPService.sendOTP(mosipUser, otpUser);
 			authNResponseDto.setStatus(authNResponseDto.getStatus());
 			authNResponseDto.setMessage(authNResponseDto.getMessage());
 		} else {
@@ -294,7 +301,7 @@ public class AuthServiceImpl implements AuthService {
 		if (userOtp.getAppId().equalsIgnoreCase(AuthConstant.PRE_REGISTRATION)) {
 			realm = userOtp.getAppId();
 		}
-		
+
 		if (keycloakImpl.isUserAlreadyPresent(userOtp.getUserId(), realm)) {
 			mosipUser = new MosipUserDto();
 			mosipUser.setUserId(userOtp.getUserId());
@@ -367,26 +374,39 @@ public class AuthServiceImpl implements AuthService {
 	 */
 
 	@Override
-	public MosipUserTokenDto retryToken(String existingToken) throws Exception {
-		MosipUserTokenDto mosipUserDtoToken = null;
-		boolean checkRefreshToken = false;
-		AuthToken accessToken = customTokenServices.getTokenDetails(existingToken);
-		if (accessToken != null) {
-			if (accessToken.getRefreshToken() != null) {
-				checkRefreshToken = tokenValidator.validateExpiry(accessToken.getRefreshToken());
-			}
-			if (checkRefreshToken) {
-				TimeToken newAccessToken = tokenGenerator.generateNewToken(accessToken.getRefreshToken());
-				AuthToken updatedAccessToken = customTokenServices.getUpdatedAccessToken(accessToken.getUserId(),
-						newAccessToken, accessToken.getUserId());
-				mosipUserDtoToken = tokenValidator.validateToken(updatedAccessToken.getAccessToken());
-			} else {
-				throw new RuntimeException("Refresh Token Expired");
-			}
+	public RefreshTokenResponse refreshToken(String appID, String refreshToken, RefreshTokenRequest refreshTokenRequest)
+			throws Exception {
+		MultiValueMap<String, String> tokenRequestBody = new LinkedMultiValueMap<>();
+		tokenRequestBody.add(AuthConstant.GRANT_TYPE, AuthConstant.REFRESH_TOKEN);
+		tokenRequestBody.add(AuthConstant.REFRESH_TOKEN, refreshToken);
+		tokenRequestBody.add(AuthConstant.CLIENT_ID, refreshTokenRequest.getClientID());
+		tokenRequestBody.add(AuthConstant.CLIENT_SECRET, refreshTokenRequest.getClientID());
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		Map<String, String> pathParams = new HashMap<>();
+
+		if (appID.equalsIgnoreCase("preregistration")) {
+			pathParams.put(AuthConstant.REALM_ID, preRegRealmID);
 		} else {
-			throw new RuntimeException("Token doesn't exist");
+			pathParams.put(AuthConstant.REALM_ID, realmId);
 		}
-		return mosipUserDtoToken;
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(keycloakOpenIdUrl + "/token");
+
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(tokenRequestBody, headers);
+		ResponseEntity<AccessTokenResponse> response = null;
+		try {
+			response = restTemplate.postForEntity(uriComponentsBuilder.buildAndExpand(pathParams).toUriString(),
+					request, AccessTokenResponse.class);
+		} catch (HttpServerErrorException | HttpClientErrorException ex) {
+			LOGGER.error(ex.getMessage());
+		}
+		Objects.requireNonNull(response);
+		AccessTokenResponse accessTokenResponse = response.getBody();
+		AuthNResponse authNResponse = new AuthNResponse("SUCCESS", "Access token refreshed");
+		return new RefreshTokenResponse(authNResponse, accessTokenResponse.getAccess_token(),
+				accessTokenResponse.getRefresh_token(), accessTokenResponse.getExpires_in(),
+				accessTokenResponse.getExpires_in());
 	}
 
 	/**
@@ -615,11 +635,12 @@ public class AuthServiceImpl implements AuthService {
 		map.add(KeycloakConstants.REDIRECT_URI, this.redirectURI + redirectURI);
 		Map<String, String> pathParam = new HashMap<>();
 		pathParam.put("realmId", realmID);
-        UriComponentsBuilder uriBuilder= UriComponentsBuilder.fromUriString(tokenEndpoint);
+		UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(tokenEndpoint);
 		HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
 		ResponseEntity<String> responseEntity = null;
 		try {
-			responseEntity = restTemplate.exchange(uriBuilder.buildAndExpand(pathParam).toUriString(), HttpMethod.POST, entity, String.class);
+			responseEntity = restTemplate.exchange(uriBuilder.buildAndExpand(pathParam).toUriString(), HttpMethod.POST,
+					entity, String.class);
 
 		} catch (HttpClientErrorException | HttpServerErrorException e) {
 			KeycloakErrorResponseDto keycloakErrorResponseDto = parseKeyClockErrorResponse(e);
