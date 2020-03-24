@@ -16,6 +16,8 @@ import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import io.mosip.kernel.syncdata.entity.id.RegistrationCenterHistoryID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -83,12 +85,15 @@ public class RegistrationCenterHistory extends BaseEntity implements Serializabl
 	@Column(name = "working_hours", length = 32)
 	private String workingHours;
 
+	@JsonFormat(pattern = "kk:mm:ss")
 	@Column(name = "per_kiosk_process_time")
 	private LocalTime perKioskProcessTime;
 
+	@JsonFormat(pattern = "kk:mm:ss")
 	@Column(name = "center_start_time")
 	private LocalTime centerStartTime;
 
+	@JsonFormat(pattern = "kk:mm:ss")
 	@Column(name = "center_end_time")
 	private LocalTime centerEndTime;
 
@@ -98,9 +103,11 @@ public class RegistrationCenterHistory extends BaseEntity implements Serializabl
 	@Column(name = "contact_person", length = 128)
 	private String contactPerson;
 
+	@JsonFormat(pattern = "kk:mm:ss")
 	@Column(name = "lunch_start_time")
 	private LocalTime lunchStartTime;
 
+	@JsonFormat(pattern = "kk:mm:ss")
 	@Column(name = "lunch_end_time")
 	private LocalTime lunchEndTime;
 

@@ -3,6 +3,7 @@ package io.mosip.kernel.syncdata.utils;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -1749,13 +1750,13 @@ public class SyncMasterDataServiceHelper {
 	@SuppressWarnings("unchecked")
 	public SyncDataBaseDto getSyncDataBaseDto(Class entityClass, String entityType, List entities) {
 		
-		List<String> list = new ArrayList<String>();
+		List<String> list = Collections.synchronizedList(new ArrayList<String>());
 		
 		if(null != entities) {
 			entities.parallelStream().filter(Objects::nonNull).forEach(obj -> {
 				try {
 					String json = mapper.getObjectAsJsonString(obj);
-					if(json != null) { list.add(mapper.getObjectAsJsonString(obj)); }
+					if(json != null) { list.add(json); }
 				} catch (Exception e) {
 					logger.error("Failed to map "+ entityClass.getSimpleName() +" to json", e);
 				}

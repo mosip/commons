@@ -17,6 +17,8 @@ import javax.persistence.NamedNativeQueries;
 import javax.persistence.NamedNativeQuery;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import io.mosip.kernel.syncdata.entity.id.IdAndLanguageCodeID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -146,18 +148,21 @@ public class RegistrationCenter extends BaseEntity implements Serializable {
 	/**
 	 * the per kiosk process time.
 	 */
+	@JsonFormat(pattern = "kk:mm:ss")
 	@Column(name = "per_kiosk_process_time")
 	private LocalTime perKioskProcessTime;
 
 	/**
 	 * the start time of the registration center.
 	 */
+	@JsonFormat(pattern = "kk:mm:ss")
 	@Column(name = "center_start_time")
 	private LocalTime centerStartTime;
 
 	/**
 	 * the end time of the registration center.
 	 */
+	@JsonFormat(pattern = "kk:mm:ss")
 	@Column(name = "center_end_time")
 	private LocalTime centerEndTime;
 
@@ -176,12 +181,14 @@ public class RegistrationCenter extends BaseEntity implements Serializable {
 	/**
 	 * the lunch start time of the registration center.
 	 */
+	@JsonFormat(pattern = "kk:mm:ss")
 	@Column(name = "lunch_start_time")
 	private LocalTime lunchStartTime;
 
 	/**
 	 * the lunch end time of the registration center.
 	 */
+	@JsonFormat(pattern = "kk:mm:ss")
 	@Column(name = "lunch_end_time")
 	private LocalTime lunchEndTime;
 }
