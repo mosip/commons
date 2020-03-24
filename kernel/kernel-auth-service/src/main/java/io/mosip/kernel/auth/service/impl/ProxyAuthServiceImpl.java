@@ -247,7 +247,7 @@ public class ProxyAuthServiceImpl implements AuthService {
 		AuthNResponseDto authNResponseDto = new AuthNResponseDto();
 		MosipUserTokenDto mosipToken = null;
 		MosipUserDto mosipUser = null;
-		String realm = null;
+		String realm = realmId;
 		if (userOtp.getAppId().equalsIgnoreCase(AuthConstant.PRE_REGISTRATION)) {
 			realm = userOtp.getAppId();
 		}
