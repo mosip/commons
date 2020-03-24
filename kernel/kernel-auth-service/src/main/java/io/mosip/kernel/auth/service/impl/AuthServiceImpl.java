@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -19,7 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.web.authentication.www.NonceExpiredException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
@@ -29,7 +30,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -74,7 +74,6 @@ import io.mosip.kernel.auth.service.AuthService;
 import io.mosip.kernel.auth.service.OTPService;
 import io.mosip.kernel.auth.service.TokenService;
 import io.mosip.kernel.auth.service.UinService;
-import io.mosip.kernel.auth.util.ProxyTokenGenerator;
 import io.mosip.kernel.auth.util.TokenGenerator;
 import io.mosip.kernel.auth.util.TokenValidator;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
@@ -87,8 +86,8 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
  * @author Srinivasan
  *
  */
-
-@Component
+@Profile("!local")
+@Service
 public class AuthServiceImpl implements AuthService {
 
 	private static final String CLIENTID_AND_TOKEN_COMBINATION_HAD_BEEN_VALIDATED_SUCCESSFULLY = "Clientid and Token combination had been validated successfully";
@@ -100,9 +99,6 @@ public class AuthServiceImpl implements AuthService {
 	private static final String SUCCESS = "Success";
 
 	private static final String SUCCESSFULLY_LOGGED_OUT = "successfully loggedout";
-	
-	@Autowired
-	private ProxyTokenGenerator proxyTokenGenarator;
 
 	@Value("${mosip.kernel.open-id-url}")
 	private String keycloakOpenIdUrl;
@@ -169,15 +165,6 @@ public class AuthServiceImpl implements AuthService {
 
 	@Value("${mosip.admin_realm_id}")
 	private String realmID;
-
-	@Value("${spring.profiles.active}")
-	String activeProfile;
-
-	@Value("${auth.local.exp:1000000}")
-	long localExp;
-
-	@Value("${auth.local.secret:secret}")
-	String localSecret;
 	
 	@Qualifier("authRestTemplate")
 	@Autowired
@@ -223,12 +210,6 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public AuthNResponseDto authenticateUser(LoginUser loginUser) throws Exception {
 		AuthNResponseDto authNResponseDto = null;
-
-		if (activeProfile.equalsIgnoreCase("local")) {
-			return proxyTokenForLocalEnv(loginUser.getUserName(), AuthConstant.SUCCESS_STATUS,
-					AuthConstant.USERPWD_SUCCESS_MESSAGE);
-		}
-
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		MultiValueMap<String, String> tokenRequestBody = null;
@@ -283,12 +264,7 @@ public class AuthServiceImpl implements AuthService {
 			UserRegistrationRequestDto userCreationRequestDto = new UserRegistrationRequestDto();
 			userCreationRequestDto.setUserName(otpUser.getUserId());
 			userCreationRequestDto.setAppId(otpUser.getAppId());
-			if(!activeProfile.equalsIgnoreCase("local")) {
 			mosipUser = registerUser(userCreationRequestDto);
-			}else {
-			mosipUser = new MosipUserDto();
-			mosipUser.setUserId(otpUser.getUserId());
-			}
             authNResponseDto = oTPService.sendOTP(mosipUser, otpUser);
 			authNResponseDto.setStatus(authNResponseDto.getStatus());
 			authNResponseDto.setMessage(authNResponseDto.getMessage());
@@ -319,10 +295,7 @@ public class AuthServiceImpl implements AuthService {
 			realm = userOtp.getAppId();
 		}
 		
-		if (activeProfile.equalsIgnoreCase("local")) {
-			mosipUser = new MosipUserDto();
-			mosipUser.setUserId(userOtp.getUserId());
-		}else if (keycloakImpl.isUserAlreadyPresent(userOtp.getUserId(), realm)) {
+		if (keycloakImpl.isUserAlreadyPresent(userOtp.getUserId(), realm)) {
 			mosipUser = new MosipUserDto();
 			mosipUser.setUserId(userOtp.getUserId());
 		}
@@ -362,10 +335,6 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public AuthNResponseDto authenticateWithSecretKey(ClientSecret clientSecret) throws Exception {
-		if (activeProfile.equalsIgnoreCase("local")) {
-			return proxyTokenForLocalEnv(clientSecret.getClientId(), SUCCESS,
-					CLIENTID_AND_TOKEN_COMBINATION_HAD_BEEN_VALIDATED_SUCCESSFULLY);
-		}
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		MultiValueMap<String, String> tokenRequestBody = null;
@@ -386,18 +355,6 @@ public class AuthServiceImpl implements AuthService {
 		return authNResponseDto;
 	}
 
-	private AuthNResponseDto proxyTokenForLocalEnv(String subject, String status, String message) {
-		long exp = System.currentTimeMillis() + localExp;
-		String token = proxyTokenGenarator.getProxyToken(subject,exp);
-		AuthNResponseDto authNResponseDto = new AuthNResponseDto();
-		authNResponseDto.setToken(token);
-		authNResponseDto.setRefreshToken(null);
-		authNResponseDto.setExpiryTime(exp);
-		authNResponseDto.setStatus(status);
-		authNResponseDto.setMessage(message);
-		return authNResponseDto;
-	}
-	
 	/**
 	 * Method used for generating refresh token
 	 * 
@@ -537,23 +494,6 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public MosipUserDto valdiateToken(String token) {
-		
-		if (activeProfile.equalsIgnoreCase("local")) {
-			DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512(localSecret.getBytes()))
-            .build()
-            .verify(token);
-			
-			MosipUserDto mosipUserDto= new MosipUserDto();
-			String user = decodedJWT.getSubject();
-			mosipUserDto.setToken(token);
-			mosipUserDto.setMail(decodedJWT.getClaim(AuthConstant.EMAIL).asString());
-			mosipUserDto.setMobile(decodedJWT.getClaim(AuthConstant.MOBILE).asString());
-			mosipUserDto.setRole(decodedJWT.getClaim(AuthConstant.ROLES).asString());
-			mosipUserDto.setName(user);
-			mosipUserDto.setUserId(user);
-			return mosipUserDto;
-		}
-		
 		Map<String, String> pathparams = new HashMap<>();
 		if (EmptyCheckUtils.isNullEmpty(token)) {
 			throw new AuthenticationServiceException(AuthErrorCode.INVALID_TOKEN.getErrorMessage());
