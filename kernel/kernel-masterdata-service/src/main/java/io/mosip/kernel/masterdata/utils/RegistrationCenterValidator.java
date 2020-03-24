@@ -858,8 +858,7 @@ public class RegistrationCenterValidator {
 			List<String> zoneIds) {
 		String centerZoneCode=registrationCenterRepository.findByIdAndLangCode(registrationCenterDto.getId(), registrationCenterDto.getLangCode()).getZoneCode();
 		if (!zoneIds.isEmpty()) {
-			//if (!zoneIds.contains(registrationCenterDto.getZoneCode())) {
-			if (!zoneIds.contains(centerZoneCode)) { 
+			if (!zoneIds.contains(centerZoneCode) || !zoneIds.contains(registrationCenterDto.getZoneCode())) { 
 				errors.add(new ServiceError(RegistrationCenterErrorCode.INVALIDE_ZONE.getErrorCode(),
 						String.format(RegistrationCenterErrorCode.INVALIDE_ZONE.getErrorMessage(),
 								registrationCenterDto.getZoneCode())));
