@@ -320,7 +320,7 @@ public class ProxyAuthServiceImpl implements AuthService {
 	 */
 
 	@Override
-	public RefreshTokenResponse refreshToken(String refereshToken,RefreshTokenRequest refreshTokenRequest) throws Exception {
+	public RefreshTokenResponse refreshToken(String appID,String refereshToken,RefreshTokenRequest refreshTokenRequest) throws Exception {
 		throw new UnsupportedOperationException("This openeration is not supported in local profile for now");
 	}
 

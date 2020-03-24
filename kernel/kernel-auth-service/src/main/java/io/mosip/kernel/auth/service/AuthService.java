@@ -31,7 +31,7 @@ import io.mosip.kernel.auth.dto.ValidationResponseDto;
  */
 public interface AuthService extends AuthZService, AuthNService {
 
-	public RefreshTokenResponse refreshToken(String refereshToken,RefreshTokenRequest refreshTokenRequest) throws Exception;
+	public RefreshTokenResponse refreshToken(String refereshToken,String refreshToken, RefreshTokenRequest refreshTokenRequest) throws Exception;
 
 	public AuthNResponse invalidateToken(String token) throws Exception;
 

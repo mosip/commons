@@ -170,6 +170,9 @@ public class AuthServiceImpl implements AuthService {
 	@Value("${mosip.admin_realm_id}")
 	private String realmID;
 
+	@Value("${mosip.kernel.prereg.realm-id}")
+	private String preRegRealmID;
+
 	@Qualifier("authRestTemplate")
 	@Autowired
 	private RestTemplate authRestTemplate;
@@ -371,7 +374,7 @@ public class AuthServiceImpl implements AuthService {
 	 */
 
 	@Override
-	public RefreshTokenResponse refreshToken(String refreshToken, RefreshTokenRequest refreshTokenRequest)
+	public RefreshTokenResponse refreshToken(String appID, String refreshToken, RefreshTokenRequest refreshTokenRequest)
 			throws Exception {
 		MultiValueMap<String, String> tokenRequestBody = new LinkedMultiValueMap<>();
 		tokenRequestBody.add(AuthConstant.GRANT_TYPE, AuthConstant.REFRESH_TOKEN);
@@ -382,7 +385,12 @@ public class AuthServiceImpl implements AuthService {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		Map<String, String> pathParams = new HashMap<>();
-		pathParams.put(AuthConstant.REALM_ID, realmId);
+
+		if (appID.equalsIgnoreCase("preregistration")) {
+			pathParams.put(AuthConstant.REALM_ID, preRegRealmID);
+		} else {
+			pathParams.put(AuthConstant.REALM_ID, realmId);
+		}
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(keycloakOpenIdUrl + "/token");
 
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(tokenRequestBody, headers);
@@ -393,11 +401,12 @@ public class AuthServiceImpl implements AuthService {
 		} catch (HttpServerErrorException | HttpClientErrorException ex) {
 			LOGGER.error(ex.getMessage());
 		}
-        Objects.requireNonNull(response);
+		Objects.requireNonNull(response);
 		AccessTokenResponse accessTokenResponse = response.getBody();
-		AuthNResponse authNResponse =  new AuthNResponse("SUCCESS", "Access token refreshed");
-		return new RefreshTokenResponse(authNResponse,accessTokenResponse.getAccess_token(), accessTokenResponse.getRefresh_token(),
-				accessTokenResponse.getExpires_in(), accessTokenResponse.getExpires_in());
+		AuthNResponse authNResponse = new AuthNResponse("SUCCESS", "Access token refreshed");
+		return new RefreshTokenResponse(authNResponse, accessTokenResponse.getAccess_token(),
+				accessTokenResponse.getRefresh_token(), accessTokenResponse.getExpires_in(),
+				accessTokenResponse.getExpires_in());
 	}
 
 	/**

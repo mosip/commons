@@ -304,8 +304,8 @@ public class AuthController {
 	 * @return ResponseEntity with MosipUserDto
 	 */
 	@ResponseFilter
-	@PostMapping(value = "/authorize/refreshToken")
-	public ResponseWrapper<AuthNResponse> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest,
+	@PostMapping(value = "/authorize/refreshToken/{appid}")
+	public ResponseWrapper<AuthNResponse> refreshToken(@PathVariable("appid") String appId,@RequestBody RefreshTokenRequest refreshTokenRequest,
 			HttpServletRequest request, HttpServletResponse res) throws Exception {
 		ResponseWrapper<AuthNResponse> responseWrapper = new ResponseWrapper<>();
 		String refreshToken = null;
@@ -316,7 +316,7 @@ public class AuthController {
 			}
 		}
 		Objects.requireNonNull(refreshToken, "No refresh token cookie found");
-		RefreshTokenResponse mosipUserDtoToken = authService.refreshToken(refreshToken, refreshTokenRequest);
+		RefreshTokenResponse mosipUserDtoToken = authService.refreshToken(appId,refreshToken, refreshTokenRequest);
 		Cookie cookie = createCookie(mosipUserDtoToken.getAccesstoken(), mosipEnvironment.getTokenExpiry());
 		res.addCookie(cookie);
 		res.addCookie(new Cookie("refresh_token", mosipUserDtoToken.getRefreshToken()));
