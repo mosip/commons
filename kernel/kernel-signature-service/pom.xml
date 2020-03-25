@@ -8,6 +8,7 @@
 		<version>1.0.6</version>
 	</parent>
 	<artifactId>kernel-signature-service</artifactId>
+	<version>1.0.6</version>
 	<properties>
 	<kernel.core.version>1.0.6</kernel.core.version>
 	<kernel.auth.adaptor.version>1.0.6</kernel.auth.adaptor.version>

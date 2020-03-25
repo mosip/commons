@@ -8,6 +8,7 @@
 		<version>1.0.6</version>
 	</parent>
 	<artifactId>kernel-pdfgenerator-itext</artifactId>
+	<version>1.0.6</version>
 	<name>kernel-pdfgenerator</name>
 	<description>generate pdf for given  template</description>
 	<properties>

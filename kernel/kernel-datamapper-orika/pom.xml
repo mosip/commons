@@ -11,6 +11,7 @@
 	</parent>
 
 	<artifactId>kernel-datamapper-orika</artifactId>
+	<version>1.0.6</version>
 	<name>kernel-datamapper-orika</name>
 	<url>http://maven.apache.org</url>
 	<properties>

@@ -11,6 +11,7 @@
 	</parent>
 
 	<artifactId>kernel-otpmanager-service</artifactId>
+	<version>1.0.6</version>
 	<properties>
 		<kernel.core.version>1.0.6</kernel.core.version>
 		<kernel.auth-adapter.version>1.0.6</kernel.auth-adapter.version>
