@@ -1088,7 +1088,7 @@ public class SyncMasterDataServiceHelper {
 	 * @return list of {@link RegistrationCenterMachineDto}
 	 */
 	@Async
-	public CompletableFuture<List<RegistrationCenterMachineDto>> getRegistrationCenterMachines(String machineId,
+	public CompletableFuture<List<RegistrationCenterMachineDto>> getRegistrationCenterMachines(String regCenterId,
 			LocalDateTime lastUpdated, LocalDateTime currentTimeStamp) {
 		List<RegistrationCenterMachineDto> registrationCenterMachineDtos = null;
 		List<RegistrationCenterMachine> registrationCenterMachines = null;
@@ -1097,7 +1097,7 @@ public class SyncMasterDataServiceHelper {
 				lastUpdated = LocalDateTime.ofEpochSecond(0, 0, ZoneOffset.UTC);
 			}
 			registrationCenterMachines = registrationCenterMachineRepository
-					.findAllLatestCreatedUpdatedDeleted(machineId, lastUpdated, currentTimeStamp);
+					.findAllLatestCreatedUpdatedDeleted(regCenterId, lastUpdated, currentTimeStamp);
 
 		} catch (DataAccessException e) {
 			throw new SyncDataServiceException(MasterDataErrorCode.REG_CENTER_MACHINE_FETCH_EXCEPTION.getErrorCode(),
