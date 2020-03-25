@@ -8,6 +8,7 @@
 		<version>1.0.6</version>
 	</parent>
 	<artifactId>kernel-crypto-jce</artifactId>
+	<version>1.0.6</version>
 	<packaging>jar</packaging>
 	<name>kernel-crypto-jce</name>
 	<properties>
