@@ -1082,9 +1082,9 @@ public class SyncMasterDataServiceHelper {
 
 	/**
 	 * 
-	 * @param machineId        - machine id
-	 * @param lastUpdated      - last updated time stamp
-	 * @param currentTimeStamp - current time stamp
+	 * @param regCenterId
+	 * @param lastUpdated
+	 * @param currentTimeStamp
 	 * @return list of {@link RegistrationCenterMachineDto}
 	 */
 	@Async
