@@ -6,6 +6,7 @@
     <version>1.0.6</version>
   </parent>
   <artifactId>kernel-idvalidator-uin</artifactId>
+  <version>1.0.6</version>
   <name>kernel-idvalidator-uin</name>
   <description>kernel-idvalidator-uin</description>
   <properties>

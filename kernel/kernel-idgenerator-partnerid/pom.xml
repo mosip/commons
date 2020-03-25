@@ -8,6 +8,7 @@
 		<version>1.0.6</version>
 	</parent>
 	<artifactId>kernel-idgenerator-partnerid</artifactId>
+	<version>1.0.6</version>
 	<name>kernel-idgenerator-partnerid</name>
 	<url>http://maven.apache.org</url>
 	<properties>

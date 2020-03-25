@@ -9,6 +9,7 @@
 		<version>1.0.6</version>
 	</parent>
 	<artifactId>kernel-keygenerator-bouncycastle</artifactId>
+	<version>1.0.6</version>
 	<packaging>jar</packaging>
 	<name>kernel-keygenerator-bouncycastle</name>
 	<properties>

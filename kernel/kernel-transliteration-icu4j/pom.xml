@@ -12,6 +12,7 @@
 	</parent>
 
 	<artifactId>kernel-transliteration-icu4j</artifactId>
+	<version>1.0.6</version>
     <properties>
     <kernel.core.version>1.0.6</kernel.core.version>
     </properties>
