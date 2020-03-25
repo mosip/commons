@@ -8,7 +8,7 @@
 		<artifactId>kernel-parent</artifactId>
 		<version>1.0.6</version>
 	</parent>
-<properties>
+	<properties>
 		<kernel.core.version>1.0.6</kernel.core.version>
 		<kernel.auth-adapter.version>1.0.6</kernel.auth-adapter.version>
 		<kernel.templatemanager-velocity.version>1.0.6</kernel.templatemanager-velocity.version>
@@ -16,14 +16,14 @@
 		<kernel.prid-generator.version>1.0.6</kernel.prid-generator.version>
 	</properties>
 	<artifactId>kernel-pridgenerator-service</artifactId>
-
+	<version>1.0.6</version>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
 			<version>${kernel.core.version}</version>
 		</dependency>
-	        <dependency>
+		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-auth-adapter</artifactId>
 			<version>${kernel.auth-adapter.version}</version>

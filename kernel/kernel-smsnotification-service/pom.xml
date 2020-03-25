@@ -18,7 +18,7 @@
 	<artifactId>kernel-smsnotification-service</artifactId>
         <version>1.0.7-SNAPSHOT</version>
 	<name>kernel-smsnotification-service</name>
-
+     
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>

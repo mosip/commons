@@ -11,6 +11,7 @@
 	</parent>
 	<artifactId>kernel-applicanttype-service</artifactId>
 	<name>kernel-applicanttype-service</name>
+	<version>1.0.6</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<kernel.core.version>1.0.6</kernel.core.version>

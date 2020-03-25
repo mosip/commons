@@ -18,6 +18,7 @@
 		<kernel.crypto-jce.version>1.0.6</kernel.crypto-jce.version>
 	</properties>
 	<artifactId>kernel-idgenerator-prid</artifactId>
+	<version>1.0.6</version>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>

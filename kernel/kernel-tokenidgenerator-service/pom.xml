@@ -16,6 +16,7 @@
 		<kernel.logger.version>1.0.6</kernel.logger.version>
 	</properties>
 	<artifactId>kernel-tokenidgenerator-service</artifactId>
+	<version>1.0.6</version>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
