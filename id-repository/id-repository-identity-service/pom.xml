@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
@@ -14,6 +13,9 @@
 	<description>ID-Repository Identity service</description>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
 		<kernel.core.version>1.0.7</kernel.core.version>
 		<kernel.idvalidator.uin.version>1.0.6</kernel.idvalidator.uin.version>
@@ -24,7 +26,7 @@
 		<kernel.bioapi.provider.version>1.0.6</kernel.bioapi.provider.version>
 		<id.repository.core.version>1.0.7</id.repository.core.version>
 	</properties>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>

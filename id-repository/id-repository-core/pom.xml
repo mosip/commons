@@ -13,6 +13,9 @@
 	<description>ID-Repository core</description>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
 		<spring-cloud-config.version>2.0.0.RELEASE</spring-cloud-config.version>
 		<swagger.version>2.9.2</swagger.version>
@@ -22,7 +25,7 @@
 		<kernel.auth.adapter.version>1.0.6</kernel.auth.adapter.version>
 		<kernel.logger.logback.version>1.0.6</kernel.logger.logback.version>
 	</properties>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
