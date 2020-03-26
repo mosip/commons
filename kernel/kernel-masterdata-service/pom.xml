@@ -10,7 +10,7 @@
 	</parent>
 	<artifactId>kernel-masterdata-service</artifactId>
 	<name>kernel-masterdata-service</name>
-	<version>1.0.7-SNAPSHOT</version>
+	<version>1.0.7</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>

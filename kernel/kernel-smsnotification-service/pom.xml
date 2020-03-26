@@ -10,13 +10,13 @@
 		<version>1.0.6</version>
 	</parent>
 	<properties>
-		<kernel.core.version>1.0.7-SNAPSHOT</kernel.core.version>
+		<kernel.core.version>1.0.7</kernel.core.version>
 		<kernel.crypto.signature.version>1.0.6</kernel.crypto.signature.version>
 		<kernel.logger.logback.version>1.0.6</kernel.logger.logback.version>
-	    <kernel.smsserviceprovider.msg91.version>1.1.0-SNAPSHOT</kernel.smsserviceprovider.msg91.version>
+	    <kernel.smsserviceprovider.msg91.version>1.1.0</kernel.smsserviceprovider.msg91.version>
 	</properties>
 	<artifactId>kernel-smsnotification-service</artifactId>
-        <version>1.0.7-SNAPSHOT</version>
+        <version>1.0.7</version>
 	<name>kernel-smsnotification-service</name>
      
 	<dependencies>
