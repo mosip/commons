@@ -5,11 +5,11 @@
 	<parent>
 		<groupId>io.mosip.idrepository</groupId>
 		<artifactId>id-repository-parent</artifactId>
-		<version>1.0.7-SNAPSHOT</version>
+		<version>1.0.6</version>
 	</parent>
 
 	<artifactId>id-repository-identity-service</artifactId>
-	<version>1.0.7-SNAPSHOT</version>
+	<version>1.0.7</version>
 	<name>identity-service</name>
 	<description>ID-Repository Identity service</description>
 
@@ -59,6 +59,11 @@
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-bioapi-provider</artifactId>
 			<version>${kernel.bioapi.provider.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.mosip.kernel</groupId>
+			<artifactId>kernel-ref-idobjectvalidator-phil</artifactId>
+			<version>0.10.0</version>
 		</dependency>
 	</dependencies>
 	<build>
