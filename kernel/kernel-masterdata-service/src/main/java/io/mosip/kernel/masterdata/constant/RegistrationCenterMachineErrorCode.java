@@ -18,7 +18,7 @@ public enum RegistrationCenterMachineErrorCode {
 	REGISTRATION_CENTER_MACHINE_FETCH_EXCEPTION("KER-MSD-601", "Error occurred while fetching Center Machine details"),
 	REGISTRATION_CENTER_ZONE_INVALID("KER-MSD-411",
 			"Admin not authorized to map/un-map this Registration Center"),
-	REGISTRATION_MACHINE_ZONE_INVALID("KER-MSD-411",
+	REGISTRATION_MACHINE_ZONE_INVALID("KER-MSD-412",
 			"Admin not authorized to map/un-map this Registration Machine"),
 	REGISTRATION_CENTER_MACHINE_STATUS("KER-MSD-602", "Already is in inactive status"),
 	REGISTRATION_CENTER_NOT_FOUND("KER-MSD-409", "Registration Center not found"),
