@@ -10,7 +10,7 @@
 	<artifactId>kernel-smsserviceprovider-msg91</artifactId>
 	<name>kernel-smsserviceprovider-msg91</name>
 	<description>kernel-smsserviceprovider-msg91</description>
-	<version>1.1.0-SNAPSHOT</version>
+	<version>1.1.0</version>
 	<properties>
 		<kernel.core.version>1.0.7</kernel.core.version>
         <kernel.auth.adaptor.version>1.0.6</kernel.auth.adaptor.version>
