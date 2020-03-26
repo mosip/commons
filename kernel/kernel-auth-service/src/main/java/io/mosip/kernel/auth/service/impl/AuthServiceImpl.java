@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.mosip.kernel.auth.adapter.exception.AuthNException;
 import io.mosip.kernel.auth.config.MosipEnvironment;
 import io.mosip.kernel.auth.constant.AuthConstant;
 import io.mosip.kernel.auth.constant.AuthErrorCode;
@@ -180,11 +184,13 @@ public class AuthServiceImpl implements AuthService {
 	/**
 	 * Method used for validating Auth token
 	 * 
-	 * @param token token
+	 * @param token
+	 *            token
 	 * 
 	 * @return mosipUserDtoToken is of type {@link MosipUserTokenDto}
 	 * 
-	 * @throws Exception exception
+	 * @throws Exception
+	 *             exception
 	 * 
 	 */
 
@@ -206,11 +212,13 @@ public class AuthServiceImpl implements AuthService {
 	/**
 	 * Method used for Authenticating User based on username and password
 	 * 
-	 * @param loginUser is of type {@link LoginUser}
+	 * @param loginUser
+	 *            is of type {@link LoginUser}
 	 * 
 	 * @return authNResponseDto is of type {@link AuthNResponseDto}
 	 * 
-	 * @throws Exception exception
+	 * @throws Exception
+	 *             exception
 	 * 
 	 */
 
@@ -231,7 +239,16 @@ public class AuthServiceImpl implements AuthService {
 			response = authRestTemplate.postForEntity(uriComponentsBuilder.buildAndExpand(pathParams).toUriString(),
 					request, AccessTokenResponse.class);
 		} catch (HttpClientErrorException | HttpServerErrorException ex) {
-			System.out.println(ex.getResponseBodyAsString());
+			if (ex.getRawStatusCode() == 401) {
+				throw new AuthManagerException(AuthErrorCode.INVALID_CREDENTIALS.getErrorCode(),
+						AuthErrorCode.INVALID_CREDENTIALS.getErrorMessage());
+			} else if (ex.getRawStatusCode() == 400) {
+				throw new AuthManagerException(AuthErrorCode.REQUEST_VALIDATION_ERROR.getErrorCode(),
+						AuthErrorCode.REQUEST_VALIDATION_ERROR.getErrorMessage());
+			}
+
+			throw new AuthManagerException(AuthErrorCode.SERVER_ERROR.getErrorCode(),
+					AuthErrorCode.SERVER_ERROR.getErrorCode());
 		}
 		AccessTokenResponse accessTokenResponse = response.getBody();
 		authNResponseDto = new AuthNResponseDto();
@@ -246,11 +263,13 @@ public class AuthServiceImpl implements AuthService {
 	/**
 	 * Method used for sending OTP
 	 * 
-	 * @param otpUser is of type {@link OtpUser}
+	 * @param otpUser
+	 *            is of type {@link OtpUser}
 	 * 
 	 * @return authNResponseDto is of type {@link AuthNResponseDto}
 	 * 
-	 * @throws Exception exception
+	 * @throws Exception
+	 *             exception
 	 * 
 	 */
 
@@ -284,11 +303,13 @@ public class AuthServiceImpl implements AuthService {
 	/**
 	 * Method used for Authenticating User based with username and OTP
 	 * 
-	 * @param userOtp is of type {@link UserOtp}
+	 * @param userOtp
+	 *            is of type {@link UserOtp}
 	 * 
 	 * @return authNResponseDto is of type {@link AuthNResponseDto}
 	 * 
-	 * @throws Exception exception
+	 * @throws Exception
+	 *             exception
 	 * 
 	 */
 
@@ -332,11 +353,13 @@ public class AuthServiceImpl implements AuthService {
 	/**
 	 * Method used for Authenticating User based with secretkey and password
 	 * 
-	 * @param clientSecret is of type {@link ClientSecret}
+	 * @param clientSecret
+	 *            is of type {@link ClientSecret}
 	 * 
 	 * @return authNResponseDto is of type {@link AuthNResponseDto}
 	 * 
-	 * @throws Exception exception
+	 * @throws Exception
+	 *             exception
 	 * 
 	 */
 
@@ -365,11 +388,13 @@ public class AuthServiceImpl implements AuthService {
 	/**
 	 * Method used for generating refresh token
 	 * 
-	 * @param existingToken existing token
+	 * @param existingToken
+	 *            existing token
 	 * 
 	 * @return mosipUserDtoToken is of type {@link MosipUserTokenDto}
 	 * 
-	 * @throws Exception exception
+	 * @throws Exception
+	 *             exception
 	 * 
 	 */
 
@@ -412,11 +437,13 @@ public class AuthServiceImpl implements AuthService {
 	/**
 	 * Method used for invalidate token
 	 * 
-	 * @param token token
+	 * @param token
+	 *            token
 	 * 
 	 * @return authNResponse is of type {@link AuthNResponse}
 	 * 
-	 * @throws Exception exception
+	 * @throws Exception
+	 *             exception
 	 * 
 	 */
 
@@ -453,21 +480,25 @@ public class AuthServiceImpl implements AuthService {
 
 	}
 
+	@Deprecated
 	@Override
 	public AuthZResponseDto unBlockUser(String userId, String appId) throws Exception {
 		return userStoreFactory.getDataStoreBasedOnApp(appId).unBlockAccount(userId);
 	}
-
+	
+	@Deprecated
 	@Override
 	public AuthZResponseDto changePassword(String appId, PasswordDto passwordDto) throws Exception {
 		return userStoreFactory.getDataStoreBasedOnApp(appId).changePassword(passwordDto);
 	}
 
+	@Deprecated
 	@Override
 	public AuthZResponseDto resetPassword(String appId, PasswordDto passwordDto) throws Exception {
 		return userStoreFactory.getDataStoreBasedOnApp(appId).resetPassword(passwordDto);
 	}
 
+	@Deprecated
 	@Override
 	public UserNameDto getUserNameBasedOnMobileNumber(String appId, String mobileNumber) throws Exception {
 		return userStoreFactory.getDataStoreBasedOnApp("registrationclient")
@@ -480,6 +511,7 @@ public class AuthServiceImpl implements AuthService {
 		return keycloakImpl.registerUser(userCreationRequestDto);
 	}
 
+	@Deprecated
 	@Override
 	public UserPasswordResponseDto addUserPassword(UserPasswordRequestDto userPasswordRequestDto) {
 		return userStoreFactory.getDataStoreBasedOnApp(userPasswordRequestDto.getAppId())
@@ -496,17 +528,20 @@ public class AuthServiceImpl implements AuthService {
 		return userRole;
 	}
 
+	@Deprecated
 	@Override
 	public MosipUserDto getUserDetailBasedonMobileNumber(String appId, String mobileNumber) throws Exception {
 
 		return userStoreFactory.getDataStoreBasedOnApp(appId).getUserDetailBasedonMobileNumber(mobileNumber);
 	}
 
+	@Deprecated
 	@Override
 	public ValidationResponseDto validateUserName(String appId, String userName) {
 		return userStoreFactory.getDataStoreBasedOnApp(appId).validateUserName(userName);
 	}
 
+	
 	@Override
 	public UserDetailsResponseDto getUserDetailBasedOnUserId(String appId, List<String> userIds) {
 		return userStoreFactory.getDataStoreBasedOnApp(appId).getUserDetailBasedOnUid(userIds);

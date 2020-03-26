@@ -51,6 +51,7 @@ import io.mosip.kernel.auth.exception.AuthManagerServiceException;
 import io.mosip.kernel.auth.service.OTPGenerateService;
 import io.mosip.kernel.auth.service.OTPService;
 import io.mosip.kernel.auth.service.TokenGenerationService;
+import io.mosip.kernel.auth.util.MemoryCache;
 import io.mosip.kernel.auth.util.OtpValidator;
 import io.mosip.kernel.auth.util.ProxyTokenGenerator;
 import io.mosip.kernel.auth.util.TemplateUtil;
@@ -127,6 +128,9 @@ public class OTPServiceImpl implements OTPService {
 
 	@Value("${mosip.kernel.prereg.realm-id}")
 	private String preregRealmId;
+	
+	@Autowired
+	private MemoryCache<String, AccessTokenResponse> memoryCache;
 
 	@Override
 	public AuthNResponseDto sendOTP(MosipUserDto mosipUserDto, List<String> otpChannel, String appId) {
@@ -646,6 +650,7 @@ public class OTPServiceImpl implements OTPService {
 		MultiValueMap<String, String> tokenRequestBody = null;
 		Map<String, String> pathParams = new HashMap<>();
 		pathParams.put(AuthConstant.REALM_ID, realmId);
+		
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(keycloakOpenIdUrl + "/token");
 		tokenRequestBody = getClientValueMap(clientID, clientSecret);
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(tokenRequestBody, headers);
@@ -675,5 +680,12 @@ public class OTPServiceImpl implements OTPService {
 		map.add(AuthConstant.CLIENT_ID, clientID);
 		map.add(AuthConstant.CLIENT_SECRET, clientSecret);
 		return map;
+	}
+	
+	private AccessTokenResponse getTokenFromMemoryCache(String realm) {
+		if(memoryCache.get(realm)!=null) {
+			return memoryCache.get(realm);
+		}
+		return null;
 	}
 }

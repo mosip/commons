@@ -110,7 +110,8 @@ public enum AuthErrorCode {
 	REST_EXCEPTION("KER-ATH-025", "Exception occured while consuming service"),
 
 	KEYCLOAK_ACESSTOKEN_EXCEPTION("KER-ATH-021", "Error Occured while getting access token from keycloak"),
-	KEYCLOAK_STATE_EXCEPTION("KER-ATH-022", "state is not maching");
+	KEYCLOAK_STATE_EXCEPTION("KER-ATH-022", "state is not maching"),
+	INVALID_CREDENTIALS("KER-ATH-023","Invalid Credentials");
 
 	/**
 	 * The error code
