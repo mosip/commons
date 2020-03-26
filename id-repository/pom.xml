@@ -9,7 +9,7 @@
 
 	<groupId>io.mosip.idrepository</groupId>
 	<artifactId>id-repository-parent</artifactId>
-	<version>1.0.7-SNAPSHOT</version>
+	<version>1.0.6</version>
 	<packaging>pom</packaging>
 
 	<name>ID-Repository</name>
@@ -22,52 +22,15 @@
 	</modules>
 
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
 		<!-- maven -->
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<maven.compiler.version>3.7.0</maven.compiler.version>
 		<maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
 		<maven.war.plugin.version>3.1.0</maven.war.plugin.version>
 		<maven.surefire.plugin.version>2.9</maven.surefire.plugin.version>
 		<maven.jacoco.plugin.version>0.8.1</maven.jacoco.plugin.version>
 		<maven.sonar.plugin.version>3.2</maven.sonar.plugin.version>
 		<maven.javadoc.version>3.1.0</maven.javadoc.version>
-
-		<!-- spring -->
-		<spring.version>5.0.4.RELEASE</spring.version>
-		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
-		<spring-cloud-config.version>2.0.0.RELEASE</spring-cloud-config.version>
-		<swagger.version>2.9.2</swagger.version>
-
-		<!-- data -->
-		<postgresql.version>42.2.2</postgresql.version>
-
-		<!-- test -->
-		<junit.version>4.12</junit.version>
-		<mockito.version>1.10.19</mockito.version>
-
-		<!-- utilities -->
-		<lombok.version>1.16.18</lombok.version>
-		<json.schema.validator.version>2.2.10</json.schema.validator.version>
-
 		<sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/dto/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/security/**,**/*Config.java,**/*BootApplication.java,**/*VertxApplication.java,**/cbeffutil/**</sonar.coverage.exclusions>
 		<sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**</sonar.cpd.exclusions>
-		<powermock.version>2.0.0</powermock.version>
-		<kernel.core.version>1.0.7-SNAPSHOT</kernel.core.version>
-		<kernel.idvalidator.uin.version>1.0.6</kernel.idvalidator.uin.version>
-		<kernel.idvalidator.rid.version>1.0.6</kernel.idvalidator.rid.version>
-		<kernel.cbeffutil.api.version>1.1.0-SNAPSHOT</kernel.cbeffutil.api.version>
-		<kernel.fsadapter.hdfs.version>1.0.6</kernel.fsadapter.hdfs.version>
-		<id.repository.core.version>1.0.7-SNAPSHOT</id.repository.core.version>
-		<kernel.idobjectvalidator.version>1.0.6</kernel.idobjectvalidator.version>
-		<kernel.bioapi.provider.version>1.0.6</kernel.bioapi.provider.version>
-		<kernel.auth.adapter.version>1.0.6</kernel.auth.adapter.version>
-		<kernel.logger.logback.version>1.0.6</kernel.logger.logback.version>
-		<kernel.idgenerator.vid.version>1.0.6</kernel.idgenerator.vid.version>
-		<kernel.idvalidator.vid.version>1.0.6</kernel.idvalidator.vid.version>
-		<kernel.dataaccess.hibernate.version>1.0.6</kernel.dataaccess.hibernate.version>
 	</properties>
 
 	<build>
