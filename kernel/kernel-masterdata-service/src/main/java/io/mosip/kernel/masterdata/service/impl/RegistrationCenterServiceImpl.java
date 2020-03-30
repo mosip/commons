@@ -753,7 +753,8 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 		PageResponseDto<RegistrationCenterSearchDto> pageDto = new PageResponseDto<>();
 		List<SearchFilter> addList = new ArrayList<>();
 		List<SearchFilter> removeList = new ArrayList<>();
-		List<SearchFilter> locationFilter = new ArrayList<>();
+		List<SearchFilter> locationFilter=new ArrayList<>();
+		List<List<SearchFilter>> locationFilters = new ArrayList<>();
 		List<SearchFilter> zoneFilter = new ArrayList<>();
 		List<Zone> zones = null;
 		List<Location> locations = null;
@@ -777,7 +778,7 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 					List<Location> descendants = locationUtils.getDescedants(locations, location);
 					List<Location> leaves = descendants.parallelStream().filter(child -> child.getHierarchyLevel() == 5)
 							.collect(Collectors.toList());
-					locationFilter.addAll(serviceHelper.buildLocationSearchFilter(leaves));
+					locationFilters.add(serviceHelper.buildLocationSearchFilter(leaves));
 				} else {
 					flag = false;
 				}
@@ -804,7 +805,12 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 
 		if (filterTypeValidator.validate(RegistrationCenterSearchDto.class, dto.getFilters()) && flag) {
 			// searching registration center
+			if(locationFilters.isEmpty() ) {
 			pageDto = serviceHelper.searchCenter(dto, locationFilter, zoneFilter, zones, locations);
+			}
+			else{
+			pageDto = serviceHelper.searchCenterLocFilter(dto, locationFilters, zoneFilter, zones, locations);
+			}
 		}
 		return pageDto;
 	}
