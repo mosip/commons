@@ -222,7 +222,7 @@ public class CbeffValidator {
 			singleAnySubType = getSingleAnySubtype(subType);
 		}
 		Map<String, String> bdbMap = new HashMap<>();
-		if (bir.getBIR() != null && bir.getBIR().isEmpty()) {
+		if (bir.getBIR() != null && !bir.getBIR().isEmpty()) {
 			populateBDBMap(bir, singleType, singleAnySubType, formatType, bdbMap);
 		}
 		Map<String, String> map = new TreeMap<>(bdbMap);

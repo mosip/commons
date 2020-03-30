@@ -9,7 +9,7 @@
 		<version>1.0.6</version>
 	</parent>
 	<artifactId>kernel-cbeffutil-api</artifactId>
-	<version>1.1.0</version>
+	<version>1.1.1-SNAPSHOT</version>
 	
 	<properties>
 		<sonar.skip>true</sonar.skip>
