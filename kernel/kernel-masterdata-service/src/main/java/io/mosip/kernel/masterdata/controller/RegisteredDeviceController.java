@@ -81,7 +81,7 @@ public class RegisteredDeviceController {
 	@ApiOperation(value = "Update status of the devive")
 	@PutMapping("/update/status")
 	public ResponseEntity<ResponseDto> deRegisterDevice(
-			@NotBlank @RequestParam(name = "deviceCode", required = true) String deviceCode,
+			@Valid @NotBlank @RequestParam(name = "deviceCode", required = true) String deviceCode,
 			@NotBlank @RequestParam(name = "statusCode", required = true) String statusCode) {
 		return new ResponseEntity<>(registeredDeviceService.updateStatus(deviceCode, statusCode), HttpStatus.OK);
 	}
