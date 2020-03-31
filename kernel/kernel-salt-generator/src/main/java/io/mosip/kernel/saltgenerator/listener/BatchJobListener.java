@@ -1,11 +1,14 @@
 package io.mosip.kernel.saltgenerator.listener;
 
+import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.listener.JobExecutionListenerSupport;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.kernel.core.saltgenerator.constant.SaltGeneratorErrorConstants;
+import io.mosip.kernel.core.saltgenerator.exception.SaltGeneratorException;
 import io.mosip.kernel.saltgenerator.logger.SaltGeneratorLogger;
 
 /**
@@ -41,6 +44,9 @@ public class BatchJobListener extends JobExecutionListenerSupport {
 	public void afterJob(JobExecution jobExecution) {
 		mosipLogger.debug("SALT_GENERATOR", "BatchJobListener", "BATCH JOB COMPLETED WITH STATUS : ",
 				jobExecution.getStatus().name());
+		if (!jobExecution.getStatus().equals(BatchStatus.COMPLETED)) {
+			throw new SaltGeneratorException(SaltGeneratorErrorConstants.JOB_FAILED);
+		}
 		jobExecution.setExitStatus(ExitStatus.COMPLETED);
 	}
 }
