@@ -13,7 +13,7 @@
 	
 	<properties>
 		<sonar.skip>true</sonar.skip>
-		<kernel.core.version>1.0.8-SNAPSHOT</kernel.core.version>
+		<kernel.core.version>1.0.7</kernel.core.version>
 	</properties>
 	<dependencies>
 		<dependency>
