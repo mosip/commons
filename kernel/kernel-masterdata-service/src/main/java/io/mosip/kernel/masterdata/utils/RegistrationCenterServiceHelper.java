@@ -165,6 +165,7 @@ public class RegistrationCenterServiceHelper {
 			pageDto=new PageResponseDto<>();
 			return pageDto;
 		}
+		count++;
 		}
 		return pageDto;
 	}
