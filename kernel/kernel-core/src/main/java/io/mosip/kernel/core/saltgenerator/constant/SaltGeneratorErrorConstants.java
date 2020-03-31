@@ -13,8 +13,9 @@ import java.util.stream.Collectors;
  */
 public enum SaltGeneratorErrorConstants {
 
-	/** The record exists. */
-	RECORD_EXISTS("KER-SGR-001", "Record(s) already exists in DB");
+	RECORD_EXISTS("KER-SGR-001", "Record(s) already exists in DB"),
+
+	JOB_FAILED("KER-SGR-002", "Failed to populate salt");
 
 	/** The error code. */
 	private final String errorCode;
