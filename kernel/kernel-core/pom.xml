@@ -11,7 +11,7 @@
 	</parent>
 
 	<artifactId>kernel-core</artifactId>
-	<version>1.0.7</version>
+	<version>1.0.8-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
