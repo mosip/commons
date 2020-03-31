@@ -38,7 +38,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/registereddevices")
 @Api(tags = { "Registered Device" })
-// @Validated
+@Validated
 public class RegisteredDeviceController {
 
 	@Autowired
@@ -82,9 +82,9 @@ public class RegisteredDeviceController {
 
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN')")
 	@ApiOperation(value = "Update status of the devive")
-	@PutMapping("/update/status/{deviceCode}")
-	@Validated
-	public ResponseEntity<ResponseDto> deRegisterDevice(@NotBlank @RequestParam(name = "deviceCode") String deviceCode,
+	@PutMapping("/update/status")
+	public ResponseEntity<ResponseDto> deRegisterDevice(
+			@NotBlank @RequestParam(name = "deviceCode") String deviceCode,
 			@NotBlank @RequestParam(name = "statusCode") String statusCode) {
 		return new ResponseEntity<>(registeredDeviceService.updateStatus(deviceCode, statusCode), HttpStatus.OK);
 	}
