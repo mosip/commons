@@ -90,6 +90,7 @@ import io.mosip.kernel.masterdata.validator.FilterTypeValidator;
  * @author Megha Tanga
  * @author Ritesh Sinha
  * @author Sidhant Agarwal
+ * @author Ravi Kant
  * @since 1.0.0
  *
  */
@@ -499,10 +500,8 @@ public class MachineServiceImpl implements MachineService {
 	/**
 	 * Method to set each machine zone meta data.
 	 * 
-	 * @param list
-	 *            list of {@link MachineSearchDto}.
-	 * @param zones
-	 *            the list of zones.
+	 * @param list  list of {@link MachineSearchDto}.
+	 * @param zones the list of zones.
 	 */
 	private void setMachineMetadata(List<MachineSearchDto> list, List<Zone> zones) {
 		list.forEach(i -> setZoneMetadata(i, zones));
@@ -511,8 +510,7 @@ public class MachineServiceImpl implements MachineService {
 	/**
 	 * Method to set MachineType Name for each Machine.
 	 * 
-	 * @param list
-	 *            the {@link MachineSearchDto}.
+	 * @param list the {@link MachineSearchDto}.
 	 */
 	private void setMachineTypeNames(List<MachineSearchDto> list) {
 		List<MachineSpecification> machineSpecifications = machineUtil.getMachineSpec();
@@ -535,8 +533,7 @@ public class MachineServiceImpl implements MachineService {
 	/**
 	 * Method to set Map status of each Machine.
 	 * 
-	 * @param list
-	 *            the {@link MachineSearchDto}.
+	 * @param list the {@link MachineSearchDto}.
 	 */
 	private void setMapStatus(List<MachineSearchDto> list) {
 		List<RegistrationCenterMachine> centerMachineList = machineUtil.getAllMachineCentersList();
@@ -560,10 +557,8 @@ public class MachineServiceImpl implements MachineService {
 	/**
 	 * Method to set Zone metadata
 	 * 
-	 * @param machines
-	 *            metadata to be added
-	 * @param zones
-	 *            list of zones
+	 * @param machines metadata to be added
+	 * @param zones    list of zones
 	 * 
 	 */
 	private void setZoneMetadata(MachineSearchDto machines, List<Zone> zones) {
@@ -578,8 +573,7 @@ public class MachineServiceImpl implements MachineService {
 	/**
 	 * Search the zone in the based on the received input filter
 	 * 
-	 * @param filter
-	 *            search input
+	 * @param filter search input
 	 * @return {@link Zone} if successful otherwise throws
 	 *         {@link MasterDataServiceException}
 	 */
@@ -597,8 +591,7 @@ public class MachineServiceImpl implements MachineService {
 	/**
 	 * Creating Search filter from the passed zones
 	 * 
-	 * @param zones
-	 *            filter to be created with the zones
+	 * @param zones filter to be created with the zones
 	 * @return list of {@link SearchFilter}
 	 */
 	public List<SearchFilter> buildZoneFilter(List<Zone> zones) {
@@ -612,8 +605,7 @@ public class MachineServiceImpl implements MachineService {
 	/**
 	 * Method to create SearchFilter for the recieved zoneCode
 	 * 
-	 * @param zoneCode
-	 *            input from the {@link SearchFilter} has to be created
+	 * @param zoneCode input from the {@link SearchFilter} has to be created
 	 * @return {@link SearchFilter}
 	 */
 	private SearchFilter buildZoneFilter(String zoneCode) {
@@ -627,8 +619,7 @@ public class MachineServiceImpl implements MachineService {
 	/**
 	 * This method return Machine Id list filters.
 	 * 
-	 * @param machineIdList
-	 *            the Machine Id list.
+	 * @param machineIdList the Machine Id list.
 	 * @return the list of {@link SearchFilter}.
 	 */
 	private List<SearchFilter> buildRegistrationCenterMachineTypeSearchFilter(List<String> machineIdList) {
@@ -641,8 +632,7 @@ public class MachineServiceImpl implements MachineService {
 	/**
 	 * This method return Machine Specification list filters.
 	 * 
-	 * @param machineSpecification
-	 *            the list of Machine Specification.
+	 * @param machineSpecification the list of Machine Specification.
 	 * @return the list of {@link SearchFilter}.
 	 */
 	private List<SearchFilter> buildMachineSpecificationSearchFilter(List<Object[]> machineSpecification) {
@@ -660,8 +650,7 @@ public class MachineServiceImpl implements MachineService {
 	/**
 	 * This method provide search filter for provided machine id.
 	 * 
-	 * @param machineId
-	 *            the machine id.
+	 * @param machineId the machine id.
 	 * @return the {@link SearchFilter}.
 	 */
 	private SearchFilter buildRegistrationCenterMachineType(String machineId) {
@@ -711,18 +700,13 @@ public class MachineServiceImpl implements MachineService {
 	public IdResponseDto decommissionMachine(String machineId) {
 		IdResponseDto idResponseDto = new IdResponseDto();
 		int decommissionedMachine = 0;
-		List<String> zoneIds;
-
-		// get user zone and child zones list
-		List<Zone> userZones = zoneUtils.getUserZones();
-		zoneIds = userZones.parallelStream().map(Zone::getCode).collect(Collectors.toList());
 
 		// get machine from DB by given id
-		List<Machine> renMachines = machineRepository
+		List<Machine> machines = machineRepository
 				.findMachineByIdAndIsDeletedFalseorIsDeletedIsNullNoIsActive(machineId);
 
 		// machine is not in DB
-		if (renMachines.isEmpty()) {
+		if (machines.isEmpty()) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_DECOMMISSION, MachineSearchDto.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
@@ -734,8 +718,14 @@ public class MachineServiceImpl implements MachineService {
 					String.format(MachineErrorCode.MACHINE_NOT_EXIST_EXCEPTION.getErrorMessage(), machineId));
 		}
 
+		List<String> zoneIds;
+
+		// get user zone and child zones list
+		List<Zone> userZones = zoneUtils.getUserZones();
+		zoneIds = userZones.parallelStream().map(Zone::getCode).collect(Collectors.toList());
+
 		// check the given device and registration center zones are come under user zone
-		if (!zoneIds.contains(renMachines.get(0).getZoneCode())) {
+		if (!zoneIds.contains(machines.get(0).getZoneCode())) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_DECOMMISSION, MachineSearchDto.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
@@ -763,7 +753,7 @@ public class MachineServiceImpl implements MachineService {
 					MetaDataUtils.getCurrentDateTime());
 
 			// create Machine history
-			for (Machine machine : renMachines) {
+			for (Machine machine : machines) {
 				MachineHistory machineHistory = new MachineHistory();
 				MapperUtils.map(machine, machineHistory);
 				MapperUtils.setBaseFieldValue(machine, machineHistory);

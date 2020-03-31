@@ -7,20 +7,22 @@
 	<parent>
 		<groupId>io.mosip.kernel</groupId>
 		<artifactId>kernel-parent</artifactId>
-		<version>1.0.6-SNAPSHOT</version>
+		<version>1.0.6</version>
 	</parent>
 
 	<artifactId>kernel-datamapper-orika</artifactId>
+	<version>1.0.6</version>
 	<name>kernel-datamapper-orika</name>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<kernel.core.version>1.0.6</kernel.core.version>
 	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ma.glasnost.orika</groupId>

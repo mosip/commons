@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.orm.hibernate5.HibernateObjectRetrievalFailureException;
@@ -40,6 +39,7 @@ import io.mosip.kernel.masterdata.dto.DayNameAndSeqListDto;
 import io.mosip.kernel.masterdata.dto.DeviceSpecificationDto;
 import io.mosip.kernel.masterdata.dto.DocumentCategoryDto;
 import io.mosip.kernel.masterdata.dto.DocumentTypeDto;
+import io.mosip.kernel.masterdata.dto.DocumentTypePutReqDto;
 import io.mosip.kernel.masterdata.dto.ExceptionalHolidayDto;
 import io.mosip.kernel.masterdata.dto.LanguageDto;
 import io.mosip.kernel.masterdata.dto.LocationDto;
@@ -215,7 +215,7 @@ public class MasterDataServiceTest {
 
 	@Autowired
 	RegistrationCenterMachineDeviceHistoryService registrationCenterMachineDeviceHistoryService;
-	
+
 	@MockBean
 	RegWorkingNonWorkingRepo regWorkingNonWorkingRepo;
 	@MockBean
@@ -223,10 +223,10 @@ public class MasterDataServiceTest {
 
 	@Autowired
 	RegWorkingNonWorkingService regWorkingNonWorkingService;
-	
+
 	@Autowired
 	ExceptionalHolidayService exceptionalHolidayService;
-	
+
 	@MockBean
 	ExceptionalHolidayRepository exceptionalHolidayRepository;
 
@@ -692,10 +692,10 @@ public class MasterDataServiceTest {
 
 	@MockBean
 	ZoneUtils zoneUtils;
-	
+
 	@MockBean
 	private AuditUtil auditUtil;
-	
+
 	List<Zone> zones = null;
 
 	private void registrationCenterSetup() {
@@ -1796,7 +1796,7 @@ public class MasterDataServiceTest {
 
 		locationHierarchyService.updateLocationDetails(requestLocationDto1.getRequest());
 	}
-    
+
 	@Ignore
 	@Test
 	public void updateLocationDetailsTest() {
@@ -1811,7 +1811,8 @@ public class MasterDataServiceTest {
 	public void updateLocationDetailsExceptionTest() {
 		Mockito.when(locationHierarchyRepository.findById(Mockito.any(), Mockito.any())).thenReturn(locationHierarchy);
 		Mockito.when(locationHierarchyRepository.update(Mockito.any())).thenThrow(DataRetrievalFailureException.class);
-
+		Mockito.when(locationHierarchyRepository.findByNameAndLevelLangCode(Mockito.any(),Mockito.anyShort(), Mockito.any())).thenReturn(null);
+		Mockito.when(locationHierarchyRepository.findLocationHierarchyByCodeAndLanguageCode(Mockito.any(), Mockito.any())).thenReturn(locationHierarchyList);
 		locationHierarchyService.updateLocationDetails(requestLocationDto.getRequest());
 	}
 
@@ -2049,7 +2050,7 @@ public class MasterDataServiceTest {
 
 	}
 
-	@Test(expected=MasterDataServiceException.class)
+	@Test(expected = MasterDataServiceException.class)
 	public void documentTypeNoRecordsFoudExceptionTest() {
 		String documentCategoryCode = "poc";
 		String langCode = "eng";
@@ -2060,7 +2061,7 @@ public class MasterDataServiceTest {
 
 	}
 
-	@Test(expected=MasterDataServiceException.class)
+	@Test(expected = MasterDataServiceException.class)
 	public void documentTypeNoRecordsFoudExceptionForNullTest() {
 		String documentCategoryCode = "poc";
 		String langCode = "eng";
@@ -2083,7 +2084,7 @@ public class MasterDataServiceTest {
 	@Test
 	public void updateDocumentTypeSuccessTest() {
 
-		DocumentTypeDto documentTypeDto = new DocumentTypeDto();
+		DocumentTypePutReqDto documentTypeDto = new DocumentTypePutReqDto();
 		documentTypeDto.setCode("code");
 		documentTypeDto.setIsActive(Boolean.TRUE);
 		documentTypeDto.setLangCode("eng");
@@ -2100,8 +2101,6 @@ public class MasterDataServiceTest {
 		documentTypeService.updateDocumentType(documentTypeDto);
 
 	}
-	
-	
 
 	/*---------------------- Blacklisted word validator----------------------*/
 
@@ -2379,9 +2378,14 @@ public class MasterDataServiceTest {
 		daysDto.setOrder((short) 1);
 		weekdayList.add(daysDto);
 		weekdays.setWeekdays(weekdayList);
+		RegistrationCenter registCent = new RegistrationCenter();
+		registCent.setId("10001");
+		registCent.setLangCode("eng");
 
 		Mockito.when(regWorkingNonWorkingRepo.findByregistrationCenterIdAndlanguagecodeForWeekDays(Mockito.anyString(),
 				Mockito.anyString())).thenReturn(nameSeqDtoList);
+		Mockito.when(registrationCenterRepository.findByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
+				.thenReturn(registCent);
 		assertEquals("Monday",
 				regWorkingNonWorkingService.getWeekDaysList("10001", "eng").getWeekdays().get(0).getName());
 	}
@@ -2394,6 +2398,11 @@ public class MasterDataServiceTest {
 		workingDaysDto.setName("Monday");
 		workingDaysDto.setLanguagecode("eng");
 		workingDaysDtos.add(workingDaysDto);
+		RegistrationCenter registCent = new RegistrationCenter();
+		registCent.setId("10001");
+		registCent.setLangCode("eng");
+		Mockito.when(registrationCenterRepository.findByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
+				.thenReturn(registCent);
 
 		Mockito.when(regWorkingNonWorkingRepo.findByregistrationCenterIdAndlangCodeForWorkingDays("10001", "eng"))
 				.thenReturn(workingDaysDtos);
@@ -2401,32 +2410,42 @@ public class MasterDataServiceTest {
 		assertEquals("Monday",
 				regWorkingNonWorkingService.getWorkingDays("10001", "eng").getWorkingdays().get(0).getName());
 	}
+
 	@Test
 	public void getWorkingDaysServiceGlobalTest() {
-		List<DaysOfWeek> globalDaysList=new ArrayList<>();
-		DaysOfWeek daysOfWeek=new DaysOfWeek();
+		List<DaysOfWeek> globalDaysList = new ArrayList<>();
+		DaysOfWeek daysOfWeek = new DaysOfWeek();
 		daysOfWeek.setCode("101");
 		daysOfWeek.setGlobalWorking(true);
-		daysOfWeek.setDaySeq((short)1);
+		daysOfWeek.setDaySeq((short) 1);
 		daysOfWeek.setLangCode("eng");
 		daysOfWeek.setName("Monday");
 		globalDaysList.add(daysOfWeek);
+		RegistrationCenter registCent = new RegistrationCenter();
+		registCent.setId("10001");
+		registCent.setLangCode("eng");
 
 		Mockito.when(regWorkingNonWorkingRepo.findByregistrationCenterIdAndlangCodeForWorkingDays("10001", "eng"))
 				.thenReturn(null);
-		Mockito.when(daysOfWeekRepo.findByAllGlobalWorkingTrue(Mockito.anyString()))
-		.thenReturn(globalDaysList);
+		Mockito.when(registrationCenterRepository.findByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
+				.thenReturn(registCent);
+		Mockito.when(daysOfWeekRepo.findByAllGlobalWorkingTrue(Mockito.anyString())).thenReturn(globalDaysList);
 
 		assertEquals("Monday",
 				regWorkingNonWorkingService.getWorkingDays("10001", "eng").getWorkingdays().get(0).getName());
 	}
-	@Test(expected=DataNotFoundException.class)
+
+	@Test(expected = DataNotFoundException.class)
 	public void getWorkingDaysServiceGlobalFailTest() {
 
+		RegistrationCenter registCent = new RegistrationCenter();
+		registCent.setId("10001");
+		registCent.setLangCode("eng");
 		Mockito.when(regWorkingNonWorkingRepo.findByregistrationCenterIdAndlangCodeForWorkingDays("10001", "eng"))
 				.thenReturn(null);
-		Mockito.when(daysOfWeekRepo.findByAllGlobalWorkingTrue(Mockito.anyString()))
-		.thenReturn(null);
+		Mockito.when(registrationCenterRepository.findByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
+				.thenReturn(registCent);
+		Mockito.when(daysOfWeekRepo.findByAllGlobalWorkingTrue(Mockito.anyString())).thenReturn(null);
 
 		regWorkingNonWorkingService.getWorkingDays("10001", "eng");
 	}
@@ -2438,10 +2457,10 @@ public class MasterDataServiceTest {
 
 		workingDaysDtos.add(workingDaysDto);
 
-		Mockito.when(regWorkingNonWorkingRepo.findByregistrationCenterIdAndlangCodeForWorkingDays("10001", "eng")).thenThrow(DataAccessLayerException.class);
+		Mockito.when(regWorkingNonWorkingRepo.findByregistrationCenterIdAndlangCodeForWorkingDays("10001", "eng"))
+				.thenThrow(DataAccessLayerException.class);
 		regWorkingNonWorkingService.getWorkingDays("10001", "eng");
 	}
-
 
 	@Test(expected = DataNotFoundException.class)
 	public void getWeekServiceFailureTest() {
@@ -2459,40 +2478,11 @@ public class MasterDataServiceTest {
 		regWorkingNonWorkingService.getWeekDaysList("10001", "eng");
 	}
 	
-	@Test
-	public void exceptionalHolidaysServiceTest() {
-		List<ExceptionalHoliday> exceptionalHolidayList = new ArrayList<>();
-		ExceptionalHoliday exceptionalHoliday = new ExceptionalHoliday();
-		LocalDate date=LocalDate.now();
-		
-		exceptionalHoliday.setIsActive(true);
-		exceptionalHoliday.setHolidayDate(date);
-		exceptionalHoliday.setLangCode("eng");
-		exceptionalHoliday.setHolidayDate(date);
-		exceptionalHoliday.setHolidayName("Exceptional Holiday");
-		exceptionalHoliday.setHolidayReason("Exceptional Holiday");
-		exceptionalHolidayList.add(exceptionalHoliday);
-
-		Mockito.when(exceptionalHolidayRepository.findAllNonDeletedExceptionalHoliday("10001", "eng"))
-				.thenReturn(exceptionalHolidayList);
-		System.out.println("sdgd");
-		
-		List<ExceptionalHolidayDto> excepHolidays = MapperUtils.mapExceptionalHolidays(exceptionalHolidayList);
-
-		assertEquals("Exceptional Holiday",
-				exceptionalHolidayService.getAllExceptionalHolidays("10001", "eng").getExceptionalHolidayList().get(0).getHolidayName());
-	}
-	@Test(expected = DataNotFoundException.class)
-	public void exceptionalHolidaysFailureTest() {
-
-		Mockito.when(exceptionalHolidayRepository.findAllNonDeletedExceptionalHoliday("10001", "eng"))
-		.thenReturn(null);
-		exceptionalHolidayService.getAllExceptionalHolidays("10001", "eng");
-	}
 	@Test(expected = MasterDataServiceException.class)
 	public void exceptionalHolidaysFailureTest2() {
 
-		Mockito.when(exceptionalHolidayRepository.findAllNonDeletedExceptionalHoliday("10001", "eng")).thenThrow(new DataAccessLayerException("", "", new Throwable()));
+		Mockito.when(exceptionalHolidayRepository.findAllNonDeletedExceptionalHoliday("10001", "eng"))
+				.thenThrow(new DataAccessLayerException("", "", new Throwable()));
 		exceptionalHolidayService.getAllExceptionalHolidays("10001", "eng");
 	}
 

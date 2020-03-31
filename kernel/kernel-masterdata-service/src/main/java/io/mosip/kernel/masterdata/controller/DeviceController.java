@@ -67,8 +67,7 @@ public class DeviceController {
 	/**
 	 * Get api to fetch a all device details based on language code
 	 * 
-	 * @param langCode
-	 *            pass language code as String
+	 * @param langCode pass language code as String
 	 * 
 	 * @return DeviceResponseDto all device details based on given language code
 	 *         {@link DeviceResponseDto}
@@ -91,11 +90,9 @@ public class DeviceController {
 	/**
 	 * Get api to fetch a all device details based on device type and language code
 	 * 
-	 * @param langCode
-	 *            pass language code as String
+	 * @param langCode   pass language code as String
 	 * 
-	 * @param deviceType
-	 *            pass device Type id as String
+	 * @param deviceType pass device Type id as String
 	 * 
 	 * @return DeviceLangCodeResponseDto all device details based on given device
 	 *         type and language code {@link DeviceLangCodeResponseDto}
@@ -130,8 +127,7 @@ public class DeviceController {
 	@ApiResponses({ @ApiResponse(code = 201, message = "When Device successfully created"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While creating device any error occured") })
-	public ResponseWrapper<DeviceExtnDto> createDevice(
-			@RequestBody RequestWrapper<DeviceDto> request) {
+	public ResponseWrapper<DeviceExtnDto> createDevice(@Valid @RequestBody RequestWrapper<DeviceDto> request) {
 		ResponseWrapper<DeviceExtnDto> responseWrapper = new ResponseWrapper<>();
 		auditUtil.auditRequest(MasterDataConstant.CREATE_API_IS_CALLED + DeviceDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,
@@ -169,8 +165,7 @@ public class DeviceController {
 	/**
 	 * API to delete Device
 	 * 
-	 * @param id
-	 *            The Device Id
+	 * @param id The Device Id
 	 * 
 	 * @return {@link ResponseEntity} The id of the Device which is deleted
 	 */
@@ -191,8 +186,7 @@ public class DeviceController {
 	 * 
 	 * Function to fetch Device detail those are mapped with given registration Id
 	 * 
-	 * @param regCenterId
-	 *            pass registration Id as String
+	 * @param regCenterId pass registration Id as String
 	 * 
 	 * @return @return DeviceRegistrationCenterDto all devices details
 	 *         {@link DeviceRegistrationCenterDto}
@@ -221,8 +215,7 @@ public class DeviceController {
 	/**
 	 * Api to search Device based on filters provided.
 	 * 
-	 * @param request
-	 *            the request DTO.
+	 * @param request the request DTO.
 	 * @return the pages of {@link DeviceSearchDto}.
 	 */
 	@ResponseFilter
@@ -246,8 +239,7 @@ public class DeviceController {
 	/**
 	 * Api to filter Device based on column and type provided.
 	 * 
-	 * @param request
-	 *            the request DTO.
+	 * @param request the request DTO.
 	 * @return the {@link FilterResponseDto}.
 	 */
 	@ResponseFilter
@@ -270,8 +262,7 @@ public class DeviceController {
 	/**
 	 * PUT API to decommission device
 	 * 
-	 * @param deviceId
-	 *            input from user
+	 * @param deviceId input from user
 	 * @return device ID of decommissioned device
 	 */
 	@ResponseFilter

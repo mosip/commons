@@ -67,10 +67,8 @@ public class RegistrationCenterDeviceController {
 	/**
 	 * Delete the mapping of registration center and device
 	 * 
-	 * @param regCenterId
-	 *            Registration center id to be deleted
-	 * @param deviceId
-	 *            DeviceId id to be deleted
+	 * @param regCenterId Registration center id to be deleted
+	 * @param deviceId    DeviceId id to be deleted
 	 * @return {@link RegistrationCenterDeviceID}
 	 */
 	@ResponseFilter
@@ -89,10 +87,8 @@ public class RegistrationCenterDeviceController {
 	/**
 	 * Api to un-map Device from a Registration Center .
 	 * 
-	 * @param deviceId
-	 *            the Device ID.
-	 * @param regCenterId
-	 *            the Registration Center ID.
+	 * @param deviceId    the Device ID.
+	 * @param regCenterId the Registration Center ID.
 	 * @return the DeviceAndRegCenterMappingResponseDto.
 	 */
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
@@ -120,10 +116,8 @@ public class RegistrationCenterDeviceController {
 	/**
 	 * Map registration center device.
 	 *
-	 * @param regCenterId
-	 *            the reg center id
-	 * @param deviceId
-	 *            the device id
+	 * @param regCenterId the reg center id
+	 * @param deviceId    the device id
 	 * @return {@link ResponseDto}
 	 */
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")

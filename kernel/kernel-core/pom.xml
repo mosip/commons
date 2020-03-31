@@ -7,11 +7,11 @@
 	<parent>
 		<groupId>io.mosip.kernel</groupId>
 		<artifactId>kernel-parent</artifactId>
-		<version>1.0.6-SNAPSHOT</version>
+		<version>1.0.6</version>
 	</parent>
 
 	<artifactId>kernel-core</artifactId>
-
+	<version>1.0.8-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -27,6 +27,12 @@
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
 			<version>${spring.data.jpa.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.h2database</groupId>
+					<artifactId>h2</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>javax.persistence</groupId>
@@ -106,7 +112,4 @@
 			<version>${swagger.annotations.version}</version>
 		</dependency>
 	</dependencies>
-
-
-
 </project>

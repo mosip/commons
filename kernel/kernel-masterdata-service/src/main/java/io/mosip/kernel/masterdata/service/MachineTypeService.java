@@ -5,6 +5,7 @@ import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.MachineTypeExtnDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
+import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.entity.id.CodeAndLanguageCodeID;
@@ -22,28 +23,23 @@ public interface MachineTypeService {
 	/**
 	 * Abstract method to save Machine Type Details to the Database
 	 * 
-	 * @param machineType
-	 *            machineType DTO
+	 * @param machineType machineType DTO
 	 * 
 	 * @return CodeAndLanguageCodeID returning code and language code
 	 *         {@link CodeAndLanguageCodeID}
 	 * 
-	 * @throws MasterDataServiceException
-	 *             if any error occurred while saving Machine Type
+	 * @throws MasterDataServiceException if any error occurred while saving Machine
+	 *                                    Type
 	 */
 	public CodeAndLanguageCodeID createMachineType(MachineTypeDto machineType);
 
 	/**
 	 * Method to get all machine types
 	 * 
-	 * @param pageNumber
-	 *            the page number
-	 * @param pageSize
-	 *            the size of each page
-	 * @param sortBy
-	 *            the attributes by which it should be ordered
-	 * @param orderBy
-	 *            the order to be used
+	 * @param pageNumber the page number
+	 * @param pageSize   the size of each page
+	 * @param sortBy     the attributes by which it should be ordered
+	 * @param orderBy    the order to be used
 	 * 
 	 * @return the response i.e. pages containing the machine types
 	 */
@@ -52,8 +48,7 @@ public interface MachineTypeService {
 	/**
 	 * Method to search Machine Type.
 	 * 
-	 * @param dto
-	 *            the search DTO.
+	 * @param dto the search DTO.
 	 * @return the {@link MachineTypeExtnDto}.
 	 */
 	public PageResponseDto<MachineTypeExtnDto> searchMachineType(SearchDto dto);
@@ -61,9 +56,8 @@ public interface MachineTypeService {
 	/**
 	 * Method to filter Machine Types based on column and type provided.
 	 * 
-	 * @param filterValueDto
-	 *            the filter DTO.
+	 * @param filterValueDto the filter DTO.
 	 * @return the {@link FilterResponseDto}.
 	 */
-	public FilterResponseDto machineTypesFilterValues(FilterValueDto filterValueDto);
+	public FilterResponseCodeDto machineTypesFilterValues(FilterValueDto filterValueDto);
 }

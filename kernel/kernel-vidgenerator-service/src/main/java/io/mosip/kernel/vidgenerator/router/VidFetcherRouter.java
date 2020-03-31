@@ -41,7 +41,7 @@ import io.vertx.ext.web.RoutingContext;
  */
 @Component
 public class VidFetcherRouter {
-	
+
 	@Value("${mosip.kernel.vid.get_executor_pool:400}")
 	private int workerExecutorPool;
 
@@ -62,15 +62,15 @@ public class VidFetcherRouter {
 	 * @return Router
 	 */
 	public Router createRouter(Vertx vertx) {
-		LOGGER.info("worker executor pool {}",workerExecutorPool);
+		LOGGER.info("worker executor pool {}", workerExecutorPool);
 		Router router = Router.router(vertx);
 		router.get().handler(routingContext -> {
 			LOGGER.info("publishing event to CHECKPOOL");
 			// send a publish event to vid pool checker
 			vertx.eventBus().publish(EventType.CHECKPOOL, EventType.CHECKPOOL);
-			routingContext.response().headers().add("Content-Type","application/json");
+			routingContext.response().headers().add("Content-Type", "application/json");
 			ResponseWrapper<VidFetchResponseDto> reswrp = new ResponseWrapper<>();
-			WorkerExecutor executor=vertx.createSharedWorkerExecutor("get-vid", workerExecutorPool);
+			WorkerExecutor executor = vertx.createSharedWorkerExecutor("get-vid", workerExecutorPool);
 			executor.executeBlocking(blockingCodeHandler -> {
 				String expiryDateString = routingContext.request().getParam(VIDGeneratorConstant.VIDEXPIRY);
 				LocalDateTime expiryTime = null;
@@ -79,22 +79,22 @@ public class VidFetcherRouter {
 						ServiceError error = new ServiceError(
 								VIDGeneratorErrorCode.VID_EXPIRY_DATE_EMPTY.getErrorCode(),
 								VIDGeneratorErrorCode.VID_EXPIRY_DATE_EMPTY.getErrorMessage());
-						setError(routingContext, error,blockingCodeHandler);
+						setError(routingContext, error, blockingCodeHandler);
 					}
 					DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(UTC_DATETIME_PATTERN);
 					try {
-					expiryTime = LocalDateTime.parse(expiryDateString, dateTimeFormatter);
-					}catch(DateTimeParseException exception) {
+						expiryTime = LocalDateTime.parse(expiryDateString, dateTimeFormatter);
+					} catch (DateTimeParseException exception) {
 						ServiceError error = new ServiceError(
 								VIDGeneratorErrorCode.VID_EXPIRY_DATE_PATTERN_INVALID.getErrorCode(),
 								VIDGeneratorErrorCode.VID_EXPIRY_DATE_PATTERN_INVALID.getErrorMessage());
-						setError(routingContext, error,blockingCodeHandler);
+						setError(routingContext, error, blockingCodeHandler);
 					}
 					if (expiryTime.isBefore(DateUtils.getUTCCurrentDateTime())) {
 						ServiceError error = new ServiceError(
 								VIDGeneratorErrorCode.VID_EXPIRY_DATE_INVALID.getErrorCode(),
 								VIDGeneratorErrorCode.VID_EXPIRY_DATE_INVALID.getErrorMessage());
-						setError(routingContext, error,blockingCodeHandler);
+						setError(routingContext, error, blockingCodeHandler);
 					}
 				}
 				VidFetchResponseDto vidFetchResponseDto = null;
@@ -102,23 +102,24 @@ public class VidFetcherRouter {
 					vidFetchResponseDto = vidService.fetchVid(expiryTime);
 				} catch (VidGeneratorServiceException exception) {
 					ServiceError error = new ServiceError(exception.getErrorCode(), exception.getMessage());
-					setError(routingContext, error,blockingCodeHandler);
+					setError(routingContext, error, blockingCodeHandler);
 				}
 				String timestamp = DateUtils.getUTCCurrentDateTimeString();
 				reswrp.setResponsetime(DateUtils.convertUTCToLocalDateTime(timestamp));
 				reswrp.setResponse(vidFetchResponseDto);
 				reswrp.setErrors(null);
 				blockingCodeHandler.complete();
-			},false, resultHandler -> {
-				if(resultHandler.succeeded()) {
-				try {
-					routingContext.response().end(objectMapper.writeValueAsString(reswrp));
-				} catch (JsonProcessingException exception) {
-					ExceptionUtils.logRootCause(exception);
-					ServiceError error = new ServiceError(VIDGeneratorErrorCode.INTERNAL_SERVER_ERROR.getErrorCode(),
-							exception.getMessage());
-					setError(routingContext, error,null);
-				}}
+			}, false, resultHandler -> {
+				if (resultHandler.succeeded()) {
+					try {
+						routingContext.response().end(objectMapper.writeValueAsString(reswrp));
+					} catch (JsonProcessingException exception) {
+						ExceptionUtils.logRootCause(exception);
+						ServiceError error = new ServiceError(
+								VIDGeneratorErrorCode.INTERNAL_SERVER_ERROR.getErrorCode(), exception.getMessage());
+						setError(routingContext, error, null);
+					}
+				}
 			});
 		});
 
@@ -144,9 +145,9 @@ public class VidFetcherRouter {
 		} catch (JsonProcessingException e) {
 			LOGGER.error(e.getMessage());
 		}
-		
+
 		LOGGER.error(error.getMessage());
-		if(blockingCodeHandler != null) {
+		if (blockingCodeHandler != null) {
 			blockingCodeHandler.fail(error.getMessage());
 		}
 	}

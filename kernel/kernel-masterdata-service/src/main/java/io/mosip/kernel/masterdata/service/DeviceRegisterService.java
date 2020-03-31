@@ -12,24 +12,15 @@ import io.mosip.kernel.masterdata.dto.getresponse.ResponseDto;
  * @since 1.0.0
  */
 public interface DeviceRegisterService {
-	/**
-	 * Method to register Device.
-	 * 
-	 * @param request
-	 *            the {@link DeviceRegisterDto}.
-	 * @return the {@link DeviceRegisterResponseDto}.
-	 */
-	public DeviceRegisterResponseDto registerDevice(DeviceRegisterDto request);
 
 	/**
 	 * Method to de register Device.
 	 * 
-	 * @param deviceCode
-	 *            the {@link DeRegisterDeviceRequestDto}.
+	 * @param deviceCode the {@link DeRegisterDeviceRequestDto}.
 	 * @return the {@link DeviceRegisterResponseDto}.
 	 */
 	public DeviceRegisterResponseDto deRegisterDevice(String deviceCode);
-	
+
 	/**
 	 * Update status.
 	 *
@@ -37,5 +28,5 @@ public interface DeviceRegisterService {
 	 * @param statusCode the status code
 	 * @return the response dto
 	 */
-	public ResponseDto updateStatus(String deviceCode,String statusCode);
+	public ResponseDto updateStatus(String deviceCode, String statusCode);
 }

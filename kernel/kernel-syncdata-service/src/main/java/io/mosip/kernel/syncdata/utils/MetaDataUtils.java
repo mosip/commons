@@ -15,7 +15,6 @@ import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.kernel.syncdata.entity.BaseEntity;
 
-
 /**
  * MetaDataUtils class provide methods to copy values from DTO to entity along
  * with that it create some meta data which is required before an entity to be
@@ -42,8 +41,8 @@ public class MetaDataUtils {
 	 * must extends {@link BaseEntity} and map all values from DTO object to the
 	 * <code>destination</code> object and return it.
 	 * 
-	 * @param               <S> is a type parameter
-	 * @param               <D> is a type parameter
+	 * @param <S>           is a type parameter
+	 * @param <D>           is a type parameter
 	 * @param source        is the source
 	 * @param destination   is the destination
 	 * @param mapNullvalues if marked as false then field inside source which are
@@ -63,7 +62,7 @@ public class MetaDataUtils {
 		setUpdatedDateTime(contextUser, destination);
 		return destination;
 	}
-	
+
 	public static <S extends BaseEntity> S setUpdateMetaData(final S source) {
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		if (!EmptyCheckUtils.isNullEmpty(authN)) {
@@ -74,11 +73,11 @@ public class MetaDataUtils {
 		source.setUpdatedBy(contextUser);
 		return source;
 	}
-	
+
 	/**
 	 * This method is used to set meta data used for delete.
 	 * 
-	 * @param        <E> is a type parameter
+	 * @param <E>    is a type parameter
 	 * 
 	 * @param entity which extends base entity
 	 * @return entity having isDeleted value as true and deleted times
@@ -99,8 +98,8 @@ public class MetaDataUtils {
 	 * must extends {@link BaseEntity} and map all values from DTO object to the
 	 * <code>destinationClass</code> object and return it.
 	 * 
-	 * @param                  <T> is a type parameter
-	 * @param                  <D> is a type parameter
+	 * @param <T>              is a type parameter
+	 * @param <D>              is a type parameter
 	 * @param source           is the source
 	 * @param destinationClass is the destination class
 	 * @return an entity class which extends {@link BaseEntity}

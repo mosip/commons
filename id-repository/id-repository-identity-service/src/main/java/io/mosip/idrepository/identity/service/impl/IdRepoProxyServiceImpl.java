@@ -3,6 +3,14 @@ package io.mosip.idrepository.identity.service.impl;
 import static io.mosip.idrepository.core.constant.IdRepoConstants.APPLICATION_VERSION;
 import static io.mosip.idrepository.core.constant.IdRepoConstants.MODULO_VALUE;
 import static io.mosip.idrepository.core.constant.IdRepoConstants.SPLITTER;
+import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.DATABASE_ACCESS_ERROR;
+import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.DOCUMENT_HASH_MISMATCH;
+import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.FILE_NOT_FOUND;
+import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.FILE_STORAGE_ACCESS_ERROR;
+import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.ID_OBJECT_PROCESSING_FAILED;
+import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.INVALID_INPUT_PARAMETER;
+import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.NO_RECORD_FOUND;
+import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.RECORD_EXISTS;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -25,17 +33,12 @@ import org.springframework.transaction.TransactionException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.idrepository.core.constant.AuditEvents;
-import io.mosip.idrepository.core.constant.AuditModules;
-import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.*;
-import io.mosip.idrepository.core.constant.IdType;
 import io.mosip.idrepository.core.dto.DocumentsDTO;
 import io.mosip.idrepository.core.dto.IdRequestDTO;
 import io.mosip.idrepository.core.dto.IdResponseDTO;
 import io.mosip.idrepository.core.dto.ResponseDTO;
 import io.mosip.idrepository.core.exception.IdRepoAppException;
 import io.mosip.idrepository.core.exception.IdRepoAppUncheckedException;
-import io.mosip.idrepository.core.helper.AuditHelper;
 import io.mosip.idrepository.core.logger.IdRepoLogger;
 import io.mosip.idrepository.core.security.IdRepoSecurityManager;
 import io.mosip.idrepository.core.spi.IdRepoService;
@@ -134,10 +137,6 @@ public class IdRepoProxyServiceImpl implements IdRepoService<IdRequestDTO, IdRes
 	@Autowired
 	private FileSystemAdapter fsAdapter;
 
-	/** The audit helper. */
-	@Autowired
-	private AuditHelper auditHelper;
-
 	/** The service. */
 	@Autowired
 	private IdRepoService<IdRequestDTO, Uin> service;
@@ -176,10 +175,6 @@ public class IdRepoProxyServiceImpl implements IdRepoService<IdRequestDTO, IdRes
 		} catch (IdRepoAppUncheckedException e) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, ADD_IDENTITY, "\n" + e.getMessage());
 			throw new IdRepoAppException(e.getErrorCode(), e.getErrorText(), e);
-		} finally {
-			auditHelper.audit(AuditModules.ID_REPO_CORE_SERVICE, AuditEvents.CREATE_IDENTITY_REQUEST_RESPONSE,
-					securityManager.hash(request.getRequest().getRegistrationId().getBytes()), IdType.REG_ID,
-					"Create Identity requested");
 		}
 	}
 
@@ -210,9 +205,6 @@ public class IdRepoProxyServiceImpl implements IdRepoService<IdRequestDTO, IdRes
 		} catch (IdRepoAppUncheckedException e) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, RETRIEVE_IDENTITY, "\n" + e.getMessage());
 			throw new IdRepoAppException(e.getErrorCode(), e.getErrorText(), e);
-		} finally {
-			auditHelper.audit(AuditModules.ID_REPO_CORE_SERVICE, AuditEvents.RETRIEVE_IDENTITY_REQUEST_RESPONSE_UIN,
-					securityManager.hash(uin.getBytes()), IdType.UIN,"Retrieve Identity requested");
 		}
 	}
 
@@ -296,9 +288,6 @@ public class IdRepoProxyServiceImpl implements IdRepoService<IdRequestDTO, IdRes
 		} catch (IdRepoAppUncheckedException e) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, RETRIEVE_IDENTITY, "\n" + e.getMessage());
 			throw new IdRepoAppException(e.getErrorCode(), e.getErrorText(), e);
-		} finally {
-			auditHelper.audit(AuditModules.ID_REPO_CORE_SERVICE, AuditEvents.RETRIEVE_IDENTITY_REQUEST_RESPONSE_RID,
-					securityManager.hash(rid.getBytes()), IdType.REG_ID,"Retrieve Identity requested");
 		}
 	}
 
@@ -438,9 +427,6 @@ public class IdRepoProxyServiceImpl implements IdRepoService<IdRequestDTO, IdRes
 		} catch (DataAccessException | TransactionException | JDBCConnectionException e) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, UPDATE_IDENTITY, e.getMessage());
 			throw new IdRepoAppException(DATABASE_ACCESS_ERROR, e);
-		} finally {
-			auditHelper.audit(AuditModules.ID_REPO_CORE_SERVICE, AuditEvents.UPDATE_IDENTITY_REQUEST_RESPONSE,
-					securityManager.hash(regId.getBytes()), IdType.REG_ID, "Update Identity requested");
 		}
 	}
 

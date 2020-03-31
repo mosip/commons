@@ -11,13 +11,13 @@ import lombok.Data;
  *
  */
 @Data
-public class ExceptionalHolidayResponseDto implements Serializable{
+public class ExceptionalHolidayResponseDto implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -6008692838467689608L;
-	
+
 	private List<ExceptionalHolidayDto> exceptionalHolidayList;
 
 }

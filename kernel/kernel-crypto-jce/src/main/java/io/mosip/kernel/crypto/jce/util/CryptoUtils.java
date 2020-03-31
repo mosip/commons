@@ -29,7 +29,7 @@ public class CryptoUtils {
 	/**
 	 * Verify if data is null or empty
 	 * 
-	 * @param      <T>
+	 * @param <T>
 	 * 
 	 * @param data data provided by user
 	 */

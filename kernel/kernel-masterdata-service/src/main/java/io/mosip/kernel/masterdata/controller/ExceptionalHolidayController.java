@@ -31,8 +31,9 @@ public class ExceptionalHolidayController {
 	 * center ID and Language code.
 	 * 
 	 * @param ExceptionalHolidayResponseDto
-	 * @return ExceptionalHolidayResponseDto exceptional holidays based on given Registration center ID
-	 *         and Language code {@link ExceptionalHolidayResponseDto}
+	 * @return ExceptionalHolidayResponseDto exceptional holidays based on given
+	 *         Registration center ID and Language code
+	 *         {@link ExceptionalHolidayResponseDto}
 	 */
 	@ResponseFilter
 	@GetMapping(value = "/exceptionalholidays/{registrationCenterId}/{languagecode}")

@@ -1,4 +1,5 @@
 package io.mosip.kernel.auth.dto.otp.idrepo;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

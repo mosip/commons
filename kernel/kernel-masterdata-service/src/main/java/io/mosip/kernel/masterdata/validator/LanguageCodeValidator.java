@@ -25,8 +25,8 @@ public class LanguageCodeValidator implements ConstraintValidator<ValidLangCode,
 	@Value("${mosip.supported-languages}")
 	private String supportedLanguages;
 
-	//@Value("${mosip.all-languages}")
-	//private String allLanguages;
+	// @Value("${mosip.all-languages}")
+	// private String allLanguages;
 
 	/*
 	 * (non-Javadoc)

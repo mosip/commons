@@ -107,8 +107,7 @@ public class MasterDataResponseDto {
 	private List<FoundationalTrustProviderDto> functionalTrustProviders = null;
 	private List<DeviceTypeDPMDto> deviceTypeDPMs = null;
 	private List<DeviceSubTypeDPMDto> deviceSubTypeDPMs = null;
-	
-	
+
 	private List<RegistrationCenterMachineDto> registrationCenterMachines;
 	private List<RegistrationCenterDeviceDto> registrationCenterDevices;
 	private List<RegistrationCenterMachineDeviceDto> registrationCenterMachineDevices;

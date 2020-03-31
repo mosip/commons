@@ -20,10 +20,8 @@ public class LengthNotSameException extends BaseUncheckedException {
 	 * Constructor with errorCode, errorMessage that invokes the super class
 	 * constructor.
 	 * 
-	 * @param errorCode
-	 *            the error code.
-	 * @param errorMessage
-	 *            the error message.
+	 * @param errorCode    the error code.
+	 * @param errorMessage the error message.
 	 */
 	public LengthNotSameException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);

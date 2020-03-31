@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -16,6 +17,7 @@ import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.masterdata.constant.DeviceProviderManagementErrorCode;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.dto.DeviceProviderDto;
+import io.mosip.kernel.masterdata.dto.DeviceProviderPutDto;
 import io.mosip.kernel.masterdata.dto.DigitalIdDto;
 import io.mosip.kernel.masterdata.dto.ValidateDeviceDto;
 import io.mosip.kernel.masterdata.dto.ValidateDeviceHistoryDto;
@@ -51,7 +53,7 @@ import io.mosip.kernel.masterdata.utils.MetaDataUtils;
  */
 @Service
 public class DeviceProviderServiceImpl implements
-		DeviceProviderService<ResponseDto, ValidateDeviceDto, ValidateDeviceHistoryDto, DeviceProviderDto, DeviceProviderExtnDto> {
+		DeviceProviderService<ResponseDto, ValidateDeviceDto, ValidateDeviceHistoryDto, DeviceProviderDto, DeviceProviderExtnDto, DeviceProviderPutDto> {
 
 	private static final String UTC_DATETIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
@@ -85,7 +87,7 @@ public class DeviceProviderServiceImpl implements
 		isDeviceProviderPresent(validateDeviceDto.getDigitalId().getDpId());
 		isValidServiceSoftwareVersion(validateDeviceDto.getDeviceServiceVersion());
 		checkMappingBetweenSwVersionDeviceTypeAndDeviceSubType(validateDeviceDto.getDeviceServiceVersion(),
-				validateDeviceDto.getDeviceCode());
+				registeredDevice);
 		validateDeviceCodeAndDigitalId(registeredDevice, validateDeviceDto.getDigitalId());
 		responseDto.setStatus(MasterDataConstant.VALID);
 		responseDto.setMessage("Device  details validated successfully");
@@ -205,16 +207,14 @@ public class DeviceProviderServiceImpl implements
 	/**
 	 * Check mapping between sw version device type and device sub type.
 	 *
-	 * @param deviceCode
-	 *            the device code
+	 * @param deviceCode the device code
 	 * @return true, if successful
 	 */
-	private boolean checkMappingBetweenSwVersionDeviceTypeAndDeviceSubType(String swVersion, String deviceCode) {
-		RegisteredDevice registeredDevice = null;
+	private boolean checkMappingBetweenSwVersionDeviceTypeAndDeviceSubType(String swVersion,
+			RegisteredDevice registeredDevice) {
+
 		MOSIPDeviceService mosipDeviceService = null;
 		try {
-			registeredDevice = registeredDeviceRepository.findByCodeAndIsActiveIsTrue(deviceCode);
-
 			mosipDeviceService = deviceServiceRepository.findByDeviceDetail(swVersion,
 					registeredDevice.getDeviceTypeCode(), registeredDevice.getDeviceSTypeCode(),
 					registeredDevice.getMake(), registeredDevice.getModel(), registeredDevice.getDpId());
@@ -331,13 +331,50 @@ public class DeviceProviderServiceImpl implements
 				effTimes);
 		isDeviceProviderHistoryPresent(validateDeviceDto.getDigitalId().getDpId(), effTimes);
 		isValidServiceVersionFromHistory(validateDeviceDto.getDeviceServiceVersion(), effTimes);
-		checkMappingBetweenSwVersionDeviceTypeAndDeviceSubType(validateDeviceDto.getDeviceServiceVersion(),
-				validateDeviceDto.getDeviceCode());
+		checkMappingBetweenSWVerDTypeAndDSubTypeHistory(validateDeviceDto.getDeviceServiceVersion(),
+				registeredDeviceHistory, effTimes);
 		validateDigitalIdWithRegisteredDeviceHistory(registeredDeviceHistory, validateDeviceDto.getDigitalId());
 		responseDto.setStatus(MasterDataConstant.VALID);
 		responseDto.setMessage("Device details history validated successfully");
 
 		return responseDto;
+	}
+
+	private boolean checkMappingBetweenSWVerDTypeAndDSubTypeHistory(String swVersion,
+			RegisteredDeviceHistory registeredDevice, LocalDateTime effTimes) {
+		MOSIPDeviceServiceHistory mosipDeviceService = null;
+		try {
+			mosipDeviceService = deviceServiceHistoryRepository.findByDeviceDetailHistory(swVersion,
+					registeredDevice.getDeviceTypeCode(), registeredDevice.getDeviceSTypeCode(),
+					registeredDevice.getMake(), registeredDevice.getModel(), registeredDevice.getDpId(), effTimes);
+		} catch (DataAccessException | DataAccessLayerException e) {
+			auditUtil.auditRequest(
+					MasterDataConstant.DEVICE_VALIDATION_FAILURE + ValidateDeviceDto.class.getSimpleName(),
+					MasterDataConstant.AUDIT_SYSTEM,
+					String.format(MasterDataConstant.FAILURE_DESC,
+							DeviceProviderManagementErrorCode.DATABASE_EXCEPTION.getErrorCode(),
+							DeviceProviderManagementErrorCode.DATABASE_EXCEPTION.getErrorMessage()),
+					"ADM-611");
+			throw new MasterDataServiceException(DeviceProviderManagementErrorCode.DATABASE_EXCEPTION.getErrorCode(),
+					String.format(DeviceProviderManagementErrorCode.DATABASE_EXCEPTION.getErrorMessage(),
+							MasterDataConstant.ERROR_OCCURED_MOSIP_DEVICE_SERVICE));
+		}
+
+		if (mosipDeviceService == null) {
+			auditUtil.auditRequest(
+					MasterDataConstant.DEVICE_VALIDATION_FAILURE + ValidateDeviceDto.class.getSimpleName(),
+					MasterDataConstant.AUDIT_SYSTEM,
+					String.format(MasterDataConstant.FAILURE_DESC,
+							DeviceProviderManagementErrorCode.SOFTWARE_VERSION_IS_NOT_A_MATCH.getErrorCode(),
+							DeviceProviderManagementErrorCode.SOFTWARE_VERSION_IS_NOT_A_MATCH.getErrorMessage()),
+					"ADM-612");
+			throw new DataNotFoundException(
+					DeviceProviderManagementErrorCode.SOFTWARE_VERSION_IS_NOT_A_MATCH.getErrorCode(),
+					DeviceProviderManagementErrorCode.SOFTWARE_VERSION_IS_NOT_A_MATCH.getErrorMessage());
+		}
+
+		return true;
+
 	}
 
 	private void validateDigitalIdWithRegisteredDeviceHistory(RegisteredDeviceHistory registeredDevice,
@@ -542,21 +579,26 @@ public class DeviceProviderServiceImpl implements
 		DeviceProvider crtDeviceProvider = null;
 		try {
 
-			if (deviceProviderRepository.findById(DeviceProvider.class, dto.getId()) != null) {
+			DeviceProvider renDeviceProvider = deviceProviderRepository.findByNameAndAddressAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(dto.getVendorName(),dto.getAddress());
+			
+			if(renDeviceProvider!=null)
+			{
 				auditUtil.auditRequest(
-						String.format(MasterDataConstant.FAILURE_CREATE, DeviceProvider.class.getCanonicalName()),
+						String.format(MasterDataConstant.FAILURE_UPDATE, DeviceProvider.class.getCanonicalName()),
 						MasterDataConstant.AUDIT_SYSTEM,
 						String.format(MasterDataConstant.FAILURE_DESC,
 								DeviceProviderManagementErrorCode.DEVICE_PROVIDER_EXIST.getErrorCode(),
 								DeviceProviderManagementErrorCode.DEVICE_PROVIDER_EXIST.getErrorMessage()),
-						"ADM-723");
+						"ADM-725");
 				throw new RequestException(DeviceProviderManagementErrorCode.DEVICE_PROVIDER_EXIST.getErrorCode(),
 						String.format(DeviceProviderManagementErrorCode.DEVICE_PROVIDER_EXIST.getErrorMessage(),
-								dto.getId()));
+								dto.getVendorName()));
 			}
 			entity = MetaDataUtils.setCreateMetaData(dto, DeviceProvider.class);
-			entity.setIsActive(true);
+			entity.setId(UUID.randomUUID().toString());
 			crtDeviceProvider = deviceProviderRepository.create(entity);
+			
+			
 
 			// add new row to the history table
 			DeviceProviderHistory entityHistory = new DeviceProviderHistory();
@@ -592,10 +634,11 @@ public class DeviceProviderServiceImpl implements
 	 */
 	@Override
 	@Transactional
-	public DeviceProviderExtnDto updateDeviceProvider(DeviceProviderDto dto) {
+	public DeviceProviderExtnDto updateDeviceProvider(DeviceProviderPutDto dto) {
 		DeviceProvider entity = null;
 		DeviceProvider updtDeviceProvider = null;
 		DeviceProvider renDeviceProvider = null;
+		DeviceProvider existingDeviceProvider = null;
 		try {
 			renDeviceProvider = deviceProviderRepository.findById(DeviceProvider.class, dto.getId());
 
@@ -611,6 +654,23 @@ public class DeviceProviderServiceImpl implements
 						String.format(DeviceProviderManagementErrorCode.DEVICE_PROVIDER_NOT_EXIST.getErrorMessage(),
 								dto.getId()));
 			}
+			
+			existingDeviceProvider = deviceProviderRepository.findByNameAndAddressAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(dto.getVendorName(),dto.getAddress());
+			
+			if(existingDeviceProvider!=null)
+			{
+				auditUtil.auditRequest(
+						String.format(MasterDataConstant.FAILURE_UPDATE, DeviceProvider.class.getCanonicalName()),
+						MasterDataConstant.AUDIT_SYSTEM,
+						String.format(MasterDataConstant.FAILURE_DESC,
+								DeviceProviderManagementErrorCode.DEVICE_PROVIDER_EXIST.getErrorCode(),
+								DeviceProviderManagementErrorCode.DEVICE_PROVIDER_EXIST.getErrorMessage()),
+						"ADM-725");
+				throw new RequestException(DeviceProviderManagementErrorCode.DEVICE_PROVIDER_EXIST.getErrorCode(),
+						String.format(DeviceProviderManagementErrorCode.DEVICE_PROVIDER_EXIST.getErrorMessage(),
+								dto.getVendorName()));
+			}
+			
 			entity = MetaDataUtils.setUpdateMetaData(dto, renDeviceProvider, false);
 			updtDeviceProvider = deviceProviderRepository.update(entity);
 

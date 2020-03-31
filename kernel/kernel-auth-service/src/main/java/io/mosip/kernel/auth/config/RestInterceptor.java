@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +21,8 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -25,6 +30,7 @@ import io.mosip.kernel.auth.constant.AuthConstant;
 import io.mosip.kernel.auth.dto.AccessTokenResponse;
 import io.mosip.kernel.auth.util.MemoryCache;
 import io.mosip.kernel.auth.util.TokenValidator;
+
 
 /**
  * RestInterceptor for getting admin token
@@ -36,9 +42,11 @@ import io.mosip.kernel.auth.util.TokenValidator;
 @Component
 public class RestInterceptor implements ClientHttpRequestInterceptor {
 
+	private static final Logger LOGGER= LoggerFactory.getLogger(RestInterceptor.class);
+	
 	@Autowired
 	private MemoryCache<String, AccessTokenResponse> memoryCache;
-	
+
 	@Autowired
 	private TokenValidator tokenValidator;
 
@@ -51,13 +59,13 @@ public class RestInterceptor implements ClientHttpRequestInterceptor {
 
 	@Value("${mosip.master.realm-id}")
 	private String realmId;
-	
+
 	@Value("${mosip.keycloak.admin.client.id}")
 	private String adminClientID;
-	
+
 	@Value("${mosip.keycloak.admin.user.id}")
 	private String adminUserName;
-	
+
 	@Value("${mosip.keycloak.admin.secret.key}")
 	private String adminSecret;
 
@@ -66,15 +74,11 @@ public class RestInterceptor implements ClientHttpRequestInterceptor {
 			throws IOException {
 		AccessTokenResponse accessTokenResponse = null;
 		if ((accessTokenResponse = memoryCache.get("adminToken")) != null) {
-			boolean accessTokenExpired=tokenValidator.isExpired(accessTokenResponse.getAccess_token());
-			boolean refreshTokenExpired=tokenValidator.isExpired(accessTokenResponse.getRefresh_token());
-			System.out.println("access token "+accessTokenResponse.getAccess_token());
-			System.out.println("refresh token "+accessTokenResponse.getRefresh_token());
-			System.out.println(accessTokenExpired);
-			System.out.println(refreshTokenExpired);
+			boolean accessTokenExpired = tokenValidator.isExpired(accessTokenResponse.getAccess_token());
+			boolean refreshTokenExpired = tokenValidator.isExpired(accessTokenResponse.getRefresh_token());
 			if (accessTokenExpired && refreshTokenExpired) {
 				accessTokenResponse = getAdminToken(false, null);
-			}else if(accessTokenExpired) {
+			} else if (accessTokenExpired) {
 				accessTokenResponse = getAdminToken(true, accessTokenResponse.getRefresh_token());
 			}
 		} else {
@@ -99,8 +103,14 @@ public class RestInterceptor implements ClientHttpRequestInterceptor {
 		}
 
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(tokenRequestBody, headers);
-		ResponseEntity<AccessTokenResponse> response = restTemplate.postForEntity(
+		ResponseEntity<AccessTokenResponse> response=null;
+		try {
+		 response = restTemplate.postForEntity(
 				uriComponentsBuilder.buildAndExpand(pathParams).toUriString(), request, AccessTokenResponse.class);
+		}catch(HttpServerErrorException | HttpClientErrorException ex) {
+			LOGGER.error(ex.getMessage());
+		}
+		
 		return response.getBody();
 	}
 
@@ -114,7 +124,7 @@ public class RestInterceptor implements ClientHttpRequestInterceptor {
 	}
 
 	private MultiValueMap<String, String> getAdminValueMap(String refreshToken) {
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add(AuthConstant.GRANT_TYPE, AuthConstant.REFRESH_TOKEN);
 		map.add(AuthConstant.REFRESH_TOKEN, refreshToken);
 		map.add(AuthConstant.CLIENT_ID, adminClientID);

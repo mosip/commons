@@ -14,7 +14,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
@@ -35,6 +34,7 @@ import io.mosip.kernel.smsnotification.constant.SmsExceptionConstant;
  * @since 1.0.0
  *
  */
+
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
@@ -70,33 +70,12 @@ public class ApiExceptionHandler {
 	}
 
 	/**
-	 * This method handles MosipInvalidNumberException type of exceptions.
-	 * 
-	 * @param httpServletRequest the request
-	 * @param e                  The exception
-	 * @return The response entity.
-	 * @throws IOException the IOException
-	 */
-	@ExceptionHandler(InvalidNumberException.class)
-	public ResponseEntity<ResponseWrapper<ServiceError>> smsNotificationInvalidNumber(
-			final HttpServletRequest httpServletRequest, final InvalidNumberException e) throws IOException {
-		ResponseWrapper<ServiceError> errorResponse = setErrors(httpServletRequest);
-		ServiceError error = new ServiceError(e.getErrorCode(), e.getErrorText());
-		errorResponse.getErrors().add(error);
-		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
-
-	}
-
-	/**
 	 * This method handle HttpMessageNotReadableException type of exception.
 	 * 
-	 * @param httpServletRequest
-	 *            the request.
-	 * @param e
-	 *            the exception.
+	 * @param httpServletRequest the request.
+	 * @param e                  the exception.
 	 * @return the response entity.
-	 * @throws IOException
-	 *             IOException.
+	 * @throws IOException IOException.
 	 */
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> onHttpMessageNotReadable(
@@ -107,34 +86,6 @@ public class ApiExceptionHandler {
 		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
 	}
 
-	/**
-	 * This method handle HttpClientErrorException type of exception.
-	 * 
-	 * @param httpServletRequest
-	 *            the request.
-	 * @param e
-	 *            the exception.
-	 * @return the response entity.
-	 * @throws IOException
-	 *             IOException.
-	 */
-	@ExceptionHandler(HttpClientErrorException.class)
-	public ResponseEntity<ResponseWrapper<ServiceError>> smsVendorServiceException(
-			final HttpServletRequest httpServletRequest, final HttpClientErrorException e) throws IOException {
-		ResponseWrapper<ServiceError> errorResponse = setErrors(httpServletRequest);
-
-		JsonNode responseTree = objectMapper.readTree(e.getResponseBodyAsString());
-		String errorMessage = null;
-		if (responseTree != null) {
-			responseTree = responseTree.get("requestError").get("serviceException");
-			errorMessage = responseTree.get("text").asText();
-		} else {
-			errorMessage = e.getMessage();
-		}
-		ServiceError error = new ServiceError(SmsExceptionConstant.SMS_INVALID_CREDENTIAL.getErrorCode(), errorMessage);
-		errorResponse.getErrors().add(error);
-		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
-	}
 
 	@ExceptionHandler(HttpServerErrorException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> httpServerErrorException(HttpServletRequest httpServletRequest,

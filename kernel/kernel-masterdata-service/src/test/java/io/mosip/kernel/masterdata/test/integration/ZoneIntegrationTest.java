@@ -104,11 +104,11 @@ public class ZoneIntegrationTest {
 				.thenReturn(registrationCenter);
 		mockMvc.perform(get("/zones/authorize?rid=12234234234234234")).andExpect(status().isOk());
 	}
-	
+
 	@Test
 	@WithUserDetails("zonal-admin")
 	public void authorizeZoneWithInvalidZone() throws Exception {
-		//when(zoneUtils.getUserLeafZones(Mockito.anyString())).thenReturn(leafsZones);
+		// when(zoneUtils.getUserLeafZones(Mockito.anyString())).thenReturn(leafsZones);
 		when(registrationCenterRepo.findByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(registrationCenter);
 		mockMvc.perform(get("/zones/authorize?rid=12234234234234234")).andExpect(status().isOk());
@@ -117,12 +117,21 @@ public class ZoneIntegrationTest {
 	@Test
 	@WithUserDetails("zonal-admin")
 	public void authorizeZoneExceptionTest() throws Exception {
-		
+
 		when(registrationCenterRepo.findByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenThrow(DataRetrievalFailureException.class);
 		mockMvc.perform(get("/zones/authorize?rid=12234234234234234")).andExpect(status().isInternalServerError());
 	}
 	
+	@Test
+	@WithUserDetails("zonal-admin")
+	public void authorizeZoneEmptyTest() throws Exception {
+
+		when(registrationCenterRepo.findByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
+				.thenReturn(null);
+		mockMvc.perform(get("/zones/authorize?rid=12234234234234234")).andExpect(status().isOk());
+	}
+
 	@Test
 	@WithUserDetails("zonal-admin")
 	public void authorizeZoneZoneExceptionTest() throws Exception {

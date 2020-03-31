@@ -82,13 +82,11 @@ public class MasterdataSearchHelperTest {
 		wildCardFilter2.setType("contains");
 		wildCardFilter2.setValue("mosip*");
 
-		
 		wildCardFilter3 = new SearchFilter();
 		wildCardFilter3.setColumnName("name");
 		wildCardFilter3.setType("contains");
 		wildCardFilter3.setValue("*mosip");
 
-		
 		noColumnSort = new SearchSort();
 		noColumnSort.setSortType("desc");
 
@@ -99,7 +97,6 @@ public class MasterdataSearchHelperTest {
 		page = new Pagination();
 		page.setPageStart(1);
 		page.setPageFetch(100);
-		
 
 		invalidPage = new Pagination();
 		invalidPage.setPageFetch(0);
@@ -112,9 +109,9 @@ public class MasterdataSearchHelperTest {
 		searchwithDateFilter.setType("equals");
 		searchwithDateFilter.setValue("2019-01-01T01:01:01.000Z");
 		searchwithDateFilter.setColumnName("createdDateTime");
-		
-		optionalFilterArray=new OptionalFilter[1];
-		optionalFilterArray[0]=new OptionalFilter(Arrays.asList(betweenfilter));
+
+		optionalFilterArray = new OptionalFilter[1];
+		optionalFilterArray[0] = new OptionalFilter(Arrays.asList(betweenfilter));
 	}
 
 	@Test
@@ -144,7 +141,7 @@ public class MasterdataSearchHelperTest {
 	@Test
 	public void searchStartsWithFilterMasterdata() {
 		SearchDto searchDto = new SearchDto(Arrays.asList(wildCardFilter2), Arrays.asList(sort), page, "eng");
-		searchHelper.searchMasterdata(RegistrationCenter.class, searchDto,optionalFilterArray);
+		searchHelper.searchMasterdata(RegistrationCenter.class, searchDto, optionalFilterArray);
 	}
 
 	@Test
@@ -155,10 +152,10 @@ public class MasterdataSearchHelperTest {
 		searchHelper.searchMasterdata(RegistrationCenter.class, searchDto, optionalFilterArray);
 	}
 
-	@Test(expected=RequestException.class)
+	@Test(expected = RequestException.class)
 	public void searchInvalidPaginationMasterdata() {
 		SearchDto searchDto = new SearchDto(Arrays.asList(filter), Arrays.asList(sort), invalidPage, "eng");
-		searchHelper.searchMasterdata(RegistrationCenter.class, searchDto,optionalFilterArray);
+		searchHelper.searchMasterdata(RegistrationCenter.class, searchDto, optionalFilterArray);
 	}
 
 	@Test(expected = RequestException.class)
@@ -202,13 +199,13 @@ public class MasterdataSearchHelperTest {
 		SearchDto searchDto = new SearchDto(Arrays.asList(searchwithDateFilter), Arrays.asList(sort), page, "eng");
 		searchHelper.searchMasterdata(RegistrationCenter.class, searchDto, null);
 	}
-	
+
 	@Test
 	public void searchStartsWithMasterdata() {
 		SearchDto searchDto = new SearchDto(Arrays.asList(startWithFilter), Arrays.asList(sort), page, "eng");
 		searchHelper.searchMasterdata(RegistrationCenter.class, searchDto, null);
 	}
-	
+
 	@Test
 	public void searchwildcardSearchMasterdata() {
 		SearchDto searchDto = new SearchDto(Arrays.asList(wildCardFilter3), Arrays.asList(sort), page, "eng");

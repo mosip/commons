@@ -57,22 +57,21 @@ import io.mosip.kernel.masterdata.validator.FilterTypeEnum;
 @Repository
 @Transactional(readOnly = true)
 public class MasterdataSearchHelper {
-	
+
 	@Value("${master.search.maximum.rows}")
 	private int maximumRows;
-	
+
 	private static final String LANGCODE_COLUMN_NAME = "langCode";
 	private static final String ENTITY_IS_NULL = "entity is null";
 	private static final String WILD_CARD_CHARACTER = "%";
 	private static final String TYPE_NAME = "typeName";
 	private static final String DECOMISSION = "isDeleted";
-	private static final String DEVICE_NAME="deviceName";
-	private static final String MAC_ADDRESS="macAddress";
-	private static final String SERIAL_NUMBER="serialNum";
-	private static final String MACHINE_SPEC_ID="machineSpecId";
-	private static final String DEVICE_SPEC_ID="deviceSpecId";
-	private static final String IS_ACTIVE_COLUMN_NAME="isActive";
-	
+	private static final String DEVICE_NAME = "deviceName";
+	private static final String MAC_ADDRESS = "macAddress";
+	private static final String SERIAL_NUMBER = "serialNum";
+	private static final String MACHINE_SPEC_ID = "machineSpecId";
+	private static final String DEVICE_SPEC_ID = "deviceSpecId";
+	private static final String IS_ACTIVE_COLUMN_NAME = "isActive";
 
 	/**
 	 * Field for interface used to interact with the persistence context.
@@ -83,8 +82,7 @@ public class MasterdataSearchHelper {
 	/**
 	 * Constructor for MasterdataSearchHelper having EntityManager
 	 * 
-	 * @param entityManager
-	 *            The entityManager
+	 * @param entityManager The entityManager
 	 */
 	public MasterdataSearchHelper(EntityManager entityManager) {
 		this.entityManager = entityManager;
@@ -93,12 +91,10 @@ public class MasterdataSearchHelper {
 	/**
 	 * Method to search and sort the masterdata.
 	 * 
-	 * @param entity
-	 *            the entity class for which search will be applied
-	 * @param searchDto
-	 *            which contains the list of filters, sort and pagination
-	 * @param optionalFilters
-	 *            filters to be considered as 'or' statements
+	 * @param entity          the entity class for which search will be applied
+	 * @param searchDto       which contains the list of filters, sort and
+	 *                        pagination
+	 * @param optionalFilters filters to be considered as 'or' statements
 	 * 
 	 * @return {@link Page} of entity
 	 */
@@ -109,7 +105,7 @@ public class MasterdataSearchHelper {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<E> selectQuery = criteriaBuilder.createQuery(entity);
 		CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-		Pagination pagination= searchDto.getPagination();
+		Pagination pagination = searchDto.getPagination();
 		pagination.setPageFetch(pagination.getPageFetch() > maximumRows ? maximumRows : pagination.getPageFetch());
 		searchDto.setPagination(pagination);
 		// root Query
@@ -152,18 +148,12 @@ public class MasterdataSearchHelper {
 	/**
 	 * Method to add the filters to the criteria query
 	 * 
-	 * @param builder
-	 *            used to construct criteria queries
-	 * @param root
-	 *            root type in the from clause,always refers entity
-	 * @param selectQuery
-	 *            criteria select query
-	 * @param countQuery
-	 *            criteria count query
-	 * @param filters
-	 *            list of {@link SearchFilter}
-	 * @param langCode
-	 *            language code if applicable
+	 * @param builder     used to construct criteria queries
+	 * @param root        root type in the from clause,always refers entity
+	 * @param selectQuery criteria select query
+	 * @param countQuery  criteria count query
+	 * @param filters     list of {@link SearchFilter}
+	 * @param langCode    language code if applicable
 	 */
 	private <E> void filterQuery(CriteriaBuilder builder, Root<E> root, CriteriaQuery<E> selectQuery,
 			CriteriaQuery<Long> countQuery, List<SearchFilter> filters, String langCode,
@@ -210,12 +200,9 @@ public class MasterdataSearchHelper {
 	/**
 	 * Method to build {@link Predicate} out the {@link SearchFilter}
 	 * 
-	 * @param builder
-	 *            used to construct criteria queries
-	 * @param root
-	 *            root type in the from clause,always refers entity
-	 * @param filter
-	 *            search filter
+	 * @param builder used to construct criteria queries
+	 * @param root    root type in the from clause,always refers entity
+	 * @param filter  search filter
 	 * @return {@link Predicate}
 	 */
 	private <E> Predicate buildFilters(CriteriaBuilder builder, Root<E> root, SearchFilter filter) {
@@ -255,14 +242,10 @@ public class MasterdataSearchHelper {
 	/**
 	 * Method to add sorting statement in criteria query
 	 * 
-	 * @param builder
-	 *            used to construct criteria query
-	 * @param root
-	 *            root type in the from clause,always refers entity
-	 * @param criteriaQuery
-	 *            query in which sorting to be added
-	 * @param sortFilter
-	 *            by the query to be sorted
+	 * @param builder       used to construct criteria query
+	 * @param root          root type in the from clause,always refers entity
+	 * @param criteriaQuery query in which sorting to be added
+	 * @param sortFilter    by the query to be sorted
 	 */
 	private <E> void sortQuery(CriteriaBuilder builder, Root<E> root, CriteriaQuery<E> criteriaQuery,
 			List<SearchSort> sortFilter) {
@@ -296,10 +279,8 @@ public class MasterdataSearchHelper {
 	/**
 	 * Method to add pagination in criteria query
 	 * 
-	 * @param query
-	 *            to be added with pagination
-	 * @param page
-	 *            contains the pagination details
+	 * @param query to be added with pagination
+	 * @param page  contains the pagination details
 	 */
 	private void paginationQuery(Query query, Pagination page) {
 		if (page != null) {
@@ -318,12 +299,9 @@ public class MasterdataSearchHelper {
 	/**
 	 * Method to add the Language Code in the criteria query
 	 * 
-	 * @param builder
-	 *            used to construct the criteria query
-	 * @param root
-	 *            root type in the from clause,always refers entity
-	 * @param langCode
-	 *            language code
+	 * @param builder  used to construct the criteria query
+	 * @param root     root type in the from clause,always refers entity
+	 * @param langCode language code
 	 * @return {@link Predicate}
 	 */
 	private <E> Predicate setLangCode(CriteriaBuilder builder, Root<E> root, String langCode) {
@@ -339,12 +317,9 @@ public class MasterdataSearchHelper {
 	/**
 	 * Method to handle type safe between {@link Predicate}
 	 * 
-	 * @param builder
-	 *            use to construct the criteria query
-	 * @param root
-	 *            type in the from clause,always refers entity
-	 * @param filter
-	 *            search filter with the between type.
+	 * @param builder use to construct the criteria query
+	 * @param root    type in the from clause,always refers entity
+	 * @param filter  search filter with the between type.
 	 * @return {@link Predicate}
 	 */
 	private <E> Predicate setBetweenValue(CriteriaBuilder builder, Root<E> root, SearchFilter filter) {
@@ -389,12 +364,9 @@ public class MasterdataSearchHelper {
 	/**
 	 * Method to cast the data into the column type data type
 	 * 
-	 * @param root
-	 *            type in the from clause,always refers entity
-	 * @param column
-	 *            name of the column
-	 * @param value
-	 *            value to be cast based on the column data type
+	 * @param root   type in the from clause,always refers entity
+	 * @param column name of the column
+	 * @param value  value to be cast based on the column data type
 	 * @return the value
 	 */
 	private <E> Object parseDataType(Root<E> root, String column, String value) {
@@ -433,14 +405,10 @@ public class MasterdataSearchHelper {
 	/**
 	 * Method to create the predicate
 	 * 
-	 * @param builder
-	 *            used to construct criteria query
-	 * @param root
-	 *            type in the from clause,always refers entity
-	 * @param column
-	 *            name of the column
-	 * @param value
-	 *            column value
+	 * @param builder used to construct criteria query
+	 * @param root    type in the from clause,always refers entity
+	 * @param column  name of the column
+	 * @param value   column value
 	 * @return {@link Predicate}
 	 */
 	private <E> Predicate buildPredicate(CriteriaBuilder builder, Root<E> root, String column, String value) {
@@ -452,9 +420,9 @@ public class MasterdataSearchHelper {
 			if (LocalDateTime.class.getName().equals(fieldType)) {
 				LocalDateTime start = DateUtils.parseToLocalDateTime(value);
 				predicate = builder.between(root.get(column), start, start.plusNanos(1000000l));
-			} 	else if(String.class.getName().equals(fieldType)) {
+			} else if (String.class.getName().equals(fieldType)) {
 				predicate = builder.equal(builder.lower(root.get(column)), builder.lower(builder.literal(value)));
-			}	else {
+			} else {
 				predicate = builder.equal(root.get(column), parseDataType(root, column, value));
 			}
 		}
@@ -464,22 +432,13 @@ public class MasterdataSearchHelper {
 	/**
 	 * Validate the filter column and values
 	 * 
-	 * @param filter
-	 *            search filter to be validated
+	 * @param filter search filter to be validated
 	 * @return true if valid false otherwise
 	 */
 	private boolean validateFilters(SearchFilter filter) {
 		if (filter != null) {
 			if (filter.getColumnName() != null && !filter.getColumnName().trim().isEmpty()) {
-				if (filter.getType() != null && !filter.getType().trim().isEmpty()) {
-					if (validateFilter(filter)) {
-						return true;
-					}
-				} else {
-					throw new RequestException(MasterdataSearchErrorCode.FILTER_TYPE_NOT_AVAILABLE.getErrorCode(),
-							String.format(MasterdataSearchErrorCode.FILTER_TYPE_NOT_AVAILABLE.getErrorMessage(),
-									filter.getColumnName()));
-				}
+				return FilterTypes(filter);
 			} else {
 				throw new RequestException(MasterdataSearchErrorCode.MISSING_FILTER_COLUMN.getErrorCode(),
 						MasterdataSearchErrorCode.MISSING_FILTER_COLUMN.getErrorMessage());
@@ -488,11 +447,23 @@ public class MasterdataSearchHelper {
 		return false;
 	}
 
+	private boolean FilterTypes(SearchFilter filter) {
+		if (filter.getType() != null && !filter.getType().trim().isEmpty()) {
+			if (validateFilter(filter)) {
+				return true;
+			}
+		} else {
+			throw new RequestException(MasterdataSearchErrorCode.FILTER_TYPE_NOT_AVAILABLE.getErrorCode(),
+					String.format(MasterdataSearchErrorCode.FILTER_TYPE_NOT_AVAILABLE.getErrorMessage(),
+							filter.getColumnName()));
+		}
+		return false;
+	}
+
 	/**
 	 * Method to validate the individual filter
 	 * 
-	 * @param filter
-	 *            input filter to be validated
+	 * @param filter input filter to be validated
 	 * @return true if valid false otherwise
 	 */
 	private boolean validateFilter(SearchFilter filter) {
@@ -508,7 +479,7 @@ public class MasterdataSearchHelper {
 						MasterdataSearchErrorCode.INVALID_VALUE.getErrorMessage());
 			}
 
-		}else if (!FilterTypeEnum.BETWEEN.name().equalsIgnoreCase(filter.getType())) {
+		} else if (!FilterTypeEnum.BETWEEN.name().equalsIgnoreCase(filter.getType())) {
 			String value = filter.getValue();
 			if (value != null && !value.trim().isEmpty()) {
 				flag = true;
@@ -516,7 +487,7 @@ public class MasterdataSearchHelper {
 				throw new RequestException(MasterdataSearchErrorCode.INVALID_VALUE.getErrorCode(),
 						MasterdataSearchErrorCode.INVALID_VALUE.getErrorMessage());
 			}
-		}else {
+		} else {
 			String fromValue = filter.getFromValue();
 			String toValue = filter.getToValue();
 			if (fromValue != null && !fromValue.trim().isEmpty() && toValue != null && !toValue.trim().isEmpty()) {
@@ -533,8 +504,7 @@ public class MasterdataSearchHelper {
 	/**
 	 * Method to validate the Sort Filter
 	 * 
-	 * @param sort
-	 *            sort filter to be validated
+	 * @param sort sort filter to be validated
 	 * @return true if valid false otherwise
 	 */
 	private boolean validateSort(SearchSort sort) {

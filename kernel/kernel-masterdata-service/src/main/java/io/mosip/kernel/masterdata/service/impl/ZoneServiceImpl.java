@@ -3,7 +3,6 @@ package io.mosip.kernel.masterdata.service.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
+import io.mosip.kernel.masterdata.constant.RegistrationCenterErrorCode;
 import io.mosip.kernel.masterdata.constant.ZoneErrorCode;
 import io.mosip.kernel.masterdata.dto.getresponse.ZoneNameResponseDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.ZoneExtnDto;
@@ -47,16 +47,15 @@ public class ZoneServiceImpl implements ZoneService {
 
 	@Autowired
 	ZoneRepository zoneRepository;
-	
+
 	@Autowired
 	private RegistrationCenterRepository registrationCenterRepo;
-	
+
 	@Value("${mosip.kernel.registrationcenterid.length}")
 	private int centerIdLength;
-	
+
 	@Value("${mosip.primary-language}")
 	private String primaryLangCode;
-
 
 	/*
 	 * (non-Javadoc)
@@ -117,34 +116,32 @@ public class ZoneServiceImpl implements ZoneService {
 		zoneNameResponseDto.setZoneName(zone.getName());
 		return zoneNameResponseDto;
 	}
-	
+
 	@Override
-	public boolean getUserValidityZoneHierarchy(String langCode,String zoneCode) {
+	public boolean getUserValidityZoneHierarchy(String langCode, String zoneCode) {
 		List<Zone> zones = zoneUtils.getUserZones();
 		boolean zoneValid = false;
 		List<ZoneExtnDto> zoneExtnList = new ArrayList<>();
 		if (zones != null && !zones.isEmpty()) {
 			List<Zone> zoneList = zones.parallelStream().filter(z -> z.getLangCode().equals(langCode))
 					.collect(Collectors.toList());
-			zoneExtnList =  MapperUtils.mapAll(zoneList, ZoneExtnDto.class);
+			zoneExtnList = MapperUtils.mapAll(zoneList, ZoneExtnDto.class);
 		}
-		for(ZoneExtnDto zoneExtnDto : zoneExtnList)
-		{
-				if(zoneCode.equals(zoneExtnDto.getCode()))
-				{
-					zoneValid = true;
-				}
+		for (ZoneExtnDto zoneExtnDto : zoneExtnList) {
+			if (zoneCode.equals(zoneExtnDto.getCode())) {
+				zoneValid = true;
+			}
 		}
-		return zoneValid;	
+		return zoneValid;
 	}
 
 	@Override
 	public boolean authorizeZone(String rId) {
 		String centerId = rId.substring(0, centerIdLength);
-		String zoneCode=getZoneBasedOnTheRId(centerId, primaryLangCode);
+		String zoneCode = getZoneBasedOnTheRId(centerId, primaryLangCode);
 		return isPresentInTheHierarchy(zoneCode, primaryLangCode);
 	}
-	
+
 	private String getZoneBasedOnTheRId(String centerId, String primaryLangCode) {
 		RegistrationCenter registrationCenter = null;
 		try {
@@ -152,18 +149,21 @@ public class ZoneServiceImpl implements ZoneService {
 		} catch (DataAccessException | DataAccessLayerException ex) {
 			throw new MasterDataServiceException("ADM-PKT-500", "Error occured while fetching packet");
 		}
-		Objects.nonNull(registrationCenter);
+		if(registrationCenter==null) {
+			throw new DataNotFoundException(RegistrationCenterErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorCode(), RegistrationCenterErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorMessage());
+		}
+		
 		return registrationCenter.getZoneCode();
 	}
 
-	private boolean isPresentInTheHierarchy(String zoneCode,String primaryLangCode) {
+	private boolean isPresentInTheHierarchy(String zoneCode, String primaryLangCode) {
 		List<Zone> zones = zoneUtils.getUserLeafZones(primaryLangCode);
 		boolean isAuthorized = zones.stream().anyMatch(zone -> zone.getCode().equals(zoneCode));
 		if (!isAuthorized) {
 			throw new RequestException(ZoneErrorCode.ADMIN_UNAUTHORIZED.getErrorCode(),
 					ZoneErrorCode.ADMIN_UNAUTHORIZED.getErrorMessage());
 		}
-		
+
 		return isAuthorized;
 	}
 }

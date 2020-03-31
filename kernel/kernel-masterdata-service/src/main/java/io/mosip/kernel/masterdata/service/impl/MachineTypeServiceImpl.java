@@ -3,6 +3,8 @@ package io.mosip.kernel.masterdata.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.masterdata.constant.MachineTypeErrorCode;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
+import io.mosip.kernel.masterdata.dto.FilterData;
 import io.mosip.kernel.masterdata.dto.MachineTypeDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.MachineTypeExtnDto;
@@ -21,7 +24,9 @@ import io.mosip.kernel.masterdata.dto.request.FilterDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
 import io.mosip.kernel.masterdata.dto.request.SearchFilter;
+import io.mosip.kernel.masterdata.dto.response.ColumnCodeValue;
 import io.mosip.kernel.masterdata.dto.response.ColumnValue;
+import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.entity.Machine;
@@ -186,17 +191,18 @@ public class MachineTypeServiceImpl implements MachineTypeService {
 	 * FilterValueDto)
 	 */
 	@Override
-	public FilterResponseDto machineTypesFilterValues(FilterValueDto filterValueDto) {
-		FilterResponseDto filterResponseDto = new FilterResponseDto();
-		List<ColumnValue> columnValueList = new ArrayList<>();
+	public FilterResponseCodeDto machineTypesFilterValues(FilterValueDto filterValueDto) {
+		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
+		List<ColumnCodeValue> columnValueList = new ArrayList<>();
 		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), Machine.class)) {
 			for (FilterDto filterDto : filterValueDto.getFilters()) {
-				List<?> filterValues = masterDataFilterHelper.filterValues(MachineType.class, filterDto,
-						filterValueDto);
+				List<FilterData> filterValues = masterDataFilterHelper.filterValuesWithCode(MachineType.class, filterDto,
+						filterValueDto,"code");
 				filterValues.forEach(filterValue -> {
-					ColumnValue columnValue = new ColumnValue();
+					ColumnCodeValue columnValue = new ColumnCodeValue();
+					columnValue.setFieldCode(filterValue.getFieldCode());
 					columnValue.setFieldID(filterDto.getColumnName());
-					columnValue.setFieldValue(filterValue.toString());
+					columnValue.setFieldValue(filterValue.getFieldValue());
 					columnValueList.add(columnValue);
 				});
 			}

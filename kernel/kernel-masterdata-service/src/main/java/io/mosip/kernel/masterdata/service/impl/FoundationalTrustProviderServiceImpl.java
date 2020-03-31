@@ -4,6 +4,7 @@
 package io.mosip.kernel.masterdata.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import javax.transaction.Transactional;
 
@@ -31,13 +32,13 @@ import io.mosip.kernel.masterdata.utils.MetaDataUtils;
  */
 @Component
 public class FoundationalTrustProviderServiceImpl implements FoundationalTrustProviderService {
-	
+
 	@Autowired
 	AuditUtil auditUtil;
-	
+
 	@Autowired
 	private FoundationalTrustProviderRepository foundationalTrustProviderRepository;
-	
+
 	@Autowired
 	private FoundationalTrustProviderRepositoryHistory foundationalTrustProviderRepositoryHistory;
 
@@ -49,35 +50,42 @@ public class FoundationalTrustProviderServiceImpl implements FoundationalTrustPr
 		FoundationalTrustProvider foundationalTrustProviderEntity = null;
 		FoundationalTrustProviderResDto foundationalTrustProviderResDto = null;
 		ResponseWrapper<FoundationalTrustProviderResDto> response = new ResponseWrapper<>();
-		foundationalTrustProvider = foundationalTrustProviderRepository.findByDetails(foundationalTrustProviderDto.getName(),foundationalTrustProviderDto.getEmail(),foundationalTrustProviderDto.getAddress(),foundationalTrustProviderDto.getCertAlias(),foundationalTrustProviderDto.isActive());
-		if(foundationalTrustProvider!=null)
-		{
-			auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_CREATE, FoundationalTrustProvider.class.getCanonicalName()),
+		foundationalTrustProvider = foundationalTrustProviderRepository.findByDetails(
+				foundationalTrustProviderDto.getName(), foundationalTrustProviderDto.getEmail(),
+				foundationalTrustProviderDto.getAddress(), foundationalTrustProviderDto.getCertAlias(),
+				foundationalTrustProviderDto.getIsActive());
+		if (foundationalTrustProvider != null) {
+			auditUtil.auditRequest(
+					String.format(
+							MasterDataConstant.FAILURE_CREATE, FoundationalTrustProvider.class.getCanonicalName()),
 					MasterDataConstant.AUDIT_SYSTEM,
 					String.format(MasterDataConstant.FAILURE_DESC,
 							FoundationalTrustProviderErrorCode.FTP_ALREADY_PRESENT.getErrorCode(),
-							FoundationalTrustProviderErrorCode.FTP_ALREADY_PRESENT.getErrorMessage()),"ADM-705");
-			throw new MasterDataServiceException(FoundationalTrustProviderErrorCode.FTP_ALREADY_PRESENT.getErrorCode(),FoundationalTrustProviderErrorCode.FTP_ALREADY_PRESENT.getErrorMessage());
-		}
-		else
-		{
-			foundationalTrustProvider = MetaDataUtils.setCreateMetaData(foundationalTrustProviderDto, FoundationalTrustProvider.class);
-			foundationalTrustProvider.setIsActive(foundationalTrustProviderDto.isActive());	
+							FoundationalTrustProviderErrorCode.FTP_ALREADY_PRESENT.getErrorMessage()),
+					"ADM-705");
+			throw new MasterDataServiceException(FoundationalTrustProviderErrorCode.FTP_ALREADY_PRESENT.getErrorCode(),
+					FoundationalTrustProviderErrorCode.FTP_ALREADY_PRESENT.getErrorMessage());
+		} else {
+			foundationalTrustProvider = MetaDataUtils.setCreateMetaData(foundationalTrustProviderDto,
+					FoundationalTrustProvider.class);
+			foundationalTrustProvider.setIsActive(foundationalTrustProviderDto.getIsActive());
+			foundationalTrustProvider.setId(UUID.randomUUID().toString());
 			foundationalTrustProviderEntity = foundationalTrustProviderRepository.create(foundationalTrustProvider);
-			if(foundationalTrustProviderEntity!=null)
-			{
-				foundationalTrustProviderResDto =  MetaDataUtils.setCreateMetaData(foundationalTrustProviderEntity, FoundationalTrustProviderResDto.class);
+			if (foundationalTrustProviderEntity != null) {
+				foundationalTrustProviderResDto = MetaDataUtils.setCreateMetaData(foundationalTrustProviderEntity,
+						FoundationalTrustProviderResDto.class);
 				response.setResponse(foundationalTrustProviderResDto);
 				response.setResponsetime(LocalDateTime.now());
-				FoundationalTrustProviderHistory foundationalTrustProviderHistory = MetaDataUtils.setCreateMetaData(foundationalTrustProviderEntity, FoundationalTrustProviderHistory.class);
-				foundationalTrustProviderHistory.setIsActive(foundationalTrustProviderDto.isActive());
+				FoundationalTrustProviderHistory foundationalTrustProviderHistory = MetaDataUtils
+						.setCreateMetaData(foundationalTrustProviderEntity, FoundationalTrustProviderHistory.class);
+				foundationalTrustProviderHistory.setIsActive(foundationalTrustProviderDto.getIsActive());
 				foundationalTrustProviderHistory.setEffectivetimes(foundationalTrustProvider.getCreatedDateTime());
 				foundationalTrustProviderHistory.setCreatedDateTime(foundationalTrustProvider.getCreatedDateTime());
 				foundationalTrustProviderRepositoryHistory.create(foundationalTrustProviderHistory);
 			}
-			
+
 		}
-			
+
 		return response;
 	}
 
@@ -88,27 +96,33 @@ public class FoundationalTrustProviderServiceImpl implements FoundationalTrustPr
 		ResponseWrapper<FoundationalTrustProviderResDto> response = new ResponseWrapper<>();
 		FoundationalTrustProvider updateFoundationalTrustProvider = new FoundationalTrustProvider();
 		FoundationalTrustProviderResDto foundationalTrustProviderResDto = null;
-		updateFoundationalTrustProvider = foundationalTrustProviderRepository.findById(FoundationalTrustProvider.class, foundationalTrustProviderPutDto.getId());
-		if(updateFoundationalTrustProvider==null)
-		{
-			auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_UPDATE, FoundationalTrustProvider.class.getCanonicalName()),
+		updateFoundationalTrustProvider = foundationalTrustProviderRepository.findById(FoundationalTrustProvider.class,
+				foundationalTrustProviderPutDto.getId());
+		if (updateFoundationalTrustProvider == null) {
+			auditUtil.auditRequest(
+					String.format(
+							MasterDataConstant.FAILURE_UPDATE, FoundationalTrustProvider.class.getCanonicalName()),
 					MasterDataConstant.AUDIT_SYSTEM,
 					String.format(MasterDataConstant.FAILURE_DESC,
 							FoundationalTrustProviderErrorCode.ID_NOT_PRESENT.getErrorCode(),
-							FoundationalTrustProviderErrorCode.ID_NOT_PRESENT.getErrorMessage()),"ADM-706");
-			throw new MasterDataServiceException(FoundationalTrustProviderErrorCode.ID_NOT_PRESENT.getErrorCode(),FoundationalTrustProviderErrorCode.ID_NOT_PRESENT.getErrorMessage());
+							FoundationalTrustProviderErrorCode.ID_NOT_PRESENT.getErrorMessage()),
+					"ADM-706");
+			throw new MasterDataServiceException(FoundationalTrustProviderErrorCode.ID_NOT_PRESENT.getErrorCode(),
+					FoundationalTrustProviderErrorCode.ID_NOT_PRESENT.getErrorMessage());
 		}
-		updateFoundationalTrustProvider = MetaDataUtils.setUpdateMetaData(foundationalTrustProviderPutDto, updateFoundationalTrustProvider,  false);
+		updateFoundationalTrustProvider = MetaDataUtils.setUpdateMetaData(foundationalTrustProviderPutDto,
+				updateFoundationalTrustProvider, false);
 		updateFoundationalTrustProvider.setIsActive(foundationalTrustProviderPutDto.isActive());
 		updateFoundationalTrustProvider = foundationalTrustProviderRepository.update(updateFoundationalTrustProvider);
-		if(updateFoundationalTrustProvider!=null)
-		{
-			FoundationalTrustProviderHistory foundationalTrustProviderHistory = MetaDataUtils.setCreateMetaData(updateFoundationalTrustProvider, FoundationalTrustProviderHistory.class);
+		if (updateFoundationalTrustProvider != null) {
+			FoundationalTrustProviderHistory foundationalTrustProviderHistory = MetaDataUtils
+					.setCreateMetaData(updateFoundationalTrustProvider, FoundationalTrustProviderHistory.class);
 			foundationalTrustProviderHistory.setEffectivetimes(updateFoundationalTrustProvider.getUpdatedDateTime());
 			foundationalTrustProviderHistory.setIsActive(foundationalTrustProviderPutDto.isActive());
 			foundationalTrustProviderHistory.setCreatedDateTime(updateFoundationalTrustProvider.getUpdatedDateTime());
 			foundationalTrustProviderRepositoryHistory.create(foundationalTrustProviderHistory);
-			foundationalTrustProviderResDto =  MetaDataUtils.setCreateMetaData(updateFoundationalTrustProvider, FoundationalTrustProviderResDto.class);
+			foundationalTrustProviderResDto = MetaDataUtils.setCreateMetaData(updateFoundationalTrustProvider,
+					FoundationalTrustProviderResDto.class);
 			response.setResponse(foundationalTrustProviderResDto);
 			response.setResponsetime(LocalDateTime.now());
 		}

@@ -27,6 +27,7 @@ import io.mosip.kernel.masterdata.dto.getresponse.extn.DeviceSpecificationExtnDt
 import io.mosip.kernel.masterdata.dto.postresponse.IdResponseDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
+import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.entity.id.IdAndLanguageCodeID;
@@ -65,8 +66,7 @@ public class DeviceSpecificationController {
 	/**
 	 * Function to fetch list of device specification details based on language code
 	 * 
-	 * @param langCode
-	 *            pass language code as String
+	 * @param langCode pass language code as String
 	 * 
 	 * @return DeviceSpecificationResponseDto all device Specification details based
 	 *         on given language code
@@ -94,10 +94,8 @@ public class DeviceSpecificationController {
 	 * Function to fetch list of device specification details based on language code
 	 * and device Type Code
 	 * 
-	 * @param langCode
-	 *            pass language code as String
-	 * @param deviceTypeCode
-	 *            pass deviceTypeCode as String
+	 * @param langCode       pass language code as String
+	 * @param deviceTypeCode pass deviceTypeCode as String
 	 * @return {@link DeviceSpecificationResponseDto}
 	 * 
 	 */
@@ -121,8 +119,7 @@ public class DeviceSpecificationController {
 	/**
 	 * Post API to insert a new row of DeviceSpecification data
 	 * 
-	 * @param deviceSpecification
-	 *            input parameter deviceRequestDto
+	 * @param deviceSpecification input parameter deviceRequestDto
 	 * 
 	 * @return {@link IdResponseDto}
 	 */
@@ -142,7 +139,7 @@ public class DeviceSpecificationController {
 		ResponseWrapper<IdAndLanguageCodeID> responseWrapper = new ResponseWrapper<>();
 		responseWrapper
 				.setResponse(deviceSpecificationService.createDeviceSpecification(deviceSpecification.getRequest()));
-		
+
 		return responseWrapper;
 	}
 
@@ -163,7 +160,7 @@ public class DeviceSpecificationController {
 		ResponseWrapper<IdAndLanguageCodeID> responseWrapper = new ResponseWrapper<>();
 		responseWrapper
 				.setResponse(deviceSpecificationService.updateDeviceSpecification(deviceSpecification.getRequest()));
-		
+
 		return responseWrapper;
 	}
 
@@ -184,14 +181,10 @@ public class DeviceSpecificationController {
 	/**
 	 * This controller method provides with all device specifications.
 	 * 
-	 * @param pageNumber
-	 *            the page number
-	 * @param pageSize
-	 *            the size of each page
-	 * @param sortBy
-	 *            the attributes by which it should be ordered
-	 * @param orderBy
-	 *            the order to be used
+	 * @param pageNumber the page number
+	 * @param pageSize   the size of each page
+	 * @param sortBy     the attributes by which it should be ordered
+	 * @param orderBy    the order to be used
 	 * @return the response i.e. pages containing the device specifications.
 	 */
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','CENTRAL_ADMIN')")
@@ -219,11 +212,13 @@ public class DeviceSpecificationController {
 		auditUtil.auditRequest(
 				MasterDataConstant.SEARCH_API_IS_CALLED + DeviceSpecificationExtnDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,
-				MasterDataConstant.SEARCH_API_IS_CALLED + DeviceSpecificationExtnDto.class.getCanonicalName(), "ADM-642");
+				MasterDataConstant.SEARCH_API_IS_CALLED + DeviceSpecificationExtnDto.class.getCanonicalName(),
+				"ADM-642");
 		ResponseWrapper<PageResponseDto<DeviceSpecificationExtnDto>> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(deviceSpecificationService.searchDeviceSpec(requestWrapper.getRequest()));
 		auditUtil.auditRequest(
-				String.format(MasterDataConstant.SUCCESSFUL_SEARCH, DeviceSpecificationExtnDto.class.getCanonicalName()),
+				String.format(MasterDataConstant.SUCCESSFUL_SEARCH,
+						DeviceSpecificationExtnDto.class.getCanonicalName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_SEARCH_DESC,
 						DeviceSpecificationExtnDto.class.getCanonicalName()),
 				"ADM-643");
@@ -233,22 +228,21 @@ public class DeviceSpecificationController {
 	/**
 	 * API that returns the values required for the column filter columns.
 	 * 
-	 * @param request
-	 *            the request DTO {@link FilterResponseDto} wrapper in
-	 *            {@link RequestWrapper}.
+	 * @param request the request DTO {@link FilterResponseDto} wrapper in
+	 *                {@link RequestWrapper}.
 	 * @return the response i.e. the list of values for the specific filter column
 	 *         name and type.
 	 */
 	@ResponseFilter
 	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
 	@PostMapping("/devicespecifications/filtervalues")
-	public ResponseWrapper<FilterResponseDto> deviceSpecificationFilterValues(
+	public ResponseWrapper<FilterResponseCodeDto> deviceSpecificationFilterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> requestWrapper) {
 		auditUtil.auditRequest(
 				MasterDataConstant.FILTER_API_IS_CALLED + DeviceSpecificationDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,
 				MasterDataConstant.FILTER_API_IS_CALLED + DeviceSpecificationDto.class.getCanonicalName(), "ADM-645");
-		ResponseWrapper<FilterResponseDto> responseWrapper = new ResponseWrapper<>();
+		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(deviceSpecificationService.deviceSpecFilterValues(requestWrapper.getRequest()));
 		auditUtil.auditRequest(MasterDataConstant.SUCCESSFUL_FILTER + DeviceSpecificationDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,

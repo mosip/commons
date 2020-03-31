@@ -23,6 +23,8 @@ public interface CbeffUtil {
 
 	public boolean validateXML(byte[] xmlBytes, byte[] xsdBytes) throws Exception;
 
+	public boolean validateXML(byte[] xmlBytes) throws Exception;
+
 	public Map<String, String> getBDBBasedOnType(byte[] fileBytes, String type, String subType) throws Exception;
 
 	public List<BIRType> getBIRDataFromXML(byte[] xmlBytes) throws Exception;
@@ -30,8 +32,9 @@ public interface CbeffUtil {
 	public Map<String, String> getAllBDBData(byte[] xmlBytes, String type, String subType) throws Exception;
 
 	public byte[] createXML(List<BIR> birList, byte[] xsd) throws Exception;
-	
+
 	public List<BIR> convertBIRTypeToBIR(List<BIRType> birType);
-	
-	public List<BIRType> getBIRDataFromXMLType(byte[] xmlBytes,String type) throws Exception;
+
+	public List<BIRType> getBIRDataFromXMLType(byte[] xmlBytes, String type) throws Exception;
+
 }

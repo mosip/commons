@@ -5,7 +5,6 @@
 // Generated on: 2019.05.13 at 03:22:53 PM IST 
 //
 
-
 package io.mosip.kernel.core.cbeffutil.jaxbclasses;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -14,11 +13,13 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for QualityType complex type.
+ * <p>
+ * Java class for QualityType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="QualityType">
@@ -39,91 +40,75 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "QualityType", propOrder = {
-    "algorithm",
-    "score",
-    "qualityCalculationFailed"
-})
+@XmlType(name = "QualityType", propOrder = { "algorithm", "score", "qualityCalculationFailed" })
 public class QualityType {
 
-    @XmlElement(name = "Algorithm", required = true)
-    protected RegistryIDType algorithm;
-    @XmlElement(name = "Score")
-    @XmlSchemaType(name = "unsignedInt")
-    protected Long score;
-    @XmlElement(name = "QualityCalculationFailed")
-    protected String qualityCalculationFailed;
+	@XmlElement(name = "Algorithm", required = true)
+	protected RegistryIDType algorithm;
+	@XmlElement(name = "Score")
+	@XmlSchemaType(name = "unsignedInt")
+	protected Long score;
+	@XmlElement(name = "QualityCalculationFailed")
+	protected String qualityCalculationFailed;
 
-    /**
-     * Gets the value of the algorithm property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link RegistryIDType }
-     *     
-     */
-    public RegistryIDType getAlgorithm() {
-        return algorithm;
-    }
+	/**
+	 * Gets the value of the algorithm property.
+	 * 
+	 * @return possible object is {@link RegistryIDType }
+	 * 
+	 */
+	public RegistryIDType getAlgorithm() {
+		return algorithm;
+	}
 
-    /**
-     * Sets the value of the algorithm property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link RegistryIDType }
-     *     
-     */
-    public void setAlgorithm(RegistryIDType value) {
-        this.algorithm = value;
-    }
+	/**
+	 * Sets the value of the algorithm property.
+	 * 
+	 * @param value allowed object is {@link RegistryIDType }
+	 * 
+	 */
+	public void setAlgorithm(RegistryIDType value) {
+		this.algorithm = value;
+	}
 
-    /**
-     * Gets the value of the score property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Long }
-     *     
-     */
-    public Long getScore() {
-        return score;
-    }
+	/**
+	 * Gets the value of the score property.
+	 * 
+	 * @return possible object is {@link Long }
+	 * 
+	 */
+	public Long getScore() {
+		return score;
+	}
 
-    /**
-     * Sets the value of the score property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Long }
-     *     
-     */
-    public void setScore(Long value) {
-        this.score = value;
-    }
+	/**
+	 * Sets the value of the score property.
+	 * 
+	 * @param value allowed object is {@link Long }
+	 * 
+	 */
+	public void setScore(Long value) {
+		this.score = value;
+	}
 
-    /**
-     * Gets the value of the qualityCalculationFailed property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getQualityCalculationFailed() {
-        return qualityCalculationFailed;
-    }
+	/**
+	 * Gets the value of the qualityCalculationFailed property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getQualityCalculationFailed() {
+		return qualityCalculationFailed;
+	}
 
-    /**
-     * Sets the value of the qualityCalculationFailed property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setQualityCalculationFailed(String value) {
-        this.qualityCalculationFailed = value;
-    }
+	/**
+	 * Sets the value of the qualityCalculationFailed property.
+	 * 
+	 * @param value allowed object is {@link String }
+	 * 
+	 */
+	public void setQualityCalculationFailed(String value) {
+		this.qualityCalculationFailed = value;
+	}
 
 }

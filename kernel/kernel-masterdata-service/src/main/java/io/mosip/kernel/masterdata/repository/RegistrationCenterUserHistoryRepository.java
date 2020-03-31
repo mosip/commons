@@ -16,6 +16,7 @@ import io.mosip.kernel.masterdata.entity.RegistrationCenterUserHistoryPk;
  *
  */
 @Repository
-public interface RegistrationCenterUserHistoryRepository extends BaseRepository<RegistrationCenterUserHistory, RegistrationCenterUserHistoryPk> {
+public interface RegistrationCenterUserHistoryRepository
+		extends BaseRepository<RegistrationCenterUserHistory, RegistrationCenterUserHistoryPk> {
 
 }

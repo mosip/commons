@@ -43,6 +43,7 @@ import io.mosip.idrepository.core.dto.IdRequestDTO;
 import io.mosip.idrepository.core.dto.IdResponseDTO;
 import io.mosip.idrepository.core.dto.RequestDTO;
 import io.mosip.idrepository.core.exception.IdRepoAppException;
+import io.mosip.idrepository.core.helper.AuditHelper;
 import io.mosip.idrepository.core.spi.IdRepoService;
 import io.mosip.idrepository.identity.controller.IdRepoController;
 import io.mosip.idrepository.identity.validator.IdRequestValidator;
@@ -78,6 +79,9 @@ public class IdRepoControllerTest {
 
 	@Mock
 	private RidValidatorImpl ridValidator;
+	
+	@Mock
+	private AuditHelper auditHelper;
 
 	@InjectMocks
 	IdRepoController controller;

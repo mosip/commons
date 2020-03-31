@@ -68,7 +68,7 @@ public class RidGeneratorTest {
 
 	@Autowired
 	RidGenerator<String> ridGeneratorImpl;
-	
+
 	@MockBean
 	private RestTemplate restTemplate;
 

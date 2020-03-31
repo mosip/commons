@@ -9,8 +9,8 @@ package io.mosip.kernel.tokenidgenerator.constant;
  */
 public enum TokenIDGeneratorErrorCode {
 	INTERNAL_SERVER_ERROR("KER-UIG-005", "Internal Server Error"),
-	EMPTY_UIN_OR_PARTNERCODE_EXCEPTION("KER-TIG-010","UIN and partner code cannot be empty"),
-	RUNTIME_EXCEPTION("KER-RIG-500","");
+	EMPTY_UIN_OR_PARTNERCODE_EXCEPTION("KER-TIG-010", "UIN and partner code cannot be empty"),
+	RUNTIME_EXCEPTION("KER-RIG-500", "");
 
 	/**
 	 * The error code
@@ -24,10 +24,8 @@ public enum TokenIDGeneratorErrorCode {
 	/**
 	 * Constructor to set error code and message
 	 * 
-	 * @param errorCode
-	 *            the error code
-	 * @param errorMessage
-	 *            the error message
+	 * @param errorCode    the error code
+	 * @param errorMessage the error message
 	 */
 	private TokenIDGeneratorErrorCode(final String errorCode, final String errorMessage) {
 		this.errorCode = errorCode;

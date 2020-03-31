@@ -28,7 +28,7 @@ public enum SecurityExceptionCodeConstant {
 	MOSIP_NULL_METHOD_EXCEPTION("KER-FSE-007", "mosip security method is null"),
 	MOSIP_NO_SUCH_ALGORITHM_EXCEPTION("KER-FSE-008", "no such algorithm"),
 	MOSIP_INVALID_PARAM_SPEC_EXCEPTION("KER-FSE-009", "invalid param spec"),
-	MOSIP_SIGNATURE_EXCEPTION("KER-FSE-010", "invalid signature, maybe null or empty"), 
+	MOSIP_SIGNATURE_EXCEPTION("KER-FSE-010", "invalid signature, maybe null or empty"),
 	SALT_PROVIDED_IS_NULL_OR_EMPTY("KER-FSE-011", "salt provided is null or empty");
 
 	/**

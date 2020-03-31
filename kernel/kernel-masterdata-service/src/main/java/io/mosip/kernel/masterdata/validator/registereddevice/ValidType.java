@@ -26,9 +26,11 @@ public @interface ValidType {
 	Class<?>[] groups() default {};
 
 	Class<? extends Payload>[] payload() default {};
-	
-	/*String baseField(); 
-	
-	String matchField();*/
+
+	/*
+	 * String baseField();
+	 * 
+	 * String matchField();
+	 */
 
 }

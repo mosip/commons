@@ -76,15 +76,15 @@ public class DocumentCategoryController {
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.GET_ALL_SUCCESS, DocumentCategoryDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.GET_ALL_SUCCESS_DESC, DocumentCategoryDto.class.getSimpleName()), "ADM-693");
+				String.format(MasterDataConstant.GET_ALL_SUCCESS_DESC, DocumentCategoryDto.class.getSimpleName()),
+				"ADM-693");
 		return responseWrapper;
 	}
 
 	/**
 	 * API to fetch all Document categories details based on language code
 	 * 
-	 * @param langCode
-	 *            the language code
+	 * @param langCode the language code
 	 * 
 	 * @return {@link DocumentCategoryResponseDto}
 	 */
@@ -100,10 +100,8 @@ public class DocumentCategoryController {
 	/**
 	 * API to fetch all Document categories details based on code and language code
 	 * 
-	 * @param code
-	 *            the code
-	 * @param langCode
-	 *            the language code
+	 * @param code     the code
+	 * @param langCode the language code
 	 * @return {@link DocumentCategoryResponseDto}
 	 */
 	@ResponseFilter
@@ -119,8 +117,7 @@ public class DocumentCategoryController {
 	/**
 	 * API to create Document category
 	 * 
-	 * @param category
-	 *            is of type {@link DocumentCategoryDto}
+	 * @param category is of type {@link DocumentCategoryDto}
 	 * 
 	 * @return {@link CodeAndLanguageCodeID}
 	 */
@@ -139,15 +136,15 @@ public class DocumentCategoryController {
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.SUCCESSFUL_CREATE, DocumentCategoryDto.class.getCanonicalName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC, DocumentCategoryDto.class.getCanonicalName()), "ADM-695");
+				String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC, DocumentCategoryDto.class.getCanonicalName()),
+				"ADM-695");
 		return responseWrapper;
 	}
 
 	/**
 	 * Api to update Document category.
 	 * 
-	 * @param category
-	 *            is of type {@link DocumentCategoryDto}
+	 * @param category is of type {@link DocumentCategoryDto}
 	 * @return {@link CodeAndLanguageCodeID}
 	 */
 	@ResponseFilter
@@ -165,15 +162,15 @@ public class DocumentCategoryController {
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.SUCCESSFUL_UPDATE, DocumentCategoryDto.class.getCanonicalName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC, DocumentCategoryDto.class.getCanonicalName()), "ADM-697");
+				String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC, DocumentCategoryDto.class.getCanonicalName()),
+				"ADM-697");
 		return responseWrapper;
 	}
 
 	/**
 	 * Api to delete Document Category.
 	 * 
-	 * @param code
-	 *            the document category code.
+	 * @param code the document category code.
 	 * @return the code.
 	 */
 	@ResponseFilter
@@ -189,14 +186,10 @@ public class DocumentCategoryController {
 	/**
 	 * This controller method provides with all document category details.
 	 * 
-	 * @param pageNumber
-	 *            the page number
-	 * @param pageSize
-	 *            the size of each page
-	 * @param sortBy
-	 *            the attributes by which it should be ordered
-	 * @param orderBy
-	 *            the order to be used
+	 * @param pageNumber the page number
+	 * @param pageSize   the size of each page
+	 * @param sortBy     the attributes by which it should be ordered
+	 * @param orderBy    the order to be used
 	 * @return the response i.e. pages containing the document category details.
 	 */
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','CENTRAL_ADMIN')")
@@ -219,9 +212,8 @@ public class DocumentCategoryController {
 	/**
 	 * API to search document Category.
 	 * 
-	 * @param request
-	 *            the request DTO {@link SearchDto} wrapped in
-	 *            {@link RequestWrapper}.
+	 * @param request the request DTO {@link SearchDto} wrapped in
+	 *                {@link RequestWrapper}.
 	 * @return the response i.e. multiple entities based on the search values
 	 *         required.
 	 */
@@ -238,16 +230,16 @@ public class DocumentCategoryController {
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.SUCCESSFUL_FILTER, DocumentCategoryDto.class.getCanonicalName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SUCCESSFUL_FILTER_DESC, DocumentCategoryDto.class.getCanonicalName()), "ADM-699");
+				String.format(MasterDataConstant.SUCCESSFUL_FILTER_DESC, DocumentCategoryDto.class.getCanonicalName()),
+				"ADM-699");
 		return responseWrapper;
 	}
 
 	/**
 	 * API that returns the values required for the column filter columns.
 	 * 
-	 * @param request
-	 *            the request DTO {@link FilterResponseDto} wrapper in
-	 *            {@link RequestWrapper}.
+	 * @param request the request DTO {@link FilterResponseDto} wrapper in
+	 *                {@link RequestWrapper}.
 	 * @return the response i.e. the list of values for the specific filter column
 	 *         name and type.
 	 */
@@ -264,7 +256,8 @@ public class DocumentCategoryController {
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.SUCCESSFUL_FILTER, DocumentCategoryDto.class.getCanonicalName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SUCCESSFUL_FILTER_DESC, DocumentCategoryDto.class.getCanonicalName()), "ADM-801");
+				String.format(MasterDataConstant.SUCCESSFUL_FILTER_DESC, DocumentCategoryDto.class.getCanonicalName()),
+				"ADM-801");
 		return responseWrapper;
 	}
 }

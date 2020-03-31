@@ -43,25 +43,9 @@ public class DeviceRegisterController {
 	private DeviceRegisterService deviceRegisterService;
 
 	/**
-	 * Api to register Device.
-	 * 
-	 * @param request
-	 *            the request DTO.
-	 * @return the {@link DeviceRegisterResponseDto}.
-	 */
-	@PreAuthorize("hasAnyRole('DEVICE_PROVIDER')")
-	@ApiOperation(value = "Register Device")
-	@PostMapping("/register")
-	public ResponseEntity<DeviceRegisterResponseDto> registerDevice(
-			@ApiParam("foundationTrustCertificate in BASE64 encoded") @RequestBody DeviceRegisterDto request) {
-		return new ResponseEntity<>(deviceRegisterService.registerDevice(request), HttpStatus.OK);
-	}
-
-	/**
 	 * Api to de register Device.
 	 * 
-	 * @param request
-	 *            the request DTO.
+	 * @param request the request DTO.
 	 * @return the {@link DeviceRegisterResponseDto}.
 	 */
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN')")
@@ -70,13 +54,13 @@ public class DeviceRegisterController {
 	public ResponseEntity<DeviceRegisterResponseDto> deRegisterDevice(@Valid @PathVariable String deviceCode) {
 		return new ResponseEntity<>(deviceRegisterService.deRegisterDevice(deviceCode), HttpStatus.OK);
 	}
-	
-	
+
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN')")
 	@ApiOperation(value = "Update status of the devive")
 	@PutMapping("/update/status")
-	public ResponseEntity<ResponseDto> deRegisterDevice(@NotBlank @RequestParam(value="devicecode",required=true) String deviceCode,
-			@NotBlank @RequestParam(value="statuscode",required=true) String statusCode) {
+	public ResponseEntity<ResponseDto> deRegisterDevice(
+			@NotBlank @RequestParam(value = "devicecode", required = true) String deviceCode,
+			@NotBlank @RequestParam(value = "statuscode", required = true) String statusCode) {
 		return new ResponseEntity<>(deviceRegisterService.updateStatus(deviceCode, statusCode), HttpStatus.OK);
 	}
 }

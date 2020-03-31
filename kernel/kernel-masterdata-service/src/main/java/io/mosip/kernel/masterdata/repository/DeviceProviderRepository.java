@@ -19,18 +19,24 @@ public interface DeviceProviderRepository extends BaseRepository<DeviceProvider,
 	/**
 	 * Find by id and is active is true.
 	 *
-	 * @param id
-	 *            the id
+	 * @param id the id
 	 * @return the device provider
 	 */
 	DeviceProvider findByIdAndIsActiveIsTrue(String id);
 
 	@Query("FROM DeviceProvider d where d.id=?1 AND (d.isDeleted is null OR d.isDeleted = false) AND d.isActive = true")
 	DeviceProvider findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(String id);
-	
+
 	@Query("FROM DeviceProvider d where d.id=?1 AND d.vendorName=?2 AND (d.isDeleted is null OR d.isDeleted = false) AND d.isActive = true")
 	DeviceProvider findByIdAndNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(String id, String vendorName);
 	
-	/*@Query("FROM DeviceProvider d where d.id=?1 AND d.venderName AND (d.isDeleted is null OR d.isDeleted = false) AND d.isActive = true")
-	DeviceProvider findByIdAndNameIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(String id, String vendorName);*/
+	@Query("FROM DeviceProvider d where d.vendorName=?1 AND d.address=?2 AND (d.isDeleted is null OR d.isDeleted = false) AND d.isActive = true")
+	DeviceProvider findByNameAndAddressAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(String vendorName, String address);
+
+	/*
+	 * @Query("FROM DeviceProvider d where d.id=?1 AND d.venderName AND (d.isDeleted is null OR d.isDeleted = false) AND d.isActive = true"
+	 * ) DeviceProvider
+	 * findByIdAndNameIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(String id,
+	 * String vendorName);
+	 */
 }

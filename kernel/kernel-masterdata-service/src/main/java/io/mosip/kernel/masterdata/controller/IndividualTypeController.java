@@ -67,14 +67,10 @@ public class IndividualTypeController {
 	/**
 	 * This controller method provides with all individual types.
 	 * 
-	 * @param pageNumber
-	 *            the page number
-	 * @param pageSize
-	 *            the size of each page
-	 * @param sortBy
-	 *            the attributes by which it should be ordered
-	 * @param orderBy
-	 *            the order to be used
+	 * @param pageNumber the page number
+	 * @param pageSize   the size of each page
+	 * @param sortBy     the attributes by which it should be ordered
+	 * @param orderBy    the order to be used
 	 * 
 	 * @return the response i.e. pages containing the individual types.
 	 */
@@ -98,9 +94,8 @@ public class IndividualTypeController {
 	/**
 	 * API to search Individual Types.
 	 * 
-	 * @param request
-	 *            the request DTO {@link SearchDto} wrapped in
-	 *            {@link RequestWrapper}.
+	 * @param request the request DTO {@link SearchDto} wrapped in
+	 *                {@link RequestWrapper}.
 	 * @return the response i.e. multiple entities based on the search values
 	 *         required.
 	 */
@@ -112,22 +107,23 @@ public class IndividualTypeController {
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.SEARCH_API_IS_CALLED, IndividualTypeDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SEARCH_API_IS_CALLED, IndividualTypeDto.class.getSimpleName()),"ADM-589");
+				String.format(MasterDataConstant.SEARCH_API_IS_CALLED, IndividualTypeDto.class.getSimpleName()),
+				"ADM-589");
 		ResponseWrapper<PageResponseDto<IndividualTypeExtnDto>> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(individualTypeService.searchIndividuals(request.getRequest()));
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.SUCCESSFUL_SEARCH, IndividualTypeDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SUCCESSFUL_SEARCH_DESC, IndividualTypeDto.class.getSimpleName()),"ADM-590");
+				String.format(MasterDataConstant.SUCCESSFUL_SEARCH_DESC, IndividualTypeDto.class.getSimpleName()),
+				"ADM-590");
 		return responseWrapper;
 	}
 
 	/**
 	 * API that returns the values required for the column filter columns.
 	 * 
-	 * @param request
-	 *            the request DTO {@link FilterResponseDto} wrapper in
-	 *            {@link RequestWrapper}.
+	 * @param request the request DTO {@link FilterResponseDto} wrapper in
+	 *                {@link RequestWrapper}.
 	 * @return the response i.e. the list of values for the specific filter column
 	 *         name and type.
 	 */
@@ -139,13 +135,15 @@ public class IndividualTypeController {
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.FILTER_API_IS_CALLED, IndividualTypeDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.FILTER_API_IS_CALLED, IndividualTypeDto.class.getSimpleName()),"ADM-591");
+				String.format(MasterDataConstant.FILTER_API_IS_CALLED, IndividualTypeDto.class.getSimpleName()),
+				"ADM-591");
 		ResponseWrapper<FilterResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(individualTypeService.individualsFilterValues(requestWrapper.getRequest()));
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.SUCCESSFUL_FILTER, IndividualTypeDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SUCCESSFUL_FILTER_DESC, IndividualTypeDto.class.getSimpleName()),"ADM-592");
+				String.format(MasterDataConstant.SUCCESSFUL_FILTER_DESC, IndividualTypeDto.class.getSimpleName()),
+				"ADM-592");
 		return responseWrapper;
 	}
 }

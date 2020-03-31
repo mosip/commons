@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "registered_device_master_h", schema = "master")
-@EqualsAndHashCode(callSuper=true)
+@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -36,8 +36,8 @@ public class DeviceRegisterHistory extends BaseEntity {
 
 	@Column(name = "dstype_code")
 	private String dSubTypeCode;
-	
-	@Column(name="digital_id")
+
+	@Column(name = "digital_id")
 	private String digitalId;
 
 	@Column(name = "status_code")
@@ -75,15 +75,6 @@ public class DeviceRegisterHistory extends BaseEntity {
 
 	@Column(name = "foundational_trust_provider_iD")
 	private String foundationalTrustProviderID;
-
-	@Column(name = "foundational_trust_signature")
-	private String foundationalTrustSignature;
-
-	@Column(name = "foundational_trust_certificate")
-	private byte[] foundationTrustCertificate;
-
-	@Column(name = "dprovider_signature")
-	private String dpSignature;
 
 	@Column(name = "serial_number", nullable = false)
 	private String serialNumber;

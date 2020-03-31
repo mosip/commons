@@ -29,10 +29,8 @@ public class FilterTypeValidator {
 	/**
 	 * Method to validate that the filter supports the search type
 	 * 
-	 * @param target
-	 *            the class to be with filter to be validated
-	 * @param filters
-	 *            list of {@link SearchFilter}
+	 * @param target  the class to be with filter to be validated
+	 * @param filters list of {@link SearchFilter}
 	 * @return true if successful false otherwise
 	 */
 	public <T> boolean validate(Class<T> target, List<SearchFilter> filters) {
@@ -88,10 +86,8 @@ public class FilterTypeValidator {
 	/**
 	 * Check the filter is supported.
 	 * 
-	 * @param field
-	 *            column field
-	 * @param filterType
-	 *            type of the filter
+	 * @param field      column field
+	 * @param filterType type of the filter
 	 * @return true if supported else otherwise
 	 */
 	public boolean containsFilter(Field field, String filterType) {
@@ -107,10 +103,8 @@ public class FilterTypeValidator {
 	/**
 	 * Validate the input column and types is not either null or emptry
 	 * 
-	 * @param column
-	 *            column name
-	 * @param filterType
-	 *            search type
+	 * @param column     column name
+	 * @param filterType search type
 	 * @return
 	 */
 	private boolean validateColumnAndTypes(String column, String filterType) {

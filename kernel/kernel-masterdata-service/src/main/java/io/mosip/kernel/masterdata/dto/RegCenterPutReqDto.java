@@ -3,6 +3,7 @@ package io.mosip.kernel.masterdata.dto;
 import java.time.LocalTime;
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -22,9 +23,8 @@ import lombok.Data;
  */
 
 @Data
-public class RegCenterPutReqDto
-{
-	
+public class RegCenterPutReqDto {
+
 	private String id;
 
 	@NotBlank
@@ -51,7 +51,7 @@ public class RegCenterPutReqDto
 
 	@NotNull
 	private Boolean isActive;
-	
+
 	@NotBlank
 	@Size(min = 0, max = 36)
 	private String centerTypeCode;
@@ -103,9 +103,9 @@ public class RegCenterPutReqDto
 	@NotNull
 	@Size(min = 0, max = 36)
 	private String zoneCode;
-	
-    private WorkingNonWorkingDaysDto workingNonWorkingDays;
-	
-    private List<ExceptionalHolidayPutPostDto>	 exceptionalHolidayPutPostDto;
-	
+
+	private WorkingNonWorkingDaysDto workingNonWorkingDays;
+
+	private @Valid List<ExceptionalHolidayPutPostDto> exceptionalHolidayPutPostDto;
+
 }

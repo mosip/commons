@@ -1,27 +1,26 @@
 package io.mosip.kernel.masterdata.dto;
 
-
-import javax.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class WorkingNonWorkingDaysDto {
-	
-	@NotNull
+
+	// @NotNull
 	Boolean sun;
-	@NotNull
+	// @NotNull
 	Boolean mon;
-	@NotNull
+	// @NotNull
 	Boolean tue;
-	@NotNull
+	// @NotNull
 	Boolean wed;
-	@NotNull
+	// @NotNull
 	Boolean thu;
-	@NotNull
+	// @NotNull
 	Boolean fri;
-	@NotNull
+	// @NotNull
 	Boolean sat;
-	
 
 }

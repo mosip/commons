@@ -40,7 +40,6 @@ import io.mosip.kernel.keymanager.softhsm.constant.KeymanagerErrorCode;
 import io.mosip.kernel.keymanager.softhsm.util.CertificateUtility;
 import sun.security.pkcs11.SunPKCS11;
 
-
 /**
  * Softhsm Keymanager implementation based on OpenDNSSEC that handles and stores
  * its cryptographic keys via the PKCS#11 interface. This is a software
@@ -79,7 +78,8 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	private String country;
 
 	/**
-	 * Path of HSM PKCS11 config file or the Keystore in caes of bouncy castle provider
+	 * Path of HSM PKCS11 config file or the Keystore in caes of bouncy castle
+	 * provider
 	 */
 	@Value("${mosip.kernel.keymanager.softhsm.config-path}")
 	private String configPath;
@@ -115,23 +115,23 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	/**
 	 * Setup a new SunPKCS11 provider
 	 * 
-	 * @param configPath
-	 *            The path of config file or keyStore in case of bouncycastle provider
+	 * @param configPath The path of config file or keyStore in case of bouncycastle
+	 *                   provider
 	 * @return Provider
 	 */
 	private Provider setupProvider(String configPath) {
 		Provider provider = null;
 		try {
-			switch(keystoreType){
-				case "PKCS11":
-					provider = new SunPKCS11(configPath);
-					break;
-				case "BouncyCastleProvider":
-					provider = new BouncyCastleProvider();
-					break;
-				default:
-					provider = new SunPKCS11(configPath);
-					break;
+			switch (keystoreType) {
+			case "PKCS11":
+				provider = new SunPKCS11(configPath);
+				break;
+			case "BouncyCastleProvider":
+				provider = new BouncyCastleProvider();
+				break;
+			default:
+				provider = new SunPKCS11(configPath);
+				break;
 
 			}
 		} catch (ProviderException providerException) {
@@ -140,7 +140,6 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 		}
 		return provider;
 	}
-
 
 	/**
 	 * Adds a provider to the next position available.
@@ -152,8 +151,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	 * again with the "insertProvider."+provider.getName() permission target name.
 	 * If both checks are denied, a SecurityException is thrown.
 	 * 
-	 * @param provider
-	 *            the provider to be added
+	 * @param provider the provider to be added
 	 */
 	private void addProvider(Provider provider) {
 		if (-1 == Security.addProvider(provider)) {
@@ -169,10 +167,8 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	 * specified Provider object is returned. Note that the specified Provider
 	 * object does not have to be registered in the provider list.
 	 * 
-	 * @param keystoreType
-	 *            the type of keystore
-	 * @param provider
-	 *            provider
+	 * @param keystoreType the type of keystore
+	 * @param provider     provider
 	 * @return a keystore object of the specified type.
 	 */
 	private KeyStore getKeystoreInstance(String keystoreType, Provider provider) {
@@ -207,18 +203,21 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	private void loadKeystore() {
 
 		try {
-			switch(keystoreType){
-				case "PKCS11":
-					keyStore.load(null, keystorePass.toCharArray());
-					break;
-				case "BouncyCastleProvider":
-					keyStore.load(new FileInputStream(configPath), keystorePass.toCharArray());
-					break;
-				default:
-					keyStore.load(null, keystorePass.toCharArray());
-					break;
+			switch (keystoreType) {
+			case "PKCS11":
+				keyStore.load(null, keystorePass.toCharArray());
+				break;
+			case "BouncyCastleProvider":
+				// added try with res for sonar bug fix
+				try (FileInputStream fis = new FileInputStream(configPath)) {
+					keyStore.load(fis, keystorePass.toCharArray());
+				}
+				break;
+			default:
+				keyStore.load(null, keystorePass.toCharArray());
+				break;
 			}
-			
+
 		} catch (NoSuchAlgorithmException | CertificateException | IOException e) {
 			throw new KeystoreProcessingException(KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorCode(),
 					KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorMessage() + e.getMessage(), e);
@@ -414,8 +413,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	/**
 	 * Sets keystore
 	 * 
-	 * @param keyStore
-	 *            keyStore
+	 * @param keyStore keyStore
 	 */
 	public void setKeyStore(KeyStore keyStore) {
 		this.keyStore = keyStore;

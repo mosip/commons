@@ -12,16 +12,17 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-
 /* (non-Javadoc)
  * @see io.mosip.kernel.syncdata.entity.BaseEntity#toString()
  */
 @Data
 
-/* (non-Javadoc)
+/*
+ * (non-Javadoc)
+ * 
  * @see io.mosip.kernel.syncdata.entity.BaseEntity#hashCode()
  */
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 
 /**
  * Instantiates a new screen detail.
@@ -31,36 +32,36 @@ import lombok.NoArgsConstructor;
 /**
  * @author Srinivasan
  * 
- * Instantiates a new screen detail.
+ *         Instantiates a new screen detail.
  *
- * @param id the id
- * @param appId the app id
- * @param name the name
- * @param descr the descr
+ * @param id       the id
+ * @param appId    the app id
+ * @param name     the name
+ * @param descr    the descr
  * @param langCode the lang code
  */
 @AllArgsConstructor
 @IdClass(IdAndLanguageCodeID.class)
 @Entity
-@Table(name="screen_detail",schema="master")
+@Table(name = "screen_detail", schema = "master")
 public class ScreenDetail extends BaseEntity {
 
 	/** The id. */
 	@Id
 	private String id;
-	
+
 	/** The app id. */
-	@Column(name="app_id",length=36,nullable=false)
+	@Column(name = "app_id", length = 36, nullable = false)
 	private String appId;
-	
+
 	/** The name. */
-	@Column(name="name",length=36,nullable=false)
+	@Column(name = "name", length = 36, nullable = false)
 	private String name;
-	
+
 	/** The descr. */
-	@Column(name="descr",length=256)
+	@Column(name = "descr", length = 256)
 	private String descr;
-	
+
 	/** The lang code. */
 	@Id
 	private String langCode;

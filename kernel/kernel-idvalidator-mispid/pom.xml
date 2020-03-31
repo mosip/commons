@@ -5,14 +5,18 @@
 	<parent>
 		<groupId>io.mosip.kernel</groupId>
 		<artifactId>kernel-parent</artifactId>
-		<version>1.0.6-SNAPSHOT</version>
+		<version>1.0.6</version>
 	</parent>
 	<artifactId>kernel-idvalidator-mispid</artifactId>
+	<version>1.0.6</version>
+	<properties>
+		<kernel.core.version>1.0.6</kernel.core.version>
+    </properties>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>${kernel.core.version}</version>
 		</dependency>
 	</dependencies>
 	<build>

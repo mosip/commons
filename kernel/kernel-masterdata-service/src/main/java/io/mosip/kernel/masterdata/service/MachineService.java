@@ -32,16 +32,13 @@ public interface MachineService {
 	 * This abstract method to fetch machine details for given Machine ID and
 	 * language code
 	 * 
-	 * @param id
-	 *            Machine Id given by user
-	 * @param langCode
-	 *            Language code given by user
+	 * @param id       Machine Id given by user
+	 * @param langCode Language code given by user
 	 * @return MachineResponseDto Machine Detail for given machine id and language
 	 *         code
-	 * @throws MasterDataServiceException
-	 *             if any error occurs while retrieving Machine Details
-	 * @throws DataNotFoundException
-	 *             if no Machine found
+	 * @throws MasterDataServiceException if any error occurs while retrieving
+	 *                                    Machine Details
+	 * @throws DataNotFoundException      if no Machine found
 	 *
 	 */
 	public MachineResponseDto getMachine(String id, String langCode);
@@ -50,10 +47,9 @@ public interface MachineService {
 	 * This abstract method to fetch all machines details
 	 * 
 	 * @return MachineResponseDto Returning all Machines Details
-	 * @throws MasterDataServiceException
-	 *             if any error occurs while retrieving Machine Details
-	 * @throws DataNotFoundException
-	 *             if no Machine found
+	 * @throws MasterDataServiceException if any error occurs while retrieving
+	 *                                    Machine Details
+	 * @throws DataNotFoundException      if no Machine found
 	 *
 	 */
 
@@ -62,14 +58,12 @@ public interface MachineService {
 	/**
 	 * This abstract method to fetch machine details for given language code
 	 * 
-	 * @param langCode
-	 *            Language code given by user
+	 * @param langCode Language code given by user
 	 * @return MachineResponseDto Machine Detail for given machine id and language
 	 *         code
-	 * @throws MasterDataServiceException
-	 *             if any error occurs while retrieving Machine Details
-	 * @throws DataNotFoundException
-	 *             if no Machine found
+	 * @throws MasterDataServiceException if any error occurs while retrieving
+	 *                                    Machine Details
+	 * @throws DataNotFoundException      if no Machine found
 	 *
 	 */
 	public MachineResponseDto getMachine(String langCode);
@@ -77,16 +71,14 @@ public interface MachineService {
 	/**
 	 * Abstract method to delete Machine Details to the Database
 	 * 
-	 * @param id
-	 *            machine id
+	 * @param id machine id
 	 * 
 	 * @return IdResponseDto returning machine id which is updated successfully
 	 *         {@link IdResponseDto}
-	 * @throws RequestException
-	 *             if Machine not Found
+	 * @throws RequestException           if Machine not Found
 	 * 
-	 * @throws MasterDataServiceException
-	 *             if any error occurred while updating Machine
+	 * @throws MasterDataServiceException if any error occurred while updating
+	 *                                    Machine
 	 * 
 	 */
 	public IdResponseDto deleteMachine(String id);
@@ -94,11 +86,10 @@ public interface MachineService {
 	/**
 	 * Fetch all Machines which are mapped with the given registration center
 	 * 
-	 * @throws MasterDataServiceException
-	 *             if any error occurred while updating Machine
+	 * @throws MasterDataServiceException if any error occurred while updating
+	 *                                    Machine
 	 * 
-	 * @param regCenterId
-	 *            Registration center id as String
+	 * @param regCenterId Registration center id as String
 	 * @return MachineRegistrationCenterDto response object which contain the list
 	 *         of machins those are mapped with the given registration center
 	 *         {@link RegistrationCenterMachineID}
@@ -109,8 +100,7 @@ public interface MachineService {
 	/**
 	 * Method to search Machines based on filters provided.
 	 * 
-	 * @param dto
-	 *            the search DTO.
+	 * @param dto the search DTO.
 	 * @return the {@link PageResponseDto}.
 	 */
 	public PageResponseDto<MachineSearchDto> searchMachine(SearchDto dto);
@@ -118,53 +108,44 @@ public interface MachineService {
 	/**
 	 * Method to filter Machine based on column and type provided.
 	 * 
-	 * @param filterValueDto
-	 *            the filter DTO.
+	 * @param filterValueDto the filter DTO.
 	 * @return the {@link FilterResponseDto}.
 	 */
 	public FilterResponseDto machineFilterValues(FilterValueDto filterValueDto);
-	
+
 	/**
 	 * Abstract method to save Machine Details to the Database
 	 * 
-	 * @param machine
-	 *            Machine Post Request DTO
+	 * @param machine Machine Post Request DTO
 	 * 
-	 * @return MachineExtnDto returning created machine.
-	 *         {@link MachineExtnDto}
+	 * @return MachineExtnDto returning created machine. {@link MachineExtnDto}
 	 * 
-	 * @throws MasterDataServiceException
-	 *             if any error occurred while saving Machine
+	 * @throws MasterDataServiceException if any error occurred while saving Machine
 	 */
 	public MachineExtnDto createMachine(MachinePostReqDto machine);
-	
+
 	/**
 	 * Abstract method to update Machine Details to the Database
 	 * 
-	 * @param machine
-	 *            Machine Put Request DTO
+	 * @param machine Machine Put Request DTO
 	 * 
-	 * @return MachineExtnDto returning updated machine 
-	 *         {@link MachineExtnDto}
+	 * @return MachineExtnDto returning updated machine {@link MachineExtnDto}
 	 * 
-	 * @throws MasterDataServiceException
-	 *             if any error occurred while updating Machine
+	 * @throws MasterDataServiceException if any error occurred while updating
+	 *                                    Machine
 	 */
-	public MachineExtnDto updateMachine(MachinePutReqDto  machine);
-	
+	public MachineExtnDto updateMachine(MachinePutReqDto machine);
+
 	/**
 	 * Abstract method to decommission machine
 	 * 
-	 * @param machineId
-	 *            Machine Id which one need to decommission
+	 * @param machineId Machine Id which one need to decommission
 	 * 
-	 * @return IdResponseDto returning decommission machine id
-	 *         {@link IdResponseDto}
+	 * @return IdResponseDto returning decommission machine id {@link IdResponseDto}
 	 * 
-	 * @throws MasterDataServiceException
-	 *             if any error occurred while decommissioning the Machine
+	 * @throws MasterDataServiceException if any error occurred while
+	 *                                    decommissioning the Machine
 	 */
 	public IdResponseDto decommissionMachine(String machineId);
-	
 
 }

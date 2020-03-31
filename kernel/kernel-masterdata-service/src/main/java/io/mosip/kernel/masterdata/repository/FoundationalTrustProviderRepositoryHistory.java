@@ -16,8 +16,7 @@ import io.mosip.kernel.masterdata.entity.FoundationalTrustProviderHistory;
  *
  */
 @Repository
-public interface FoundationalTrustProviderRepositoryHistory extends BaseRepository<FoundationalTrustProviderHistory,String>
-{
-
+public interface FoundationalTrustProviderRepositoryHistory
+		extends BaseRepository<FoundationalTrustProviderHistory, String> {
 
 }

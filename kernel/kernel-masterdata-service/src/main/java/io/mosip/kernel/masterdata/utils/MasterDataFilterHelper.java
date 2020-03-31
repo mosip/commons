@@ -82,8 +82,7 @@ public class MasterDataFilterHelper {
 		String columnType = filterDto.getType();
 		List<Predicate> predicates = new ArrayList<>();
 		Predicate caseSensitivePredicate = null;
-		if (columnName.equals(MAP_STATUS_COLUMN_NAME)
-				&& (columnType.equals(FILTER_VALUE_UNIQUE) || columnType.equals(FILTER_VALUE_ALL))) {
+		if (checkColNameAndType(columnName, columnType)) {
 			return (List<T>) valuesForMapStatusColumn();
 		}
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -100,18 +99,9 @@ public class MasterDataFilterHelper {
 		if (!filterValueDto.getLanguageCode().equals("all")) {
 			predicates.add(langCodePredicate);
 		}
-		if(StringUtils.isNotBlank(filterDto.getText()))
-		{
-			caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
-					.like(criteriaBuilder.lower(rootType.get(filterDto.getColumnName())), criteriaBuilder.lower(
-							criteriaBuilder.literal(filterDto.getText()))));
-		}
-		else
-		{
-			caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
-					.like(criteriaBuilder.lower(rootType.get(filterDto.getColumnName())), criteriaBuilder.lower(
-							criteriaBuilder.literal(WILD_CARD_CHARACTER+filterDto.getText()+WILD_CARD_CHARACTER))));
-		}
+		caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
+				.like(criteriaBuilder.lower(rootType.get(filterDto.getColumnName())), criteriaBuilder.lower(
+						criteriaBuilder.literal(WILD_CARD_CHARACTER + filterDto.getText() + WILD_CARD_CHARACTER))));
 		if (!(rootType.get(columnName).getJavaType().equals(Boolean.class))) {
 			predicates.add(caseSensitivePredicate);
 		}
@@ -124,8 +114,7 @@ public class MasterDataFilterHelper {
 		criteriaQueryByType.orderBy(criteriaBuilder.asc(rootType.get(columnName)));
 
 		// check if column type is boolean then return true/false
-		if (rootType.get(columnName).getJavaType().equals(Boolean.class) && (columnType.equals(FILTER_VALUE_UNIQUE)
-				|| columnType.equals(FILTER_VALUE_ALL) || columnType.equals(FILTER_VALUE_EMPTY))) {
+		if (checkColNameTypeAndRootType(columnName, columnType, rootType)) {
 			return (List<T>) valuesForStatusColumn();
 		}
 
@@ -138,6 +127,16 @@ public class MasterDataFilterHelper {
 		results = typedQuery.setMaxResults(filterValueMaxColumns).getResultList();
 		return results;
 
+	}
+
+	private boolean checkColNameAndType(String columnName, String columnType) {
+		return columnName.equals(MAP_STATUS_COLUMN_NAME)
+				&& (columnType.equals(FILTER_VALUE_UNIQUE) || columnType.equals(FILTER_VALUE_ALL));
+	}
+
+	private <E> boolean checkColNameTypeAndRootType(String columnName, String columnType, Root<E> rootType) {
+		return rootType.get(columnName).getJavaType().equals(Boolean.class) && (columnType.equals(FILTER_VALUE_UNIQUE)
+				|| columnType.equals(FILTER_VALUE_ALL) || columnType.equals(FILTER_VALUE_EMPTY));
 	}
 
 	public <E> List<FilterData> filterValuesWithCode(Class<E> entity, FilterDto filterDto,
@@ -153,24 +152,16 @@ public class MasterDataFilterHelper {
 
 		Predicate langCodePredicate = criteriaBuilder.equal(rootType.get(LANGCODE_COLUMN_NAME),
 				filterValueDto.getLanguageCode());
-		if(StringUtils.isNotBlank(filterDto.getText()))
-		{
-			caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
-					.like(criteriaBuilder.lower(rootType.get(filterDto.getColumnName())), criteriaBuilder.lower(
-							criteriaBuilder.literal(filterDto.getText()))));
-		}
-		else
-		{
-			caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
-					.like(criteriaBuilder.lower(rootType.get(filterDto.getColumnName())), criteriaBuilder.lower(
-							criteriaBuilder.literal(WILD_CARD_CHARACTER+filterDto.getText()+WILD_CARD_CHARACTER))));
-		}
-	
+		caseSensitivePredicate = criteriaBuilder.and(criteriaBuilder
+				.like(criteriaBuilder.lower(rootType.get(filterDto.getColumnName())), criteriaBuilder.lower(
+						criteriaBuilder.literal(WILD_CARD_CHARACTER + filterDto.getText() + WILD_CARD_CHARACTER))));
+
 		criteriaQueryByType.multiselect(rootType.get(fieldCodeColumnName), rootType.get(columnName));
 
 		columnTypeValidator(rootType, columnName);
 
-		if (filterValueDto.getLanguageCode().equals("all") && !(rootType.get(columnName).getJavaType().equals(Boolean.class))) {
+		if (filterValueDto.getLanguageCode().equals("all")
+				&& !(rootType.get(columnName).getJavaType().equals(Boolean.class))) {
 			criteriaQueryByType.where(criteriaBuilder.and(caseSensitivePredicate));
 		} else if (!(rootType.get(columnName).getJavaType().equals(Boolean.class))) {
 			criteriaQueryByType.where(criteriaBuilder.and(langCodePredicate, caseSensitivePredicate));
@@ -244,7 +235,6 @@ public class MasterDataFilterHelper {
 		String value = filter.getValue();
 
 		return builder.equal(root.get(columnName), value);
-		
 
 	}
 }

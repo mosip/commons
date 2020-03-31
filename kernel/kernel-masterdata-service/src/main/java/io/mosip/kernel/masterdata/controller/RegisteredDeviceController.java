@@ -41,7 +41,6 @@ public class RegisteredDeviceController {
 
 	@Autowired
 	RegisteredDeviceService registeredDeviceService;
-	
 
 	/**
 	 * Api to Register Device.
@@ -50,22 +49,22 @@ public class RegisteredDeviceController {
 	 * 
 	 * @param registeredDevicePostDto
 	 * @return ResponseWrapper<String>
+	 * @throws Exception 
 	 */
 	@ResponseFilter
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN')")
 	@PostMapping
 	public ResponseWrapper<String> signedRegisteredDevice(
-			@Valid @RequestBody RequestWrapper<RegisteredDevicePostDto> registeredDevicePostDto) {
+			@Valid @RequestBody RequestWrapper<RegisteredDevicePostDto> registeredDevicePostDto) throws Exception {
 		ResponseWrapper<String> response = new ResponseWrapper<>();
 		response.setResponse(registeredDeviceService.signedRegisteredDevice(registeredDevicePostDto.getRequest()));
 		return response;
 	}
-	
+
 	/**
 	 * Api to de-register Device.
 	 * 
-	 * @param request
-	 *            the request DTO.
+	 * @param request the request DTO.
 	 * @return the {@link DeviceRegisterResponseDto}.
 	 */
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN')")
@@ -77,12 +76,13 @@ public class RegisteredDeviceController {
 		response.setResponse(registeredDeviceService.deRegisterDevice(deviceCode));
 		return response;
 	}
-	
+
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN')")
 	@ApiOperation(value = "Update status of the devive")
 	@PutMapping("/update/status")
-	public ResponseEntity<ResponseDto> deRegisterDevice(@NotBlank @RequestParam(name="deviceCode",required=true) String deviceCode,
-			@NotBlank @RequestParam(name="statusCode",required=true) String statusCode) {
+	public ResponseEntity<ResponseDto> deRegisterDevice(
+			@NotBlank @RequestParam(name = "deviceCode", required = true) String deviceCode,
+			@NotBlank @RequestParam(name = "statusCode", required = true) String statusCode) {
 		return new ResponseEntity<>(registeredDeviceService.updateStatus(deviceCode, statusCode), HttpStatus.OK);
 	}
 

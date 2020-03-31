@@ -34,7 +34,6 @@ import io.mosip.kernel.masterdata.utils.ExceptionUtils;
 import io.mosip.kernel.masterdata.utils.MapperUtils;
 import io.mosip.kernel.masterdata.utils.MetaDataUtils;
 
-
 /**
  * Service class to register and de register Device.
  * 
@@ -64,52 +63,6 @@ public class DeviceRegisterServiceImpl implements DeviceRegisterService {
 
 	/** The retired. */
 	private static String RETIRED = "Retired";
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.mosip.kernel.masterdata.service.DeviceRegisterService#registerDevice(io.
-	 * mosip.kernel.masterdata.dto.DeviceRegisterDto)
-	 */
-	@Override
-	public DeviceRegisterResponseDto registerDevice(DeviceRegisterDto request) {
-		DeviceRegister deviceRegisterEntity = new DeviceRegister();
-		DeviceRegisterHistory deviceRegisterHistory = new DeviceRegisterHistory();
-		DeviceDataDto deviceDataDTO = request.getDeviceData();
-		DeviceInfoDto deviceInfoDto = deviceDataDTO.getDeviceInfo();
-		MapperUtils.map(deviceDataDTO, deviceRegisterEntity);
-		MapperUtils.map(deviceInfoDto, deviceRegisterEntity);
-		MapperUtils.map(deviceDataDTO, deviceRegisterHistory);
-		MapperUtils.map(deviceInfoDto, deviceRegisterHistory);
-		deviceRegisterEntity.setDpSignature(request.getDpSignature());
-		deviceRegisterEntity.setFoundationTrustCertificate(
-				CryptoUtil.decodeBase64(request.getDeviceData().getFoundationTrustCertificate()));
-		LocalDateTime createdTime = DateUtils.getUTCCurrentDateTime();
-		deviceRegisterEntity.setPurpose("mosip-process");
-		deviceRegisterEntity.setCreatedDateTime(createdTime);
-		deviceRegisterEntity.setCreatedBy(MetaDataUtils.getContextUser());
-		deviceRegisterHistory.setDpSignature(request.getDpSignature());
-		deviceRegisterHistory.setFoundationTrustCertificate(
-				CryptoUtil.decodeBase64(request.getDeviceData().getFoundationTrustCertificate()));
-		deviceRegisterHistory.setPurpose("mosip-process");
-		deviceRegisterHistory.setCreatedDateTime(createdTime);
-		deviceRegisterHistory.setCreatedBy(MetaDataUtils.getContextUser());
-		deviceRegisterHistory.setEffectivetimes(LocalDateTime.now(ZoneId.of("UTC")));
-		try {
-			deviceRegisterRepository.create(deviceRegisterEntity);
-			deviceRegisterHistoryRepository.create(deviceRegisterHistory);
-		} catch (DataAccessLayerException e) {
-			throw new DeviceRegisterException("KER-MSD-xx",
-					"Error occur while registering device details " + ExceptionUtils.parseException(e));
-		}
-		DeviceRegisterResponseDto responseDto = new DeviceRegisterResponseDto();
-		DeviceRegResponseDto regResponseDto = new DeviceRegResponseDto();
-		regResponseDto.setDeviceCode(request.getDeviceData().getDeviceCode());
-		regResponseDto.setStatus("success");
-		responseDto.setResponse(regResponseDto);
-		return responseDto;
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -162,12 +115,13 @@ public class DeviceRegisterServiceImpl implements DeviceRegisterService {
 			deviceRegister = deviceRegisterRepository.findById(DeviceRegister.class, deviceCode);
 		} catch (DataAccessException | DataAccessLayerException e) {
 			throw new MasterDataServiceException(DeviceRegisterErrorCode.DEVICE_REGISTER_FETCH_EXCEPTION.getErrorCode(),
-					DeviceRegisterErrorCode.DEVICE_REGISTER_FETCH_EXCEPTION.getErrorMessage() + " " + ExceptionUtils.parseException(e));
+					DeviceRegisterErrorCode.DEVICE_REGISTER_FETCH_EXCEPTION.getErrorMessage() + " "
+							+ ExceptionUtils.parseException(e));
 		}
 
 		if (deviceRegister == null) {
-			throw new DataNotFoundException(DeviceRegisterErrorCode.DATA_NOT_FOUND_EXCEPTION.getErrorCode(),
-					DeviceRegisterErrorCode.DATA_NOT_FOUND_EXCEPTION.getErrorMessage());
+			throw new DataNotFoundException(DeviceRegisterErrorCode.DATA_NOT_FOUND_DEVICE_REGISTER.getErrorCode(),
+					DeviceRegisterErrorCode.DATA_NOT_FOUND_DEVICE_REGISTER.getErrorMessage());
 		}
 		if (!Arrays.asList(REGISTERED, REVOKED, RETIRED).contains(statusCode)) {
 			throw new RequestException(DeviceRegisterErrorCode.INVALID_STATUS_CODE.getErrorCode(),
@@ -184,8 +138,7 @@ public class DeviceRegisterServiceImpl implements DeviceRegisterService {
 	/**
 	 * Creates the history details.
 	 *
-	 * @param deviceRegister
-	 *            the device register
+	 * @param deviceRegister the device register
 	 */
 	private void createHistoryDetails(DeviceRegister deviceRegister) {
 		DeviceRegisterHistory deviceRegisterHistory = new DeviceRegisterHistory();
@@ -207,8 +160,7 @@ public class DeviceRegisterServiceImpl implements DeviceRegisterService {
 	/**
 	 * Update register details.
 	 *
-	 * @param deviceRegister
-	 *            the device register
+	 * @param deviceRegister the device register
 	 */
 	private void updateRegisterDetails(DeviceRegister deviceRegister) {
 		try {

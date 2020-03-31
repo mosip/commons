@@ -309,7 +309,7 @@ public interface CryptoCoreSpec<R, D, S, P, K, T> {
 	T sign(D data, K privateKey);
 
 	/**
-	 * This method is responsible for core <b> Digital Signature </b> with 
+	 * This method is responsible for core <b> Digital Signature </b> with
 	 * <a href ="https://tools.ietf.org/html/rfc7515"> JSON WEB SIGNATURE</a>
 	 * specification
 	 * 
@@ -332,13 +332,13 @@ public interface CryptoCoreSpec<R, D, S, P, K, T> {
 	 * Digital Signature is described in <a href=
 	 * "https://en.wikipedia.org/wiki/Digital_signature">Digital_signature</a>.
 	 * 
-	 * @param data       data to sign
-	 * @param privateKey privateKey of owner
+	 * @param data            data to sign
+	 * @param privateKey      privateKey of owner
 	 * @param x509Certificate {@link X509Certificate) of owner
 	 * @return signed data
 	 */
-	T sign(D data, K privateKey,X509Certificate x509Certificate);
-	
+	T sign(D data, K privateKey, X509Certificate x509Certificate);
+
 	/**
 	 * This method is responsible for core <b> Digital Signature </b>.
 	 * 
@@ -367,9 +367,9 @@ public interface CryptoCoreSpec<R, D, S, P, K, T> {
 	 * @return True; if signature is verified;False otherwise
 	 */
 	boolean verifySignature(D data, T signature, P publicKey);
-	
+
 	/**
-	 * This method is responsible for core <b> Digital Signature </b> with 
+	 * This method is responsible for core <b> Digital Signature </b> with
 	 * <a href ="https://tools.ietf.org/html/rfc7515"> JSON WEB SIGNATURE</a>
 	 * specification
 	 * 

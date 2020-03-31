@@ -25,19 +25,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 //@ApiModel(value = "Registration Centers", description = "Registration centers")
 public class RegistrationCenterExtnDto extends BaseDto {
-	
-	@FilterType(types= {FilterTypeEnum.EQUALS,FilterTypeEnum.STARTSWITH,FilterTypeEnum.CONTAINS})
+
+	@FilterType(types = { FilterTypeEnum.EQUALS, FilterTypeEnum.STARTSWITH, FilterTypeEnum.CONTAINS })
 	@NotBlank
 	@Size(min = 1, max = 10)
 	private String id;
 
-	@FilterType(types= {FilterTypeEnum.EQUALS,FilterTypeEnum.STARTSWITH,FilterTypeEnum.CONTAINS})
+	@FilterType(types = { FilterTypeEnum.EQUALS, FilterTypeEnum.STARTSWITH, FilterTypeEnum.CONTAINS })
 	@NotBlank
 	@Size(min = 1, max = 128)
 	private String name;
 
 	@Size(min = 1, max = 36)
-	@FilterType(types= {FilterTypeEnum.EQUALS})
+	@FilterType(types = { FilterTypeEnum.EQUALS })
 	private String centerTypeCode;
 
 	@Size(min = 1, max = 256)
@@ -55,7 +55,7 @@ public class RegistrationCenterExtnDto extends BaseDto {
 	@Size(min = 1, max = 32)
 	private String longitude;
 
-	@FilterType(types= {FilterTypeEnum.EQUALS})
+	@FilterType(types = { FilterTypeEnum.EQUALS })
 	@NotBlank
 	@Size(min = 1, max = 36)
 	private String locationCode;
@@ -94,12 +94,12 @@ public class RegistrationCenterExtnDto extends BaseDto {
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
 	private LocalTime lunchEndTime;
-	
-	@FilterType(types= {FilterTypeEnum.EQUALS,FilterTypeEnum.STARTSWITH,FilterTypeEnum.CONTAINS})
+
+	@FilterType(types = { FilterTypeEnum.EQUALS, FilterTypeEnum.STARTSWITH, FilterTypeEnum.CONTAINS })
 	@Size(min = 1, max = 36)
 	private String zoneCode;
-	
+
 	private WorkingNonWorkingDaysDto workingNonWorkingDays;
-	
-	private List<ExceptionalHolidayPutPostDto>	 exceptionalHolidayPutPostDto;
+
+	private List<ExceptionalHolidayPutPostDto> exceptionalHolidayPutPostDto;
 }

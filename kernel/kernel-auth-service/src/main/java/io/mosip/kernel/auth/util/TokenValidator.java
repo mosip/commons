@@ -96,6 +96,10 @@ public class TokenValidator {
 		return currentEpoch > expiryEpochTime;
 	}
 
+	public String getissuer(String token) {
+		DecodedJWT decodedJWT = JWT.decode(token);
+		return decodedJWT.getClaim("iss").asString();
+	}
 	private Claims getClaims(String token) throws Exception {
 		String token_base = mosipEnvironment.getTokenBase();
 		String secret = mosipEnvironment.getJwtSecret();

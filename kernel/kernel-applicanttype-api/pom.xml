@@ -5,15 +5,16 @@
 	<parent>
 		<groupId>io.mosip.kernel</groupId>
 		<artifactId>kernel-parent</artifactId>
-		<version>1.0.6-SNAPSHOT</version>
+		<version>1.0.6</version>
 	</parent>
 	<artifactId>kernel-applicanttype-api</artifactId>
 	<description>Mosip Applicant type API</description>
+	<version>1.0.6</version>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>${project.version}</version>
+			<version>1.0.6</version>
 		</dependency>
 	</dependencies>
 </project>

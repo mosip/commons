@@ -28,7 +28,6 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.kernel.syncdata.constant.MasterDataErrorCode;
 import io.mosip.kernel.syncdata.constant.SyncDataConstant;
 
-
 /**
  * synch handler controller advice
  * 
@@ -131,12 +130,12 @@ public class SyncHandlerControllerAdvice {
 		final List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
 		fieldErrors.forEach(x -> {
 			ServiceError error = new ServiceError(MasterDataErrorCode.INVALID_INPUT_REQUEST.getErrorCode(),
-					x.getField() + SyncDataConstant.WHITESPACE+ x.getDefaultMessage());
+					x.getField() + SyncDataConstant.WHITESPACE + x.getDefaultMessage());
 			errorResponse.getErrors().add(error);
 		});
-		return new ResponseEntity<>(errorResponse, HttpStatus.OK);	
+		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
 	}
-	
+
 	private ResponseEntity<ResponseWrapper<ServiceError>> getServiceErrorResponseEntity(BaseUncheckedException e,
 			HttpStatus httpStatus, HttpServletRequest httpServletRequest) throws IOException {
 		ResponseWrapper<ServiceError> responseWrapper = setErrors(httpServletRequest);
@@ -160,7 +159,5 @@ public class SyncHandlerControllerAdvice {
 		responseWrapper.setVersion(reqNode.path("version").asText());
 		return responseWrapper;
 	}
-
-	
 
 }

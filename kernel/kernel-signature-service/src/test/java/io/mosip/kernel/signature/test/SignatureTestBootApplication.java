@@ -16,8 +16,7 @@ public class SignatureTestBootApplication {
 	/**
 	 * Main method to run spring boot application
 	 * 
-	 * @param args
-	 *            args
+	 * @param args args
 	 */
 	public static void main(String[] args) {
 		SpringApplication.run(SignatureTestBootApplication.class, args);

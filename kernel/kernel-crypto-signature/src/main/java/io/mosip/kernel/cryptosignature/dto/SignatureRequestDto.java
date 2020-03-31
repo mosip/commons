@@ -30,7 +30,7 @@ public class SignatureRequestDto {
 	 * Application id of decrypting module
 	 */
 	@ApiModelProperty(notes = "Application id of decrypting module", example = "REGISTRATION", required = true)
-	//@NotBlank(message = KeymanagerConstant.SIGNATURE_ALGORITHM)
+	// @NotBlank(message = KeymanagerConstant.SIGNATURE_ALGORITHM)
 	private String applicationId;
 	/**
 	 * Refrence Id
@@ -47,7 +47,7 @@ public class SignatureRequestDto {
 	 * Data in BASE64 encoding to encrypt/decrypt
 	 */
 	@ApiModelProperty(notes = "Data to sign", required = true)
-	//@NotBlank(message = CryptomanagerConstant.INVALID_REQUEST)
+	// @NotBlank(message = CryptomanagerConstant.INVALID_REQUEST)
 	private String data;
 
 }

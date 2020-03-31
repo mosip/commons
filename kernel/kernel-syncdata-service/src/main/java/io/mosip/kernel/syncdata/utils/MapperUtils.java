@@ -12,10 +12,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.syncdata.dto.BaseDto;
@@ -33,7 +38,15 @@ import io.mosip.kernel.syncdata.entity.id.HolidayID;
  */
 @Component
 public class MapperUtils {
-
+	
+	private final ObjectMapper objectMapper = new ObjectMapper();
+	
+	@PostConstruct
+	private void setupObjectMapper() {
+		objectMapper.registerModule(new JavaTimeModule());
+		objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+	}
+	
 	public List<HolidayDto> mapHolidays(List<Holiday> holidays) {
 		Objects.requireNonNull(holidays);
 		List<HolidayDto> holidayDtos = new ArrayList<>();
@@ -78,8 +91,8 @@ public class MapperUtils {
 	 * name fields value will be set but not the embedded IDs and super class
 	 * values.
 	 * 
-	 * @param             <S> is a type parameter
-	 * @param             <D> is a type parameter
+	 * @param <S>         is a type parameter
+	 * @param <D>         is a type parameter
 	 * @param source      which value is going to be mapped
 	 * @param destination where values is going to be mapped
 	 * @return the <code>destination</code> object
@@ -107,8 +120,8 @@ public class MapperUtils {
 	 * Entity type field is their then only matched name fields value will be set
 	 * but not the embedded IDs and super class values.
 	 * 
-	 * @param                  <S> is a type parameter
-	 * @param                  <D> is a type parameter
+	 * @param <S>              is a type parameter
+	 * @param <D>              is a type parameter
 	 * @param source           which value is going to be mapped
 	 * @param destinationClass where values is going to be mapped
 	 * @return the object of <code>destinationClass</code>
@@ -137,9 +150,9 @@ public class MapperUtils {
 	 * <code>destinationClass</code> and map all the values from source to
 	 * destination if field name and type is same.
 	 * 
-	 * @param                  <S> is a type parameter
+	 * @param <S>              is a type parameter
 	 * 
-	 * @param                  <D> is a type parameter
+	 * @param <D>              is a type parameter
 	 * @param sourceList       which value is going to be mapped
 	 * @param destinationClass where values is going to be mapped
 	 * @return list of destinationClass objects
@@ -160,9 +173,9 @@ public class MapperUtils {
 	 * and same type for the fields. It will not map any field which is static or
 	 * final.It will simply ignore those values.
 	 * 
-	 * @param             <S> is a type parameter
+	 * @param <S>         is a type parameter
 	 * 
-	 * @param             <D> is a type parameter
+	 * @param <D>         is a type parameter
 	 * @param source      is any object which should not be null and have data which
 	 *                    is going to be copied
 	 * @param destination is an object in which source field values is going to be
@@ -220,15 +233,15 @@ public class MapperUtils {
 			}
 		}
 	}
-	
+
 	/**
 	 * Map values from {@link BaseEntity} class source object to destination or vice
 	 * versa and this method will be used to map {@link BaseEntity} values from
 	 * entity to entity. Like when both <code>source</code> and
 	 * <code>destination</code> are object which extends {@link BaseEntity}.
 	 * 
-	 * @param             <S> is a type parameter
-	 * @param             <D> is a type parameter
+	 * @param <S>         is a type parameter
+	 * @param <D>         is a type parameter
 	 * @param source      which value is going to be mapped
 	 * @param destination where values is going to be mapped
 	 */
@@ -360,6 +373,9 @@ public class MapperUtils {
 
 		}
 		return userDetailMapDtoList;
-
+	}
+	
+	public String getObjectAsJsonString(Object object) throws Exception {
+		return (null != object) ? objectMapper.writeValueAsString(object) : null;
 	}
 }

@@ -172,6 +172,20 @@ public class RegistrationCenterMachineServiceImpl implements RegistrationCenterM
 		Zone registrationCenterZone = null;
 		userZones = userZones.stream().filter(zone -> zone.getLangCode().equals(primaryLang))
 				.collect(Collectors.toList());
+		if(regRepo.findByIdAndIsDeletedFalseOrNull(regCenterId)==null)
+		{
+			auditUtil.auditRequest(
+					String.format(MasterDataConstant.FAILURE_MAP, RegistrationCenterMachine.class.getCanonicalName()),
+					MasterDataConstant.AUDIT_SYSTEM,
+					String.format(MasterDataConstant.FAILURE_DESC,
+							RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorCode(),
+							RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_NOT_FOUND
+									.getErrorMessage()),
+					"ADM-754");
+			throw new RequestException(
+					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorCode(),
+					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorMessage());
+		}
 		Machine machine = getZoneFromMachineRepoByMachineId(machineId, primaryLang);
 		List<RegistrationCenter> registrationCenters = getZoneFromRegCenterRepoByRegCenterId(regCenterId, primaryLang);
 		for (Zone zone : userZones) {
@@ -185,18 +199,31 @@ public class RegistrationCenterMachineServiceImpl implements RegistrationCenterM
 			}
 		}
 
-		if (!isMachineMappedToUserZone || !isRegCenterMappedToUserZone) {
+		if (!isMachineMappedToUserZone ) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_UNMAP, RegistrationCenterMachine.class.getCanonicalName()),
 					MasterDataConstant.AUDIT_SYSTEM,
 					String.format(MasterDataConstant.FAILURE_DESC,
-							RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_ZONE_INVALID.getErrorCode(),
-							RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_ZONE_INVALID
+							RegistrationCenterMachineErrorCode.REGISTRATION_MACHINE_ZONE_INVALID.getErrorCode(),
+							RegistrationCenterMachineErrorCode.REGISTRATION_MACHINE_ZONE_INVALID
 									.getErrorMessage()),
 					"ADM-750");
 			throw new RequestException(
-					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_ZONE_INVALID.getErrorCode(),
-					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_ZONE_INVALID.getErrorMessage());
+					RegistrationCenterMachineErrorCode.REGISTRATION_MACHINE_ZONE_INVALID.getErrorCode(),
+					RegistrationCenterMachineErrorCode.REGISTRATION_MACHINE_ZONE_INVALID.getErrorMessage());
+		}
+		if (!isRegCenterMappedToUserZone) {
+			auditUtil.auditRequest(
+					String.format(MasterDataConstant.FAILURE_UNMAP, RegistrationCenterMachine.class.getCanonicalName()),
+					MasterDataConstant.AUDIT_SYSTEM,
+					String.format(MasterDataConstant.FAILURE_DESC,
+							RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_ZONE_INVALID.getErrorCode(),
+							RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_ZONE_INVALID
+									.getErrorMessage()),
+					"ADM-750");
+			throw new RequestException(
+					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_ZONE_INVALID.getErrorCode(),
+					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_ZONE_INVALID.getErrorMessage());
 		}
 		Objects.requireNonNull(registrationCenterZone, "registrationCenterZone is empty");
 		String hierarchyPath = registrationCenterZone.getHierarchyPath();
@@ -305,10 +332,8 @@ public class RegistrationCenterMachineServiceImpl implements RegistrationCenterM
 	/**
 	 * Gets the zone from reg center repo by reg center id.
 	 *
-	 * @param regCenterId
-	 *            the reg center id
-	 * @param langCode
-	 *            the lang code
+	 * @param regCenterId the reg center id
+	 * @param langCode    the lang code
 	 * @return the zone from reg center repo by reg center id
 	 */
 	private List<RegistrationCenter> getZoneFromRegCenterRepoByRegCenterId(String regCenterId, String langCode) {
@@ -358,6 +383,20 @@ public class RegistrationCenterMachineServiceImpl implements RegistrationCenterM
 		userZones = userZones.stream().filter(zone -> zone.getLangCode().equals(primaryLang))
 				.collect(Collectors.toList());
 		Machine machine = getZoneFromMachineRepoByMachineId(machineId, primaryLang);
+		if(regRepo.findByIdAndIsDeletedFalseOrNull(regCenterId)==null)
+		{
+			auditUtil.auditRequest(
+					String.format(MasterDataConstant.FAILURE_MAP, RegistrationCenterMachine.class.getCanonicalName()),
+					MasterDataConstant.AUDIT_SYSTEM,
+					String.format(MasterDataConstant.FAILURE_DESC,
+							RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorCode(),
+							RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_NOT_FOUND
+									.getErrorMessage()),
+					"ADM-762");
+			throw new RequestException(
+					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorCode(),
+					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorMessage());
+		}
 		List<RegistrationCenter> registrationCenters = getZoneFromRegCenterRepoByRegCenterId(regCenterId, primaryLang);
 		for (Zone zone : userZones) {
 			if (zone.getCode().equals(machine.getZoneCode())) {
@@ -370,18 +409,31 @@ public class RegistrationCenterMachineServiceImpl implements RegistrationCenterM
 			}
 		}
 
-		if (!isMachineMappedToUserZone || !isRegCenterMappedToUserZone) {
+		if ( !isRegCenterMappedToUserZone) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_MAP, RegistrationCenterMachine.class.getCanonicalName()),
 					MasterDataConstant.AUDIT_SYSTEM,
 					String.format(MasterDataConstant.FAILURE_DESC,
-							RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_ZONE_INVALID.getErrorCode(),
-							RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_ZONE_INVALID
+							RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_ZONE_INVALID.getErrorCode(),
+							RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_ZONE_INVALID
 									.getErrorMessage()),
 					"ADM-745");
 			throw new RequestException(
-					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_ZONE_INVALID.getErrorCode(),
-					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_ZONE_INVALID.getErrorMessage());
+					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_ZONE_INVALID.getErrorCode(),
+					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_ZONE_INVALID.getErrorMessage());
+		}
+		if (!isMachineMappedToUserZone) {
+			auditUtil.auditRequest(
+					String.format(MasterDataConstant.FAILURE_MAP, RegistrationCenterMachine.class.getCanonicalName()),
+					MasterDataConstant.AUDIT_SYSTEM,
+					String.format(MasterDataConstant.FAILURE_DESC,
+							RegistrationCenterMachineErrorCode.REGISTRATION_MACHINE_ZONE_INVALID.getErrorCode(),
+							RegistrationCenterMachineErrorCode.REGISTRATION_MACHINE_ZONE_INVALID
+									.getErrorMessage()),
+					"ADM-745");
+			throw new RequestException(
+					RegistrationCenterMachineErrorCode.REGISTRATION_MACHINE_ZONE_INVALID.getErrorCode(),
+					RegistrationCenterMachineErrorCode.REGISTRATION_MACHINE_ZONE_INVALID.getErrorMessage());
 		}
 		Objects.requireNonNull(registrationCenterZone, "registrationCenterZone is empty");
 		String hierarchyPath = registrationCenterZone.getHierarchyPath();
