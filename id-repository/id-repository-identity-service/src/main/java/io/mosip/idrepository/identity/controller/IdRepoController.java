@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.annotation.Nullable;
 import javax.annotation.Resource;
@@ -155,6 +156,8 @@ public class IdRepoController {
 	@PostMapping(path = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<IdResponseDTO> addIdentity(@Validated @RequestBody IdRequestDTO request,
 			@ApiIgnore Errors errors) throws IdRepoAppException {
+		String regId = Optional.ofNullable(request.getRequest()).map(req -> String.valueOf(req.getRegistrationId()))
+				.orElse("null");
 		try {
 			String uin = getUin(request.getRequest());
 			validator.validateId(request.getId(), CREATE);
@@ -163,17 +166,17 @@ public class IdRepoController {
 			return new ResponseEntity<>(idRepoService.addIdentity(request, uin), HttpStatus.OK);
 		} catch (IdRepoDataValidationException e) {
 			auditHelper.auditError(AuditModules.ID_REPO_CORE_SERVICE, AuditEvents.CREATE_IDENTITY_REQUEST_RESPONSE,
-					request.getRequest().getRegistrationId(), IdType.REG_ID, e);
+					regId, IdType.REG_ID, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_CONTROLLER, ADD_IDENTITY, e.getMessage());
 			throw new IdRepoAppException(DATA_VALIDATION_FAILED, e);
 		} catch (IdRepoAppException e) {
 			auditHelper.auditError(AuditModules.ID_REPO_CORE_SERVICE, AuditEvents.CREATE_IDENTITY_REQUEST_RESPONSE,
-					request.getRequest().getRegistrationId(), IdType.REG_ID, e);
+					regId, IdType.REG_ID, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_CONTROLLER, RETRIEVE_IDENTITY, e.getMessage());
 			throw new IdRepoAppException(e.getErrorCode(), e.getErrorText(), e);
 		} finally {
-			auditHelper.audit(AuditModules.ID_REPO_CORE_SERVICE, AuditEvents.CREATE_IDENTITY_REQUEST_RESPONSE,
-					request.getRequest().getRegistrationId(), IdType.REG_ID, "Create Identity requested");
+			auditHelper.audit(AuditModules.ID_REPO_CORE_SERVICE, AuditEvents.CREATE_IDENTITY_REQUEST_RESPONSE, regId,
+					IdType.REG_ID, "Create Identity requested");
 		}
 	}
 
@@ -250,6 +253,8 @@ public class IdRepoController {
 	@PatchMapping(path = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<IdResponseDTO> updateIdentity(@Validated @RequestBody IdRequestDTO request,
 			@ApiIgnore Errors errors) throws IdRepoAppException {
+		String regId = Optional.ofNullable(request.getRequest()).map(req -> String.valueOf(req.getRegistrationId()))
+				.orElse("null");
 		try {
 			String uin = getUin(request.getRequest());
 			validator.validateId(request.getId(), UPDATE);
@@ -258,17 +263,17 @@ public class IdRepoController {
 			return new ResponseEntity<>(idRepoService.updateIdentity(request, uin), HttpStatus.OK);
 		} catch (IdRepoDataValidationException e) {
 			auditHelper.auditError(AuditModules.ID_REPO_CORE_SERVICE, AuditEvents.UPDATE_IDENTITY_REQUEST_RESPONSE,
-					request.getRequest().getRegistrationId(), IdType.REG_ID, e);
+					regId, IdType.REG_ID, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_CONTROLLER, UPDATE_IDENTITY, e.getMessage());
 			throw new IdRepoAppException(DATA_VALIDATION_FAILED, e);
 		} catch (IdRepoAppException e) {
 			auditHelper.auditError(AuditModules.ID_REPO_CORE_SERVICE, AuditEvents.UPDATE_IDENTITY_REQUEST_RESPONSE,
-					request.getRequest().getRegistrationId(), IdType.REG_ID, e);
+					regId, IdType.REG_ID, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_CONTROLLER, RETRIEVE_IDENTITY, e.getMessage());
 			throw new IdRepoAppException(e.getErrorCode(), e.getErrorText(), e);
 		} finally {
-			auditHelper.audit(AuditModules.ID_REPO_CORE_SERVICE, AuditEvents.UPDATE_IDENTITY_REQUEST_RESPONSE,
-					request.getRequest().getRegistrationId(), IdType.REG_ID, "Update Identity requested");
+			auditHelper.audit(AuditModules.ID_REPO_CORE_SERVICE, AuditEvents.UPDATE_IDENTITY_REQUEST_RESPONSE, regId,
+					IdType.REG_ID, "Update Identity requested");
 		}
 	}
 
@@ -311,6 +316,11 @@ public class IdRepoController {
 	 * @throws IdRepoAppException the id repo app exception
 	 */
 	private String getUin(Object request) throws IdRepoAppException {
+		if (Objects.isNull(request)) {
+			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_CONTROLLER, "getUin", "request is null");
+			throw new IdRepoAppException(MISSING_INPUT_PARAMETER.getErrorCode(),
+					String.format(MISSING_INPUT_PARAMETER.getErrorMessage(), "request"));
+		}
 		Object uin = null;
 		String pathOfUin = env.getProperty(MOSIP_KERNEL_IDREPO_JSON_PATH);
 		try {
@@ -323,8 +333,8 @@ public class IdRepoController {
 			throw new IdRepoAppException(INVALID_REQUEST, e);
 		} catch (JsonPathException e) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_CONTROLLER, "getUin", e.getMessage());
-			throw new IdRepoAppException(MISSING_INPUT_PARAMETER.getErrorCode(), String.format(
-					MISSING_INPUT_PARAMETER.getErrorMessage(), "/" + pathOfUin.replace(".", "/")));
+			throw new IdRepoAppException(MISSING_INPUT_PARAMETER.getErrorCode(),
+					String.format(MISSING_INPUT_PARAMETER.getErrorMessage(), pathOfUin.replace(".", "/")));
 		}
 	}
 }

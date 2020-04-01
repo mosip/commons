@@ -25,7 +25,7 @@ public enum IdRepoErrorConstants {
 	INVALID_REQUEST("IDR-IDC-003", "Invalid Request"),
 	
 	/** The unknown error. */
-	UNKNOWN_ERROR("IDR-IDC-004", "Unknown error occured"),
+	UNKNOWN_ERROR("IDR-IDC-004", "Unknown error occurred"),
 	
 	/** The data validation failed. */
 	DATA_VALIDATION_FAILED("IDR-IDC-005", "Input Data Validation Failed"),
