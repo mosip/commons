@@ -27,7 +27,7 @@ jobs:
     - name: Publish to GitHub Packages Apache Maven
       run: 
         mkdir ~/.m2
-        echo "<settings><servers><server><id>github</id><username>gsasikumar</username><password>${secrets.access_token}</password></server></servers></settings>" > ~/.m2/settings.xml
+        echo "<settings><servers><server><id>github</id><username>gsasikumar</username><password>${{secrets.access_token}}</password></server></servers></settings>" > ~/.m2/settings.xml
         mvn deploy -s $GITHUB_WORKSPACE/settings.xml
       env:
         GITHUB_TOKEN: ${{ secrets.access_token }}
