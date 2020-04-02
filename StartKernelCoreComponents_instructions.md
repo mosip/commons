@@ -61,7 +61,7 @@ To run auth service
 	mvn clean install
 	```
 
-	Step 2.b Start the auth service by the following command, 
+	Step 2.b Start the "\commons\kernel\kernel-auth-service" by the following command, 
   
 	```
 
@@ -76,11 +76,10 @@ To run auth service
 
 	```
 
-Step 3. To verify the auth service, hit the below url from browser
+Step 3. To verify the auth service, use the following swagger URL in browser,
  
 
 ```
-
 http://localhost:8091/v1/authmanager/swagger-ui.html
 ```
 Go to -> authmanager -> authenticate/useridPwd
@@ -141,7 +140,7 @@ Step i: Clone the https://github.com/mosip/mosip-config to your local machine. F
 
   
 
-Step ii: Download the kernel config server jar file to your local directory.
+Step ii: Start the "\commons\kernel\kernel-config-server" by the following command, 
 
   
 
