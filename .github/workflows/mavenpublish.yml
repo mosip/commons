@@ -24,9 +24,11 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
     
-    - name: Publish to GitHub Packages Apache Maven
+    - name: Setup the settings file for Github server
     - run: 
         echo "<settings><servers><server><id>github</id><username>gsasikumar</username><password>${{secrets.access_token}}</password></server></servers></settings>" > $GITHUB_WORKSPACE/settings.xml
+    
+    - name: Publish to GitHub Packages Apache Maven
     - run: 
         mvn deploy -s $GITHUB_WORKSPACE/settings.xml
       env:
