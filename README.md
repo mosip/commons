@@ -29,7 +29,7 @@ The following command should be executed to run a docker image -
 
 #### Run as Developer
 For running services in a native environment developer has to run some core components
-For running core components [Instruction to follow for running core components](./StartKernelCoreComponents_instructions.md) 
+[Instruction to follow for running core components](./StartKernelCoreComponents_instructions.md) 
 ### Configurations
 All the configurations used by the codebase in `mosip-platform` is present in [mosip-config](https://github.com/mosip/mosip-config) repository.
 
