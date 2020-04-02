@@ -5,7 +5,7 @@ name: Maven Package
 
 on:
   release:
-    types: [created, edited, prereleased]
+    types: [created, edited, published]
 
 jobs:
   build:
