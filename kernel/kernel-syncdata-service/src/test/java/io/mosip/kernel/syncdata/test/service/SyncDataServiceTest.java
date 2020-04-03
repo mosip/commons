@@ -1,11 +1,14 @@
 package io.mosip.kernel.syncdata.test.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withBadRequest;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withServerError;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 import java.io.IOException;
+import java.security.PublicKey;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +37,7 @@ import io.mosip.kernel.syncdata.dto.HolidayDto;
 import io.mosip.kernel.syncdata.dto.MachineDto;
 import io.mosip.kernel.syncdata.dto.MachineSpecificationDto;
 import io.mosip.kernel.syncdata.dto.MachineTypeDto;
+import io.mosip.kernel.syncdata.dto.PublicKeyResponse;
 import io.mosip.kernel.syncdata.dto.response.MasterDataResponseDto;
 import io.mosip.kernel.syncdata.exception.SyncDataServiceException;
 import io.mosip.kernel.syncdata.exception.SyncInvalidArgumentException;
@@ -357,7 +361,10 @@ public class SyncDataServiceTest {
 				.andRespond(withSuccess().body(
 						"{ \"id\": null, \"version\": null, \"responsetime\": \"2019-04-24T09:07:42.017Z\", \"metadata\": null, \"response\": { \"lastSyncTime\": \"2019-04-24T09:07:41.771Z\", \"publicKey\": \"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtzi3nWiNMEcaBV2cWO5ZLTBZe1TEGnT95bTvrpEEr-kJLrn80dn9k156zjQpjSzNfEOFVwugTEhEWdxrdrjDUACpA0cF4tUdAM5XJBB0xmzNGS5s7lmcliAOjXbCGU2VJwOUnYV4DSCgrReMCCe6LD_aApwu45OAZ9_sWG6R-jlIUOHLTdDUs6O8zLk8zl7tOX6Rlp25Zk9CLQw1m9drHJqxCbr9Wc9PQKUHBPqhtvCe9ZZeySsZb83dXpKKAZlkjdbrB25i_4O0pbv9LHk0qQlk0twqaef6D5nCTqcB5KQ4QqVYLcrtAhdbMXaDvpSf9syRQ3P3fAeiGkvUIhUWPwIDAQAB\", \"issuedAt\": \"2019-04-23T06:17:46.753\", \"expiryAt\": \"2020-04-23T06:17:46.753\" }, \"errors\": null }"));
 
-		syncConfigDetailsService.getPublicKey("REGISTRATION", "2019-09-09T09:00:00.000Z", "referenceId");
+		PublicKeyResponse<String> publicKeyResponse = syncConfigDetailsService.getPublicKey("REGISTRATION", "2019-09-09T09:00:00.000Z", "referenceId");
+		
+		assertNotNull(publicKeyResponse.getProfile());
+		assertEquals("test", publicKeyResponse.getProfile());
 	}
 
 	@Test(expected = SyncDataServiceException.class)
