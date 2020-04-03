@@ -11,7 +11,7 @@
 	</parent>
 
 	<artifactId>kernel-ridgenerator-service</artifactId>
-
+    <version>1.0.6</version>
 	<name>kernel-ridgenerator-service</name>
     <properties>
     <kernel.core.version>1.0.6</kernel.core.version>

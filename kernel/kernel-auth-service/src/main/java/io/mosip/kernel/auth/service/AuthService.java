@@ -12,9 +12,10 @@ import io.mosip.kernel.auth.dto.AuthZResponseDto;
 import io.mosip.kernel.auth.dto.MosipUserDto;
 import io.mosip.kernel.auth.dto.MosipUserListDto;
 import io.mosip.kernel.auth.dto.MosipUserSaltListDto;
-import io.mosip.kernel.auth.dto.MosipUserTokenDto;
 import io.mosip.kernel.auth.dto.PasswordDto;
 import io.mosip.kernel.auth.dto.RIdDto;
+import io.mosip.kernel.auth.dto.RefreshTokenRequest;
+import io.mosip.kernel.auth.dto.RefreshTokenResponse;
 import io.mosip.kernel.auth.dto.RolesListDto;
 import io.mosip.kernel.auth.dto.UserDetailsResponseDto;
 import io.mosip.kernel.auth.dto.UserNameDto;
@@ -30,7 +31,7 @@ import io.mosip.kernel.auth.dto.ValidationResponseDto;
  */
 public interface AuthService extends AuthZService, AuthNService {
 
-	public MosipUserTokenDto retryToken(String existingToken) throws Exception;
+	public RefreshTokenResponse refreshToken(String refereshToken,String refreshToken, RefreshTokenRequest refreshTokenRequest) throws Exception;
 
 	public AuthNResponse invalidateToken(String token) throws Exception;
 

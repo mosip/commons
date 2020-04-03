@@ -1,6 +1,6 @@
 package io.mosip.kernel.core.saltgenerator.exception;
 
-import io.mosip.kernel.core.exception.BaseCheckedException;
+import io.mosip.kernel.core.exception.BaseUncheckedException;
 import io.mosip.kernel.core.saltgenerator.constant.SaltGeneratorErrorConstants;
 
 /**
@@ -8,7 +8,7 @@ import io.mosip.kernel.core.saltgenerator.constant.SaltGeneratorErrorConstants;
  *
  * @author Manoj SP
  */
-public class SaltGeneratorException extends BaseCheckedException {
+public class SaltGeneratorException extends BaseUncheckedException {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 6748760277721155095L;

@@ -13,7 +13,7 @@
 	<artifactId>kernel-auth-adapter</artifactId>
 	<packaging>jar</packaging>
 	<description>***</description>
-	<version>1.0.6</version>
+	<version>1.0.8-SNAPSHOT</version>
 	<properties>
 		<sonar.skip>true</sonar.skip>
 	</properties>
@@ -89,6 +89,11 @@
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
 			<version>${io.jsonwebtoken.jjwt.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>3.8.1</version>
 		</dependency>
 	</dependencies>
 </project>

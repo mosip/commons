@@ -15,9 +15,6 @@ public class ProxyTokenGenerator {
 	
 	@Value("${auth.local.exp:1000000}")
 	long localExp;
-
-	@Value("${auth.local.secret:secret}")
-	String localSecret;
 	
 	@Value("${auth.local.mobileno}")
 	String mobileNO;
@@ -32,6 +29,6 @@ public class ProxyTokenGenerator {
 		return JWT.create().withSubject(subject).withClaim(AuthConstant.MOBILE, mobileNO)
 				.withClaim(AuthConstant.EMAIL, subject.concat(emailDomain))
 				.withClaim(AuthConstant.ROLES, localUserRoles).withExpiresAt(new Date(exp))
-				.sign(Algorithm.HMAC512(localSecret.getBytes()));
+				.sign(Algorithm.none());
 	}
 }

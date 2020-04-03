@@ -12,6 +12,7 @@
 
 	<artifactId>kernel-crypto-signature</artifactId>
 	<name>kernel-crypto-signature</name>
+	<version>1.0.6</version>
 	<properties>
 	<kernel.core.version>1.0.6</kernel.core.version>
 	<kernel.auth.adaptor.version>1.0.6</kernel.auth.adaptor.version>

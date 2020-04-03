@@ -8,13 +8,14 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
@@ -50,6 +51,7 @@ import io.mosip.kernel.auth.exception.AuthManagerServiceException;
 import io.mosip.kernel.auth.service.OTPGenerateService;
 import io.mosip.kernel.auth.service.OTPService;
 import io.mosip.kernel.auth.service.TokenGenerationService;
+import io.mosip.kernel.auth.util.MemoryCache;
 import io.mosip.kernel.auth.util.OtpValidator;
 import io.mosip.kernel.auth.util.ProxyTokenGenerator;
 import io.mosip.kernel.auth.util.TemplateUtil;
@@ -62,7 +64,8 @@ import io.mosip.kernel.core.http.ResponseWrapper;
  * @author Ramadurai Pandian
  *
  */
-@Component
+@Profile("!local")
+@Service
 public class OTPServiceImpl implements OTPService {
 
 	/*
@@ -78,15 +81,11 @@ public class OTPServiceImpl implements OTPService {
 	@Autowired
 	MosipEnvironment mosipEnvironment;
 
-
 	@Autowired
 	OTPGenerateService oTPGenerateService;
 
 	@Autowired
 	private ObjectMapper mapper;
-
-	@Autowired
-	private TokenGenerationService tokenService;
 
 	@Autowired
 	private TemplateUtil templateUtil;
@@ -129,15 +128,9 @@ public class OTPServiceImpl implements OTPService {
 
 	@Value("${mosip.kernel.prereg.realm-id}")
 	private String preregRealmId;
-
-	@Value("${spring.profiles.active}")
-	String activeProfile;
-
-	@Value("${auth.local.exp:1000000}")
-	long localExp;
 	
 	@Autowired
-	private ProxyTokenGenerator proxyTokenGenerator;
+	private MemoryCache<String, AccessTokenResponse> memoryCache;
 
 	@Override
 	public AuthNResponseDto sendOTP(MosipUserDto mosipUserDto, List<String> otpChannel, String appId) {
@@ -377,17 +370,8 @@ public class OTPServiceImpl implements OTPService {
 		AccessTokenResponse responseAccessTokenResponse = null;
 		String realm = appId.equalsIgnoreCase("preregistration") ? appId : realmId;
 		try {
-			if (activeProfile.equalsIgnoreCase("local")) {
-	             accessTokenResponse = new AccessTokenResponse();
-	             long exp=System.currentTimeMillis()+localExp;
-	             token = proxyTokenGenerator.getProxyToken("AUTH", exp);
-	             accessTokenResponse.setAccess_token(token);
-	             accessTokenResponse.setExpires_in(exp+"");
-				} else {
-					accessTokenResponse = getAuthAccessToken(authClientID, authSecret, realm);
-					token = accessTokenResponse.getAccess_token();
-				}
-		
+			accessTokenResponse = getAuthAccessToken(authClientID, authSecret, realm);
+			token = accessTokenResponse.getAccess_token();
 		} catch (Exception e) {
 			throw new AuthManagerException(String.valueOf(HttpStatus.UNAUTHORIZED.value()), e.getMessage(), e);
 		}
@@ -405,17 +389,7 @@ public class OTPServiceImpl implements OTPService {
 			if (!validationErrorsList.isEmpty()) {
 				throw new AuthManagerServiceException(validationErrorsList);
 			}
-			
-			if (activeProfile.equalsIgnoreCase("local")) {
-				responseAccessTokenResponse = new AccessTokenResponse();
-	             long exp=System.currentTimeMillis()+localExp;
-	             responseAccessTokenResponse = new AccessTokenResponse();
-	             responseAccessTokenResponse.setAccess_token(proxyTokenGenerator.getProxyToken(mosipUser.getUserId(), exp));
-			     responseAccessTokenResponse.setRefresh_token(proxyTokenGenerator.getProxyToken(mosipUser.getUserId(), exp));
-	             responseAccessTokenResponse.setExpires_in(exp+"");	
-			} else {
-					responseAccessTokenResponse = getUserAccessToken(mosipUser.getUserId(), realm);
-				}
+			responseAccessTokenResponse = getUserAccessToken(mosipUser.getUserId(), realm);
 			OtpValidatorResponseDto otpResponse = null;
 			ResponseWrapper<?> responseObject;
 			try {
@@ -528,14 +502,7 @@ public class OTPServiceImpl implements OTPService {
 		AccessTokenResponse accessTokenResponse = null;
 		authOtpValidator.validateOTPUser(otpUser);
 		try {
-			if (activeProfile.equalsIgnoreCase("local")) {
-             accessTokenResponse = new AccessTokenResponse();
-             long exp=System.currentTimeMillis()+localExp;
-             accessTokenResponse.setAccess_token(proxyTokenGenerator.getProxyToken("AUTH", exp));
-             accessTokenResponse.setExpires_in(exp+"");
-			} else {
-				accessTokenResponse = getAuthAccessToken(authClientID, authSecret, otpUser.getAppId());
-			}
+			accessTokenResponse = getAuthAccessToken(authClientID, authSecret, otpUser.getAppId());
 		} catch (HttpClientErrorException | HttpServerErrorException ex) {
 			List<ServiceError> validationErrorsList = ExceptionUtils.getServiceErrorList(ex.getResponseBodyAsString());
 
@@ -683,6 +650,7 @@ public class OTPServiceImpl implements OTPService {
 		MultiValueMap<String, String> tokenRequestBody = null;
 		Map<String, String> pathParams = new HashMap<>();
 		pathParams.put(AuthConstant.REALM_ID, realmId);
+		
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(keycloakOpenIdUrl + "/token");
 		tokenRequestBody = getClientValueMap(clientID, clientSecret);
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(tokenRequestBody, headers);
@@ -712,5 +680,12 @@ public class OTPServiceImpl implements OTPService {
 		map.add(AuthConstant.CLIENT_ID, clientID);
 		map.add(AuthConstant.CLIENT_SECRET, clientSecret);
 		return map;
+	}
+	
+	private AccessTokenResponse getTokenFromMemoryCache(String realm) {
+		if(memoryCache.get(realm)!=null) {
+			return memoryCache.get(realm);
+		}
+		return null;
 	}
 }

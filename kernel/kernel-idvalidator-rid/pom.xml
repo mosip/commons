@@ -6,6 +6,7 @@
     <version>1.0.6</version>
   </parent>
   <artifactId>kernel-idvalidator-rid</artifactId>
+  <version>1.0.6</version>
   <name>kernel-idvalidator-rid</name>
   <description>kernel-idvalidator-rid</description>
   <properties>

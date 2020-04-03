@@ -131,6 +131,44 @@ public class RegistrationCenterServiceHelper {
 
 		return pageDto;
 	}
+	
+	public PageResponseDto<RegistrationCenterSearchDto> searchCenterLocFilter(SearchDto dto,
+			List<List<SearchFilter>> locationFilters, List<SearchFilter> zoneFilter, List<Zone> zones,
+			List<Location> locations) {
+		PageResponseDto<RegistrationCenterSearchDto> pageDto = new PageResponseDto<>();
+		List<RegistrationCenterSearchDto> registrationCenters = null;
+		OptionalFilter zoneOptionalFilter = new OptionalFilter(zoneFilter);
+		Pagination pagination = dto.getPagination();
+		List<SearchSort> sort = dto.getSort();
+		dto.setPagination(new Pagination(0, Integer.MAX_VALUE));
+		dto.setSort(Collections.emptyList());
+		List<RegWorkingNonWorking> workingNonWorkingDays = regWorkingNonWorkingRepo
+				.findByLanguagecode(dto.getLanguageCode());
+		List<RegExceptionalHoliday> exceptionalHoliday = regExceptionalHolidayRepository
+				.findByLangcode(dto.getLanguageCode());
+		int count=0;
+		for(List<SearchFilter> locationFilter:locationFilters) {
+			OptionalFilter optionalFilter = new OptionalFilter(locationFilter);
+		Page<RegistrationCenter> page = masterdataSearchHelper.searchMasterdata(RegistrationCenter.class, dto,
+				new OptionalFilter[] { optionalFilter, zoneOptionalFilter });
+		if (page.getContent() != null && !page.getContent().isEmpty()) {
+			if(count==0) {
+			registrationCenters = MapperUtils.mapAll(page.getContent(), RegistrationCenterSearchDto.class);
+			}else {
+			registrationCenters.retainAll(MapperUtils.mapAll(page.getContent(), RegistrationCenterSearchDto.class));
+			}
+			setCenterMetadata(registrationCenters, locations, zones);
+			setWorkingNonWorking(registrationCenters, workingNonWorkingDays);
+			setExceptionalHoliday(registrationCenters, exceptionalHoliday);
+			pageDto = pageUtils.sortPage(registrationCenters, sort, pagination);
+		}else {
+			pageDto=new PageResponseDto<>();
+			return pageDto;
+		}
+		count++;
+		}
+		return pageDto;
+	}
 
 	private void setExceptionalHoliday(List<RegistrationCenterSearchDto> registrationCenters,
 			List<RegExceptionalHoliday> exceptionalHoliday) {
