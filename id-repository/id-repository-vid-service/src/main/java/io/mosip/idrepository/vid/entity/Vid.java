@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "vid", schema = "idmap")
 @Entity
-public class Vid {
+public class Vid implements Comparable<Vid> {
 
 	/** The Id value */
 	@Id
@@ -75,5 +75,10 @@ public class Vid {
 	/** The value to hold deleted DTimes */
 	@Column(name = "del_dtimes", nullable = true)
 	private LocalDateTime deletedDTimes;
+
+	@Override
+	public int compareTo(Vid vid) {
+		return vid.getCreatedDTimes().compareTo(createdDTimes);
+	}
 
 }
