@@ -166,7 +166,7 @@ public class ProxyAdapterImpl implements FileSystemAdapter {
 			}
 			return FileUtils.openInputStream(file);
 		} catch (IOException e) {
-			LOGGER.error("Packet {} io exceptio occuered", id, ExceptionUtils.getStackTrace(e));
+			LOGGER.error("Packet {} io exceptio occuered {}", id, ExceptionUtils.getStackTrace(e));
 			throw new FSAdapterException(ProxyAdapterErrorCode.HDFS_ADAPTER_EXCEPTION.getErrorCode(),
 					ProxyAdapterErrorCode.HDFS_ADAPTER_EXCEPTION.getErrorMessage(), e);
 		}
