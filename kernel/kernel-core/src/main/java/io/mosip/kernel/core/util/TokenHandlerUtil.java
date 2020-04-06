@@ -1,10 +1,10 @@
-package io.mosip.kernel.auth.adapter.util;
+package io.mosip.kernel.core.util;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 
-import org.jboss.logging.Logger;
-import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTDecodeException;
@@ -12,16 +12,20 @@ import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import io.mosip.kernel.core.exception.ExceptionUtils;
-import io.mosip.kernel.core.util.DateUtils;
+
 
 /**
  * 
  * @author Srinivasan
  *
  */
-@Component
+
 public class TokenHandlerUtil {
-	Logger LOGGER = Logger.getLogger(this.getClass());
+	  private static Logger LOGGER= LoggerFactory.getLogger(TokenHandlerUtil.class);
+	  
+	  private TokenHandlerUtil() {
+		  
+	  }
 
 	/**
 	 * Validates the token offline based on the Oauth2 standards.
@@ -34,7 +38,7 @@ public class TokenHandlerUtil {
 	 *            - client Id to be read from the properties
 	 * @return Boolean
 	 */
-	public boolean isValidBearerToken(String accessToken, String issuerUrl, String clientId) {
+	public static boolean isValidBearerToken(String accessToken, String issuerUrl, String clientId) {
 
 		try {
 			DecodedJWT decodedJWT = JWT.decode(accessToken);
@@ -52,10 +56,10 @@ public class TokenHandlerUtil {
 				return true;
 			}
 		} catch (JWTDecodeException e) {
-			LOGGER.error("JWT DECODE EXCEPTION ::" + e.getMessage() + ExceptionUtils.getStackTrace(e));
+			LOGGER.error("JWT DECODE EXCEPTION ::" .concat(e.getMessage()).concat(ExceptionUtils.getStackTrace(e)));
 			return false;
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage() + ExceptionUtils.getStackTrace(e));
+			LOGGER.error(e.getMessage().concat(ExceptionUtils.getStackTrace(e)));
 			return false;
 		}
 
