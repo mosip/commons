@@ -8,13 +8,12 @@
 		<groupId>io.mosip.kernel</groupId>
 		<artifactId>kernel-parent</artifactId>
 		<version>1.0.6</version>
-		
 	</parent>
     <properties>
     <jwt.version> 3.8.1</jwt.version>
     </properties>
 	<artifactId>kernel-core</artifactId>
-	<version>1.0.7</version>
+	<version>1.0.8-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
