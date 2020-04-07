@@ -40,9 +40,6 @@
             <name>Github Maven Repository</name>
             <url>https://maven.pkg.github.com/mosip/commons</url>
             <layout>default</layout>
-            <snapshots>
-                  <enabled>true</enabled>
-            </snapshots>
           </repository>
           <repository>
             <id>ossrh</id>
@@ -56,23 +53,17 @@
         </repositories>
 
         
-
         <distributionManagement>
-		<repository>
-     			<id>github</id>
-     			<name>GitHub MOSIP Snapshots Packages</name>
-     			<url>https://maven.pkg.github.com/MOSIP/commons</url>
-   		</repository> 
 		<snapshotRepository>
                         <id>ossrh</id>
                         <url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository> 
-                <!-- <repository>
+                 <repository>
                         <id>ossrh</id>
                         <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-                </repository> -->
+                </repository> 
                 
-        </distributionManagement>
+        </distributionManagement> 
         <build>
           <plugins>
             <plugin>
