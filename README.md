@@ -28,12 +28,8 @@ The following command should be executed to run a docker image -
 `docker run -it -p <host-port>:<container-port> -e active_profile_env={profile} -e spring_config_label_env= {branch} -e spring_config_url_env={config_server_url} <docker-registry-IP:docker-registry-port/<dcker-image>`
 
 #### Run as Developer
-Each and every service has separate properties file specific to DEV profile. So as a developer use the following command to run any service locally.
-
-`java -Dspring.profiles.active=dev -Dspring.autoconfigure.exclude[0]=org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration -jar target/<jar-name>.jar`
-
-above command excludes spring security autoconfiguration to ease development. If developer requires spring security autoconfiguration then one could use key-manager-server and auth-manager-server sandbox.
-
+For running services in a native environment developer has to run some core components
+[Instruction to follow for running core components](./StartKernelCoreComponents_instructions.md) 
 ### Configurations
 All the configurations used by the codebase in `mosip-platform` is present in [mosip-config](https://github.com/mosip/mosip-config) repository.
 

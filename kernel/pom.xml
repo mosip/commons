@@ -120,7 +120,7 @@
 
 
 
-		<sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/dto/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/security/**,**/*Config.java,**/*BootApplication.java,**/*VertxApplication.java,**/cbeffutil/**,**/*Utils.java,**/*Validator.java,**/*Helper.java,**/verticle/**,**/VidWriter.java/**,**/masterdata/utils/**,**/spi/**,**/core/http/**,"**/LocationServiceImpl.java","**/RegistrationCenterMachineServiceImpl.java","**/RegistrationCenterServiceImpl.java","**/pridgenerator/**","**/idgenerator/prid"</sonar.coverage.exclusions>
+		<sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/dto/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/security/**,**/*Config.java,**/*BootApplication.java,**/*VertxApplication.java,**/cbeffutil/**,**/*Utils.java,**/*Validator.java,**/*Helper.java,**/verticle/**,**/VidWriter.java/**,**/masterdata/utils/**,**/spi/**,**/core/http/**,"**/LocationServiceImpl.java","**/RegistrationCenterMachineServiceImpl.java","**/RegistrationCenterServiceImpl.java","**/pridgenerator/**","**/idgenerator/prid","**/proxy/**"</sonar.coverage.exclusions>
 		<sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**</sonar.cpd.exclusions>
 	</properties>
 
@@ -162,6 +162,8 @@
 		<module>kernel-idobjectvalidator</module>
 		<module>kernel-bioapi-provider</module>
 		<module>kernel-smsserviceprovider-msg91</module>
+        <module>kernel-fsadapter-proxy</module>
+
 		<module>kernel-uingenerator-service</module>
 		<module>kernel-masterdata-service</module>
 		<module>kernel-auditmanager-service</module>
@@ -178,7 +180,7 @@
 		<module>kernel-signature-service</module>
 		<module>kernel-cryptomanager-service</module>
 		<module>kernel-keymanager-service</module>
-                <module>kernel-vidgenerator-service</module>
+        <module>kernel-vidgenerator-service</module>
 		<!--<module>kernel-salt-generator</module>-->
     <!--<module>kernel-packetstatusupdater-api</module>-->
                 <module>kernel-pridgenerator-service</module>
