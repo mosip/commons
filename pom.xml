@@ -34,13 +34,7 @@
                 </developer>
         </developers>
 
-        <repositories>
-          <repository>
-            <id>github</id>
-            <name>Github Maven Repository</name>
-            <url>https://maven.pkg.github.com/mosip/commons</url>
-            <layout>default</layout>
-          </repository>
+        <repositories>        
           <repository>
             <id>ossrh</id>
             <name>Central Repository</name>
@@ -62,7 +56,6 @@
                         <id>ossrh</id>
                         <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
                 </repository> 
-                
         </distributionManagement> 
         <build>
           <plugins>
