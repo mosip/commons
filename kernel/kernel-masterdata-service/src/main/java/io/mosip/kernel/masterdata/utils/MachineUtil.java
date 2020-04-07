@@ -1,5 +1,7 @@
 package io.mosip.kernel.masterdata.utils;
 
+import java.security.KeyFactory;
+import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.List;
@@ -31,6 +33,8 @@ import io.mosip.kernel.masterdata.repository.RegistrationCenterRepository;
 public class MachineUtil {
 	
 	private final Logger logger = LoggerFactory.getLogger(MachineUtil.class);
+	
+	private static final String ALGORITHM = "RSA";
 
 	@Autowired
 	private MachineTypeRepository machineTypeRepository;
@@ -86,8 +90,10 @@ public class MachineUtil {
 	
 	public String getX509EncodedPublicKey(String encodedKey) {		
 		try {			
-			X509EncodedKeySpec keySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(encodedKey));			
-			return Base64.getEncoder().encodeToString(keySpec.getEncoded());			
+			X509EncodedKeySpec keySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(encodedKey));
+			KeyFactory kf = KeyFactory.getInstance(ALGORITHM);
+			PublicKey publicKey = kf.generatePublic(keySpec);
+			return Base64.getEncoder().encodeToString(publicKey.getEncoded());			
 		} catch (Exception e) {
 			logger.error("Invalid public key provided", e);
 		}
