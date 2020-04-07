@@ -342,7 +342,7 @@ public class SyncClientSettingsIntegrationTest {
 		applications.add(new Application("101", "ENG", "MOSIP", "MOSIP"));
 		machines = new ArrayList<>();
 		machine = new Machine("1001", "Laptop", "9876427", "172.12.01.128", "21:21:21:12", "1001", "ENG", localdateTime,
-				tpmPublicKey, keyIndex, "ZONE", null);
+				encodedTPMPublicKey, keyIndex, "ZONE", null);
 		machines.add(machine);
 		machineSpecification = new ArrayList<>();
 		machineSpecification.add(
@@ -830,7 +830,13 @@ public class SyncClientSettingsIntegrationTest {
 	@WithUserDetails(value = "reg-officer")
 	public void syncSuccessWithOnlyKeyIndex() throws Exception {
 		mockSuccess();
-		mockMvc.perform(get(syncDataUrlWithOnlyKeyIndex)).andExpect(status().isOk());
+		MvcResult result = mockMvc.perform(get(syncDataUrlWithOnlyKeyIndex)).andExpect(status().isOk()).andReturn();
+		try {
+			JSONObject jsonObject = new JSONObject(result.getResponse().getContentAsString());
+			assertNotNull(jsonObject.get("response"));
+		} catch(Throwable t) {
+			Assert.fail("Not expected response!");
+		}
 	}
 	
 	

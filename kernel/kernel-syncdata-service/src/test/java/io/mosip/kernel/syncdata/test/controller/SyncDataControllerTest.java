@@ -1,7 +1,9 @@
 package io.mosip.kernel.syncdata.test.controller;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDateTime;
@@ -17,12 +19,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.signatureutil.model.SignatureResponse;
 import io.mosip.kernel.core.signatureutil.spi.SignatureUtil;
+import io.mosip.kernel.syncdata.constant.MasterDataErrorCode;
 import io.mosip.kernel.syncdata.dto.ApplicationDto;
 import io.mosip.kernel.syncdata.dto.HolidayDto;
 import io.mosip.kernel.syncdata.dto.MachineDto;
@@ -30,10 +38,14 @@ import io.mosip.kernel.syncdata.dto.MachineSpecificationDto;
 import io.mosip.kernel.syncdata.dto.MachineTypeDto;
 import io.mosip.kernel.syncdata.dto.PublicKeyResponse;
 import io.mosip.kernel.syncdata.dto.SyncUserDetailDto;
+import io.mosip.kernel.syncdata.dto.UploadPublicKeyRequestDto;
+import io.mosip.kernel.syncdata.dto.UploadPublicKeyResponseDto;
 import io.mosip.kernel.syncdata.dto.UserDetailMapDto;
 import io.mosip.kernel.syncdata.dto.response.MasterDataResponseDto;
 import io.mosip.kernel.syncdata.dto.response.RolesResponseDto;
+import io.mosip.kernel.syncdata.exception.RequestException;
 import io.mosip.kernel.syncdata.exception.SyncDataServiceException;
+import io.mosip.kernel.syncdata.repository.MachineRepository;
 import io.mosip.kernel.syncdata.repository.RegistrationCenterUserRepository;
 import io.mosip.kernel.syncdata.service.SyncConfigDetailsService;
 import io.mosip.kernel.syncdata.service.SyncMasterDataService;
@@ -72,6 +84,10 @@ public class SyncDataControllerTest {
 
 	JSONObject globalConfigMap = null;
 	JSONObject regCentreConfigMap = null;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
+	
 
 	@Before
 	public void setup() {
@@ -243,4 +259,37 @@ public class SyncDataControllerTest {
 		Mockito.when(syncRolesService.getAllRoles()).thenReturn(rolesResponseDto);
 		mockMvc.perform(get("/roles")).andExpect(status().isOk());
 	}
+	
+	
+	// -----------------AllRoles-------------------------------//
+
+	@WithUserDetails(value = "reg-officer")
+	@Test
+	public void validateMachineMapping() throws Exception {
+		UploadPublicKeyResponseDto resp = new UploadPublicKeyResponseDto("keyindex");
+		when(masterDataService.validateKeyMachineMapping(Mockito.any())).thenReturn(resp);		
+		mockMvc.perform(post("/tpm/publickey/verify").contentType(MediaType.APPLICATION_JSON)
+				.content("{\"machineName\":\"name\",\"publicKey\":\"key\"}")).andExpect(status().isOk());
+	}
+	
+	@WithUserDetails(value = "reg-officer")
+	@Test
+	public void validateMachineMappingWithInvalidInput() throws Exception {
+		MvcResult result = mockMvc.perform(post("/tpm/publickey/verify").contentType(MediaType.APPLICATION_JSON)
+		.content("{\"machineName\":\"name\",\"publicKey\":null}")).andExpect(status().isOk()).andReturn();
+		
+		ResponseWrapper<UploadPublicKeyResponseDto> responseWrapper = objectMapper.readValue(result.getResponse().getContentAsString(),
+				ResponseWrapper.class);
+		
+		assertEquals(MasterDataErrorCode.INVALID_INPUT_REQUEST.getErrorCode(), responseWrapper.getErrors().get(0).getErrorCode());
+	}
+	
+	@WithUserDetails(value = "reg-officer")
+	@Test
+	public void validateMachineMappingException() throws Exception {
+		when(masterDataService.validateKeyMachineMapping(Mockito.any())).thenThrow(RequestException.class);
+		mockMvc.perform(post("/tpm/publickey/verify").contentType(MediaType.APPLICATION_JSON)
+				.content("{\"machineName\":\"name\",\"publicKey\":\"key\"}")).andExpect(status().isOk());
+	}
+	
 }

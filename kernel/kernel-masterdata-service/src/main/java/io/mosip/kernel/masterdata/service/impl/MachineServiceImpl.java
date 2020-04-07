@@ -817,7 +817,8 @@ public class MachineServiceImpl implements MachineService {
 			//machine name to be stored in lowercase
 			machineEntity.setName(machinePostReqDto.getName().toLowerCase());
 			machineEntity.setPublicKey(machineUtil.getX509EncodedPublicKey(machinePostReqDto.getPublicKey()));
-			machineEntity.setKeyIndex(CryptoUtil.computeFingerPrint(CryptoUtil.decodeBase64(machineEntity.getPublicKey()), null));
+			machineEntity.setKeyIndex(CryptoUtil.computeFingerPrint(CryptoUtil.decodeBase64(machineEntity.getPublicKey()), 
+					null).toLowerCase());
 
 			// creating a Machine
 			crtMachine = machineRepository.create(machineEntity);

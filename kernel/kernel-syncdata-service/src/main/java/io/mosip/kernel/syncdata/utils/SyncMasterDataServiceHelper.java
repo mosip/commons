@@ -323,7 +323,7 @@ public class SyncMasterDataServiceHelper {
 			// MachineDto.class);
 			machineDetailList.forEach(machine -> {
 				MachineDto responseDto = new MachineDto();
-				responseDto.setPublicKey(CryptoUtil.encodeBase64(machine.getPublicKey()));
+				responseDto.setPublicKey(machine.getPublicKey());
 				responseDto.setId(machine.getId());
 				responseDto.setIpAddress(machine.getIpAddress());
 				responseDto.setIsActive(machine.getIsActive());
