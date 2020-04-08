@@ -3,6 +3,7 @@ package io.mosip.kernel.masterdata.utils;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
@@ -10,8 +11,10 @@ import java.util.function.Predicate;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +28,9 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+
+import ch.qos.logback.classic.Logger;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.auth.adapter.exception.AuthNException;
@@ -70,7 +76,11 @@ public class AuditUtil {
 
 	@Autowired
 	private ObjectMapper objectMapper;
-
+	
+	@Autowired
+	private Environment env;
+	
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(AuditUtil.class);
 	/**
 	 * Audit request.
 	 *
@@ -125,7 +135,14 @@ public class AuditUtil {
 		auditRequestDto.setSessionUserId(SecurityContextHolder.getContext().getAuthentication().getName());
 		auditRequestDto.setSessionUserName(SecurityContextHolder.getContext().getAuthentication().getName());
 		auditRequestDto.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
-		callAuditManager(auditRequestDto);
+		
+		//if current profile is local or dev donot call this method
+		if(Arrays.stream(env.getActiveProfiles()).anyMatch(
+				   environment -> (environment.equalsIgnoreCase("local")) )) {
+			LOGGER.info("Recieved Audit : "+auditRequestDto.toString());
+			
+		}
+		//callAuditManager(auditRequestDto);
 
 	}
 
