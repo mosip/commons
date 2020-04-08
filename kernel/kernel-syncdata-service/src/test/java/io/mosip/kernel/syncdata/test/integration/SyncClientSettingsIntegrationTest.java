@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
@@ -37,6 +38,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import io.mosip.kernel.core.signatureutil.model.SignatureResponse;
 import io.mosip.kernel.core.signatureutil.spi.SignatureUtil;
 import io.mosip.kernel.core.util.CryptoUtil;
+import io.mosip.kernel.syncdata.constant.MasterDataErrorCode;
 import io.mosip.kernel.syncdata.entity.AppAuthenticationMethod;
 import io.mosip.kernel.syncdata.entity.AppDetail;
 import io.mosip.kernel.syncdata.entity.AppRolePriority;
@@ -1694,7 +1696,14 @@ public class SyncClientSettingsIntegrationTest {
 		mockSuccess();
 		when(registrationCenterMachineRepository.getRegistrationCenterMachineWithKeyIndex(Mockito.anyString()))
 				.thenReturn(new ArrayList<Object[]>());
-		mockMvc.perform(get(syncDataUrl)).andExpect(status().isOk());
+		MvcResult result = mockMvc.perform(get(syncDataUrl)).andExpect(status().isOk()).andReturn();
+		try {
+			JSONObject jsonObject = new JSONObject(result.getResponse().getContentAsString());
+			JSONArray errors =  jsonObject.getJSONArray("errors");
+			assertNotNull(errors);
+			assertEquals(MasterDataErrorCode.INVALID_KEY_INDEX.getErrorCode(), errors.getJSONObject(0).getString("errorCode"));
+		} catch(Throwable t) {
+			Assert.fail("Not expected response!");}
 	}	
 
 	
@@ -1725,6 +1734,27 @@ public class SyncClientSettingsIntegrationTest {
 		} catch(Throwable t) {
 			Assert.fail("Not expected response!");
 		}
+	}
+	
+	@Test
+	@WithUserDetails(value= "reg-officer")
+	public void syncClientSettingsForUpdatedRegCenterId() throws Exception {
+		mockSuccess();
+		String [] regcenterMachineId = {"1001", "230030"};
+		List<Object[]> data = new ArrayList<Object[]>();
+		data.add(regcenterMachineId);
+		
+		when(registrationCenterMachineRepository.getRegistrationCenterMachineWithKeyIndex(Mockito.anyString()))
+				.thenReturn(data);
+		
+		MvcResult result = mockMvc.perform(get(syncDataUrlRegCenterIdWithKeyIndex, "1002")).andExpect(status().isOk()).andReturn();
+		try {
+			JSONObject jsonObject = new JSONObject(result.getResponse().getContentAsString());
+			JSONArray errors =  jsonObject.getJSONArray("errors");
+			assertNotNull(errors);
+			assertEquals(MasterDataErrorCode.REG_CENTER_UPDATED.getErrorCode(), errors.getJSONObject(0).getString("errorCode"));
+		} catch(Throwable t) {
+			Assert.fail("Not expected response!");}
 	}
 
 }

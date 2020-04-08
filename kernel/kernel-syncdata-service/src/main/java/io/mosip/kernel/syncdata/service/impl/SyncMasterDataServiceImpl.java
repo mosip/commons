@@ -656,9 +656,13 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 			
 			String mappedRegCenterId = (String)((Object[])regCenterMachines.get(0))[0];
 			
-			if(mappedRegCenterId == null || ( registrationCenterId != null &&  !mappedRegCenterId.equals(registrationCenterId) ) )
+			if(mappedRegCenterId == null)
 				throw new RequestException(MasterDataErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorCode(),
 						MasterDataErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorMessage());
+			
+			if(registrationCenterId != null &&  !mappedRegCenterId.equals(registrationCenterId))
+				throw new RequestException(MasterDataErrorCode.REG_CENTER_UPDATED.getErrorCode(),
+						MasterDataErrorCode.REG_CENTER_UPDATED.getErrorMessage());
 			
 			return new RegistrationCenterMachineDto(mappedRegCenterId, (String)((Object[])regCenterMachines.get(0))[1]);
 			

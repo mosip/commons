@@ -40,7 +40,7 @@ public interface SyncConfigDetailsService {
 	ConfigDto getConfiguration(String registrationCenterId);
 
 	/**
-	 * Function to get public key
+	 * Function to get public key along with server active profile
 	 * 
 	 * @param applicationId applicationId
 	 * @param timeStamp     timeStamp

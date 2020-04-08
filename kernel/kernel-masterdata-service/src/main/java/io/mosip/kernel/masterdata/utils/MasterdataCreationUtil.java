@@ -41,7 +41,7 @@ import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
  *
  */
 @Repository
-@Transactional(readOnly = true)
+@Transactional
 public class MasterdataCreationUtil {
 
 	private static final String LANGCODE_COLUMN_NAME = "langCode";

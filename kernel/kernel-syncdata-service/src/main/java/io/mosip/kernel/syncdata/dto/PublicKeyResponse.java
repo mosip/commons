@@ -51,5 +51,11 @@ public class PublicKeyResponse<T> {
 	 */
 	@ApiModelProperty(notes = "Timestamp of expiry of public key", required = true)
 	private LocalDateTime expiryAt;
+	
+	/**
+	 * Server profile
+	 */
+	@ApiModelProperty(notes = "Server's active profile")
+	private String profile;
 
 }
