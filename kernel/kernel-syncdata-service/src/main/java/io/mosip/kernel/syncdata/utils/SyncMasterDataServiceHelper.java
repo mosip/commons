@@ -3,6 +3,7 @@ package io.mosip.kernel.syncdata.utils;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -1081,13 +1082,13 @@ public class SyncMasterDataServiceHelper {
 
 	/**
 	 * 
-	 * @param machineId        - machine id
-	 * @param lastUpdated      - last updated time stamp
-	 * @param currentTimeStamp - current time stamp
+	 * @param regCenterId
+	 * @param lastUpdated
+	 * @param currentTimeStamp
 	 * @return list of {@link RegistrationCenterMachineDto}
 	 */
 	@Async
-	public CompletableFuture<List<RegistrationCenterMachineDto>> getRegistrationCenterMachines(String machineId,
+	public CompletableFuture<List<RegistrationCenterMachineDto>> getRegistrationCenterMachines(String regCenterId,
 			LocalDateTime lastUpdated, LocalDateTime currentTimeStamp) {
 		List<RegistrationCenterMachineDto> registrationCenterMachineDtos = null;
 		List<RegistrationCenterMachine> registrationCenterMachines = null;
@@ -1096,7 +1097,7 @@ public class SyncMasterDataServiceHelper {
 				lastUpdated = LocalDateTime.ofEpochSecond(0, 0, ZoneOffset.UTC);
 			}
 			registrationCenterMachines = registrationCenterMachineRepository
-					.findAllLatestCreatedUpdatedDeleted(machineId, lastUpdated, currentTimeStamp);
+					.findAllLatestCreatedUpdatedDeleted(regCenterId, lastUpdated, currentTimeStamp);
 
 		} catch (DataAccessException e) {
 			throw new SyncDataServiceException(MasterDataErrorCode.REG_CENTER_MACHINE_FETCH_EXCEPTION.getErrorCode(),
@@ -1749,13 +1750,13 @@ public class SyncMasterDataServiceHelper {
 	@SuppressWarnings("unchecked")
 	public SyncDataBaseDto getSyncDataBaseDto(Class entityClass, String entityType, List entities) {
 		
-		List<String> list = new ArrayList<String>();
+		List<String> list = Collections.synchronizedList(new ArrayList<String>());
 		
 		if(null != entities) {
 			entities.parallelStream().filter(Objects::nonNull).forEach(obj -> {
 				try {
 					String json = mapper.getObjectAsJsonString(obj);
-					if(json != null) { list.add(mapper.getObjectAsJsonString(obj)); }
+					if(json != null) { list.add(json); }
 				} catch (Exception e) {
 					logger.error("Failed to map "+ entityClass.getSimpleName() +" to json", e);
 				}

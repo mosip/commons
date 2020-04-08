@@ -9,6 +9,7 @@
 		<version>1.0.6</version>
 	</parent>
 	<artifactId>kernel-licensekeymanager-service</artifactId>
+	<version>1.0.6</version>
 	<name>kernel-licensekeymanager-service</name>
 	<properties>
 		<kernel.core.version>1.0.6</kernel.core.version>

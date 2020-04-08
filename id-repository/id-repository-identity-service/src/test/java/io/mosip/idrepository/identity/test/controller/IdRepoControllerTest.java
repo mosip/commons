@@ -444,7 +444,7 @@ public class IdRepoControllerTest {
 			requestDTO.setIdentity(identity);
 			ReflectionTestUtils.invokeMethod(controller, "getUin", requestDTO);
 		} catch (UndeclaredThrowableException e) {
-			assertEquals("IDR-IDC-001 --> Missing Input Parameter - /identity/UIN", e.getCause().getMessage());
+			assertEquals("IDR-IDC-001 --> Missing Input Parameter - identity/UIN", e.getCause().getMessage());
 		}
 	}
 

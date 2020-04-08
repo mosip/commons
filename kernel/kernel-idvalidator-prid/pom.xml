@@ -13,6 +13,7 @@
 		<kernel.core.version>1.0.6</kernel.core.version>
     </properties>
 	<artifactId>kernel-idvalidator-prid</artifactId>
+	<version>1.0.6</version>
 	<name>kernel-idvalidator-prid</name>
 	<dependencies>
 		<dependency>

@@ -4,12 +4,26 @@
 	<parent>
 		<groupId>io.mosip.idrepository</groupId>
 		<artifactId>id-repository-parent</artifactId>
-		<version>1.0.7-SNAPSHOT</version>
+		<version>1.0.6</version>
 	</parent>
 	<artifactId>id-repository-vid-service</artifactId>
-	<version>1.0.7-SNAPSHOT</version>
+	<version>1.0.7</version>
 	<name>vid-service</name>
 	<description>ID-Repository Virtual ID Service</description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
+		<kernel.idvalidator.uin.version>1.0.6</kernel.idvalidator.uin.version>
+		<kernel.idgenerator.vid.version>1.0.6</kernel.idgenerator.vid.version>
+		<kernel.idvalidator.vid.version>1.0.6</kernel.idvalidator.vid.version>
+		<kernel.dataaccess.hibernate.version>1.0.6</kernel.dataaccess.hibernate.version>
+		<id.repository.core.version>1.0.7</id.repository.core.version>
+		<json.schema.validator.version>2.2.10</json.schema.validator.version>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.idrepository</groupId>

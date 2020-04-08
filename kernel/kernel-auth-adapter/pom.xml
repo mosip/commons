@@ -90,5 +90,6 @@
 			<artifactId>jjwt</artifactId>
 			<version>${io.jsonwebtoken.jjwt.version}</version>
 		</dependency>
+		
 	</dependencies>
 </project>

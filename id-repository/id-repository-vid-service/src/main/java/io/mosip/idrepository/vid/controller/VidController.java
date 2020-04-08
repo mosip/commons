@@ -3,6 +3,8 @@ package io.mosip.idrepository.vid.controller;
 import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.DATA_VALIDATION_FAILED;
 import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.INVALID_INPUT_PARAMETER;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -123,20 +125,21 @@ public class VidController {
 	public ResponseEntity<ResponseWrapper<VidResponseDTO>> createVid(
 			@Validated @RequestBody RequestWrapper<VidRequestDTO> request, @ApiIgnore Errors errors)
 			throws IdRepoAppException {
+		String uin = Optional.ofNullable(request.getRequest()).map(req -> String.valueOf(req.getUin())).orElse("null");
 		try {
 			validator.validateId(request.getId(), CREATE);
 			DataValidationUtil.validate(errors);
 			request.getRequest().setVidType(request.getRequest().getVidType().toUpperCase());
 			return new ResponseEntity<>(vidService.generateVid(request.getRequest()), HttpStatus.OK);
 		} catch (IdRepoAppException e) {
-			auditHelper.auditError(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.CREATE_VID,
-					request.getRequest().getUin().toString(), IdType.VID, e);
+			auditHelper.auditError(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.CREATE_VID, uin, IdType.VID, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), VID_CONTROLLER, RETRIEVE_UIN_BY_VID, e.getMessage());
 			throw new IdRepoAppException(e.getErrorCode(), e.getErrorText(), e, CREATE);
 		} finally {
-			auditHelper.audit(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.CREATE_VID,
-					request.getRequest().getUin().toString(), IdType.VID,
-					"Create VID requested for " + request.getRequest().getVidType());
+			String vidType = Optional.ofNullable(request.getRequest()).map(req -> String.valueOf(req.getVidType()))
+					.orElse("null");
+			auditHelper.audit(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.CREATE_VID, uin, IdType.VID,
+					"Create VID requested for " + vidType);
 		}
 	}
 
@@ -257,27 +260,25 @@ public class VidController {
 	public ResponseEntity<ResponseWrapper<VidResponseDTO>> deactivateVIDsForUIN(
 			@Validated @RequestBody RequestWrapper<VidRequestDTO> request, @ApiIgnore Errors errors)
 			throws IdRepoAppException {
+		String uin = Optional.ofNullable(request.getRequest()).map(req -> String.valueOf(req.getUin())).orElse("null");
 		try {
 			validator.validateId(request.getId(), DEACTIVATE);
 			DataValidationUtil.validate(errors);
 			return new ResponseEntity<>(vidService.deactivateVIDsForUIN(String.valueOf(request.getRequest().getUin())),
 					HttpStatus.OK);
 		} catch (InvalidIDException e) {
-			auditHelper.auditError(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.DEACTIVATE_VID,
-					request.getRequest().getUin().toString(), IdType.VID, e);
+			auditHelper.auditError(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.DEACTIVATE_VID, uin, IdType.UIN, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), VID_CONTROLLER, DEACTIVATE_VID, e.getMessage());
 			throw new IdRepoAppException(INVALID_INPUT_PARAMETER.getErrorCode(),
 					String.format(INVALID_INPUT_PARAMETER.getErrorMessage(), UIN));
 		} catch (IdRepoAppException e) {
-			auditHelper.auditError(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.DEACTIVATE_VID,
-					request.getRequest().getUin().toString(), IdType.VID, e);
+			auditHelper.auditError(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.DEACTIVATE_VID, uin, IdType.UIN, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), VID_CONTROLLER, DEACTIVATE_VID, e.getMessage());
 			throw new IdRepoAppException(e.getErrorCode(), e.getErrorText(), e, DEACTIVATE);
 		} finally {
-			auditHelper.audit(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.DEACTIVATE_VID,
-					request.getRequest().getUin().toString(), IdType.VID, "Deactivate VID Requested");
+			auditHelper.audit(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.DEACTIVATE_VID, uin, IdType.UIN,
+					"Deactivate VID Requested");
 		}
-
 	}
 
 	/**
@@ -296,26 +297,24 @@ public class VidController {
 	public ResponseEntity<ResponseWrapper<VidResponseDTO>> reactivateVIDsForUIN(
 			@Validated @RequestBody RequestWrapper<VidRequestDTO> request, @ApiIgnore Errors errors)
 			throws IdRepoAppException {
+		String uin = Optional.ofNullable(request.getRequest()).map(req -> String.valueOf(req.getUin())).orElse("null");
 		try {
 			validator.validateId(request.getId(), REACTIVATE);
 			DataValidationUtil.validate(errors);
 			return new ResponseEntity<>(vidService.reactivateVIDsForUIN(String.valueOf(request.getRequest().getUin())),
 					HttpStatus.OK);
 		} catch (InvalidIDException e) {
-			auditHelper.auditError(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.REACTIVATE_VID,
-					request.getRequest().getUin().toString(), IdType.VID, e);
+			auditHelper.auditError(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.REACTIVATE_VID, uin, IdType.UIN, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), VID_CONTROLLER, DEACTIVATE_VID, e.getMessage());
 			throw new IdRepoAppException(INVALID_INPUT_PARAMETER.getErrorCode(),
 					String.format(INVALID_INPUT_PARAMETER.getErrorMessage(), UIN));
 		} catch (IdRepoAppException e) {
-			auditHelper.auditError(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.REACTIVATE_VID,
-					request.getRequest().getUin().toString(), IdType.VID, e);
+			auditHelper.auditError(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.REACTIVATE_VID, uin, IdType.UIN, e);
 			mosipLogger.error(IdRepoSecurityManager.getUser(), VID_CONTROLLER, DEACTIVATE_VID, e.getMessage());
 			throw new IdRepoAppException(e.getErrorCode(), e.getErrorText(), e, REACTIVATE);
 		} finally {
-			auditHelper.audit(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.REACTIVATE_VID,
-					request.getRequest().getUin().toString(), IdType.VID, "Reactivate VID Requested");
+			auditHelper.audit(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.REACTIVATE_VID, uin, IdType.UIN,
+					"Reactivate VID Requested");
 		}
-
 	}
 }

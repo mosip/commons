@@ -11,7 +11,7 @@
 	</parent>
 
 	<artifactId>kernel-core</artifactId>
-	<version>1.0.7-SNAPSHOT</version>
+	<version>1.0.7</version>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -110,6 +110,11 @@
 			<groupId>io.swagger</groupId>
 			<artifactId>swagger-models</artifactId>
 			<version>${swagger.annotations.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>3.8.1</version>
 		</dependency>
 	</dependencies>
 </project>

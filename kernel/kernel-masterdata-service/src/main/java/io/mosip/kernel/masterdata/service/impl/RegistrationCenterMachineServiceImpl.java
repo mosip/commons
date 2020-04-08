@@ -199,18 +199,31 @@ public class RegistrationCenterMachineServiceImpl implements RegistrationCenterM
 			}
 		}
 
-		if (!isMachineMappedToUserZone || !isRegCenterMappedToUserZone) {
+		if (!isMachineMappedToUserZone ) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_UNMAP, RegistrationCenterMachine.class.getCanonicalName()),
 					MasterDataConstant.AUDIT_SYSTEM,
 					String.format(MasterDataConstant.FAILURE_DESC,
-							RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_ZONE_INVALID.getErrorCode(),
-							RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_ZONE_INVALID
+							RegistrationCenterMachineErrorCode.REGISTRATION_MACHINE_ZONE_INVALID.getErrorCode(),
+							RegistrationCenterMachineErrorCode.REGISTRATION_MACHINE_ZONE_INVALID
 									.getErrorMessage()),
 					"ADM-750");
 			throw new RequestException(
-					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_ZONE_INVALID.getErrorCode(),
-					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_ZONE_INVALID.getErrorMessage());
+					RegistrationCenterMachineErrorCode.REGISTRATION_MACHINE_ZONE_INVALID.getErrorCode(),
+					RegistrationCenterMachineErrorCode.REGISTRATION_MACHINE_ZONE_INVALID.getErrorMessage());
+		}
+		if (!isRegCenterMappedToUserZone) {
+			auditUtil.auditRequest(
+					String.format(MasterDataConstant.FAILURE_UNMAP, RegistrationCenterMachine.class.getCanonicalName()),
+					MasterDataConstant.AUDIT_SYSTEM,
+					String.format(MasterDataConstant.FAILURE_DESC,
+							RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_ZONE_INVALID.getErrorCode(),
+							RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_ZONE_INVALID
+									.getErrorMessage()),
+					"ADM-750");
+			throw new RequestException(
+					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_ZONE_INVALID.getErrorCode(),
+					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_ZONE_INVALID.getErrorMessage());
 		}
 		Objects.requireNonNull(registrationCenterZone, "registrationCenterZone is empty");
 		String hierarchyPath = registrationCenterZone.getHierarchyPath();
@@ -396,18 +409,31 @@ public class RegistrationCenterMachineServiceImpl implements RegistrationCenterM
 			}
 		}
 
-		if (!isMachineMappedToUserZone || !isRegCenterMappedToUserZone) {
+		if ( !isRegCenterMappedToUserZone) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_MAP, RegistrationCenterMachine.class.getCanonicalName()),
 					MasterDataConstant.AUDIT_SYSTEM,
 					String.format(MasterDataConstant.FAILURE_DESC,
-							RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_ZONE_INVALID.getErrorCode(),
-							RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_ZONE_INVALID
+							RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_ZONE_INVALID.getErrorCode(),
+							RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_ZONE_INVALID
 									.getErrorMessage()),
 					"ADM-745");
 			throw new RequestException(
-					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_ZONE_INVALID.getErrorCode(),
-					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_ZONE_INVALID.getErrorMessage());
+					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_ZONE_INVALID.getErrorCode(),
+					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_ZONE_INVALID.getErrorMessage());
+		}
+		if (!isMachineMappedToUserZone) {
+			auditUtil.auditRequest(
+					String.format(MasterDataConstant.FAILURE_MAP, RegistrationCenterMachine.class.getCanonicalName()),
+					MasterDataConstant.AUDIT_SYSTEM,
+					String.format(MasterDataConstant.FAILURE_DESC,
+							RegistrationCenterMachineErrorCode.REGISTRATION_MACHINE_ZONE_INVALID.getErrorCode(),
+							RegistrationCenterMachineErrorCode.REGISTRATION_MACHINE_ZONE_INVALID
+									.getErrorMessage()),
+					"ADM-745");
+			throw new RequestException(
+					RegistrationCenterMachineErrorCode.REGISTRATION_MACHINE_ZONE_INVALID.getErrorCode(),
+					RegistrationCenterMachineErrorCode.REGISTRATION_MACHINE_ZONE_INVALID.getErrorMessage());
 		}
 		Objects.requireNonNull(registrationCenterZone, "registrationCenterZone is empty");
 		String hierarchyPath = registrationCenterZone.getHierarchyPath();

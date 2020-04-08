@@ -48,7 +48,7 @@ public class RegistrationCenterDataHelper {
 	public void retrieveData(final SyncMasterDataServiceHelper serviceHelper, final List<CompletableFuture> futures) {
 		this.registrationCenterTypes = serviceHelper.getRegistrationCenterType(this.machineId, this.lastUpdated, this.currentTimestamp);
 		this.registrationCenters = serviceHelper.getRegistrationCenter(this.machineId, this.lastUpdated, this.currentTimestamp);
-		this.registrationCenterMachines = serviceHelper.getRegistrationCenterMachines(this.machineId, this.lastUpdated, this.currentTimestamp);
+		this.registrationCenterMachines = serviceHelper.getRegistrationCenterMachines(this.regCenterId, this.lastUpdated, this.currentTimestamp);
 		this.registrationCenterDevices = serviceHelper.getRegistrationCenterDevices(this.regCenterId, this.lastUpdated, this.currentTimestamp);
 		this.registrationCenterMachineDevices = serviceHelper.getRegistrationCenterMachineDevices(this.regCenterId, this.lastUpdated, this.currentTimestamp);
 		this.registrationCenterUserMachines = serviceHelper.getRegistrationCenterUserMachines(this.regCenterId, this.lastUpdated, this.currentTimestamp);

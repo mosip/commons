@@ -192,5 +192,18 @@ public class CbeffImpl implements CbeffUtil {
 	public List<BIRType> getBIRDataFromXMLType(byte[] xmlBytes, String type) throws Exception {
 		return CbeffValidator.getBIRDataFromXMLType(xmlBytes, type);
 	}
+	
+	//TODO for testing, will be removed later
+//	public static void main(String arg[]) throws Exception
+//	{
+//		Map<String,String> test= new CbeffImpl().getBDBBasedOnType(readCreatedXML(),"Iris",null);
+//		System.out.println(test.size());
+//		
+//	}
+//	
+//	private static byte[] readCreatedXML() throws IOException {
+//		byte[] fileContent = Files.readAllBytes(Paths.get("C:\\Users\\M1046464\\Downloads\\cbeff1.xml"));
+//		return fileContent;
+//	}
 
 }

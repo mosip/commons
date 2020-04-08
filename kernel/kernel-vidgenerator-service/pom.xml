@@ -20,6 +20,7 @@
 		<kernel.templatemanager.velocity.version>1.0.6</kernel.templatemanager.velocity.version>
 	</properties>
 	<artifactId>kernel-vidgenerator-service</artifactId>
+	<version>1.0.6</version>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
