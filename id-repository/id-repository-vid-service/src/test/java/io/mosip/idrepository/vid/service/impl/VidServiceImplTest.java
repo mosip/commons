@@ -154,6 +154,44 @@ public class VidServiceImplTest {
 		assertEquals(vidResponse.getResponse().getVidStatus(), vid.getStatusCode());
 	}
 
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testCreateVidAutoRestore() throws IdRepoAppException, JsonParseException, JsonMappingException, IOException {
+		when(securityManager.hash(Mockito.any())).thenReturn("123");
+		when(restBuilder.buildRequest(Mockito.any(), Mockito.any(), Mockito.any(Class.class)))
+				.thenReturn(new RestRequestDTO());
+		IdResponseDTO identityResponse = new IdResponseDTO();
+		ResponseDTO response = new ResponseDTO();
+		response.setStatus("ACTIVATED");
+		identityResponse.setResponse(response);
+		when(restHelper.requestSync(Mockito.any())).thenReturn(identityResponse);
+		VidPolicy policy = new VidPolicy();
+		policy.setAllowedInstances(1);
+		policy.setAutoRestoreAllowed(true);
+		policy.setRestoreOnAction("REVOKED");
+		when(vidPolicyProvider.getPolicy(Mockito.any())).thenReturn(policy);
+		Vid vid = new Vid();
+		vid.setVid("123");
+		vid.setStatusCode("");
+		when(vidRepo.findByUinHashAndStatusCodeAndVidTypeCodeAndExpiryDTimesAfter(Mockito.any(), Mockito.any(),
+				Mockito.any(), Mockito.any())).thenReturn(Collections.singletonList(vid), Collections.emptyList());
+		when(vidRepo.save(Mockito.any())).thenReturn(vid);
+		VidRequestDTO request = new VidRequestDTO();
+		request.setUin(2953190571L);
+		when(uinEncryptSaltRepo.retrieveSaltById(Mockito.anyInt())).thenReturn("7C9JlRD32RnFTzAmeTfIzg");
+		when(uinHashSaltRepo.retrieveSaltById(Mockito.anyInt())).thenReturn("AG7JQI1HwFp_cI_DcdAQ9A");
+		RestRequestDTO restReq = new RestRequestDTO();
+		when(restBuilder.buildRequest(RestServicesConstants.VID_GENERATOR_SERVICE, null, ResponseWrapper.class)).thenReturn(restReq);
+		ResponseWrapper<Object> responseWrapper = new ResponseWrapper<>();
+		ObjectNode node = mapper.createObjectNode();
+		node.put("vid", "12345");
+		responseWrapper.setResponse(mapper.readValue(node.toString(), Object.class));
+		when(restHelper.requestSync(restReq)).thenReturn(responseWrapper);
+		ResponseWrapper<VidResponseDTO> vidResponse = service.generateVid(request);
+		assertEquals(vidResponse.getResponse().getVid().toString(), vid.getVid());
+		assertEquals(vidResponse.getResponse().getVidStatus(), vid.getStatusCode());
+	}
+
 	@Test
 	public void testCreateVidInstanceFail() throws RestServiceException, IdRepoDataValidationException, JsonParseException, JsonMappingException, IOException {
 		when(securityManager.hash(Mockito.any())).thenReturn("123");
@@ -187,8 +225,8 @@ public class VidServiceImplTest {
 		try {
 			service.generateVid(request);
 		} catch (IdRepoAppException e) {
-			assertEquals(IdRepoErrorConstants.VID_GENERATION_FAILED.getErrorCode(), e.getErrorCode());
-			assertEquals(IdRepoErrorConstants.VID_GENERATION_FAILED.getErrorMessage(), e.getErrorText());
+			assertEquals(IdRepoErrorConstants.VID_POLICY_FAILED.getErrorCode(), e.getErrorCode());
+			assertEquals(IdRepoErrorConstants.VID_POLICY_FAILED.getErrorMessage(), e.getErrorText());
 		}
 	}
 
