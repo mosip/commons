@@ -30,6 +30,7 @@ import io.mosip.kernel.masterdata.dto.ValidDocCategoryAndDocTypeResponseDto;
 import io.mosip.kernel.masterdata.dto.ValidDocCategoryDto;
 import io.mosip.kernel.masterdata.dto.ValidDocumentDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
+import io.mosip.kernel.masterdata.dto.getresponse.ValidDocumentMapDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.DocumentCategoryExtnDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.DocumentCategoryTypeMappingExtnDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.DocumentCategoryTypeMappingFilterDto;
@@ -193,6 +194,31 @@ public class ValidDocumentServiceImpl implements ValidDocumentService {
 		}
 		validDocCategoryAndDocTypeResponseDto.setDocumentcategories(categoryDtos);
 		return validDocCategoryAndDocTypeResponseDto;
+	}
+	
+	@Override
+	public List<ValidDocumentMapDto> getValidDocumentByDocCategoryCode(String docCatCode, String langCode) {
+		
+		List<ValidDocumentMapDto> validDocumentDtos = new ArrayList<ValidDocumentMapDto>();
+		DocumentType documentType=null;
+		try {
+			
+			List<ValidDocument> validDocuments = documentRepository.findByDocCategoryCodeAndLangCode(docCatCode, langCode);
+			for (ValidDocument validDocument : validDocuments) {
+					ValidDocumentMapDto validDocumentDto = new ValidDocumentMapDto();
+					documentType=documentTypeRepository.findByCodeAndLangCode(validDocument.getDocTypeCode(), validDocument.getLangCode());
+					validDocumentDto.setDocCategoryCode(validDocument.getDocCategoryCode());
+					validDocumentDto.setDocTypeCode(validDocument.getDocTypeCode());
+					validDocumentDto.setDocTypeName(documentType.getName());
+					validDocumentDto.setIsActive(validDocument.getIsActive());
+					validDocumentDto.setLangCode(validDocument.getLangCode());
+					validDocumentDtos.add(validDocumentDto);
+				}		
+			} catch (DataAccessLayerException | DataAccessException e) {
+			throw new MasterDataServiceException(ValidDocumentErrorCode.VALID_DOCUMENT_FETCH_EXCEPTION.getErrorCode(),
+					ValidDocumentErrorCode.VALID_DOCUMENT_FETCH_EXCEPTION.getErrorMessage());
+		}
+		return validDocumentDtos;
 	}
 
 	/*

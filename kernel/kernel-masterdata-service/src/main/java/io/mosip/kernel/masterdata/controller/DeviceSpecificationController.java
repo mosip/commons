@@ -236,13 +236,13 @@ public class DeviceSpecificationController {
 	@ResponseFilter
 	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
 	@PostMapping("/devicespecifications/filtervalues")
-	public ResponseWrapper<FilterResponseDto> deviceSpecificationFilterValues(
+	public ResponseWrapper<FilterResponseCodeDto> deviceSpecificationFilterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> requestWrapper) {
 		auditUtil.auditRequest(
 				MasterDataConstant.FILTER_API_IS_CALLED + DeviceSpecificationDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,
 				MasterDataConstant.FILTER_API_IS_CALLED + DeviceSpecificationDto.class.getCanonicalName(), "ADM-645");
-		ResponseWrapper<FilterResponseDto> responseWrapper = new ResponseWrapper<>();
+		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(deviceSpecificationService.deviceSpecFilterValues(requestWrapper.getRequest()));
 		auditUtil.auditRequest(MasterDataConstant.SUCCESSFUL_FILTER + DeviceSpecificationDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,

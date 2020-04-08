@@ -58,5 +58,12 @@ public interface DeviceTypeService {
 	 * @return the {@link FilterResponseDto}.
 	 */
 	public FilterResponseCodeDto deviceTypeFilterValues(FilterValueDto filterValueDto);
+	
+	/**
+	 * method to create DeviceType
+	 * @param request
+	 * @return
+	 */
+	public CodeAndLanguageCodeID updateDeviceType(DeviceTypeDto request);
 
 }

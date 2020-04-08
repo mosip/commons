@@ -1,9 +1,12 @@
 package io.mosip.kernel.masterdata.service;
 
+import java.util.List;
+
 import io.mosip.kernel.masterdata.dto.DocCategoryAndTypeMappingResponseDto;
 import io.mosip.kernel.masterdata.dto.ValidDocCategoryAndDocTypeResponseDto;
 import io.mosip.kernel.masterdata.dto.ValidDocumentDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
+import io.mosip.kernel.masterdata.dto.getresponse.ValidDocumentMapDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.DocumentCategoryTypeMappingExtnDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.ValidDocumentExtnDto;
 import io.mosip.kernel.masterdata.dto.postresponse.DocCategoryAndTypeResponseDto;
@@ -94,5 +97,7 @@ public interface ValidDocumentService {
 	 * @return {@link DocCategoryAndTypeMappingResponseDto}.
 	 */
 	public DocCategoryAndTypeMappingResponseDto unmapDocCategoryAndDocType(String docCatCode, String docTypeCode);
+
+	public List<ValidDocumentMapDto> getValidDocumentByDocCategoryCode(String langCode, String languagecode);
 
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -83,6 +84,38 @@ public class DeviceTypeController {
 				"ADM-631");
 		return responseWrapper;
 	}
+
+	
+	/**
+	 * update list of device Type details to the Database
+	 * 
+	 * @param deviceTypes input from user Device Type DTO
+	 * 
+	 * @return {@link CodeAndLanguageCodeID}
+	 */
+	@ResponseFilter
+	@PutMapping("/devicetypes")
+	@PreAuthorize("hasRole('GLOBAL_ADMIN')")
+	@ApiOperation(value = "Service to save Device Type", notes = "Saves Device Type and return Device Code and Languge Code")
+	@ApiResponses({
+			@ApiResponse(code = 201, message = "When Device Type successfully created", response = CodeAndLanguageCodeID.class),
+			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
+			@ApiResponse(code = 500, message = "While creating Device Type any error occured") })
+	public ResponseWrapper<CodeAndLanguageCodeID> updateDeviceType(
+			@Valid @RequestBody RequestWrapper<DeviceTypeDto> deviceTypes) {
+		auditUtil.auditRequest(MasterDataConstant.CREATE_API_IS_CALLED + DeviceTypeDto.class.getCanonicalName(),
+				MasterDataConstant.AUDIT_SYSTEM,
+				MasterDataConstant.CREATE_API_IS_CALLED + DeviceTypeDto.class.getCanonicalName(), "ADM-630");
+		ResponseWrapper<CodeAndLanguageCodeID> responseWrapper = new ResponseWrapper<>();
+		responseWrapper.setResponse(deviceTypeService.updateDeviceType(deviceTypes.getRequest()));
+		auditUtil.auditRequest(
+				String.format(MasterDataConstant.SUCCESSFUL_CREATE, DeviceTypeDto.class.getCanonicalName()),
+				MasterDataConstant.AUDIT_SYSTEM,
+				String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC, DeviceTypeDto.class.getCanonicalName()),
+				"ADM-631");
+		return responseWrapper;
+	}
+
 
 	/**
 	 * This controller method provides with all device types.

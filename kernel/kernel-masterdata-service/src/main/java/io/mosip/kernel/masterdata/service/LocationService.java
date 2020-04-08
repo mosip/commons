@@ -16,6 +16,7 @@ import io.mosip.kernel.masterdata.dto.postresponse.CodeResponseDto;
 import io.mosip.kernel.masterdata.dto.postresponse.PostLocationCodeResponseDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
+import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.LocationPostResponseDto;
 import io.mosip.kernel.masterdata.dto.response.LocationPutResponseDto;
@@ -136,7 +137,7 @@ public interface LocationService {
 	 * @param filterValueDto
 	 * @return names corresponding to the eneted filter dto
 	 */
-	public FilterResponseDto locationFilterValues(FilterValueDto filterValueDto);
+	public FilterResponseCodeDto locationFilterValues(FilterValueDto filterValueDto);
 
 	public LocationLevelResponseDto getLocationCodeByLangCode(String langCode);
 }

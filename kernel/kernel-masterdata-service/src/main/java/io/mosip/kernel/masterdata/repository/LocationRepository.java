@@ -120,11 +120,11 @@ public interface LocationRepository extends BaseRepository<Location, CodeAndLang
 	@Query("FROM Location l where l.hierarchyName=?1 and lower(l.name) like ?2 and l.langCode=?3 and l.isActive=true and (l.isDeleted is null or l.isDeleted=false)")
 	List<Location> findAllHierarchyNameAndNameValueForTextFilter(String hierarchyName, String text, String langCode);
 
-	@Query("SELECT DISTINCT l.name FROM Location l where l.hierarchyName=?1 and l.langCode=?2 and l.isActive=true and (l.isDeleted is null or l.isDeleted=false)")
-	List<String> findDistinctHierarchyNameAndNameValueForEmptyTextFilter(String hierarchyName, String langCode);
+	@Query("FROM Location l where l.hierarchyName=?1 and l.langCode=?2 and l.isActive=true and (l.isDeleted is null or l.isDeleted=false)")
+	List<Location> findDistinctHierarchyNameAndNameValueForEmptyTextFilter(String hierarchyName, String langCode);
 
-	@Query("SELECT DISTINCT l.name FROM Location l where l.hierarchyName=?1 and lower(l.name) like ?2 and l.langCode=?3 and l.isActive=true and (l.isDeleted is null or l.isDeleted=false)")
-	List<String> findDistinctHierarchyNameAndNameValueForTextFilter(String hierarchyName, String text, String langCode);
+	@Query("FROM Location l where l.hierarchyName=?1 and lower(l.name) like ?2 and l.langCode=?3 and l.isActive=true and (l.isDeleted is null or l.isDeleted=false)")
+	List<Location> findDistinctHierarchyNameAndNameValueForTextFilter(String hierarchyName, String text, String langCode);
 
 	@Query(value = "FROM Location l where (l.isDeleted is null or l.isDeleted=false)")
 	List<Location> findAllNonDeleted();

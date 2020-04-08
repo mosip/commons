@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.masterdata.constant.MachineSpecificationErrorCode;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
+import io.mosip.kernel.masterdata.dto.FilterData;
 import io.mosip.kernel.masterdata.dto.MachineSpecificationDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.MachineSpecificationExtnDto;
@@ -28,7 +29,9 @@ import io.mosip.kernel.masterdata.dto.request.Pagination;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
 import io.mosip.kernel.masterdata.dto.request.SearchFilter;
 import io.mosip.kernel.masterdata.dto.request.SearchSort;
+import io.mosip.kernel.masterdata.dto.response.ColumnCodeValue;
 import io.mosip.kernel.masterdata.dto.response.ColumnValue;
+import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.entity.Machine;
@@ -371,23 +374,22 @@ public class MachineSpecificationServiceImpl implements MachineSpecificationServ
 	 * FilterValueDto)
 	 */
 	@Override
-	public FilterResponseDto machineSpecificationFilterValues(FilterValueDto filterValueDto) {
-		FilterResponseDto filterResponseDto = new FilterResponseDto();
-		List<ColumnValue> columnValueList = new ArrayList<>();
-		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), MachineSpecification.class)) {
+	public FilterResponseCodeDto machineSpecificationFilterValues(FilterValueDto filterValueDto) {
+		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
+		List<ColumnCodeValue> columnValueList = new ArrayList<>();
+		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), Machine.class)) {
 			for (FilterDto filterDto : filterValueDto.getFilters()) {
-				masterDataFilterHelper.filterValues(MachineSpecification.class, filterDto, filterValueDto)
-						.forEach(filterValue -> {
-							if (filterValue != null) {
-								ColumnValue columnValue = new ColumnValue();
-								columnValue.setFieldID(filterDto.getColumnName());
-								columnValue.setFieldValue(filterValue.toString());
-								columnValueList.add(columnValue);
-							}
-						});
+				List<FilterData> filterValues = masterDataFilterHelper.filterValuesWithCode(MachineSpecification.class, filterDto,
+						filterValueDto,"id");
+				filterValues.forEach(filterValue -> {
+					ColumnCodeValue columnValue = new ColumnCodeValue();
+					columnValue.setFieldCode(filterValue.getFieldCode());
+					columnValue.setFieldID(filterDto.getColumnName());
+					columnValue.setFieldValue(filterValue.getFieldValue());
+					columnValueList.add(columnValue);
+				});
 			}
 			filterResponseDto.setFilters(columnValueList);
-
 		}
 		return filterResponseDto;
 	}
