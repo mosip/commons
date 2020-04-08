@@ -21,6 +21,7 @@ import io.mosip.kernel.masterdata.constant.DeviceSpecificationErrorCode;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.dto.DeviceSpecificationDto;
 import io.mosip.kernel.masterdata.dto.DeviceTypeDto;
+import io.mosip.kernel.masterdata.dto.FilterData;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.DeviceSpecificationExtnDto;
 import io.mosip.kernel.masterdata.dto.postresponse.IdResponseDto;
@@ -38,6 +39,7 @@ import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.entity.Device;
 import io.mosip.kernel.masterdata.entity.DeviceSpecification;
 import io.mosip.kernel.masterdata.entity.DeviceType;
+import io.mosip.kernel.masterdata.entity.MachineSpecification;
 import io.mosip.kernel.masterdata.entity.id.IdAndLanguageCodeID;
 import io.mosip.kernel.masterdata.exception.DataNotFoundException;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
@@ -321,8 +323,8 @@ public class DeviceSpecificationServiceImpl implements DeviceSpecificationServic
 		List<ColumnCodeValue> columnValueList = new ArrayList<>();
 		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), DeviceSpecification.class)) {
 			for (FilterDto filterDto : filterValueDto.getFilters()) {
-				List<ColumnCodeValue> filterValues = masterDataFilterHelper.filterValues(DeviceSpecification.class, filterDto,
-						filterValueDto);
+				List<FilterData> filterValues = masterDataFilterHelper.filterValuesWithCode(DeviceSpecification.class, filterDto,
+						filterValueDto,"id");
 				filterValues.forEach(filterValue -> {
 					ColumnCodeValue columnValue = new ColumnCodeValue();
 					columnValue.setFieldCode(filterValue.getFieldCode());

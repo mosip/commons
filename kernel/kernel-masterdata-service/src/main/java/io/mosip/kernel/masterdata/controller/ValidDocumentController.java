@@ -1,5 +1,7 @@
 package io.mosip.kernel.masterdata.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -24,6 +26,7 @@ import io.mosip.kernel.masterdata.dto.DocCategoryAndTypeMappingResponseDto;
 import io.mosip.kernel.masterdata.dto.ValidDocCategoryAndDocTypeResponseDto;
 import io.mosip.kernel.masterdata.dto.ValidDocumentDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
+import io.mosip.kernel.masterdata.dto.getresponse.ValidDocumentMapDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.DocumentCategoryTypeMappingExtnDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.ValidDocumentExtnDto;
 import io.mosip.kernel.masterdata.dto.postresponse.DocCategoryAndTypeResponseDto;
@@ -111,7 +114,7 @@ public class ValidDocumentController {
 		responseWrapper.setResponse(documentService.getValidDocumentByLangCode(langCode));
 		return responseWrapper;
 	}
-
+	
 	/**
 	 * This controller method provides with all valid documents.
 	 * 
@@ -204,6 +207,24 @@ public class ValidDocumentController {
 
 		ResponseWrapper<DocCategoryAndTypeMappingResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(documentService.unmapDocCategoryAndDocType(docCatCode, docTypeCode));
+		return responseWrapper;
+	}
+	/**
+	 * Service to fetch all valid document categories and associated document types
+	 * for a docCate
+	 * 
+	 * @param langCode language in which document categories and associated document
+	 *                 types should be fetch
+	 * @return the valid documents
+	 */
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','ZONAL_APPROVER','PRE_REGISTRATION_ADMIN','PRE_REGISTRATION')")
+	@ResponseFilter
+	@GetMapping("/validdocuments/{docCategoryCode}/{languagecode}")
+	@ApiOperation(value = "Service to fetch all valid document categories and associated document types for a docCategoryCode")
+	public ResponseWrapper<List<ValidDocumentMapDto>> getValidDocumentByDocCategoryCode(
+			@PathVariable("docCategoryCode") String docCategoryCode, @PathVariable("languagecode") String languagecode) {
+		ResponseWrapper<List<ValidDocumentMapDto>> responseWrapper = new ResponseWrapper<>();
+		responseWrapper.setResponse(documentService.getValidDocumentByDocCategoryCode(docCategoryCode,languagecode));
 		return responseWrapper;
 	}
 }

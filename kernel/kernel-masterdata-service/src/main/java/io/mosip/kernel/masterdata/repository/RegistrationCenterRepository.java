@@ -117,7 +117,7 @@ public interface RegistrationCenterRepository extends BaseRepository<Registratio
 	 * @return - the fetched registration center entity.
 	 */
 	@Query("FROM RegistrationCenter WHERE id= ?1 and (isDeleted is null or isDeleted =false) and isActive = true")
-	RegistrationCenter findByIdAndIsDeletedFalseOrNull(String id);
+	List<RegistrationCenter> findByIdAndIsDeletedFalseOrNull(String id);
 
 	/**
 	 * This method triggers query to set the isDeleted to true for a registration

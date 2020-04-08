@@ -192,7 +192,7 @@ public class DocumentCategoryController {
 	 * @param orderBy    the order to be used
 	 * @return the response i.e. pages containing the document category details.
 	 */
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','CENTRAL_ADMIN')")
+	//@PreAuthorize("hasAnyRole('ZONAL_ADMIN','CENTRAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping("/documentcategories/all")
 	@ApiOperation(value = "Retrieve all the document category with metadata", notes = "Retrieve all the document categories")

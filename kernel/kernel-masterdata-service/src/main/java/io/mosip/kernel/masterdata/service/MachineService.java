@@ -9,6 +9,7 @@ import io.mosip.kernel.masterdata.dto.getresponse.extn.MachineExtnDto;
 import io.mosip.kernel.masterdata.dto.postresponse.IdResponseDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
+import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.MachineSearchDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
@@ -111,7 +112,7 @@ public interface MachineService {
 	 * @param filterValueDto the filter DTO.
 	 * @return the {@link FilterResponseDto}.
 	 */
-	public FilterResponseDto machineFilterValues(FilterValueDto filterValueDto);
+	public FilterResponseCodeDto machineFilterValues(FilterValueDto filterValueDto);
 
 	/**
 	 * Abstract method to save Machine Details to the Database

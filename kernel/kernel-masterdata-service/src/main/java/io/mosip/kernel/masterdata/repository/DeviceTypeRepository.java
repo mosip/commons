@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import io.mosip.kernel.core.dataaccess.spi.repository.BaseRepository;
 import io.mosip.kernel.masterdata.entity.DeviceType;
+import io.mosip.kernel.masterdata.entity.MachineType;
 
 /**
  * Repository function to fetching Device Type details
@@ -20,5 +21,8 @@ public interface DeviceTypeRepository extends BaseRepository<DeviceType, String>
 
 	@Query("FROM DeviceType d where (isDeleted is null OR isDeleted = false) AND isActive = true")
 	List<DeviceType> findAllDeviceTypeByIsActiveAndIsDeletedFalseOrNull();
-
+	
+	@Query(value="FROM DeviceType d where d.code = ?1 and d.langCode =?2")
+	DeviceType findDeviceTypeByCodeAndByLangCode(String code, String langCode);
+	
 }

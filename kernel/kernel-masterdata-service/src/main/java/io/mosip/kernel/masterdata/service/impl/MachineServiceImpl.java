@@ -25,6 +25,7 @@ import io.mosip.kernel.core.util.StringUtils;
 import io.mosip.kernel.masterdata.constant.MachineErrorCode;
 import io.mosip.kernel.masterdata.constant.MachinePutReqDto;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
+import io.mosip.kernel.masterdata.dto.FilterData;
 import io.mosip.kernel.masterdata.dto.MachineDto;
 import io.mosip.kernel.masterdata.dto.MachinePostReqDto;
 import io.mosip.kernel.masterdata.dto.MachineRegistrationCenterDto;
@@ -39,7 +40,9 @@ import io.mosip.kernel.masterdata.dto.request.Pagination;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
 import io.mosip.kernel.masterdata.dto.request.SearchFilter;
 import io.mosip.kernel.masterdata.dto.request.SearchSort;
+import io.mosip.kernel.masterdata.dto.response.ColumnCodeValue;
 import io.mosip.kernel.masterdata.dto.response.ColumnValue;
+import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.MachineSearchDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
@@ -669,9 +672,9 @@ public class MachineServiceImpl implements MachineService {
 	 * mosip.kernel.masterdata.dto.request.FilterValueDto)
 	 */
 	@Override
-	public FilterResponseDto machineFilterValues(FilterValueDto filterValueDto) {
-		FilterResponseDto filterResponseDto = new FilterResponseDto();
-		List<ColumnValue> columnValueList = new ArrayList<>();
+	public FilterResponseCodeDto machineFilterValues(FilterValueDto filterValueDto) {
+		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
+		List<ColumnCodeValue> columnValueList = new ArrayList<>();
 		List<Zone> zones = zoneUtils.getUserZones();
 		List<SearchFilter> zoneFilter = new ArrayList<>();
 		if (zones != null && !zones.isEmpty()) {
@@ -682,14 +685,17 @@ public class MachineServiceImpl implements MachineService {
 		}
 		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), Machine.class)) {
 			for (FilterDto filterDto : filterValueDto.getFilters()) {
-				List<?> filterValues = masterDataFilterHelper.filterValues(Machine.class, filterDto, filterValueDto);
+				List<FilterData> filterValues = masterDataFilterHelper.filterValuesWithCode(Machine.class, filterDto,
+						filterValueDto,"id");
 				filterValues.forEach(filterValue -> {
-					ColumnValue columnValue = new ColumnValue();
+					ColumnCodeValue columnValue = new ColumnCodeValue();
+					columnValue.setFieldCode(filterValue.getFieldCode());
 					columnValue.setFieldID(filterDto.getColumnName());
-					columnValue.setFieldValue(filterValue.toString());
+					columnValue.setFieldValue(filterValue.getFieldValue());
 					columnValueList.add(columnValue);
 				});
 			}
+
 			filterResponseDto.setFilters(columnValueList);
 		}
 		return filterResponseDto;

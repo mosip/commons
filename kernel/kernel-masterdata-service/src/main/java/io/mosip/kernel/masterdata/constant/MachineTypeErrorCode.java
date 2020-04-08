@@ -11,7 +11,8 @@ public enum MachineTypeErrorCode {
 
 	MACHINE_TYPE_INSERT_EXCEPTION("KER-MSD-061", "Error occurred while inserting Machine Type details"),
 	MACHINE_TYPE_FETCH_EXCEPTION("KER-MSD-062", "Error occurred while fetching Machine Type details"),
-	MACHINE_TYPE_NOT_FOUND("KER-MSD-063", "Machine Type Not Found");
+	MACHINE_TYPE_NOT_FOUND("KER-MSD-063", "Machine Type Not Found"),
+	MACHINE_TYPE_UPDATE_EXCEPTION("KER-MSD-064", "Error occurred while updating Machine Type details");
 
 	private final String errorCode;
 	private final String errorMessage;

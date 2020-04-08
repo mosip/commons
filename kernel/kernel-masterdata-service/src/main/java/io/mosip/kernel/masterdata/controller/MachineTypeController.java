@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -76,6 +77,36 @@ public class MachineTypeController {
 				MasterDataConstant.CREATE_API_IS_CALLED + MachineTypeDto.class.getCanonicalName(), "ADM-651");
 		ResponseWrapper<CodeAndLanguageCodeID> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(machinetypeService.createMachineType(machineType.getRequest()));
+		auditUtil.auditRequest(
+				String.format(MasterDataConstant.SUCCESSFUL_CREATE, MachineTypeDto.class.getCanonicalName()),
+				MasterDataConstant.AUDIT_SYSTEM,
+				String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC, MachineTypeDto.class.getCanonicalName()),
+				"ADM-652");
+		return responseWrapper;
+	}
+	/**
+	 * Put API to update a new row of Machine Type data
+	 * 
+	 * @param machineType input Machine Type DTO from user
+	 * 
+	 * @return ResponseEntity Machine Type Code and Language Code which is
+	 *         successfully inserted
+	 * 
+	 */
+	@ResponseFilter
+	@PutMapping("/machinetypes")
+	@PreAuthorize("hasRole('GLOBAL_ADMIN')")
+	@ApiOperation(value = "Service to save Machine Type", notes = "Saves MachineType and return  code and Languge Code")
+	@ApiResponses({ @ApiResponse(code = 201, message = "When Machine Type successfully created"),
+			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
+			@ApiResponse(code = 500, message = "While creating Machine Type any error occured") })
+	public ResponseWrapper<CodeAndLanguageCodeID> updateMachineType(
+			@Valid @RequestBody RequestWrapper<MachineTypeDto> machineType) {
+		auditUtil.auditRequest(MasterDataConstant.CREATE_API_IS_CALLED + MachineTypeDto.class.getCanonicalName(),
+				MasterDataConstant.AUDIT_SYSTEM,
+				MasterDataConstant.CREATE_API_IS_CALLED + MachineTypeDto.class.getCanonicalName(), "ADM-651");
+		ResponseWrapper<CodeAndLanguageCodeID> responseWrapper = new ResponseWrapper<>();
+		responseWrapper.setResponse(machinetypeService.updateMachineType(machineType.getRequest()));
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.SUCCESSFUL_CREATE, MachineTypeDto.class.getCanonicalName()),
 				MasterDataConstant.AUDIT_SYSTEM,

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,6 +38,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/registereddevices")
 @Api(tags = { "Registered Device" })
+@Validated
 public class RegisteredDeviceController {
 
 	@Autowired
@@ -49,7 +51,7 @@ public class RegisteredDeviceController {
 	 * 
 	 * @param registeredDevicePostDto
 	 * @return ResponseWrapper<String>
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@ResponseFilter
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN')")
@@ -64,7 +66,8 @@ public class RegisteredDeviceController {
 	/**
 	 * Api to de-register Device.
 	 * 
-	 * @param request the request DTO.
+	 * @param request
+	 *            the request DTO.
 	 * @return the {@link DeviceRegisterResponseDto}.
 	 */
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN')")
@@ -81,8 +84,8 @@ public class RegisteredDeviceController {
 	@ApiOperation(value = "Update status of the devive")
 	@PutMapping("/update/status")
 	public ResponseEntity<ResponseDto> deRegisterDevice(
-			@NotBlank @RequestParam(name = "deviceCode", required = true) String deviceCode,
-			@NotBlank @RequestParam(name = "statusCode", required = true) String statusCode) {
+			@NotBlank @RequestParam(name = "deviceCode") String deviceCode,
+			@NotBlank @RequestParam(name = "statusCode") String statusCode) {
 		return new ResponseEntity<>(registeredDeviceService.updateStatus(deviceCode, statusCode), HttpStatus.OK);
 	}
 

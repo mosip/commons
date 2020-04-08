@@ -14,11 +14,14 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
+import io.mosip.kernel.core.util.EmptyCheckUtils;
+import io.mosip.kernel.masterdata.constant.IndividualTypeErrorCode;
 import io.mosip.kernel.masterdata.constant.MachineTypeErrorCode;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.dto.FilterData;
 import io.mosip.kernel.masterdata.dto.MachineTypeDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
+import io.mosip.kernel.masterdata.dto.getresponse.extn.IndividualTypeExtnDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.MachineTypeExtnDto;
 import io.mosip.kernel.masterdata.dto.request.FilterDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
@@ -29,11 +32,13 @@ import io.mosip.kernel.masterdata.dto.response.ColumnValue;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
+import io.mosip.kernel.masterdata.entity.IndividualType;
 import io.mosip.kernel.masterdata.entity.Machine;
 import io.mosip.kernel.masterdata.entity.MachineType;
 import io.mosip.kernel.masterdata.entity.id.CodeAndLanguageCodeID;
 import io.mosip.kernel.masterdata.exception.DataNotFoundException;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
+import io.mosip.kernel.masterdata.exception.RequestException;
 import io.mosip.kernel.masterdata.repository.MachineTypeRepository;
 import io.mosip.kernel.masterdata.service.MachineTypeService;
 import io.mosip.kernel.masterdata.utils.AuditUtil;
@@ -125,8 +130,35 @@ public class MachineTypeServiceImpl implements MachineTypeService {
 		MapperUtils.map(renMachineType, codeLangCodeId);
 		return codeLangCodeId;
 	}
-
-	/*
+	
+	@Override
+	public CodeAndLanguageCodeID updateMachineType(MachineTypeDto machineTypeDto) {
+		CodeAndLanguageCodeID codeAndLanguageCodeID = new CodeAndLanguageCodeID();
+		try {
+			MachineType machineType = machineTypeRepository.findMachineTypeByCodeAndByLangCode(machineTypeDto.getCode(),machineTypeDto.getLangCode());
+			if (!EmptyCheckUtils.isNullEmpty(machineType)) {
+				MetaDataUtils.setUpdateMetaData(machineTypeDto, machineType, false);
+				machineTypeRepository.update(machineType);
+				MapperUtils.map(machineType, codeAndLanguageCodeID);
+			} else {
+				throw new RequestException(MachineTypeErrorCode.MACHINE_TYPE_NOT_FOUND.getErrorCode(),
+						MachineTypeErrorCode.MACHINE_TYPE_NOT_FOUND.getErrorMessage());
+			}
+		} catch (DataAccessLayerException | DataAccessException e) {
+			auditUtil.auditRequest(
+					String.format(MasterDataConstant.FAILURE_CREATE, MachineType.class.getCanonicalName()),
+					MasterDataConstant.AUDIT_SYSTEM,
+					String.format(MasterDataConstant.FAILURE_DESC,
+							MachineTypeErrorCode.MACHINE_TYPE_UPDATE_EXCEPTION.getErrorCode(),
+							MachineTypeErrorCode.MACHINE_TYPE_UPDATE_EXCEPTION.getErrorMessage()),
+					"ADM-657");
+			throw new MasterDataServiceException(MachineTypeErrorCode.MACHINE_TYPE_UPDATE_EXCEPTION.getErrorCode(),
+					MachineTypeErrorCode.MACHINE_TYPE_UPDATE_EXCEPTION.getErrorMessage()
+							+ ExceptionUtils.parseException(e));
+		}
+		return codeAndLanguageCodeID;
+	}
+	/*codeLangCodeId
 	 * (non-Javadoc)
 	 * 
 	 * @see
@@ -210,5 +242,4 @@ public class MachineTypeServiceImpl implements MachineTypeService {
 		}
 		return filterResponseDto;
 	}
-
 }

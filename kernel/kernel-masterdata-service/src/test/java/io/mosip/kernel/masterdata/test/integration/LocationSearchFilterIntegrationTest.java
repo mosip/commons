@@ -42,7 +42,6 @@ import io.mosip.kernel.masterdata.dto.request.SearchSort;
 import io.mosip.kernel.masterdata.dto.response.LocationSearchDto;
 import io.mosip.kernel.masterdata.entity.Location;
 import io.mosip.kernel.masterdata.repository.LocationRepository;
-import io.mosip.kernel.masterdata.test.TestBootApplication;
 import io.mosip.kernel.masterdata.utils.AuditUtil;
 import io.mosip.kernel.masterdata.utils.MasterDataFilterHelper;
 import io.mosip.kernel.masterdata.utils.PageUtils;
@@ -53,7 +52,7 @@ import io.mosip.kernel.masterdata.utils.PageUtils;
  * @since 1.0.0
  *
  */
-@SpringBootTest(classes = TestBootApplication.class)
+@SpringBootTest
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 public class LocationSearchFilterIntegrationTest {
@@ -381,7 +380,7 @@ public class LocationSearchFilterIntegrationTest {
 
 		when(locationRepository.findLocationAllHierarchyNames()).thenReturn(hierarchyNames);
 		when(locationRepository.findDistinctHierarchyNameAndNameValueForEmptyTextFilter(Mockito.anyString(),
-				Mockito.anyString())).thenReturn(hierarchyNames);
+				Mockito.anyString()));
 
 		mockMvc.perform(post("/locations/filtervalues").contentType(MediaType.APPLICATION_JSON).content(json))
 				.andExpect(status().isOk());
@@ -428,7 +427,7 @@ public class LocationSearchFilterIntegrationTest {
 
 		when(locationRepository.findLocationAllHierarchyNames()).thenReturn(hierarchyNames);
 		when(locationRepository.findDistinctHierarchyNameAndNameValueForTextFilter(Mockito.anyString(),
-				Mockito.anyString(), Mockito.anyString())).thenReturn(hierarchyNames);
+				Mockito.anyString(), Mockito.anyString()));
 
 		mockMvc.perform(post("/locations/filtervalues").contentType(MediaType.APPLICATION_JSON).content(json))
 				.andExpect(status().isOk());

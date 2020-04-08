@@ -29,6 +29,7 @@ import io.mosip.kernel.masterdata.dto.postresponse.IdResponseDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
 import io.mosip.kernel.masterdata.dto.response.DeviceSearchDto;
+import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.entity.Device;
@@ -245,12 +246,12 @@ public class DeviceController {
 	@ResponseFilter
 	@PostMapping("/filtervalues")
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
-	public ResponseWrapper<FilterResponseDto> deviceFilterValues(
+	public ResponseWrapper<FilterResponseCodeDto> deviceFilterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
 		auditUtil.auditRequest(MasterDataConstant.FILTER_API_IS_CALLED + DeviceDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,
 				MasterDataConstant.FILTER_API_IS_CALLED + DeviceDto.class.getCanonicalName(), "ADM-505");
-		ResponseWrapper<FilterResponseDto> responseWrapper = new ResponseWrapper<>();
+		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(deviceService.deviceFilterValues(request.getRequest()));
 		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_FILTER, DeviceDto.class.getCanonicalName()),
 				MasterDataConstant.AUDIT_SYSTEM,
@@ -268,7 +269,7 @@ public class DeviceController {
 	@ResponseFilter
 	@ApiOperation(value = "Decommission Device")
 	@PutMapping("/decommission/{deviceId}")
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
+	//@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	public ResponseWrapper<IdResponseDto> decommissionDevice(@PathVariable("deviceId") String deviceId) {
 		auditUtil.auditRequest(MasterDataConstant.DECOMMISION_API_CALLED + DeviceDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,

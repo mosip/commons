@@ -12,7 +12,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
+import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.kernel.masterdata.constant.DeviceTypeErrorCode;
+import io.mosip.kernel.masterdata.constant.MachineTypeErrorCode;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.dto.DeviceTypeDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
@@ -26,9 +28,11 @@ import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.entity.DeviceType;
+import io.mosip.kernel.masterdata.entity.MachineType;
 import io.mosip.kernel.masterdata.entity.id.CodeAndLanguageCodeID;
 import io.mosip.kernel.masterdata.exception.DataNotFoundException;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
+import io.mosip.kernel.masterdata.exception.RequestException;
 import io.mosip.kernel.masterdata.repository.DeviceTypeRepository;
 import io.mosip.kernel.masterdata.service.DeviceTypeService;
 import io.mosip.kernel.masterdata.utils.AuditUtil;
@@ -111,6 +115,43 @@ public class DeviceTypeServiceImpl implements DeviceTypeService {
 		CodeAndLanguageCodeID codeLangCodeId = new CodeAndLanguageCodeID();
 		MapperUtils.map(renDeviceType, codeLangCodeId);
 		return codeLangCodeId;
+	}
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.mosip.kernel.masterdata.service.DeviceTypeService#createDeviceTypes(io.
+	 * mosip.kernel.masterdata.dto.RequestDto)
+	 */
+	@Override
+	public CodeAndLanguageCodeID updateDeviceType(DeviceTypeDto deviceTypeDto) {
+		CodeAndLanguageCodeID codeAndLanguageCodeID=new CodeAndLanguageCodeID();
+		//DeviceType deviceType=null;
+		try {
+			DeviceType deviceType = deviceTypeRepository.findDeviceTypeByCodeAndByLangCode(deviceTypeDto.getCode(), deviceTypeDto.getLangCode());
+			if (!EmptyCheckUtils.isNullEmpty(deviceType)) {
+				MetaDataUtils.setUpdateMetaData(deviceTypeDto, deviceType, false);
+				deviceTypeRepository.update(deviceType);
+				MapperUtils.map(deviceType, codeAndLanguageCodeID);
+			} else {
+				throw new RequestException(DeviceTypeErrorCode.DEVICE_TYPE_NOT_FOUND_EXCEPTION.getErrorCode(),
+						DeviceTypeErrorCode.DEVICE_TYPE_NOT_FOUND_EXCEPTION.getErrorMessage());
+			}
+		} catch (DataAccessLayerException | DataAccessException
+				| IllegalArgumentException | SecurityException e) {
+			auditUtil.auditRequest(
+					String.format(MasterDataConstant.FAILURE_CREATE, DeviceType.class.getCanonicalName()),
+					MasterDataConstant.AUDIT_SYSTEM,
+					String.format(MasterDataConstant.FAILURE_DESC,
+							DeviceTypeErrorCode.DEVICE_TYPE_INSERT_EXCEPTION.getErrorCode(),
+							DeviceTypeErrorCode.DEVICE_TYPE_INSERT_EXCEPTION.getErrorMessage()),
+					"ADM-637");
+			throw new MasterDataServiceException(DeviceTypeErrorCode.DEVICE_TYPE_UPDATE_EXCEPTION.getErrorCode(),
+					DeviceTypeErrorCode.DEVICE_TYPE_UPDATE_EXCEPTION.getErrorMessage()
+							+ ExceptionUtils.parseException(e));
+		}
+		//MapperUtils.map(deviceType, codeAndLanguageCodeID);
+		return codeAndLanguageCodeID;
 	}
 
 	/*
