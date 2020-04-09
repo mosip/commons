@@ -13,10 +13,14 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 import io.mosip.kernel.core.exception.ExceptionUtils;
 
-public class TokenHandlerUtil {
+/**
+ * 
+ * @author Srinivasan
+ *
+ */
 
-	
-	private static Logger LOGGER= LoggerFactory.getLogger(TokenHandlerUtil.class);
+public class TokenHandlerUtil {
+	  private static Logger LOGGER= LoggerFactory.getLogger(TokenHandlerUtil.class);
 	  
 	  private TokenHandlerUtil() {
 		  
@@ -59,6 +63,5 @@ public class TokenHandlerUtil {
 		}
 
 	}
-
-	
+  
 }
