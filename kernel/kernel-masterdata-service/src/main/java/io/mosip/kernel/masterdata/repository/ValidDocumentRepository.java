@@ -29,6 +29,24 @@ public interface ValidDocumentRepository extends BaseRepository<ValidDocument, V
 	 */
 	@Query("FROM ValidDocument WHERE docCategoryCode=?1 AND (isDeleted is null OR isDeleted = false) and isActive = true")
 	List<ValidDocument> findByDocCategoryCode(String code);
+	
+	/**
+	 * Method to find valid document based on code provided.
+	 * 
+	 * @param code the document category code.
+	 * @return list of valid document.
+	 */
+	@Query("FROM ValidDocument v WHERE v.docCategoryCode=?1 and v.langCode=?2 AND (isDeleted is null OR isDeleted = false) and isActive = true")
+	List<ValidDocument> findByDocCategoryCodeAndLangCode(String code, String langCode);
+	
+	/**
+	 * Method to find valid document based on code provided.
+	 * 
+	 * @param code the document category code.
+	 * @return list of valid document.
+	 */
+	@Query("FROM ValidDocument WHERE docCategoryCode=?1 AND (isDeleted is null OR isDeleted = false) and isActive = true")
+	ValidDocument findByDocCategCode(String code);
 
 	/**
 	 * Method to find valid document based on code provided.

@@ -29,6 +29,7 @@ import io.mosip.kernel.masterdata.constant.LocationErrorCode;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.constant.MasterdataSearchErrorCode;
 import io.mosip.kernel.masterdata.constant.ValidationErrorCode;
+import io.mosip.kernel.masterdata.dto.FilterData;
 import io.mosip.kernel.masterdata.dto.LocationCreateDto;
 import io.mosip.kernel.masterdata.dto.LocationDto;
 import io.mosip.kernel.masterdata.dto.LocationLevelDto;
@@ -46,13 +47,16 @@ import io.mosip.kernel.masterdata.dto.request.Pagination;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
 import io.mosip.kernel.masterdata.dto.request.SearchFilter;
 import io.mosip.kernel.masterdata.dto.request.SearchSort;
+import io.mosip.kernel.masterdata.dto.response.ColumnCodeValue;
 import io.mosip.kernel.masterdata.dto.response.ColumnValue;
+import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.LocationPostResponseDto;
 import io.mosip.kernel.masterdata.dto.response.LocationPutResponseDto;
 import io.mosip.kernel.masterdata.dto.response.LocationSearchDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.entity.Location;
+import io.mosip.kernel.masterdata.entity.MachineType;
 import io.mosip.kernel.masterdata.exception.DataNotFoundException;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
 import io.mosip.kernel.masterdata.exception.RequestException;
@@ -779,9 +783,15 @@ public class LocationServiceImpl implements LocationService {
 				locationSearchDto.setCreatedDateTime(p.getCreatedDateTime());
 				locationSearchDto.setDeletedDateTime(p.getDeletedDateTime());
 				locationSearchDto.setIsActive(p.getIsActive());
+				locationSearchDto.setLangCode(p.getLangCode());
+				locationSearchDto.setName(p.getName());
+				locationSearchDto.setHierarchyLevel(p.getHierarchyLevel());
+				locationSearchDto.setHierarchyName(p.getHierarchyName());
+				locationSearchDto.setParentLocCode(p.getParentLocCode());
 				locationSearchDto.setIsDeleted(p.getIsDeleted());
 				locationSearchDto.setUpdatedBy(p.getUpdatedBy());
 				locationSearchDto.setUpdatedDateTime(p.getUpdatedDateTime());
+				locationSearchDto.setCode(p.getCode());
 			});
 			responseDto.add(locationSearchDto);
 		});
@@ -838,9 +848,14 @@ public class LocationServiceImpl implements LocationService {
 				locationSearchDto.setCreatedDateTime(p.getCreatedDateTime());
 				locationSearchDto.setDeletedDateTime(p.getDeletedDateTime());
 				locationSearchDto.setIsActive(p.getIsActive());
+				locationSearchDto.setHierarchyLevel(p.getHierarchyLevel());
+				locationSearchDto.setHierarchyName(p.getHierarchyName());
+				locationSearchDto.setParentLocCode(p.getParentLocCode());
 				locationSearchDto.setIsDeleted(p.getIsDeleted());
 				locationSearchDto.setUpdatedBy(p.getUpdatedBy());
 				locationSearchDto.setUpdatedDateTime(p.getUpdatedDateTime());
+				locationSearchDto.setCode(p.getCode());
+				locationSearchDto.setName(p.getName());
 			});
 			responseDto.add(locationSearchDto);
 		});
@@ -899,9 +914,9 @@ public class LocationServiceImpl implements LocationService {
 	 * io. mosip.kernel.masterdata.dto.request.FilterValueDto)
 	 */
 	@Override
-	public FilterResponseDto locationFilterValues(FilterValueDto filterValueDto) {
-		FilterResponseDto filterResponseDto = new FilterResponseDto();
-		List<ColumnValue> columnValueList = new ArrayList<>();
+	public FilterResponseCodeDto locationFilterValues(FilterValueDto filterValueDto) {
+		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
+		List<ColumnCodeValue> columnValueList = new ArrayList<>();
 		List<String> hierarchyNames = null;
 		try {
 			hierarchyNames = locationRepository.findLocationAllHierarchyNames();
@@ -946,34 +961,37 @@ public class LocationServiceImpl implements LocationService {
 				}
 				if (filter.getType().equals(FilterColumnEnum.UNIQUE.toString())) {
 					if (filter.getColumnName().equals(MasterDataConstant.IS_ACTIVE)) {
-						List<String> filterValues = masterDataFilterHelper.filterValues(Location.class, filter,
-								filterValueDto);
+						List<FilterData> filterValues = masterDataFilterHelper.filterValuesWithCode(Location.class, filter,
+								filterValueDto,"code");
 						filterValues.forEach(filterValue -> {
-							ColumnValue columnValue = new ColumnValue();
-							columnValue.setFieldID(MasterDataConstant.IS_ACTIVE);
-							columnValue.setFieldValue(filterValue);
+							ColumnCodeValue columnValue = new ColumnCodeValue();
+							columnValue.setFieldCode(filterValue.getFieldCode());
+							columnValue.setFieldID(filter.getColumnName());
+							columnValue.setFieldValue(filterValue.getFieldValue());
 							columnValueList.add(columnValue);
 						});
 					}
 					if (filter.getText() == null || filter.getText().isEmpty()) {
-						List<String> locationNames = locationRepository
+						List<Location> locationNames = locationRepository
 								.findDistinctHierarchyNameAndNameValueForEmptyTextFilter(filter.getColumnName(),
 										langCode);
 						locationNames.forEach(locationName -> {
-							ColumnValue columnValue = new ColumnValue();
+							ColumnCodeValue columnValue = new ColumnCodeValue();
 							columnValue.setFieldID(filter.getColumnName());
-							columnValue.setFieldValue(locationName);
+							columnValue.setFieldValue(locationName.getName());
+							columnValue.setFieldCode(locationName.getCode());
 							columnValueList.add(columnValue);
 						});
 
 					} else {
-						List<String> locationNames = locationRepository
+						List<Location> locationNames = locationRepository
 								.findDistinctHierarchyNameAndNameValueForTextFilter(filter.getColumnName(),
 										"%" + filter.getText().toLowerCase() + "%", langCode);
 						locationNames.forEach(locationName -> {
-							ColumnValue columnValue = new ColumnValue();
+							ColumnCodeValue columnValue = new ColumnCodeValue();
 							columnValue.setFieldID(filter.getColumnName());
-							columnValue.setFieldValue(locationName);
+							columnValue.setFieldValue(locationName.getName());
+							columnValue.setFieldCode(locationName.getCode());
 							columnValueList.add(columnValue);
 						});
 					}
@@ -983,9 +1001,10 @@ public class LocationServiceImpl implements LocationService {
 						List<Location> locations = locationRepository
 								.findAllHierarchyNameAndNameValueForEmptyTextFilter(filter.getColumnName(), langCode);
 						locations.forEach(loc -> {
-							ColumnValue columnValue = new ColumnValue();
+							ColumnCodeValue columnValue = new ColumnCodeValue();
 							columnValue.setFieldID(filter.getColumnName());
 							columnValue.setFieldValue(loc.getName());
+							columnValue.setFieldCode(loc.getCode());
 							columnValueList.add(columnValue);
 						});
 
@@ -993,9 +1012,10 @@ public class LocationServiceImpl implements LocationService {
 						List<Location> locations = locationRepository.findAllHierarchyNameAndNameValueForTextFilter(
 								filter.getColumnName(), "%" + filter.getText().toLowerCase() + "%", langCode);
 						locations.forEach(loc -> {
-							ColumnValue columnValue = new ColumnValue();
+							ColumnCodeValue columnValue = new ColumnCodeValue();
 							columnValue.setFieldID(filter.getColumnName());
 							columnValue.setFieldValue(loc.getName());
+							columnValue.setFieldCode(loc.getCode());
 							columnValueList.add(columnValue);
 						});
 					}

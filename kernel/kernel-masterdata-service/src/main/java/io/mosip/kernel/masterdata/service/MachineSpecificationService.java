@@ -6,6 +6,7 @@ import io.mosip.kernel.masterdata.dto.getresponse.extn.MachineSpecificationExtnD
 import io.mosip.kernel.masterdata.dto.postresponse.IdResponseDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
+import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.entity.id.IdAndLanguageCodeID;
@@ -91,6 +92,6 @@ public interface MachineSpecificationService {
 	 * @param filterValueDto the filter DTO.
 	 * @return the {@link FilterResponseDto}.
 	 */
-	public FilterResponseDto machineSpecificationFilterValues(FilterValueDto filterValueDto);
+	public FilterResponseCodeDto machineSpecificationFilterValues(FilterValueDto filterValueDto);
 
 }

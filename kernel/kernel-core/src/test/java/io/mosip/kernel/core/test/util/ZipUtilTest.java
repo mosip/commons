@@ -148,7 +148,7 @@ public class ZipUtilTest {
 	 */
 
 	// @Test
-	public void unzipDTest() throws FileNotFoundException, IOException, java.io.IOException {
+	public void unzipDTest() throws Exception {
 
 		String outputUnZip = "unzip";
 		ClassLoader classLoader = getClass().getClassLoader();
@@ -174,7 +174,7 @@ public class ZipUtilTest {
 	}
 
 	@Test(expected = IOException.class)
-	public void unZipDirNotFoundExceptionTest() throws FileNotFoundException, IOException {
+	public void unZipDirNotFoundExceptionTest() throws Exception {
 		String outputFile = "";
 		String outputUnZip = "";
 		ZipUtils.unZipDirectory(outputFile, outputUnZip);

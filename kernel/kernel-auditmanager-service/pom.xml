@@ -14,8 +14,8 @@
 		<kernel.core.version>1.0.6</kernel.core.version>
 		<kernel.auth-adapter.version>1.0.8-SNAPSHOT</kernel.auth-adapter.version>
 		<kernel.applicant-type.version>1.0.6</kernel.applicant-type.version>
-		 <kernel.dataaccess-hibernate.version>1.0.6</kernel.dataaccess-hibernate.version>
-		 <kernel.audit-api.version>1.0.6</kernel.audit-api.version>
+		<kernel.dataaccess-hibernate.version>1.0.6</kernel.dataaccess-hibernate.version>
+		<kernel.audit-api.version>1.0.6</kernel.audit-api.version>
 		<kernel.logger.version>1.0.6</kernel.logger.version>
 	</properties>
 	<dependencies>

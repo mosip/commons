@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,16 +15,21 @@ import org.springframework.web.bind.annotation.RestController;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
+import io.mosip.kernel.masterdata.constant.MachinePutReqDto;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.constant.OrderEnum;
+import io.mosip.kernel.masterdata.dto.BiometricAttributeDto;
 import io.mosip.kernel.masterdata.dto.IndividualTypeDto;
 import io.mosip.kernel.masterdata.dto.getresponse.IndividualTypeResponseDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.IndividualTypeExtnDto;
+import io.mosip.kernel.masterdata.dto.getresponse.extn.MachineExtnDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
+import io.mosip.kernel.masterdata.entity.IndividualType;
+import io.mosip.kernel.masterdata.entity.id.CodeAndLanguageCodeID;
 import io.mosip.kernel.masterdata.service.IndividualTypeService;
 import io.mosip.kernel.masterdata.utils.AuditUtil;
 import io.swagger.annotations.Api;
@@ -127,23 +133,65 @@ public class IndividualTypeController {
 	 * @return the response i.e. the list of values for the specific filter column
 	 *         name and type.
 	 */
-	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
+	//@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
 	@ResponseFilter
 	@PostMapping("/filtervalues")
 	public ResponseWrapper<FilterResponseDto> individualsFilterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> requestWrapper) {
-		auditUtil.auditRequest(
+		/*auditUtil.auditRequest(
 				String.format(MasterDataConstant.FILTER_API_IS_CALLED, IndividualTypeDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
 				String.format(MasterDataConstant.FILTER_API_IS_CALLED, IndividualTypeDto.class.getSimpleName()),
-				"ADM-591");
+				"ADM-591");*/
 		ResponseWrapper<FilterResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(individualTypeService.individualsFilterValues(requestWrapper.getRequest()));
-		auditUtil.auditRequest(
+		/*auditUtil.auditRequest(
 				String.format(MasterDataConstant.SUCCESSFUL_FILTER, IndividualTypeDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
 				String.format(MasterDataConstant.SUCCESSFUL_FILTER_DESC, IndividualTypeDto.class.getSimpleName()),
-				"ADM-592");
+				"ADM-592");*/
+		return responseWrapper;
+	}
+	
+	/**
+	 * create Individual Type
+	 * 
+	 * 
+	 * @param individualType
+	 * @return
+	 */
+	@ResponseFilter
+	@PostMapping
+	@ApiOperation(value = "Service to create Individual Type", notes = "create Individual Type  and return  code and LangCode")
+	@ApiResponses({ @ApiResponse(code = 201, message = " successfully created"),
+			@ApiResponse(code = 400, message = " Request body passed  is null or invalid"),
+			@ApiResponse(code = 500, message = " creating any error occured") })
+	public ResponseWrapper<IndividualTypeExtnDto> createIndividualType(
+			@Valid @RequestBody RequestWrapper<IndividualTypeDto> individualType) {
+
+		ResponseWrapper<IndividualTypeExtnDto> responseWrapper = new ResponseWrapper<>();
+		responseWrapper
+				.setResponse(individualTypeService.createIndividualsTypes(individualType.getRequest()));
+		return responseWrapper;
+	}
+	/**
+	 * This method updates IndividualType by Admin.
+	 * 
+	 * @param IndividualTypeDto the request DTO for updating machine.
+	 * @return the response i.e. the updated machine.
+	 */
+	//@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
+	@ResponseFilter
+	@PutMapping()
+	@ApiOperation(value = "Service to upadte IndividualType", notes = "Update IndividualType Detail and return updated IndividualType")
+	@ApiResponses({ @ApiResponse(code = 201, message = "When IndividualType successfully updated"),
+			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
+			@ApiResponse(code = 404, message = "When No IndividualType found"),
+			@ApiResponse(code = 500, message = "While updating IndividualType any error occured") })
+	public ResponseWrapper<IndividualTypeExtnDto> updateIndividualType(
+			@RequestBody @Valid RequestWrapper<IndividualTypeDto> individualTypeDto) {
+		ResponseWrapper<IndividualTypeExtnDto> responseWrapper = new ResponseWrapper<>();
+		responseWrapper.setResponse(individualTypeService.updateIndividualsTypes(individualTypeDto.getRequest()));
 		return responseWrapper;
 	}
 }

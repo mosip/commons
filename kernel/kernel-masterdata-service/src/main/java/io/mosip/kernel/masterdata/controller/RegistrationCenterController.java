@@ -292,7 +292,7 @@ public class RegistrationCenterController {
 	 * @param request the request DTO.
 	 * @return the {@link FilterResponseDto}.
 	 */
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
+	//@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@PostMapping("/registrationcenters/filtervalues")
 	public ResponseWrapper<FilterResponseDto> registrationCenterFilterValues(

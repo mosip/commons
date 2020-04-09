@@ -8,6 +8,7 @@ import io.mosip.kernel.masterdata.dto.getresponse.extn.DeviceSpecificationExtnDt
 import io.mosip.kernel.masterdata.dto.postresponse.IdResponseDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
+import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.entity.id.IdAndLanguageCodeID;
@@ -110,6 +111,6 @@ public interface DeviceSpecificationService {
 	 * @param filterValueDto the request DTO that provides the column name.
 	 * @return the response containing the filter values.
 	 */
-	public FilterResponseDto deviceSpecFilterValues(FilterValueDto filterValueDto);
+	public FilterResponseCodeDto deviceSpecFilterValues(FilterValueDto filterValueDto);
 
 }

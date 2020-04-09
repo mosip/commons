@@ -60,4 +60,6 @@ public interface MachineTypeService {
 	 * @return the {@link FilterResponseDto}.
 	 */
 	public FilterResponseCodeDto machineTypesFilterValues(FilterValueDto filterValueDto);
+
+	public CodeAndLanguageCodeID updateMachineType(MachineTypeDto request);
 }
