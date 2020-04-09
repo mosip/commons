@@ -4,6 +4,9 @@
 name: Maven Package upon a pull request 
 
 on:
+  push:
+    branches:
+      - master
   pull_request:
     types: [closed]
 
