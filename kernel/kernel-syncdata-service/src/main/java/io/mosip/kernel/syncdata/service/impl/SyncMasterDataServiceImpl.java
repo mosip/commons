@@ -524,10 +524,10 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 		List<Machine> machineDetail = machineRepo
 				.findByMachineNameAndIsActive(uploadPublicKeyRequestDto.getMachineName());
 		if (machineDetail != null && !machineDetail.isEmpty()) {
-			if (Arrays.equals(publicKey, machineDetail.get(0).getPublicKey())) {
+			if (Arrays.equals(publicKey, CryptoUtil.decodeBase64(machineDetail.get(0).getPublicKey()))) {
 				return new UploadPublicKeyResponseDto(machineDetail.get(0).getKeyIndex());
-			} else if (machineDetail.get(0).getPublicKey() != null && machineDetail.get(0).getPublicKey().length != 0
-					&& !Arrays.equals(publicKey, machineDetail.get(0).getPublicKey())) {
+			} else if (machineDetail.get(0).getPublicKey() != null && !machineDetail.get(0).getPublicKey().isEmpty()
+					&& !Arrays.equals(publicKey, CryptoUtil.decodeBase64(machineDetail.get(0).getPublicKey()))) {
 				throw new SyncDataServiceException(MasterDataErrorCode.MACHINE_PUBLIC_KEY_ALREADY_EXIST.getErrorCode(),
 						MasterDataErrorCode.MACHINE_PUBLIC_KEY_ALREADY_EXIST.getErrorMessage());
 			}
@@ -539,7 +539,7 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 				List<MachineHistory> updatedMachineHistoryList = new ArrayList<>();
 				machineDetail.forEach(machineEntity -> {
 					Machine machine = MetaDataUtils.setUpdateMetaData(machineEntity);
-					machine.setPublicKey(publicKey);
+					machine.setPublicKey(uploadPublicKeyRequestDto.getPublicKey());
 					machine.setKeyIndex(keyIndex);
 					MachineHistory machineHistory = MapperUtils.map(machine, MachineHistory.class);
 					machineHistory.setEffectDateTime(machine.getUpdatedDateTime());
@@ -673,6 +673,29 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 		
 		throw new SyncDataServiceException(MasterDataErrorCode.REG_CENTER_MACHINE_FETCH_EXCEPTION.getErrorCode(),
 				MasterDataErrorCode.REG_CENTER_MACHINE_FETCH_EXCEPTION.getErrorMessage());
+	}
+	
+	
+	@Override
+	@Transactional("syncDataTransactionManager")
+	public UploadPublicKeyResponseDto validateKeyMachineMapping(UploadPublicKeyRequestDto dto) {
+		List<Machine> machines = machineRepo.findByMachineNameAndIsActive(dto.getMachineName());
+		
+		if(machines == null || machines.isEmpty())
+			throw new RequestException(MasterDataErrorCode.MACHINE_NOT_FOUND.getErrorCode(),
+					MasterDataErrorCode.MACHINE_NOT_FOUND.getErrorMessage());
+		
+		if(machines.get(0).getPublicKey() == null || machines.get(0).getPublicKey().length() == 0)
+			throw new RequestException(MasterDataErrorCode.MACHINE_PUBLIC_KEY_NOT_WHITELISTED.getErrorCode(),
+					MasterDataErrorCode.MACHINE_PUBLIC_KEY_NOT_WHITELISTED.getErrorMessage());
+		
+		if(Arrays.equals(CryptoUtil.decodeBase64(dto.getPublicKey()), 
+				CryptoUtil.decodeBase64(machines.get(0).getPublicKey()))) {
+			return new UploadPublicKeyResponseDto(machines.get(0).getKeyIndex());
+		}
+		
+		throw new RequestException(MasterDataErrorCode.MACHINE_PUBLIC_KEY_NOT_WHITELISTED.getErrorCode(),
+				MasterDataErrorCode.MACHINE_PUBLIC_KEY_NOT_WHITELISTED.getErrorMessage());
 	}
 
 }

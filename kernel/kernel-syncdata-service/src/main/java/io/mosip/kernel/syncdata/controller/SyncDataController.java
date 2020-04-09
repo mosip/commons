@@ -357,5 +357,22 @@ public class SyncDataController {
 		response.setResponse(masterDataService.uploadpublickey(uploadPublicKeyRequestDto.getRequest()));
 		return response;
 	}
+	
+	/**
+	 * Verifies mapping of input public key with any machine.
+	 * if valid returns corresponding keyIndex.
+	 * 
+	 * @param uploadPublicKeyRequestDto
+	 * @return
+	 */
+	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN')")
+	@ResponseFilter
+	@PostMapping(value = "/tpm/publickey/verify", produces = "application/json")
+	public ResponseWrapper<UploadPublicKeyResponseDto> validateKeyMachineMapping(
+			@ApiParam("public key in BASE64 encoded") @RequestBody @Valid RequestWrapper<UploadPublicKeyRequestDto> uploadPublicKeyRequestDto) {
+		ResponseWrapper<UploadPublicKeyResponseDto> response = new ResponseWrapper<>();
+		response.setResponse(masterDataService.validateKeyMachineMapping(uploadPublicKeyRequestDto.getRequest()));
+		return response;
+	}
 
 }

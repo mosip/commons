@@ -42,9 +42,7 @@ public class MachinePutReqDto {
 	/**
 	 * Field for machine serial number
 	 */
-	@NotNull
-	@StringFormatter(min = 1, max = 64)
-	@ApiModelProperty(value = "serialNum", required = true, dataType = "java.lang.String")
+	@ApiModelProperty(value = "serialNum", required = false, dataType = "java.lang.String")
 	private String serialNum;
 	/**
 	 * Field for machine mac address

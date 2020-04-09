@@ -86,5 +86,17 @@ public class MachineHistory extends BaseEntity implements Serializable {
 
 	@Column(name = "zone_code", length = 36)
 	private String zoneCode;
+	
+	/**
+	 * Field for reg machine public key
+	 */
+	@Column(name = "public_key")
+	private String publicKey;
+	
+	/**
+	 * Field for reg machine public key SHA256 hash
+	 */
+	@Column(name = "key_index")
+	private String keyIndex;
 
 }
