@@ -213,7 +213,7 @@ public class ValidDocumentController {
 	 * Service to fetch all valid document categories and associated document types
 	 * for a docCate
 	 * 
-	 * @param langCode language in which document categories and associated document
+	 * @param languagecode language in which document categories and associated document
 	 *                 types should be fetch
 	 * @return the valid documents
 	 */

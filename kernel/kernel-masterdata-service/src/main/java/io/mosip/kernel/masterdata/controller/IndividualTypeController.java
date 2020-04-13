@@ -177,7 +177,7 @@ public class IndividualTypeController {
 	/**
 	 * This method updates IndividualType by Admin.
 	 * 
-	 * @param IndividualTypeDto the request DTO for updating machine.
+	 * @param individualTypeDto the request DTO for updating machine.
 	 * @return the response i.e. the updated machine.
 	 */
 	//@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
