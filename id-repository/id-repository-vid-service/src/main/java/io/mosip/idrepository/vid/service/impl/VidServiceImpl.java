@@ -186,17 +186,25 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 		LocalDateTime currentTime = DateUtils.getUTCCurrentDateTime();
 		List<Vid> vidDetails = vidRepo.findByUinHashAndStatusCodeAndVidTypeCodeAndExpiryDTimesAfter(uinHash,
 				env.getProperty(VID_ACTIVE_STATUS), vidType, currentTime);
+		Collections.sort(vidDetails);
 		VidPolicy policy = policyProvider.getPolicy(vidType);
 		if (Objects.isNull(vidDetails) || vidDetails.isEmpty() || vidDetails.size() < policy.getAllowedInstances()) {
 			String vidRefId = UUIDUtils
 					.getUUID(UUIDUtils.NAMESPACE_OID, uin + SPLITTER + DateUtils.getUTCCurrentDateTime()).toString();
-			return vidRepo
-					.save(new Vid(vidRefId, generateVid(), uinHash, uinToEncrypt, vidType, currentTime,
-							Objects.nonNull(policy.getValidForInMinutes())
-									? DateUtils.getUTCCurrentDateTime().plusMinutes(policy.getValidForInMinutes())
-									: LocalDateTime.MAX.withYear(9999),
-							env.getProperty(VID_ACTIVE_STATUS),
-							IdRepoSecurityManager.getUser(), currentTime, null, null, false, null));
+			return vidRepo.save(new Vid(vidRefId, generateVid(), uinHash, uinToEncrypt, vidType, currentTime,
+					Objects.nonNull(policy.getValidForInMinutes())
+							? DateUtils.getUTCCurrentDateTime().plusMinutes(policy.getValidForInMinutes())
+							: LocalDateTime.MAX.withYear(9999),
+					env.getProperty(VID_ACTIVE_STATUS), IdRepoSecurityManager.getUser(), currentTime, null, null, false,
+					null));
+		} else if (vidDetails.size() == policy.getAllowedInstances() && policy.getAutoRestoreAllowed()) {
+			Vid vidObject = vidDetails.get(0);
+			vidObject.setStatusCode(policy.getRestoreOnAction());
+			vidObject.setUpdatedBy(IdRepoSecurityManager.getUser());
+			vidObject.setUpdatedDTimes(DateUtils.getUTCCurrentDateTime());
+			vidObject.setUin(uinToEncrypt);
+			vidRepo.saveAndFlush(vidObject);
+			return generateVid(uin, vidType);
 		} else {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_VID_SERVICE, CREATE_VID,
 					"throwing vid creation failed");

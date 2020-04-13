@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
@@ -350,8 +351,10 @@ public class ZipUtils {
 	 * @throws IOException           when file unable to read
 	 */
 
-	public static boolean unZipDirectory(String zipFilePath, String destDirectory) throws IOException {
+	public static boolean unZipDirectory(String zipFilePath, String destDirectory) throws Exception {
 		File destDir = new File(destDirectory);
+		String canonicalDestinationDirPath = destDir.getCanonicalPath();
+		
 		if (!destDir.exists()) {
 			boolean isCreated = destDir.mkdir();
 			if (!isCreated) {
@@ -359,13 +362,21 @@ public class ZipUtils {
 						ZipUtilConstants.IO_ERROR_CODE.getMessage());
 			}
 		}
+		
 
 		try (ZipInputStream zipIn = new ZipInputStream(new FileInputStream(zipFilePath))) {
-
+			
 			ZipEntry entry = zipIn.getNextEntry();
 			while (entry != null) {
+				
 				String filePath = destDirectory + File.separator + entry.getName();
-
+				File dir = new File(filePath);
+				String canonicalDestinationFile = dir.getCanonicalPath();
+				
+				if (!canonicalDestinationFile.startsWith(canonicalDestinationDirPath + File.separator)) {
+					  throw new ZipException(ZipUtilConstants.ARCHIVER_ERROR_CODE.getMessage());
+				}
+				
 				if (!entry.isDirectory()) {
 					boolean isCreated = new File(filePath).getParentFile().mkdirs();
 					if (!isCreated) {
@@ -374,7 +385,6 @@ public class ZipUtils {
 					}
 					extractFile(zipIn, filePath);
 				} else {
-					File dir = new File(filePath);
 					boolean isCreated = dir.mkdirs();
 					if (!isCreated) {
 						throw new IOException(ZipUtilConstants.IO_ERROR_CODE.getErrorCode(),
@@ -394,7 +404,7 @@ public class ZipUtils {
 
 		return true;
 	}
-
+	
 	/**
 	 * This is inner method for Extracts a zip entry (file entry)
 	 * 

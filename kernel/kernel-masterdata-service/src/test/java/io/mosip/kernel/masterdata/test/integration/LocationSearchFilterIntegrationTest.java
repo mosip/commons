@@ -42,7 +42,6 @@ import io.mosip.kernel.masterdata.dto.request.SearchSort;
 import io.mosip.kernel.masterdata.dto.response.LocationSearchDto;
 import io.mosip.kernel.masterdata.entity.Location;
 import io.mosip.kernel.masterdata.repository.LocationRepository;
-import io.mosip.kernel.masterdata.test.TestBootApplication;
 import io.mosip.kernel.masterdata.utils.AuditUtil;
 import io.mosip.kernel.masterdata.utils.MasterDataFilterHelper;
 import io.mosip.kernel.masterdata.utils.PageUtils;
@@ -53,7 +52,7 @@ import io.mosip.kernel.masterdata.utils.PageUtils;
  * @since 1.0.0
  *
  */
-@SpringBootTest(classes = TestBootApplication.class)
+@SpringBootTest
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 public class LocationSearchFilterIntegrationTest {
@@ -377,11 +376,12 @@ public class LocationSearchFilterIntegrationTest {
 		requestDto.setRequest(filterValueDto);
 		String json = objectMapper.writeValueAsString(requestDto);
 		List<String> hierarchyNames = new ArrayList<>();
+		List<Location> location =new ArrayList<Location>();
 		hierarchyNames.add("Zone");
 
 		when(locationRepository.findLocationAllHierarchyNames()).thenReturn(hierarchyNames);
 		when(locationRepository.findDistinctHierarchyNameAndNameValueForEmptyTextFilter(Mockito.anyString(),
-				Mockito.anyString())).thenReturn(hierarchyNames);
+				Mockito.anyString())).thenReturn(location);
 
 		mockMvc.perform(post("/locations/filtervalues").contentType(MediaType.APPLICATION_JSON).content(json))
 				.andExpect(status().isOk());
@@ -410,30 +410,7 @@ public class LocationSearchFilterIntegrationTest {
 				.andExpect(status().isOk());
 	}
 
-	@Test
-	@WithUserDetails("global-admin")
-	public void filterUniqueWithTextLocationTest() throws Exception {
-		FilterDto filterDto = new FilterDto();
-		filterDto.setColumnName("Zone");
-		filterDto.setType("unique");
-		filterDto.setText("abc");
-		FilterValueDto filterValueDto = new FilterValueDto();
-		filterValueDto.setFilters(Arrays.asList(filterDto));
-		filterValueDto.setLanguageCode("eng");
-		RequestWrapper<FilterValueDto> requestDto = new RequestWrapper<>();
-		requestDto.setRequest(filterValueDto);
-		String json = objectMapper.writeValueAsString(requestDto);
-		List<String> hierarchyNames = new ArrayList<>();
-		hierarchyNames.add("Zone");
-
-		when(locationRepository.findLocationAllHierarchyNames()).thenReturn(hierarchyNames);
-		when(locationRepository.findDistinctHierarchyNameAndNameValueForTextFilter(Mockito.anyString(),
-				Mockito.anyString(), Mockito.anyString())).thenReturn(hierarchyNames);
-
-		mockMvc.perform(post("/locations/filtervalues").contentType(MediaType.APPLICATION_JSON).content(json))
-				.andExpect(status().isOk());
-	}
-
+	
 	@Test
 	@WithUserDetails("global-admin")
 	public void filterInvalidTypeExceptionLocationTest() throws Exception {

@@ -1,11 +1,15 @@
 package io.mosip.kernel.syncdata.test.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withBadRequest;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withServerError;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 import java.io.IOException;
+import java.security.PublicKey;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +19,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,17 +34,24 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.syncdata.dto.ApplicationDto;
 import io.mosip.kernel.syncdata.dto.HolidayDto;
 import io.mosip.kernel.syncdata.dto.MachineDto;
 import io.mosip.kernel.syncdata.dto.MachineSpecificationDto;
 import io.mosip.kernel.syncdata.dto.MachineTypeDto;
+import io.mosip.kernel.syncdata.dto.PublicKeyResponse;
+import io.mosip.kernel.syncdata.dto.UploadPublicKeyRequestDto;
+import io.mosip.kernel.syncdata.dto.UploadPublicKeyResponseDto;
 import io.mosip.kernel.syncdata.dto.response.MasterDataResponseDto;
+import io.mosip.kernel.syncdata.entity.Machine;
+import io.mosip.kernel.syncdata.exception.RequestException;
 import io.mosip.kernel.syncdata.exception.SyncDataServiceException;
 import io.mosip.kernel.syncdata.exception.SyncInvalidArgumentException;
 import io.mosip.kernel.syncdata.repository.MachineRepository;
 import io.mosip.kernel.syncdata.service.SyncConfigDetailsService;
 import io.mosip.kernel.syncdata.service.SyncJobDefService;
+import io.mosip.kernel.syncdata.service.SyncMasterDataService;
 import io.mosip.kernel.syncdata.service.SyncRolesService;
 import io.mosip.kernel.syncdata.utils.SyncMasterDataServiceHelper;
 import net.minidev.json.JSONObject;
@@ -119,6 +131,13 @@ public class SyncDataServiceTest {
 
 	JSONObject globalConfigMap = null;
 	JSONObject regCentreConfigMap = null;
+	
+	@Autowired
+	private SyncMasterDataService masterDataService;
+	
+	private String encodedTPMPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn4A-U6V4SpSeJmjl0xtBDgyFaHn1CvglvnpbczxiDakH6ks8tPvIYT4jDOU-9XaUYKuMFhLxS7G8qwJhv7GKpDQXphSXjgwv_l8A--KV6C1UVaHoAs4XuJPFdXneSd9uMH94GO6lWucyOyfaZLrf5F_--2Rr4ba4rBWw20OrAl1c7FrzjIQjzYXgnBMrvETXptxKKrMELwOOsuyc1Ju4wzPJHYjI0Em4q2BOcQLXqYjhsZhcYeTqBFxXjCOM3WQKLCIsh9RN8Hz-s8yJbQId6MKIS7HQNCTbhbjl1jdfwqRwmBaZz0Gt73I4_8SVCcCQzJWVsakLC1oJAFcmi3l_mQIDAQAB";
+	private byte[] tpmPublicKey = CryptoUtil.decodeBase64(encodedTPMPublicKey);
+	private String keyIndex = CryptoUtil.computeFingerPrint(tpmPublicKey, null);
 
 	@Before
 	public void setup() {
@@ -357,7 +376,10 @@ public class SyncDataServiceTest {
 				.andRespond(withSuccess().body(
 						"{ \"id\": null, \"version\": null, \"responsetime\": \"2019-04-24T09:07:42.017Z\", \"metadata\": null, \"response\": { \"lastSyncTime\": \"2019-04-24T09:07:41.771Z\", \"publicKey\": \"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtzi3nWiNMEcaBV2cWO5ZLTBZe1TEGnT95bTvrpEEr-kJLrn80dn9k156zjQpjSzNfEOFVwugTEhEWdxrdrjDUACpA0cF4tUdAM5XJBB0xmzNGS5s7lmcliAOjXbCGU2VJwOUnYV4DSCgrReMCCe6LD_aApwu45OAZ9_sWG6R-jlIUOHLTdDUs6O8zLk8zl7tOX6Rlp25Zk9CLQw1m9drHJqxCbr9Wc9PQKUHBPqhtvCe9ZZeySsZb83dXpKKAZlkjdbrB25i_4O0pbv9LHk0qQlk0twqaef6D5nCTqcB5KQ4QqVYLcrtAhdbMXaDvpSf9syRQ3P3fAeiGkvUIhUWPwIDAQAB\", \"issuedAt\": \"2019-04-23T06:17:46.753\", \"expiryAt\": \"2020-04-23T06:17:46.753\" }, \"errors\": null }"));
 
-		syncConfigDetailsService.getPublicKey("REGISTRATION", "2019-09-09T09:00:00.000Z", "referenceId");
+		PublicKeyResponse<String> publicKeyResponse = syncConfigDetailsService.getPublicKey("REGISTRATION", "2019-09-09T09:00:00.000Z", "referenceId");
+		
+		assertNotNull(publicKeyResponse.getProfile());
+		assertEquals("test", publicKeyResponse.getProfile());
 	}
 
 	@Test(expected = SyncDataServiceException.class)
@@ -412,6 +434,56 @@ public class SyncDataServiceTest {
 						" \"id\": null, \"version\": null, \"responsetime\": \"2019-04-24T09:07:42.017Z\", \"metadata\": null, \"response\": { \"lastSyncTime\": \"2019-04-24T09:07:41.771Z\", \"publicKey\": \"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtzi3nWiNMEcaBV2cWO5ZLTBZe1TEGnT95bTvrpEEr-kJLrn80dn9k156zjQpjSzNfEOFVwugTEhEWdxrdrjDUACpA0cF4tUdAM5XJBB0xmzNGS5s7lmcliAOjXbCGU2VJwOUnYV4DSCgrReMCCe6LD_aApwu45OAZ9_sWG6R-jlIUOHLTdDUs6O8zLk8zl7tOX6Rlp25Zk9CLQw1m9drHJqxCbr9Wc9PQKUHBPqhtvCe9ZZeySsZb83dXpKKAZlkjdbrB25i_4O0pbv9LHk0qQlk0twqaef6D5nCTqcB5KQ4QqVYLcrtAhdbMXaDvpSf9syRQ3P3fAeiGkvUIhUWPwIDAQAB\", \"issuedAt\": \"2019-04-23T06:17:46.753\", \"expiryAt\": \"2020-04-23T06:17:46.753\" }, \"errors\": null }"));
 
 		syncConfigDetailsService.getPublicKey("REGISTRATION", "2019-09-09T09:00:00.000Z", "referenceId");
+	}
+	
+	//machine public key mapping test cases
+	@Test
+	public void verifyPublicKeyMachineMappingSuccess() {			
+		LocalDateTime localdateTime = LocalDateTime.parse("2018-11-01T01:01:01");
+		Machine machine = new Machine("1001", "Laptop", "9876427", "172.12.01.128", "21:21:21:12", "1001", "ENG", localdateTime,
+				encodedTPMPublicKey, keyIndex, "ZONE", null);
+		List<Machine> machines = new ArrayList<Machine>();
+		machines.add(machine);			
+		when(machineRespository.findByMachineNameAndIsActive(Mockito.anyString())).thenReturn(machines);
+		
+		UploadPublicKeyRequestDto dto = new UploadPublicKeyRequestDto("laptop", encodedTPMPublicKey);
+		UploadPublicKeyResponseDto resp = masterDataService.validateKeyMachineMapping(dto);
+		assertEquals(keyIndex, resp.getKeyIndex());
+	}
+	
+	//machine public key mapping test cases
+	@Test(expected = RequestException.class)
+	public void verifyPublicKeyMachineMappingNoMapping() {			
+		when(machineRespository.findByMachineNameAndIsActive(Mockito.anyString())).thenReturn(new ArrayList<Machine>());
+		
+		UploadPublicKeyRequestDto dto = new UploadPublicKeyRequestDto("laptop", encodedTPMPublicKey);
+		masterDataService.validateKeyMachineMapping(dto);		
+	}
+	
+	@Test(expected = RequestException.class)
+	public void verifyPublicKeyMachineMappingNoKey() {			
+		LocalDateTime localdateTime = LocalDateTime.parse("2018-11-01T01:01:01");
+		Machine machine = new Machine("1001", "Laptop", "9876427", "172.12.01.128", "21:21:21:12", "1001", "ENG", localdateTime,
+				null, null, "ZONE", null);
+		List<Machine> machines = new ArrayList<Machine>();
+		machines.add(machine);			
+		when(machineRespository.findByMachineNameAndIsActive(Mockito.anyString())).thenReturn(machines);
+		
+		UploadPublicKeyRequestDto dto = new UploadPublicKeyRequestDto("laptop", encodedTPMPublicKey);
+		masterDataService.validateKeyMachineMapping(dto);
+	}
+	
+	@Test(expected = RequestException.class)
+	public void verifyPublicKeyMachineMappingInvalidKey() {			
+		LocalDateTime localdateTime = LocalDateTime.parse("2018-11-01T01:01:01");
+		Machine machine = new Machine("1001", "Laptop", "9876427", "172.12.01.128", "21:21:21:12", "1001", "ENG", localdateTime,
+				encodedTPMPublicKey, keyIndex, "ZONE", null);
+		List<Machine> machines = new ArrayList<Machine>();
+		machines.add(machine);			
+		when(machineRespository.findByMachineNameAndIsActive(Mockito.anyString())).thenReturn(machines);
+		
+		UploadPublicKeyRequestDto dto = new UploadPublicKeyRequestDto("laptop", "invalidKey");
+		masterDataService.validateKeyMachineMapping(dto);
 	}
 
 }

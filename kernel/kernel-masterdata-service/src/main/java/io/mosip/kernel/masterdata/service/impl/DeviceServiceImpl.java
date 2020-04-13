@@ -39,8 +39,10 @@ import io.mosip.kernel.masterdata.dto.request.Pagination;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
 import io.mosip.kernel.masterdata.dto.request.SearchFilter;
 import io.mosip.kernel.masterdata.dto.request.SearchSort;
+import io.mosip.kernel.masterdata.dto.response.ColumnCodeValue;
 import io.mosip.kernel.masterdata.dto.response.ColumnValue;
 import io.mosip.kernel.masterdata.dto.response.DeviceSearchDto;
+import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.entity.Device;
@@ -692,9 +694,9 @@ public class DeviceServiceImpl implements DeviceService {
 	 * kernel.masterdata.dto.request.FilterValueDto)
 	 */
 	@Override
-	public FilterResponseDto deviceFilterValues(FilterValueDto filterValueDto) {
-		FilterResponseDto filterResponseDto = new FilterResponseDto();
-		List<ColumnValue> columnValueList = new ArrayList<>();
+	public FilterResponseCodeDto deviceFilterValues(FilterValueDto filterValueDto) {
+		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
+		List<ColumnCodeValue> columnValueList = new ArrayList<>();
 		List<Zone> zones = zoneUtils.getUserZones();
 		List<SearchFilter> zoneFilter = new ArrayList<>();
 		if (zones != null && !zones.isEmpty()) {
@@ -707,14 +709,16 @@ public class DeviceServiceImpl implements DeviceService {
 
 		{
 			for (FilterDto filterDto : filterValueDto.getFilters()) {
-				masterDataFilterHelper.filterValues(Device.class, filterDto, filterValueDto).forEach(filterValue -> {
-					if (filterValue != null) {
-						ColumnValue columnValue = new ColumnValue();
-						columnValue.setFieldID(filterDto.getColumnName());
-						columnValue.setFieldValue(filterValue.toString());
-						columnValueList.add(columnValue);
-					}
-				});
+				masterDataFilterHelper.filterValuesWithCode(Device.class, filterDto, filterValueDto,"id")
+						.forEach(filterValue -> {
+							if (filterValue != null) {
+								ColumnCodeValue columnValue = new ColumnCodeValue();
+								columnValue.setFieldCode(filterValue.getFieldCode());
+								columnValue.setFieldID(filterDto.getColumnName());
+								columnValue.setFieldValue(filterValue.getFieldValue());
+								columnValueList.add(columnValue);
+							}
+						});	
 			}
 			filterResponseDto.setFilters(columnValueList);
 

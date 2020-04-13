@@ -88,6 +88,6 @@ public interface RegistrationCenterMachineRepository
 	@Query(value = "select distinct rcm.regcntr_id , rcm.machine_id from master.reg_center_machine rcm, master.machine_master mm where rcm.machine_id=mm.id and mm.serial_num=?1 and mm.key_index=?2 and rcm.is_active=true", nativeQuery = true)
 	List<Object[]> getRegistrationCenterMachineWithSerialNumberAndKeyIndex(String serialNumber, String keyIndex);
 
-	@Query(value = "select distinct rcm.regcntr_id , rcm.machine_id from master.reg_center_machine rcm, master.machine_master mm where rcm.machine_id=mm.id  and mm.key_index=?1 and rcm.is_active=true", nativeQuery = true)
+	@Query(value = "select distinct rcm.regcntr_id , rcm.machine_id from master.reg_center_machine rcm, master.machine_master mm where rcm.machine_id=mm.id  and lower(mm.key_index) = lower(?1) and rcm.is_active=true", nativeQuery = true)
 	List<Object[]> getRegistrationCenterMachineWithKeyIndex(String keyIndex);
 }

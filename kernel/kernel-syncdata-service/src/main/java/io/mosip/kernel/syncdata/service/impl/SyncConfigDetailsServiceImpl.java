@@ -230,6 +230,7 @@ public class SyncConfigDetailsServiceImpl implements SyncConfigDetailsService {
 					SyncConfigDetailsErrorCode.SYNC_IO_EXCEPTION.getErrorMessage(), e);
 		}
 
+		publicKeyResponseMapped.getResponse().setProfile(env.getActiveProfiles()[0]);
 		return publicKeyResponseMapped.getResponse();
 
 	}

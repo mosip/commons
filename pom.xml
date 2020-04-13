@@ -33,7 +33,6 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
-
         <repositories>        
           <repository>
             <id>ossrh</id>
@@ -45,8 +44,6 @@
             </snapshots>
           </repository>
         </repositories>
-
-        
         <distributionManagement>
 		<snapshotRepository>
                         <id>ossrh</id>

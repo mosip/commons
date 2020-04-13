@@ -13,7 +13,6 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 import io.mosip.kernel.core.exception.ExceptionUtils;
 
-
 /**
  * 
  * @author Srinivasan
@@ -64,5 +63,5 @@ public class TokenHandlerUtil {
 		}
 
 	}
-
+  
 }
