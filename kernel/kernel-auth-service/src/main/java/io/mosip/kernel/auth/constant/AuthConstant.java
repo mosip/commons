@@ -27,7 +27,7 @@ public class AuthConstant {
 
 	public static final String EMAIL = "email";
 
-	public static final String PHONE = "mobile";
+	public static final String PHONE = "phone";
 
 	public static final String OTP_SENT_MESSAGE = "OTP Sent Successfully";
 
