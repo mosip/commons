@@ -172,7 +172,8 @@ public class RegistrationCenterMachineServiceImpl implements RegistrationCenterM
 		Zone registrationCenterZone = null;
 		userZones = userZones.stream().filter(zone -> zone.getLangCode().equals(primaryLang))
 				.collect(Collectors.toList());
-		if(regRepo.findByIdAndIsDeletedFalseOrNull(regCenterId)==null)
+		List<RegistrationCenter> regCenters =regRepo.findByIdAndIsDeletedFalseOrNull(regCenterId);
+		if(regCenters==null || regCenters.isEmpty())
 		{
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_MAP, RegistrationCenterMachine.class.getCanonicalName()),
@@ -383,7 +384,8 @@ public class RegistrationCenterMachineServiceImpl implements RegistrationCenterM
 		userZones = userZones.stream().filter(zone -> zone.getLangCode().equals(primaryLang))
 				.collect(Collectors.toList());
 		Machine machine = getZoneFromMachineRepoByMachineId(machineId, primaryLang);
-		if(regRepo.findByIdAndIsDeletedFalseOrNull(regCenterId)==null)
+		List<RegistrationCenter> regCenters =regRepo.findByIdAndIsDeletedFalseOrNull(regCenterId);
+		if(regCenters==null || regCenters.isEmpty())
 		{
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_MAP, RegistrationCenterMachine.class.getCanonicalName()),
