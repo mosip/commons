@@ -1,6 +1,7 @@
 package io.mosip.kernel.masterdata.repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -8,10 +9,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.mosip.kernel.core.dataaccess.spi.repository.BaseRepository;
+import io.mosip.kernel.masterdata.entity.Machine;
 import io.mosip.kernel.masterdata.entity.TemplateFileFormat;
 
 /**
  * @author Neha Sinha
+ * @author Megha Tanga
  * @since 1.0.0
  * 
  */
@@ -40,4 +43,12 @@ public interface TemplateFileFormatRepository extends BaseRepository<TemplateFil
 	@Transactional
 	@Query("UPDATE TemplateFileFormat t SET t.updatedBy = ?1, t.isDeleted = true , t.deletedDateTime = ?2 WHERE t.code =?3 and (t.isDeleted is null or t.isDeleted = false)")
 	int deleteTemplateFileFormat(String updatedBy, LocalDateTime deletedDateTime, String code);
+	
+	
+	
+	@Query("FROM TemplateFileFormat t where t.code = ?1 and t.langCode = ?2 and (t.isDeleted is null or t.isDeleted = false) and t.isActive = true")
+	List<TemplateFileFormat> findAllByCodeAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(String code, String langCode);
+	
+	@Query("FROM TemplateFileFormat t where  t.langCode = ?1 and (t.isDeleted is null or t.isDeleted = false) and t.isActive = true")
+	List<TemplateFileFormat> findAllByLangCodeAndIsDeletedFalseorIsDeletedIsNull(String langCode);
 }
