@@ -54,6 +54,14 @@ public interface SyncMasterDataService {
 	 * @param uploadPublicKeyRequestDto {@link UploadPublicKeyRequestDto} inatance
 	 * @return {@link UploadPublicKeyResponseDto} instance
 	 */
+	@Deprecated
 	UploadPublicKeyResponseDto uploadpublickey(UploadPublicKeyRequestDto uploadPublicKeyRequestDto);
+	
+	/**
+	 * Verifies machine name and public key mapping in machine_master table
+	 * @param dto {@link UploadPublicKeyRequestDto}
+	 * @return {@link UploadPublicKeyResponseDto}
+	 */
+	UploadPublicKeyResponseDto validateKeyMachineMapping(UploadPublicKeyRequestDto dto);
 
 }

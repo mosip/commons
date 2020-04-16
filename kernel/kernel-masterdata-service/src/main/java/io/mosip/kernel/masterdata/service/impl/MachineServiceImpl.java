@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
+import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.StringUtils;
 import io.mosip.kernel.masterdata.constant.MachineErrorCode;
 import io.mosip.kernel.masterdata.constant.MachinePutReqDto;
@@ -809,7 +810,7 @@ public class MachineServiceImpl implements MachineService {
 		try {
 			// call method to set isActive value based on primary/Secondary language
 			machinePostReqDto = masterdataCreationUtil.createMasterData(Machine.class, machinePostReqDto);
-
+			
 			machineEntity = MetaDataUtils.setCreateMetaData(machinePostReqDto, Machine.class);
 
 			if (StringUtils.isNotEmpty(primaryLang) && primaryLang.equals(machinePostReqDto.getLangCode())) {
@@ -818,6 +819,12 @@ public class MachineServiceImpl implements MachineService {
 				uniqueId = registrationCenterValidator.generateMachineIdOrvalidateWithDB(uniqueId);
 				machineEntity.setId(uniqueId);
 			}
+			
+			//machine name to be stored in lowercase
+			machineEntity.setName(machinePostReqDto.getName().toLowerCase());
+			machineEntity.setPublicKey(machineUtil.getX509EncodedPublicKey(machinePostReqDto.getPublicKey()));
+			machineEntity.setKeyIndex(CryptoUtil.computeFingerPrint(CryptoUtil.decodeBase64(machineEntity.getPublicKey()), 
+					null).toLowerCase());
 
 			// creating a Machine
 			crtMachine = machineRepository.create(machineEntity);
@@ -898,6 +905,9 @@ public class MachineServiceImpl implements MachineService {
 				// updating registration center
 				updMachineEntity = MetaDataUtils.setUpdateMetaData(machinePutReqDto, renMachine, false);
 
+				//machine name to be stored in lowercase
+				updMachineEntity.setName(machinePutReqDto.getName().toLowerCase());
+				
 				// updating Machine
 				updMachine = machineRepository.update(updMachineEntity);
 

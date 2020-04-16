@@ -60,7 +60,7 @@ public class Machine extends BaseEntity implements Serializable {
 	/**
 	 * Field for machine serial number
 	 */
-	@Column(name = "serial_num", nullable = false, length = 64)
+	@Column(name = "serial_num", nullable = true, length = 64)
 	private String serialNum;
 
 	/**
@@ -71,7 +71,7 @@ public class Machine extends BaseEntity implements Serializable {
 	/**
 	 * Field for machine mac address
 	 */
-	@Column(name = "mac_address", nullable = false, length = 64)
+	@Column(name = "mac_address", nullable = true, length = 64)
 	private String macAddress;
 
 	/**
@@ -90,7 +90,7 @@ public class Machine extends BaseEntity implements Serializable {
 	 * Field for publicKey
 	 */
 	@Column(name = "public_key")
-	private byte[] publicKey;
+	private String publicKey;
 
 	/**
 	 * Field for public key pringerprint

@@ -11,7 +11,7 @@
 	</parent>
 
 	<artifactId>kernel-fsadapter-proxy</artifactId>
-	<version>1.0.8-SNAPSHOT</version>
+	<version>1.0.8</version>
     <properties>
     <kernel.core.version>1.0.7</kernel.core.version>
     </properties> 

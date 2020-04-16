@@ -2,6 +2,7 @@ package io.mosip.kernel.masterdata.test.integration;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.isA;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -31,6 +32,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -7318,6 +7321,7 @@ public class MasterdataIntegrationTest {
 		reqPostMachine.setSerialNum("123");
 		reqPostMachine.setIsActive(true);
 		reqPostMachine.setZoneCode("MOR");
+		reqPostMachine.setPublicKey("testpublic");
 
 		// machine.setValidityDateTime(specificDate);
 		// machineList.add(machine);
@@ -7384,9 +7388,15 @@ public class MasterdataIntegrationTest {
 		when(registrationCenterValidator.generateMachineIdOrvalidateWithDB(Mockito.any())).thenReturn("10001");
 		Mockito.when(machineRepository.create(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot insert", null));
-		mockMvc.perform(
+		
+		MvcResult result = mockMvc.perform(
 				MockMvcRequestBuilders.post("/machines").contentType(MediaType.APPLICATION_JSON).content(content))
-				.andExpect(status().isInternalServerError());
+				.andExpect(status().isOk()).andReturn();
+		
+		ResponseWrapper<?> responseWrapper = objectMapper.readValue(result.getResponse().getContentAsString(),
+				ResponseWrapper.class);
+
+		assertNotNull(responseWrapper.getErrors());
 	}
 
 	@Test
@@ -9027,6 +9037,87 @@ public class MasterdataIntegrationTest {
 		when(locationRepository.findLocationByLangCodeLevel(Mockito.anyString(), Mockito.anyShort()))
 				.thenThrow(DataRetrievalFailureException.class);
 		mockMvc.perform(get("/locations/level/eng")).andExpect(status().isInternalServerError());
+	}
+	
+	
+	@Test
+	@WithUserDetails("zonal-admin")
+	public void createTestWithNoPublicKey() {
+		MachinePostReqDto req = new MachinePostReqDto();
+		req.setLangCode("eng");
+		req.setName("HP");
+		req.setIpAddress("129.0.0.0");
+		req.setMacAddress("178.0.0.0");
+		req.setMachineSpecId("1010");
+		req.setSerialNum("123");
+		req.setIsActive(true);
+		req.setZoneCode("MOR");
+		req.setPublicKey(null);
+		
+		RequestWrapper<MachinePostReqDto> requestDto;
+		requestDto = new RequestWrapper<>();
+		requestDto.setId("mosip.match.regcentr.machineid");
+		requestDto.setVersion("1.0.0");
+		requestDto.setRequest(req);
+		
+		try {
+			when(zoneUtils.getUserZones()).thenReturn(zonesMachines);
+			//when(masterdataCreationUtil.createMasterData(Machine.class, req)).thenReturn(req);
+			when(registrationCenterValidator.generateMachineIdOrvalidateWithDB(Mockito.any())).thenReturn("10001");
+			when(machineRepository.create(Mockito.any())).thenReturn(machineEntity);
+			when(machineHistoryRepository.create(Mockito.any())).thenReturn(machineHistory);
+			
+			MvcResult result = mockMvc.perform(post("/machines").contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(requestDto)))
+			.andExpect(status().isOk()).andReturn();
+			
+			ResponseWrapper<?> responseWrapper = objectMapper.readValue(result.getResponse().getContentAsString(),
+					ResponseWrapper.class);
+
+			assertThat(responseWrapper.getErrors().get(0).getErrorCode(), is("KER-MSD-999"));
+						
+		} catch(Exception e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	@WithUserDetails("zonal-admin")
+	public void createTestWithInvalidPublicKey() {
+		MachinePostReqDto req = new MachinePostReqDto();
+		req.setLangCode("eng");
+		req.setName("HP");
+		req.setIpAddress("129.0.0.0");
+		req.setMacAddress("178.0.0.0");
+		req.setMachineSpecId("1010");
+		req.setSerialNum("123");
+		req.setIsActive(true);
+		req.setZoneCode("MOR");
+		req.setPublicKey("test-public-key");
+		
+		RequestWrapper<MachinePostReqDto> requestDto;
+		requestDto = new RequestWrapper<>();
+		requestDto.setId("mosip.match.regcentr.machineid");
+		requestDto.setVersion("1.0.0");
+		requestDto.setRequest(req);
+		
+		try {
+			when(zoneUtils.getUserZones()).thenReturn(zonesMachines);
+			when(masterdataCreationUtil.createMasterData(Machine.class, req)).thenReturn(req);
+			when(registrationCenterValidator.generateMachineIdOrvalidateWithDB(Mockito.any())).thenReturn("10001");
+			when(machineRepository.create(Mockito.any())).thenReturn(machineEntity);
+			when(machineHistoryRepository.create(Mockito.any())).thenReturn(machineHistory);
+			
+			MvcResult result = mockMvc.perform(post("/machines").contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(requestDto)))
+					.andExpect(status().isOk()).andReturn();
+			
+			ResponseWrapper<?> responseWrapper = objectMapper.readValue(result.getResponse().getContentAsString(),
+					ResponseWrapper.class);
+
+			assertThat(responseWrapper.getErrors().get(0).getErrorCode(), is("KER-MSD-353"));
+			
+		} catch(Exception e) {
+			Assert.fail(e.getMessage());
+		}
 	}
 
 }

@@ -60,7 +60,7 @@ public class Machine extends BaseEntity implements Serializable {
 	/**
 	 * Field for machine serial number
 	 */
-	@Column(name = "serial_num", nullable = false, length = 64)
+	@Column(name = "serial_num", nullable = true, length = 64)
 	private String serialNum;
 
 	/**
@@ -71,7 +71,7 @@ public class Machine extends BaseEntity implements Serializable {
 	/**
 	 * Field for machine mac address
 	 */
-	@Column(name = "mac_address", nullable = false, length = 64)
+	@Column(name = "mac_address", nullable = true, length = 64)
 	private String macAddress;
 
 	/**
@@ -96,4 +96,16 @@ public class Machine extends BaseEntity implements Serializable {
 
 	@Transient
 	private String mapStatus;
+	
+	/**
+	 * Field for reg machine public key
+	 */
+	@Column(name = "public_key", nullable = false)
+	private String publicKey;
+	
+	/**
+	 * Field for reg machine public key SHA256 hash
+	 */
+	@Column(name = "key_index", nullable = false)
+	private String keyIndex;
 }
