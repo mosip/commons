@@ -7280,7 +7280,7 @@ public class MasterdataIntegrationTest {
 	public void testUnMapDeviceRegCenterDataAccessException() throws Exception {
 		when(zoneUtils.getUserZones()).thenReturn(zonesUsers);
 		when(deviceRepository.findByIdAndLangCode(Mockito.any(), Mockito.any())).thenReturn(deviceZone);
-		when(registrationCenterRepository.findByLangCodeAndId(Mockito.any(), Mockito.any())).thenReturn(regCenterZone);
+		when(registrationCenterRepository.findByRegIdAndLangCode(Mockito.any(), Mockito.any())).thenReturn(Arrays.asList(regCenterZone));
 		when(registrationCenterDeviceRepository.findByDeviceIdAndRegCenterId(Mockito.any(), Mockito.any()))
 				.thenThrow(DataAccessLayerException.class);
 		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcenterdevice/unmap/10008/110005"))
