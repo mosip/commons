@@ -18,7 +18,6 @@ import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.masterdata.dto.TemplateFileFormatDto;
 import io.mosip.kernel.masterdata.dto.TemplateFileFormatResponseDto;
-import io.mosip.kernel.masterdata.dto.getresponse.MachineResponseDto;
 import io.mosip.kernel.masterdata.dto.postresponse.CodeResponseDto;
 import io.mosip.kernel.masterdata.entity.id.CodeAndLanguageCodeID;
 import io.mosip.kernel.masterdata.service.TemplateFileFormatService;
@@ -46,7 +45,8 @@ public class TemplateFileFormatController {
 	/**
 	 * API to create a templatefileformat
 	 * 
-	 * @param templateFileFormatRequestDto {@link TemplateFileFormatDto} instance
+	 * @param templateFileFormatRequestDto
+	 *            {@link TemplateFileFormatDto} instance
 	 * 
 	 * @return {@link CodeAndLanguageCodeID}
 	 */
@@ -64,8 +64,8 @@ public class TemplateFileFormatController {
 	/**
 	 * API to update an existing row of Templatefileformat data
 	 * 
-	 * @param templateFileFormatRequestDto input parameter
-	 *                                     templateFileFormatRequestDto
+	 * @param templateFileFormatRequestDto
+	 *            input parameter templateFileFormatRequestDto
 	 * 
 	 * @return ResponseEntity TemplateFileFormat Code and LangCode which is updated
 	 *         successfully {@link ResponseEntity}
@@ -89,7 +89,8 @@ public class TemplateFileFormatController {
 	/**
 	 * Api to delete TemplateFileFormat
 	 * 
-	 * @param code the TemplateFileFormat code
+	 * @param code
+	 *            the TemplateFileFormat code
 	 * @return the code of templatefileformat
 	 */
 	@ResponseFilter
@@ -105,16 +106,19 @@ public class TemplateFileFormatController {
 		responseWrapper.setResponse(templateFileFormatService.deleteTemplateFileFormat(code));
 		return responseWrapper;
 	}
-	
-	
+
 	/**
 	 * 
-	 * Function to fetch TemplateFileFormat detail based on given TemplateFileFormat code and Language code.
+	 * Function to fetch TemplateFileFormat detail based on given TemplateFileFormat
+	 * code and Language code.
 	 * 
-	 * @param TemplateFileFormat code pass TemplateFileFormat code as String
-	 * @param langCode  pass language code as String
-	 * @return TemplateFileFormatResponseDto TemplateFileFormat detail based on given Machine ID and
-	 *         Language code {@link TemplateFileFormatResponseDto}
+	 * @param TemplateFileFormat
+	 *            code pass TemplateFileFormat code as String
+	 * @param langCode
+	 *            pass language code as String
+	 * @return TemplateFileFormatResponseDto TemplateFileFormat detail based on
+	 *         given Machine ID and Language code
+	 *         {@link TemplateFileFormatResponseDto}
 	 */
 	@ResponseFilter
 	@GetMapping(value = "/{code}/{langcode}")
@@ -123,22 +127,24 @@ public class TemplateFileFormatController {
 			@ApiResponse(code = 200, message = "When TemplateFileFormat Details retrieved from database for the given Languge Code and Code"),
 			@ApiResponse(code = 404, message = "When No TemplateFileFormat Details found for the given Languge Code and Code"),
 			@ApiResponse(code = 500, message = "While retrieving TemplateFileFormat Details any error occured") })
-	public ResponseWrapper<TemplateFileFormatResponseDto> getTemplateFileFormatCodeandLangCode(@PathVariable("code") String templateFileFormatCode,
-			@PathVariable("langcode") String langCode) {
+	public ResponseWrapper<TemplateFileFormatResponseDto> getTemplateFileFormatCodeandLangCode(
+			@PathVariable("code") String templateFileFormatCode, @PathVariable("langcode") String langCode) {
 
 		ResponseWrapper<TemplateFileFormatResponseDto> responseWrapper = new ResponseWrapper<>();
-		responseWrapper.setResponse(templateFileFormatService.getTemplateFileFormatCodeandLangCode(templateFileFormatCode, langCode));
+		responseWrapper.setResponse(
+				templateFileFormatService.getTemplateFileFormatCodeandLangCode(templateFileFormatCode, langCode));
 		return responseWrapper;
 	}
-	
-	
+
 	/**
 	 * 
 	 * Function to fetch TemplateFileFormat detail based on given Language code.
 	 * 
-	 * @param langCode  pass language code as String
-	 * @return TemplateFileFormatResponseDto TemplateFileFormat detail based on given Machine ID and
-	 *         Language code {@link TemplateFileFormatResponseDto}
+	 * @param langCode
+	 *            pass language code as String
+	 * @return TemplateFileFormatResponseDto TemplateFileFormat detail based on
+	 *         given Machine ID and Language code
+	 *         {@link TemplateFileFormatResponseDto}
 	 */
 	@ResponseFilter
 	@GetMapping(value = "/{langcode}")

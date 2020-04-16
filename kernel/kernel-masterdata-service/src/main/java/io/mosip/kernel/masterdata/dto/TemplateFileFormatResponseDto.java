@@ -11,7 +11,7 @@ import lombok.Data;
  */
 @Data
 public class TemplateFileFormatResponseDto {
-	
+
 	private List<TemplateFileFormatDto> templateFileFormats;
 
 }

@@ -12,6 +12,7 @@ import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
  * Service API for Template File Format
  * 
  * @author Neha Sinha
+ * @author Megha Tanga
  * @since 1.0.0
  *
  */
@@ -68,15 +69,18 @@ public interface TemplateFileFormatService {
 			String langCode);
 
 	/**
-	 * This abstract method to fetch TemplateFileFormat details for given 
-	 * language code
+	 * This abstract method to fetch TemplateFileFormat details for given language
+	 * code
 	 * 
-	 * @param langCode Language code given by user
-	 * @return TemplateFileFormatResponseDto TemplateFileFormat Detail for given language code
+	 * @param langCode
+	 *            Language code given by user
+	 * @return TemplateFileFormatResponseDto TemplateFileFormat Detail for given
+	 *         language code
 	 * 
-	 * @throws MasterDataServiceException if any error occurs while retrieving
-	 *                                    TemplateFileFormat Details
-	 * @throws DataNotFoundException      if no TemplateFileFormat found
+	 * @throws MasterDataServiceException
+	 *             if any error occurs while retrieving TemplateFileFormat Details
+	 * @throws DataNotFoundException
+	 *             if no TemplateFileFormat found
 	 *
 	 */
 	public TemplateFileFormatResponseDto getTemplateFileFormatLangCode(String langCode);
