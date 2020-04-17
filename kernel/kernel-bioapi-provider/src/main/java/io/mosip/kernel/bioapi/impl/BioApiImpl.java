@@ -58,8 +58,10 @@ public class BioApiImpl implements IBioApi {
 			if (Objects.nonNull(recordedValue) && Objects.nonNull(recordedValue.getBdb())
 					&& recordedValue.getBdb().length != 0 && Arrays.equals(recordedValue.getBdb(), sample.getBdb())) {
 				matchingScore[count].setInternalScore(90);
+				matchingScore[count].setScaleScore(90);
 			} else {
 				matchingScore[count].setInternalScore(new SecureRandom().nextInt(50));
+				matchingScore[count].setScaleScore(new SecureRandom().nextInt(50));
 			}
 			count++;
 		}
@@ -90,6 +92,7 @@ public class BioApiImpl implements IBioApi {
 		CompositeScore compositeScore = new CompositeScore();
 		compositeScore.setIndividualScores(matchingScore);
 		compositeScore.setInternalScore((long) (sum / matchingScore.length));
+		compositeScore.setScaledScore((long) (sum / matchingScore.length));
 		return compositeScore;
 	}
 
