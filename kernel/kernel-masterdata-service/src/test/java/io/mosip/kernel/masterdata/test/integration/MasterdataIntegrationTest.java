@@ -9172,6 +9172,31 @@ public class MasterdataIntegrationTest {
 				Mockito.anyString())).thenThrow(DataRetrievalFailureException.class);
 		mockMvc.perform(get("/templatefileformats/{code}/{langcode}", "1000", "ENG")).andExpect(status().isInternalServerError());
 	}
+//----------------------------------------Template Type ------------------------------------------
+	@Test
+	@WithUserDetails("global-admin")
+	public void getTemplateTypeCodeLangcodeSuccessTest() throws Exception {
+		List<TemplateType> templateTypes = new ArrayList<TemplateType>();
+		templateTypes.add(templateType);
+		when(templateTypeRepository.findAllByCodeAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyString(),
+				Mockito.anyString())).thenReturn(templateTypes);
+		mockMvc.perform(get("/templatetypes/{code}/{langcode}", "1000", "ENG")).andExpect(status().isOk());
+	}
 
+	@Test
+	@WithUserDetails("global-admin")
+	public void getTemplateTypeCodeLangcodeNullResponseTest() throws Exception {
+		when(templateTypeRepository.findAllByCodeAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyString(),
+				Mockito.anyString())).thenReturn(null);
+		mockMvc.perform(get("/templatetypes/{code}/{langcode}", "1000", "ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getTemplateTypeCodeLangcodeFetchExceptionTest() throws Exception {
+		when(templateTypeRepository.findAllByCodeAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyString(),
+				Mockito.anyString())).thenThrow(DataRetrievalFailureException.class);
+		mockMvc.perform(get("/templatetypes/{code}/{langcode}", "1000", "ENG")).andExpect(status().isInternalServerError());
+	}
 
 }
