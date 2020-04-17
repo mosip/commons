@@ -9119,5 +9119,32 @@ public class MasterdataIntegrationTest {
 			Assert.fail(e.getMessage());
 		}
 	}
+//----------------------------	TemplateFileFormat --------------------------------------
+	
+	@Test
+	@WithUserDetails("global-admin")
+	public void getTemplateFileFormatLangCodeSuccessTest() throws Exception {
+		List<TemplateFileFormat> templateFileFormats = new ArrayList<TemplateFileFormat>();
+		templateFileFormats.add(templateFileFormat);
+		when(templateFileFormatRepository.findAllByLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyString()
+				)).thenReturn(templateFileFormats);
+		mockMvc.perform(get("/templatefileformats/{langcode}", "ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getTemplateFileFormatLangCodeNullResponseTest() throws Exception {
+		when(templateFileFormatRepository.findAllByLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyString()
+				)).thenReturn(null);
+		mockMvc.perform(get("/templatefileformats/{langcode}", "ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getTemplateFileFormatLangCodeFetchExceptionTest() throws Exception {
+		when(templateFileFormatRepository.findAllByLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyString()
+				)).thenThrow(DataRetrievalFailureException.class);
+		mockMvc.perform(get("/templatefileformats/{langcode}", "ENG")).andExpect(status().isInternalServerError());
+	}
 
 }
