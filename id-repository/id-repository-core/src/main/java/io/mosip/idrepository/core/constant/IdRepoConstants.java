@@ -29,6 +29,9 @@ public class IdRepoConstants {
 
 	/** The datetime timezone. */
 	public static final String DATETIME_TIMEZONE = "mosip.idrepo.datetime.timezone";
+	
+	/** datetime adjustment in minutes **/
+	public static final String DATETIME_ADJUSTMENT = "mosip.idrepo.datetime.future-time-adjustment";
 
 	/** The status registered. */
 	public static final String ACTIVE_STATUS = "mosip.idrepo.identity.uin-status.registered";
