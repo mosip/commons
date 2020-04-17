@@ -9258,4 +9258,38 @@ public class MasterdataIntegrationTest {
 				)).thenThrow(DataRetrievalFailureException.class);
 		mockMvc.perform(get("/modules/{langcode}", "ENG")).andExpect(status().isInternalServerError());
 	}
+	
+	//-------------------------
+	@Test
+	@WithUserDetails("global-admin")
+	public void getModuleIdLangcodeSuccessTest() throws Exception {
+		ModuleDetail module = new ModuleDetail();
+		module.setId("1001");
+		module.setLangCode("eng");
+		module.setIsActive(true);
+		module.setName("module");
+		module.setDescription("description");
+		List<ModuleDetail> modules = new ArrayList<ModuleDetail>();
+		modules.add(module);
+		when(moduleRepository.findAllByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyString(),
+				Mockito.anyString())).thenReturn(modules);
+		mockMvc.perform(get("/modules/{id}/{langcode}", "1000", "ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getModuleIdLangcodeNullResponseTest() throws Exception {
+		when(moduleRepository.findAllByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyString(),
+				Mockito.anyString())).thenReturn(null);
+		mockMvc.perform(get("/modules/{id}/{langcode}", "1000", "ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getModuleIdLangcodeFetchExceptionTest() throws Exception {
+		when(moduleRepository.findAllByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyString(),
+				Mockito.anyString())).thenThrow(DataRetrievalFailureException.class);
+		mockMvc.perform(get("/modules/{id}/{langcode}", "1000", "ENG")).andExpect(status().isInternalServerError());
+	}
+	
 }
