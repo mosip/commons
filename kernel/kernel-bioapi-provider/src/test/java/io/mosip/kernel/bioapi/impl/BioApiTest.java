@@ -72,7 +72,7 @@ public class BioApiTest {
 		Score[] match = bioApiImpl.match(BIR, birDataFromXML.stream().toArray(BIR[]::new), null);
 		Score highestScore = Arrays.stream(match).max(Comparator.comparing(Score::getInternalScore)).get();
 		assertEquals(90, highestScore.getInternalScore());
-		assertEquals(90, highestScore.getScaleScore());
+		assertEquals(90, highestScore.getScaleScore(),0.00);
 	}
 
 	@Test
@@ -81,7 +81,7 @@ public class BioApiTest {
 				birDataFromXML2.stream().toArray(BIR[]::new), null);
 		for (Score score : compositeMatch.getIndividualScores()) {
 			assertEquals(90, score.getInternalScore());
-			assertEquals(90, score.getScaleScore());
+			assertEquals(90, score.getScaleScore(),0.00);
 		}
 		assertEquals(90, compositeMatch.getInternalScore());
 	}
