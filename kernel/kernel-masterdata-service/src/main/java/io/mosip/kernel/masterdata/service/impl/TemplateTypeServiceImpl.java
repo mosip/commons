@@ -70,7 +70,7 @@ public class TemplateTypeServiceImpl implements TemplateTypeService {
 	public TemplateTypeResponseDto getTemplateTypeCodeandLangCode(String templateTypeCode, String langCode) {
 		List<TemplateType> templateTypeList = null;
 		List<TemplateTypeDto> templateTypeDtoList = null;
-		TemplateTypeResponseDto templateTypeResponseIdDto = new TemplateTypeResponseDto();
+		TemplateTypeResponseDto templateTypeResponseDto = new TemplateTypeResponseDto();
 		try {
 			templateTypeList = templateTypeRepository
 					.findAllByCodeAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(templateTypeCode, langCode);
@@ -87,8 +87,8 @@ public class TemplateTypeServiceImpl implements TemplateTypeService {
 					TemplateTypeErrorCode.TEMPLATE_TYPE_NOT_FOUND_EXCEPTION.getErrorMessage());
 
 		}
-		templateTypeResponseIdDto.setTemplateTypes(templateTypeDtoList);
-		return templateTypeResponseIdDto;
+		templateTypeResponseDto.setTemplateTypes(templateTypeDtoList);
+		return templateTypeResponseDto;
 	}
 
 	/*

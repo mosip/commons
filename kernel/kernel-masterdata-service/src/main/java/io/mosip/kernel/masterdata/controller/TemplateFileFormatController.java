@@ -117,7 +117,7 @@ public class TemplateFileFormatController {
 	 * @param langCode
 	 *            pass language code as String
 	 * @return TemplateFileFormatResponseDto TemplateFileFormat detail based on
-	 *         given Machine ID and Language code
+	 *         given TemplateFileFormat code and Language code
 	 *         {@link TemplateFileFormatResponseDto}
 	 */
 	@ResponseFilter
@@ -143,7 +143,7 @@ public class TemplateFileFormatController {
 	 * @param langCode
 	 *            pass language code as String
 	 * @return TemplateFileFormatResponseDto TemplateFileFormat detail based on
-	 *         given Machine ID and Language code
+	 *         given TemplateFileFormat code and Language code
 	 *         {@link TemplateFileFormatResponseDto}
 	 */
 	@ResponseFilter

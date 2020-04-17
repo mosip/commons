@@ -20,7 +20,7 @@ public interface TemplateTypeRepository extends BaseRepository<TemplateType, Str
 
 	/**
 	 * This method trigger query to fetch the TemplateType detail for the given
-	 * TemplateType id and language code.
+	 * TemplateType code and language code.
 	 * 
 	 * 
 	 * @param code
