@@ -70,7 +70,7 @@ public abstract class BaseIdRepoValidator {
 					String.format(MISSING_INPUT_PARAMETER.getErrorMessage(), REQUEST_TIME));
 		} else {
 			if (DateUtils.after(reqTime, DateUtils.getUTCCurrentDateTime()
-					.plusMinutes(env.getProperty(DATETIME_ADJUSTMENT, Long.class, 2l)))) {
+					.plusMinutes(env.getProperty(DATETIME_ADJUSTMENT, Long.class, 0l)))) {
 				mosipLogger.error(IdRepoSecurityManager.getUser(), BASE_ID_REPO_VALIDATOR, "validateReqTime",
 						"requesttime is future dated");
 				errors.rejectValue(REQUEST_TIME, INVALID_INPUT_PARAMETER.getErrorCode(),
