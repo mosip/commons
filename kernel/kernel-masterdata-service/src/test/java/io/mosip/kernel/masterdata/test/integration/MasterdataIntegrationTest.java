@@ -24,7 +24,6 @@ import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -32,7 +31,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -59,7 +57,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -78,7 +75,6 @@ import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.idgenerator.spi.MachineIdGenerator;
 import io.mosip.kernel.core.util.CryptoUtil;
-import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.masterdata.constant.MachinePutReqDto;
 import io.mosip.kernel.masterdata.dto.BiometricAttributeDto;
 import io.mosip.kernel.masterdata.dto.BlacklistedWordsDto;
@@ -142,7 +138,6 @@ import io.mosip.kernel.masterdata.entity.DeviceSpecification;
 import io.mosip.kernel.masterdata.entity.DeviceType;
 import io.mosip.kernel.masterdata.entity.DocumentCategory;
 import io.mosip.kernel.masterdata.entity.DocumentType;
-import io.mosip.kernel.masterdata.entity.ExceptionalHoliday;
 import io.mosip.kernel.masterdata.entity.FoundationalTrustProvider;
 import io.mosip.kernel.masterdata.entity.FoundationalTrustProviderHistory;
 import io.mosip.kernel.masterdata.entity.Gender;
@@ -157,6 +152,7 @@ import io.mosip.kernel.masterdata.entity.Machine;
 import io.mosip.kernel.masterdata.entity.MachineHistory;
 import io.mosip.kernel.masterdata.entity.MachineSpecification;
 import io.mosip.kernel.masterdata.entity.MachineType;
+import io.mosip.kernel.masterdata.entity.ModuleDetail;
 import io.mosip.kernel.masterdata.entity.ReasonCategory;
 import io.mosip.kernel.masterdata.entity.ReasonList;
 import io.mosip.kernel.masterdata.entity.RegWorkingNonWorking;
@@ -226,6 +222,7 @@ import io.mosip.kernel.masterdata.repository.MachineHistoryRepository;
 import io.mosip.kernel.masterdata.repository.MachineRepository;
 import io.mosip.kernel.masterdata.repository.MachineSpecificationRepository;
 import io.mosip.kernel.masterdata.repository.MachineTypeRepository;
+import io.mosip.kernel.masterdata.repository.ModuleRepository;
 import io.mosip.kernel.masterdata.repository.ReasonCategoryRepository;
 import io.mosip.kernel.masterdata.repository.ReasonListRepository;
 import io.mosip.kernel.masterdata.repository.RegWorkingNonWorkingRepo;
@@ -9226,5 +9223,39 @@ public class MasterdataIntegrationTest {
 				)).thenThrow(DataRetrievalFailureException.class);
 		mockMvc.perform(get("/templatetypes/{langcode}", "ENG")).andExpect(status().isInternalServerError());
 	}
+//-----------------------------------module----------------------------
+	@MockBean
+	ModuleRepository moduleRepository;
+	
+	@Test
+	@WithUserDetails("global-admin")
+	public void getModuleLangCodeSuccessTest() throws Exception {
+		ModuleDetail module = new ModuleDetail();
+		module.setId("1001");
+		module.setLangCode("eng");
+		module.setIsActive(true);
+		module.setName("module");
+		module.setDescription("description");
+		List<ModuleDetail> modules = new ArrayList<ModuleDetail>();
+		modules.add(module);
+		when(moduleRepository.findAllByLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString()
+				)).thenReturn(modules);
+		mockMvc.perform(get("/modules/{langcode}", "ENG")).andExpect(status().isOk());
+	}
 
+	@Test
+	@WithUserDetails("global-admin")
+	public void getModuleLangCodeNullResponseTest() throws Exception {
+		when(moduleRepository.findAllByLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString()
+				)).thenReturn(null);
+		mockMvc.perform(get("/modules/{langcode}", "ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getModuleLangCodeFetchExceptionTest() throws Exception {
+		when(moduleRepository.findAllByLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString()
+				)).thenThrow(DataRetrievalFailureException.class);
+		mockMvc.perform(get("/modules/{langcode}", "ENG")).andExpect(status().isInternalServerError());
+	}
 }
