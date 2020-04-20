@@ -7,6 +7,8 @@ import java.util.UUID;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -35,6 +37,8 @@ import io.mosip.kernel.masterdata.utils.MetaDataUtils;
 
 @Service
 public class DynamicFieldServiceImpl implements DynamicFieldService {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(DynamicFieldServiceImpl.class);
 	
 	private ObjectMapper objectMapper = new ObjectMapper();
 	
@@ -93,6 +97,7 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 		entity.setIsActive(true);
 		entity.setIsDeleted(false);
 		entity.setId(UUID.randomUUID().toString());
+		entity.setValueJson(getValueJson(dto.getFieldVal()));
 		try {
 			entity = dynamicFieldRepository.create(entity);
 		} catch (DataAccessLayerException | DataAccessException e) {
@@ -163,6 +168,18 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 		}
 		return fieldId;		
 	}
+	
+	private String getValueJson(List<DynamicFieldValueDto> fieldValues) {
+		String valueJson = "[]";
+		try {
+			for(DynamicFieldValueDto valueDto : fieldValues) {
+				valueJson = getFieldValue(valueJson, valueDto);
+			}
+		} catch(JsonProcessingException e) {
+			LOGGER.error("Failed to parse field value passed : ", e);
+		}
+		return valueJson;
+	}
 
 		
 	private void checkIfDynamicFieldExists(String fieldName, String langCode) {
@@ -215,11 +232,11 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 					updatedExisting = true;
 					break;
 				}
-			}	
-		}
-		
-		if(!updatedExisting)
-			valueDtoList.add(dto);
+			}
+			
+			if(!updatedExisting)
+				valueDtoList.add(dto);
+		}	
 		
 		return objectMapper.writeValueAsString(valueDtoList);
 	}

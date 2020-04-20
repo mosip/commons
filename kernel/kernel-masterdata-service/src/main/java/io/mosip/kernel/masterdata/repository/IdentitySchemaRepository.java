@@ -35,15 +35,17 @@ public interface IdentitySchemaRepository extends BaseRepository<IdentitySchema,
 	/**
 	 * Get published identity schema based on idVersion
 	 * 
-	 * @param entityClass of type {@link IdentitySchema}
-	 * @return list of {@link IdentitySchema}
+	 * @param ver
+	 * @return
 	 */
 	@Query("FROM IdentitySchema WHERE idVersion=?1 AND isActive = true AND status='PUBLISHED'")
 	IdentitySchema findPublishedIdentitySchema(double ver);
 	
 	/**
 	 * Get All Identity schema based on pagination
-	 * @param pageRequest
+	 * 
+	 * @param isActive
+	 * @param pageable
 	 * @return
 	 */
 	@Query(value="select * FROM master.identity_schema WHERE is_active=?1 AND (is_deleted is null OR is_deleted = false)", 

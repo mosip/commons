@@ -42,7 +42,7 @@ public class DynamicFieldController {
 			@RequestParam(name = "pageSize", defaultValue = "10") @ApiParam(value = "page size", defaultValue = "10") int pageSize,
 			@RequestParam(name = "sortBy", defaultValue = "cr_dtimes") @ApiParam(value = "sort on field name", defaultValue = "cr_dtimes") String sortBy,
 			@RequestParam(name = "orderBy", defaultValue = "desc") @ApiParam(value = "sort order", defaultValue = "desc") OrderEnum orderBy,
-			@RequestParam(name = "langCode", defaultValue = "eng") @ApiParam(value = "Lang Code", defaultValue = "eng") String langCode) {
+			@RequestParam(name = "langCode", required = false) @ApiParam(value = "Lang Code", required = false) String langCode) {
 		ResponseWrapper<PageDto<DynamicFieldResponseDto>> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(dynamicFieldService.getAllDynamicField(pageNumber, pageSize, sortBy, orderBy.name(), langCode));
 		return responseWrapper;

@@ -3,6 +3,7 @@ package io.mosip.kernel.masterdata.dto;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import io.mosip.kernel.masterdata.validator.ValidLangCode;
@@ -26,6 +27,7 @@ public class DynamicFieldDto {
 	
 	@ApiModelProperty(notes = "Field name", example = "any name", required = true)
 	@NotBlank
+	@Pattern(regexp = "^[a-zA-Z]+$")
 	@Size(min = 1, max = 20)
 	private String name;
 	

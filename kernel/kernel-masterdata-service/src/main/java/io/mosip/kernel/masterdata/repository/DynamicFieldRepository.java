@@ -23,7 +23,9 @@ public interface DynamicFieldRepository extends BaseRepository<DynamicField, Str
 
 	/**
 	 * Get All dynamic fields based on pagination
-	 * @param pageRequest
+	 * 
+	 * @param langCode
+	 * @param pageable
 	 * @return
 	 */
 	@Query(value="SELECT * FROM master.dynamic_field WHERE (is_deleted is null OR is_deleted = false) and lang_code=?1",
@@ -33,7 +35,7 @@ public interface DynamicFieldRepository extends BaseRepository<DynamicField, Str
 	
 	/**
 	 * Get All dynamic fields based on pagination
-	 * @param pageRequest
+	 * @param pageable
 	 * @return
 	 */
 	@Query(value="SELECT * FROM master.dynamic_field WHERE (is_deleted is null OR is_deleted = false)", 
@@ -66,16 +68,22 @@ public interface DynamicFieldRepository extends BaseRepository<DynamicField, Str
 	@Query("FROM DynamicField WHERE lower(name)=lower(?1)")
 	List<DynamicField> findAllDynamicFieldByName(String fieldName);
 	
+	/**
+	 * 
+	 * @param fieldName
+	 * @param langCode
+	 * @return
+	 */
 	@Query("FROM DynamicField WHERE lower(name)=lower(?1) and langCode=?2")
 	DynamicField findDynamicFieldByNameAndLangCode(String fieldName, String langCode);
 	
 	/**
-	 * Update all the fields of dynamic field except name
+	 *  Update all the fields of dynamic field except name
+	 *  
 	 * @param id
 	 * @param description
 	 * @param langCode
 	 * @param dataType
-	 * @param fieldVal
 	 * @param isActive
 	 * @param updatedDateTime
 	 * @param updatedBy
@@ -89,8 +97,9 @@ public interface DynamicFieldRepository extends BaseRepository<DynamicField, Str
 	
 	/**
 	 * Update dynamic field value specific to a language code
+	 * 
 	 * @param id
-	 * @param fieldVal
+	 * @param valueJson
 	 * @param langCode
 	 * @param updatedDateTime
 	 * @param updatedBy

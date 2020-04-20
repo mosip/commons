@@ -404,7 +404,8 @@ public class IdentitySchemaServiceImpl implements IdentitySchemaService {
 	
 	
 	private IdSchemaResponseDto getIdentitySchemaDto(IdentitySchema entity) {
-		IdSchemaResponseDto dto = new IdSchemaResponseDto();		
+		IdSchemaResponseDto dto = new IdSchemaResponseDto();
+		dto.setId(entity.getId());
 		dto.setIdVersion(entity.getIdVersion());
 		dto.setTitle(entity.getTitle());
 		dto.setDescription(entity.getDescription());
@@ -415,6 +416,7 @@ public class IdentitySchemaServiceImpl implements IdentitySchemaService {
 		dto.setCreatedOn(entity.getCreatedDateTime());		
 		dto.setUpdatedBy(entity.getUpdatedBy());
 		dto.setUpdatedOn(entity.getUpdatedDateTime());
+		dto.setEffectiveFrom(entity.getEffectiveFrom());
 		return dto;
 	}
 }
