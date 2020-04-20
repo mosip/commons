@@ -37,6 +37,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -146,6 +147,7 @@ import io.mosip.kernel.masterdata.entity.IdType;
 import io.mosip.kernel.masterdata.entity.IndividualType;
 import io.mosip.kernel.masterdata.entity.Language;
 import io.mosip.kernel.masterdata.entity.Location;
+import io.mosip.kernel.masterdata.entity.LocationHierarchy;
 import io.mosip.kernel.masterdata.entity.MOSIPDeviceService;
 import io.mosip.kernel.masterdata.entity.MOSIPDeviceServiceHistory;
 import io.mosip.kernel.masterdata.entity.Machine;
@@ -215,6 +217,7 @@ import io.mosip.kernel.masterdata.repository.HolidayRepository;
 import io.mosip.kernel.masterdata.repository.IdTypeRepository;
 import io.mosip.kernel.masterdata.repository.IndividualTypeRepository;
 import io.mosip.kernel.masterdata.repository.LanguageRepository;
+import io.mosip.kernel.masterdata.repository.LocationHierarchyRepository;
 import io.mosip.kernel.masterdata.repository.LocationRepository;
 import io.mosip.kernel.masterdata.repository.MOSIPDeviceServiceHistoryRepository;
 import io.mosip.kernel.masterdata.repository.MOSIPDeviceServiceRepository;
@@ -9291,5 +9294,41 @@ public class MasterdataIntegrationTest {
 				Mockito.anyString())).thenThrow(DataRetrievalFailureException.class);
 		mockMvc.perform(get("/modules/{id}/{langcode}", "1000", "ENG")).andExpect(status().isInternalServerError());
 	}
+	//----------------------------Location hierarchy-------------------------
+	@MockBean
+	LocationHierarchyRepository locationHierarchyRepository;
 	
+	@Test
+	@WithUserDetails("global-admin")
+	public void getLocationHierarchyLevelAndLangCodeSuccessTest() throws Exception {
+		LocationHierarchy locationHierarchy = new LocationHierarchy();
+		locationHierarchy.setHierarchyLevel((short)0);
+		short l = 0;
+		locationHierarchy.setLangCode("eng");
+		locationHierarchy.setIsActive(true);
+		locationHierarchy.setHierarchyLevelName("name");
+		List<LocationHierarchy> locationHierarchys = new ArrayList<LocationHierarchy>();
+		locationHierarchys.add(locationHierarchy);
+		when(locationHierarchyRepository
+				.findAllByLevelAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyShort(),Mockito.anyString())).thenReturn(locationHierarchys);
+		mockMvc.perform(get("/locationHierarchyLevels/{level}/{langcode}", l, "ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getLocationHierarchyLevelAndLangCodeResponseTest() throws Exception {
+		short level = 0;
+		when(locationHierarchyRepository.findAllByLevelAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyShort(),
+				Mockito.anyString())).thenReturn(null);
+		mockMvc.perform(get("/locationHierarchyLevels/{level}/{langcode}", level, "ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getLocationHierarchyLevelAndLangCodeFetchExceptionTest() throws Exception {
+		short level = 0;
+		when(locationHierarchyRepository.findAllByLevelAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyShort(),
+				Mockito.anyString())).thenThrow(DataRetrievalFailureException.class);
+		mockMvc.perform(get("/locationHierarchyLevels/{level}/{langcode}", level, "ENG")).andExpect(status().isInternalServerError());
+	}
 }
