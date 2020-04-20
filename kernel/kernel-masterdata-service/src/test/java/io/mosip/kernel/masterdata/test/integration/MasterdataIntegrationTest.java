@@ -24,7 +24,6 @@ import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -32,13 +31,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,7 +58,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -78,7 +76,6 @@ import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.idgenerator.spi.MachineIdGenerator;
 import io.mosip.kernel.core.util.CryptoUtil;
-import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.masterdata.constant.MachinePutReqDto;
 import io.mosip.kernel.masterdata.dto.BiometricAttributeDto;
 import io.mosip.kernel.masterdata.dto.BlacklistedWordsDto;
@@ -142,7 +139,6 @@ import io.mosip.kernel.masterdata.entity.DeviceSpecification;
 import io.mosip.kernel.masterdata.entity.DeviceType;
 import io.mosip.kernel.masterdata.entity.DocumentCategory;
 import io.mosip.kernel.masterdata.entity.DocumentType;
-import io.mosip.kernel.masterdata.entity.ExceptionalHoliday;
 import io.mosip.kernel.masterdata.entity.FoundationalTrustProvider;
 import io.mosip.kernel.masterdata.entity.FoundationalTrustProviderHistory;
 import io.mosip.kernel.masterdata.entity.Gender;
@@ -151,12 +147,14 @@ import io.mosip.kernel.masterdata.entity.IdType;
 import io.mosip.kernel.masterdata.entity.IndividualType;
 import io.mosip.kernel.masterdata.entity.Language;
 import io.mosip.kernel.masterdata.entity.Location;
+import io.mosip.kernel.masterdata.entity.LocationHierarchy;
 import io.mosip.kernel.masterdata.entity.MOSIPDeviceService;
 import io.mosip.kernel.masterdata.entity.MOSIPDeviceServiceHistory;
 import io.mosip.kernel.masterdata.entity.Machine;
 import io.mosip.kernel.masterdata.entity.MachineHistory;
 import io.mosip.kernel.masterdata.entity.MachineSpecification;
 import io.mosip.kernel.masterdata.entity.MachineType;
+import io.mosip.kernel.masterdata.entity.ModuleDetail;
 import io.mosip.kernel.masterdata.entity.ReasonCategory;
 import io.mosip.kernel.masterdata.entity.ReasonList;
 import io.mosip.kernel.masterdata.entity.RegWorkingNonWorking;
@@ -219,6 +217,7 @@ import io.mosip.kernel.masterdata.repository.HolidayRepository;
 import io.mosip.kernel.masterdata.repository.IdTypeRepository;
 import io.mosip.kernel.masterdata.repository.IndividualTypeRepository;
 import io.mosip.kernel.masterdata.repository.LanguageRepository;
+import io.mosip.kernel.masterdata.repository.LocationHierarchyRepository;
 import io.mosip.kernel.masterdata.repository.LocationRepository;
 import io.mosip.kernel.masterdata.repository.MOSIPDeviceServiceHistoryRepository;
 import io.mosip.kernel.masterdata.repository.MOSIPDeviceServiceRepository;
@@ -226,6 +225,7 @@ import io.mosip.kernel.masterdata.repository.MachineHistoryRepository;
 import io.mosip.kernel.masterdata.repository.MachineRepository;
 import io.mosip.kernel.masterdata.repository.MachineSpecificationRepository;
 import io.mosip.kernel.masterdata.repository.MachineTypeRepository;
+import io.mosip.kernel.masterdata.repository.ModuleRepository;
 import io.mosip.kernel.masterdata.repository.ReasonCategoryRepository;
 import io.mosip.kernel.masterdata.repository.ReasonListRepository;
 import io.mosip.kernel.masterdata.repository.RegWorkingNonWorkingRepo;
@@ -9119,5 +9119,248 @@ public class MasterdataIntegrationTest {
 			Assert.fail(e.getMessage());
 		}
 	}
+//----------------------------	TemplateFileFormat --------------------------------------
+	
+	@Test
+	@WithUserDetails("global-admin")
+	public void getTemplateFileFormatLangCodeSuccessTest() throws Exception {
+		List<TemplateFileFormat> templateFileFormats = new ArrayList<TemplateFileFormat>();
+		templateFileFormats.add(templateFileFormat);
+		when(templateFileFormatRepository.findAllByLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyString()
+				)).thenReturn(templateFileFormats);
+		mockMvc.perform(get("/templatefileformats/{langcode}", "ENG")).andExpect(status().isOk());
+	}
 
+	@Test
+	@WithUserDetails("global-admin")
+	public void getTemplateFileFormatLangCodeNullResponseTest() throws Exception {
+		when(templateFileFormatRepository.findAllByLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyString()
+				)).thenReturn(null);
+		mockMvc.perform(get("/templatefileformats/{langcode}", "ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getTemplateFileFormatLangCodeFetchExceptionTest() throws Exception {
+		when(templateFileFormatRepository.findAllByLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyString()
+				)).thenThrow(DataRetrievalFailureException.class);
+		mockMvc.perform(get("/templatefileformats/{langcode}", "ENG")).andExpect(status().isInternalServerError());
+	}
+	
+	@Test
+	@WithUserDetails("global-admin")
+	public void getTemplateFileFormatCodeLangcodeSuccessTest() throws Exception {
+		List<TemplateFileFormat> templateFileFormats = new ArrayList<TemplateFileFormat>();
+		templateFileFormats.add(templateFileFormat);
+		when(templateFileFormatRepository.findAllByCodeAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyString(),
+				Mockito.anyString())).thenReturn(templateFileFormats);
+		mockMvc.perform(get("/templatefileformats/{code}/{langcode}", "1000", "ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getTemplateFileFormatCodeLangcodeNullResponseTest() throws Exception {
+		when(templateFileFormatRepository.findAllByCodeAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyString(),
+				Mockito.anyString())).thenReturn(null);
+		mockMvc.perform(get("/templatefileformats/{code}/{langcode}", "1000", "ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getTemplateFileFormatCodeLangcodeFetchExceptionTest() throws Exception {
+		when(templateFileFormatRepository.findAllByCodeAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyString(),
+				Mockito.anyString())).thenThrow(DataRetrievalFailureException.class);
+		mockMvc.perform(get("/templatefileformats/{code}/{langcode}", "1000", "ENG")).andExpect(status().isInternalServerError());
+	}
+//----------------------------------------Template Type ------------------------------------------
+	@Test
+	@WithUserDetails("global-admin")
+	public void getTemplateTypeCodeLangcodeSuccessTest() throws Exception {
+		List<TemplateType> templateTypes = new ArrayList<TemplateType>();
+		templateTypes.add(templateType);
+		when(templateTypeRepository.findAllByCodeAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyString(),
+				Mockito.anyString())).thenReturn(templateTypes);
+		mockMvc.perform(get("/templatetypes/{code}/{langcode}", "1000", "ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getTemplateTypeCodeLangcodeNullResponseTest() throws Exception {
+		when(templateTypeRepository.findAllByCodeAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyString(),
+				Mockito.anyString())).thenReturn(null);
+		mockMvc.perform(get("/templatetypes/{code}/{langcode}", "1000", "ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getTemplateTypeCodeLangcodeFetchExceptionTest() throws Exception {
+		when(templateTypeRepository.findAllByCodeAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyString(),
+				Mockito.anyString())).thenThrow(DataRetrievalFailureException.class);
+		mockMvc.perform(get("/templatetypes/{code}/{langcode}", "1000", "ENG")).andExpect(status().isInternalServerError());
+	}
+	
+	//---------------
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getTemplateTypeLangCodeSuccessTest() throws Exception {
+		List<TemplateType> templateTypes = new ArrayList<TemplateType>();
+		templateTypes.add(templateType);
+		when(templateTypeRepository.findAllByLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString()
+				)).thenReturn(templateTypes);
+		mockMvc.perform(get("/templatetypes/{langcode}", "ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getTemplateTypeLangCodeNullResponseTest() throws Exception {
+		when(templateTypeRepository.findAllByLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString()
+				)).thenReturn(null);
+		mockMvc.perform(get("/templatetypes/{langcode}", "ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getTemplateTypeLangCodeFetchExceptionTest() throws Exception {
+		when(templateTypeRepository.findAllByLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString()
+				)).thenThrow(DataRetrievalFailureException.class);
+		mockMvc.perform(get("/templatetypes/{langcode}", "ENG")).andExpect(status().isInternalServerError());
+	}
+//-----------------------------------module----------------------------
+	@MockBean
+	ModuleRepository moduleRepository;
+	
+	@Test
+	@WithUserDetails("global-admin")
+	public void getModuleLangCodeSuccessTest() throws Exception {
+		ModuleDetail module = new ModuleDetail();
+		module.setId("1001");
+		module.setLangCode("eng");
+		module.setIsActive(true);
+		module.setName("module");
+		module.setDescription("description");
+		List<ModuleDetail> modules = new ArrayList<ModuleDetail>();
+		modules.add(module);
+		when(moduleRepository.findAllByLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString()
+				)).thenReturn(modules);
+		mockMvc.perform(get("/modules/{langcode}", "ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getModuleLangCodeNullResponseTest() throws Exception {
+		when(moduleRepository.findAllByLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString()
+				)).thenReturn(null);
+		mockMvc.perform(get("/modules/{langcode}", "ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getModuleLangCodeFetchExceptionTest() throws Exception {
+		when(moduleRepository.findAllByLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString()
+				)).thenThrow(DataRetrievalFailureException.class);
+		mockMvc.perform(get("/modules/{langcode}", "ENG")).andExpect(status().isInternalServerError());
+	}
+	
+	//-------------------------
+	@Test
+	@WithUserDetails("global-admin")
+	public void getModuleIdLangcodeSuccessTest() throws Exception {
+		ModuleDetail module = new ModuleDetail();
+		module.setId("1001");
+		module.setLangCode("eng");
+		module.setIsActive(true);
+		module.setName("module");
+		module.setDescription("description");
+		List<ModuleDetail> modules = new ArrayList<ModuleDetail>();
+		modules.add(module);
+		when(moduleRepository.findAllByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyString(),
+				Mockito.anyString())).thenReturn(modules);
+		mockMvc.perform(get("/modules/{id}/{langcode}", "1000", "ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getModuleIdLangcodeNullResponseTest() throws Exception {
+		when(moduleRepository.findAllByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyString(),
+				Mockito.anyString())).thenReturn(null);
+		mockMvc.perform(get("/modules/{id}/{langcode}", "1000", "ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getModuleIdLangcodeFetchExceptionTest() throws Exception {
+		when(moduleRepository.findAllByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyString(),
+				Mockito.anyString())).thenThrow(DataRetrievalFailureException.class);
+		mockMvc.perform(get("/modules/{id}/{langcode}", "1000", "ENG")).andExpect(status().isInternalServerError());
+	}
+	//----------------------------Location hierarchy-------------------------
+	@MockBean
+	LocationHierarchyRepository locationHierarchyRepository;
+	short level = 0;
+	
+	@Test
+	@WithUserDetails("global-admin")
+	public void getLocationHierarchyLevelAndLangCodeSuccessTest() throws Exception {
+		LocationHierarchy locationHierarchy = new LocationHierarchy();
+		locationHierarchy.setHierarchyLevel((short)0);
+		locationHierarchy.setLangCode("eng");
+		locationHierarchy.setIsActive(true);
+		locationHierarchy.setHierarchyLevelName("name");
+		List<LocationHierarchy> locationHierarchys = new ArrayList<LocationHierarchy>();
+		locationHierarchys.add(locationHierarchy);
+		when(locationHierarchyRepository
+				.findAllByLevelAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyShort(),Mockito.anyString())).thenReturn(locationHierarchys);
+		mockMvc.perform(get("/locationHierarchyLevels/{level}/{langcode}", level, "ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getLocationHierarchyLevelAndLangCodeResponseTest() throws Exception {
+		when(locationHierarchyRepository.findAllByLevelAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyShort(),
+				Mockito.anyString())).thenReturn(null);
+		mockMvc.perform(get("/locationHierarchyLevels/{level}/{langcode}", level, "ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getLocationHierarchyLevelAndLangCodeFetchExceptionTest() throws Exception {
+		when(locationHierarchyRepository.findAllByLevelAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyShort(),
+				Mockito.anyString())).thenThrow(DataRetrievalFailureException.class);
+		mockMvc.perform(get("/locationHierarchyLevels/{level}/{langcode}", level, "ENG")).andExpect(status().isInternalServerError());
+	}
+	
+	//--------------------------------
+	@Test
+	@WithUserDetails("global-admin")
+	public void getLocationHierarchyLangCodeSuccessTest() throws Exception {
+		LocationHierarchy locationHierarchy = new LocationHierarchy();
+		locationHierarchy.setHierarchyLevel((short)0);
+		locationHierarchy.setLangCode("eng");
+		locationHierarchy.setIsActive(true);
+		locationHierarchy.setHierarchyLevelName("name");
+		List<LocationHierarchy> locationHierarchys = new ArrayList<LocationHierarchy>();
+		locationHierarchys.add(locationHierarchy);
+		when(locationHierarchyRepository
+				.findAllByLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString())).thenReturn(locationHierarchys);
+		mockMvc.perform(get("/locationHierarchyLevels/{langcode}", "ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getLocationHierarchyLangCodeResponseTest() throws Exception {
+		
+		when(locationHierarchyRepository.findAllByLangCodeAndIsDeletedFalseOrIsDeletedIsNull(
+				Mockito.anyString())).thenReturn(null);
+		mockMvc.perform(get("/locationHierarchyLevels/{langcode}","ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getLocationHierarchyLangCodeFetchExceptionTest() throws Exception {
+		
+		when(locationHierarchyRepository.findAllByLangCodeAndIsDeletedFalseOrIsDeletedIsNull(
+				Mockito.anyString())).thenThrow(DataRetrievalFailureException.class);
+		mockMvc.perform(get("/locationHierarchyLevels/{langcode}","ENG")).andExpect(status().isInternalServerError());
+	}
 }
