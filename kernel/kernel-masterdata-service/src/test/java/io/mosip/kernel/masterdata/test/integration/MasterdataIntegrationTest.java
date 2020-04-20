@@ -9297,13 +9297,13 @@ public class MasterdataIntegrationTest {
 	//----------------------------Location hierarchy-------------------------
 	@MockBean
 	LocationHierarchyRepository locationHierarchyRepository;
+	short level = 0;
 	
 	@Test
 	@WithUserDetails("global-admin")
 	public void getLocationHierarchyLevelAndLangCodeSuccessTest() throws Exception {
 		LocationHierarchy locationHierarchy = new LocationHierarchy();
 		locationHierarchy.setHierarchyLevel((short)0);
-		short l = 0;
 		locationHierarchy.setLangCode("eng");
 		locationHierarchy.setIsActive(true);
 		locationHierarchy.setHierarchyLevelName("name");
@@ -9311,13 +9311,12 @@ public class MasterdataIntegrationTest {
 		locationHierarchys.add(locationHierarchy);
 		when(locationHierarchyRepository
 				.findAllByLevelAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyShort(),Mockito.anyString())).thenReturn(locationHierarchys);
-		mockMvc.perform(get("/locationHierarchyLevels/{level}/{langcode}", l, "ENG")).andExpect(status().isOk());
+		mockMvc.perform(get("/locationHierarchyLevels/{level}/{langcode}", level, "ENG")).andExpect(status().isOk());
 	}
 
 	@Test
 	@WithUserDetails("global-admin")
 	public void getLocationHierarchyLevelAndLangCodeResponseTest() throws Exception {
-		short level = 0;
 		when(locationHierarchyRepository.findAllByLevelAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyShort(),
 				Mockito.anyString())).thenReturn(null);
 		mockMvc.perform(get("/locationHierarchyLevels/{level}/{langcode}", level, "ENG")).andExpect(status().isOk());
@@ -9326,9 +9325,42 @@ public class MasterdataIntegrationTest {
 	@Test
 	@WithUserDetails("global-admin")
 	public void getLocationHierarchyLevelAndLangCodeFetchExceptionTest() throws Exception {
-		short level = 0;
 		when(locationHierarchyRepository.findAllByLevelAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.anyShort(),
 				Mockito.anyString())).thenThrow(DataRetrievalFailureException.class);
 		mockMvc.perform(get("/locationHierarchyLevels/{level}/{langcode}", level, "ENG")).andExpect(status().isInternalServerError());
+	}
+	
+	//--------------------------------
+	@Test
+	@WithUserDetails("global-admin")
+	public void getLocationHierarchyLangCodeSuccessTest() throws Exception {
+		LocationHierarchy locationHierarchy = new LocationHierarchy();
+		locationHierarchy.setHierarchyLevel((short)0);
+		locationHierarchy.setLangCode("eng");
+		locationHierarchy.setIsActive(true);
+		locationHierarchy.setHierarchyLevelName("name");
+		List<LocationHierarchy> locationHierarchys = new ArrayList<LocationHierarchy>();
+		locationHierarchys.add(locationHierarchy);
+		when(locationHierarchyRepository
+				.findAllByLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString())).thenReturn(locationHierarchys);
+		mockMvc.perform(get("/locationHierarchyLevels/{langcode}", "ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getLocationHierarchyLangCodeResponseTest() throws Exception {
+		
+		when(locationHierarchyRepository.findAllByLangCodeAndIsDeletedFalseOrIsDeletedIsNull(
+				Mockito.anyString())).thenReturn(null);
+		mockMvc.perform(get("/locationHierarchyLevels/{langcode}","ENG")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void getLocationHierarchyLangCodeFetchExceptionTest() throws Exception {
+		
+		when(locationHierarchyRepository.findAllByLangCodeAndIsDeletedFalseOrIsDeletedIsNull(
+				Mockito.anyString())).thenThrow(DataRetrievalFailureException.class);
+		mockMvc.perform(get("/locationHierarchyLevels/{langcode}","ENG")).andExpect(status().isInternalServerError());
 	}
 }
