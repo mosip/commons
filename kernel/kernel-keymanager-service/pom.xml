@@ -16,7 +16,7 @@
 	<properties>
 		<kernel.core.version>1.0.8</kernel.core.version>
 		<kernel.auth.adaptor.version>1.0.6</kernel.auth.adaptor.version>
-		<kernel.datamapper.orika.version>1.0.6</kernel.datamapper.orika.version>
+		<kernel.datamapper.orika.version>1.0.7</kernel.datamapper.orika.version>
 		<kernel.crypto.jce.version>1.0.6</kernel.crypto.jce.version>
 		<kernel.keygenerator.bouncycastle.version>1.0.6</kernel.keygenerator.bouncycastle.version>
 		<kernel.logger.logback.version>1.0.6</kernel.logger.logback.version>
