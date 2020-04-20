@@ -88,7 +88,7 @@ public class MachineHistory extends BaseEntity implements Serializable {
 	/**
 	 * Field for publicKey
 	 */
-	@Column(name = "public_key")
+	@Column(name = "public_key", length= 1024)
 	private byte[] publicKey;
 
 	/**

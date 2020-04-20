@@ -90,7 +90,7 @@ public class MachineHistory extends BaseEntity implements Serializable {
 	/**
 	 * Field for reg machine public key
 	 */
-	@Column(name = "public_key")
+	@Column(name = "public_key", length=1024)
 	private String publicKey;
 	
 	/**

@@ -20,6 +20,7 @@ import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.syncdata.dto.ConfigDto;
+import io.mosip.kernel.syncdata.dto.IdSchemaDto;
 import io.mosip.kernel.syncdata.dto.PublicKeyResponse;
 import io.mosip.kernel.syncdata.dto.SyncUserDetailDto;
 import io.mosip.kernel.syncdata.dto.SyncUserSaltDto;
@@ -372,6 +373,19 @@ public class SyncDataController {
 			@ApiParam("public key in BASE64 encoded") @RequestBody @Valid RequestWrapper<UploadPublicKeyRequestDto> uploadPublicKeyRequestDto) {
 		ResponseWrapper<UploadPublicKeyResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(masterDataService.validateKeyMachineMapping(uploadPublicKeyRequestDto.getRequest()));
+		return response;
+	}
+	
+	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN')")
+	@ResponseFilter
+	@GetMapping(value = "/latestidschema", produces = "application/json")
+	public ResponseWrapper<IdSchemaDto> getLatestPublishedIdSchema(
+			@RequestParam(value = "lastupdated", required = false) String lastUpdated) {
+		LocalDateTime currentTimeStamp = LocalDateTime.now(ZoneOffset.UTC);
+		LocalDateTime timestamp = localDateTimeUtil.getLocalDateTimeFromTimeStamp(currentTimeStamp, lastUpdated);
+		
+		ResponseWrapper<IdSchemaDto> response = new ResponseWrapper<>();
+		response.setResponse(masterDataService.getLatestPublishedIdSchema(timestamp));
 		return response;
 	}
 

@@ -80,7 +80,9 @@ public enum MasterDataErrorCode {
 	
 	INVALID_KEY_INDEX("KER-SNC-163", "Key Index does not exist"),
 	MACHINE_PUBLIC_KEY_NOT_WHITELISTED("KER-SNC-164","Public key not whitelisted"),
-	MACHINE_INVALID_PUBLIC_KEY("KER-SNC-165", "Invalid public key provided");
+	MACHINE_INVALID_PUBLIC_KEY("KER-SNC-165", "Invalid public key provided"),
+	
+	SCHEMA_FETCH_FAILED("KER-SNC-166", "Identity schema fetch failed");
 
 	private final String errorCode;
 	private final String errorMessage;
