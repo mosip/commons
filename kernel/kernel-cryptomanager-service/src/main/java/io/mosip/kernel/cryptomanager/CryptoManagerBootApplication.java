@@ -8,6 +8,10 @@ package io.mosip.kernel.cryptomanager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Import;
+
+import io.mosip.kernel.keymanagerservice.service.impl.KeymanagerServiceImpl;
+import io.mosip.kernel.keymanagerservice.util.KeymanagerUtil;
 
 /**
  * Crypto-Manager-Service Boot Application
@@ -17,6 +21,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 1.0.0
  */
 @SpringBootApplication(scanBasePackages = { "io.mosip.kernel.cryptomanager.*", "io.mosip.kernel.auth.*" })
+@Import(value = {KeymanagerServiceImpl.class, KeymanagerUtil.class})
 public class CryptoManagerBootApplication {
 
 	/**
