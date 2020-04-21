@@ -32,7 +32,7 @@ public class HibernatePersistenceConstant {
 	public static final String JDBC_PASS = "javax.persistence.jdbc.password";
 
 	/**
-	 * The string constant jdbc password
+	 * The string constant jdbc schema
 	 */
 	public static final String JDBC_SCHEMA = "javax.persistence.jdbc.schema";
 

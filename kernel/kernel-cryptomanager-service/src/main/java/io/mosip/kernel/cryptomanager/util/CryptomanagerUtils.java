@@ -64,72 +64,70 @@ import io.mosip.kernel.keymanagerservice.dto.SymmetricKeyRequestDto;
 import io.mosip.kernel.keymanagerservice.service.KeymanagerService;
 
 /**
- * Util class for this project
- * 
+ * Util class for this project.
+ *
  * @author Urvil Joshi
  * @author Manoj SP
- *
  * @since 1.0.0
  */
 @RefreshScope
 @Component
 public class CryptomanagerUtils {
 
+	/** The Constant RESPONSE. */
 	private static final String RESPONSE = "response";
 
+	/** The Constant ACCESS_DENIED. */
 	private static final String ACCESS_DENIED = "Access denied for ";
 
+	/** The Constant AUTHENTICATION_FAILED. */
 	private static final String AUTHENTICATION_FAILED = "Authentication failed for ";
 
+	/** The Constant REFERENCE_ID. */
 	private static final String REFERENCE_ID = "referenceId";
 
+	/** The Constant TIMESTAMP. */
 	private static final String TIMESTAMP = "timeStamp";
 
+	/** The Constant APPLICATION_ID. */
 	private static final String APPLICATION_ID = "applicationId";
 
+	/** The Constant UTC_DATETIME_PATTERN. */
 	private static final String UTC_DATETIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
+	/** The object mapper. */
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	/**
-	 * Asymmetric Algorithm Name
-	 */
+	/** Asymmetric Algorithm Name. */
 	@Value("${mosip.kernel.keygenerator.asymmetric-algorithm-name}")
 	private String asymmetricAlgorithmName;
 
-	/**
-	 * Symmetric Algorithm Name
-	 */
+	/** Symmetric Algorithm Name. */
 	@Value("${mosip.kernel.keygenerator.symmetric-algorithm-name}")
 	private String symmetricAlgorithmName;
 
-	/**
-	 * Keymanager URL to Get PublicKey
-	 */
+	/** Keymanager URL to Get PublicKey. */
 	@Value("${mosip.kernel.keymanager-service-publickey-url}")
 	private String getPublicKeyUrl;
 
-	/**
-	 * Keymanager URL to Decrypt Symmetric key
-	 */
+	/** Keymanager URL to Decrypt Symmetric key. */
 	@Value("${mosip.kernel.keymanager-service-decrypt-url}")
 	private String decryptSymmetricKeyUrl;
 
-	/**
-	 * Keymanager URL to Decrypt Symmetric key
-	 */
+	/** Keymanager URL to Decrypt Symmetric key. */
 	@Value("${mosip.kernel.keymanager-service-auth-decrypt-url}")
 	private String decryptAuthSymmetricKeyUrl;
-	/**
-	 * Key Splitter
-	 */
+	
+	/** Key Splitter. */
 	@Value("${mosip.kernel.data-key-splitter}")
 	private String keySplitter;
 
+	/** The cryptomanager request ID. */
 	@Value("${mosip.kernel.cryptomanager.request_id}")
 	private String cryptomanagerRequestID;
 
+	/** The cryptomanager request version. */
 	@Value("${mosip.kernel.cryptomanager.request_version}")
 	private String cryptomanagerRequestVersion;
 
@@ -139,24 +137,24 @@ public class CryptomanagerUtils {
 	@Autowired
 	private DataMapper<CryptomanagerRequestDto, KeymanagerSymmetricKeyRequestDto> dataMapper;
 
+	/** The key manager. */
 	@Autowired(required = false)
 	private KeymanagerService keyManager;
 
-	/**
-	 * {@link RestTemplate} instance
-	 */
+	/** {@link RestTemplate} instance. */
 	@Autowired
 	private RestTemplate restTemplate;
 
+	/** The Constant KEYMANAGER. */
 	private static final String KEYMANAGER = "Keymanager";
 
+	/** The Constant PUBLIC_KEY. */
 	private static final String PUBLIC_KEY = "Public Key";
 
 	/**
-	 * Calls Key-Manager-Service to get public key of an application
-	 * 
-	 * @param cryptomanagerRequestDto
-	 *            {@link CryptomanagerRequestDto} instance
+	 * Calls Key-Manager-Service to get public key of an application.
+	 *
+	 * @param cryptomanagerRequestDto            {@link CryptomanagerRequestDto} instance
 	 * @return {@link PublicKey} returned by Key Manager Service
 	 */
 	public PublicKey getPublicKey(CryptomanagerRequestDto cryptomanagerRequestDto) {
@@ -183,10 +181,26 @@ public class CryptomanagerUtils {
 		}
 	}
 
+	/**
+	 * Gets the public key from key manager.
+	 *
+	 * @param appId the app id
+	 * @param timestamp the timestamp
+	 * @param refId the ref id
+	 * @return the public key from key manager
+	 */
 	private String getPublicKeyFromKeyManager(String appId, String timestamp, String refId) {
 		return keyManager.getPublicKey(appId, timestamp, Optional.of(refId)).getPublicKey();
 	}
 
+	/**
+	 * Gets the public key.
+	 *
+	 * @param appId the app id
+	 * @param timestamp the timestamp
+	 * @param refId the ref id
+	 * @return the public key
+	 */
 	private String getPublicKey(String appId, String timestamp, String refId) {
 		ResponseEntity<String> response = null;
 		Map<String, String> uriParams = new HashMap<>();
@@ -208,10 +222,9 @@ public class CryptomanagerUtils {
 	}
 
 	/**
-	 * Calls Key-Manager-Service to decrypt symmetric key
-	 * 
-	 * @param cryptomanagerRequestDto
-	 *            {@link CryptomanagerRequestDto} instance
+	 * Calls Key-Manager-Service to decrypt symmetric key.
+	 *
+	 * @param cryptomanagerRequestDto            {@link CryptomanagerRequestDto} instance
 	 * @return Decrypted {@link SecretKey} from Key Manager Service
 	 */
 	public SecretKey getDecryptedSymmetricKey(CryptomanagerRequestDto cryptomanagerRequestDto) {
@@ -225,6 +238,12 @@ public class CryptomanagerUtils {
 		return new SecretKeySpec(symmetricKey, 0, symmetricKey.length, symmetricAlgorithmName);
 	}
 
+	/**
+	 * Decrypt symmetric key using key manager.
+	 *
+	 * @param cryptomanagerRequestDto the cryptomanager request dto
+	 * @return the string
+	 */
 	private String decryptSymmetricKeyUsingKeyManager(CryptomanagerRequestDto cryptomanagerRequestDto) {
 		SymmetricKeyRequestDto symmetricKeyRequestDto = new SymmetricKeyRequestDto(
 				cryptomanagerRequestDto.getApplicationId(), cryptomanagerRequestDto.getTimeStamp(),
@@ -232,6 +251,12 @@ public class CryptomanagerUtils {
 		return keyManager.decryptSymmetricKey(symmetricKeyRequestDto).getSymmetricKey();
 	}
 
+	/**
+	 * Decrypt symmetric key.
+	 *
+	 * @param cryptomanagerRequestDto the cryptomanager request dto
+	 * @return the string
+	 */
 	private String decryptSymmetricKey(CryptomanagerRequestDto cryptomanagerRequestDto) {
 		RequestWrapper<KeymanagerSymmetricKeyRequestDto> requestWrapper = new RequestWrapper<>();
 		requestWrapper.setId(cryptomanagerRequestID);
@@ -258,10 +283,9 @@ public class CryptomanagerUtils {
 	}
 
 	/**
-	 * Change Parameter form to trim if not null
-	 * 
-	 * @param parameter
-	 *            parameter
+	 * Change Parameter form to trim if not null.
+	 *
+	 * @param parameter            parameter
 	 * @return null if null;else trimmed string
 	 */
 	public static String nullOrTrim(String parameter) {
@@ -269,16 +293,21 @@ public class CryptomanagerUtils {
 	}
 
 	/**
-	 * Function to check is salt is valid
-	 * 
-	 * @param salt
-	 *            salt
+	 * Function to check is salt is valid.
+	 *
+	 * @param salt            salt
 	 * @return true if salt is valid, else false
 	 */
 	public boolean isValidSalt(String salt) {
 		return salt != null && !salt.trim().isEmpty();
 	}
 
+	/**
+	 * Auth exception handler.
+	 *
+	 * @param ex the ex
+	 * @param source the source
+	 */
 	private void authExceptionHandler(HttpStatusCodeException ex, String source) {
 		List<ServiceError> validationErrorsList = ExceptionUtils.getServiceErrorList(ex.getResponseBodyAsString());
 
@@ -306,6 +335,11 @@ public class CryptomanagerUtils {
 		}
 	}
 
+	/**
+	 * Throw exception if exist.
+	 *
+	 * @param response the response
+	 */
 	public void throwExceptionIfExist(ResponseEntity<String> response) {
 		if (response == null) {
 			throw new ParseResponseException(CryptomanagerErrorCode.CANNOT_CONNECT_TO_KEYMANAGER_SERVICE.getErrorCode(),
@@ -318,6 +352,14 @@ public class CryptomanagerUtils {
 		}
 	}
 
+	/**
+	 * Gets the response.
+	 *
+	 * @param <S> the generic type
+	 * @param response the response
+	 * @param clazz the clazz
+	 * @return the response
+	 */
 	public <S> S getResponse(ResponseEntity<String> response, Class<S> clazz) {
 		try {
 			JsonNode res = objectMapper.readTree(response.getBody());
@@ -330,10 +372,9 @@ public class CryptomanagerUtils {
 
 	/**
 	 * Parse a date string of pattern UTC_DATETIME_PATTERN into
-	 * {@link LocalDateTime}
-	 * 
-	 * @param dateTime
-	 *            of type {@link String} of pattern UTC_DATETIME_PATTERN
+	 * {@link LocalDateTime}.
+	 *
+	 * @param dateTime            of type {@link String} of pattern UTC_DATETIME_PATTERN
 	 * @return a {@link LocalDateTime} of given pattern
 	 */
 	public LocalDateTime parseToLocalDateTime(String dateTime) {

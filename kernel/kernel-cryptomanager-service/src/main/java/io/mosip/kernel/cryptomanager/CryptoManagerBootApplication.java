@@ -21,13 +21,14 @@ import io.mosip.kernel.keymanagerservice.util.KeymanagerUtil;
  * @since 1.0.0
  */
 @SpringBootApplication(scanBasePackages = { "io.mosip.kernel.cryptomanager.*", "io.mosip.kernel.auth.*" })
-@Import(value = {KeymanagerServiceImpl.class, KeymanagerUtil.class})
+@Import(value = { KeymanagerServiceImpl.class, KeymanagerUtil.class })
 public class CryptoManagerBootApplication {
 
 	/**
 	 * Main method for this application
 	 * 
-	 * @param args arguments to pass
+	 * @param args
+	 *            arguments to pass
 	 */
 	public static void main(String[] args) {
 		SpringApplication.run(CryptoManagerBootApplication.class, args);
