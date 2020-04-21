@@ -8,8 +8,8 @@ package io.mosip.kernel.masterdata.constant;
  */
 
 public enum LocationHierarchyErrorCode {
-	LOCATION_HIERARCHY_FETCH_EXCEPTION("KER-MSD-399", "Error occured while fetching Location Hierarchy"),
-	LOCATION_HIERARCHY_NOT_FOUND_EXCEPTION("KER-MSD-398", "Location Hierarchy not Found");
+	LOCATION_HIERARCHY_FETCH_EXCEPTION("KER-MSD-739", "Error occurred while fetching Location Hierarchy"),
+	LOCATION_HIERARCHY_NOT_FOUND_EXCEPTION("KER-MSD-738", "Location Hierarchy not Found");
 
 	private final String errorCode;
 	private final String errorMessage;
