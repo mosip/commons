@@ -9,7 +9,7 @@
 	</parent>
 	<artifactId>kernel-syncdata-service</artifactId>
 	<name>kernel-syncdata-service</name>
-	<version>1.0.7</version>
+	<version>1.0.9-SNAPSHOT</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<kernel.core.version>1.0.6</kernel.core.version>
