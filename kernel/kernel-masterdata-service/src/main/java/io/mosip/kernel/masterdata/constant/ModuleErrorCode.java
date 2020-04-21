@@ -8,8 +8,8 @@ package io.mosip.kernel.masterdata.constant;
  */
 
 public enum ModuleErrorCode {
-	MODULE_FETCH_EXCEPTION("KER-MSD-399", "Error occured while fetching Module"),
-	MODULE_NOT_FOUND_EXCEPTION("KER-MSD-398", "Module not Found");
+	MODULE_FETCH_EXCEPTION("KER-MSD-734", "Error occurred while fetching Module"),
+	MODULE_NOT_FOUND_EXCEPTION("KER-MSD-733", "Module not Found");
 
 	private final String errorCode;
 	private final String errorMessage;
