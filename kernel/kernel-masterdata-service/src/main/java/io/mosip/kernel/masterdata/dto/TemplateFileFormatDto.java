@@ -10,7 +10,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-//@ApiModel(value = "TemplateFileFormat", description = "TemplateFileFormat resource representation")
+// @ApiModel(value = "TemplateFileFormat", description = "TemplateFileFormat
+// resource representation")
 public class TemplateFileFormatDto {
 
 	@NotBlank
