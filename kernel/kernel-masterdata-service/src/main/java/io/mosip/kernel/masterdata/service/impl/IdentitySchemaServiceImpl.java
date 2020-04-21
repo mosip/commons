@@ -72,7 +72,7 @@ public class IdentitySchemaServiceImpl implements IdentitySchemaService {
 	private static final String ATTR_FIELDTYPE = "fieldType";
 	private static final String ATTR_FIELD_CATEGORY = "fieldCategory";
 	private static final String ATTR_VALIDATORS = "validators";
-	
+	private static final String ATTR_BIOS = "bioAttributes";
 	
 	private static final String REF_DATATYPE = "#/definitions/%s";	
 	
@@ -366,6 +366,7 @@ public class IdentitySchemaServiceImpl implements IdentitySchemaService {
 		JSONObject schemaAttributes = new JSONObject();
 		schemaAttributes.put(ATTR_FIELDTYPE, schemaDto.getFieldType());
 		schemaAttributes.put(ATTR_FIELD_CATEGORY, schemaDto.getFieldCategory());
+		schemaAttributes.put(ATTR_BIOS, schemaDto.getBioAttributes());
 		
 		if(isPrimitive(schemaDto.getType()))
 			schemaAttributes.put(KEY_TYPE, schemaDto.getType());

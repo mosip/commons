@@ -37,7 +37,7 @@ public class SchemaDto {
 	private boolean inputRequired;
 	private boolean isRequired;	
 	private List<ValidatorDto> validators;
-	private List<String> biometricTypes;
+	private List<String> bioAttributes;
 }
 
 @Data
