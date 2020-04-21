@@ -10,8 +10,8 @@ package io.mosip.kernel.masterdata.constant;
 
 public enum TemplateTypeErrorCode {
 	TEMPLATE_TYPE_INSERT_EXCEPTION("KER-MSD-072", "Error occurred while inserting Template Type details into db"),
-	TEMPLATE_TYPE_FETCH_EXCEPTION("KER-MSD-399", "Error occured while fetching Template Type"),
-	TEMPLATE_TYPE_NOT_FOUND_EXCEPTION("KER-MSD-398", "Template Type not Found");
+	TEMPLATE_TYPE_FETCH_EXCEPTION("KER-MSD-737", "Error occurred while fetching Template Type"),
+	TEMPLATE_TYPE_NOT_FOUND_EXCEPTION("KER-MSD-736", "Template Type not Found");
 
 	private final String errorCode;
 	private final String errorMessage;
