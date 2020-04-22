@@ -1,4 +1,4 @@
-package io.mosip.kernel.applicanttype.test.integration;
+package io.mosip.kernel.masterdata.test.integration;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -20,10 +20,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import io.mosip.kernel.applicanttype.dto.KeyValues;
-import io.mosip.kernel.applicanttype.dto.request.RequestDTO;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.util.DateUtils;
+import io.mosip.kernel.masterdata.dto.KeyValues;
+import io.mosip.kernel.masterdata.dto.request.RequestDTO;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
