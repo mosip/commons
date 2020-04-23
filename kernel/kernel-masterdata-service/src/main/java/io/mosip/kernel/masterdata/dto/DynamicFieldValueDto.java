@@ -1,6 +1,6 @@
 package io.mosip.kernel.masterdata.dto;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,14 +9,14 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(of = {"code", "langCode"})
 public class DynamicFieldValueDto {
 
-	@NotNull
+	@NotBlank
 	private String code;
 	
-	@NotNull
+	@NotBlank
 	private String value;
 	
 	private boolean isActive;
 	
-	@NotNull
+	@NotBlank
 	private String langCode;
 }

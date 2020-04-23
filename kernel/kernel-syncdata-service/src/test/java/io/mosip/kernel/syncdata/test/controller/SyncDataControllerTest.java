@@ -31,6 +31,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -44,14 +45,12 @@ import io.mosip.kernel.syncdata.dto.MachineSpecificationDto;
 import io.mosip.kernel.syncdata.dto.MachineTypeDto;
 import io.mosip.kernel.syncdata.dto.PublicKeyResponse;
 import io.mosip.kernel.syncdata.dto.SyncUserDetailDto;
-import io.mosip.kernel.syncdata.dto.UploadPublicKeyRequestDto;
 import io.mosip.kernel.syncdata.dto.UploadPublicKeyResponseDto;
 import io.mosip.kernel.syncdata.dto.UserDetailMapDto;
 import io.mosip.kernel.syncdata.dto.response.MasterDataResponseDto;
 import io.mosip.kernel.syncdata.dto.response.RolesResponseDto;
 import io.mosip.kernel.syncdata.exception.RequestException;
 import io.mosip.kernel.syncdata.exception.SyncDataServiceException;
-import io.mosip.kernel.syncdata.repository.MachineRepository;
 import io.mosip.kernel.syncdata.repository.RegistrationCenterUserRepository;
 import io.mosip.kernel.syncdata.service.SyncConfigDetailsService;
 import io.mosip.kernel.syncdata.service.SyncMasterDataService;
@@ -118,11 +117,11 @@ public class SyncDataControllerTest {
 		.andRespond(withSuccess().body(
 				"{ \"id\": null, \"version\": null, \"responsetime\": \"2019-04-24T09:07:42.017Z\", \"metadata\": null, "
 				+ "\"response\": { \"lastSyncTime\": \"2019-04-24T09:07:41.771Z\", "
-				+ "\"idVersion\": 1.0, \"schema\": [{\"fieldName\":\"IDSchemaVersion\",\"inputRequired\":false,\"type\":\"number\",\"minimum\":0,"
+				+ "\"idVersion\": 1.0, \"schema\": [{\"id\":\"IDSchemaVersion\",\"inputRequired\":false,\"type\":\"number\",\"minimum\":0,"
 				+ "\"maximum\":0,\"description\":\"\",\"labelName\":\"IDSchemaVersion\",\"controlType\":\"none\",\"fieldType\":\"default\","
-				+ "\"format\":\"none\",\"validators\":[],\"fieldCategory\":\"Pvt\",\"required\":false},{\"fieldName\":\"UIN\",\"inputRequired\":false,"
+				+ "\"format\":\"none\",\"validators\":[],\"fieldCategory\":\"Pvt\",\"required\":false},{\"id\":\"UIN\",\"inputRequired\":false,"
 				+ "\"type\":\"integer\",\"minimum\":0,\"maximum\":0,\"description\":\"\",\"labelName\":\"UIN\",\"controlType\":\"none\","
-				+ "\"fieldType\":\"default\",\"format\":\"none\",\"validators\":[],\"fieldCategory\":\"Pvt\",\"required\":false},{\"fieldName\":\"fullName\","
+				+ "\"fieldType\":\"default\",\"format\":\"none\",\"validators\":[],\"fieldCategory\":\"Pvt\",\"required\":false},{\"id\":\"fullName\","
 				+ "\"inputRequired\":true,\"type\":\"simpleType\",\"minimum\":0,\"maximum\":0,\"description\":\"\",\"labelName\":\"Full Name\","
 				+ "\"controlType\":\"textbox\",\"fieldType\":\"default\",\"format\":\"none\",\"validators\":[],\"fieldCategory\":\"Pvt\",\"required\":true}], "
 				+ "\"schemaJson\": \"{}\", \"effectiveFrom\" : \"2019-04-24T09:07:42.017Z\"}, \"errors\": null }"));
@@ -307,7 +306,7 @@ public class SyncDataControllerTest {
 		.content("{\"machineName\":\"name\",\"publicKey\":null}")).andExpect(status().isOk()).andReturn();
 		
 		ResponseWrapper<UploadPublicKeyResponseDto> responseWrapper = objectMapper.readValue(result.getResponse().getContentAsString(),
-				ResponseWrapper.class);
+				new TypeReference<ResponseWrapper<UploadPublicKeyResponseDto>>() {});
 		
 		assertEquals(MasterDataErrorCode.INVALID_INPUT_REQUEST.getErrorCode(), responseWrapper.getErrors().get(0).getErrorCode());
 	}

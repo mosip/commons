@@ -42,6 +42,7 @@ public class ValidatorsKeywordValidator extends AbstractKeywordValidator {
 		return null;
 	}	
 	
+	//TODO --
 	private boolean isValid(JsonNode validator, CharSequence data) {
 		String type = validator.get("type").asText();
 		switch (type) {
@@ -49,7 +50,7 @@ public class ValidatorsKeywordValidator extends AbstractKeywordValidator {
 				Pattern pattern = Pattern.compile(validator.get("validator").asText());
 				return pattern.matcher(data).matches();			
 	
-			default: //Nothing to do as of now
+			default: //TODO Nothing to do as of now
 				break;
 		}
 		return true;
