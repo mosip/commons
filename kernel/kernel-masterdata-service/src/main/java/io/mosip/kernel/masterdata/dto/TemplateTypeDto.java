@@ -33,13 +33,13 @@ public class TemplateTypeDto {
 	 * Field for description
 	 */
 	@Size(min = 0, max = 256)
-	@ApiModelProperty(value = "Biometric Attribute desc", required = false, dataType = "java.lang.String")
+	@ApiModelProperty(value = "Template Type desc", required = false, dataType = "java.lang.String")
 	private String description;
 
 	/**
 	 * Field for the status of data.
 	 */
-	@ApiModelProperty(value = "BiometricAttribute isActive status", required = true, dataType = "java.lang.Boolean")
+	@ApiModelProperty(value = "Template Type  isActive status", required = true, dataType = "java.lang.Boolean")
 	@NotNull
 	private Boolean isActive;
 
