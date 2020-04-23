@@ -8,7 +8,7 @@
 	</parent>
 
 	<artifactId>id-repository-core</artifactId>
-	<version>1.0.7</version>
+	<version>1.0.8</version>
 	<name>idrepo-core</name>
 	<description>ID-Repository core</description>
 
