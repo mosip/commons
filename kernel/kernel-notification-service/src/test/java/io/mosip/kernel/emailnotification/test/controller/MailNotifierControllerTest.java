@@ -17,10 +17,10 @@ import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.emailnotification.controller.EmailNotificationController;
 import io.mosip.kernel.emailnotification.dto.ResponseDto;
 import io.mosip.kernel.emailnotification.service.impl.EmailNotificationServiceImpl;
-import io.mosip.kernel.emailnotification.test.NotificationEmailTestBootApplication;
+import io.mosip.kernel.emailnotification.test.NotificationTestBootApplication;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = NotificationEmailTestBootApplication.class)
+@SpringBootTest(classes = NotificationTestBootApplication.class)
 public class MailNotifierControllerTest {
 	@Mock
 	EmailNotificationServiceImpl service;

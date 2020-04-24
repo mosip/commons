@@ -15,11 +15,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import io.mosip.kernel.emailnotification.service.impl.SmsNotificationServiceImpl;
-import io.mosip.kernel.emailnotification.test.NotificationEmailTestBootApplication;
+import io.mosip.kernel.emailnotification.test.NotificationTestBootApplication;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-@SpringBootTest(classes = { NotificationEmailTestBootApplication.class })
+@SpringBootTest(classes = { NotificationTestBootApplication.class })
 public class ExceptionHandlerTest {
 
 	@Autowired

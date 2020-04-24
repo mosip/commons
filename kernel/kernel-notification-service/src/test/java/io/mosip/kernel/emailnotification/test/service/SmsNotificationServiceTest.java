@@ -15,10 +15,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import io.mosip.kernel.core.notification.model.SMSResponseDto;
 import io.mosip.kernel.core.notification.spi.SMSServiceProvider;
 import io.mosip.kernel.emailnotification.service.impl.SmsNotificationServiceImpl;
-import io.mosip.kernel.emailnotification.test.NotificationEmailTestBootApplication;
+import io.mosip.kernel.emailnotification.test.NotificationTestBootApplication;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { NotificationEmailTestBootApplication.class })
+@SpringBootTest(classes = { NotificationTestBootApplication.class })
 public class SmsNotificationServiceTest {
 
 	@Autowired

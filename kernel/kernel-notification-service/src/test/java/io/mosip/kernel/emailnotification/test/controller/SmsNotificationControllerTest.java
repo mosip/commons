@@ -26,12 +26,12 @@ import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.notification.model.SMSResponseDto;
 import io.mosip.kernel.emailnotification.dto.SmsRequestDto;
 import io.mosip.kernel.emailnotification.service.impl.SmsNotificationServiceImpl;
-import io.mosip.kernel.emailnotification.test.NotificationEmailTestBootApplication;
+import io.mosip.kernel.emailnotification.test.NotificationTestBootApplication;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @SpringBootTest
-@ContextConfiguration(classes = { NotificationEmailTestBootApplication.class })
+@ContextConfiguration(classes = { NotificationTestBootApplication.class })
 public class SmsNotificationControllerTest {
 
 	@Autowired
