@@ -290,7 +290,7 @@ public class SchemaServiceTest {
 		Mockito.when(identitySchemaRepository.publishIdentitySchema(Mockito.anyString(), Mockito.anyString(), 
 				Mockito.any(LocalDateTime.class), Mockito.any(LocalDateTime.class), Mockito.anyString())).thenReturn(1);
 		
-		Mockito.when(identitySchemaRepository.findIdentitySchemaById(Mockito.anyString())).thenReturn(publishedSchema);
+		Mockito.when(identitySchemaRepository.findIdentitySchemaById(Mockito.anyString())).thenReturn(draftSchema);
 		
 		IdSchemaPublishDto dto = new IdSchemaPublishDto();
 		dto.setEffectiveFrom(LocalDateTime.now());
