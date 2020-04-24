@@ -23,6 +23,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
+import io.mosip.kernel.masterdata.constant.SchemaErrorCode;
 import io.mosip.kernel.masterdata.dto.DynamicFieldDto;
 import io.mosip.kernel.masterdata.dto.DynamicFieldValueDto;
 import io.mosip.kernel.masterdata.dto.IdSchemaPublishDto;
@@ -273,17 +274,17 @@ public class SchemaServiceTest {
 		Mockito.when(identitySchemaRepository.findIdentitySchemaById(Mockito.anyString())).thenReturn(publishedSchema);
 		
 		IdSchemaPublishDto dto = new IdSchemaPublishDto();
-		dto.setEffectiveFrom(LocalDateTime.now());
+		dto.setEffectiveFrom(LocalDateTime.now().plusDays(1));
 		dto.setId("test-test-test-test");
 		
 		try {
 			identitySchemaService.publishSchema(dto);
 		} catch(MasterDataServiceException e) {
-			assertEquals("KER-SCH-009", e.getErrorCode());
+			assertEquals(SchemaErrorCode.SCHEMA_ALREADY_PUBLISHED.getErrorCode(), e.getErrorCode());
 		}
 	}
 	
-	@Test(expected = MasterDataServiceException.class)
+	@Test
 	@WithUserDetails("global-admin")
 	public void testPublishIdentitySchemaWithException() throws Exception {		
 		Mockito.when(identitySchemaRepository.publishIdentitySchema(Mockito.anyString(), Mockito.anyString(), 
@@ -294,7 +295,11 @@ public class SchemaServiceTest {
 		IdSchemaPublishDto dto = new IdSchemaPublishDto();
 		dto.setEffectiveFrom(LocalDateTime.now());
 		dto.setId("test-test-test-test");
-		identitySchemaService.publishSchema(dto);		
+		try {
+			identitySchemaService.publishSchema(dto);
+		} catch(MasterDataServiceException e) {
+			assertEquals(SchemaErrorCode.SCHEMA_EFFECTIVE_FROM_IS_OLDER.getErrorCode(), e.getErrorCode());
+		}		
 	}
 	
 	

@@ -11,6 +11,7 @@ import lombok.Data;
 @Data
 public class IdSchemaDto {
 	
+	private String id;
 	private double idVersion;
 	private List<SchemaDto> schema;
 	private String schemaJson;
