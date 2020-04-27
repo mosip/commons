@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="0,737" last-zoom="0.45"
+<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="755,1815" last-zoom="0.45"
 	 default-schema="public" default-owner="postgres">
 <role name="sysadmin"
       superuser="true"
@@ -57,7 +57,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Admin Parameters : Stores admin parameters with values used in application modules.]]></comment>
-	<position x="340" y="1760"/>
+	<position x="300" y="1780"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : unique parameter code for different configurations, processes, defaults etc]]></comment>
@@ -115,7 +115,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Application Form Type : Type of forms used for UIN / user registration.]]></comment>
-	<position x="440" y="1000"/>
+	<position x="400" y="1020"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : Unique application form types supported by registration process]]></comment>
@@ -169,7 +169,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[App Authentication Method : Store List of application, process, role and their user authentication methods mapped with sequence.]]></comment>
-	<position x="4300" y="2900"/>
+	<position x="4260" y="2920"/>
 	<column name="app_id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Application ID : of specific application module, for.ex.,  Registration client, Authentication application, Portal App, etc.  refers master.app_detail.id]]></comment>
@@ -248,7 +248,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Application Details : List of MOSIP Applications]]></comment>
-	<position x="1880" y="2020"/>
+	<position x="1840" y="2040"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Application ID :  Unique ID generated / assigned for an application]]></comment>
@@ -310,7 +310,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Application Role Priority : Defines role priority for each application and processes for application user.]]></comment>
-	<position x="1760" y="1500"/>
+	<position x="1720" y="1520"/>
 	<column name="app_id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Application ID : of specific application module, for.ex.,  Registration client, Authentication application, Portal App, etc.  refers master.app_detail.id]]></comment>
@@ -382,7 +382,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Authentication Method : List of user Authentication methods supported by the system.]]></comment>
-	<position x="3980" y="3400"/>
+	<position x="3940" y="3420"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code :  unique authentication methods supported by the system, for ex., OTP, PASSWORD, BIO etc. ]]></comment>
@@ -432,7 +432,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Authentication Type : List of Authentication types supported by the system.]]></comment>
-	<position x="420" y="140"/>
+	<position x="380" y="160"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code :  unique authentication types supported by the authentication system, for ex., OTP, BIO, DEMOGRAPHIC, eKYC etc. ]]></comment>
@@ -482,7 +482,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Applicant Valid Document : This is mapping table that relates applicant type, document category and document type, that is valid document proof for UIN registration process.]]></comment>
-	<position x="3980" y="2140"/>
+	<position x="3940" y="2160"/>
 	<column name="apptyp_code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Applicant Type Code: Code of the applicant type defined/configured by the country admin]]></comment>
@@ -536,7 +536,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Biometric Attribute : List of all biometric attributes to be captured for each biometric type during UIN registration]]></comment>
-	<position x="1180" y="1860"/>
+	<position x="1140" y="1880"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : Biometic attribute names,  Right Thumb, Left Thumb, Right Eye, Left Eye, etc.]]></comment>
@@ -594,7 +594,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Biometric Type : List of all biometric type supported for UIN registration]]></comment>
-	<position x="1540" y="2200"/>
+	<position x="1500" y="2220"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : types of biometrics for ex.,  Finger prints, facial, Iris etc.]]></comment>
@@ -648,7 +648,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Black Listed Words : List of words that are black listed.]]></comment>
-	<position x="1700" y="160"/>
+	<position x="1660" y="180"/>
 	<column name="word" not-null="true">
 		<type name="character varying" length="128"/>
 		<comment><![CDATA[Word: Word that is blacklisted by the system]]></comment>
@@ -698,7 +698,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Device Master : Contains list of approved devices and  details,  like fingerprint scanner, iris scanner, scanner etc used at registration centers. Valid devices with active status only allowed at registration centers for respective functionalities. Device onboarding are handled through admin application/portal by the user who is having the device onboarding authority. ]]></comment>
-	<position x="1420" y="3340"/>
+	<position x="1380" y="3360"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Device ID : Unique ID generated / assigned for device]]></comment>
@@ -772,7 +772,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Device Master History : This to track changes to master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ), Effective DateTimestamp is used for identifying latest or point in time information. Refer master.device_master table description for details.   ]]></comment>
-	<position x="4240" y="480"/>
+	<position x="4200" y="500"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Device ID : Unique ID generated / assigned for device]]></comment>
@@ -850,7 +850,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Device Specification :  Specification of devices for each device type that are supported by system for various process requirements, like scanning, printing, photo, biometric etc]]></comment>
-	<position x="580" y="3780"/>
+	<position x="540" y="3800"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Device Specification ID : Unique ID generated / assigned for device specification]]></comment>
@@ -920,7 +920,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Device Type : Types of devices that are supported by the system,  like  scanning, printing, photo, biometric etc]]></comment>
-	<position x="200" y="3800"/>
+	<position x="160" y="3820"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : types of devices used for registration processes, for ex., printer, scanner, etc]]></comment>
@@ -974,7 +974,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Document Category : List document categories for registration for ex., POA, POI, etc]]></comment>
-	<position x="3460" y="1740"/>
+	<position x="3420" y="1760"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : category of documents for registration for ex., POA, POI, etc]]></comment>
@@ -1028,7 +1028,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Document Format : List of acceptable document formats supported by the system, for ex., pdf, jpeg, etc.]]></comment>
-	<position x="3740" y="200"/>
+	<position x="3700" y="220"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : acceptable format of documents to be uploaded during registration, for ex., pdf, jpeg, etc]]></comment>
@@ -1082,7 +1082,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Document Type : List of acceptable document types supported by the system, for ex., passport, driving license, etc]]></comment>
-	<position x="3900" y="2540"/>
+	<position x="3860" y="2560"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : acceptable type of documents to be uploaded during registration, for ex., passport, driving license, etc]]></comment>
@@ -1136,7 +1136,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Gender : Gender codes.]]></comment>
-	<position x="540" y="520"/>
+	<position x="500" y="540"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="16"/>
 		<comment><![CDATA[Code : gender code.]]></comment>
@@ -1186,7 +1186,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Global Parameters: Stores global system and application parameters with default values used across applications and modules.  These can be configured/changed through admin portal as needed.]]></comment>
-	<position x="40" y="840"/>
+	<position x="0" y="860"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : unique global parameter code for different configurations, processes, defaults etc]]></comment>
@@ -1244,7 +1244,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Id Type :  List of ID types of various IDs generated , used or refered, for ex., PRID, RID, VID, etc]]></comment>
-	<position x="1360" y="140"/>
+	<position x="1320" y="160"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : Types of various IDs used or refered or generated for ex., PRID, RID, VID, etc]]></comment>
@@ -1298,7 +1298,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Individual Type : Type of indivisuals considered during registration.for ex., foreigner, non-foreigner, etc.]]></comment>
-	<position x="3340" y="520"/>
+	<position x="3300" y="540"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Individual Type Code : Individual type code for ex., FR, NFR etc.]]></comment>
@@ -1348,7 +1348,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Introducer Type : List of introducer types ,  for ex., OFFICER, etc.]]></comment>
-	<position x="380" y="1360"/>
+	<position x="340" y="1380"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : Types of introducers,  for ex., OFFICER, etc.]]></comment>
@@ -1402,7 +1402,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Language : List of Languages supported by system.  These language code are defined as per ISO 639 standard.]]></comment>
-	<position x="40" y="1160"/>
+	<position x="0" y="1180"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="3"/>
 		<comment><![CDATA[Code : Unique ISO 639-3 language code as per global standard.]]></comment>
@@ -1456,7 +1456,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[License Key : Holds list of license keys which will be used by TSPs]]></comment>
-	<position x="2560" y="2360"/>
+	<position x="2520" y="2380"/>
 	<column name="license_key" not-null="true">
 		<type name="character varying" length="255"/>
 		<comment><![CDATA[License Key : License key which is created to map partners, license key will have information related to authentication type access.]]></comment>
@@ -1506,7 +1506,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Permissions: List of permissions associated with license key]]></comment>
-	<position x="2960" y="2100"/>
+	<position x="2920" y="2120"/>
 	<column name="license_key" not-null="true">
 		<type name="character varying" length="255"/>
 		<comment><![CDATA[Licence Key: License key which id refered to master.licensekey_list.license_key]]></comment>
@@ -1552,7 +1552,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Location :  List of all location and  hierarchies defined for various location requirements.  An example is provided for understanding the data to be populated.]]></comment>
-	<position x="2780" y="160"/>
+	<position x="2720" y="520"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : Unique location code. ]]></comment>
@@ -1614,7 +1614,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Location Holiday : List of location specific holidays.  ]]></comment>
-	<position x="3280" y="180"/>
+	<position x="3240" y="200"/>
 	<column name="id" not-null="true">
 		<type name="integer" length="0"/>
 		<comment><![CDATA[Holiday ID : Unique id for each holiday]]></comment>
@@ -1679,7 +1679,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Machine Master : Contains list of approved Machines and  details,  like laptop, desktop, dongle etc used at registration centers. Valid Machines with active status only allowed at registration centers for respective functionalities. Machine onboarding are handled through admin application/portal by the user who is having the Machine onboarding authority. ]]></comment>
-	<position x="240" y="3300"/>
+	<position x="200" y="3320"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="10"/>
 		<comment><![CDATA[Machine ID : Unique ID generated / assigned for machine]]></comment>
@@ -1761,7 +1761,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Machine Master History : This to track changes to master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ), Effective DateTimestamp is used for identifying latest or point in time information. Refer master.machine_master table description for details.   ]]></comment>
-	<position x="720" y="1760"/>
+	<position x="680" y="1780"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="10"/>
 		<comment><![CDATA[Machine ID : Unique ID generated / assigned for machine]]></comment>
@@ -1847,7 +1847,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Machine Specification :  Specification of Machines for each Machine type that are supported by system,  like laptop, desktop, dongle etc]]></comment>
-	<position x="1440" y="2940"/>
+	<position x="1400" y="2960"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Machine Specification ID : Unique ID generated / assigned for machine specification]]></comment>
@@ -1917,7 +1917,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Machine Type : Types of Machines that are supported by the system,  like laptop, desktop, dongle etc]]></comment>
-	<position x="2100" y="2400"/>
+	<position x="2060" y="2420"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : types of machines used for registration processes, for ex., laptop, dongle, workstation etc]]></comment>
@@ -1971,7 +1971,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Message List : List of message texts that will be displayed or sent as alerts / notifications.]]></comment>
-	<position x="4280" y="180"/>
+	<position x="4240" y="200"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : unique code for various standard messages used for display , alerts, etc.]]></comment>
@@ -2033,7 +2033,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Machine ID Sequence : Maintains latest sequence number available for Machine ID generation]]></comment>
-	<position x="1940" y="600"/>
+	<position x="1900" y="620"/>
 	<column name="curr_seq_no" not-null="true">
 		<type name="integer" length="0"/>
 		<comment><![CDATA[Current Sequence Number : Latest sequence number available for Machine ID generation]]></comment>
@@ -2063,7 +2063,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Module Detail : List of all application modules within the system.]]></comment>
-	<position x="4080" y="1120"/>
+	<position x="4040" y="1140"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Module ID : Unique ID generated / assigned for a module]]></comment>
@@ -2117,7 +2117,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Process Detail : List of all processes within the system.]]></comment>
-	<position x="2260" y="1680"/>
+	<position x="2220" y="1700"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Process ID : Unique ID generated / assigned for a process]]></comment>
@@ -2171,7 +2171,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Registration Center ID Sequence : Maintains latest sequence number available for registration center ID generation]]></comment>
-	<position x="3760" y="560"/>
+	<position x="3720" y="580"/>
 	<column name="curr_seq_no" not-null="true">
 		<type name="integer" length="0"/>
 		<comment><![CDATA[Current Sequence Number : Latest sequence number available for Registration Center ID generation]]></comment>
@@ -2201,7 +2201,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Reason Category : List of reason categories defined for different processes, for ex., client rejection, manual adjudication etc.]]></comment>
-	<position x="960" y="2720"/>
+	<position x="920" y="2740"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : reason categories used during registration process, for ex., client rejection, manual adjudication etc.]]></comment>
@@ -2255,7 +2255,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Reason List : List of reasons for each category, for ex., photo mismatch, duplicate registration etc.]]></comment>
-	<position x="240" y="2860"/>
+	<position x="200" y="2880"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : list of reasons used related to specific reason categories defined, for ex., photo mismatch, duplicate registration etc.]]></comment>
@@ -2313,7 +2313,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Registration Center : List of registration centers that are authorized to perform UIN registrations ]]></comment>
-	<position x="2780" y="3400"/>
+	<position x="2740" y="3420"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="10"/>
 		<comment><![CDATA[Registration Center ID : Unique ID generated / assigned for a registration center]]></comment>
@@ -2439,7 +2439,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Registration Center History : This to track changes to master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ), Effective DateTimestamp is used for identifying latest or point in time information. Refer master.registration_center table description for details.]]></comment>
-	<position x="1000" y="480"/>
+	<position x="960" y="500"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="10"/>
 		<comment><![CDATA[Registration Center ID : Unique ID generated / assigned for a registration center]]></comment>
@@ -2569,7 +2569,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Registration Center Device : Mapping table to assign devices that are used at a registration center]]></comment>
-	<position x="2300" y="3260"/>
+	<position x="2260" y="3280"/>
 	<column name="regcntr_id" not-null="true">
 		<type name="character varying" length="10"/>
 		<comment><![CDATA[Registration Center ID : registration center id refers to master.registration_center.id]]></comment>
@@ -2619,7 +2619,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Registration Center Device History : This to track changes to master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ), Effective DateTimestamp is used for identifying latest or point in time information. Refer master.reg_center_device table description for details.   ]]></comment>
-	<position x="880" y="180"/>
+	<position x="840" y="200"/>
 	<column name="regcntr_id" not-null="true">
 		<type name="character varying" length="10"/>
 		<comment><![CDATA[Registration Center ID : registration center id refers to master.registration_center.id]]></comment>
@@ -2673,7 +2673,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Registration Center Machine : Mapping table to assign machines that are used at a registration center]]></comment>
-	<position x="1140" y="3800"/>
+	<position x="1100" y="3820"/>
 	<column name="regcntr_id" not-null="true">
 		<type name="character varying" length="10"/>
 		<comment><![CDATA[Registration Center ID : registration center id refers to master.registration_center.id]]></comment>
@@ -2723,7 +2723,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Registration Center Machine Device : Mapping table to assign machines and devices that are used at a registration center]]></comment>
-	<position x="2200" y="3840"/>
+	<position x="2160" y="3860"/>
 	<column name="regcntr_id" not-null="true">
 		<type name="character varying" length="10"/>
 		<comment><![CDATA[Registration Center ID : registration center id refers to master.registration_center.id]]></comment>
@@ -2777,7 +2777,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Registration Center Machine Device History : This to track changes to master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ), Effective DateTimestamp is used for identifying latest or point in time information. Refer master.reg_center_machine_device table description for details.   ]]></comment>
-	<position x="3320" y="2860"/>
+	<position x="3280" y="2880"/>
 	<column name="regcntr_id" not-null="true">
 		<type name="character varying" length="10"/>
 		<comment><![CDATA[Registration Center ID : registration center id refers to master.registration_center.id]]></comment>
@@ -2835,7 +2835,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Registration Center Machine History : This to track changes to master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ), Effective DateTimestamp is used for identifying latest or point in time information. Refer master.reg_center_machine table description for details.   ]]></comment>
-	<position x="40" y="100"/>
+	<position x="0" y="120"/>
 	<column name="regcntr_id" not-null="true">
 		<type name="character varying" length="10"/>
 		<comment><![CDATA[Registration Center ID : registration center id refers to master.registration_center.id]]></comment>
@@ -2889,7 +2889,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Registration Center Type : List of registration center types availabe / configured within the system.]]></comment>
-	<position x="3500" y="3840"/>
+	<position x="3460" y="3860"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : different types of registration centers, ]]></comment>
@@ -2943,7 +2943,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Registration Center User : List of authorized users assigned to a registration center.]]></comment>
-	<position x="3140" y="4020"/>
+	<position x="3100" y="4040"/>
 	<column name="regcntr_id" not-null="true">
 		<type name="character varying" length="10"/>
 		<comment><![CDATA[Registration Center ID : registration center id refers to master.registration_center.id]]></comment>
@@ -2993,7 +2993,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Registration Center User History : This to track changes to master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ), Effective DateTimestamp is used for identifying latest or point in time information. Refer master.reg_center_user table description for details.   ]]></comment>
-	<position x="840" y="2960"/>
+	<position x="800" y="2980"/>
 	<column name="regcntr_id" not-null="true">
 		<type name="character varying" length="10"/>
 		<comment><![CDATA[Registration Center ID : registration center id refers to master.registration_center.id]]></comment>
@@ -3047,7 +3047,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Registration Center User Machine : Mapping table to assign a user to a machine that will be used at a registration center.]]></comment>
-	<position x="3380" y="2280"/>
+	<position x="3340" y="2300"/>
 	<column name="regcntr_id" not-null="true">
 		<type name="character varying" length="10"/>
 		<comment><![CDATA[Registration Center ID : registration center id refers to master.registration_center.id]]></comment>
@@ -3101,7 +3101,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Registration Center User Machine History : This to track changes to master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ), Effective DateTimestamp is used for identifying latest or point in time information. Refer master.reg_center_user_machine table description for details.]]></comment>
-	<position x="2860" y="2540"/>
+	<position x="2820" y="2560"/>
 	<column name="regcntr_id" not-null="true">
 		<type name="character varying" length="10"/>
 		<comment><![CDATA[Registration Center ID : registration center id refers to master.registration_center.id]]></comment>
@@ -3159,7 +3159,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Role List : List of roles defined within the system. These roles are used for various processes like data access, authentication methods, authorization, etc.]]></comment>
-	<position x="1040" y="1020"/>
+	<position x="1000" y="1040"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : list of roles defined for security , authorization,  permission for various modules/processes, etc.]]></comment>
@@ -3209,7 +3209,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Screen Authorization : Mapping table to define the access control of application screens to a role]]></comment>
-	<position x="1460" y="1000"/>
+	<position x="1420" y="1020"/>
 	<column name="screen_id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Screen ID : registration center id refers to master.screen_detail.id]]></comment>
@@ -3263,7 +3263,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Screen Detail : List of screens of each application. ]]></comment>
-	<position x="1360" y="1480"/>
+	<position x="1320" y="1500"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Screen ID : Unique ID generated / assigned for a screen]]></comment>
@@ -3321,7 +3321,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Status List : List of statuses used within each status types are configured in this table.]]></comment>
-	<position x="2360" y="1080"/>
+	<position x="2320" y="1100"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : Status codes like STARTED, INPROGRESS, COMPLETED, FAILED etc for each status type with sequence number, with lang_cd for multi language]]></comment>
@@ -3379,7 +3379,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Status Type : List of status types. These are used to group a set of statuses of a process.]]></comment>
-	<position x="1900" y="860"/>
+	<position x="1860" y="880"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : status types for ex.,  transaction,  registration, uin,  packet etc.]]></comment>
@@ -3433,7 +3433,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Template : Templates are defined to standardize the communication process within the system. For ex., notications, alerts, etc.]]></comment>
-	<position x="3600" y="1160"/>
+	<position x="3080" y="1160"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Template ID : Unique ID generated / assigned for a template]]></comment>
@@ -3511,7 +3511,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Template File Format : Format of the template files that are used for notifications. For ex.,  xml, html, xslt, etc.]]></comment>
-	<position x="4080" y="1580"/>
+	<position x="4040" y="1600"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : format code of template documents, for ex., html, text, etc]]></comment>
@@ -3561,7 +3561,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Template Type : Type of templates supported by the system. For ex., sms, email, etc]]></comment>
-	<position x="880" y="1440"/>
+	<position x="840" y="1460"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : type code for templates  for ex.,  sms, email, etc.]]></comment>
@@ -3611,7 +3611,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Title : List of title, for ex.,  Mr, Mrs, etc]]></comment>
-	<position x="3580" y="800"/>
+	<position x="3540" y="820"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="16"/>
 		<comment><![CDATA[Code :  list of title for ex.,  Mr, Mrs, etc]]></comment>
@@ -3665,7 +3665,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Transaction Type : List of various transactions types across all modules and processes.   for ex., registration,  virusscan, sync, authentication, etc]]></comment>
-	<position x="1580" y="540"/>
+	<position x="1540" y="560"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : type code for various transactions across all modules and processes.   for ex., registration,  virusscan, sync, authentication, etc]]></comment>
@@ -3715,7 +3715,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[TSP License keys : TSP and License key mapping ]]></comment>
-	<position x="2680" y="3000"/>
+	<position x="2640" y="3020"/>
 	<column name="tsp_id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[TSP ID: ID of the thirdparty service provider]]></comment>
@@ -3761,7 +3761,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Trusted Service Provider ID Sequence : Maintains latest sequence number available for TSP ID  generation]]></comment>
-	<position x="80" y="500"/>
+	<position x="40" y="520"/>
 	<column name="curr_seq_no" not-null="true">
 		<type name="integer" length="0"/>
 		<comment><![CDATA[Current Sequence Number : Latest sequence number available for TSP (Trusted Service Provider) ID generation]]></comment>
@@ -3791,7 +3791,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[User Detail : List of applicatgion users in the system, who can perform UIN registration functions as per roles assigned.]]></comment>
-	<position x="4000" y="3780"/>
+	<position x="3960" y="3800"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="256"/>
 		<comment><![CDATA[User ID : Unique ID generated / assigned for a user]]></comment>
@@ -3865,7 +3865,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[User Detail History : This to track changes to master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ), Effective DateTimestamp is used for identifying latest or point in time information. Refer master.user_detail table description for details.]]></comment>
-	<position x="1980" y="160"/>
+	<position x="1940" y="180"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="256"/>
 		<comment><![CDATA[User ID : Unique ID generated / assigned for a user]]></comment>
@@ -3943,7 +3943,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[User Password : Stores encripted password of users in master.user_details table.   ]]></comment>
-	<position x="3560" y="3160"/>
+	<position x="3520" y="3180"/>
 	<column name="usr_id" not-null="true">
 		<type name="character varying" length="256"/>
 		<comment><![CDATA[User ID : registration center id refers to master.user_detail.id]]></comment>
@@ -4001,7 +4001,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[User Role : List of user roles as per the security and access rights, that will be assigned to specific users.]]></comment>
-	<position x="2660" y="4000"/>
+	<position x="2620" y="4020"/>
 	<column name="usr_id" not-null="true">
 		<type name="character varying" length="256"/>
 		<comment><![CDATA[User ID : registration center id refers to master.user_detail.id]]></comment>
@@ -4051,7 +4051,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Valid Document : This is mapping table that relates  document category and document type, that is valid document proof for UIN registration process.]]></comment>
-	<position x="4260" y="2440"/>
+	<position x="4220" y="2460"/>
 	<column name="doctyp_code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Document Type Code: Refers to master.doc_type.code]]></comment>
@@ -4101,7 +4101,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Zone :  List of all zones and hierarchies defined for various zone requirements.  An example is provided for understanding the data to be populated.]]></comment>
-	<position x="2320" y="180"/>
+	<position x="2280" y="200"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : Unique zone code generated or entered by admin while creating zones. ]]></comment>
@@ -4170,7 +4170,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Zone User : Mapping table to assign a user to a zone that will be used for the zonal administration purpose]]></comment>
-	<position x="2340" y="500"/>
+	<position x="2300" y="520"/>
 	<column name="zone_code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : Unique zone code generated or entered by admin while creating zones. ]]></comment>
@@ -4220,7 +4220,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Zone User History : This to track changes to master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ), Effective DateTimestamp is used for identifying latest or point in time information. Refer master.zone_user table description for details.]]></comment>
-	<position x="2800" y="460"/>
+	<position x="2300" y="740"/>
 	<column name="zone_code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : Unique zone code generated or entered by admin while creating zones. ]]></comment>
@@ -4270,11 +4270,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="registered_device_master" alias="regdevm">
+<table name="registered_device_master" alias="regdevm" hide-ext-attribs="true">
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Registered Device Master : Contains list of registered devices and details, like fingerprint scanner, iris scanner, scanner etc used at registration centers, authentication services, eKYC...etc. Valid devices with active status only allowed at registering devices for respective functionalities. Device onboarding are handled through admin application/portal by the user who is having the device onboarding authority. ]]></comment>
-	<position x="580" y="4540"/>
+	<position x="540" y="4560"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Registred Device Code : Unique ID generated / assigned for device which is registred in MOSIP system for the purpose]]></comment>
@@ -4382,7 +4382,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Days of Week List : Stores all days of the week with Code and Name. The Days of week are kept with multiple language based on country configured languages.]]></comment>
-	<position x="180" y="2340"/>
+	<position x="140" y="2360"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="3"/>
 		<comment><![CDATA[Code of the day of the week, This can be single digit like (M,T,W,R,F,S,U) or three digit like (MON,TUE,WED,THU,FRI,SAT,SUN)]]></comment>
@@ -4440,7 +4440,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Registration Center Working NonWorking : Stores working and non-working days of the week for all registration centers. As per the requirement working and non-working days are defined at center level.]]></comment>
-	<position x="580" y="2160"/>
+	<position x="540" y="2180"/>
 	<column name="regcntr_id" not-null="true">
 		<type name="character varying" length="10"/>
 		<comment><![CDATA[Registration Center ID : registration center id refers to master.registration_center.id, Registration centers id that are authorized to perform UIN registrations.]]></comment>
@@ -4494,7 +4494,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Registration Center Exceptional Holiday : Table to store all the exceptioanl holidays declared for the registartion centers. Will have all details on the exceptional holiday details like data, reason for holiday and registration center details.]]></comment>
-	<position x="620" y="2500"/>
+	<position x="580" y="2520"/>
 	<column name="regcntr_id" not-null="true">
 		<type name="character varying" length="10"/>
 		<comment><![CDATA[Registration Center ID : registration center id refers to master.registration_center.id, Registration centers id that are authorized to perform UIN registrations.]]></comment>
@@ -4552,7 +4552,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Registered Device History : History of changes of any MOSIP device registration will be stored in history table to track any chnages for future validations.]]></comment>
-	<position x="200" y="4640"/>
+	<position x="160" y="4660"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Registred Device Code : Unique ID generated / assigned for device which is registred in MOSIP system for the purpose]]></comment>
@@ -4661,7 +4661,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Device Provider : To store MOSIP device provider details, Devices will be used in MOSIP those are provided by only registred device provider.]]></comment>
-	<position x="1080" y="4180"/>
+	<position x="1040" y="4200"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Device Provider ID: Unique ID of the device provider, Device provider id is generated by MOSIP system.]]></comment>
@@ -4723,7 +4723,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Device Provider History : History of changes of any device provider will be stored in history table to track any chnages for future validations.]]></comment>
-	<position x="1480" y="4140"/>
+	<position x="1440" y="4160"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Device Provider ID: Unique ID of the device provider, Device provider id is generated by MOSIP system.]]></comment>
@@ -4789,7 +4789,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Foundational Trust Provider : To store all foundational trust provider, This provider will issue certificates to the chip/device manufacturer to certify devices.]]></comment>
-	<position x="600" y="4200"/>
+	<position x="560" y="4220"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Foundational Trust Provider ID: Unique ID of the trust provider, Trust provider id is generated by MOSIP system.]]></comment>
@@ -4851,7 +4851,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Foundational Trust Provider History : History of changes of any Foundational Trust Provider will be stored in history table to track any chnages for future validations.]]></comment>
-	<position x="260" y="4360"/>
+	<position x="220" y="4380"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Foundational Trust Provider ID: Unique ID of the trust provider, Trust provider id is generated by MOSIP system.]]></comment>
@@ -4917,7 +4917,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Device Type : Types of devices that are supported by the MOSIP system,  like  scanning, finger, face, iris etc]]></comment>
-	<position x="1140" y="4520"/>
+	<position x="1100" y="4540"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Device Type Code: Types of devices used for registration processes, authentication...etc for ex., FNR, FACE, IRIS... etc]]></comment>
@@ -4967,7 +4967,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Device Type : Sub types of devices that are supported by the MOSIP system,  like  Slab, Single, Touchless...etc]]></comment>
-	<position x="1160" y="4840"/>
+	<position x="1120" y="4860"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Device Sub Type Code: Sub types of devices used for registration processes, authentication...etc for ex., SLB, SINGLE, FULLFACE... etc]]></comment>
@@ -5024,7 +5024,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[MOSIP Device Service : Mosip device cervice to have all the details about the device types, provider and software details]]></comment>
-	<position x="1600" y="4740"/>
+	<position x="1560" y="4760"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[ID: Unigue service ID, Service ID is geerated by the MOSIP system]]></comment>
@@ -5105,7 +5105,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[MOSIP Device Service History : History of changes of any MOSIP device service will be stored in history table to track any chnages for future validations.]]></comment>
-	<position x="1780" y="4400"/>
+	<position x="1740" y="4420"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[ID: Unigue service ID, Service ID is geerated by the MOSIP system]]></comment>
@@ -5180,6 +5180,257 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<constraint name="pk_mdsh_id" type="pk-constr" table="master.mosip_device_service_h">
 		<columns names="id,eff_dtimes" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="loc_hierarchy_list">
+	<schema name="master"/>
+	<role name="sysadmin"/>
+	<comment><![CDATA[Location Hierarchy List: Master list of location hierarchy, Contains pre defined location hierarchy level, location hierarchy name in multiple language for the country.]]></comment>
+	<position x="2720" y="240"/>
+	<column name="hierarchy_level" not-null="true">
+		<type name="smallint" length="0"/>
+		<comment><![CDATA[Hierarchy Level: Number of hierarchy levels defined by each country. Typically it starts with 0 for the topmost hierarchy level. This hierarchy level is referenced in location table]]></comment>
+	</column>
+	<column name="hierarchy_level_name" not-null="true">
+		<type name="character varying" length="64"/>
+		<comment><![CDATA[Hierarchy Level Name: Hierarchy level name defined by each country. for ex., COUNTRY->STATE->CITY->PINCODE. This hierarchy level name is referenced in location table]]></comment>
+	</column>
+	<column name="lang_code" not-null="true">
+		<type name="character varying" length="3"/>
+		<comment><![CDATA[Language Code : For multilanguage implementation this attribute Refers master.language.code. The value of some of the attributes in current record is stored in this respective language. ]]></comment>
+	</column>
+	<column name="is_active" not-null="true">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[IS_Active : Flag to mark whether the record is Active or In-active]]></comment>
+	</column>
+	<column name="cr_by" not-null="true">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Created By : ID or name of the user who create / insert record]]></comment>
+	</column>
+	<column name="cr_dtimes" not-null="true">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Created DateTimestamp : Date and Timestamp when the record is created/inserted]]></comment>
+	</column>
+	<column name="upd_by">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Updated By : ID or name of the user who update the record with new values]]></comment>
+	</column>
+	<column name="upd_dtimes">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
+	</column>
+	<column name="is_deleted">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
+	</column>
+	<column name="del_dtimes">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE]]></comment>
+	</column>
+	<constraint name="pk_loc_hierlst" type="pk-constr" table="master.loc_hierarchy_list">
+		<columns names="hierarchy_level,hierarchy_level_name,lang_code" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="identity_schema" alias="idsch">
+	<schema name="master"/>
+	<role name="sysadmin"/>
+	<comment><![CDATA[Identity Schema: To store id schema which is used in MOSIP platform. All MOSIP modules will use this schema for fields representation and validation. ID schema will contain the key pair of the fields and values used and other meta information of schema in table. ]]></comment>
+	<position x="2220" y="4420"/>
+	<column name="id" not-null="true">
+		<type name="character varying" length="36"/>
+		<comment><![CDATA[ID: Unigue ID is assign to identity schema. Each identity schema will have its own unigue id.]]></comment>
+	</column>
+	<column name="id_version">
+		<type name="character varying" length="8"/>
+		<comment><![CDATA[ID Version: Version of the identity schema, versions will be used for validation of right version usage in the system.]]></comment>
+	</column>
+	<column name="title">
+		<type name="character varying" length="64"/>
+		<comment><![CDATA[Title: Tittle of the id schema, Gives high level detail about the id schema.]]></comment>
+	</column>
+	<column name="description">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Description: Description of the id schema which will give more details about id schema.]]></comment>
+	</column>
+	<column name="id_attr_json">
+		<type name="character varying" length="12288"/>
+		<comment><![CDATA[ID Attribute JSON: Field includes both UI related attributes as well as actual ID-Schema related attributes. It is acutal representation of POJO used by UI.]]></comment>
+	</column>
+	<column name="schema_json">
+		<type name="character varying" length="10240"/>
+		<comment><![CDATA[Schema JSON: Its the ID-Schema json that is supported by JSON-Schema validator.]]></comment>
+	</column>
+	<column name="status_code">
+		<type name="character varying" length="36"/>
+		<comment><![CDATA[Status Code: Status of the identity schema. which gives details on the schema is in use, expired or outdated....etc.]]></comment>
+	</column>
+	<column name="add_props">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[Additional Properties: This boolean value represents weather additional property consideration is allowed or not.]]></comment>
+	</column>
+	<column name="effective_from">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Effective From: Effective date and time of the id schema which can be used in MOSIP platform.]]></comment>
+	</column>
+	<column name="lang_code" not-null="true">
+		<type name="character varying" length="3"/>
+		<comment><![CDATA[Language Code : For multilanguage implementation this attribute Refers master.language.code. The value of some of the attributes in current record is stored in this respective language.]]></comment>
+	</column>
+	<column name="is_active" not-null="true">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[IS_Active : Flag to mark whether the record/device is Active or In-active]]></comment>
+	</column>
+	<column name="cr_by" not-null="true">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Created By : ID or name of the user who create / insert record]]></comment>
+	</column>
+	<column name="cr_dtimes" not-null="true">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Created DateTimestamp : Date and Timestamp when the record is created/inserted]]></comment>
+	</column>
+	<column name="upd_by">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Updated By : ID or name of the user who update the record with new values]]></comment>
+	</column>
+	<column name="upd_dtimes">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
+	</column>
+	<column name="is_deleted">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
+	</column>
+	<column name="del_dtimes">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE]]></comment>
+	</column>
+	<constraint name="pk_idsch_id" type="pk-constr" table="master.identity_schema">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="dynamic_field" alias="dynfld">
+	<schema name="master"/>
+	<role name="sysadmin"/>
+	<comment><![CDATA[Schema Dynamic Fields: Table to store the fields which are used dynamically in MOSIP applications. These fields are also part of identity schema.]]></comment>
+	<position x="2560" y="4420"/>
+	<column name="id" not-null="true">
+		<type name="character varying" length="36"/>
+		<comment><![CDATA[ID: Unigue ID generated by MOSIP systema assigned to dynamic fields.]]></comment>
+	</column>
+	<column name="name" not-null="true">
+		<type name="character varying" length="36"/>
+		<comment><![CDATA[Name: Name of the dynamic field. example location hierarchy name like regin, destrict, zone..etc]]></comment>
+	</column>
+	<column name="description">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Description: Description of the dynamic field.]]></comment>
+	</column>
+	<column name="data_type">
+		<type name="character varying" length="16"/>
+		<comment><![CDATA[Data Type: Data type of the dynamic field. ]]></comment>
+	</column>
+	<column name="value_json">
+		<type name="character varying" length="4086"/>
+		<comment><![CDATA[Value JSON: Value of the dynamic field listed in this column.]]></comment>
+	</column>
+	<column name="lang_code" not-null="true">
+		<type name="character varying" length="3"/>
+		<comment><![CDATA[Language Code : For multilanguage implementation this attribute Refers master.language.code. The value of some of the attributes in current record is stored in this respective language.]]></comment>
+	</column>
+	<column name="is_active" not-null="true">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[IS_Active : Flag to mark whether the record/device is Active or In-active]]></comment>
+	</column>
+	<column name="cr_by" not-null="true">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Created By : ID or name of the user who create / insert record]]></comment>
+	</column>
+	<column name="cr_dtimes" not-null="true">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Created DateTimestamp : Date and Timestamp when the record is created/inserted]]></comment>
+	</column>
+	<column name="upd_by">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Updated By : ID or name of the user who update the record with new values]]></comment>
+	</column>
+	<column name="upd_dtimes">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
+	</column>
+	<column name="is_deleted">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
+	</column>
+	<column name="del_dtimes">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE]]></comment>
+	</column>
+	<constraint name="pk_schfld_id" type="pk-constr" table="master.dynamic_field">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="uk_schfld_name" type="uq-constr" table="master.dynamic_field">
+		<columns names="name,lang_code" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="schema_definition" alias="schdef">
+	<schema name="master"/>
+	<role name="sysadmin"/>
+	<comment><![CDATA[Schema Definition: Defination of the id defination, Based on this schema defination id schema will be generated.]]></comment>
+	<position x="2920" y="4420"/>
+	<column name="id" not-null="true">
+		<type name="character varying" length="36"/>
+		<comment><![CDATA[ID: Unigue service ID, Service ID is geerated by the MOSIP system]]></comment>
+	</column>
+	<column name="def_type">
+		<type name="character varying" length="16"/>
+		<comment><![CDATA[Defination Type: Schema defination type]]></comment>
+	</column>
+	<column name="def_name">
+		<type name="character varying" length="36"/>
+		<comment><![CDATA[Definition Name: Name of the schema defination]]></comment>
+	</column>
+	<column name="add_props">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[Additional Properties: This boolean value represents weather additional property consideration is allowed or not.]]></comment>
+	</column>
+	<column name="def_json">
+		<type name="character varying" length="4086"/>
+		<comment><![CDATA[ID Definition JSON: This holds the JSON text which will be used define ID schema.]]></comment>
+	</column>
+	<column name="is_active" not-null="true">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[IS_Active : Flag to mark whether the record/device is Active or In-active]]></comment>
+	</column>
+	<column name="cr_by" not-null="true">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Created By : ID or name of the user who create / insert record]]></comment>
+	</column>
+	<column name="cr_dtimes" not-null="true">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Created DateTimestamp : Date and Timestamp when the record is created/inserted]]></comment>
+	</column>
+	<column name="upd_by">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Updated By : ID or name of the user who update the record with new values]]></comment>
+	</column>
+	<column name="upd_dtimes">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
+	</column>
+	<column name="is_deleted">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
+	</column>
+	<column name="del_dtimes">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE]]></comment>
+	</column>
+	<constraint name="pk_schdef_id" type="pk-constr" table="master.schema_definition">
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -5265,6 +5516,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="master.licensekey_list" table="master.licensekey_permission">
 	<columns names="license_key" ref-type="src-columns"/>
 	<columns names="license_key" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_loc_lochierlst" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="master.loc_hierarchy_list" table="master.location">
+	<columns names="hierarchy_level,hierarchy_level_name,lang_code" ref-type="src-columns"/>
+	<columns names="hierarchy_level,hierarchy_level_name,lang_code" ref-type="dst-columns"/>
 </constraint>
 
 <constraint name="fk_lochol_loc" type="fk-constr" comparison-type="MATCH SIMPLE"
@@ -5915,6 +6172,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_mosip_device_service_reg_device_sub_type" type="relfk"
 	 src-table="master.mosip_device_service"
 	 dst-table="master.reg_device_sub_type" reference-fk="fk_mds_dstype"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_location_loc_hierarchy_list" type="relfk"
+	 src-table="master.location"
+	 dst-table="master.loc_hierarchy_list" reference-fk="fk_loc_lochierlst"
 	 src-required="false" dst-required="false"/>
 
 <permission>
