@@ -71,6 +71,7 @@ public class IntegrationTest {
 		objectMapper.registerModule(new JavaTimeModule());
 		LOGGER = LoggerFactory.getLogger(IntegrationTest.class);
 		ServerSocket socket = new ServerSocket(0);
+		vertx = Vertx.vertx();
 		port = socket.getLocalPort();
 		System.setProperty("server.port", String.valueOf(port));
 		socket.close();
@@ -195,6 +196,7 @@ public class IntegrationTest {
 	}
 
 	@Ignore
+
 	@Test
 	public void getViDExpiryInvalidExpiryDateTest(TestContext context) {
 		LOGGER.info("getVidSuccessTest execution...");
