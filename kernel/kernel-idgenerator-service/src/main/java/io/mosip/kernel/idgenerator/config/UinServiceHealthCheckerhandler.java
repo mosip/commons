@@ -1,4 +1,4 @@
-package io.mosip.kernel.uingenerator.config;
+package io.mosip.kernel.idgenerator.config;
 
 import static io.vertx.ext.healthchecks.impl.StatusHelper.isUp;
 

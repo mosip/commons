@@ -18,7 +18,7 @@ import io.mosip.kernel.uingenerator.exception.UinNotIssuedException;
 import io.mosip.kernel.uingenerator.exception.UinStatusNotFoundException;
 import io.mosip.kernel.uingenerator.repository.UinRepository;
 import io.mosip.kernel.uingenerator.service.UinService;
-import io.mosip.kernel.uingenerator.util.MetaDataUtil;
+import io.mosip.kernel.uingenerator.util.UINMetaDataUtil;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
@@ -41,10 +41,10 @@ public class UinServiceImpl implements UinService {
 	UinRepository uinRepository;
 
 	/**
-	 * instance of {@link MetaDataUtil}
+	 * instance of {@link UINMetaDataUtil}
 	 */
 	@Autowired
-	private MetaDataUtil metaDataUtil;
+	private UINMetaDataUtil metaDataUtil;
 
 	/*
 	 * (non-Javadoc)
