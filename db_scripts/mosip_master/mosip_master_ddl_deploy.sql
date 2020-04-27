@@ -89,4 +89,8 @@
 \ir ddl/master-reg_working_nonworking.sql
 \ir ddl/master-reg_exceptional_holiday.sql
 
+\ir ddl/master-schema_definition.sql
+\ir ddl/master-dynamic_field.sql
+\ir ddl/master-identity_schema.sql
+
 \ir ddl/master-fk.sql
