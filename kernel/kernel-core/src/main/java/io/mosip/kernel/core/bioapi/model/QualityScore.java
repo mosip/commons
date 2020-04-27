@@ -9,5 +9,6 @@ import lombok.Data;
  */
 @Data
 public class QualityScore {
-	private long internalScore; // used against threshold specified in config file
+	float score; // 0 - 100 score that represents quality as a percentage
+	KeyValuePair[] analyticsInfo; // detailed breakdown and other information
 }

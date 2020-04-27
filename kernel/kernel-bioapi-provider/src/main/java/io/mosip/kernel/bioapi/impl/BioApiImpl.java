@@ -1,17 +1,15 @@
 package io.mosip.kernel.bioapi.impl;
 
-import java.security.SecureRandom;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import io.mosip.kernel.core.bioapi.model.CompositeScore;
 import io.mosip.kernel.core.bioapi.model.KeyValuePair;
+import io.mosip.kernel.core.bioapi.model.MatchDecision;
 import io.mosip.kernel.core.bioapi.model.QualityScore;
-import io.mosip.kernel.core.bioapi.model.Score;
+import io.mosip.kernel.core.bioapi.model.Response;
 import io.mosip.kernel.core.bioapi.spi.IBioApi;
 import io.mosip.kernel.core.cbeffutil.entity.BDBInfo;
 import io.mosip.kernel.core.cbeffutil.entity.BIR;
@@ -33,12 +31,14 @@ public class BioApiImpl implements IBioApi {
 	 * bioapi.model.BIR, io.mosip.kernel.core.bioapi.model.KeyValuePair[])
 	 */
 	@Override
-	public QualityScore checkQuality(BIR sample, KeyValuePair[] flags) {
+	public Response<QualityScore> checkQuality(BIR sample, KeyValuePair[] flags) {
 		QualityScore qualityScore = new QualityScore();
 		int major = Optional.ofNullable(sample.getBdbInfo()).map(BDBInfo::getQuality).map(QualityType::getScore)
 				.orElse(0L).intValue();
-		qualityScore.setInternalScore(major);
-		return qualityScore;
+		qualityScore.setScore(major);
+		Response<QualityScore> response = new Response<>();
+		response.setResponse(qualityScore);
+		return response;
 	}
 
 	/*
@@ -50,52 +50,22 @@ public class BioApiImpl implements IBioApi {
 	 * io.mosip.kernel.core.bioapi.model.KeyValuePair[])
 	 */
 	@Override
-	public Score[] match(BIR sample, BIR[] gallery, KeyValuePair[] flags) {
-		Score matchingScore[] = new Score[gallery.length];
+	public Response<MatchDecision[]> match(BIR sample, BIR[] gallery, KeyValuePair[] flags) {
+		MatchDecision matchingScore[] = new MatchDecision[gallery.length];
 		int count = 0;
 		for (BIR recordedValue : gallery) {
-			matchingScore[count] = new Score();
+			matchingScore[count] = new MatchDecision();
 			if (Objects.nonNull(recordedValue) && Objects.nonNull(recordedValue.getBdb())
 					&& recordedValue.getBdb().length != 0 && Arrays.equals(recordedValue.getBdb(), sample.getBdb())) {
-				matchingScore[count].setInternalScore(90);
-				matchingScore[count].setScaleScore(90);
+				matchingScore[count].setMatch(true);
 			} else {
-				int randomNumebr = new SecureRandom().nextInt(50);
-				matchingScore[count].setInternalScore(randomNumebr);
-				matchingScore[count].setScaleScore(randomNumebr);
+				matchingScore[count].setMatch(false);
 			}
 			count++;
 		}
-		return matchingScore;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.mosip.kernel.core.bioapi.spi.IBioApi#compositeMatch(io.mosip.kernel.core.
-	 * bioapi.model.BIR[], io.mosip.kernel.core.bioapi.model.BIR[],
-	 * io.mosip.kernel.core.bioapi.model.KeyValuePair[])
-	 */
-	@Override
-	public CompositeScore compositeMatch(BIR[] sampleList, BIR[] recordList, KeyValuePair[] flags) {
-		Score matchingScore[] = new Score[sampleList.length];
-		int count = 0;
-		for (BIR sampleValue : sampleList) {
-			Score[] match = match(sampleValue, recordList, flags);
-			Optional<Score> max = Arrays.stream(match).max(Comparator.comparing(Score::getInternalScore));
-			if (max.isPresent()) {
-				matchingScore[count] = max.get();
-				count++;
-			}
-		}
-		double sum = Arrays.stream(matchingScore).mapToDouble(Score::getInternalScore).sum();
-		CompositeScore compositeScore = new CompositeScore();
-		compositeScore.setIndividualScores(matchingScore);
-		long compositeMatchScore = (long) (sum / matchingScore.length);
-		compositeScore.setInternalScore(compositeMatchScore );
-		compositeScore.setScaledScore(compositeMatchScore);
-		return compositeScore;
+		Response<MatchDecision[]> response = new Response<>();
+		response.setResponse(matchingScore);
+		return response;
 	}
 
 	/*
@@ -106,8 +76,10 @@ public class BioApiImpl implements IBioApi {
 	 * bioapi.model.BIR, io.mosip.kernel.core.bioapi.model.KeyValuePair[])
 	 */
 	@Override
-	public BIR extractTemplate(BIR sample, KeyValuePair[] flags) {
-		return sample;
+	public Response<BIR> extractTemplate(BIR sample, KeyValuePair[] flags) {
+		Response<BIR> response = new Response<>();
+		response.setResponse(sample);
+		return response;
 	}
 
 	/*
@@ -118,10 +90,12 @@ public class BioApiImpl implements IBioApi {
 	 * model.BIR, io.mosip.kernel.core.bioapi.model.KeyValuePair[])
 	 */
 	@Override
-	public BIR[] segment(BIR sample, KeyValuePair[] flags) {
+	public Response<BIR[]> segment(BIR sample, KeyValuePair[] flags) {
 		BIR[] bir = new BIR[1];
 		bir[0] = sample;
-		return bir;
+		Response<BIR[]> response = new Response<>();
+		response.setResponse(bir);
+		return response;
 	}
 
 }

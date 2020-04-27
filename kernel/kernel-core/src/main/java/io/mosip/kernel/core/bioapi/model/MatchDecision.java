@@ -8,8 +8,7 @@ import lombok.Data;
  * @author Sanjay Murali
  */
 @Data
-public class Score {
-	private float scaleScore; // 0 - 100, used for internal classification and efficacy analysis
-	private long internalScore; // used against threshold specified in config file
+public class MatchDecision {
+	boolean match; // true or false indicates matchers decision
 	private KeyValuePair[] analyticsInfo; // detailed breakdown and other information
 }
