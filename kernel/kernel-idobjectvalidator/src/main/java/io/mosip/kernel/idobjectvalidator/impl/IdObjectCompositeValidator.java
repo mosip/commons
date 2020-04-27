@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorSupportedOperations;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectIOException;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectValidationFailedException;
+import io.mosip.kernel.core.idobjectvalidator.exception.InvalidIdSchemaException;
 import io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator;
 
 /**
@@ -48,6 +49,22 @@ public class IdObjectCompositeValidator implements IdObjectValidator {
 		patternValidator.validateIdObject(identityObject, operation);
 		referenceValidator.validateIdObject(identityObject, operation);
 
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator#validateIdObject
+	 * (java.lang.Object)
+	 */
+	@Override
+	public boolean validateIdObject(String idSchema, Object idObject, IdObjectValidatorSupportedOperations operation)
+			throws IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
+		schemaValidator.validateIdObject( idSchema, idObject, operation);
+		patternValidator.validateIdObject( idSchema, idObject, operation);
+		referenceValidator.validateIdObject( idSchema, idObject, operation);
 		return true;
 	}
 

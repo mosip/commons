@@ -202,7 +202,8 @@ public class IdentitySchemaServiceImpl implements IdentitySchemaService {
 		entity.setId(UUID.randomUUID().toString());
 	
 		try {
-			entity = identitySchemaRepository.create(entity);
+			entity = identitySchemaRepository.create(entity);			
+				
 		} catch (DataAccessLayerException | DataAccessException e) {
 			LOGGER.error("Error while creating identity schema", e);
 			throw new MasterDataServiceException(SchemaErrorCode.SCHEMA_INSERT_EXCEPTION.getErrorCode(),
@@ -270,12 +271,12 @@ public class IdentitySchemaServiceImpl implements IdentitySchemaService {
 			int updatedRows = identitySchemaRepository.updateIdentitySchema(id, jsonString, true, 
 					MetaDataUtils.getCurrentDateTime(), MetaDataUtils.getContextUser());
 			
-			if (updatedRows < 1) {
+			entity = identitySchemaRepository.findIdentitySchemaById(id);
+			
+			if (updatedRows < 1 || entity == null) {
 				throw new RequestException(SchemaErrorCode.SCHEMA_NOT_FOUND_EXCEPTION.getErrorCode(),
 						SchemaErrorCode.SCHEMA_NOT_FOUND_EXCEPTION.getErrorMessage());
-			}
-			
-			entity = identitySchemaRepository.findIdentitySchemaById(id);
+			}		
 						
 		} catch (DataAccessException | DataAccessLayerException e) {
 			LOGGER.error("Error while updating identity schema : " + id, e);
@@ -316,7 +317,7 @@ public class IdentitySchemaServiceImpl implements IdentitySchemaService {
 	}
 	
 	private String getIdAttributeJsonString(IdentitySchemaDto dto) {
-		List<SchemaDto> list = dto.getSchema();
+		List<SchemaDto> list = dto.getSchema() == null ? new ArrayList<SchemaDto>() : dto.getSchema();
 		try {
 			return objectMapper.writeValueAsString(list);
 		} catch (IOException e) {
@@ -338,10 +339,10 @@ public class IdentitySchemaServiceImpl implements IdentitySchemaService {
 			JSONObject identityProperties = new JSONObject();
 			List<SchemaDto> list = convertJSONStringToSchemaDTO(entity.getIdAttributeJson());
 			for(SchemaDto schemaDto : list) {		
-				identityProperties.put(schemaDto.getFieldName(), getSchemaAttributes(schemaDto));
+				identityProperties.put(schemaDto.getId(), getSchemaAttributes(schemaDto));
 				
 				if(schemaDto.isRequired())
-					requiredFields.put(schemaDto.getFieldName());
+					requiredFields.put(schemaDto.getId());
 			}
 			JSONObject identityProps = new JSONObject();
 			identityProps.put(KEY_TYPE, KEY_TYPE_OBJECT);			
@@ -383,7 +384,7 @@ public class IdentitySchemaServiceImpl implements IdentitySchemaService {
 			schemaAttributes.put(ATTR_FORMAT, schemaDto.getFormat());		
 		
 		if(schemaDto.getValidators() != null && !schemaDto.getValidators().isEmpty())
-			schemaAttributes.put(ATTR_VALIDATORS, new JSONObject(objectMapper.writeValueAsString(schemaDto.getValidators())));
+			schemaAttributes.put(ATTR_VALIDATORS, new JSONArray(objectMapper.writeValueAsString(schemaDto.getValidators())));
 		
 		return schemaAttributes;
 	}

@@ -35,6 +35,11 @@ import io.mosip.kernel.masterdata.service.DynamicFieldService;
 import io.mosip.kernel.masterdata.service.IdentitySchemaService;
 import io.mosip.kernel.masterdata.test.TestBootApplication;
 
+/**
+ * 
+ * @author anusha
+ *
+ */
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TestBootApplication.class)
@@ -197,12 +202,12 @@ public class IdentitySchemaControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.post("/idschema")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content("{\"id\":\"string\",\"version\":\"string\",\"requesttime\":\"2018-12-17T07:15:06.724Z\",\"request\":"
-						+"{\"title\":\"title\",\"description\":\"test desc\",\"schema\":[{\"fieldName\":\"IDSchemaVersion\",\"inputRequired\":false,"
+						+"{\"title\":\"title\",\"description\":\"test desc\",\"schema\":[{\"id\":\"IDSchemaVersion\",\"inputRequired\":false,"
 						+ "\"type\":\"number\",\"minimum\":0,\"maximum\":0,\"description\":\"\",\"labelName\":\"IDSchemaVersion\",\"controlType\":\"none\","
 						+ "\"fieldType\":\"default\",\"format\":\"none\",\"validators\":[],\"fieldCategory\":\"Pvt\",\"required\":false},"
-						+ "{\"fieldName\":\"UIN\",\"inputRequired\":false,\"type\":\"integer\",\"minimum\":0,\"maximum\":0,\"description\":\"\","
+						+ "{\"id\":\"UIN\",\"inputRequired\":false,\"type\":\"integer\",\"minimum\":0,\"maximum\":0,\"description\":\"\","
 						+ "\"labelName\":\"UIN\",\"controlType\":\"none\",\"fieldType\":\"default\",\"format\":\"none\",\"validators\":[],"
-						+ "\"fieldCategory\":\"Pvt\",\"required\":false},{\"fieldName\":\"fullName\",\"inputRequired\":true,\"type\":\"simpleType\","
+						+ "\"fieldCategory\":\"Pvt\",\"required\":false},{\"id\":\"fullName\",\"inputRequired\":true,\"type\":\"simpleType\","
 						+ "\"minimum\":0,\"maximum\":0,\"description\":\"\",\"labelName\":\"Full Name\",\"controlType\":\"textbox\",\"fieldType\":\"default\","
 						+ "\"format\":\"none\",\"validators\":[],\"fieldCategory\":\"Pvt\",\"required\":true}],"
 						+ "\"effectiveFrom\":\"2018-12-17T07:15:06.724Z\"}}")
@@ -219,12 +224,12 @@ public class IdentitySchemaControllerTest {
 				.param("id", "test-test-test-test")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content("{\"id\":\"string\",\"version\":\"string\",\"requesttime\":\"2018-12-17T07:15:06.724Z\",\"request\":"
-						+"{\"title\":\"MOSIP ID Schema\",\"description\":\"test desc\",\"schema\":[{\"fieldName\":\"IDSchemaVersion\",\"inputRequired\":false,"
+						+"{\"title\":\"MOSIP ID Schema\",\"description\":\"test desc\",\"schema\":[{\"id\":\"IDSchemaVersion\",\"inputRequired\":false,"
 						+ "\"type\":\"number\",\"minimum\":0,\"maximum\":0,\"description\":\"\",\"labelName\":\"IDSchemaVersion\",\"controlType\":\"none\","
 						+ "\"fieldType\":\"default\",\"format\":\"none\",\"validators\":[],\"fieldCategory\":\"Pvt\",\"required\":false},"
-						+ "{\"fieldName\":\"UIN\",\"inputRequired\":false,\"type\":\"integer\",\"minimum\":0,\"maximum\":0,\"description\":\"\","
+						+ "{\"id\":\"UIN\",\"inputRequired\":false,\"type\":\"integer\",\"minimum\":0,\"maximum\":0,\"description\":\"\","
 						+ "\"labelName\":\"UIN\",\"controlType\":\"none\",\"fieldType\":\"default\",\"format\":\"none\",\"validators\":[],"
-						+ "\"fieldCategory\":\"Pvt\",\"required\":false},{\"fieldName\":\"fullName\",\"inputRequired\":true,\"type\":\"simpleType\","
+						+ "\"fieldCategory\":\"Pvt\",\"required\":false},{\"id\":\"fullName\",\"inputRequired\":true,\"type\":\"simpleType\","
 						+ "\"minimum\":0,\"maximum\":0,\"description\":\"\",\"labelName\":\"Full Name\",\"controlType\":\"textbox\",\"fieldType\":\"default\","
 						+ "\"format\":\"none\",\"validators\":[],\"fieldCategory\":\"Pvt\",\"required\":true}],"
 						+ "\"effectiveFrom\":\"2018-12-17T07:15:06.724Z\"}}")

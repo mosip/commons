@@ -41,14 +41,14 @@ public class IdentitySchema extends BaseEntity {
 	@Column(name = "description", nullable = false, length=50)
 	private String description;
 	
-	@Column(name = "id_attr_json", nullable = false, length=3000)
+	@Column(name = "id_attr_json", nullable = false, length=10240)
 	private String idAttributeJson;
 	
 	//schema_json is built only when schema is published
-	@Column(name = "schema_json", nullable = false, length=4000)
+	@Column(name = "schema_json", nullable = false, length=10240)
 	private String schemaJson;
 	
-	@Column(name = "status", nullable = false, length=16)
+	@Column(name = "status_code", nullable = false, length=16)
 	private String status;
 	
 	@Column(name = "add_props", nullable = false)

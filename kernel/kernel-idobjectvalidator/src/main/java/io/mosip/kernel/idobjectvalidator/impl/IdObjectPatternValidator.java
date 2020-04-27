@@ -26,6 +26,7 @@ import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorSupportedOperations;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectIOException;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectValidationFailedException;
+import io.mosip.kernel.core.idobjectvalidator.exception.InvalidIdSchemaException;
 import io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator;
 import net.minidev.json.JSONArray;
 
@@ -113,6 +114,13 @@ public class IdObjectPatternValidator implements IdObjectValidator {
 	private String convertToPath(String jsonPath) {
 		String path = String.valueOf(jsonPath.replaceAll("[$']", ""));
 		return path.substring(1, path.length() - 1).replace("][", "/");
+	}
+
+	@Override
+	public boolean validateIdObject(String idSchema, Object idObject, IdObjectValidatorSupportedOperations operations)
+			throws IdObjectValidationFailedException, IdObjectIOException,InvalidIdSchemaException {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
