@@ -9,11 +9,12 @@ package io.mosip.kernel.emailnotification.constant;
  *
  */
 public enum MailNotifierArgumentErrorConstants {
-	RECEIVER_ADDRESS_NOT_FOUND("KER-NOE-001", "To must be valid. It can't be empty or null."),
+	RECEIVER_ADDRESS_NOT_FOUND("KER-NOE-001", "To must be valid. It can't be empty or null or invalid address."),
 	SUBJECT_NOT_FOUND("KER-NOE-002", "Subject must be valid. It can't be empty or null."),
 	CONTENT_NOT_FOUND("KER-NOE-003", "Content must be valid. It can't be empty or null."),
 	MAIL_SEND_EXCEPTION_CODE("KER-NOE-004"), MAIL_AUTHENTICATION_EXCEPTION_CODE("KER-NOE-005"),
 	MAIL_EXCEPTION_CODE("KER-NOE-006"), REQUEST_DATA_NOT_VALID("KER-NOE-999", "Data not valid"),
+	SENDER_ADDRESS_NOT_FOUND("KER-NOE-007", "From must be valid. It can't be empty or null or invalid address."),
 	INTERNAL_SERVER_ERROR("KER-NOE-500");
 
 	/**
