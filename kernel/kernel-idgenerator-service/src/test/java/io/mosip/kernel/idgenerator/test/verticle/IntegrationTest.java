@@ -195,9 +195,9 @@ public class IntegrationTest {
 				});
 	}
 
-	@Ignore
+	//@Ignore
 
-	@Test
+	//@Test
 	public void getViDExpiryInvalidExpiryDateTest(TestContext context) {
 		LOGGER.info("getVidSuccessTest execution...");
 		Async async = context.async();
