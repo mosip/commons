@@ -384,7 +384,7 @@ public class IdentitySchemaServiceImpl implements IdentitySchemaService {
 			schemaAttributes.put(ATTR_FORMAT, schemaDto.getFormat());		
 		
 		if(schemaDto.getValidators() != null && !schemaDto.getValidators().isEmpty())
-			schemaAttributes.put(ATTR_VALIDATORS, new JSONObject(objectMapper.writeValueAsString(schemaDto.getValidators())));
+			schemaAttributes.put(ATTR_VALIDATORS, new JSONArray(objectMapper.writeValueAsString(schemaDto.getValidators())));
 		
 		return schemaAttributes;
 	}
