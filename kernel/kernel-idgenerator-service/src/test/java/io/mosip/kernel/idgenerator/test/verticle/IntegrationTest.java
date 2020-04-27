@@ -261,8 +261,7 @@ public class IntegrationTest {
 		});
 	}
 
-	@Test
-	@Ignore
+	
 	public void uinStatusUpdateSuccessTest(TestContext context) throws JsonProcessingException {
 		LOGGER.info("uinStatusUpdateSuccessTest execution...");
 		Async async = context.async();
@@ -314,7 +313,7 @@ public class IntegrationTest {
 
 	}
 
-	@Test
+	//@Test
 	public void uinStausUpdateUinNotFoundExpTest(TestContext context) throws IOException {
 		LOGGER.info("uinStausUpdateUinNotFoundExpTest execution...");
 		Async async = context.async();
@@ -361,7 +360,7 @@ public class IntegrationTest {
 
 	}
 
-	@Test
+	//@Test
 	public void uinStatusUpdateStatusNotFoundExpTest(TestContext context) throws IOException {
 		LOGGER.info("uinStatusUpdateStatusNotFoundExpTest execution...");
 		Async async = context.async();
