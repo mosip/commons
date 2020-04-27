@@ -1,4 +1,4 @@
-
+/*
  * package io.mosip.kernel.idgenerator.test.verticle;
  * 
  * import static org.junit.Assert.assertTrue;
@@ -282,4 +282,4 @@
  * 
  * 
  * }
- 
+ */
