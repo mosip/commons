@@ -31,7 +31,6 @@ import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.idgenerator.config.HibernateDaoConfig;
-import io.mosip.kernel.idgenerator.verticle.HttpServerVerticle;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorConstant;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorErrorCode;
 import io.mosip.kernel.uingenerator.dto.UinResponseDto;
@@ -48,7 +47,6 @@ import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.EventBus;
-import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.core.logging.SLF4JLogDelegateFactory;
@@ -79,21 +77,22 @@ public class IntegrationTest {
 		VertxOptions options = new VertxOptions();
 		context = new AnnotationConfigApplicationContext(HibernateDaoConfig.class);
 		DeploymentOptions workerOptions = new DeploymentOptions().setWorker(true);
+		DeploymentOptions dpOptions = new DeploymentOptions();
 		vertx = Vertx.vertx(options);
-		Verticle[] workerVerticles = { new VidPoolCheckerVerticle(context), new VidPopulatorVerticle(context),
-				new VidExpiryVerticle(context) };
-		Stream.of(workerVerticles).forEach(verticle -> deploy(verticle, workerOptions, vertx));
-		vertx.setTimer(1000, handler -> initPool());
-		Verticle[] verticles = { new UinGeneratorVerticle(context), new HttpServerVerticle(context) };
-		DeploymentOptions dpOptions = new DeploymentOptions().setConfig(new JsonObject().put("http.port", port));
+		Verticle[] verticles = { new UinGeneratorVerticle(context)};
 		Stream.of(verticles)
-				.forEach(verticle -> vertx.deployVerticle(verticle, dpOptions, testContext.asyncAssertSuccess()));
+				.forEach(verticle -> deploy(verticle,dpOptions,vertx));
 		try {
 			LOGGER.info("Waiting for UIN generation : 5s");
 			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		Verticle[] workerVerticles = { new VidPoolCheckerVerticle(context), new VidPopulatorVerticle(context),
+				new VidExpiryVerticle(context) };
+		Stream.of(workerVerticles).forEach(verticle -> deploy(verticle, workerOptions, vertx));
+		vertx.setTimer(1000, handler -> initPool());
+		
 	}
 
 	private static void deploy(Verticle verticle, DeploymentOptions opts, Vertx vertx) {
@@ -261,7 +260,7 @@ public class IntegrationTest {
 		});
 	}
 
-	
+	//@Test
 	public void uinStatusUpdateSuccessTest(TestContext context) throws JsonProcessingException {
 		LOGGER.info("uinStatusUpdateSuccessTest execution...");
 		Async async = context.async();

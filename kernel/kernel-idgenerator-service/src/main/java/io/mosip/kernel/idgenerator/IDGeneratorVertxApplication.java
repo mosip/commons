@@ -166,7 +166,7 @@ public class IDGeneratorVertxApplication {
 				new VidExpiryVerticle(context) };
 		Stream.of(workerVerticles).forEach(verticle -> deploy(verticle, workerOptions, vertx));
 		vertx.setTimer(1000, handler -> initPool());
-		Verticle[] uinVerticles = { new UinGeneratorVerticle(context), new HttpServerVerticle(context) };
+		Verticle[] uinVerticles = { new UinGeneratorVerticle(context)};
 		Stream.of(uinVerticles).forEach(verticle -> vertx.deployVerticle(verticle, stringAsyncResult -> {
 			if (stringAsyncResult.succeeded()) {
 				LOGGER.info("Successfully deployed: " + verticle.getClass().getSimpleName());
