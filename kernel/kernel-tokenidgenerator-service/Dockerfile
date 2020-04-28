@@ -38,7 +38,7 @@ ENV artifactory_url_env=${artifactory_url}
 ADD ./target/*.jar /target/
 RUN find /target -name '*.jar' -executable -type f "-print0" | xargs "-0" cp -t / \
     && rm -rf /target \
-    && mv *.jar kernel-keymanager-service.jar
+    && mv *.jar kernel-tokenidgenerator-service.jar
 
 EXPOSE 8097
 
