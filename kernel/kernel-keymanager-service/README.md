@@ -169,7 +169,7 @@ Status:200
   
 ## Setup steps:
 
-### Linux (Docker)
+### Linux (Docker) -- OLD Style
 
 1. (First time only) Rename the  kernel-keymanager-softhsm Dockerfile in softhsm directory to `Dockerfile`. Build kernel-keymanager-softhsm docker image using this Dockerfile with command:
 
@@ -240,6 +240,20 @@ re-running configure with the option "--disable-non-paged-memory".
 Please be advised that this may seriously degrade the security of
 SoftHSM.
 ```
+
+### Linux (Docker) -- New Style
+With the new docker file the key manager is an independent of the type of HSM. The HSM is abstracted out of this layer using PKCS11 library and dynamic installation of client libraries for the HSM.
+
+However the key manager needs the hsm client (vendor specific) to interact with the various models of HSM. The Docker file is structured to download and install this client from the artifactory url $artifactory_url_env/artifactory/libs-release-local/hsm/client.zip. 
+
+In our environment we will use a network based HSM from The HSM is run in network mode baed on the https://hub.docker.com/repository/docker/mosipdev/softhsm. The source code of this project is part of the mosip-mock-services projects.
+
+So in order to connect the key manager with the softhsm the following has to be done.
+
+1. Load the client.zip file from https://github.com/mosip/mosip-mock-services/softhsm to the artifactory in the path /artifactory/libs-release-local/hsm/client.zip
+1. Run the keymanager docker using the following command or its equivalent yml
+    docker run -e artifactory_url_env="url pointing to the artifactory" -e PKCS11_PROXY_SOCKET="tcp://servicenameofsofthsm:5666" kernel-keymanager-service:<version>
+
 
 ### Windows
 
