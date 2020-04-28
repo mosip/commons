@@ -13,7 +13,7 @@
 	<description>bioapi provider</description>
 	<packaging>jar</packaging>
 	<properties>
-		<kernel.core.version>1.0.9</kernel.core.version>
+		<kernel.core.version>1.0.9-SNAPSHOT</kernel.core.version>
 		<kernel.cbeff.version>1.0.6</kernel.cbeff.version>
 	</properties>	
 	<dependencies>
