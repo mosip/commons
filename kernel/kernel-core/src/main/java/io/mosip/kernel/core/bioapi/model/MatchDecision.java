@@ -5,10 +5,14 @@ import lombok.Data;
 /**
  * The Class Score.
  * 
- * @author Sanjay Murali
+ * @author Manoj SP
  */
 @Data
 public class MatchDecision {
-	boolean match; // true or false indicates matchers decision
-	private KeyValuePair[] analyticsInfo; // detailed breakdown and other information
+	
+	/** The match - true or false indicates matchers decision. */
+	boolean match;
+	
+	/** The analytics info - detailed breakdown and other information. */
+	private KeyValuePair[] analyticsInfo;
 }

@@ -9,6 +9,10 @@ import lombok.Data;
  */
 @Data
 public class QualityScore {
-	float score; // 0 - 100 score that represents quality as a percentage
-	KeyValuePair[] analyticsInfo; // detailed breakdown and other information
+	
+	/** The score - 0 - 100 score that represents quality as a percentage */
+	float score; 
+	
+	/** The analytics info - detailed breakdown and other information */
+	KeyValuePair[] analyticsInfo;
 }

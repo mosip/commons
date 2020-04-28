@@ -19,6 +19,8 @@ import io.mosip.kernel.core.cbeffutil.jaxbclasses.QualityType;
  * The Class BioApiImpl.
  * 
  * @author Sanjay Murali
+ * @author Manoj SP
+ * 
  */
 @Component
 public class BioApiImpl implements IBioApi {

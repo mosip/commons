@@ -1,6 +1,5 @@
 package io.mosip.kernel.core.bioapi.spi;
 
-import io.mosip.kernel.core.bioapi.exception.BiometricException;
 import io.mosip.kernel.core.bioapi.model.KeyValuePair;
 import io.mosip.kernel.core.bioapi.model.MatchDecision;
 import io.mosip.kernel.core.bioapi.model.QualityScore;
@@ -11,6 +10,8 @@ import io.mosip.kernel.core.cbeffutil.entity.BIR;
  * The Interface IBioApi.
  * 
  * @author Sanjay Murali
+ * @author Manoj SP
+ * 
  */
 public interface IBioApi {
 
@@ -20,8 +21,7 @@ public interface IBioApi {
 	 *
 	 * @param sample the sample
 	 * @param flags  the flags
-	 * @return the quality score
-	 * @throws BiometricException
+	 * @return the response
 	 */
 	Response<QualityScore> checkQuality(BIR sample, KeyValuePair[] flags);
 
@@ -31,7 +31,7 @@ public interface IBioApi {
 	 * @param sample  the sample
 	 * @param gallery the gallery
 	 * @param flags   the flags
-	 * @return the score[]
+	 * @return the response
 	 */
 	Response<MatchDecision[]> match(BIR sample, BIR[] gallery, KeyValuePair[] flags);
 
@@ -40,7 +40,7 @@ public interface IBioApi {
 	 *
 	 * @param sample the sample
 	 * @param flags  the flags
-	 * @return the biometric record
+	 * @return the response
 	 */
 	Response<BIR> extractTemplate(BIR sample, KeyValuePair[] flags);
 
@@ -50,7 +50,7 @@ public interface IBioApi {
 	 *
 	 * @param sample the sample
 	 * @param flags  the flags
-	 * @return the biometric record[]
+	 * @return the response
 	 */
 	Response<BIR[]> segment(BIR sample, KeyValuePair[] flags);
 }
