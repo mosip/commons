@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.core.io.ByteArrayResource;
@@ -65,8 +67,21 @@ public class EmailNotificationUtils {
 	 * @param mailSubject the subject to be validated.
 	 * @param mailContent the content to be validated.
 	 */
-	public static void validateMailArguments(String[] mailTo, String mailSubject, String mailContent) {
+	public static void validateMailArguments(String fromEmail, String[] mailTo, String mailSubject, String mailContent){
 		Set<ServiceError> validationErrorsList = new HashSet<>();
+		
+		if (null != fromEmail ) {
+			
+			try {
+				validateEmailAddress(fromEmail);
+			}
+			catch(AddressException ex){
+				validationErrorsList.add(new ServiceError(MailNotifierArgumentErrorConstants.SENDER_ADDRESS_NOT_FOUND.getErrorCode(),
+				MailNotifierArgumentErrorConstants.SENDER_ADDRESS_NOT_FOUND.getErrorMessage()));
+			}
+			
+		}
+
 		if (mailTo == null || mailTo.length == Integer.parseInt(MailNotifierConstants.DIGIT_ZERO.getValue())) {
 			validationErrorsList
 					.add(new ServiceError(MailNotifierArgumentErrorConstants.RECEIVER_ADDRESS_NOT_FOUND.getErrorCode(),
@@ -74,10 +89,12 @@ public class EmailNotificationUtils {
 		} else {
 			List<String> tos = Arrays.asList(mailTo);
 			tos.forEach(to -> {
-				if (to.trim().isEmpty()) {
-					validationErrorsList.add(new ServiceError(
-							MailNotifierArgumentErrorConstants.RECEIVER_ADDRESS_NOT_FOUND.getErrorCode(),
-							MailNotifierArgumentErrorConstants.RECEIVER_ADDRESS_NOT_FOUND.getErrorMessage()));
+				try {
+					validateEmailAddress(to);
+				}
+				catch(AddressException ex){
+					validationErrorsList.add(new ServiceError(MailNotifierArgumentErrorConstants.SENDER_ADDRESS_NOT_FOUND.getErrorCode(),
+					MailNotifierArgumentErrorConstants.SENDER_ADDRESS_NOT_FOUND.getErrorMessage()));
 				}
 			});
 		}
@@ -94,5 +111,12 @@ public class EmailNotificationUtils {
 		if (!validationErrorsList.isEmpty()) {
 			throw new InvalidArgumentsException(new ArrayList<ServiceError>(validationErrorsList));
 		}
+	}
+
+	private static boolean validateEmailAddress(String emailId ) throws AddressException{
+		
+		InternetAddress fromEmailAddr = new InternetAddress(emailId);
+		fromEmailAddr.validate();
+		return true;		
 	}
 }
