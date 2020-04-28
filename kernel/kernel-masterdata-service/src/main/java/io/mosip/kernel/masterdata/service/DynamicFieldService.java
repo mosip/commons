@@ -41,10 +41,10 @@ public interface DynamicFieldService {
 	
 	/**
 	 * Add / updates field value based on the fieldName and langCode
-	 * @param fieldName
+	 * @param fieldId
 	 * @param dto
 	 * @return
 	 */
-	public String updateFieldValue(String fieldName, DynamicFieldValueDto dto);
+	public String updateFieldValue(String fieldId, DynamicFieldValueDto dto);
 	
 }

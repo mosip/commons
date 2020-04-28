@@ -7,6 +7,8 @@ package io.mosip.kernel.masterdata.constant;
  * @since 1.0.0
  */
 public enum ApplicantTypeErrorCode {
+	INVALID_REQUEST_EXCEPTION("KER-MSD-148", "One or more input parameter is invalid or does not exist"),
+	NO_APPLICANT_FOUND_EXCEPTION("KER-MSD-147", "Applicant Type data does not exist"),
 	APPLICANT_TYPE_FETCH_EXCEPTION("KER-MSD-149",
 			"Error occurred while fetching Applicant Type-Document Category-Document Type Mapping details"),
 	APPLICANT_TYPE_NOT_FOUND_EXCEPTION("KER-MSD-150", "Document Category- Document Type mapping not found");

@@ -172,6 +172,9 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 	private String getValueJson(List<DynamicFieldValueDto> fieldValues) {
 		String valueJson = "[]";
 		try {
+			if(fieldValues == null)
+				return valueJson;
+			
 			for(DynamicFieldValueDto valueDto : fieldValues) {
 				valueJson = getFieldValue(valueJson, valueDto);
 			}

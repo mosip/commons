@@ -2,51 +2,54 @@ package io.mosip.kernel.masterdata.dto;
 
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import lombok.Data;
 
 @Data
 public class SchemaDto {
 	
-	@NotNull
-	private String fieldName;
+	@NotBlank
+	@Pattern(regexp = "^[a-zA-Z]+$")
+	@Size(min = 2, max = 20)
+	private String id;
 	
 	private String description;
 	
-	@NotNull
+	@NotBlank
 	private String labelName;
 	
-	@NotNull
+	@NotBlank
 	private String type;
 	
 	private int minimum;
 	private int maximum;
 	
-	@NotNull
+	@NotBlank
 	private String controlType;
 	
-	@NotNull
+	@NotBlank
 	private String fieldType;
-	
 	private String format;
 	
-	@NotNull
+	@NotBlank
 	private String fieldCategory;
-	
 	private boolean inputRequired;
 	private boolean isRequired;	
 	private List<ValidatorDto> validators;
 	private List<String> bioAttributes;
+	private String requiredOn;
 }
 
 @Data
 class ValidatorDto {
 	
-	@NotNull
+	@NotBlank
 	private String type;
 	
-	@NotNull
+	@NotBlank
 	private String validator;
 	
 	private List<String> arguments;

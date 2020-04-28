@@ -70,6 +70,12 @@ public class IdObjectValidatorConfig {
 						throws IdObjectValidationFailedException, IdObjectIOException {
 					return true;
 				}
+
+				@Override
+				public boolean validateIdObject(String arg0, Object arg1, IdObjectValidatorSupportedOperations arg2)
+						throws IdObjectValidationFailedException, IdObjectIOException {
+					return true;
+				}
 			};
 		}
 	}

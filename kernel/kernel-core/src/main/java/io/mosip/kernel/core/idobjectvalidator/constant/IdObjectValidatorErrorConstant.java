@@ -22,7 +22,9 @@ public enum IdObjectValidatorErrorConstant {
 
 	MASTERDATA_LOAD_FAILED("KER-IOV-006", "Failed to load data from kernel masterdata"),
 
-	MANDATORY_FIELDS_NOT_FOUND("KER-IOV-007", "Mandatory fields are not found for %s operation");
+	MANDATORY_FIELDS_NOT_FOUND("KER-IOV-007", "Mandatory fields are not found for %s operation"),
+	
+	INVALID_ID_SCHEMA("KER-IOV-008", "Invalid ID schema");
 
 	private final String errorCode;
 

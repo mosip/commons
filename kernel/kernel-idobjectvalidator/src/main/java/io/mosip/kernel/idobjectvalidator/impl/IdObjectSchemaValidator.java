@@ -46,11 +46,14 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory;
 
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
+import io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorErrorConstant;
 import io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorSupportedOperations;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectIOException;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectValidationFailedException;
+import io.mosip.kernel.core.idobjectvalidator.exception.InvalidIdSchemaException;
 import io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator;
 import io.mosip.kernel.core.util.StringUtils;
+import io.mosip.kernel.idobjectvalidator.helper.IdObjectValidatorHelper;
 
 /**
  * This class provides the implementation for JSON validation against the
@@ -147,28 +150,11 @@ public class IdObjectSchemaValidator implements IdObjectValidator {
 			final JsonSchema jsonSchema = factory.getJsonSchema(jsonSchemaNode);
 			report = jsonSchema.validate(jsonObjectNode);
 			logger.debug("schema validation report generated : " + report);
-			List<ServiceError> errorList = new ArrayList<>();
-			if (!report.isSuccess()) {
-				report.forEach(processingMessage -> {
-					if (processingMessage.getLogLevel().toString().equals(ERROR)) {
-						JsonNode processingMessageAsJson = processingMessage.asJson();
-						if (processingMessageAsJson.hasNonNull(INSTANCE)
-								&& processingMessageAsJson.get(INSTANCE).hasNonNull(POINTER)) {
-							if (processingMessageAsJson.has(MISSING)
-									&& !processingMessageAsJson.get(MISSING).isNull()) {
-								errorList.add(new ServiceError(MISSING_INPUT_PARAMETER.getErrorCode(),
-										buildErrorMessage(processingMessageAsJson, MISSING_INPUT_PARAMETER.getMessage(),
-												MISSING)));
-							} else {
-								errorList.add(new ServiceError(INVALID_INPUT_PARAMETER.getErrorCode(),
-										buildErrorMessage(processingMessageAsJson, INVALID_INPUT_PARAMETER.getMessage(),
-												UNWANTED)));
-							}
-						}
-					}
-				});
-			}
+			
+			List<ServiceError> errorList = getErrorList(report);
+			
 			validateMandatoryFields(jsonObjectNode, operation, errorList);
+			
 			if (!errorList.isEmpty()) {
 				logger.debug("IdObjectValidationFailedException thrown with errors : " + errorList);
 				throw new IdObjectValidationFailedException(ID_OBJECT_VALIDATION_FAILED, errorList);
@@ -319,5 +305,80 @@ public class IdObjectSchemaValidator implements IdObjectValidator {
 			logger.debug("schema is loaded from APPLICATION_CONTEXT");
 		}
 		return jsonSchemaNode;
+	}
+
+	@Override
+	public boolean validateIdObject(String idSchema, Object idObject, IdObjectValidatorSupportedOperations operation)
+			throws IdObjectValidationFailedException, IdObjectIOException ,InvalidIdSchemaException{		
+		
+		try {
+			final JsonSchema jsonSchema = getJsonSchema(idSchema);
+			JsonNode jsonIdObjectNode = mapper.readTree(mapper.writeValueAsString(idObject));			
+			ProcessingReport report = jsonSchema.validate(jsonIdObjectNode);
+			logger.debug("schema validation report generated : " + report);
+			
+			List<ServiceError> errorList = getErrorList(report);
+						
+			if (!errorList.isEmpty()) {
+				logger.error("IdObject Validation Failed with errors : " + errorList);
+				throw new IdObjectValidationFailedException(ID_OBJECT_VALIDATION_FAILED, errorList);
+			}
+			return true;
+			
+		} catch (IOException e) {
+			ExceptionUtils.logRootCause(e);
+			throw new IdObjectIOException(SCHEMA_IO_EXCEPTION, e);
+		} catch (ProcessingException e) {
+			ExceptionUtils.logRootCause(e);
+			throw new IdObjectIOException(ID_OBJECT_VALIDATION_FAILED, e);
+		}
+	}
+	
+	private JsonSchema getJsonSchema(String schemaJson) throws InvalidIdSchemaException {
+		if(schemaJson == null)
+			throw new InvalidIdSchemaException(IdObjectValidatorErrorConstant.INVALID_ID_SCHEMA.getErrorCode(), 
+					IdObjectValidatorErrorConstant.INVALID_ID_SCHEMA.getMessage());		
+	
+		try {
+			JsonNode jsonIdSchemaNode = JsonLoader.fromString(schemaJson);
+			
+			if(jsonIdSchemaNode.size() <= 0 || 
+					!(jsonIdSchemaNode.hasNonNull("$schema") && jsonIdSchemaNode.hasNonNull("type"))) {
+				throw new InvalidIdSchemaException(IdObjectValidatorErrorConstant.SCHEMA_IO_EXCEPTION.getErrorCode(), 
+						IdObjectValidatorErrorConstant.SCHEMA_IO_EXCEPTION.getMessage());
+			}
+				
+			final JsonSchemaFactory factory = IdObjectValidatorHelper.getJSONSchemaFactory();
+			return factory.getJsonSchema(jsonIdSchemaNode);			
+		} catch (IOException | ProcessingException e) {
+			throw new InvalidIdSchemaException(IdObjectValidatorErrorConstant.SCHEMA_IO_EXCEPTION.getErrorCode(), 
+					IdObjectValidatorErrorConstant.SCHEMA_IO_EXCEPTION.getMessage());
+		}	
+	}
+	
+	
+	private List<ServiceError> getErrorList(ProcessingReport report) {
+		List<ServiceError> errorList = new ArrayList<>();
+		if (!report.isSuccess()) {
+			report.forEach(processingMessage -> {
+				if (processingMessage.getLogLevel().toString().equals(ERROR)) {
+					JsonNode processingMessageAsJson = processingMessage.asJson();
+					if (processingMessageAsJson.hasNonNull(INSTANCE)
+							&& processingMessageAsJson.get(INSTANCE).hasNonNull(POINTER)) {
+						if (processingMessageAsJson.has(MISSING)
+								&& !processingMessageAsJson.get(MISSING).isNull()) {
+							errorList.add(new ServiceError(MISSING_INPUT_PARAMETER.getErrorCode(),
+									buildErrorMessage(processingMessageAsJson, MISSING_INPUT_PARAMETER.getMessage(),
+											MISSING)));
+						} else {
+							errorList.add(new ServiceError(INVALID_INPUT_PARAMETER.getErrorCode(),
+									buildErrorMessage(processingMessageAsJson, INVALID_INPUT_PARAMETER.getMessage(),
+											UNWANTED)));
+						}
+					}
+				}
+			});
+		}
+		return errorList;
 	}
 }

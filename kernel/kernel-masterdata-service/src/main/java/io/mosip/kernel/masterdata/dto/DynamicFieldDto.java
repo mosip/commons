@@ -28,7 +28,7 @@ public class DynamicFieldDto {
 	@ApiModelProperty(notes = "Field name", example = "any name", required = true)
 	@NotBlank
 	@Pattern(regexp = "^[a-zA-Z]+$")
-	@Size(min = 1, max = 20)
+	@Size(min = 2, max = 20)
 	private String name;
 	
 	@ApiModelProperty(notes = "Language Code", example = "eng", required = true)
@@ -37,7 +37,7 @@ public class DynamicFieldDto {
 	
 	@NotBlank
 	@ApiModelProperty(notes = "Data Type", example = "string", required = true)
-	@Size(min = 1, max = 20)
+	@Size(min = 3, max = 20)
 	private String dataType;
 	
 	@NotBlank
