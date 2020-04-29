@@ -34,7 +34,12 @@ ENV is_glowroot_env=${is_glowroot}
 ENV artifactory_url_env=${artifactory_url}
 
 
-COPY ./target/kernel-cryptomanager-service-*.jar kernel-cryptomanager-service.jar
+#COPY ./target/kernel-cryptomanager-service-*.jar kernel-cryptomanager-service.jar
+
+ADD ./target/*.jar /target/
+RUN find /target -name '*.jar' -executable -type f "-print0" | xargs "-0" cp -t / \
+    && rm -rf /target \
+    && mv *.jar kernel-cryptomanager-service.jar
 
 EXPOSE 8087
 

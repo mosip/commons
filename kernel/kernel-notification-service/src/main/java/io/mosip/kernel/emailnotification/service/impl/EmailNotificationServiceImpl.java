@@ -6,6 +6,8 @@ import javax.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.Nullable;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -41,6 +43,13 @@ public class EmailNotificationServiceImpl implements EmailNotification<Multipart
 	EmailNotificationUtils emailNotificationUtils;
 
 	/**
+	 * Optionally an email address can be configured.
+	 */
+	@Nullable
+	@Value("${mosip.kernel.notification.email.from:#{null}}")
+	private String fromEmailAddress;
+
+	/**
 	 * SendEmail
 	 * 
 	 * @param mailTo
@@ -69,7 +78,7 @@ public class EmailNotificationServiceImpl implements EmailNotification<Multipart
 	@Async
 	private void send(String[] mailTo, String[] mailCc, String mailSubject, String mailContent,
 			MultipartFile[] attachments) {
-		EmailNotificationUtils.validateMailArguments(mailTo, mailSubject, mailContent);
+		EmailNotificationUtils.validateMailArguments(fromEmailAddress, mailTo, mailSubject, mailContent);
 		/**
 		 * Creates the message.
 		 */
@@ -81,6 +90,10 @@ public class EmailNotificationServiceImpl implements EmailNotification<Multipart
 			 * Sets to, subject, content.
 			 */
 			helper.setTo(mailTo);
+			
+			if (null != fromEmailAddress){
+				helper.setFrom(fromEmailAddress);
+			}
 			if (mailCc != null) {
 				helper.setCc(mailCc);
 			}

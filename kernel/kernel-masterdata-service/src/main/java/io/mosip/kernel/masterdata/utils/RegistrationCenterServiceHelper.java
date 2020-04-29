@@ -155,7 +155,16 @@ public class RegistrationCenterServiceHelper {
 			if(count==0) {
 			registrationCenters = MapperUtils.mapAll(page.getContent(), RegistrationCenterSearchDto.class);
 			}else {
-			registrationCenters.retainAll(MapperUtils.mapAll(page.getContent(), RegistrationCenterSearchDto.class));
+				List<RegistrationCenterSearchDto> regCenters =MapperUtils.mapAll(page.getContent(), RegistrationCenterSearchDto.class);
+				List<RegistrationCenterSearchDto> swapregCenters=new ArrayList<>();
+				for(RegistrationCenterSearchDto regCenter:regCenters) {
+					for(RegistrationCenterSearchDto registrationCenter:registrationCenters) {
+						if(registrationCenter.getId().equals(regCenter.getId())) {
+							swapregCenters.add(registrationCenter);
+						}
+					}
+				}
+				registrationCenters = swapregCenters;		
 			}
 			setCenterMetadata(registrationCenters, locations, zones);
 			setWorkingNonWorking(registrationCenters, workingNonWorkingDays);
