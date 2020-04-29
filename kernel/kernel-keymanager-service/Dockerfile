@@ -49,7 +49,7 @@ VOLUME /softhsm
 EXPOSE 8088
 EXPOSE 9010
 
-ENTRYPOINT [ "/app/configure_start.sh" ]
+ENTRYPOINT [ "configure_start.sh" ]
 CMD if [ "$is_glowroot_env" = "present" ]; then \
     wget "${artifactory_url_env}"/artifactory/libs-release-local/io/mosip/testing/glowroot.zip ; \
     apt-get update && apt-get install -y unzip ; \
