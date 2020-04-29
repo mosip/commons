@@ -332,7 +332,7 @@ public class LdapDataStore implements DataStore {
 	}
 
 	@Override
-	public RolesListDto getAllRoles() {
+	public RolesListDto getAllRoles(String appId) {
 		RolesListDto rolesListDto = new RolesListDto();
 		EntryCursor rolesData = null;
 		LdapConnection connection = null;
@@ -369,7 +369,7 @@ public class LdapDataStore implements DataStore {
 	}
 
 	@Override
-	public MosipUserListDto getListOfUsersDetails(List<String> users) throws Exception {
+	public MosipUserListDto getListOfUsersDetails(List<String> users,String appId) throws Exception {
 		LdapConnection connection = null;
 		try {
 			MosipUserListDto userResponseDto = new MosipUserListDto();
@@ -395,7 +395,7 @@ public class LdapDataStore implements DataStore {
 	}
 
 	@Override
-	public MosipUserSaltListDto getAllUserDetailsWithSalt(List<String> userDetails) throws Exception {
+	public MosipUserSaltListDto getAllUserDetailsWithSalt(List<String> userDetails,String appId) throws Exception {
 		MosipUserSaltListDto mosipUserSaltList = new MosipUserSaltListDto();
 		List<MosipUserSalt> mosipUserDtos = new ArrayList<>();
 		LdapConnection connection = null;
@@ -427,7 +427,7 @@ public class LdapDataStore implements DataStore {
 	}
 
 	@Override
-	public RIdDto getRidFromUserId(String userId) throws Exception {
+	public RIdDto getRidFromUserId(String userId,String appId) throws Exception {
 		RIdDto ridDto = null;
 		LdapConnection ldapConnection = null;
 		try {

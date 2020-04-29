@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +33,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.kernel.auth.adapter.exception.AuthNException;
 import io.mosip.kernel.auth.config.MosipEnvironment;
 import io.mosip.kernel.auth.constant.AuthConstant;
 import io.mosip.kernel.auth.constant.AuthErrorCode;
@@ -80,6 +76,7 @@ import io.mosip.kernel.auth.service.AuthService;
 import io.mosip.kernel.auth.service.OTPService;
 import io.mosip.kernel.auth.service.TokenService;
 import io.mosip.kernel.auth.service.UinService;
+import io.mosip.kernel.auth.util.AuthUtil;
 import io.mosip.kernel.auth.util.TokenGenerator;
 import io.mosip.kernel.auth.util.TokenValidator;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
@@ -92,7 +89,7 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
  * @author Srinivasan
  *
  */
-@Profile("!local")
+@Profile("local")
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -110,9 +107,6 @@ public class AuthServiceImpl implements AuthService {
 
 	@Value("${mosip.kernel.open-id-url}")
 	private String keycloakOpenIdUrl;
-
-	@Value("${mosip.admin_realm_id}")
-	private String realmId;
 
 	@Autowired
 	UserStoreFactory userStoreFactory;
@@ -171,11 +165,14 @@ public class AuthServiceImpl implements AuthService {
 	@Value("${mosip.keycloak.token_endpoint}")
 	private String tokenEndpoint;
 
-	@Value("${mosip.admin_realm_id}")
-	private String realmID;
+	 @Value("${mosip.admin_realm_id}")
+	 private String realmID;
 
 	@Value("${mosip.kernel.prereg.realm-id}")
 	private String preRegRealmID;
+
+	@Autowired
+	private AuthUtil authUtil;
 
 	@Qualifier("authRestTemplate")
 	@Autowired
@@ -226,6 +223,7 @@ public class AuthServiceImpl implements AuthService {
 	public AuthNResponseDto authenticateUser(LoginUser loginUser) throws Exception {
 		AuthNResponseDto authNResponseDto = null;
 		HttpHeaders headers = new HttpHeaders();
+		String realmId = authUtil.getRealmIdFromAppId(loginUser.getAppId());
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		MultiValueMap<String, String> tokenRequestBody = null;
 		ResponseEntity<AccessTokenResponse> response = null;
@@ -318,7 +316,7 @@ public class AuthServiceImpl implements AuthService {
 		AuthNResponseDto authNResponseDto = new AuthNResponseDto();
 		MosipUserTokenDto mosipToken = null;
 		MosipUserDto mosipUser = null;
-		String realm = realmId;
+		String realm = authUtil.getRealmIdFromAppId(userOtp.getAppId());
 		if (userOtp.getAppId().equalsIgnoreCase(AuthConstant.PRE_REGISTRATION)) {
 			realm = userOtp.getAppId();
 		}
@@ -369,6 +367,7 @@ public class AuthServiceImpl implements AuthService {
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		MultiValueMap<String, String> tokenRequestBody = null;
 		Map<String, String> pathParams = new HashMap<>();
+		String realmId = authUtil.getRealmIdFromAppId(clientSecret.getAppId());
 		pathParams.put(AuthConstant.REALM_ID, realmId);
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(keycloakOpenIdUrl + "/token");
 		tokenRequestBody = getClientSecretValueMap(clientSecret.getClientId(), clientSecret.getSecretKey());
@@ -406,16 +405,13 @@ public class AuthServiceImpl implements AuthService {
 		tokenRequestBody.add(AuthConstant.REFRESH_TOKEN, refreshToken);
 		tokenRequestBody.add(AuthConstant.CLIENT_ID, refreshTokenRequest.getClientID());
 		tokenRequestBody.add(AuthConstant.CLIENT_SECRET, refreshTokenRequest.getClientID());
-
+		String realmId = authUtil.getRealmIdFromAppId(appID);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		Map<String, String> pathParams = new HashMap<>();
 
-		if (appID.equalsIgnoreCase("preregistration")) {
-			pathParams.put(AuthConstant.REALM_ID, preRegRealmID);
-		} else {
-			pathParams.put(AuthConstant.REALM_ID, realmId);
-		}
+		pathParams.put(AuthConstant.REALM_ID, realmId);
+
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(keycloakOpenIdUrl + "/token");
 
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(tokenRequestBody, headers);
@@ -459,24 +455,28 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public RolesListDto getAllRoles(String appId) {
-		RolesListDto rolesListDto = keycloakImpl.getAllRoles();
+		appId=authUtil.getRealmIdFromAppId(appId);
+		RolesListDto rolesListDto = keycloakImpl.getAllRoles(appId);
 		return rolesListDto;
 	}
 
 	@Override
 	public MosipUserListDto getListOfUsersDetails(List<String> userDetails, String appId) throws Exception {
-		MosipUserListDto mosipUserListDto = keycloakImpl.getListOfUsersDetails(userDetails);
+		appId=authUtil.getRealmIdFromAppId(appId);
+		MosipUserListDto mosipUserListDto = keycloakImpl.getListOfUsersDetails(userDetails,appId);
 		return mosipUserListDto;
 	}
 
 	@Override
 	public MosipUserSaltListDto getAllUserDetailsWithSalt(List<String> userDetails, String appId) throws Exception {
-		return keycloakImpl.getAllUserDetailsWithSalt(userDetails);
+		appId=authUtil.getRealmIdFromAppId(appId);
+		return keycloakImpl.getAllUserDetailsWithSalt(userDetails,appId);
 	}
 
 	@Override
 	public RIdDto getRidBasedOnUid(String userId, String appId) throws Exception {
-		return keycloakImpl.getRidFromUserId(userId);
+		appId=authUtil.getRealmIdFromAppId(appId);
+		return keycloakImpl.getRidFromUserId(userId,appId);
 
 	}
 
@@ -485,7 +485,7 @@ public class AuthServiceImpl implements AuthService {
 	public AuthZResponseDto unBlockUser(String userId, String appId) throws Exception {
 		return userStoreFactory.getDataStoreBasedOnApp(appId).unBlockAccount(userId);
 	}
-	
+
 	@Deprecated
 	@Override
 	public AuthZResponseDto changePassword(String appId, PasswordDto passwordDto) throws Exception {
@@ -541,7 +541,6 @@ public class AuthServiceImpl implements AuthService {
 		return userStoreFactory.getDataStoreBasedOnApp(appId).validateUserName(userName);
 	}
 
-	
 	@Override
 	public UserDetailsResponseDto getUserDetailBasedOnUserId(String appId, List<String> userIds) {
 		return userStoreFactory.getDataStoreBasedOnApp(appId).getUserDetailBasedOnUid(userIds);
@@ -602,10 +601,10 @@ public class AuthServiceImpl implements AuthService {
 			throw new AuthenticationServiceException(AuthErrorCode.INVALID_TOKEN.getErrorMessage());
 		}
 		Map<String, String> pathparams = new HashMap<>();
-		pathparams.put(KeycloakConstants.REALM_ID, realmID);
+		String issuer = tokenValidator.getissuer(token);
 		ResponseEntity<String> response = null;
 		AuthResponseDto authResponseDto = new AuthResponseDto();
-		StringBuilder urlBuilder = new StringBuilder().append(openIdUrl).append("logout");
+		StringBuilder urlBuilder = new StringBuilder().append(issuer).append("/protocol/openid-connect/logout");
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(urlBuilder.toString())
 				.queryParam(KeycloakConstants.ID_TOKEN_HINT, token);
 		try {
