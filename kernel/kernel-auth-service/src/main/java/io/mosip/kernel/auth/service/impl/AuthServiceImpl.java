@@ -89,7 +89,7 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
  * @author Srinivasan
  *
  */
-@Profile("local")
+@Profile("!local")
 @Service
 public class AuthServiceImpl implements AuthService {
 
