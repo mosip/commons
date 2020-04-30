@@ -248,25 +248,25 @@ public class DBDataStore implements DataStore {
 	}
 
 	@Override
-	public RolesListDto getAllRoles() {
+	public RolesListDto getAllRoles(String appId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public MosipUserListDto getListOfUsersDetails(List<String> userDetails) {
+	public MosipUserListDto getListOfUsersDetails(List<String> userDetails,String appId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public MosipUserSaltListDto getAllUserDetailsWithSalt(List<String> userDetails) throws Exception {
+	public MosipUserSaltListDto getAllUserDetailsWithSalt(List<String> userDetails,String appId) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public RIdDto getRidFromUserId(String userId) throws Exception {
+	public RIdDto getRidFromUserId(String userId,String appId) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
