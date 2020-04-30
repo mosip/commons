@@ -11,7 +11,7 @@ import lombok.Data;
 public class MatchDecision {
 	
 	/** The match - true or false indicates matchers decision. */
-	boolean match;
+	private boolean match;
 	
 	/** The analytics info - detailed breakdown and other information. */
 	private KeyValuePair[] analyticsInfo;
