@@ -12,7 +12,7 @@ import io.mosip.kernel.idgenerator.mispid.entity.Misp;
  * @author Ritesh Sinha
  * @author Sidhant Agarwal
  * @since 1.0.0
- *
+ * @author Nagarjuna K
  */
 @Repository
 public interface MispRepository extends BaseRepository<Misp, Integer> {
@@ -22,7 +22,7 @@ public interface MispRepository extends BaseRepository<Misp, Integer> {
 	 * 
 	 * @return the entity.
 	 */
-	@Query(value = "select t.curr_seq_no,t.cr_by,t.cr_dtimes,t.upd_by,t.upd_dtimes FROM master.tspid_seq t where t.curr_seq_no=(select max(t.curr_seq_no) FROM master.tspid_seq t)", nativeQuery = true)
+	@Query(value = "select t.curr_seq_no,t.cr_by,t.cr_dtimes,t.upd_by,t.upd_dtimes FROM pmp.tspid_seq t where t.curr_seq_no=(select max(t.curr_seq_no) FROM pmp.tspid_seq t)", nativeQuery = true)
 	Misp findLastMispId();
 
 }
