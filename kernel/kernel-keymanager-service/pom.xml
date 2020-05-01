@@ -14,7 +14,7 @@
 	<name>kernel-keymanager-service</name>
 
 	<properties>
-		<kernel.core.version>1.0.8</kernel.core.version>
+		<kernel.core.version>1.0.9-SNAPSHOT</kernel.core.version>
 		<kernel.auth.adaptor.version>1.0.6</kernel.auth.adaptor.version>
 		<kernel-dataaccess-hibernate.version>1.0.7</kernel-dataaccess-hibernate.version>
 		<kernel.crypto.jce.version>1.0.6</kernel.crypto.jce.version>
