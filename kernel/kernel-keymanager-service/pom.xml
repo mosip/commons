@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
@@ -10,12 +11,12 @@
 	</parent>
 
 	<artifactId>kernel-keymanager-service</artifactId>
-	<version>1.0.7</version>
+	<version>1.0.9-SNAPSHOT</version>
 	<name>kernel-keymanager-service</name>
 
 	<properties>
 		<kernel.core.version>1.0.9-SNAPSHOT</kernel.core.version>
-		<kernel.auth.adaptor.version>1.0.6</kernel.auth.adaptor.version>
+		<kernel.auth.adaptor.version>1.0.8</kernel.auth.adaptor.version>
 		<kernel-dataaccess-hibernate.version>1.0.7</kernel-dataaccess-hibernate.version>
 		<kernel.crypto.jce.version>1.0.6</kernel.crypto.jce.version>
 		<kernel.keygenerator.bouncycastle.version>1.0.6</kernel.keygenerator.bouncycastle.version>
@@ -52,11 +53,6 @@
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-dataaccess-hibernate</artifactId>
-			<version>${kernel-dataaccess-hibernate.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-keygenerator-bouncycastle</artifactId>
 			<version>${kernel.keygenerator.bouncycastle.version}</version>
 		</dependency>
@@ -69,6 +65,17 @@
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-pdfgenerator-itext</artifactId>
 			<version>${kernel.pdfgenerator.itext.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<version>${spring.boot.version}</version>
+		</dependency>
+			<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>${h2.version}</version>
+			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 	<build>

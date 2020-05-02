@@ -80,8 +80,7 @@ public class ResponseBodyAdviceConfig implements ResponseBodyAdvice<ResponseWrap
 			try {
 				String timestamp = DateUtils.getUTCCurrentDateTimeString();
 				body.setResponsetime(DateUtils.convertUTCToLocalDateTime(timestamp));
-				SignatureResponse cryptoManagerResponseDto = signatureUtil.sign(objectMapper.writeValueAsString(body),
-						timestamp);
+				SignatureResponse cryptoManagerResponseDto = signatureUtil.sign(objectMapper.writeValueAsString(body));
 				response.getHeaders().add("response-signature", cryptoManagerResponseDto.getData());
 			} catch (JsonProcessingException e) {
 				throw new ParseResponseException(SigningDataErrorCode.RESPONSE_PARSE_EXCEPTION.getErrorCode(),

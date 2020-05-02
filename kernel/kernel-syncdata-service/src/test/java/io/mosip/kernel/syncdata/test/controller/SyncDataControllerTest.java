@@ -219,7 +219,7 @@ public class SyncDataControllerTest {
 	@WithUserDetails(value = "reg-officer")
 	public void syncGlobalConfigDetailsSuccess() throws Exception {
 
-		when(signingUtil.sign(Mockito.anyString(), Mockito.anyString())).thenReturn(signResponse);
+		when(signingUtil.sign(Mockito.anyString())).thenReturn(signResponse);
 		when(syncConfigDetailsService.getGlobalConfigDetails()).thenReturn(globalConfigMap);
 		mockMvc.perform(get("/globalconfigs")).andExpect(status().isOk());
 	}
@@ -227,7 +227,7 @@ public class SyncDataControllerTest {
 	@Test
 	@WithUserDetails(value = "reg-officer")
 	public void syncRegistrationConfigDetailsSuccess() throws Exception {
-		when(signingUtil.sign(Mockito.anyString(), Mockito.anyString())).thenReturn(signResponse);
+		when(signingUtil.sign(Mockito.anyString())).thenReturn(signResponse);
 		when(syncConfigDetailsService.getRegistrationCenterConfigDetails(Mockito.anyString()))
 				.thenReturn(globalConfigMap);
 		mockMvc.perform(get("/registrationcenterconfig/1")).andExpect(status().isOk());
@@ -245,7 +245,7 @@ public class SyncDataControllerTest {
 	@WithUserDetails(value = "reg-officer")
 	public void getUsersBasedOnRegCenter() throws Exception {
 		String regId = "110044";
-		when(signingUtil.sign(Mockito.anyString(), Mockito.anyString())).thenReturn(signResponse);
+		when(signingUtil.sign(Mockito.anyString())).thenReturn(signResponse);
 		when(syncUserDetailsService.getAllUserDetail(regId)).thenReturn(syncUserDetailDto);
 		mockMvc.perform(get("/userdetails/{regid}", "110044")).andExpect(status().isOk());
 
@@ -268,7 +268,7 @@ public class SyncDataControllerTest {
 	public void getPublicKey() throws Exception {
 		PublicKeyResponse<String> publicKeyResponse = new PublicKeyResponse<>();
 		publicKeyResponse.setPublicKey("aasfdsfsadfdsaf");
-		when(signingUtil.sign(Mockito.anyString(), Mockito.anyString())).thenReturn(signResponse);
+		when(signingUtil.sign(Mockito.anyString())).thenReturn(signResponse);
 		Mockito.when(syncConfigDetailsService.getPublicKey(Mockito.anyString(), Mockito.anyString(), Mockito.any()))
 				.thenReturn(publicKeyResponse);
 		mockMvc.perform(get("/publickey/REGISTRATION").param("timeStamp", "2019-09-09T09%3A00%3A00.000Z"))
@@ -280,7 +280,7 @@ public class SyncDataControllerTest {
 	@WithUserDetails(value = "reg-officer")
 	@Test
 	public void getAllRoles() throws Exception {
-		when(signingUtil.sign(Mockito.anyString(), Mockito.anyString())).thenReturn(signResponse);
+		when(signingUtil.sign(Mockito.anyString())).thenReturn(signResponse);
 		RolesResponseDto rolesResponseDto = new RolesResponseDto();
 		rolesResponseDto.setLastSyncTime("2019-09-09T09:09:09.000Z");
 		Mockito.when(syncRolesService.getAllRoles()).thenReturn(rolesResponseDto);
@@ -322,7 +322,7 @@ public class SyncDataControllerTest {
 	@WithUserDetails(value = "reg-officer")
 	@Test
 	public void validateLatestSchemaSync() throws Exception {
-		when(signingUtil.sign(Mockito.anyString(), Mockito.anyString())).thenReturn(signResponse);
+		when(signingUtil.sign(Mockito.anyString())).thenReturn(signResponse);
 		mockMvc.perform(get("/latestidschema").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 	}
 	

@@ -61,7 +61,7 @@ public class UserConfigIntegrationTest {
 		signResponse = new SignatureResponse();
 		signResponse.setData("asdasdsadf4e");
 		signResponse.setTimestamp(LocalDateTime.now(ZoneOffset.UTC));
-		when(signingUtil.sign(Mockito.anyString(), Mockito.anyString())).thenReturn(signResponse);
+		when(signingUtil.sign(Mockito.anyString())).thenReturn(signResponse);
 		ReflectionTestUtils.setField(syncConfigDetailsService, "globalConfigFileName",
 				"mosip.kernel.syncdata.global-config-file");
 		when(restTemplate.getForObject(Mockito.anyString(), Mockito.any()))
@@ -78,7 +78,7 @@ public class UserConfigIntegrationTest {
 		signResponse = new SignatureResponse();
 		signResponse.setData("asdasdsadf4e");
 		signResponse.setTimestamp(LocalDateTime.now(ZoneOffset.UTC));
-		when(signingUtil.sign(Mockito.anyString(), Mockito.anyString())).thenReturn(signResponse);
+		when(signingUtil.sign(Mockito.anyString())).thenReturn(signResponse);
 		when(restTemplate.getForObject(Mockito.anyString(), Mockito.any()))
 				.thenReturn(JSON_REGISTRATION_CONFIG_RESPONSE);
 		when(restTemplate.getForObject(Mockito.anyString(), Mockito.any())).thenReturn(JSON_GLOBAL_CONFIG_RESPONSE);
@@ -111,7 +111,7 @@ public class UserConfigIntegrationTest {
 		signResponse = new SignatureResponse();
 		signResponse.setData("asdasdsadf4e");
 		signResponse.setTimestamp(LocalDateTime.now(ZoneOffset.UTC));
-		when(signingUtil.sign(Mockito.anyString(), Mockito.anyString())).thenReturn(signResponse);
+		when(signingUtil.sign(Mockito.anyString())).thenReturn(signResponse);
 		when(restTemplate.getForObject(Mockito.anyString(), Mockito.any()))
 				.thenReturn(JSON_REGISTRATION_CONFIG_RESPONSE);
 		when(restTemplate.getForObject(Mockito.anyString(), Mockito.any()))
