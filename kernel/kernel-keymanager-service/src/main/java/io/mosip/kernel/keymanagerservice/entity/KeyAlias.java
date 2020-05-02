@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
  *
  */
 @Entity
-@Table(name = "key_alias")
+@Table(name = "key_alias",schema = "kernel")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor

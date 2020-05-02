@@ -33,13 +33,25 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.mosip.kernel.core.crypto.exception.InvalidDataException;
 import io.mosip.kernel.core.crypto.exception.InvalidKeyException;
 import io.mosip.kernel.core.crypto.exception.NullDataException;
+import io.mosip.kernel.core.exception.BaseUncheckedException;
+import io.mosip.kernel.core.exception.ErrorResponse;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.NoSuchAlgorithmException;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
+import io.mosip.kernel.core.idgenerator.exception.TokenIdGeneratorException;
+import io.mosip.kernel.core.signatureutil.exception.ParseResponseException;
+import io.mosip.kernel.core.signatureutil.exception.SignatureUtilClientException;
+import io.mosip.kernel.core.signatureutil.exception.SignatureUtilException;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
+import io.mosip.kernel.cryptomanager.constant.CryptomanagerErrorCode;
+import io.mosip.kernel.cryptomanager.exception.CryptoManagerSerivceException;
 import io.mosip.kernel.keymanagerservice.constant.KeymanagerConstant;
 import io.mosip.kernel.keymanagerservice.constant.KeymanagerErrorConstant;
+import io.mosip.kernel.lkeymanager.exception.InvalidArgumentsException;
+import io.mosip.kernel.lkeymanager.exception.LicenseKeyServiceException;
+import io.mosip.kernel.signature.exception.RequestException;
+import io.mosip.kernel.signature.exception.SignatureFailureException;
 
 /**
  * Rest Controller Advice for Keymanager Service
@@ -76,6 +88,17 @@ public class KeymanagerExceptionHandler {
 		ExceptionUtils.logRootCause(e);
 		return new ResponseEntity<>(
 				getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText(), HttpStatus.OK), HttpStatus.OK);
+	}
+	
+
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<ResponseWrapper<ServiceError>> illegalArgumentException(HttpServletRequest httpServletRequest,
+			final IllegalArgumentException e) throws IOException {
+		return new ResponseEntity<>(
+				getErrorResponse(httpServletRequest,
+						CryptomanagerErrorCode.INVALID_DATA_WITHOUT_KEY_BREAKER.getErrorCode(),
+						CryptomanagerErrorCode.INVALID_DATA_WITHOUT_KEY_BREAKER.getErrorMessage(), HttpStatus.OK),
+				HttpStatus.OK);
 	}
 
 	@ExceptionHandler(InvalidFormatException.class)
@@ -131,6 +154,14 @@ public class KeymanagerExceptionHandler {
 		return new ResponseEntity<>(
 				getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText(), HttpStatus.OK), HttpStatus.OK);
 	}
+	
+	@ExceptionHandler(CryptoManagerSerivceException.class)
+	public ResponseEntity<ResponseWrapper<ServiceError>> cryptoManagerServieException(
+			HttpServletRequest httpServletRequest, final CryptoManagerSerivceException e) throws IOException {
+		ExceptionUtils.logRootCause(e);
+		return new ResponseEntity<>(
+				getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText(), HttpStatus.OK), HttpStatus.OK);
+	}
 
 	@ExceptionHandler(InvalidApplicationIdException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> invalidApplicationIdException(
@@ -170,6 +201,86 @@ public class KeymanagerExceptionHandler {
 		errorResponse.getErrors().add(error);
 		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
 	}
+	
+	@ExceptionHandler(TokenIdGeneratorException.class)
+	public ResponseEntity<ResponseWrapper<ServiceError>> emptyLengthException(
+			final HttpServletRequest httpServletRequest, final TokenIdGeneratorException e) throws IOException {
+		ResponseWrapper<ServiceError> responseWrapper = setErrors(httpServletRequest);
+		ServiceError error = new ServiceError(e.getErrorCode(), e.getErrorText());
+		responseWrapper.getErrors().add(error);
+		return new ResponseEntity<>(responseWrapper, HttpStatus.OK);
+
+	}
+	
+	/**
+	 * Method to handle {@link InvalidArgumentsException}.
+	 * 
+	 * @param httpServletRequest the request
+	 * @param exception          the exception.
+	 * @return {@link ErrorResponse}.
+	 * @throws IOException the IO exception
+	 */
+	@ExceptionHandler(InvalidArgumentsException.class)
+	public ResponseEntity<ResponseWrapper<ServiceError>> validateInputArguments(HttpServletRequest httpServletRequest,
+			final InvalidArgumentsException exception) throws IOException {
+		ResponseWrapper<ServiceError> errorResponse = setErrors(httpServletRequest);
+		errorResponse.getErrors().addAll(exception.getList());
+		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
+	}
+
+	/**
+	 * Method to handle {@link LicenseKeyServiceException}.
+	 * 
+	 * @param httpServletRequest the request
+	 * @param exception          the exception.
+	 * @return {@link ErrorResponse}.
+	 * @throws IOException the IO exception
+	 */
+	@ExceptionHandler(LicenseKeyServiceException.class)
+	public ResponseEntity<ResponseWrapper<ServiceError>> handleServiceException(HttpServletRequest httpServletRequest,
+			final LicenseKeyServiceException exception) throws IOException {
+		ResponseWrapper<ServiceError> errorResponse = setErrors(httpServletRequest);
+		errorResponse.getErrors().addAll(exception.getList());
+		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
+	}
+
+	
+	@ExceptionHandler(RequestException.class)
+	public ResponseEntity<ResponseWrapper<ServiceError>> controlRequestException(
+			final HttpServletRequest httpServletRequest, final RequestException e) throws IOException {
+		ExceptionUtils.logRootCause(e);
+		return getErrorResponseEntity(e, HttpStatus.OK, httpServletRequest);
+	}
+
+	@ExceptionHandler(SignatureFailureException.class)
+	public ResponseEntity<ResponseWrapper<ServiceError>> signatureFailureException(
+			final HttpServletRequest httpServletRequest, final SignatureFailureException e) throws IOException {
+		ExceptionUtils.logRootCause(e);
+		return getErrorResponseEntity(e, HttpStatus.OK, httpServletRequest);
+	}
+
+	@ExceptionHandler(SignatureUtilClientException.class)
+	public ResponseEntity<ResponseWrapper<ServiceError>> signatureUtilClientException(
+			final HttpServletRequest httpServletRequest, final SignatureUtilClientException e) throws IOException {
+		ResponseWrapper<ServiceError> responseWrapper = setErrors(httpServletRequest);
+		responseWrapper.getErrors().addAll(e.getList());
+		ExceptionUtils.logRootCause(e);
+		return new ResponseEntity<>(responseWrapper, HttpStatus.OK);
+	}
+
+	@ExceptionHandler(SignatureUtilException.class)
+	public ResponseEntity<ResponseWrapper<ServiceError>> signatureUtilException(
+			final HttpServletRequest httpServletRequest, final SignatureUtilException e) throws IOException {
+		ExceptionUtils.logRootCause(e);
+		return getErrorResponseEntity(e, HttpStatus.OK, httpServletRequest);
+	}
+
+	@ExceptionHandler(ParseResponseException.class)
+	public ResponseEntity<ResponseWrapper<ServiceError>> parseResponseException(
+			final HttpServletRequest httpServletRequest, final ParseResponseException e) throws IOException {
+		ExceptionUtils.logRootCause(e);
+		return getErrorResponseEntity(e, HttpStatus.OK, httpServletRequest);
+	}
 
 	@ExceptionHandler(value = { Exception.class, RuntimeException.class })
 	public ResponseEntity<ResponseWrapper<ServiceError>> defaultErrorHandler(HttpServletRequest httpServletRequest,
@@ -205,5 +316,13 @@ public class KeymanagerExceptionHandler {
 		responseWrapper.setId(reqNode.path("id").asText());
 		responseWrapper.setVersion(reqNode.path("version").asText());
 		return responseWrapper;
+	}
+	
+	private ResponseEntity<ResponseWrapper<ServiceError>> getErrorResponseEntity(BaseUncheckedException e,
+			HttpStatus httpStatus, HttpServletRequest httpServletRequest) throws IOException {
+		ResponseWrapper<ServiceError> responseWrapper = setErrors(httpServletRequest);
+		ServiceError error = new ServiceError(e.getErrorCode(), e.getErrorText());
+		responseWrapper.getErrors().add(error);
+		return new ResponseEntity<>(responseWrapper, httpStatus);
 	}
 }

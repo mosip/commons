@@ -2,9 +2,9 @@ package io.mosip.kernel.keymanagerservice.repository;
 
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import io.mosip.kernel.core.dataaccess.spi.repository.BaseRepository;
 import io.mosip.kernel.keymanagerservice.entity.KeyStore;
 
 /**
@@ -16,7 +16,7 @@ import io.mosip.kernel.keymanagerservice.entity.KeyStore;
  *
  */
 @Repository
-public interface KeyStoreRepository extends BaseRepository<KeyStore, String> {
+public interface KeyStoreRepository extends JpaRepository<KeyStore, String> {
 
 	/**
 	 * Function to find KeyStore by alias
