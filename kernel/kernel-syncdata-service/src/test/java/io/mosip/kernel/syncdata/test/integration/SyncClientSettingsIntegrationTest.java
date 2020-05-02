@@ -816,7 +816,7 @@ public class SyncClientSettingsIntegrationTest {
 		when(deviceSubTypeDPMRepository.findAllLatestCreatedUpdateDeleted(Mockito.any(), 
 				Mockito.any())) .thenReturn(Arrays.asList(deviceSubTypeDPM));
 		
-		when(signatureUtil.sign(Mockito.anyString(), Mockito.anyString())).thenReturn(signResponse);
+		when(signatureUtil.sign(Mockito.anyString())).thenReturn(signResponse);
 	}
 	
 		
