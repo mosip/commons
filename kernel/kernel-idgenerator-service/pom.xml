@@ -12,13 +12,13 @@
 	</parent>
 
 	<properties>
-		<kernel.core.version>1.0.6</kernel.core.version>
+		<kernel.core.version>1.0.9-SNAPSHOT</kernel.core.version>
 		<kernel.auth.adaptor.version>1.0.8</kernel.auth.adaptor.version>
 		<kernel.idgenerator.vid.version>1.0.6</kernel.idgenerator.vid.version>
 		<ceylon.complete.version>1.3.2</ceylon.complete.version>
 		<vertx.lang.ceylon.version>3.4.1</vertx.lang.ceylon.version>
 		<kernel.templatemanager.velocity.version>1.0.6</kernel.templatemanager.velocity.version>
-		<kernel.crypto.signature.version>1.0.6</kernel.crypto.signature.version>
+		<kernel.crypto.signature.version>1.0.9-SNAPSHOT</kernel.crypto.signature.version>
 	</properties>
 	<artifactId>kernel-idgenerator-service</artifactId>
 	<version>1.0.9</version>
