@@ -1,8 +1,5 @@
 package io.mosip.kernel.signature.controller;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +13,6 @@ import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.signatureutil.model.SignatureResponse;
-import io.mosip.kernel.signature.dto.PublicKeyRequestDto;
 import io.mosip.kernel.signature.dto.SignRequestDto;
 import io.mosip.kernel.signature.dto.SignResponseDto;
 import io.mosip.kernel.signature.dto.TimestampRequestDto;
@@ -54,27 +50,6 @@ public class SignatureController {
 		signResponse.setSignature(signatureResponse.getData());
 		ResponseWrapper<SignResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(signResponse);
-		return response;
-	}
-
-	/**
-	 * Function to validate with public key
-	 * 
-	 * @param validateWithPublicKeyRequestDto {@link AuditRequestDto} having
-	 *                                        required fields for auditing
-	 * @return The {@link Boolean} having the value
-	 * @throws NoSuchAlgorithmException
-	 * @throws InvalidKeySpecException
-	 */
-	// @ApiIgnore
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN')")
-	@ResponseFilter
-	@PostMapping(value = "/public/validate")
-	public ResponseWrapper<ValidatorResponseDto> validateWithPublicKey(
-			@RequestBody @Valid RequestWrapper<PublicKeyRequestDto> validateWithPublicKeyRequestDto)
-			throws InvalidKeySpecException, NoSuchAlgorithmException {
-		ResponseWrapper<ValidatorResponseDto> response = new ResponseWrapper<>();
-		response.setResponse(service.validateWithPublicKey(validateWithPublicKeyRequestDto.getRequest()));
 		return response;
 	}
 

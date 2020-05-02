@@ -36,7 +36,10 @@ import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.cryptosignature.constant.SigningDataErrorCode;
 import io.mosip.kernel.cryptosignature.dto.PublicKeyResponse;
+import io.mosip.kernel.cryptosignature.dto.SignResponseDto;
 import io.mosip.kernel.cryptosignature.dto.SignatureRequestDto;
+import io.mosip.kernel.cryptosignature.dto.TimestampRequestDto;
+import io.mosip.kernel.cryptosignature.dto.ValidatorResponseDto;
 import io.mosip.kernel.cryptosignature.exception.ExceptionHandler;
 import io.mosip.kernel.keygenerator.bouncycastle.KeyGenerator;
 
@@ -65,10 +68,15 @@ public class SignatureUtilImpl implements SignatureUtil {
 	/** The encrypt url. */
 	@Value("${mosip.kernel.keymanager-service-sign-url}")
 	private String signUrl;
+	
+	/** The encrypt url. */
+	@Value("${mosip.kernel.keymanager-service-validate-url}")
+	private String validateUrl;
+	
+	public static final String VALIDATION_SUCCESSFUL = "Validation Successful";
+	public static final String SUCCESS = "success";
 
-	/** The get public key url. */
-	@Value("${mosip.kernel.keymanager-service-publickey-url}")
-	private String getPublicKeyUrl;
+
 
 	/** The rest template. */
 	@Autowired
@@ -111,18 +119,14 @@ public class SignatureUtilImpl implements SignatureUtil {
 	}
 
 	@Override
-	public SignatureResponse sign(String response, String timestamp) {
+	public SignatureResponse sign(String response) {
 		SignatureRequestDto signatureRequestDto = new SignatureRequestDto();
-		signatureRequestDto.setApplicationId(signApplicationid);
-		signatureRequestDto.setReferenceId(signRefid);
 		signatureRequestDto.setData(response);
-		signatureRequestDto.setTimeStamp(timestamp);
 		RequestWrapper<SignatureRequestDto> requestWrapper = new RequestWrapper<>();
 		requestWrapper.setId(signDataRequestId);
 		requestWrapper.setVersion(signDataVersionId);
 		requestWrapper.setRequest(signatureRequestDto);
 		ResponseEntity<String> responseEntity = null;
-
 		try {
 			responseEntity = restTemplate.postForEntity(signUrl, requestWrapper, String.class);
 		} catch (HttpClientErrorException | HttpServerErrorException ex) {
@@ -138,25 +142,27 @@ public class SignatureUtilImpl implements SignatureUtil {
 			}
 		}
 		ExceptionHandler.throwExceptionIfExist(responseEntity);
-		SignatureResponse signatureResponse = ExceptionHandler.getResponse(objectMapper, responseEntity,
-				SignatureResponse.class);
-		signatureResponse.setData(signatureResponse.getData());
-		signatureResponse.setTimestamp(DateUtils.convertUTCToLocalDateTime(timestamp));
-		return signatureResponse;
+		SignResponseDto signatureResponse = ExceptionHandler.getResponse(objectMapper, responseEntity,
+				SignResponseDto.class);
+		SignatureResponse signatureResp= new SignatureResponse();
+		signatureResp.setData(signatureResponse.getSignature());
+		signatureResp.setTimestamp(signatureResponse.getTimestamp());
+		return signatureResp;
 	}
 
 	@Override
-	public boolean validate(String signature, String actualData, String timestamp)
-			throws InvalidKeySpecException, NoSuchAlgorithmException {
-
-		ResponseEntity<String> response = null;
-		Map<String, String> uriParams = new HashMap<>();
-		uriParams.put("applicationId", signApplicationid);
-		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(getPublicKeyUrl)
-				.queryParam("timeStamp", timestamp).queryParam("referenceId", signRefid);
+	public boolean validate(String signature, String actualData, String timestamp){
+		TimestampRequestDto timestampRequestDto = new TimestampRequestDto();
+		timestampRequestDto.setData(actualData);
+		timestampRequestDto.setSignature(signature);
+		timestampRequestDto.setTimestamp(DateUtils.convertUTCToLocalDateTime(timestamp));
+		RequestWrapper<TimestampRequestDto> requestWrapper = new RequestWrapper<>();
+		requestWrapper.setId(signDataRequestId);
+		requestWrapper.setVersion(signDataVersionId);
+		requestWrapper.setRequest(timestampRequestDto);
+		ResponseEntity<String> responseEntity = null;
 		try {
-			response = restTemplate.exchange(builder.buildAndExpand(uriParams).toUri(), HttpMethod.GET, null,
-					String.class);
+			responseEntity = restTemplate.postForEntity(validateUrl, requestWrapper, String.class);
 		} catch (HttpClientErrorException | HttpServerErrorException ex) {
 			List<ServiceError> validationErrorsList = ExceptionUtils.getServiceErrorList(ex.getResponseBodyAsString());
 
@@ -166,15 +172,13 @@ public class SignatureUtilImpl implements SignatureUtil {
 				throw new SignatureUtilClientException(validationErrorsList);
 			} else {
 				throw new SignatureUtilException(SigningDataErrorCode.REST_CRYPTO_CLIENT_EXCEPTION.getErrorCode(),
-						SigningDataErrorCode.REST_CRYPTO_CLIENT_EXCEPTION.getErrorMessage());
+						SigningDataErrorCode.REST_CRYPTO_CLIENT_EXCEPTION.getErrorMessage(), ex);
 			}
-
 		}
-		ExceptionHandler.throwExceptionIfExist(response);
-		PublicKeyResponse publicKeyResponse = ExceptionHandler.getResponse(objectMapper, response,
-				PublicKeyResponse.class);
-		PublicKey publicKey = KeyFactory.getInstance(asymmetricAlgorithmName)
-				.generatePublic(new X509EncodedKeySpec(CryptoUtil.decodeBase64(publicKeyResponse.getPublicKey())));
-		return cryptoCore.verifySignature(actualData.getBytes(), signature, publicKey);
+		ExceptionHandler.throwExceptionIfExist(responseEntity);
+		ValidatorResponseDto validationResponse = ExceptionHandler.getResponse(objectMapper, responseEntity,
+				ValidatorResponseDto.class);
+		return (validationResponse.getStatus().equalsIgnoreCase(SUCCESS) && validationResponse.getMessage().equalsIgnoreCase(VALIDATION_SUCCESSFUL));
+		
 	}
 }
