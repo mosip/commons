@@ -7,8 +7,10 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class SchemaDto {
 	
 	@NotBlank
@@ -41,6 +43,17 @@ public class SchemaDto {
 	private List<ValidatorDto> validators;
 	private List<String> bioAttributes;
 	private String requiredOn;
+	private String subType;
+	
+	
+	@EqualsAndHashCode.Include
+	public String caseIgnoredId() {
+		return this.id.toLowerCase();
+	}
+	
+	public String getSubType() {
+		return this.subType == null ? "none" : this.subType; 
+	}
 }
 
 @Data

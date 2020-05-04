@@ -240,7 +240,7 @@ public class IdentitySchemaControllerTest {
 	@WithUserDetails("global-admin")
 	public void publishIdentitySchema() throws Exception {		
 		Mockito.when(identitySchemaRepository.publishIdentitySchema(Mockito.anyString(), Mockito.anyString(), 
-				Mockito.any(LocalDateTime.class), Mockito.any(LocalDateTime.class), Mockito.anyString())).thenReturn(1);
+				Mockito.any(LocalDateTime.class), Mockito.any(LocalDateTime.class), Mockito.anyString(), Mockito.anyDouble())).thenReturn(1);
 		
 		mockMvc.perform(MockMvcRequestBuilders.put("/idschema/publish")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -254,7 +254,7 @@ public class IdentitySchemaControllerTest {
 	@WithUserDetails("global-admin")
 	public void deleteIdentitySchema() throws Exception {		
 		Mockito.when(identitySchemaRepository.publishIdentitySchema(Mockito.anyString(), Mockito.anyString(), 
-				Mockito.any(LocalDateTime.class), Mockito.any(LocalDateTime.class), Mockito.anyString())).thenReturn(1);		
+				Mockito.any(LocalDateTime.class), Mockito.any(LocalDateTime.class), Mockito.anyString(), Mockito.anyDouble())).thenReturn(1);		
 		mockMvc.perform(MockMvcRequestBuilders.delete("/idschema")
 				.param("id", "test-test-test-test")
 				.contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isOk());

@@ -255,7 +255,7 @@ public class SchemaServiceTest {
 	@WithUserDetails("global-admin")
 	public void testPublishIdentitySchema() throws Exception {		
 		Mockito.when(identitySchemaRepository.publishIdentitySchema(Mockito.anyString(), Mockito.anyString(), 
-				Mockito.any(LocalDateTime.class), Mockito.any(LocalDateTime.class), Mockito.anyString())).thenReturn(1);
+				Mockito.any(LocalDateTime.class), Mockito.any(LocalDateTime.class), Mockito.anyString(), Mockito.anyDouble())).thenReturn(1);
 		
 		Mockito.when(identitySchemaRepository.findIdentitySchemaById(Mockito.anyString())).thenReturn(draftSchema);
 		
@@ -269,7 +269,7 @@ public class SchemaServiceTest {
 	@WithUserDetails("global-admin")
 	public void testPublishAlreadyPublishedIdentitySchema() throws Exception {		
 		Mockito.when(identitySchemaRepository.publishIdentitySchema(Mockito.anyString(), Mockito.anyString(), 
-				Mockito.any(LocalDateTime.class), Mockito.any(LocalDateTime.class), Mockito.anyString())).thenReturn(1);
+				Mockito.any(LocalDateTime.class), Mockito.any(LocalDateTime.class), Mockito.anyString(), Mockito.anyDouble())).thenReturn(1);
 		
 		Mockito.when(identitySchemaRepository.findIdentitySchemaById(Mockito.anyString())).thenReturn(publishedSchema);
 		
@@ -288,7 +288,7 @@ public class SchemaServiceTest {
 	@WithUserDetails("global-admin")
 	public void testPublishIdentitySchemaWithException() throws Exception {		
 		Mockito.when(identitySchemaRepository.publishIdentitySchema(Mockito.anyString(), Mockito.anyString(), 
-				Mockito.any(LocalDateTime.class), Mockito.any(LocalDateTime.class), Mockito.anyString())).thenReturn(1);
+				Mockito.any(LocalDateTime.class), Mockito.any(LocalDateTime.class), Mockito.anyString(),Mockito.anyDouble())).thenReturn(1);
 		
 		Mockito.when(identitySchemaRepository.findIdentitySchemaById(Mockito.anyString())).thenReturn(draftSchema);
 		

@@ -79,10 +79,9 @@ public interface IdentitySchemaRepository extends BaseRepository<IdentitySchema,
 	 * @return
 	 */
 	@Modifying
-	@Query("UPDATE IdentitySchema i SET i.schemaJson=?2, i.effectiveFrom=?3, i.status='PUBLISHED', i.idVersion=(select max(s.idVersion) FROM IdentitySchema s "
-			+ "WHERE (s.isDeleted is null OR s.isDeleted =false) AND s.isActive=true)+0.1, i.isActive=true ,i.updatedDateTime=?4, i.updatedBy=?5 "
+	@Query("UPDATE IdentitySchema i SET i.idVersion=?6, i.schemaJson=?2, i.effectiveFrom=?3, i.status='PUBLISHED', i.isActive=true ,i.updatedDateTime=?4, i.updatedBy=?5 "
 			+ "WHERE i.id =?1 AND i.status='DRAFT' AND (i.isDeleted is null OR i.isDeleted =false)")
-	int publishIdentitySchema(String id, String schemaJson, LocalDateTime effectiveFrom, LocalDateTime updatedDateTime, String updatedBy);
+	int publishIdentitySchema(String id, String schemaJson, LocalDateTime effectiveFrom, LocalDateTime updatedDateTime, String updatedBy, double idVersion);
 	
 	/**
 	 * update only is_deleted flag of Identity_schema in DRAFT status
