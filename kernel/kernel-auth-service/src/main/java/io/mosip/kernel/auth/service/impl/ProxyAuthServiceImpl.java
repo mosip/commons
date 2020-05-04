@@ -64,7 +64,7 @@ import io.mosip.kernel.auth.util.TokenValidator;
  * @author Srinivasan
  *
  */
-@Profile("!local")
+@Profile("local")
 @Service
 public class ProxyAuthServiceImpl implements AuthService {
 

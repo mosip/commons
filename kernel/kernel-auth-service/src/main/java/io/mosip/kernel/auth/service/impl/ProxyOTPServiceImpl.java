@@ -63,7 +63,7 @@ import io.mosip.kernel.core.http.ResponseWrapper;
  * @author Urvil Joshi
  *
  */
-@Profile("!local")
+@Profile("local")
 @Service
 public class ProxyOTPServiceImpl implements OTPService {
 

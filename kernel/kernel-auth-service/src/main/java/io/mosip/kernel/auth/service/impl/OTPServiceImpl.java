@@ -64,7 +64,7 @@ import io.mosip.kernel.core.http.ResponseWrapper;
  * @author Ramadurai Pandian
  *
  */
-@Profile("local")
+@Profile("!local")
 @Service
 public class OTPServiceImpl implements OTPService {
 
