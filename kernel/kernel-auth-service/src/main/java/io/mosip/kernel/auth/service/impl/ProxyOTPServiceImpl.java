@@ -512,7 +512,7 @@ public class ProxyOTPServiceImpl implements OTPService {
 	}
 
 	@Override
-	public AuthNResponseDto sendOTP(MosipUserDto mosipUser, OtpUser otpUser) throws Exception {
+	public AuthNResponseDto sendOTP(MosipUserDto mosipUser, OtpUser otpUser,String appId) throws Exception {
 		AuthNResponseDto authNResponseDto = null;
 		OtpEmailSendResponseDto otpEmailSendResponseDto = null;
 		SmsResponseDto otpSmsSendResponseDto = null;

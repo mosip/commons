@@ -274,14 +274,14 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public AuthNResponseDto authenticateWithOtp(OtpUser otpUser) throws Exception {
 		AuthNResponseDto authNResponseDto = null;
-
+        String realmId=authUtil.getRealmIdFromAppId(otpUser.getAppId());
 		MosipUserDto mosipUser = null;
 		otpUser.getOtpChannel().replaceAll(String::toLowerCase);
 		otpUser.setAppId(otpUser.getAppId().toLowerCase());
 		otpUser.setOtpChannel(otpUser.getOtpChannel());
 		if (AuthConstant.APPTYPE_UIN.equals(otpUser.getUseridtype())) {
 			mosipUser = uinService.getDetailsFromUin(otpUser);
-			authNResponseDto = oTPService.sendOTPForUin(mosipUser, otpUser, "ida");
+			authNResponseDto = oTPService.sendOTPForUin(mosipUser, otpUser,realmId);
 			authNResponseDto.setStatus(authNResponseDto.getStatus());
 			authNResponseDto.setMessage(authNResponseDto.getMessage());
 		} else if (AuthConstant.APPTYPE_USERID.equals(otpUser.getUseridtype())) {
@@ -289,7 +289,7 @@ public class AuthServiceImpl implements AuthService {
 			userCreationRequestDto.setUserName(otpUser.getUserId());
 			userCreationRequestDto.setAppId(otpUser.getAppId());
 			mosipUser = registerUser(userCreationRequestDto);
-			authNResponseDto = oTPService.sendOTP(mosipUser, otpUser);
+			authNResponseDto = oTPService.sendOTP(mosipUser, otpUser,realmId);
 			authNResponseDto.setStatus(authNResponseDto.getStatus());
 			authNResponseDto.setMessage(authNResponseDto.getMessage());
 		} else {
@@ -329,7 +329,7 @@ public class AuthServiceImpl implements AuthService {
 			mosipUser = uinService.getDetailsForValidateOtp(userOtp.getUserId());
 		}
 		if (mosipUser != null) {
-			mosipToken = oTPService.validateOTP(mosipUser, userOtp.getOtp(), userOtp.getAppId());
+			mosipToken = oTPService.validateOTP(mosipUser, userOtp.getOtp(), realm);
 		} else {
 			throw new AuthManagerException(AuthErrorCode.USER_VALIDATION_ERROR.getErrorCode(),
 					AuthErrorCode.USER_VALIDATION_ERROR.getErrorMessage());
