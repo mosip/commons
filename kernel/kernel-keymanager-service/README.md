@@ -1,10 +1,25 @@
 ## kernel-keymanager-service
 
-[Background & Design](../../docs/design/kernel/kernel-keymanager.md)
+[Background & Design KEYMANAGER](../../docs/design/kernel/kernel-keymanager.md)
 
-[Api Documentation](https://github.com/mosip/mosip/wiki/Kernel-APIs#key-manager)
+[Background & Design CRYPTOMANAGER](../../docs/design/kernel/kernel-cryptomanager.md)
 
-[Api Documentation](https://github.com/mosip/mosip/wiki/Kernel-APIs#crypto-manager)
+[Background & Design SIGNATURE](../../docs/design/kernel/kernel-cryptography-digitalsignature.md)
+
+[Background & Design TOKENIDGENERATOR](../../docs/design/kernel/kernel-idgenerator-statictoken.md)
+
+[Background & Design -TBA- LICENSEKEYMANAGER](../../docs/design/kernel/kernel-licensekeymanager.md)
+
+[Api Documentation KEYMANAGER](https://github.com/mosip/mosip/wiki/Kernel-APIs#key-manager)
+
+[Api Documentation CRYPTOMANAGER](https://github.com/mosip/mosip/wiki/Kernel-APIs#crypto-manager)
+
+[Api Documentation SIGNATURE](https://github.com/mosip/mosip/wiki/Kernel-APIs#signature)
+
+[Api Documentation TOKENIDGENERATOR](https://github.com/mosip/mosip/wiki/Kernel-APIs#tokenid-generator)
+
+[Api Documentation -TBA- LICENSEKEYMANAGER](https://github.com/mosip/mosip/wiki/Kernel-APIs#licensekey-manager)
+
 
 Default Port and Context Path
 
@@ -123,7 +138,7 @@ mosip.kernel.licensekey.permissions=OTP Trigger,OTP Authentication,Demo Authenti
 **Usage Sample**
 
 
-  *Get Public Key*
+  **Get Public Key**
   
   *Request*
   
@@ -150,7 +165,7 @@ Response response = client.newCall(request).execute();
 }
   ```
 
-  *Sign pdf*
+  **Sign pdf**
   
   *Request*
   
@@ -187,7 +202,7 @@ Status:200
  }
 ```
 
-*Encrypt Request*
+**Encrypt Request**
   
   ```
 OkHttpClient client = new OkHttpClient();
@@ -215,7 +230,7 @@ Response response = client.newCall(request).execute();
 }
   ```
   
-  *Decrypt Request*
+  **Decrypt Request**
   
   ```
 OkHttpClient client = new OkHttpClient();
@@ -243,7 +258,7 @@ Response response = client.newCall(request).execute();
 }
   ```
 
- *Sign Request*
+**Sign Request**
   
   ```
 OkHttpClient client = new OkHttpClient();
@@ -278,15 +293,18 @@ Response response = client.newCall(request).execute();
   ```
 
 **The inputs which have to be provided for validate sign response by passing Response Timestamp along with the data and sign response:**
+
 1.signature -Mandatory
+
 2.data - Mandatory
+
 3.timestamp -Mandatory
 
 
 **The response will be Validation Successful  if request is successful, else throw exception Validation Unsuccessful** 
 
 
-*Signature Validate Sample**
+**Signature Validate**
   
 *Request*
   
@@ -326,7 +344,7 @@ Response response = client.newCall(request).execute();
 }
   ```
 
-  *Token ID  generator GET Request:*
+  **Token ID Generation**
   
   
 ```
@@ -359,7 +377,7 @@ Response response = client.newCall(request).execute();
 ```
 
  
- *License Generation Request:*
+ **License Key Generation :**
  
  ```
 { 
@@ -390,7 +408,7 @@ HttpStatus : 200 OK
 }
 ```
 
-*License Mapping Request:*
+**License Key Mapping:**
  
 ```
 OkHttpClient client = new OkHttpClient();
@@ -419,7 +437,7 @@ Response response = client.newCall(request).execute();
 }
  ```
 
-*License Fetch Request:*
+**License Key Fetch:**
  
 ```
  OkHttpClient client = new OkHttpClient();
