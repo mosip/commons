@@ -64,7 +64,7 @@ import io.mosip.kernel.auth.util.TokenValidator;
  * @author Srinivasan
  *
  */
-@Profile("local")
+@Profile("!local")
 @Service
 public class ProxyAuthServiceImpl implements AuthService {
 
@@ -224,7 +224,7 @@ public class ProxyAuthServiceImpl implements AuthService {
 			userCreationRequestDto.setAppId(otpUser.getAppId());
 			mosipUser = new MosipUserDto();
 			mosipUser.setUserId(otpUser.getUserId());
-			authNResponseDto = oTPService.sendOTP(mosipUser, otpUser);
+			authNResponseDto = oTPService.sendOTP(mosipUser, otpUser,"mosip");
 			authNResponseDto.setStatus(authNResponseDto.getStatus());
 			authNResponseDto.setMessage(authNResponseDto.getMessage());
 		} else {
