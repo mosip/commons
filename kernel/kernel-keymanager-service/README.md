@@ -4,6 +4,8 @@
 
 [Api Documentation](https://github.com/mosip/mosip/wiki/Kernel-APIs#key-manager)
 
+[Api Documentation](https://github.com/mosip/mosip/wiki/Kernel-APIs#crypto-manager)
+
 Default Port and Context Path
 
 ```
@@ -23,38 +25,59 @@ localhost:8088/keymanager/swagger-ui.html
 
 
 ```
-#mosip.kernel.keymanager.softhsm.config-path=/pathto/softhsm.conf
-mosip.kernel.keymanager.softhsm.config-path=D\:\\SoftHSM2\\etc\\softhsm2-demo.conf
+
+mosip.kernel.keymanager.softhsm.config-path=B\:\\softhsm2\\etc\\softhsm2-demo.conf
 mosip.kernel.keymanager.softhsm.keystore-type=PKCS11
-mosip.kernel.keymanager.softhsm.keystore-pass=pwd
+mosip.kernel.keymanager.softhsm.keystore-pass=1234
 
 mosip.kernel.keymanager.softhsm.certificate.common-name=www.mosip.io
 mosip.kernel.keymanager.softhsm.certificate.organizational-unit=MOSIP
 mosip.kernel.keymanager.softhsm.certificate.organization=IITB
 mosip.kernel.keymanager.softhsm.certificate.country=IN
 
+#----------------------- Crypto --------------------------------------------------
+#Crypto asymmetric algorithm name
+mosip.kernel.crypto.asymmetric-algorithm-name=RSA/ECB/OAEPWITHSHA-256ANDMGF1PADDING
+#Crypto symmetric algorithm name
+mosip.kernel.crypto.symmetric-algorithm-name=AES/GCM/PKCS5Padding
+#Keygenerator asymmetric algorithm name
 mosip.kernel.keygenerator.asymmetric-algorithm-name=RSA
-mosip.kernel.keygenerator.asymmetric-key-length=2048
+#Keygenerator symmetric algorithm name
 mosip.kernel.keygenerator.symmetric-algorithm-name=AES
+#Asymmetric algorithm key length
+mosip.kernel.keygenerator.asymmetric-key-length=2048
+#Symmetric algorithm key length
 mosip.kernel.keygenerator.symmetric-key-length=256
 
-mosip.kernel.crypto.asymmetric-algorithm-name=RSA
-mosip.kernel.crypto.symmetric-algorithm-name=AES
-
+#Encrypted data and encrypted symmetric key separator
 mosip.kernel.data-key-splitter=#KEY_SPLITTER#
+#GCM tag length
+mosip.kernel.crypto.gcm-tag-length=128
+#Hash algo name
+mosip.kernel.crypto.hash-algorithm-name=PBKDF2WithHmacSHA512
+#Symmtric key length used in hash
+mosip.kernel.crypto.hash-symmetric-key-length=256
+#No of iterations in hash
+mosip.kernel.crypto.hash-iteration=100000
+#Sign algo name
+mosip.kernel.crypto.sign-algorithm-name=RS256
 
-# DB Properties For Development
---------------------------------------
-javax.persistence.jdbc.driver=org.postgresql.Driver
-javax.persistence.jdbc.url = jdbc:postgresql://localhost:8888/mosip_kernel
-javax.persistence.jdbc.password = dbpwd
-javax.persistence.jdbc.user = dbuser
 
-hibernate.hbm2ddl.auto=update
+keymanager.persistence.jdbc.driver=org.postgresql.Driver
+keymanager_database_url=jdbc:postgresql://localhost:9001/mosip_kernel
+keymanager_database_username=kerneluser
+keymanager_database_password=Mosip@dev123
+
+licensekeymanager.persistence.jdbc.driver=org.postgresql.Driver
+licensekeymanager_database_url=jdbc:postgresql://localhost:9001/mosip_master
+licensekeymanager_database_username=masteruser
+licensekeymanager_database_password=Mosip@dev123
+
+hibernate.hbm2ddl.auto=none
 hibernate.dialect=org.hibernate.dialect.PostgreSQL95Dialect
 hibernate.jdbc.lob.non_contextual_creation=true
-hibernate.show_sql=true
-hibernate.format_sql=true
+hibernate.show_sql=false
+hibernate.format_sql=false
 hibernate.connection.charSet=utf8
 hibernate.cache.use_second_level_cache=false
 hibernate.cache.use_query_cache=false
@@ -62,11 +85,40 @@ hibernate.cache.use_structured_entries=false
 hibernate.generate_statistics=false
 hibernate.current_session_context_class=org.springframework.orm.hibernate5.SpringSessionContext
 
-```
+auth.server.validate.url=https://dev.mosip.io/v1/authmanager/authorize/admin/validateToken
+auth.server.admin.validate.url=https://dev.mosip.io/v1/authmanager/authorize/admin/validateToken
+auth.role.prefix=ROLE_
+auth.header.name=Authorization
 
-**The inputs which have to be provided are:**
-1. Encrypted Key provided to decrypt should be encoded to BASE64.
-2. Decrypted Key received after decrypt should be decoded from BASE64 encoding.
+mosip.kernel.pdf_owner_password=PDFADMIN
+#------
+mosip.kernel.signature.signature-request-id=SIGNATURE.REQUEST
+mosip.kernel.signature.signature-version-id=v1.0
+
+mosip.sign.applicationid=KERNEL
+mosip.sign.refid=SIGN
+mosip.sign-certificate-refid=SIGN
+mosip.signed.header=response-signature
+mosip.kernel.signature.encrypt-url=http://localhost:8088/v1/keymanager/sign
+mosip.kernel.keymanager-service-publickey-url=http://localhost:8088/v1/keymanager/publickey/{applicationId}
+mosip.kernel.keymanager-service-sign-url=http://localhost:8088/v1/keymanager/sign
+
+
+#---
+  
+mosip.kernel.tokenid.uin.salt=zHuDEAbmbxiUbUShgy6pwUhKh9DE0EZn9kQDKPPKbWscGajMwf
+mosip.kernel.tokenid.partnercode.salt=yS8w5Wb6vhIKdf1msi4LYTJks7mqkbmITk2O63Iq8h0bkRlD0d
+mosip.kernel.tokenid.length=36
+
+#---
+#Length of license key to be generated.
+mosip.kernel.licensekey.length=16
+#List of permissions
+# NOTE: ',' in the below list is used as splitter in the implementation. 
+# Use of ',' in the values for below key should be avoided.
+# Use of spaces before and after ',' also should be avoided.
+mosip.kernel.licensekey.permissions=OTP Trigger,OTP Authentication,Demo Authentication - Identity Data Match,Demo Authentication - Address Data Match,Demo Authentication - Full Address Data Match,Demo Authentication - Secondary Language Match,Biometric Authentication - FMR Data Match,Biometric Authentication - IIR Data Match,Biometric Authentication - FID Data Match,Static Pin Authentication,eKYC - limited,eKYC - Full,eKYC - No
+```
 
 **Usage Sample**
 
@@ -97,36 +149,7 @@ Response response = client.newCall(request).execute();
     "expiryAt": "2019-12-11T06:12:52.994"
 }
   ```
- 
-  *Decrypt Symmetric Key*
-  
-  *Request*
-  
-  ```
-OkHttpClient client = new OkHttpClient();
 
-MediaType mediaType = MediaType.parse("application/json");
-
-RequestBody body = RequestBody.create(mediaType, "{\n  \"applicationId\": \"REGISTRATION\",\n  \"encryptedSymmetricKey\": \"NuIMhUHds-5SlmcVWob1Kg2PA7mVRbzYLrXwb24JGX767CKdTC67wVYM3wGz9_8vmuNk-Yh_SExT6uJJHZyuY3q7pZ-BbBy-ZRWTEJqxXmnF9EWWADDQCQMQajtU-fyszBzQeIjM6gRcvwjXAuq48bC6LsEEL-9Zm6Cu6iL5oHbE77tCENrvcvdWlXY5SQx8p_w6XFlEoU_0f1ZWqjDYlW5iYHBz4XJsgrJjx7nhywOvqvJkOJZeCXSmbbvHCC6o8nIvzdF0Vd-2S2bGTKlICoLIsj9EUGKFgNLM8chI0QqPILFw2BQQfI3AQMsM2Rc04AoMRT_VYFU5Acs_fuHn3g\",\n  \"referenceId\": \"ref123\",\n  \"timeStamp\": \"2018-12-07T12:07:44.403Z\"\n}");
-
-Request request = new Request.Builder()
-  .url("http://localhost:8088/keymanager/v1.0/symmetrickey")
-  .post(body)
-  .addHeader("content-type", "application/json")
-  .build();
-
-Response response = client.newCall(request).execute();
-  ```
-  
-  *Response*
-  
-  Status:200
-  
-  ```
- {
-    "symmetricKey": "sq9oJCdwV-mHEdxEXRh91WkQcGJ6Q83quNaP9OZa_p0"
- }
-  ```
   *Sign pdf*
   
   *Request*
@@ -163,6 +186,265 @@ Status:200
     "data": "sq9oJCdwV-mHEdxEXRh91WkQcGJ6Q83quNaP9OZa_p0"
  }
 ```
+
+*Encrypt Request*
+  
+  ```
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("multipart/form-data;boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW");
+
+RequestBody body = RequestBody.create(mediaType, "{\r\n  \"applicationId\": \"REGISTRATION\",\r\n  \"data\": \"VGhpcyBpcyBhIHBsYWluIHRleHQ=\",\r\n  \"referenceId\": \"ref123\",\r\n  \"timeStamp\": \"2018-12-06T12:07:44.403Z\"\r\n}");
+
+Request request = new Request.Builder()
+  .url("http://localhost:8087/cryptomanager/v1.0/encrypt")
+  .post(body)
+  .addHeader("content-type", "application/json")
+  .build();
+
+Response response = client.newCall(request).execute();
+  ```
+  
+  *Response*
+  
+  Status:200
+  
+  ```
+{
+"data":"EsGmECXJucN7AH6DHoKzzGs3bwspfOftQHwhpOWHUpptyFU1MYOz_iJxi1dBcLDXKQE_OV1xrY8Jyw0XUcSDbNYW9qHr5Hfbe30kTc-hCVNKItYN0OYOSBvgq9pd6TAatzlADvW6PRbRyHuumRqoD2ZL0tddiZqe6pa_Ya3hlTYsZm-L_65IJnkGDJLmxmMVS-pqqKqqtrXnTdYMjvK2wMkuZIFz4SX6F0jxnHz7XhrKSBzY8b8O4z1ZUterB450kKPzbRsZ3fySdjlpqhwtuVXZV6gkAA_n1iACOksvSyUZ7BN5AgWKnnsUHaNyF6f-e564G6nTN4M3Fyd_Z_KzxCNLRVlfU1BMSVRURVIjcvEHI6pM3H-kRWMRBZJDyte4BHKuUj4PBtU3dJ4kb_Vmd4nFBuguSh_tFHiz62GB"
+}
+  ```
+  
+  *Decrypt Request*
+  
+  ```
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/json");
+
+RequestBody body = RequestBody.create(mediaType, "{\n  \"applicationId\": \"REGISTRATION\",\n  \"data\": \"EsGmECXJucN7AH6DHoKzzGs3bwspfOftQHwhpOWHUpptyFU1MYOz_iJxi1dBcLDXKQE_OV1xrY8Jyw0XUcSDbNYW9qHr5Hfbe30kTc-hCVNKItYN0OYOSBvgq9pd6TAatzlADvW6PRbRyHuumRqoD2ZL0tddiZqe6pa_Ya3hlTYsZm-L_65IJnkGDJLmxmMVS-pqqKqqtrXnTdYMjvK2wMkuZIFz4SX6F0jxnHz7XhrKSBzY8b8O4z1ZUterB450kKPzbRsZ3fySdjlpqhwtuVXZV6gkAA_n1iACOksvSyUZ7BN5AgWKnnsUHaNyF6f-e564G6nTN4M3Fyd_Z_KzxCNLRVlfU1BMSVRURVIjcvEHI6pM3H-kRWMRBZJDyte4BHKuUj4PBtU3dJ4kb_Vmd4nFBuguSh_tFHiz62GB\",\n  \"referenceId\": \"ref123\",\n  \"timeStamp\": \"2018-12-06T12:07:44.403Z\"\n}\n");
+
+Request request = new Request.Builder()
+  .url("http://localhost:8087/cryptomanager/v1.0/decrypt")
+  .post(body)
+  .addHeader("content-type", "application/json")
+  .build();
+
+Response response = client.newCall(request).execute();
+  ```
+  
+  *Response*
+  
+  Status:200
+  
+  ```
+{
+ "data": "VGhpcyBpcyBhIHBsYWluIHRleHQ"
+}
+  ```
+
+ *Sign Request*
+  
+  ```
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/json");
+RequestBody body = RequestBody.create(mediaType, "{ \"id\": \"string\", \"metadata\": {}, \"request\": { \"data\": \"admin\" }, \"requesttime\": \"2018-12-10T06:12:52.994Z\", \"version\": \"string\" }");
+Request request = new Request.Builder()
+  .url("http://localhost:8092/v1/signature/sign")
+  .post(body)
+  .addHeader("Content-Type", "application/json")
+  .build();
+
+Response response = client.newCall(request).execute();
+  ```
+  
+  *Response*
+  
+ HTTP Status: 200 OK
+  
+  ```
+{
+    "id": null,
+    "version": null,
+    "responsetime": "2019-05-20T05:59:32.178Z",
+    "metadata": null,
+    "response": {
+        "signature": "ZeNsCOsdgf0UgpXDMry82hrHS6b1ZKvS-tZ_3HBGQHleIu1fZA6LNTtx7XZPFeC8dxsyuYO_iN3mVExM4J2tPlebzsRtuxHigi9o7DI_2xGqFudzlgoH55CP_BBNUDmGm6m-lTMkRx6X61dKfKDNo2NipZdM-a_cHf6Z0aVAU4LdJhV4xWOOm8Pb8sYIc2Nf6kUJRiidEGrxonUCfXX1XlnjMAo75wu99pN8G0mc7JhOehUqbwuXwKo4sQ694ae4F_AYl70sepX24v-0k0ga9esXR4i9rKaoHbzhQFtt2hangQkxHajq9ZTrXWMhd4msTzjHCKdEPXQFsTbKrgKtDQ",
+        "timestamp": "2019-05-20T05:59:31.934Z"
+    },
+    "errors": null
+}
+  ```
+
+**The inputs which have to be provided for validate sign response by passing Response Timestamp along with the data and sign response:**
+1.signature -Mandatory
+2.data - Mandatory
+3.timestamp -Mandatory
+
+
+**The response will be Validation Successful  if request is successful, else throw exception Validation Unsuccessful** 
+
+
+*Signature Validate Sample**
+  
+*Request*
+  
+  ```
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/json");
+
+RequestBody body = RequestBody.create(mediaType, "{ \"id\": \"string\", \"metadata\": {}, \"request\": { \"signature\": \"DrgkF2vm4WvBe04UNe-RePRcrg77uQpsH3GENRcglBsid-K0UDReeeZVKwimOdwV7Ht1j-_D1BFf2sCrM8ni7ztE5Xc_3TEaniOAnOgZDRSI0GG-uSqjH51AwTSl1PYdStfXtOn6HEfEU68JG7TdAliDI5C7thJ1YNmPnHusIsZzX6sW_VfvSpLeA_RzCqnUDH_VaEzZt_5zRYiQv9van4wt0P7HTfIBlQ5zaeO3wXOc3Pogct3ssKwqdaMmZdc7QTDOFqDZZVceMTIXKyiH-ZVs_u3QXRysiLVdXoz7d7yXHdWxQtzsfMjY7alMJNgbmu4X26LYNRemn65Mmn6ixA\", \"data\": \"test\", \"timestamp\": \"2019-05-20T07:28:04.269Z\" }, \"requesttime\": \"2018-12-10T06:12:52.994Z\", \"version\": \"string\" }");
+
+
+
+Request request = new Request.Builder()
+  .url("http://localhost:8092/v1/signature/validate")
+  .post(body)
+  .addHeader("Content-Type", "application/json")
+  .build();
+
+Response response = client.newCall(request).execute();
+  ```
+  
+  *Response*
+  
+ HTTP Status: 200 OK
+  
+  ```
+{
+    "id": null,
+    "version": null,
+    "responsetime": "2019-05-20T07:16:40.794Z",
+    "metadata": null,
+    "response": {
+        "status": "success",
+        "message": "Validation Successful"
+    },
+    "errors": null
+}
+  ```
+
+  *Token ID  generator GET Request:*
+  
+  
+```
+OkHttpClient client = new OkHttpClient();
+
+Request request = new Request.Builder()
+  .url("http://localhost:8097/v1/tokenidgenerator/7394829283/PC001")
+  .get()
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+
+  *Response:*
+  
+  HttpStatus: 200 OK
+  
+```
+{
+	"id": "mosip.kernel.tokenid.generate",
+	"version": "1.0",
+	"metadata": {},
+	"responsetime": "2019-04-04T05:03:18.287Z",
+	"response": {
+                  "tokenID": "268177021248100621690339355202974361"
+                },
+        "errors": []
+}
+```
+
+ 
+ *License Generation Request:*
+ 
+ ```
+{ 
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/json");
+RequestBody body = RequestBody.create(mediaType, "{\"tspId\":\"TSPID1\",\"licenseExpiryTime\":\"2019-02-07T05:35:53.476Z\"}");
+Request request = new Request.Builder()
+  .url("http://localhost:8080/v1.0/license/generate")
+  .post(body)
+  .addHeader("content-type", "application/json")
+  .addHeader("cache-control", "no-cache")
+  .addHeader("postman-token", "7d3b19f4-5a6c-d926-4975-1f228f8caa3e")
+  .build();
+
+Response response = client.newCall(request).execute();
+}
+ ```
+ 
+*License Generation Responses :*
+Successful Generation :
+
+HttpStatus : 200 OK
+
+```
+{
+    "licenseKey": "rAx2TRvemovtZ0to"
+}
+```
+
+*License Mapping Request:*
+ 
+```
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/json");
+RequestBody body = RequestBody.create(mediaType, "{ \"lkey\": \"rAx2TRvemovtZ0to\",\"permissions\": [\"OTP Trigger\",\"OTP Authentication\"],\"tspId\": \"TSPID1\"}");
+Request request = new Request.Builder()
+  .url("http://localhost:8080/v1.0/license/map")
+  .post(body)
+  .addHeader("content-type", "application/json")
+  .addHeader("cache-control", "no-cache")
+  .addHeader("postman-token", "86230d1c-f33d-0ab1-6726-8f7f6ade6072")
+  .build();
+
+Response response = client.newCall(request).execute();
+
+```
+*License Mapping Responses:*
+
+ HttpStatus : 200 OK
+ 
+
+ ```
+{
+    "status": "Mapped License with the permissions"
+}
+ ```
+
+*License Fetch Request:*
+ 
+```
+ OkHttpClient client = new OkHttpClient();
+
+Request request = new Request.Builder()
+  .url("http://localhost:8080/v1.0/license/fetch?licenseKey=rAx2TRvemovtZ0to&tspId=TSPID1")
+  .get()
+  .addHeader("cache-control", "no-cache")
+  .addHeader("postman-token", "ac4daf24-2cef-f5f5-50f4-32b0d1938177")
+  .build();
+
+```
+
+*License Fetch Responses:*
+
+ HttpStatus : 200 OK
+
+ ```
+{
+    "mappedPermissions": [
+        "OTP Trigger",
+        "OTP Authentication"
+    ]
+}
+ ```
   
  
     
