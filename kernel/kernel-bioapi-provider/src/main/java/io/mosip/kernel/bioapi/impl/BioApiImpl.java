@@ -39,6 +39,7 @@ public class BioApiImpl implements IBioApi {
 				.orElse(0L).intValue();
 		qualityScore.setScore(major);
 		Response<QualityScore> response = new Response<>();
+		response.setStatusCode(200);
 		response.setResponse(qualityScore);
 		return response;
 	}
@@ -66,6 +67,7 @@ public class BioApiImpl implements IBioApi {
 			count++;
 		}
 		Response<MatchDecision[]> response = new Response<>();
+		response.setStatusCode(200);
 		response.setResponse(matchingScore);
 		return response;
 	}
@@ -80,6 +82,7 @@ public class BioApiImpl implements IBioApi {
 	@Override
 	public Response<BIR> extractTemplate(BIR sample, KeyValuePair[] flags) {
 		Response<BIR> response = new Response<>();
+		response.setStatusCode(200);
 		response.setResponse(sample);
 		return response;
 	}
@@ -96,6 +99,7 @@ public class BioApiImpl implements IBioApi {
 		BIR[] bir = new BIR[1];
 		bir[0] = sample;
 		Response<BIR[]> response = new Response<>();
+		response.setStatusCode(200);
 		response.setResponse(bir);
 		return response;
 	}
