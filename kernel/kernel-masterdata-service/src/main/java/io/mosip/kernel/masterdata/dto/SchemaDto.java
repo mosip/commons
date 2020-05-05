@@ -3,6 +3,7 @@ package io.mosip.kernel.masterdata.dto;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -20,8 +21,8 @@ public class SchemaDto {
 	
 	private String description;
 	
-	@NotBlank
-	private String labelName;
+	@NotEmpty
+	private List<MultiLingualLabel> label;
 	
 	@NotBlank
 	private String type;
@@ -44,7 +45,7 @@ public class SchemaDto {
 	private List<String> bioAttributes;
 	private String requiredOn;
 	private String subType;
-	
+	private String contactType;
 	
 	@EqualsAndHashCode.Include
 	public String caseIgnoredId() {
@@ -66,4 +67,10 @@ class ValidatorDto {
 	private String validator;
 	
 	private List<String> arguments;
+}
+
+@Data
+class MultiLingualLabel {
+	private String value;
+	private String language;
 }
