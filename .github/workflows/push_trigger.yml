@@ -38,7 +38,10 @@ jobs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-${{ env.BRANCH_NAME }}
-
+          
+    - name: Install xmllint
+      run: sudo apt-get install libxml2-utils
+      
     - name: Build with Maven
       run: mvn -B package --file pom.xml
     
@@ -47,8 +50,8 @@ jobs:
     
     - name: Publish the maven package
       run: |
-        find kernel/*/ -name "pom.xml" | xargs -I{} mvn deploy -DskipTests -f {} -s $GITHUB_WORKSPACE/settings.xml
-        find id-repository/*/ -name "pom.xml" | xargs -I{} mvn deploy -DskipTests -f {} -s $GITHUB_WORKSPACE/settings.xml
+        ./deploy.sh kernel $GITHUB_WORKSPACE/settings.xml SNAPSHOT
+        ./deploy.sh id-repository $GITHUB_WORKSPACE/settings.xml SNAPSHOT 
       env:
         GPG_TTY: $(tty)
          
