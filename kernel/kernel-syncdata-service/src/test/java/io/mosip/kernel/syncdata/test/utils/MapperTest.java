@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,8 +65,13 @@ public class MapperTest {
 	@Test
 	public void testObjectMapperWithValidArg() {
 		try {
-			ApplicationDto dto = new ApplicationDto("AO1", "app1", "app desc");			
-			assertEquals("{\"code\":\"AO1\",\"name\":\"app1\",\"description\":\"app desc\",\"isDeleted\":null,\"langCode\":null,\"isActive\":null}", mapperUtils.getObjectAsJsonString(dto));
+			ApplicationDto dto = new ApplicationDto("AO1", "app1", "app desc");	
+			JSONObject expected = new JSONObject("{\"code\":\"AO1\",\"name\":\"app1\",\"description\":\"app desc\",\"isDeleted\":null,\"langCode\":null,\"isActive\":null}");
+			JSONObject actual = new JSONObject(mapperUtils.getObjectAsJsonString(dto));
+			assertEquals(expected.getString("code"), actual.getString("code"));
+			assertEquals(expected.getString("name"), actual.getString("name"));
+			assertEquals(expected.getString("description"), actual.getString("description"));
+			assertEquals(expected.getString("langCode"), actual.getString("langCode"));
 		} catch (Exception e) {
 			Assert.fail(e.getMessage());
 		}
@@ -76,9 +82,9 @@ public class MapperTest {
 		try { 
 			MachineDto dto = new MachineDto();
 			dto.setName("Test machine");
-			dto.setValidityDateTime(LocalDateTime.MIN);
-			
-			assertEquals("{\"id\":null,\"name\":\"Test machine\",\"serialNum\":null,\"macAddress\":null,\"ipAddress\":null,\"machineSpecId\":null,\"validityDateTime\":\"-999999999-01-01T00:00:00\",\"keyIndex\":null,\"publicKey\":null,\"isDeleted\":null,\"langCode\":null,\"isActive\":null}", mapperUtils.getObjectAsJsonString(dto)); 
+			dto.setValidityDateTime(LocalDateTime.MIN);			
+			JSONObject actual = new JSONObject(mapperUtils.getObjectAsJsonString(dto));			
+			assertEquals("-999999999-01-01T00:00:00", actual.getString("validityDateTime")); 
 		} catch (Exception e) {
 			Assert.fail(e.getMessage()); 
 		}
@@ -106,7 +112,11 @@ public class MapperTest {
 		
 		try {
 			String jsonString = mapperUtils.getObjectAsJsonString(registrationCenter);
-			assertEquals("{\"id\":\"1011\",\"langCode\":\"ENG\",\"name\":null,\"centerTypeCode\":\"T1011\",\"addressLine1\":\"address-line1\",\"addressLine2\":\"address-line2\",\"addressLine3\":\"address-line3\",\"latitude\":null,\"longitude\":null,\"locationCode\":null,\"location\":null,\"registrationCenterType\":null,\"contactPhone\":\"9865123456\",\"numberOfKiosks\":null,\"holidayLocationCode\":\"LOC01\",\"workingHours\":\"9\",\"perKioskProcessTime\":null,\"centerStartTime\":\"09:30:04\",\"centerEndTime\":\"09:30:04\",\"timeZone\":null,\"contactPerson\":\"admin\",\"lunchStartTime\":\"09:30:04\",\"lunchEndTime\":\"09:30:04\",\"isActive\":true,\"createdBy\":null,\"createdDateTime\":null,\"updatedBy\":null,\"updatedDateTime\":null,\"isDeleted\":null,\"deletedDateTime\":null}", jsonString);
+			JSONObject actual = new JSONObject(jsonString);	
+			assertEquals("09:30:04", actual.getString("lunchEndTime"));
+			assertEquals("09:30:04", actual.getString("lunchStartTime"));
+			assertEquals("09:30:04", actual.getString("centerEndTime"));
+			assertEquals("09:30:04", actual.getString("centerStartTime"));
 		} catch (Exception e) {
 			Assert.fail(e.getMessage());
 		}
