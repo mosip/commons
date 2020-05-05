@@ -84,7 +84,7 @@ import io.mosip.kernel.keymanagerservice.util.KeymanagerUtil;
  *
  */
 @Service
-@Transactional
+@Transactional("keymanagerTransactionManager")
 public class KeymanagerServiceImpl implements KeymanagerService {
 
 	private static final String VALID_REFERENCE_ID_GETTING_KEY_ALIAS_WITH_REFERENCE_ID = "Valid reference Id. Getting key alias with referenceId";
@@ -482,7 +482,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 		keyAlias.setReferenceId(referenceId);
 		keyAlias.setKeyGenerationTime(timeStamp);
 		keyAlias.setKeyExpiryTime(expiryDateTime);
-		keyAliasRepository.save(keymanagerUtil.setMetaData(keyAlias));
+		keyAliasRepository.saveAndFlush(keymanagerUtil.setMetaData(keyAlias));
 	}
 
 	/**
@@ -501,7 +501,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 		dbKeyStore.setMasterAlias(masterAlias);
 		dbKeyStore.setPublicKey(publicKey);
 		dbKeyStore.setPrivateKey(encryptedPrivateKey);
-		keyStoreRepository.save(keymanagerUtil.setMetaData(dbKeyStore));
+		keyStoreRepository.saveAndFlush(keymanagerUtil.setMetaData(dbKeyStore));
 	}
 
 	/**

@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 1.0.0
  *
  */
-@SpringBootApplication(scanBasePackages = { "io.mosip.kernel.keymanagerservice.*" })
+@SpringBootApplication(scanBasePackages = { "io.mosip.kernel.keymanagerservice.*","io.mosip.kernel.cryptomanager.*","io.mosip.kernel.signature.*","io.mosip.kernel.tokenidgenerator.*","io.mosip.kernel.lkeymanager.*"})
 public class KeymanagerTestBootApplication {
 
 	/**

@@ -224,7 +224,7 @@ public class ProxyAuthServiceImpl implements AuthService {
 			userCreationRequestDto.setAppId(otpUser.getAppId());
 			mosipUser = new MosipUserDto();
 			mosipUser.setUserId(otpUser.getUserId());
-			authNResponseDto = oTPService.sendOTP(mosipUser, otpUser);
+			authNResponseDto = oTPService.sendOTP(mosipUser, otpUser,"mosip");
 			authNResponseDto.setStatus(authNResponseDto.getStatus());
 			authNResponseDto.setMessage(authNResponseDto.getMessage());
 		} else {

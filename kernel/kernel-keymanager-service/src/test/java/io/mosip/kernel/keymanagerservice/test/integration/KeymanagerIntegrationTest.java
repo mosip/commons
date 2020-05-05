@@ -425,40 +425,6 @@ public class KeymanagerIntegrationTest {
 
 	@WithUserDetails("reg-processor")
 	@Test
-	public void encryptWithReferenceId() throws Exception {
-
-		setupDBKeyStore();
-		setupSingleKeyAlias();
-		setupKey();
-		when(keyAliasRepository.findByApplicationIdAndReferenceId(Mockito.any(), Mockito.any())).thenReturn(keyalias);
-		when(cryptoCore.sign(Mockito.any(), Mockito.any())).thenReturn("");
-		when(keyStore.getAsymmetricKey(Mockito.any())).thenReturn(privateKeyEntry);
-
-		doReturn(key.getPrivate().getEncoded()).when(keymanagerUtil).decryptKey(Mockito.any(), Mockito.any());
-		SignatureRequestDto encryptDataRequestDto = new SignatureRequestDto();
-		encryptDataRequestDto.setApplicationId("applicationId");
-		encryptDataRequestDto.setData("AMert334-edrtda");
-		encryptDataRequestDto.setReferenceId("referenceId");
-		encryptDataRequestDto.setTimeStamp("2010-05-01T12:00:00.00Z");
-		RequestWrapper<SignatureRequestDto> encryptRequestWrapper = new RequestWrapper<>();
-		encryptRequestWrapper.setId(ID);
-		encryptRequestWrapper.setVersion(VERSION);
-		encryptRequestWrapper.setRequest(encryptDataRequestDto);
-
-		String content = mapper.writeValueAsString(encryptRequestWrapper);
-		MvcResult result = mockMvc.perform(post("/sign").contentType(MediaType.APPLICATION_JSON).content(content))
-				.andExpect(status().is(200)).andReturn();
-
-		ResponseWrapper<?> responseWrapper = objectMapper.readValue(result.getResponse().getContentAsString(),
-				ResponseWrapper.class);
-		SignatureResponseDto signatureResponseDto = objectMapper
-				.readValue(objectMapper.writeValueAsString(responseWrapper.getResponse()), SignatureResponseDto.class);
-
-		assertThat(signatureResponseDto.getData(), isA(String.class));
-	}
-
-	@WithUserDetails("reg-processor")
-	@Test
 	public void getSignPublicKeyFromHSMMultipleAliasReference() throws Exception {
 		setupSingleKeyAlias();
 		setupKey();

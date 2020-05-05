@@ -154,7 +154,7 @@ public class UinServiceRouter {
 					SignatureResponse cryptoManagerResponseDto = null;
 					try {
 						resWrpJsonString = objectMapper.writeValueAsString(reswrp);
-						cryptoManagerResponseDto = signatureUtil.sign(resWrpJsonString, timestamp);
+						cryptoManagerResponseDto = signatureUtil.sign(resWrpJsonString);
 					} catch (JsonProcessingException e) {
 
 					} catch (SignatureUtilClientException e1) {

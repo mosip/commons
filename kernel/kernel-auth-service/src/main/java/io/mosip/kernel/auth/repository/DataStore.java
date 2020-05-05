@@ -29,13 +29,13 @@ import io.mosip.kernel.auth.dto.otp.OtpUser;
  */
 public interface DataStore {
 
-	public RolesListDto getAllRoles();
+	public RolesListDto getAllRoles(String appId);
 
-	public MosipUserListDto getListOfUsersDetails(List<String> userDetails) throws Exception;
+	public MosipUserListDto getListOfUsersDetails(List<String> userDetails,String appId) throws Exception;
 
-	public MosipUserSaltListDto getAllUserDetailsWithSalt(List<String> userDetails) throws Exception;
+	public MosipUserSaltListDto getAllUserDetailsWithSalt(List<String> userDetails,String appId) throws Exception;
 
-	public RIdDto getRidFromUserId(String userId) throws Exception;
+	public RIdDto getRidFromUserId(String userId,String appId) throws Exception;
 
 	public AuthZResponseDto unBlockAccount(String userId) throws Exception;
 
