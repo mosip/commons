@@ -14,7 +14,7 @@
 -- DROP TABLE IF EXISTS master.identity_schema CASCADE;
 CREATE TABLE master.identity_schema(
 	id character varying(36) NOT NULL,
-	id_version character varying(8),
+	id_version numeric(5,3),
 	title character varying(64),
 	description character varying(256),
 	id_attr_json character varying(12288),
