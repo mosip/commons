@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="755,1815" last-zoom="0.45"
+<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="708,1815" last-zoom="0.45"
 	 default-schema="public" default-owner="postgres">
 <role name="sysadmin"
       superuser="true"
@@ -5243,7 +5243,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<comment><![CDATA[ID: Unigue ID is assign to identity schema. Each identity schema will have its own unigue id.]]></comment>
 	</column>
 	<column name="id_version">
-		<type name="character varying" length="8"/>
+		<type name="numeric" length="5" precision="3"/>
 		<comment><![CDATA[ID Version: Version of the identity schema, versions will be used for validation of right version usage in the system.]]></comment>
 	</column>
 	<column name="title">
