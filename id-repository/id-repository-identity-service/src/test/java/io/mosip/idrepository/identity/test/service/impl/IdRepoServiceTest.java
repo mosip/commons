@@ -1233,7 +1233,9 @@ public class IdRepoServiceTest {
 		EventsDTO eventsDTO = new EventsDTO();
 		eventsDTO.setEvents(Collections.singletonList(new EventDTO()));
 		eventsResponse.setResponse(eventsDTO);
-		when(restHelper.requestSync(Mockito.any())).thenReturn(eventsResponse);
+		when(restHelper.requestSync(Mockito.any())).thenReturn(
+				mapper.readValue("{\"response\":{\"data\":\"1234\"}}".getBytes(), ObjectNode.class),
+				mapper.readValue("{\"response\":{\"data\":\"1234\"}}".getBytes(), ObjectNode.class), eventsResponse);
 		IdResponseDTO updateIdentity = proxyService.updateIdentity(request, "1234");
 		assertEquals(ACTIVATED, updateIdentity.getResponse().getStatus());
 	}
