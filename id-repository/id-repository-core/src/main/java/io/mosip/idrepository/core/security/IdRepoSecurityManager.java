@@ -123,6 +123,7 @@ public class IdRepoSecurityManager {
 			request.put("timeStamp",
 					DateUtils.formatDate(new Date(), env.getProperty(DATETIME_PATTERN)));
 			request.put("data", CryptoUtil.encodeBase64(dataToEncrypt));
+			request.put("referenceId", "");
 			baseRequest.setRequest(request);
 			return encryptDecryptData(restBuilder.buildRequest(RestServicesConstants.CRYPTO_MANAGER_ENCRYPT,
 					baseRequest, ObjectNode.class));
@@ -152,6 +153,7 @@ public class IdRepoSecurityManager {
 					DateUtils.formatDate(new Date(), env.getProperty(DATETIME_PATTERN)));
 			request.put("data", CryptoUtil.encodeBase64(dataToEncrypt));
 			request.put("salt", CryptoUtil.encodeBase64(saltToEncrypt));
+			request.put("referenceId", "");
 			baseRequest.setRequest(request);
 			return encryptDecryptData(restBuilder.buildRequest(RestServicesConstants.CRYPTO_MANAGER_ENCRYPT,
 					baseRequest, ObjectNode.class));
