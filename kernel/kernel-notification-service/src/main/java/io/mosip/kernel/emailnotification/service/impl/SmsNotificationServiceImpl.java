@@ -26,6 +26,9 @@ public class SmsNotificationServiceImpl implements SmsNotification {
 
 	@Autowired
 	private SMSServiceProvider smsServiceProvider;
+	
+	@Value("${mosip.kernel.sms.proxy-sms}")
+	private boolean isProxytrue;
 
 	/*
 	 * (non-Javadoc)
@@ -36,7 +39,7 @@ public class SmsNotificationServiceImpl implements SmsNotification {
 	 */
 	@Override
 	public SMSResponseDto sendSmsNotification(String contactNumber, String contentMessage) {
-		if (activeProfile.equalsIgnoreCase("local")) {
+		if (activeProfile.equalsIgnoreCase("local") || isProxytrue) {
 			SMSResponseDto smsResponseDTO = new SMSResponseDto();
 			smsResponseDTO.setMessage(SmsPropertyConstant.SUCCESS_RESPONSE.getProperty());
 			smsResponseDTO.setStatus("success");
