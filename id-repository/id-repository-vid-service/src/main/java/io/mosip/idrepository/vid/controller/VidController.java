@@ -185,7 +185,7 @@ public class VidController {
 	 * @return the response entity
 	 * @throws IdRepoAppException the id repo app exception
 	 */
-	@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
+//	@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
 	@GetMapping(path = "/uin/{UIN}", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ResponseWrapper<EventsDTO>> retrieveVidsByUin(@PathVariable("UIN") String uin)
 			throws IdRepoAppException {
