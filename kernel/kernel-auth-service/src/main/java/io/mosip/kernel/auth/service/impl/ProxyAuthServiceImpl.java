@@ -57,7 +57,8 @@ import io.mosip.kernel.auth.util.TokenGenerator;
 import io.mosip.kernel.auth.util.TokenValidator;
 
 /**
- * Proxy Implementation of Auth service which will not use IAM just give back proxy token.
+ * Proxy Implementation of Auth service which will not use IAM just give back
+ * proxy token.
  * 
  * @author Ramadurai Pandian
  * @author Urvil Joshi
@@ -69,7 +70,7 @@ import io.mosip.kernel.auth.util.TokenValidator;
 public class ProxyAuthServiceImpl implements AuthService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProxyAuthServiceImpl.class);
-	
+
 	private static final String CLIENTID_AND_TOKEN_COMBINATION_HAD_BEEN_VALIDATED_SUCCESSFULLY = "Clientid and Token combination had been validated successfully";
 
 	private static final String LOG_OUT_FAILED = "log out failed";
@@ -116,7 +117,6 @@ public class ProxyAuthServiceImpl implements AuthService {
 	@Autowired
 	ObjectMapper objectmapper;
 
-
 	@Value("${mosip.kernel.open-id-url}")
 	private String openIdUrl;
 
@@ -160,14 +160,19 @@ public class ProxyAuthServiceImpl implements AuthService {
 	@Autowired
 	private RestTemplate authRestTemplate;
 
+	@Value("${mosip.kernel.auth.proxy-otp}")
+	private boolean proxyOtp;
+
 	/**
 	 * Method used for validating Auth token
 	 * 
-	 * @param token token
+	 * @param token
+	 *            token
 	 * 
 	 * @return mosipUserDtoToken is of type {@link MosipUserTokenDto}
 	 * 
-	 * @throws Exception exception
+	 * @throws Exception
+	 *             exception
 	 * 
 	 */
 
@@ -180,11 +185,13 @@ public class ProxyAuthServiceImpl implements AuthService {
 	/**
 	 * Method used for Authenticating User based on username and password
 	 * 
-	 * @param loginUser is of type {@link LoginUser}
+	 * @param loginUser
+	 *            is of type {@link LoginUser}
 	 * 
 	 * @return authNResponseDto is of type {@link AuthNResponseDto}
 	 * 
-	 * @throws Exception exception
+	 * @throws Exception
+	 *             exception
 	 * 
 	 */
 
@@ -197,11 +204,13 @@ public class ProxyAuthServiceImpl implements AuthService {
 	/**
 	 * Method used for sending OTP
 	 * 
-	 * @param otpUser is of type {@link OtpUser}
+	 * @param otpUser
+	 *            is of type {@link OtpUser}
 	 * 
 	 * @return authNResponseDto is of type {@link AuthNResponseDto}
 	 * 
-	 * @throws Exception exception
+	 * @throws Exception
+	 *             exception
 	 * 
 	 */
 
@@ -213,8 +222,17 @@ public class ProxyAuthServiceImpl implements AuthService {
 		otpUser.getOtpChannel().replaceAll(String::toLowerCase);
 		otpUser.setAppId(otpUser.getAppId().toLowerCase());
 		otpUser.setOtpChannel(otpUser.getOtpChannel());
+
 		if (AuthConstant.APPTYPE_UIN.equals(otpUser.getUseridtype())) {
-			mosipUser = uinService.getDetailsFromUin(otpUser);
+			if (!proxyOtp) {
+				mosipUser = uinService.getDetailsFromUin(otpUser);
+			} else {
+				mosipUser = new MosipUserDto();
+				mosipUser.setMail("mosip@mosip.io");
+				mosipUser.setMobile("91818181223");
+				mosipUser.setRId("10012100240015720200428110601");
+				mosipUser.setRole("IDA");
+			}
 			authNResponseDto = oTPService.sendOTPForUin(mosipUser, otpUser, "ida");
 			authNResponseDto.setStatus(authNResponseDto.getStatus());
 			authNResponseDto.setMessage(authNResponseDto.getMessage());
@@ -224,7 +242,7 @@ public class ProxyAuthServiceImpl implements AuthService {
 			userCreationRequestDto.setAppId(otpUser.getAppId());
 			mosipUser = new MosipUserDto();
 			mosipUser.setUserId(otpUser.getUserId());
-			authNResponseDto = oTPService.sendOTP(mosipUser, otpUser,"mosip");
+			authNResponseDto = oTPService.sendOTP(mosipUser, otpUser, "mosip");
 			authNResponseDto.setStatus(authNResponseDto.getStatus());
 			authNResponseDto.setMessage(authNResponseDto.getMessage());
 		} else {
@@ -236,11 +254,13 @@ public class ProxyAuthServiceImpl implements AuthService {
 	/**
 	 * Method used for Authenticating User based with username and OTP
 	 * 
-	 * @param userOtp is of type {@link UserOtp}
+	 * @param userOtp
+	 *            is of type {@link UserOtp}
 	 * 
 	 * @return authNResponseDto is of type {@link AuthNResponseDto}
 	 * 
-	 * @throws Exception exception
+	 * @throws Exception
+	 *             exception
 	 * 
 	 */
 
@@ -281,11 +301,13 @@ public class ProxyAuthServiceImpl implements AuthService {
 	/**
 	 * Method used for Authenticating User based with secretkey and password
 	 * 
-	 * @param clientSecret is of type {@link ClientSecret}
+	 * @param clientSecret
+	 *            is of type {@link ClientSecret}
 	 * 
 	 * @return authNResponseDto is of type {@link AuthNResponseDto}
 	 * 
-	 * @throws Exception exception
+	 * @throws Exception
+	 *             exception
 	 * 
 	 */
 
@@ -298,7 +320,7 @@ public class ProxyAuthServiceImpl implements AuthService {
 	private AuthNResponseDto proxyTokenForLocalEnv(String subject, String status, String message) {
 		long exp = System.currentTimeMillis() + localExp;
 		String token = proxyTokenGenarator.getProxyToken(subject, exp);
-		logger.debug("token craeted for subject {} to expire at {}",subject,exp);
+		logger.debug("token craeted for subject {} to expire at {}", subject, exp);
 		AuthNResponseDto authNResponseDto = new AuthNResponseDto();
 		authNResponseDto.setToken(token);
 		authNResponseDto.setRefreshToken(null);
@@ -311,27 +333,32 @@ public class ProxyAuthServiceImpl implements AuthService {
 	/**
 	 * Method used for generating refresh token
 	 * 
-	 * @param existingToken existing token
+	 * @param existingToken
+	 *            existing token
 	 * 
 	 * @return mosipUserDtoToken is of type {@link MosipUserTokenDto}
 	 * 
-	 * @throws Exception exception
+	 * @throws Exception
+	 *             exception
 	 * 
 	 */
 
 	@Override
-	public RefreshTokenResponse refreshToken(String appID,String refereshToken,RefreshTokenRequest refreshTokenRequest) throws Exception {
+	public RefreshTokenResponse refreshToken(String appID, String refereshToken,
+			RefreshTokenRequest refreshTokenRequest) throws Exception {
 		throw new UnsupportedOperationException("This openeration is not supported in local profile for now");
 	}
 
 	/**
 	 * Method used for invalidate token
 	 * 
-	 * @param token token
+	 * @param token
+	 *            token
 	 * 
 	 * @return authNResponse is of type {@link AuthNResponse}
 	 * 
-	 * @throws Exception exception
+	 * @throws Exception
+	 *             exception
 	 * 
 	 */
 
@@ -413,7 +440,7 @@ public class ProxyAuthServiceImpl implements AuthService {
 
 	@Override
 	public MosipUserDto valdiateToken(String token) {
-		//this will verify token
+		// this will verify token
 		DecodedJWT decodedJWT = JWT.require(Algorithm.none()).build().verify(token);
 		MosipUserDto mosipUserDto = new MosipUserDto();
 		String user = decodedJWT.getSubject();
@@ -441,8 +468,6 @@ public class ProxyAuthServiceImpl implements AuthService {
 			String redirectURI) {
 		throw new UnsupportedOperationException("This openeration is not supported in local profile for now");
 	}
-
-
 
 	@Override
 	public String getKeycloakURI(String redirectURI, String state) {
