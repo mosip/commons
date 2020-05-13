@@ -21,7 +21,6 @@ import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.VID_POLIC
 
 import java.security.MessageDigest;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -518,7 +517,7 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 		String hashSalt = uinHashSaltRepo.retrieveSaltById((int) (Long.parseLong(uin) % moduloValue));
 		String uinHash = String.valueOf((Long.parseLong(uin) % moduloValue)) + SPLITTER
 				+ securityManager.hashwithSalt(uin.getBytes(), CryptoUtil.decodeBase64(hashSalt));
-		ArrayList<Vid> vidList = (ArrayList<Vid>) vidRepo.findByUinHashAndStatusCodeAndExpiryDTimesAfter(uinHash, vidStatusToRetrieveVIDList,
+		List<Vid> vidList = vidRepo.findByUinHashAndStatusCodeAndExpiryDTimesAfter(uinHash, vidStatusToRetrieveVIDList,
 				DateUtils.getUTCCurrentDateTime());
 		if (!vidList.isEmpty()) {
 			String decryptedUin = decryptUin(vidList.get(0).getUin(), uinHash);
