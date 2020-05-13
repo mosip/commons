@@ -474,7 +474,7 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 				uinObject.setUpdatedBy(IdRepoSecurityManager.getUser());
 				uinObject.setUpdatedDateTime(now());
 
-				if (env.getProperty(ACTIVE_STATUS).equalsIgnoreCase(request.getRequest().getStatus())) {
+				if (!env.getProperty(ACTIVE_STATUS).equalsIgnoreCase(request.getRequest().getStatus())) {
 					isStatusUpdated = true;
 				}
 			}
