@@ -659,8 +659,8 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 			RequestWrapper<EventsDTO> request = new RequestWrapper<>();
 			request.setRequest(events);
 			restHelper
-					.requestAsync(restBuilder.buildRequest(RestServicesConstants.ID_AUTH_SERVICE, request, Void.class));
-		} catch (IdRepoDataValidationException e) {
+					.requestSync(restBuilder.buildRequest(RestServicesConstants.ID_AUTH_SERVICE, request, Void.class));
+		} catch (IdRepoDataValidationException | RestServiceException e) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_VID_SERVICE, "notify", e.getMessage());
 		}
 	}

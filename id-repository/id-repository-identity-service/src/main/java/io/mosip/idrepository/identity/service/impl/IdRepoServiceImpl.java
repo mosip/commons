@@ -849,15 +849,17 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 						ResponseWrapper.class);
 				restRequest.setUri(restRequest.getUri().replace("{uin}", uin));
 				ResponseWrapper<EventsDTO> response = restHelper.requestSync(restRequest);
-				eventsList.addAll(response.getResponse().getEvents().stream()
+				EventsDTO eventsDto = mapper.convertValue(response.getResponse(), EventsDTO.class);response.getResponse();
+				eventsList.addAll(eventsDto.getEvents().stream()
 						.map(event -> new EventDTO(EventType.UPDATE_VID, uin, event.getVid(),
 								Objects.isNull(expiryTimestamp) ? event.getExpiryTimestamp() : expiryTimestamp,
 								event.getTransactionLimit()))
 						.collect(Collectors.toList()));
 			}
 			RequestWrapper<EventsDTO> request = new RequestWrapper<>();
+			events.setEvents(eventsList);
 			request.setRequest(events);
-			restHelper.requestAsync(restBuilder.buildRequest(RestServicesConstants.ID_AUTH_SERVICE, request, null));
+			restHelper.requestAsync(restBuilder.buildRequest(RestServicesConstants.ID_AUTH_SERVICE, request, Void.class));
 		} catch (IdRepoDataValidationException | RestServiceException e) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, "notify", e.getMessage());
 		}
