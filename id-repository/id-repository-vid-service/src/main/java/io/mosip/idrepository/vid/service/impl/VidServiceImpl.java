@@ -418,7 +418,9 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 			vidObject.setUpdatedDTimes(DateUtils.getUTCCurrentDateTime());
 			vidObject.setUin(decryptedUin);
 			vidRepo.saveAndFlush(vidObject);
-			vidObject.setUin(decryptedUin);
+			Vid notificationObject = vidObject;
+			notificationObject.setUin(decryptedUin);
+			notificationObject.setExpiryDTimes(vidObject.getUpdatedDTimes());
 			notify(EventType.UPDATE_VID, Collections.singletonList(vidObject));
 		}
 		VidResponseDTO response = new VidResponseDTO();
@@ -529,7 +531,11 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 				vid.setUin(decryptedUin);
 			});
 			vidRepo.saveAll(vidList);
-			notify(EventType.UPDATE_VID, vidList);
+			List<Vid> notificationVids = vidList;
+			if (idType.contentEquals(DEACTIVATE)) {
+				notificationVids.stream().forEach(vid -> vid.setExpiryDTimes(vid.getUpdatedDTimes()));
+			}
+			notify(EventType.UPDATE_VID, notificationVids);
 			VidResponseDTO response = new VidResponseDTO();
 			response.setVidStatus(status);
 			return buildResponse(response, id.get(idType));
@@ -654,7 +660,7 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 			events.setEvents(vids.stream()
 					.map(vid -> new EventDTO(eventType, Arrays.asList(vid.getUin().split(SPLITTER)).get(1),
 							vid.getVid(),
-							Objects.isNull(vid.getUpdatedDTimes()) ? vid.getExpiryDTimes() : vid.getUpdatedDTimes(),
+							vid.getExpiryDTimes(),
 							policyProvider.getPolicy(vid.getVidTypeCode()).getAllowedTransactions()))
 					.collect(Collectors.toList()));
 			RequestWrapper<EventsDTO> request = new RequestWrapper<>();
