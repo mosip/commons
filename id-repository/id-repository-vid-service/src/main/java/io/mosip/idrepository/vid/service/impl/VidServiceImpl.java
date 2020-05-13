@@ -198,13 +198,14 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 		if (Objects.isNull(vidDetails) || vidDetails.isEmpty() || vidDetails.size() < policy.getAllowedInstances()) {
 			String vidRefId = UUIDUtils
 					.getUUID(UUIDUtils.NAMESPACE_OID, uin + SPLITTER + DateUtils.getUTCCurrentDateTime()).toString();
-			Vid vid = vidRepo.save(new Vid(vidRefId, generateVid(), uinHash, uinToEncrypt, vidType, currentTime,
+			Vid vidEntity = new Vid(vidRefId, generateVid(), uinHash, uinToEncrypt, vidType, currentTime,
 					Objects.nonNull(policy.getValidForInMinutes())
 							? DateUtils.getUTCCurrentDateTime().plusMinutes(policy.getValidForInMinutes())
 							: LocalDateTime.MAX.withYear(9999),
 					env.getProperty(VID_ACTIVE_STATUS), IdRepoSecurityManager.getUser(), currentTime, null, null, false,
-					null));
-			notify(EventType.CREATE_VID, Collections.singletonList(vid));
+					null);
+			Vid vid = vidRepo.save(vidEntity);
+			notify(EventType.CREATE_VID, Collections.singletonList(vidEntity));
 			return vid;
 		} else if (vidDetails.size() == policy.getAllowedInstances() && policy.getAutoRestoreAllowed()) {
 			Vid vidObject = vidDetails.get(0);
@@ -650,13 +651,15 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 		try {
 			EventsDTO events = new EventsDTO();
 			events.setEvents(vids.stream()
-					.map(vid -> new EventDTO(eventType, vid.getUin(), vid.getVid(),
+					.map(vid -> new EventDTO(eventType, Arrays.asList(vid.getUin().split(SPLITTER)).get(1),
+							vid.getVid(),
 							Objects.isNull(vid.getUpdatedDTimes()) ? vid.getExpiryDTimes() : vid.getUpdatedDTimes(),
 							policyProvider.getPolicy(vid.getVidTypeCode()).getAllowedTransactions()))
 					.collect(Collectors.toList()));
 			RequestWrapper<EventsDTO> request = new RequestWrapper<>();
 			request.setRequest(events);
-			restHelper.requestAsync(restBuilder.buildRequest(RestServicesConstants.ID_AUTH_SERVICE, request, null));
+			restHelper
+					.requestAsync(restBuilder.buildRequest(RestServicesConstants.ID_AUTH_SERVICE, request, Void.class));
 		} catch (IdRepoDataValidationException e) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_VID_SERVICE, "notify", e.getMessage());
 		}
