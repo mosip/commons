@@ -21,6 +21,7 @@ import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.VID_POLIC
 
 import java.security.MessageDigest;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -205,7 +206,7 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 					env.getProperty(VID_ACTIVE_STATUS), IdRepoSecurityManager.getUser(), currentTime, null, null, false,
 					null);
 			Vid vid = vidRepo.save(vidEntity);
-			notify(EventType.CREATE_VID, Collections.singletonList(vidEntity));
+			notify(EventType.CREATE_VID, Collections.singletonList(vidEntity), false);
 			return vid;
 		} else if (vidDetails.size() == policy.getAllowedInstances() && policy.getAutoRestoreAllowed()) {
 			Vid vidObject = vidDetails.get(0);
@@ -215,7 +216,7 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 			vidObject.setUin(uinToEncrypt);
 			vidRepo.saveAndFlush(vidObject);
 			Vid vid = generateVid(uin, vidType);
-			notify(EventType.CREATE_VID, Collections.singletonList(vidObject));
+			notify(EventType.CREATE_VID, Collections.singletonList(vidObject), false);
 			return vid;
 		} else {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_VID_SERVICE, CREATE_VID,
@@ -418,10 +419,7 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 			vidObject.setUpdatedDTimes(DateUtils.getUTCCurrentDateTime());
 			vidObject.setUin(decryptedUin);
 			vidRepo.saveAndFlush(vidObject);
-			Vid notificationObject = vidObject;
-			notificationObject.setUin(decryptedUin);
-			notificationObject.setExpiryDTimes(vidObject.getUpdatedDTimes());
-			notify(EventType.UPDATE_VID, Collections.singletonList(vidObject));
+			notify(EventType.UPDATE_VID, Collections.singletonList(vidObject), true);
 		}
 		VidResponseDTO response = new VidResponseDTO();
 		response.setVidStatus(vidObject.getStatusCode());
@@ -520,7 +518,7 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 		String hashSalt = uinHashSaltRepo.retrieveSaltById((int) (Long.parseLong(uin) % moduloValue));
 		String uinHash = String.valueOf((Long.parseLong(uin) % moduloValue)) + SPLITTER
 				+ securityManager.hashwithSalt(uin.getBytes(), CryptoUtil.decodeBase64(hashSalt));
-		List<Vid> vidList = vidRepo.findByUinHashAndStatusCodeAndExpiryDTimesAfter(uinHash, vidStatusToRetrieveVIDList,
+		ArrayList<Vid> vidList = (ArrayList<Vid>) vidRepo.findByUinHashAndStatusCodeAndExpiryDTimesAfter(uinHash, vidStatusToRetrieveVIDList,
 				DateUtils.getUTCCurrentDateTime());
 		if (!vidList.isEmpty()) {
 			String decryptedUin = decryptUin(vidList.get(0).getUin(), uinHash);
@@ -531,11 +529,11 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 				vid.setUin(decryptedUin);
 			});
 			vidRepo.saveAll(vidList);
-			List<Vid> notificationVids = vidList;
 			if (idType.contentEquals(DEACTIVATE)) {
-				notificationVids.stream().forEach(vid -> vid.setExpiryDTimes(vid.getUpdatedDTimes()));
+				notify(EventType.UPDATE_VID, vidList, true);
+			} else {
+				notify(EventType.UPDATE_VID, vidList, false);
 			}
-			notify(EventType.UPDATE_VID, notificationVids);
 			VidResponseDTO response = new VidResponseDTO();
 			response.setVidStatus(status);
 			return buildResponse(response, id.get(idType));
@@ -654,13 +652,13 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 		return responseDto;
 	}
 
-	private void notify(EventType eventType, List<Vid> vids) {
+	private void notify(EventType eventType, List<Vid> vids, boolean isUpdated) {
 		try {
 			EventsDTO events = new EventsDTO();
 			events.setEvents(vids.stream()
 					.map(vid -> new EventDTO(eventType, Arrays.asList(vid.getUin().split(SPLITTER)).get(1),
 							vid.getVid(),
-							vid.getExpiryDTimes(),
+							isUpdated ? vid.getUpdatedDTimes() : vid.getExpiryDTimes(),
 							policyProvider.getPolicy(vid.getVidTypeCode()).getAllowedTransactions()))
 					.collect(Collectors.toList()));
 			RequestWrapper<EventsDTO> request = new RequestWrapper<>();
