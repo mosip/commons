@@ -49,7 +49,7 @@ public class EmailNotificationServiceImpl implements EmailNotification<Multipart
 	@Value("${mosip.kernel.notification.email.from:#{null}}")
 	private String fromEmailAddress;
 	
-	@Value("${mosip.kernel.sms.proxy-sms}")
+	@Value("${mosip.kernel.mail.proxy-mail:false}")
 	private boolean isProxytrue;
 
 	/**
