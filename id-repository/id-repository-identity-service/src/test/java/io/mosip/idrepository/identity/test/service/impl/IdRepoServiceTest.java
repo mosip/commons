@@ -1538,19 +1538,6 @@ public class IdRepoServiceTest {
 		assertEquals(ACTIVATED, updateIdentity.getResponse().getStatus());
 	}
 
-	@Test(expected = IdRepoAppException.class)
-	public void testNowParseException() throws Throwable {
-		try {
-			MockEnvironment mockEnv = new MockEnvironment();
-			mockEnv.merge((ConfigurableEnvironment) env);
-			mockEnv.setProperty("mosip.utc-datetime-pattern", "abcd");
-			ReflectionTestUtils.setField(service, "env", mockEnv);
-			ReflectionTestUtils.invokeMethod(service, "now");
-		} catch (UndeclaredThrowableException e) {
-			throw e.getCause();
-		}
-	}
-
 	@Test
 	public void testRetriveIdentityByRid_Valid() throws JsonProcessingException {
 		String value = "6158236213";
