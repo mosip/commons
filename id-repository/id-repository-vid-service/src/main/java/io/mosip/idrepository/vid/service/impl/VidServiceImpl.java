@@ -418,6 +418,7 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 			vidObject.setUpdatedDTimes(DateUtils.getUTCCurrentDateTime());
 			vidObject.setUin(decryptedUin);
 			vidRepo.saveAndFlush(vidObject);
+			vidObject.setUin(decryptedUin);
 			notify(EventType.UPDATE_VID, Collections.singletonList(vidObject));
 		}
 		VidResponseDTO response = new VidResponseDTO();
@@ -659,8 +660,8 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 			RequestWrapper<EventsDTO> request = new RequestWrapper<>();
 			request.setRequest(events);
 			restHelper
-					.requestSync(restBuilder.buildRequest(RestServicesConstants.ID_AUTH_SERVICE, request, Void.class));
-		} catch (IdRepoDataValidationException | RestServiceException e) {
+					.requestAsync(restBuilder.buildRequest(RestServicesConstants.ID_AUTH_SERVICE, request, Void.class));
+		} catch (IdRepoDataValidationException e) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_VID_SERVICE, "notify", e.getMessage());
 		}
 	}
