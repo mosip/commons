@@ -177,7 +177,8 @@
 		<module>kernel-keymanager-service</module>
         <module>kernel-idgenerator-service</module>
         <module>kernel-pridgenerator-service</module>
-  </modules>
+		<module>kernel-registration-packet-manager</module>
+	</modules>
 
 	<dependencies>
 	    <dependency>
