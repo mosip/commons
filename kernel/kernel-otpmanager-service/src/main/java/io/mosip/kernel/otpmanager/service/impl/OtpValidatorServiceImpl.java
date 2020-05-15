@@ -62,6 +62,8 @@ public class OtpValidatorServiceImpl implements OtpValidator<ResponseEntity<OtpV
 	@Value("${local.env.otp:111111}")
 	String localOtp;
 
+	@Value("${mosip.kernel.auth.proxy-otp}")
+	private boolean proxyOtp;
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -72,7 +74,7 @@ public class OtpValidatorServiceImpl implements OtpValidator<ResponseEntity<OtpV
 	@Override
 	public ResponseEntity<OtpValidatorResponseDto> validateOtp(String key, String otp) {
 		ResponseEntity<OtpValidatorResponseDto> validationResponseEntity;
-		if(activeProfile.equalsIgnoreCase("local")) {
+		if(activeProfile.equalsIgnoreCase("local") || proxyOtp) {
 		return proxyForLocalProfile(otp);
 		}
 		// This method validates the input parameters.

@@ -48,6 +48,9 @@ public class EmailNotificationServiceImpl implements EmailNotification<Multipart
 	@Nullable
 	@Value("${mosip.kernel.notification.email.from:#{null}}")
 	private String fromEmailAddress;
+	
+	@Value("${mosip.kernel.mail.proxy-mail:false}")
+	private boolean isProxytrue;
 
 	/**
 	 * SendEmail
@@ -69,7 +72,9 @@ public class EmailNotificationServiceImpl implements EmailNotification<Multipart
 			MultipartFile[] attachments) {
 		ResponseDto dto = new ResponseDto();
 		LOGGER.info("To Request : " + String.join(",", mailTo));
+		if(!isProxytrue) {
 		send(mailTo, mailCc, mailSubject, mailContent, attachments);
+		}
 		dto.setStatus(MailNotifierConstants.MESSAGE_SUCCESS_STATUS.getValue());
 		dto.setMessage(MailNotifierConstants.MESSAGE_REQUEST_SENT.getValue());
 		return dto;

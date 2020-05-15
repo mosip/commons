@@ -67,7 +67,6 @@ import io.mosip.kernel.core.http.ResponseWrapper;
 @Service
 public class ProxyOTPServiceImpl implements OTPService {
 
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -138,6 +137,9 @@ public class ProxyOTPServiceImpl implements OTPService {
 	@Value("${auth.local.exp:1000000}")
 	long localExp;
 
+	@Value("${mosip.kernel.auth.proxy-otp}")
+	private boolean proxyOtp;
+
 	@Autowired
 	private ProxyTokenGenerator proxyTokenGenerator;
 
@@ -151,8 +153,7 @@ public class ProxyOTPServiceImpl implements OTPService {
 		String token = null;
 		try {
 			// token = tokenService.getInternalTokenGenerationService();
-			AccessTokenResponse accessTokenResponse = getAuthAccessToken(authClientID,
-					authSecret, realmId);
+			AccessTokenResponse accessTokenResponse = getAuthAccessToken(authClientID, authSecret, realmId);
 			token = AuthAdapterConstant.AUTH_ADMIN_COOKIE_PREFIX + accessTokenResponse.getAccess_token();
 		} catch (HttpClientErrorException | HttpServerErrorException ex) {
 			List<ServiceError> validationErrorsList = ExceptionUtils.getServiceErrorList(ex.getResponseBodyAsString());
@@ -470,8 +471,14 @@ public class ProxyOTPServiceImpl implements OTPService {
 				throw new AuthManagerException(AuthErrorCode.CLIENT_ERROR.getErrorCode(), ex.getMessage(), ex);
 			}
 		}
-		OtpGenerateResponseDto otpGenerateResponseDto = oTPGenerateService.generateOTP(mosipUser,
-				accessTokenResponse.getAccess_token());
+		OtpGenerateResponseDto otpGenerateResponseDto=null;
+		if (!proxyOtp) {
+			otpGenerateResponseDto = oTPGenerateService.generateOTP(mosipUser, accessTokenResponse.getAccess_token());
+		} else {
+			otpGenerateResponseDto = new OtpGenerateResponseDto();
+			otpGenerateResponseDto.setOtp("123445");
+			otpGenerateResponseDto.setStatus(AuthConstant.SUCCESS_STATUS);
+		}
 		if (otpGenerateResponseDto != null && otpGenerateResponseDto.getStatus().equals("USER_BLOCKED")) {
 			authNResponseDto = new AuthNResponseDto();
 			authNResponseDto.setStatus(AuthConstant.FAILURE_STATUS);
@@ -481,16 +488,28 @@ public class ProxyOTPServiceImpl implements OTPService {
 		for (String channel : otpUser.getOtpChannel()) {
 			switch (channel.toLowerCase()) {
 			case AuthConstant.EMAIL:
-				emailTemplate = templateUtil.getEmailTemplate(otpGenerateResponseDto.getOtp(), otpUser,
-						accessTokenResponse.getAccess_token());
-				otpEmailSendResponseDto = sendOtpByEmail(emailTemplate, mosipUser.getMail(),
-						accessTokenResponse.getAccess_token());
+				if (!proxyOtp) {
+					emailTemplate = templateUtil.getEmailTemplate(otpGenerateResponseDto.getOtp(), otpUser,
+							accessTokenResponse.getAccess_token());
+					otpEmailSendResponseDto = sendOtpByEmail(emailTemplate, mosipUser.getUserId(),
+							accessTokenResponse.getAccess_token());
+				} else {
+					otpEmailSendResponseDto = new OtpEmailSendResponseDto();
+					otpEmailSendResponseDto.setMessage("Email Request submitted");
+					otpEmailSendResponseDto.setStatus(AuthConstant.SUCCESS_STATUS);
+				}
 				break;
 			case AuthConstant.PHONE:
-				mobileMessage = templateUtil.getOtpSmsMessage(otpGenerateResponseDto.getOtp(), otpUser,
-						accessTokenResponse.getAccess_token());
-				otpSmsSendResponseDto = sendOtpBySms(mobileMessage, mosipUser.getMobile(),
-						accessTokenResponse.getAccess_token());
+				if (!proxyOtp) {
+					mobileMessage = templateUtil.getOtpSmsMessage(otpGenerateResponseDto.getOtp(), otpUser,
+							accessTokenResponse.getAccess_token());
+					otpSmsSendResponseDto = sendOtpBySms(mobileMessage, mosipUser.getUserId(),
+							accessTokenResponse.getAccess_token());
+				} else {
+					otpEmailSendResponseDto = new OtpEmailSendResponseDto();
+					otpEmailSendResponseDto.setMessage("Sms Request Sent");
+					otpEmailSendResponseDto.setStatus(AuthConstant.SUCCESS_STATUS);
+				}
 				break;
 			}
 		}
@@ -512,7 +531,7 @@ public class ProxyOTPServiceImpl implements OTPService {
 	}
 
 	@Override
-	public AuthNResponseDto sendOTP(MosipUserDto mosipUser, OtpUser otpUser,String appId) throws Exception {
+	public AuthNResponseDto sendOTP(MosipUserDto mosipUser, OtpUser otpUser, String appId) throws Exception {
 		AuthNResponseDto authNResponseDto = null;
 		OtpEmailSendResponseDto otpEmailSendResponseDto = null;
 		SmsResponseDto otpSmsSendResponseDto = null;
@@ -549,8 +568,14 @@ public class ProxyOTPServiceImpl implements OTPService {
 				throw new AuthManagerException(AuthErrorCode.CLIENT_ERROR.getErrorCode(), ex.getMessage(), ex);
 			}
 		}
-		OtpGenerateResponseDto otpGenerateResponseDto = oTPGenerateService.generateOTP(mosipUser,
-				accessTokenResponse.getAccess_token());
+		OtpGenerateResponseDto otpGenerateResponseDto = null;
+		if (!proxyOtp) {
+			otpGenerateResponseDto = oTPGenerateService.generateOTP(mosipUser, accessTokenResponse.getAccess_token());
+		} else {
+			otpGenerateResponseDto = new OtpGenerateResponseDto();
+			otpGenerateResponseDto.setOtp("123445");
+			otpGenerateResponseDto.setStatus(AuthConstant.SUCCESS_STATUS);
+		}
 		if (otpGenerateResponseDto != null && otpGenerateResponseDto.getStatus().equals("USER_BLOCKED")) {
 			authNResponseDto = new AuthNResponseDto();
 			authNResponseDto.setStatus(AuthConstant.FAILURE_STATUS);
@@ -560,16 +585,28 @@ public class ProxyOTPServiceImpl implements OTPService {
 		for (String channel : otpUser.getOtpChannel()) {
 			switch (channel.toLowerCase()) {
 			case AuthConstant.EMAIL:
-				emailTemplate = templateUtil.getEmailTemplate(otpGenerateResponseDto.getOtp(), otpUser,
-						accessTokenResponse.getAccess_token());
-				otpEmailSendResponseDto = sendOtpByEmail(emailTemplate, mosipUser.getUserId(),
-						accessTokenResponse.getAccess_token());
+				if (!proxyOtp) {
+					emailTemplate = templateUtil.getEmailTemplate(otpGenerateResponseDto.getOtp(), otpUser,
+							accessTokenResponse.getAccess_token());
+					otpEmailSendResponseDto = sendOtpByEmail(emailTemplate, mosipUser.getUserId(),
+							accessTokenResponse.getAccess_token());
+				} else {
+					otpEmailSendResponseDto = new OtpEmailSendResponseDto();
+					otpEmailSendResponseDto.setMessage("Email Request submitted");
+					otpEmailSendResponseDto.setStatus(AuthConstant.SUCCESS_STATUS);
+				}
 				break;
 			case AuthConstant.PHONE:
-				mobileMessage = templateUtil.getOtpSmsMessage(otpGenerateResponseDto.getOtp(), otpUser,
-						accessTokenResponse.getAccess_token());
-				otpSmsSendResponseDto = sendOtpBySms(mobileMessage, mosipUser.getUserId(),
-						accessTokenResponse.getAccess_token());
+				if (!proxyOtp) {
+					mobileMessage = templateUtil.getOtpSmsMessage(otpGenerateResponseDto.getOtp(), otpUser,
+							accessTokenResponse.getAccess_token());
+					otpSmsSendResponseDto = sendOtpBySms(mobileMessage, mosipUser.getUserId(),
+							accessTokenResponse.getAccess_token());
+				} else {
+					otpEmailSendResponseDto = new OtpEmailSendResponseDto();
+					otpEmailSendResponseDto.setMessage("Sms Request Sent");
+					otpEmailSendResponseDto.setStatus(AuthConstant.SUCCESS_STATUS);
+				}
 				break;
 			}
 		}
