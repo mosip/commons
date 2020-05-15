@@ -164,7 +164,8 @@
 		<module>kernel-idobjectvalidator</module>
 		<module>kernel-bioapi-provider</module>
 		<module>kernel-smsserviceprovider-msg91</module>
-        <module>kernel-fsadapter-proxy</module>
+        	<module>kernel-fsadapter-proxy</module>
+		<module>kernel-registration-packet-manager</module>
 
 		<module>kernel-masterdata-service</module>
 		<module>kernel-auditmanager-service</module>
@@ -175,9 +176,9 @@
 		<module>kernel-ridgenerator-service</module>
 		<module>kernel-config-server</module>
 		<module>kernel-keymanager-service</module>
-        <module>kernel-idgenerator-service</module>
-        <module>kernel-pridgenerator-service</module>
-		<module>kernel-registration-packet-manager</module>
+        	<module>kernel-idgenerator-service</module>
+        	<module>kernel-pridgenerator-service</module>
+		
 	</modules>
 
 	<dependencies>
