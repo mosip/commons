@@ -52,17 +52,13 @@ public class IdSchemaUtils {
      * @throws IOException
      */
     public String getSource(String id) throws IOException, ApiNotAccessibleException {
-        try {
-            String idSchema = getIdSchema();
-            JSONObject properties = getJSONObjFromStr(idSchema, IDschemaConstants.PROPERTIES);
-            JSONObject identity = getJSONObj(properties, IDschemaConstants.IDENTITY);
-            JSONObject property = getJSONObj(identity, IDschemaConstants.PROPERTIES);
-            JSONObject value = getJSONObj(property, id);
-            String fieldCategory = getFieldCategory(value);
-            return fieldCategory;
-        } catch (JSONException e) {
-            throw new IOException(e);
-        }
+        String idSchema = getIdSchema();
+        JSONObject properties = getJSONObjFromStr(idSchema, IDschemaConstants.PROPERTIES);
+        JSONObject identity = getJSONObj(properties, IDschemaConstants.IDENTITY);
+        JSONObject property = getJSONObj(identity, IDschemaConstants.PROPERTIES);
+        JSONObject value = getJSONObj(property, id);
+        String fieldCategory = getFieldCategory(value);
+        return fieldCategory;
     }
 
     /**
@@ -113,8 +109,13 @@ public class IdSchemaUtils {
      * @param jsonObject the json object
      * @return the field category
      */
-    private String getFieldCategory(JSONObject jsonObject) throws JSONException {
-        String fieldCategory = jsonObject != null ? jsonObject.getString(IDschemaConstants.FIELDCATEGORY) : null;
+    private String getFieldCategory(JSONObject jsonObject) {
+        String fieldCategory = null;
+        try {
+            fieldCategory = jsonObject != null ? jsonObject.getString(IDschemaConstants.FIELDCATEGORY) : null;
+        } catch (JSONException e) {
+            fieldCategory = null;
+        }
 
         if (fieldCategory != null && fieldCategory.equalsIgnoreCase(defaultFieldCategory)) {
             fieldCategory = defaultSource;
@@ -128,10 +129,13 @@ public class IdSchemaUtils {
      * @param jsonObject
      * @param id
      * @return
-     * @throws JSONException
      */
-    private JSONObject getJSONObj(JSONObject jsonObject, String id) throws JSONException {
-        return (jsonObject == null) ? null : (JSONObject) jsonObject.get(id);
+    private JSONObject getJSONObj(JSONObject jsonObject, String id) {
+        try {
+            return (jsonObject == null) ? null : (JSONObject) jsonObject.get(id);
+        } catch (JSONException e) {
+            return null;
+        }
     }
 
     /**
@@ -140,9 +144,12 @@ public class IdSchemaUtils {
      * @param jsonString
      * @param id
      * @return
-     * @throws JSONException
      */
-    private JSONObject getJSONObjFromStr(String jsonString, String id) throws JSONException {
-        return (jsonString == null) ? null : (JSONObject) new JSONObject(jsonString).get(id);
+    private JSONObject getJSONObjFromStr(String jsonString, String id) {
+        try {
+            return (jsonString == null) ? null : (JSONObject) new JSONObject(jsonString).get(id);
+        } catch (JSONException e) {
+            return null;
+        }
     }
 }
