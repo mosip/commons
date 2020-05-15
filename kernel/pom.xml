@@ -178,7 +178,8 @@
 		<module>kernel-keymanager-service</module>
         	<module>kernel-idgenerator-service</module>
         	<module>kernel-pridgenerator-service</module>
-		
+
+        	<module>kernel-cryptomanager-service</module>
 	</modules>
 
 	<dependencies>
