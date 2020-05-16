@@ -33,7 +33,7 @@ public interface PacketCreator {
 	
 	public void setAcknowledgement(String acknowledgeReceiptName, byte[] acknowledgeReceipt);
 	
-	public boolean isPacketCreatorInitialized();
+	public void setChecksum(String key, String value);
 	
 	public byte[] createPacket(String registrationId, double version, String schemaJson,
                                Map<String, String> categoryPacketMapping, byte[] publicKey, PacketSigner signer) throws PacketCreatorException;
