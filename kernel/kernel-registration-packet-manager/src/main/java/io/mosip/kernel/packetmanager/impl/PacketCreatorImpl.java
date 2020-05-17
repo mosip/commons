@@ -140,7 +140,7 @@ public class PacketCreatorImpl implements PacketCreator {
 						registrationId);
 				
 				//TODO sign zip
-				//subpacketBytes = CryptoUtil.encodeBase64(packetCryptoHelper.encryptPacket(subpacketBytes, publicKey)).getBytes();
+				subpacketBytes = CryptoUtil.encodeBase64(packetCryptoHelper.encryptPacket(subpacketBytes, publicKey)).getBytes();
 				addEntryToZip(String.format(PacketManagerConstants.SUBPACKET_ZIP_FILE_NAME, registrationId, subpacketName), 
 						subpacketBytes, packetZip);
 				LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), 
@@ -178,7 +178,8 @@ public class PacketCreatorImpl implements PacketCreator {
 			for(Object obj : schemaFields) {
 				Map<String, Object> field = (Map<String, Object>) obj;
 				String fieldName = (String) field.get(PacketManagerConstants.SCHEMA_ID);
-				
+				LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), 
+						registrationId, "Adding field : "+ fieldName);
 				switch ((String) field.get(PacketManagerConstants.SCHEMA_TYPE)) {
 				case PacketManagerConstants.BIOMETRICS_TYPE:
 					if(this.packetInfoDto.getBiometrics().containsKey(fieldName))					
@@ -402,7 +403,9 @@ public class PacketCreatorImpl implements PacketCreator {
 	
 	
 	private void addEntryToZip(String fileName, byte[] data, ZipOutputStream zipOutputStream) 
-			throws PacketCreatorException {		
+			throws PacketCreatorException {	
+		LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), 
+				this.packetInfoDto.getRegistrationId(), "Adding file : "+ fileName);
 		try {			
 			if(data != null) {
 				ZipEntry zipEntry = new ZipEntry(fileName);
