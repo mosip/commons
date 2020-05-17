@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Objects;
 
 import javax.crypto.SecretKey;
 
@@ -32,11 +33,12 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import io.mosip.kernel.core.keymanager.exception.KeystoreProcessingException;
 import io.mosip.kernel.core.keymanager.exception.NoSuchSecurityProviderException;
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.keymanager.softhsm.constant.KeymanagerErrorCode;
+import io.mosip.kernel.keymanager.softhsm.logging.KeymanagerLogger;
 import io.mosip.kernel.keymanager.softhsm.util.CertificateUtility;
 import sun.security.pkcs11.SunPKCS11;
 
@@ -52,6 +54,8 @@ import sun.security.pkcs11.SunPKCS11;
  */
 @Component
 public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStore, InitializingBean {
+
+	private static final Logger LOGGER = KeymanagerLogger.getLogger(KeyStoreImpl.class);
 
 	/**
 	 * Common name for generating certificate
@@ -101,9 +105,13 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	 */
 	private KeyStore keyStore;
 
+	private Provider provider = null;
+
+	private static final int NO_OF_RETRIES = 3;
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		Provider provider = setupProvider(configPath);
+		provider = setupProvider(configPath);
 		addProvider(provider);
 		BouncyCastleProvider bouncyCastleProvider = new BouncyCastleProvider();
 		Security.addProvider(bouncyCastleProvider);
@@ -115,12 +123,12 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	/**
 	 * Setup a new SunPKCS11 provider
 	 * 
-	 * @param configPath The path of config file or keyStore in case of bouncycastle
-	 *                   provider
+	 * @param configPath
+	 *            The path of config file or keyStore in case of bouncycastle
+	 *            provider
 	 * @return Provider
 	 */
 	private Provider setupProvider(String configPath) {
-		Provider provider = null;
 		try {
 			switch (keystoreType) {
 			case "PKCS11":
@@ -151,7 +159,8 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	 * again with the "insertProvider."+provider.getName() permission target name.
 	 * If both checks are denied, a SecurityException is thrown.
 	 * 
-	 * @param provider the provider to be added
+	 * @param provider
+	 *            the provider to be added
 	 */
 	private void addProvider(Provider provider) {
 		if (-1 == Security.addProvider(provider)) {
@@ -167,8 +176,10 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	 * specified Provider object is returned. Note that the specified Provider
 	 * object does not have to be registered in the provider list.
 	 * 
-	 * @param keystoreType the type of keystore
-	 * @param provider     provider
+	 * @param keystoreType
+	 *            the type of keystore
+	 * @param provider
+	 *            provider
 	 * @return a keystore object of the specified type.
 	 */
 	private KeyStore getKeystoreInstance(String keystoreType, Provider provider) {
@@ -271,20 +282,53 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	@Override
 	public PrivateKeyEntry getAsymmetricKey(String alias) {
 		PrivateKeyEntry privateKeyEntry = null;
-		try {
-			if (keyStore.entryInstanceOf(alias, PrivateKeyEntry.class)) {
-				ProtectionParameter password = new PasswordProtection(keystorePass.toCharArray());
-				privateKeyEntry = (PrivateKeyEntry) keyStore.getEntry(alias, password);
-			} else {
-				throw new NoSuchSecurityProviderException(KeymanagerErrorCode.NO_SUCH_ALIAS.getErrorCode(),
-						KeymanagerErrorCode.NO_SUCH_ALIAS.getErrorMessage() + alias);
+		int i = 0;
+		boolean isException = false;
+		String expMessage = "";
+		Exception exp = null;
+		do {
+			try {
+				if (keyStore.entryInstanceOf(alias, PrivateKeyEntry.class)) {
+					LOGGER.debug("sessionId", "KeyStoreImpl", "getAsymmetricKey", "alias is instanceof keystore");
+					ProtectionParameter password = new PasswordProtection(keystorePass.toCharArray());
+					privateKeyEntry = (PrivateKeyEntry) keyStore.getEntry(alias, password);
+					if (privateKeyEntry != null) {
+						LOGGER.debug("sessionId", "KeyStoreImpl", "getAsymmetricKey", "privateKeyEntry is not null");
+						break;
+					}
+				} else {
+					throw new NoSuchSecurityProviderException(KeymanagerErrorCode.NO_SUCH_ALIAS.getErrorCode(),
+							KeymanagerErrorCode.NO_SUCH_ALIAS.getErrorMessage() + alias);
+				}
+			} catch (NoSuchAlgorithmException | UnrecoverableEntryException e) {
+				throw new KeystoreProcessingException(KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorCode(),
+						KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorMessage() + e.getMessage(), e);
+			} catch (KeyStoreException kse) {
+				isException = true;
+				expMessage = kse.getMessage();
+				exp = kse;
+				LOGGER.debug("sessionId", "KeyStoreImpl", "getAsymmetricKey", expMessage);
 			}
-		} catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableEntryException e) {
+			if (isException) {
+				reloadProvider();
+				isException = false;
+			}
+		} while (i++ < NO_OF_RETRIES);
+		if (Objects.isNull(privateKeyEntry)) {
+			LOGGER.debug("sessionId", "KeyStoreImpl", "getAsymmetricKey", "privateKeyEntry is null");
 			throw new KeystoreProcessingException(KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorCode(),
-					KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorMessage() + e.getMessage(), e);
+					KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorMessage() + expMessage, exp);
 		}
 		return privateKeyEntry;
+	}
 
+	private void reloadProvider() {
+		LOGGER.debug("sessionId", "KeyStoreImpl", "getAsymmetricKey", "reloading provider");
+		Provider provider = setupProvider(configPath);
+		Security.removeProvider(provider.getName());
+		addProvider(provider);
+		this.keyStore = getKeystoreInstance(keystoreType, provider);
+		loadKeystore();
 	}
 
 	/*
@@ -413,7 +457,8 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	/**
 	 * Sets keystore
 	 * 
-	 * @param keyStore keyStore
+	 * @param keyStore
+	 *            keyStore
 	 */
 	public void setKeyStore(KeyStore keyStore) {
 		this.keyStore = keyStore;
