@@ -20,9 +20,12 @@ import io.mosip.kernel.masterdata.constant.BiometricAttributeErrorCode;
 import io.mosip.kernel.masterdata.constant.BlacklistedWordsErrorCode;
 import io.mosip.kernel.masterdata.constant.IndividualTypeErrorCode;
 import io.mosip.kernel.masterdata.constant.LanguageErrorCode;
+import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.constant.UpdateQueryConstants;
 import io.mosip.kernel.masterdata.dto.BlackListedWordsUpdateDto;
 import io.mosip.kernel.masterdata.dto.IndividualTypeDto;
+import io.mosip.kernel.masterdata.dto.LocationDto;
+import io.mosip.kernel.masterdata.dto.ValidateDeviceDto;
 import io.mosip.kernel.masterdata.dto.getresponse.IndividualTypeResponseDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.IndividualTypeExtnDto;
@@ -44,6 +47,7 @@ import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
 import io.mosip.kernel.masterdata.exception.RequestException;
 import io.mosip.kernel.masterdata.repository.IndividualTypeRepository;
 import io.mosip.kernel.masterdata.service.IndividualTypeService;
+import io.mosip.kernel.masterdata.utils.AuditUtil;
 import io.mosip.kernel.masterdata.utils.ExceptionUtils;
 import io.mosip.kernel.masterdata.utils.MapperUtils;
 import io.mosip.kernel.masterdata.utils.MasterDataFilterHelper;
@@ -80,6 +84,9 @@ public class IndividualTypeServiceImpl implements IndividualTypeService {
 
 	@Autowired
 	private PageUtils pageUtils;
+
+	@Autowired
+	private AuditUtil auditUtil;
 
 	/*
 	 * (non-Javadoc)
@@ -193,18 +200,28 @@ public class IndividualTypeServiceImpl implements IndividualTypeService {
 	public IndividualTypeExtnDto createIndividualsTypes(IndividualTypeDto individualTypeDto) {
 		IndividualType entity = MetaDataUtils.setCreateMetaData(individualTypeDto, IndividualType.class);
 		try {
-			entity =individualTypeRepository.create(entity);
+			entity = individualTypeRepository.create(entity);
+
 		} catch (DataAccessLayerException | DataAccessException e) {
+			auditUtil.auditRequest(
+					MasterDataConstant.DEVICE_VALIDATION_FAILURE + IndividualTypeDto.class.getSimpleName(),
+					MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.FAILURE_DESC,
+							IndividualTypeErrorCode.INDIVIDUAL_TYPE_INSERT_EXCEPTION.getErrorMessage()),
+					"ADM-1500");
 			throw new MasterDataServiceException(
 					IndividualTypeErrorCode.INDIVIDUAL_TYPE_INSERT_EXCEPTION.getErrorCode(),
 					IndividualTypeErrorCode.INDIVIDUAL_TYPE_INSERT_EXCEPTION.getErrorMessage() + " "
 							+ ExceptionUtils.parseException(e));
 		}
-		
+
 		IndividualTypeExtnDto individualTypeExtnDto = new IndividualTypeExtnDto();
 
 		MapperUtils.map(entity, individualTypeExtnDto);
-
+		auditUtil.auditRequest(
+				String.format(MasterDataConstant.SUCCESSFUL_CREATE, IndividualTypeDto.class.getSimpleName()),
+				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC,
+						IndividualTypeDto.class.getSimpleName(), individualTypeExtnDto.getCode()),
+				"ADM-1504");
 		return individualTypeExtnDto;
 	}
 
@@ -212,21 +229,39 @@ public class IndividualTypeServiceImpl implements IndividualTypeService {
 	public IndividualTypeExtnDto updateIndividualsTypes(IndividualTypeDto individualTypeDto) {
 		IndividualTypeExtnDto individualTypeExtnDto = new IndividualTypeExtnDto();
 		try {
-			IndividualType individualType = individualTypeRepository.findIndividualTypeByCodeAndLangCode(individualTypeDto.getCode(),individualTypeDto.getLangCode());
+			IndividualType individualType = individualTypeRepository
+					.findIndividualTypeByCodeAndLangCode(individualTypeDto.getCode(), individualTypeDto.getLangCode());
 			if (!EmptyCheckUtils.isNullEmpty(individualType)) {
 				MetaDataUtils.setUpdateMetaData(individualTypeDto, individualType, false);
 				individualTypeRepository.update(individualType);
 				MapperUtils.map(individualType, individualTypeExtnDto);
 			} else {
+				auditUtil.auditRequest(MasterDataConstant.FAILURE_UPDATE + IndividualTypeDto.class.getSimpleName(),
+						MasterDataConstant.AUDIT_SYSTEM,
+						String.format(MasterDataConstant.FAILURE_DESC,
+								IndividualTypeErrorCode.NO_INDIVIDUAL_TYPE_FOUND_EXCEPTION.getErrorMessage(),
+								IndividualTypeErrorCode.INDIVIDUAL_TYPE_UPDATE_EXCEPTION.getErrorCode()),
+						"ADM-1501");
 				throw new RequestException(IndividualTypeErrorCode.NO_INDIVIDUAL_TYPE_FOUND_EXCEPTION.getErrorCode(),
 						IndividualTypeErrorCode.NO_INDIVIDUAL_TYPE_FOUND_EXCEPTION.getErrorMessage());
 			}
 		} catch (DataAccessLayerException | DataAccessException e) {
-			throw new MasterDataServiceException(IndividualTypeErrorCode.INDIVIDUAL_TYPE_UPDATE_EXCEPTION.getErrorCode(),
-					IndividualTypeErrorCode.INDIVIDUAL_TYPE_UPDATE_EXCEPTION.getErrorMessage() + ExceptionUtils.parseException(e));
+			auditUtil.auditRequest(MasterDataConstant.FAILURE_UPDATE + IndividualTypeDto.class.getSimpleName(),
+					MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.FAILURE_DESC,
+							IndividualTypeErrorCode.INDIVIDUAL_TYPE_UPDATE_EXCEPTION.getErrorMessage(),
+							IndividualTypeErrorCode.INDIVIDUAL_TYPE_UPDATE_EXCEPTION.getErrorCode()),
+					"ADM-1502");
+			throw new MasterDataServiceException(
+					IndividualTypeErrorCode.INDIVIDUAL_TYPE_UPDATE_EXCEPTION.getErrorCode(),
+					IndividualTypeErrorCode.INDIVIDUAL_TYPE_UPDATE_EXCEPTION.getErrorMessage()
+							+ ExceptionUtils.parseException(e));
 		}
+		auditUtil.auditRequest(
+				String.format(MasterDataConstant.SUCCESSFUL_UPDATE, IndividualTypeDto.class.getSimpleName()),
+				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC,
+						IndividualTypeDto.class.getSimpleName(), individualTypeExtnDto.getCode()),
+				"ADM-1504");
 		return individualTypeExtnDto;
 	}
-	
+
 }
-	

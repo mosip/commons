@@ -20,6 +20,8 @@ import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.constant.OrderEnum;
 import io.mosip.kernel.masterdata.dto.BiometricAttributeDto;
 import io.mosip.kernel.masterdata.dto.IndividualTypeDto;
+import io.mosip.kernel.masterdata.dto.LocationCreateDto;
+import io.mosip.kernel.masterdata.dto.LocationDto;
 import io.mosip.kernel.masterdata.dto.getresponse.IndividualTypeResponseDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.IndividualTypeExtnDto;
@@ -168,10 +170,13 @@ public class IndividualTypeController {
 			@ApiResponse(code = 500, message = " creating any error occured") })
 	public ResponseWrapper<IndividualTypeExtnDto> createIndividualType(
 			@Valid @RequestBody RequestWrapper<IndividualTypeDto> individualType) {
-
+		auditUtil.auditRequest(MasterDataConstant.CREATE_API_IS_CALLED + IndividualTypeDto.class.getSimpleName(),
+				MasterDataConstant.AUDIT_SYSTEM,
+				MasterDataConstant.CREATE_API_IS_CALLED + IndividualTypeDto.class.getSimpleName(), "ADM-1503");
 		ResponseWrapper<IndividualTypeExtnDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper
 				.setResponse(individualTypeService.createIndividualsTypes(individualType.getRequest()));
+	
 		return responseWrapper;
 	}
 	/**
@@ -190,6 +195,9 @@ public class IndividualTypeController {
 			@ApiResponse(code = 500, message = "While updating IndividualType any error occured") })
 	public ResponseWrapper<IndividualTypeExtnDto> updateIndividualType(
 			@RequestBody @Valid RequestWrapper<IndividualTypeDto> individualTypeDto) {
+		auditUtil.auditRequest(MasterDataConstant.UPDATE_API_IS_CALLED + IndividualTypeDto.class.getSimpleName(),
+				MasterDataConstant.AUDIT_SYSTEM,
+				MasterDataConstant.UPDATE_API_IS_CALLED + IndividualTypeDto.class.getSimpleName(), "ADM-1505");
 		ResponseWrapper<IndividualTypeExtnDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(individualTypeService.updateIndividualsTypes(individualTypeDto.getRequest()));
 		return responseWrapper;
