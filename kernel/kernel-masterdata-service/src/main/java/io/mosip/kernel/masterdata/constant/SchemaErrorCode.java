@@ -24,7 +24,12 @@ public enum SchemaErrorCode {
 	VALUE_PARSE_ERROR("KER-SCH-013", "Error while parsing json string"),
 	SCHEMA_JSON_EXCEPTION("KER-SCH-014", "Error while constructing schema json"),
 	
-	SCHEMA_REQUEST_EXCEPTION("KER-SCH-015", "Bad Request Found");
+	SCHEMA_REQUEST_EXCEPTION("KER-SCH-015", "Bad Request Found"),
+	
+	DUPLICATE_FIELD_EXCEPTION("KER-SCH-016", "Duplicate fields found %s"),
+	SUB_TYPE_REQUIRED_EXCEPTION("KER-SCH-017", "SubType is required for field %s"),
+	BIO_ATTRIBUTES_REQUIRED_EXCEPTION("KER-SCH-018", "BioAttributes are required for field %s"),
+	BIO_ATTRIBUTES_DUPLICATED_EXCEPTION("KER-SCH-019", "Same BioAttributes used in field with same SubType : %s");
 
 	private final String errorCode;
 	private final String errorMessage;

@@ -12,8 +12,8 @@ public class PacketUtilityLogger {
 		mosipRollingFileAppender = new RollingFileAppender();
 		mosipRollingFileAppender.setAppend(true);
 		mosipRollingFileAppender.setAppenderName("fileappender");
-		mosipRollingFileAppender.setFileName("/home/logs/packetutility.log");
-		mosipRollingFileAppender.setFileNamePattern("/home/logs/packetutility-%d{yyyy-MM-dd}-%i.log");
+		mosipRollingFileAppender.setFileName("logs/packetutility.log");
+		mosipRollingFileAppender.setFileNamePattern("logs/packetutility-%d{yyyy-MM-dd}-%i.log");
 		mosipRollingFileAppender.setImmediateFlush(true);
 		mosipRollingFileAppender.setMaxFileSize("1mb");
 		mosipRollingFileAppender.setMaxHistory(3);

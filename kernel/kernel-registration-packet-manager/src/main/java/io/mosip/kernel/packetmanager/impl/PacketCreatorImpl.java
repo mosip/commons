@@ -2,6 +2,7 @@ package io.mosip.kernel.packetmanager.impl;
 
 import io.mosip.kernel.core.cbeffutil.entity.BIR;
 import io.mosip.kernel.core.exception.ExceptionUtils;
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.JsonUtils;
 import io.mosip.kernel.core.util.exception.JsonProcessingException;
@@ -10,6 +11,7 @@ import io.mosip.kernel.packetmanager.util.PacketCryptoHelper;
 import io.mosip.kernel.packetmanager.util.PacketManagerHelper;
 import io.mosip.kernel.packetmanager.constants.Biometric;
 import io.mosip.kernel.packetmanager.constants.ErrorCode;
+import io.mosip.kernel.packetmanager.constants.LoggerFileConstant;
 import io.mosip.kernel.packetmanager.constants.PacketManagerConstants;
 import io.mosip.kernel.packetmanager.datatype.BiometricsType;
 import io.mosip.kernel.packetmanager.datatype.DocumentType;
@@ -25,6 +27,7 @@ import io.mosip.kernel.packetmanager.dto.metadata.HashSequenceMetaInfo;
 import io.mosip.kernel.packetmanager.dto.metadata.MetaInfo;
 import io.mosip.kernel.packetmanager.dto.metadata.ModalityInfo;
 import io.mosip.kernel.packetmanager.exception.PacketCreatorException;
+import io.mosip.kernel.packetmanager.logger.PacketUtilityLogger;
 import io.mosip.kernel.packetmanager.spi.PacketSigner;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,6 +51,8 @@ import java.util.zip.ZipOutputStream;
 @Component
 public class PacketCreatorImpl implements PacketCreator {
 	
+	private static final Logger LOGGER = PacketUtilityLogger.getLogger(PacketCreatorImpl.class);
+	
 	@Autowired
 	private PacketManagerHelper helper;
 	
@@ -61,11 +66,6 @@ public class PacketCreatorImpl implements PacketCreator {
 	private String defaultSubpacketName;
 	
 	private PacketInfoDto packetInfoDto = null;
-	
-	@Override
-	public boolean isPacketCreatorInitialized() {
-		return this.packetInfoDto == null ? false : true;
-	}	
 	
 	@Override
 	public void initialize() {		
@@ -122,7 +122,7 @@ public class PacketCreatorImpl implements PacketCreator {
 	@Override
 	public byte[] createPacket(String registrationId, double version, String schemaJson, 
 			Map<String, String> categoryPacketMapping, byte[] publicKey, PacketSigner signer) throws PacketCreatorException {
-		
+		LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), registrationId, "Started packet creation");
 		if(this.packetInfoDto == null)
 			throw new PacketCreatorException(ErrorCode.INITIALIZATION_ERROR.getErrorCode(),	
 					ErrorCode.INITIALIZATION_ERROR.getErrorMessage());
@@ -133,6 +133,8 @@ public class PacketCreatorImpl implements PacketCreator {
 		try(ZipOutputStream packetZip = new ZipOutputStream(new BufferedOutputStream(out))) {
 			
 			for(String subpacketName : identityProperties.keySet()) {
+				LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), 
+						registrationId, "Started Subpacket: "+ subpacketName);
 				List<Object> schemaFields = identityProperties.get(subpacketName);
 				byte[] subpacketBytes = createSubpacket(version, schemaFields, defaultSubpacketName.equalsIgnoreCase(subpacketName), 
 						registrationId);
@@ -141,6 +143,8 @@ public class PacketCreatorImpl implements PacketCreator {
 				subpacketBytes = CryptoUtil.encodeBase64(packetCryptoHelper.encryptPacket(subpacketBytes, publicKey)).getBytes();
 				addEntryToZip(String.format(PacketManagerConstants.SUBPACKET_ZIP_FILE_NAME, registrationId, subpacketName), 
 						subpacketBytes, packetZip);
+				LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), 
+						registrationId, "Completed Subpacket: "+ subpacketName);
 			}
 			
 		} catch (IOException e) {
@@ -149,7 +153,8 @@ public class PacketCreatorImpl implements PacketCreator {
 		} finally {
 			this.packetInfoDto = null;
 		}
-		
+		LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), 
+				registrationId, "Exiting packet creation");
 		//TODO sign zip
 		return out.toByteArray();
 	}
@@ -160,18 +165,21 @@ public class PacketCreatorImpl implements PacketCreator {
 			
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try (ZipOutputStream subpacketZip = new ZipOutputStream(new BufferedOutputStream(out))) {
-			
+			LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), 
+					registrationId, "Identified fields >>> " + schemaFields.size());
 			Map<String, Object> identity = new HashMap<String, Object>();
 			Map<String, HashSequenceMetaInfo> hashSequences = new HashMap<>();
 			MetaInfo metaInfo = new MetaInfo();
 			
 			identity.put(PacketManagerConstants.IDSCHEMA_VERSION, version);			
-			metaInfo.addMetaData(new FieldValue(PacketManagerConstants.REGISTRATIONID, registrationId));					
+			metaInfo.addMetaData(new FieldValue(PacketManagerConstants.REGISTRATIONID, registrationId));
+			metaInfo.addMetaData(new FieldValue(PacketManagerConstants.META_CREATION_DATE, this.packetInfoDto.getCreationDate()));
 						
 			for(Object obj : schemaFields) {
 				Map<String, Object> field = (Map<String, Object>) obj;
 				String fieldName = (String) field.get(PacketManagerConstants.SCHEMA_ID);
-				
+				LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), 
+						registrationId, "Adding field : "+ fieldName);
 				switch ((String) field.get(PacketManagerConstants.SCHEMA_TYPE)) {
 				case PacketManagerConstants.BIOMETRICS_TYPE:
 					if(this.packetInfoDto.getBiometrics().containsKey(fieldName))					
@@ -188,8 +196,8 @@ public class PacketCreatorImpl implements PacketCreator {
 				}
 			}
 			
-			byte[] identityBytes = JsonUtils.javaObjectToJsonString(identity).getBytes();
-			addEntryToZip(PacketManagerConstants.IDENTITY_FILENAME, identityBytes, subpacketZip);
+			byte[] identityBytes = getIdentity(identity).getBytes();
+			addEntryToZip(PacketManagerConstants.IDENTITY_FILENAME_WITH_EXT, identityBytes, subpacketZip);
 			addHashSequenceWithSource(PacketManagerConstants.DEMOGRAPHIC_SEQ, PacketManagerConstants.IDENTITY_FILENAME, identityBytes, 
 					hashSequences);			
 			addOtherFilesToZip(isDefault, metaInfo, subpacketZip, hashSequences);			
@@ -262,7 +270,7 @@ public class PacketCreatorImpl implements PacketCreator {
 				throw new PacketCreatorException(ErrorCode.AUDITS_REQUIRED.getErrorCode(), ErrorCode.AUDITS_REQUIRED.getErrorMessage());
 			
 			byte[] auditBytes = JsonUtils.javaObjectToJsonString(this.packetInfoDto.getAudits()).getBytes();
-			addEntryToZip(PacketManagerConstants.AUDIT_FILENAME, auditBytes, zipOutputStream);
+			addEntryToZip(PacketManagerConstants.AUDIT_FILENAME_WITH_EXT, auditBytes, zipOutputStream);
 			addHashSequenceWithSource(PacketManagerConstants.OPERATIONS_SEQ, PacketManagerConstants.AUDIT_FILENAME, auditBytes, 
 					hashSequences);
 			
@@ -273,10 +281,8 @@ public class PacketCreatorImpl implements PacketCreator {
 			metaInfo.addHashSequence2(hashSequenceMetaInfo);
 		}
 		
-		addPacketDataHash(hashSequences, metaInfo, zipOutputStream);	
-		
-		addEntryToZip(PacketManagerConstants.PACKET_META_FILENAME, 
-				JsonUtils.javaObjectToJsonString(metaInfo).getBytes(), zipOutputStream);
+		addPacketDataHash(hashSequences, metaInfo, zipOutputStream);		
+		addEntryToZip(PacketManagerConstants.PACKET_META_FILENAME,  getIdentity(metaInfo).getBytes(), zipOutputStream);
 	}
 	
 	private void addPacketDataHash(Map<String, HashSequenceMetaInfo> hashSequences, MetaInfo metaInfo,
@@ -397,7 +403,9 @@ public class PacketCreatorImpl implements PacketCreator {
 	
 	
 	private void addEntryToZip(String fileName, byte[] data, ZipOutputStream zipOutputStream) 
-			throws PacketCreatorException {		
+			throws PacketCreatorException {	
+		LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), 
+				this.packetInfoDto.getRegistrationId(), "Adding file : "+ fileName);
 		try {			
 			if(data != null) {
 				ZipEntry zipEntry = new ZipEntry(fileName);
@@ -408,6 +416,15 @@ public class PacketCreatorImpl implements PacketCreator {
 			throw new PacketCreatorException(ErrorCode.ADD_ZIP_ENTRY_ERROR.getErrorCode(),
 					ErrorCode.ADD_ZIP_ENTRY_ERROR.getErrorMessage().concat(ExceptionUtils.getStackTrace(e)));
 		}		
-	}	
+	}
+	
+	private String getIdentity(Object object) throws JsonProcessingException {
+		return "{ \"identity\" : " + JsonUtils.javaObjectToJsonString(object) + " } ";
+	}
+
+	@Override
+	public void setChecksum(String key, String value) {
+		this.packetInfoDto.setChecksum(key, value);
+	}
 
 }

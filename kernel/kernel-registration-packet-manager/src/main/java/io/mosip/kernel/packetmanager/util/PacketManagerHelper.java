@@ -1,10 +1,13 @@
 package io.mosip.kernel.packetmanager.util;
 
-import io.mosip.kernel.cbeffutil.impl.CbeffImpl;
+import io.mosip.kernel.cbeffutil.container.impl.CbeffContainerImpl;
+import io.mosip.kernel.core.cbeffutil.common.CbeffValidator;
 import io.mosip.kernel.core.cbeffutil.entity.BIR;
+import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
 import io.mosip.kernel.core.util.HMACUtils;
 import io.mosip.kernel.packetmanager.constants.PacketManagerConstants;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
@@ -14,15 +17,15 @@ import java.util.Map;
 @Component
 public class PacketManagerHelper {
 	
-	@Autowired
-	private CbeffImpl xmlBuilder;
+	//@Autowired
+	//private CbeffImpl xmlBuilder;
 	
 	public byte[] getXMLData(List<BIR> birs) throws Exception {
 		byte[] xmlBytes = null;
-		try(InputStream file = getClass().getClassLoader().getResourceAsStream(PacketManagerConstants.CBEFF_SCHEMA_FILE_PATH)) {
-			byte[] bytesArray = new byte[(int) file.available()];
-			file.read(bytesArray);
-			xmlBytes = xmlBuilder.createXML(birs, bytesArray);
+		try(InputStream xsd = getClass().getClassLoader().getResourceAsStream(PacketManagerConstants.CBEFF_SCHEMA_FILE_PATH)) {
+			CbeffContainerImpl cbeffContainer = new CbeffContainerImpl();
+			BIRType bir = cbeffContainer.createBIRType(birs);
+			xmlBytes =  CbeffValidator.createXMLBytes(bir, IOUtils.toByteArray(xsd));
 		}
 		return xmlBytes;
 	}

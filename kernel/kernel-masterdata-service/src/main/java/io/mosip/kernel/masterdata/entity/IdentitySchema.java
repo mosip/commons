@@ -56,4 +56,7 @@ public class IdentitySchema extends BaseEntity {
 		 
 	@Column(name = "effective_from", nullable = false)
 	private LocalDateTime effectiveFrom;
+	
+	@Column(name = "lang_code", nullable = false)
+	private String langCode;
 }

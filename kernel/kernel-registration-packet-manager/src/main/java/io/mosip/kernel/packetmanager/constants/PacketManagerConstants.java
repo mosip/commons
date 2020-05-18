@@ -2,8 +2,10 @@ package io.mosip.kernel.packetmanager.constants;
 
 public class PacketManagerConstants {
 	
-	public static final String IDENTITY_FILENAME = "ID.json";
-	public static final String AUDIT_FILENAME = "audit.json";
+	public static final String IDENTITY_FILENAME = "ID";
+	public static final String IDENTITY_FILENAME_WITH_EXT = "ID.json";
+	public static final String AUDIT_FILENAME = "audit";
+	public static final String AUDIT_FILENAME_WITH_EXT = "audit.json";
 	public static final String PACKET_META_FILENAME = "packet_meta_info.json";
 	public static final String PACKET_DATA_HASH_FILENAME = "packet_data_hash.txt";
 	public static final String PACKET_OPER_HASH_FILENAME = "packet_operations_hash.txt";
@@ -51,5 +53,30 @@ public class PacketManagerConstants {
 	public static final String FINGERPRINT_SLAB_THUMBS = "FINGERPRINT_SLAB_THUMBS";
 	public static final String IRIS_DOUBLE = "IRIS_DOUBLE";
 	public static final String FACE_FULLFACE = "FACE_FULL FACE";
-
+	
+	public static final String META_CREATION_DATE = "creationDate";
+	public static final String META_CLIENT_VERSION = "Registration Client Version Number";
+	public static final String META_LATITUDE = "geoLocLatitude";
+	public static final String META_LONGITUDE = "geoLoclongitude";
+	public static final String META_REGISTRATION_TYPE = "registrationType";
+	public static final String META_PRE_REGISTRATION_ID = "preRegistrationId";
+	public static final String META_MACHINE_ID = "machineId";
+	public static final String META_DONGLE_ID ="dongleId";
+	public static final String META_KEYINDEX ="keyIndex";
+	public static final String META_CENTER_ID ="centerId";
+	public static final String META_APPLICANT_CONSENT ="consentOfApplicant";
+	
+	public static final String META_OFFICER_ID ="officerId";
+	public static final String META_OFFICER_BIOMETRIC_FILE ="officerBiometricFileName";
+	public static final String META_SUPERVISOR_ID ="supervisorId";
+	public static final String META_SUPERVISOR_BIOMETRIC_FILE ="supervisorBiometricFileName";
+	public static final String META_SUPERVISOR_PWD ="supervisorPassword";
+	public static final String META_OFFICER_PWD ="officerPassword";
+	public static final String META_SUPERVISOR_PIN ="supervisorPIN";
+	public static final String META_OFFICER_PIN ="officerPIN";
+	public static final String META_SUPERVISOR_OTP ="supervisorOTPAuthentication";
+	public static final String META_OFFICER_OTP ="officerOTPAuthentication";	
+	
+	//TODO During update flow if its non-biometric update, then the captured biometrics are sent in this file
+	public static final String META_AUTH_BIO_FILENAME = "authenticationBiometricFileName";
 }
