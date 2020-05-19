@@ -19,6 +19,7 @@
 		<vertx.lang.ceylon.version>3.4.1</vertx.lang.ceylon.version>
 		<kernel.templatemanager.velocity.version>1.0.6</kernel.templatemanager.velocity.version>
 		<kernel.crypto.signature.version>1.0.9-SNAPSHOT</kernel.crypto.signature.version>
+		<modelmapper.version>2.3.7</modelmapper.version>
 	</properties>
 	<artifactId>kernel-idgenerator-service</artifactId>
 	<version>1.0.9</version>
@@ -111,6 +112,12 @@
 			<artifactId>kernel-templatemanager-velocity</artifactId>
 			<version>${kernel.templatemanager.velocity.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>${modelmapper.version}</version>
+		</dependency>
+
 		<dependency>
 			<!-- Ceylon lang dependency is required to have CeylonVerticleFactory 
 				which is used to instantiate Ceylon verticles -->
