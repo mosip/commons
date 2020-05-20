@@ -94,7 +94,7 @@ public class CryptomanagerUtils {
 	 * @return the public key from key manager
 	 */
 	private String getPublicKeyFromKeyManager(String appId, String timestamp, String refId) {
-		return keyManager.getPublicKey(appId, timestamp, Optional.of(refId)).getPublicKey();
+		return keyManager.getPublicKey(appId, timestamp, Optional.ofNullable(refId)).getPublicKey();
 	}
 
 
