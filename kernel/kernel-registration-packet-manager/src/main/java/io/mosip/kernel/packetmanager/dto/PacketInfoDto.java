@@ -29,7 +29,7 @@ public class PacketInfoDto {
 	private List<DeviceMetaInfo> capturedRegisteredDevices;
 	private List<FieldValue> capturedNonRegisteredDevices;
 	private List<FieldValue> checkSum;
-	private List<SimpleDto> printingName;	
+	private List<SimpleType> printingName;	
 	private List<BiometricsDto> officerBiometrics;
 	private List<BiometricsDto> supervisorBiometrics;	
 	private List<AuditDto> audits;	
@@ -45,6 +45,7 @@ public class PacketInfoDto {
 		this.metaData = new ArrayList<FieldValue>();
 		this.operationsData = new ArrayList<FieldValue>();
 		this.checkSum = new ArrayList<FieldValue>();
+		this.printingName = new ArrayList<SimpleType>();
 	}
 	
 	public void setField(String fieldName, Object value) {
@@ -89,6 +90,10 @@ public class PacketInfoDto {
 	public void setChecksum(String key, String value) {
 		if(!this.checkSum.contains(new FieldValue(key, value)))
 			this.checkSum.add(new FieldValue(key, value));
+	}
+	
+	public void setPrintingName(String language, String value) {
+		this.getPrintingName().add(new SimpleType(language, value));
 	}
 	
 }
