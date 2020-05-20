@@ -5,6 +5,7 @@ import io.mosip.kernel.packetmanager.dto.BiometricsDto;
 import io.mosip.kernel.packetmanager.dto.DocumentDto;
 import io.mosip.kernel.packetmanager.dto.SimpleDto;
 import io.mosip.kernel.packetmanager.dto.metadata.BiometricsException;
+import io.mosip.kernel.packetmanager.dto.metadata.DeviceMetaInfo;
 import io.mosip.kernel.packetmanager.exception.PacketCreatorException;
 
 import java.util.List;
@@ -34,6 +35,10 @@ public interface PacketCreator {
 	public void setAcknowledgement(String acknowledgeReceiptName, byte[] acknowledgeReceipt);
 	
 	public void setChecksum(String key, String value);
+	
+	public void setRegisteredDeviceDetails(List<DeviceMetaInfo> deviceDetails);
+	
+	public void setPrintingName(String langauge, String printingName);
 	
 	public byte[] createPacket(String registrationId, double version, String schemaJson,
                                Map<String, String> categoryPacketMapping, byte[] publicKey, PacketSigner signer) throws PacketCreatorException;

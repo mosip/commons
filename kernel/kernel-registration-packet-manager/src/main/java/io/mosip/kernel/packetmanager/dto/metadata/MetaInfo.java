@@ -1,5 +1,6 @@
 package io.mosip.kernel.packetmanager.dto.metadata;
 
+import io.mosip.kernel.packetmanager.datatype.SimpleType;
 import io.mosip.kernel.packetmanager.dto.SimpleDto;
 import lombok.Data;
 
@@ -33,7 +34,7 @@ public class MetaInfo {
 	private List<DeviceMetaInfo> capturedRegisteredDevices;
 	private List<FieldValue> capturedNonRegisteredDevices;
 	private List<FieldValue> checkSum;
-	private List<SimpleDto> printingName;
+	private List<SimpleType> printingName;
 	
 	public void setBiometrics(String subType, String bioAttribute, ModalityInfo modalityInfo) {
 		if(this.biometrics.containsKey(subType) && this.biometrics.get(subType) != null) {

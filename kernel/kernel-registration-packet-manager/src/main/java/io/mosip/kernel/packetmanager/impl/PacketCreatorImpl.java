@@ -21,6 +21,7 @@ import io.mosip.kernel.packetmanager.dto.DocumentDto;
 import io.mosip.kernel.packetmanager.dto.PacketInfoDto;
 import io.mosip.kernel.packetmanager.dto.SimpleDto;
 import io.mosip.kernel.packetmanager.dto.metadata.BiometricsException;
+import io.mosip.kernel.packetmanager.dto.metadata.DeviceMetaInfo;
 import io.mosip.kernel.packetmanager.dto.metadata.DocumentMetaInfo;
 import io.mosip.kernel.packetmanager.dto.metadata.FieldValue;
 import io.mosip.kernel.packetmanager.dto.metadata.HashSequenceMetaInfo;
@@ -425,6 +426,16 @@ public class PacketCreatorImpl implements PacketCreator {
 	@Override
 	public void setChecksum(String key, String value) {
 		this.packetInfoDto.setChecksum(key, value);
+	}
+
+	@Override
+	public void setRegisteredDeviceDetails(List<DeviceMetaInfo> deviceDetails) {
+		this.packetInfoDto.setCapturedRegisteredDevices(deviceDetails);		
+	}
+
+	@Override
+	public void setPrintingName(String langauge, String printingName) {
+		this.packetInfoDto.setPrintingName(langauge, printingName);		
 	}
 
 }
