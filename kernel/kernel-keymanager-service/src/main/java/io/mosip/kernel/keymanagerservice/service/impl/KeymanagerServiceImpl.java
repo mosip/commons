@@ -84,7 +84,7 @@ import io.mosip.kernel.keymanagerservice.util.KeymanagerUtil;
  *
  */
 @Service
-@Transactional("keymanagerTransactionManager")
+@Transactional
 public class KeymanagerServiceImpl implements KeymanagerService {
 
 	private static final String VALID_REFERENCE_ID_GETTING_KEY_ALIAS_WITH_REFERENCE_ID = "Valid reference Id. Getting key alias with referenceId";
