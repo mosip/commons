@@ -54,11 +54,6 @@ TRUNCATE TABLE master.language cascade ;
 
 \COPY master.language (code,name,family,native_name,is_active,cr_by,cr_dtimes) FROM './dml/master-language.csv' delimiter ',' HEADER  csv;
 
------ TRUNCATE master.template_type TABLE Data and It's reference Data and COPY Data from CSV file -----
-TRUNCATE TABLE master.loc_hierarchy_list cascade ;
-
-\COPY master.loc_hierarchy_list (hierarchy_level,hierarchy_level_name,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-loc_hierarchy_list.csv' delimiter ',' HEADER  csv;
-
 ----- TRUNCATE master.machine_type TABLE Data and It's reference Data and COPY Data from CSV file -----
 TRUNCATE TABLE master.machine_type cascade ;
 
@@ -130,7 +125,7 @@ TRUNCATE TABLE master.daysofweek_list cascade ;
 
 \COPY master.daysofweek_list (code,name,day_seq,is_global_working,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-daysofweek_list.csv' delimiter ',' HEADER  csv;
 
------ TRUNCATE master.template_type TABLE Data and It's reference Data and COPY Data from CSV file -----
+----- TRUNCATE master.loc_hierarchy_list TABLE Data and It's reference Data and COPY Data from CSV file -----
 TRUNCATE TABLE master.loc_hierarchy_list cascade ;
 
 \COPY master.loc_hierarchy_list (hierarchy_level,hierarchy_level_name,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-loc_hierarchy_list.csv' delimiter ',' HEADER  csv;
