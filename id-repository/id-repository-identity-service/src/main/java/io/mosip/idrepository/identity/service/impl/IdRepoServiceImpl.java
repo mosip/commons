@@ -836,6 +836,9 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 			}
 			RequestWrapper<EventsDTO> request = new RequestWrapper<>();
 			events.setEvents(eventsList);
+			request.setId("");
+			request.setRequesttime(DateUtils.getUTCCurrentDateTime());
+			request.setVersion("");
 			request.setRequest(events);
 			restHelper.requestAsync(restBuilder.buildRequest(RestServicesConstants.ID_AUTH_SERVICE, request, Void.class));
 		} catch (IdRepoDataValidationException | RestServiceException e) {

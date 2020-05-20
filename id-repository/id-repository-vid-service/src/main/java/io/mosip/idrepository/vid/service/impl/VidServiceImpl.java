@@ -661,6 +661,9 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 							policyProvider.getPolicy(vid.getVidTypeCode()).getAllowedTransactions()))
 					.collect(Collectors.toList()));
 			RequestWrapper<EventsDTO> request = new RequestWrapper<>();
+			request.setId("");
+			request.setRequesttime(DateUtils.getUTCCurrentDateTime());
+			request.setVersion("");
 			request.setRequest(events);
 			restHelper
 					.requestAsync(restBuilder.buildRequest(RestServicesConstants.ID_AUTH_SERVICE, request, Void.class));
