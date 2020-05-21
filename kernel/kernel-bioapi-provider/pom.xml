@@ -8,7 +8,7 @@
 	</parent>
 
 	<artifactId>kernel-bioapi-provider</artifactId>
-	<version>1.0.8</version>
+	<version>1.0.9-SNAPSHOT</version>
 	<name>kernel-bioapi-provider</name>
 	<description>bioapi provider</description>
 	<packaging>jar</packaging>
