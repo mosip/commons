@@ -42,6 +42,8 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.core.logging.SLF4JLogDelegateFactory;
+import io.vertx.micrometer.MicrometerMetricsOptions;
+import io.vertx.micrometer.VertxPrometheusOptions;
 
 /**
  * ID Generator Vertx Application
@@ -161,6 +163,9 @@ public class IDGeneratorVertxApplication {
 	private static void startApplication() {
 		ApplicationContext context = new AnnotationConfigApplicationContext(HibernateDaoConfig.class);
 		VertxOptions options = new VertxOptions();
+		options.setMetricsOptions(new MicrometerMetricsOptions()
+                .setPrometheusOptions(new VertxPrometheusOptions().setEnabled(true))
+                .setEnabled(true));
 		DeploymentOptions workerOptions = new DeploymentOptions().setWorker(true);
 		vertx = Vertx.vertx(options);
 		Verticle[] workerVerticles = { new VidPoolCheckerVerticle(context), new VidPopulatorVerticle(context),

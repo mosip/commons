@@ -12,6 +12,7 @@ import io.vertx.core.http.HttpServer;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
+import io.vertx.micrometer.PrometheusScrapingHandler;
 
 public class PridFetcherVerticle extends AbstractVerticle {
 
@@ -48,11 +49,14 @@ public class PridFetcherVerticle extends AbstractVerticle {
 
 		// Parent router so that global options can be applied to it in future
 		Router parentRouter = Router.router(vertx);
+		Router metricRouter = Router.router(vertx);
+		metricRouter.route("/metrics").handler(PrometheusScrapingHandler.create());
 		// giving the root to parent router
 		parentRouter.route().consumes(PRIDGeneratorConstant.APPLICATION_JSON)
 				.produces(PRIDGeneratorConstant.APPLICATION_JSON);
 		// System.out.println(environment.getProperty(PRIDGeneratorConstant.SERVER_SERVLET_PATH));
 		// mount all the routers to parent router
+		parentRouter.mountSubRouter(environment.getProperty(PRIDGeneratorConstant.SERVER_SERVLET_PATH), metricRouter);
 		parentRouter.mountSubRouter(
 				environment.getProperty(PRIDGeneratorConstant.SERVER_SERVLET_PATH) + PRIDGeneratorConstant.PRID,
 				pridFetcherRouter.createRouter(vertx));
