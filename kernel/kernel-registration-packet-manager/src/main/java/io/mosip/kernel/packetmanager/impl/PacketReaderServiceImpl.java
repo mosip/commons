@@ -10,10 +10,18 @@ import io.mosip.kernel.packetmanager.logger.PacketUtilityLogger;
 import io.mosip.kernel.packetmanager.spi.PacketDecryptor;
 import io.mosip.kernel.packetmanager.spi.PacketReaderService;
 import io.mosip.kernel.packetmanager.util.ZipUtils;
+
+import org.apache.commons.io.IOUtils;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Set;
 
 
 /**
@@ -37,6 +45,7 @@ public class PacketReaderServiceImpl implements PacketReaderService {
 	/** The Constant PACKET_NOTAVAILABLE_ERROR_DESC. */
 	private static final String PACKET_NOTAVAILABLE_ERROR_DESC = "the requested file is not found in the destination";
 
+	private static final String IDENTITY="identity";
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -115,5 +124,39 @@ public class PacketReaderServiceImpl implements PacketReaderService {
 	@Override
 	public InputStream getEncryptedSourcePacket(String rid, InputStream inputStream, String source) throws IOException {
 		return ZipUtils.unzipAndGetFile(inputStream, rid + "_" + source);
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked"})
+	@Override
+	public Object getCompleteIdObject(String rid,String sourcepackets) throws PacketDecryptionFailureException, ApiNotAccessibleException, IOException {
+		String[] sources = sourcepackets.split(",");
+
+		JSONObject finalIdObject = null;
+
+		for (String source : sources) {
+			InputStream idJsonStream = ZipUtils.unzipAndGetFile(getFile(rid, source), "ID");
+			
+			byte[] bytearray = IOUtils.toByteArray(idJsonStream);
+			String jsonString = new String(bytearray);
+			ObjectMapper mapper = new ObjectMapper();
+			JSONObject idObject = mapper.readValue(jsonString, JSONObject.class);
+			
+			if(finalIdObject == null) {
+				finalIdObject=idObject;
+			}else if(finalIdObject != null){
+				
+				LinkedHashMap currentidentityMap = (LinkedHashMap) idObject.get(IDENTITY);
+				LinkedHashMap finalidMap =(LinkedHashMap) finalIdObject.get(IDENTITY);
+				LinkedHashMap finalidentityMap=new LinkedHashMap<>(finalidMap);
+				currentidentityMap.forEach((key, value) -> 
+					finalidentityMap.merge(key, value, (v1, v2) -> v1 !=null? v1 : v2));
+				LinkedHashMap objectMap=new LinkedHashMap<>();
+				objectMap.put(IDENTITY, finalidentityMap);
+				finalIdObject=new JSONObject(objectMap);
+			}
+
+		}
+
+		return finalIdObject;
 	}
 }
