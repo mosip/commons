@@ -135,7 +135,7 @@ public class PacketReaderServiceImpl implements PacketReaderService {
 
 		for (String source : sources) {
 			InputStream idJsonStream = ZipUtils.unzipAndGetFile(getFile(rid, source), "ID");
-			
+			if(idJsonStream != null) {
 			byte[] bytearray = IOUtils.toByteArray(idJsonStream);
 			String jsonString = new String(bytearray);
 			ObjectMapper mapper = new ObjectMapper();
@@ -154,7 +154,7 @@ public class PacketReaderServiceImpl implements PacketReaderService {
 				objectMap.put(IDENTITY, finalidentityMap);
 				finalIdObject=new JSONObject(objectMap);
 			}
-
+			}
 		}
 
 		return finalIdObject;
