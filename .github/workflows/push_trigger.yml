@@ -1,17 +1,16 @@
-# This workflow will build a package using Maven and then publish it nexus when a pull request is merged
-# For more information see: https://github.com/actions/setup-java#apache-maven-with-a-settings-path
 
-name: Maven Package upon a pull request 
+name: Maven Package upon a push 
 
 on:
-  pull_request:
-    types: [closed]
-
+  push:
+    branches:
+      - master
+      - 1.0.*
+  
 jobs:
   build:
 
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
 
     steps:
     - uses: actions/checkout@v2
@@ -63,7 +62,6 @@ jobs:
   
   publish_to_nexus:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
 
     steps:
     - uses: actions/checkout@v2

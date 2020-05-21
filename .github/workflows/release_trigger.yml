@@ -1,17 +1,16 @@
-# This workflow will build a package using Maven and then publish it nexus when a pull request is merged
-# For more information see: https://github.com/actions/setup-java#apache-maven-with-a-settings-path
+# This workflow will build and publish package using Maven, Docker when a release is published 
 
-name: Maven Package upon a pull request 
+name: Release maven packages and docker upon a release
 
 on:
-  pull_request:
-    types: [closed]
+  release: 
+    types: [published]
+  
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
 
     steps:
     - uses: actions/checkout@v2
@@ -63,7 +62,6 @@ jobs:
   
   publish_to_nexus:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
 
     steps:
     - uses: actions/checkout@v2
@@ -107,8 +105,8 @@ jobs:
     - name: Publish the maven package
       run: |
         chmod +x ./deploy.sh
-        ./deploy.sh kernel $GITHUB_WORKSPACE/settings.xml SNAPSHOT
-        ./deploy.sh id-repository $GITHUB_WORKSPACE/settings.xml SNAPSHOT 
+        ./deploy.sh kernel $GITHUB_WORKSPACE/settings.xml .*
+        ./deploy.sh id-repository $GITHUB_WORKSPACE/settings.xml .* 
       env:
         GPG_TTY: $(tty)
          
