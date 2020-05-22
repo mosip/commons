@@ -23,12 +23,16 @@ public interface UinService {
 	UinResponseDto getUin();
 
 	/**
-	 * Upodate the status of the Uin from ISSUED to ASSIGNED
+	 * Update the status of the Uin from ISSUED to ASSIGNED
 	 * 
 	 * @param uin pass uin object as param
 	 * 
 	 * @return UinStatusUpdateReponseDto
 	 */
 	UinStatusUpdateReponseDto updateUinStatus(UinEntity uin);
+
+	void transferUin();
+
+	boolean uinExist(String uin);
 
 }

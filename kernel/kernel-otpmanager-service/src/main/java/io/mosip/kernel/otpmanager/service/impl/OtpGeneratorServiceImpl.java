@@ -54,6 +54,9 @@ public class OtpGeneratorServiceImpl implements OtpGenerator<OtpGeneratorRequest
 	
 	@Value("${local.env.otp:111111}")
 	String localOtp;
+	
+	@Value("${mosip.kernel.auth.proxy-otp}")
+	private boolean isProxytrue;
 
 	/*
 	 * (non-Javadoc)
@@ -74,7 +77,7 @@ public class OtpGeneratorServiceImpl implements OtpGenerator<OtpGeneratorRequest
 		/*
 		 * Skipping OTP creation for local profile 
 		 */
-        if(activeProfile.equalsIgnoreCase("local")) {
+        if(activeProfile.equalsIgnoreCase("local") || isProxytrue) {
         	response.setOtp(localOtp);
 			response.setStatus(OtpStatusConstants.GENERATION_SUCCESSFUL.getProperty());
 		    return response;

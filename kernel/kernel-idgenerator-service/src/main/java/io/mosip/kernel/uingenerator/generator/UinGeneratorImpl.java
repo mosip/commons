@@ -11,6 +11,7 @@ import io.mosip.kernel.core.idgenerator.spi.UinGenerator;
 import io.mosip.kernel.core.util.ChecksumUtils;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorConstant;
 import io.mosip.kernel.uingenerator.entity.UinEntity;
+import io.mosip.kernel.uingenerator.service.UinService;
 import io.mosip.kernel.uingenerator.util.UINMetaDataUtil;
 import io.mosip.kernel.uingenerator.util.UinFilterUtil;
 import io.vertx.core.logging.Logger;
@@ -36,6 +37,9 @@ public class UinGeneratorImpl implements UinGenerator {
 	 */
 	@Autowired
 	private UINMetaDataUtil metaDataUtil;
+	
+	@Autowired
+	private UinService uinService; 
 
 	/**
 	 * Field for UinWriter
@@ -93,7 +97,7 @@ public class UinGeneratorImpl implements UinGenerator {
 		uinWriter.setSession();
 		while (uinCount < uinsCount) {
 			String generatedUIN = generateSingleId(generatedIdLength, lowerBound, upperBound);
-			if (uinFilterUtils.isValidId(generatedUIN)) {
+			if (uinFilterUtils.isValidId(generatedUIN) && !uinService.uinExist(generatedUIN)) {
 				UinEntity uinBean = new UinEntity(generatedUIN, uinDefaultStatus);
 				metaDataUtil.setCreateMetaData(uinBean);
 				// try {

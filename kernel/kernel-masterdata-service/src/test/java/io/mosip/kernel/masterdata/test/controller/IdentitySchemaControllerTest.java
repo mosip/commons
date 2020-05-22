@@ -203,12 +203,12 @@ public class IdentitySchemaControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content("{\"id\":\"string\",\"version\":\"string\",\"requesttime\":\"2018-12-17T07:15:06.724Z\",\"request\":"
 						+"{\"title\":\"title\",\"description\":\"test desc\",\"schema\":[{\"id\":\"IDSchemaVersion\",\"inputRequired\":false,"
-						+ "\"type\":\"number\",\"minimum\":0,\"maximum\":0,\"description\":\"\",\"labelName\":\"IDSchemaVersion\",\"controlType\":\"none\","
+						+ "\"type\":\"number\",\"minimum\":0,\"maximum\":0,\"description\":\"\",\"label\":[{\"value\":\"IDSchemaVersion\",\"language\":\"eng\"}],\"controlType\":\"none\","
 						+ "\"fieldType\":\"default\",\"format\":\"none\",\"validators\":[],\"fieldCategory\":\"Pvt\",\"required\":false},"
 						+ "{\"id\":\"UIN\",\"inputRequired\":false,\"type\":\"integer\",\"minimum\":0,\"maximum\":0,\"description\":\"\","
-						+ "\"labelName\":\"UIN\",\"controlType\":\"none\",\"fieldType\":\"default\",\"format\":\"none\",\"validators\":[],"
+						+ "\"label\":[{\"value\":\"UIN\",\"language\":\"eng\"}],\"controlType\":\"none\",\"fieldType\":\"default\",\"format\":\"none\",\"validators\":[],"
 						+ "\"fieldCategory\":\"Pvt\",\"required\":false},{\"id\":\"fullName\",\"inputRequired\":true,\"type\":\"simpleType\","
-						+ "\"minimum\":0,\"maximum\":0,\"description\":\"\",\"labelName\":\"Full Name\",\"controlType\":\"textbox\",\"fieldType\":\"default\","
+						+ "\"minimum\":0,\"maximum\":0,\"description\":\"\",\"label\":[{\"value\":\"Full Name\",\"language\":\"eng\"}],\"controlType\":\"textbox\",\"fieldType\":\"default\","
 						+ "\"format\":\"none\",\"validators\":[],\"fieldCategory\":\"Pvt\",\"required\":true}],"
 						+ "\"effectiveFrom\":\"2018-12-17T07:15:06.724Z\"}}")
 				).andExpect(MockMvcResultMatchers.status().isOk());
@@ -225,12 +225,12 @@ public class IdentitySchemaControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content("{\"id\":\"string\",\"version\":\"string\",\"requesttime\":\"2018-12-17T07:15:06.724Z\",\"request\":"
 						+"{\"title\":\"MOSIP ID Schema\",\"description\":\"test desc\",\"schema\":[{\"id\":\"IDSchemaVersion\",\"inputRequired\":false,"
-						+ "\"type\":\"number\",\"minimum\":0,\"maximum\":0,\"description\":\"\",\"labelName\":\"IDSchemaVersion\",\"controlType\":\"none\","
+						+ "\"type\":\"number\",\"minimum\":0,\"maximum\":0,\"description\":\"\",\"labelName\":[{\"value\":\"IDSchemaVersion\",\"language\":\"eng\"}],\"controlType\":\"none\","
 						+ "\"fieldType\":\"default\",\"format\":\"none\",\"validators\":[],\"fieldCategory\":\"Pvt\",\"required\":false},"
 						+ "{\"id\":\"UIN\",\"inputRequired\":false,\"type\":\"integer\",\"minimum\":0,\"maximum\":0,\"description\":\"\","
-						+ "\"labelName\":\"UIN\",\"controlType\":\"none\",\"fieldType\":\"default\",\"format\":\"none\",\"validators\":[],"
+						+ "\"labelName\":[{\"value\":\"UIN\",\"language\":\"eng\"}],\"controlType\":\"none\",\"fieldType\":\"default\",\"format\":\"none\",\"validators\":[],"
 						+ "\"fieldCategory\":\"Pvt\",\"required\":false},{\"id\":\"fullName\",\"inputRequired\":true,\"type\":\"simpleType\","
-						+ "\"minimum\":0,\"maximum\":0,\"description\":\"\",\"labelName\":\"Full Name\",\"controlType\":\"textbox\",\"fieldType\":\"default\","
+						+ "\"minimum\":0,\"maximum\":0,\"description\":\"\",\"label\":[{\"value\":\"Full Name\",\"language\":\"eng\"}],\"controlType\":\"textbox\",\"fieldType\":\"default\","
 						+ "\"format\":\"none\",\"validators\":[],\"fieldCategory\":\"Pvt\",\"required\":true}],"
 						+ "\"effectiveFrom\":\"2018-12-17T07:15:06.724Z\"}}")
 				).andExpect(MockMvcResultMatchers.status().isOk());
@@ -240,7 +240,7 @@ public class IdentitySchemaControllerTest {
 	@WithUserDetails("global-admin")
 	public void publishIdentitySchema() throws Exception {		
 		Mockito.when(identitySchemaRepository.publishIdentitySchema(Mockito.anyString(), Mockito.anyString(), 
-				Mockito.any(LocalDateTime.class), Mockito.any(LocalDateTime.class), Mockito.anyString())).thenReturn(1);
+				Mockito.any(LocalDateTime.class), Mockito.any(LocalDateTime.class), Mockito.anyString(), Mockito.anyDouble())).thenReturn(1);
 		
 		mockMvc.perform(MockMvcRequestBuilders.put("/idschema/publish")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -254,7 +254,7 @@ public class IdentitySchemaControllerTest {
 	@WithUserDetails("global-admin")
 	public void deleteIdentitySchema() throws Exception {		
 		Mockito.when(identitySchemaRepository.publishIdentitySchema(Mockito.anyString(), Mockito.anyString(), 
-				Mockito.any(LocalDateTime.class), Mockito.any(LocalDateTime.class), Mockito.anyString())).thenReturn(1);		
+				Mockito.any(LocalDateTime.class), Mockito.any(LocalDateTime.class), Mockito.anyString(), Mockito.anyDouble())).thenReturn(1);		
 		mockMvc.perform(MockMvcRequestBuilders.delete("/idschema")
 				.param("id", "test-test-test-test")
 				.contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isOk());

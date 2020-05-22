@@ -24,6 +24,7 @@ import io.mosip.kernel.idgenerator.config.HibernateDaoConfig;
 import io.mosip.kernel.idgenerator.verticle.HttpServerVerticle;
 import io.mosip.kernel.templatemanager.velocity.builder.TemplateManagerBuilderImpl;
 import io.mosip.kernel.uingenerator.verticle.UinGeneratorVerticle;
+import io.mosip.kernel.uingenerator.verticle.UinTransferVerticle;
 import io.mosip.kernel.vidgenerator.constant.EventType;
 import io.mosip.kernel.vidgenerator.constant.VIDGeneratorConstant;
 import io.mosip.kernel.vidgenerator.verticle.VidExpiryVerticle;
@@ -166,7 +167,7 @@ public class IDGeneratorVertxApplication {
 				new VidExpiryVerticle(context) };
 		Stream.of(workerVerticles).forEach(verticle -> deploy(verticle, workerOptions, vertx));
 		vertx.setTimer(1000, handler -> initPool());
-		Verticle[] uinVerticles = { new UinGeneratorVerticle(context)};
+		Verticle[] uinVerticles = { new UinGeneratorVerticle(context),new UinTransferVerticle(context)};
 		Stream.of(uinVerticles).forEach(verticle -> vertx.deployVerticle(verticle, stringAsyncResult -> {
 			if (stringAsyncResult.succeeded()) {
 				LOGGER.info("Successfully deployed: " + verticle.getClass().getSimpleName());

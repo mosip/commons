@@ -27,7 +27,7 @@ public class SmsNotificationServiceImpl implements SmsNotification {
 	@Autowired
 	private SMSServiceProvider smsServiceProvider;
 	
-	@Value("${mosip.kernel.sms.proxy-sms}")
+	@Value("${mosip.kernel.sms.proxy-sms:false}")
 	private boolean isProxytrue;
 
 	/*

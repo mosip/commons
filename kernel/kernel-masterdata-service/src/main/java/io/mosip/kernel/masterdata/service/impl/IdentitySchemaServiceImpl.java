@@ -5,8 +5,13 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -192,6 +197,10 @@ public class IdentitySchemaServiceImpl implements IdentitySchemaService {
 	@Transactional
 	public IdSchemaResponseDto createSchema(IdentitySchemaDto dto) {
 		
+		validateDuplicateFields(dto.getSchema());
+		validateDocumentFields(dto.getSchema());
+		validateBiometricFields(dto.getSchema());
+		
 		IdentitySchema entity = MetaDataUtils.setCreateMetaData(dto, IdentitySchema.class);
 		
 		entity.setIsActive(true);
@@ -200,6 +209,7 @@ public class IdentitySchemaServiceImpl implements IdentitySchemaService {
 		entity.setIdAttributeJson(getIdAttributeJsonString(dto));
 		entity.setSchemaJson("{}");
 		entity.setId(UUID.randomUUID().toString());
+		entity.setLangCode("eng");
 	
 		try {
 			entity = identitySchemaRepository.create(entity);			
@@ -238,8 +248,13 @@ public class IdentitySchemaServiceImpl implements IdentitySchemaService {
 			
 			String schemaJson = getSchemaJsonString(identitySchema);
 			
+			IdentitySchema publishedSchema = identitySchemaRepository.findLatestPublishedIdentitySchema();
+			double currentVersion = publishedSchema == null ? 0.1 : (publishedSchema.getIdVersion() + 0.1);
+			
+			LOGGER.info("Current published version >> " + currentVersion);
+						
 			int updatedRows = identitySchemaRepository.publishIdentitySchema(dto.getId(), schemaJson, dto.getEffectiveFrom(), 
-					MetaDataUtils.getCurrentDateTime(), MetaDataUtils.getContextUser());
+					MetaDataUtils.getCurrentDateTime(), MetaDataUtils.getContextUser(), currentVersion);
 			
 			if (updatedRows < 1) {
 				throw new MasterDataServiceException(SchemaErrorCode.SCHEMA_NOT_FOUND_EXCEPTION.getErrorCode(),
@@ -263,7 +278,12 @@ public class IdentitySchemaServiceImpl implements IdentitySchemaService {
 	 */
 	@Override
 	@Transactional
-	public IdSchemaResponseDto updateSchema(String id, IdentitySchemaDto dto) {
+	public IdSchemaResponseDto updateSchema(String id, IdentitySchemaDto dto) {	
+		
+		validateDuplicateFields(dto.getSchema());
+		validateDocumentFields(dto.getSchema());
+		validateBiometricFields(dto.getSchema());
+		
 		IdentitySchema entity = null;
 		String jsonString = getIdAttributeJsonString(dto);
 		
@@ -420,5 +440,77 @@ public class IdentitySchemaServiceImpl implements IdentitySchemaService {
 		dto.setUpdatedOn(entity.getUpdatedDateTime());
 		dto.setEffectiveFrom(entity.getEffectiveFrom());
 		return dto;
+	}
+	
+	private void validateDuplicateFields(List<SchemaDto> list) {
+		List<String> duplicates = list.stream()
+			.collect(Collectors.groupingBy(SchemaDto::caseIgnoredId))
+			.entrySet()
+			.stream()
+			.filter(e -> e.getValue().size() > 1)
+			.map(Map.Entry::getKey).collect(Collectors.toList());
+		
+		if(duplicates != null && duplicates.size() > 0)
+			throw new MasterDataServiceException(SchemaErrorCode.DUPLICATE_FIELD_EXCEPTION.getErrorCode(),
+					String.format(SchemaErrorCode.DUPLICATE_FIELD_EXCEPTION.getErrorMessage(), duplicates));
+	}
+	
+	private void validateDocumentFields(List<SchemaDto> dtoList) {
+		validateSubType(dtoList, "documentType");
+	}
+	
+	private void validateSubType(List<SchemaDto> dtoList, String fieldType) {
+		List<SchemaDto> fields = dtoList.stream()
+				.filter(obj -> fieldType.equalsIgnoreCase(obj.getType()))
+				.collect(Collectors.toList());
+		
+		for(SchemaDto dto : fields) {
+			if("none".equalsIgnoreCase(dto.getSubType()))
+				throw new MasterDataServiceException(SchemaErrorCode.SUB_TYPE_REQUIRED_EXCEPTION.getErrorCode(),
+						String.format(SchemaErrorCode.SUB_TYPE_REQUIRED_EXCEPTION.getErrorMessage(), dto.getId()));
+		}
+	}
+	
+	private void validateBiometricFields(List<SchemaDto> dtoList) {
+		validateSubType(dtoList, "biometricsType");
+		
+		List<SchemaDto> fields = dtoList.stream()
+				.filter(obj -> "biometricsType".equalsIgnoreCase(obj.getType()))
+				.collect(Collectors.toList());
+			
+		if(fields != null) {
+			Map<String, List<SchemaDto>> fieldsGroupedBySubType  = fields.stream()
+			.collect(Collectors.groupingBy(SchemaDto::getSubType))
+			.entrySet()
+			.stream()
+			.filter(e -> e.getValue().size() > 1)
+			.collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue));
+			
+			if(fieldsGroupedBySubType != null) {
+				for(Entry<String, List<SchemaDto>> entry : fieldsGroupedBySubType.entrySet()) {
+					List<SchemaDto> list = entry.getValue();
+					
+					if(entry.getKey() == null || "none".equalsIgnoreCase(entry.getKey()))
+						throw new MasterDataServiceException(SchemaErrorCode.SUB_TYPE_REQUIRED_EXCEPTION.getErrorCode(),
+								String.format(SchemaErrorCode.SUB_TYPE_REQUIRED_EXCEPTION.getErrorMessage(), list.get(0).getId()));
+					
+					
+					List<String> temp = new ArrayList<String>();
+					for(SchemaDto dto : list) {
+						if(dto.getBioAttributes() == null)
+							throw new MasterDataServiceException(SchemaErrorCode.BIO_ATTRIBUTES_REQUIRED_EXCEPTION.getErrorCode(),
+									String.format(SchemaErrorCode.BIO_ATTRIBUTES_REQUIRED_EXCEPTION.getErrorMessage(), dto.getId()));
+						
+						temp.addAll(dto.getBioAttributes());
+					}
+					
+					List<String> distinctValues = temp.stream().distinct().collect(Collectors.toList());
+					
+					if(temp.size() > distinctValues.size())
+						throw new MasterDataServiceException(SchemaErrorCode.BIO_ATTRIBUTES_DUPLICATED_EXCEPTION.getErrorCode(),
+								String.format(SchemaErrorCode.BIO_ATTRIBUTES_DUPLICATED_EXCEPTION.getErrorMessage(), list.get(0).getId()));
+				}
+			}
+		}
 	}
 }

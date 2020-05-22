@@ -3,6 +3,11 @@
  */
 package io.mosip.kernel.uingenerator.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,10 +18,12 @@ import io.mosip.kernel.uingenerator.constant.UinGeneratorErrorCode;
 import io.mosip.kernel.uingenerator.dto.UinResponseDto;
 import io.mosip.kernel.uingenerator.dto.UinStatusUpdateReponseDto;
 import io.mosip.kernel.uingenerator.entity.UinEntity;
+import io.mosip.kernel.uingenerator.entity.UinEntityAssigned;
 import io.mosip.kernel.uingenerator.exception.UinNotFoundException;
 import io.mosip.kernel.uingenerator.exception.UinNotIssuedException;
 import io.mosip.kernel.uingenerator.exception.UinStatusNotFoundException;
 import io.mosip.kernel.uingenerator.repository.UinRepository;
+import io.mosip.kernel.uingenerator.repository.UinRepositoryAssigned;
 import io.mosip.kernel.uingenerator.service.UinService;
 import io.mosip.kernel.uingenerator.util.UINMetaDataUtil;
 import io.vertx.core.logging.Logger;
@@ -38,7 +45,13 @@ public class UinServiceImpl implements UinService {
 	 * Field for {@link #uinRepository}
 	 */
 	@Autowired
-	UinRepository uinRepository;
+	private UinRepository uinRepository;
+	
+	@Autowired
+	private UinRepositoryAssigned uinRepositoryAssigned;
+	
+	@Autowired
+	private ModelMapper modelMapper;
 
 	/**
 	 * instance of {@link UINMetaDataUtil}
@@ -102,6 +115,22 @@ public class UinServiceImpl implements UinService {
 		uinResponseDto.setUin(existingUin.getUin());
 		uinResponseDto.setStatus(existingUin.getStatus());
 		return uinResponseDto;
+	}
+
+	@Transactional(transactionManager = "transactionManager")
+	@Override
+	public void transferUin() {
+		List<UinEntity> uinEntities=uinRepository.findByStatus(UinGeneratorConstant.ASSIGNED);
+		List<UinEntityAssigned> uinEntitiesAssined = modelMapper.map(uinEntities, new TypeToken<List<UinEntityAssigned>>() {}.getType());
+		uinRepositoryAssigned.saveAll(uinEntitiesAssined);
+	    uinRepository.deleteAll(uinEntities);
+	}
+	
+	
+	@Override
+	public boolean uinExist(String uin) {
+	Optional<UinEntityAssigned> uinEntityAssignedOptional=uinRepositoryAssigned.findById(uin);
+	return uinEntityAssignedOptional.isPresent();
 	}
 
 }

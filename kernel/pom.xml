@@ -81,6 +81,7 @@
 		<json.utility.version>20180130</json.utility.version>
 		<json.schema.validator.version>2.2.10</json.schema.validator.version>
 		<json.version>20180813</json.version>
+		<jsonsimple.version>1.1.1</jsonsimple.version>
 
 		<!-- utilities -->
 		<commons-math3>3.6.1</commons-math3>
@@ -92,7 +93,7 @@
 		<commons.configuration2.version>2.2</commons.configuration2.version>
 		<apache.httpcomponents.version>4.5.6</apache.httpcomponents.version>
 		<guava.version>19.0</guava.version>
-		<lombok.version>1.16.18</lombok.version>
+		<lombok.version>1.18.8</lombok.version>
 		<jsch.version>0.1.54</jsch.version>
 		<sshd.version>1.4.0</sshd.version>
 		<itextcore.version>7.1.0</itextcore.version>
@@ -164,7 +165,8 @@
 		<module>kernel-idobjectvalidator</module>
 		<module>kernel-bioapi-provider</module>
 		<module>kernel-smsserviceprovider-msg91</module>
-        <module>kernel-fsadapter-proxy</module>
+        	<module>kernel-fsadapter-proxy</module>
+		<module>kernel-registration-packet-manager</module>
 
 		<module>kernel-masterdata-service</module>
 		<module>kernel-auditmanager-service</module>
@@ -177,7 +179,8 @@
 		<module>kernel-keymanager-service</module>
         <module>kernel-idgenerator-service</module>
         <module>kernel-pridgenerator-service</module>
-  </modules>
+
+	</modules>
 
 	<dependencies>
 	    <dependency>

@@ -119,7 +119,7 @@ public class HibernateDaoConfig implements EnvironmentAware {
 	 * @param entityManagerFactory entityManagerFactory
 	 * @return PlatformTransactionManager
 	 */
-	@Bean
+	@Bean(name = "transactionManager")
 	@Autowired
 	public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
 		JpaTransactionManager jpaTransactionManager = new JpaTransactionManager(entityManagerFactory);

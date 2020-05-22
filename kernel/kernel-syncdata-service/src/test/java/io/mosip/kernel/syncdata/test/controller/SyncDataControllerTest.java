@@ -118,11 +118,11 @@ public class SyncDataControllerTest {
 				"{ \"id\": null, \"version\": null, \"responsetime\": \"2019-04-24T09:07:42.017Z\", \"metadata\": null, "
 				+ "\"response\": { \"lastSyncTime\": \"2019-04-24T09:07:41.771Z\", "
 				+ "\"idVersion\": 1.0, \"schema\": [{\"id\":\"IDSchemaVersion\",\"inputRequired\":false,\"type\":\"number\",\"minimum\":0,"
-				+ "\"maximum\":0,\"description\":\"\",\"labelName\":\"IDSchemaVersion\",\"controlType\":\"none\",\"fieldType\":\"default\","
+				+ "\"maximum\":0,\"description\":\"\",\"label\":[{\"value\":\"IDSchemaVersion\",\"language\":\"eng\"}],\"controlType\":\"none\",\"fieldType\":\"default\","
 				+ "\"format\":\"none\",\"validators\":[],\"fieldCategory\":\"Pvt\",\"required\":false},{\"id\":\"UIN\",\"inputRequired\":false,"
-				+ "\"type\":\"integer\",\"minimum\":0,\"maximum\":0,\"description\":\"\",\"labelName\":\"UIN\",\"controlType\":\"none\","
+				+ "\"type\":\"integer\",\"minimum\":0,\"maximum\":0,\"description\":\"\",\"label\":[{\"value\":\"UIN\",\"language\":\"eng\"}],\"controlType\":\"none\","
 				+ "\"fieldType\":\"default\",\"format\":\"none\",\"validators\":[],\"fieldCategory\":\"Pvt\",\"required\":false},{\"id\":\"fullName\","
-				+ "\"inputRequired\":true,\"type\":\"simpleType\",\"minimum\":0,\"maximum\":0,\"description\":\"\",\"labelName\":\"Full Name\","
+				+ "\"inputRequired\":true,\"type\":\"simpleType\",\"minimum\":0,\"maximum\":0,\"description\":\"\",\"label\":[{\"value\":\"Full Name\",\"language\":\"eng\"}],"
 				+ "\"controlType\":\"textbox\",\"fieldType\":\"default\",\"format\":\"none\",\"validators\":[],\"fieldCategory\":\"Pvt\",\"required\":true}], "
 				+ "\"schemaJson\": \"{}\", \"effectiveFrom\" : \"2019-04-24T09:07:42.017Z\"}, \"errors\": null }"));
 
