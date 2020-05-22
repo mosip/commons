@@ -1,5 +1,11 @@
 package io.mosip.idrepository.identity.validator;
 
+import static io.mosip.idrepository.core.constant.IdRepoConstants.MOSIP_KERNEL_IDREPO_JSON_PATH;
+import static io.mosip.idrepository.core.constant.IdRepoConstants.ROOT_PATH;
+import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.ID_OBJECT_PROCESSING_FAILED;
+import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.INVALID_INPUT_PARAMETER;
+import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.MISSING_INPUT_PARAMETER;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -9,9 +15,11 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -19,8 +27,6 @@ import org.springframework.validation.Validator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static io.mosip.idrepository.core.constant.IdRepoConstants.*;
-import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.*;
 import io.mosip.idrepository.core.dto.IdRequestDTO;
 import io.mosip.idrepository.core.exception.IdRepoAppException;
 import io.mosip.idrepository.core.logger.IdRepoLogger;
@@ -44,6 +50,7 @@ import io.mosip.kernel.core.util.StringUtils;
  * @author Manoj SP
  */
 @Component
+@Lazy
 public class IdRequestValidator extends BaseIdRepoValidator implements Validator {
 
 	/** The Constant UIN. */
@@ -112,6 +119,11 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 	/** The uin validator. */
 	@Autowired
 	private UinValidator<String> uinValidator;
+	
+	@PostConstruct
+	public void getSchema() {
+		
+	}
 
 	/*
 	 * (non-Javadoc)
