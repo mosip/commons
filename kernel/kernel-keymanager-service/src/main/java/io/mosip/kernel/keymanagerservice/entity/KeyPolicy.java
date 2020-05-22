@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
  *
  */
 @Entity
-@Table(name = "key_policy_def",schema = "kernel")
+@Table(name = "key_policy_def")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor

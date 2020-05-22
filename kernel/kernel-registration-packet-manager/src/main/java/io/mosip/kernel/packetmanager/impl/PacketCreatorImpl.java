@@ -369,17 +369,20 @@ public class PacketCreatorImpl implements PacketCreator {
 				JSONObject fieldDetail = schema.getJSONObject(fieldName);
 				String fieldCategory = fieldDetail.has(PacketManagerConstants.SCHEMA_CATEGORY) ? 
 						fieldDetail.getString(PacketManagerConstants.SCHEMA_CATEGORY) : "none";			
-				String packetName = mappingList.get(fieldCategory.toLowerCase());
+				String packets = mappingList.get(fieldCategory.toLowerCase());
 				
-				if(!packetBasedMap.containsKey(packetName)) {				
-					packetBasedMap.put(packetName, new ArrayList<Object>());
-				}
-				
-				Map<String, String> attributes = new HashMap<>();
-				attributes.put(PacketManagerConstants.SCHEMA_ID, fieldName);
-				attributes.put(PacketManagerConstants.SCHEMA_TYPE, fieldDetail.has(PacketManagerConstants.SCHEMA_REF) ? 
-						fieldDetail.getString(PacketManagerConstants.SCHEMA_REF) : fieldDetail.getString(PacketManagerConstants.SCHEMA_TYPE));
-				packetBasedMap.get(packetName).add(attributes);
+				String[] packetNames = packets.split(",");
+				for(String packetName : packetNames) {
+					if(!packetBasedMap.containsKey(packetName)) {				
+						packetBasedMap.put(packetName, new ArrayList<Object>());
+					}
+					
+					Map<String, String> attributes = new HashMap<>();
+					attributes.put(PacketManagerConstants.SCHEMA_ID, fieldName);
+					attributes.put(PacketManagerConstants.SCHEMA_TYPE, fieldDetail.has(PacketManagerConstants.SCHEMA_REF) ? 
+							fieldDetail.getString(PacketManagerConstants.SCHEMA_REF) : fieldDetail.getString(PacketManagerConstants.SCHEMA_TYPE));
+					packetBasedMap.get(packetName).add(attributes);
+				}				
 			}
 		} catch (JSONException e) {
 			throw new PacketCreatorException(ErrorCode.JSON_PARSE_ERROR.getErrorCode(), 

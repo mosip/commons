@@ -77,7 +77,17 @@
             <artifactId>json</artifactId>
             <version>${json.version}</version>
         </dependency>
-
+		<dependency>
+    		<groupId>com.googlecode.json-simple</groupId>
+    		<artifactId>json-simple</artifactId>
+    		<version>1.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+			<version>${junit.version}</version>
+		</dependency>
     </dependencies>
 
     <build>
