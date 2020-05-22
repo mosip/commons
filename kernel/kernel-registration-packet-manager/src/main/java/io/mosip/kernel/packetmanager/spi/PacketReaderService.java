@@ -57,4 +57,15 @@ public interface PacketReaderService {
 	 * @throws IOException
 	 */
 	public InputStream getEncryptedSourcePacket(String rid, InputStream inputStream, String source) throws IOException;
+	
+	/**
+	 * Get the complete idObject
+	 *
+	 * @param rid : The rid
+	 * @throws IOException 
+	 * @throws ApiNotAccessibleException 
+	 * @throws PacketDecryptionFailureException 
+	 * 
+	 */
+	public Object getCompleteIdObject(String rid,String sourcepackets) throws PacketDecryptionFailureException, ApiNotAccessibleException, IOException; 
 }

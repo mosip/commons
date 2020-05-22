@@ -81,6 +81,7 @@
 		<json.utility.version>20180130</json.utility.version>
 		<json.schema.validator.version>2.2.10</json.schema.validator.version>
 		<json.version>20180813</json.version>
+		<jsonsimple.version>1.1.1</jsonsimple.version>
 
 		<!-- utilities -->
 		<commons-math3>3.6.1</commons-math3>
