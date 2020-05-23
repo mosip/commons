@@ -204,9 +204,8 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 							: LocalDateTime.MAX.withYear(9999),
 					env.getProperty(VID_ACTIVE_STATUS), IdRepoSecurityManager.getUser(), currentTime, null, null, false,
 					null);
-			Vid vid = vidRepo.save(vidEntity);
 			notify(EventType.CREATE_VID, Collections.singletonList(vidEntity), false);
-			return vid;
+			return vidRepo.save(vidEntity);
 		} else if (vidDetails.size() == policy.getAllowedInstances() && policy.getAutoRestoreAllowed()) {
 			Vid vidObject = vidDetails.get(0);
 			vidObject.setStatusCode(policy.getRestoreOnAction());
