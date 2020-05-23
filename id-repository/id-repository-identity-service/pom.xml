@@ -17,13 +17,13 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
-		<kernel.core.version>1.0.7</kernel.core.version>
+		<kernel.core.version>1.0.9-SNAPSHOT</kernel.core.version>
 		<kernel.idvalidator.uin.version>1.0.6</kernel.idvalidator.uin.version>
 		<kernel.idvalidator.rid.version>1.0.6</kernel.idvalidator.rid.version>
 		<kernel.cbeffutil.api.version>1.1.0</kernel.cbeffutil.api.version>
 		<kernel.fsadapter.hdfs.version>1.0.6</kernel.fsadapter.hdfs.version>
 		<kernel.idobjectvalidator.version>1.0.6</kernel.idobjectvalidator.version>
-		<kernel.bioapi.provider.version>1.0.6</kernel.bioapi.provider.version>
+		<kernel.bioapi.provider.version>1.0.8</kernel.bioapi.provider.version>
 		<id.repository.core.version>1.0.9-SNAPSHOT</id.repository.core.version>
 	</properties>
 

@@ -46,6 +46,8 @@ import com.google.common.collect.Lists;
 import io.mosip.idrepository.core.builder.RestRequestBuilder;
 import io.mosip.idrepository.core.constant.IdRepoConstants;
 import io.mosip.idrepository.core.constant.IdRepoErrorConstants;
+import io.mosip.idrepository.core.dto.EventDTO;
+import io.mosip.idrepository.core.dto.EventsDTO;
 import io.mosip.idrepository.core.dto.IdRequestDTO;
 import io.mosip.idrepository.core.dto.IdResponseDTO;
 import io.mosip.idrepository.core.dto.RequestDTO;
@@ -83,6 +85,7 @@ import io.mosip.kernel.core.cbeffutil.jaxbclasses.SingleAnySubtypeType;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.SingleType;
 import io.mosip.kernel.core.fsadapter.exception.FSAdapterException;
 import io.mosip.kernel.core.fsadapter.spi.FileSystemAdapter;
+import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.fsadapter.hdfs.constant.HDFSAdapterErrorCode;
 
 /**
@@ -143,8 +146,6 @@ public class IdRepoServiceTest {
 
 	@Mock
 	private DefaultShardResolver shardResolver;
-	
-
 
 	BIR rFinger = null;
 
@@ -201,13 +202,14 @@ public class IdRepoServiceTest {
 				.withVersion(new BIRVersion.BIRVersionBuilder().withMajor(1).withMinor(1).build())
 				.withCbeffversion(new BIRVersion.BIRVersionBuilder().withMajor(1).withMinor(1).build())
 				.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(false).build())
-				.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(registryIDType)
-						.withQuality(quality).withType(Arrays.asList(SingleType.FINGER))
+				.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(registryIDType).withQuality(quality)
+						.withType(Arrays.asList(SingleType.FINGER))
 						.withSubtype(Arrays.asList(SingleAnySubtypeType.RIGHT.value(),
 								SingleAnySubtypeType.INDEX_FINGER.value()))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now()).build())
-				.withSbInfo(new SBInfo.SBInfoBuilder().setFormatOwner(registryIDType).build()).build();;
+				.withSbInfo(new SBInfo.SBInfoBuilder().setFormatOwner(registryIDType).build()).build();
+		;
 		ReflectionTestUtils.setField(securityManager, "env", env);
 		ReflectionTestUtils.setField(securityManager, "mapper", mapper);
 		ReflectionTestUtils.setField(service, "securityManager", securityManager);
@@ -237,7 +239,8 @@ public class IdRepoServiceTest {
 	/**
 	 * Test add identity.
 	 *
-	 * @throws IdRepoAppException   the id repo app exception
+	 * @throws IdRepoAppException
+	 *             the id repo app exception
 	 * @throws IOException
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
@@ -328,8 +331,7 @@ public class IdRepoServiceTest {
 	}
 
 	@Test
-	public void testAddIdentityDocumentStoreFailed()
-			throws Exception {
+	public void testAddIdentityDocumentStoreFailed() throws Exception {
 		try {
 			when(fpProvider.convertFIRtoFMR(Mockito.any())).thenReturn(Collections.singletonList(rFinger));
 			when(cbeffUtil.validateXML(Mockito.any())).thenReturn(true);
@@ -375,7 +377,7 @@ public class IdRepoServiceTest {
 						+ "\":\"fileReferenceID\"}},\"documents\":[{\"category\":\"individualBiometrics\",\"value\":\"dGVzdA\"}]}")
 								.getBytes(),
 						RequestDTO.class);
-		 req.setRegistrationId("27841457360002620190730095024");
+		req.setRegistrationId("27841457360002620190730095024");
 		request.setRequest(req);
 		uinObj.setUinData("".getBytes());
 		when(uinRepo.existsByUinHash(Mockito.any())).thenReturn(false);
@@ -427,7 +429,7 @@ public class IdRepoServiceTest {
 							.getBytes(),
 					ObjectNode.class);
 			RequestDTO req = new RequestDTO();
-			 req.setRegistrationId("27841457360002620190730095024");
+			req.setRegistrationId("27841457360002620190730095024");
 			req.setIdentity(obj);
 			request.setRequest(req);
 			when(uinRepo.findByUinHash(Mockito.any())).thenReturn(uinObj);
@@ -444,7 +446,8 @@ public class IdRepoServiceTest {
 	/**
 	 * Test add identity exception.
 	 *
-	 * @throws IdRepoAppException   the id repo app exception
+	 * @throws IdRepoAppException
+	 *             the id repo app exception
 	 * @throws IOException
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
@@ -474,7 +477,8 @@ public class IdRepoServiceTest {
 	/**
 	 * Test retrieve identity.
 	 *
-	 * @throws IdRepoAppException   the id repo app exception
+	 * @throws IdRepoAppException
+	 *             the id repo app exception
 	 * @throws IOException
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
@@ -919,6 +923,14 @@ public class IdRepoServiceTest {
 		when(uinRepo.save(Mockito.any())).thenReturn(uinObj);
 		when(uinEncryptSaltRepo.retrieveSaltById(Mockito.anyInt())).thenReturn("7C9JlRD32RnFTzAmeTfIzg");
 		when(uinHashSaltRepo.retrieveSaltById(Mockito.anyInt())).thenReturn("AG7JQI1HwFp_cI_DcdAQ9A");
+		RestRequestDTO restReq = new RestRequestDTO();
+		restReq.setUri("http://localhost/v1/vid/{uin}");
+		when(restBuilder.buildRequest(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(restReq);
+		ResponseWrapper<EventsDTO> eventsResponse = new ResponseWrapper<>();
+		EventsDTO eventsDTO = new EventsDTO();
+		eventsDTO.setEvents(Collections.singletonList(new EventDTO()));
+		eventsResponse.setResponse(eventsDTO);
+		when(restHelper.requestSync(Mockito.any())).thenReturn(eventsResponse);
 		proxyService.updateIdentity(request, "234").getResponse().equals(obj2);
 	}
 
@@ -983,6 +995,14 @@ public class IdRepoServiceTest {
 		when(uinRepo.save(Mockito.any())).thenReturn(uinObj);
 		when(uinEncryptSaltRepo.retrieveSaltById(Mockito.anyInt())).thenReturn("7C9JlRD32RnFTzAmeTfIzg");
 		when(uinHashSaltRepo.retrieveSaltById(Mockito.anyInt())).thenReturn("AG7JQI1HwFp_cI_DcdAQ9A");
+		RestRequestDTO restReq = new RestRequestDTO();
+		restReq.setUri("http://localhost/v1/vid/{uin}");
+		when(restBuilder.buildRequest(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(restReq);
+		ResponseWrapper<EventsDTO> eventsResponse = new ResponseWrapper<>();
+		EventsDTO eventsDTO = new EventsDTO();
+		eventsDTO.setEvents(Collections.singletonList(new EventDTO()));
+		eventsResponse.setResponse(eventsDTO);
+		when(restHelper.requestSync(Mockito.any())).thenReturn(eventsResponse);
 		proxyService.updateIdentity(request, "234").getResponse().equals(obj2);
 	}
 
@@ -1033,7 +1053,7 @@ public class IdRepoServiceTest {
 			when(uinEncryptSaltRepo.retrieveSaltById(Mockito.anyInt())).thenReturn("7C9JlRD32RnFTzAmeTfIzg");
 			when(uinHashSaltRepo.retrieveSaltById(Mockito.anyInt())).thenReturn("AG7JQI1HwFp_cI_DcdAQ9A");
 			IdRequestDTO idRequestDTO = new IdRequestDTO();
-			RequestDTO req=new RequestDTO();
+			RequestDTO req = new RequestDTO();
 			req.setRegistrationId("27841457360002620190730095024");
 			idRequestDTO.setRequest(req);
 			proxyService.updateIdentity(idRequestDTO, "12343");
@@ -1080,7 +1100,8 @@ public class IdRepoServiceTest {
 	}
 
 	@Test
-	public void testUpdateIdentityUpdateStatus() throws IdRepoAppException {
+	public void testUpdateIdentityUpdateStatus()
+			throws IdRepoAppException, JsonParseException, JsonMappingException, IOException {
 		Uin uinObj = new Uin();
 		uinObj.setUin("1234");
 		uinObj.setRegId("1234");
@@ -1099,6 +1120,14 @@ public class IdRepoServiceTest {
 		req.setStatus(status);
 		req.setRegistrationId("27841457360002620190730095024");
 		request.setRequest(req);
+		RestRequestDTO restReq = new RestRequestDTO();
+		restReq.setUri("http://localhost/v1/vid/{uin}");
+		when(restBuilder.buildRequest(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(restReq);
+		ResponseWrapper<EventsDTO> eventsResponse = new ResponseWrapper<>();
+		EventsDTO eventsDTO = new EventsDTO();
+		eventsDTO.setEvents(Collections.singletonList(new EventDTO()));
+		eventsResponse.setResponse(eventsDTO);
+		when(restHelper.requestSync(Mockito.any())).thenReturn(eventsResponse);
 		IdResponseDTO updateIdentity = proxyService.updateIdentity(request, "12343");
 		assertEquals(status, updateIdentity.getResponse().getStatus());
 	}
@@ -1197,6 +1226,16 @@ public class IdRepoServiceTest {
 		when(cbeffUtil.validateXML(Mockito.any())).thenReturn(true);
 		when(connection.getFile(Mockito.any(), Mockito.any()))
 				.thenReturn(IOUtils.toInputStream("dGVzdA", Charset.defaultCharset()));
+		RestRequestDTO restReq = new RestRequestDTO();
+		restReq.setUri("http://localhost/v1/vid/{uin}");
+		when(restBuilder.buildRequest(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(restReq);
+		ResponseWrapper<EventsDTO> eventsResponse = new ResponseWrapper<>();
+		EventsDTO eventsDTO = new EventsDTO();
+		eventsDTO.setEvents(Collections.singletonList(new EventDTO()));
+		eventsResponse.setResponse(eventsDTO);
+		when(restHelper.requestSync(Mockito.any())).thenReturn(
+				mapper.readValue("{\"response\":{\"data\":\"1234\"}}".getBytes(), ObjectNode.class),
+				mapper.readValue("{\"response\":{\"data\":\"1234\"}}".getBytes(), ObjectNode.class), eventsResponse);
 		IdResponseDTO updateIdentity = proxyService.updateIdentity(request, "1234");
 		assertEquals(ACTIVATED, updateIdentity.getResponse().getStatus());
 	}
@@ -1218,9 +1257,9 @@ public class IdRepoServiceTest {
 						+ "\":\"fileReferenceID\"}},\"documents\":[{\"category\":\"parentOrGuardianBiometrics\",\"value\":\"dGVzdA\"}]}")
 								.getBytes(),
 						RequestDTO.class);
-						req.setRegistrationId("27841457360002620190730095024");
+		req.setRegistrationId("27841457360002620190730095024");
 		request.setRequest(req);
-		
+
 		UinBiometric biometrics = new UinBiometric();
 		biometrics.setBiometricFileType("individualBiometrics");
 		biometrics.setBiometricFileHash("W3LDtXpyxkl0YSifynsfhl7W-wWWtEb-ofkq-TGl1Lc");
@@ -1238,6 +1277,15 @@ public class IdRepoServiceTest {
 		when(cbeffUtil.getBIRDataFromXML(Mockito.any()))
 				.thenReturn(Collections.singletonList(rFinger.toBIRType(rFinger)));
 		when(cbeffUtil.updateXML(Mockito.any(), Mockito.any())).thenReturn("value".getBytes());
+		RestRequestDTO restReq = new RestRequestDTO();
+		restReq.setUri("http://localhost/v1/vid/{uin}");
+		when(restBuilder.buildRequest(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(restReq);
+		ResponseWrapper<EventsDTO> eventsResponse = new ResponseWrapper<>();
+		EventsDTO eventsDTO = new EventsDTO();
+		eventsDTO.setEvents(Collections.singletonList(new EventDTO()));
+		eventsResponse.setResponse(eventsDTO);
+		when(restHelper.requestSync(Mockito.any())).thenReturn(
+				mapper.readValue("{\"response\":{\"data\":\"1234\"}}".getBytes(), ObjectNode.class), eventsResponse);
 		IdResponseDTO updateIdentity = proxyService.updateIdentity(request, "1234");
 		assertEquals(ACTIVATED, updateIdentity.getResponse().getStatus());
 	}
@@ -1274,6 +1322,15 @@ public class IdRepoServiceTest {
 		when(cbeffUtil.getBIRDataFromXML(Mockito.any()))
 				.thenReturn(Collections.singletonList(rFinger.toBIRType(rFinger)));
 		when(cbeffUtil.updateXML(Mockito.any(), Mockito.any())).thenReturn("value".getBytes());
+		RestRequestDTO restReq = new RestRequestDTO();
+		restReq.setUri("http://localhost/v1/vid/{uin}");
+		when(restBuilder.buildRequest(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(restReq);
+		ResponseWrapper<EventsDTO> eventsResponse = new ResponseWrapper<>();
+		EventsDTO eventsDTO = new EventsDTO();
+		eventsDTO.setEvents(Collections.singletonList(new EventDTO()));
+		eventsResponse.setResponse(eventsDTO);
+		when(restHelper.requestSync(Mockito.any())).thenReturn(
+				mapper.readValue("{\"response\":{\"data\":\"1234\"}}".getBytes(), ObjectNode.class), eventsResponse);
 		IdResponseDTO updateIdentity = proxyService.updateIdentity(request, "1234");
 		assertEquals(ACTIVATED, updateIdentity.getResponse().getStatus());
 	}
@@ -1425,6 +1482,15 @@ public class IdRepoServiceTest {
 		when(cbeffUtil.getBIRDataFromXML(Mockito.any()))
 				.thenReturn(Collections.singletonList(rFinger.toBIRType(rFinger)));
 		when(cbeffUtil.updateXML(Mockito.any(), Mockito.any())).thenReturn("value".getBytes());
+		RestRequestDTO restReq = new RestRequestDTO();
+		restReq.setUri("http://localhost/v1/vid/{uin}");
+		when(restBuilder.buildRequest(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(restReq);
+		ResponseWrapper<EventsDTO> eventsResponse = new ResponseWrapper<>();
+		EventsDTO eventsDTO = new EventsDTO();
+		eventsDTO.setEvents(Collections.singletonList(new EventDTO()));
+		eventsResponse.setResponse(eventsDTO);
+		when(restHelper.requestSync(Mockito.any())).thenReturn(
+				mapper.readValue("{\"response\":{\"data\":\"1234\"}}".getBytes(), ObjectNode.class), eventsResponse);
 		IdResponseDTO updateIdentity = proxyService.updateIdentity(request, "1234");
 		assertEquals(ACTIVATED, updateIdentity.getResponse().getStatus());
 	}
@@ -1459,22 +1525,17 @@ public class IdRepoServiceTest {
 		when(cbeffUtil.getBIRDataFromXML(Mockito.any()))
 				.thenReturn(Collections.singletonList(rFinger.toBIRType(rFinger)));
 		when(cbeffUtil.updateXML(Mockito.any(), Mockito.any())).thenReturn("value".getBytes());
-		proxyService.updateIdentity(request, "1234");
+		RestRequestDTO restReq = new RestRequestDTO();
+		restReq.setUri("http://localhost/v1/vid/{uin}");
+		when(restBuilder.buildRequest(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(restReq);
+		ResponseWrapper<EventsDTO> eventsResponse = new ResponseWrapper<>();
+		EventsDTO eventsDTO = new EventsDTO();
+		eventsDTO.setEvents(Collections.singletonList(new EventDTO()));
+		eventsResponse.setResponse(eventsDTO);
+		when(restHelper.requestSync(Mockito.any())).thenReturn(
+				mapper.readValue("{\"response\":{\"data\":\"1234\"}}".getBytes(), ObjectNode.class), eventsResponse);
 		IdResponseDTO updateIdentity = proxyService.updateIdentity(request, "1234");
 		assertEquals(ACTIVATED, updateIdentity.getResponse().getStatus());
-	}
-
-	@Test(expected = IdRepoAppException.class)
-	public void testNowParseException() throws Throwable {
-		try {
-			MockEnvironment mockEnv = new MockEnvironment();
-			mockEnv.merge((ConfigurableEnvironment) env);
-			mockEnv.setProperty("mosip.utc-datetime-pattern", "abcd");
-			ReflectionTestUtils.setField(service, "env", mockEnv);
-			ReflectionTestUtils.invokeMethod(service, "now");
-		} catch (UndeclaredThrowableException e) {
-			throw e.getCause();
-		}
 	}
 
 	@Test

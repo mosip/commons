@@ -10,7 +10,7 @@ import io.mosip.idrepository.core.exception.IdRepoAppException;
  * @param <REQUEST> the Request Object
  * @param <RESPONSE> the Response Object
  */
-public interface VidService<REQUEST, RESPONSE> {
+public interface VidService<REQUEST, RESPONSE, NOTIFICATION> {
 
 	/**
 	 * This method will generate new Vid based on the provided request and based on
@@ -69,4 +69,13 @@ public interface VidService<REQUEST, RESPONSE> {
 	 * @throws IdRepoAppException the id repo app exception
 	 */
 	RESPONSE reactivateVIDsForUIN(String uin) throws IdRepoAppException;
+
+	/**
+	 * Retrieve vids by uin.
+	 *
+	 * @param uin the uin
+	 * @return the response
+	 * @throws IdRepoAppException the id repo app exception
+	 */
+	NOTIFICATION retrieveVidsByUin(String uin) throws IdRepoAppException;;
 }

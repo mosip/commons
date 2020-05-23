@@ -946,6 +946,7 @@ public class VidServiceImplTest {
 		vid.setUin("461_3920450236_7C9JlRD32RnFTzAmeTfIzg");
 		when(vidRepo.findByUinHashAndStatusCodeAndExpiryDTimesAfter(Mockito.any(), Mockito.any(),
 				Mockito.any())).thenReturn(Collections.singletonList(vid));
+		when(vidPolicyProvider.getPolicy(Mockito.any())).thenReturn(new VidPolicy());
 		ResponseWrapper<VidResponseDTO> regenerateVid = service.deactivateVIDsForUIN("12345461");
 		assertEquals("DEACTIVATED", regenerateVid.getResponse().getVidStatus());
 	}
@@ -992,6 +993,7 @@ public class VidServiceImplTest {
 		vid.setUin("461_3920450236_7C9JlRD32RnFTzAmeTfIzg");
 		when(vidRepo.findByUinHashAndStatusCodeAndExpiryDTimesAfter(Mockito.any(), Mockito.any(),
 				Mockito.any())).thenReturn(Collections.singletonList(vid));
+		when(vidPolicyProvider.getPolicy(Mockito.any())).thenReturn(new VidPolicy());
 		ResponseWrapper<VidResponseDTO> regenerateVid = service.reactivateVIDsForUIN("12345461");
 		assertEquals("ACTIVE", regenerateVid.getResponse().getVidStatus());
 	}
