@@ -178,15 +178,15 @@ public class VidController {
 	}
 
 	/**
-	 * This method will accepts uin as parameter, if uin is valid it will return 
+	 * This method will accept uin as parameter, it will return 
 	 * all its associated vids.
 	 *
 	 * @param vid the vid
 	 * @return the response entity
 	 * @throws IdRepoAppException the id repo app exception
 	 */
-//	@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
-	@GetMapping(path = "/uin/{UIN}", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
+	@GetMapping(path = "/vid/uin/{UIN}", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ResponseWrapper<EventsDTO>> retrieveVidsByUin(@PathVariable("UIN") String uin)
 			throws IdRepoAppException {
 		try {
