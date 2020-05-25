@@ -183,15 +183,15 @@ public class PacketCreatorImpl implements PacketCreator {
 						registrationId, "Adding field : "+ fieldName);
 				switch ((String) field.get(PacketManagerConstants.SCHEMA_TYPE)) {
 				case PacketManagerConstants.BIOMETRICS_TYPE:
-					if(this.packetInfoDto.getBiometrics().containsKey(fieldName))					
+					if(this.packetInfoDto.getBiometrics().get(fieldName) != null)					
 						addBiometricDetailsToZip(fieldName, identity, metaInfo, subpacketZip, hashSequences);					
 					break;					
 				case PacketManagerConstants.DOCUMENTS_TYPE:
-					if(this.packetInfoDto.getDocuments().containsKey(fieldName))
+					if(this.packetInfoDto.getDocuments().get(fieldName) != null)
 						addDocumentDetailsToZip(fieldName, identity, metaInfo, subpacketZip, hashSequences);
 					break;
 				default:
-					if(this.packetInfoDto.getDemographics().containsKey(fieldName))
+					if(this.packetInfoDto.getDemographics().get(fieldName) != null)
 						identity.put(fieldName, this.packetInfoDto.getDemographics().get(fieldName));
 					break;
 				}
