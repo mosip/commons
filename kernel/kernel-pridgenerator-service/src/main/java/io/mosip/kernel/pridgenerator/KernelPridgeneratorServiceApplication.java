@@ -34,10 +34,13 @@ import io.vertx.core.Verticle;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.core.logging.SLF4JLogDelegateFactory;
+import io.vertx.micrometer.MicrometerMetricsOptions;
+import io.vertx.micrometer.VertxPrometheusOptions;
 
 @SpringBootApplication
 public class KernelPridgeneratorServiceApplication {
@@ -150,6 +153,15 @@ public class KernelPridgeneratorServiceApplication {
 	private static void startApplication() {
 		ApplicationContext context = new AnnotationConfigApplicationContext(HibernateDaoConfig.class);
 		VertxOptions options = new VertxOptions();
+		/* options.setMetricsOptions(new MicrometerMetricsOptions()
+		.setPrometheusOptions(new VertxPrometheusOptions().setEnabled(true)
+		  .setStartEmbeddedServer(true)
+		  .setEmbeddedServerOptions(new HttpServerOptions().setPort(8080))
+		  .setEmbeddedServerEndpoint("/metrics/vertx"))
+		.setEnabled(true)); */
+		options.setMetricsOptions(new MicrometerMetricsOptions()
+		.setPrometheusOptions(new VertxPrometheusOptions().setEnabled(true))
+		.setEnabled(true));
 		DeploymentOptions workerOptions = new DeploymentOptions().setWorker(true);
 		vertx = Vertx.vertx(options);
 		Verticle[] workerVerticles = { new PridPoolCheckerVerticle(context), new PridPopulatorVerticle(context) };

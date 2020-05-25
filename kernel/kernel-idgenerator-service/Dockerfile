@@ -38,7 +38,6 @@ RUN find /target -name '*.jar' -executable -type f "-print0" | xargs "-0" cp -t 
 EXPOSE 8080
 
 
-
 CMD if [ "$is_glowroot_env" = "present" ]; then \
     wget "${artifactory_url_env}"/artifactory/libs-release-local/io/mosip/testing/glowroot.zip ; \
     apt-get update && apt-get install -y unzip ; \
