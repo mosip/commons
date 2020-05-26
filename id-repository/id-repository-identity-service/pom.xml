@@ -22,8 +22,8 @@
 		<kernel.idvalidator.rid.version>1.0.6</kernel.idvalidator.rid.version>
 		<kernel.cbeffutil.api.version>1.1.0</kernel.cbeffutil.api.version>
 		<kernel.fsadapter.hdfs.version>1.0.6</kernel.fsadapter.hdfs.version>
-		<kernel.idobjectvalidator.version>1.0.6</kernel.idobjectvalidator.version>
-		<kernel.bioapi.provider.version>1.0.8</kernel.bioapi.provider.version>
+		<kernel.idobjectvalidator.version>1.0.9-SNAPSHOT</kernel.idobjectvalidator.version>
+		<kernel.bioapi.provider.version>1.0.9-SNAPSHOT</kernel.bioapi.provider.version>
 		<id.repository.core.version>1.0.9-SNAPSHOT</id.repository.core.version>
 	</properties>
 

@@ -47,6 +47,7 @@ import io.mosip.idrepository.identity.validator.IdRequestValidator;
 import io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorErrorConstant;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectIOException;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectValidationFailedException;
+import io.mosip.kernel.core.idobjectvalidator.exception.InvalidIdSchemaException;
 import io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator;
 import io.mosip.kernel.core.idvalidator.exception.InvalidIDException;
 import io.mosip.kernel.core.util.DateUtils;
@@ -131,8 +132,8 @@ public class IdRequestValidatorTest {
 
 	@Test
 	public void testValidateRequestJsonAttributes() throws JsonParseException, JsonMappingException, IOException,
-			IdObjectValidationFailedException, IdObjectIOException {
-		when(idObjectValidator.validateIdObject(Mockito.any(), Mockito.any()))
+			IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
+		when(idObjectValidator.validateIdObject(Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenThrow(new IdObjectValidationFailedException("", "Invalid - Request"));
 		Object request = mapper.readValue(
 				"{\"identity\":{\"dateOfBirth\":\"12345\",\"fullName\":[{\"language\":\"\",\"value\":\"Manoj\",\"label\":\"string\"}]}}"
@@ -191,8 +192,8 @@ public class IdRequestValidatorTest {
 
 	@Test
 	public void testValidateRequestInvalidSchema() throws JsonParseException, JsonMappingException, IOException,
-			IdObjectIOException, IdObjectValidationFailedException {
-		when(idObjectValidator.validateIdObject(Mockito.any(), Mockito.any()))
+			IdObjectIOException, IdObjectValidationFailedException, InvalidIdSchemaException {
+		when(idObjectValidator.validateIdObject(Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenThrow(new IdObjectIOException("errorCode", "errorMessage"));
 		Object request = mapper.readValue(
 				"{\"identity\":{\"firstName\":[{\"language\":\"AR\",\"value\":\"Manoj\",\"label\":\"string\"}]}}"
@@ -305,8 +306,8 @@ public class IdRequestValidatorTest {
 
 	@Test
 	public void testValidateRequestConfigServerConnectionException() throws JsonParseException, JsonMappingException,
-			IOException, IdObjectIOException, IdObjectValidationFailedException {
-		when(idObjectValidator.validateIdObject(Mockito.any(), Mockito.any()))
+			IOException, IdObjectIOException, IdObjectValidationFailedException, InvalidIdSchemaException {
+		when(idObjectValidator.validateIdObject(Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenThrow(new IdObjectIOException("errorCode", "errorMessage"));
 		Object request = mapper.readValue(
 				"{\"identity\":{\"firstName\":[{\"language\":\"AR\",\"value\":\"Manoj\",\"label\":\"string\"}]}}"
@@ -323,8 +324,8 @@ public class IdRequestValidatorTest {
 
 	@Test
 	public void testValidateRequestUnidentifiedJsonException() throws JsonParseException, JsonMappingException,
-			IOException, IdObjectIOException, IdObjectValidationFailedException {
-		when(idObjectValidator.validateIdObject(Mockito.any(), Mockito.any()))
+			IOException, IdObjectIOException, IdObjectValidationFailedException, InvalidIdSchemaException {
+		when(idObjectValidator.validateIdObject(Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenThrow(new IdObjectValidationFailedException(
 						IdObjectValidatorErrorConstant.INVALID_INPUT_PARAMETER.getErrorCode(), "error - Message"));
 		Object request = mapper.readValue(
