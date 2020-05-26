@@ -78,7 +78,7 @@ public class PridFetcherRouter {
 				reswrp.setResponse(pridFetchResponseDto);
 				reswrp.setErrors(null);
 				blockingCodeHandler.complete();
-			}, true, resultHandler -> {
+			}, false, resultHandler -> {
 				if (resultHandler.succeeded()) {
 					try {
 						routingContext.response().end(objectMapper.writeValueAsString(reswrp));
