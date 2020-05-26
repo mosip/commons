@@ -14,6 +14,7 @@ import io.vertx.core.http.HttpServer;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
+import io.vertx.micrometer.PrometheusScrapingHandler;
 
 /**
  * Http Verticle for fetching UIN and VID
@@ -58,6 +59,8 @@ public class HttpServerVerticle extends AbstractVerticle {
 
 		// Parent router so that global options can be applied to it in future
 		Router parentRouter = Router.router(vertx);
+		Router metricRouter = Router.router(vertx);
+		metricRouter.route("/metrics").handler(PrometheusScrapingHandler.create());
 		// giving the root to parent router
 		parentRouter.route().consumes(VIDGeneratorConstant.APPLICATION_JSON)
 				.produces(VIDGeneratorConstant.APPLICATION_JSON);
@@ -69,6 +72,8 @@ public class HttpServerVerticle extends AbstractVerticle {
 		parentRouter.mountSubRouter(
 				environment.getProperty(VIDGeneratorConstant.SERVER_SERVLET_PATH) + UinGeneratorConstant.VUIN,
 				uinServiceRouter.createRouter(vertx));
+		
+		parentRouter.mountSubRouter(environment.getProperty(VIDGeneratorConstant.	SERVER_SERVLET_PATH), metricRouter);
 
 		httpServer.requestHandler(parentRouter);
 		httpServer.listen(Integer.parseInt(environment.getProperty(VIDGeneratorConstant.SERVER_PORT)), result -> {
