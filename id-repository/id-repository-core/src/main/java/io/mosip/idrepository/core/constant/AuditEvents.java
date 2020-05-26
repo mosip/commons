@@ -27,7 +27,9 @@ public enum AuditEvents {
 	
 	DEACTIVATE_VID("IDR-010", "System Event"),
 	
-	REACTIVATE_VID("IDR-011", "System Event");
+	REACTIVATE_VID("IDR-011", "System Event"),
+	
+	RETRIEVE_UIN_VID("IDR-012", "System Event"),;
 	
 	
 
