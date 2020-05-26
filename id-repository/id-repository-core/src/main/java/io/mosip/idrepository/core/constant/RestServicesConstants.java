@@ -19,6 +19,8 @@ public enum RestServicesConstants {
 
 	CRYPTO_MANAGER_DECRYPT("mosip.idrepo.decryptor"), 
 	
+	SYNCDATA_SERVICE("mosip.idrepo.syncdata-service"),
+	
 	ID_AUTH_SERVICE("mosip.idrepo.ida"), 
 	
 	VID_SERVICE("mosip.idrepo.vid-service");
