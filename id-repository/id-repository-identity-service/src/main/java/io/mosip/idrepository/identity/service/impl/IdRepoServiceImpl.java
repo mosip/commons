@@ -840,7 +840,9 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 			request.setRequesttime(DateUtils.getUTCCurrentDateTime());
 			request.setVersion("");
 			request.setRequest(events);
+			mosipLogger.info(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, "notify", "notifying IDA for event" + eventType.name());
 			restHelper.requestAsync(restBuilder.buildRequest(RestServicesConstants.ID_AUTH_SERVICE, request, Void.class));
+			mosipLogger.info(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, "notify", "notified IDA for event" + eventType.name());
 		} catch (IdRepoDataValidationException | RestServiceException e) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, "notify", e.getMessage());
 		}
