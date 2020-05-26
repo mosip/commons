@@ -53,6 +53,15 @@ import java.util.zip.ZipOutputStream;
 public class PacketCreatorImpl implements PacketCreator {
 	
 	private static final Logger LOGGER = PacketUtilityLogger.getLogger(PacketCreatorImpl.class);
+	private static Map<String, String> categorySubpacketMapping = new HashMap<>();
+	
+	static {
+		categorySubpacketMapping.put("pvt", "id");
+		categorySubpacketMapping.put("kyc", "id");
+		categorySubpacketMapping.put("none", "id,evidence,optional");
+		categorySubpacketMapping.put("evidence", "evidence");
+		categorySubpacketMapping.put("optional", "optional");
+	}
 	
 	@Autowired
 	private PacketManagerHelper helper;
@@ -128,7 +137,7 @@ public class PacketCreatorImpl implements PacketCreator {
 			throw new PacketCreatorException(ErrorCode.INITIALIZATION_ERROR.getErrorCode(),	
 					ErrorCode.INITIALIZATION_ERROR.getErrorMessage());
 		
-		Map<String, List<Object>> identityProperties = loadSchemaFields(schemaJson, categoryPacketMapping);
+		Map<String, List<Object>> identityProperties = loadSchemaFields(schemaJson);
 		
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try(ZipOutputStream packetZip = new ZipOutputStream(new BufferedOutputStream(out))) {
@@ -141,7 +150,7 @@ public class PacketCreatorImpl implements PacketCreator {
 						registrationId);
 				
 				//TODO sign zip
-				subpacketBytes = CryptoUtil.encodeBase64(packetCryptoHelper.encryptPacket(subpacketBytes, publicKey)).getBytes();
+				//subpacketBytes = CryptoUtil.encodeBase64(packetCryptoHelper.encryptPacket(subpacketBytes, publicKey)).getBytes();
 				addEntryToZip(String.format(PacketManagerConstants.SUBPACKET_ZIP_FILE_NAME, registrationId, subpacketName), 
 						subpacketBytes, packetZip);
 				LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), 
@@ -354,7 +363,7 @@ public class PacketCreatorImpl implements PacketCreator {
 		}
 	}	
 	
-	private Map<String, List<Object>> loadSchemaFields(String schemaJson, Map<String, String> mappingList) throws PacketCreatorException {		
+	private Map<String, List<Object>> loadSchemaFields(String schemaJson) throws PacketCreatorException {		
 		Map<String, List<Object>> packetBasedMap = new HashMap<String, List<Object>>();
 		
 		try {
@@ -369,7 +378,7 @@ public class PacketCreatorImpl implements PacketCreator {
 				JSONObject fieldDetail = schema.getJSONObject(fieldName);
 				String fieldCategory = fieldDetail.has(PacketManagerConstants.SCHEMA_CATEGORY) ? 
 						fieldDetail.getString(PacketManagerConstants.SCHEMA_CATEGORY) : "none";			
-				String packets = mappingList.get(fieldCategory.toLowerCase());
+				String packets = categorySubpacketMapping.get(fieldCategory.toLowerCase());
 				
 				String[] packetNames = packets.split(",");
 				for(String packetName : packetNames) {

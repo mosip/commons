@@ -1,13 +1,14 @@
 package io.mosip.kernel.syncdata.dto;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import io.mosip.kernel.syncdata.dto.MultiLingualLabel;
+import io.mosip.kernel.syncdata.dto.RequiredOnDto;
 import io.mosip.kernel.syncdata.dto.SchemaDto;
 import io.mosip.kernel.syncdata.dto.ValidatorDto;
 import lombok.Data;
@@ -25,7 +26,7 @@ public class SchemaDto {
 	private String description;
 	
 	@NotEmpty
-	private List<MultiLingualLabel> label;
+	private Map<String, String> label;
 	
 	@NotBlank
 	private String type;
@@ -46,7 +47,7 @@ public class SchemaDto {
 	private boolean isRequired;	
 	private List<ValidatorDto> validators;
 	private List<String> bioAttributes;
-	private String requiredOn;
+	private List<RequiredOnDto> requiredOn;
 	private String subType;
 	private String contactType;
 	
@@ -73,7 +74,9 @@ class ValidatorDto {
 }
 
 @Data
-class MultiLingualLabel {
-	private String value;
-	private String language;
+class RequiredOnDto {	
+	@NotBlank
+	private String engine;	
+	@NotBlank
+	private String expr;
 }
