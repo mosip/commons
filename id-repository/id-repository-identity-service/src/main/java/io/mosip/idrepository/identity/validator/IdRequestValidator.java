@@ -1,5 +1,11 @@
 package io.mosip.idrepository.identity.validator;
 
+import static io.mosip.idrepository.core.constant.IdRepoConstants.MOSIP_KERNEL_IDREPO_JSON_PATH;
+import static io.mosip.idrepository.core.constant.IdRepoConstants.ROOT_PATH;
+import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.ID_OBJECT_PROCESSING_FAILED;
+import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.INVALID_INPUT_PARAMETER;
+import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.MISSING_INPUT_PARAMETER;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -9,28 +15,36 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static io.mosip.idrepository.core.constant.IdRepoConstants.*;
-import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.*;
+import io.mosip.idrepository.core.builder.RestRequestBuilder;
+import io.mosip.idrepository.core.constant.RestServicesConstants;
 import io.mosip.idrepository.core.dto.IdRequestDTO;
 import io.mosip.idrepository.core.exception.IdRepoAppException;
+import io.mosip.idrepository.core.exception.IdRepoDataValidationException;
+import io.mosip.idrepository.core.exception.RestServiceException;
+import io.mosip.idrepository.core.helper.RestHelper;
 import io.mosip.idrepository.core.logger.IdRepoLogger;
 import io.mosip.idrepository.core.security.IdRepoSecurityManager;
 import io.mosip.idrepository.core.validator.BaseIdRepoValidator;
 import io.mosip.kernel.core.exception.ExceptionUtils;
+import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorErrorConstant;
 import io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorSupportedOperations;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectIOException;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectValidationFailedException;
+import io.mosip.kernel.core.idobjectvalidator.exception.InvalidIdSchemaException;
 import io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator;
 import io.mosip.kernel.core.idvalidator.exception.InvalidIDException;
 import io.mosip.kernel.core.idvalidator.spi.RidValidator;
@@ -44,6 +58,7 @@ import io.mosip.kernel.core.util.StringUtils;
  * @author Manoj SP
  */
 @Component
+@Lazy
 public class IdRequestValidator extends BaseIdRepoValidator implements Validator {
 
 	/** The Constant UIN. */
@@ -75,7 +90,6 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 
 	/** The Constant ID_REPO. */
 	private static final String ID_REPO = "IdRepo";
-	
 
 	/** The mosip logger. */
 	Logger mosipLogger = IdRepoLogger.getLogger(IdRequestValidator.class);
@@ -112,6 +126,21 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 	/** The uin validator. */
 	@Autowired
 	private UinValidator<String> uinValidator;
+	
+	private String identitySchema;
+	
+	@Autowired
+	private RestHelper restHelper;
+	
+	@Autowired
+	private RestRequestBuilder restBuilder;
+	
+	@PostConstruct
+	public void loadSchema() throws IdRepoDataValidationException, RestServiceException, JsonProcessingException {
+		ResponseWrapper<Map<String, String>> response = restHelper.requestSync(
+				restBuilder.buildRequest(RestServicesConstants.SYNCDATA_SERVICE, null, ResponseWrapper.class));
+		identitySchema = response.getResponse().get("schemaJson");
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -225,10 +254,10 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 							.forEach(requestMap::remove);
 					if (!errors.hasErrors()) {
 						if (method.equals(CREATE)) {
-							idObjectValidator.validateIdObject(requestMap,
+							idObjectValidator.validateIdObject(identitySchema, requestMap,
 									IdObjectValidatorSupportedOperations.NEW_REGISTRATION);
 						} else {
-							idObjectValidator.validateIdObject(requestMap,
+							idObjectValidator.validateIdObject(identitySchema, requestMap,
 									IdObjectValidatorSupportedOperations.UPDATE_UIN);
 						}
 					}
@@ -259,7 +288,7 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 								Arrays.asList(e.getErrorTexts().get(index).split("-")[1].trim().split("\\|")).stream()
 										.collect(Collectors.joining(" | "))))
 			);
-		} catch (IdObjectIOException e) {
+		} catch (InvalidIdSchemaException | IdObjectIOException e) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO, ID_REQUEST_VALIDATOR,
 					VALIDATE_REQUEST + ExceptionUtils.getStackTrace(e));
 			errors.rejectValue(REQUEST, ID_OBJECT_PROCESSING_FAILED.getErrorCode(),
@@ -334,8 +363,6 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 							+ StringUtils.substringBefore(StringUtils.reverseDelimited(e.getMessage(), ' '), " ")));
 		}
 	}
-
-	
 
 	/**
 	 * Convert to map.
