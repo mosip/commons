@@ -5,6 +5,8 @@ import static io.mosip.idrepository.core.constant.IdRepoConstants.CBEFF_FORMAT;
 import static io.mosip.idrepository.core.constant.IdRepoConstants.FILE_FORMAT_ATTRIBUTE;
 import static io.mosip.idrepository.core.constant.IdRepoConstants.FILE_NAME_ATTRIBUTE;
 import static io.mosip.idrepository.core.constant.IdRepoConstants.FMR_ENABLED;
+import static io.mosip.idrepository.core.constant.IdRepoConstants.IDA_NOTIFY_REQ_ID;
+import static io.mosip.idrepository.core.constant.IdRepoConstants.IDA_NOTIFY_REQ_VER;
 import static io.mosip.idrepository.core.constant.IdRepoConstants.MODULO_VALUE;
 import static io.mosip.idrepository.core.constant.IdRepoConstants.MOSIP_PRIMARY_LANGUAGE;
 import static io.mosip.idrepository.core.constant.IdRepoConstants.SPLITTER;
@@ -836,12 +838,12 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 			}
 			RequestWrapper<EventsDTO> request = new RequestWrapper<>();
 			events.setEvents(eventsList);
-			request.setId("");
+			request.setId(env.getProperty(IDA_NOTIFY_REQ_ID));
 			request.setRequesttime(DateUtils.getUTCCurrentDateTime());
-			request.setVersion("");
+			request.setVersion(env.getProperty(IDA_NOTIFY_REQ_VER));
 			request.setRequest(events);
 			mosipLogger.info(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, "notify", "notifying IDA for event" + eventType.name());
-			restHelper.requestAsync(restBuilder.buildRequest(RestServicesConstants.ID_AUTH_SERVICE, request, Void.class));
+			restHelper.requestSync(restBuilder.buildRequest(RestServicesConstants.ID_AUTH_SERVICE, request, Void.class));
 			mosipLogger.info(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, "notify", "notified IDA for event" + eventType.name());
 		} catch (IdRepoDataValidationException | RestServiceException e) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, "notify", e.getMessage());

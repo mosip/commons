@@ -92,6 +92,10 @@ public class IdRepoConstants {
 	
 	public static final String FMR_ENABLED = "mosip.fingerprint.fmr.enabled";
 	
+	public static final String IDA_NOTIFY_REQ_ID = "ida.api.id.event.notify";
+	
+	public static final String IDA_NOTIFY_REQ_VER = "ida.api.version.event.notify";
+	
 	/** The value. */
 	private final String value;
 
