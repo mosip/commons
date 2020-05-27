@@ -387,7 +387,13 @@ public class IdentitySchemaServiceImpl implements IdentitySchemaService {
 		JSONObject schemaAttributes = new JSONObject();
 		schemaAttributes.put(ATTR_FIELDTYPE, schemaDto.getFieldType());
 		schemaAttributes.put(ATTR_FIELD_CATEGORY, schemaDto.getFieldCategory());
-		schemaAttributes.put(ATTR_BIOS, schemaDto.getBioAttributes());
+		JSONArray bioAttributes = new JSONArray();
+		if(schemaDto.getBioAttributes() != null) {
+			schemaDto.getBioAttributes().forEach(bioAttr -> { 
+				bioAttributes.put(bioAttr);
+			});
+		}		
+		schemaAttributes.put(ATTR_BIOS, bioAttributes);
 		
 		if(isPrimitive(schemaDto.getType()))
 			schemaAttributes.put(KEY_TYPE, schemaDto.getType());

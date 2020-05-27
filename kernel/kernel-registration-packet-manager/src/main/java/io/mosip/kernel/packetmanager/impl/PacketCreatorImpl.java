@@ -150,7 +150,7 @@ public class PacketCreatorImpl implements PacketCreator {
 						registrationId);
 				
 				//TODO sign zip
-				//subpacketBytes = CryptoUtil.encodeBase64(packetCryptoHelper.encryptPacket(subpacketBytes, publicKey)).getBytes();
+				subpacketBytes = CryptoUtil.encodeBase64(packetCryptoHelper.encryptPacket(subpacketBytes, publicKey)).getBytes();
 				addEntryToZip(String.format(PacketManagerConstants.SUBPACKET_ZIP_FILE_NAME, registrationId, subpacketName), 
 						subpacketBytes, packetZip);
 				LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), 
@@ -449,5 +449,5 @@ public class PacketCreatorImpl implements PacketCreator {
 	public void setPrintingName(String langauge, String printingName) {
 		this.packetInfoDto.setPrintingName(langauge, printingName);		
 	}
-
+	
 }
