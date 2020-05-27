@@ -17,7 +17,7 @@ CREATE TABLE master.identity_schema(
 	id_version numeric(5,3),
 	title character varying(64),
 	description character varying(256),
-	id_attr_json character varying(12288),
+	id_attr_json character varying(20480),
 	schema_json character varying(10240),
 	status_code character varying(36),
 	add_props boolean,
