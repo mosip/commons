@@ -28,6 +28,9 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +41,8 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
@@ -72,6 +77,9 @@ public class IdObjectSchemaValidator implements IdObjectValidator {
 
 	/** The Constant OPERATION. */
 	private static final String OPERATION = "operation";
+	
+	private static final String [] REQUIRED_FIELDS_UPDATEUIN = new String[] {"IDSchemaVersion", "UIN"};
+	private static final String [] REQUIRED_FIELDS_LOSTUIN = new String[] {"IDSchemaVersion"};
 
 	/** The mapper. */
 	@Autowired
@@ -312,7 +320,7 @@ public class IdObjectSchemaValidator implements IdObjectValidator {
 			throws IdObjectValidationFailedException, IdObjectIOException ,InvalidIdSchemaException{		
 		
 		try {
-			final JsonSchema jsonSchema = getJsonSchema(idSchema);
+			final JsonSchema jsonSchema = getJsonSchema(idSchema, operation);
 			JsonNode jsonIdObjectNode = mapper.readTree(mapper.writeValueAsString(idObject));			
 			ProcessingReport report = jsonSchema.validate(jsonIdObjectNode);
 			logger.debug("schema validation report generated : " + report);
@@ -334,13 +342,28 @@ public class IdObjectSchemaValidator implements IdObjectValidator {
 		}
 	}
 	
-	private JsonSchema getJsonSchema(String schemaJson) throws InvalidIdSchemaException {
+	private JsonSchema getJsonSchema(String schemaJson, IdObjectValidatorSupportedOperations operation) throws InvalidIdSchemaException {
 		if(schemaJson == null)
 			throw new InvalidIdSchemaException(IdObjectValidatorErrorConstant.INVALID_ID_SCHEMA.getErrorCode(), 
 					IdObjectValidatorErrorConstant.INVALID_ID_SCHEMA.getMessage());		
 	
 		try {
-			JsonNode jsonIdSchemaNode = JsonLoader.fromString(schemaJson);
+			
+			JSONObject schema = new JSONObject(schemaJson);
+			switch (operation) {
+			case UPDATE_UIN:
+				((JSONObject)((JSONObject)schema.get("properties")).get("identity")).put("required", 
+						new JSONArray(REQUIRED_FIELDS_UPDATEUIN));
+				break;
+			case LOST_UIN:
+				((JSONObject)((JSONObject)schema.get("properties")).get("identity")).put("required", 
+						new JSONArray(REQUIRED_FIELDS_LOSTUIN));
+				break;
+			default:
+					break;
+			}	
+			
+			JsonNode jsonIdSchemaNode = JsonLoader.fromString(schema.toString());
 			
 			if(jsonIdSchemaNode.size() <= 0 || 
 					!(jsonIdSchemaNode.hasNonNull("$schema") && jsonIdSchemaNode.hasNonNull("type"))) {
@@ -350,11 +373,12 @@ public class IdObjectSchemaValidator implements IdObjectValidator {
 				
 			final JsonSchemaFactory factory = IdObjectValidatorHelper.getJSONSchemaFactory();
 			return factory.getJsonSchema(jsonIdSchemaNode);			
-		} catch (IOException | ProcessingException e) {
+		} catch (IOException | ProcessingException | JSONException e) {
 			throw new InvalidIdSchemaException(IdObjectValidatorErrorConstant.SCHEMA_IO_EXCEPTION.getErrorCode(), 
 					IdObjectValidatorErrorConstant.SCHEMA_IO_EXCEPTION.getMessage());
 		}	
 	}
+	
 	
 	
 	private List<ServiceError> getErrorList(ProcessingReport report) {
