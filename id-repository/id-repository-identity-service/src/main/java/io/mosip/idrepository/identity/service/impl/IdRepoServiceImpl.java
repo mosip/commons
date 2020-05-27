@@ -5,8 +5,6 @@ import static io.mosip.idrepository.core.constant.IdRepoConstants.CBEFF_FORMAT;
 import static io.mosip.idrepository.core.constant.IdRepoConstants.FILE_FORMAT_ATTRIBUTE;
 import static io.mosip.idrepository.core.constant.IdRepoConstants.FILE_NAME_ATTRIBUTE;
 import static io.mosip.idrepository.core.constant.IdRepoConstants.FMR_ENABLED;
-import static io.mosip.idrepository.core.constant.IdRepoConstants.IDA_NOTIFY_REQ_ID;
-import static io.mosip.idrepository.core.constant.IdRepoConstants.IDA_NOTIFY_REQ_VER;
 import static io.mosip.idrepository.core.constant.IdRepoConstants.MODULO_VALUE;
 import static io.mosip.idrepository.core.constant.IdRepoConstants.MOSIP_PRIMARY_LANGUAGE;
 import static io.mosip.idrepository.core.constant.IdRepoConstants.SPLITTER;
@@ -25,7 +23,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -54,20 +51,11 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 
-import io.mosip.idrepository.core.builder.RestRequestBuilder;
-import io.mosip.idrepository.core.constant.EventType;
-import io.mosip.idrepository.core.constant.RestServicesConstants;
 import io.mosip.idrepository.core.dto.DocumentsDTO;
-import io.mosip.idrepository.core.dto.EventDTO;
-import io.mosip.idrepository.core.dto.EventsDTO;
 import io.mosip.idrepository.core.dto.IdRequestDTO;
 import io.mosip.idrepository.core.dto.RequestDTO;
-import io.mosip.idrepository.core.dto.RestRequestDTO;
 import io.mosip.idrepository.core.exception.IdRepoAppException;
 import io.mosip.idrepository.core.exception.IdRepoAppUncheckedException;
-import io.mosip.idrepository.core.exception.IdRepoDataValidationException;
-import io.mosip.idrepository.core.exception.RestServiceException;
-import io.mosip.idrepository.core.helper.RestHelper;
 import io.mosip.idrepository.core.logger.IdRepoLogger;
 import io.mosip.idrepository.core.security.IdRepoSecurityManager;
 import io.mosip.idrepository.core.spi.IdRepoService;
@@ -89,8 +77,6 @@ import io.mosip.kernel.core.cbeffutil.spi.CbeffUtil;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.fsadapter.exception.FSAdapterException;
 import io.mosip.kernel.core.fsadapter.spi.FileSystemAdapter;
-import io.mosip.kernel.core.http.RequestWrapper;
-import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.DateUtils;
@@ -198,12 +184,6 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 	@Autowired
 	private UinEncryptSaltRepo uinEncryptSaltRepo;
 
-	@Autowired
-	private RestHelper restHelper;
-
-	@Autowired
-	private RestRequestBuilder restBuilder;
-
 	/**
 	 * Adds the identity to DB.
 	 *
@@ -254,7 +234,6 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 				request.getRequest().getBiometricReferenceId(), env.getProperty(ACTIVE_STATUS),
 				env.getProperty(MOSIP_PRIMARY_LANGUAGE), IdRepoSecurityManager.getUser(), DateUtils.getUTCCurrentDateTime(), null, null, false,
 				null));
-		notify(EventType.CREATE_UIN, uin, null);
 		return uinEntity;
 	}
 
@@ -463,7 +442,6 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 		int modResult = (int) (Long.parseLong(uin) % moduloValue);
 		String hashSalt = uinHashSaltRepo.retrieveSaltById(modResult);
 		String uinHash = modResult + SPLITTER + securityManager.hashwithSalt(uin.getBytes(), hashSalt.getBytes());
-		boolean isStatusUpdated = false;
 		try {
 			Uin uinObject = retrieveIdentityByUin(uinHash, null);
 			uinObject.setRegId(request.getRequest().getRegistrationId());
@@ -472,10 +450,6 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 				uinObject.setStatusCode(request.getRequest().getStatus());
 				uinObject.setUpdatedBy(IdRepoSecurityManager.getUser());
 				uinObject.setUpdatedDateTime(DateUtils.getUTCCurrentDateTime());
-
-				if (!env.getProperty(ACTIVE_STATUS).equalsIgnoreCase(request.getRequest().getStatus())) {
-					isStatusUpdated = true;
-				}
 			}
 			if (Objects.nonNull(request.getRequest()) && Objects.nonNull(request.getRequest().getIdentity())) {
 				RequestDTO requestDTO = request.getRequest();
@@ -509,11 +483,6 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 					env.getProperty(MOSIP_PRIMARY_LANGUAGE), IdRepoSecurityManager.getUser(), DateUtils.getUTCCurrentDateTime(),
 					IdRepoSecurityManager.getUser(), DateUtils.getUTCCurrentDateTime(), false, null));
 
-			if (isStatusUpdated) {
-				notify(EventType.UPDATE_UIN, uin, uinObject.getUpdatedDateTime());
-			} else {
-				notify(EventType.UPDATE_UIN, uin, null);
-			}
 			return uinObject;
 		} catch (JSONException | InvalidJsonException e) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, UPDATE_IDENTITY, e.getMessage());
@@ -816,37 +785,6 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 		} catch (JsonProcessingException e) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, "convertToBytes", e.getMessage());
 			throw new IdRepoAppException(ID_OBJECT_PROCESSING_FAILED, e);
-		}
-	}
-
-	private void notify(EventType eventType, String uin, LocalDateTime expiryTimestamp) {
-		try {
-			EventsDTO events = new EventsDTO();
-			List<EventDTO> eventsList = new ArrayList<>();
-			eventsList.add(new EventDTO(eventType, uin, null, expiryTimestamp, null));
-			if (eventType == EventType.UPDATE_UIN) {
-				RestRequestDTO restRequest = restBuilder.buildRequest(RestServicesConstants.VID_SERVICE, null,
-						ResponseWrapper.class);
-				restRequest.setUri(restRequest.getUri().replace("{uin}", uin));
-				ResponseWrapper<EventsDTO> response = restHelper.requestSync(restRequest);
-				EventsDTO eventsDto = mapper.convertValue(response.getResponse(), EventsDTO.class);response.getResponse();
-				eventsList.addAll(eventsDto.getEvents().stream()
-						.map(event -> new EventDTO(EventType.UPDATE_VID, uin, event.getVid(),
-								Objects.isNull(expiryTimestamp) ? event.getExpiryTimestamp() : expiryTimestamp,
-								event.getTransactionLimit()))
-						.collect(Collectors.toList()));
-			}
-			RequestWrapper<EventsDTO> request = new RequestWrapper<>();
-			events.setEvents(eventsList);
-			request.setId(env.getProperty(IDA_NOTIFY_REQ_ID));
-			request.setRequesttime(DateUtils.getUTCCurrentDateTime());
-			request.setVersion(env.getProperty(IDA_NOTIFY_REQ_VER));
-			request.setRequest(events);
-			mosipLogger.info(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, "notify", "notifying IDA for event" + eventType.name());
-			restHelper.requestSync(restBuilder.buildRequest(RestServicesConstants.ID_AUTH_SERVICE, request, Void.class));
-			mosipLogger.info(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, "notify", "notified IDA for event" + eventType.name());
-		} catch (IdRepoDataValidationException | RestServiceException e) {
-			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, "notify", e.getMessage());
 		}
 	}
 
