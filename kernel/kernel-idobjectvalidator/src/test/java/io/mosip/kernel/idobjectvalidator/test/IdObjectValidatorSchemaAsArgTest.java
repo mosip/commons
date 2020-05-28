@@ -101,44 +101,44 @@ public class IdObjectValidatorSchemaAsArgTest {
 	@Test
 	public void testValidSchemaAndValidIDObject() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
 		JsonNode idObject = JsonLoader.fromResource("/valid-IDObject.json");
-		assertEquals(true, validator.validateIdObject(validSchemaJson, idObject, IdObjectValidatorSupportedOperations.NEW_REGISTRATION));
+		assertEquals(true, validator.validateIdObject(validSchemaJson, idObject));
 	}
 	
 	@Test(expected = IdObjectIOException.class)
 	public void testInvalidSchemaAndValidIDObject() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
 		JsonNode idObject = JsonLoader.fromResource("/valid-IDObject.json");
-		validator.validateIdObject(schemaJsonWithoutDefinitions, idObject, IdObjectValidatorSupportedOperations.NEW_REGISTRATION);
+		validator.validateIdObject(schemaJsonWithoutDefinitions, idObject);
 	}
 	
 	@Test(expected = InvalidIdSchemaException.class)
 	public void testNullSchemaAndValidIDObject() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
 		JsonNode idObject = JsonLoader.fromResource("/valid-IDObject.json");
-		validator.validateIdObject(null, idObject, IdObjectValidatorSupportedOperations.NEW_REGISTRATION);
+		validator.validateIdObject(null, idObject);
 	}
 	
 	@Test(expected = InvalidIdSchemaException.class)
 	public void testNoSchemaAndValidIDObject() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
 		JsonNode idObject = JsonLoader.fromResource("/valid-IDObject.json");
-		validator.validateIdObject("", idObject, IdObjectValidatorSupportedOperations.NEW_REGISTRATION);
+		validator.validateIdObject("", idObject);
 	}
 	
 	@Test(expected = InvalidIdSchemaException.class)
 	public void testEmptySchemaAndValidIDObject() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
 		JsonNode idObject = JsonLoader.fromResource("/valid-IDObject.json");
-		validator.validateIdObject("{}", idObject, IdObjectValidatorSupportedOperations.NEW_REGISTRATION);
+		validator.validateIdObject("{}", idObject);
 	}
 	
 	@Test(expected = IdObjectValidationFailedException.class)
 	public void testValidSchemaAndInValidIDObject() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
 		JsonNode idObject = JsonLoader.fromResource("/invalid-IDObject.json");
-		validator.validateIdObject(validSchemaJson, idObject, IdObjectValidatorSupportedOperations.NEW_REGISTRATION);
+		validator.validateIdObject(validSchemaJson, idObject);
 	}
 	
 	@Test
 	public void testValidSchemaAndInValidIDObjectWithResponseCheck() throws IOException, IdObjectIOException, InvalidIdSchemaException {
 		JsonNode idObject = JsonLoader.fromResource("/invalid-IDObject.json");		
 		try {
-			validator.validateIdObject(validSchemaJson, idObject, IdObjectValidatorSupportedOperations.NEW_REGISTRATION);
+			validator.validateIdObject(validSchemaJson, idObject);
 		} catch (IdObjectValidationFailedException e) {
 			assertEquals("Invalid input parameter - identity/IDSchemaVersion", e.getErrorTexts().get(0));			
 		}
@@ -147,20 +147,20 @@ public class IdObjectValidatorSchemaAsArgTest {
 	@Test
 	public void testSchemaValidatorsAndValidIDObject() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
 		JsonNode idObject = JsonLoader.fromResource("/valid-IDObject.json");
-		assertEquals(true, validator.validateIdObject(schemaWithValidators, idObject, IdObjectValidatorSupportedOperations.NEW_REGISTRATION));
+		assertEquals(true, validator.validateIdObject(schemaWithValidators, idObject));
 	}
 	
 	@Test(expected= IdObjectValidationFailedException.class)
 	public void testSchemaValidatorsAndInvalidIDObject() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
 		JsonNode idObject = JsonLoader.fromResource("/validatorcheck-IDObject.json");
-		validator.validateIdObject(schemaWithValidators, idObject, IdObjectValidatorSupportedOperations.NEW_REGISTRATION);
+		validator.validateIdObject(schemaWithValidators, idObject);
 	}
 	
 	@Test
 	public void testSchemaValidatorsAndInvalidIDObjectWithResponseCheck() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
 		JsonNode idObject = JsonLoader.fromResource("/validatorcheck-IDObject.json");
 		try {
-			validator.validateIdObject(schemaWithValidators, idObject, IdObjectValidatorSupportedOperations.NEW_REGISTRATION);
+			validator.validateIdObject(schemaWithValidators, idObject);
 		} catch (IdObjectValidationFailedException e) {
 			assertEquals("Invalid input parameter - identity/dateOfBirth", e.getErrorTexts().get(0));			
 		}
@@ -169,14 +169,14 @@ public class IdObjectValidatorSchemaAsArgTest {
 	@Test
 	public void testValidators() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
 		JsonNode idObject = JsonLoader.fromResource("/validatorcheck-IDObject2.json");
-		assertEquals(true, validator.validateIdObject(schemaWithValidators_1, idObject, IdObjectValidatorSupportedOperations.NEW_REGISTRATION));		
+		assertEquals(true, validator.validateIdObject(schemaWithValidators_1, idObject));		
 	}
 	
 	@Test
 	public void testValidatorsWithInvalidIDObject() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
 		JsonNode idObject = JsonLoader.fromResource("/validatorcheck-IDObject3.json");		
 		try {
-			validator.validateIdObject(schemaWithValidators_1, idObject, IdObjectValidatorSupportedOperations.NEW_REGISTRATION);
+			validator.validateIdObject(schemaWithValidators_1, idObject);
 		} catch (IdObjectValidationFailedException e) {
 			assertEquals("Invalid input parameter - identity/fullName/0/value", e.getErrorTexts().get(0));			
 		}
@@ -186,7 +186,7 @@ public class IdObjectValidatorSchemaAsArgTest {
 	public void testValidatorsWithInvalidIDObject_2() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
 		JsonNode idObject = JsonLoader.fromResource("/validatorcheck-IDObject4.json");		
 		try {
-			validator.validateIdObject(schemaWithValidators_1, idObject, IdObjectValidatorSupportedOperations.NEW_REGISTRATION);
+			validator.validateIdObject(schemaWithValidators_1, idObject);
 		} catch (IdObjectValidationFailedException e) {
 			assertEquals("Invalid input parameter - identity/referenceIdentityNumber", e.getErrorTexts().get(0));			
 		}
@@ -195,20 +195,20 @@ public class IdObjectValidatorSchemaAsArgTest {
 	@Test
 	public void testValidatorsForUpdateUIN() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
 		JsonNode idObject = JsonLoader.fromResource("/UINcheck-IDObject5.json");
-		assertEquals(true, validator.validateIdObject(SCHEMA, idObject, IdObjectValidatorSupportedOperations.UPDATE_UIN));		
+		assertEquals(true, validator.validateIdObject(SCHEMA, idObject));		
 	}
 	
 	@Test
 	public void testValidatorsForLostUIN() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
 		JsonNode idObject = JsonLoader.fromResource("/UINcheck-IDObject5.json");
-		assertEquals(true, validator.validateIdObject(SCHEMA, idObject, IdObjectValidatorSupportedOperations.LOST_UIN));		
+		assertEquals(true, validator.validateIdObject(SCHEMA, idObject));		
 	}
 	
 	@Test
 	public void testValidatorsForUpdateUINWithNull() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
 		JsonNode idObject = JsonLoader.fromResource("/UINcheck-IDObject6.json");
 		try {
-			validator.validateIdObject(SCHEMA, idObject, IdObjectValidatorSupportedOperations.UPDATE_UIN);
+			validator.validateIdObject(SCHEMA, idObject);
 		} catch (IdObjectValidationFailedException e) {
 			assertEquals("Invalid input parameter - identity/UIN", e.getErrorTexts().get(0));			
 		}				
@@ -218,10 +218,9 @@ public class IdObjectValidatorSchemaAsArgTest {
 	public void testValidatorsForLostUINWithNull() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
 		JsonNode idObject = JsonLoader.fromResource("/UINcheck-IDObject6.json");
 		try {
-			validator.validateIdObject(SCHEMA, idObject, IdObjectValidatorSupportedOperations.LOST_UIN);
+			validator.validateIdObject(SCHEMA, idObject);
 		} catch (IdObjectValidationFailedException e) {
 			assertEquals("Invalid input parameter - identity/UIN", e.getErrorTexts().get(0));			
 		}	
 	}
-
 }

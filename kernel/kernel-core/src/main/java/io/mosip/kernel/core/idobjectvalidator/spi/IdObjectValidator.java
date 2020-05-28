@@ -1,6 +1,7 @@
 package io.mosip.kernel.core.idobjectvalidator.spi;
 
-import io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorSupportedOperations;
+import java.util.List;
+
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectIOException;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectValidationFailedException;
 import io.mosip.kernel.core.idobjectvalidator.exception.InvalidIdSchemaException;
@@ -16,32 +17,33 @@ import io.mosip.kernel.core.idobjectvalidator.exception.InvalidIdSchemaException
  * 
  */
 public interface IdObjectValidator {
-
-	/**
-	 * Validates a JSON object passed as string with the schema provided.
-	 *
-	 * @param identityObject the identity object
-	 * @param operation      the operation
-	 * @return true, if successful
-	 * @throws IdObjectValidationFailedException the id object validation processing
-	 *                                           exception
-	 * @throws IdObjectIOException               the id object IO exception
-	 */
-
-	public boolean validateIdObject(Object identityObject, IdObjectValidatorSupportedOperations operation)
-			throws IdObjectValidationFailedException, IdObjectIOException;
 	
 	/**
-	 * Validates a JSON object passed as string with the identity schema provided.
+	 * Validates a identityObject passed with the identity schema provided.
 	 * 
 	 * @param identitySchema
 	 * @param identityObject
-	 * @param operation
 	 * @return
 	 * @throws IdObjectValidationFailedException
 	 * @throws IdObjectIOException
+	 * @throws InvalidIdSchemaException
 	 */
-	public boolean validateIdObject(String identitySchema, Object identityObject, IdObjectValidatorSupportedOperations operation)
+	public boolean validateIdObject(String identitySchema, Object identityObject)
+			throws IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException;
+	
+	/**
+	 * Validates a identityObject passed with the identity schema provided.
+	 * if validation errors are found then filters error list to ignore missing field errors.
+	 *  
+	 * @param identitySchema
+	 * @param identityObject
+	 * @param ignorableRequiredFields
+	 * @return
+	 * @throws IdObjectValidationFailedException
+	 * @throws IdObjectIOException
+	 * @throws InvalidIdSchemaException
+	 */
+	public boolean validateIdObject(String identitySchema, Object identityObject, List<String> requiredFields)
 			throws IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException;
 
 }

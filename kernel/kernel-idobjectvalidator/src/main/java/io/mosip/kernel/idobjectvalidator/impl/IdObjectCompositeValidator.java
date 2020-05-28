@@ -1,5 +1,7 @@
 package io.mosip.kernel.idobjectvalidator.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
@@ -43,12 +45,11 @@ public class IdObjectCompositeValidator implements IdObjectValidator {
 	 * (java.lang.Object)
 	 */
 	@Override
-	public boolean validateIdObject(Object identityObject, IdObjectValidatorSupportedOperations operation)
-			throws IdObjectValidationFailedException, IdObjectIOException {
-		schemaValidator.validateIdObject(identityObject, operation);
-		patternValidator.validateIdObject(identityObject, operation);
-		referenceValidator.validateIdObject(identityObject, operation);
-
+	public boolean validateIdObject(String idSchema, Object identityObject, List<String> requiredFields)
+			throws IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
+		schemaValidator.validateIdObject(idSchema, identityObject, requiredFields);
+		patternValidator.validateIdObject(idSchema, identityObject, requiredFields);
+		referenceValidator.validateIdObject(idSchema, identityObject, requiredFields);
 		return true;
 	}
 
@@ -60,11 +61,11 @@ public class IdObjectCompositeValidator implements IdObjectValidator {
 	 * (java.lang.Object)
 	 */
 	@Override
-	public boolean validateIdObject(String idSchema, Object idObject, IdObjectValidatorSupportedOperations operation)
+	public boolean validateIdObject(String idSchema, Object idObject)
 			throws IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
-		schemaValidator.validateIdObject( idSchema, idObject, operation);
-		patternValidator.validateIdObject( idSchema, idObject, operation);
-		referenceValidator.validateIdObject( idSchema, idObject, operation);
+		schemaValidator.validateIdObject( idSchema, idObject);
+		patternValidator.validateIdObject( idSchema, idObject);
+		referenceValidator.validateIdObject( idSchema, idObject);
 		return true;
 	}
 

@@ -63,7 +63,7 @@ public class IdObjectPatternValidator implements IdObjectValidator {
 	 * (java.lang.Object)
 	 */
 	@Override
-	public boolean validateIdObject(Object identityObject, IdObjectValidatorSupportedOperations operation)
+	public boolean validateIdObject(String idSchema, Object identityObject)
 			throws IdObjectIOException, IdObjectValidationFailedException {
 		try {
 			String identityString = mapper.writeValueAsString(identityObject);
@@ -117,10 +117,9 @@ public class IdObjectPatternValidator implements IdObjectValidator {
 	}
 
 	@Override
-	public boolean validateIdObject(String idSchema, Object idObject, IdObjectValidatorSupportedOperations operations)
+	public boolean validateIdObject(String idSchema, Object idObject, List<String> requiredFields)
 			throws IdObjectValidationFailedException, IdObjectIOException,InvalidIdSchemaException {
-		// TODO Auto-generated method stub
-		return false;
+		return validateIdObject(idSchema, idObject);
 	}
 
 }
