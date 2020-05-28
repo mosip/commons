@@ -102,12 +102,16 @@ public class SchemaController {
 	}
 	
 	@ResponseFilter
-	@GetMapping("/latest")
+	@GetMapping
 	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN','REGISTRATION_PROCESSOR')")
-	@ApiOperation(value = "Service to fetch latest published identity schema")
-	public ResponseWrapper<IdSchemaResponseDto> getLatestPublishedSchema() {
-		ResponseWrapper<IdSchemaResponseDto> responseWrapper = new ResponseWrapper<>();
-		responseWrapper.setResponse(identitySchemaService.getLatestSchema());
+	@ApiOperation(value = "Service to fetch latest published identity schema, if schemaVersion is provided fetches schema for that version if present")
+	public ResponseWrapper<IdSchemaResponseDto> getLatestPublishedSchema(
+			@RequestParam(name = "schemaVersion", defaultValue = "0") @ApiParam(value = "Version for the requested schema", defaultValue = "0") double schemaVersion) {
+		ResponseWrapper<IdSchemaResponseDto> responseWrapper = new ResponseWrapper<>();		
+		if(schemaVersion > 0)
+			responseWrapper.setResponse(identitySchemaService.getLatestSchema());
+		else
+			responseWrapper.setResponse(identitySchemaService.getIdentitySchema(schemaVersion));
 		return responseWrapper;
 	}
 
