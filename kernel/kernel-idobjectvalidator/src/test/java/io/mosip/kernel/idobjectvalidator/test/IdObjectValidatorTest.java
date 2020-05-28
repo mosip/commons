@@ -73,7 +73,7 @@ public class IdObjectValidatorTest {
 	@Autowired
 	private IdObjectValidator validator;
 
-	@Test
+	/*@Test
 	public void testValidData() throws JsonParseException, JsonMappingException, IdObjectValidationFailedException,
 			IdObjectIOException, IOException {
 		ReflectionTestUtils.setField(validator, "referenceValidator", patternValidator);
@@ -189,6 +189,6 @@ public class IdObjectValidatorTest {
 			assertTrue(e.getErrorCode().equals(ID_OBJECT_PARSING_FAILED.getErrorCode()));
 			assertTrue(e.getErrorText().equals(ID_OBJECT_PARSING_FAILED.getMessage()));
 		}
-	}
+	}*/
 
 }

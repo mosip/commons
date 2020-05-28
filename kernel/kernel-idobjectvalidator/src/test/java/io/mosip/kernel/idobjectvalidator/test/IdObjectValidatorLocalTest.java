@@ -39,7 +39,7 @@ public class IdObjectValidatorLocalTest {
 	@InjectMocks
 	IdObjectSchemaValidator validator;
 
-	@Before
+	/*@Before
 	public void setup() {
 		ReflectionTestUtils.setField(validator, "propertySource", "LOCAL");
 		ReflectionTestUtils.setField(validator, "schemaName", "schemaV1.json");
@@ -79,6 +79,6 @@ public class IdObjectValidatorLocalTest {
 			e.getErrorCode().equals(ID_OBJECT_VALIDATION_FAILED.getErrorCode());
 			e.getErrorText().equals(ID_OBJECT_VALIDATION_FAILED.getMessage());
 		}
-	}
+	}*/
 
 }

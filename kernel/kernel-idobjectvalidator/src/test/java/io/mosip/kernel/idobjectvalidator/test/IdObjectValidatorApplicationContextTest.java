@@ -51,7 +51,7 @@ public class IdObjectValidatorApplicationContextTest {
 
 	ObjectMapper mapper = new ObjectMapper();
 
-	@Before
+	/*@Before
 	public void before() throws IOException {
 		JsonNode schema = JsonLoader.fromResource("/schemaV1.json");
 		PowerMockito.mockStatic(JsonLoader.class);
@@ -127,5 +127,5 @@ public class IdObjectValidatorApplicationContextTest {
 			e.getErrorCode().equals(ID_OBJECT_PARSING_FAILED.getErrorCode());
 			e.getErrorText().equals(ID_OBJECT_PARSING_FAILED.getMessage());
 		}
-	}
+	}*/
 }
