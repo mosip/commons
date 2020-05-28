@@ -159,7 +159,7 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 		try {
 			Vid vid = generateVid(uin, vidRequest.getVidType());
 			VidResponseDTO responseDTO = new VidResponseDTO();
-			responseDTO.setVid(Long.parseLong(vid.getVid()));
+			responseDTO.setVid(vid.getVid());
 			responseDTO.setVidStatus(vid.getStatusCode());
 			return buildResponse(responseDTO, id.get("create"));
 		} catch (IdRepoAppUncheckedException e) {
@@ -307,7 +307,7 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 				checkStatus(vidObject.getStatusCode());
 				checkUinStatus(uinList.get(1));
 				VidResponseDTO resDTO = new VidResponseDTO();
-				resDTO.setUin(Long.parseLong(uinList.get(1)));
+				resDTO.setUin(uinList.get(1));
 				return buildResponse(resDTO, id.get("read"));
 			} else {
 				mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_VID_SERVICE, RETRIEVE_UIN_BY_VID,
@@ -425,7 +425,7 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 		if (policy.getAutoRestoreAllowed() && policy.getRestoreOnAction().equals(vidStatus)) {
 			Vid createVidResponse = generateVid(uin, vidObject.getVidTypeCode());
 			VidResponseDTO restoredVidDTO = new VidResponseDTO();
-			restoredVidDTO.setVid(Long.valueOf(createVidResponse.getVid()));
+			restoredVidDTO.setVid(createVidResponse.getVid());
 			restoredVidDTO.setVidStatus(createVidResponse.getStatusCode());
 			response.setRestoredVid(restoredVidDTO);
 		}
@@ -459,7 +459,7 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 			List<String> uinList = Arrays.asList(decryptedUin.split(SPLITTER));
 			VidResponseDTO response = new VidResponseDTO();
 			Vid generateVidObject = generateVid(uinList.get(1), vidObject.getVidTypeCode());
-			response.setVid(Long.parseLong(generateVidObject.getVid()));
+			response.setVid(generateVidObject.getVid());
 			response.setVidStatus(generateVidObject.getStatusCode());
 			return buildResponse(response, id.get("regenerate"));
 		} catch (IdRepoAppUncheckedException e) {
