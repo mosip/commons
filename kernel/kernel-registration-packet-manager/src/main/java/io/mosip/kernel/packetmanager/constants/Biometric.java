@@ -22,19 +22,19 @@ public enum Biometric {
 	LEFT_IRIS("IRIS_DOUBLE", "Iris", "leftEye", SingleType.IRIS, "L_IRIS"),
 	FACE("FACE_FULL FACE", "Face", "face", SingleType.FACE, "FACE");
 	
-	Biometric(String modalityName, String modalityShortName, String attributeName, SingleType singleType, String mdsConstant) {
+	Biometric(String modalityName, String modalityShortName, String attributeName, SingleType singleType, String shortName) {
 		this.modalityName = modalityName;
 		this.setModalityShortName(modalityShortName);
 		this.attributeName = attributeName;
 		this.singleType = singleType;
-		this.mdsConstant = mdsConstant;
+		this.shortName = shortName;
 	}
 	
 	private String modalityName;
 	private String modalityShortName;
 	private String attributeName;
 	private SingleType singleType;
-	private String mdsConstant;
+	private String shortName;
 		
 	public String getModalityName() {
 		return modalityName;
@@ -96,24 +96,13 @@ public enum Biometric {
 	public static Biometric getBiometricByAttribute(String attributeName) {
 		Biometric constant = null;
 		for(Biometric biometric : Biometric.values()) {
-			if(biometric.getMdsConstant().equalsIgnoreCase(attributeName) || 
+			if(biometric.getShortName().equalsIgnoreCase(attributeName) || 
 					biometric.getAttributeName().equalsIgnoreCase(attributeName)) {
 				constant = biometric;
 				break;
 			}
 		}
 		return constant;
-	}
-	
-	public static String getBiometricByMDSConstant(String mdsConstant) {
-		Biometric constant = null;
-		for(Biometric biometric : Biometric.values()) {
-			if(biometric.getMdsConstant().equalsIgnoreCase(mdsConstant)) {
-				constant = biometric;
-				break;
-			}
-		}
-		return constant != null ? constant.getAttributeName() : null;
 	}
 	
 	public static long getFormatType(SingleType singleType) {
@@ -132,10 +121,10 @@ public enum Biometric {
 		return format;
 	}
 	
-	public String getMdsConstant() {
-		return mdsConstant;
+	public String getShortName() {
+		return shortName;
 	}
-	public void setMdsConstant(String mdsConstant) {
-		this.mdsConstant = mdsConstant;
+	public void setShortName(String shortName) {
+		this.shortName = shortName;
 	}
 }

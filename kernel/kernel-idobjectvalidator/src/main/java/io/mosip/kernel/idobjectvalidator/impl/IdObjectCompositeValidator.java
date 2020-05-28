@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
-import io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorSupportedOperations;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectIOException;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectValidationFailedException;
 import io.mosip.kernel.core.idobjectvalidator.exception.InvalidIdSchemaException;
@@ -27,10 +26,6 @@ public class IdObjectCompositeValidator implements IdObjectValidator {
 	@Autowired
 	private IdObjectSchemaValidator schemaValidator;
 
-	/** The pattern validator. */
-	@Autowired
-	private IdObjectPatternValidator patternValidator;
-
 	/** The reference validator. */
 	@Autowired(required = false)
 	@Qualifier("referenceValidator")
@@ -47,9 +42,8 @@ public class IdObjectCompositeValidator implements IdObjectValidator {
 	@Override
 	public boolean validateIdObject(String idSchema, Object identityObject, List<String> requiredFields)
 			throws IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
-		schemaValidator.validateIdObject(idSchema, identityObject, requiredFields);
-		patternValidator.validateIdObject(idSchema, identityObject, requiredFields);
-		referenceValidator.validateIdObject(idSchema, identityObject, requiredFields);
+		schemaValidator.validateIdObject(idSchema, identityObject);
+		referenceValidator.validateIdObject(idSchema, identityObject);
 		return true;
 	}
 
@@ -61,11 +55,10 @@ public class IdObjectCompositeValidator implements IdObjectValidator {
 	 * (java.lang.Object)
 	 */
 	@Override
-	public boolean validateIdObject(String idSchema, Object idObject)
+	public boolean validateIdObject(String idSchema, Object identityObject)
 			throws IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
-		schemaValidator.validateIdObject( idSchema, idObject);
-		patternValidator.validateIdObject( idSchema, idObject);
-		referenceValidator.validateIdObject( idSchema, idObject);
+		schemaValidator.validateIdObject(idSchema, identityObject);
+		referenceValidator.validateIdObject(idSchema, identityObject);
 		return true;
 	}
 

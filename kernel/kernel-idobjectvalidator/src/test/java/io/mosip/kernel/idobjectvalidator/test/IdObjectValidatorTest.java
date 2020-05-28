@@ -1,194 +1,226 @@
 package io.mosip.kernel.idobjectvalidator.test;
 
-import static io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorErrorConstant.ID_OBJECT_PARSING_FAILED;
-import static io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorErrorConstant.INVALID_INPUT_PARAMETER;
-import static io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorErrorConstant.MANDATORY_FIELDS_NOT_FOUND;
-import static io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorErrorConstant.MISSING_INPUT_PARAMETER;
-import static io.mosip.kernel.idobjectvalidator.constant.IdObjectValidatorConstant.APPLICATION_ID;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 
-import org.junit.FixMethodOrder;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
-import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.autoconfigure.RefreshAutoConfiguration;
-import org.springframework.context.annotation.Import;
-import org.springframework.core.env.Environment;
-import org.springframework.mock.env.MockEnvironment;
+import org.mockito.InjectMocks;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestContext;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.github.fge.jackson.JsonLoader;
 
-import io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorSupportedOperations;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectIOException;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectValidationFailedException;
-import io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator;
-import io.mosip.kernel.idobjectvalidator.impl.IdObjectCompositeValidator;
-import io.mosip.kernel.idobjectvalidator.impl.IdObjectPatternValidator;
+import io.mosip.kernel.core.idobjectvalidator.exception.InvalidIdSchemaException;
 import io.mosip.kernel.idobjectvalidator.impl.IdObjectSchemaValidator;
 
-/**
- * @author Manoj SP
- *
- */
-@RunWith(SpringRunner.class)
-@ContextConfiguration(classes = { TestContext.class, WebApplicationContext.class })
-@ImportAutoConfiguration({ RefreshAutoConfiguration.class, JacksonAutoConfiguration.class })
-@SpringBootTest
-@Import({ IdObjectPatternValidator.class, IdObjectSchemaValidator.class, IdObjectCompositeValidator.class })
-@EnableConfigurationProperties
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@RunWith(MockitoJUnitRunner.class)
 @ActiveProfiles("test")
 public class IdObjectValidatorTest {
+	
+	
+	@InjectMocks
+	IdObjectSchemaValidator validator;
+	
+	private String validSchemaJson = "{\"$schema\":\"http:\\/\\/json-schema.org\\/draft-07\\/schema#\",\"description\":\"string\","
+			+ "\"additionalProperties\":false,\"title\":\"string\",\"type\":\"object\",\"definitions\":{\"simpleType\":"
+			+ "{\"uniqueItems\":true,\"additionalItems\":false,\"type\":\"array\",\"items\":{\"additionalProperties\":false,\"type\":\"object\","
+			+ "\"required\":[\"language\",\"value\"],\"properties\":{\"language\":{\"type\":\"string\"},\"value\":{\"type\":\"string\"}}}},"
+			+ "\"documentType\":{\"additionalProperties\":false,\"type\":\"object\",\"properties\":{\"format\":{\"type\":\"string\"},"
+			+ "\"type\":{\"type\":\"string\"},\"value\":{\"type\":\"string\"}}},\"biometricsType\":{\"additionalProperties\":false,\"type\":\"object\","
+			+ "\"properties\":{\"format\":{\"type\":\"string\"},\"version\":{\"type\":\"number\",\"minimum\":0},\"value\":{\"type\":\"string\"}}}},"
+			+ "\"properties\":{\"identity\":{\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"IDSchemaVersion\",\"fullName\",\"dateOfBirth\","
+			+ "\"gender\",\"addressLine1\",\"proofOfIdentity\",\"individualBiometrics\"],\"properties\":{\"proofOfIdentity\":{\"fieldCategory\":\"evidence\","
+			+ "\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/documentType\"},\"individualBiometrics\":{\"bioAttributes\":"
+			+ "[\"leftIris\", \"face\"],\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/biometricsType\"},"
+			+ "\"IDSchemaVersion\":{\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"type\":\"number\",\"fieldType\":\"default\",\"minimum\":0},\"proofOfAddress\":"
+			+ "{\"fieldCategory\":\"optional\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/documentType\"},\"gender\":"
+			+ "{\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/simpleType\"},\"parentOrGuardianBiometrics\":"
+			+ "{\"bioAttributes\":[\"face\"],\"fieldCategory\":\"evidence\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/biometricsType\"},"
+			+ "\"fullName\":{\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/simpleType\"},"
+			+ "\"addressLine1\":{\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/simpleType\"},"
+			+ "\"dateOfBirth\":{\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"type\":\"string\",\"fieldType\":\"default\"}}}}}";
+	
+	private String schemaJsonWithoutDefinitions = "{\"$schema\":\"http:\\/\\/json-schema.org\\/draft-07\\/schema#\",\"description\":\"string\","
+			+ "\"additionalProperties\":false,\"title\":\"string\",\"type\":\"object\",\"properties\":{\"identity\":{\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"IDSchemaVersion\",\"fullName\",\"dateOfBirth\","
+			+ "\"gender\",\"addressLine1\",\"proofOfIdentity\",\"individualBiometrics\"],\"properties\":{\"proofOfIdentity\":{\"fieldCategory\":\"evidence\","
+			+ "\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/documentType\"},\"individualBiometrics\":{\"bioAttributes\":"
+			+ "[\"leftIris\", \"face\"],\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/biometricsType\"},"
+			+ "\"IDSchemaVersion\":{\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"type\":\"number\",\"fieldType\":\"default\",\"minimum\":0},\"proofOfAddress\":"
+			+ "{\"fieldCategory\":\"optional\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/documentType\"},\"gender\":"
+			+ "{\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/simpleType\"},\"parentOrGuardianBiometrics\":"
+			+ "{\"bioAttributes\":[\"face\"],\"fieldCategory\":\"evidence\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/biometricsType\"},"
+			+ "\"fullName\":{\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/simpleType\"},"
+			+ "\"addressLine1\":{\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/simpleType\"},"
+			+ "\"dateOfBirth\":{\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"type\":\"string\",\"fieldType\":\"default\"}}}}}";
+	
+	
+	private String schemaWithValidators = "{\"$schema\":\"http:\\/\\/json-schema.org\\/draft-07\\/schema#\",\"description\":\"string\","
+			+ "\"additionalProperties\":false,\"title\":\"string\",\"type\":\"object\",\"definitions\":{\"simpleType\":"
+			+ "{\"uniqueItems\":true,\"additionalItems\":false,\"type\":\"array\",\"items\":{\"additionalProperties\":false,\"type\":\"object\","
+			+ "\"required\":[\"language\",\"value\"],\"properties\":{\"language\":{\"type\":\"string\"},\"value\":{\"type\":\"string\"}}}},"
+			+ "\"documentType\":{\"additionalProperties\":false,\"type\":\"object\",\"properties\":{\"format\":{\"type\":\"string\"},"
+			+ "\"type\":{\"type\":\"string\"},\"value\":{\"type\":\"string\"}}},\"biometricsType\":{\"additionalProperties\":false,\"type\":\"object\","
+			+ "\"properties\":{\"format\":{\"type\":\"string\"},\"version\":{\"type\":\"number\",\"minimum\":0},\"value\":{\"type\":\"string\"}}}},"
+			+ "\"properties\":{\"identity\":{\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"IDSchemaVersion\",\"fullName\",\"dateOfBirth\","
+			+ "\"gender\",\"addressLine1\",\"proofOfIdentity\",\"individualBiometrics\"],\"properties\":{\"proofOfIdentity\":{\"fieldCategory\":\"evidence\","
+			+ "\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/documentType\"},\"individualBiometrics\":{\"bioAttributes\":"
+			+ "[\"leftIris\", \"face\"],\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/biometricsType\"},"
+			+ "\"IDSchemaVersion\":{\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"type\":\"number\",\"fieldType\":\"default\",\"minimum\":0},\"proofOfAddress\":"
+			+ "{\"fieldCategory\":\"optional\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/documentType\"},\"gender\":"
+			+ "{\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/simpleType\"},\"parentOrGuardianBiometrics\":"
+			+ "{\"bioAttributes\":[\"face\"],\"fieldCategory\":\"evidence\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/biometricsType\"},"
+			+ "\"fullName\":{\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/simpleType\"},"
+			+ "\"addressLine1\":{\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/simpleType\"},"
+			+ "\"dateOfBirth\":{\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"type\":\"string\",\"fieldType\":\"default\",\"validators\":"
+			+ "[{\"type\": \"regex\",\"validator\":\"^(1869|18[7-9][0-9]|19[0-9][0-9]|20[0-9][0-9])/([0][1-9]|1[0-2])/([0][1-9]|[1-2][0-9]|3[01])$\",\"arguments\":[]}] }}}}}";
+	
+	private String schemaWithValidators_1 = "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"description\":\"string\",\"additionalProperties\":false,"
+			+ "\"title\":\"string\",\"type\":\"object\",\"definitions\":{\"simpleType\":{\"uniqueItems\":true,\"additionalItems\":false,\"type\":\"array\","
+			+ "\"items\":{\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"language\",\"value\"],"
+			+ "\"properties\":{\"language\":{\"type\":\"string\"},\"value\":{\"type\":\"string\","
+			+ "\"validators\":[{\"type\":\"regex\",\"validator\":\"^(?=.{0,50}$).*\",\"arguments\":[]}]}}}},"
+			+ "\"documentType\":{\"additionalProperties\":false,\"type\":\"object\",\"properties\":{\"format\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"},\"value\":{\"type\":\"string\"}}},\"biometricsType\":{\"additionalProperties\":false,\"type\":\"object\",\"properties\":{\"format\":{\"type\":\"string\"},\"version\":{\"type\":\"number\",\"minimum\":0},\"value\":{\"type\":\"string\"}}}},\"properties\":{\"identity\":{\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"IDSchemaVersion\",\"fullName\",\"dateOfBirth\",\"gender\",\"addressLine1\",\"proofOfIdentity\",\"individualBiometrics\"],\"properties\":{\"proofOfIdentity\":{\"fieldCategory\":\"evidence\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#/definitions/documentType\"},\"individualBiometrics\":{\"bioAttributes\":[\"leftIris\",\"face\"],\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#/definitions/biometricsType\"},\"IDSchemaVersion\":{\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"type\":\"number\",\"fieldType\":\"default\",\"minimum\":0},\"proofOfAddress\":{\"fieldCategory\":\"optional\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#/definitions/documentType\"},\"gender\":{\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#/definitions/simpleType\"},\"parentOrGuardianBiometrics\":{\"bioAttributes\":[\"face\"],\"fieldCategory\":\"evidence\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#/definitions/biometricsType\"},\"fullName\":{\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#/definitions/simpleType\"},\"addressLine1\":{\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#/definitions/simpleType\"},\"referenceIdentityNumber\":{\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"type\":\"number\",\"fieldType\":\"default\",\"validators\":[{\"type\":\"regex\",\"validator\":\"^([0-9]{10,30})$\",\"arguments\":[]}]},\"dateOfBirth\":{\"fieldCategory\":\"Pvt\",\"format\":\"none\",\"type\":\"string\",\"fieldType\":\"default\",\"validators\":[{\"type\":\"regex\",\"validator\":\"^(1869|18[7-9][0-9]|19[0-9][0-9]|20[0-9][0-9])/([0][1-9]|1[0-2])/([0][1-9]|[1-2][0-9]|3[01])$\",\"arguments\":[]}]}}}}}";
 
-	@Autowired
-	Environment env;
-
-	@Autowired
-	IdObjectSchemaValidator schemaValidator;
-
-	@Autowired
-	IdObjectPatternValidator patternValidator;
-
-	@Autowired
-	private IdObjectValidator validator;
-
-	/*@Test
-	public void testValidData() throws JsonParseException, JsonMappingException, IdObjectValidationFailedException,
-			IdObjectIOException, IOException {
-		ReflectionTestUtils.setField(validator, "referenceValidator", patternValidator);
-		String identityString = "{\"identity\":{\"IDSchemaVersion\":1.0,\"UIN\":4920546943,\"fullName\":[{\"language\":\"eng\",\"value\":\"Ibrahim Ibn Ali\"}],\"dateOfBirth\":\"1955/04/15\",\"age\":45,\"gender\":[{\"language\":\"eng\",\"value\":\"MLE\"}],\"addressLine1\":[{\"language\":\"eng\",\"value\":\"exemple d'adresse ligne 1\"}],\"addressLine2\":[{\"language\":\"eng\",\"value\":\"exemple d'adresse ligne 2\"}],\"addressLine3\":[{\"language\":\"eng\",\"value\":\"exemple d'adresse ligne 2\"}],\"region\":[{\"language\":\"eng\",\"value\":\"Rabat Sale Kenitra\"}],\"province\":[{\"language\":\"eng\",\"value\":\"Kenitra\"}],\"city\":[{\"language\":\"eng\",\"value\":\"Kenitra\"}],\"postalCode\":\"10112\",\"phone\":\"9876543210\",\"email\":\"abc@xyz.com\",\"CNIENumber\":\"6789545678909\",\"localAdministrativeAuthority\":[{\"language\":\"eng\",\"value\":\"Mograne\"}],\"parentOrGuardianRID\":212124324784912,\"parentOrGuardianUIN\":212124324784912,\"parentOrGuardianName\":[{\"language\":\"eng\",\"value\":\"salma\"}],\"proofOfAddress\":{\"format\":\"pdf\",\"type\":\"Ration Card\",\"value\":\"fileReferenceID\"},\"proofOfIdentity\":{\"format\":\"txt\",\"type\":\"Passport\",\"value\":\"fileReferenceID\"},\"proofOfRelationship\":{\"format\":\"pdf\",\"type\":\"Birth Certificate\",\"value\":\"fileReferenceID\"},\"proofOfDateOfBirth\":{\"format\":\"pdf\",\"type\":\"passport\",\"value\":\"fileReferenceID\"},\"individualBiometrics\":{\"format\":\"cbeff\",\"version\":1.0,\"value\":\"fileReferenceID\"},\"parentOrGuardianBiometrics\":{\"format\":\"cbeff\",\"version\":1.1,\"value\":\"fileReferenceID\"}}}";
-		validator.validateIdObject(
-				new ObjectMapper().readValue(identityString.getBytes(StandardCharsets.UTF_8), Object.class),
-				IdObjectValidatorSupportedOperations.NEW_REGISTRATION);
+	
+	private String SCHEMA =  "{\"$schema\":\"http:\\/\\/json-schema.org\\/draft-07\\/schema#\",\"description\":\"test mosip id schema\",\"additionalProperties\":false,\"title\":\"mosip id schema\",\"type\":\"object\",\"definitions\":{\"simpleType\":{\"uniqueItems\":true,\"additionalItems\":false,\"type\":\"array\",\"items\":{\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"language\",\"value\"],\"properties\":{\"language\":{\"type\":\"string\"},\"value\":{\"type\":\"string\"}}}},\"documentType\":{\"additionalProperties\":false,\"type\":\"object\",\"properties\":{\"format\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"},\"value\":{\"type\":\"string\"}}},\"biometricsType\":{\"additionalProperties\":false,\"type\":\"object\",\"properties\":{\"format\":{\"type\":\"string\"},\"version\":{\"type\":\"number\",\"minimum\":0},\"value\":{\"type\":\"string\"}}}},\"properties\":{\"identity\":{\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"IDSchemaVersion\",\"UIN\",\"fullName\",\"dateOfBirth\",\"gender\",\"addressLine1\",\"addressLine2\",\"addressLine3\",\"region\",\"province\",\"city\",\"postalCode\",\"phone\",\"email\",\"zone\",\"proofOfIdentity\",\"proofOfRelationship\",\"proofOfDateOfBirth\",\"proofOfException\",\"proofOfException\",\"individualBiometrics\"],\"properties\":{\"proofOfAddress\":{\"fieldCategory\":\"optional\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/documentType\"},\"gender\":{\"fieldCategory\":\"pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/simpleType\"},\"city\":{\"validators\":[{\"validator\":\"^(?=.{0,50}$).*\",\"arguments\":[],\"type\":\"regex\"}],\"fieldCategory\":\"pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/simpleType\"},\"postalCode\":{\"validators\":[{\"validator\":\"^[(?i)A-Z0-9]{5}$|^NA$\",\"arguments\":[],\"type\":\"regex\"}],\"fieldCategory\":\"pvt\",\"format\":\"none\",\"type\":\"string\",\"fieldType\":\"default\"},\"individualBiometrics\":{\"bioAttributes\":[\"leftIris\", \"face\"],\"fieldCategory\":\"pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/biometricsType\"},\"province\":{\"validators\":[{\"validator\":\"^(?=.{0,50}$).*\",\"arguments\":[],\"type\":\"regex\"}],\"fieldCategory\":\"pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/simpleType\"},\"zone\":{\"fieldCategory\":\"pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/simpleType\"},\"proofOfDateOfBirth\":{\"fieldCategory\":\"evidence\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/documentType\"},\"addressLine1\":{\"validators\":[{\"validator\":\"^(?=.{0,50}$).*\",\"arguments\":[],\"type\":\"regex\"}],\"fieldCategory\":\"pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/simpleType\"},\"addressLine2\":{\"validators\":[{\"validator\":\"^(?=.{0,50}$).*\",\"arguments\":[],\"type\":\"regex\"}],\"fieldCategory\":\"pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/simpleType\"},\"residenceStatus\":{\"fieldCategory\":\"kyc\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/simpleType\"},\"referenceIdentityNumber\":{\"fieldCategory\":\"kyc\",\"format\":\"none\",\"fieldType\":\"default\",\"type\":\"string\"},\"addressLine3\":{\"validators\":[{\"validator\":\"^(?=.{0,50}$).*\",\"arguments\":[],\"type\":\"regex\"}],\"fieldCategory\":\"pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/simpleType\"},\"email\":{\"validators\":[{\"validator\":\"^[a-zA-Z-\\\\+]+(\\\\.[a-zA-Z]+)*@[a-zA-Z-]+(\\\\.[a-zA-Z]+)*(\\\\.[a-zA-Z]{2,})$\",\"arguments\":[],\"type\":\"regex\"}],\"fieldCategory\":\"pvt\",\"format\":\"none\",\"type\":\"string\",\"fieldType\":\"default\"},\"parentOrGuardianRID\":{\"fieldCategory\":\"evidence\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/simpleType\"},\"parentOrGuardianBiometrics\":{\"bioAttributes\":[\"face\"],\"fieldCategory\":\"evidence\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/biometricsType\"},\"fullName\":{\"validators\":[{\"validator\":\"^(?=.{0,50}$).*\",\"arguments\":[],\"type\":\"regex\"}],\"fieldCategory\":\"pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/simpleType\"},\"dateOfBirth\":{\"validators\":[{\"validator\":\"^(1869|18[7-9][0-9]|19[0-9][0-9]|20[0-9][0-9])\\/([0][1-9]|1[0-2])\\/([0][1-9]|[1-2][0-9]|3[01])$\",\"arguments\":[],\"type\":\"regex\"}],\"fieldCategory\":\"pvt\",\"format\":\"none\",\"type\":\"string\",\"fieldType\":\"default\"},\"parentOrGuardianUIN\":{\"fieldCategory\":\"evidence\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/simpleType\"},\"proofOfIdentity\":{\"fieldCategory\":\"evidence\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/documentType\"},\"IDSchemaVersion\":{\"fieldCategory\":\"none\",\"format\":\"none\",\"type\":\"number\",\"fieldType\":\"default\",\"minimum\":0},\"proofOfException\":{\"fieldCategory\":\"evidence\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/documentType\"},\"phone\":{\"validators\":[{\"validator\":\"^([6-9]{1})([0-9]{9})$\",\"arguments\":[],\"type\":\"regex\"}],\"fieldCategory\":\"pvt\",\"format\":\"none\",\"type\":\"string\",\"fieldType\":\"default\"},\"parentOrGuardianName\":{\"fieldCategory\":\"evidence\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/simpleType\"},\"proofOfRelationship\":{\"fieldCategory\":\"evidence\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/documentType\"},\"UIN\":{\"fieldCategory\":\"none\",\"format\":\"none\",\"type\":\"string\",\"fieldType\":\"default\",\"minimum\":0},\"region\":{\"validators\":[{\"validator\":\"^(?=.{0,50}$).*\",\"arguments\":[],\"type\":\"regex\"}],\"fieldCategory\":\"pvt\",\"format\":\"none\",\"fieldType\":\"default\",\"$ref\":\"#\\/definitions\\/simpleType\"}}}}}";
+	
+	@Before
+	public void setup() {
+		ReflectionTestUtils.setField(validator, "mapper", new ObjectMapper());
 	}
-
+	
 	@Test
-	public void testSchemaValidationFailedError() throws IdObjectValidationFailedException, IdObjectIOException,
-			JsonParseException, JsonMappingException, IOException {
+	public void testValidSchemaAndValidIDObject() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
+		JsonNode idObject = JsonLoader.fromResource("/valid-IDObject.json");
+		assertEquals(true, validator.validateIdObject(validSchemaJson, idObject));
+	}
+	
+	@Test(expected = IdObjectIOException.class)
+	public void testInvalidSchemaAndValidIDObject() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
+		JsonNode idObject = JsonLoader.fromResource("/valid-IDObject.json");
+		validator.validateIdObject(schemaJsonWithoutDefinitions, idObject);
+	}
+	
+	@Test(expected = InvalidIdSchemaException.class)
+	public void testNullSchemaAndValidIDObject() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
+		JsonNode idObject = JsonLoader.fromResource("/valid-IDObject.json");
+		validator.validateIdObject(null, idObject);
+	}
+	
+	@Test(expected = InvalidIdSchemaException.class)
+	public void testNoSchemaAndValidIDObject() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
+		JsonNode idObject = JsonLoader.fromResource("/valid-IDObject.json");
+		validator.validateIdObject("", idObject);
+	}
+	
+	@Test(expected = InvalidIdSchemaException.class)
+	public void testEmptySchemaAndValidIDObject() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
+		JsonNode idObject = JsonLoader.fromResource("/valid-IDObject.json");
+		validator.validateIdObject("{}", idObject);
+	}
+	
+	@Test(expected=IdObjectValidationFailedException.class)
+	public void testValidSchemaAndInValidIDObject() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
+		JsonNode idObject = JsonLoader.fromResource("/valid-json.json");
+		validator.validateIdObject(validSchemaJson, idObject, Collections.singletonList("proofOfIdentity"));
+	}
+	
+	@Test
+	public void testValidSchemaAndInValidIDObjectWithResponseCheck() throws IOException, IdObjectIOException, InvalidIdSchemaException {
+		JsonNode idObject = JsonLoader.fromResource("/invalid-IDObject.json");		
 		try {
-			String identityString = "{\"identity\":{\"IDSchemaVersion\":1.0,\"UIN1\":4920546943,\"fullName\":[{\"language\":\"ara\",\"value\":\"ابراهيم بن علي\"},{\"language\":\"eng\",\"value\":\"Ibrahim Ibn Ali\"}],\"dateOfBirth\":\"2019/02/31\",\"age\":45,\"gender\":[{\"language\":\"ara\",\"value\":\"الذكر\"},{\"language\":\"eng\",\"value\":\"male\"}],\"addressLine1\":[{\"language\":\"ara\",\"value\":\"عنوان العينة سطر 1\"},{\"language\":\"eng\",\"value\":\"exemple d'adresse ligne 1\"}],\"addressLine2\":[{\"language\":\"ara\",\"value\":\"عنوان العينة سطر 2\"},{\"language\":\"eng\",\"value\":\"exemple d'adresse ligne 2\"}],\"addressLine3\":[{\"language\":\"ara\",\"value\":\"عنوان العينة سطر 2\"},{\"language\":\"eng\",\"value\":\"exemple d'adresse ligne 2\"}],\"region\":[{\"language\":\"ara\",\"value\":\"طنجة - تطوان - الحسيمة\"},{\"language\":\"eng\",\"value\":\"T\"}],\"province\":[{\"language\":\"ara\",\"value\":\"فاس-مكناس\"},{\"language\":\"eng\",\"value\":\"Fès-Meknès\"}],\"city\":[{\"language\":\"ara\",\"value\":\"الدار البيضاء\"},{\"language\":\"eng\",\"value\":\"Casablanca\"}],\"postalCode\":\"570004\",\"phone\":\"9876543210\",\"email\":\"abc@xyz.com\",\"CNIENumber\":\"6789545678909\",\"localAdministrativeAuthority\":[{\"language\":\"ara\",\"value\":\"سلمى\"},{\"language\":\"eng\",\"value\":\"salma\"}],\"parentOrGuardianRID\":212124324784912,\"parentOrGuardianUIN\":212124324784912,\"parentOrGuardianName\":[{\"language\":\"ara\",\"value\":\"سلمى\"},{\"language\":\"eng\",\"value\":\"salma\"}],\"proofOfAddress\":{\"format\":\"pdf\",\"type\":\"drivingLicense\",\"value\":\"fileReferenceID\"},\"proofOfIdentity\":{\"format\":\"txt\",\"type\":\"passport\",\"value\":\"fileReferenceID\"},\"proofOfRelationship\":{\"format\":\"pdf\",\"type\":\"passport\",\"value\":\"fileReferenceID\"},\"proofOfDateOfBirth\":{\"format\":\"pdf\",\"type\":\"passport\",\"value\":\"fileReferenceID\"},\"individualBiometrics\":{\"format\":\"cbeff\",\"version\":1.0,\"value\":\"fileReferenceID\"},\"parentOrGuardianBiometrics\":{\"format\":\"cbeff\",\"version\":1.1,\"value\":\"fileReferenceID\"}}}";
-			schemaValidator.validateIdObject(
-					new ObjectMapper().readValue(identityString.getBytes(StandardCharsets.UTF_8), Object.class),
-					IdObjectValidatorSupportedOperations.NEW_REGISTRATION);
+			validator.validateIdObject(validSchemaJson, idObject);
 		} catch (IdObjectValidationFailedException e) {
-			assertTrue(e.getCodes().contains(MISSING_INPUT_PARAMETER.getErrorCode()));
-			assertTrue(e.getErrorTexts().contains(String.format(MISSING_INPUT_PARAMETER.getMessage(), "identity/UIN")));
-			assertTrue(
-					e.getErrorTexts().contains(String.format(INVALID_INPUT_PARAMETER.getMessage(), "identity/UIN1")));
+			assertEquals("Invalid input parameter - identity/IDSchemaVersion", e.getErrorTexts().get(0));			
 		}
 	}
-
+	
 	@Test
-	public void testSchemaNullOperationError() throws IdObjectValidationFailedException, IdObjectIOException,
-			JsonParseException, JsonMappingException, IOException {
-		try {
-			String identityString = "{\"identity\":{\"IDSchemaVersion\":1.0,\"UIN1\":4920546943,\"fullName\":[{\"language\":\"ara\",\"value\":\"ابراهيم بن علي\"},{\"language\":\"eng\",\"value\":\"Ibrahim Ibn Ali\"}],\"dateOfBirth\":\"1955/04/15\",\"age\":45,\"gender\":[{\"language\":\"ara\",\"value\":\"الذكر\"},{\"language\":\"eng\",\"value\":\"male\"}],\"addressLine1\":[{\"language\":\"ara\",\"value\":\"عنوان العينة سطر 1\"},{\"language\":\"eng\",\"value\":\"exemple d'adresse ligne 1\"}],\"addressLine2\":[{\"language\":\"ara\",\"value\":\"عنوان العينة سطر 2\"},{\"language\":\"eng\",\"value\":\"exemple d'adresse ligne 2\"}],\"addressLine3\":[{\"language\":\"ara\",\"value\":\"عنوان العينة سطر 2\"},{\"language\":\"eng\",\"value\":\"exemple d'adresse ligne 2\"}],\"region\":[{\"language\":\"ara\",\"value\":\"طنجة - تطوان - الحسيمة\"},{\"language\":\"eng\",\"value\":\"T\"}],\"province\":[{\"language\":\"ara\",\"value\":\"فاس-مكناس\"},{\"language\":\"eng\",\"value\":\"Fès-Meknès\"}],\"city\":[{\"language\":\"ara\",\"value\":\"الدار البيضاء\"},{\"language\":\"eng\",\"value\":\"Casablanca\"}],\"postalCode\":\"570004\",\"phone\":\"9876543210\",\"email\":\"abc@xyz.com\",\"CNIENumber\":\"6789545678909\",\"localAdministrativeAuthority\":[{\"language\":\"ara\",\"value\":\"سلمى\"},{\"language\":\"eng\",\"value\":\"salma\"}],\"parentOrGuardianRID\":212124324784912,\"parentOrGuardianUIN\":212124324784912,\"parentOrGuardianName\":[{\"language\":\"ara\",\"value\":\"سلمى\"},{\"language\":\"eng\",\"value\":\"salma\"}],\"proofOfAddress\":{\"format\":\"pdf\",\"type\":\"drivingLicense\",\"value\":\"fileReferenceID\"},\"proofOfIdentity\":{\"format\":\"txt\",\"type\":\"passport\",\"value\":\"fileReferenceID\"},\"proofOfRelationship\":{\"format\":\"pdf\",\"type\":\"passport\",\"value\":\"fileReferenceID\"},\"proofOfDateOfBirth\":{\"format\":\"pdf\",\"type\":\"passport\",\"value\":\"fileReferenceID\"},\"individualBiometrics\":{\"format\":\"cbeff\",\"version\":1.0,\"value\":\"fileReferenceID\"},\"parentOrGuardianBiometrics\":{\"format\":\"cbeff\",\"version\":1.1,\"value\":\"fileReferenceID\"}}}";
-			schemaValidator.validateIdObject(
-					new ObjectMapper().readValue(identityString.getBytes(StandardCharsets.UTF_8), Object.class), null);
-		} catch (IdObjectIOException e) {
-			assertTrue(e.getCodes().contains(MISSING_INPUT_PARAMETER.getErrorCode()));
-			assertTrue(e.getErrorTexts().contains(String.format(MISSING_INPUT_PARAMETER.getMessage(), "operation")));
-		}
+	public void testSchemaValidatorsAndValidIDObject() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
+		JsonNode idObject = JsonLoader.fromResource("/valid-IDObject.json");
+		assertEquals(true, validator.validateIdObject(schemaWithValidators, idObject));
 	}
-
-	@Test
-	public void vTestSchemaNullAppIdError() throws IdObjectValidationFailedException, IdObjectIOException,
-			JsonParseException, JsonMappingException, IOException {
-		try {
-			ReflectionTestUtils.setField(schemaValidator, "env", new MockEnvironment());
-			String identityString = "{\"identity\":{\"IDSchemaVersion\":1.0,\"UIN1\":4920546943,\"fullName\":[{\"language\":\"ara\",\"value\":\"ابراهيم بن علي\"},{\"language\":\"eng\",\"value\":\"Ibrahim Ibn Ali\"}],\"dateOfBirth\":\"1955/04/15\",\"age\":45,\"gender\":[{\"language\":\"ara\",\"value\":\"الذكر\"},{\"language\":\"eng\",\"value\":\"male\"}],\"addressLine1\":[{\"language\":\"ara\",\"value\":\"عنوان العينة سطر 1\"},{\"language\":\"eng\",\"value\":\"exemple d'adresse ligne 1\"}],\"addressLine2\":[{\"language\":\"ara\",\"value\":\"عنوان العينة سطر 2\"},{\"language\":\"eng\",\"value\":\"exemple d'adresse ligne 2\"}],\"addressLine3\":[{\"language\":\"ara\",\"value\":\"عنوان العينة سطر 2\"},{\"language\":\"eng\",\"value\":\"exemple d'adresse ligne 2\"}],\"region\":[{\"language\":\"ara\",\"value\":\"طنجة - تطوان - الحسيمة\"},{\"language\":\"eng\",\"value\":\"T\"}],\"province\":[{\"language\":\"ara\",\"value\":\"فاس-مكناس\"},{\"language\":\"eng\",\"value\":\"Fès-Meknès\"}],\"city\":[{\"language\":\"ara\",\"value\":\"الدار البيضاء\"},{\"language\":\"eng\",\"value\":\"Casablanca\"}],\"postalCode\":\"570004\",\"phone\":\"9876543210\",\"email\":\"abc@xyz.com\",\"CNIENumber\":\"6789545678909\",\"localAdministrativeAuthority\":[{\"language\":\"ara\",\"value\":\"سلمى\"},{\"language\":\"eng\",\"value\":\"salma\"}],\"parentOrGuardianRID\":212124324784912,\"parentOrGuardianUIN\":212124324784912,\"parentOrGuardianName\":[{\"language\":\"ara\",\"value\":\"سلمى\"},{\"language\":\"eng\",\"value\":\"salma\"}],\"proofOfAddress\":{\"format\":\"pdf\",\"type\":\"drivingLicense\",\"value\":\"fileReferenceID\"},\"proofOfIdentity\":{\"format\":\"txt\",\"type\":\"passport\",\"value\":\"fileReferenceID\"},\"proofOfRelationship\":{\"format\":\"pdf\",\"type\":\"passport\",\"value\":\"fileReferenceID\"},\"proofOfDateOfBirth\":{\"format\":\"pdf\",\"type\":\"passport\",\"value\":\"fileReferenceID\"},\"individualBiometrics\":{\"format\":\"cbeff\",\"version\":1.0,\"value\":\"fileReferenceID\"},\"parentOrGuardianBiometrics\":{\"format\":\"cbeff\",\"version\":1.1,\"value\":\"fileReferenceID\"}}}";
-			schemaValidator.validateIdObject(
-					new ObjectMapper().readValue(identityString.getBytes(StandardCharsets.UTF_8), Object.class),
-					IdObjectValidatorSupportedOperations.NEW_REGISTRATION);
-		} catch (IdObjectIOException e) {
-			assertTrue(e.getCodes().contains(MISSING_INPUT_PARAMETER.getErrorCode()));
-			assertTrue(e.getErrorTexts().contains(String.format(MISSING_INPUT_PARAMETER.getMessage(), APPLICATION_ID)));
-		}
+	
+	@Test(expected= IdObjectValidationFailedException.class)
+	public void testSchemaValidatorsAndInvalidIDObject() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
+		JsonNode idObject = JsonLoader.fromResource("/validatorcheck-IDObject.json");
+		validator.validateIdObject(schemaWithValidators, idObject);
 	}
-
+	
 	@Test
-	@Ignore
-	public void wTestSchemaNullFieldsError() throws IdObjectValidationFailedException, IdObjectIOException,
-			JsonParseException, JsonMappingException, IOException {
+	public void testSchemaValidatorsAndInvalidIDObjectWithResponseCheck() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
+		JsonNode idObject = JsonLoader.fromResource("/validatorcheck-IDObject.json");
 		try {
-			MockEnvironment mockEnv = (MockEnvironment) ReflectionTestUtils.getField(schemaValidator, "env");
-			mockEnv.setProperty(APPLICATION_ID, "");
-			ReflectionTestUtils.setField(schemaValidator, "env", mockEnv);
-			String identityString = "{\"identity\":{\"IDSchemaVersion\":1.0,\"UIN1\":4920546943,\"fullName\":[{\"language\":\"ara\",\"value\":\"ابراهيم بن علي\"},{\"language\":\"eng\",\"value\":\"Ibrahim Ibn Ali\"}],\"dateOfBirth\":\"1955/04/15\",\"age\":45,\"gender\":[{\"language\":\"ara\",\"value\":\"الذكر\"},{\"language\":\"eng\",\"value\":\"male\"}],\"addressLine1\":[{\"language\":\"ara\",\"value\":\"عنوان العينة سطر 1\"},{\"language\":\"eng\",\"value\":\"exemple d'adresse ligne 1\"}],\"addressLine2\":[{\"language\":\"ara\",\"value\":\"عنوان العينة سطر 2\"},{\"language\":\"eng\",\"value\":\"exemple d'adresse ligne 2\"}],\"addressLine3\":[{\"language\":\"ara\",\"value\":\"عنوان العينة سطر 2\"},{\"language\":\"eng\",\"value\":\"exemple d'adresse ligne 2\"}],\"region\":[{\"language\":\"ara\",\"value\":\"طنجة - تطوان - الحسيمة\"},{\"language\":\"eng\",\"value\":\"T\"}],\"province\":[{\"language\":\"ara\",\"value\":\"فاس-مكناس\"},{\"language\":\"eng\",\"value\":\"Fès-Meknès\"}],\"city\":[{\"language\":\"ara\",\"value\":\"الدار البيضاء\"},{\"language\":\"eng\",\"value\":\"Casablanca\"}],\"postalCode\":\"570004\",\"phone\":\"9876543210\",\"email\":\"abc@xyz.com\",\"CNIENumber\":\"6789545678909\",\"localAdministrativeAuthority\":[{\"language\":\"ara\",\"value\":\"سلمى\"},{\"language\":\"eng\",\"value\":\"salma\"}],\"parentOrGuardianRID\":212124324784912,\"parentOrGuardianUIN\":212124324784912,\"parentOrGuardianName\":[{\"language\":\"ara\",\"value\":\"سلمى\"},{\"language\":\"eng\",\"value\":\"salma\"}],\"proofOfAddress\":{\"format\":\"pdf\",\"type\":\"drivingLicense\",\"value\":\"fileReferenceID\"},\"proofOfIdentity\":{\"format\":\"txt\",\"type\":\"passport\",\"value\":\"fileReferenceID\"},\"proofOfRelationship\":{\"format\":\"pdf\",\"type\":\"passport\",\"value\":\"fileReferenceID\"},\"proofOfDateOfBirth\":{\"format\":\"pdf\",\"type\":\"passport\",\"value\":\"fileReferenceID\"},\"individualBiometrics\":{\"format\":\"cbeff\",\"version\":1.0,\"value\":\"fileReferenceID\"},\"parentOrGuardianBiometrics\":{\"format\":\"cbeff\",\"version\":1.1,\"value\":\"fileReferenceID\"}}}";
-			schemaValidator.validateIdObject(
-					new ObjectMapper().readValue(identityString.getBytes(StandardCharsets.UTF_8), Object.class),
-					IdObjectValidatorSupportedOperations.NEW_REGISTRATION);
-		} catch (IdObjectIOException e) {
-			assertTrue(e.getCodes().contains(MISSING_INPUT_PARAMETER.getErrorCode()));
-			assertTrue(e.getErrorText().contains(String.format(MANDATORY_FIELDS_NOT_FOUND.getMessage(),
-					IdObjectValidatorSupportedOperations.NEW_REGISTRATION.getOperation())));
-		}
-	}
-
-	@Test
-	public void testPatternFailure() throws IdObjectValidationFailedException, IdObjectIOException, JsonParseException,
-			JsonMappingException, IOException {
-		try {
-			String identityString = "{\"identity\":{\"IDSchemaVersion\":1.0,\"UIN\":4920546943,\"fullName\":[{\"language\":\"ara\",\"value\":\"ابراهيم بن علي\"},{\"language\":\"eng\",\"value\":\"Ibrahim Ibn Ali\"}],\"dateOfBirth\":\"1955/04\",\"age\":45,\"gender\":[{\"language\":\"ara\",\"value\":\"الذكر\"},{\"language\":\"eng\",\"value\":\"male\"}],\"addressLine1\":[{\"language\":\"ara\",\"value\":\"عنوان العينة سطر 1\"},{\"language\":\"eng\",\"value\":\"exemple d'adresse ligne 1\"}],\"addressLine2\":[{\"language\":\"ara\",\"value\":\"عنوان العينة سطر 2\"},{\"language\":\"eng\",\"value\":\"exemple d'adresse ligne 2\"}],\"addressLine3\":[{\"language\":\"ara\",\"value\":\"عنوان العينة سطر 2\"},{\"language\":\"eng\",\"value\":\"exemple d'adresse ligne 2\"}],\"region\":[{\"language\":\"ara\",\"value\":\"طنجة - تطوان - الحسيمة\"},{\"language\":\"eng\",\"value\":\"Tanger-Tétouan-Al Hoceima\"}],\"province\":[{\"language\":\"ara\",\"value\":\"فاس-مكناس\"},{\"language\":\"eng\",\"value\":\"Fès-Meknès\"}],\"city\":[{\"language\":\"ara\",\"value\":\"الدار البيضاء\"},{\"language\":\"eng\",\"value\":\"Casablanca\"}],\"postalCode\":\"570004\",\"phone\":\"9876543210\",\"email\":\"abc@xyz.com\",\"CNIENumber\":\"abcd\",\"localAdministrativeAuthority\":[{\"language\":\"ara\",\"value\":\"سلمى\"},{\"language\":\"eng\",\"value\":\"salma\"}],\"parentOrGuardianRID\":212124324784912,\"parentOrGuardianUIN\":212124324784912,\"parentOrGuardianName\":[{\"language\":\"ara\",\"value\":\"سلمى\"},{\"language\":\"eng\",\"value\":\"salma\"}],\"proofOfAddress\":{\"format\":\"pdf\",\"type\":\"drivingLicense\",\"value\":\"fileReferenceID\"},\"proofOfIdentity\":{\"format\":\"txt\",\"type\":\"passport\",\"value\":\"fileReferenceID\"},\"proofOfRelationship\":{\"format\":\"pdf\",\"type\":\"passport\",\"value\":\"fileReferenceID\"},\"proofOfDateOfBirth\":{\"format\":\"pdf\",\"type\":\"passport\",\"value\":\"fileReferenceID\"},\"individualBiometrics\":{\"format\":\"cbeff\",\"version\":1.0,\"value\":\"fileReferenceID\"},\"parentOrGuardianBiometrics\":{\"format\":\"cbeff\",\"version\":1.1,\"value\":\"fileReferenceID\"}}}";
-			validator.validateIdObject(
-					new ObjectMapper().readValue(identityString.getBytes(StandardCharsets.UTF_8), Object.class),
-					IdObjectValidatorSupportedOperations.NEW_REGISTRATION);
+			validator.validateIdObject(schemaWithValidators, idObject);
 		} catch (IdObjectValidationFailedException e) {
-			assertTrue(e.getCodes().contains(INVALID_INPUT_PARAMETER.getErrorCode()));
-			assertTrue(e.getErrorTexts()
-					.contains(String.format(INVALID_INPUT_PARAMETER.getMessage(), "identity/dateOfBirth")));
+			assertEquals("Invalid input parameter - identity/dateOfBirth", e.getErrorTexts().get(0));			
 		}
 	}
-
+	
 	@Test
-	public void xtestSchemaValidatorParsingFailure() throws IdObjectValidationFailedException, IdObjectIOException,
-			JsonParseException, JsonMappingException, IOException {
+	public void testValidators() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
+		JsonNode idObject = JsonLoader.fromResource("/validatorcheck-IDObject2.json");
+		assertEquals(true, validator.validateIdObject(schemaWithValidators_1, idObject));		
+	}
+	
+	@Test
+	public void testValidatorsWithInvalidIDObject() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
+		JsonNode idObject = JsonLoader.fromResource("/validatorcheck-IDObject3.json");		
 		try {
-			ObjectMapper mockMapper = mock(ObjectMapper.class);
-			when(mockMapper.writeValueAsString(Mockito.any()))
-					.thenThrow(new InvalidFormatException(null, "", null, null));
-			ReflectionTestUtils.setField(schemaValidator, "mapper", mockMapper);
-			schemaValidator.validateIdObject(null, IdObjectValidatorSupportedOperations.NEW_REGISTRATION);
-		} catch (IdObjectIOException e) {
-			assertTrue(e.getErrorCode().equals(ID_OBJECT_PARSING_FAILED.getErrorCode()));
-			assertTrue(e.getErrorText().equals(ID_OBJECT_PARSING_FAILED.getMessage()));
+			validator.validateIdObject(schemaWithValidators_1, idObject);
+		} catch (IdObjectValidationFailedException e) {
+			assertEquals("Invalid input parameter - identity/fullName/0/value", e.getErrorTexts().get(0));			
 		}
 	}
-
+	
 	@Test
-	public void ytestPatternValidatorParsingFailure() throws IdObjectValidationFailedException, IdObjectIOException,
-			JsonParseException, JsonMappingException, IOException {
+	public void testValidatorsWithInvalidIDObject_2() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
+		JsonNode idObject = JsonLoader.fromResource("/validatorcheck-IDObject4.json");		
 		try {
-			ObjectMapper mockMapper = mock(ObjectMapper.class);
-			when(mockMapper.writeValueAsString(Mockito.any()))
-					.thenThrow(new InvalidFormatException(null, "", null, null));
-			ReflectionTestUtils.setField(patternValidator, "mapper", mockMapper);
-			patternValidator.validateIdObject(null, IdObjectValidatorSupportedOperations.NEW_REGISTRATION);
-		} catch (IdObjectIOException e) {
-			assertTrue(e.getErrorCode().equals(ID_OBJECT_PARSING_FAILED.getErrorCode()));
-			assertTrue(e.getErrorText().equals(ID_OBJECT_PARSING_FAILED.getMessage()));
+			validator.validateIdObject(schemaWithValidators_1, idObject);
+		} catch (IdObjectValidationFailedException e) {
+			assertEquals("Invalid input parameter - identity/referenceIdentityNumber", e.getErrorTexts().get(0));			
 		}
-	}*/
-
+	}
+	
+	@Test
+	public void testValidatorsForUpdateUIN() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
+		JsonNode idObject = JsonLoader.fromResource("/UINcheck-IDObject5.json");
+		assertEquals(true, validator.validateIdObject(SCHEMA, idObject, Collections.singletonList("UIN")));		
+	}
+	
+	@Test
+	public void testValidatorsForLostUIN() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
+		JsonNode idObject = JsonLoader.fromResource("/UINcheck-IDObject5.json");
+		assertEquals(true, validator.validateIdObject(SCHEMA, idObject, Collections.singletonList("UIN")));		
+	}
+	
+	@Test
+	public void testValidatorsForUpdateUINWithNull() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
+		JsonNode idObject = JsonLoader.fromResource("/UINcheck-IDObject6.json");
+		try {
+			validator.validateIdObject(SCHEMA, idObject,Collections.singletonList("UIN"));
+		} catch (IdObjectValidationFailedException e) {
+			assertEquals("Invalid input parameter - identity/UIN", e.getErrorTexts().get(0));			
+		}				
+	}
+	
+	@Test
+	public void testValidatorsForLostUINWithNull() throws IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
+		JsonNode idObject = JsonLoader.fromResource("/UINcheck-IDObject6.json");
+		try {
+			validator.validateIdObject(SCHEMA, idObject, Collections.singletonList("uin"));
+		} catch (IdObjectValidationFailedException e) {
+			assertEquals("Invalid input parameter - identity/UIN", e.getErrorTexts().get(0));			
+		}	
+	}
 }

@@ -14,6 +14,8 @@ public class IdObjectValidatorConstant {
 	public static final String WARNING = "warning";
 	public static final String INSTANCE = "instance";
 	public static final String POINTER = "pointer";
+	public static final String KEYWORD = "keyword";
+	public static final String VALIDATORS = "validators";
 	public static final String AT = " at ";
 	public static final String ERROR = "error";
 	public static final String PATH_SEPERATOR = "/";

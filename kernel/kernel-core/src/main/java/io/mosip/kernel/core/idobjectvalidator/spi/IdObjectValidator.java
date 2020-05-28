@@ -28,8 +28,10 @@ public interface IdObjectValidator {
 	 * @throws IdObjectIOException
 	 * @throws InvalidIdSchemaException
 	 */
-	public boolean validateIdObject(String identitySchema, Object identityObject)
-			throws IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException;
+	default boolean validateIdObject(String identitySchema, Object identityObject)
+			throws IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
+		return validateIdObject(identitySchema, identityObject, null);
+	}
 	
 	/**
 	 * Validates a identityObject passed with the identity schema provided.
