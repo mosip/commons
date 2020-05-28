@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 
@@ -148,8 +150,17 @@ public class PacketReaderServiceImpl implements PacketReaderService {
 				LinkedHashMap currentidentityMap = (LinkedHashMap) idObject.get(IDENTITY);
 				LinkedHashMap finalidMap =(LinkedHashMap) finalIdObject.get(IDENTITY);
 				LinkedHashMap finalidentityMap=new LinkedHashMap<>(finalidMap);
-				currentidentityMap.forEach((key, value) -> 
-					finalidentityMap.merge(key, value, (v1, v2) -> v1 !=null? v1 : v2));
+				Iterator iterator=currentidentityMap.entrySet().iterator();
+				while(iterator.hasNext()) {
+					Map.Entry entry=(Entry) iterator.next();
+					if(!finalidentityMap.containsKey(entry.getKey())) {
+						finalidentityMap.put(entry.getKey(), entry.getValue());
+					}
+					else if(finalidentityMap.containsKey(entry.getKey()) && finalidentityMap.get(entry.getKey())==null
+							&& entry.getValue()!=null) {
+						finalidentityMap.put(entry.getKey(), entry.getValue());
+					} 
+				}
 				LinkedHashMap objectMap=new LinkedHashMap<>();
 				objectMap.put(IDENTITY, finalidentityMap);
 				finalIdObject=new JSONObject(objectMap);
