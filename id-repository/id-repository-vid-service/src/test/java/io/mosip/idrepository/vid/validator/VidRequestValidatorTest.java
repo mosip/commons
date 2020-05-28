@@ -233,7 +233,7 @@ public class VidRequestValidatorTest {
 		VidRequestDTO request = new VidRequestDTO();
 		request.setVidStatus("ACTIVE");
 		request.setVidType("Perpetual");
-		request.setUin(2953190571L);
+		request.setUin("2953190571");
 		req.setVersion("v1");
 		req.setRequesttime(DateUtils.getUTCCurrentDateTime()
 				.atZone(ZoneId.of(env.getProperty(IdRepoConstants.DATETIME_TIMEZONE))).toLocalDateTime());
@@ -253,7 +253,7 @@ public class VidRequestValidatorTest {
 		req.setId("mosip.vid.create");
 		VidRequestDTO request = new VidRequestDTO();
 		request.setVidStatus("ACTIVE");
-		request.setUin(2953190571L);
+		request.setUin("2953190571");
 		request.setVidType("Temp");
 		req.setVersion("v1");
 		req.setRequesttime(DateUtils.getUTCCurrentDateTime()
@@ -279,7 +279,7 @@ public class VidRequestValidatorTest {
 		req.setId("mosip.vid.create");
 		VidRequestDTO request = new VidRequestDTO();
 		request.setVidStatus("ACTIVE");
-		request.setUin(2953190571L);
+		request.setUin("2953190571");
 		request.setVidType(null);
 		req.setVersion("v1");
 		req.setRequesttime(DateUtils.getUTCCurrentDateTime()
@@ -304,14 +304,14 @@ public class VidRequestValidatorTest {
 	@Test
 	public void testUinValid() {
 		Mockito.when(uinValidator.validateId(Mockito.anyString())).thenReturn(true);
-		ReflectionTestUtils.invokeMethod(requestValidator, "validateUin", 123456l, errors);
+		ReflectionTestUtils.invokeMethod(requestValidator, "validateUin", "123456", errors);
 	}
 	
 	@Test
 	public void testUinInValid() {
 		Mockito.when(uinValidator.validateId(Mockito.anyString())).thenThrow(new InvalidIDException(IdRepoErrorConstants.INVALID_INPUT_PARAMETER.getErrorCode(),
 				String.format(IdRepoErrorConstants.INVALID_INPUT_PARAMETER.getErrorMessage(), "UIN")));
-		ReflectionTestUtils.invokeMethod(requestValidator, "validateUin", 123456l, errors);
+		ReflectionTestUtils.invokeMethod(requestValidator, "validateUin", "123456", errors);
 		errors.getAllErrors().forEach(error -> {
 			assertEquals(IdRepoErrorConstants.INVALID_INPUT_PARAMETER.getErrorCode(), error.getCode());
 			assertEquals(String.format(IdRepoErrorConstants.INVALID_INPUT_PARAMETER.getErrorMessage(), "UIN"),

@@ -159,7 +159,7 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 		try {
 			Vid vid = generateVid(uin, vidRequest.getVidType());
 			VidResponseDTO responseDTO = new VidResponseDTO();
-			responseDTO.setVid(Long.parseLong(vid.getVid()));
+			responseDTO.setVid(vid.getVid());
 			responseDTO.setVidStatus(vid.getStatusCode());
 			return buildResponse(responseDTO, id.get("create"));
 		} catch (IdRepoAppUncheckedException e) {
@@ -206,7 +206,7 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 							: LocalDateTime.MAX.withYear(9999),
 					env.getProperty(VID_ACTIVE_STATUS), IdRepoSecurityManager.getUser(), currentTime, null, null, false,
 					null);
-			notify(EventType.CREATE_VID, Collections.singletonList(vidEntity), false);
+			notify(EventType.CREATE_VID, Collections.singletonList(vidEntity), uinToEncrypt, false);
 			return vidRepo.save(vidEntity);
 		} else if (vidDetails.size() == policy.getAllowedInstances() && policy.getAutoRestoreAllowed()) {
 			Vid vidObject = vidDetails.get(0);
@@ -215,7 +215,7 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 			vidObject.setUpdatedDTimes(DateUtils.getUTCCurrentDateTime());
 			vidObject.setUin(uinToEncrypt);
 			vidRepo.saveAndFlush(vidObject);
-			notify(EventType.CREATE_VID, Collections.singletonList(vidObject), false);
+			notify(EventType.CREATE_VID, Collections.singletonList(vidObject), uinToEncrypt, false);
 			return generateVid(uin, vidType);
 		} else {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_VID_SERVICE, CREATE_VID,
@@ -307,7 +307,7 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 				checkStatus(vidObject.getStatusCode());
 				checkUinStatus(uinList.get(1));
 				VidResponseDTO resDTO = new VidResponseDTO();
-				resDTO.setUin(Long.parseLong(uinList.get(1)));
+				resDTO.setUin(uinList.get(1));
 				return buildResponse(resDTO, id.get("read"));
 			} else {
 				mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_VID_SERVICE, RETRIEVE_UIN_BY_VID,
@@ -418,14 +418,14 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 			vidObject.setUpdatedDTimes(DateUtils.getUTCCurrentDateTime());
 			vidObject.setUin(decryptedUin);
 			vidRepo.saveAndFlush(vidObject);
-			notify(EventType.UPDATE_VID, Collections.singletonList(vidObject), true);
+			notify(EventType.UPDATE_VID, Collections.singletonList(vidObject), decryptedUin, true);
 		}
 		VidResponseDTO response = new VidResponseDTO();
 		response.setVidStatus(vidObject.getStatusCode());
 		if (policy.getAutoRestoreAllowed() && policy.getRestoreOnAction().equals(vidStatus)) {
 			Vid createVidResponse = generateVid(uin, vidObject.getVidTypeCode());
 			VidResponseDTO restoredVidDTO = new VidResponseDTO();
-			restoredVidDTO.setVid(Long.valueOf(createVidResponse.getVid()));
+			restoredVidDTO.setVid(createVidResponse.getVid());
 			restoredVidDTO.setVidStatus(createVidResponse.getStatusCode());
 			response.setRestoredVid(restoredVidDTO);
 		}
@@ -459,7 +459,7 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 			List<String> uinList = Arrays.asList(decryptedUin.split(SPLITTER));
 			VidResponseDTO response = new VidResponseDTO();
 			Vid generateVidObject = generateVid(uinList.get(1), vidObject.getVidTypeCode());
-			response.setVid(Long.parseLong(generateVidObject.getVid()));
+			response.setVid(generateVidObject.getVid());
 			response.setVidStatus(generateVidObject.getStatusCode());
 			return buildResponse(response, id.get("regenerate"));
 		} catch (IdRepoAppUncheckedException e) {
@@ -529,9 +529,9 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 			});
 			vidRepo.saveAll(vidList);
 			if (idType.contentEquals(DEACTIVATE)) {
-				notify(EventType.UPDATE_VID, vidList, true);
+				notify(EventType.UPDATE_VID, vidList, decryptedUin, true);
 			} else {
-				notify(EventType.UPDATE_VID, vidList, false);
+				notify(EventType.UPDATE_VID, vidList, decryptedUin, false);
 			}
 			VidResponseDTO response = new VidResponseDTO();
 			response.setVidStatus(status);
@@ -651,11 +651,11 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 		return responseDto;
 	}
 
-	private void notify(EventType eventType, List<Vid> vids, boolean isUpdated) {
+	private void notify(EventType eventType, List<Vid> vids, String decryptedUin, boolean isUpdated) {
 		try {
 			EventsDTO events = new EventsDTO();
 			events.setEvents(vids.stream()
-					.map(vid -> new EventDTO(eventType, Arrays.asList(vid.getUin().split(SPLITTER)).get(1),
+					.map(vid -> new EventDTO(eventType, Arrays.asList(decryptedUin.split(SPLITTER)).get(1),
 							vid.getVid(),
 							isUpdated ? vid.getUpdatedDTimes() : vid.getExpiryDTimes(),
 							policyProvider.getPolicy(vid.getVidTypeCode()).getAllowedTransactions()))
@@ -671,5 +671,4 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_VID_SERVICE, "notify", e.getMessage());
 		}
 	}
-
 }

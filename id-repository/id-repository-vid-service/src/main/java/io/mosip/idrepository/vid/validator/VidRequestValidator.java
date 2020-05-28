@@ -149,7 +149,7 @@ public class VidRequestValidator extends BaseIdRepoValidator implements Validato
 	 * @param uin    the uin
 	 * @param errors the errors
 	 */
-	private void validateUin(Long uin, Errors errors) {
+	private void validateUin(String uin, Errors errors) {
 		if (Objects.isNull(uin)) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), VID_REQUEST_VALIDATOR, "validateUin",
 					"\n" + "uin is null");
