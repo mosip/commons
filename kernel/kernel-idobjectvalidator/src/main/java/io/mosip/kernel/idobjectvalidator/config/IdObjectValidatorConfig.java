@@ -68,19 +68,11 @@ public class IdObjectValidatorConfig {
 			return new IdObjectValidator() {
 
 				@Override
-				public boolean validateIdObject(String identitySchema, Object identityObject)
-						throws IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
-					return true;
-				}
-
-				@Override
 				public boolean validateIdObject(String identitySchema, Object identityObject,
 						List<String> requiredFields)
 						throws IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
 					return true;
 				}
-
-				
 			};
 		}
 	}

@@ -47,19 +47,4 @@ public class IdObjectCompositeValidator implements IdObjectValidator {
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator#validateIdObject
-	 * (java.lang.Object)
-	 */
-	@Override
-	public boolean validateIdObject(String idSchema, Object identityObject)
-			throws IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
-		schemaValidator.validateIdObject(idSchema, identityObject);
-		referenceValidator.validateIdObject(idSchema, identityObject);
-		return true;
-	}
-
 }
