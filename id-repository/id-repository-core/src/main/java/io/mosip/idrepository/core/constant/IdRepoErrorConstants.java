@@ -74,6 +74,9 @@ public enum IdRepoErrorConstants {
 	/** The masterdata retrieve error. */
 	MASTERDATA_RETRIEVE_ERROR("IDR-IDS-007", "Failed to retrieve data from kernel Masterdata"),
 	
+	/** The masterdata retrieve error. */
+	SCHEMA_RETRIEVE_ERROR("IDR-IDS-008", "Failed to retrieve Identity Schema from kernel Syncdata service"),
+	
 	// VID Service
 	
 	/** The invalid vid. */
