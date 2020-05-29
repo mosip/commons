@@ -1,6 +1,6 @@
 package io.mosip.kernel.biometrics.constant;
 
-public enum Decision {
+public enum Match {
 	
 	MATCHED,
 	NOT_MATCHED,

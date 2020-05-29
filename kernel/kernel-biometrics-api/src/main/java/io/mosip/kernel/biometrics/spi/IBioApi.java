@@ -8,7 +8,7 @@ import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.biometrics.model.SDKInfo;
 import io.mosip.kernel.biometrics.model.MatchDecision;
-import io.mosip.kernel.biometrics.model.QualityScore;
+import io.mosip.kernel.biometrics.model.QualityCheck;
 import io.mosip.kernel.biometrics.model.Response;
 
 
@@ -29,16 +29,22 @@ public interface IBioApi {
 
 	/**
 	 * It checks the quality of the provided biometric image and render the
-	 * respective quality score.
+	 * respective quality score per modality.
+	 * 
+	 * if modalitiesToCheck is null/empty, score is provided for each modality found in the gallery record.
 	 * 
 	 * @param sample
+	 * @param modalitiesToCheck
 	 * @param flags
 	 * @return
 	 */
-	Response<QualityScore> checkQuality(BiometricRecord sample, Map<String, String> flags);
+	Response<QualityCheck> checkQuality(BiometricRecord sample, List<BiometricType> modalitiesToCheck, Map<String, String> flags);
 
 	/**
-	 * It compares the biometrics and provide the respective matching scores.
+	 * It compares the biometrics and provide the respective matching decision per modality for each 
+	 * item in gallery based on modalitiesToMatch argument.
+	 * 
+	 * if modalitiesToMatch is null/empty, match is provided for each modality found in the gallery record.
 	 * 
 	 * @param sample
 	 * @param gallery
@@ -60,7 +66,7 @@ public interface IBioApi {
 	 * It segment the single biometric image into multiple biometric images. Eg:
 	 * Split the thumb slab into multiple fingers
 	 *
-	 * @param sample the samplel
+	 * @param sample the sample
 	 * @param flags  the flags
 	 * @return the response
 	 */

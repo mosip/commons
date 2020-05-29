@@ -1,6 +1,3 @@
-/**
- * 
- */
 package io.mosip.kernel.biometrics.entities;
 
 import java.util.List;
@@ -33,7 +30,7 @@ public class BIR {
 		this.bdb = birBuilder.bdb;
 		this.sb = birBuilder.sb;
 		this.sbInfo = birBuilder.sbInfo;
-		this.element = birBuilder.element;
+		this.setElement(birBuilder.element);
 	}
 
 
@@ -85,6 +82,16 @@ public class BIR {
 	 */
 	public SBInfo getSbInfo() {
 		return sbInfo;
+	}
+
+	public List<Object> getElement() {
+		return element;
+	}
+
+
+
+	public void setElement(List<Object> element) {
+		this.element = element;
 	}
 
 	public static class BIRBuilder {
