@@ -234,7 +234,7 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 	 * @param errors  the errors
 	 * @param method  the method
 	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void validateRequest(Object request, Errors errors, String method) {
 		try {
 			if (Objects.nonNull(request)) {
