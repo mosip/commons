@@ -70,15 +70,6 @@ public class IdObjectSchemaValidator implements IdObjectValidator {
 	private static final String UNWANTED = "unwanted";
 
 	/* (non-Javadoc)
-	 * @see io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator#validateIdObject(java.lang.String, java.lang.Object)
-	 */
-	@Override
-	public boolean validateIdObject(String identitySchema, Object identityObject)
-			throws IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
-		return validateIdObject(identitySchema, identityObject, null);
-	}
-
-	/* (non-Javadoc)
 	 * @see io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator#validateIdObject(java.lang.String, java.lang.Object, java.util.List)
 	 */
 	@Override
