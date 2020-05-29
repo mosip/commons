@@ -1,12 +1,13 @@
 package io.mosip.kernel.idobjectvalidator.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
-import io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorSupportedOperations;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectIOException;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectValidationFailedException;
 import io.mosip.kernel.core.idobjectvalidator.exception.InvalidIdSchemaException;
@@ -25,10 +26,6 @@ public class IdObjectCompositeValidator implements IdObjectValidator {
 	@Autowired
 	private IdObjectSchemaValidator schemaValidator;
 
-	/** The pattern validator. */
-	@Autowired
-	private IdObjectPatternValidator patternValidator;
-
 	/** The reference validator. */
 	@Autowired(required = false)
 	@Qualifier("referenceValidator")
@@ -43,28 +40,10 @@ public class IdObjectCompositeValidator implements IdObjectValidator {
 	 * (java.lang.Object)
 	 */
 	@Override
-	public boolean validateIdObject(Object identityObject, IdObjectValidatorSupportedOperations operation)
-			throws IdObjectValidationFailedException, IdObjectIOException {
-		schemaValidator.validateIdObject(identityObject, operation);
-		patternValidator.validateIdObject(identityObject, operation);
-		referenceValidator.validateIdObject(identityObject, operation);
-
-		return true;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator#validateIdObject
-	 * (java.lang.Object)
-	 */
-	@Override
-	public boolean validateIdObject(String idSchema, Object idObject, IdObjectValidatorSupportedOperations operation)
+	public boolean validateIdObject(String idSchema, Object identityObject, List<String> requiredFields)
 			throws IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
-		schemaValidator.validateIdObject( idSchema, idObject, operation);
-		patternValidator.validateIdObject( idSchema, idObject, operation);
-		referenceValidator.validateIdObject( idSchema, idObject, operation);
+		schemaValidator.validateIdObject(idSchema, identityObject);
+		referenceValidator.validateIdObject(idSchema, identityObject);
 		return true;
 	}
 

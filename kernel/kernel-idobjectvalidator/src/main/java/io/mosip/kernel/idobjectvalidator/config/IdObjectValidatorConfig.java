@@ -2,6 +2,8 @@ package io.mosip.kernel.idobjectvalidator.config;
 
 import static io.mosip.kernel.idobjectvalidator.constant.IdObjectValidatorConstant.REFERENCE_VALIDATOR;
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,9 +15,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.Environment;
 
-import io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorSupportedOperations;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectIOException;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectValidationFailedException;
+import io.mosip.kernel.core.idobjectvalidator.exception.InvalidIdSchemaException;
 import io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator;
 
 /**
@@ -66,14 +68,9 @@ public class IdObjectValidatorConfig {
 			return new IdObjectValidator() {
 
 				@Override
-				public boolean validateIdObject(Object arg0, IdObjectValidatorSupportedOperations arg1)
-						throws IdObjectValidationFailedException, IdObjectIOException {
-					return true;
-				}
-
-				@Override
-				public boolean validateIdObject(String arg0, Object arg1, IdObjectValidatorSupportedOperations arg2)
-						throws IdObjectValidationFailedException, IdObjectIOException {
+				public boolean validateIdObject(String identitySchema, Object identityObject,
+						List<String> requiredFields)
+						throws IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
 					return true;
 				}
 			};
