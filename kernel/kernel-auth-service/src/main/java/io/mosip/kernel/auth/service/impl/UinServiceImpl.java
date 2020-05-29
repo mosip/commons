@@ -26,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Objects;
 
 import io.mosip.kernel.auth.adapter.exception.AuthNException;
 import io.mosip.kernel.auth.adapter.exception.AuthZException;
@@ -120,7 +121,7 @@ public class UinServiceImpl implements UinService {
 				mosipDto.setUserId(otpUser.getUserId());
 				validate(res, otpUser.getOtpChannel());
 				if (res.get("phone") != null) {
-					mosipDto.setMobile((String) res.get("phone"));
+					mosipDto.setMobile(String.valueOf(res.get("phone")));
 				}
 				if (res.get("email") != null) {
 					mosipDto.setMail(res.get("email"));
@@ -205,7 +206,7 @@ public class UinServiceImpl implements UinService {
 				mosipDto.setUserId(uin);
 				validate(res, null);
 				if (res.get("phone") != null) {
-					mosipDto.setMobile((String) res.get("phone"));
+					mosipDto.setMobile(String.valueOf(res.get("phone")));
 				}
 				if (res.get("email") != null) {
 					mosipDto.setMail(res.get("email"));
@@ -242,11 +243,13 @@ public class UinServiceImpl implements UinService {
 
 	private void validate(Map<String, String> res, List<String> channelList) {
 		String notficationType = en.getProperty(MOSIP_NOTIFICATIONTYPE);
-		String phone, email;
+		String phone = null, email=null;
 		String[] notificationArray = notficationType.split("[\\|\\s]+");
 		List<String> notifyList = Arrays.asList(notificationArray);
-		phone = (String) res.get("phone");
-		email = (String) res.get("email");
+		if(res.get("phone")!=null) {
+		phone = String.valueOf(res.get("phone"));
+		}
+		email = res.get("email");
 		validateConfigChannel(notifyList, channelList);
 		if ((StringUtils.isBlank(phone) && StringUtils.isBlank(email))
 				&& (channelList.contains(AuthConstant.PHONE) && channelList.contains(AuthConstant.EMAIL))) {
