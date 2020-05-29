@@ -210,8 +210,8 @@ public class IdRequestValidatorTest {
 
 	@Test
 	public void testValidateRequestWithDocuments() throws JsonParseException, JsonMappingException, IOException,
-			IdObjectIOException, IdObjectValidationFailedException {
-		when(idObjectValidator.validateIdObject(Mockito.any(), Mockito.any())).thenReturn(true);
+			IdObjectIOException, IdObjectValidationFailedException, InvalidIdSchemaException {
+		when(idObjectValidator.validateIdObject(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
 		Object request = mapper.readValue(
 				"{\"identity\":{\"IDSchemaVersion\":1.0,\"UIN\":795429385028},\"documents\":[{\"category\":\"individualBiometrics\",\"value\":\"dGVzdA\"}]}"
 						.getBytes(),
@@ -228,8 +228,8 @@ public class IdRequestValidatorTest {
 
 	@Test
 	public void testValidateRequestWithDocumentsEmptyDocValue() throws JsonParseException, JsonMappingException,
-			IOException, IdObjectIOException, IdObjectValidationFailedException {
-		when(idObjectValidator.validateIdObject(Mockito.any(), Mockito.any())).thenReturn(true);
+			IOException, IdObjectIOException, IdObjectValidationFailedException, InvalidIdSchemaException {
+		when(idObjectValidator.validateIdObject(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
 		Object request = mapper.readValue(
 				"{\"identity\":{\"IDSchemaVersion\":1.0,\"UIN\":795429385028},\"documents\":[{\"category\":\"individualBiometrics\",\"value\":\"\"}]}"
 						.getBytes(),
@@ -246,8 +246,8 @@ public class IdRequestValidatorTest {
 
 	@Test
 	public void testValidateRequestWithDocumentsInvalidIdentityJsonValidator() throws JsonParseException,
-			JsonMappingException, IOException, IdObjectValidationFailedException, IdObjectIOException {
-		when(idObjectValidator.validateIdObject(Mockito.any(), Mockito.any())).thenReturn(true);
+			JsonMappingException, IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
+		when(idObjectValidator.validateIdObject(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
 		Object request = mapper.readValue(
 				"{\"identity\":{},\"documents\":[{\"category\":\"individualBiometrics\",\"value\":\"dGVzdA\"}]}"
 						.getBytes(),
@@ -344,8 +344,8 @@ public class IdRequestValidatorTest {
 
 	@Test
 	public void testValidateRequestWithoutIdentity() throws JsonParseException, JsonMappingException, IOException,
-			IdObjectIOException, IdObjectValidationFailedException {
-		when(idObjectValidator.validateIdObject(Mockito.any(), Mockito.any()))
+			IdObjectIOException, IdObjectValidationFailedException, InvalidIdSchemaException {
+		when(idObjectValidator.validateIdObject(Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenThrow(new IdObjectIOException("errorCode", "errorMessage"));
 		Object request = mapper.readValue(
 				"{\"firstName\":[{\"language\":\"AR\",\"value\":\"Manoj\",\"label\":\"string\"}]}".getBytes(),
@@ -362,8 +362,8 @@ public class IdRequestValidatorTest {
 
 	@Test
 	public void testValidateCreate() throws JsonParseException, JsonMappingException, JsonProcessingException,
-			IOException, IdObjectIOException, IdObjectValidationFailedException {
-		Mockito.when(idObjectValidator.validateIdObject(Mockito.any(), Mockito.any())).thenReturn(true);
+			IOException, IdObjectIOException, IdObjectValidationFailedException, InvalidIdSchemaException {
+		Mockito.when(idObjectValidator.validateIdObject(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
 		Mockito.when(ridValidator.validateId(Mockito.any())).thenReturn(true);
 		Mockito.when(uinValidator.validateId(Mockito.anyString())).thenReturn(true);
 		IdRequestDTO request = new IdRequestDTO();
@@ -386,8 +386,8 @@ public class IdRequestValidatorTest {
 
 	@Test
 	public void testValidateUpdate() throws JsonParseException, JsonMappingException, JsonProcessingException,
-			IOException, IdObjectIOException, IdObjectValidationFailedException {
-		Mockito.when(idObjectValidator.validateIdObject(Mockito.any(), Mockito.any())).thenReturn(true);
+			IOException, IdObjectIOException, IdObjectValidationFailedException, InvalidIdSchemaException {
+		Mockito.when(idObjectValidator.validateIdObject(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
 		Mockito.when(ridValidator.validateId(Mockito.any())).thenReturn(true);
 		Mockito.when(uinValidator.validateId(Mockito.anyString())).thenReturn(true);
 		IdRequestDTO request = new IdRequestDTO();

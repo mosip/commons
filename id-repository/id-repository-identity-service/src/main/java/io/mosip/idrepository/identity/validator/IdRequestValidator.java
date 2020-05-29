@@ -19,6 +19,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -41,7 +42,6 @@ import io.mosip.idrepository.core.validator.BaseIdRepoValidator;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorErrorConstant;
-import io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorSupportedOperations;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectIOException;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectValidationFailedException;
 import io.mosip.kernel.core.idobjectvalidator.exception.InvalidIdSchemaException;
@@ -102,6 +102,12 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 
 	/** The Constant STATUS_FIELD. */
 	private static final String STATUS_FIELD = "status";
+	
+	@Value("${mosip.kernel.idobjectvalidator.mandatory-attributes.id-repository.new-registration}")
+	private List<String> newRegistrationFields;
+	
+	@Value("${mosip.kernel.idobjectvalidator.mandatory-attributes.id-repository.update-uin}")
+	private List<String> updateUinFields;
 
 	/** The status. */
 	@Resource
@@ -254,11 +260,9 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 							.forEach(requestMap::remove);
 					if (!errors.hasErrors()) {
 						if (method.equals(CREATE)) {
-							idObjectValidator.validateIdObject(identitySchema, requestMap,
-									IdObjectValidatorSupportedOperations.NEW_REGISTRATION);
+							idObjectValidator.validateIdObject(identitySchema, requestMap, newRegistrationFields);
 						} else {
-							idObjectValidator.validateIdObject(identitySchema, requestMap,
-									IdObjectValidatorSupportedOperations.UPDATE_UIN);
+							idObjectValidator.validateIdObject(identitySchema, requestMap, updateUinFields);
 						}
 					}
 				}

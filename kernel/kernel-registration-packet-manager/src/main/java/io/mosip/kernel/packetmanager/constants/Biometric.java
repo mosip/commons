@@ -22,19 +22,19 @@ public enum Biometric {
 	LEFT_IRIS("IRIS_DOUBLE", "Iris", "leftEye", SingleType.IRIS, "L_IRIS"),
 	FACE("FACE_FULL FACE", "Face", "face", SingleType.FACE, "FACE");
 	
-	Biometric(String modalityName, String modalityShortName, String attributeName, SingleType singleType, String shortName) {
+	Biometric(String modalityName, String modalityShortName, String attributeName, SingleType singleType, String mdmConstant) {
 		this.modalityName = modalityName;
 		this.setModalityShortName(modalityShortName);
 		this.attributeName = attributeName;
 		this.singleType = singleType;
-		this.shortName = shortName;
+		this.mdmConstant = mdmConstant;
 	}
 	
 	private String modalityName;
 	private String modalityShortName;
 	private String attributeName;
 	private SingleType singleType;
-	private String shortName;
+	private String mdmConstant;
 		
 	public String getModalityName() {
 		return modalityName;
@@ -96,8 +96,19 @@ public enum Biometric {
 	public static Biometric getBiometricByAttribute(String attributeName) {
 		Biometric constant = null;
 		for(Biometric biometric : Biometric.values()) {
-			if(biometric.getShortName().equalsIgnoreCase(attributeName) || 
+			if(biometric.getMdmConstant().equalsIgnoreCase(attributeName) || 
 					biometric.getAttributeName().equalsIgnoreCase(attributeName)) {
+				constant = biometric;
+				break;
+			}
+		}
+		return constant;
+	}
+	
+	public static Biometric getBiometricByMDMConstant(String mdmConstant) {
+		Biometric constant = null;
+		for(Biometric biometric : Biometric.values()) {
+			if(biometric.getMdmConstant().equalsIgnoreCase(mdmConstant)) {
 				constant = biometric;
 				break;
 			}
@@ -120,11 +131,12 @@ public enum Biometric {
 		}
 		return format;
 	}
+	public String getMdmConstant() {
+		return mdmConstant;
+	}
+	public void setMdsConstant(String mdmConstant) {
+		this.mdmConstant = mdmConstant;
+	}
 	
-	public String getShortName() {
-		return shortName;
-	}
-	public void setShortName(String shortName) {
-		this.shortName = shortName;
-	}
+	
 }
