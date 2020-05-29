@@ -16,7 +16,6 @@ import javax.annotation.Nullable;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -121,7 +120,6 @@ public class IdRepoController {
 
 	/** The validator. */
 	@Autowired
-	@Lazy
 	private IdRequestValidator validator;
 
 	/** The mapper. */
