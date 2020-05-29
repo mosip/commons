@@ -41,6 +41,7 @@ public class PacketManagerConstants {
 	public static final String SCHEMA_TYPE = "type";
 	public static final String SCHEMA_REF = "$ref";
 	public static final String SCHEMA_CATEGORY = "fieldCategory";
+	public static final String SCHEMA_VERSION_QUERY_PARAM = "schemaVersion";
 	
 	public static final String BIOMETRICS_TYPE = "#/definitions/biometricsType";
 	public static final String DOCUMENTS_TYPE = "#/definitions/documentType";
