@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.lang.reflect.UndeclaredThrowableException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,12 +39,18 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
+import io.mosip.idrepository.core.builder.RestRequestBuilder;
 import io.mosip.idrepository.core.constant.IdRepoConstants;
 import io.mosip.idrepository.core.constant.IdRepoErrorConstants;
 import io.mosip.idrepository.core.dto.IdRequestDTO;
 import io.mosip.idrepository.core.dto.RequestDTO;
+import io.mosip.idrepository.core.dto.RestRequestDTO;
 import io.mosip.idrepository.core.exception.IdRepoAppException;
+import io.mosip.idrepository.core.exception.IdRepoDataValidationException;
+import io.mosip.idrepository.core.exception.RestServiceException;
+import io.mosip.idrepository.core.helper.RestHelper;
 import io.mosip.idrepository.identity.validator.IdRequestValidator;
+import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorErrorConstant;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectIOException;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectValidationFailedException;
@@ -99,6 +106,12 @@ public class IdRequestValidatorTest {
 	@Mock
 	private RidValidatorImpl ridValidator;
 
+	@Mock
+	private RestRequestBuilder restBuilder;
+
+	@Mock
+	private RestHelper restHelper;
+
 	public Map<String, String> getId() {
 		return id;
 	}
@@ -114,7 +127,7 @@ public class IdRequestValidatorTest {
 	Errors errors;
 
 	@Before
-	public void setup() {
+	public void setup() throws RestServiceException, IdRepoDataValidationException {
 		uinStatus.add(env.getProperty(IdRepoConstants.ACTIVE_STATUS));
 		allowedTypes.add("bio,demo,all");
 		ReflectionTestUtils.setField(validator, "id", id);
@@ -123,6 +136,14 @@ public class IdRequestValidatorTest {
 		ReflectionTestUtils.setField(validator, "allowedTypes", allowedTypes);
 		ReflectionTestUtils.setField(validator, "mapper", mapper);
 		errors = new BeanPropertyBindingResult(new IdRequestDTO(), "idRequestDto");
+		RestRequestDTO restReq = new RestRequestDTO();
+		restReq.setUri("");
+		when(restBuilder.buildRequest(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(restReq);
+		ResponseWrapper<Map<String, String>> response = new ResponseWrapper<>();
+		Map<String, String> responseMap = new HashMap<String, String>();
+		responseMap.put("schemaJson", "");
+		response.setResponse(responseMap);
+		when(restHelper.requestSync(Mockito.any())).thenReturn(response);
 	}
 
 	@Test
@@ -245,8 +266,9 @@ public class IdRequestValidatorTest {
 	}
 
 	@Test
-	public void testValidateRequestWithDocumentsInvalidIdentityJsonValidator() throws JsonParseException,
-			JsonMappingException, IOException, IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
+	public void testValidateRequestWithDocumentsInvalidIdentityJsonValidator()
+			throws JsonParseException, JsonMappingException, IOException, IdObjectValidationFailedException,
+			IdObjectIOException, InvalidIdSchemaException {
 		when(idObjectValidator.validateIdObject(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
 		Object request = mapper.readValue(
 				"{\"identity\":{},\"documents\":[{\"category\":\"individualBiometrics\",\"value\":\"dGVzdA\"}]}"
@@ -411,9 +433,10 @@ public class IdRequestValidatorTest {
 	@Test
 	public void testInvalidUin() throws IdRepoAppException {
 		try {
-		when(uinValidator.validateId(anyString())).thenThrow(new InvalidIDException(IdRepoErrorConstants.INVALID_INPUT_PARAMETER.getErrorCode(),
-				String.format(IdRepoErrorConstants.INVALID_INPUT_PARAMETER.getErrorMessage(), UIN)));
-		validator.validateUin("1234", "read");
+			when(uinValidator.validateId(anyString()))
+					.thenThrow(new InvalidIDException(IdRepoErrorConstants.INVALID_INPUT_PARAMETER.getErrorCode(),
+							String.format(IdRepoErrorConstants.INVALID_INPUT_PARAMETER.getErrorMessage(), UIN)));
+			validator.validateUin("1234", "read");
 		} catch (IdRepoAppException e) {
 			assertEquals(IdRepoErrorConstants.INVALID_INPUT_PARAMETER.getErrorCode(), e.getErrorCode());
 			assertEquals(String.format(IdRepoErrorConstants.INVALID_INPUT_PARAMETER.getErrorMessage(), UIN),
@@ -430,15 +453,15 @@ public class IdRequestValidatorTest {
 	@Test
 	public void testValidateNullId() throws IdRepoAppException {
 		try {
-		when(uinValidator.validateId(null)).thenThrow(new InvalidIDException(null, null));
-		validator.validateUin(null, "create");
-	} catch (IdRepoAppException e) {
-		assertEquals(IdRepoErrorConstants.INVALID_INPUT_PARAMETER.getErrorCode(), e.getErrorCode());
-		assertEquals(String.format(IdRepoErrorConstants.INVALID_INPUT_PARAMETER.getErrorMessage(),
-				 env.getProperty(IdRepoConstants.MOSIP_KERNEL_IDREPO_JSON_PATH))
-				.replace(".", "/"),
-				e.getErrorText());
-	}
+			when(uinValidator.validateId(null)).thenThrow(new InvalidIDException(null, null));
+			validator.validateUin(null, "create");
+		} catch (IdRepoAppException e) {
+			assertEquals(IdRepoErrorConstants.INVALID_INPUT_PARAMETER.getErrorCode(), e.getErrorCode());
+			assertEquals(
+					String.format(IdRepoErrorConstants.INVALID_INPUT_PARAMETER.getErrorMessage(),
+							env.getProperty(IdRepoConstants.MOSIP_KERNEL_IDREPO_JSON_PATH)).replace(".", "/"),
+					e.getErrorText());
+		}
 	}
 
 }
