@@ -42,8 +42,8 @@ public class IdObjectCompositeValidator implements IdObjectValidator {
 	@Override
 	public boolean validateIdObject(String idSchema, Object identityObject, List<String> requiredFields)
 			throws IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
-		schemaValidator.validateIdObject(idSchema, identityObject);
-		referenceValidator.validateIdObject(idSchema, identityObject);
+		schemaValidator.validateIdObject(idSchema, identityObject, requiredFields);
+		referenceValidator.validateIdObject(idSchema, identityObject, requiredFields);
 		return true;
 	}
 
