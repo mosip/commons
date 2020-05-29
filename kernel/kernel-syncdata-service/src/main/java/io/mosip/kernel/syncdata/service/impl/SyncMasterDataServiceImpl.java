@@ -706,8 +706,8 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 	}
 	
 	@Override
-	public IdSchemaDto getLatestPublishedIdSchema(LocalDateTime lastUpdated) {
-		return identitySchemaHelper.getLatestIdentitySchema(lastUpdated);		
+	public IdSchemaDto getLatestPublishedIdSchema(LocalDateTime lastUpdated, double schemaVersion) {
+		return identitySchemaHelper.getLatestIdentitySchema(lastUpdated, schemaVersion);		
 	}
 
 }

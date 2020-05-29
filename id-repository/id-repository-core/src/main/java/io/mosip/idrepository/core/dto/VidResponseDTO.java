@@ -15,11 +15,11 @@ public class VidResponseDTO {
 
 	/** The Value Of UIN in Decrypted value */
 	@JsonProperty("UIN")
-	private Long uin;
+	private String uin;
 
 	/** The Value to hold vid */
 	@JsonProperty("VID")
-	private Long vid;
+	private String vid;
 
 	/** The Value to hold vidStatus */
 	private String vidStatus;

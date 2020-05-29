@@ -70,6 +70,6 @@ public interface SyncMasterDataService {
 	 * @param lastUpdated
 	 * @return
 	 */
-	IdSchemaDto getLatestPublishedIdSchema(LocalDateTime lastUpdated);
+	IdSchemaDto getLatestPublishedIdSchema(LocalDateTime lastUpdated, double schemaVersion);
 
 }

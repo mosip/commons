@@ -218,7 +218,7 @@ public class VidControllerTest {
 	public void testCreateVidValid() throws IdRepoAppException {
 		RequestWrapper<VidRequestDTO> req = new RequestWrapper<VidRequestDTO>();
 		VidRequestDTO request = new VidRequestDTO();
-		request.setUin(2953190571L);
+		request.setUin("2953190571");
 		request.setVidType("");
 		req.setRequest(request);
 		ResponseWrapper<VidResponseDTO> value = new ResponseWrapper<VidResponseDTO>();
@@ -234,7 +234,7 @@ public class VidControllerTest {
 		try {
 			RequestWrapper<VidRequestDTO> req = new RequestWrapper<VidRequestDTO>();
 			VidRequestDTO request = new VidRequestDTO();
-			request.setUin(2953190571L);
+			request.setUin("2953190571");
 			request.setVidType("");
 			req.setRequest(request);
 			BeanPropertyBindingResult errors = new BeanPropertyBindingResult(req, "RequestWrapper<RequestDTO>");
@@ -316,7 +316,7 @@ public class VidControllerTest {
 		when(uinValidator.validateId(Mockito.anyString())).thenReturn(true);
 		RequestWrapper<VidRequestDTO> req = new RequestWrapper<VidRequestDTO>();
 		VidRequestDTO request = new VidRequestDTO();
-		request.setUin(2953190571L);
+		request.setUin("2953190571");
 		req.setRequest(request);
 		BeanPropertyBindingResult errors = new BeanPropertyBindingResult(req, "RequestWrapper<RequestDTO>");
 		ResponseEntity<ResponseWrapper<VidResponseDTO>> responseEntity = controller.deactivateVIDsForUIN(req, errors);
@@ -335,7 +335,7 @@ public class VidControllerTest {
 							String.format(IdRepoErrorConstants.INVALID_INPUT_PARAMETER.getErrorMessage(), UIN)));
 			RequestWrapper<VidRequestDTO> req = new RequestWrapper<VidRequestDTO>();
 			VidRequestDTO request = new VidRequestDTO();
-			request.setUin(2953190571L);
+			request.setUin("2953190571");
 			req.setRequest(request);
 			BeanPropertyBindingResult errors = new BeanPropertyBindingResult(req, "RequestWrapper<RequestDTO>");
 			controller.deactivateVIDsForUIN(req, errors);
@@ -355,7 +355,7 @@ public class VidControllerTest {
 							IdRepoErrorConstants.NO_RECORD_FOUND.getErrorMessage()));
 			RequestWrapper<VidRequestDTO> req = new RequestWrapper<VidRequestDTO>();
 			VidRequestDTO request = new VidRequestDTO();
-			request.setUin(2953190571L);
+			request.setUin("2953190571");
 			req.setRequest(request);
 			BeanPropertyBindingResult errors = new BeanPropertyBindingResult(req, "RequestWrapper<RequestDTO>");
 			controller.deactivateVIDsForUIN(req, errors);
@@ -373,7 +373,7 @@ public class VidControllerTest {
 		when(uinValidator.validateId(Mockito.anyString())).thenReturn(true);
 		RequestWrapper<VidRequestDTO> req = new RequestWrapper<VidRequestDTO>();
 		VidRequestDTO request = new VidRequestDTO();
-		request.setUin(2953190571L);
+		request.setUin("2953190571");
 		req.setRequest(request);
 		BeanPropertyBindingResult errors = new BeanPropertyBindingResult(req, "RequestWrapper<RequestDTO>");
 		ResponseEntity<ResponseWrapper<VidResponseDTO>> responseEntity = controller.reactivateVIDsForUIN(req, errors);
@@ -392,7 +392,7 @@ public class VidControllerTest {
 							String.format(IdRepoErrorConstants.INVALID_INPUT_PARAMETER.getErrorMessage(), UIN)));
 			RequestWrapper<VidRequestDTO> req = new RequestWrapper<VidRequestDTO>();
 			VidRequestDTO request = new VidRequestDTO();
-			request.setUin(2953190571L);
+			request.setUin("2953190571");
 			req.setRequest(request);
 			BeanPropertyBindingResult errors = new BeanPropertyBindingResult(req, "RequestWrapper<RequestDTO>");
 			controller.reactivateVIDsForUIN(req, errors);
@@ -412,7 +412,7 @@ public class VidControllerTest {
 							IdRepoErrorConstants.NO_RECORD_FOUND.getErrorMessage()));
 			RequestWrapper<VidRequestDTO> req = new RequestWrapper<VidRequestDTO>();
 			VidRequestDTO request = new VidRequestDTO();
-			request.setUin(2953190571L);
+			request.setUin("2953190571");
 			req.setRequest(request);
 			BeanPropertyBindingResult errors = new BeanPropertyBindingResult(req, "RequestWrapper<RequestDTO>");
 			controller.reactivateVIDsForUIN(req, errors);

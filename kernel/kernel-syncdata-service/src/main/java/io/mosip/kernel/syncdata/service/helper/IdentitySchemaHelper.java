@@ -76,10 +76,10 @@ public class IdentitySchemaHelper {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
-	public IdSchemaDto getLatestIdentitySchema(LocalDateTime lastUpdated) {
+	public IdSchemaDto getLatestIdentitySchema(LocalDateTime lastUpdated, double schemaVersion) {
 		try {
 			UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(idSchemaUrl);
+			builder.queryParam("schemaVersion", schemaVersion);
 			ResponseEntity<String> responseEntity = restTemplate.getForEntity(builder.build().toUri(), String.class);
 			
 			objectMapper.registerModule(new JavaTimeModule());
