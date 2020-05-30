@@ -179,6 +179,7 @@
 		<module>kernel-keymanager-service</module>
         <module>kernel-idgenerator-service</module>
         <module>kernel-pridgenerator-service</module>
+        <module>kernel-salt-generator</module>
 
 	</modules>
 
