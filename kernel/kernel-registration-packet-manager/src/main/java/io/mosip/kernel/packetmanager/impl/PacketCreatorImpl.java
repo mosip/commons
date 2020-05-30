@@ -224,8 +224,9 @@ public class PacketCreatorImpl implements PacketCreator {
 	
 	private void addDocumentDetailsToZip(String fieldName, Map<String, Object> identity, MetaInfo metaInfo, 
 			ZipOutputStream zipOutputStream, Map<String, HashSequenceMetaInfo> hashSequences) throws PacketCreatorException {
-		DocumentDto dto = this.packetInfoDto.getDocuments().get(fieldName);						
-		identity.put(fieldName, new DocumentType(dto.getValue(), dto.getType(), dto.getFormat()));
+		DocumentDto dto = this.packetInfoDto.getDocuments().get(fieldName);	
+		//filename without extension must be set as value in ID.json
+		identity.put(fieldName, new DocumentType(fieldName, dto.getType(), dto.getFormat()));
 		String fileName = String.format("%s.%s", fieldName, dto.getFormat());
 		addEntryToZip(fileName, dto.getDocument(), zipOutputStream);					
 		metaInfo.addDocumentMetaInfo(new DocumentMetaInfo(fieldName, dto.getCategory(),
