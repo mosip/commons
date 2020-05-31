@@ -12,7 +12,7 @@ public enum Biometric {
 	LEFT_MIDDLE("FINGERPRINT_SLAB_LEFT", "Left Slab",  "leftMiddle", SingleType.FINGER, "LF_MIDDLE"),
 	LEFT_RING("FINGERPRINT_SLAB_LEFT", "Left Slab", "leftRing", SingleType.FINGER, "LF_RING"),
 	LEFT_LITTLE("FINGERPRINT_SLAB_LEFT", "Left Slab", "leftLittle", SingleType.FINGER, "LF_LITTLE"),
-	RIGHT_INDEX("FINGERPRINT_SLAB_RIGHT", "Right Slab", "rightIndex", SingleType.FINGER, "LF_INDEX"),
+	RIGHT_INDEX("FINGERPRINT_SLAB_RIGHT", "Right Slab", "rightIndex", SingleType.FINGER, "RF_INDEX"),
 	RIGHT_MIDDLE("FINGERPRINT_SLAB_RIGHT", "Right Slab", "rightMiddle", SingleType.FINGER, "RF_MIDDLE"),
 	RIGHT_RING("FINGERPRINT_SLAB_RIGHT", "Right Slab", "rightRing", SingleType.FINGER, "RF_RING"),
 	RIGHT_LITTLE("FINGERPRINT_SLAB_RIGHT", "Right Slab", "rightLittle", SingleType.FINGER, "RF_LITTLE"),

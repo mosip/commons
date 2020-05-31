@@ -50,6 +50,7 @@ public class SchemaDto {
 	private List<RequiredOnDto> requiredOn;
 	private String subType;
 	private String contactType;
+	private String group;
 	
 	@EqualsAndHashCode.Include
 	public String caseIgnoredId() {
