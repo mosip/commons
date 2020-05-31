@@ -36,7 +36,10 @@ ENV artifactory_url_env=${artifactory_url}
 # change volume to whichever storage directory you want to use for this container.
 VOLUME /tmp
 
-copy ./target/kernel-auth-service*.jar kernel-auth-service.jar
+ADD ./target/*.jar /target/
+RUN find /target -name '*.jar' -executable -type f "-print0" | xargs "-0" cp -t / \
+    && rm -rf /target \
+    && mv *.jar kernel-auth-service.jar 
 
 EXPOSE 8091
 
@@ -45,7 +48,6 @@ CMD if [ "$is_glowroot_env" = "present" ]; then \
     apt-get update && apt-get install -y unzip ; \
     unzip glowroot.zip ; \
     rm -rf glowroot.zip ; \
-    
     sed -i 's/<service_name>/kernel-auth-service/g' glowroot/glowroot.properties ; \
     java -jar -javaagent:glowroot/glowroot.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" kernel-auth-service.jar ; \
     else \

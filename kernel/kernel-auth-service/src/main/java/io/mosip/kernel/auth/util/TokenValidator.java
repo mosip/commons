@@ -3,6 +3,8 @@ package io.mosip.kernel.auth.util;
 import java.time.ZoneOffset;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.authentication.www.NonceExpiredException;
 import org.springframework.stereotype.Component;
@@ -38,6 +40,8 @@ import io.mosip.kernel.core.util.DateUtils;
 @Component
 public class TokenValidator {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(TokenValidator.class);
+
 	@Autowired
 	MosipEnvironment mosipEnvironment;
 
@@ -69,9 +73,11 @@ public class TokenValidator {
 		String[] roles = access.getRoles();
 		StringBuilder builder = new StringBuilder();
 
+		LOGGER.debug("invoked getAdminClaims");
 		for (String r : roles) {
 			builder.append(r);
 			builder.append(";");
+			LOGGER.debug("Roles " + r);
 		}
 		MosipUserDto dto = new MosipUserDto();
 		dto.setUserId(decodedJWT.getClaim("preferred_username").asString());
@@ -93,6 +99,7 @@ public class TokenValidator {
 		DecodedJWT decodedJWT = JWT.decode(token);
 		long expiryEpochTime = decodedJWT.getClaim("exp").asLong();
 		long currentEpoch = DateUtils.getUTCCurrentDateTime().toEpochSecond(ZoneOffset.UTC);
+		LOGGER.debug("invoked isExpired token " + expiryEpochTime + " currentEpoch " + currentEpoch);
 		return currentEpoch > expiryEpochTime;
 	}
 
@@ -115,7 +122,7 @@ public class TokenValidator {
 			throw new AuthManagerException(AuthErrorCode.UNAUTHORIZED.getErrorCode(), e.getMessage());
 		} catch (JwtException e) {
 			if (e instanceof ExpiredJwtException) {
-				System.out.println("Token expired message " + e.getMessage() + " Token " + token);
+				LOGGER.error("invoked validate token expired message " + e.getMessage() + " Token " + token);
 				throw new AuthManagerException(AuthErrorCode.TOKEN_EXPIRED.getErrorCode(),
 						AuthErrorCode.TOKEN_EXPIRED.getErrorMessage());
 			} else {
@@ -131,6 +138,7 @@ public class TokenValidator {
 		Boolean isOtpRequired = (Boolean) claims.get("isOtpRequired");
 		if (isOtpRequired) {
 			MosipUser mosipUser = buildMosipUser(claims);
+			LOGGER.info("Otp required " + mosipUser.getUserName());
 			return new MosipUserToken(mosipUser, token);
 		} else {
 			throw new AuthManagerException(AuthErrorCode.INVALID_TOKEN.getErrorCode(),
@@ -186,9 +194,11 @@ public class TokenValidator {
 			long currentTime = new Date().getTime();
 			long exp = expTime.longValue() * 1000;
 			if (expTime != 0 && currentTime < exp) {
+				LOGGER.debug("Token Valid " + claims.getId());
 				return true;
 			}
 		}
+		LOGGER.debug("Token Invalid " + claims.getId());
 		return false;
 	}
 }
