@@ -41,7 +41,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.mosip.kernel.auth.adapter.config.LoggerConfiguration;
 import io.mosip.kernel.auth.adapter.config.RestTemplateInterceptor;
 import io.mosip.kernel.auth.adapter.constant.AuthAdapterConstant;
 import io.mosip.kernel.auth.adapter.constant.AuthAdapterErrorCode;
@@ -347,7 +346,7 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 				errorResponse.setId(reqNode.path("id").asText());
 				errorResponse.setVersion(reqNode.path("version").asText());
 			} catch (IOException exception) {
-				LOGGER.error("", "", "", exception.getMessage());
+				LOGGER.error(exception.getMessage());
 			}
 		}
 		try {
@@ -355,7 +354,7 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 					.end(objectMapper.writeValueAsString(errorResponse));
 
 		} catch (JsonProcessingException exception) {
-			LOGGER.error("", "", "", exception.getMessage());
+			LOGGER.error(exception.getMessage());
 		}
 	}
 }

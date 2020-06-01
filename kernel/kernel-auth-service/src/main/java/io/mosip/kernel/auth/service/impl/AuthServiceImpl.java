@@ -338,7 +338,7 @@ public class AuthServiceImpl implements AuthService {
 		}
 		if (mosipUser != null) {
 			mosipToken = oTPService.validateOTP(mosipUser, userOtp.getOtp(), realm);
-			LOGGER.info("Validate otp" + userOtp.getUserId() + " realm "+ realm + " status " + mosipToken.getStatus());
+			LOGGER.info("Validate otp" + userOtp.getUserId() + " realm "+ realm + " status " + mosipToken == null? " No Response ": mosipToken.getStatus());
 		} else {
 			throw new AuthManagerException(AuthErrorCode.USER_VALIDATION_ERROR.getErrorCode(),
 					AuthErrorCode.USER_VALIDATION_ERROR.getErrorMessage());

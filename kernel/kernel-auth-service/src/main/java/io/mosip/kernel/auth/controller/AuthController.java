@@ -186,12 +186,15 @@ public class AuthController {
 			res.addCookie(cookie);
 			authNResponse.setStatus(authResponseDto.getStatus());
 			authNResponse.setMessage(authResponseDto.getMessage());
-		} else {
+		} else if (authResponseDto != null ){
 			LOGGER.info("useridOTP null for user " + userOtpDto.getRequest().getUserId() + " status " + authResponseDto.getStatus());
 			authNResponse = new AuthNResponse();
 			authNResponse.setStatus(authResponseDto.getStatus());
 			authNResponse.setMessage(
 					authResponseDto.getMessage() != null ? authResponseDto.getMessage() : "Otp validation failed");
+		}
+		else {
+			LOGGER.error("useridOTP auth response null for user " + userOtpDto.getRequest().getUserId() );
 		}
 		responseWrapper.setResponse(authNResponse);
 		return responseWrapper;
