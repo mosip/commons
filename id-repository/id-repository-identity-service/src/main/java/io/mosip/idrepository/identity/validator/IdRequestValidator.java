@@ -18,6 +18,7 @@ import java.util.stream.IntStream;
 import javax.annotation.Nonnull;
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -257,18 +258,12 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 						if (requestMap.get(ROOT_PATH) != null) {
 							schemaVersion = String
 									.valueOf(((Map<String, Object>) requestMap.get(ROOT_PATH)).get("IDSchemaVersion"));
-							if (Objects.isNull(schemaVersion)) {
-								errors.rejectValue(REQUEST, MISSING_INPUT_PARAMETER.getErrorCode(), String.format(
-										MISSING_INPUT_PARAMETER.getErrorMessage(),
-										ROOT_PATH + IdObjectValidatorConstant.PATH_SEPERATOR + "IDSchemaVersion"));
+							if (method.equals(CREATE)) {
+								idObjectValidator.validateIdObject(getSchema(schemaVersion, errors), requestMap,
+										newRegistrationFields);
 							} else {
-								if (method.equals(CREATE)) {
-									idObjectValidator.validateIdObject(getSchema(schemaVersion), requestMap,
-											newRegistrationFields);
-								} else {
-									idObjectValidator.validateIdObject(getSchema(schemaVersion), requestMap,
-											updateUinFields);
-								}
+								idObjectValidator.validateIdObject(getSchema(schemaVersion, errors), requestMap,
+										updateUinFields);
 							}
 						}
 					}
@@ -375,7 +370,12 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 		}
 	}
 	
-	private String getSchema(String schemaVersion) {
+	private String getSchema(String schemaVersion, Errors errors) {
+		if (Objects.isNull(schemaVersion) || schemaVersion == "null" || !NumberUtils.isCreatable(schemaVersion)) {
+			errors.rejectValue(REQUEST, MISSING_INPUT_PARAMETER.getErrorCode(),
+					String.format(MISSING_INPUT_PARAMETER.getErrorMessage(),
+							ROOT_PATH + IdObjectValidatorConstant.PATH_SEPERATOR + "IDSchemaVersion"));
+		}
 		try {
 			if (schemaMap.containsKey(schemaVersion)) {
 				return schemaMap.get(schemaVersion);

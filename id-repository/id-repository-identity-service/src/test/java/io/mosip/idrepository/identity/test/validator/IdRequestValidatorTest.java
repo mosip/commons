@@ -217,7 +217,7 @@ public class IdRequestValidatorTest {
 		when(idObjectValidator.validateIdObject(Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenThrow(new IdObjectIOException("errorCode", "errorMessage"));
 		Object request = mapper.readValue(
-				"{\"identity\":{\"firstName\":[{\"language\":\"AR\",\"value\":\"Manoj\",\"label\":\"string\"}]}}"
+				"{\"identity\":{\"IDSchemaVersion\":0,\"firstName\":[{\"language\":\"AR\",\"value\":\"Manoj\",\"label\":\"string\"}]}}"
 						.getBytes(),
 				Object.class);
 		ReflectionTestUtils.invokeMethod(validator, "validateRequest", request, errors, "create");
@@ -332,7 +332,7 @@ public class IdRequestValidatorTest {
 		when(idObjectValidator.validateIdObject(Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenThrow(new IdObjectIOException("errorCode", "errorMessage"));
 		Object request = mapper.readValue(
-				"{\"identity\":{\"firstName\":[{\"language\":\"AR\",\"value\":\"Manoj\",\"label\":\"string\"}]}}"
+				"{\"identity\":{\"IDSchemaVersion\":0,\"firstName\":[{\"language\":\"AR\",\"value\":\"Manoj\",\"label\":\"string\"}]}}"
 						.getBytes(),
 				Object.class);
 		ReflectionTestUtils.invokeMethod(validator, "validateRequest", request, errors, "create");
@@ -351,7 +351,7 @@ public class IdRequestValidatorTest {
 				.thenThrow(new IdObjectValidationFailedException(
 						IdObjectValidatorErrorConstant.INVALID_INPUT_PARAMETER.getErrorCode(), "error - Message"));
 		Object request = mapper.readValue(
-				"{\"identity\":{\"firstName\":[{\"language\":\"AR\",\"value\":\"Manoj\",\"label\":\"string\"}]}}"
+				"{\"identity\":{\"IDSchemaVersion\":0,\"firstName\":[{\"language\":\"AR\",\"value\":\"Manoj\",\"label\":\"string\"}]}}"
 						.getBytes(),
 				Object.class);
 		ReflectionTestUtils.invokeMethod(validator, "validateRequest", request, errors, "create");
@@ -392,7 +392,7 @@ public class IdRequestValidatorTest {
 		request.setId("mosip.id.create");
 		request.setVersion("v1");
 		Object obj = mapper.readValue(
-				"{\"identity\":{\"firstName\":[{\"language\":\"AR\",\"value\":\"Manoj\",\"label\":\"string\"}]}}"
+				"{\"IDSchemaVersion\":0,\"firstName\":[{\"language\":\"AR\",\"value\":\"Manoj\",\"label\":\"string\"}]}"
 						.getBytes(),
 				Object.class);
 
@@ -416,7 +416,7 @@ public class IdRequestValidatorTest {
 		request.setId("mosip.id.update");
 		request.setVersion("v1");
 		Object obj = mapper.readValue(
-				"{\"identity\":{\"firstName\":[{\"language\":\"AR\",\"value\":\"Manoj\",\"label\":\"string\"}]}}"
+				"{\"IDSchemaVersion\":0,\"firstName\":[{\"language\":\"AR\",\"value\":\"Manoj\",\"label\":\"string\"}]}"
 						.getBytes(),
 				Object.class);
 
