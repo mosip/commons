@@ -4,6 +4,7 @@
 package io.mosip.kernel.packetmanager.util;
 
 import io.mosip.kernel.packetmanager.constants.IDschemaConstants;
+import io.mosip.kernel.packetmanager.constants.PacketManagerConstants;
 import io.mosip.kernel.packetmanager.exception.ApiNotAccessibleException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,7 +17,8 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
-
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The Class IdSchemaUtils.
@@ -36,7 +38,7 @@ public class IdSchemaUtils {
     @Autowired
     private Environment env;
 
-    private String idschema = null;
+    private Map<Double, String> idschema = null;
 
     @Value("${packet.default.source}")
     private String defaultSource;
@@ -51,8 +53,8 @@ public class IdSchemaUtils {
      * @return the source
      * @throws IOException
      */
-    public String getSource(String id) throws IOException, ApiNotAccessibleException {
-        String idSchema = getIdSchema();
+    public String getSource(String id, Double idschemaVersion) throws IOException, ApiNotAccessibleException {
+        String idSchema = getIdSchema(idschemaVersion);
         JSONObject properties = getJSONObjFromStr(idSchema, IDschemaConstants.PROPERTIES);
         JSONObject identity = getJSONObj(properties, IDschemaConstants.IDENTITY);
         JSONObject property = getJSONObj(identity, IDschemaConstants.PROPERTIES);
@@ -68,11 +70,14 @@ public class IdSchemaUtils {
      * @throws ApiNotAccessibleException
      * @throws IOException
      */
-    public String getIdSchema() throws ApiNotAccessibleException, IOException {
-        if (idschema != null && !idschema.isEmpty())
-            return idschema;
+    public String getIdSchema(Double version) throws ApiNotAccessibleException, IOException {
+        if (idschema != null && !idschema.isEmpty() && idschema.get(version) != null)
+            return idschema.get(version);
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(env.getProperty(IDschemaConstants.IDSCHEMA_URL));
+        if (version != null)
+            builder.queryParam(PacketManagerConstants.SCHEMA_VERSION_QUERY_PARAM,version);
         UriComponents uriComponents = builder.build(false).encode();
+
         String response = restUtil.getApi(uriComponents.toUri(), String.class);
         String responseString = null;
         try {
@@ -83,12 +88,16 @@ public class IdSchemaUtils {
             throw new IOException(e);
         }
 
-        if (responseString != null)
-            idschema = responseString;
-        else
+        if (responseString != null) {
+            if (idschema == null) {
+                idschema = new HashMap<>();
+                idschema.put(version, responseString);
+            } else
+                idschema.put(version, responseString);
+        } else
             throw new ApiNotAccessibleException("Could not get id schema");
 
-        return idschema;
+        return idschema.get(version);
     }
 
     /**

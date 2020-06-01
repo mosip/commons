@@ -1,8 +1,10 @@
 package io.mosip.kernel.packetmanager.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.fsadapter.spi.FileSystemAdapter;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.packetmanager.constants.LoggerFileConstant;
+import io.mosip.kernel.packetmanager.constants.PacketManagerConstants;
 import io.mosip.kernel.packetmanager.exception.ApiNotAccessibleException;
 import io.mosip.kernel.packetmanager.exception.FileNotFoundInDestinationException;
 import io.mosip.kernel.packetmanager.exception.PacketDecryptionFailureException;
@@ -10,17 +12,18 @@ import io.mosip.kernel.packetmanager.logger.PacketUtilityLogger;
 import io.mosip.kernel.packetmanager.spi.PacketDecryptor;
 import io.mosip.kernel.packetmanager.spi.PacketReaderService;
 import io.mosip.kernel.packetmanager.util.ZipUtils;
-
 import org.apache.commons.io.IOUtils;
+import org.json.JSONException;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 
@@ -30,6 +33,10 @@ import java.util.Set;
  * @author Sowmya
  */
 public class PacketReaderServiceImpl implements PacketReaderService {
+
+	private static final String UTF_8 = "UTF-8";
+	@Value("${packet.default.source}")
+	private String defaultSource;
 
 	/** The file system adapter. */
 	@Autowired
@@ -140,16 +147,25 @@ public class PacketReaderServiceImpl implements PacketReaderService {
 			String jsonString = new String(bytearray);
 			ObjectMapper mapper = new ObjectMapper();
 			JSONObject idObject = mapper.readValue(jsonString, JSONObject.class);
-			
+
 			if(finalIdObject == null) {
 				finalIdObject=idObject;
 			}else if(finalIdObject != null){
-				
+
 				LinkedHashMap currentidentityMap = (LinkedHashMap) idObject.get(IDENTITY);
 				LinkedHashMap finalidMap =(LinkedHashMap) finalIdObject.get(IDENTITY);
 				LinkedHashMap finalidentityMap=new LinkedHashMap<>(finalidMap);
-				currentidentityMap.forEach((key, value) -> 
-					finalidentityMap.merge(key, value, (v1, v2) -> v1 !=null? v1 : v2));
+				Iterator iterator=currentidentityMap.entrySet().iterator();
+				while(iterator.hasNext()) {
+					Map.Entry entry=(Entry) iterator.next();
+					if(!finalidentityMap.containsKey(entry.getKey())) {
+						finalidentityMap.put(entry.getKey(), entry.getValue());
+					}
+					else if(finalidentityMap.containsKey(entry.getKey()) && finalidentityMap.get(entry.getKey())==null
+							&& entry.getValue()!=null) {
+						finalidentityMap.put(entry.getKey(), entry.getValue());
+					}
+				}
 				LinkedHashMap objectMap=new LinkedHashMap<>();
 				objectMap.put(IDENTITY, finalidentityMap);
 				finalIdObject=new JSONObject(objectMap);
@@ -158,5 +174,20 @@ public class PacketReaderServiceImpl implements PacketReaderService {
 		}
 
 		return finalIdObject;
+	}
+
+	@Override
+	public Double getIdSchemaVersionFromPacket(String rid) throws PacketDecryptionFailureException, ApiNotAccessibleException, IOException {
+        Double idSchemaVesion = null;
+		InputStream idobject = getFile(rid, PacketManagerConstants.IDENTITY_FILENAME, defaultSource);
+		String idJsonString = IOUtils.toString(idobject, UTF_8);
+		try {
+			org.json.JSONObject identityJson = new org.json.JSONObject(idJsonString);
+            org.json.JSONObject jsonObject = identityJson != null ? (org.json.JSONObject) identityJson.get(PacketManagerConstants.IDENTITY) : null;
+			idSchemaVesion = jsonObject != null ? (Double) jsonObject.get(PacketManagerConstants.IDSCHEMA_VERSION) : null;
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return idSchemaVesion;
 	}
 }

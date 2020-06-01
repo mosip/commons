@@ -3,14 +3,9 @@ package io.mosip.kernel.biometrics.model;
 import java.util.Map;
 
 import io.mosip.kernel.biometrics.constant.BiometricType;
-import io.mosip.kernel.biometrics.constant.Decision;
 import lombok.Data;
 
-/**
- * The Class Score.
- * 
- * @author Manoj SP
- */
+
 @Data
 public class MatchDecision {
 	

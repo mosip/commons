@@ -1,6 +1,6 @@
 package io.mosip.kernel.biometrics.model;
 
-import java.util.Map;
+import java.util.List;
 
 import lombok.Data;
 
@@ -15,6 +15,5 @@ public class QualityScore {
 	/** The score - 0 - 100 score that represents quality as a percentage */
 	private float score; 
 	
-	/** The analytics info - detailed breakdown and other information */
-	private Map<String, String> analyticsInfo;
+	private List<String> errors;
 }

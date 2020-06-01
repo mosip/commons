@@ -67,5 +67,15 @@ public interface PacketReaderService {
 	 * @throws PacketDecryptionFailureException 
 	 * 
 	 */
-	public Object getCompleteIdObject(String rid,String sourcepackets) throws PacketDecryptionFailureException, ApiNotAccessibleException, IOException; 
+	public Object getCompleteIdObject(String rid,String sourcepackets) throws PacketDecryptionFailureException, ApiNotAccessibleException, IOException;
+
+	/**
+	 * Get the schema version from inside default packet
+	 * @param rid : registration id to get default packet
+	 * @return : schema version
+	 * @throws PacketDecryptionFailureException
+	 * @throws ApiNotAccessibleException
+	 * @throws IOException
+	 */
+	public Double getIdSchemaVersionFromPacket(String rid) throws PacketDecryptionFailureException, ApiNotAccessibleException, IOException;
 }
