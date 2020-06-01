@@ -37,9 +37,7 @@ public class CorsFilter extends OncePerRequestFilter {
 		response.setHeader("Access-Control-Expose-Headers", "Set-Cookie");
 		response.setHeader("Access-Control-Allow-Credentials", "true");
 		String reqUrl = request.getRequestURL().toString();
-		System.out.println("Request Url :::" + reqUrl);
 		if (!"OPTIONS".equalsIgnoreCase(request.getMethod())) {
-			System.out.println("<--- Inside filter --->");
 			filterChain.doFilter(request, response);
 		}
 	}

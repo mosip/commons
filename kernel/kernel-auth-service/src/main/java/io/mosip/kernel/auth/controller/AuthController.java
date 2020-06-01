@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.web.authentication.www.NonceExpiredException;
@@ -78,6 +80,7 @@ import io.swagger.annotations.Api;
 @Api(value = "Operation related to Authentication and Authorization", tags = { "authmanager" })
 public class AuthController {
 
+	private static Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
 	/**
 	 * Autowired reference for {@link MosipEnvironment}
 	 */
@@ -108,6 +111,7 @@ public class AuthController {
 		AuthNResponse authNResponse = null;
 		AuthNResponseDto authResponseDto = authService.authenticateUser(request.getRequest());
 		if (authResponseDto != null) {
+			LOGGER.info("Authentication for " + request.getRequest().getUserName() + " status " + authResponseDto.getStatus());
 			Cookie cookie = createCookie(authResponseDto.getToken(), mosipEnvironment.getTokenExpiry());
 			authNResponse = new AuthNResponse();
 			res.addHeader(mosipEnvironment.getAuthTokenHeader(), authResponseDto.getToken());
@@ -115,6 +119,9 @@ public class AuthController {
 			authNResponse.setStatus(authResponseDto.getStatus());
 			authNResponse.setMessage(authResponseDto.getMessage());
 
+		}
+		else {
+			LOGGER.info("Authentication failed for " + request.getRequest().getUserName());
 		}
 		responseWrapper.setResponse(authNResponse);
 		return responseWrapper;
@@ -145,9 +152,13 @@ public class AuthController {
 		AuthNResponse authNResponse = null;
 		AuthNResponseDto authResponseDto = authService.authenticateWithOtp(otpUserDto.getRequest());
 		if (authResponseDto != null) {
+			LOGGER.info("Send OTP for user " + otpUserDto.getRequest().getUserId() + " status " + authResponseDto.getStatus());
 			authNResponse = new AuthNResponse();
 			authNResponse.setStatus(authResponseDto.getStatus());
 			authNResponse.setMessage(authResponseDto.getMessage());
+		}
+		else {
+			LOGGER.info("Send OTP failed for " + otpUserDto.getRequest().getUserId());
 		}
 		responseWrapper.setResponse(authNResponse);
 		return responseWrapper;
@@ -168,17 +179,22 @@ public class AuthController {
 		AuthNResponse authNResponse = null;
 		AuthNResponseDto authResponseDto = authService.authenticateUserWithOtp(userOtpDto.getRequest());
 		if (authResponseDto != null && authResponseDto.getToken() != null) {
+			LOGGER.info("useridOTP for user " + userOtpDto.getRequest().getUserId() + " status " + authResponseDto.getStatus());
 			Cookie cookie = createCookie(authResponseDto.getToken(), mosipEnvironment.getTokenExpiry());
 			authNResponse = new AuthNResponse();
 			res.addHeader(mosipEnvironment.getAuthTokenHeader(), authResponseDto.getToken());
 			res.addCookie(cookie);
 			authNResponse.setStatus(authResponseDto.getStatus());
 			authNResponse.setMessage(authResponseDto.getMessage());
-		} else {
+		} else if (authResponseDto != null ){
+			LOGGER.info("useridOTP null for user " + userOtpDto.getRequest().getUserId() + " status " + authResponseDto.getStatus());
 			authNResponse = new AuthNResponse();
 			authNResponse.setStatus(authResponseDto.getStatus());
 			authNResponse.setMessage(
 					authResponseDto.getMessage() != null ? authResponseDto.getMessage() : "Otp validation failed");
+		}
+		else {
+			LOGGER.error("useridOTP auth response null for user " + userOtpDto.getRequest().getUserId() );
 		}
 		responseWrapper.setResponse(authNResponse);
 		return responseWrapper;
@@ -200,16 +216,18 @@ public class AuthController {
 		AuthNResponse authNResponse = null;
 		AuthNResponseDto authResponseDto = authService.authenticateWithSecretKey(clientSecretDto.getRequest());
 		if (authResponseDto != null) {
+			LOGGER.info("clientidsecretkey for user " + clientSecretDto.getRequest().getClientId() + " status " + authResponseDto.getStatus());
 			Cookie cookie = createCookie(authResponseDto.getToken(), mosipEnvironment.getTokenExpiry());
 			authNResponse = new AuthNResponse();
 			res.addHeader(mosipEnvironment.getAuthTokenHeader(), authResponseDto.getToken());
 			res.addCookie(cookie);
 			authNResponse.setStatus(authResponseDto.getStatus());
-			authNResponse.setMessage(authResponseDto.getMessage());
-			System.out.println("Token added in response " + authResponseDto.getToken());
-
+			authNResponse.setMessage(authResponseDto.getMessage());			
 		}
-		System.out.println("Token in response header :::" + res.getHeader("Set-Cookie"));
+		else {
+			LOGGER.info("clientidsecretkey null for user " + clientSecretDto.getRequest().getClientId());
+		}
+		
 		responseWrapper.setResponse(authNResponse);
 		return responseWrapper;
 	}
@@ -242,17 +260,18 @@ public class AuthController {
 				throw new AuthManagerException(AuthErrorCode.TOKEN_NOTPRESENT_ERROR.getErrorCode(),
 						AuthErrorCode.TOKEN_NOTPRESENT_ERROR.getErrorMessage());
 			}
-			mosipUserDtoToken = authService.validateToken(authToken);
-			System.out.println("Token check after validate :::" + mosipUserDtoToken.getToken());
+			mosipUserDtoToken = authService.validateToken(authToken);			
 			if (mosipUserDtoToken != null) {
+				LOGGER.info("token expiry time: " + mosipUserDtoToken.getExpTime() + " token payload: " + mosipUserDtoToken.getToken().split("\\.")[1]);
 				mosipUserDtoToken.setMessage(AuthConstant.TOKEN_SUCCESS_MESSAGE);
+				Cookie cookie = createCookie(mosipUserDtoToken.getToken(), mosipEnvironment.getTokenExpiry());
+				res.addCookie(cookie);
+				responseWrapper.setResponse(mosipUserDtoToken.getMosipUserDto());
 			}
-			Cookie cookie = createCookie(mosipUserDtoToken.getToken(), mosipEnvironment.getTokenExpiry());
-			res.addCookie(cookie);
+			
 		} catch (NonceExpiredException exp) {
 			throw new AuthManagerException(AuthErrorCode.UNAUTHORIZED.getErrorCode(), exp.getMessage());
-		}
-		responseWrapper.setResponse(mosipUserDtoToken.getMosipUserDto());
+		}		
 		return responseWrapper;
 	}
 
@@ -287,6 +306,7 @@ public class AuthController {
 			}
 
 			mosipUserDto = authService.valdiateToken(authToken);
+			LOGGER.info("validate admin token successful " + " token payload: " + mosipUserDto.getToken().split("\\.")[1]);
 			Cookie cookie = createCookie(mosipUserDto.getToken(), mosipEnvironment.getTokenExpiry());
 			res.addCookie(cookie);
 		} catch (NonceExpiredException exp) {
@@ -313,10 +333,12 @@ public class AuthController {
 		for (Cookie cookie : cookies) {
 			if (cookie.getName().contains(AuthConstant.REFRESH_TOKEN)) {
 				refreshToken = cookie.getValue();
+				LOGGER.info("refresh token for app " + appId + " from cookie " + cookie.getName());
 			}
 		}
-		Objects.requireNonNull(refreshToken, "No refresh token cookie found");
+		Objects.requireNonNull(refreshToken, "No refresh token cookie found");		
 		RefreshTokenResponse mosipUserDtoToken = authService.refreshToken(appId,refreshToken, refreshTokenRequest);
+		LOGGER.info("New refresh token obtained for app " + appId + " expires (access token) by " + mosipUserDtoToken.getAccessTokenExpTime() + " refresh token expires in " + mosipUserDtoToken.getRefreshTokenExpTime() );
 		Cookie cookie = createCookie(mosipUserDtoToken.getAccesstoken(), mosipEnvironment.getTokenExpiry());
 		res.addCookie(cookie);
 		res.addCookie(new Cookie("refresh_token", mosipUserDtoToken.getRefreshToken()));
@@ -344,6 +366,7 @@ public class AuthController {
 		for (Cookie cookie : cookies) {
 			if (cookie.getName().contains(AuthConstant.AUTH_COOOKIE_HEADER)) {
 				authToken = cookie.getValue();
+				LOGGER.info("Attempt to invalidate the token from cookie  " + cookie.getName() );
 			}
 		}
 		if (authToken == null) {
@@ -351,6 +374,7 @@ public class AuthController {
 					AuthErrorCode.TOKEN_NOTPRESENT_ERROR.getErrorMessage());
 		}
 		AuthNResponse authNResponse = authService.invalidateToken(authToken);
+		LOGGER.info("Invalidated the token  " + authToken );
 		responseWrapper.setResponse(authNResponse);
 		return responseWrapper;
 	}
@@ -360,6 +384,7 @@ public class AuthController {
 	public ResponseWrapper<RolesListDto> getAllRoles(@PathVariable("appid") String appId) throws Exception {
 		ResponseWrapper<RolesListDto> responseWrapper = new ResponseWrapper<>();
 		RolesListDto rolesListDto = authService.getAllRoles(appId);
+		LOGGER.info("Get roles for " + appId + ". Total roles:  " + rolesListDto.getRoles().size() );
 		responseWrapper.setResponse(rolesListDto);
 		return responseWrapper;
 	}
@@ -372,6 +397,7 @@ public class AuthController {
 		ResponseWrapper<MosipUserListDto> responseWrapper = new ResponseWrapper<>();
 		MosipUserListDto mosipUsers = authService.getListOfUsersDetails(userDetails.getRequest().getUserDetails(),
 				appId);
+		LOGGER.info("Get userdetails for " + appId + ". Total users:  " + mosipUsers.getMosipUserDtoList().size() );
 		responseWrapper.setResponse(mosipUsers);
 		return responseWrapper;
 	}
@@ -384,6 +410,7 @@ public class AuthController {
 		ResponseWrapper<MosipUserSaltListDto> responseWrapper = new ResponseWrapper<>();
 		MosipUserSaltListDto mosipUsers = authService
 				.getAllUserDetailsWithSalt(userDetails.getRequest().getUserDetails(), appId);
+		LOGGER.info("Get usersaltdetails for " + appId + ". Total user salts:  " + mosipUsers.getMosipUserSaltList().size() );
 		responseWrapper.setResponse(mosipUsers);
 		return responseWrapper;
 	}
@@ -402,6 +429,7 @@ public class AuthController {
 			throws Exception {
 		ResponseWrapper<RIdDto> responseWrapper = new ResponseWrapper<>();
 		RIdDto rIdDto = authService.getRidBasedOnUid(userId, appId);
+		LOGGER.info("Get rid for " + appId + ". Rid:  " + rIdDto.getRId());
 		responseWrapper.setResponse(rIdDto);
 		return responseWrapper;
 	}
@@ -419,6 +447,7 @@ public class AuthController {
 	public ResponseWrapper<AuthZResponseDto> getUserName(@PathVariable("appid") String appId,
 			@PathVariable("userid") String userId) throws Exception {
 		AuthZResponseDto authZResponseDto = authService.unBlockUser(userId, appId);
+		LOGGER.info("unblock user " + userId + " appid " + appId + ". Response  status " + authZResponseDto.getStatus());
 		ResponseWrapper<AuthZResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(authZResponseDto);
 		return responseWrapper;
@@ -437,7 +466,8 @@ public class AuthController {
 	public ResponseWrapper<AuthZResponseDto> changePassword(@PathVariable("appid") String appId,
 			@RequestBody @Valid RequestWrapper<PasswordDto> passwordDto) throws Exception {
 		AuthZResponseDto mosipUserDto = authService.changePassword(appId, passwordDto.getRequest());
-		ResponseWrapper<AuthZResponseDto> responseWrapper = new ResponseWrapper<>();
+		LOGGER.info("changepassword appid " + appId + ". Response  status " + mosipUserDto.getStatus());
+		ResponseWrapper<AuthZResponseDto> responseWrapper = new ResponseWrapper<>();		
 		responseWrapper.setResponse(mosipUserDto);
 		return responseWrapper;
 	}
@@ -455,6 +485,7 @@ public class AuthController {
 	public ResponseWrapper<AuthZResponseDto> resetPassword(@PathVariable("appid") String appId,
 			@RequestBody @Valid RequestWrapper<PasswordDto> passwordDto) throws Exception {
 		AuthZResponseDto mosipUserDto = authService.resetPassword(appId, passwordDto.getRequest());
+		LOGGER.info("resetpassword appid " + appId + ". Response  status " + mosipUserDto.getStatus());
 		ResponseWrapper<AuthZResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(mosipUserDto);
 		return responseWrapper;
@@ -472,6 +503,7 @@ public class AuthController {
 	public ResponseWrapper<UserNameDto> getUsernameBasedOnMobileNumber(@PathVariable("mobilenumber") String mobile,
 			@PathVariable("appid") String appId) throws Exception {
 		UserNameDto userNameDto = authService.getUserNameBasedOnMobileNumber(appId, mobile);
+		LOGGER.info("fetch username based on mobile number - appid " + appId + ". Response  status " + userNameDto.getUserName());
 		ResponseWrapper<UserNameDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(userNameDto);
 		return responseWrapper;
@@ -488,7 +520,16 @@ public class AuthController {
 	public ResponseWrapper<UserPasswordResponseDto> addPassword(
 			@RequestBody @Valid RequestWrapper<UserPasswordRequestDto> userPasswordRequestDto) {
 		ResponseWrapper<UserPasswordResponseDto> responseWrapper = new ResponseWrapper<>();
-		responseWrapper.setResponse(authService.addUserPassword(userPasswordRequestDto.getRequest()));
+		UserPasswordResponseDto userPasswordResponseDto = authService.addUserPassword(userPasswordRequestDto.getRequest());
+		if ( userPasswordResponseDto != null && userPasswordResponseDto.getUserName().equals(userPasswordRequestDto.getRequest().getUserName())  ){
+			LOGGER.info("add password " + userPasswordRequestDto.getRequest().getUserName() + ". Response  status success" );
+		}
+		else{
+			
+			LOGGER.info("add password " + userPasswordRequestDto.getRequest().getUserName() + ". Response  status failed" );
+		}
+
+		responseWrapper.setResponse(userPasswordResponseDto);
 		return responseWrapper;
 	}
 
@@ -498,6 +539,7 @@ public class AuthController {
 			@PathVariable("userId") String userId) throws Exception {
 		ResponseWrapper<UserRoleDto> responseWrapper = new ResponseWrapper<>();
 		UserRoleDto userRole = authService.getUserRole(appId, userId);
+		LOGGER.info("role appid " + appId + " user " + userId + ". role " + userRole.getRole() );
 		responseWrapper.setResponse(userRole);
 		return responseWrapper;
 	}
@@ -514,6 +556,7 @@ public class AuthController {
 	public ResponseWrapper<MosipUserDto> getUserDetailBasedOnMobileNumber(@PathVariable("mobilenumber") String mobile,
 			@PathVariable("appid") String appId) throws Exception {
 		MosipUserDto mosipUserDto = authService.getUserDetailBasedonMobileNumber(appId, mobile);
+		LOGGER.info("userdetail with mobile number appid " + appId + " user " + mosipUserDto.getUserId() );
 		ResponseWrapper<MosipUserDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(mosipUserDto);
 		return responseWrapper;
@@ -531,6 +574,7 @@ public class AuthController {
 	public ResponseWrapper<ValidationResponseDto> validateUserName(@PathVariable("userid") String userId,
 			@PathVariable("appid") String appId) {
 		ValidationResponseDto validationResponseDto = authService.validateUserName(appId, userId);
+		LOGGER.info("validate with appid " + appId + " user " + userId + ". Response " + validationResponseDto.getStatus() );
 		ResponseWrapper<ValidationResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(validationResponseDto);
 		return responseWrapper;
@@ -549,6 +593,7 @@ public class AuthController {
 			@RequestBody RequestWrapper<UserDetailsRequestDto> userDetails) {
 		UserDetailsResponseDto userDetailsDto = authService.getUserDetailBasedOnUserId(appId,
 				userDetails.getRequest().getUserDetails());
+		LOGGER.info("userdetail regid with appid " + appId + " request user count " + userDetails.getRequest().getUserDetails().size() + ". Response user count " + userDetailsDto.getUserDetails().size() );
 		ResponseWrapper<UserDetailsResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(userDetailsDto);
 		return responseWrapper;
@@ -565,6 +610,7 @@ public class AuthController {
 	public ResponseWrapper<AuthResponseDto> logoutUser(
 			@CookieValue(value = "Authorization", required = false) String token, HttpServletResponse res) {
 		AuthResponseDto authResponseDto = authService.logoutUser(token);
+		LOGGER.info("logout user " + token + ". Response " + authResponseDto.getStatus() );
 		ResponseWrapper<AuthResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(authResponseDto);
 		return responseWrapper;
@@ -574,6 +620,7 @@ public class AuthController {
 	public void login(@CookieValue("state") String state, @PathVariable("redirectURI") String redirectURI,
 			HttpServletResponse res) throws IOException {
 		String uri = authService.getKeycloakURI(redirectURI, state);
+		LOGGER.info("redirect open id login uri " + uri );
 		res.setStatus(302);
 		res.sendRedirect(uri);
 	}
@@ -585,6 +632,7 @@ public class AuthController {
 		AccessTokenResponseDTO jwtResponseDTO = authService.loginRedirect(state, sessionState, code, stateCookie,
 				redirectURI);
 		String uri = new String(Base64.decodeBase64(redirectURI.getBytes()));
+		LOGGER.info("login-redirect open id login uri " + uri );
 		Cookie cookie = createCookie(jwtResponseDTO.getAccessToken(), Integer.parseInt(jwtResponseDTO.getExpiresIn()));
 		res.addCookie(cookie);
 		res.setStatus(302);
