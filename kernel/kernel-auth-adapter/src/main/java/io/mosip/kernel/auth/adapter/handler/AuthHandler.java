@@ -10,6 +10,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -39,7 +41,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.mosip.kernel.auth.adapter.config.LoggerConfiguration;
 import io.mosip.kernel.auth.adapter.config.RestTemplateInterceptor;
 import io.mosip.kernel.auth.adapter.constant.AuthAdapterConstant;
 import io.mosip.kernel.auth.adapter.constant.AuthAdapterErrorCode;
@@ -50,7 +51,7 @@ import io.mosip.kernel.auth.adapter.model.MosipUserDto;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
-import io.mosip.kernel.core.logger.spi.Logger;
+//import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
@@ -77,7 +78,7 @@ import io.vertx.ext.web.RoutingContext;
 @Component
 public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 
-	private static final Logger LOGGER = LoggerConfiguration.logConfig(AuthHandler.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AuthHandler.class);
 
 	@Value("${auth.server.validate.url}")
 	private String validateUrl;
@@ -118,6 +119,7 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 			ResponseWrapper<?> responseObject = objectMapper.readValue(response.getBody(), ResponseWrapper.class);
 			mosipUserDto = objectMapper.readValue(objectMapper.writeValueAsString(responseObject.getResponse()),
 					MosipUserDto.class);
+			LOGGER.info("user " +mosipUserDto.getUserId() );
 		} catch (Exception e) {
 			throw new AuthManagerException(String.valueOf(HttpStatus.UNAUTHORIZED.value()), e.getMessage(), e);
 		}
@@ -184,6 +186,7 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 		headers.set(AuthAdapterConstant.AUTH_HEADER_COOKIE, AuthAdapterConstant.AUTH_COOOKIE_HEADER + token);
 		HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 		try {
+			LOGGER.info("url " + adminValidateUrl);
 			return getRestTemplate().exchange(adminValidateUrl, HttpMethod.GET, entity, String.class);
 		} catch (RestClientException | KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
 			throw new AuthManagerException(AuthAdapterErrorCode.UNAUTHORIZED.getErrorCode(), e.getMessage(), e);
@@ -277,6 +280,7 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 			List<ServiceError> errors = new ArrayList<>();
 			ServiceError error = new ServiceError(AuthAdapterErrorCode.UNAUTHORIZED.getErrorCode(),
 					AuthAdapterErrorCode.UNAUTHORIZED.getErrorMessage());
+			LOGGER.error(error.getMessage());
 			errors.add(error);
 			sendErrors(routingContext, errors, AuthAdapterConstant.NOTAUTHENTICATED);
 			return "";
@@ -287,12 +291,14 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 			List<ServiceError> errors = new ArrayList<>();
 			ServiceError error = new ServiceError(AuthAdapterErrorCode.CONNECT_EXCEPTION.getErrorCode(),
 					AuthAdapterErrorCode.CONNECT_EXCEPTION.getErrorMessage());
+			LOGGER.error(error.getMessage());
 			errors.add(error);
 			sendErrors(routingContext, errors, AuthAdapterConstant.INTERNEL_SERVER_ERROR);
 			return "";
 		}
 		List<ServiceError> validationErrorsList = ExceptionUtils.getServiceErrorList(response.getBody());
 		if (!validationErrorsList.isEmpty()) {
+			LOGGER.error("count " + validationErrorsList.size());
 			sendErrors(routingContext, validationErrorsList, AuthAdapterConstant.NOTAUTHENTICATED);
 			return "";
 		}
@@ -320,6 +326,7 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 			List<ServiceError> errors = new ArrayList<>();
 			ServiceError error = new ServiceError(AuthAdapterErrorCode.FORBIDDEN.getErrorCode(),
 					AuthAdapterErrorCode.FORBIDDEN.getErrorMessage());
+			LOGGER.error(error.getMessage());
 			errors.add(error);
 			sendErrors(routingContext, errors, AuthAdapterConstant.UNAUTHORIZED);
 			return "";
@@ -339,7 +346,7 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 				errorResponse.setId(reqNode.path("id").asText());
 				errorResponse.setVersion(reqNode.path("version").asText());
 			} catch (IOException exception) {
-				LOGGER.error("", "", "", exception.getMessage());
+				LOGGER.error(exception.getMessage());
 			}
 		}
 		try {
@@ -347,7 +354,7 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 					.end(objectMapper.writeValueAsString(errorResponse));
 
 		} catch (JsonProcessingException exception) {
-			LOGGER.error("", "", "", exception.getMessage());
+			LOGGER.error(exception.getMessage());
 		}
 	}
 }

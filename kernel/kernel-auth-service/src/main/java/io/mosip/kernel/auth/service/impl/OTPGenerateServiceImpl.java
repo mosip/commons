@@ -144,7 +144,6 @@ public class OTPGenerateServiceImpl implements OTPGenerateService {
 			}
 			return otpGenerateResponseDto;
 		} catch (HttpClientErrorException | HttpServerErrorException exp) {
-			System.out.println(exp.getResponseBodyAsString());
 			throw new AuthManagerException(String.valueOf(HttpStatus.UNAUTHORIZED.value()), exp.getMessage(), exp);
 		}
 	}

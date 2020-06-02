@@ -1,7 +1,7 @@
 ﻿code,name,descr,lang_code,is_active,cr_by,cr_dtimes
-CIN,CNIE card,Moroccan National Electronic ID Card,eng,TRUE,superadmin,now()
-CIN,نَتِنَل ِد,بطاقة الهوية الوطنية المغربية,ara,TRUE,superadmin,now()
-CIN,carte didentité,Carte didentité électronique nationale marocaine,fra,TRUE,superadmin,now()
+CIN,Reference Identity Card,Reference Identity Card,eng,TRUE,superadmin,now()
+CIN,بطاقة الهوية المرجعية,بطاقة الهوية المرجعية,ara,TRUE,superadmin,now()
+CIN,Carte d'identité de référence,Carte d'identité de référence,fra,TRUE,superadmin,now()
 RNC,Rental contract,Rental Agreement of address,eng,TRUE,superadmin,now()
 RNC,عقد ايجار,اتفاق تأجير العنوان,ara,TRUE,superadmin,now()
 RNC,Contrat de location,Contrat de location dadresse,fra,TRUE,superadmin,now()
@@ -86,3 +86,6 @@ DOC025,Carte médicale délivrée par le govt de l'État,"Carte médicale déliv
 DOC026,Carte de cantine de l’armée,Carte de cantine de l’armée,fra,TRUE,superadmin,now()
 DOC027,Titre de droit familial,Tout document de droit de la famille délivré par un gouvernement central ou,fra,TRUE,superadmin,now()
 DOC028,Certificat de naissance,Registraire de naissance/municipalité ou tout acte de naissance du gouvernement local,fra,TRUE,superadmin,now()
+EOP,Expetion Photo,Expetion Photo,eng,TRUE,superadmin,now()
+EOP,Photo d exception,Photo d exception,fra,TRUE,superadmin,now()
+EOP,صور الاستثناء,صور الاستثناء,ara,TRUE,superadmin,now()

@@ -3,7 +3,7 @@
 -- Release Version 	: 1.0.9
 -- Purpose    		: Revoking Database Alter deployement done for release in Master DB.       
 -- Create By   		: Sadanandegowda DM
--- Created Date		: 23-Apr-2020
+-- Created Date		: 02-Jun-2020
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- -----------------------------------------------------------------------------------------------------------
