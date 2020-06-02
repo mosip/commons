@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -96,20 +97,24 @@ public class CbeffBIRBuilder implements BiometricDataBuilder {
 	
 	@SuppressWarnings("incomplete-switch")
 	private List<String> getSubTypes(SingleType singleType, String bioAttribute) {
-		List<String> subtypes = new ArrayList<>();			
+		List<String> subtypes = new LinkedList<>();		
 		switch (singleType) {
 		case FINGER:
+			subtypes.add(bioAttribute.contains("left") ? SingleAnySubtypeType.LEFT.value() :
+				SingleAnySubtypeType.RIGHT.value());
 			if(bioAttribute.toLowerCase().contains("thumb"))
 				subtypes.add(SingleAnySubtypeType.THUMB.value());
 			else {
 				String val = bioAttribute.toLowerCase().replace("left", "").replace("right", "");
 				subtypes.add(SingleAnySubtypeType.fromValue(StringUtils.capitalizeFirstLetter(val).concat("Finger")).value());
-			}			
-		case IRIS:
+			}
+			break;
+		case IRIS:			
 			subtypes.add(bioAttribute.contains("left") ? SingleAnySubtypeType.LEFT.value() :
 				SingleAnySubtypeType.RIGHT.value());
 			break;
-		case FACE:break;
+		case FACE:
+			break;
 		}
 		return subtypes;
 	}
