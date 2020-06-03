@@ -44,12 +44,12 @@
 			<version>${kernel.core.version}</version>
 		</dependency>
 		
-		<dependency>
+		<!-- <dependency>
 			<artifactId>mock-sdk</artifactId>
 			<groupId>io.mosip.mock.sdk</groupId>
 			<version>0.9-SNAPSHOT</version>
 			<scope>test</scope>
-		</dependency>
+		</dependency>  -->
 				
 	</dependencies>
 </project>
