@@ -8,10 +8,11 @@ import org.springframework.context.annotation.PropertySource;
 
 
 @Configuration
-@PropertySource(value = { "application.properties" })
-@ComponentScan(basePackages = {"io.mosip.sdk.provider.test", "io.mosip.sdk.provider.factory", "io.mosip.sdk.provider.impl"})
+@PropertySource(value = { "application-test.properties" })
+@ComponentScan(basePackages = {"io.mosip.sdk.provider.factory", "io.mosip.sdk.provider.impl"})
 @SpringBootApplication
 public class TestApplication {
+	
 	public static void main(String[] args) {
 		SpringApplication.run(TestApplication.class, args);	
 	}

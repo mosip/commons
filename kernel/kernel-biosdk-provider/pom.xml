@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>kernel-biosdk-provider</artifactId>
-	<groupId>io.mosip.kernel.sdkprovider</groupId>
+	<groupId>io.mosip.kernel.biosdk.provider</groupId>
 	<version>0.9-SNAPSHOT</version>
 	<name>kernel-biosdk-provider</name>
 	<description>Implementation of biosdk provider</description>
@@ -43,27 +43,13 @@
 			<artifactId>kernel-core</artifactId>
 			<version>${kernel.core.version}</version>
 		</dependency>
+		
+		<dependency>
+			<artifactId>mock-sdk</artifactId>
+			<groupId>io.mosip.mock.sdk</groupId>
+			<version>0.9-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
 				
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${spring.boot.version}</version>
-				<configuration>
-					<executable>true</executable>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>build-info</goal>
-							<goal>repackage</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
 </project>
