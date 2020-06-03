@@ -466,7 +466,7 @@ public class DeviceProviderManagementIntegrationTest {
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
 		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req))
-				.andExpect(status().isOk());
+				.andExpect(status().isInternalServerError());
 	}
 
 	@Test
