@@ -28,6 +28,7 @@ public class BioMatcherUtil implements iBioProviderApi {
 	
 	private static final String API_VERSION = "0.8";
 	private Map<BiometricType, Map<BiometricFunction, IBioApi>> sdkRegistry = new HashMap<>();
+	//TODO - as sdk instance is heavy (around 2GB), rethink on the way of reusing the instances
 
 	@Override
 	public Map<BiometricType, List<BiometricFunction>> init(Map<BiometricType, Map<String, String>> params) 

@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>kernel-biosdk-provider</artifactId>
-	<groupId>io.mosip.kernel.biosdk.provider</groupId>
+	<groupId>io.mosip.kernel</groupId>
 	<version>0.9-SNAPSHOT</version>
 	<name>kernel-biosdk-provider</name>
 	<description>Implementation of biosdk provider</description>
