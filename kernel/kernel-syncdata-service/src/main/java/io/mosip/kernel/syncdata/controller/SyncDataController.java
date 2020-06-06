@@ -376,7 +376,7 @@ public class SyncDataController {
 		return response;
 	}
 	
-	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN','REGISTRATION_PROCESSOR','ID_AUTHENTICATION','RESIDENT')")
+	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN','REGISTRATION_PROCESSOR','ID_AUTHENTICATION','RESIDENT','INDIVIDUAL')")
 	@ResponseFilter
 	@GetMapping(value = "/latestidschema", produces = "application/json")
 	public ResponseWrapper<IdSchemaDto> getLatestPublishedIdSchema(
