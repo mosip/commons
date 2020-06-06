@@ -4,22 +4,9 @@ import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-/**
- * 
- * @author Abhishek Kumar
- * @since 1.0.0
- */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class HolidayUpdateDto {
-	
-	private Integer id;
-
+public class HolidayDto {
 	private String locationCode;
 
 	@DateTimeFormat(pattern="yyyy-mm-dd")
@@ -29,11 +16,7 @@ public class HolidayUpdateDto {
 
 	private String holidayDesc;
 	
-	
 	private String langCode;
 
-	
 	private Boolean isActive;
-
-
 }

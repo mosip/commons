@@ -1,5 +1,6 @@
 package io.mosip.kernel.masterdata.service.impl;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -55,6 +57,7 @@ import io.mosip.kernel.masterdata.utils.AuditUtil;
 import io.mosip.kernel.masterdata.utils.ExceptionUtils;
 import io.mosip.kernel.masterdata.utils.MapperUtils;
 import io.mosip.kernel.masterdata.utils.MasterDataFilterHelper;
+import io.mosip.kernel.masterdata.utils.MasterdataCreationUtil;
 import io.mosip.kernel.masterdata.utils.MasterdataSearchHelper;
 import io.mosip.kernel.masterdata.utils.MetaDataUtils;
 import io.mosip.kernel.masterdata.utils.OptionalFilter;
@@ -87,11 +90,20 @@ public class HolidayServiceImpl implements HolidayService {
 	private MasterDataFilterHelper masterDataFilterHelper;
 	@Autowired
 	private PageUtils pageUtils;
+	@Autowired
+	private MasterdataCreationUtil masterdataCreationUtil;
 
 	@Autowired
 	private AuditUtil auditUtil;
+	
+	@Value("${mosip.primary-language:eng}")
+	private String primaryLang;
 
-	private static final String UPDATE_HOLIDAY_QUERY = "UPDATE Holiday h SET h.isActive = :isActive ,h.updatedBy = :updatedBy , h.updatedDateTime = :updatedDateTime, h.holidayDesc = :holidayDesc,h.holidayId.holidayDate=:newHolidayDate,h.holidayId.holidayName = :newHolidayName   WHERE h.holidayId.locationCode = :locationCode and h.holidayId.holidayName = :holidayName and h.holidayId.holidayDate = :holidayDate and h.holidayId.langCode = :langCode and (h.isDeleted is null or h.isDeleted = false)";
+	@Value("${mosip.secondary-language:ara}")
+	private String secondaryLang;
+
+	private static final String UPDATE_HOLIDAY_QUERY = "UPDATE Holiday h SET h.isActive = :isActive ,h.updatedBy = :updatedBy , h.updatedDateTime = :updatedDateTime, h.holidayDesc = :holidayDesc,h.holidayId.holidayDate=:holidayDate,h.holidayId.holidayName = :holidayName   WHERE h.holidayId.locationCode = :locationCode  and h.holidayId.holidayId = :holidayId and h.holidayId.langCode = :langCode and (h.isDeleted is null or h.isDeleted = false)";
+	private static final int DEFAULT_HOLIDAY_ID = 2000001;
 
 	/*
 	 * (non-Javadoc)
@@ -190,27 +202,80 @@ public class HolidayServiceImpl implements HolidayService {
 	 */
 	@Override
 	public HolidayIDDto saveHoliday(HolidayDto holidayDto) {
-		Holiday entity = MetaDataUtils.setCreateMetaData(holidayDto, Holiday.class);
-		entity.setHolidayId(holidayDto.getId());
-		Holiday holiday;
+		
+		Holiday entity=null;
+		Holiday holiday=null;
+		HolidayIDDto holidayId = new HolidayIDDto();
 		try {
+			if (holidayDto != null) {
+				List<Location> locations =locationRepository.findByCode(holidayDto.getLocationCode());
+				if(locations==null || locations.isEmpty()) {
+					auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_UPDATE, LocationDto.class.getSimpleName()),
+							MasterDataConstant.AUDIT_SYSTEM,
+							String.format(MasterDataConstant.FAILURE_DESC,
+									HolidayErrorCode.HOLIDAY_LOCATION_INVALID.getErrorCode(),
+									HolidayErrorCode.HOLIDAY_LOCATION_INVALID.getErrorMessage()),
+							"ADM-2163");
+					throw new RequestException(HolidayErrorCode.HOLIDAY_LOCATION_INVALID.getErrorCode(),
+							HolidayErrorCode.HOLIDAY_LOCATION_INVALID.getErrorMessage());
+				}
+				holidayDto.setIsActive(getisActive(holidayDto.getHolidayDate(),holidayDto.getLangCode(),
+						holidayDto.getLocationCode(),holidayDto.getIsActive()));
+				entity = MetaDataUtils.setCreateMetaData(holidayDto, Holiday.class);
+				List<Holiday> hols=holidayRepository.findHolidayByHolidayDate(holidayDto.getHolidayDate());
+				List<Holiday> holidays=holidayRepository.findAll();
+			
+				if(holidays==null || holidays.isEmpty() ) {
+					entity.setHolidayId(DEFAULT_HOLIDAY_ID);
+				}
+				else if(hols!=null && !hols.isEmpty()){
+					entity.setHolidayId(hols.get(0).getHolidayId());
+				}
+				else {
+					List<Integer> holidayIds=new ArrayList<>();
+					for(Holiday holidayEntry:holidays) {
+						holidayIds.add(Integer.valueOf(holidayEntry.getHolidayId()));
+					}
+				
+				entity.setHolidayId(Collections.max(holidayIds)+1);
+			}
+			
 			holiday = holidayRepository.create(entity);
-		} catch (DataAccessLayerException | DataAccessException e) {
+			MapperUtils.map(holiday, holidayId);
+			}
+		}catch (DataAccessLayerException | DataAccessException | IllegalArgumentException |  SecurityException e) {
 			auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_UPDATE, LocationDto.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
 					String.format(MasterDataConstant.FAILURE_DESC,
 							HolidayErrorCode.HOLIDAY_INSERT_EXCEPTION.getErrorCode(), ExceptionUtils.parseException(e)),
-					"ADM-599");
+					"ADM-2163");
 			throw new MasterDataServiceException(HolidayErrorCode.HOLIDAY_INSERT_EXCEPTION.getErrorCode(),
 					ExceptionUtils.parseException(e));
 		}
-		HolidayIDDto holidayId = new HolidayIDDto();
-		MapperUtils.map(holiday, holidayId);
+		
 		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_CREATE, HolidayDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
 				String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC, HolidayDto.class.getSimpleName(), holidayId),
-				"ADM-800");
+				"ADM-2162");
 		return holidayId;
+	}
+
+	private boolean getisActive(LocalDate holidayDate,String langCode,String locationCode,boolean isActive) {
+		if(langCode.equalsIgnoreCase(primaryLang)) {
+			Holiday holiday=holidayRepository.findHolidayByHolidayDateLocationCodeLangCode(holidayDate,
+					locationCode,secondaryLang);
+			if(holiday==null) {
+				return false;
+			}
+		}
+		if(langCode.equalsIgnoreCase(secondaryLang)) {
+			Holiday holiday=holidayRepository.findHolidayByHolidayDateLocationCodeLangCode(holidayDate,
+					locationCode,primaryLang);
+			if(holiday==null) {
+				return false;
+			}
+		}
+		return isActive;
 	}
 
 	/*
@@ -223,9 +288,22 @@ public class HolidayServiceImpl implements HolidayService {
 	@Override
 	public HolidayIDDto updateHoliday(HolidayUpdateDto holidayDto) {
 		HolidayIDDto idDto = null;
-		Map<String, Object> params = bindDtoToMap(holidayDto);
+		
 		try {
-			int noOfRowAffected = holidayRepository.createQueryUpdateOrDelete(UPDATE_HOLIDAY_QUERY, params);
+			List<Location> locations =locationRepository.findByCode(holidayDto.getLocationCode());
+			if(locations==null || locations.isEmpty()) {
+				auditUtil.auditRequest(
+						String.format(MasterDataConstant.FAILURE_UPDATE, HolidayUpdateDto.class.getSimpleName()),
+						MasterDataConstant.AUDIT_SYSTEM, String.format(HolidayErrorCode.UPDATE_HOLIDAY_LOCATION_INVALID.getErrorCode(),
+								HolidayErrorCode.UPDATE_HOLIDAY_LOCATION_INVALID.getErrorMessage()),
+						"ADM-2166");
+				throw new RequestException(HolidayErrorCode.UPDATE_HOLIDAY_LOCATION_INVALID.getErrorCode(),
+						HolidayErrorCode.UPDATE_HOLIDAY_LOCATION_INVALID.getErrorMessage());
+			}
+			holidayDto.setIsActive(getisActive(holidayDto.getHolidayDate(),holidayDto.getLangCode(),
+					holidayDto.getLocationCode(),holidayDto.getIsActive()));
+			Map<String, Object> params = bindDtoToMap(holidayDto);
+			int noOfRowAffected = holidayRepository.createQueryUpdateOrDelete(UPDATE_HOLIDAY_QUERY, params);			
 			if (noOfRowAffected != 0) {
 				idDto = mapToHolidayIdDto(holidayDto);
 			} else {
@@ -233,17 +311,17 @@ public class HolidayServiceImpl implements HolidayService {
 						String.format(MasterDataConstant.FAILURE_UPDATE, HolidayUpdateDto.class.getSimpleName()),
 						MasterDataConstant.AUDIT_SYSTEM, String.format(HolidayErrorCode.HOLIDAY_NOTFOUND.getErrorCode(),
 								HolidayErrorCode.HOLIDAY_NOTFOUND.getErrorMessage()),
-						"ADM-801");
+						"ADM-2166");
 				throw new RequestException(HolidayErrorCode.HOLIDAY_NOTFOUND.getErrorCode(),
 						HolidayErrorCode.HOLIDAY_NOTFOUND.getErrorMessage());
 			}
 
-		} catch (DataAccessException | DataAccessLayerException e) {
+		} catch (DataAccessException | DataAccessLayerException | IllegalArgumentException | SecurityException e) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_UPDATE, HolidayUpdateDto.class.getSimpleName()),
-					MasterDataConstant.AUDIT_SYSTEM, String.format(HolidayErrorCode.HOLIDAY_NOTFOUND.getErrorCode(),
-							HolidayErrorCode.HOLIDAY_NOTFOUND.getErrorMessage()),
-					"ADM-802");
+					MasterDataConstant.AUDIT_SYSTEM, String.format(HolidayErrorCode.HOLIDAY_UPDATE_EXCEPTION.getErrorCode(),
+							HolidayErrorCode.HOLIDAY_UPDATE_EXCEPTION.getErrorMessage()),
+					"ADM-2166");
 			throw new MasterDataServiceException(HolidayErrorCode.HOLIDAY_UPDATE_EXCEPTION.getErrorCode(),
 					HolidayErrorCode.HOLIDAY_UPDATE_EXCEPTION.getErrorMessage() + ExceptionUtils.parseException(e));
 		}
@@ -251,7 +329,7 @@ public class HolidayServiceImpl implements HolidayService {
 				String.format(MasterDataConstant.SUCCESSFUL_UPDATE, HolidayUpdateDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
 				String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC, HolidayUpdateDto.class.getSimpleName(), idDto),
-				"ADM-803");
+				"ADM-2165");
 		return idDto;
 	}
 
@@ -287,19 +365,8 @@ public class HolidayServiceImpl implements HolidayService {
 	 */
 	private Map<String, Object> bindDtoToMap(HolidayUpdateDto dto) {
 		Map<String, Object> params = new HashMap<>();
-		if (dto.getNewHolidayName() != null && !dto.getNewHolidayName().isEmpty())
-			params.put("newHolidayName", dto.getNewHolidayName());
-		else
-			params.put("newHolidayName", dto.getHolidayName());
-		if (dto.getNewHolidayDate() != null)
-			params.put("newHolidayDate", dto.getNewHolidayDate());
-		else
-			params.put("newHolidayDate", dto.getHolidayDate());
-		if (dto.getNewHolidayDesc() != null && !dto.getNewHolidayDesc().isEmpty())
-			params.put("holidayDesc", dto.getNewHolidayDesc());
-		else
-			params.put("holidayDesc", dto.getHolidayDesc());
-
+		params.put("holidayId", dto.getId());
+		params.put("holidayDesc", dto.getHolidayDesc());
 		params.put("isActive", dto.getIsActive());
 		params.put("holidayDate", dto.getHolidayDate());
 		params.put("holidayName", dto.getHolidayName());
@@ -319,12 +386,12 @@ public class HolidayServiceImpl implements HolidayService {
 	private HolidayIDDto mapToHolidayIdDto(HolidayUpdateDto dto) {
 		HolidayIDDto idDto;
 		idDto = new HolidayIDDto();
-		if (dto.getNewHolidayName() != null)
-			idDto.setHolidayName(dto.getNewHolidayName());
+		if (dto.getHolidayName() != null)
+			idDto.setHolidayName(dto.getHolidayName());
 		else
 			idDto.setHolidayName(dto.getHolidayName());
-		if (dto.getNewHolidayDate() != null)
-			idDto.setHolidayDate(dto.getNewHolidayDate());
+		if (dto.getHolidayDate() != null)
+			idDto.setHolidayDate(dto.getHolidayDate());
 		else
 			idDto.setHolidayDate(dto.getHolidayDate());
 		idDto.setLocationCode(dto.getLocationCode());

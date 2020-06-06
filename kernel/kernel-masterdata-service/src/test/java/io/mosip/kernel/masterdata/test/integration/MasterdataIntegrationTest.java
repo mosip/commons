@@ -76,6 +76,7 @@ import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.idgenerator.spi.MachineIdGenerator;
 import io.mosip.kernel.core.util.CryptoUtil;
+import io.mosip.kernel.core.util.JsonUtils;
 import io.mosip.kernel.masterdata.constant.MachinePutReqDto;
 import io.mosip.kernel.masterdata.dto.BiometricAttributeDto;
 import io.mosip.kernel.masterdata.dto.BlacklistedWordsDto;
@@ -93,6 +94,7 @@ import io.mosip.kernel.masterdata.dto.ExceptionalHolidayPutPostDto;
 import io.mosip.kernel.masterdata.dto.FoundationalTrustProviderDto;
 import io.mosip.kernel.masterdata.dto.FoundationalTrustProviderPutDto;
 import io.mosip.kernel.masterdata.dto.GenderTypeDto;
+import io.mosip.kernel.masterdata.dto.HolidayDto;
 import io.mosip.kernel.masterdata.dto.IdTypeDto;
 import io.mosip.kernel.masterdata.dto.IndividualTypeDto;
 import io.mosip.kernel.masterdata.dto.LanguageDto;
@@ -2158,16 +2160,27 @@ public class MasterdataIntegrationTest {
 	public void addHolidayTypeExceptionTest() throws Exception {
 
 		String json = "{\n" + "  \"id\": \"string\",\n" + "  \"metadata\": {},\n" + "  \"request\": {\n"
-				+ "    \"holidayDate\": \"2019-01-01\",\n" + "    \"holidayDay\": \"Sunday\",\n"
-				+ "    \"holidayDesc\": \"New Year\",\n" + "    \"holidayMonth\": \"January\",\n"
-				+ "    \"holidayName\": \"New Year\",\n" + "    \"holidayYear\": \"2019\",\n" + "    \"id\": 1,\n"
+				+ "    \"holidayDate\": \"2019-01-01\",\n" + "    \"holidayDesc\": \"New Year\",\n" 
+				+ "    \"holidayName\": \"New Year\",\n"  
 				+ "    \"isActive\": true,\n" + "    \"langCode\": \"eng\",\n" + "    \"locationCode\": \"BLR\"\n"
 				+ "  },\n" + "  \"requesttime\": \"2018-12-06T08:49:32.190Z\",\n" + "  \"version\": \"string\"\n" + "}";
 		when(holidayRepository.create(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot execute ", null));
+		when(locationRepository.findByCode(anyString())).thenReturn(locationHierarchies);
+		when(holidayRepository.findHolidayByHolidayDate(Mockito.any()))
+		.thenReturn(holidays);
+		when(holidayRepository.findAll()).thenReturn(holidays);
+		HolidayDto holidayDto =new HolidayDto();
+		holidayDto.setHolidayDate(LocalDate.parse("2019-01-01"));
+		holidayDto.setHolidayDesc("New Year");
+		holidayDto.setHolidayName("New Year");
+		holidayDto.setIsActive(true);
+		holidayDto.setLangCode("eng");
+		holidayDto.setLocationCode("BLR");
+		when(holidayRepository.findHolidayByHolidayDateLocationCodeLangCode(any(), any(),any())).thenReturn(null);
+		
 		mockMvc.perform(post("/holidays").contentType(MediaType.APPLICATION_JSON).content(json))
 				.andExpect(status().isInternalServerError());
-
 	}
 
 	// -----------------------------IdTypeTest----------------------------------

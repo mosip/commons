@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +34,7 @@ import io.mosip.kernel.masterdata.dto.response.HolidaySearchDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.service.HolidayService;
 import io.mosip.kernel.masterdata.utils.AuditUtil;
+import io.mosip.kernel.masterdata.validator.HolidayValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -57,6 +59,9 @@ public class HolidayController {
 
 	@Autowired
 	private AuditUtil auditUtil;
+	
+	@Autowired
+	private HolidayValidator holidayValidator;
 
 	/**
 	 * This method returns all holidays present in master db
@@ -114,9 +119,11 @@ public class HolidayController {
 	@PostMapping
 	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
 	public ResponseWrapper<HolidayIDDto> saveHoliday(@Valid @RequestBody RequestWrapper<HolidayDto> holiday) {
+		holidayValidator.validate(holiday.getRequest());
 		auditUtil.auditRequest(MasterDataConstant.CREATE_API_IS_CALLED + HolidayDto.class.getSimpleName(),
 				MasterDataConstant.AUDIT_SYSTEM,
-				MasterDataConstant.CREATE_API_IS_CALLED + HolidayDto.class.getSimpleName(), "ADM-593");
+				MasterDataConstant.CREATE_API_IS_CALLED + HolidayDto.class.getSimpleName(), "ADM-2161");
+		
 		ResponseWrapper<HolidayIDDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(holidayService.saveHoliday(holiday.getRequest()));
 		return responseWrapper;
@@ -133,9 +140,10 @@ public class HolidayController {
 	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
 	@ApiOperation(value = "to update a holiday", response = HolidayIDDto.class)
 	public ResponseWrapper<HolidayIDDto> updateHoliday(@Valid @RequestBody RequestWrapper<HolidayUpdateDto> holiday) {
+		holidayValidator.validate(holiday.getRequest());
 		auditUtil.auditRequest(MasterDataConstant.UPDATE_API_IS_CALLED + HolidayUpdateDto.class.getSimpleName(),
 				MasterDataConstant.AUDIT_SYSTEM,
-				MasterDataConstant.UPDATE_API_IS_CALLED + HolidayUpdateDto.class.getSimpleName(), "ADM-594");
+				MasterDataConstant.UPDATE_API_IS_CALLED + HolidayUpdateDto.class.getSimpleName(), "ADM-2164");
 		ResponseWrapper<HolidayIDDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(holidayService.updateHoliday(holiday.getRequest()));
 		return responseWrapper;
