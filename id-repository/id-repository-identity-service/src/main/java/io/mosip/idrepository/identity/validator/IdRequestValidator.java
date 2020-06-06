@@ -386,7 +386,8 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 						ResponseWrapper.class);
 				restRequest.setUri(restRequest.getUri().concat("?schemaVersion=" + schemaVersion));
 				ResponseWrapper<Map<String, String>> response = restHelper.requestSync(restRequest);
-				return schemaMap.put(schemaVersion, response.getResponse().get("schemaJson"));
+				schemaMap.put(schemaVersion, response.getResponse().get("schemaJson"));
+				return getSchema(schemaVersion);
 			}
 		} catch (IdRepoDataValidationException | RestServiceException e) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REQUEST_VALIDATOR, "getSchema",

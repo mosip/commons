@@ -443,7 +443,8 @@ public class IdRepoProxyServiceImpl implements IdRepoService<IdRequestDTO, IdRes
 				}
 
 				Uin uinObject = service.updateIdentity(request, uin);
-				if (!env.getProperty(ACTIVE_STATUS).equalsIgnoreCase(request.getRequest().getStatus())) {
+				if (Objects.nonNull(request.getRequest().getStatus())
+						&& !env.getProperty(ACTIVE_STATUS).equalsIgnoreCase(request.getRequest().getStatus())) {
 					notify(EventType.UPDATE_UIN, uin, uinObject.getUpdatedDateTime());
 				} else {
 					notify(EventType.UPDATE_UIN, uin, null);
