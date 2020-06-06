@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 
@@ -211,14 +212,20 @@ public class RestHelper {
 	 */
 	private void checkErrorResponse(Object response, Class<?> responseType) throws RestServiceException {
 		try {
-			ObjectNode responseNode = mapper.readValue(mapper.writeValueAsBytes(response), ObjectNode.class);
-			if (responseNode.has(ERRORS) && !responseNode.get(ERRORS).isNull() && responseNode.get(ERRORS).isArray()
-					&& responseNode.get(ERRORS).size() > 0) {
-				throw new RestServiceException(CLIENT_ERROR, responseNode.toString(),
-						mapper.readValue(responseNode.toString().getBytes(), responseType));
+			if (Objects.nonNull(response)) {
+				ObjectNode responseNode = mapper.readValue(mapper.writeValueAsBytes(response), ObjectNode.class);
+				if (responseNode.has(ERRORS) && !responseNode.get(ERRORS).isNull() && responseNode.get(ERRORS).isArray()
+						&& responseNode.get(ERRORS).size() > 0) {
+					throw new RestServiceException(CLIENT_ERROR, responseNode.toString(),
+							mapper.readValue(responseNode.toString().getBytes(), responseType));
+				}
+			} else {
+				mosipLogger.error(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, "checkErrorResponse",
+						THROWING_REST_SERVICE_EXCEPTION + "- UNKNOWN_ERROR - " + "Response is null");
+				throw new RestServiceException(CLIENT_ERROR);
 			}
 		} catch (IOException e) {
-			mosipLogger.error(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, REQUEST_SYNC_RUNTIME_EXCEPTION,
+			mosipLogger.error(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, "checkErrorResponse",
 					THROWING_REST_SERVICE_EXCEPTION + "- UNKNOWN_ERROR - " + e.getMessage());
 			throw new RestServiceException(UNKNOWN_ERROR, e);
 		}

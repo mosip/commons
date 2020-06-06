@@ -157,7 +157,7 @@ public class IdRequestValidatorTest {
 		when(idObjectValidator.validateIdObject(Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenThrow(new IdObjectValidationFailedException("", "Invalid - Request"));
 		Object request = mapper.readValue(
-				"{\"identity\":{\"dateOfBirth\":\"12345\",\"fullName\":[{\"language\":\"\",\"value\":\"Manoj\",\"label\":\"string\"}]}}"
+				"{\"identity\":{\"IDSchemaVersion\":0,\"dateOfBirth\":\"12345\",\"fullName\":[{\"language\":\"\",\"value\":\"Manoj\",\"label\":\"string\"}]}}"
 						.getBytes(),
 				Object.class);
 		ReflectionTestUtils.invokeMethod(validator, "validateRequest", request, errors, "create");

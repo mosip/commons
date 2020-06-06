@@ -6,6 +6,7 @@ package io.mosip.kernel.packetmanager.util;
 import io.mosip.kernel.packetmanager.constants.IDschemaConstants;
 import io.mosip.kernel.packetmanager.constants.PacketManagerConstants;
 import io.mosip.kernel.packetmanager.exception.ApiNotAccessibleException;
+import org.apache.commons.lang3.ArrayUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,8 +126,9 @@ public class IdSchemaUtils {
         } catch (JSONException e) {
             fieldCategory = null;
         }
-
-        if (fieldCategory != null && fieldCategory.equalsIgnoreCase(defaultFieldCategory)) {
+        String[] defaultCategories = defaultFieldCategory != null ? defaultFieldCategory.split(",") : null;
+        if (fieldCategory != null && defaultCategories != null
+                && ArrayUtils.contains(defaultCategories, fieldCategory)) {
             fieldCategory = defaultSource;
         }
         return fieldCategory;

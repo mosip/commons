@@ -52,7 +52,6 @@ import io.mosip.kernel.masterdata.dto.DeviceRegisterResponseDto;
  * @since 1.0.0
  */
 @RestControllerAdvice
-@Order(Ordered.HIGHEST_PRECEDENCE)
 public class ApiExceptionHandler {
 
 	@Autowired

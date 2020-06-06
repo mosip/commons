@@ -130,6 +130,13 @@ TRUNCATE TABLE master.loc_hierarchy_list cascade ;
 
 \COPY master.loc_hierarchy_list (hierarchy_level,hierarchy_level_name,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-loc_hierarchy_list.csv' delimiter ',' HEADER  csv;
 
+
+----- TRUNCATE master.identity_schema TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.identity_schema cascade ;
+
+\COPY master.identity_schema (id,id_version,title,description,id_attr_json,schema_json,status_code,add_props,effective_from,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-identity_schema.csv' delimiter ',' HEADER  csv;
+
+
 -------------- Level 2 data load scripts ------------------------
 
 ----- TRUNCATE master.location TABLE Data and It's reference Data and COPY Data from CSV file -----
