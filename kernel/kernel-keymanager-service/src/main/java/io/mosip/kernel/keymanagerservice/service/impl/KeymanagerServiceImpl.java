@@ -744,6 +744,9 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 	public SignatureResponseDto signPDF(PDFSignatureRequestDto request) {
 		SignatureCertificate signatureCertificate = getSigningCertificate(request.getApplicationId(),
 				Optional.of(request.getReferenceId()), request.getTimeStamp());
+		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.SESSIONID,
+				KeymanagerConstant.SESSIONID,
+				"Signature fetched from hsm "+ signatureCertificate);
 		Rectangle rectangle = new Rectangle(request.getLowerLeftX(), request.getLowerLeftY(), request.getUpperRightX(),
 				request.getUpperRightY());
 		OutputStream outputStream;
@@ -759,5 +762,5 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 		signatureResponseDto.setData(CryptoUtil.encodeBase64(((ByteArrayOutputStream) outputStream).toByteArray()));
 		return signatureResponseDto;
 	}
-
+	
 }
