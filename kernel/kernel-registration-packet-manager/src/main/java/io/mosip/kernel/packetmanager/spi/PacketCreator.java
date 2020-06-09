@@ -42,5 +42,7 @@ public interface PacketCreator {
 	
 	public byte[] createPacket(String registrationId, double version, String schemaJson,
                                Map<String, String> categoryPacketMapping, byte[] publicKey, PacketSigner signer) throws PacketCreatorException;
+	
+	public Map<String, Object> getIdentityObject();
 
 }

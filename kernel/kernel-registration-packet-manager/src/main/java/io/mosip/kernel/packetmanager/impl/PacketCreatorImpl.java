@@ -450,5 +450,10 @@ public class PacketCreatorImpl implements PacketCreator {
 	public void setPrintingName(String langauge, String printingName) {
 		this.packetInfoDto.setPrintingName(langauge, printingName);		
 	}
+
+	@Override
+	public Map<String, Object> getIdentityObject() {
+		return this.packetInfoDto.getIdentityObject();
+	}
 	
 }
