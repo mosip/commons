@@ -101,7 +101,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 	/** The sign applicationid. */
 	@Value("${mosip.sign.applicationid:KERNEL}")
 	private String signApplicationid;
-	
+
 	@Value("${mosip.security.provider.name:SunPKCS11-SoftHSM2}")
 	private String providerName;
 
@@ -747,13 +747,20 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 	public SignatureResponseDto signPDF(PDFSignatureRequestDto request) {
 		SignatureCertificate signatureCertificate = getSigningCertificate(request.getApplicationId(),
 				Optional.of(request.getReferenceId()), request.getTimeStamp());
-		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.SESSIONID,
-				KeymanagerConstant.SESSIONID,
-				"Signature fetched from hsm "+ signatureCertificate);
+		LOGGER.debug(KeymanagerConstant.SESSIONID, KeymanagerConstant.SESSIONID, KeymanagerConstant.SESSIONID,
+				"Signature fetched from hsm " + signatureCertificate);
 		Rectangle rectangle = new Rectangle(request.getLowerLeftX(), request.getLowerLeftY(), request.getUpperRightX(),
 				request.getUpperRightY());
 		OutputStream outputStream;
 		try {
+			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.SESSIONID, KeymanagerConstant.SESSIONID," mosip.security.provider.name property value"+providerName);
+			
+			Arrays.stream(Security.getProviders()).forEach(x -> {
+				LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.SESSIONID, KeymanagerConstant.SESSIONID,"provider name "+x.getName());
+				LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.SESSIONID, KeymanagerConstant.SESSIONID,"provider info "+x.getInfo());
+			});
+			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.SESSIONID, KeymanagerConstant.SESSIONID,
+					"all providers ");
 			outputStream = pdfGenerator.signAndEncryptPDF(CryptoUtil.decodeBase64(request.getData()), rectangle,
 					request.getReason(), request.getPageNumber(), Security.getProvider(providerName),
 					signatureCertificate.getCertificateEntry(), request.getPassword());
@@ -765,5 +772,5 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 		signatureResponseDto.setData(CryptoUtil.encodeBase64(((ByteArrayOutputStream) outputStream).toByteArray()));
 		return signatureResponseDto;
 	}
-	
+
 }

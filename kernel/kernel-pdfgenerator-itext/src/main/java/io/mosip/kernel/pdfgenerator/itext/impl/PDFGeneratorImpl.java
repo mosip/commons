@@ -251,7 +251,7 @@ public class PDFGeneratorImpl implements PDFGenerator {
 		try {
 			pdfReader = new PdfReader(pdf);
 			pdfStamper = PdfStamper.createSignature(pdfReader, outputStream, '\0');
-            LOGGER.info("certificate entry {}",certificateEntry);
+            LOGGER.debug("certificate entry {}",certificateEntry);
             LOGGER.info("provider {}",provider);
 			if (password != null && !password.trim().isEmpty()) {
 				pdfStamper.setEncryption(password.getBytes(), pdfOwnerPassword.getBytes(),
