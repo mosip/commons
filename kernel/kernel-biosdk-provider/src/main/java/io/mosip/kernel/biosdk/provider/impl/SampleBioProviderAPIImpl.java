@@ -212,13 +212,12 @@ public class SampleBioProviderAPIImpl implements iBioProviderApi {
 			bioTypes.add(BiometricType.fromValue(type.name()));
 		}	
 		
-		io.mosip.kernel.biometrics.entities.RegistryIDType format = new io.mosip.kernel.biometrics.entities.RegistryIDType();
-		format.setOrganization(bir.getBdbInfo().getFormat().getOrganization());
-		format.setType(bir.getBdbInfo().getFormat().getType());
-		
-		io.mosip.kernel.biometrics.entities.RegistryIDType birAlgorithm = new io.mosip.kernel.biometrics.entities.RegistryIDType();
-		birAlgorithm.setOrganization(bir.getBdbInfo().getQuality().getAlgorithm().getOrganization());
-		birAlgorithm.setType(bir.getBdbInfo().getQuality().getAlgorithm().getType());
+		io.mosip.kernel.biometrics.entities.RegistryIDType format = new io.mosip.kernel.biometrics.entities.RegistryIDType(bir.getBdbInfo().getFormat().getOrganization(),
+				bir.getBdbInfo().getFormat().getType());
+				
+		io.mosip.kernel.biometrics.entities.RegistryIDType birAlgorithm = new io.mosip.kernel.biometrics.entities.RegistryIDType(
+				bir.getBdbInfo().getQuality().getAlgorithm().getOrganization(),
+				bir.getBdbInfo().getQuality().getAlgorithm().getType());
 		
 		io.mosip.kernel.biometrics.constant.QualityType qualityType = new io.mosip.kernel.biometrics.constant.QualityType();
 		qualityType.setAlgorithm(birAlgorithm);
@@ -227,12 +226,10 @@ public class SampleBioProviderAPIImpl implements iBioProviderApi {
 		
 		return new io.mosip.kernel.biometrics.entities.BIR.BIRBuilder()
 					.withBdb(bir.getBdb())
-					.withVersion(new io.mosip.kernel.biometrics.entities.BIRVersion.BIRVersionBuilder()
-								.withMinor(bir.getVersion().getMinor())
-								.withMajor(bir.getVersion().getMajor()).build())
-					.withCbeffversion(new io.mosip.kernel.biometrics.entities.BIRVersion.BIRVersionBuilder()
-								.withMinor(bir.getCbeffversion().getMinor())
-								.withMajor(bir.getCbeffversion().getMajor()).build())
+					.withVersion(new io.mosip.kernel.biometrics.entities.VersionType(bir.getVersion().getMajor(), 
+							bir.getVersion().getMinor()))
+					.withCbeffversion(new io.mosip.kernel.biometrics.entities.VersionType(bir.getCbeffversion().getMajor(),
+							bir.getCbeffversion().getMinor()))
 					.withBirInfo(new io.mosip.kernel.biometrics.entities.BIRInfo.BIRInfoBuilder().withIntegrity(true).build())
 					.withBdbInfo(new io.mosip.kernel.biometrics.entities.BDBInfo.BDBInfoBuilder()
 							.withFormat(format)

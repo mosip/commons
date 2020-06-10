@@ -1,5 +1,6 @@
 package io.mosip.kernel.biometrics.model;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import io.mosip.kernel.biometrics.constant.BiometricType;
@@ -20,6 +21,12 @@ public class MatchDecision {
 	
 	/** The analytics info - detailed breakdown and other information. */
 	private Map<String, String> analyticsInfo;
+	
+	public MatchDecision(int galleryIndex) {
+		this.analyticsInfo = new HashMap<String, String>();
+		this.decisions = new HashMap<BiometricType, Decision>();
+		this.galleryIndex = galleryIndex; 
+	}
 	
 }
 
