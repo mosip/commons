@@ -7,7 +7,9 @@
 
 package io.mosip.kernel.biometrics.entities;
 
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 public class RegistryIDType {
 
 	

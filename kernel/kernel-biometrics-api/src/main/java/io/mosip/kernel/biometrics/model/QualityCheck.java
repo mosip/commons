@@ -1,5 +1,6 @@
 package io.mosip.kernel.biometrics.model;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import io.mosip.kernel.biometrics.constant.BiometricType;
@@ -15,5 +16,10 @@ public class QualityCheck {
 	
 	/** The analytics info - detailed breakdown and other information */
 	private Map<String, String> analyticsInfo;
+	
+	public QualityCheck() {
+		this.scores = new HashMap<BiometricType, QualityScore>();
+		this.analyticsInfo = new HashMap<String, String>();
+	}
 
 }

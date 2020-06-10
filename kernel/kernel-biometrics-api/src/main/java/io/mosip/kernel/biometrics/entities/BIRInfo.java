@@ -4,10 +4,13 @@
 package io.mosip.kernel.biometrics.entities;
 
 import java.time.LocalDateTime;
+
+import lombok.Data;
 /**
  * @author Ramadurai Pandian
  *
  */
+@Data
 public class BIRInfo {
 
 	private String creator;
@@ -18,34 +21,7 @@ public class BIRInfo {
 	private LocalDateTime notValidBefore;
 	private LocalDateTime notValidAfter;
 
-	public String getCreator() {
-		return creator;
-	}
-
-	public String getIndex() {
-		return index;
-	}
-
-	public byte[] getPayload() {
-		return payload;
-	}
-
-	public Boolean isIntegrity() {
-		return integrity;
-	}
-
-	public LocalDateTime getCreationDate() {
-		return creationDate;
-	}
-
-	public LocalDateTime getNotValidBefore() {
-		return notValidBefore;
-	}
-
-	public LocalDateTime getNotValidAfter() {
-		return notValidAfter;
-	}
-
+	
 	public BIRInfo(BIRInfoBuilder bIRInfoBuilder) {
 		this.creator = bIRInfoBuilder.creator;
 		this.index = bIRInfoBuilder.index;
@@ -109,8 +85,8 @@ public class BIRInfo {
 	public BIRInfoType toBIRInfo() {
 		BIRInfoType bIRInfoType = new BIRInfoType();
 		createrPopolation(bIRInfoType);
-		if (isIntegrity() != null) {
-			bIRInfoType.setIntegrity(isIntegrity());
+		if (this.integrity != null) {
+			bIRInfoType.setIntegrity(this.integrity);
 		}
 
 		if (getPayload() != null && getPayload().length > 0) {

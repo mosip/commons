@@ -23,6 +23,9 @@ public interface IBioApi {
 	
 	/**
 	 * All the initialization process, for eg: license initialization
+	 * Possible values in initparams
+	 * environment
+	 * 
 	 * @param initParams
 	 */
 	SDKInfo init(Map<String, String> initParams);
@@ -46,6 +49,8 @@ public interface IBioApi {
 	 * 
 	 * if modalitiesToMatch is null/empty, match is provided for each modality found in the gallery record.
 	 * 
+	 * pass transactionID in flags - to log during this method call
+	 * 
 	 * @param sample
 	 * @param gallery
 	 * @param flags
@@ -55,7 +60,8 @@ public interface IBioApi {
 
 	/**
 	 * Extract template
-	 * 
+	 * Need to sign the extracted template
+	 *  
 	 * @param sample
 	 * @param flags
 	 * @return
