@@ -241,7 +241,7 @@ public class LocationControllerIntegrationTest {
 		String requestJson = mapper.writeValueAsString(request);
 		when(repo.findLocationHierarchyByCodeAndLanguageCode(Mockito.any(), Mockito.any()))
 				.thenReturn(Arrays.asList(location1));
-		when(repo.findByNameAndLevelLangCode(Mockito.any(),Mockito.any(), Mockito.any())).thenReturn(Arrays.asList(location1));
+		when(repo.findByNameAndLevelLangCodeNotCode(Mockito.any(),Mockito.any(),Mockito.any(), Mockito.any())).thenReturn(Arrays.asList(location1));
 		mockMvc.perform(put("/locations").contentType(MediaType.APPLICATION_JSON).content(requestJson))
 		.andExpect(status().isOk());
 	}

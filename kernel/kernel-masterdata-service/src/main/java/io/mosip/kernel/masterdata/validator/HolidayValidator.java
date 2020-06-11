@@ -29,11 +29,11 @@ public class HolidayValidator {
 			if( request.getHolidayName().trim().length()>64)
 				throw new RequestException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), "holiday_name size must be between 1 and 64");
 			
-			if( request.getHolidayDesc().trim().length()<1 || request.getHolidayDesc().trim().length()>128)
+			if( request.getHolidayDesc()!=null && (request.getHolidayDesc().trim().length()<1 || request.getHolidayDesc().trim().length()>128))
 				throw new RequestException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), "holiday_desc size must be between 1 and 128");
 			
 			if(!isValidLanguage(request.getLangCode()))
-				throw new RequestException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), "lang_code size must be between 1 and 3");
+				throw new RequestException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), "language code is invalid");
 		
 	}
 
@@ -50,16 +50,16 @@ public class HolidayValidator {
 		if( request.getHolidayName().trim().length()>64)
 			throw new RequestException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), "holiday_name size must be between 1 and 64");
 		
-		if( request.getHolidayDesc().trim().length()<1 || request.getHolidayDesc().trim().length()>128)
+		if( request.getHolidayDesc()!=null && (request.getHolidayDesc().trim().length()<1 || request.getHolidayDesc().trim().length()>128))
 			throw new RequestException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), "holiday_desc size must be between 1 and 128");
 		
 		if(!isValidLanguage(request.getLangCode()))
-			throw new RequestException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), "lang_code size must be between 1 and 3");
+			throw new RequestException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), "language code is invalid");
 	}
 	
 	public boolean isValidLanguage(String langCode) {
 		if (langCode.trim().length() > 3) {
-			return false;
+			throw new RequestException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), "lang_code size must be between 1 and 3");
 		} else {
 			try {
 				String[] langArray = supportedLanguages.split(",");

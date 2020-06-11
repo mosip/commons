@@ -27,6 +27,7 @@ import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.masterdata.constant.HolidayErrorCode;
 import io.mosip.kernel.masterdata.constant.LocationErrorCode;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
+import io.mosip.kernel.masterdata.constant.RequestErrorCode;
 import io.mosip.kernel.masterdata.dto.HolidayDto;
 import io.mosip.kernel.masterdata.dto.HolidayIDDto;
 import io.mosip.kernel.masterdata.dto.HolidayIdDeleteDto;
@@ -272,7 +273,8 @@ public class HolidayServiceImpl implements HolidayService {
 			Holiday holiday=holidayRepository.findHolidayByHolidayDateLocationCodeLangCode(holidayDate,
 					locationCode,primaryLang);
 			if(holiday==null) {
-				return false;
+				throw new MasterDataServiceException(RequestErrorCode.REQUEST_INVALID_SEC_LANG_ID.getErrorCode(),
+						RequestErrorCode.REQUEST_INVALID_SEC_LANG_ID.getErrorMessage());
 			}
 		}
 		return isActive;
