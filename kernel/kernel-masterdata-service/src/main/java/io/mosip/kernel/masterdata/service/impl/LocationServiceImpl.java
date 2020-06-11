@@ -303,8 +303,8 @@ public class LocationServiceImpl implements LocationService {
 									locationDto.getParentLocCode()));
 				}
 			}
-			List<Location> list = locationRepository.findByNameAndLevelLangCode(locationDto.getName(),
-					locationDto.getHierarchyLevel(), locationDto.getLangCode());
+			List<Location> list = locationRepository.findByNameAndLevelLangCodeNotCode(locationDto.getName(),
+					locationDto.getHierarchyLevel(), locationDto.getLangCode(),locationDto.getCode());
 			if (list != null && !list.isEmpty()) {
 				auditUtil.auditRequest(
 						String.format(MasterDataConstant.FAILURE_CREATE, LocationDto.class.getSimpleName()),
