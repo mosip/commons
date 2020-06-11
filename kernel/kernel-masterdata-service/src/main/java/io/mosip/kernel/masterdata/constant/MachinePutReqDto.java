@@ -8,6 +8,7 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import io.mosip.kernel.masterdata.validator.OptionalStringFormatter;
 import io.mosip.kernel.masterdata.validator.StringFormatter;
 import io.mosip.kernel.masterdata.validator.ValidLangCode;
 import io.swagger.annotations.ApiModel;
@@ -42,14 +43,14 @@ public class MachinePutReqDto {
 	/**
 	 * Field for machine serial number
 	 */
-	@StringFormatter(min = 1, max = 64)
+	@OptionalStringFormatter( max = 64)
 	@ApiModelProperty(value = "serialNum", required = false, dataType = "java.lang.String")
 	private String serialNum;
 	/**
 	 * Field for machine mac address
 	 */
 	
-	@StringFormatter(min = 1, max = 64)
+	@OptionalStringFormatter( max = 64)
 	@ApiModelProperty(value = "macAddress", required = true, dataType = "java.lang.String")
 	private String macAddress;
 	/**
