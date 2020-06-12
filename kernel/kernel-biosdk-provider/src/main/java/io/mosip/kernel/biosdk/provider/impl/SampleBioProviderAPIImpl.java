@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.springframework.stereotype.Component;
@@ -119,7 +120,7 @@ public class SampleBioProviderAPIImpl implements iBioProviderApi {
 	public float[] getSegmentQuality(BIR[] sample, Map<String, String> flags) {		
 		float scores[] = new float[sample.length];
 		for(int i=0; i< sample.length; i++) {
-			BiometricType modality = BiometricType.fromValue(sample[i].getBdbInfo().getType().get(0).name());
+			BiometricType modality = BiometricType.fromValue(sample[i].getBdbInfo().getType().get(0).value());
 			Response<QualityCheck> response = sdkRegistry.get(modality).get(BiometricFunction.QUALITY_CHECK)
 					.checkQuality(getBiometricRecord(sample[i]), Arrays.asList(modality), flags);
 			
@@ -139,7 +140,7 @@ public class SampleBioProviderAPIImpl implements iBioProviderApi {
 	public Map<BiometricType, Float> getModalityQuality(BIR[] sample, Map<String, String> flags) {		
 		Set<BiometricType> modalitites = new HashSet<>();
 		for(int i=0; i< sample.length; i++) {
-			modalitites.add(BiometricType.fromValue(sample[i].getBdbInfo().getType().get(0).name()));
+			modalitites.add(BiometricType.fromValue(sample[i].getBdbInfo().getType().get(0).value()));
 		}
 		
 		Map<BiometricType, Float> scoreMap = new HashMap<>();
@@ -155,7 +156,7 @@ public class SampleBioProviderAPIImpl implements iBioProviderApi {
 		
 		float scores[] = new float[sample.length];
 		for(int i=0; i< sample.length; i++) {
-			BiometricType modality = BiometricType.fromValue(sample[i].getBdbInfo().getType().get(0).name());
+			BiometricType modality = BiometricType.fromValue(sample[i].getBdbInfo().getType().get(0).value());
 			if(scoreMap.containsKey(modality))
 				scores[i] = scoreMap.get(modality);
 			else
@@ -168,7 +169,7 @@ public class SampleBioProviderAPIImpl implements iBioProviderApi {
 	public List<BIR> extractTemplate(List<BIR> sample, Map<String, String> flags) {
 		List<BIR> templates = new LinkedList<>();
 		for(BIR bir : sample) {
-			Response<BiometricRecord> response = sdkRegistry.get(BiometricType.fromValue(bir.getBdbInfo().getType().get(0).name()))
+			Response<BiometricRecord> response = sdkRegistry.get(BiometricType.fromValue(bir.getBdbInfo().getType().get(0).value()))
 				.get(BiometricFunction.EXTRACT).extractTemplate(getBiometricRecord(bir), flags);
 			
 			templates.add( isSuccessResponse(response) ? 
@@ -209,27 +210,63 @@ public class SampleBioProviderAPIImpl implements iBioProviderApi {
 	private io.mosip.kernel.biometrics.entities.BIR convertToBiometricRecordBIR(BIR bir) {
 		List<BiometricType> bioTypes = new ArrayList<>();
 		for(SingleType type : bir.getBdbInfo().getType()) {
-			bioTypes.add(BiometricType.fromValue(type.name()));
+			bioTypes.add(BiometricType.fromValue(type.value()));
 		}	
 		
 		io.mosip.kernel.biometrics.entities.RegistryIDType format = new io.mosip.kernel.biometrics.entities.RegistryIDType(bir.getBdbInfo().getFormat().getOrganization(),
 				bir.getBdbInfo().getFormat().getType());
-				
-		io.mosip.kernel.biometrics.entities.RegistryIDType birAlgorithm = new io.mosip.kernel.biometrics.entities.RegistryIDType(
-				bir.getBdbInfo().getQuality().getAlgorithm().getOrganization(),
-				bir.getBdbInfo().getQuality().getAlgorithm().getType());
 		
-		io.mosip.kernel.biometrics.constant.QualityType qualityType = new io.mosip.kernel.biometrics.constant.QualityType();
-		qualityType.setAlgorithm(birAlgorithm);
-		qualityType.setQualityCalculationFailed(bir.getBdbInfo().getQuality().getQualityCalculationFailed());
-		qualityType.setScore(bir.getBdbInfo().getQuality().getScore());
+		io.mosip.kernel.biometrics.constant.QualityType qualityType;
+		
+		if(Objects.nonNull(bir.getBdbInfo().getQuality())) {
+			io.mosip.kernel.biometrics.entities.RegistryIDType birAlgorithm = new io.mosip.kernel.biometrics.entities.RegistryIDType(
+					bir.getBdbInfo().getQuality().getAlgorithm().getOrganization(),
+					bir.getBdbInfo().getQuality().getAlgorithm().getType());
+			
+			qualityType = new io.mosip.kernel.biometrics.constant.QualityType();
+			qualityType.setAlgorithm(birAlgorithm);
+			qualityType.setQualityCalculationFailed(bir.getBdbInfo().getQuality().getQualityCalculationFailed());
+			qualityType.setScore(bir.getBdbInfo().getQuality().getScore());
+			
+		} else {
+			qualityType = null;
+		}
+		
+		io.mosip.kernel.biometrics.entities.VersionType version;
+		if(Objects.nonNull(bir.getVersion())) {
+			version = new io.mosip.kernel.biometrics.entities.VersionType(bir.getVersion().getMajor(), 
+					bir.getVersion().getMinor());
+		} else {
+			version = null;
+		}
+		
+		io.mosip.kernel.biometrics.entities.VersionType cbeffversion;
+		if(Objects.nonNull(bir.getCbeffversion())) {
+			cbeffversion = new io.mosip.kernel.biometrics.entities.VersionType(bir.getCbeffversion().getMajor(),
+					bir.getCbeffversion().getMinor());
+		} else {
+			cbeffversion = null;
+		}
+		
+		io.mosip.kernel.biometrics.constant.PurposeType purposeType;
+		if(Objects.nonNull(bir.getBdbInfo().getPurpose())) {
+			purposeType = io.mosip.kernel.biometrics.constant.PurposeType.fromValue(bir.getBdbInfo().getPurpose().name());
+		} else {
+			purposeType = null;
+		}
+		
+		io.mosip.kernel.biometrics.constant.ProcessedLevelType processedLevelType;
+		if(Objects.nonNull(bir.getBdbInfo().getLevel())) {
+			processedLevelType = io.mosip.kernel.biometrics.constant.ProcessedLevelType.fromValue(
+					bir.getBdbInfo().getLevel().name());
+		} else{
+			processedLevelType = null;
+		}
 		
 		return new io.mosip.kernel.biometrics.entities.BIR.BIRBuilder()
 					.withBdb(bir.getBdb())
-					.withVersion(new io.mosip.kernel.biometrics.entities.VersionType(bir.getVersion().getMajor(), 
-							bir.getVersion().getMinor()))
-					.withCbeffversion(new io.mosip.kernel.biometrics.entities.VersionType(bir.getCbeffversion().getMajor(),
-							bir.getCbeffversion().getMinor()))
+					.withVersion(version)
+					.withCbeffversion(cbeffversion)
 					.withBirInfo(new io.mosip.kernel.biometrics.entities.BIRInfo.BIRInfoBuilder().withIntegrity(true).build())
 					.withBdbInfo(new io.mosip.kernel.biometrics.entities.BDBInfo.BDBInfoBuilder()
 							.withFormat(format)
@@ -237,17 +274,15 @@ public class SampleBioProviderAPIImpl implements iBioProviderApi {
 							.withQuality(qualityType)
 							.withCreationDate(bir.getBdbInfo().getCreationDate())
 							.withIndex(bir.getBdbInfo().getIndex())
-							.withPurpose(io.mosip.kernel.biometrics.constant.PurposeType.fromValue(									
-									bir.getBdbInfo().getPurpose().name()))
-							.withLevel(io.mosip.kernel.biometrics.constant.ProcessedLevelType.fromValue(
-									bir.getBdbInfo().getLevel().name()))
+							.withPurpose(purposeType)
+							.withLevel(processedLevelType)
 							.withSubtype(bir.getBdbInfo().getSubtype()).build()).build();
 	}
 	
 	private BIR convertToBIR(io.mosip.kernel.biometrics.entities.BIR bir) {
 		List<SingleType> bioTypes = new ArrayList<>();
 		for(BiometricType type : bir.getBdbInfo().getType()) {
-			bioTypes.add(SingleType.fromValue(type.name()));
+			bioTypes.add(SingleType.fromValue(type.value()));
 		}
 		
 		RegistryIDType format = new RegistryIDType();
