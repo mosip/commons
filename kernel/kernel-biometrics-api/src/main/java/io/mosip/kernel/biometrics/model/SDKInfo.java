@@ -25,6 +25,8 @@ public class SDKInfo {
 	private RegistryIDType productOwner;
 	
 	public SDKInfo(String apiVersion, String sdkVersion, String organization, String type) {
+		this.apiVersion = apiVersion;
+		this.sdkVersion = sdkVersion;
 		this.productOwner = new RegistryIDType(organization, type);
 		this.supportedModalities = new ArrayList<>();
 		this.supportedMethods = new HashMap<>();
