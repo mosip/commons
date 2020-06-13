@@ -37,8 +37,10 @@ import io.mosip.kernel.masterdata.dto.LocationCreateDto;
 import io.mosip.kernel.masterdata.dto.LocationDto;
 import io.mosip.kernel.masterdata.dto.getresponse.LocationHierarchyDto;
 import io.mosip.kernel.masterdata.entity.Location;
+import io.mosip.kernel.masterdata.entity.LocationHierarchy;
 import io.mosip.kernel.masterdata.entity.Machine;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
+import io.mosip.kernel.masterdata.repository.LocationHierarchyRepository;
 import io.mosip.kernel.masterdata.repository.LocationRepository;
 import io.mosip.kernel.masterdata.utils.AuditUtil;
 import io.mosip.kernel.masterdata.utils.MasterdataCreationUtil;
@@ -71,6 +73,9 @@ public class LocationControllerIntegrationTest {
 
 	@Autowired
 	private ObjectMapper mapper;
+	
+	@MockBean
+	private LocationHierarchyRepository locationHierarchyRepository;
 
 	private RequestWrapper<LocationDto> request;
 	private RequestWrapper<LocationCreateDto> createRequest;
@@ -95,6 +100,9 @@ public class LocationControllerIntegrationTest {
 		createRequest.setMetadata("masterdata.location.create");
 		when(repo.save(Mockito.any())).thenReturn(location1);
 		when(repo.save(Mockito.any())).thenReturn(parentLoc);
+		LocationHierarchy hierarchy=new LocationHierarchy((short) 3, "City", "eng");
+		when(locationHierarchyRepository.findByLangCodeAndLevelAndName(Mockito.anyString(), Mockito.anyShort(),
+				Mockito.anyString())).thenReturn(hierarchy);
 		parentLocList = new ArrayList<>();
 		parentLocList.add(parentLoc);
 		doNothing().when(auditUtil).auditRequest(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());

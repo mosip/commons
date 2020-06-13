@@ -11,6 +11,8 @@ public enum LocationErrorCode {
 	INVALID_LANG_CODE("KER-MSD_386", "Invalid Language Code :"),
 	INVALID_DIFF_HIERARCY_LEVEL("KER-MSD-389",
 			"Location hierarchy level should not be different in different languages"),
+	INVALID_HIERARCY_LEVEL("KER-MSD-391",
+			"Location hierarchy is invalid"),
 	DATA_IN_PRIMARY_LANG_MISSING("KER-MSD-388", "Location data is not present in the primary language : %s"),
 	PARENT_LOC_NOT_FOUND("KER-MSD-389", "Parent location not found"),
 	PARENT_LOC_NOT_EXIST("KER-MSD-027", "Parent Location %s does not exist"),

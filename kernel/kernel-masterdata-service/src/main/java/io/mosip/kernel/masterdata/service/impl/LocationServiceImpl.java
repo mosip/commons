@@ -60,6 +60,7 @@ import io.mosip.kernel.masterdata.entity.MachineType;
 import io.mosip.kernel.masterdata.exception.DataNotFoundException;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
 import io.mosip.kernel.masterdata.exception.RequestException;
+import io.mosip.kernel.masterdata.repository.LocationHierarchyRepository;
 import io.mosip.kernel.masterdata.repository.LocationRepository;
 import io.mosip.kernel.masterdata.service.LocationService;
 import io.mosip.kernel.masterdata.utils.AuditUtil;
@@ -92,6 +93,9 @@ public class LocationServiceImpl implements LocationService {
 	 */
 	@Autowired
 	private LocationRepository locationRepository;
+	
+	@Autowired
+	private LocationHierarchyRepository locationHierarchyRepository;
 
 	@Autowired
 	FilterColumnValidator filterColumnValidator;
@@ -231,6 +235,10 @@ public class LocationServiceImpl implements LocationService {
 								LocationErrorCode.PARENT_LOC_NOT_FOUND.getErrorMessage());
 					}
 				}
+				if(locationHierarchyRepository.findByLangCodeAndLevelAndName(dto.getLangCode(), dto.getHierarchyLevel(), dto.getHierarchyName())==null) {
+					throw new RequestException(LocationErrorCode.INVALID_HIERARCY_LEVEL.getErrorCode(),
+							LocationErrorCode.INVALID_HIERARCY_LEVEL.getErrorMessage());
+				}
 				List<Location> list = locationRepository.findByNameAndLevelLangCode(dto.getName(),
 						dto.getHierarchyLevel(), dto.getLangCode());
 				if (list != null && !list.isEmpty()) {
@@ -302,6 +310,10 @@ public class LocationServiceImpl implements LocationService {
 							String.format(LocationErrorCode.PARENT_LOC_NOT_EXIST.getErrorMessage(),
 									locationDto.getParentLocCode()));
 				}
+			}
+			if(locationHierarchyRepository.findByLangCodeAndLevelAndName(locationDto.getLangCode(), locationDto.getHierarchyLevel(), locationDto.getHierarchyName())==null) {
+				throw new RequestException(LocationErrorCode.INVALID_HIERARCY_LEVEL.getErrorCode(),
+						LocationErrorCode.INVALID_HIERARCY_LEVEL.getErrorMessage());
 			}
 			List<Location> list = locationRepository.findByNameAndLevelLangCodeNotCode(locationDto.getName(),
 					locationDto.getHierarchyLevel(), locationDto.getLangCode(),locationDto.getCode());

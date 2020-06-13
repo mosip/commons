@@ -43,5 +43,8 @@ public interface LocationHierarchyRepository extends BaseRepository<LocationHier
 	 */
 	@Query("FROM LocationHierarchy l where l.langCode = ?1 and (l.isDeleted is null or l.isDeleted = false) and l.isActive = true")
 	List<LocationHierarchy> findAllByLangCodeAndIsDeletedFalseOrIsDeletedIsNull(String langCode);
+	
+	@Query("FROM LocationHierarchy l where l.langCode = ?1 and hierarchyLevel = ?2 and hierarchyLevelName =?3 and (l.isDeleted is null or l.isDeleted = false) and l.isActive = true")
+	LocationHierarchy findByLangCodeAndLevelAndName(String langCode,short hierarchyLevel,String hierarchyLevelName);
 
 }
