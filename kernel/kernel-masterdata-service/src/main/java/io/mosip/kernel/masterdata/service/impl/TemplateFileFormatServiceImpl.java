@@ -27,6 +27,7 @@ import io.mosip.kernel.masterdata.repository.TemplateRepository;
 import io.mosip.kernel.masterdata.service.TemplateFileFormatService;
 import io.mosip.kernel.masterdata.utils.ExceptionUtils;
 import io.mosip.kernel.masterdata.utils.MapperUtils;
+import io.mosip.kernel.masterdata.utils.MasterdataCreationUtil;
 import io.mosip.kernel.masterdata.utils.MetaDataUtils;
 
 @Service
@@ -37,6 +38,10 @@ public class TemplateFileFormatServiceImpl implements TemplateFileFormatService 
 
 	@Autowired
 	private TemplateRepository templateRepository;
+	
+	
+	@Autowired
+	private MasterdataCreationUtil masterdataCreationUtil;
 
 	/*
 	 * (non-Javadoc)
@@ -79,6 +84,9 @@ public class TemplateFileFormatServiceImpl implements TemplateFileFormatService 
 			if (templateFileFormat != null) {
 				MetaDataUtils.setUpdateMetaData(templateFileFormatDto, templateFileFormat, false);
 				templateFileFormatRepository.update(templateFileFormat);
+				if(!templateFileFormatRequestDto.getIsActive()) {
+					masterdataCreationUtil.updateMasterDataDeactivate(TemplateFileFormat.class, templateFileFormatRequestDto.getCode());
+				}
 			} else {
 
 				throw new RequestException(TemplateFileFormatErrorCode.TEMPLATE_FILE_FORMAT_NOT_FOUND.getErrorCode(),

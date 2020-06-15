@@ -337,6 +337,9 @@ public class LocationServiceImpl implements LocationService {
 				location = MetaDataUtils.setUpdateMetaData(locationDto, location, false);
 				locationRepository.update(location);
 				MapperUtils.map(location, postLocationCodeResponseDto);
+				if(!location.getIsActive()) {
+					masterdataCreationUtil.updateMasterDataDeactivate(Location.class, location.getCode());
+				}
 			}
 
 		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
