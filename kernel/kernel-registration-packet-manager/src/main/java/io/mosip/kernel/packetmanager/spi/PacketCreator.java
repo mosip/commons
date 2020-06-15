@@ -44,5 +44,7 @@ public interface PacketCreator {
                                Map<String, String> categoryPacketMapping, byte[] publicKey, PacketSigner signer) throws PacketCreatorException;
 	
 	public Map<String, Object> getIdentityObject();
+	
+	public void setOfficerBiometric(String userId, String officerRole, List<BiometricsDto> value);
 
 }
