@@ -73,7 +73,7 @@ public class PacketCreatorImpl implements PacketCreator {
 	@Autowired
 	private PacketCryptoHelper packetCryptoHelper;
 	
-	@Value("${mosip.kernel.packetmanager.default-subpacket-name:id}")
+	@Value("${mosip.kernel.packetmanager.default_subpacket_name:id}")
 	private String defaultSubpacketName;
 	
 	private PacketInfoDto packetInfoDto = null;
