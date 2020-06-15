@@ -145,12 +145,13 @@ public class PacketReaderServiceImpl implements PacketReaderService {
 			if(idJsonStream != null) {
 			byte[] bytearray = IOUtils.toByteArray(idJsonStream);
 			String jsonString = new String(bytearray);
+			idJsonStream.reset();
 			ObjectMapper mapper = new ObjectMapper();
 			JSONObject idObject = mapper.readValue(jsonString, JSONObject.class);
 
 			if(finalIdObject == null) {
 				finalIdObject=idObject;
-			}else if(finalIdObject != null){
+			}else{
 
 				LinkedHashMap currentidentityMap = (LinkedHashMap) idObject.get(IDENTITY);
 				LinkedHashMap finalidMap =(LinkedHashMap) finalIdObject.get(IDENTITY);
