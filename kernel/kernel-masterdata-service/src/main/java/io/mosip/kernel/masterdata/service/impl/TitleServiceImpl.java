@@ -41,6 +41,7 @@ import io.mosip.kernel.masterdata.utils.AuditUtil;
 import io.mosip.kernel.masterdata.utils.ExceptionUtils;
 import io.mosip.kernel.masterdata.utils.MapperUtils;
 import io.mosip.kernel.masterdata.utils.MasterDataFilterHelper;
+import io.mosip.kernel.masterdata.utils.MasterdataCreationUtil;
 import io.mosip.kernel.masterdata.utils.MasterdataSearchHelper;
 import io.mosip.kernel.masterdata.utils.MetaDataUtils;
 import io.mosip.kernel.masterdata.utils.PageUtils;
@@ -78,6 +79,9 @@ public class TitleServiceImpl implements TitleService {
 
 	@Autowired
 	private AuditUtil auditUtil;
+	
+	@Autowired
+	private MasterdataCreationUtil masterdataCreationUtil;
 
 	/*
 	 * (non-Javadoc)
@@ -190,6 +194,9 @@ public class TitleServiceImpl implements TitleService {
 			if (title != null) {
 				MetaDataUtils.setUpdateMetaData(titleDto, title, false);
 				titleRepository.update(title);
+				if(!titles.getIsActive()) {
+					masterdataCreationUtil.updateMasterDataDeactivate(Title.class, titles.getCode());
+				}
 			} else {
 				auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_UPDATE, TitleDto.class.getSimpleName()),
 						MasterDataConstant.AUDIT_SYSTEM,

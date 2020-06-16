@@ -43,6 +43,7 @@ import io.mosip.kernel.masterdata.utils.AuditUtil;
 import io.mosip.kernel.masterdata.utils.ExceptionUtils;
 import io.mosip.kernel.masterdata.utils.MapperUtils;
 import io.mosip.kernel.masterdata.utils.MasterDataFilterHelper;
+import io.mosip.kernel.masterdata.utils.MasterdataCreationUtil;
 import io.mosip.kernel.masterdata.utils.MasterdataSearchHelper;
 import io.mosip.kernel.masterdata.utils.MetaDataUtils;
 import io.mosip.kernel.masterdata.utils.PageUtils;
@@ -91,6 +92,10 @@ public class DocumentCategoryServiceImpl implements DocumentCategoryService {
 	private List<DocumentCategory> documentCategoryList = new ArrayList<>();
 
 	private DocumentCategoryResponseDto documentCategoryResponseDto = new DocumentCategoryResponseDto();
+	
+	@Autowired
+	private MasterdataCreationUtil masterdataCreationUtil;
+
 
 	/*
 	 * (non-Javadoc)
@@ -243,6 +248,9 @@ public class DocumentCategoryServiceImpl implements DocumentCategoryService {
 			if (documentCategory != null) {
 				MetaDataUtils.setUpdateMetaData(categoryDto, documentCategory, false);
 				documentCategoryRepository.update(documentCategory);
+				if(!categoryDto.getIsActive()) {
+					masterdataCreationUtil.updateMasterDataDeactivate(DocumentCategory.class, categoryDto.getCode());
+				}
 			} else {
 				auditUtil.auditRequest(
 						String.format(MasterDataConstant.FAILURE_UPDATE, DeviceType.class.getCanonicalName()),
@@ -255,6 +263,7 @@ public class DocumentCategoryServiceImpl implements DocumentCategoryService {
 						DocumentCategoryErrorCode.DOCUMENT_CATEGORY_NOT_FOUND_EXCEPTION.getErrorCode(),
 						DocumentCategoryErrorCode.DOCUMENT_CATEGORY_NOT_FOUND_EXCEPTION.getErrorMessage());
 			}
+			
 
 		} catch (DataAccessLayerException | DataAccessException e) {
 			auditUtil.auditRequest(

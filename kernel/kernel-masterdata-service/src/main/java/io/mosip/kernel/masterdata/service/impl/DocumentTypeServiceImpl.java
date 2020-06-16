@@ -206,6 +206,9 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 				documentTypeDto = masterdataCreationUtil.updateMasterData(DocumentType.class, documentTypeDto);
 				MetaDataUtils.setUpdateMetaData(documentTypeDto, documentType, true);
 				documentTypeRepository.update(documentType);
+				if(!documentTypeDto.getIsActive()) {
+					masterdataCreationUtil.updateMasterDataDeactivate(DocumentType.class, documentTypeDto.getCode());
+				}
 			} else {
 				auditUtil.auditRequest(
 						String.format(
