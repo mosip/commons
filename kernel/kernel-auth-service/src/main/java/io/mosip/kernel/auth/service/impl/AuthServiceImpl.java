@@ -623,13 +623,14 @@ public class AuthServiceImpl implements AuthService {
 		StringBuilder urlBuilder = new StringBuilder().append(issuer).append("/protocol/openid-connect/logout");
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(urlBuilder.toString())
 				.queryParam(KeycloakConstants.ID_TOKEN_HINT, token);
-		AuthToken authToken = customTokenServices.getTokenDetails(token);
-		LOGGER.info("logout user " + authToken.getUserId() + " uri: " + uriComponentsBuilder.toUriString() );
+		
+		LOGGER.info("logout user {} uri: {}",token, uriComponentsBuilder.toUriString() );
 		try {
 			response = restTemplate.getForEntity(uriComponentsBuilder.buildAndExpand(pathparams).toUriString(),
 					String.class);
 			
 		} catch (HttpClientErrorException | HttpServerErrorException e) {
+			LOGGER.error("error occcur in logout : {}",e.getResponseBodyAsString());
 			throw new AuthManagerException(AuthErrorCode.REST_EXCEPTION.getErrorCode(),
 					AuthErrorCode.REST_EXCEPTION.getErrorMessage() + e.getResponseBodyAsString());
 		}
@@ -641,7 +642,7 @@ public class AuthServiceImpl implements AuthService {
 			authResponseDto.setMessage(LOG_OUT_FAILED);
 			authResponseDto.setStatus(FAILED);
 		}
-		LOGGER.info("logout status " + authResponseDto.getStatus() + " for user " + authToken.getUserId() );
+		LOGGER.info("logout status {} for token {}",authResponseDto.getStatus(),token );
 		return authResponseDto;
 	}
 
