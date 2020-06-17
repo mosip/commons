@@ -133,10 +133,14 @@ public class DeviceTypeServiceImpl implements DeviceTypeService {
 				MetaDataUtils.setUpdateMetaData(deviceTypeDto, deviceType, false);
 				deviceTypeRepository.update(deviceType);
 				MapperUtils.map(deviceType, codeAndLanguageCodeID);
+				if(!deviceTypeDto.getIsActive()) {
+					masterdataCreationUtil.updateMasterDataDeactivate(DeviceType.class, deviceTypeDto.getCode());
+				}
 			} else {
 				throw new RequestException(DeviceTypeErrorCode.DEVICE_TYPE_NOT_FOUND_EXCEPTION.getErrorCode(),
 						DeviceTypeErrorCode.DEVICE_TYPE_NOT_FOUND_EXCEPTION.getErrorMessage());
 			}
+			
 		} catch (DataAccessLayerException | DataAccessException
 				| IllegalArgumentException | SecurityException e) {
 			auditUtil.auditRequest(

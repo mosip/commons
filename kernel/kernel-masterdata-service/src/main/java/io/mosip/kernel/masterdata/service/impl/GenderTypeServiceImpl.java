@@ -40,6 +40,7 @@ import io.mosip.kernel.masterdata.utils.AuditUtil;
 import io.mosip.kernel.masterdata.utils.ExceptionUtils;
 import io.mosip.kernel.masterdata.utils.MapperUtils;
 import io.mosip.kernel.masterdata.utils.MasterDataFilterHelper;
+import io.mosip.kernel.masterdata.utils.MasterdataCreationUtil;
 import io.mosip.kernel.masterdata.utils.MasterdataSearchHelper;
 import io.mosip.kernel.masterdata.utils.MetaDataUtils;
 import io.mosip.kernel.masterdata.utils.PageUtils;
@@ -77,6 +78,9 @@ public class GenderTypeServiceImpl implements GenderTypeService {
 
 	@Autowired
 	private AuditUtil auditUtil;
+	
+	@Autowired
+	private MasterdataCreationUtil masterdataCreationUtil;
 
 	/*
 	 * (non-Javadoc)
@@ -195,6 +199,10 @@ public class GenderTypeServiceImpl implements GenderTypeService {
 				throw new RequestException(GenderTypeErrorCode.GENDER_TYPE_NOT_FOUND.getErrorCode(),
 						GenderTypeErrorCode.GENDER_TYPE_NOT_FOUND.getErrorMessage());
 			}
+			if(!genderTypeDto.getIsActive()) {
+				masterdataCreationUtil.updateMasterDataDeactivate(Gender.class, genderTypeDto.getCode());
+			}
+			
 		} catch (DataAccessLayerException | DataAccessException e) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_UPDATE, GenderTypeDto.class.getSimpleName()),

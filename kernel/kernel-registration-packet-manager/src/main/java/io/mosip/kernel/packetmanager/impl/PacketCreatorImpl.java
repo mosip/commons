@@ -45,6 +45,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -402,7 +403,7 @@ public class PacketCreatorImpl implements PacketCreator {
 	}
 	
 	
-	public List<BIR> getSerializedBiometrics(List<BiometricsDto> list, MetaInfo metaInfo) {
+	private List<BIR> getSerializedBiometrics(List<BiometricsDto> list, MetaInfo metaInfo) {
 		List<BIR> birs = new ArrayList<BIR>();
 		for(BiometricsDto bioDto : list) {
 			BIR bir = cbeffBIRBuilder.buildBIR(bioDto.getAttributeISO(), bioDto.getQualityScore(),
@@ -454,6 +455,21 @@ public class PacketCreatorImpl implements PacketCreator {
 	@Override
 	public Map<String, Object> getIdentityObject() {
 		return this.packetInfoDto.getIdentityObject();
+	}
+
+	@Override
+	public void setOfficerBiometric(String userId, String officerRole, List<BiometricsDto> value) {
+		if(Objects.isNull(value))
+			return;
+		
+		switch (officerRole.toLowerCase()) {
+		case "officer":
+			this.packetInfoDto.setOfficerBiometrics(value);
+			break;
+		case "supervisor":
+			this.packetInfoDto.setSupervisorBiometrics(value);
+			break;
+		}		
 	}
 	
 }

@@ -122,7 +122,7 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 		if (documents != null && !documents.isEmpty()) {
 			listOfDocumentTypeDto = MapperUtils.mapAll(documents, DocumentTypeDto.class);
 		} else {
-			throw new MasterDataServiceException(DocumentTypeErrorCode.DOCUMENT_TYPE_NOT_FOUND_EXCEPTION.getErrorCode(),
+			throw new DataNotFoundException(DocumentTypeErrorCode.DOCUMENT_TYPE_NOT_FOUND_EXCEPTION.getErrorCode(),
 					DocumentTypeErrorCode.DOCUMENT_TYPE_NOT_FOUND_EXCEPTION.getErrorMessage());
 		}
 		return listOfDocumentTypeDto;
@@ -206,6 +206,9 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 				documentTypeDto = masterdataCreationUtil.updateMasterData(DocumentType.class, documentTypeDto);
 				MetaDataUtils.setUpdateMetaData(documentTypeDto, documentType, true);
 				documentTypeRepository.update(documentType);
+				if(!documentTypeDto.getIsActive()) {
+					masterdataCreationUtil.updateMasterDataDeactivate(DocumentType.class, documentTypeDto.getCode());
+				}
 			} else {
 				auditUtil.auditRequest(
 						String.format(
