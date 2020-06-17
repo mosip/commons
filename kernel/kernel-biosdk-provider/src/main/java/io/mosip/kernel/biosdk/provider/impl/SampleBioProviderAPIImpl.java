@@ -170,7 +170,7 @@ public class SampleBioProviderAPIImpl implements iBioProviderApi {
 		List<BIR> templates = new LinkedList<>();
 		for(BIR bir : sample) {
 			Response<BiometricRecord> response = sdkRegistry.get(BiometricType.fromValue(bir.getBdbInfo().getType().get(0).value()))
-				.get(BiometricFunction.EXTRACT).extractTemplate(getBiometricRecord(bir), flags);
+				.get(BiometricFunction.EXTRACT).extractTemplate(getBiometricRecord(bir), null, flags);
 			
 			templates.add( isSuccessResponse(response) ? 
 						convertToBIR(response.getResponse().getSegments().get(0)) :	null);
