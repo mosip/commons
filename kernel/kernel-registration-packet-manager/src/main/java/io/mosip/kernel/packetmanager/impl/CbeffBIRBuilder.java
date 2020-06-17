@@ -31,7 +31,7 @@ import java.util.UUID;
 @Component
 public class CbeffBIRBuilder implements BiometricDataBuilder {
 	
-	@Value("${mosip.registration.cbeff_only_unique_tags:Y}")
+	@Value("${mosip.kernel.packetmanager.cbeff_only_unique_tags:Y}")
 	private String uniqueTagsEnabled;
 	
 	private static SecureRandom random = new SecureRandom(String.valueOf(5000).getBytes());

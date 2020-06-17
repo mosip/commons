@@ -53,6 +53,7 @@ public interface IBioApi {
 	 * 
 	 * @param sample
 	 * @param gallery
+	 * @param modalitiesToMatch
 	 * @param flags
 	 * @return
 	 */
@@ -61,35 +62,41 @@ public interface IBioApi {
 	/**
 	 * Extract template
 	 * Need to sign the extracted template
-	 *  
+	 * if modalitiesToExtract is null/empty, template is extracted for each modality found in the sample.
+	 * 
 	 * @param sample
+	 * @param modalitiesToExtract
 	 * @param flags
 	 * @return
 	 */
-	Response<BiometricRecord> extractTemplate(BiometricRecord sample, Map<String, String> flags);
+	Response<BiometricRecord> extractTemplate(BiometricRecord sample, List<BiometricType> modalitiesToExtract, Map<String, String> flags);
 
 	/**
 	 * It segment the single biometric image into multiple biometric images. Eg:
 	 * Split the thumb slab into multiple fingers
-	 *
-	 * @param sample the sample
-	 * @param flags  the flags
-	 * @return the response
+	 * if modalitiesToSegment is null/empty, each modality found in the sample is segmented.
+	 * 
+	 * @param sample
+	 * @param modalitiesToSegment
+	 * @param flags
+	 * @return
 	 */
-	Response<BiometricRecord> segment(BIR sample, Map<String, String> flags);
+	Response<BiometricRecord> segment(BIR sample, List<BiometricType> modalitiesToSegment, Map<String, String> flags);
 	
 	/**
 	 * Converts the provided BDBData from source format to target format for all segments
+	 * if modalitiesToConvert is null/empty, each modality found in the sample is converted to target format(sample must be in sourceFormat).
 	 * 
 	 * @param sample
 	 * @param sourceFormat
 	 * @param targetFormat
 	 * @param sourceParams
 	 * @param targetParams
+	 * @param modalitiesToConvert
 	 * @return
 	 */
 	BiometricRecord convertFormat(BiometricRecord sample, String sourceFormat, String targetFormat, Map<String, String> sourceParams, 
-			Map<String, String> targetParams);
+			Map<String, String> targetParams, List<BiometricType> modalitiesToConvert);
 	
 	
 }

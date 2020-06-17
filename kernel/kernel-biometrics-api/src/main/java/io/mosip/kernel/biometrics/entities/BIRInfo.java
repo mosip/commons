@@ -81,34 +81,4 @@ public class BIRInfo {
 		}
 
 	}
-
-	public BIRInfoType toBIRInfo() {
-		BIRInfoType bIRInfoType = new BIRInfoType();
-		createrPopolation(bIRInfoType);
-		if (this.integrity != null) {
-			bIRInfoType.setIntegrity(this.integrity);
-		}
-
-		if (getPayload() != null && getPayload().length > 0) {
-			bIRInfoType.setPayload(getPayload());
-		}
-		if (getCreationDate() != null) {
-			bIRInfoType.setCreationDate(getCreationDate());
-		}
-		if (getNotValidAfter() != null) {
-			bIRInfoType.setNotValidAfter(getNotValidAfter());
-		}
-		if (getNotValidBefore() != null) {
-			bIRInfoType.setNotValidBefore(getNotValidBefore());
-		}
-
-		return bIRInfoType;
-	}
-
-	private void createrPopolation(BIRInfoType bIRInfoType) {
-		if (getCreator() != null && getCreator().length() > 0) {
-			bIRInfoType.setCreator(getCreator());
-		}
-	}
-
 }

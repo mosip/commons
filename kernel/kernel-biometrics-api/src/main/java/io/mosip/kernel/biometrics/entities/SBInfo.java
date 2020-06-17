@@ -32,13 +32,4 @@ public class SBInfo {
 			return new SBInfo(this);
 		}
 	}
-
-	public SBInfoType toSBInfoType() {
-		SBInfoType sBInfoType = new SBInfoType();
-		if (getFormat() != null) {
-			sBInfoType.setFormat(getFormat());
-		}
-		return sBInfoType;
-	}
-
 }
