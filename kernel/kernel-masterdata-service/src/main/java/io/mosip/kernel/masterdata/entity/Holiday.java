@@ -40,12 +40,12 @@ public class Holiday extends BaseEntity implements Serializable {
 
 	@Id
 	@AttributeOverrides({
-			@AttributeOverride(name = "locationCode", column = @Column(name = "location_code", nullable = false, length = 36)),
 			@AttributeOverride(name = "holidayDate", column = @Column(name = "holiday_date", nullable = false)),
+			@AttributeOverride(name = "locationCode", column = @Column(name = "location_code", nullable = false, length = 36)),
 			@AttributeOverride(name = "langCode", column = @Column(name = "lang_code", nullable = false, length = 3)),
 			@AttributeOverride(name = "holidayName", column = @Column(name = "holiday_name", nullable = false, length = 64)) })
-	private String locationCode;
 	private LocalDate holidayDate;
+	private String locationCode;
 	private String langCode;
 	private String holidayName;
 

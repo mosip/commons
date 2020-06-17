@@ -7,44 +7,16 @@
 
 package io.mosip.kernel.biometrics.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
+@Data
+@AllArgsConstructor
 public class VersionType {
-
 	
-	protected long major;
+	private int major;
+	private int minor;
 	
-	protected long minor;
 
-	/**
-	 * Gets the value of the major property.
-	 * 
-	 */
-	public long getMajor() {
-		return major;
-	}
-
-	/**
-	 * Sets the value of the major property.
-	 * 
-	 */
-	public void setMajor(long value) {
-		this.major = value;
-	}
-
-	/**
-	 * Gets the value of the minor property.
-	 * 
-	 */
-	public long getMinor() {
-		return minor;
-	}
-
-	/**
-	 * Sets the value of the minor property.
-	 * 
-	 */
-	public void setMinor(long value) {
-		this.minor = value;
-	}
 
 }

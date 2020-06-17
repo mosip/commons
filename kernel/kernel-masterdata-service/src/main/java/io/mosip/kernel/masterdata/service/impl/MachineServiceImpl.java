@@ -821,7 +821,7 @@ public class MachineServiceImpl implements MachineService {
 			}
 			
 			//machine name to be stored in lowercase
-			machineEntity.setName(machinePostReqDto.getName().toLowerCase());
+			machineEntity.setName(machinePostReqDto.getName());
 			machineEntity.setPublicKey(machineUtil.getX509EncodedPublicKey(machinePostReqDto.getPublicKey()));
 			machineEntity.setKeyIndex(CryptoUtil.computeFingerPrint(CryptoUtil.decodeBase64(machineEntity.getPublicKey()), 
 					null).toLowerCase());
@@ -906,7 +906,7 @@ public class MachineServiceImpl implements MachineService {
 				updMachineEntity = MetaDataUtils.setUpdateMetaData(machinePutReqDto, renMachine, false);
 
 				//machine name to be stored in lowercase
-				updMachineEntity.setName(machinePutReqDto.getName().toLowerCase());
+				updMachineEntity.setName(machinePutReqDto.getName());
 				
 				// updating Machine
 				updMachine = machineRepository.update(updMachineEntity);

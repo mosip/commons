@@ -137,6 +137,9 @@ public interface LocationRepository extends BaseRepository<Location, CodeAndLang
 
 	@Query("FROM Location l WHERE l.name=?1 AND l.hierarchyLevel=?2 AND l.langCode=?3")
 	List<Location> findByNameAndLevelLangCode(String name, Short hierarchyLevel, String langCode);
+	
+	@Query("FROM Location l WHERE l.name=?1 AND l.hierarchyLevel=?2 AND l.langCode=?3 AND NOT code=?4")
+	List<Location> findByNameAndLevelLangCodeNotCode(String name, Short hierarchyLevel, String langCode, String code);
 
 	/**
 	 * give list of the immediate Locations for the given parent location code

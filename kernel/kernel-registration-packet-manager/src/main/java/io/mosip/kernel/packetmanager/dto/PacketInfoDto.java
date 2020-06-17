@@ -1,6 +1,9 @@
 package io.mosip.kernel.packetmanager.dto;
 
 import io.mosip.kernel.core.util.DateUtils;
+import io.mosip.kernel.packetmanager.constants.PacketManagerConstants;
+import io.mosip.kernel.packetmanager.datatype.BiometricsType;
+import io.mosip.kernel.packetmanager.datatype.DocumentType;
 import io.mosip.kernel.packetmanager.datatype.SimpleType;
 import io.mosip.kernel.packetmanager.dto.metadata.BiometricsException;
 import io.mosip.kernel.packetmanager.dto.metadata.DeviceMetaInfo;
@@ -95,5 +98,28 @@ public class PacketInfoDto {
 	public void setPrintingName(String language, String value) {
 		this.getPrintingName().add(new SimpleType(language, value));
 	}
+	
+	public Map<String, Object> getIdentityObject() {
+        Map<String, Object> identityData = new HashMap<String, Object>();
+        identityData.put(PacketManagerConstants.IDSCHEMA_VERSION, idSchemaVersion);
+        identityData.putAll(this.demographics);
+        this.documents.forEach((k, v) ->{
+        	Map<String, String> data =  new HashMap<>();
+        	data.put("value", k);
+        	data.put("type", v.getType());
+        	data.put("format", v.getFormat());
+            identityData.put(k, data);
+        });             
+        this.biometrics.forEach((k, v) -> {
+        	Map<String, Object> data =  new HashMap<>();
+        	data.put("value", String.format(PacketManagerConstants.CBEFF_FILENAME, k));
+        	data.put("version", PacketManagerConstants.CBEFF_VERSION);
+        	data.put("format", PacketManagerConstants.CBEFF_FILE_FORMAT);
+            identityData.put(k, data);
+        });
+        Map<String, Object> idObject = new HashMap<String, Object>();
+        idObject.put(PacketManagerConstants.IDENTITY, identityData);
+        return idObject;
+}
 	
 }

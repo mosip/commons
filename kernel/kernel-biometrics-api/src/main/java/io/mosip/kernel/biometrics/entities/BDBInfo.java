@@ -10,12 +10,14 @@ import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.constant.ProcessedLevelType;
 import io.mosip.kernel.biometrics.constant.PurposeType;
 import io.mosip.kernel.biometrics.constant.QualityType;
+import lombok.Data;
 
 
 /**
  * @author Ramadurai Pandian
  *
  */
+@Data
 public class BDBInfo {
 
 	private byte[] challengeResponse;
@@ -55,86 +57,7 @@ public class BDBInfo {
 		this.comparisonAlgorithm = bDBInfoBuilder.comparisonAlgorithm;
 		this.compressionAlgorithm = bDBInfoBuilder.compressionAlgorithm;
 	}
-
-	public byte[] getChallengeResponse() {
-		return challengeResponse;
-	}
-
-	public String getIndex() {
-		return index;
-	}
-
-	public RegistryIDType getFormat() {
-		return format;
-	}
-
-	public Boolean getEncryption() {
-		return encryption;
-	}
-
-	public LocalDateTime getCreationDate() {
-		return creationDate;
-	}
-
-	public LocalDateTime getNotValidBefore() {
-		return notValidBefore;
-	}
-
-	public LocalDateTime getNotValidAfter() {
-		return notValidAfter;
-	}
-
-	public List<BiometricType> getType() {
-		return type;
-	}
-
-	public List<String> getSubtype() {
-		return subtype;
-	}
-
-	public ProcessedLevelType getLevel() {
-		return level;
-	}
-
-	public RegistryIDType getProduct() {
-		return product;
-	}
-
-	public PurposeType getPurpose() {
-		return purpose;
-	}
-
-	public QualityType getQuality() {
-		return quality;
-	}
-
-	/**
-	 * @return the captureDevice
-	 */
-	public RegistryIDType getCaptureDevice() {
-		return captureDevice;
-	}
-
-	/**
-	 * @return the featureExtractionAlgorithm
-	 */
-	public RegistryIDType getFeatureExtractionAlgorithm() {
-		return featureExtractionAlgorithm;
-	}
-
-	/**
-	 * @return the comparisonAlgorithm
-	 */
-	public RegistryIDType getComparisonAlgorithm() {
-		return comparisonAlgorithm;
-	}
-
-	/**
-	 * @return the compressionAlgorithm
-	 */
-	public RegistryIDType getCompressionAlgorithm() {
-		return compressionAlgorithm;
-	}
+	
 
 	public static class BDBInfoBuilder {
 		private byte[] challengeResponse;
@@ -221,6 +144,7 @@ public class BDBInfo {
 		}
 
 		public BDBInfo build() {
+			//TODO
 			return new BDBInfo(this);
 		}
 

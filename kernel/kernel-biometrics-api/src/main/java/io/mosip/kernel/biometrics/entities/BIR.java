@@ -1,6 +1,10 @@
 package io.mosip.kernel.biometrics.entities;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+import lombok.Data;
 
 
 /**
@@ -10,17 +14,17 @@ import java.util.List;
  * @author Ramadurai Pandian
  *
  */
+@Data
 public class BIR {
 
-	private BIRVersion version;
-	private BIRVersion cbeffversion;
+	private VersionType version;
+	private VersionType cbeffversion;
 	private BIRInfo birInfo;
 	private BDBInfo bdbInfo;
 	private byte[] bdb;
 	private byte[] sb;
 	private SBInfo sbInfo;
-	//TODO - check datatype
-	private List<Object> element;
+	private Map<String, Object> others;
 
 	public BIR(BIRBuilder birBuilder) {
 		this.version = birBuilder.version;
@@ -30,91 +34,33 @@ public class BIR {
 		this.bdb = birBuilder.bdb;
 		this.sb = birBuilder.sb;
 		this.sbInfo = birBuilder.sbInfo;
-		this.setElement(birBuilder.element);
-	}
-
-
-
-	/**
-	 * @return the version
-	 */
-	public BIRVersion getVersion() {
-		return version;
-	}
-
-	/**
-	 * @return the cbeffversion
-	 */
-	public BIRVersion getCbeffversion() {
-		return cbeffversion;
-	}
-
-	/**
-	 * @return the birInfo
-	 */
-	public BIRInfo getBirInfo() {
-		return birInfo;
-	}
-
-	/**
-	 * @return the bdbInfo
-	 */
-	public BDBInfo getBdbInfo() {
-		return bdbInfo;
-	}
-
-	/**
-	 * @return the bdb
-	 */
-	public byte[] getBdb() {
-		return bdb;
-	}
-
-	/**
-	 * @return the sb
-	 */
-	public byte[] getSb() {
-		return sb;
-	}
-
-	/**
-	 * @return the sbInfo
-	 */
-	public SBInfo getSbInfo() {
-		return sbInfo;
-	}
-
-	public List<Object> getElement() {
-		return element;
-	}
-
-
-
-	public void setElement(List<Object> element) {
-		this.element = element;
+		this.setOthers(birBuilder.others);
 	}
 
 	public static class BIRBuilder {
-		private BIRVersion version;
-		private BIRVersion cbeffversion;
+		private VersionType version;
+		private VersionType cbeffversion;
 		private BIRInfo birInfo;
 		private BDBInfo bdbInfo;
 		private byte[] bdb;
 		private byte[] sb;
 		private SBInfo sbInfo;
-		private List<Object> element;
+		private Map<String, Object> others;
 
-		public BIRBuilder withElement(List<Object> list) {
-			this.element = list;
+		public BIRBuilder withOther(String key, Object value) {
+			if(Objects.isNull(others))
+				this.others = new HashMap<>();
+			
+			this.others.put(key, value);
 			return this;
 		}
 
-		public BIRBuilder withVersion(BIRVersion version) {
+		public BIRBuilder withVersion(VersionType version) {
 			this.version = version;
 			return this;
 		}
 
-		public BIRBuilder withCbeffversion(BIRVersion cbeffversion) {
+		public BIRBuilder withCbeffversion(VersionType cbeffversion) {
 			this.cbeffversion = cbeffversion;
 			return this;
 		}

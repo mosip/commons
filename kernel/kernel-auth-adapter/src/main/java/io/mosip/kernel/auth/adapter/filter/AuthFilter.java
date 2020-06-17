@@ -53,7 +53,7 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
 				"/**/configuration/security", "/**/swagger-resources/**", "/**/swagger-ui.html", "/**/csrf", "/*/",
 				"**/authenticate/**", "/**/actuator/**", "/**/authmanager/**", "/sendOtp", "/validateOtp",
 				"/invalidateToken", "/config", "/login", "/logout", "/validateOTP", "/sendOTP", "/**/login",
-				"/**/logout","/**/h2-console/**","/**/**/license/**" };
+				"/**/login/**","/**/login-redirect/**","/**/logout","/**/h2-console/**","/**/**/license/**" };
 
 	}
 
@@ -139,7 +139,6 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
 		response.setCharacterEncoding("UTF-8");
 		ExceptionUtils.logRootCause(failed);
 		response.getWriter().write(convertObjectToJson(errorResponse));
-
 	}
 
 	private ResponseWrapper<ServiceError> setErrors(HttpServletRequest httpServletRequest) throws IOException {

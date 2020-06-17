@@ -47,6 +47,7 @@ import io.mosip.kernel.masterdata.service.IndividualTypeService;
 import io.mosip.kernel.masterdata.utils.ExceptionUtils;
 import io.mosip.kernel.masterdata.utils.MapperUtils;
 import io.mosip.kernel.masterdata.utils.MasterDataFilterHelper;
+import io.mosip.kernel.masterdata.utils.MasterdataCreationUtil;
 import io.mosip.kernel.masterdata.utils.MasterdataSearchHelper;
 import io.mosip.kernel.masterdata.utils.MetaDataUtils;
 import io.mosip.kernel.masterdata.utils.PageUtils;
@@ -80,6 +81,9 @@ public class IndividualTypeServiceImpl implements IndividualTypeService {
 
 	@Autowired
 	private PageUtils pageUtils;
+	
+	@Autowired
+	private MasterdataCreationUtil masterdataCreationUtil;
 
 	/*
 	 * (non-Javadoc)
@@ -217,6 +221,9 @@ public class IndividualTypeServiceImpl implements IndividualTypeService {
 				MetaDataUtils.setUpdateMetaData(individualTypeDto, individualType, false);
 				individualTypeRepository.update(individualType);
 				MapperUtils.map(individualType, individualTypeExtnDto);
+				if(!individualTypeDto.getIsActive()) {
+					masterdataCreationUtil.updateMasterDataDeactivate(IndividualType.class, individualTypeDto.getCode());
+				}
 			} else {
 				throw new RequestException(IndividualTypeErrorCode.NO_INDIVIDUAL_TYPE_FOUND_EXCEPTION.getErrorCode(),
 						IndividualTypeErrorCode.NO_INDIVIDUAL_TYPE_FOUND_EXCEPTION.getErrorMessage());
