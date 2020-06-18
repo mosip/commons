@@ -17,6 +17,7 @@ import io.mosip.kernel.masterdata.repository.BiometricAttributeRepository;
 import io.mosip.kernel.masterdata.service.BiometricAttributeService;
 import io.mosip.kernel.masterdata.utils.ExceptionUtils;
 import io.mosip.kernel.masterdata.utils.MapperUtils;
+import io.mosip.kernel.masterdata.utils.MasterdataCreationUtil;
 import io.mosip.kernel.masterdata.utils.MetaDataUtils;
 
 /**
@@ -31,6 +32,10 @@ import io.mosip.kernel.masterdata.utils.MetaDataUtils;
 public class BiometricAttributeServiecImpl implements BiometricAttributeService {
 	@Autowired
 	private BiometricAttributeRepository biometricAttributeRepository;
+	
+	@Autowired
+	private MasterdataCreationUtil masterdataCreationUtil;
+
 
 	/*
 	 * (non-Javadoc)
@@ -70,14 +75,18 @@ public class BiometricAttributeServiecImpl implements BiometricAttributeService 
 	 */
 	@Override
 	public CodeAndLanguageCodeID createBiometricAttribute(BiometricAttributeDto biometricAttribute) {
-		BiometricAttribute entity = MetaDataUtils.setCreateMetaData(biometricAttribute, BiometricAttribute.class);
+		BiometricAttribute entity;
 		try {
+			biometricAttribute=masterdataCreationUtil.createMasterData(BiometricAttribute.class, biometricAttribute);
+			 entity = MetaDataUtils.setCreateMetaData(biometricAttribute, BiometricAttribute.class);
 			entity = biometricAttributeRepository.create(entity);
-		} catch (DataAccessLayerException | DataAccessException e) {
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
 			throw new MasterDataServiceException(
 					BiometricAttributeErrorCode.BIOMETRICATTRIBUTE_INSERT_EXCEPTION.getErrorCode(),
 					BiometricAttributeErrorCode.BIOMETRICATTRIBUTE_INSERT_EXCEPTION.getErrorMessage() + " "
 							+ ExceptionUtils.parseException(e));
+		
 		}
 		CodeAndLanguageCodeID codeAndLanguageCodeId = new CodeAndLanguageCodeID();
 

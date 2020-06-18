@@ -20,6 +20,7 @@ import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
 import io.mosip.kernel.masterdata.repository.ApplicationRepository;
 import io.mosip.kernel.masterdata.service.ApplicationService;
 import io.mosip.kernel.masterdata.utils.ExceptionUtils;
+import io.mosip.kernel.masterdata.utils.MasterdataCreationUtil;
 import io.mosip.kernel.masterdata.utils.MetaDataUtils;
 
 /**
@@ -42,6 +43,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Qualifier("applicationToCodeandlanguagecodeDefaultMapper")
 	@Autowired
 	private DataMapper<Application, CodeAndLanguageCodeID> applicationToCodeandlanguagecodeDefaultMapper;
+	
+	@Autowired
+	private MasterdataCreationUtil masterdataCreationUtil;
 
 	/*
 	 * (non-Javadoc)
@@ -140,11 +144,14 @@ public class ApplicationServiceImpl implements ApplicationService {
 	 */
 	@Override
 	public CodeAndLanguageCodeID createApplication(ApplicationDto applicationRequestDto) {
-		Application entity = MetaDataUtils.setCreateMetaData(applicationRequestDto, Application.class);
-		Application application;
+		
+		Application application=null;
 		try {
+			applicationRequestDto=masterdataCreationUtil.createMasterData(Application.class, applicationRequestDto);
+			Application entity = MetaDataUtils.setCreateMetaData(applicationRequestDto, Application.class);
 			application = applicationRepository.create(entity);
-		} catch (DataAccessLayerException | DataAccessException e) {
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
 			throw new MasterDataServiceException(ApplicationErrorCode.APPLICATION_INSERT_EXCEPTION.getErrorCode(),
 					ApplicationErrorCode.APPLICATION_INSERT_EXCEPTION.getErrorMessage() + " "
 							+ ExceptionUtils.parseException(e));

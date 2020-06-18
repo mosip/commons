@@ -152,11 +152,14 @@ public class GenderTypeServiceImpl implements GenderTypeService {
 	 */
 	@Override
 	public CodeAndLanguageCodeID saveGenderType(GenderTypeDto genderRequestDto) {
-		Gender entity = MetaDataUtils.setCreateMetaData(genderRequestDto, Gender.class);
+
 		Gender gender;
 		try {
+			genderRequestDto = masterdataCreationUtil.createMasterData(Gender.class, genderRequestDto);
+			Gender entity = MetaDataUtils.setCreateMetaData(genderRequestDto, Gender.class);
 			gender = genderTypeRepository.create(entity);
-		} catch (DataAccessLayerException | DataAccessException e) {
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_CREATE, GenderTypeDto.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
@@ -192,6 +195,8 @@ public class GenderTypeServiceImpl implements GenderTypeService {
 		CodeAndLanguageCodeID genderTypeId = new CodeAndLanguageCodeID();
 		MapperUtils.mapFieldValues(genderTypeDto, genderTypeId);
 		try {
+			genderTypeDto = masterdataCreationUtil.updateMasterData(Gender.class,
+					genderTypeDto);
 			int updatedRows = genderTypeRepository.updateGenderType(genderTypeDto.getCode(),
 					genderTypeDto.getLangCode(), genderTypeDto.getGenderName(), genderTypeDto.getIsActive(),
 					MetaDataUtils.getCurrentDateTime(), MetaDataUtils.getContextUser());
@@ -203,7 +208,8 @@ public class GenderTypeServiceImpl implements GenderTypeService {
 				masterdataCreationUtil.updateMasterDataDeactivate(Gender.class, genderTypeDto.getCode());
 			}
 			
-		} catch (DataAccessLayerException | DataAccessException e) {
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_UPDATE, GenderTypeDto.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,

@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.kernel.masterdata.constant.DeviceTypeErrorCode;
-import io.mosip.kernel.masterdata.constant.MachineTypeErrorCode;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.dto.DeviceTypeDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
@@ -23,12 +22,9 @@ import io.mosip.kernel.masterdata.dto.request.FilterDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
 import io.mosip.kernel.masterdata.dto.response.ColumnCodeValue;
-import io.mosip.kernel.masterdata.dto.response.ColumnValue;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
-import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.entity.DeviceType;
-import io.mosip.kernel.masterdata.entity.MachineType;
 import io.mosip.kernel.masterdata.entity.id.CodeAndLanguageCodeID;
 import io.mosip.kernel.masterdata.exception.DataNotFoundException;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
@@ -130,6 +126,7 @@ public class DeviceTypeServiceImpl implements DeviceTypeService {
 		try {
 			DeviceType deviceType = deviceTypeRepository.findDeviceTypeByCodeAndByLangCode(deviceTypeDto.getCode(), deviceTypeDto.getLangCode());
 			if (!EmptyCheckUtils.isNullEmpty(deviceType)) {
+				deviceTypeDto = masterdataCreationUtil.updateMasterData(DeviceType.class, deviceTypeDto);
 				MetaDataUtils.setUpdateMetaData(deviceTypeDto, deviceType, false);
 				deviceTypeRepository.update(deviceType);
 				MapperUtils.map(deviceType, codeAndLanguageCodeID);
@@ -142,7 +139,7 @@ public class DeviceTypeServiceImpl implements DeviceTypeService {
 			}
 			
 		} catch (DataAccessLayerException | DataAccessException
-				| IllegalArgumentException | SecurityException e) {
+				| IllegalArgumentException | SecurityException | IllegalAccessException | NoSuchFieldException e) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_CREATE, DeviceType.class.getCanonicalName()),
 					MasterDataConstant.AUDIT_SYSTEM,
@@ -154,7 +151,8 @@ public class DeviceTypeServiceImpl implements DeviceTypeService {
 					DeviceTypeErrorCode.DEVICE_TYPE_UPDATE_EXCEPTION.getErrorMessage()
 							+ ExceptionUtils.parseException(e));
 		}
-		//MapperUtils.map(deviceType, codeAndLanguageCodeID);
+
+
 		return codeAndLanguageCodeID;
 	}
 

@@ -39,6 +39,7 @@ import io.mosip.kernel.masterdata.utils.AuditUtil;
 import io.mosip.kernel.masterdata.utils.ExceptionUtils;
 import io.mosip.kernel.masterdata.utils.MapperUtils;
 import io.mosip.kernel.masterdata.utils.MasterDataFilterHelper;
+import io.mosip.kernel.masterdata.utils.MasterdataCreationUtil;
 import io.mosip.kernel.masterdata.utils.MasterdataSearchHelper;
 import io.mosip.kernel.masterdata.utils.MetaDataUtils;
 import io.mosip.kernel.masterdata.utils.PageUtils;
@@ -78,6 +79,10 @@ public class TemplateServiceImpl implements TemplateService {
 
 	@Autowired
 	private AuditUtil auditUtil;
+
+	@Autowired
+	private MasterdataCreationUtil masterdataCreationUtil;
+
 
 	/*
 	 * (non-Javadoc)
@@ -166,12 +171,15 @@ public class TemplateServiceImpl implements TemplateService {
 	 */
 	@Override
 	public IdAndLanguageCodeID createTemplate(TemplateDto template) {
-		Template entity = MetaDataUtils.setCreateMetaData(template, Template.class);
+
 		Template templateEntity;
 		try {
+			template = masterdataCreationUtil.createMasterData(Template.class, template);
+			Template entity = MetaDataUtils.setCreateMetaData(template, Template.class);
 			templateEntity = templateRepository.create(entity);
 
-		} catch (DataAccessLayerException | DataAccessException e) {
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.CREATE_ERROR_AUDIT, TemplateDto.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
@@ -207,6 +215,7 @@ public class TemplateServiceImpl implements TemplateService {
 			Template entity = templateRepository.findTemplateByIDAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(
 					template.getId(), template.getLangCode());
 			if (!EmptyCheckUtils.isNullEmpty(entity)) {
+				template = masterdataCreationUtil.updateMasterData(Template.class, template);
 				MetaDataUtils.setUpdateMetaData(template, entity, false);
 				templateRepository.update(entity);
 				idAndLanguageCodeID.setId(entity.getId());
@@ -222,7 +231,8 @@ public class TemplateServiceImpl implements TemplateService {
 				throw new RequestException(TemplateErrorCode.TEMPLATE_NOT_FOUND.getErrorCode(),
 						TemplateErrorCode.TEMPLATE_NOT_FOUND.getErrorMessage());
 			}
-		} catch (DataAccessLayerException | DataAccessException e) {
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
 			auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_UPDATE, TemplateDto.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
 					String.format(MasterDataConstant.FAILURE_DESC,

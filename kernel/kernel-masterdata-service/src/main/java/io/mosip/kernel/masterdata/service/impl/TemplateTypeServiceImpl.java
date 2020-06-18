@@ -18,6 +18,7 @@ import io.mosip.kernel.masterdata.repository.TemplateTypeRepository;
 import io.mosip.kernel.masterdata.service.TemplateTypeService;
 import io.mosip.kernel.masterdata.utils.ExceptionUtils;
 import io.mosip.kernel.masterdata.utils.MapperUtils;
+import io.mosip.kernel.masterdata.utils.MasterdataCreationUtil;
 import io.mosip.kernel.masterdata.utils.MetaDataUtils;
 
 /**
@@ -34,6 +35,9 @@ public class TemplateTypeServiceImpl implements TemplateTypeService {
 	@Autowired
 	private TemplateTypeRepository templateTypeRepository;
 
+	@Autowired
+	private MasterdataCreationUtil masterdataCreationUtil;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -42,13 +46,16 @@ public class TemplateTypeServiceImpl implements TemplateTypeService {
 	 * mosip.kernel.masterdata.dto.TemplateTypeDto)
 	 */
 	@Override
-	public CodeAndLanguageCodeID createTemplateType(TemplateTypeDto tempalteType) {
-		TemplateType entity = MetaDataUtils.setCreateMetaData(tempalteType, TemplateType.class);
+	public CodeAndLanguageCodeID createTemplateType(TemplateTypeDto templateTypeDto) {
+
 		TemplateType templateType;
 		try {
+			templateTypeDto = masterdataCreationUtil.createMasterData(TemplateType.class, templateTypeDto);
+			TemplateType entity = MetaDataUtils.setCreateMetaData(templateTypeDto, TemplateType.class);
 			templateType = templateTypeRepository.create(entity);
 
-		} catch (DataAccessLayerException | DataAccessException e) {
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
 			throw new MasterDataServiceException(TemplateTypeErrorCode.TEMPLATE_TYPE_INSERT_EXCEPTION.getErrorCode(),
 					TemplateTypeErrorCode.TEMPLATE_TYPE_INSERT_EXCEPTION.getErrorMessage()
 							+ ExceptionUtils.parseException(e));

@@ -44,6 +44,7 @@ import io.mosip.kernel.masterdata.utils.AuditUtil;
 import io.mosip.kernel.masterdata.utils.ExceptionUtils;
 import io.mosip.kernel.masterdata.utils.MapperUtils;
 import io.mosip.kernel.masterdata.utils.MasterDataFilterHelper;
+import io.mosip.kernel.masterdata.utils.MasterdataCreationUtil;
 import io.mosip.kernel.masterdata.utils.MasterdataSearchHelper;
 import io.mosip.kernel.masterdata.utils.MetaDataUtils;
 import io.mosip.kernel.masterdata.utils.PageUtils;
@@ -93,6 +94,9 @@ public class RegistrationCenterTypeServiceImpl implements RegistrationCenterType
 	@Autowired
 	private AuditUtil auditUtil;
 
+	@Autowired
+	private MasterdataCreationUtil masterdataCreationUtil;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -102,12 +106,16 @@ public class RegistrationCenterTypeServiceImpl implements RegistrationCenterType
 	@Override
 	public CodeAndLanguageCodeID createRegistrationCenterType(
 			RegistrationCenterTypeDto registrationCenterTypeRequestDto) {
-		RegistrationCenterType entity = MetaDataUtils.setCreateMetaData(registrationCenterTypeRequestDto,
-				RegistrationCenterType.class);
+
 		RegistrationCenterType registrationCenterType;
 		try {
+			registrationCenterTypeRequestDto = masterdataCreationUtil.createMasterData(RegistrationCenterType.class,
+					registrationCenterTypeRequestDto);
+			RegistrationCenterType entity = MetaDataUtils.setCreateMetaData(registrationCenterTypeRequestDto,
+					RegistrationCenterType.class);
 			registrationCenterType = registrationCenterTypeRepository.create(entity);
-		} catch (DataAccessLayerException | DataAccessException exception) {
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException exception) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_CREATE, RegistrationCenterTypeDto.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
@@ -145,6 +153,9 @@ public class RegistrationCenterTypeServiceImpl implements RegistrationCenterType
 					.findByCodeAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(registrationCenterTypeDto.getCode(),
 							registrationCenterTypeDto.getLangCode());
 			if (registrationCenterTypeEntity != null) {
+
+				registrationCenterTypeDto = masterdataCreationUtil.updateMasterData(RegistrationCenterType.class,
+						registrationCenterTypeDto);
 				MetaDataUtils.setUpdateMetaData(registrationCenterTypeDto, registrationCenterTypeEntity, false);
 				registrationCenterTypeRepository.update(registrationCenterTypeEntity);
 			} else {
@@ -162,7 +173,8 @@ public class RegistrationCenterTypeServiceImpl implements RegistrationCenterType
 						RegistrationCenterTypeErrorCode.REGISTRATION_CENTER_TYPE_NOT_FOUND_EXCEPTION.getErrorCode(),
 						RegistrationCenterTypeErrorCode.REGISTRATION_CENTER_TYPE_NOT_FOUND_EXCEPTION.getErrorMessage());
 			}
-		} catch (DataAccessLayerException | DataAccessException exception) {
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException exception) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_UPDATE, RegistrationCenterTypeDto.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,

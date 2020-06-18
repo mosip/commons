@@ -203,12 +203,15 @@ public class DocumentCategoryServiceImpl implements DocumentCategoryService {
 	 */
 	@Override
 	public CodeAndLanguageCodeID createDocumentCategory(DocumentCategoryDto category) {
-		DocumentCategory entity = MetaDataUtils.setCreateMetaData(category, DocumentCategory.class);
+
 		DocumentCategory documentCategory;
 		try {
+			category = masterdataCreationUtil.createMasterData(DocumentCategory.class, category);
+			DocumentCategory entity = MetaDataUtils.setCreateMetaData(category, DocumentCategory.class);
 			documentCategory = documentCategoryRepository.create(entity);
 
-		} catch (DataAccessLayerException | DataAccessException e) {
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_CREATE, DeviceType.class.getCanonicalName()),
 					MasterDataConstant.AUDIT_SYSTEM,
@@ -246,6 +249,7 @@ public class DocumentCategoryServiceImpl implements DocumentCategoryService {
 							categoryDto.getLangCode());
 
 			if (documentCategory != null) {
+				categoryDto = masterdataCreationUtil.updateMasterData(DocumentCategory.class, categoryDto);
 				MetaDataUtils.setUpdateMetaData(categoryDto, documentCategory, false);
 				documentCategoryRepository.update(documentCategory);
 				if(!categoryDto.getIsActive()) {
@@ -265,7 +269,8 @@ public class DocumentCategoryServiceImpl implements DocumentCategoryService {
 			}
 			
 
-		} catch (DataAccessLayerException | DataAccessException e) {
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_UPDATE, DeviceType.class.getCanonicalName()),
 					MasterDataConstant.AUDIT_SYSTEM,

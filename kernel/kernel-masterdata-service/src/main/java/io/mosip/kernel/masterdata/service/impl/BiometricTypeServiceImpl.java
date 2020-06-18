@@ -20,6 +20,7 @@ import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
 import io.mosip.kernel.masterdata.repository.BiometricTypeRepository;
 import io.mosip.kernel.masterdata.service.BiometricTypeService;
 import io.mosip.kernel.masterdata.utils.ExceptionUtils;
+import io.mosip.kernel.masterdata.utils.MasterdataCreationUtil;
 import io.mosip.kernel.masterdata.utils.MetaDataUtils;
 
 /**
@@ -44,6 +45,8 @@ public class BiometricTypeServiceImpl implements BiometricTypeService {
 	private List<BiometricTypeDto> biometricTypeDtoList;
 	private List<BiometricType> biometricTypesList;
 
+	@Autowired
+	private MasterdataCreationUtil masterdataCreationUtil;
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -142,15 +145,20 @@ public class BiometricTypeServiceImpl implements BiometricTypeService {
 	 */
 	@Override
 	public CodeAndLanguageCodeID createBiometricType(BiometricTypeDto biometricTypeRequestDto) {
-		BiometricType entity = MetaDataUtils.setCreateMetaData(biometricTypeRequestDto, BiometricType.class);
-		BiometricType biometricType;
+
+		BiometricType biometricType = null;
 		try {
+			biometricTypeRequestDto = masterdataCreationUtil.createMasterData(BiometricType.class,
+					biometricTypeRequestDto);
+			BiometricType entity = MetaDataUtils.setCreateMetaData(biometricTypeRequestDto, BiometricType.class);
 			biometricType = biometricTypeRepository.create(entity);
-		} catch (DataAccessLayerException | DataAccessException e) {
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
 			throw new MasterDataServiceException(BiometricTypeErrorCode.BIOMETRIC_TYPE_INSERT_EXCEPTION.getErrorCode(),
 					BiometricTypeErrorCode.BIOMETRIC_TYPE_INSERT_EXCEPTION.getErrorMessage() + " "
 							+ ExceptionUtils.parseException(e));
 		}
+
 		return biometricTypeToCodeandlanguagecodeDefaultMapper.map(biometricType);
 
 	}
