@@ -55,7 +55,7 @@ public class OtpGeneratorServiceImpl implements OtpGenerator<OtpGeneratorRequest
 	@Value("${spring.profiles.active}")
 	String activeProfile;
 	
-	@Value("${local.env.otp:111111}")
+	@Value("${mosip.kernel.auth.proxy-otp-value:111111}")
 	String localOtp;
 	
 	@Value("${mosip.kernel.auth.proxy-otp}")

@@ -2053,7 +2053,7 @@ public class MasterDataServiceTest {
 
 	}
 
-	@Test(expected = MasterDataServiceException.class)
+	@Test(expected = DataNotFoundException.class)
 	public void documentTypeNoRecordsFoudExceptionTest() {
 		String documentCategoryCode = "poc";
 		String langCode = "eng";
@@ -2064,7 +2064,7 @@ public class MasterDataServiceTest {
 
 	}
 
-	@Test(expected = MasterDataServiceException.class)
+	@Test(expected = DataNotFoundException.class)
 	public void documentTypeNoRecordsFoudExceptionForNullTest() {
 		String documentCategoryCode = "poc";
 		String langCode = "eng";

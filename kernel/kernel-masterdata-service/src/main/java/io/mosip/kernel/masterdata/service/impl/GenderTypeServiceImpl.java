@@ -78,7 +78,7 @@ public class GenderTypeServiceImpl implements GenderTypeService {
 
 	@Autowired
 	private AuditUtil auditUtil;
-	
+
 	@Autowired
 	private MasterdataCreationUtil masterdataCreationUtil;
 
@@ -207,7 +207,7 @@ public class GenderTypeServiceImpl implements GenderTypeService {
 			if(!genderTypeDto.getIsActive()) {
 				masterdataCreationUtil.updateMasterDataDeactivate(Gender.class, genderTypeDto.getCode());
 			}
-			
+
 		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
 				| NoSuchFieldException | SecurityException e) {
 			auditUtil.auditRequest(

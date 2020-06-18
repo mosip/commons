@@ -151,7 +151,7 @@ public class MasterdataCreationUtil {
 
 			return primaryBehaviour(primaryKeyCol, dtoClass, entity, id, activeDto, t, priSecIdentical);
 
-		} 
+		}
 		else if (langCode.equals(secondaryLang) && !priSecIdentical) {
 			return secondaryBehaviour(id, entity, primaryKeyCol, activePrimary, activeDto, dtoClass, t,
 					priSecIdentical);

@@ -616,6 +616,7 @@ public class AuthController {
 		return responseWrapper;
 	}
 
+	@Deprecated
 	@GetMapping(value = "/login/{redirectURI}")
 	public void login(@CookieValue("state") String state, @PathVariable("redirectURI") String redirectURI,
 			HttpServletResponse res) throws IOException {
@@ -625,6 +626,7 @@ public class AuthController {
 		res.sendRedirect(uri);
 	}
 
+	@Deprecated
 	@GetMapping(value = "/login-redirect/{redirectURI}")
 	public void loginRedirect(@PathVariable("redirectURI") String redirectURI, @RequestParam("state") String state,
 			@RequestParam("session_state") String sessionState, @RequestParam("code") String code,
