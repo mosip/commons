@@ -20,7 +20,6 @@ import io.mosip.kernel.masterdata.constant.ApplicationErrorCode;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.constant.RegistrationCenterTypeErrorCode;
 import io.mosip.kernel.masterdata.dto.FilterData;
-import io.mosip.kernel.masterdata.dto.MachineDto;
 import io.mosip.kernel.masterdata.dto.RegistrationCenterTypeDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.RegistrationCenterTypeExtnDto;
@@ -117,7 +116,7 @@ public class RegistrationCenterTypeServiceImpl implements RegistrationCenterType
 		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
 				| NoSuchFieldException | SecurityException exception) {
 			auditUtil.auditRequest(
-					String.format(MasterDataConstant.FAILURE_CREATE, RegistrationCenterTypeDto.class.getSimpleName()),
+					String.format(MasterDataConstant.FAILURE_CREATE, RegistrationCenterType.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
 					String.format(MasterDataConstant.FAILURE_DESC,
 							ApplicationErrorCode.APPLICATION_INSERT_EXCEPTION.getErrorCode(),
@@ -133,7 +132,7 @@ public class RegistrationCenterTypeServiceImpl implements RegistrationCenterType
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.SUCCESSFUL_CREATE, RegistrationCenterTypeDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC,
-						RegistrationCenterTypeDto.class.getSimpleName(), codeAndLanguageCodeID.getCode()),
+						RegistrationCenterType.class.getSimpleName(), codeAndLanguageCodeID.getCode()),
 				"ADM-555");
 		return codeAndLanguageCodeID;
 	}
@@ -161,7 +160,7 @@ public class RegistrationCenterTypeServiceImpl implements RegistrationCenterType
 			} else {
 				auditUtil.auditRequest(
 						String.format(
-								MasterDataConstant.FAILURE_UPDATE, RegistrationCenterTypeDto.class.getSimpleName()),
+								MasterDataConstant.FAILURE_UPDATE, RegistrationCenterType.class.getSimpleName()),
 						MasterDataConstant.AUDIT_SYSTEM,
 						String.format(
 								RegistrationCenterTypeErrorCode.REGISTRATION_CENTER_TYPE_NOT_FOUND_EXCEPTION
@@ -176,7 +175,7 @@ public class RegistrationCenterTypeServiceImpl implements RegistrationCenterType
 		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
 				| NoSuchFieldException | SecurityException exception) {
 			auditUtil.auditRequest(
-					String.format(MasterDataConstant.FAILURE_UPDATE, RegistrationCenterTypeDto.class.getSimpleName()),
+					String.format(MasterDataConstant.FAILURE_UPDATE, RegistrationCenterType.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
 					String.format(MasterDataConstant.FAILURE_DESC,
 							RegistrationCenterTypeErrorCode.REGISTRATION_CENTER_TYPE_UPDATE_EXCEPTION.getErrorCode(),
@@ -188,10 +187,13 @@ public class RegistrationCenterTypeServiceImpl implements RegistrationCenterType
 					RegistrationCenterTypeErrorCode.REGISTRATION_CENTER_TYPE_UPDATE_EXCEPTION.getErrorMessage()
 							+ ExceptionUtils.parseException(exception));
 		}
-		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_UPDATE, MachineDto.class.getSimpleName()),
+		auditUtil
+				.auditRequest(
+						String.format(MasterDataConstant.SUCCESSFUL_UPDATE,
+								RegistrationCenterType.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
 				String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC,
-						RegistrationCenterTypeDto.class.getSimpleName(), registrationCenterTypeId.getCode()),
+								RegistrationCenterType.class.getSimpleName(), registrationCenterTypeId.getCode()),
 				"ADM-554");
 		return registrationCenterTypeId;
 	}

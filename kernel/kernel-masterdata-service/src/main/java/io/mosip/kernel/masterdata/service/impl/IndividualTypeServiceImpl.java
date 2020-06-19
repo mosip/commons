@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.kernel.masterdata.constant.IndividualTypeErrorCode;
+import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.dto.IndividualTypeDto;
 import io.mosip.kernel.masterdata.dto.getresponse.IndividualTypeResponseDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
@@ -30,6 +31,7 @@ import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
 import io.mosip.kernel.masterdata.exception.RequestException;
 import io.mosip.kernel.masterdata.repository.IndividualTypeRepository;
 import io.mosip.kernel.masterdata.service.IndividualTypeService;
+import io.mosip.kernel.masterdata.utils.AuditUtil;
 import io.mosip.kernel.masterdata.utils.ExceptionUtils;
 import io.mosip.kernel.masterdata.utils.MapperUtils;
 import io.mosip.kernel.masterdata.utils.MasterDataFilterHelper;
@@ -70,6 +72,9 @@ public class IndividualTypeServiceImpl implements IndividualTypeService {
 	
 	@Autowired
 	private MasterdataCreationUtil masterdataCreationUtil;
+
+	@Autowired
+	private AuditUtil auditUtil;
 
 	/*
 	 * (non-Javadoc)
@@ -188,6 +193,13 @@ public class IndividualTypeServiceImpl implements IndividualTypeService {
 			entity =individualTypeRepository.create(entity);
 		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
 				| NoSuchFieldException | SecurityException e) {
+			auditUtil.auditRequest(
+					String.format(MasterDataConstant.FAILURE_CREATE, IndividualType.class.getSimpleName()),
+					MasterDataConstant.AUDIT_SYSTEM,
+					String.format(MasterDataConstant.FAILURE_DESC,
+							IndividualTypeErrorCode.INDIVIDUAL_TYPE_INSERT_EXCEPTION.getErrorCode(),
+							IndividualTypeErrorCode.INDIVIDUAL_TYPE_INSERT_EXCEPTION.getErrorMessage()
+									+ ExceptionUtils.parseException(e)));
 			throw new MasterDataServiceException(
 					IndividualTypeErrorCode.INDIVIDUAL_TYPE_INSERT_EXCEPTION.getErrorCode(),
 					IndividualTypeErrorCode.INDIVIDUAL_TYPE_INSERT_EXCEPTION.getErrorMessage() + " "
@@ -197,7 +209,10 @@ public class IndividualTypeServiceImpl implements IndividualTypeService {
 		IndividualTypeExtnDto individualTypeExtnDto = new IndividualTypeExtnDto();
 
 		MapperUtils.map(entity, individualTypeExtnDto);
-
+		auditUtil.auditRequest(
+				String.format(MasterDataConstant.SUCCESSFUL_CREATE, IndividualType.class.getSimpleName()),
+				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC,
+						IndividualType.class.getSimpleName(), individualTypeExtnDto.getCode()));
 		return individualTypeExtnDto;
 	}
 
@@ -211,6 +226,7 @@ public class IndividualTypeServiceImpl implements IndividualTypeService {
 				MetaDataUtils.setUpdateMetaData(individualTypeDto, individualType, false);
 				individualTypeRepository.update(individualType);
 				MapperUtils.map(individualType, individualTypeExtnDto);
+
 				if(!individualTypeDto.getIsActive()) {
 					masterdataCreationUtil.updateMasterDataDeactivate(IndividualType.class, individualTypeDto.getCode());
 				}
@@ -220,9 +236,21 @@ public class IndividualTypeServiceImpl implements IndividualTypeService {
 			}
 		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
 				| NoSuchFieldException | SecurityException e) {
+			auditUtil.auditRequest(
+					String.format(MasterDataConstant.FAILURE_UPDATE, IndividualType.class.getSimpleName()),
+					MasterDataConstant.AUDIT_SYSTEM,
+					String.format(MasterDataConstant.FAILURE_DESC,
+							IndividualTypeErrorCode.INDIVIDUAL_TYPE_UPDATE_EXCEPTION.getErrorCode(),
+							IndividualTypeErrorCode.INDIVIDUAL_TYPE_UPDATE_EXCEPTION.getErrorMessage()
+									+ ExceptionUtils.parseException(e)));
 			throw new MasterDataServiceException(IndividualTypeErrorCode.INDIVIDUAL_TYPE_UPDATE_EXCEPTION.getErrorCode(),
 					IndividualTypeErrorCode.INDIVIDUAL_TYPE_UPDATE_EXCEPTION.getErrorMessage() + ExceptionUtils.parseException(e));
 		}
+
+		auditUtil.auditRequest(
+				String.format(MasterDataConstant.SUCCESSFUL_UPDATE, IndividualType.class.getSimpleName()),
+				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC,
+						IndividualType.class.getSimpleName(), individualTypeExtnDto.getCode()));
 		return individualTypeExtnDto;
 	}
 	

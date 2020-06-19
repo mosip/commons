@@ -19,6 +19,7 @@ import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.masterdata.constant.MachineSpecificationErrorCode;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.dto.FilterData;
+import io.mosip.kernel.masterdata.dto.GenderTypeDto;
 import io.mosip.kernel.masterdata.dto.MachineSpecificationDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.MachineSpecificationExtnDto;
@@ -141,7 +142,9 @@ public class MachineSpecificationServiceImpl implements MachineSpecificationServ
 
 		IdAndLanguageCodeID idAndLanguageCodeID = new IdAndLanguageCodeID();
 		MapperUtils.map(renMachineSpecification, idAndLanguageCodeID);
-
+		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_CREATE, MachineSpecification.class.getSimpleName()),
+				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC,
+						MachineSpecification.class.getSimpleName(), idAndLanguageCodeID.getId()));
 		return idAndLanguageCodeID;
 
 	}
@@ -195,7 +198,9 @@ public class MachineSpecificationServiceImpl implements MachineSpecificationServ
 
 		IdAndLanguageCodeID idAndLanguageCodeID = new IdAndLanguageCodeID();
 		MapperUtils.map(updMachineSpecification, idAndLanguageCodeID);
-
+		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_UPDATE, MachineSpecification.class.getSimpleName()),
+				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC,
+						MachineSpecification.class.getSimpleName(), idAndLanguageCodeID.getId()));
 		return idAndLanguageCodeID;
 	}
 

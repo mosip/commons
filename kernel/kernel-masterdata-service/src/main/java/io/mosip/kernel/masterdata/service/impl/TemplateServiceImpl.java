@@ -181,7 +181,7 @@ public class TemplateServiceImpl implements TemplateService {
 		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
 				| NoSuchFieldException | SecurityException e) {
 			auditUtil.auditRequest(
-					String.format(MasterDataConstant.CREATE_ERROR_AUDIT, TemplateDto.class.getSimpleName()),
+					String.format(MasterDataConstant.CREATE_ERROR_AUDIT, Template.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
 					String.format(MasterDataConstant.FAILURE_DESC,
 							TemplateErrorCode.TEMPLATE_INSERT_EXCEPTION.getErrorCode(),
@@ -194,9 +194,9 @@ public class TemplateServiceImpl implements TemplateService {
 
 		IdAndLanguageCodeID idAndLanguageCodeID = new IdAndLanguageCodeID();
 		MapperUtils.map(templateEntity, idAndLanguageCodeID);
-		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_CREATE, TemplateDto.class.getSimpleName()),
+		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_CREATE, Template.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC,
-						TemplateDto.class.getSimpleName(), idAndLanguageCodeID.getId()),
+						Template.class.getSimpleName(), idAndLanguageCodeID.getId()),
 				"ADM-813");
 		return idAndLanguageCodeID;
 	}
@@ -222,7 +222,7 @@ public class TemplateServiceImpl implements TemplateService {
 				idAndLanguageCodeID.setLangCode(entity.getLangCode());
 			} else {
 				auditUtil.auditRequest(
-						String.format(MasterDataConstant.FAILURE_UPDATE, TemplateDto.class.getSimpleName()),
+						String.format(MasterDataConstant.FAILURE_UPDATE, Template.class.getSimpleName()),
 						MasterDataConstant.AUDIT_SYSTEM,
 						String.format(MasterDataConstant.FAILURE_DESC,
 								TemplateErrorCode.TEMPLATE_NOT_FOUND.getErrorCode(),
@@ -233,7 +233,7 @@ public class TemplateServiceImpl implements TemplateService {
 			}
 		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
 				| NoSuchFieldException | SecurityException e) {
-			auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_UPDATE, TemplateDto.class.getSimpleName()),
+			auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_UPDATE, Template.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
 					String.format(MasterDataConstant.FAILURE_DESC,
 							TemplateErrorCode.TEMPLATE_UPDATE_EXCEPTION.getErrorCode(),
@@ -243,9 +243,9 @@ public class TemplateServiceImpl implements TemplateService {
 			throw new MasterDataServiceException(TemplateErrorCode.TEMPLATE_UPDATE_EXCEPTION.getErrorCode(),
 					TemplateErrorCode.TEMPLATE_UPDATE_EXCEPTION.getErrorMessage() + ExceptionUtils.parseException(e));
 		}
-		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_UPDATE, TemplateDto.class.getSimpleName()),
+		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_UPDATE, Template.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC,
-						TemplateDto.class.getSimpleName(), idAndLanguageCodeID.getId()),
+						Template.class.getSimpleName(), idAndLanguageCodeID.getId()),
 				"ADM-816");
 		return idAndLanguageCodeID;
 	}

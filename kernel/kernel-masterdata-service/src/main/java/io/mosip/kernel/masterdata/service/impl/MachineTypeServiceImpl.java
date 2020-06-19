@@ -129,6 +129,9 @@ public class MachineTypeServiceImpl implements MachineTypeService {
 
 		CodeAndLanguageCodeID codeLangCodeId = new CodeAndLanguageCodeID();
 		MapperUtils.map(renMachineType, codeLangCodeId);
+		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_CREATE, MachineType.class.getSimpleName()),
+				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC,
+						MachineType.class.getSimpleName(), codeLangCodeId.getCode()));
 		return codeLangCodeId;
 	}
 	
@@ -162,6 +165,9 @@ public class MachineTypeServiceImpl implements MachineTypeService {
 					MachineTypeErrorCode.MACHINE_TYPE_UPDATE_EXCEPTION.getErrorMessage()
 							+ ExceptionUtils.parseException(e));
 		}
+		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_UPDATE, MachineType.class.getSimpleName()),
+				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC,
+						MachineType.class.getSimpleName(), codeAndLanguageCodeID.getCode()));
 		return codeAndLanguageCodeID;
 	}
 	/*codeLangCodeId
