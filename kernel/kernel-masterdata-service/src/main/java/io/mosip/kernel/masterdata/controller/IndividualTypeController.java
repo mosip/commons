@@ -133,23 +133,23 @@ public class IndividualTypeController {
 	 * @return the response i.e. the list of values for the specific filter column
 	 *         name and type.
 	 */
-	//@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
 	@ResponseFilter
 	@PostMapping("/filtervalues")
 	public ResponseWrapper<FilterResponseDto> individualsFilterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> requestWrapper) {
-		/*auditUtil.auditRequest(
+		auditUtil.auditRequest(
 				String.format(MasterDataConstant.FILTER_API_IS_CALLED, IndividualTypeDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
 				String.format(MasterDataConstant.FILTER_API_IS_CALLED, IndividualTypeDto.class.getSimpleName()),
-				"ADM-591");*/
+				"ADM-591");
 		ResponseWrapper<FilterResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(individualTypeService.individualsFilterValues(requestWrapper.getRequest()));
-		/*auditUtil.auditRequest(
+		auditUtil.auditRequest(
 				String.format(MasterDataConstant.SUCCESSFUL_FILTER, IndividualTypeDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
 				String.format(MasterDataConstant.SUCCESSFUL_FILTER_DESC, IndividualTypeDto.class.getSimpleName()),
-				"ADM-592");*/
+				"ADM-592");
 		return responseWrapper;
 	}
 	
@@ -180,7 +180,7 @@ public class IndividualTypeController {
 	 * @param individualTypeDto the request DTO for updating machine.
 	 * @return the response i.e. the updated machine.
 	 */
-	//@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
 	@ResponseFilter
 	@PutMapping()
 	@ApiOperation(value = "Service to upadte IndividualType", notes = "Update IndividualType Detail and return updated IndividualType")

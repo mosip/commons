@@ -88,6 +88,9 @@ public class HibernateDaoConfig implements BaseDaoConfig {
 		hikariConfig.setJdbcUrl(environment.getProperty(HibernatePersistenceConstant.JDBC_URL));
 		hikariConfig.setUsername(environment.getProperty(HibernatePersistenceConstant.JDBC_USER));
 		hikariConfig.setPassword(environment.getProperty(HibernatePersistenceConstant.JDBC_PASS));
+		if (environment.containsProperty(HibernatePersistenceConstant.JDBC_SCHEMA)) {
+			hikariConfig.setSchema(environment.getProperty(HibernatePersistenceConstant.JDBC_SCHEMA));
+		}
 		hikariConfig.setMaximumPoolSize(maximumPoolSize);
 		hikariConfig.setValidationTimeout(validationTimeout);
 		hikariConfig.setConnectionTimeout(connectionTimeout);

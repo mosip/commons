@@ -2,9 +2,9 @@ package io.mosip.kernel.keymanagerservice.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import io.mosip.kernel.core.dataaccess.spi.repository.BaseRepository;
 import io.mosip.kernel.keymanagerservice.entity.KeyAlias;
 
 /**
@@ -16,7 +16,7 @@ import io.mosip.kernel.keymanagerservice.entity.KeyAlias;
  *
  */
 @Repository
-public interface KeyAliasRepository extends BaseRepository<KeyAlias, String> {
+public interface KeyAliasRepository extends JpaRepository<KeyAlias, String> {
 
 	/**
 	 * Function to find keyalias by applicationId and referenceId

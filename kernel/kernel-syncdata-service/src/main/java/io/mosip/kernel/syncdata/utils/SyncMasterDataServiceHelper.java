@@ -1747,8 +1747,14 @@ public class SyncMasterDataServiceHelper {
 		return CompletableFuture.completedFuture(deviceSubTypeDPMDtos);
 	}
 	
+	
 	@SuppressWarnings("unchecked")
 	public SyncDataBaseDto getSyncDataBaseDto(Class entityClass, String entityType, List entities) {
+		return getSyncDataBaseDto(entityClass.getSimpleName(), entityType, entities);			
+	}
+	
+	@SuppressWarnings("unchecked")
+	public SyncDataBaseDto getSyncDataBaseDto(String entityName, String entityType, List entities) {
 		
 		List<String> list = Collections.synchronizedList(new ArrayList<String>());
 		
@@ -1758,12 +1764,12 @@ public class SyncMasterDataServiceHelper {
 					String json = mapper.getObjectAsJsonString(obj);
 					if(json != null) { list.add(json); }
 				} catch (Exception e) {
-					logger.error("Failed to map "+ entityClass.getSimpleName() +" to json", e);
+					logger.error("Failed to map "+ entityName +" to json", e);
 				}
 			});
 		}		
 		
-		return new SyncDataBaseDto(entityClass.getSimpleName(), entityType, list);		
+		return new SyncDataBaseDto(entityName, entityType, list);		
 	}
 
 }

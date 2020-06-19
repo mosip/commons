@@ -1,5 +1,6 @@
 package io.mosip.idrepository.core.validator;
 
+import static io.mosip.idrepository.core.constant.IdRepoConstants.DATETIME_ADJUSTMENT;
 import static io.mosip.idrepository.core.constant.IdRepoConstants.VERSION_PATTERN;
 import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.INVALID_INPUT_PARAMETER;
 import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.MISSING_INPUT_PARAMETER;
@@ -68,9 +69,14 @@ public abstract class BaseIdRepoValidator {
 			errors.rejectValue(REQUEST_TIME, MISSING_INPUT_PARAMETER.getErrorCode(),
 					String.format(MISSING_INPUT_PARAMETER.getErrorMessage(), REQUEST_TIME));
 		} else {
-			if (DateUtils.after(reqTime, DateUtils.getUTCCurrentDateTime())) {
+			if (DateUtils.after(reqTime, DateUtils.getUTCCurrentDateTime()
+					.plusMinutes(env.getProperty(DATETIME_ADJUSTMENT, Long.class, 0l)))) {
 				mosipLogger.error(IdRepoSecurityManager.getUser(), BASE_ID_REPO_VALIDATOR, "validateReqTime",
-						"requesttime is InValid");
+						"requesttime is future dated");
+				mosipLogger.error(IdRepoSecurityManager.getUser(), BASE_ID_REPO_VALIDATOR, "validateReqTime",
+						"reqTime" + reqTime.toString());
+				mosipLogger.error(IdRepoSecurityManager.getUser(), BASE_ID_REPO_VALIDATOR, "validateReqTime",
+						"vmTime" + DateUtils.getUTCCurrentDateTime());
 				errors.rejectValue(REQUEST_TIME, INVALID_INPUT_PARAMETER.getErrorCode(),
 						String.format(INVALID_INPUT_PARAMETER.getErrorMessage(), REQUEST_TIME));
 			}

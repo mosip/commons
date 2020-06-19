@@ -454,5 +454,25 @@ public class MasterdataCreationUtil {
 		}
 		return null;
 	}
-
+	public <E> int updateMasterDataDeactivate(Class<E> entity, String code) {
+		List<Predicate> predicates = new ArrayList<Predicate>();
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaUpdate<E> update = criteriaBuilder.createCriteriaUpdate(entity);
+		Root<E> root = update.from(entity);
+		Predicate codePredicate = setCode(criteriaBuilder, root, code);
+		predicates.add(codePredicate);
+		update.where(predicates.toArray(new Predicate[] {}));
+		update.set(root.get(ISACTIVE_COLUMN_NAME), false);
+		Query executableQuery = entityManager.createQuery(update);
+		return executableQuery.executeUpdate();
+	}
+	private <E> Predicate setCode(CriteriaBuilder builder, Root<E> root, String code) {
+		if (code != null && !code.isEmpty()) {
+			Path<Object> langCodePath = root.get(CODE_COLUMN_NAME);
+			if (langCodePath != null) {
+				return builder.equal(langCodePath, code);
+			}
+		}
+		return null;
+	}
 }

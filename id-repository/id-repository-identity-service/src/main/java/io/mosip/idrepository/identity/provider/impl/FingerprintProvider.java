@@ -97,7 +97,7 @@ public class FingerprintProvider implements MosipFingerprintProvider<BIR, BIR> {
 	 */
 	private byte[] convertToFMR(BIR bir) {
 		KeyValuePair[] flags=null;
-		BIR birType = bioApiImpl.extractTemplate(bir, flags);
+		BIR birType = bioApiImpl.extractTemplate(bir, flags).getResponse();
 		return birType.getBdb();
 	}
 

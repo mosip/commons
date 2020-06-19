@@ -17,7 +17,13 @@ public enum RestServicesConstants {
 
 	CRYPTO_MANAGER_ENCRYPT("mosip.idrepo.encryptor"),
 
-	CRYPTO_MANAGER_DECRYPT("mosip.idrepo.decryptor");
+	CRYPTO_MANAGER_DECRYPT("mosip.idrepo.decryptor"), 
+	
+	SYNCDATA_SERVICE("mosip.idrepo.syncdata-service"),
+	
+	ID_AUTH_SERVICE("mosip.idrepo.ida"), 
+	
+	VID_SERVICE("mosip.idrepo.vid-service");
 
 	/** The service name. */
 	private final String serviceName;

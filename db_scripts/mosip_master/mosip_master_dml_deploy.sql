@@ -54,11 +54,6 @@ TRUNCATE TABLE master.language cascade ;
 
 \COPY master.language (code,name,family,native_name,is_active,cr_by,cr_dtimes) FROM './dml/master-language.csv' delimiter ',' HEADER  csv;
 
------ TRUNCATE master.location TABLE Data and It's reference Data and COPY Data from CSV file -----
-TRUNCATE TABLE master.location cascade ;
-
-\COPY master.location (code,name,hierarchy_level,hierarchy_level_name,parent_loc_code,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-location.csv' delimiter ',' HEADER  csv;
-
 ----- TRUNCATE master.machine_type TABLE Data and It's reference Data and COPY Data from CSV file -----
 TRUNCATE TABLE master.machine_type cascade ;
 
@@ -130,9 +125,24 @@ TRUNCATE TABLE master.daysofweek_list cascade ;
 
 \COPY master.daysofweek_list (code,name,day_seq,is_global_working,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-daysofweek_list.csv' delimiter ',' HEADER  csv;
 
+----- TRUNCATE master.loc_hierarchy_list TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.loc_hierarchy_list cascade ;
+
+\COPY master.loc_hierarchy_list (hierarchy_level,hierarchy_level_name,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-loc_hierarchy_list.csv' delimiter ',' HEADER  csv;
+
+
+----- TRUNCATE master.identity_schema TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.identity_schema cascade ;
+
+\COPY master.identity_schema (id,id_version,title,description,id_attr_json,schema_json,status_code,add_props,effective_from,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-identity_schema.csv' delimiter ',' HEADER  csv;
 
 
 -------------- Level 2 data load scripts ------------------------
+
+----- TRUNCATE master.location TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.location cascade ;
+
+\COPY master.location (code,name,hierarchy_level,hierarchy_level_name,parent_loc_code,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-location.csv' delimiter ',' HEADER  csv;
 
 ----- TRUNCATE master.app_authentication_method TABLE Data and It's reference Data and COPY Data from CSV file -----
 TRUNCATE TABLE master.app_authentication_method cascade ;

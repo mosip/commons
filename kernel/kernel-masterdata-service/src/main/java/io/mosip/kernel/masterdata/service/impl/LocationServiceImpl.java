@@ -303,8 +303,8 @@ public class LocationServiceImpl implements LocationService {
 									locationDto.getParentLocCode()));
 				}
 			}
-			List<Location> list = locationRepository.findByNameAndLevelLangCode(locationDto.getName(),
-					locationDto.getHierarchyLevel(), locationDto.getLangCode());
+			List<Location> list = locationRepository.findByNameAndLevelLangCodeNotCode(locationDto.getName(),
+					locationDto.getHierarchyLevel(), locationDto.getLangCode(),locationDto.getCode());
 			if (list != null && !list.isEmpty()) {
 				auditUtil.auditRequest(
 						String.format(MasterDataConstant.FAILURE_CREATE, LocationDto.class.getSimpleName()),
@@ -337,6 +337,9 @@ public class LocationServiceImpl implements LocationService {
 				location = MetaDataUtils.setUpdateMetaData(locationDto, location, false);
 				locationRepository.update(location);
 				MapperUtils.map(location, postLocationCodeResponseDto);
+				if(!location.getIsActive()) {
+					masterdataCreationUtil.updateMasterDataDeactivate(Location.class, location.getCode());
+				}
 			}
 
 		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {

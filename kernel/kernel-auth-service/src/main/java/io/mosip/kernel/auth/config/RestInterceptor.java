@@ -76,11 +76,20 @@ public class RestInterceptor implements ClientHttpRequestInterceptor {
 		if ((accessTokenResponse = memoryCache.get("adminToken")) != null) {
 			boolean accessTokenExpired = tokenValidator.isExpired(accessTokenResponse.getAccess_token());
 			boolean refreshTokenExpired = tokenValidator.isExpired(accessTokenResponse.getRefresh_token());
-			if (accessTokenExpired && refreshTokenExpired) {
+			LOGGER.info("access token expired: " + accessTokenExpired + " ,refresh token expired: " + refreshTokenExpired);
+			if (refreshTokenExpired){
 				accessTokenResponse = getAdminToken(false, null);
 			} else if (accessTokenExpired) {
 				accessTokenResponse = getAdminToken(true, accessTokenResponse.getRefresh_token());
 			}
+			
+			/* if (accessTokenExpired && refreshTokenExpired) {
+				accessTokenResponse = getAdminToken(false, null);
+			} else if (accessTokenExpired) {
+				accessTokenResponse = getAdminToken(true, accessTokenResponse.getRefresh_token());
+			} else if (refreshTokenExpired) {
+				accessTokenResponse = getAdminToken(false, null);
+			} */
 		} else {
 			accessTokenResponse = getAdminToken(false, null);
 		}
@@ -96,6 +105,7 @@ public class RestInterceptor implements ClientHttpRequestInterceptor {
 		Map<String, String> pathParams = new HashMap<>();
 		pathParams.put(AuthConstant.REALM_ID, realmId);
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(keycloakOpenIdUrl + "/token");
+		LOGGER.info("location " + uriComponentsBuilder.toUriString() + " refresh token expired: " + isGetRefreshToken);
 		if (isGetRefreshToken) {
 			tokenRequestBody = getAdminValueMap(refreshToken);
 		} else {

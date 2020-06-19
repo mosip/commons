@@ -1,5 +1,7 @@
 package io.mosip.kernel.core.keymanager.model;
 
+import java.util.Arrays;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,5 +22,10 @@ public class CertificateEntry<C, P> {
 	private C[] chain;
 
 	private P privateKey;
+
+	@Override
+	public String toString() {
+		return "CertificateEntry [chain=" + Arrays.toString(chain) + ", privateKey=" + privateKey + "]";
+	}
 
 }

@@ -23,6 +23,7 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.kernel.masterdata.dto.DeviceLangCodeDtypeDto;
 import io.mosip.kernel.masterdata.dto.ExceptionalHolidayDto;
 import io.mosip.kernel.masterdata.dto.HolidayDto;
+import io.mosip.kernel.masterdata.dto.HolidayUpdateDto;
 import io.mosip.kernel.masterdata.dto.ReasonCategoryDto;
 import io.mosip.kernel.masterdata.dto.ReasonListDto;
 import io.mosip.kernel.masterdata.dto.RegisteredDevicePostReqDto;
@@ -450,13 +451,29 @@ public class MapperUtils {
 		holidays.forEach(holiday -> {
 			LocalDate date = holiday.getHolidayDate();
 			HolidayDto dto = new HolidayDto();
+			
+			dto.setHolidayDate(date);
+			dto.setHolidayName(holiday.getHolidayName());
+			dto.setLangCode(holiday.getLangCode());
+			
+			dto.setIsActive(holiday.getIsActive());
+			dto.setLocationCode(holiday.getLocationCode());
+			dto.setHolidayDesc(holiday.getHolidayDesc());
+			holidayDtos.add(dto);
+		});
+		return holidayDtos;
+	}
+	
+	public static List<HolidayUpdateDto> mapUpdateHolidays(List<Holiday> holidays) {
+		Objects.requireNonNull(holidays);
+		List<HolidayUpdateDto> holidayDtos = new ArrayList<>();
+		holidays.forEach(holiday -> {
+			LocalDate date = holiday.getHolidayDate();
+			HolidayUpdateDto dto = new HolidayUpdateDto();
 			dto.setId(holiday.getHolidayId());
 			dto.setHolidayDate(date);
 			dto.setHolidayName(holiday.getHolidayName());
 			dto.setLangCode(holiday.getLangCode());
-			dto.setHolidayYear(String.valueOf(date.getYear()));
-			dto.setHolidayMonth(String.valueOf(date.getMonth().getValue()));
-			dto.setHolidayDay(String.valueOf(date.getDayOfWeek().getValue()));
 			dto.setIsActive(holiday.getIsActive());
 			dto.setLocationCode(holiday.getLocationCode());
 			dto.setHolidayDesc(holiday.getHolidayDesc());

@@ -3,6 +3,7 @@ package io.mosip.kernel.syncdata.test.integration;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -25,15 +26,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.test.web.client.match.MockRestRequestMatchers;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import io.mosip.kernel.core.signatureutil.model.SignatureResponse;
 import io.mosip.kernel.core.signatureutil.spi.SignatureUtil;
@@ -160,10 +165,16 @@ import io.mosip.kernel.syncdata.utils.MapperUtils;
 public class SyncClientSettingsIntegrationTest {
 		
 	@Autowired
+	RestTemplate restTemplate;
+	
+	@Autowired
 	private MockMvc mockMvc;
 	
 	@MockBean
-	private MapperUtils mapper;
+	private MapperUtils mapper;	
+	
+	@Value("${mosip.kernel.syncdata-service-dynamicfield-url}")
+	private String dynamicfieldUrl;
 	
 	private Machine machine;
 	private List<Application> applications;
@@ -324,14 +335,15 @@ public class SyncClientSettingsIntegrationTest {
 	@MockBean
 	private ApplicantValidDocumentRespository applicantValidDocumentRespository;
 	@MockBean
-	private IndividualTypeRepository individualTypeRepository;
-	
+	private IndividualTypeRepository individualTypeRepository;	
 	
 	private String encodedTPMPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn4A-U6V4SpSeJmjl0xtBDgyFaHn1CvglvnpbczxiDakH6ks8tPvIYT4jDOU-9XaUYKuMFhLxS7G8qwJhv7GKpDQXphSXjgwv_l8A--KV6C1UVaHoAs4XuJPFdXneSd9uMH94GO6lWucyOyfaZLrf5F_--2Rr4ba4rBWw20OrAl1c7FrzjIQjzYXgnBMrvETXptxKKrMELwOOsuyc1Ju4wzPJHYjI0Em4q2BOcQLXqYjhsZhcYeTqBFxXjCOM3WQKLCIsh9RN8Hz-s8yJbQId6MKIS7HQNCTbhbjl1jdfwqRwmBaZz0Gt73I4_8SVCcCQzJWVsakLC1oJAFcmi3l_mQIDAQAB";
 	private byte[] tpmPublicKey = CryptoUtil.decodeBase64(encodedTPMPublicKey);
 	private String keyIndex = CryptoUtil.computeFingerPrint(tpmPublicKey, null);
 	
 	private SignatureResponse signResponse;
+		
+	private MockRestServiceServer mockRestServer;
 				
 	@Before
 	public void setup() {
@@ -640,6 +652,15 @@ public class SyncClientSettingsIntegrationTest {
 		signResponse = new SignatureResponse();
 		signResponse.setData("asdasdsadf4e");
 		signResponse.setTimestamp(LocalDateTime.now(ZoneOffset.UTC));
+		
+		mockRestServer = MockRestServiceServer.bindTo(restTemplate).build();
+				
+		UriComponentsBuilder fieldbuilder = UriComponentsBuilder.fromUriString(dynamicfieldUrl);
+		mockRestServer.expect(MockRestRequestMatchers.requestTo(fieldbuilder.build().toString()))
+		.andRespond(withSuccess().body(
+				"{\"id\":null,\"version\":null,\"responsetime\":\"2019-04-24T09:07:42.017Z\",\"metadata\":null,\"response\":{\"pageNo\":1,\"totalPages\":10,\"totalItems\":10,\"data\":[{\"name\":\"bloodType\",\"valueJson\":\"[{\\\"code\\\":\\\"BT1\\\",\\\"value\\\":\\\"Ove\\\",\\\"isActive\\\":true}]\",\"dataType\":\"simpleType\",\"isDeleted\":false,\"isActive\":true,\"langCode\":\"eng\"}]},\"errors\":null}"));
+
+
 	}
 
 	private void mockSuccess() {
@@ -795,7 +816,7 @@ public class SyncClientSettingsIntegrationTest {
 		when(deviceSubTypeDPMRepository.findAllLatestCreatedUpdateDeleted(Mockito.any(), 
 				Mockito.any())) .thenReturn(Arrays.asList(deviceSubTypeDPM));
 		
-		when(signatureUtil.sign(Mockito.anyString(), Mockito.anyString())).thenReturn(signResponse);
+		when(signatureUtil.sign(Mockito.anyString())).thenReturn(signResponse);
 	}
 	
 		

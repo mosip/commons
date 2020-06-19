@@ -29,6 +29,9 @@ public class IdRepoConstants {
 
 	/** The datetime timezone. */
 	public static final String DATETIME_TIMEZONE = "mosip.idrepo.datetime.timezone";
+	
+	/** datetime adjustment in minutes **/
+	public static final String DATETIME_ADJUSTMENT = "mosip.idrepo.datetime.future-time-adjustment";
 
 	/** The status registered. */
 	public static final String ACTIVE_STATUS = "mosip.idrepo.identity.uin-status.registered";
@@ -88,6 +91,10 @@ public class IdRepoConstants {
 	public static final String VID_REACTIVATED = "mosip.idrepo.vid.reactive-status";
 	
 	public static final String FMR_ENABLED = "mosip.fingerprint.fmr.enabled";
+	
+	public static final String IDA_NOTIFY_REQ_ID = "ida.api.id.event.notify";
+	
+	public static final String IDA_NOTIFY_REQ_VER = "ida.api.version.event.notify";
 	
 	/** The value. */
 	private final String value;

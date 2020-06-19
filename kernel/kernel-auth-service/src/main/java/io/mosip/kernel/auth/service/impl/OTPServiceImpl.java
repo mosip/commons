@@ -368,9 +368,9 @@ public class OTPServiceImpl implements OTPService {
 		String token = null;
 		AccessTokenResponse accessTokenResponse = null;
 		AccessTokenResponse responseAccessTokenResponse = null;
-		String realm = appId.equalsIgnoreCase("preregistration") ? appId : realmId;
+		String realm = appId;
 		try {
-			accessTokenResponse = getAuthAccessToken(authClientID, authSecret, realm);
+			accessTokenResponse = getAuthAccessToken(authClientID, authSecret, realmId);
 			token = accessTokenResponse.getAccess_token();
 		} catch (Exception e) {
 			throw new AuthManagerException(String.valueOf(HttpStatus.UNAUTHORIZED.value()), e.getMessage(), e);
@@ -426,7 +426,7 @@ public class OTPServiceImpl implements OTPService {
 		authOtpValidator.validateOTPUser(otpUser);
 		try {
 			// token = tokenService.getInternalTokenGenerationService();
-			accessTokenResponse = getAuthAccessToken(idaClientID, idaSecret, realmId);
+			accessTokenResponse = getAuthAccessToken(idaClientID, idaSecret, appId);
 		} catch (HttpClientErrorException | HttpServerErrorException ex) {
 			List<ServiceError> validationErrorsList = ExceptionUtils.getServiceErrorList(ex.getResponseBodyAsString());
 
@@ -493,7 +493,7 @@ public class OTPServiceImpl implements OTPService {
 	}
 
 	@Override
-	public AuthNResponseDto sendOTP(MosipUserDto mosipUser, OtpUser otpUser) throws Exception {
+	public AuthNResponseDto sendOTP(MosipUserDto mosipUser, OtpUser otpUser,String appId) throws Exception {
 		AuthNResponseDto authNResponseDto = null;
 		OtpEmailSendResponseDto otpEmailSendResponseDto = null;
 		SmsResponseDto otpSmsSendResponseDto = null;
@@ -502,7 +502,7 @@ public class OTPServiceImpl implements OTPService {
 		AccessTokenResponse accessTokenResponse = null;
 		authOtpValidator.validateOTPUser(otpUser);
 		try {
-			accessTokenResponse = getAuthAccessToken(authClientID, authSecret, otpUser.getAppId());
+			accessTokenResponse = getAuthAccessToken(authClientID, authSecret,appId);
 		} catch (HttpClientErrorException | HttpServerErrorException ex) {
 			List<ServiceError> validationErrorsList = ExceptionUtils.getServiceErrorList(ex.getResponseBodyAsString());
 

@@ -168,11 +168,14 @@ public class RegistrationCenterDeviceServiceImpl implements RegistrationCenterDe
 	public DeviceAndRegCenterMappingResponseDto unmapDeviceRegCenter(String deviceId, String regCenterId) {
 		DeviceAndRegCenterMappingResponseDto responseDto = new DeviceAndRegCenterMappingResponseDto();
 		try {
-
+			
+			RegistrationCenterDevice registrationCenterDevice=null;
+			Device device = getDeviceBasedOnDeviceIdAndPrimaryLangCode(deviceId, primaryLang);
+			List<RegistrationCenter> registrationCenters = getZoneFromRegCenterRepoByRegCenterId(regCenterId, primaryLang);
+			if(device!=null &&registrationCenters !=null && !registrationCenters.isEmpty()) {
 			// find given Device id and registration center are in DB or not
-			RegistrationCenterDevice registrationCenterDevice = registrationCenterDeviceRepository
-					.findByDeviceIdAndRegCenterId(deviceId, regCenterId);
-
+			 registrationCenterDevice = registrationCenterDeviceRepository.findByDeviceIdAndRegCenterId(deviceId, regCenterId);
+			}
 			if (registrationCenterDevice != null) {
 
 				List<String> zoneIds;
@@ -220,20 +223,22 @@ public class RegistrationCenterDeviceServiceImpl implements RegistrationCenterDe
 				// isActive is false, already un-mapped
 				if (!registrationCenterDevice.getIsActive()) {
 					auditUtil.auditRequest(
-							String.format(MasterDataConstant.FAILURE_UNMAP,
-									RegistrationCenterDevice.class.getCanonicalName()),
+							String.format(
+									MasterDataConstant.FAILURE_UNMAP, RegistrationCenterDevice.class.getCanonicalName()),
 							MasterDataConstant.AUDIT_SYSTEM,
 							String.format(MasterDataConstant.FAILURE_DESC,
-									RegistrationCenterDeviceErrorCode.REGISTRATION_CENTER_DEVICE_ALREADY_UNMAPPED_EXCEPTION
+									RegistrationCenterDeviceErrorCode.DEVICE_AND_REG_CENTER_MAPPING_NOT_FOUND_EXCEPTION
 											.getErrorCode(),
-									RegistrationCenterDeviceErrorCode.REGISTRATION_CENTER_DEVICE_ALREADY_UNMAPPED_EXCEPTION
+									RegistrationCenterDeviceErrorCode.DEVICE_AND_REG_CENTER_MAPPING_NOT_FOUND_EXCEPTION
 											.getErrorMessage()),
 							"ADM-738");
 					throw new RequestException(
-							RegistrationCenterDeviceErrorCode.REGISTRATION_CENTER_DEVICE_ALREADY_UNMAPPED_EXCEPTION
+							RegistrationCenterDeviceErrorCode.DEVICE_AND_REG_CENTER_MAPPING_NOT_FOUND_EXCEPTION
 									.getErrorCode(),
-							RegistrationCenterDeviceErrorCode.REGISTRATION_CENTER_DEVICE_ALREADY_UNMAPPED_EXCEPTION
-									.getErrorMessage());
+							String.format(
+									RegistrationCenterDeviceErrorCode.DEVICE_AND_REG_CENTER_MAPPING_NOT_FOUND_EXCEPTION
+											.getErrorMessage(),
+									deviceId, regCenterId));
 				}
 
 				// isActive is true

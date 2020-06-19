@@ -1,7 +1,14 @@
 package io.mosip.idrepository.identity.validator;
 
+import static io.mosip.idrepository.core.constant.IdRepoConstants.MOSIP_KERNEL_IDREPO_JSON_PATH;
+import static io.mosip.idrepository.core.constant.IdRepoConstants.ROOT_PATH;
+import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.ID_OBJECT_PROCESSING_FAILED;
+import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.INVALID_INPUT_PARAMETER;
+import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.MISSING_INPUT_PARAMETER;
+
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -12,6 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -19,24 +27,32 @@ import org.springframework.validation.Validator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static io.mosip.idrepository.core.constant.IdRepoConstants.*;
-import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.*;
+import io.mosip.idrepository.core.builder.RestRequestBuilder;
+import io.mosip.idrepository.core.constant.IdRepoErrorConstants;
+import io.mosip.idrepository.core.constant.RestServicesConstants;
 import io.mosip.idrepository.core.dto.IdRequestDTO;
+import io.mosip.idrepository.core.dto.RestRequestDTO;
 import io.mosip.idrepository.core.exception.IdRepoAppException;
+import io.mosip.idrepository.core.exception.IdRepoAppUncheckedException;
+import io.mosip.idrepository.core.exception.IdRepoDataValidationException;
+import io.mosip.idrepository.core.exception.RestServiceException;
+import io.mosip.idrepository.core.helper.RestHelper;
 import io.mosip.idrepository.core.logger.IdRepoLogger;
 import io.mosip.idrepository.core.security.IdRepoSecurityManager;
 import io.mosip.idrepository.core.validator.BaseIdRepoValidator;
 import io.mosip.kernel.core.exception.ExceptionUtils;
+import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorErrorConstant;
-import io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorSupportedOperations;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectIOException;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectValidationFailedException;
+import io.mosip.kernel.core.idobjectvalidator.exception.InvalidIdSchemaException;
 import io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator;
 import io.mosip.kernel.core.idvalidator.exception.InvalidIDException;
 import io.mosip.kernel.core.idvalidator.spi.RidValidator;
 import io.mosip.kernel.core.idvalidator.spi.UinValidator;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.StringUtils;
+import io.mosip.kernel.idobjectvalidator.constant.IdObjectValidatorConstant;
 
 /**
  * The Class IdRequestValidator - Validator for {@code IdRequestDTO}.
@@ -75,7 +91,6 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 
 	/** The Constant ID_REPO. */
 	private static final String ID_REPO = "IdRepo";
-	
 
 	/** The mosip logger. */
 	Logger mosipLogger = IdRepoLogger.getLogger(IdRequestValidator.class);
@@ -88,6 +103,12 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 
 	/** The Constant STATUS_FIELD. */
 	private static final String STATUS_FIELD = "status";
+	
+	@Value("${mosip.kernel.idobjectvalidator.mandatory-attributes.id-repository.new-registration}")
+	private List<String> newRegistrationFields;
+	
+	@Value("${mosip.kernel.idobjectvalidator.mandatory-attributes.id-repository.update-uin}")
+	private List<String> updateUinFields;
 
 	/** The status. */
 	@Resource
@@ -112,6 +133,14 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 	/** The uin validator. */
 	@Autowired
 	private UinValidator<String> uinValidator;
+	
+	@Autowired
+	private RestHelper restHelper;
+	
+	@Autowired
+	private RestRequestBuilder restBuilder;
+	
+	private Map<String, String> schemaMap = new HashMap<>();
 
 	/*
 	 * (non-Javadoc)
@@ -205,7 +234,7 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 	 * @param errors  the errors
 	 * @param method  the method
 	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void validateRequest(Object request, Errors errors, String method) {
 		try {
 			if (Objects.nonNull(request)) {
@@ -224,12 +253,17 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 							.filter(key -> !key.contentEquals(ROOT_PATH))
 							.forEach(requestMap::remove);
 					if (!errors.hasErrors()) {
-						if (method.equals(CREATE)) {
-							idObjectValidator.validateIdObject(requestMap,
-									IdObjectValidatorSupportedOperations.NEW_REGISTRATION);
-						} else {
-							idObjectValidator.validateIdObject(requestMap,
-									IdObjectValidatorSupportedOperations.UPDATE_UIN);
+						String schemaVersion;
+						if (requestMap.get(ROOT_PATH) != null) {
+							schemaVersion = String
+									.valueOf(((Map<String, Object>) requestMap.get(ROOT_PATH)).get("IDSchemaVersion"));
+							if (method.equals(CREATE)) {
+								idObjectValidator.validateIdObject(getSchema(schemaVersion), requestMap,
+										newRegistrationFields);
+							} else {
+								idObjectValidator.validateIdObject(getSchema(schemaVersion), requestMap,
+										updateUinFields);
+							}
 						}
 					}
 				}
@@ -259,7 +293,7 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 								Arrays.asList(e.getErrorTexts().get(index).split("-")[1].trim().split("\\|")).stream()
 										.collect(Collectors.joining(" | "))))
 			);
-		} catch (IdObjectIOException e) {
+		} catch (InvalidIdSchemaException | IdObjectIOException e) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO, ID_REQUEST_VALIDATOR,
 					VALIDATE_REQUEST + ExceptionUtils.getStackTrace(e));
 			errors.rejectValue(REQUEST, ID_OBJECT_PROCESSING_FAILED.getErrorCode(),
@@ -334,8 +368,33 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 							+ StringUtils.substringBefore(StringUtils.reverseDelimited(e.getMessage(), ' '), " ")));
 		}
 	}
-
 	
+	private String getSchema(String schemaVersion) {
+		if (Objects.isNull(schemaVersion) || schemaVersion.contentEquals("null")) {
+			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REQUEST_VALIDATOR, "getSchema",
+					"\n" + "schemaVersion is null");
+			throw new IdRepoAppUncheckedException(MISSING_INPUT_PARAMETER.getErrorCode(),
+					String.format(MISSING_INPUT_PARAMETER.getErrorMessage(),
+							ROOT_PATH + IdObjectValidatorConstant.PATH_SEPERATOR + "IDSchemaVersion"));
+		}
+		try {
+			if (schemaMap.containsKey(schemaVersion)) {
+				return schemaMap.get(schemaVersion);
+			} else {
+				RestRequestDTO restRequest;
+				restRequest = restBuilder.buildRequest(RestServicesConstants.SYNCDATA_SERVICE, null,
+						ResponseWrapper.class);
+				restRequest.setUri(restRequest.getUri().concat("?schemaVersion=" + schemaVersion));
+				ResponseWrapper<Map<String, String>> response = restHelper.requestSync(restRequest);
+				schemaMap.put(schemaVersion, response.getResponse().get("schemaJson"));
+				return getSchema(schemaVersion);
+			}
+		} catch (IdRepoDataValidationException | RestServiceException e) {
+			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REQUEST_VALIDATOR, "getSchema",
+					"\n" + ExceptionUtils.getStackTrace(e));
+			throw new IdRepoAppUncheckedException(IdRepoErrorConstants.SCHEMA_RETRIEVE_ERROR);
+		}
+	}
 
 	/**
 	 * Convert to map.

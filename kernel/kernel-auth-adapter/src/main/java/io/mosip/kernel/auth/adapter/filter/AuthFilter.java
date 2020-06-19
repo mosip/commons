@@ -45,7 +45,7 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
  */
 public class AuthFilter extends AbstractAuthenticationProcessingFilter {
 
-	private static final Logger logger = LoggerFactory.getLogger(AuthFilter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AuthFilter.class);
 
 	private String[] allowedEndPoints() {
 		return new String[] { "/**/assets/**", "/**/icons/**", "/**/screenshots/**", "/favicon**", "/**/favicon**",
@@ -53,7 +53,7 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
 				"/**/configuration/security", "/**/swagger-resources/**", "/**/swagger-ui.html", "/**/csrf", "/*/",
 				"**/authenticate/**", "/**/actuator/**", "/**/authmanager/**", "/sendOtp", "/validateOtp",
 				"/invalidateToken", "/config", "/login", "/logout", "/validateOTP", "/sendOTP", "/**/login",
-				"/**/logout","/**/h2-console/**" };
+				"/**/login/**","/**/login-redirect/**","/**/logout","/**/h2-console/**","/**/**/license/**" };
 
 	}
 
@@ -67,9 +67,11 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
 		String[] endpoints = allowedEndPoints();
 		for (String pattern : endpoints) {
 			RequestMatcher ignorePattern = new AntPathRequestMatcher(pattern);
+			LOGGER.debug("ignore pattern for " + request.getRequestURI() + " try to match " + pattern);
 			if (ignorePattern.matches(request)) {
 				return false;
 			}
+			LOGGER.debug("ignore pattern match failed for "  + request.getRequestURI() + " try to match " + pattern);
 		}
 		return true;
 	}
@@ -85,12 +87,14 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
 			if (cookies != null) {
 				for (Cookie cookie : cookies) {
 					if (cookie.getName().contains(AuthAdapterConstant.AUTH_REQUEST_COOOKIE_HEADER)) {
+						LOGGER.debug("extract token from cookie named "  + cookie.getName() );
 						token = cookie.getValue();
 					}
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.debug("extract token from cookie failed for request " + httpServletRequest.getRequestURI() );
+			//e.printStackTrace();
 		}
 
 		if (token == null) {
@@ -102,11 +106,12 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
 			httpServletResponse.setContentType("application/json");
 			httpServletResponse.setCharacterEncoding("UTF-8");
 			httpServletResponse.getWriter().write(convertObjectToJson(errorResponse));
-			logger.error("\n\n Exception : Authorization token not present > " + httpServletRequest.getRequestURL()
+			LOGGER.error("\n\n Exception : Authorization token not present > " + httpServletRequest.getRequestURL()
 					+ "\n\n");
 			return null;
 		}
 		AuthToken authToken = new AuthToken(token);
+		LOGGER.debug("Extracted auth token for request " + httpServletRequest.getRequestURL());
 		return getAuthenticationManager().authenticate(authToken);
 	}
 
@@ -134,7 +139,6 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
 		response.setCharacterEncoding("UTF-8");
 		ExceptionUtils.logRootCause(failed);
 		response.getWriter().write(convertObjectToJson(errorResponse));
-
 	}
 
 	private ResponseWrapper<ServiceError> setErrors(HttpServletRequest httpServletRequest) throws IOException {

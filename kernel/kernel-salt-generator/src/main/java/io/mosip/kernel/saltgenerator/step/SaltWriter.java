@@ -40,8 +40,7 @@ public class SaltWriter implements ItemWriter<SaltEntity> {
 			repo.saveAll(entities);
 			mosipLogger.debug("SALT_GENERATOR", "SaltWriter", "Entities written", String.valueOf(entities.size()));
 		} else {
-			mosipLogger.error("SALT_GENERATOR", "SaltWriter", "write", "Records already exists");
-			throw new SaltGeneratorException(SaltGeneratorErrorConstants.RECORD_EXISTS);
+			mosipLogger.error("SALT_GENERATOR", "SaltWriter", "write", "Records already exists");			
 		}
 	}
 

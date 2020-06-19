@@ -3,6 +3,7 @@ package io.mosip.kernel.syncdata.service;
 import java.time.LocalDateTime;
 import java.util.concurrent.ExecutionException;
 
+import io.mosip.kernel.syncdata.dto.IdSchemaDto;
 import io.mosip.kernel.syncdata.dto.UploadPublicKeyRequestDto;
 import io.mosip.kernel.syncdata.dto.UploadPublicKeyResponseDto;
 import io.mosip.kernel.syncdata.dto.response.MasterDataResponseDto;
@@ -63,5 +64,12 @@ public interface SyncMasterDataService {
 	 * @return {@link UploadPublicKeyResponseDto}
 	 */
 	UploadPublicKeyResponseDto validateKeyMachineMapping(UploadPublicKeyRequestDto dto);
+	
+	/**
+	 * fetches latest published Identity schema from masterdata-service
+	 * @param lastUpdated
+	 * @return
+	 */
+	IdSchemaDto getLatestPublishedIdSchema(LocalDateTime lastUpdated, double schemaVersion);
 
 }

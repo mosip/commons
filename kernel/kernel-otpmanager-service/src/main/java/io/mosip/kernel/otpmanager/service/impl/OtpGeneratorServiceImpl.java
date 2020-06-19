@@ -3,6 +3,8 @@ package io.mosip.kernel.otpmanager.service.impl;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -31,6 +33,7 @@ public class OtpGeneratorServiceImpl implements OtpGenerator<OtpGeneratorRequest
 	/**
 	 * The reference that autowires OtpRepository class.
 	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(OtpGeneratorServiceImpl.class);
 	@Autowired
 	private OtpRepository otpRepository;
 
@@ -52,8 +55,11 @@ public class OtpGeneratorServiceImpl implements OtpGenerator<OtpGeneratorRequest
 	@Value("${spring.profiles.active}")
 	String activeProfile;
 	
-	@Value("${local.env.otp:111111}")
+	@Value("${mosip.kernel.auth.proxy-otp-value:111111}")
 	String localOtp;
+	
+	@Value("${mosip.kernel.auth.proxy-otp}")
+	private boolean isProxytrue;
 
 	/*
 	 * (non-Javadoc)
@@ -90,7 +96,12 @@ public class OtpGeneratorServiceImpl implements OtpGenerator<OtpGeneratorRequest
 			response.setOtp(OtpStatusConstants.SET_AS_NULL_IN_STRING.getProperty());
 			response.setStatus(OtpStatusConstants.BLOCKED_USER.getProperty());
 		} else {
-			generatedOtp = otpProvider.computeOtp(otpDto.getKey(), otpLength, macAlgorithm);
+			if (isProxytrue){
+				generatedOtp = localOtp;
+			} else {
+				generatedOtp = otpProvider.computeOtp(otpDto.getKey(), otpLength, macAlgorithm);
+			}
+			
 			OtpEntity otp = new OtpEntity();
 			otp.setId(otpDto.getKey());
 			otp.setValidationRetryCount(0);

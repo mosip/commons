@@ -1,43 +1,33 @@
 package io.mosip.kernel.idobjectvalidator.impl;
 
-import static io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorErrorConstant.ID_OBJECT_PARSING_FAILED;
 import static io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorErrorConstant.ID_OBJECT_VALIDATION_FAILED;
 import static io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorErrorConstant.INVALID_INPUT_PARAMETER;
 import static io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorErrorConstant.MISSING_INPUT_PARAMETER;
 import static io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorErrorConstant.SCHEMA_IO_EXCEPTION;
-import static io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorPropertySourceConstant.APPLICATION_CONTEXT;
-import static io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorPropertySourceConstant.CONFIG_SERVER;
-import static io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorPropertySourceConstant.LOCAL;
-import static io.mosip.kernel.idobjectvalidator.constant.IdObjectValidatorConstant.APPLICATION_ID;
+import static io.mosip.kernel.idobjectvalidator.constant.IdObjectValidatorConstant.KEYWORD;
 import static io.mosip.kernel.idobjectvalidator.constant.IdObjectValidatorConstant.ERROR;
-import static io.mosip.kernel.idobjectvalidator.constant.IdObjectValidatorConstant.FIELD_LIST;
 import static io.mosip.kernel.idobjectvalidator.constant.IdObjectValidatorConstant.INSTANCE;
 import static io.mosip.kernel.idobjectvalidator.constant.IdObjectValidatorConstant.PATH_SEPERATOR;
 import static io.mosip.kernel.idobjectvalidator.constant.IdObjectValidatorConstant.POINTER;
-import static io.mosip.kernel.idobjectvalidator.constant.IdObjectValidatorConstant.ROOT_PATH;
-import static io.mosip.kernel.idobjectvalidator.constant.IdObjectValidatorConstant.IDENTITY_ARRAY_VALUE_FIELD;
+import static io.mosip.kernel.idobjectvalidator.constant.IdObjectValidatorConstant.VALIDATORS;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
-import javax.annotation.PostConstruct;
-
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
@@ -46,11 +36,13 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory;
 
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
-import io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorSupportedOperations;
+import io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorErrorConstant;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectIOException;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectValidationFailedException;
+import io.mosip.kernel.core.idobjectvalidator.exception.InvalidIdSchemaException;
 import io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator;
 import io.mosip.kernel.core.util.StringUtils;
+import io.mosip.kernel.idobjectvalidator.helper.IdObjectValidatorHelper;
 
 /**
  * This class provides the implementation for JSON validation against the
@@ -67,16 +59,9 @@ public class IdObjectSchemaValidator implements IdObjectValidator {
 	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(IdObjectSchemaValidator.class);
 
-	/** The Constant OPERATION. */
-	private static final String OPERATION = "operation";
-
 	/** The mapper. */
 	@Autowired
 	private ObjectMapper mapper;
-
-	/** The env. */
-	@Autowired
-	private Environment env;
 
 	/** The Constant MISSING. */
 	private static final String MISSING = "missing";
@@ -84,99 +69,29 @@ public class IdObjectSchemaValidator implements IdObjectValidator {
 	/** The Constant UNWANTED. */
 	private static final String UNWANTED = "unwanted";
 
-	/**
-	 * The config server file storage URL.
-	 *
-	 * Address of Spring cloud config server for getting the schema file
-	 */
-	@Value("${mosip.kernel.idobjectvalidator.file-storage-uri}")
-	private String configServerFileStorageURL;
-
-	/** The schema name. */
-	@Value("${mosip.kernel.idobjectvalidator.schema-name}")
-	private String schemaName;
-
-	/**
-	 * The property source. /* Property source from which schema file has to be
-	 * taken, can be either CONFIG_SERVER or LOCAL
-	 */
-	@Value("${mosip.kernel.idobjectvalidator.property-source}")
-	private String propertySource;
-
-	/** The schema. */
-	private JsonNode schema;
-
-	/**
-	 * Load schema.
-	 *
-	 * @throws IdObjectIOException the id object IO exception
-	 */
-	@PostConstruct
-	public void loadSchema() throws IdObjectIOException {
-		try {
-			if (APPLICATION_CONTEXT.getPropertySource().equals(propertySource)) {
-				logger.debug("schema loaded from application context");
-				schema = JsonLoader.fromURL(new URL(configServerFileStorageURL + schemaName));
-			}
-		} catch (IOException e) {
-			ExceptionUtils.logRootCause(e);
-			throw new IdObjectIOException(SCHEMA_IO_EXCEPTION, e);
-		}
-	}
-
-	/**
-	 * Validates a JSON object passed as string with the schema provided.
-	 *
-	 * @param idObject  the id object
-	 * @param operation the operation
-	 * @return true, if successful
-	 * @throws IdObjectValidationFailedException the id object validation failed
-	 *                                           exception
-	 * @throws IdObjectIOException               the id object IO exception
+	/* (non-Javadoc)
+	 * @see io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator#validateIdObject(java.lang.String, java.lang.Object, java.util.List)
 	 */
 	@Override
-	public boolean validateIdObject(Object idObject, IdObjectValidatorSupportedOperations operation)
-			throws IdObjectValidationFailedException, IdObjectIOException {
-		JsonNode jsonObjectNode = null;
-		JsonNode jsonSchemaNode = null;
-		ProcessingReport report = null;
+	public boolean validateIdObject(String identitySchema, Object identityObject, List<String> requiredFields)
+			throws IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
 		try {
-			jsonObjectNode = mapper.readTree(mapper.writeValueAsString(idObject));
-			jsonSchemaNode = getJsonSchemaNode();
-			final JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
-			final JsonSchema jsonSchema = factory.getJsonSchema(jsonSchemaNode);
-			report = jsonSchema.validate(jsonObjectNode);
+			final JsonSchema jsonSchema = getJsonSchema(identitySchema);
+			JsonNode jsonIdObjectNode = mapper.readTree(mapper.writeValueAsString(identityObject));
+			ProcessingReport report = jsonSchema.validate(jsonIdObjectNode);
 			logger.debug("schema validation report generated : " + report);
-			List<ServiceError> errorList = new ArrayList<>();
-			if (!report.isSuccess()) {
-				report.forEach(processingMessage -> {
-					if (processingMessage.getLogLevel().toString().equals(ERROR)) {
-						JsonNode processingMessageAsJson = processingMessage.asJson();
-						if (processingMessageAsJson.hasNonNull(INSTANCE)
-								&& processingMessageAsJson.get(INSTANCE).hasNonNull(POINTER)) {
-							if (processingMessageAsJson.has(MISSING)
-									&& !processingMessageAsJson.get(MISSING).isNull()) {
-								errorList.add(new ServiceError(MISSING_INPUT_PARAMETER.getErrorCode(),
-										buildErrorMessage(processingMessageAsJson, MISSING_INPUT_PARAMETER.getMessage(),
-												MISSING)));
-							} else {
-								errorList.add(new ServiceError(INVALID_INPUT_PARAMETER.getErrorCode(),
-										buildErrorMessage(processingMessageAsJson, INVALID_INPUT_PARAMETER.getMessage(),
-												UNWANTED)));
-							}
-						}
-					}
-				});
-			}
-			validateMandatoryFields(jsonObjectNode, operation, errorList);
+
+			List<ServiceError> errorList = getErrorList(report, requiredFields);
+
 			if (!errorList.isEmpty()) {
-				logger.debug("IdObjectValidationFailedException thrown with errors : " + errorList);
+				logger.error("IdObject Validation Failed with errors : " + errorList);
 				throw new IdObjectValidationFailedException(ID_OBJECT_VALIDATION_FAILED, errorList);
 			}
 			return true;
+
 		} catch (IOException e) {
 			ExceptionUtils.logRootCause(e);
-			throw new IdObjectIOException(ID_OBJECT_PARSING_FAILED, e);
+			throw new IdObjectIOException(SCHEMA_IO_EXCEPTION, e);
 		} catch (ProcessingException e) {
 			ExceptionUtils.logRootCause(e);
 			throw new IdObjectIOException(ID_OBJECT_VALIDATION_FAILED, e);
@@ -184,140 +99,98 @@ public class IdObjectSchemaValidator implements IdObjectValidator {
 	}
 
 	/**
-	 * Validate mandatory fields.
+	 * Gets the json schema.
 	 *
-	 * @param jsonObjectNode the json object node
-	 * @param operation      the operation
-	 * @param errorList      the error list
-	 * @throws IdObjectIOException the id object IO exception
+	 * @param schemaJson the schema json
+	 * @return the json schema
+	 * @throws InvalidIdSchemaException the invalid id schema exception
 	 */
-	private void validateMandatoryFields(JsonNode jsonObjectNode, IdObjectValidatorSupportedOperations operation,
-			List<ServiceError> errorList) throws IdObjectIOException {
-		if (Objects.isNull(operation)) {
-			logger.debug("mandatory field input operation is null");
-			throw new IdObjectIOException(MISSING_INPUT_PARAMETER.getErrorCode(),
-					String.format(MISSING_INPUT_PARAMETER.getMessage(), OPERATION));
-		}
-		String appId = env.getProperty(APPLICATION_ID);
-		if (Objects.isNull(appId)) {
-			logger.debug("mandatory field input appId is null");
-			throw new IdObjectIOException(MISSING_INPUT_PARAMETER.getErrorCode(),
-					String.format(MISSING_INPUT_PARAMETER.getMessage(), APPLICATION_ID));
-		}
-		String fields = env.getProperty(String.format(FIELD_LIST, appId, operation.getOperation()));
-		Optional.ofNullable(fields).ifPresent(fieldList -> Arrays.asList(StringUtils.split(fields, ','))
-				.parallelStream().map(StringUtils::normalizeSpace).forEach(field -> {
-					List<String> fieldNames = Arrays.asList(field.split("\\|"));
-					fieldNames = fieldNames.stream()
-							.map(fieldName -> PATH_SEPERATOR
-									.concat(ROOT_PATH.concat(PATH_SEPERATOR.concat(fieldName.replace('.', '/')))))
-							.collect(Collectors.toList());
-					validateMissingFields(jsonObjectNode, errorList, fieldNames);
-					validateInvalidFields(jsonObjectNode, errorList, fieldNames);
-				}));
-	}
+	private JsonSchema getJsonSchema(String schemaJson) throws InvalidIdSchemaException {
+		try {
+			if (schemaJson == null) {
+				throw new InvalidIdSchemaException(IdObjectValidatorErrorConstant.INVALID_ID_SCHEMA.getErrorCode(),
+						IdObjectValidatorErrorConstant.INVALID_ID_SCHEMA.getMessage());
+			}
+			JSONObject schema = new JSONObject(schemaJson);
+			JsonNode jsonIdSchemaNode = JsonLoader.fromString(schema.toString());
 
-	/**
-	 * Validate missing fields.
-	 *
-	 * @param jsonObjectNode the json object node
-	 * @param errorList      the error list
-	 * @param fieldNames     the field names
-	 */
-	private void validateMissingFields(JsonNode jsonObjectNode, List<ServiceError> errorList, List<String> fieldNames) {
-		if (fieldNames.parallelStream().allMatch(fieldName -> isMissingOrEmpty(jsonObjectNode, fieldName))) {
-			errorList.add(new ServiceError(MISSING_INPUT_PARAMETER.getErrorCode(),
-					String.format(MISSING_INPUT_PARAMETER.getMessage(),
-							fieldNames.parallelStream().map(fieldName -> fieldName.replaceFirst(PATH_SEPERATOR, ""))
-									.collect(Collectors.joining(" | ")))));
+			if (jsonIdSchemaNode.size() <= 0
+					|| !(jsonIdSchemaNode.hasNonNull("$schema") && jsonIdSchemaNode.hasNonNull("type"))) {
+				throw new InvalidIdSchemaException(IdObjectValidatorErrorConstant.SCHEMA_IO_EXCEPTION.getErrorCode(),
+						IdObjectValidatorErrorConstant.SCHEMA_IO_EXCEPTION.getMessage());
+			}
+
+			final JsonSchemaFactory factory = IdObjectValidatorHelper.getJSONSchemaFactory();
+			return factory.getJsonSchema(jsonIdSchemaNode);
+		} catch (IOException | ProcessingException | JSONException e) {
+			throw new InvalidIdSchemaException(IdObjectValidatorErrorConstant.SCHEMA_IO_EXCEPTION.getErrorCode(),
+					IdObjectValidatorErrorConstant.SCHEMA_IO_EXCEPTION.getMessage());
 		}
 	}
 
 	/**
-	 * Validate invalid fields.
+	 * Gets the error list.
 	 *
-	 * @param jsonObjectNode the json object node
-	 * @param errorList      the error list
-	 * @param fieldNames     the field names
+	 * @param report the report
+	 * @param requiredFields the required fields
+	 * @return the error list
 	 */
-	private void validateInvalidFields(JsonNode jsonObjectNode, List<ServiceError> errorList, List<String> fieldNames) {
-		if (fieldNames.parallelStream().anyMatch(
-				fieldName -> !isMissingOrEmpty(jsonObjectNode, fieldName) && (jsonObjectNode.at(fieldName).isArray()
-						? jsonObjectNode.findValuesAsText(IDENTITY_ARRAY_VALUE_FIELD).stream()
-								.allMatch(StringUtils::isBlank)
-						: StringUtils.isBlank(jsonObjectNode.at(fieldName).toString())))) {
-			errorList.add(new ServiceError(INVALID_INPUT_PARAMETER.getErrorCode(),
-					String.format(INVALID_INPUT_PARAMETER.getMessage(),
-							fieldNames.parallelStream().map(fieldName -> fieldName.replaceFirst(PATH_SEPERATOR, ""))
-									.collect(Collectors.joining(" | ")))));
+	private List<ServiceError> getErrorList(ProcessingReport report, List<String> requiredFields) {
+		List<ServiceError> errorList = new ArrayList<>();
+		if (!report.isSuccess()) {
+			report.forEach(processingMessage -> {
+				if (processingMessage.getLogLevel().toString().equals(ERROR)) {
+					JsonNode processingMessageAsJson = processingMessage.asJson();
+					if (processingMessageAsJson.hasNonNull(INSTANCE)
+							&& processingMessageAsJson.get(INSTANCE).hasNonNull(POINTER)) {
+						if (processingMessageAsJson.has(MISSING) && !processingMessageAsJson.get(MISSING).isNull()) {
+							buildErrorMessages(errorList, processingMessageAsJson, MISSING_INPUT_PARAMETER, MISSING, requiredFields);
+						} else {
+							buildErrorMessages(errorList, processingMessageAsJson, INVALID_INPUT_PARAMETER, UNWANTED, null);
+						}
+						if (processingMessageAsJson.hasNonNull(KEYWORD) && processingMessageAsJson.get(KEYWORD).asText().contentEquals(VALIDATORS)) {
+							buildErrorMessages(errorList, processingMessageAsJson, INVALID_INPUT_PARAMETER, KEYWORD, null);
+						}
+					}
+				}
+			});
 		}
-	}
-
-	/**
-	 * Checks if is missing or empty.
-	 *
-	 * @param jsonObjectNode the json object node
-	 * @param fieldName      the field name
-	 * @return true, if is missing or empty
-	 */
-	private boolean isMissingOrEmpty(JsonNode jsonObjectNode, String fieldName) {
-		return jsonObjectNode.at(fieldName).isMissingNode()
-				|| StringUtils.isEmpty(jsonObjectNode.at(fieldName).toString());
+		return errorList;
 	}
 
 	/**
 	 * Builds the error message.
 	 *
-	 * @param processingMessageAsJson the processing message as json
-	 * @param messageBody             the message body
-	 * @param field                   the field
+	 * @param errorList the error list
+	 * @param processingMessageAsJson            the processing message as json
+	 * @param errorConstant the error constant
+	 * @param field            the field
+	 * @param requiredFields the required fields
 	 * @return the string
 	 */
-	private String buildErrorMessage(JsonNode processingMessageAsJson, String messageBody, String field) {
-		return String.format(messageBody, StringUtils.strip(
-				processingMessageAsJson.get(INSTANCE).get(POINTER).asText() + (processingMessageAsJson.hasNonNull(field)
-						? PATH_SEPERATOR
-								+ StringUtils.removeAll(processingMessageAsJson.get(field).toString(), "[\\[\"\\]]")
-						: ""),
-				"/"));
-	}
-
-	/**
-	 * Gets the json schema node. If the property source selected is CONFIG_SERVER.
-	 * In this scenario schema is coming from Config Server, whose location has to
-	 * be mentioned in the bootstrap.properties by the application using this JSON
-	 * validator API. If the property source selected is local. In this scenario
-	 * schema is coming from local resource location. If the property source is
-	 * APPLICATION_CONTEXT, schema is loaded using PostConstruct for one time, and
-	 * loaded schema is reused for validation.
-	 * 
-	 * @return the json schema node
-	 * @throws IdObjectIOException the id object IO exception
-	 */
-	private JsonNode getJsonSchemaNode() throws IdObjectIOException {
-		logger.debug("propertySource is set to " + propertySource);
-		JsonNode jsonSchemaNode = null;
-		if (CONFIG_SERVER.getPropertySource().equals(propertySource)) {
-			try {
-				jsonSchemaNode = JsonLoader.fromURL(new URL(configServerFileStorageURL + schemaName));
-				logger.debug("schema is loaded from config server");
-			} catch (IOException e) {
-				ExceptionUtils.logRootCause(e);
-				throw new IdObjectIOException(SCHEMA_IO_EXCEPTION, e);
+	private void buildErrorMessages(List<ServiceError> errorList, JsonNode processingMessageAsJson,
+			IdObjectValidatorErrorConstant errorConstant, String field, List<String> requiredFields) {
+		if (processingMessageAsJson.hasNonNull(field)) {
+			if (field.contentEquals(KEYWORD)) {
+				errorList.add(new ServiceError(errorConstant.getErrorCode(), String.format(errorConstant.getMessage(),
+						StringUtils.strip(processingMessageAsJson.get(INSTANCE).get(POINTER).asText(), "/"))));
+			} else {
+				StreamSupport.stream(((ArrayNode) processingMessageAsJson.get(field)).spliterator(), false)
+						.filter(element -> {
+							if (Objects.isNull(requiredFields)) {
+								return true;
+							} else {
+								return requiredFields.contains(element.asText());
+							}
+						}).forEach(
+								element -> errorList
+										.add(new ServiceError(errorConstant.getErrorCode(),
+												String.format(errorConstant.getMessage(),
+														StringUtils.strip(
+																processingMessageAsJson.get(INSTANCE).get(POINTER)
+																		.asText() + PATH_SEPERATOR + element.asText(),
+																"/")))));
 			}
-		} else if (LOCAL.getPropertySource().equals(propertySource)) {
-			try {
-				jsonSchemaNode = JsonLoader.fromResource(PATH_SEPERATOR + schemaName);
-				logger.debug("schema is loaded from LOCAL");
-			} catch (IOException e) {
-				ExceptionUtils.logRootCause(e);
-				throw new IdObjectIOException(SCHEMA_IO_EXCEPTION.getErrorCode(), SCHEMA_IO_EXCEPTION.getMessage(),
-						e.getCause());
-			}
-		} else if (APPLICATION_CONTEXT.getPropertySource().equals(propertySource)) {
-			jsonSchemaNode = schema;
-			logger.debug("schema is loaded from APPLICATION_CONTEXT");
 		}
-		return jsonSchemaNode;
 	}
 }

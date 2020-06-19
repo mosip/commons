@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.mosip.idrepository.core.constant.AuditEvents;
 import io.mosip.idrepository.core.constant.AuditModules;
 import io.mosip.idrepository.core.constant.IdType;
+import io.mosip.idrepository.core.dto.EventsDTO;
 import io.mosip.idrepository.core.dto.VidRequestDTO;
 import io.mosip.idrepository.core.dto.VidResponseDTO;
 import io.mosip.idrepository.core.exception.IdRepoAppException;
@@ -75,6 +76,9 @@ public class VidController {
 	/** The Constant RETRIEVE_UIN_BY_VID. */
 	private static final String RETRIEVE_UIN_BY_VID = "retrieveUinByVid";
 
+	/** The Constant RETRIEVE_VID_BY_UIN. */
+	private static final String RETRIEVE_VID_BY_UIN = "retrieveVidsByUin";
+
 	/** The Constant UPDATE_VID_STATUS. */
 	private static final String UPDATE_VID_STATUS = "updateVidStatus";
 
@@ -89,7 +93,7 @@ public class VidController {
 
 	/** The Vid Service. */
 	@Autowired
-	private VidService<VidRequestDTO, ResponseWrapper<VidResponseDTO>> vidService;
+	private VidService<VidRequestDTO, ResponseWrapper<VidResponseDTO>, ResponseWrapper<EventsDTO>> vidService;
 
 	/** The Vid Request Validator. */
 	@Autowired
@@ -170,6 +174,34 @@ public class VidController {
 		} finally {
 			auditHelper.audit(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.RETRIEVE_VID_UIN, vid, IdType.VID,
 					"Retrieve Uin By VID requested");
+		}
+	}
+
+	/**
+	 * This method will accept uin as parameter, it will return 
+	 * all its associated vids.
+	 *
+	 * @param vid the vid
+	 * @return the response entity
+	 * @throws IdRepoAppException the id repo app exception
+	 */
+	@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
+	@GetMapping(path = "/vid/uin/{UIN}", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ResponseWrapper<EventsDTO>> retrieveVidsByUin(@PathVariable("UIN") String uin)
+			throws IdRepoAppException {
+		try {
+			return new ResponseEntity<>(vidService.retrieveVidsByUin(uin), HttpStatus.OK);
+		} catch (InvalidIDException e) {
+			mosipLogger.error(IdRepoSecurityManager.getUser(), VID_CONTROLLER, RETRIEVE_VID_BY_UIN, e.getMessage());
+			throw new IdRepoAppException(INVALID_INPUT_PARAMETER.getErrorCode(),
+					String.format(INVALID_INPUT_PARAMETER.getErrorMessage(), UIN));
+		} catch (IdRepoAppException e) {
+			auditHelper.auditError(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.RETRIEVE_UIN_VID, uin, IdType.UIN, e);
+			mosipLogger.error(IdRepoSecurityManager.getUser(), VID_CONTROLLER, RETRIEVE_VID_BY_UIN, e.getMessage());
+			throw new IdRepoAppException(e.getErrorCode(), e.getErrorText(), e);
+		} finally {
+			auditHelper.audit(AuditModules.ID_REPO_VID_SERVICE, AuditEvents.RETRIEVE_UIN_VID, uin, IdType.UIN,
+					"Retrieve Vids By UIN requested");
 		}
 	}
 

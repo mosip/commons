@@ -53,4 +53,10 @@ public class SignatureCertificate {
 	@ApiModelProperty(notes = "Timestamp of expiry of public key", required = true)
 	private LocalDateTime expiryAt;
 
+	@Override
+	public String toString() {
+		return "SignatureCertificate [alias=" + alias + ", certificateEntry=" + certificateEntry + ", issuedAt="
+				+ issuedAt + ", expiryAt=" + expiryAt + "]";
+	}
+	  
 }

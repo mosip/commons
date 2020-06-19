@@ -2,7 +2,6 @@ package io.mosip.idrepository.identity.service.impl;
 
 import static io.mosip.idrepository.core.constant.IdRepoConstants.ACTIVE_STATUS;
 import static io.mosip.idrepository.core.constant.IdRepoConstants.CBEFF_FORMAT;
-import static io.mosip.idrepository.core.constant.IdRepoConstants.DATETIME_PATTERN;
 import static io.mosip.idrepository.core.constant.IdRepoConstants.FILE_FORMAT_ATTRIBUTE;
 import static io.mosip.idrepository.core.constant.IdRepoConstants.FILE_NAME_ATTRIBUTE;
 import static io.mosip.idrepository.core.constant.IdRepoConstants.FMR_ENABLED;
@@ -21,7 +20,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -77,7 +75,6 @@ import io.mosip.idrepository.identity.repository.UinRepo;
 import io.mosip.kernel.core.cbeffutil.entity.BIR;
 import io.mosip.kernel.core.cbeffutil.spi.CbeffUtil;
 import io.mosip.kernel.core.exception.ExceptionUtils;
-import io.mosip.kernel.core.exception.ParseException;
 import io.mosip.kernel.core.fsadapter.exception.FSAdapterException;
 import io.mosip.kernel.core.fsadapter.spi.FileSystemAdapter;
 import io.mosip.kernel.core.logger.spi.Logger;
@@ -190,10 +187,13 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 	/**
 	 * Adds the identity to DB.
 	 *
-	 * @param request the request
-	 * @param uin the uin
+	 * @param request
+	 *            the request
+	 * @param uin
+	 *            the uin
 	 * @return the uin
-	 * @throws IdRepoAppException the id repo app exception
+	 * @throws IdRepoAppException
+	 *             the id repo app exception
 	 */
 	@Override
 	public Uin addIdentity(IdRequestDTO request, String uin) throws IdRepoAppException {
@@ -206,17 +206,16 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 		String uinHash = modResult + SPLITTER + securityManager.hashwithSalt(uin.getBytes(), hashSalt.getBytes());
 		String encryptSalt = uinEncryptSaltRepo.retrieveSaltById(modResult);
 		String uinToEncrypt = modResult + SPLITTER + uin + SPLITTER + encryptSalt;
-        
+
 		List<UinDocument> docList = new ArrayList<>();
 		List<UinBiometric> bioList = new ArrayList<>();
 		Uin uinEntity;
-		if (Objects.nonNull(request.getRequest().getDocuments())
-				&& !request.getRequest().getDocuments().isEmpty()) {
+		if (Objects.nonNull(request.getRequest().getDocuments()) && !request.getRequest().getDocuments().isEmpty()) {
 			addDocuments(uinHash, identityInfo, request.getRequest().getDocuments(), uinRefId, docList, bioList);
 			uinEntity = new Uin(uinRefId, uinToEncrypt, uinHash, identityInfo, securityManager.hash(identityInfo),
 					request.getRequest().getRegistrationId(), request.getRequest().getBiometricReferenceId(),
 					env.getProperty(ACTIVE_STATUS), env.getProperty(MOSIP_PRIMARY_LANGUAGE),
-					IdRepoSecurityManager.getUser(), now(), null, null, false, null, bioList, docList);
+					IdRepoSecurityManager.getUser(), DateUtils.getUTCCurrentDateTime(), null, null, false, null, bioList, docList);
 			uinEntity = uinRepo.save(uinEntity);
 			mosipLogger.debug(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, ADD_IDENTITY,
 					"Record successfully saved in db with documents");
@@ -224,16 +223,16 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 			uinEntity = new Uin(uinRefId, uinToEncrypt, uinHash, identityInfo, securityManager.hash(identityInfo),
 					request.getRequest().getRegistrationId(), request.getRequest().getBiometricReferenceId(),
 					env.getProperty(ACTIVE_STATUS), env.getProperty(MOSIP_PRIMARY_LANGUAGE),
-					IdRepoSecurityManager.getUser(), now(), null, null, false, null, null, null);
+					IdRepoSecurityManager.getUser(), DateUtils.getUTCCurrentDateTime(), null, null, false, null, null, null);
 			uinEntity = uinRepo.save(uinEntity);
 			mosipLogger.debug(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, ADD_IDENTITY,
 					"Record successfully saved in db without documents");
 		}
 
-		uinHistoryRepo.save(new UinHistory(uinRefId, now(), uinEntity.getUin(), uinEntity.getUinHash(),
+		uinHistoryRepo.save(new UinHistory(uinRefId, DateUtils.getUTCCurrentDateTime(), uinEntity.getUin(), uinEntity.getUinHash(),
 				uinEntity.getUinData(), uinEntity.getUinDataHash(), uinEntity.getRegId(),
 				request.getRequest().getBiometricReferenceId(), env.getProperty(ACTIVE_STATUS),
-				env.getProperty(MOSIP_PRIMARY_LANGUAGE), IdRepoSecurityManager.getUser(), now(), null, null, false,
+				env.getProperty(MOSIP_PRIMARY_LANGUAGE), IdRepoSecurityManager.getUser(), DateUtils.getUTCCurrentDateTime(), null, null, false,
 				null));
 		return uinEntity;
 	}
@@ -241,13 +240,20 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 	/**
 	 * Stores the documents to FileSystem.
 	 *
-	 * @param uinHash the uin hash
-	 * @param identityInfo the identity info
-	 * @param documents the documents
-	 * @param uinRefId the uin ref id
-	 * @param docList the doc list
-	 * @param bioList the bio list
-	 * @throws IdRepoAppException the id repo app exception
+	 * @param uinHash
+	 *            the uin hash
+	 * @param identityInfo
+	 *            the identity info
+	 * @param documents
+	 *            the documents
+	 * @param uinRefId
+	 *            the uin ref id
+	 * @param docList
+	 *            the doc list
+	 * @param bioList
+	 *            the bio list
+	 * @throws IdRepoAppException
+	 *             the id repo app exception
 	 */
 	private void addDocuments(String uinHash, byte[] identityInfo, List<DocumentsDTO> documents, String uinRefId,
 			List<UinDocument> docList, List<UinBiometric> bioList) throws IdRepoAppException {
@@ -273,12 +279,18 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 	/**
 	 * Stores the biometric documents to FileSystem.
 	 *
-	 * @param uinHash the uin hash
-	 * @param uinRefId the uin ref id
-	 * @param bioList the bio list
-	 * @param doc the doc
-	 * @param docType the doc type
-	 * @throws IdRepoAppException the id repo app exception
+	 * @param uinHash
+	 *            the uin hash
+	 * @param uinRefId
+	 *            the uin ref id
+	 * @param bioList
+	 *            the bio list
+	 * @param doc
+	 *            the doc
+	 * @param docType
+	 *            the doc type
+	 * @throws IdRepoAppException
+	 *             the id repo app exception
 	 */
 	private void addBiometricDocuments(String uinHash, String uinRefId, List<UinBiometric> bioList, DocumentsDTO doc,
 			JsonNode docType) throws IdRepoAppException {
@@ -304,23 +316,29 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 
 		bioList.add(new UinBiometric(uinRefId, fileRefId, doc.getCategory(), docType.get(FILE_NAME_ATTRIBUTE).asText(),
 				securityManager.hash(data), env.getProperty(MOSIP_PRIMARY_LANGUAGE), IdRepoSecurityManager.getUser(),
-				now(), null, null, false, null));
+				DateUtils.getUTCCurrentDateTime(), null, null, false, null));
 
-		uinBioHRepo.save(new UinBiometricHistory(uinRefId, now(), fileRefId, doc.getCategory(),
+		uinBioHRepo.save(new UinBiometricHistory(uinRefId, DateUtils.getUTCCurrentDateTime(), fileRefId, doc.getCategory(),
 				docType.get(FILE_NAME_ATTRIBUTE).asText(), securityManager.hash(doc.getValue().getBytes()),
-				env.getProperty(MOSIP_PRIMARY_LANGUAGE), IdRepoSecurityManager.getUser(), now(), null, null, false,
+				env.getProperty(MOSIP_PRIMARY_LANGUAGE), IdRepoSecurityManager.getUser(), DateUtils.getUTCCurrentDateTime(), null, null, false,
 				null));
 	}
 
 	/**
 	 * Stores the demographic documents to FileSystem.
 	 *
-	 * @param uinHash the uin hash
-	 * @param uinRefId the uin ref id
-	 * @param docList the doc list
-	 * @param doc the doc
-	 * @param docType the doc type
-	 * @throws IdRepoAppException the id repo app exception
+	 * @param uinHash
+	 *            the uin hash
+	 * @param uinRefId
+	 *            the uin ref id
+	 * @param docList
+	 *            the doc list
+	 * @param doc
+	 *            the doc
+	 * @param docType
+	 *            the doc type
+	 * @throws IdRepoAppException
+	 *             the id repo app exception
 	 */
 	private void addDemographicDocuments(String uinHash, String uinRefId, List<UinDocument> docList, DocumentsDTO doc,
 			JsonNode docType) throws IdRepoAppException {
@@ -341,21 +359,24 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 		docList.add(new UinDocument(uinRefId, doc.getCategory(), docType.get(TYPE).asText(), fileRefId,
 				docType.get(FILE_NAME_ATTRIBUTE).asText(), docType.get(FILE_FORMAT_ATTRIBUTE).asText(),
 				securityManager.hash(data), env.getProperty(MOSIP_PRIMARY_LANGUAGE), IdRepoSecurityManager.getUser(),
-				now(), null, null, false, null));
+				DateUtils.getUTCCurrentDateTime(), null, null, false, null));
 
-		uinDocHRepo.save(new UinDocumentHistory(uinRefId, now(), doc.getCategory(), docType.get(TYPE).asText(),
+		uinDocHRepo.save(new UinDocumentHistory(uinRefId, DateUtils.getUTCCurrentDateTime(), doc.getCategory(), docType.get(TYPE).asText(),
 				fileRefId, docType.get(FILE_NAME_ATTRIBUTE).asText(), docType.get(FILE_FORMAT_ATTRIBUTE).asText(),
 				securityManager.hash(data), env.getProperty(MOSIP_PRIMARY_LANGUAGE), IdRepoSecurityManager.getUser(),
-				now(), null, null, false, null));
+				DateUtils.getUTCCurrentDateTime(), null, null, false, null));
 	}
 
 	/**
 	 * Convert to FMR.
 	 *
-	 * @param category the category
-	 * @param encodedCbeffFile the encoded cbeff file
+	 * @param category
+	 *            the category
+	 * @param encodedCbeffFile
+	 *            the encoded cbeff file
 	 * @return the byte[]
-	 * @throws IdRepoAppException the id repo app exception
+	 * @throws IdRepoAppException
+	 *             the id repo app exception
 	 */
 	private byte[] convertToFMR(String category, String encodedCbeffFile) throws IdRepoAppException {
 		try {
@@ -384,16 +405,18 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 	/**
 	 * Retrieve identity by uin from DB.
 	 *
-	 * @param uinHash the uin hash
-	 * @param type the type
+	 * @param uinHash
+	 *            the uin hash
+	 * @param type
+	 *            the type
 	 * @return the uin
-	 * @throws IdRepoAppException the id repo app exception
+	 * @throws IdRepoAppException
+	 *             the id repo app exception
 	 */
 	@Override
 	public Uin retrieveIdentityByUin(String uinHash, String type) throws IdRepoAppException {
 		return uinRepo.findByUinHash(uinHash);
 	}
-	
 
 	/*
 	 * (non-Javadoc)
@@ -419,7 +442,6 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 		int modResult = (int) (Long.parseLong(uin) % moduloValue);
 		String hashSalt = uinHashSaltRepo.retrieveSaltById(modResult);
 		String uinHash = modResult + SPLITTER + securityManager.hashwithSalt(uin.getBytes(), hashSalt.getBytes());
-
 		try {
 			Uin uinObject = retrieveIdentityByUin(uinHash, null);
 			uinObject.setRegId(request.getRequest().getRegistrationId());
@@ -427,7 +449,7 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 					&& !StringUtils.equals(uinObject.getStatusCode(), request.getRequest().getStatus())) {
 				uinObject.setStatusCode(request.getRequest().getStatus());
 				uinObject.setUpdatedBy(IdRepoSecurityManager.getUser());
-				uinObject.setUpdatedDateTime(now());
+				uinObject.setUpdatedDateTime(DateUtils.getUTCCurrentDateTime());
 			}
 			if (Objects.nonNull(request.getRequest()) && Objects.nonNull(request.getRequest().getIdentity())) {
 				RequestDTO requestDTO = request.getRequest();
@@ -443,30 +465,31 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 					uinObject.setUinData(convertToBytes(convertToObject(dbData.jsonString().getBytes(), Map.class)));
 					uinObject.setUinDataHash(securityManager.hash(uinObject.getUinData()));
 					uinObject.setUpdatedBy(IdRepoSecurityManager.getUser());
-					uinObject.setUpdatedDateTime(now());
+					uinObject.setUpdatedDateTime(DateUtils.getUTCCurrentDateTime());
 				}
 
 				if (Objects.nonNull(requestDTO.getDocuments()) && !requestDTO.getDocuments().isEmpty()) {
 					updateDocuments(uinHash, uinObject, requestDTO);
 					uinObject.setUpdatedBy(IdRepoSecurityManager.getUser());
-					uinObject.setUpdatedDateTime(now());
+					uinObject.setUpdatedDateTime(DateUtils.getUTCCurrentDateTime());
 				}
 			}
-			
+
 			uinObject = uinRepo.save(uinObject);
 
-			uinHistoryRepo.save(new UinHistory(uinObject.getUinRefId(), now(), uinObject.getUin(),
+			uinHistoryRepo.save(new UinHistory(uinObject.getUinRefId(), DateUtils.getUTCCurrentDateTime(), uinObject.getUin(),
 					uinObject.getUinHash(), uinObject.getUinData(), uinObject.getUinDataHash(), uinObject.getRegId(),
 					request.getRequest().getBiometricReferenceId(), uinObject.getStatusCode(),
-					env.getProperty(MOSIP_PRIMARY_LANGUAGE), IdRepoSecurityManager.getUser(), now(),
-					IdRepoSecurityManager.getUser(), now(), false, null));
+					env.getProperty(MOSIP_PRIMARY_LANGUAGE), IdRepoSecurityManager.getUser(), DateUtils.getUTCCurrentDateTime(),
+					IdRepoSecurityManager.getUser(), DateUtils.getUTCCurrentDateTime(), false, null));
 
 			return uinObject;
 		} catch (JSONException | InvalidJsonException e) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, UPDATE_IDENTITY, e.getMessage());
 			throw new IdRepoAppException(ID_OBJECT_PROCESSING_FAILED, e);
 		} catch (IdRepoAppUncheckedException e) {
-			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, UPDATE_IDENTITY, "\n" + e.getErrorText());
+			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, UPDATE_IDENTITY,
+					"\n" + e.getErrorText());
 			throw new IdRepoAppException(e.getErrorCode(), e.getErrorText(), e);
 		}
 	}
@@ -474,11 +497,16 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 	/**
 	 * Update identity.
 	 *
-	 * @param inputData the input data
-	 * @param dbData the db data
-	 * @param comparisonResult the comparison result
-	 * @throws JSONException the JSON exception
-	 * @throws IdRepoAppException the id repo app exception
+	 * @param inputData
+	 *            the input data
+	 * @param dbData
+	 *            the db data
+	 * @param comparisonResult
+	 *            the comparison result
+	 * @throws JSONException
+	 *             the JSON exception
+	 * @throws IdRepoAppException
+	 *             the id repo app exception
 	 */
 	private void updateIdentityObject(DocumentContext inputData, DocumentContext dbData,
 			JSONCompareResult comparisonResult) throws JSONException, IdRepoAppException {
@@ -508,9 +536,12 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 	/**
 	 * Update missing fields.
 	 *
-	 * @param dbData the db data
-	 * @param comparisonResult the comparison result
-	 * @throws IdRepoAppException the id repo app exception
+	 * @param dbData
+	 *            the db data
+	 * @param comparisonResult
+	 *            the comparison result
+	 * @throws IdRepoAppException
+	 *             the id repo app exception
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void updateMissingFields(DocumentContext dbData, JSONCompareResult comparisonResult)
@@ -546,10 +577,14 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 	/**
 	 * Update failing fields.
 	 *
-	 * @param inputData the input data
-	 * @param dbData the db data
-	 * @param comparisonResult the comparison result
-	 * @throws IdRepoAppException the id repo app exception
+	 * @param inputData
+	 *            the input data
+	 * @param dbData
+	 *            the db data
+	 * @param comparisonResult
+	 *            the comparison result
+	 * @throws IdRepoAppException
+	 *             the id repo app exception
 	 */
 	private void updateFailingFields(DocumentContext inputData, DocumentContext dbData,
 			JSONCompareResult comparisonResult) throws IdRepoAppException {
@@ -585,9 +620,12 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 	/**
 	 * Update missing values.
 	 *
-	 * @param inputData the input data
-	 * @param dbData the db data
-	 * @param comparisonResult the comparison result
+	 * @param inputData
+	 *            the input data
+	 * @param dbData
+	 *            the db data
+	 * @param comparisonResult
+	 *            the comparison result
 	 */
 	@SuppressWarnings("unchecked")
 	private void updateMissingValues(DocumentContext inputData, DocumentContext dbData,
@@ -619,10 +657,14 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 	/**
 	 * Update documents.
 	 *
-	 * @param uinHash the uin hash
-	 * @param uinObject the uin object
-	 * @param requestDTO the request DTO
-	 * @throws IdRepoAppException the id repo app exception
+	 * @param uinHash
+	 *            the uin hash
+	 * @param uinObject
+	 *            the uin object
+	 * @param requestDTO
+	 *            the request DTO
+	 * @throws IdRepoAppException
+	 *             the id repo app exception
 	 */
 	private void updateDocuments(String uinHash, Uin uinObject, RequestDTO requestDTO) throws IdRepoAppException {
 		List<UinDocument> docList = new ArrayList<>();
@@ -667,9 +709,12 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 	/**
 	 * Update cbeff.
 	 *
-	 * @param uinObject the uin object
-	 * @param requestDTO the request DTO
-	 * @throws IdRepoAppException the id repo app exception
+	 * @param uinObject
+	 *            the uin object
+	 * @param requestDTO
+	 *            the request DTO
+	 * @throws IdRepoAppException
+	 *             the id repo app exception
 	 */
 	private void updateCbeff(Uin uinObject, RequestDTO requestDTO) throws IdRepoAppException {
 		ObjectNode identityMap = (ObjectNode) convertToObject(uinObject.getUinData(), ObjectNode.class);
@@ -689,7 +734,8 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 									data)));
 						}
 					} catch (FSAdapterException e) {
-						mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, GET_FILES, e.getMessage());
+						mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, GET_FILES,
+								e.getMessage());
 						throw new IdRepoAppUncheckedException(
 								e.getErrorCode().equals(HDFSAdapterErrorCode.FILE_NOT_FOUND_EXCEPTION.getErrorCode())
 										? FILE_NOT_FOUND
@@ -705,30 +751,15 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 	}
 
 	/**
-	 * Get the current time.
-	 *
-	 * @return the local date time
-	 * @throws IdRepoAppException the id repo app exception
-	 */
-	private LocalDateTime now() throws IdRepoAppException {
-		try {
-			return DateUtils.parseUTCToLocalDateTime(
-					DateUtils.formatDate(new Date(), env.getProperty(DATETIME_PATTERN)),
-					env.getProperty(DATETIME_PATTERN));
-		} catch (ParseException | io.mosip.kernel.core.exception.IllegalArgumentException e) {
-			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_SERVICE_IMPL, "now()", e.getMessage());
-			throw new IdRepoAppException(INVALID_INPUT_PARAMETER.getErrorCode(),
-					String.format(INVALID_INPUT_PARAMETER.getErrorCode(), "DATETIME_PATTERN"), e);
-		}
-	}
-
-	/**
 	 * Convert to object.
 	 *
-	 * @param identity the identity
-	 * @param clazz the clazz
+	 * @param identity
+	 *            the identity
+	 * @param clazz
+	 *            the clazz
 	 * @return the object
-	 * @throws IdRepoAppException the id repo app exception
+	 * @throws IdRepoAppException
+	 *             the id repo app exception
 	 */
 	private Object convertToObject(byte[] identity, Class<?> clazz) throws IdRepoAppException {
 		try {
@@ -742,9 +773,11 @@ public class IdRepoServiceImpl implements IdRepoService<IdRequestDTO, Uin> {
 	/**
 	 * Convert to bytes.
 	 *
-	 * @param identity the identity
+	 * @param identity
+	 *            the identity
 	 * @return the byte[]
-	 * @throws IdRepoAppException the id repo app exception
+	 * @throws IdRepoAppException
+	 *             the id repo app exception
 	 */
 	private byte[] convertToBytes(Object identity) throws IdRepoAppException {
 		try {

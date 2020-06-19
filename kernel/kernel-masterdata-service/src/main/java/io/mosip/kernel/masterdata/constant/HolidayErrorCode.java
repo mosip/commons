@@ -4,8 +4,10 @@ public enum HolidayErrorCode {
 
 	HOLIDAY_FETCH_EXCEPTION("KER-MSD-019", "Error occured while fetching Holidays"),
 	HOLIDAY_NOTFOUND("KER-MSD-020", "Holiday not found"),
-	HOLIDAY_INSERT_EXCEPTION("KER-MSD-065", "Error Occured while inserting holiday"),
-	HOLIDAY_UPDATE_EXCEPTION("KER-MSD-099", "Error occurred while updating Holiday"),
+	HOLIDAY_INSERT_EXCEPTION("KER-MSD-729", "Error Occured while inserting holiday"),
+	HOLIDAY_UPDATE_EXCEPTION("KER-MSD-731", "Error occurred while updating Holiday"),
+	HOLIDAY_LOCATION_INVALID("KER-MSD-730", "Invalid 'location_code' received"),
+	UPDATE_HOLIDAY_LOCATION_INVALID("KER-MSD-732", "Invalid 'location_code' received"),
 	HOLIDAY_DELETE_EXCEPTION("KER-MSD-100", "Error occurred while deleting Holiday");
 
 	private final String errorCode;

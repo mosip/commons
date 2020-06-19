@@ -2,9 +2,9 @@ package io.mosip.kernel.keymanagerservice.repository;
 
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import io.mosip.kernel.core.dataaccess.spi.repository.BaseRepository;
 import io.mosip.kernel.keymanagerservice.entity.KeyPolicy;
 
 /**
@@ -16,7 +16,7 @@ import io.mosip.kernel.keymanagerservice.entity.KeyPolicy;
  *
  */
 @Repository
-public interface KeyPolicyRepository extends BaseRepository<KeyPolicy, String> {
+public interface KeyPolicyRepository extends JpaRepository<KeyPolicy, String> {
 
 	/**
 	 * Function to find KeyPolicy by applicationId

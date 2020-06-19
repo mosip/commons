@@ -2,11 +2,8 @@ package io.mosip.kernel.masterdata.dto;
 
 import java.time.LocalDate;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import io.mosip.kernel.masterdata.validator.ValidLangCode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,38 +17,23 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class HolidayUpdateDto {
-	@NotNull
-	private int id;
+	
+	private Integer id;
 
-	@Size(min = 1, max = 36)
-	@NotBlank
 	private String locationCode;
 
-	@NotNull
+	@DateTimeFormat(pattern="yyyy-mm-dd")
 	private LocalDate holidayDate;
 
-	@NotBlank
-	@Size(min = 1, max = 64)
 	private String holidayName;
 
-	@Size(min = 1, max = 128)
-	@NotBlank
 	private String holidayDesc;
-
-	@Size(min = 1, max = 3)
-	@NotBlank
-	@ValidLangCode
+	
+	
 	private String langCode;
 
-	@NotNull
+	
 	private Boolean isActive;
 
-	@Size(min = 1, max = 64)
-	private String newHolidayName;
-
-	private LocalDate newHolidayDate;
-
-	@Size(min = 1, max = 128)
-	private String newHolidayDesc;
 
 }

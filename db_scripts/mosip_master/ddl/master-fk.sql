@@ -8,7 +8,7 @@
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
--- 
+-- 17-Apr-2020          Sadanandegowda      Added FK constraints for location Hierarchy Level and Name
 -- ------------------------------------------------------------------------------------------
 
 -- Foreign Key Constraints Same DB/Schema tables.
@@ -448,5 +448,12 @@ ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ALTER TABLE master.reg_exceptional_holiday DROP CONSTRAINT IF EXISTS fk_regeh_regcntr CASCADE;
 ALTER TABLE master.reg_exceptional_holiday ADD CONSTRAINT fk_regeh_regcntr FOREIGN KEY (regcntr_id,lang_code)
 REFERENCES master.registration_center (id,lang_code) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: fk_loc_lochierlst | type: CONSTRAINT --
+-- ALTER TABLE master.location DROP CONSTRAINT IF EXISTS fk_loc_lochierlst CASCADE;
+ALTER TABLE master.location ADD CONSTRAINT fk_loc_lochierlst FOREIGN KEY (hierarchy_level,hierarchy_level_name,lang_code)
+REFERENCES master.loc_hierarchy_list (hierarchy_level,hierarchy_level_name,lang_code) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --

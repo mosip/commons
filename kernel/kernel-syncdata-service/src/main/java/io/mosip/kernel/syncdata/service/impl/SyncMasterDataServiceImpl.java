@@ -42,6 +42,7 @@ import io.mosip.kernel.syncdata.dto.DocumentTypeDto;
 import io.mosip.kernel.syncdata.dto.FoundationalTrustProviderDto;
 import io.mosip.kernel.syncdata.dto.GenderDto;
 import io.mosip.kernel.syncdata.dto.HolidayDto;
+import io.mosip.kernel.syncdata.dto.IdSchemaDto;
 import io.mosip.kernel.syncdata.dto.IdTypeDto;
 import io.mosip.kernel.syncdata.dto.IndividualTypeDto;
 import io.mosip.kernel.syncdata.dto.LanguageDto;
@@ -96,6 +97,7 @@ import io.mosip.kernel.syncdata.service.helper.ApplicationDataHelper;
 import io.mosip.kernel.syncdata.service.helper.DeviceDataHelper;
 import io.mosip.kernel.syncdata.service.helper.DocumentDataHelper;
 import io.mosip.kernel.syncdata.service.helper.HistoryDataHelper;
+import io.mosip.kernel.syncdata.service.helper.IdentitySchemaHelper;
 import io.mosip.kernel.syncdata.service.helper.IndividualDataHelper;
 import io.mosip.kernel.syncdata.service.helper.MachineDataHelper;
 import io.mosip.kernel.syncdata.service.helper.MiscellaneousDataHelper;
@@ -191,6 +193,9 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 	
 	@Autowired
 	private MapperUtils mapper;
+	
+	@Autowired
+	private IdentitySchemaHelper identitySchemaHelper;
 
 	/*
 	 * (non-Javadoc)
@@ -602,7 +607,7 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 		historyDataHelper.retrieveData(serviceHelper, futures);
 		
 		MiscellaneousDataHelper miscellaneousDataHelper = new MiscellaneousDataHelper(machineId, lastUpdated, currentTimestamp);
-		miscellaneousDataHelper.retrieveData(serviceHelper, futures);
+		miscellaneousDataHelper.retrieveData(serviceHelper, futures);		
 		
 		CompletableFuture array [] = new CompletableFuture[futures.size()];
 		CompletableFuture<Void> future = CompletableFuture.allOf(futures.toArray(array));		
@@ -627,6 +632,9 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 		documentDataHelper.fillRetrievedData(serviceHelper, list);
 		historyDataHelper.fillRetrievedData(serviceHelper, list);
 		miscellaneousDataHelper.fillRetrievedData(serviceHelper, list);
+		
+		//Fills dynamic field data
+		identitySchemaHelper.fillRetrievedData(list);
 		
 		response.setDataToSync(list);
 		return response;
@@ -677,7 +685,6 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 	
 	
 	@Override
-	@Transactional("syncDataTransactionManager")
 	public UploadPublicKeyResponseDto validateKeyMachineMapping(UploadPublicKeyRequestDto dto) {
 		List<Machine> machines = machineRepo.findByMachineNameAndIsActive(dto.getMachineName());
 		
@@ -696,6 +703,11 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 		
 		throw new RequestException(MasterDataErrorCode.MACHINE_PUBLIC_KEY_NOT_WHITELISTED.getErrorCode(),
 				MasterDataErrorCode.MACHINE_PUBLIC_KEY_NOT_WHITELISTED.getErrorMessage());
+	}
+	
+	@Override
+	public IdSchemaDto getLatestPublishedIdSchema(LocalDateTime lastUpdated, double schemaVersion) {
+		return identitySchemaHelper.getLatestIdentitySchema(lastUpdated, schemaVersion);		
 	}
 
 }

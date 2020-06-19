@@ -19,6 +19,7 @@ import com.google.common.collect.Lists;
 
 import io.mosip.idrepository.identity.provider.impl.FingerprintProvider;
 import io.mosip.kernel.bioapi.impl.BioApiImpl;
+import io.mosip.kernel.core.bioapi.model.Response;
 import io.mosip.kernel.core.cbeffutil.entity.BDBInfo;
 import io.mosip.kernel.core.cbeffutil.entity.BIR;
 import io.mosip.kernel.core.cbeffutil.entity.BIRInfo;
@@ -65,7 +66,9 @@ public class FingerprintProviderTest {
 				.build();
 		BIRType birType = new BIRType();
 		birType.setBDB(rFinger.getBdb());
-		Mockito.when(bioApiImpl.extractTemplate(Mockito.any(), Mockito.any())).thenReturn(rFinger);
+		Response<BIR> response = new Response<>();
+		response.setResponse(rFinger);
+		Mockito.when(bioApiImpl.extractTemplate(Mockito.any(), Mockito.any())).thenReturn(response);
 		List<BIR> data = fp.convertFIRtoFMR(Collections.singletonList(rFinger));
 		assertTrue(data.get(0).getBdbInfo().getFormat().getType().contentEquals("2"));
 	}
@@ -97,7 +100,9 @@ public class FingerprintProviderTest {
 				.build();
 		BIRType birType = new BIRType();
 		birType.setBDB(rFinger.getBdb());
-		Mockito.when(bioApiImpl.extractTemplate(Mockito.any(), Mockito.any())).thenReturn(rFinger);
+		Response<BIR> response = new Response<>();
+		response.setResponse(rFinger);
+		Mockito.when(bioApiImpl.extractTemplate(Mockito.any(), Mockito.any())).thenReturn(response);
 		List<BIR> data = fp
 				.convertFIRtoFMR(Lists.newArrayList(rFinger, rFinger2));
 		assertTrue(data.get(0).getBdbInfo().getFormat().getType().contentEquals("2"));

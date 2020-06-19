@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <project
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>io.mosip.kernel</groupId>
@@ -10,9 +11,10 @@
 	</parent>
 	<artifactId>kernel-masterdata-service</artifactId>
 	<name>kernel-masterdata-service</name>
-	<version>1.0.7</version>
+	<version>1.0.9-SNAPSHOT</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<kernel.applicant-type.version>1.0.6</kernel.applicant-type.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -23,7 +25,12 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-auth-adapter</artifactId>
-			<version>1.0.6</version>
+			<version>1.0.9-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>io.mosip.kernel</groupId>
+			<artifactId>kernel-applicanttype-api</artifactId>
+			<version>${kernel.applicant-type.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
@@ -40,7 +47,6 @@
 			<artifactId>kernel-datamapper-orika</artifactId>
 			<version>1.0.6</version>
 		</dependency>
-
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-dataaccess-hibernate</artifactId>

@@ -9,11 +9,12 @@ import io.mosip.kernel.core.signatureutil.model.SignatureResponse;
  * SignatureUtil interface.
  * 
  * @author Srinivasan
+ * @author Urvil
  * @since 1.0.0
  */
 public interface SignatureUtil {
 
-	public SignatureResponse sign(String data, String timestamp);
+	public SignatureResponse sign(String data);
 
 	/**
 	 * Validate with public key.
@@ -38,6 +39,5 @@ public interface SignatureUtil {
 	 * @throws InvalidKeySpecException  the invalid key spec exception
 	 * @throws NoSuchAlgorithmException the no such algorithm exception
 	 */
-	public boolean validate(String signature, String data, String timestamp)
-			throws InvalidKeySpecException, NoSuchAlgorithmException;
+	public boolean validate(String signature, String data, String timestamp);
 }

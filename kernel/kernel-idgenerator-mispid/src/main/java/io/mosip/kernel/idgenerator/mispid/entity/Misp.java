@@ -16,10 +16,10 @@ import lombok.Data;
  * @author Ritesh Sinha
  * @author Sidhant Agarwal
  * @since 1.0.0
- *
+ * @author Nagarjuna k
  */
 @Entity
-@Table(name = "tspid_seq", schema = "master")
+@Table(name = "tspid_seq", schema = "pmp")
 @Data
 public class Misp {
 

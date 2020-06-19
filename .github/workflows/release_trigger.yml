@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+# This workflow will build and publish package using Maven, Docker when a release is published 
+=======
+>>>>>>> master
 
 name: Release maven packages and docker upon a release
 
@@ -5,10 +9,18 @@ on:
   release: 
     types: [published]
   
+<<<<<<< HEAD
+
+=======
+>>>>>>> master
 jobs:
   build:
 
     runs-on: ubuntu-latest
+<<<<<<< HEAD
+
+=======
+>>>>>>> master
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 1.8
@@ -36,6 +48,20 @@ jobs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-${{ env.BRANCH_NAME }}
+<<<<<<< HEAD
+          
+    - name: Install xmllint
+      run: |
+        sudo apt-get update
+        sudo apt-get install libxml2-utils
+    
+    - name: Setup the settings file for ossrh server
+      run: echo "<settings> <servers>  <server>  <id>ossrh</id>    <username>${{secrets.ossrh_user}}</username> <password>${{secrets.ossrh_secret}}</password> </server> </servers> <profiles> <profile>     <id>ossrh</id> <activation> <activeByDefault>true</activeByDefault> </activation>  <properties> <gpg.executable>gpg2</gpg.executable> <gpg.passphrase>${{secrets.gpg_secret}}</gpg.passphrase> </properties> </profile> <profile> <id>allow-snapshots</id>       <activation><activeByDefault>true</activeByDefault></activation> <repositories> <repository>        <id>snapshots-repo</id> <url>https://oss.sonatype.org/content/repositories/snapshots</url> <releases><enabled>false</enabled></releases> <snapshots><enabled>true</enabled></snapshots> </repository>  <repository>         <id>releases-repo</id>  <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>         <releases><enabled>true</enabled></releases>         <snapshots><enabled>false</enabled></snapshots> </repository> </repositories>  </profile> <profile> <id>sonar</id> <properties>  <sonar.sources>.</sonar.sources> <sonar.host.url>https://sonarcloud.io</sonar.host.url>  </properties> <activation> <activeByDefault>false</activeByDefault> </activation> </profile> </profiles> </settings>" > $GITHUB_WORKSPACE/settings.xml
+    
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml -s $GITHUB_WORKSPACE/settings.xml
+         
+=======
 
     - name: Remove snapshots and build with maven
       run: |
@@ -50,6 +76,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.access_token }
         GPG_TTY: $(tty)
+>>>>>>> master
     - name: Ready the springboot artifacts
       run: find -name '*.jar' -executable -type f  -exec zip release.zip {} +
 
@@ -59,13 +86,74 @@ jobs:
         name: release
         path: ./release.zip
   
+<<<<<<< HEAD
+  publish_to_nexus:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        ref: ${{ github.ref }}
+        java-version: 1.8
+        server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
+        settings-path: ${{ github.workspace }} # location for the settings.xml file
+
+    - name: Setup branch and GPG public key 
+      run: |
+        # Strip git ref prefix from version
+        echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+        echo ${{ env.BRANCH_NAME }}
+        echo "::set-env name=GPG_TTY::$(tty)"
+        echo ${{ env.GPG_TTY }}
+        sudo apt-get --yes install gnupg2
+        gpg2 --import ./.github/keys/mosipgpgkey_pub.gpg 
+        gpg2 --quiet --batch --passphrase=${{secrets.gpg_secret}}  --allow-secret-key-import --import ./.github/keys/mosipgpgkey_sec.gpg 
+     
+    - uses: actions/cache@v1
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-${{ env.BRANCH_NAME }}
+          
+    - name: Install xmllint
+      run: |
+        sudo apt-get update
+        sudo apt-get install libxml2-utils
+
+    - name: Setup the settings file for ossrh server
+      run: echo "<settings> <servers>  <server>  <id>ossrh</id>    <username>${{secrets.ossrh_user}}</username> <password>${{secrets.ossrh_secret}}</password> </server> </servers> <profiles> <profile>     <id>ossrh</id> <activation> <activeByDefault>true</activeByDefault> </activation>  <properties> <gpg.executable>gpg2</gpg.executable> <gpg.passphrase>${{secrets.gpg_secret}}</gpg.passphrase> </properties> </profile> <profile> <id>allow-snapshots</id>       <activation><activeByDefault>true</activeByDefault></activation> <repositories> <repository>        <id>snapshots-repo</id> <url>https://oss.sonatype.org/content/repositories/snapshots</url> <releases><enabled>false</enabled></releases> <snapshots><enabled>true</enabled></snapshots> </repository>  <repository>         <id>releases-repo</id>  <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>         <releases><enabled>true</enabled></releases>         <snapshots><enabled>false</enabled></snapshots> </repository> </repositories>  </profile> <profile> <id>sonar</id> <properties>  <sonar.sources>.</sonar.sources> <sonar.host.url>https://sonarcloud.io</sonar.host.url>  </properties> <activation> <activeByDefault>false</activeByDefault> </activation> </profile> </profiles> </settings>" > $GITHUB_WORKSPACE/settings.xml
+      
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml -s $GITHUB_WORKSPACE/settings.xml
+        
+    - name: Publish the maven package
+      run: |
+        chmod +x ./deploy.sh
+        ./deploy.sh kernel $GITHUB_WORKSPACE/settings.xml .*
+        ./deploy.sh id-repository $GITHUB_WORKSPACE/settings.xml .* 
+      env:
+        GPG_TTY: $(tty)
+    - name: Analyze with SonarCloud
+      run: mvn -B verify sonar:sonar -Dsonar.projectKey=${{ secrets.PROJECT_KEY }} -Dsonar.organization=${{ secrets.ORG_KEY }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}     
+=======
    #TODO: We need to use a different docker namespace for release builds
+>>>>>>> master
   docker-id-repository-vid-service:
     needs: build
 
     runs-on: ubuntu-latest
     env:
+<<<<<<< HEAD
+      NAMESPACE: ${{ secrets. dev_namespace_docker_hub }}
+=======
       NAMESPACE: mosipdev
+>>>>>>> master
       SERVICE_NAME: id-repository-vid-service
       SERVICE_LOCATION: id-repository/id-repository-vid-service
 
@@ -76,6 +164,15 @@ jobs:
           name: release
           path: ./
 
+<<<<<<< HEAD
+      - name: Setup branch and GPG public key 
+        run: |
+          # Strip git ref prefix from version
+          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo ${{ env.BRANCH_NAME }}
+        
+=======
+>>>>>>> master
       - name: Get version info from pom
         id: getPomVersion
         uses: mavrosxristoforos/get-xml-info@1.0
@@ -83,7 +180,11 @@ jobs:
           xml-file: ./${{ env.SERVICE_LOCATION }}/pom.xml 
           xpath: /*[local-name()="project"]/*[local-name()="version"] 
       
+<<<<<<< HEAD
+      - name: Unzip and extract
+=======
       - name: Unzip and extract the id-repository-vid-service
+>>>>>>> master
         run: unzip -uj "release.zip" "${{ env.SERVICE_LOCATION }}/target/*" -d "./${{ env.SERVICE_LOCATION }}/target"
       
       - name: Build image
@@ -101,7 +202,11 @@ jobs:
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           echo "push version ${{steps.getPomVersion.outputs.info}}"
+<<<<<<< HEAD
+          VERSION=$BRANCH_NAME
+=======
           VERSION=${{steps.getPomVersion.outputs.info}}
+>>>>>>> master
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
@@ -112,7 +217,11 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
+<<<<<<< HEAD
+      NAMESPACE: ${{ secrets. dev_namespace_docker_hub }}
+=======
       NAMESPACE: mosipdev
+>>>>>>> master
       SERVICE_NAME: id-repository-identity-service
       SERVICE_LOCATION: id-repository/id-repository-identity-service
 
@@ -122,6 +231,15 @@ jobs:
         with:
           name: release
           path: ./
+<<<<<<< HEAD
+      
+      - name: Setup branch name 
+        run: |
+          # Strip git ref prefix from version
+          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo ${{ env.BRANCH_NAME }}
+=======
+>>>>>>> master
 
       - name: Get version info from pom
         id: getPomVersion
@@ -130,7 +248,11 @@ jobs:
           xml-file: ./${{ env.SERVICE_LOCATION }}/pom.xml 
           xpath: /*[local-name()="project"]/*[local-name()="version"] 
       
+<<<<<<< HEAD
+      - name: Unzip and extract 
+=======
       - name: Unzip and extract the id-repository-vid-service
+>>>>>>> master
         run: unzip -uj "release.zip" "${{ env.SERVICE_LOCATION }}/target/*" -d "./${{ env.SERVICE_LOCATION }}/target"
       
       - name: Build image
@@ -148,7 +270,11 @@ jobs:
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           echo "push version ${{steps.getPomVersion.outputs.info}}"
+<<<<<<< HEAD
+          VERSION=$BRANCH_NAME
+=======
           VERSION=${{steps.getPomVersion.outputs.info}}
+>>>>>>> master
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
@@ -159,7 +285,11 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
+<<<<<<< HEAD
+      NAMESPACE: ${{ secrets. dev_namespace_docker_hub }}
+=======
       NAMESPACE: mosipdev
+>>>>>>> master
       SERVICE_NAME: kernel-masterdata-service
       SERVICE_LOCATION: kernel/kernel-masterdata-service
 
@@ -170,6 +300,15 @@ jobs:
           name: release
           path: ./
 
+<<<<<<< HEAD
+      - name: Setup branch name 
+        run: |
+          # Strip git ref prefix from version
+          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo ${{ env.BRANCH_NAME }}
+
+=======
+>>>>>>> master
       - name: Get version info from pom
         id: getPomVersion
         uses: mavrosxristoforos/get-xml-info@1.0
@@ -195,7 +334,11 @@ jobs:
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           echo "push version ${{steps.getPomVersion.outputs.info}}"
+<<<<<<< HEAD
+          VERSION=$BRANCH_NAME
+=======
           VERSION=${{steps.getPomVersion.outputs.info}}
+>>>>>>> master
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
@@ -206,7 +349,11 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
+<<<<<<< HEAD
+      NAMESPACE: ${{ secrets. dev_namespace_docker_hub }}
+=======
       NAMESPACE: mosipdev
+>>>>>>> master
       SERVICE_NAME: kernel-syncdata-service
       SERVICE_LOCATION: kernel/kernel-syncdata-service
 
@@ -216,6 +363,14 @@ jobs:
         with:
           name: release
           path: ./
+<<<<<<< HEAD
+      
+      - name: Setup branch name 
+        run: |
+          # Strip git ref prefix from version
+          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo ${{ env.BRANCH_NAME }}
+=======
 
       - name: Get version info from pom
         id: getPomVersion
@@ -263,6 +418,7 @@ jobs:
         with:
           name: release
           path: ./
+>>>>>>> master
 
       - name: Get version info from pom
         id: getPomVersion
@@ -289,7 +445,11 @@ jobs:
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           echo "push version ${{steps.getPomVersion.outputs.info}}"
+<<<<<<< HEAD
+          VERSION=$BRANCH_NAME
+=======
           VERSION=${{steps.getPomVersion.outputs.info}}
+>>>>>>> master
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
@@ -300,7 +460,11 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
+<<<<<<< HEAD
+      NAMESPACE: ${{ secrets. dev_namespace_docker_hub }}
+=======
       NAMESPACE: mosipdev
+>>>>>>> master
       SERVICE_NAME: kernel-auditmanager-service
       SERVICE_LOCATION: kernel/kernel-auditmanager-service
 
@@ -311,6 +475,13 @@ jobs:
           name: release
           path: ./
 
+<<<<<<< HEAD
+      - name: Setup branch name 
+        run: |
+          # Strip git ref prefix from version
+          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo ${{ env.BRANCH_NAME }}
+=======
       - name: Get version info from pom
         id: getPomVersion
         uses: mavrosxristoforos/get-xml-info@1.0
@@ -357,6 +528,7 @@ jobs:
         with:
           name: release
           path: ./
+>>>>>>> master
 
       - name: Get version info from pom
         id: getPomVersion
@@ -383,7 +555,11 @@ jobs:
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           echo "push version ${{steps.getPomVersion.outputs.info}}"
+<<<<<<< HEAD
+          VERSION=$BRANCH_NAME
+=======
           VERSION=${{steps.getPomVersion.outputs.info}}
+>>>>>>> master
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
@@ -394,7 +570,11 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
+<<<<<<< HEAD
+      NAMESPACE: ${{ secrets. dev_namespace_docker_hub }}
+=======
       NAMESPACE: mosipdev
+>>>>>>> master
       SERVICE_NAME: kernel-ridgenerator-service
       SERVICE_LOCATION: kernel/kernel-ridgenerator-service
 
@@ -405,6 +585,13 @@ jobs:
           name: release
           path: ./
 
+<<<<<<< HEAD
+      - name: Setup branch name 
+        run: |
+          # Strip git ref prefix from version
+          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo ${{ env.BRANCH_NAME }}
+=======
       - name: Get version info from pom
         id: getPomVersion
         uses: mavrosxristoforos/get-xml-info@1.0
@@ -451,6 +638,7 @@ jobs:
         with:
           name: release
           path: ./
+>>>>>>> master
 
       - name: Get version info from pom
         id: getPomVersion
@@ -477,20 +665,34 @@ jobs:
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           echo "push version ${{steps.getPomVersion.outputs.info}}"
+<<<<<<< HEAD
+          VERSION=$BRANCH_NAME
+=======
           VERSION=${{steps.getPomVersion.outputs.info}}
+>>>>>>> master
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
 
+<<<<<<< HEAD
+  docker-kernel-notification-service:
+=======
   docker-kernel-signature-service:
+>>>>>>> master
     needs: build
 
     runs-on: ubuntu-latest
     env:
+<<<<<<< HEAD
+      NAMESPACE: ${{ secrets. dev_namespace_docker_hub }}
+      SERVICE_NAME: kernel-notification-service
+      SERVICE_LOCATION: kernel/kernel-notification-service
+=======
       NAMESPACE: mosipdev
       SERVICE_NAME: kernel-signature-service
       SERVICE_LOCATION: kernel/kernel-signature-service
+>>>>>>> master
 
     steps:
       - uses: actions/checkout@v2
@@ -499,6 +701,13 @@ jobs:
           name: release
           path: ./
 
+<<<<<<< HEAD
+      - name: Setup branch name 
+        run: |
+          # Strip git ref prefix from version
+          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo ${{ env.BRANCH_NAME }}
+=======
       - name: Get version info from pom
         id: getPomVersion
         uses: mavrosxristoforos/get-xml-info@1.0
@@ -545,6 +754,7 @@ jobs:
         with:
           name: release
           path: ./
+>>>>>>> master
 
       - name: Get version info from pom
         id: getPomVersion
@@ -571,7 +781,11 @@ jobs:
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           echo "push version ${{steps.getPomVersion.outputs.info}}"
+<<<<<<< HEAD
+          VERSION=$BRANCH_NAME
+=======
           VERSION=${{steps.getPomVersion.outputs.info}}
+>>>>>>> master
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
@@ -582,7 +796,11 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
+<<<<<<< HEAD
+      NAMESPACE: ${{ secrets. dev_namespace_docker_hub }}
+=======
       NAMESPACE: mosipdev
+>>>>>>> master
       SERVICE_NAME: kernel-auth-service
       SERVICE_LOCATION: kernel/kernel-auth-service
 
@@ -593,6 +811,15 @@ jobs:
           name: release
           path: ./
 
+<<<<<<< HEAD
+      - name: Setup branch name 
+        run: |
+          # Strip git ref prefix from version
+          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo ${{ env.BRANCH_NAME }}
+
+=======
+>>>>>>> master
       - name: Get version info from pom
         id: getPomVersion
         uses: mavrosxristoforos/get-xml-info@1.0
@@ -618,7 +845,11 @@ jobs:
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           echo "push version ${{steps.getPomVersion.outputs.info}}"
+<<<<<<< HEAD
+          VERSION=$BRANCH_NAME
+=======
           VERSION=${{steps.getPomVersion.outputs.info}}
+>>>>>>> master
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
@@ -629,7 +860,11 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
+<<<<<<< HEAD
+      NAMESPACE: ${{ secrets. dev_namespace_docker_hub }}
+=======
       NAMESPACE: mosipdev
+>>>>>>> master
       SERVICE_NAME: kernel-keymanager-service
       SERVICE_LOCATION: kernel/kernel-keymanager-service
 
@@ -640,6 +875,15 @@ jobs:
           name: release
           path: ./
 
+<<<<<<< HEAD
+      - name: Setup branch name 
+        run: |
+          # Strip git ref prefix from version
+          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo ${{ env.BRANCH_NAME }}
+
+=======
+>>>>>>> master
       - name: Get version info from pom
         id: getPomVersion
         uses: mavrosxristoforos/get-xml-info@1.0
@@ -665,7 +909,11 @@ jobs:
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           echo "push version ${{steps.getPomVersion.outputs.info}}"
+<<<<<<< HEAD
+          VERSION=$BRANCH_NAME
+=======
           VERSION=${{steps.getPomVersion.outputs.info}}
+>>>>>>> master
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
@@ -676,7 +924,11 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
+<<<<<<< HEAD
+      NAMESPACE: ${{ secrets. dev_namespace_docker_hub }}
+=======
       NAMESPACE: mosipdev
+>>>>>>> master
       SERVICE_NAME: kernel-pridgenerator-service
       SERVICE_LOCATION: kernel/kernel-pridgenerator-service
 
@@ -687,6 +939,15 @@ jobs:
           name: release
           path: ./
 
+<<<<<<< HEAD
+      - name: Setup branch name 
+        run: |
+          # Strip git ref prefix from version
+          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo ${{ env.BRANCH_NAME }}
+
+=======
+>>>>>>> master
       - name: Get version info from pom
         id: getPomVersion
         uses: mavrosxristoforos/get-xml-info@1.0
@@ -712,20 +973,34 @@ jobs:
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           echo "push version ${{steps.getPomVersion.outputs.info}}"
+<<<<<<< HEAD
+          VERSION=$BRANCH_NAME
+=======
           VERSION=${{steps.getPomVersion.outputs.info}}
+>>>>>>> master
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
 
+<<<<<<< HEAD
+  docker-kernel-otpmanager-service:
+=======
   docker-kernel-uingenerator-service:
+>>>>>>> master
     needs: build
 
     runs-on: ubuntu-latest
     env:
+<<<<<<< HEAD
+      NAMESPACE: ${{ secrets. dev_namespace_docker_hub }}
+      SERVICE_NAME: kernel-otpmanager-service
+      SERVICE_LOCATION: kernel/kernel-otpmanager-service
+=======
       NAMESPACE: mosipdev
       SERVICE_NAME: kernel-uingenerator-service
       SERVICE_LOCATION: kernel/kernel-uingenerator-service
+>>>>>>> master
 
     steps:
       - uses: actions/checkout@v2
@@ -734,6 +1009,15 @@ jobs:
           name: release
           path: ./
 
+<<<<<<< HEAD
+      - name: Setup branch name 
+        run: |
+          # Strip git ref prefix from version
+          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo ${{ env.BRANCH_NAME }}
+
+=======
+>>>>>>> master
       - name: Get version info from pom
         id: getPomVersion
         uses: mavrosxristoforos/get-xml-info@1.0
@@ -759,20 +1043,34 @@ jobs:
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           echo "push version ${{steps.getPomVersion.outputs.info}}"
+<<<<<<< HEAD
+          VERSION=$BRANCH_NAME
+=======
           VERSION=${{steps.getPomVersion.outputs.info}}
+>>>>>>> master
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
 
+<<<<<<< HEAD
+  docker-kernel-idgenerator-service:
+=======
   docker-kernel-applicanttype-service:
+>>>>>>> master
     needs: build
 
     runs-on: ubuntu-latest
     env:
+<<<<<<< HEAD
+      NAMESPACE: ${{ secrets. dev_namespace_docker_hub }}
+      SERVICE_NAME: kernel-idgenerator-service
+      SERVICE_LOCATION: kernel/kernel-idgenerator-service
+=======
       NAMESPACE: mosipdev
       SERVICE_NAME: kernel-applicanttype-service
       SERVICE_LOCATION: kernel/kernel-applicanttype-service
+>>>>>>> master
 
     steps:
       - uses: actions/checkout@v2
@@ -781,6 +1079,15 @@ jobs:
           name: release
           path: ./
 
+<<<<<<< HEAD
+      - name: Setup branch name 
+        run: |
+          # Strip git ref prefix from version
+          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo ${{ env.BRANCH_NAME }}
+
+=======
+>>>>>>> master
       - name: Get version info from pom
         id: getPomVersion
         uses: mavrosxristoforos/get-xml-info@1.0
@@ -806,20 +1113,34 @@ jobs:
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           echo "push version ${{steps.getPomVersion.outputs.info}}"
+<<<<<<< HEAD
+          VERSION=$BRANCH_NAME
+=======
           VERSION=${{steps.getPomVersion.outputs.info}}
+>>>>>>> master
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
 
+<<<<<<< HEAD
+  docker-kernel-salt-generator:
+=======
   docker-kernel-otpmanager-service:
+>>>>>>> master
     needs: build
 
     runs-on: ubuntu-latest
     env:
+<<<<<<< HEAD
+      NAMESPACE: ${{ secrets. dev_namespace_docker_hub }}
+      SERVICE_NAME: kernel-salt-generator
+      SERVICE_LOCATION: kernel/kernel-salt-generator
+=======
       NAMESPACE: mosipdev
       SERVICE_NAME: kernel-otpmanager-service
       SERVICE_LOCATION: kernel/kernel-otpmanager-service
+>>>>>>> master
 
     steps:
       - uses: actions/checkout@v2
@@ -828,6 +1149,13 @@ jobs:
           name: release
           path: ./
 
+<<<<<<< HEAD
+      - name: Setup branch name 
+        run: |
+          # Strip git ref prefix from version
+          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo ${{ env.BRANCH_NAME }}
+=======
       - name: Get version info from pom
         id: getPomVersion
         uses: mavrosxristoforos/get-xml-info@1.0
@@ -874,6 +1202,7 @@ jobs:
         with:
           name: release
           path: ./
+>>>>>>> master
 
       - name: Get version info from pom
         id: getPomVersion
@@ -882,7 +1211,11 @@ jobs:
           xml-file: ./${{ env.SERVICE_LOCATION }}/pom.xml 
           xpath: /*[local-name()="project"]/*[local-name()="version"] 
       
+<<<<<<< HEAD
+      - name: Unzip and extract the kernel-salt-generator
+=======
       - name: Unzip and extract the id-repository-vid-service
+>>>>>>> master
         run: unzip -uj "release.zip" "${{ env.SERVICE_LOCATION }}/target/*" -d "./${{ env.SERVICE_LOCATION }}/target"
       
       - name: Build image
@@ -900,7 +1233,11 @@ jobs:
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           echo "push version ${{steps.getPomVersion.outputs.info}}"
+<<<<<<< HEAD
+          VERSION=$BRANCH_NAME
+=======
           VERSION=${{steps.getPomVersion.outputs.info}}
+>>>>>>> master
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION

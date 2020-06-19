@@ -45,6 +45,7 @@ import io.mosip.kernel.masterdata.utils.AuditUtil;
 import io.mosip.kernel.masterdata.utils.ExceptionUtils;
 import io.mosip.kernel.masterdata.utils.MapperUtils;
 import io.mosip.kernel.masterdata.utils.MasterDataFilterHelper;
+import io.mosip.kernel.masterdata.utils.MasterdataCreationUtil;
 import io.mosip.kernel.masterdata.utils.MasterdataSearchHelper;
 import io.mosip.kernel.masterdata.utils.MetaDataUtils;
 import io.mosip.kernel.masterdata.utils.OptionalFilter;
@@ -97,6 +98,10 @@ public class MachineTypeServiceImpl implements MachineTypeService {
 
 	@Autowired
 	private AuditUtil auditUtil;
+	
+	@Autowired
+	private MasterdataCreationUtil masterdataCreationUtil;
+
 
 	/*
 	 * (non-Javadoc)
@@ -140,6 +145,9 @@ public class MachineTypeServiceImpl implements MachineTypeService {
 				MetaDataUtils.setUpdateMetaData(machineTypeDto, machineType, false);
 				machineTypeRepository.update(machineType);
 				MapperUtils.map(machineType, codeAndLanguageCodeID);
+				if(!machineTypeDto.getIsActive()) {
+					masterdataCreationUtil.updateMasterDataDeactivate(MachineType.class, machineTypeDto.getCode());
+				}
 			} else {
 				throw new RequestException(MachineTypeErrorCode.MACHINE_TYPE_NOT_FOUND.getErrorCode(),
 						MachineTypeErrorCode.MACHINE_TYPE_NOT_FOUND.getErrorMessage());

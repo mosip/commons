@@ -13,8 +13,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.naming.Context;
 import javax.naming.NameAlreadyBoundException;
@@ -43,7 +48,9 @@ import org.apache.directory.api.ldap.model.password.PasswordDetails;
 import org.apache.directory.api.ldap.model.password.PasswordUtil;
 import org.apache.directory.ldap.client.api.LdapConnection;
 import org.apache.directory.ldap.client.api.LdapNetworkConnection;
+import org.assertj.core.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.auth.config.MosipEnvironment;
@@ -85,8 +92,10 @@ import io.mosip.kernel.core.util.HMACUtils;
  *
  */
 @Component
+@Deprecated
 public class LdapDataStore implements DataStore {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(LdapDataStore.class);
 	private DataBaseProps dataBaseConfig;
 
 	public LdapDataStore() {
@@ -106,6 +115,15 @@ public class LdapDataStore implements DataStore {
 	@Autowired
 	MosipEnvironment environment;
 
+	@Value("${mosip.kernel.ldap-provider-url:ldap://localhost:389}")
+	private String ldapProviderURL;
+
+	@Value("${mosip.kernel.ldap-security-principal:uid=admin,ou=system}")
+	private String ldapSecurityPrincipal;
+
+	@Value("${mosip.kernel.ldap-security-credentials:#{null}}")
+	private String ldapSecurityCredentials;
+
 	private LdapConnection createAnonymousConnection() throws Exception {
 		LdapConnection connection = new LdapNetworkConnection(dataBaseConfig.getUrl(),
 				Integer.valueOf(dataBaseConfig.getPort()));
@@ -115,11 +133,18 @@ public class LdapDataStore implements DataStore {
 	private LdapContext getContext() throws NamingException {
 
 		Hashtable<String, String> env = new Hashtable<String, String>();
-		env.put(Context.INITIAL_CONTEXT_FACTORY, LdapConstants.LDAP_INITAL_CONTEXT_FACTORY);
-		env.put(Context.PROVIDER_URL, "ldap://52.172.11.190:10389");
-		// env.put(Context.PROVIDER_URL, "ldap://localhost:10389");
-		env.put(Context.SECURITY_PRINCIPAL, "uid=admin,ou=system");
-		env.put(Context.SECURITY_CREDENTIALS, "secret");
+		if(!env.containsKey(Context.INITIAL_CONTEXT_FACTORY))
+			env.put(Context.INITIAL_CONTEXT_FACTORY, LdapConstants.LDAP_INITAL_CONTEXT_FACTORY);
+		//env.put(Context.PROVIDER_URL, "ldap://52.172.11.190:10389");
+		if(Strings.isNullOrEmpty(ldapProviderURL) || Strings.isNullOrEmpty(ldapSecurityCredentials)) {
+			LOGGER.error("Ldap url or credential properties empty or null " );
+			throw new NamingException("Ldap url or credential properties empty or null");
+		}
+		env.put(Context.PROVIDER_URL, ldapProviderURL);
+		//env.put(Context.SECURITY_PRINCIPAL, "uid=admin,ou=system");
+		env.put(Context.SECURITY_PRINCIPAL, ldapSecurityPrincipal);
+		//env.put(Context.SECURITY_CREDENTIALS, "secret");
+		env.put(Context.SECURITY_CREDENTIALS, ldapSecurityCredentials);
 		LdapContext context = new InitialLdapContext(env, null);
 		LdapControl ldapControl = new LdapControl();
 		context.setRequestControls(ldapControl.getControls());
@@ -324,15 +349,17 @@ public class LdapDataStore implements DataStore {
 	}
 
 	private Dn createUserDn(String userName) throws LdapInvalidDnException {
+		userName = escapeLDAPValue(userName);
 		return new Dn("uid=" + userName + ",ou=people,c=mycountry");
 	}
 
 	private Dn createRoleDn(String role) throws LdapInvalidDnException {
+		role = escapeLDAPValue(role);
 		return new Dn("cn=" + role + ",ou=roles,c=mycountry");
 	}
 
 	@Override
-	public RolesListDto getAllRoles() {
+	public RolesListDto getAllRoles(String appId) {
 		RolesListDto rolesListDto = new RolesListDto();
 		EntryCursor rolesData = null;
 		LdapConnection connection = null;
@@ -369,7 +396,7 @@ public class LdapDataStore implements DataStore {
 	}
 
 	@Override
-	public MosipUserListDto getListOfUsersDetails(List<String> users) throws Exception {
+	public MosipUserListDto getListOfUsersDetails(List<String> users,String appId) throws Exception {
 		LdapConnection connection = null;
 		try {
 			MosipUserListDto userResponseDto = new MosipUserListDto();
@@ -395,7 +422,7 @@ public class LdapDataStore implements DataStore {
 	}
 
 	@Override
-	public MosipUserSaltListDto getAllUserDetailsWithSalt(List<String> userDetails) throws Exception {
+	public MosipUserSaltListDto getAllUserDetailsWithSalt(List<String> userDetails,String appId) throws Exception {
 		MosipUserSaltListDto mosipUserSaltList = new MosipUserSaltListDto();
 		List<MosipUserSalt> mosipUserDtos = new ArrayList<>();
 		LdapConnection connection = null;
@@ -427,7 +454,7 @@ public class LdapDataStore implements DataStore {
 	}
 
 	@Override
-	public RIdDto getRidFromUserId(String userId) throws Exception {
+	public RIdDto getRidFromUserId(String userId,String appId) throws Exception {
 		RIdDto ridDto = null;
 		LdapConnection ldapConnection = null;
 		try {
@@ -460,11 +487,11 @@ public class LdapDataStore implements DataStore {
 					new BasicAttribute(LdapConstants.PWD_ACCOUNT_LOCKED_TIME_ATTRIBUTE));
 			modItems[1] = new ModificationItem(DirContext.REMOVE_ATTRIBUTE,
 					new BasicAttribute(LdapConstants.PWD_FAILURE_TIME_ATTRIBUTE));
-
+			userId = escapeLDAPValue(userId);
 			context.modifyAttributes("uid=" + userId + ",ou=people,c=mycountry", modItems);
 			authZResponseDto = new AuthZResponseDto();
 			authZResponseDto.setMessage("Successfully Unblocked");
-			authZResponseDto.setStatus("Sucesss");
+			authZResponseDto.setStatus("Success");
 			closeContext(context);
 		} catch (NamingException e) {
 			closeContext(context);
@@ -507,7 +534,8 @@ public class LdapDataStore implements DataStore {
 				ModificationItem[] modItems = new ModificationItem[1];
 				modItems[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
 						new BasicAttribute("userPassword", newUserPassword));
-				ldapContext.modifyAttributes("uid=" + passwordDto.getUserId() + ",ou=people,c=mycountry", modItems);
+				String uid = escapeLDAPValue(passwordDto.getUserId());
+				ldapContext.modifyAttributes("uid=" + uid + ",ou=people,c=mycountry", modItems);
 				authZResponseDto = new AuthZResponseDto();
 				authZResponseDto.setMessage("Successfully changed");
 				authZResponseDto.setStatus("Success");
@@ -553,7 +581,8 @@ public class LdapDataStore implements DataStore {
 				ModificationItem[] modItems = new ModificationItem[1];
 				modItems[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
 						new BasicAttribute("userPassword", newUserPassword));
-				ldapContext.modifyAttributes("uid=" + passwordDto.getUserId() + ",ou=people,c=mycountry", modItems);
+				String uid = escapeLDAPValue(passwordDto.getUserId());
+				ldapContext.modifyAttributes("uid=" + uid + ",ou=people,c=mycountry", modItems);
 
 				authZResponseDto = new AuthZResponseDto();
 				authZResponseDto.setMessage("Successfully the password has been reset");
@@ -607,6 +636,7 @@ public class LdapDataStore implements DataStore {
 	 */
 	private String getPassword(String userid, LdapContext ldapContext) throws Exception {
 		String encryptedPassword = null;
+		userid = escapeLDAPValue(userid);
 		Dn searchBase = new Dn("uid=" + userid + ",ou=people,c=mycountry");
 		SearchControls searchControls = new SearchControls();
 		searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
@@ -661,14 +691,14 @@ public class LdapDataStore implements DataStore {
 			context = getDirContext();
 			userDn = createUserDn(userCreationRequestDto.getUserName());
 			List<Attribute> attributes = new ArrayList<>();
-			attributes.add(new BasicAttribute(LdapConstants.CN, userCreationRequestDto.getUserName()));
-			attributes.add(new BasicAttribute(LdapConstants.SN, userCreationRequestDto.getUserName()));
-			attributes.add(new BasicAttribute(LdapConstants.MAIL, userCreationRequestDto.getEmailID()));
-			attributes.add(new BasicAttribute(LdapConstants.MOBILE, userCreationRequestDto.getContactNo()));
-			attributes.add(new BasicAttribute(LdapConstants.DOB, userCreationRequestDto.getDateOfBirth().toString()));
-			attributes.add(new BasicAttribute(LdapConstants.FIRST_NAME, userCreationRequestDto.getFirstName()));
-			attributes.add(new BasicAttribute(LdapConstants.LAST_NAME, userCreationRequestDto.getLastName()));
-			attributes.add(new BasicAttribute(LdapConstants.GENDER_CODE, userCreationRequestDto.getGender()));
+			attributes.add(new BasicAttribute(LdapConstants.CN, escapeLDAPValue(userCreationRequestDto.getUserName())));
+			attributes.add(new BasicAttribute(LdapConstants.SN, escapeLDAPValue(userCreationRequestDto.getUserName())));
+			attributes.add(new BasicAttribute(LdapConstants.MAIL, escapeLDAPValue(userCreationRequestDto.getEmailID())));
+			attributes.add(new BasicAttribute(LdapConstants.MOBILE, escapeLDAPValue(userCreationRequestDto.getContactNo())));
+			attributes.add(new BasicAttribute(LdapConstants.DOB, escapeLDAPValue(userCreationRequestDto.getDateOfBirth().toString())));
+			attributes.add(new BasicAttribute(LdapConstants.FIRST_NAME, escapeLDAPValue(userCreationRequestDto.getFirstName())));
+			attributes.add(new BasicAttribute(LdapConstants.LAST_NAME, escapeLDAPValue(userCreationRequestDto.getLastName())));
+			attributes.add(new BasicAttribute(LdapConstants.GENDER_CODE, escapeLDAPValue(userCreationRequestDto.getGender())));
 			attributes.add(new BasicAttribute(LdapConstants.IS_ACTIVE, LdapConstants.FALSE));
 			Attribute oc = new BasicAttribute(LdapConstants.OBJECT_CLASS);
 			oc.add(LdapConstants.INET_ORG_PERSON);
@@ -728,9 +758,9 @@ public class LdapDataStore implements DataStore {
 	private DirContext getDirContext() throws NamingException {
 		Hashtable<String, String> env = new Hashtable<>();
 		env.put(Context.INITIAL_CONTEXT_FACTORY, AuthConstant.LDAP_INITAL_CONTEXT_FACTORY);
-		env.put(Context.PROVIDER_URL, "ldap://52.172.11.190:10389");
-		env.put(Context.SECURITY_PRINCIPAL, "uid=admin,ou=system");
-		env.put(Context.SECURITY_CREDENTIALS, "secret");
+		env.put(Context.PROVIDER_URL, ldapProviderURL);
+		env.put(Context.SECURITY_PRINCIPAL, ldapSecurityPrincipal);
+		env.put(Context.SECURITY_CREDENTIALS, ldapSecurityCredentials);
 		return new InitialDirContext(env);
 	}
 
@@ -740,9 +770,9 @@ public class LdapDataStore implements DataStore {
 		DirContext context = null;
 		Hashtable<String, String> env = new Hashtable<>();
 		env.put(Context.INITIAL_CONTEXT_FACTORY, AuthConstant.LDAP_INITAL_CONTEXT_FACTORY);
-		env.put(Context.PROVIDER_URL, "ldap://52.172.11.190:10389");
-		env.put(Context.SECURITY_PRINCIPAL, "uid=admin,ou=system");
-		env.put(Context.SECURITY_CREDENTIALS, "secret");
+		env.put(Context.PROVIDER_URL, ldapProviderURL);
+		env.put(Context.SECURITY_PRINCIPAL, ldapSecurityPrincipal);
+		env.put(Context.SECURITY_CREDENTIALS, ldapSecurityCredentials);
 		try {
 			userDn = createUserDn(userPasswordRequestDto.getUserName());
 			context = new InitialDirContext(env);
@@ -799,6 +829,10 @@ public class LdapDataStore implements DataStore {
 	public MosipUserDto getUserDetailBasedonMobileNumber(String mobileNumber) throws Exception {
 		MosipUserDto mosipUserDto = new MosipUserDto();
 		try {
+			if(!IsValidPhoneNumber(mobileNumber)){
+				throw new LdapInvalidDnException("Invalid phone number");
+			}
+
 			LdapContext context = getContext();
 			NamingEnumeration<SearchResult> searchResult = getUserDetail(mobileNumber);
 
@@ -825,6 +859,10 @@ public class LdapDataStore implements DataStore {
 
 	private NamingEnumeration<SearchResult> getUserDetail(String mobileNumber)
 			throws LdapInvalidDnException, NamingException {
+		
+		if(!IsValidPhoneNumber(mobileNumber)){
+			throw new LdapInvalidDnException("Invalid phone number");
+		}
 		Dn searchBase = new Dn("ou=people,c=mycountry");
 		String searchFilter = "(&(objectClass=organizationalPerson)(objectClass=inetOrgPerson)(objectClass=person)(mobile="
 				+ mobileNumber + "))";
@@ -872,6 +910,7 @@ public class LdapDataStore implements DataStore {
 	private NamingEnumeration<SearchResult> getUserDetailSearchResult(String userId)
 			throws NamingException, LdapInvalidDnException {
 		LdapContext context = getContext();
+		userId = escapeLDAPValue(userId);
 		Dn searchBase = new Dn("uid=" + userId + ",ou=people,c=mycountry");
 		SearchControls searchControls = new SearchControls();
 		searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
@@ -943,6 +982,7 @@ public class LdapDataStore implements DataStore {
 			throws NamingException, LdapInvalidDnException {
 
 		LdapContext context = getContext();
+		userId = escapeLDAPValue(userId);
 		Dn searchBase = new Dn("uid=" + userId + ",ou=people,c=mycountry");
 		SearchControls searchControls = new SearchControls();
 		NamingEnumeration<SearchResult> searchResult = null;
@@ -1020,6 +1060,7 @@ public class LdapDataStore implements DataStore {
 	private String getRolesBasedOnUid(String uid) throws LdapInvalidDnException, NamingException {
 		LdapContext context = getContext();
 		Dn searchBase = new Dn("ou=roles,c=mycountry");
+		uid = escapeLDAPValue(uid);
 		String searchFilter = "(&(objectClass=organizationalRole)(roleOccupant=uid=" + uid + ",ou=people,c=mycountry))";
 		NamingEnumeration<SearchResult> searchResultRoles = context.search(searchBase.getName(), searchFilter,
 				new SearchControls());
@@ -1036,5 +1077,60 @@ public class LdapDataStore implements DataStore {
 					AuthErrorCode.RUNTIME_EXCEPTION.getErrorMessage());
 		}
 	}
+
+	/**
+	 * Validates the mobile number 
+	 * 
+	 * @param mobileNumber     mobile number
+	 * 
+	 */
+	private boolean IsValidPhoneNumber(String mobileNumber){
+
+		Pattern phonePattern = Pattern.compile("^\\+(?:[0-9] ?){6,14}[0-9]$"); 
+		Matcher phoneMatcher = phonePattern.matcher(mobileNumber);
+		if(phoneMatcher.matches()){
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Escape the ldap vallue string. The method is not designed to escape the entire filter. So please pass only the value that you want to escape. 
+	 * 
+	 * @param ldapString ldap filter string 
+	 */
+	private String escapeLDAPValue(String ldapString){
+		if(null == ldapString) return "";
+		try{
+			// Fix as per https://stackoverflow.com/questions/31309673/parse-ldap-filter-to-escape-special-characters
+			StringBuilder finalLdapString = new StringBuilder(ldapString.length());
+			for (byte ldapCharacter : ldapString.getBytes("UTF-8"))
+			{
+				if (ldapCharacter =='\\') { finalLdapString.append("\\5c"); }
+				else if (ldapCharacter =='*') { finalLdapString.append("\\2a"); }
+				else if (ldapCharacter =='(') { finalLdapString.append("\\28"); }
+				else if (ldapCharacter ==')') { finalLdapString.append("\\29"); }
+				else if (ldapCharacter ==0) { finalLdapString.append("\\00"); }
+				else if ((ldapCharacter&0xff)>127) { finalLdapString.append("\\").append(to2CharHexString((ldapCharacter&0xff))); } 
+				else { finalLdapString.append((char)ldapCharacter); }
+			}
+			return finalLdapString.toString();
+		}
+		catch(Exception ex){
+			LOGGER.warn("Invalid ldap string " + ldapString + " so sending back empty string ");
+			return ""; 
+		}
+		
+	}
+
+	private String to2CharHexString(int hexValue){
+		String hexCharacter = Integer.toHexString(hexValue & 0xff);
+		if (hexCharacter.length()==1) 
+			return "0"+hexCharacter;
+		else 
+			return hexCharacter;
+	}
+
+	
 
 }
