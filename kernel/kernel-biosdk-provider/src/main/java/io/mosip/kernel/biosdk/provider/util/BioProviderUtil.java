@@ -8,9 +8,11 @@ import org.springframework.data.util.ReflectionUtils;
 
 import io.mosip.kernel.core.bioapi.exception.BiometricException;
 import io.mosip.kernel.core.exception.ExceptionUtils;
+import io.mosip.kernel.core.logger.spi.Logger;
 
 public class BioProviderUtil {
 	
+	private static final Logger LOGGER = BioSDKProviderLoggerFactory.getLogger(BioProviderUtil.class);
 	
 	public static Object getSDKInstance(Map<String, String> modalityParams) throws BiometricException {
 		try {					
@@ -23,6 +25,8 @@ public class BioProviderUtil {
 			if(result.isPresent()) {
 				Constructor<?> constructor = (Constructor<?>) result.get();
 				constructor.setAccessible(true);
+				LOGGER.info(ProviderConstants.LOGGER_SESSIONID, ProviderConstants.LOGGER_IDTYPE, 
+						"GET SDK INSTANCE", "SDK instance created with params >>> " + modalityParams);
 				return constructor.newInstance(args);
 			}
 			else
