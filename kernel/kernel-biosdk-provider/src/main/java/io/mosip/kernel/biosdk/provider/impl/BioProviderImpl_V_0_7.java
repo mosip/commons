@@ -15,35 +15,34 @@ import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
 import org.springframework.data.util.ReflectionUtils;
+import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.biometrics.constant.BiometricFunction;
 import io.mosip.kernel.biometrics.constant.BiometricType;
-import io.mosip.kernel.biosdk.provider.dto.CompositeScore_0_7;
-import io.mosip.kernel.biosdk.provider.dto.QualityScore_0_7;
-import io.mosip.kernel.biosdk.provider.dto.Score_0_7;
 import io.mosip.kernel.biosdk.provider.spi.iBioProviderApi;
 import io.mosip.kernel.biosdk.provider.util.BioProviderUtil;
 import io.mosip.kernel.biosdk.provider.util.BioSDKProviderLoggerFactory;
-import io.mosip.kernel.biosdk.provider.util.ErrorCode;
 import io.mosip.kernel.biosdk.provider.util.ProviderConstants;
 import io.mosip.kernel.core.bioapi.exception.BiometricException;
 import io.mosip.kernel.core.bioapi.model.KeyValuePair;
+import io.mosip.kernel.core.bioapi.model.QualityScore;
+import io.mosip.kernel.core.bioapi.model.Score;
+import io.mosip.kernel.core.bioapi.model.CompositeScore;
 import io.mosip.kernel.core.cbeffutil.entity.BIR;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;
 
-
+@Component
 public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 	
 	private static final Logger LOGGER = BioSDKProviderLoggerFactory.getLogger(BioProviderImpl_V_0_7.class);
 	
 	private static final String METHOD_NAME_KEY = "_METHOD_NAME";
-	private static final String THRESHOLD_KEY = "_THRESHOLD";
-	
+	private static final String THRESHOLD_KEY = "_THRESHOLD";	
 	private static final String API_VERSION = "0.7";
 	
 	private Map<BiometricType, Object> sdkRegistry = new HashMap<>();
-	private Map<BiometricType, Class<?>> clazzRegistry = new HashMap<>();
+	
 
 	@Override
 	public Map<BiometricType, List<BiometricFunction>> init(Map<BiometricType, Map<String, String>> params)
@@ -55,15 +54,6 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 			if(modalityParams != null && !modalityParams.isEmpty() 
 					&& API_VERSION.equals(modalityParams.get(ProviderConstants.VERSION))) {				
 				Object instance = BioProviderUtil.getSDKInstance(modalityParams);
-				try {
-					Class<?> clazz = (Class<?>) Class.forName(modalityParams.get(ProviderConstants.CLASSNAME));
-					this.clazzRegistry.put(modality, clazz);
-				} catch (ClassNotFoundException e) {
-					throw new BiometricException(ErrorCode.SDK_INITIALIZATION_FAILED.getErrorCode(), 
-							String.format(ErrorCode.SDK_INITIALIZATION_FAILED.getErrorMessage(), 
-									modalityParams.get(ProviderConstants.CLASSNAME),
-									ExceptionUtils.getStackTrace(e)));
-				}				
 				addToRegistry(instance, modality);			
 			}
 		}
@@ -78,6 +68,8 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 	public boolean verify(List<BIR> sample, List<BIR> record, BiometricType modality, Map<String, String> flags) {
 		LOGGER.info(ProviderConstants.LOGGER_SESSIONID, ProviderConstants.LOGGER_IDTYPE, "verify invoked", 
 				"modality >>> " + modality);
+		
+		if(Objects.isNull(flags)) { flags = new HashMap<>(); }
 		
 		String methodName = flags.getOrDefault(METHOD_NAME_KEY, "match");
 		String threshold = flags.getOrDefault(THRESHOLD_KEY, "60");
@@ -104,6 +96,8 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 			Map<String, String> flags) {
 		LOGGER.info(ProviderConstants.LOGGER_SESSIONID, ProviderConstants.LOGGER_IDTYPE, "identify invoked", 
 				"modality >>> " + modality);
+		
+		if(Objects.isNull(flags)) { flags = new HashMap<>(); }
 		
 		String methodName = flags.getOrDefault(METHOD_NAME_KEY, "compositeMatch");
 		String threshold = flags.getOrDefault(THRESHOLD_KEY, "60");
@@ -141,13 +135,15 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 		float[] scores = new float[sample.length];		
 		for(int i =0; i< sample.length; i++) {			
 			BiometricType modality = BiometricType.valueOf(sample[i].getBdbInfo().getType().get(0).value());
-			Method method = ReflectionUtils.findRequiredMethod(this.clazzRegistry.get(modality), 
+			Method method = ReflectionUtils.findRequiredMethod(this.sdkRegistry.get(modality).getClass(), 
 					"checkQuality", BIR.class, KeyValuePair[].class);
+			method.setAccessible(true);
+
 			if(Objects.nonNull(method)) {
 				try {
 					Object response =  method.invoke(this.sdkRegistry.get(modality), sample[i], getKeyValuePairs(flags));
 					if(Objects.nonNull(response)) {
-						QualityScore_0_7  qualityScore = (QualityScore_0_7) response;
+						QualityScore  qualityScore = (QualityScore) response;
 						scores[i] = qualityScore.getInternalScore();
 					}
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
@@ -168,14 +164,15 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 		Map<BiometricType, LongStream.Builder> result = new HashMap<>();
 		for(BIR bir : sample) {
 			BiometricType modality = BiometricType.valueOf(bir.getBdbInfo().getType().get(0).value());
-			Method method = ReflectionUtils.findRequiredMethod(this.clazzRegistry.get(modality), 
+			Method method = ReflectionUtils.findRequiredMethod(this.sdkRegistry.get(modality).getClass(), 
 					"checkQuality", BIR.class, KeyValuePair[].class);
+			method.setAccessible(true);
 			
 			if(Objects.nonNull(method)) {
 				try {
 					Object response =  method.invoke(this.sdkRegistry.get(modality), bir, getKeyValuePairs(flags));
 					if(Objects.nonNull(response)) {
-						QualityScore_0_7  qualityScore = (QualityScore_0_7) response;
+						QualityScore  qualityScore = (QualityScore) response;
 						result.computeIfAbsent(modality, k -> LongStream.builder()).add(qualityScore.getInternalScore());
 					}
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
@@ -200,8 +197,9 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 		List<BIR> extracts = new ArrayList<>();
 		for(BIR bir : sample) {
 			BiometricType modality = BiometricType.valueOf(bir.getBdbInfo().getType().get(0).value());
-			Method method = ReflectionUtils.findRequiredMethod(this.clazzRegistry.get(modality), 
+			Method method = ReflectionUtils.findRequiredMethod(this.sdkRegistry.get(modality).getClass(), 
 					"extractTemplate", BIR.class, KeyValuePair[].class);
+			method.setAccessible(true);
 			
 			if(Objects.nonNull(method)) {
 				try {
@@ -221,8 +219,9 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 	private boolean getSDKMatchResult(List<BIR> sample, BIR[] record, BiometricType modality, Map<String, String> flags, 
 			String threshold) {
 			
-		Method method = ReflectionUtils.findRequiredMethod(this.clazzRegistry.get(modality), "match", 
+		Method method = ReflectionUtils.findRequiredMethod(this.sdkRegistry.get(modality).getClass(), "match", 
 				BIR.class, BIR[].class, KeyValuePair[].class);
+		method.setAccessible(true);
 		
 		boolean isMatched = false;
 		//TODO check for duplicate segment in sample. will SDK handle it or should this be handled in provider ?
@@ -237,8 +236,8 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 							record, getKeyValuePairs(flags));
 					
 					if( Objects.nonNull(response) ) {
-						Score_0_7[] scores = Arrays.copyOf(response, response.length, Score_0_7[].class);
-						Optional<Score_0_7> result = Arrays.stream(scores)
+						Score[] scores = Arrays.copyOf(response, response.length, Score[].class);
+						Optional<Score> result = Arrays.stream(scores)
 								.max((s1, s2) ->  (int) (s1.getScaleScore() - s2.getScaleScore()));
 						scaleScores.add(result.isPresent() ? (long) result.get().getScaleScore() : 0L);
 					}
@@ -258,8 +257,9 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 	//CompositeScore compositeMatch(BIR[] sampleList, BIR[] recordList, KeyValuePair[] flags)
 	private boolean getSDKCompositeMatchResult(List<BIR> sample, BIR[] record, BiometricType modality, Map<String, String> flags, 
 			String threshold) {
-		Method method = ReflectionUtils.findRequiredMethod(this.clazzRegistry.get(modality), "compositeMatch", 
+		Method method = ReflectionUtils.findRequiredMethod(this.sdkRegistry.get(modality).getClass(), "compositeMatch", 
 				BIR[].class, BIR[].class, KeyValuePair[].class);
+		method.setAccessible(true);
 		
 		boolean isMatched = false;
 		if(Objects.nonNull(method)) {
@@ -269,7 +269,7 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 				Object response = method.invoke(this.sdkRegistry.get(modality), sample, record, getKeyValuePairs(flags));
 				
 				if( Objects.nonNull(response) ) {
-					CompositeScore_0_7  compositeScore = (CompositeScore_0_7) response;
+					CompositeScore  compositeScore = (CompositeScore) response;
 					if(compositeScore.getScaledScore() >= Float.valueOf(threshold))
 						isMatched = true;
 				}
