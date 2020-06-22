@@ -5,13 +5,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import io.mosip.kernel.masterdata.validator.ValidLangCode;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-// @ApiModel(value = "TemplateFileFormat", description = "TemplateFileFormat
-// resource representation")
 public class TemplateFileFormatDto {
 
 	@NotBlank
@@ -19,13 +16,13 @@ public class TemplateFileFormatDto {
 	@ApiModelProperty(value = "code", required = true, dataType = "java.lang.String")
 	private String code;
 
+	@NotBlank
 	@Size(min = 0, max = 256)
 	@ApiModelProperty(value = "TemplateFileFormat description", required = false, dataType = "java.lang.String")
 	private String description;
 
-	// @NotBlank
+	@NotBlank
 	@ValidLangCode(message = "Language Code is Invalid")
-	// @Size(min = 1, max = 3)
 	@ApiModelProperty(value = "Language code", required = true, dataType = "java.lang.String")
 	private String langCode;
 
