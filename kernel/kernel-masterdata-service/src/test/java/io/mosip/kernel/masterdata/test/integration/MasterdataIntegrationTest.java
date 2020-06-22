@@ -709,7 +709,7 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("individual")
+	@WithUserDetails("global-admin")
 	public void createIndividualTypeTest() throws Exception {
 		RequestWrapper<IndividualTypeDto> requestDto = new RequestWrapper<>();
 		requestDto.setId("mosip.match.regcentr.Dcode");
@@ -724,7 +724,7 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("individual")
+	@WithUserDetails("global-admin")
 	public void createIndividualTypeExceptionTest() throws Exception {
 		RequestWrapper<IndividualTypeDto> requestDto = new RequestWrapper<>();
 		requestDto.setId("mosip.match.regcentr.Dcode");
