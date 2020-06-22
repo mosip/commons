@@ -7,7 +7,7 @@ import lombok.Data;
 public class Score {
 	
 	private float scaleScore;	  
-	private float internalScore;
+	private long internalScore;
 	private KeyValuePair[] analyticsInfo;
 
 }

@@ -42,6 +42,7 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 	private static final String API_VERSION = "0.7";
 	
 	private Map<BiometricType, Object> sdkRegistry = new HashMap<>();
+	private Map<BiometricType, String> thresholds = new HashMap<>();
 	
 
 	@Override
@@ -54,7 +55,8 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 			if(modalityParams != null && !modalityParams.isEmpty() 
 					&& API_VERSION.equals(modalityParams.get(ProviderConstants.VERSION))) {				
 				Object instance = BioProviderUtil.getSDKInstance(modalityParams);
-				addToRegistry(instance, modality);			
+				addToRegistry(instance, modality);
+				thresholds.put(modality, modalityParams.getOrDefault(ProviderConstants.THRESHOLD, "60"));
 			}
 		}
 		return getSupportedModalities();
@@ -72,7 +74,7 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 		if(Objects.isNull(flags)) { flags = new HashMap<>(); }
 		
 		String methodName = flags.getOrDefault(METHOD_NAME_KEY, "match");
-		String threshold = flags.getOrDefault(THRESHOLD_KEY, "60");
+		String threshold = flags.getOrDefault(THRESHOLD_KEY, thresholds.getOrDefault(modality, "60"));
 		
 		sample = sample.stream().filter(obj -> modality == BiometricType.fromValue(obj.getBdbInfo().getType().get(0).value()))
 				.collect(Collectors.toList());
@@ -100,7 +102,7 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 		if(Objects.isNull(flags)) { flags = new HashMap<>(); }
 		
 		String methodName = flags.getOrDefault(METHOD_NAME_KEY, "compositeMatch");
-		String threshold = flags.getOrDefault(THRESHOLD_KEY, "60");
+		String threshold = flags.getOrDefault(THRESHOLD_KEY, thresholds.getOrDefault(modality, "60"));
 		
 		sample = sample.stream().filter(obj -> modality == BiometricType.fromValue(obj.getBdbInfo().getType().get(0).value()))
 				.collect(Collectors.toList());		 
@@ -266,7 +268,8 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 			LOGGER.debug(ProviderConstants.LOGGER_SESSIONID, ProviderConstants.LOGGER_IDTYPE, "verify invoked", "CompositeMatch method found");
 			
 			try {
-				Object response = method.invoke(this.sdkRegistry.get(modality), sample, record, getKeyValuePairs(flags));
+				Object response = method.invoke(this.sdkRegistry.get(modality), sample.toArray(new BIR[sample.size()]), 
+						record, getKeyValuePairs(flags));
 				
 				if( Objects.nonNull(response) ) {
 					CompositeScore  compositeScore = (CompositeScore) response;
