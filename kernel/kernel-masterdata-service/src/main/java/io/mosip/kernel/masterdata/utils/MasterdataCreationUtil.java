@@ -33,8 +33,6 @@ import io.mosip.kernel.dataaccess.hibernate.constant.HibernateErrorCode;
 import io.mosip.kernel.masterdata.constant.RegistrationCenterErrorCode;
 import io.mosip.kernel.masterdata.constant.RequestErrorCode;
 import io.mosip.kernel.masterdata.entity.Device;
-import io.mosip.kernel.masterdata.entity.DocumentType;
-import io.mosip.kernel.masterdata.entity.Location;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
 
 /**
@@ -213,15 +211,6 @@ public class MasterdataCreationUtil {
 			Field idColumn = dtoClass.getDeclaredField(CODE_COLUMN_NAME);
 			idColumn.setAccessible(true);
 
-			if (entity.equals(Location.class) || entity.equals(DocumentType.class)) {
-				id = generateId();
-				E primary = getResultSet(entity, primaryLang, id, primaryKeyCol);
-				if (primary != null) {
-					idColumn.set(t, id);
-				} else {
-					idColumn.set(t, generateId());
-				}
-			} else {
 				E primary = getResultSet(entity, primaryLang, id, primaryKeyCol);
 				if (primary == null) {
 				idColumn.set(t, id);
@@ -229,7 +218,6 @@ public class MasterdataCreationUtil {
 				throw new MasterDataServiceException(RequestErrorCode.REQUEST_CODE_ALREADY_EXIST.getErrorCode(),
 						RequestErrorCode.REQUEST_CODE_ALREADY_EXIST.getErrorMessage());
 				}
-			}
 
 		}
 		if (primaryKeyCol != null && primaryKeyCol.equals(ID_COLUMN_NAME)) {

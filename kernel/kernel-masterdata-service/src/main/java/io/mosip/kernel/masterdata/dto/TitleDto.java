@@ -27,6 +27,7 @@ public class TitleDto {
 	@Size(min = 1, max = 64)
 	private String titleName;
 
+	
 	@Size(min = 0, max = 128)
 	private String titleDescription;
 
@@ -34,6 +35,7 @@ public class TitleDto {
 	@ApiModelProperty(value = "Application isActive Status", required = true, dataType = "java.lang.Boolean")
 	private Boolean isActive;
 
+	@NotBlank
 	@ValidLangCode(message = "Language Code is Invalid")
 	private String langCode;
 
