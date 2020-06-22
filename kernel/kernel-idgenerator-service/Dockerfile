@@ -56,7 +56,7 @@ CMD if [ "$is_glowroot_env" = "present" ]; then \
     unzip glowroot.zip ; \
     rm -rf glowroot.zip ; \
     sed -i 's/<service_name>/kernel-idgenerator-service/g' glowroot/glowroot.properties ; \
-    java -jar -javaagent:glowroot/glowroot.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=${management.jmxremote.rmi.port_env} -Dcom.sun.management.jmxremote.rmi.port=${management.jmxremote.rmi.port_env} -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=${management.rmi.server.hostname_env} -XX:HeapDumpPath=/home/  kernel-idgenerator-service.jar ; \
+    java -jar -javaagent:glowroot/glowroot.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port="${management.jmxremote.rmi.port_env}" -Dcom.sun.management.jmxremote.rmi.port="${management.jmxremote.rmi.port_env}" -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname="${management.rmi.server.hostname_env}" -XX:HeapDumpPath=/home/  kernel-idgenerator-service.jar ; \
     else \
     java -jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" kernel-idgenerator-service.jar ; \
     fi
