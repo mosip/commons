@@ -7,7 +7,6 @@ import javax.validation.constraints.Size;
 import io.mosip.kernel.masterdata.validator.FilterType;
 import io.mosip.kernel.masterdata.validator.FilterTypeEnum;
 import io.mosip.kernel.masterdata.validator.ValidLangCode;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -28,7 +27,6 @@ public class MachineTypeDto {
 	private String code;
 
 	@NotBlank
-	@Size(min = 1, max = 3)
 	@ValidLangCode(message = "Language Code is Invalid")
 	@ApiModelProperty(value = "langCode", required = true, dataType = "java.lang.String")
 	private String langCode;
@@ -39,7 +37,7 @@ public class MachineTypeDto {
 	@ApiModelProperty(value = "name", required = true, dataType = "java.lang.String")
 	private String name;
 
-	@Size(min = 1, max = 128)
+	@Size(min = 0, max = 128)
 	@ApiModelProperty(value = "description", required = true, dataType = "java.lang.String")
 	private String description;
 
