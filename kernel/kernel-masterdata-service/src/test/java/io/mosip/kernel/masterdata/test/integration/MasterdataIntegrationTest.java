@@ -4757,7 +4757,7 @@ public class MasterdataIntegrationTest {
 		documentCategoryDto.setName("POI");
 		requestDto.setRequest(documentCategoryDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
-		when(documentCategoryRepository.findByCodeAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.any(),
+		when(documentCategoryRepository.findByCodeAndLangCode(Mockito.any(),
 				Mockito.any())).thenReturn(category);
 		when(masterdataCreationUtil.updateMasterData(DocumentCategory.class, documentCategoryDto))
 				.thenReturn(documentCategoryDto);
@@ -4780,7 +4780,7 @@ public class MasterdataIntegrationTest {
 		documentCategoryDto.setName("POI");
 		requestDto.setRequest(documentCategoryDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
-		when(documentCategoryRepository.findByCodeAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.any(),
+		when(documentCategoryRepository.findByCodeAndLangCode(Mockito.any(),
 				Mockito.any())).thenReturn(null);
 		when(masterdataCreationUtil.updateMasterData(DocumentCategory.class, documentCategoryDto))
 				.thenReturn(documentCategoryDto);
@@ -4803,7 +4803,7 @@ public class MasterdataIntegrationTest {
 		documentCategoryDto.setName("POI");
 		requestDto.setRequest(documentCategoryDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
-		when(documentCategoryRepository.findByCodeAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.any(),
+		when(documentCategoryRepository.findByCodeAndLangCode(Mockito.any(),
 				Mockito.any())).thenReturn(category);
 		when(documentCategoryRepository.update(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot execute statement", null));
@@ -5043,8 +5043,6 @@ public class MasterdataIntegrationTest {
 
 		when(deviceSpecificationRepository.findByIdAndIsDeletedFalseorIsDeletedIsNull(Mockito.any()))
 				.thenReturn(deviceSpecList);
-		when(deviceSpecificationRepository.findByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.any(),
-				Mockito.any())).thenReturn(deviceSpecification);
 		when(deviceRepository.findDeviceByDeviceSpecIdAndIsDeletedFalseorIsDeletedIsNull(deviceSpecification.getId()))
 				.thenReturn(new ArrayList<Device>());
 		when(deviceSpecificationRepository.update(Mockito.any())).thenReturn(deviceSpecification);
@@ -5481,7 +5479,7 @@ public class MasterdataIntegrationTest {
 		registrationCenterType.setName("POI");
 		String contentJson = mapper.writeValueAsString(requestDto);
 
-		when(registrationCenterTypeRepository.findByCodeAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.any(),
+		when(registrationCenterTypeRepository.findByCodeAndLangCode(Mockito.any(),
 				Mockito.any())).thenReturn(registrationCenterType);
 		when(masterdataCreationUtil.updateMasterData(RegistrationCenterType.class, registrationCenterTypeDto))
 				.thenReturn(registrationCenterTypeDto);
@@ -5510,7 +5508,7 @@ public class MasterdataIntegrationTest {
 		String contentJson = mapper.writeValueAsString(requestDto);
 		when(masterdataCreationUtil.updateMasterData(RegistrationCenterType.class, registrationCenterTypeDto))
 				.thenReturn(registrationCenterTypeDto);
-		when(registrationCenterTypeRepository.findByCodeAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.any(),
+		when(registrationCenterTypeRepository.findByCodeAndLangCode(Mockito.any(),
 				Mockito.any())).thenReturn(registrationCenterType);
 		when(registrationCenterTypeRepository.update(Mockito.any())).thenReturn(registrationCenterType);
 		mockMvc.perform(put("/registrationcentertypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
@@ -5537,7 +5535,7 @@ public class MasterdataIntegrationTest {
 		String contentJson = mapper.writeValueAsString(requestDto);
 		when(masterdataCreationUtil.updateMasterData(RegistrationCenterType.class, registrationCenterTypeDto))
 				.thenReturn(registrationCenterTypeDto);
-		when(registrationCenterTypeRepository.findByCodeAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.any(),
+		when(registrationCenterTypeRepository.findByCodeAndLangCode(Mockito.any(),
 				Mockito.any())).thenReturn(null);
 		when(registrationCenterTypeRepository.update(Mockito.any())).thenReturn(registrationCenterType);
 		mockMvc.perform(put("/registrationcentertypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
@@ -5563,7 +5561,7 @@ public class MasterdataIntegrationTest {
 		registrationCenterType.setDescr("TEST DESCR");
 		registrationCenterType.setName("POI");
 		String contentJson = mapper.writeValueAsString(requestDto);
-		when(registrationCenterTypeRepository.findByCodeAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.any(),
+		when(registrationCenterTypeRepository.findByCodeAndLangCode(Mockito.any(),
 				Mockito.any())).thenReturn(registrationCenterType);
 		when(registrationCenterTypeRepository.update(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot execute statement", null));

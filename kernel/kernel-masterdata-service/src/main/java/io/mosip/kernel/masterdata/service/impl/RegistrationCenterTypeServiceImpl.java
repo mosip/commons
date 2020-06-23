@@ -149,7 +149,7 @@ public class RegistrationCenterTypeServiceImpl implements RegistrationCenterType
 		MapperUtils.mapFieldValues(registrationCenterTypeDto, registrationCenterTypeId);
 		try {
 			RegistrationCenterType registrationCenterTypeEntity = registrationCenterTypeRepository
-					.findByCodeAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(registrationCenterTypeDto.getCode(),
+					.findByCodeAndLangCode(registrationCenterTypeDto.getCode(),
 							registrationCenterTypeDto.getLangCode());
 			if (registrationCenterTypeEntity != null) {
 

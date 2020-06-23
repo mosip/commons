@@ -247,7 +247,7 @@ public class DocumentCategoryServiceImpl implements DocumentCategoryService {
 		try {
 
 			DocumentCategory documentCategory = documentCategoryRepository
-					.findByCodeAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(categoryDto.getCode(),
+					.findByCodeAndLangCode(categoryDto.getCode(),
 							categoryDto.getLangCode());
 
 			if (documentCategory != null) {
