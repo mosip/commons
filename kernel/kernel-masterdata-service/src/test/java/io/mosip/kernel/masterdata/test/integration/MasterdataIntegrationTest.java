@@ -3485,6 +3485,8 @@ public class MasterdataIntegrationTest {
 		requestDto.setRequest(deviceSpecificationDto);
 
 		String deviceSpecificationJson = mapper.writeValueAsString(requestDto);
+		when(deviceTypeRepository.findDeviceTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+				.thenReturn(deviceType);
 		when(masterdataCreationUtil.createMasterData(DeviceSpecification.class, deviceSpecificationDto))
 				.thenReturn(deviceSpecificationDto);
 		when(deviceSpecificationRepository.create(Mockito.any())).thenReturn(deviceSpecification);
@@ -3516,9 +3518,11 @@ public class MasterdataIntegrationTest {
 		requestDto.setId("mosip.match.regcentr.DeviceSpecificationcode");
 		requestDto.setVersion("1.0.0");
 		requestDto.setRequest(deviceSpecificationDto);
-
+		when(deviceTypeRepository.findDeviceTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+				.thenReturn(deviceType);
 		String DeviceSpecificationJson = mapper.writeValueAsString(requestDto);
-
+		when(deviceTypeRepository.findDeviceTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+				.thenReturn(deviceType);
 		Mockito.when(deviceSpecificationRepository.create(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot insert", null));
 		mockMvc.perform(MockMvcRequestBuilders.post("/devicespecifications").contentType(MediaType.APPLICATION_JSON)
@@ -3611,7 +3615,8 @@ public class MasterdataIntegrationTest {
 		String machineSpecificationJson = mapper.writeValueAsString(requestDto);
 		when(masterdataCreationUtil.createMasterData(MachineSpecification.class, machineSpecificationDto))
 				.thenReturn(machineSpecificationDto);
-
+		when(machineTypeRepository.findMachineTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+				.thenReturn(machineType);
 		when(machineSpecificationRepository.create(Mockito.any())).thenReturn(machineSpecification);
 		mockMvc.perform(post("/machinespecifications").contentType(MediaType.APPLICATION_JSON)
 				.content(machineSpecificationJson)).andExpect(status().isOk());
@@ -3648,7 +3653,8 @@ public class MasterdataIntegrationTest {
 		requestDto.setRequest(machineSpecificationDto);
 
 		String machineSpecificationJson = mapper.writeValueAsString(requestDto);
-
+		when(machineTypeRepository.findMachineTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+				.thenReturn(machineType);
 		Mockito.when(machineSpecificationRepository.create(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot insert", null));
 		mockMvc.perform(MockMvcRequestBuilders.post("/machinespecifications").contentType(MediaType.APPLICATION_JSON)
@@ -3679,6 +3685,8 @@ public class MasterdataIntegrationTest {
 		requestDto.setVersion("1.0.0");
 		requestDto.setRequest(machineSpecificationDto);
 		String content = mapper.writeValueAsString(requestDto);
+		when(machineTypeRepository.findMachineTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+		.thenReturn(machineType);
 		when(machineSpecificationRepository.findByIdAndLangCodeIsDeletedFalseorIsDeletedIsNull(Mockito.any(),
 				Mockito.any())).thenReturn(machineSpecification);
 		Mockito.when(machineSpecificationRepository.update(Mockito.any())).thenReturn(machineSpecification);
@@ -3699,6 +3707,8 @@ public class MasterdataIntegrationTest {
 		machineSpecificationDto.setLangCode("xxx");
 		requestDto.setRequest(machineSpecificationDto);
 		String content = mapper.writeValueAsString(requestDto);
+		when(machineTypeRepository.findMachineTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+		.thenReturn(machineType);
 		when(machineSpecificationRepository.findByIdAndLangCodeIsDeletedFalseorIsDeletedIsNull(Mockito.any(),
 				Mockito.any())).thenReturn(machineSpecification);
 		Mockito.when(machineSpecificationRepository.update(Mockito.any())).thenReturn(machineSpecification);
@@ -3717,6 +3727,8 @@ public class MasterdataIntegrationTest {
 		requestDto.setVersion("1.0.0");
 		requestDto.setRequest(machineSpecificationDto);
 		String content = mapper.writeValueAsString(requestDto);
+		when(machineTypeRepository.findMachineTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+		.thenReturn(machineType);
 		when(machineSpecificationRepository.findByIdAndLangCodeIsDeletedFalseorIsDeletedIsNull(Mockito.any(),
 				Mockito.any())).thenReturn(null);
 
@@ -3734,6 +3746,8 @@ public class MasterdataIntegrationTest {
 		requestDto.setVersion("1.0.0");
 		requestDto.setRequest(machineSpecificationDto);
 		String content = mapper.writeValueAsString(requestDto);
+		when(machineTypeRepository.findMachineTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+		.thenReturn(machineType);
 		when(machineSpecificationRepository.findByIdAndLangCodeIsDeletedFalseorIsDeletedIsNull(Mockito.any(),
 				Mockito.any())).thenThrow(DataAccessLayerException.class);
 
@@ -4954,6 +4968,8 @@ public class MasterdataIntegrationTest {
 		requestDto.setVersion("1.0");
 		requestDto.setRequest(deviceSpecificationDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
+		when(deviceTypeRepository.findDeviceTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+				.thenReturn(deviceType);
 		when(deviceSpecificationRepository.findByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.any(),
 				Mockito.any())).thenReturn(deviceSpecification);
 		when(masterdataCreationUtil.updateMasterData(DeviceSpecification.class, deviceSpecificationDto))
@@ -4989,6 +5005,8 @@ public class MasterdataIntegrationTest {
 
 		requestDto.setRequest(deviceSpecificationDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
+		when(deviceTypeRepository.findDeviceTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+				.thenReturn(deviceType);
 		when(deviceSpecificationRepository.findByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.any(),
 				Mockito.any())).thenReturn(null);
 		when(masterdataCreationUtil.updateMasterData(DeviceSpecification.class, deviceSpecificationDto))
@@ -5006,6 +5024,9 @@ public class MasterdataIntegrationTest {
 		requestDto.setVersion("1.0");
 		requestDto.setRequest(deviceSpecificationDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
+
+		when(deviceTypeRepository.findDeviceTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+				.thenReturn(deviceType);
 		when(deviceSpecificationRepository.findByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.any(),
 				Mockito.any())).thenReturn(deviceSpecification);
 		when(deviceSpecificationRepository.update(Mockito.any()))
