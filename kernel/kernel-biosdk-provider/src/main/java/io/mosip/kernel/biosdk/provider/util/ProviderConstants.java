@@ -6,5 +6,8 @@ public class ProviderConstants {
 	public static final String VERSION = "version";
 	public static final String ARGUMENTS = "args";
 	public static final String THRESHOLD = "threshold";
+	
+	public static final String LOGGER_SESSIONID = "BIO-SDK-PROVIDER";
+	public static final String LOGGER_IDTYPE = "REGISTRATION / AUTH";
 
 }

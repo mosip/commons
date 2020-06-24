@@ -20,6 +20,7 @@
 		<kernel.biometricsdk.version>0.9-SNAPSHOT</kernel.biometricsdk.version>
 		<maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
 		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
+		<kernel.logger.logback.version>1.0.6</kernel.logger.logback.version>
 	</properties>
 	
 	<dependencies>
@@ -43,6 +44,12 @@
 			<artifactId>kernel-core</artifactId>
 			<version>${kernel.core.version}</version>
 		</dependency>
+		
+		 <dependency>
+            <groupId>io.mosip.kernel</groupId>
+            <artifactId>kernel-logger-logback</artifactId>
+            <version>${kernel.logger.logback.version}</version>
+        </dependency>
 		
 		<!-- <dependency>
 			<artifactId>mock-sdk</artifactId>
