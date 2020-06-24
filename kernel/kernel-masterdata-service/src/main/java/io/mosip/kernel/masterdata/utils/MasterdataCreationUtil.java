@@ -308,6 +308,10 @@ public class MasterdataCreationUtil {
 		}
 
 		if (langCode.equals(primaryLang)) {
+			if (StringUtils.isBlank(id)) {
+				throw new MasterDataServiceException(RequestErrorCode.REQUEST_INVALID_PRI_LANG_ID.getErrorCode(),
+						RequestErrorCode.REQUEST_INVALID_PRI_LANG_ID.getErrorMessage());
+			}
 			E secondaryEntity = getResultSet(entity, secondaryLang, id, primaryKeyCol);
 			if (activeDto == true) {
 				if (secondaryEntity != null) {
