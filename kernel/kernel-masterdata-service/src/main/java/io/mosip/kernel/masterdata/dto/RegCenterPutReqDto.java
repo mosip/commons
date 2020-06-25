@@ -8,8 +8,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Range;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import io.mosip.kernel.masterdata.validator.StringFormatter;
 import io.mosip.kernel.masterdata.validator.ValidLangCode;
 import lombok.Data;
 
@@ -27,12 +30,12 @@ public class RegCenterPutReqDto {
 
 	private String id;
 
-	@NotBlank
-	@Size(min = 0, max = 128)
+	@NotNull
+	@StringFormatter(min = 1, max = 128)
 	private String name;
 
-	@NotBlank
-	@Size(min = 0, max = 256)
+	@NotNull
+	@StringFormatter(min = 1, max = 256)
 	private String addressLine1;
 
 	@Size(min = 0, max = 256)
@@ -52,12 +55,12 @@ public class RegCenterPutReqDto {
 	@NotNull
 	private Boolean isActive;
 
-	@NotBlank
-	@Size(min = 0, max = 36)
+	@NotNull
+	@StringFormatter(min = 1, max = 36)
 	private String centerTypeCode;
 
-	@NotBlank
-	@Size(min = 0, max = 32)
+	@NotNull
+	@StringFormatter(min = 1, max = 32)
 	private String latitude;
 
 	@NotBlank

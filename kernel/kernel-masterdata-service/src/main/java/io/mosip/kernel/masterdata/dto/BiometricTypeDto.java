@@ -1,11 +1,12 @@
 package io.mosip.kernel.masterdata.dto;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Range;
+
+import io.mosip.kernel.masterdata.validator.StringFormatter;
 import io.mosip.kernel.masterdata.validator.ValidLangCode;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -20,13 +21,15 @@ import lombok.Data;
 //@ApiModel(value = "BiometricType", description = "BiometricType resource representation")
 public class BiometricTypeDto {
 
-	@NotBlank
-	@Size(min = 1, max = 36)
+
+	@NotNull
+	@StringFormatter(min = 1, max = 36)
 	@ApiModelProperty(value = "code", required = true, dataType = "java.lang.String")
 	private String code;
 
-	@NotBlank
-	@Size(min = 1, max = 64)
+
+	@NotNull
+	@StringFormatter(min = 1, max = 64)
 	@ApiModelProperty(value = "name", required = true, dataType = "java.lang.String")
 	private String name;
 
@@ -35,8 +38,6 @@ public class BiometricTypeDto {
 	private String description;
 
 	@ValidLangCode
-	@NotBlank
-	@Size(min = 1, max = 3)
 	@ApiModelProperty(value = "Language Code", required = true, dataType = "java.lang.String")
 	private String langCode;
 
