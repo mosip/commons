@@ -5,6 +5,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import io.mosip.kernel.masterdata.validator.ValidLangCode;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -26,15 +27,16 @@ public class TitleDto {
 	@Size(min = 1, max = 64)
 	private String titleName;
 
-	@Size(min = 1, max = 128)
+	
+	@Size(min = 0, max = 128)
 	private String titleDescription;
 
 	@NotNull
+	@ApiModelProperty(value = "Application isActive Status", required = true, dataType = "java.lang.Boolean")
 	private Boolean isActive;
 
-	// @NotBlank
+	@NotBlank
 	@ValidLangCode(message = "Language Code is Invalid")
-	// @Size(min = 1, max = 3)
 	private String langCode;
 
 }

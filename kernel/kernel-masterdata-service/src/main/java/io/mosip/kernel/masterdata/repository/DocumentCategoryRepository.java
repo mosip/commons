@@ -59,4 +59,8 @@ public interface DocumentCategoryRepository extends BaseRepository<DocumentCateg
 	@Modifying
 	@Query("UPDATE DocumentCategory d SET d.updatedBy=?3,d.isDeleted =true , d.deletedDateTime = ?1 WHERE d.code =?2 and (d.isDeleted is null or d.isDeleted =false)")
 	int deleteDocumentCategory(LocalDateTime deletedDateTime, String code, String updatedBy);
+	
+	
+	@Query("FROM DocumentCategory WHERE code =?1 AND langCode =?2 AND (isDeleted is null OR isDeleted = false)")
+	DocumentCategory findByCodeAndLangCode(String code, String langCode);
 }

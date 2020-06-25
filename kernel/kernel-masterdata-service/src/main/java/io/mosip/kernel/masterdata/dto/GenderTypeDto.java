@@ -34,11 +34,10 @@ public class GenderTypeDto {
 	@Size(min = 1, max = 64)
 	private String genderName;
 
+	@NotBlank
 	@ApiModelProperty(notes = "Language Code", example = "ENG", required = true)
-	// @NotBlank
-	@ValidLangCode(message = "Language Code is Invalid")
-	// @Size(min = 1, max = 3)
-	private String langCode;
+    @ValidLangCode(message = "Language Code is Invalid")
+    private String langCode;
 
 	@ApiModelProperty(notes = "Row is active or not", required = true)
 	@NotNull

@@ -43,13 +43,12 @@ public class DeviceSpecificationDto {
 	@ApiModelProperty(value = "minDriverversion", required = true, dataType = "java.lang.String")
 	private String minDriverversion;
 
-	@Size(min = 1, max = 256)
+	@Size(min = 0, max = 256)
 	@ApiModelProperty(value = "description", required = true, dataType = "java.lang.String")
 	private String description;
 
 	@NotBlank
-	@Size(min = 1, max = 3)
-	@ValidLangCode
+	@ValidLangCode(message = "Language Code is Invalid")
 	@ApiModelProperty(value = "langCode", required = true, dataType = "java.lang.String")
 	private String langCode;
 
