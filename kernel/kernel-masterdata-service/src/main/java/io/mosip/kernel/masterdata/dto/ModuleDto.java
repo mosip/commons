@@ -4,6 +4,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Range;
+
+import io.mosip.kernel.masterdata.validator.StringFormatter;
 import io.mosip.kernel.masterdata.validator.ValidLangCode;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -20,16 +23,16 @@ public class ModuleDto {
 	/**
 	 * Field for code
 	 */
-	@NotBlank
-	@Size(min = 1, max = 36)
+	@NotNull
+	@StringFormatter(min = 1, max = 36)
 	@ApiModelProperty(value = "id", required = true, dataType = "java.lang.String")
 	private String id;
 
 	/**
 	 * Field for module name
 	 */
-	@NotBlank
-	@Size(min = 1, max = 64)
+	@NotNull
+	@StringFormatter(min = 1, max = 64)
 	@ApiModelProperty(value = "name", required = true, dataType = "java.lang.String")
 	private String name;
 

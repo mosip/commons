@@ -4,6 +4,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Range;
+
+import io.mosip.kernel.masterdata.validator.StringFormatter;
 import io.mosip.kernel.masterdata.validator.ValidLangCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -23,17 +26,16 @@ public class LanguageDto {
 	/**
 	 * Field for language code
 	 */
-	// @NotBlank
+
 	@ValidLangCode(message = "Language Code is Invalid")
-	// @Size(min = 1, max = 3)
-	@ApiModelProperty(value = "Language Code", required = true, dataType = "java.lang.String")
+    @ApiModelProperty(value = "Language Code", required = true, dataType = "java.lang.String")
 	private String code;
 
 	/**
 	 * Field for language name
 	 */
-	@NotBlank
-	@Size(min = 1, max = 64)
+	@NotNull
+	@StringFormatter(min = 1, max = 64)
 	@ApiModelProperty(value = "Language Name", required = true, dataType = "java.lang.String")
 	private String name;
 
