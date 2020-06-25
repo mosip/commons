@@ -41,6 +41,7 @@ import io.mosip.kernel.masterdata.dto.request.SearchFilter;
 import io.mosip.kernel.masterdata.dto.request.SearchSort;
 import io.mosip.kernel.masterdata.dto.response.LocationSearchDto;
 import io.mosip.kernel.masterdata.entity.Location;
+import io.mosip.kernel.masterdata.repository.LocationHierarchyRepository;
 import io.mosip.kernel.masterdata.repository.LocationRepository;
 import io.mosip.kernel.masterdata.utils.AuditUtil;
 import io.mosip.kernel.masterdata.utils.MasterDataFilterHelper;
@@ -71,6 +72,9 @@ public class LocationSearchFilterIntegrationTest {
 
 	@MockBean
 	private MasterDataFilterHelper masterDataFilterHelper;
+	
+	@MockBean
+	private LocationHierarchyRepository locationHierarchyRepository;
 
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -127,6 +131,7 @@ public class LocationSearchFilterIntegrationTest {
 		locations.add(location);
 		String json = objectMapper.writeValueAsString(request);
 		when(locationRepository.findAllByLangCode(Mockito.anyString())).thenReturn(locations);
+		when(locationHierarchyRepository.findByheirarchyLevalNameAndLangCode(Mockito.anyString(), Mockito.anyString())).thenReturn(1);
 		when(locationRepository.findLocationByHierarchyLevel(Mockito.anyShort(), Mockito.anyString(),
 				Mockito.anyString(), Mockito.anyBoolean())).thenReturn(location);
 		mockMvc.perform(post("/locations/search").contentType(MediaType.APPLICATION_JSON).content(json))
