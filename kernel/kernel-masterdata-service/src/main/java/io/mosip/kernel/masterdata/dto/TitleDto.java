@@ -30,7 +30,7 @@ public class TitleDto {
 	@StringFormatter(min = 1, max = 64)
 	private String titleName;
 
-	
+
 	@Size(min = 0, max = 128)
 	private String titleDescription;
 
