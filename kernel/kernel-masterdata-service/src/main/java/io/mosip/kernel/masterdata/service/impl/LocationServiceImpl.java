@@ -85,9 +85,6 @@ import io.mosip.kernel.masterdata.validator.FilterTypeEnum;
 @Service
 public class LocationServiceImpl implements LocationService {
 
-	@Autowired
-	private LocationHierarchyRepository locationHierarchyRepository;
-
 	/**
 	 * creates an instance of repository class {@link LocationRepository}}
 	 */
