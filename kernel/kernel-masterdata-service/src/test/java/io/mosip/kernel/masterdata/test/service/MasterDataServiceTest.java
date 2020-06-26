@@ -7,7 +7,6 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
@@ -40,7 +39,6 @@ import io.mosip.kernel.masterdata.dto.DeviceSpecificationDto;
 import io.mosip.kernel.masterdata.dto.DocumentCategoryDto;
 import io.mosip.kernel.masterdata.dto.DocumentTypeDto;
 import io.mosip.kernel.masterdata.dto.DocumentTypePutReqDto;
-import io.mosip.kernel.masterdata.dto.ExceptionalHolidayDto;
 import io.mosip.kernel.masterdata.dto.LanguageDto;
 import io.mosip.kernel.masterdata.dto.LocationDto;
 import io.mosip.kernel.masterdata.dto.RegCenterPostReqDto;
@@ -70,7 +68,6 @@ import io.mosip.kernel.masterdata.entity.DaysOfWeek;
 import io.mosip.kernel.masterdata.entity.DeviceSpecification;
 import io.mosip.kernel.masterdata.entity.DocumentCategory;
 import io.mosip.kernel.masterdata.entity.DocumentType;
-import io.mosip.kernel.masterdata.entity.ExceptionalHoliday;
 import io.mosip.kernel.masterdata.entity.Language;
 import io.mosip.kernel.masterdata.entity.Location;
 import io.mosip.kernel.masterdata.entity.LocationHierarchy;
@@ -122,7 +119,6 @@ import io.mosip.kernel.masterdata.service.TemplateFileFormatService;
 import io.mosip.kernel.masterdata.service.TemplateService;
 import io.mosip.kernel.masterdata.test.TestBootApplication;
 import io.mosip.kernel.masterdata.utils.AuditUtil;
-import io.mosip.kernel.masterdata.utils.MapperUtils;
 import io.mosip.kernel.masterdata.utils.MetaDataUtils;
 import io.mosip.kernel.masterdata.utils.ZoneUtils;
 
@@ -325,6 +321,7 @@ public class MasterDataServiceTest {
 
 	private BiometricTypeDto biometricTypeDto;
 
+
 	@Before
 	public void setUp() {
 
@@ -506,7 +503,7 @@ public class MasterDataServiceTest {
 		documentCategory1 = new DocumentCategory();
 		documentCategory1.setCode("101");
 		documentCategory1.setName("POI");
-		documentCategory1.setLangCode("ENG");
+		documentCategory1.setLangCode("eng");
 		documentCategory1.setIsActive(true);
 		documentCategory1.setIsDeleted(false);
 		documentCategory1.setDescription(null);
@@ -516,7 +513,7 @@ public class MasterDataServiceTest {
 		documentCategory2 = new DocumentCategory();
 		documentCategory2.setCode("102");
 		documentCategory2.setName("POR");
-		documentCategory2.setLangCode("ENG");
+		documentCategory2.setLangCode("eng");
 		documentCategory2.setIsActive(true);
 		documentCategory2.setIsDeleted(false);
 		documentCategory2.setDescription(null);
@@ -531,7 +528,8 @@ public class MasterDataServiceTest {
 		documentCategoryDto.setCode("102");
 		documentCategoryDto.setName("POR");
 		documentCategoryDto.setDescription(null);
-		documentCategoryDto.setLangCode("ENG");
+		documentCategoryDto.setLangCode("eng");
+		documentCategoryDto.setIsActive(true);
 
 		documentCategoryRequestDto.setRequest(documentCategoryDto);
 	}
@@ -589,7 +587,7 @@ public class MasterDataServiceTest {
 		biometricType1.setCode("1");
 		biometricType1.setName("DNA MATCHING");
 		biometricType1.setDescription(null);
-		biometricType1.setLangCode("ENG");
+		biometricType1.setLangCode("eng");
 		biometricType1.setIsActive(true);
 		biometricType1.setCreatedBy("Neha");
 		biometricType1.setUpdatedBy(null);
@@ -598,7 +596,7 @@ public class MasterDataServiceTest {
 		biometricType2.setCode("3");
 		biometricType2.setName("EYE SCAN");
 		biometricType2.setDescription(null);
-		biometricType2.setLangCode("ENG");
+		biometricType2.setLangCode("eng");
 		biometricType2.setIsActive(true);
 		biometricType2.setCreatedBy("Neha");
 		biometricType2.setUpdatedBy(null);
@@ -613,7 +611,8 @@ public class MasterDataServiceTest {
 		biometricTypeDto.setCode("1");
 		biometricTypeDto.setName("DNA MATCHING");
 		biometricTypeDto.setDescription(null);
-		biometricTypeDto.setLangCode("ENG");
+		biometricTypeDto.setLangCode("eng");
+		biometricTypeDto.setIsActive(true);
 		// request.setBiometricType(biometricTypeDto);
 		biometricTypeRequestWrapper.setRequest(biometricTypeDto);
 	}
@@ -630,6 +629,7 @@ public class MasterDataServiceTest {
 		biometricAttribute1.setName("brown");
 		biometricAttribute1.setIsActive(true);
 		biometricattributes.add(biometricAttribute1);
+
 	}
 
 	private void applicationSetup() {
@@ -640,7 +640,7 @@ public class MasterDataServiceTest {
 		application1.setCode("101");
 		application1.setName("pre-registeration");
 		application1.setDescription("Pre-registration Application Form");
-		application1.setLangCode("ENG");
+		application1.setLangCode("eng");
 		application1.setIsActive(true);
 		application1.setCreatedBy("Neha");
 		application1.setUpdatedBy(null);
@@ -649,7 +649,7 @@ public class MasterDataServiceTest {
 		application2.setCode("102");
 		application2.setName("registeration");
 		application2.setDescription("Registeration Application Form");
-		application2.setLangCode("ENG");
+		application2.setLangCode("eng");
 		application2.setIsActive(true);
 		application2.setCreatedBy("Neha");
 		application2.setUpdatedBy(null);
@@ -664,7 +664,8 @@ public class MasterDataServiceTest {
 		applicationDto.setCode("101");
 		applicationDto.setName("pre-registeration");
 		applicationDto.setDescription("Pre-registration Application Form");
-		applicationDto.setLangCode("ENG");
+		applicationDto.setLangCode("eng");
+		applicationDto.setIsActive(true);
 		// request.setApplicationtype(applicationDto);
 		applicationRequestWrapper.setRequest(applicationDto);
 	}
@@ -672,12 +673,13 @@ public class MasterDataServiceTest {
 	private void templateFileFormatSetup() {
 		templateFileFormat = new TemplateFileFormat();
 		templateFileFormat.setCode("xml");
-		templateFileFormat.setLangCode("ENG");
+		templateFileFormat.setLangCode("eng");
 
 		templateFileFormatRequestDto = new RequestWrapper<TemplateFileFormatDto>();
 		TemplateFileFormatDto templateFileFormatDto = new TemplateFileFormatDto();
 		templateFileFormatDto.setCode("xml");
-		templateFileFormatDto.setLangCode("ENG");
+		templateFileFormatDto.setLangCode("eng");
+		templateFileFormatDto.setIsActive(true);
 
 		templateFileFormatRequestDto.setRequest(templateFileFormatDto);
 	}
@@ -1350,6 +1352,7 @@ public class MasterDataServiceTest {
 				.thenThrow(DataAccessResourceFailureException.class);
 		biometricAttributeService.getBiometricAttribute(biometricTypeCode, langCode);
 	}
+
 
 	// ------------------ BiometricTypeServiceTest -----------------//
 

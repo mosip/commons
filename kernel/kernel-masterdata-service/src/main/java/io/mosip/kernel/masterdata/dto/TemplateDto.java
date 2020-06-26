@@ -4,6 +4,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Range;
+
+import io.mosip.kernel.masterdata.validator.StringFormatter;
 import io.mosip.kernel.masterdata.validator.ValidLangCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -19,13 +22,13 @@ import lombok.Data;
 //@ApiModel(value = "Template", description = "Template resource representation")
 public class TemplateDto {
 
-	@NotBlank
-	@Size(min = 1, max = 36)
+	@NotNull
+	@StringFormatter(min = 1, max = 36)
 	@ApiModelProperty(value = "id", required = true, dataType = "java.lang.String")
 	private String id;
 
-	@NotBlank
-	@Size(min = 1, max = 128)
+	@NotNull
+	@StringFormatter(min = 1, max = 128)
 	@ApiModelProperty(value = "name", required = true, dataType = "java.lang.String")
 	private String name;
 
@@ -33,8 +36,8 @@ public class TemplateDto {
 	@ApiModelProperty(value = "Template description", required = false, dataType = "java.lang.String")
 	private String description;
 
-	@NotBlank
-	@Size(min = 1, max = 36)
+	@NotNull
+	@StringFormatter(min = 1, max = 36)
 	@ApiModelProperty(value = "Template file format code", required = true, dataType = "java.lang.String")
 	private String fileFormatCode;
 
@@ -54,13 +57,12 @@ public class TemplateDto {
 	@ApiModelProperty(value = "module name", required = false, dataType = "java.lang.String")
 	private String moduleName;
 
-	@NotBlank
-	@Size(min = 1, max = 36)
+	@NotNull
+	@StringFormatter(min = 1, max = 36)
 	@ApiModelProperty(value = "Template file format code", required = true, dataType = "java.lang.String")
 	private String templateTypeCode;
 
-	// @NotBlank
-	// @Size(min = 1, max = 3)
+
 	@ValidLangCode(message = "Language Code is Invalid")
 	@ApiModelProperty(value = "Language code", required = true, dataType = "java.lang.String")
 	private String langCode;

@@ -8,21 +8,32 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.biometrics.constant.BiometricFunction;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biosdk.provider.spi.iBioProviderApi;
+import io.mosip.kernel.biosdk.provider.util.BioSDKProviderLoggerFactory;
 import io.mosip.kernel.biosdk.provider.util.ErrorCode;
+import io.mosip.kernel.biosdk.provider.util.ProviderConstants;
 import io.mosip.kernel.core.bioapi.exception.BiometricException;
+import io.mosip.kernel.core.logger.spi.Logger;
 
 @ConfigurationProperties(prefix = "mosip.biometric.sdk.provider")
 @Component
 public class BioAPIFactory {
-		
+	
+	private static final Logger LOGGER = BioSDKProviderLoggerFactory.getLogger(BioAPIFactory.class);		
+
 	private Map<String, String> finger;
+	
 	private Map<String, String> iris;
+	
 	private Map<String, String> face;
+	
+	@Autowired
+	private Environment environment;
 	
 	@Autowired
 	private List<iBioProviderApi> providerApis;
@@ -43,6 +54,9 @@ public class BioAPIFactory {
 		params.put(BiometricType.FINGER, finger);
 		params.put(BiometricType.IRIS, iris);
 		params.put(BiometricType.FACE, face);
+		
+		LOGGER.info(ProviderConstants.LOGGER_SESSIONID, ProviderConstants.LOGGER_IDTYPE, "initializeBioAPIProviders invoked", 
+				"With params >> " + params);
 		
 		if(params.isEmpty())
 			throw new BiometricException(ErrorCode.NO_SDK_CONFIG.getErrorCode(), ErrorCode.NO_SDK_CONFIG.getErrorMessage());

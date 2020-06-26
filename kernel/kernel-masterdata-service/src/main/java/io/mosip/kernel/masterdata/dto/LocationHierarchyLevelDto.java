@@ -6,6 +6,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Range;
 
+import io.mosip.kernel.masterdata.validator.StringFormatter;
 import io.mosip.kernel.masterdata.validator.ValidLangCode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,8 +26,8 @@ public class LocationHierarchyLevelDto {
 	@Range(min = 0)
 	private short hierarchyLevel;
 
-	@Size(min = 0, max = 64)
-	@NotBlank
+	@NotNull
+	@StringFormatter(min = 1, max = 64)
 	private String hierarchyLevelName;
 
 	@ValidLangCode(message = "Language Code is Invalid")

@@ -85,8 +85,8 @@ public interface RegistrationCenterTypeRepository
 	RegistrationCenterType findByCodeAndLangCode(String code, String langCode);
 
 	/**
-	 * This method triggers query to fetch registration center type 
-	 * 
+	 * This method triggers query to fetch registration center type
+	 *
 	 * @return the registration center types.
 	 */
 	@Query( "select r from RegistrationCenterType r WHERE isActive=?1 AND (isDeleted is null OR isDeleted = false)" )

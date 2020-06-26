@@ -69,7 +69,7 @@ public interface ValidDocumentRepository extends BaseRepository<ValidDocument, V
 	 * @return the number of rows affected.
 	 */
 	@Modifying
-	@Query("UPDATE ValidDocument v SET v.updatedBy=?4,v.isDeleted =true , v.deletedDateTime = ?1 WHERE v.docCategoryCode =?2 and v.docTypeCode =?3 and (v.isDeleted is null or v.isDeleted =false)")
+	@Query("UPDATE ValidDocument v SET v.updatedBy=?4,v.isDeleted =true , v.deletedDateTime = ?1 ,isActive = false WHERE v.docCategoryCode =?2 and v.docTypeCode =?3 and (v.isDeleted is null or v.isDeleted =false)")
 	int deleteValidDocument(LocalDateTime deletedDateTime, String docCategoryCode, String docTypeCode,
 			String updatedBy);
 

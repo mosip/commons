@@ -39,7 +39,7 @@ import io.mosip.kernel.core.cbeffutil.jaxbclasses.SingleType;
 
 
 @Component
-public class SampleBioProviderAPIImpl implements iBioProviderApi {
+public class BioProviderImpl_V_0_9 implements iBioProviderApi {
 	
 	private static final String API_VERSION = "0.9";
 	private Map<BiometricType, Map<BiometricFunction, IBioApi>> sdkRegistry = new HashMap<>();
