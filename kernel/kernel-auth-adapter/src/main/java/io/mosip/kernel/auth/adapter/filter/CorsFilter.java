@@ -9,6 +9,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /***********************************************************************************************************************
@@ -24,6 +26,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 public class CorsFilter extends OncePerRequestFilter {
 	
+	private static final Logger LOGGER= LoggerFactory.getLogger(CorsFilter.class);
+	
 	
 	private List<String> origins;
 	
@@ -35,7 +39,11 @@ public class CorsFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		String origin=request.getHeader("Origin");
-		if (origins != null && !origins.isEmpty() && origin!=null && origin.isEmpty() && origins.contains(origin)) {
+		if(origin==null || origin.isEmpty()) {
+			LOGGER.info("origin {}",origin);
+			LOGGER.info("requesturl {}", request.getRequestURL().toString());
+		}
+		else if (origins != null && !origins.isEmpty() && origins.contains(origin)) {
 			response.setHeader("Access-Control-Allow-Origin", origin);
 		} 
 		response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT, PATCH");
