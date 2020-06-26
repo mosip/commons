@@ -31,7 +31,7 @@ public class ReasonCategoryDto {
 
 	@ValidLangCode(message = "Language Code is Invalid")
 	private String langCode;
-	
+
 	private Boolean isActive;
 
 	private List<ReasonListDto> reasonList = new ArrayList<>();
