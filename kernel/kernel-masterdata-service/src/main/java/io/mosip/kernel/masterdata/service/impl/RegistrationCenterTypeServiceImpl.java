@@ -248,7 +248,7 @@ public class RegistrationCenterTypeServiceImpl implements RegistrationCenterType
 		try {
 
 			Page<RegistrationCenterType> page = registrationCenterTypeRepository
-					.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(Direction.fromString(orderBy), sortBy)));
+					.findAllByIsActive(true,PageRequest.of(pageNumber, pageSize, Sort.by(Direction.fromString(orderBy), sortBy)));
 			if (page != null && page.getContent() != null && !page.getContent().isEmpty()) {
 				regCenterTypes = MapperUtils.mapAll(page.getContent(), RegistrationCenterTypeExtnDto.class);
 				pageDto = new PageDto<>(page.getNumber(), page.getTotalPages(), page.getTotalElements(),

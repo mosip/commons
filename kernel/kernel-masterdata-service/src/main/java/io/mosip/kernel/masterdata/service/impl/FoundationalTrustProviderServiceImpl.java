@@ -112,13 +112,13 @@ public class FoundationalTrustProviderServiceImpl implements FoundationalTrustPr
 		}
 		updateFoundationalTrustProvider = MetaDataUtils.setUpdateMetaData(foundationalTrustProviderPutDto,
 				updateFoundationalTrustProvider, false);
-		updateFoundationalTrustProvider.setIsActive(foundationalTrustProviderPutDto.isActive());
+		updateFoundationalTrustProvider.setIsActive(foundationalTrustProviderPutDto.getIsActive());
 		updateFoundationalTrustProvider = foundationalTrustProviderRepository.update(updateFoundationalTrustProvider);
 		if (updateFoundationalTrustProvider != null) {
 			FoundationalTrustProviderHistory foundationalTrustProviderHistory = MetaDataUtils
 					.setCreateMetaData(updateFoundationalTrustProvider, FoundationalTrustProviderHistory.class);
 			foundationalTrustProviderHistory.setEffectivetimes(updateFoundationalTrustProvider.getUpdatedDateTime());
-			foundationalTrustProviderHistory.setIsActive(foundationalTrustProviderPutDto.isActive());
+			foundationalTrustProviderHistory.setIsActive(foundationalTrustProviderPutDto.getIsActive());
 			foundationalTrustProviderHistory.setCreatedDateTime(updateFoundationalTrustProvider.getUpdatedDateTime());
 			foundationalTrustProviderRepositoryHistory.create(foundationalTrustProviderHistory);
 			foundationalTrustProviderResDto = MetaDataUtils.setCreateMetaData(updateFoundationalTrustProvider,

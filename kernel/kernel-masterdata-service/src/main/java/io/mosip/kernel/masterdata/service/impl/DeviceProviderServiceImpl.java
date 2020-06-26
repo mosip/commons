@@ -194,11 +194,11 @@ public class DeviceProviderServiceImpl implements
 					MasterDataConstant.DEVICE_VALIDATION_FAILURE + ValidateDeviceDto.class.getSimpleName(),
 					MasterDataConstant.AUDIT_SYSTEM,
 					String.format(MasterDataConstant.FAILURE_DESC,
-							DeviceProviderManagementErrorCode.MDS_INACTIVE_STATE.getErrorCode(),
-							DeviceProviderManagementErrorCode.MDS_INACTIVE_STATE.getErrorMessage()),
+							DeviceProviderManagementErrorCode.MDS_DOES_NOT_EXIST.getErrorCode(),
+							DeviceProviderManagementErrorCode.MDS_DOES_NOT_EXIST.getErrorMessage()),
 					"ADM-609");
-			throw new DataNotFoundException(DeviceProviderManagementErrorCode.MDS_INACTIVE_STATE.getErrorCode(),
-					DeviceProviderManagementErrorCode.MDS_INACTIVE_STATE.getErrorMessage());
+			throw new DataNotFoundException(DeviceProviderManagementErrorCode.MDS_DOES_NOT_EXIST.getErrorCode(),
+					DeviceProviderManagementErrorCode.MDS_DOES_NOT_EXIST.getErrorMessage());
 		}
 
 		return true;
@@ -302,7 +302,7 @@ public class DeviceProviderServiceImpl implements
 			serviceError.setMessage(DeviceProviderManagementErrorCode.PROVIDER_AND_TYPE_MAPPED.getErrorMessage());
 			serviceErrors.add(serviceError);
 		}
-		if (!registeredDevice.getDeviceSTypeCode().equals(digitalIdDto.getSubType())) {
+		if (!registeredDevice.getDeviceSTypeCode().equals(digitalIdDto.getDeviceSubType())) {
 			ServiceError serviceError = new ServiceError();
 			serviceError
 					.setErrorCode(DeviceProviderManagementErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorCode());
@@ -432,7 +432,7 @@ public class DeviceProviderServiceImpl implements
 			serviceError.setMessage(DeviceProviderManagementErrorCode.PROVIDER_AND_TYPE_MAPPED.getErrorMessage());
 			serviceErrors.add(serviceError);
 		}
-		if (!registeredDevice.getDeviceSTypeCode().equals(digitalIdDto.getSubType())) {
+		if (!registeredDevice.getDeviceSTypeCode().equals(digitalIdDto.getDeviceSubType())) {
 			ServiceError serviceError = new ServiceError();
 			serviceError
 					.setErrorCode(DeviceProviderManagementErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorCode());

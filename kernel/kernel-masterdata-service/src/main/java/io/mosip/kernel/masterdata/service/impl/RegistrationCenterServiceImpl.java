@@ -1226,7 +1226,14 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 						regExceptionalHoliday.setExceptionHolidayName(expHoliday.getExceptionHolidayName());
 						regExceptionalHoliday.setExceptionHolidayReson(expHoliday.getExceptionHolidayReson());
 						regExceptionalHoliday.setIsActive(true);
+						if(regExceptionalHolidayRepository.findByRegIdAndExpHoliday(
+							regExceptionalHoliday.getRegistrationCenterId(), 
+							regExceptionalHoliday.getExceptionHolidayDate())==null) {
 						regExceptionalHolidayRepository.create(regExceptionalHoliday);
+						}
+						else {
+							regExceptionalHolidayRepository.update(regExceptionalHoliday);
+						}
 					}
 				}
 			}

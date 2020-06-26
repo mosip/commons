@@ -70,6 +70,7 @@ import io.mosip.kernel.masterdata.entity.DocumentCategory;
 import io.mosip.kernel.masterdata.entity.DocumentType;
 import io.mosip.kernel.masterdata.entity.Language;
 import io.mosip.kernel.masterdata.entity.Location;
+import io.mosip.kernel.masterdata.entity.LocationHierarchy;
 import io.mosip.kernel.masterdata.entity.RegistrationCenter;
 import io.mosip.kernel.masterdata.entity.RegistrationCenterMachineDeviceHistory;
 import io.mosip.kernel.masterdata.entity.Template;
@@ -91,6 +92,7 @@ import io.mosip.kernel.masterdata.repository.DocumentCategoryRepository;
 import io.mosip.kernel.masterdata.repository.DocumentTypeRepository;
 import io.mosip.kernel.masterdata.repository.ExceptionalHolidayRepository;
 import io.mosip.kernel.masterdata.repository.LanguageRepository;
+import io.mosip.kernel.masterdata.repository.LocationHierarchyRepository;
 import io.mosip.kernel.masterdata.repository.LocationRepository;
 import io.mosip.kernel.masterdata.repository.RegWorkingNonWorkingRepo;
 import io.mosip.kernel.masterdata.repository.RegistrationCenterMachineDeviceHistoryRepository;
@@ -172,6 +174,8 @@ public class MasterDataServiceTest {
 	private BiometricType biometricType2 = new BiometricType();
 
 	List<BiometricType> biometricTypeList = new ArrayList<>();
+	@MockBean
+	private LocationHierarchyRepository locationHierarchyRepository1;
 
 	@Autowired
 	private BlacklistedWordsService blacklistedWordsService;
@@ -347,6 +351,9 @@ public class MasterDataServiceTest {
 		updateRegistrationCenter();
 
 		registrationCenterMachineDeviceHistorySetup();
+		LocationHierarchy hierarchy=new LocationHierarchy((short) 3, "City", "eng");
+		when(locationHierarchyRepository1.findByLangCodeAndLevelAndName(Mockito.anyString(), Mockito.anyShort(),
+				Mockito.anyString())).thenReturn(hierarchy);
 		doNothing().when(auditUtil).auditRequest(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
 
 	}
