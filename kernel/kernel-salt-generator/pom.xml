@@ -7,6 +7,7 @@
 		<version>1.0.6</version>
 	</parent>
 	<artifactId>kernel-salt-generator</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>Kernel Salt Generator</name>
 	<description>Batch Job Application to for one-time populating of salt values for MOSIP related application salt tables.</description>
 	<properties>
