@@ -8,7 +8,7 @@
 	</parent>
 
 	<artifactId>id-repository-identity-service</artifactId>
-	<version>1.0.9-SNAPSHOT</version>
+	<version>1.0.9-rc1</version>
 	<name>identity-service</name>
 	<description>ID-Repository Identity service</description>
 
@@ -17,14 +17,14 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
-		<kernel.core.version>1.0.9-SNAPSHOT</kernel.core.version>
+		<kernel.core.version>1.0.9-rc1</kernel.core.version>
 		<kernel.idvalidator.uin.version>1.0.6</kernel.idvalidator.uin.version>
 		<kernel.idvalidator.rid.version>1.0.6</kernel.idvalidator.rid.version>
 		<kernel.cbeffutil.api.version>1.1.0</kernel.cbeffutil.api.version>
 		<kernel.fsadapter.hdfs.version>1.0.6</kernel.fsadapter.hdfs.version>
-		<kernel.idobjectvalidator.version>1.0.9-SNAPSHOT</kernel.idobjectvalidator.version>
-		<kernel.bioapi.provider.version>1.0.9-SNAPSHOT</kernel.bioapi.provider.version>
-		<id.repository.core.version>1.0.9-SNAPSHOT</id.repository.core.version>
+		<kernel.idobjectvalidator.version>1.0.9-rc1</kernel.idobjectvalidator.version>
+		<kernel.bioapi.provider.version>1.0.9-rc1</kernel.bioapi.provider.version>
+		<id.repository.core.version>1.0.9-rc1</id.repository.core.version>
 	</properties>
 
 	<dependencies>
