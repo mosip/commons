@@ -148,7 +148,7 @@ public class DeviceProviderManagementIntegrationTest {
 		digitalIdDto.setModel("model-updated");
 		digitalIdDto.setSerialNo("BS563Q2230890");
 		digitalIdDto.setType("Face");
-		digitalIdDto.setSubType("Slab");
+		digitalIdDto.setDeviceSubType("Slab");
 		validateDeviceDto.setDigitalId(digitalIdDto);
 
 		validateDeviceHistoryDto = new ValidateDeviceHistoryDto();
