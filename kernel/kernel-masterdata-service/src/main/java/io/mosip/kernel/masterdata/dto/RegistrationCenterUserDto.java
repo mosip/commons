@@ -24,7 +24,7 @@ public class RegistrationCenterUserDto {
 	@StringFormatter(min = 1, max = 36)
 	private String userId;
 
-	@ValidLangCode
+	@ValidLangCode(message = "Language Code is Invalid")
 	private String langCode;
 
 	@NotNull

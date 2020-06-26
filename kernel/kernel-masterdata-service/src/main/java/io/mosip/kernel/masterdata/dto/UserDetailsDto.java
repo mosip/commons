@@ -22,7 +22,7 @@ public class UserDetailsDto {
 	private String id;
 
 
-	@ValidLangCode
+	@ValidLangCode(message = "Language Code is Invalid")
 	private String langCode;
 
 	@Size(min = 1, max = 28)

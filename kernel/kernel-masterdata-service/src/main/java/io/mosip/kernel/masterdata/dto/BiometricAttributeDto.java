@@ -49,7 +49,7 @@ public class BiometricAttributeDto {
 	/**
 	 * Field for language code
 	 */
-	@ValidLangCode
+	@ValidLangCode(message = "Language Code is Invalid")
 	@ApiModelProperty(value = "Language Code", required = true, dataType = "java.lang.String")
 	private String langCode;
 	/**
