@@ -34,7 +34,7 @@ public class RegistrationCenterMachineDeviceDto {
 	private Boolean isActive;
 
 
-	@ValidLangCode
+	@ValidLangCode(message = "Language Code is Invalid")
 	@ApiModelProperty(value = "Language code", required = true, dataType = "java.lang.String")
 	private String langCode;
 }
