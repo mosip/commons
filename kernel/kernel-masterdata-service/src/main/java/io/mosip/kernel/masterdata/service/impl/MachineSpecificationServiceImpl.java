@@ -392,7 +392,7 @@ public class MachineSpecificationServiceImpl implements MachineSpecificationServ
 	public FilterResponseCodeDto machineSpecificationFilterValues(FilterValueDto filterValueDto) {
 		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
 		List<ColumnCodeValue> columnValueList = new ArrayList<>();
-		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), Machine.class)) {
+		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), MachineSpecification.class)) {
 			for (FilterDto filterDto : filterValueDto.getFilters()) {
 				List<FilterData> filterValues = masterDataFilterHelper.filterValuesWithCode(MachineSpecification.class, filterDto,
 						filterValueDto,"id");

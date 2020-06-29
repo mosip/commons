@@ -8196,7 +8196,7 @@ public class MasterdataIntegrationTest {
 
 		foundationalTrustUpdateProviderDto = new FoundationalTrustProviderPutDto();
 		foundationalTrustUpdateProviderDto.setId("24233443444");
-		foundationalTrustUpdateProviderDto.setActive(true);
+		foundationalTrustUpdateProviderDto.setIsActive(true);
 		foundationalTrustUpdateProviderDto.setAddress("test address");
 		foundationalTrustUpdateProviderDto.setCertAlias("141d3962380139742ac9a1e4b23e0221");
 		foundationalTrustUpdateProviderDto.setContactNo("9876378945");
@@ -9001,7 +9001,7 @@ public class MasterdataIntegrationTest {
 		dig.setMake("MC01A");
 		dig.setModel("SMIDCL");
 		dig.setSerialNo("1801160991");
-		dig.setSubType("Single");
+		dig.setDeviceSubType("Single");
 		dig.setType("Fingerprint");
 		DeviceData device = new DeviceData();
 		device.setDeviceId("70959dd5-e45f-438a-9ff8-9b263908e572");
