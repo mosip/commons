@@ -84,7 +84,7 @@ public class RegistrationCenterMachineController {
 
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
-	@ApiOperation(value = "Un-map center to machine map ")
+	@ApiOperation(value = "map center to machine map ")
 	@GetMapping("/map/{regCenterId}/{machineId}")
 	public ResponseWrapper<ResponseDto> mapRegistrationCenterMachine(
 			@ApiParam("Registration center id") @PathVariable String regCenterId,
