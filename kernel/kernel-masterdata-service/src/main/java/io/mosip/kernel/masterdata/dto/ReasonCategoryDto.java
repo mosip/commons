@@ -29,9 +29,9 @@ public class ReasonCategoryDto {
 	@Size(min = 1, max = 128)
 	private String description;
 
-	@ValidLangCode
+	@ValidLangCode(message = "Language Code is Invalid")
 	private String langCode;
-	
+
 	private Boolean isActive;
 
 	private List<ReasonListDto> reasonList = new ArrayList<>();

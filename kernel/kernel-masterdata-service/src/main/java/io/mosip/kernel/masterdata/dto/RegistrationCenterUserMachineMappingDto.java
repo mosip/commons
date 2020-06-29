@@ -54,7 +54,7 @@ public class RegistrationCenterUserMachineMappingDto {
 	/**
 	 * Field for language code
 	 */
-	@ValidLangCode
+	@ValidLangCode(message = "Language Code is Invalid")
 	@ApiModelProperty(value = "langCode", required = true, dataType = "java.lang.String")
 	private String langCode;
 }

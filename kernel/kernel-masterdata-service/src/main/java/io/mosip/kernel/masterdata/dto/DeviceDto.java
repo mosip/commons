@@ -83,7 +83,7 @@ public class DeviceDto {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private LocalDateTime validityDateTime;
 
-	@StringFormatter(min = 1, max = 36)
+	@StringFormatter(min = 0, max = 36)
 	private String zoneCode;
 
 }

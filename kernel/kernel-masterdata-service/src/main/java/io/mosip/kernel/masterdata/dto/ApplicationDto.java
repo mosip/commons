@@ -30,7 +30,7 @@ public class ApplicationDto {
 	@ApiModelProperty(value = "Application description", required = false, dataType = "java.lang.String")
 	private String description;
 
-	@ValidLangCode
+	@ValidLangCode(message = "Language Code is Invalid")
 	@ApiModelProperty(value = "Language Code", required = true, dataType = "java.lang.String")
 	private String langCode;
 
