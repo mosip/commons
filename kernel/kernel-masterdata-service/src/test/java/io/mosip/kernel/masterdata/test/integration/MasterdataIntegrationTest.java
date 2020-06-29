@@ -1728,46 +1728,7 @@ public class MasterdataIntegrationTest {
 
 	// -------RegistrationCenterMachine mapping-------------------------
 
-	@Test
-	@WithUserDetails("global-admin")
-	public void mapRegistrationCenterAndMachineTest() throws Exception {
-		RequestWrapper<RegistrationCenterMachineDto> requestDto = new RequestWrapper<>();
-		requestDto.setId("mosip.match.regcentr.machineid");
-		requestDto.setVersion("1.0.0");
-		requestDto.setRequest(registrationCenterMachineDto);
-		String content = mapper.writeValueAsString(requestDto);
-		when(registrationCenterMachineRepository.create(Mockito.any())).thenReturn(registrationCenterMachine);
-		when(registrationCenterMachineHistoryRepository.create(Mockito.any()))
-				.thenReturn(registrationCenterMachineHistory);
-		mockMvc.perform(post("/registrationcentermachine").contentType(MediaType.APPLICATION_JSON).content(content))
-				.andExpect(status().isOk());
-	}
 
-	@Test
-	@WithUserDetails("global-admin")
-	public void mapRegistrationCenterAndMachineDataAccessLayerExceptionTest() throws Exception {
-		RequestWrapper<RegistrationCenterMachineDto> requestDto = new RequestWrapper<>();
-		requestDto.setId("mosip.match.regcentr.machineid");
-		requestDto.setVersion("1.0.0");
-		requestDto.setRequest(registrationCenterMachineDto);
-		String content = mapper.writeValueAsString(requestDto);
-		when(registrationCenterMachineRepository.create(Mockito.any())).thenThrow(DataAccessLayerException.class);
-		when(registrationCenterMachineHistoryRepository.create(Mockito.any()))
-				.thenReturn(registrationCenterMachineHistory);
-		mockMvc.perform(post("/registrationcentermachine").contentType(MediaType.APPLICATION_JSON).content(content))
-				.andExpect(status().isInternalServerError());
-	}
-
-	@Test
-	@WithUserDetails("global-admin")
-	public void mapRegistrationCenterAndMachineBadRequestTest() throws Exception {
-		RequestWrapper<RegistrationCenterMachineDto> requestDto = new RequestWrapper<>();
-		requestDto.setId("mosip.match.regcentr.machineid");
-		requestDto.setVersion("1.0.0");
-		String content = mapper.writeValueAsString(requestDto);
-		mockMvc.perform(post("/registrationcentermachine").contentType(MediaType.APPLICATION_JSON).content(content))
-				.andExpect(status().isOk());
-	}
 
 	@Test
 	@WithUserDetails("global-admin")
