@@ -19,10 +19,7 @@ import io.mosip.kernel.masterdata.constant.MachineErrorCode;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.constant.RegistrationCenterDeviceErrorCode;
 import io.mosip.kernel.masterdata.constant.RegistrationCenterMachineErrorCode;
-import io.mosip.kernel.masterdata.dto.RegistrationCenterMachineDto;
-import io.mosip.kernel.masterdata.dto.ResponseRrgistrationCenterMachineDto;
 import io.mosip.kernel.masterdata.dto.getresponse.ResponseDto;
-import io.mosip.kernel.masterdata.entity.MOSIPDeviceService;
 import io.mosip.kernel.masterdata.entity.Machine;
 import io.mosip.kernel.masterdata.entity.RegistrationCenter;
 import io.mosip.kernel.masterdata.entity.RegistrationCenterDevice;
@@ -85,44 +82,8 @@ public class RegistrationCenterMachineServiceImpl implements RegistrationCenterM
 	private RegistrationCenterRepository regRepo;
 
 	/*
-	 * (non-Javadoc)
 	 * 
-	 * @see io.mosip.kernel.masterdata.service.RegistrationCenterMachineService#
-	 * createRegistrationCenterAndMachine(io.mosip.kernel.masterdata.dto.RequestDto)
-	 */
-	@Override
-	@Transactional
-	public ResponseRrgistrationCenterMachineDto createRegistrationCenterAndMachine(
-			RegistrationCenterMachineDto requestDto) {
-		ResponseRrgistrationCenterMachineDto responseRrgistrationCenterMachineDto = null;
-
-		try {
-			RegistrationCenterMachine registrationCenterMachine = MetaDataUtils.setCreateMetaData(requestDto,
-					RegistrationCenterMachine.class);
-			RegistrationCenterMachine savedRegistrationCenterMachine = registrationCenterMachineRepository
-					.create(registrationCenterMachine);
-
-			RegistrationCenterMachineHistory registrationCenterMachineHistory = MetaDataUtils
-					.setCreateMetaData(requestDto, RegistrationCenterMachineHistory.class);
-			registrationCenterMachineHistory.getRegistrationCenterMachineHistoryPk()
-					.setEffectivetimes(savedRegistrationCenterMachine.getCreatedDateTime());
-			registrationCenterMachineHistoryRepository.create(registrationCenterMachineHistory);
-
-			responseRrgistrationCenterMachineDto = MapperUtils.map(
-					savedRegistrationCenterMachine.getRegistrationCenterMachinePk(),
-					ResponseRrgistrationCenterMachineDto.class);
-		} catch (DataAccessLayerException | DataAccessException e) {
-			throw new MasterDataServiceException(
-					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_CREATE_EXCEPTION.getErrorCode(),
-					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_CREATE_EXCEPTION.getErrorMessage()
-							+ ExceptionUtils.parseException(e));
-		}
-
-		return responseRrgistrationCenterMachineDto;
-	}
-
-	/*
-	 * (non-Javadoc)
+	 * /* (non-Javadoc)
 	 * 
 	 * @see io.mosip.kernel.masterdata.service.RegistrationCenterMachineService#
 	 * deleteRegistrationCenterMachineMapping(java.lang.String, java.lang.String)
