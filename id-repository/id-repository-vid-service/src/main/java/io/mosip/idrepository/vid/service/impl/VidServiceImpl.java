@@ -215,7 +215,7 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 			vidObject.setUpdatedDTimes(DateUtils.getUTCCurrentDateTime());
 			vidObject.setUin(uinToEncrypt);
 			vidRepo.saveAndFlush(vidObject);
-			notify(EventType.CREATE_VID, Collections.singletonList(vidObject), uinToEncrypt, false);
+			notify(EventType.UPDATE_VID, Collections.singletonList(vidObject), uinToEncrypt, true);
 			return generateVid(uin, vidType);
 		} else {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_VID_SERVICE, CREATE_VID,
