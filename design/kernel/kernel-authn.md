@@ -113,3 +113,16 @@ Reference:  [Auth Angular User Guide](https://docs.mosip.io/platform/contribute/
 
 5. Partner Management --> partnermanagement
 
+
+**Pluggable IAM with Auth Service**
+
+1. Auth Service communicates with any plugable IAM with OPENID Endpoints.
+2. All the features like token storage,user details storage, sessions etc are handled by IAM.
+3. In case supported by IAM Auth Service will connect with different realms and do AUTHN and AUTHZ smoothly.
+
+
+**Class Diagram**
+
+
+
+![Class Diagram](_images/auth-service-cd.png)
