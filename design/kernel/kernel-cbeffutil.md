@@ -12,7 +12,9 @@ There are many types of biometric information can be collected as part of the MO
 
 - A standard format of the biometrics data have to be described. 
 
-- The format should be standard across the ABIS utilities 
+- The format should be standard across the ABIS utilities. 
+
+- The XSD file will be loaded  only once during initialization of the cbeffutil application.
 
 - The CBEFF file will be of XML format. The validations of any XML file have to be validated with the XSD in the MOSIP platform to confirm the validity of the document. 
 
