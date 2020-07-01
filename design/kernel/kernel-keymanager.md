@@ -35,7 +35,7 @@ This library can be used to encrpyt and decrypt data based on defined set of alg
 
 
 
-![Class Diagram](_images/kernel-crypto-cd.png)
+![Class Diagram](_images/kernel-cryptomanager.png)
 
 
 # Key Manager
