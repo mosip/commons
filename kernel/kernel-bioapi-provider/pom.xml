@@ -8,12 +8,12 @@
 	</parent>
 
 	<artifactId>kernel-bioapi-provider</artifactId>
-	<version>1.0.9-rc1</version>
+	<version>1.0.9</version>
 	<name>kernel-bioapi-provider</name>
 	<description>bioapi provider</description>
 	<packaging>jar</packaging>
 	<properties>
-		<kernel.core.version>1.0.9-rc1</kernel.core.version>
+		<kernel.core.version>1.0.9</kernel.core.version>
 		<kernel.cbeff.version>1.1.0</kernel.cbeff.version>
 	</properties>	
 	<dependencies>

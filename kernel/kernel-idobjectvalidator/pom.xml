@@ -2,14 +2,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>kernel-idobjectvalidator</artifactId>
-	<version>1.0.9-rc1</version>
+	<version>1.0.9</version>
 	<parent>
 		<groupId>io.mosip.kernel</groupId>
 		<artifactId>kernel-parent</artifactId>
 		<version>1.0.6</version>
 	</parent>
 	<properties>
-		<kernel.core.version>1.0.9-rc1</kernel.core.version>
+		<kernel.core.version>1.0.9</kernel.core.version>
 	</properties>
 	<dependencies>
 		<dependency>

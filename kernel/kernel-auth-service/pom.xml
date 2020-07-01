@@ -12,7 +12,7 @@
 
 	<artifactId>kernel-auth-service</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.9-rc1</version>
+	<version>1.0.9</version>
 	<properties>
 		<sonar.skip>true</sonar.skip>
 	</properties>
@@ -20,12 +20,12 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>1.0.9-rc1</version>
+			<version>1.0.9</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-auth-adapter</artifactId>
-			<version>1.0.9-rc1</version>
+			<version>1.0.9</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

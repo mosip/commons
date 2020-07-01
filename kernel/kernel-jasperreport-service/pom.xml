@@ -7,15 +7,16 @@
 		<artifactId>kernel-parent</artifactId>
 		<version>1.0.6</version>
 	</parent>
-	<artifactId>kernel-syncdata-service</artifactId>
-	<name>kernel-syncdata-service</name>
-	<version>1.0.9</version>
+
+	<artifactId>kernel-jasperreport-service</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<kernel.core.version>1.0.9</kernel.core.version>
-		<kernel.auth.adaptor.version>1.0.6</kernel.auth.adaptor.version>
+		<kernel.core.version>1.0.6</kernel.core.version>
+		<kernel.auth-adapter.version>1.0.8</kernel.auth-adapter.version>
+		<kernel.applicant-type.version>1.0.6</kernel.applicant-type.version>
+		<kernel.dataaccess-hibernate.version>1.0.6</kernel.dataaccess-hibernate.version>
+		<kernel.audit-api.version>1.0.6</kernel.audit-api.version>
 		<kernel.logger.version>1.0.6</kernel.logger.version>
-		<kernel.crypto.version>1.0.9</kernel.crypto.version>	
 	</properties>
 	<dependencies>
 		<dependency>
@@ -23,17 +24,10 @@
 			<artifactId>kernel-core</artifactId>
 			<version>${kernel.core.version}</version>
 		</dependency>
-		<dependency>
+		<!--dependency>
 			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-auth-adapter</artifactId>
-			<version>${kernel.auth.adaptor.version}</version>
-		</dependency>
-		<!-- <dependency> <groupId>io.mosip.kernel</groupId> <artifactId>kernel-dataaccess-hibernate</artifactId> 
-			<version>${project.version}</version> </dependency> -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-			<version>${spring.boot.version}</version>
+			<artifactId>kernel-dataaccess-hibernate</artifactId>
+			<version>${kernel.dataaccess-hibernate.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -42,19 +36,24 @@
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
+			<artifactId>kernel-auditmanager-api</artifactId>
+			<version>${kernel.audit-api.version}</version>
+		</dependency-->
+		<dependency>
+			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-logger-logback</artifactId>
 			<version>${kernel.logger.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-crypto-signature</artifactId>
-			<version>${kernel.crypto.version}</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<version>${spring.boot.version}</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports -->
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>${h2.version}</version>
-			<scope>runtime</scope>
+		    <groupId>net.sf.jasperreports</groupId>
+		    <artifactId>jasperreports</artifactId>
+		    <version>3.7.5</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -62,7 +61,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${spring.boot.version}</version>
+				<version>2.0.2.RELEASE</version>
 				<configuration>
 					<executable>true</executable>
 				</configuration>

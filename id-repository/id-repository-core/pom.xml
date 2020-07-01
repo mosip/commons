@@ -8,7 +8,7 @@
 	</parent>
 
 	<artifactId>id-repository-core</artifactId>
-	<version>1.0.9-rc1</version>
+	<version>1.0.9</version>
 	<name>idrepo-core</name>
 	<description>ID-Repository core</description>
 
@@ -22,7 +22,7 @@
 		<lombok.version>1.16.18</lombok.version>
 		<postgresql.version>42.2.2</postgresql.version>
 		<powermock.version>2.0.0</powermock.version>
-		<kernel.auth.adapter.version>1.0.9-rc1</kernel.auth.adapter.version>
+		<kernel.auth.adapter.version>1.0.9</kernel.auth.adapter.version>
 		<kernel.logger.logback.version>1.0.6</kernel.logger.logback.version>
 	</properties>
 

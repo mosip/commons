@@ -10,14 +10,14 @@
 
 	<artifactId>kernel-biosdk-provider</artifactId>
 	<groupId>io.mosip.kernel</groupId>
-	<version>0.9-rc1</version>
+	<version>0.9</version>
 	<name>kernel-biosdk-provider</name>
 	<description>Implementation of biosdk provider</description>
 	<packaging>jar</packaging>
 	
 	<properties>
-		<kernel.core.version>1.0.9-rc1</kernel.core.version>
-		<kernel.biometricsdk.version>0.9-rc1</kernel.biometricsdk.version>
+		<kernel.core.version>1.0.9</kernel.core.version>
+		<kernel.biometricsdk.version>0.9</kernel.biometricsdk.version>
 		<maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
 		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
 		<kernel.logger.logback.version>1.0.6</kernel.logger.logback.version>
