@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.mosip.kernel.core.util.StringUtils;
 import io.mosip.kernel.masterdata.constant.ValidationErrorCode;
 import io.mosip.kernel.masterdata.dto.FilterData;
 import io.mosip.kernel.masterdata.dto.request.FilterDto;
@@ -147,6 +146,7 @@ public class MasterDataFilterHelper {
 		String columnType = filterDto.getType();
 		Predicate caseSensitivePredicate = null;
 		List<FilterData> results;
+		List<Predicate> predicates = new ArrayList<>();
 		CriteriaQuery<FilterData> criteriaQueryByType = criteriaBuilder.createQuery(FilterData.class);
 		Root<E> rootType = criteriaQueryByType.from(entity);
 
@@ -162,10 +162,14 @@ public class MasterDataFilterHelper {
 
 		if (filterValueDto.getLanguageCode().equals("all")
 				&& !(rootType.get(columnName).getJavaType().equals(Boolean.class))) {
-			criteriaQueryByType.where(criteriaBuilder.and(caseSensitivePredicate));
+			predicates.add(caseSensitivePredicate);
 		} else if (!(rootType.get(columnName).getJavaType().equals(Boolean.class))) {
-			criteriaQueryByType.where(criteriaBuilder.and(langCodePredicate, caseSensitivePredicate));
+			predicates.add(caseSensitivePredicate);
+			predicates.add(langCodePredicate);
 		}
+		buildOptionalFilter(criteriaBuilder, rootType, filterValueDto.getOptionalFilters(), predicates);
+		Predicate filterPredicate = criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+		criteriaQueryByType.where(filterPredicate);
 		criteriaQueryByType.orderBy(criteriaBuilder.asc(rootType.get(columnName)));
 
 		// if column type is Boolean then add value as true or false
