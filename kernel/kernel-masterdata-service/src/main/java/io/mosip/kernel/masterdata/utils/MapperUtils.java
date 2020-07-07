@@ -585,7 +585,7 @@ public class MapperUtils {
 
 		RegisteredDevice entity = new RegisteredDevice();
 		entity.setDeviceTypeCode(digitalId.getType());
-		entity.setDeviceSTypeCode(digitalId.getSubType());
+		entity.setDeviceSTypeCode(digitalId.getDeviceSubType());
 		entity.setStatusCode("REGISTERED");
 		entity.setDeviceId(deviceData.getDeviceId());
 		entity.setDeviceSubId(deviceData.getDeviceInfo().getDeviceSubId());
