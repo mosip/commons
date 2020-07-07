@@ -1,16 +1,12 @@
 package io.mosip.kernel.auth.adapter.filter;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /***********************************************************************************************************************
@@ -25,32 +21,22 @@ import org.springframework.web.filter.OncePerRequestFilter;
  **********************************************************************************************************************/
 
 public class CorsFilter extends OncePerRequestFilter {
-	
-	private static final Logger LOGGER= LoggerFactory.getLogger(CorsFilter.class);
-	
-	
-	private List<String> origins;
-	
-	public CorsFilter(String origins) {
-		this.origins=Arrays.asList(origins.split("( )*,( )*"));
-	}
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		String origin=request.getHeader("Origin");
-		if(origin==null || origin.isEmpty()) {
-			LOGGER.info("origin {}",origin);
-			LOGGER.info("requesturl {}", request.getRequestURL().toString());
-		}
-		else if (origins != null && !origins.isEmpty() && origins.contains(origin)) {
+		String origin = request.getHeader("Origin");
+		if (origin != null && !origin.isEmpty()) {
 			response.setHeader("Access-Control-Allow-Origin", origin);
-		} 
+		} else {
+			response.setHeader("Access-Control-Allow-Origin", "*");
+		}
 		response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT, PATCH");
-		response.setHeader("Access-Control-Allow-Headers", 
-				"Origin,Date, Content-Type, Accept, X-Requested-With, Authorization, From, X-Auth-Token, Request-Id");
+		response.setHeader("Access-Control-Allow-Headers",
+				"Date, Content-Type, Accept, X-Requested-With, Authorization, From, X-Auth-Token, Request-Id");
 		response.setHeader("Access-Control-Expose-Headers", "Set-Cookie");
 		response.setHeader("Access-Control-Allow-Credentials", "true");
+		String reqUrl = request.getRequestURL().toString();
 		if (!"OPTIONS".equalsIgnoreCase(request.getMethod())) {
 			filterChain.doFilter(request, response);
 		}
