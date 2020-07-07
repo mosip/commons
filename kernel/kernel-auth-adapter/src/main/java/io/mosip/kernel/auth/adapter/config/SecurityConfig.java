@@ -59,7 +59,7 @@ import io.mosip.kernel.auth.adapter.handler.AuthSuccessHandler;
 @Order(2)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Value("${mosip.security.crsf-enable:false}")
+	@Value("${mosip.security.csrf-enable:false}")
 	private boolean isCSRFEnable;
 
 	@Value("${mosip.security.cors-enable:true}")
