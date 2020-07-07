@@ -38,7 +38,7 @@ public class GenderTypeDto {
 	@ApiModelProperty(notes = "Name of the Gender", example = "Male", required = true)
 	private String genderName;
 
-	@NotBlank
+
 	@ApiModelProperty(notes = "Language Code", example = "ENG", required = true)
     @ValidLangCode(message = "Language Code is Invalid")
     private String langCode;
