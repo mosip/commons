@@ -65,6 +65,8 @@ public class UinGeneratorVerticle extends AbstractVerticle {
 						 LOGGER.error("Uin Genaration failed", result.cause());
 					}
 				});
+			}else {
+				 LOGGER.info("here");
 			}
 			receivedMessage.reply(UINHealthConstants.ACTIVE);
 		});
