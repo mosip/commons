@@ -24,7 +24,7 @@ public class HolidayUpdateDto {
 
 	private String locationCode;
 
-	@NotBlank
+	
 	@DateTimeFormat(pattern="yyyy-mm-dd")
 	private LocalDate holidayDate;
 
