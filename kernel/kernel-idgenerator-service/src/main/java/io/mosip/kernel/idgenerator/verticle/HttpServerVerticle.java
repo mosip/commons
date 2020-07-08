@@ -73,7 +73,7 @@ public class HttpServerVerticle extends AbstractVerticle {
 				environment.getProperty(VIDGeneratorConstant.SERVER_SERVLET_PATH) + UinGeneratorConstant.VUIN,
 				uinServiceRouter.createRouter(vertx));
 		
-		parentRouter.mountSubRouter(environment.getProperty(VIDGeneratorConstant.	SERVER_SERVLET_PATH), metricRouter);
+		parentRouter.mountSubRouter(environment.getProperty(VIDGeneratorConstant.SERVER_SERVLET_PATH), metricRouter);
 
 		httpServer.requestHandler(parentRouter);
 		httpServer.listen(Integer.parseInt(environment.getProperty(VIDGeneratorConstant.SERVER_PORT)), result -> {
