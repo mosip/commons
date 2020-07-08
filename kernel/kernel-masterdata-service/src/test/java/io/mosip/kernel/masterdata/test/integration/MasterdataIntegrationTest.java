@@ -1726,37 +1726,6 @@ public class MasterdataIntegrationTest {
 		mockMvc.perform(delete("/registrationcenterdevice/RC001/DC001")).andExpect(status().isInternalServerError());
 	}
 
-	// -------RegistrationCenterMachine mapping-------------------------
-
-
-
-	@Test
-	@WithUserDetails("global-admin")
-	public void deleteRegistrationCenterAndMachineMappingTest() throws Exception {
-		when(registrationCenterMachineRepository.findAllNondeletedMappings(Mockito.any()))
-				.thenReturn(Optional.of(registrationCenterMachine));
-		when(registrationCenterMachineHistoryRepository.create(Mockito.any()))
-				.thenReturn(registrationCenterMachineHistory);
-		when(registrationCenterMachineRepository.update(Mockito.any())).thenReturn(registrationCenterMachine);
-		mockMvc.perform(delete("/registrationcentermachine/RC001/MC001")).andExpect(status().isOk());
-	}
-
-	@Test
-	@WithUserDetails("global-admin")
-	public void deleteRegistrationCenterAndMachineMappingDataNotFoundExceptionTest() throws Exception {
-		when(registrationCenterMachineRepository.findAllNondeletedMappings(Mockito.any())).thenReturn(Optional.empty());
-		mockMvc.perform(delete("/registrationcentermachine/RC001/MC001")).andExpect(status().isOk());
-	}
-
-	@Test
-	@WithUserDetails("global-admin")
-	public void deleteRegistrationCenterAndMachineMappingDataAccessLayerExceptionTest() throws Exception {
-		when(registrationCenterMachineRepository.findAllNondeletedMappings(Mockito.any()))
-				.thenReturn(Optional.of(registrationCenterMachine));
-		when(registrationCenterMachineHistoryRepository.create(Mockito.any()))
-				.thenThrow(new DataAccessLayerException("errorCode", "errorMessage", null));
-		mockMvc.perform(delete("/registrationcentermachine/RC001/MC001")).andExpect(status().isInternalServerError());
-	}
 
 	// -------RegistrationCentermachineDevice mapping-------------------------
 

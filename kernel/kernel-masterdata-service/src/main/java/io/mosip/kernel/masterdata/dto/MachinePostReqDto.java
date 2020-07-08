@@ -29,8 +29,7 @@ public class MachinePostReqDto {
 	/**
 	 * Field for machine id
 	 */
-	@StringFormatter(min = 0, max = 10)
-	@ApiModelProperty(value = "id", required = true, dataType = "java.lang.String")
+
 	private String id;
 	/**
 	 * Field for machine name

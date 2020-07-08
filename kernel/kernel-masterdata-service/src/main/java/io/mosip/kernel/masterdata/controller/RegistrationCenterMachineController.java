@@ -2,7 +2,6 @@ package io.mosip.kernel.masterdata.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +12,6 @@ import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.dto.RegistrationCenterMachineDto;
 import io.mosip.kernel.masterdata.dto.getresponse.ResponseDto;
-import io.mosip.kernel.masterdata.entity.id.RegistrationCenterMachineID;
 import io.mosip.kernel.masterdata.service.RegistrationCenterMachineService;
 import io.mosip.kernel.masterdata.utils.AuditUtil;
 import io.swagger.annotations.Api;
@@ -36,27 +34,6 @@ public class RegistrationCenterMachineController {
 	private RegistrationCenterMachineService registrationCenterMachineService;
 
 
-
-	/**
-	 * Delete the mapping of registration center and machine
-	 * 
-	 * @param regCenterId Registration center id to be deleted
-	 * @param machineId   MachineId id to be deleted
-	 * @return {@link RegistrationCenterMachineID}
-	 */
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
-	@ResponseFilter
-	@ApiOperation(value = "Delete the mapping of registration center and machine")
-	@DeleteMapping("/{regCenterId}/{machineId}")
-	public ResponseWrapper<RegistrationCenterMachineID> deleteRegistrationCenterMachineMapping(
-			@ApiParam("Registration center id to be deleted") @PathVariable String regCenterId,
-			@ApiParam("MachineId id to be deleted") @PathVariable String machineId) {
-
-		ResponseWrapper<RegistrationCenterMachineID> responseWrapper = new ResponseWrapper<>();
-		responseWrapper.setResponse(
-				registrationCenterMachineService.deleteRegistrationCenterMachineMapping(regCenterId, machineId));
-		return responseWrapper;
-	}
 
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
