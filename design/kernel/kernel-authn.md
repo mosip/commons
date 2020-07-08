@@ -11,13 +11,15 @@ The authentication and authorization in the MOSIP platform is handled in the a c
 **The key solution considerations are**
 
 
-- A centralized AUTH SERVER (Auth Service with an IAM example Keycloak) handles the authorization request from the platform. 
+- A centralized Auth Server handles the authorization request from the platform. 
 
-- Once authenticated, the Auth Server sends back an AuthToken.
+- Once authenticated, the Auth Server  sends back an AuthToken.
 
 - Auth token contains the information about the authenticated user and the meta data such as the expiration time, subject, issuer etc., 
 
-- The Tokens are stored in the IAM for an individual user. In case of force logout scenario, this record will be deleted from this datastore.  
+- An additional layers in the Auth service will ensure about the forced logout scenario. Essentially, all the service calls to the Auth Service will go through this creamy layer, where we have a proxy user datastore which will maintain the additional information about the validitiy of the tokens. 
+
+- The Tokens are stored in the creamy layer for an individual user. In case of force logout scenario, this record will be deleted from this proxy user datastore. 
 
 **Tokens Overview**
 
@@ -29,11 +31,15 @@ The authentication and authorization in the MOSIP platform is handled in the a c
 
 - All the auth requests will go via the Auth Server. 
 
-- The user data stores are abstracted behind the IAM. 
+- The user data stores are abstracted behind the Auth Server. 
 
-- The user data stores should be pluggable(If supported by configured IAM). 
+- The user data stores should be pluggable. 
 
 - The platform's authentication method should support the heterogenous technologies and authentication should happen seamlessly. 
+
+- All the user information are stored in the centralized Data store. 
+
+- In the rest of the MOSIP platform uses only the userid as the handle to the actual user in the data store. No other user attribute should be used as the handle in the MOSIP platform. 
 
 
 **Different kinds of Actors in MOSIP platform**
@@ -44,13 +50,13 @@ The authentication and authorization in the MOSIP platform is handled in the a c
 
 - These are the actual human users. 
 
-- Users are provided with Username Password
+- These actors exists in LDAP or in Database. 
 
-2. Clients
+2. Applications
 
 - These are the applications like Registration client, IDA etc., 
 
-- Applications are provided with client_credentials like clientid & secret-key
+- Applications are provided with credentials like applicationid & secret-key
 
 
 **Implementing Auth in the web services**
@@ -65,7 +71,7 @@ The authentication and authorization in the MOSIP platform is handled in the a c
 
 3. Annotate the server method which have to be protected with the "Role" information. 
 
-Reference: [Auth Springboot User Guide](https://docs.mosip.io/platform/contribute/coding-standards/auth-springboot-user-guide)
+Reference: https://github.com/mosip/mosip-docs/wiki/Auth-SpringBoot-User-Guide
 
 
 **Implementing Auth in JavaFX application**
@@ -73,7 +79,7 @@ Reference: [Auth Springboot User Guide](https://docs.mosip.io/platform/contribut
 
 1. If the actual human user login, pass the username and password to the Auth server.
 
-2. In case of background serivces, pass the clientid & secret-key. 
+2. In case of background serivces, pass the applicationid & secret-key. 
 
 3. Once authenticated, the client receives the Auth Token. Client stores them in a secured local store.
 
@@ -98,31 +104,36 @@ Reference: [Auth Springboot User Guide](https://docs.mosip.io/platform/contribut
 
 ![Angular authentication keeep alive flow](_images/kernel-authentication-keepalive-prereg.jpg)
 
-Reference:  [Auth Angular User Guide](https://docs.mosip.io/platform/contribute/coding-standards/auth-angular-user-guide)
+
+Reference: https://github.com/mosip/mosip-docs/wiki/Auth-Angular-User-Guide
 
 
-**Different realms in MOSIP(IN KEYCLOAK)**
+**Data stores for different applications**
 
-1. Pre-Registration --> preregistration
+1. Pre-Registration --> Relational database
 
-2. Registration --> mosip
+2. Registration --> LDAP
 
-3. Registration processor --> mosip
+3. Registration processor --> LDAP
 
-4. IDA --> mosip
+4. IDA --> LDAP
 
-5. Partner Management --> partnermanagement
+**Class diagram**
 
+![Class Diagram](_images/kernel-authn-classdiagram.jpg)
 
-**Pluggable IAM with Auth Service**
+**Login - Swimlane diagram**
 
-1. Auth Service communicates with any plugable IAM with OPENID Endpoints.
-2. All the features like token storage,user details storage, sessions etc are handled by IAM.
-3. In case supported by IAM Auth Service will connect with different realms and do AUTHN and AUTHZ smoothly.
-
-
-**Class Diagram**
+![Login - Swimlane Diagram](_images/kernel-authn-login-swimlane.jpg)
 
 
+**Service call - Swimlane diagram**
 
-![Class Diagram](_images/auth-service-cd.png)
+![Service call - Swimlane Diagram](_images/kernel-authn-servicecall-swimlane.jpg)
+
+
+**Sequence diagram**
+
+![Sequence Diagram](_images/kernel-authn-sequencediagram.jpg)
+
+

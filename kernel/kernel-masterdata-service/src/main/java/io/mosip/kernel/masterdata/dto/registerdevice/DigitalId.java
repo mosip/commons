@@ -59,7 +59,7 @@ public class DigitalId {
 	 * Field for deviceSubTypeCode
 	 */
 	@StringFormatter(min = 1, max = 36)
-	@ApiModelProperty(value = "deviceSubType", required = true, dataType = "java.lang.String")
-	private String deviceSubType;
+	@ApiModelProperty(value = "subType", required = true, dataType = "java.lang.String")
+	private String subType;
 
 }

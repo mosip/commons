@@ -171,10 +171,10 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 		}
 
 		if (registrationDeviceSubTypeRepository
-				.findByCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(digitalId.getDeviceSubType()) == null) {
+				.findByCodeAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(digitalId.getSubType()) == null) {
 			throw new RequestException(RegisteredDeviceErrorCode.DEVICE_SUB_TYPE_NOT_EXIST.getErrorCode(),
 					String.format(RegisteredDeviceErrorCode.DEVICE_SUB_TYPE_NOT_EXIST.getErrorMessage(),
-							digitalId.getDeviceSubType()));
+							digitalId.getSubType()));
 		}
 
 		RegisteredDevice regDevice = registeredDeviceRepository

@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -58,6 +59,15 @@ import io.mosip.kernel.auth.adapter.handler.AuthSuccessHandler;
 @Order(2)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+	@Value("${mosip.security.csrf-enable:false}")
+	private boolean isCSRFEnable;
+
+	@Value("${mosip.security.cors-enable:true}")
+	private boolean isCORSEnable;
+	
+	@Value("${mosip.security.origins:localhost:8080}")
+	private String origins;
+
 	@Autowired
 	private AuthHandler authProvider;
 
@@ -85,12 +95,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
-		http.csrf().disable().authorizeRequests().antMatchers("*").authenticated().and().exceptionHandling()
+		if (!isCSRFEnable) {
+			http = http.csrf().disable();
+		}
+		http.authorizeRequests().antMatchers("*").authenticated().and().exceptionHandling()
 				.authenticationEntryPoint(new AuthEntryPoint()).and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		http.addFilterBefore(authFilter(), UsernamePasswordAuthenticationFilter.class);
-		http.addFilterBefore(new CorsFilter(), AuthFilter.class);
+		if (isCORSEnable) {
+			http.addFilterBefore(new CorsFilter(origins), AuthFilter.class);
+		}
 		http.headers().cacheControl();
 		http.headers().frameOptions().sameOrigin();
 	}

@@ -302,7 +302,7 @@ public class DeviceProviderServiceImpl implements
 			serviceError.setMessage(DeviceProviderManagementErrorCode.PROVIDER_AND_TYPE_MAPPED.getErrorMessage());
 			serviceErrors.add(serviceError);
 		}
-		if (!registeredDevice.getDeviceSTypeCode().equals(digitalIdDto.getDeviceSubType())) {
+		if (!registeredDevice.getDeviceSTypeCode().equals(digitalIdDto.getSubType())) {
 			ServiceError serviceError = new ServiceError();
 			serviceError
 					.setErrorCode(DeviceProviderManagementErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorCode());
@@ -432,7 +432,7 @@ public class DeviceProviderServiceImpl implements
 			serviceError.setMessage(DeviceProviderManagementErrorCode.PROVIDER_AND_TYPE_MAPPED.getErrorMessage());
 			serviceErrors.add(serviceError);
 		}
-		if (!registeredDevice.getDeviceSTypeCode().equals(digitalIdDto.getDeviceSubType())) {
+		if (!registeredDevice.getDeviceSTypeCode().equals(digitalIdDto.getSubType())) {
 			ServiceError serviceError = new ServiceError();
 			serviceError
 					.setErrorCode(DeviceProviderManagementErrorCode.PROVIDER_AND_DEVICE_CODE_NOT_MAPPED.getErrorCode());

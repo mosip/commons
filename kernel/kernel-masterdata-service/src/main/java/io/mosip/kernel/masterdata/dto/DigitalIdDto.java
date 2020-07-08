@@ -55,8 +55,8 @@ public class DigitalIdDto {
 				 * /** type
 				 */
 	@NotBlank
-	@ApiModelProperty(value = "deviceSubType", dataType = "java.lang.String")
-	private String deviceSubType;
+	@ApiModelProperty(value = "subType", dataType = "java.lang.String")
+	private String subType;
 	// @ValidType(message = "Type Value is Invalid")
 	@NotBlank
 	@ApiModelProperty(value = "type", dataType = "java.lang.String")

@@ -11,12 +11,12 @@
 	</parent>
 
 	<artifactId>kernel-keymanager-service</artifactId>
-	<version>1.0.9</version>
+	<version>1.0.9-SNAPSHOT</version>
 	<name>kernel-keymanager-service</name>
 
 	<properties>
-		<kernel.core.version>1.0.9</kernel.core.version>
-		<kernel.auth.adaptor.version>1.0.9</kernel.auth.adaptor.version>
+		<kernel.core.version>1.0.9-SNAPSHOT</kernel.core.version>
+		<kernel.auth.adaptor.version>1.0.9-SNAPSHOT</kernel.auth.adaptor.version>
 		<kernel-dataaccess-hibernate.version>1.0.7</kernel-dataaccess-hibernate.version>
 		<kernel.crypto.jce.version>1.0.6</kernel.crypto.jce.version>
 		<kernel.keygenerator.bouncycastle.version>1.0.6</kernel.keygenerator.bouncycastle.version>
