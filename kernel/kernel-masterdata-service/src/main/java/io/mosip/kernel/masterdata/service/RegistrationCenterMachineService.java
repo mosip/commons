@@ -1,7 +1,6 @@
 package io.mosip.kernel.masterdata.service;
 
 import io.mosip.kernel.masterdata.dto.getresponse.ResponseDto;
-import io.mosip.kernel.masterdata.entity.id.RegistrationCenterMachineID;
 
 /**
  * The RegistrationCenterMachineService interface provides method to perform
@@ -15,15 +14,6 @@ import io.mosip.kernel.masterdata.entity.id.RegistrationCenterMachineID;
 public interface RegistrationCenterMachineService {
 
 
-
-	/**
-	 * Delete the mapping of registration center and machine
-	 * 
-	 * @param regCenterId Registration center id to be deleted
-	 * @param machineId   MachineId id to be deleted
-	 * @return {@link RegistrationCenterMachineID}
-	 */
-	public RegistrationCenterMachineID deleteRegistrationCenterMachineMapping(String regCenterId, String machineId);
 
 	/**
 	 * Un map center to machine mapping.

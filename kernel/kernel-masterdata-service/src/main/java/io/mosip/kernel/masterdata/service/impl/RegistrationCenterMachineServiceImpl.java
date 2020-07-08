@@ -3,7 +3,6 @@ package io.mosip.kernel.masterdata.service.impl;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,46 +80,6 @@ public class RegistrationCenterMachineServiceImpl implements RegistrationCenterM
 	@Autowired
 	private RegistrationCenterRepository regRepo;
 
-	/*
-	 * 
-	 * /* (non-Javadoc)
-	 * 
-	 * @see io.mosip.kernel.masterdata.service.RegistrationCenterMachineService#
-	 * deleteRegistrationCenterMachineMapping(java.lang.String, java.lang.String)
-	 */
-	@Transactional
-	@Override
-	public RegistrationCenterMachineID deleteRegistrationCenterMachineMapping(String regCenterId, String machineId) {
-		RegistrationCenterMachineID registrationCenterMachineID = null;
-		try {
-			registrationCenterMachineID = new RegistrationCenterMachineID(regCenterId, machineId);
-			Optional<RegistrationCenterMachine> registrationCenterMachine = registrationCenterMachineRepository
-					.findAllNondeletedMappings(registrationCenterMachineID);
-			if (!registrationCenterMachine.isPresent()) {
-				throw new RequestException(
-						RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_DATA_NOT_FOUND.getErrorCode(),
-						RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_DATA_NOT_FOUND
-								.getErrorMessage());
-			} else {
-				RegistrationCenterMachine centerMachine = registrationCenterMachine.get();
-				centerMachine = MetaDataUtils.setDeleteMetaData(centerMachine);
-				RegistrationCenterMachineHistory history = MapperUtils.map(centerMachine,
-						RegistrationCenterMachineHistory.class);
-				history.setRegistrationCenterMachineHistoryPk(
-						MapperUtils.map(registrationCenterMachineID, RegistrationCenterMachineHistoryID.class));
-				history.getRegistrationCenterMachineHistoryPk().setEffectivetimes(centerMachine.getDeletedDateTime());
-				MapperUtils.setBaseFieldValue(centerMachine, history);
-				registrationCenterMachineHistoryRepository.create(history);
-				registrationCenterMachineRepository.update(centerMachine);
-			}
-		} catch (DataAccessLayerException | DataAccessException e) {
-			throw new MasterDataServiceException(
-					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_DELETE_EXCEPTION.getErrorCode(),
-					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_DELETE_EXCEPTION.getErrorMessage()
-							+ ExceptionUtils.parseException(e));
-		}
-		return registrationCenterMachineID;
-	}
 
 	@Override
 	@Transactional
