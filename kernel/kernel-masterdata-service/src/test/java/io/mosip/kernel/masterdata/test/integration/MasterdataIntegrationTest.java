@@ -8774,7 +8774,7 @@ public class MasterdataIntegrationTest {
 		dig.setMake("MC01A");
 		dig.setModel("SMIDCL");
 		dig.setSerialNo("1801160991");
-		dig.setDeviceSubType("Single");
+		dig.setSubType("Single");
 		dig.setType("Fingerprint");
 		DeviceData device = new DeviceData();
 		device.setDeviceId("70959dd5-e45f-438a-9ff8-9b263908e572");

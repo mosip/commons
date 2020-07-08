@@ -13,7 +13,7 @@
 	<artifactId>kernel-auth-adapter</artifactId>
 	<packaging>jar</packaging>
 	<description>***</description>
-	<version>1.0.9</version>
+	<version>1.0.9-SNAPSHOT</version>
 	<properties>
 		<sonar.skip>true</sonar.skip>
 	</properties>
@@ -22,7 +22,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>1.0.9</version>
+			<version>1.0.9-SNAPSHOT</version>
 		</dependency>
 		
 		<dependency>
