@@ -7,6 +7,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
+import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.constant.TemplateTypeErrorCode;
 import io.mosip.kernel.masterdata.dto.TemplateTypeDto;
 import io.mosip.kernel.masterdata.dto.TemplateTypeResponseDto;
@@ -16,8 +17,10 @@ import io.mosip.kernel.masterdata.exception.DataNotFoundException;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
 import io.mosip.kernel.masterdata.repository.TemplateTypeRepository;
 import io.mosip.kernel.masterdata.service.TemplateTypeService;
+import io.mosip.kernel.masterdata.utils.AuditUtil;
 import io.mosip.kernel.masterdata.utils.ExceptionUtils;
 import io.mosip.kernel.masterdata.utils.MapperUtils;
+import io.mosip.kernel.masterdata.utils.MasterdataCreationUtil;
 import io.mosip.kernel.masterdata.utils.MetaDataUtils;
 
 /**
@@ -34,6 +37,12 @@ public class TemplateTypeServiceImpl implements TemplateTypeService {
 	@Autowired
 	private TemplateTypeRepository templateTypeRepository;
 
+	@Autowired
+	private MasterdataCreationUtil masterdataCreationUtil;
+
+	@Autowired
+	private AuditUtil auditUtil;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -42,13 +51,22 @@ public class TemplateTypeServiceImpl implements TemplateTypeService {
 	 * mosip.kernel.masterdata.dto.TemplateTypeDto)
 	 */
 	@Override
-	public CodeAndLanguageCodeID createTemplateType(TemplateTypeDto tempalteType) {
-		TemplateType entity = MetaDataUtils.setCreateMetaData(tempalteType, TemplateType.class);
+	public CodeAndLanguageCodeID createTemplateType(TemplateTypeDto templateTypeDto) {
+
 		TemplateType templateType;
 		try {
+			templateTypeDto = masterdataCreationUtil.createMasterData(TemplateType.class, templateTypeDto);
+			TemplateType entity = MetaDataUtils.setCreateMetaData(templateTypeDto, TemplateType.class);
 			templateType = templateTypeRepository.create(entity);
 
-		} catch (DataAccessLayerException | DataAccessException e) {
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
+			auditUtil.auditRequest(
+					String.format(MasterDataConstant.CREATE_ERROR_AUDIT, TemplateType.class.getSimpleName()),
+					MasterDataConstant.AUDIT_SYSTEM,
+					String.format(MasterDataConstant.FAILURE_DESC,
+							TemplateTypeErrorCode.TEMPLATE_TYPE_INSERT_EXCEPTION.getErrorCode(),
+							TemplateTypeErrorCode.TEMPLATE_TYPE_INSERT_EXCEPTION.getErrorMessage()));
 			throw new MasterDataServiceException(TemplateTypeErrorCode.TEMPLATE_TYPE_INSERT_EXCEPTION.getErrorCode(),
 					TemplateTypeErrorCode.TEMPLATE_TYPE_INSERT_EXCEPTION.getErrorMessage()
 							+ ExceptionUtils.parseException(e));
@@ -56,7 +74,9 @@ public class TemplateTypeServiceImpl implements TemplateTypeService {
 
 		CodeAndLanguageCodeID codeLangCodeId = new CodeAndLanguageCodeID();
 		MapperUtils.map(templateType, codeLangCodeId);
-
+		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_CREATE, TemplateType.class.getSimpleName()),
+				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC,
+						TemplateType.class.getSimpleName(), codeLangCodeId.getCode()));
 		return codeLangCodeId;
 	}
 

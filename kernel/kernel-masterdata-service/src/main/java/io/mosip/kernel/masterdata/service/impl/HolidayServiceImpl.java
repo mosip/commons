@@ -211,7 +211,8 @@ public class HolidayServiceImpl implements HolidayService {
 			if (holidayDto != null) {
 				List<Location> locations =locationRepository.findByCode(holidayDto.getLocationCode());
 				if(locations==null || locations.isEmpty()) {
-					auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_UPDATE, LocationDto.class.getSimpleName()),
+					auditUtil.auditRequest(
+							String.format(MasterDataConstant.FAILURE_UPDATE, Holiday.class.getSimpleName()),
 							MasterDataConstant.AUDIT_SYSTEM,
 							String.format(MasterDataConstant.FAILURE_DESC,
 									HolidayErrorCode.HOLIDAY_LOCATION_INVALID.getErrorCode(),
@@ -245,7 +246,7 @@ public class HolidayServiceImpl implements HolidayService {
 			MapperUtils.map(holiday, holidayId);
 			}
 		}catch (DataAccessLayerException | DataAccessException | IllegalArgumentException |  SecurityException e) {
-			auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_UPDATE, LocationDto.class.getSimpleName()),
+			auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_UPDATE, Holiday.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
 					String.format(MasterDataConstant.FAILURE_DESC,
 							HolidayErrorCode.HOLIDAY_INSERT_EXCEPTION.getErrorCode(), ExceptionUtils.parseException(e)),
@@ -254,9 +255,9 @@ public class HolidayServiceImpl implements HolidayService {
 					ExceptionUtils.parseException(e));
 		}
 		
-		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_CREATE, HolidayDto.class.getSimpleName()),
+		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_CREATE, Holiday.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC, HolidayDto.class.getSimpleName(), holidayId),
+				String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC, Holiday.class.getSimpleName(), holidayId),
 				"ADM-2162");
 		return holidayId;
 	}
@@ -295,7 +296,7 @@ public class HolidayServiceImpl implements HolidayService {
 			List<Location> locations =locationRepository.findByCode(holidayDto.getLocationCode());
 			if(locations==null || locations.isEmpty()) {
 				auditUtil.auditRequest(
-						String.format(MasterDataConstant.FAILURE_UPDATE, HolidayUpdateDto.class.getSimpleName()),
+						String.format(MasterDataConstant.FAILURE_UPDATE, Holiday.class.getSimpleName()),
 						MasterDataConstant.AUDIT_SYSTEM, String.format(HolidayErrorCode.UPDATE_HOLIDAY_LOCATION_INVALID.getErrorCode(),
 								HolidayErrorCode.UPDATE_HOLIDAY_LOCATION_INVALID.getErrorMessage()),
 						"ADM-2166");
@@ -310,7 +311,7 @@ public class HolidayServiceImpl implements HolidayService {
 				idDto = mapToHolidayIdDto(holidayDto);
 			} else {
 				auditUtil.auditRequest(
-						String.format(MasterDataConstant.FAILURE_UPDATE, HolidayUpdateDto.class.getSimpleName()),
+						String.format(MasterDataConstant.FAILURE_UPDATE, Holiday.class.getSimpleName()),
 						MasterDataConstant.AUDIT_SYSTEM, String.format(HolidayErrorCode.HOLIDAY_NOTFOUND.getErrorCode(),
 								HolidayErrorCode.HOLIDAY_NOTFOUND.getErrorMessage()),
 						"ADM-2166");
@@ -320,7 +321,7 @@ public class HolidayServiceImpl implements HolidayService {
 
 		} catch (DataAccessException | DataAccessLayerException | IllegalArgumentException | SecurityException e) {
 			auditUtil.auditRequest(
-					String.format(MasterDataConstant.FAILURE_UPDATE, HolidayUpdateDto.class.getSimpleName()),
+					String.format(MasterDataConstant.FAILURE_UPDATE, Holiday.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM, String.format(HolidayErrorCode.HOLIDAY_UPDATE_EXCEPTION.getErrorCode(),
 							HolidayErrorCode.HOLIDAY_UPDATE_EXCEPTION.getErrorMessage()),
 					"ADM-2166");
@@ -328,9 +329,9 @@ public class HolidayServiceImpl implements HolidayService {
 					HolidayErrorCode.HOLIDAY_UPDATE_EXCEPTION.getErrorMessage() + ExceptionUtils.parseException(e));
 		}
 		auditUtil.auditRequest(
-				String.format(MasterDataConstant.SUCCESSFUL_UPDATE, HolidayUpdateDto.class.getSimpleName()),
+				String.format(MasterDataConstant.SUCCESSFUL_UPDATE, Holiday.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
-				String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC, HolidayUpdateDto.class.getSimpleName(), idDto),
+				String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC, Holiday.class.getSimpleName(), idDto),
 				"ADM-2165");
 		return idDto;
 	}

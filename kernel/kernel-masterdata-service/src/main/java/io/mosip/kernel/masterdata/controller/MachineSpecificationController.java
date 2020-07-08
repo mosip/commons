@@ -30,6 +30,7 @@ import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.entity.id.IdAndLanguageCodeID;
 import io.mosip.kernel.masterdata.service.MachineSpecificationService;
 import io.mosip.kernel.masterdata.utils.AuditUtil;
+import io.mosip.kernel.masterdata.validator.MachineSpecificationValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -58,6 +59,9 @@ public class MachineSpecificationController {
 	@Autowired
 	MachineSpecificationService machineSpecificationService;
 
+	@Autowired
+	MachineSpecificationValidator machineSpecificationValidator;
+
 	/**
 	 * Post API to insert a new row of Machine Specification data
 	 * 
@@ -74,6 +78,7 @@ public class MachineSpecificationController {
 			@ApiResponse(code = 500, message = "While creating Machine Specification any error occured") })
 	public ResponseWrapper<IdAndLanguageCodeID> createMachineSpecification(
 			@Valid @RequestBody RequestWrapper<MachineSpecificationDto> machineSpecification) {
+		machineSpecificationValidator.validate(machineSpecification.getRequest());
 		auditUtil.auditRequest(
 				MasterDataConstant.CREATE_API_IS_CALLED + MachineSpecificationDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,
@@ -105,6 +110,7 @@ public class MachineSpecificationController {
 			@ApiResponse(code = 500, message = "While updating Machine Specification any error occured") })
 	public ResponseWrapper<IdAndLanguageCodeID> updateMachineSpecification(
 			@Valid @RequestBody RequestWrapper<MachineSpecificationDto> machineSpecification) {
+		machineSpecificationValidator.validate(machineSpecification.getRequest());
 		auditUtil.auditRequest(
 				MasterDataConstant.UPDATE_API_IS_CALLED + MachineSpecificationDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,

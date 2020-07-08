@@ -7,8 +7,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Range;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import io.mosip.kernel.masterdata.validator.StringFormatter;
 import io.mosip.kernel.masterdata.validator.registereddevice.ValidCertificateLevel;
 import io.mosip.kernel.masterdata.validator.registereddevice.ValidFoundational;
 import io.mosip.kernel.masterdata.validator.registereddevice.ValidPurpose;
@@ -51,8 +54,8 @@ public class RegisteredDevicePostReqDto {
 	 * Field for Status Code Status should only have standard values - “Registered”,
 	 * “Retired”, “Revoked”
 	 */
-	@NotBlank
-	@Size(min = 0, max = 64)
+	@NotNull
+	@StringFormatter(min = 1, max = 64)
 	@ApiModelProperty(value = "statusCode", required = true, dataType = "java.lang.String")
 	@ValidStatusCode(message = "Invalid Status received")
 	private String statusCode;
@@ -60,8 +63,8 @@ public class RegisteredDevicePostReqDto {
 	/**
 	 * Field for device name
 	 */
-	@NotBlank
-	@Size(min = 0, max = 256)
+	@NotNull
+	@StringFormatter(min = 1, max = 256)
 	@ApiModelProperty(value = "deviceId", required = true, dataType = "java.lang.String")
 	private String deviceId;
 
@@ -69,7 +72,8 @@ public class RegisteredDevicePostReqDto {
 	 * Field for device name
 	 */
 
-	@Size(min = 0, max = 256)
+	@NotNull
+	@StringFormatter(min = 1, max = 256)
 	@ApiModelProperty(value = "deviceSubId", required = true, dataType = "java.lang.String")
 	private String deviceSubId;
 
@@ -77,8 +81,8 @@ public class RegisteredDevicePostReqDto {
 	 * Field for device name Purpose level should only accept two values,
 	 * “Registration” or “Auth”.
 	 */
-	@NotBlank
-	@Size(min = 0, max = 64)
+	@NotNull
+	@StringFormatter(min = 1, max = 64)
 	@ApiModelProperty(value = "purpose", required = true, dataType = "java.lang.String")
 	@ValidPurpose(message = "Invalid Purpose received")
 	private String purpose;
@@ -86,8 +90,8 @@ public class RegisteredDevicePostReqDto {
 	/**
 	 * Field for device name
 	 */
-	@NotBlank
-	@Size(min = 0, max = 128)
+	@NotNull
+	@StringFormatter(min = 1, max = 128)
 	@ApiModelProperty(value = "firmware", required = true, dataType = "java.lang.String")
 	private String firmware;
 
@@ -101,8 +105,8 @@ public class RegisteredDevicePostReqDto {
 	 * Field for device name Certificate level should only accept two values. “L0”
 	 * or “L1”
 	 */
-	@NotBlank
-	@Size(min = 0, max = 3)
+	@NotNull
+	@StringFormatter(min = 1, max = 3)
 	@ApiModelProperty(value = "certificationLevel", required = true, dataType = "java.lang.String")
 	@ValidCertificateLevel(message = "Invalid Certification level received")
 	private String certificationLevel;

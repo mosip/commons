@@ -33,6 +33,7 @@ import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.entity.id.IdAndLanguageCodeID;
 import io.mosip.kernel.masterdata.service.DeviceSpecificationService;
 import io.mosip.kernel.masterdata.utils.AuditUtil;
+import io.mosip.kernel.masterdata.validator.DeviceSpecificationValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -62,6 +63,9 @@ public class DeviceSpecificationController {
 	 */
 	@Autowired
 	DeviceSpecificationService deviceSpecificationService;
+
+	@Autowired
+	DeviceSpecificationValidator deviceSpecificationValidator;
 
 	/**
 	 * Function to fetch list of device specification details based on language code
@@ -132,6 +136,7 @@ public class DeviceSpecificationController {
 			@ApiResponse(code = 500, message = "While creating Device Specification any error occured") })
 	public ResponseWrapper<IdAndLanguageCodeID> createDeviceSpecification(
 			@Valid @RequestBody RequestWrapper<DeviceSpecificationDto> deviceSpecification) {
+		deviceSpecificationValidator.validate(deviceSpecification.getRequest());
 		auditUtil.auditRequest(
 				MasterDataConstant.CREATE_API_IS_CALLED + DeviceSpecificationDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,
@@ -153,6 +158,7 @@ public class DeviceSpecificationController {
 			@ApiResponse(code = 500, message = "While updating device specification any error occured") })
 	public ResponseWrapper<IdAndLanguageCodeID> updateDeviceSpecification(
 			@Valid @RequestBody RequestWrapper<DeviceSpecificationDto> deviceSpecification) {
+		deviceSpecificationValidator.validate(deviceSpecification.getRequest());
 		auditUtil.auditRequest(
 				MasterDataConstant.UPDATE_API_IS_CALLED + DeviceSpecificationDto.class.getCanonicalName(),
 				MasterDataConstant.AUDIT_SYSTEM,

@@ -79,6 +79,7 @@ public class MetaDataUtils {
 		entity.setUpdatedBy(contextUser);
 		entity.setIsDeleted(true);
 		entity.setDeletedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
+		entity.setIsActive(false);
 		return entity;
 	}
 

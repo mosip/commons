@@ -6,6 +6,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Range;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.mosip.kernel.masterdata.validator.StringFormatter;
@@ -63,15 +65,13 @@ public class DeviceDto {
 	 * Field for device ip address
 	 */
 
-	@StringFormatter(min = 1, max = 17)
+	@Size(min = 0, max = 17)
 	@ApiModelProperty(value = "ipAddress", required = true, dataType = "java.lang.String")
 	private String ipAddress;
 	/**
 	 * Field for language code
 	 */
 	@ValidLangCode(message = "Language Code is Invalid")
-//	@NotNull
-//	@StringFormatter(min = 1, max = 3)
 	@ApiModelProperty(value = "langCode", required = true, dataType = "java.lang.String")
 	private String langCode;
 	/**
@@ -83,7 +83,7 @@ public class DeviceDto {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private LocalDateTime validityDateTime;
 
-	@StringFormatter(min = 1, max = 36)
+	@StringFormatter(min = 0, max = 36)
 	private String zoneCode;
 
 }

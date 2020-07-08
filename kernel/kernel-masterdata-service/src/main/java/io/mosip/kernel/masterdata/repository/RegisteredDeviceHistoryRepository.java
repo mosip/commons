@@ -18,7 +18,7 @@ import io.mosip.kernel.masterdata.entity.RegisteredDeviceHistory;
 @Repository
 public interface RegisteredDeviceHistoryRepository extends BaseRepository<RegisteredDeviceHistory, String> {
 
-	@Query(value = "(select * from registered_device_master_h rdh WHERE code = ?1 AND eff_dtimes<= ?2 and (is_deleted is null or is_deleted =false) ORDER BY eff_dtimes DESC) LIMIT 1 ", nativeQuery = true)
+	@Query(value = "(select * from registered_device_master_h rdh WHERE code = ?1 AND eff_dtimes<= ?2 and is_active=true and(is_deleted is null or is_deleted =false) ORDER BY eff_dtimes DESC) LIMIT 1 ", nativeQuery = true)
 	RegisteredDeviceHistory findRegisteredDeviceHistoryByIdAndEffTimes(String code, LocalDateTime effTimes);
 
 	@Query(value = "(select * from registered_device_master_h rdh WHERE code = ?1 AND provider_id=?2 AND eff_dtimes<= ?3 and (is_deleted is null or is_deleted =false) ORDER BY eff_dtimes DESC) LIMIT 1 ", nativeQuery = true)

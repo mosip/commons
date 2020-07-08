@@ -3,6 +3,7 @@ package io.mosip.kernel.masterdata.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import io.mosip.kernel.core.dataaccess.spi.repository.BaseRepository;
@@ -43,5 +44,10 @@ public interface LocationHierarchyRepository extends BaseRepository<LocationHier
 	 */
 	@Query("FROM LocationHierarchy l where l.langCode = ?1 and (l.isDeleted is null or l.isDeleted = false) and l.isActive = true")
 	List<LocationHierarchy> findAllByLangCodeAndIsDeletedFalseOrIsDeletedIsNull(String langCode);
+	
+	@Query("FROM LocationHierarchy l where l.langCode = ?1 and hierarchyLevel = ?2 and hierarchyLevelName =?3 and (l.isDeleted is null or l.isDeleted = false) and l.isActive = true")
+	LocationHierarchy findByLangCodeAndLevelAndName(String langCode,short hierarchyLevel,String hierarchyLevelName);
 
+	@Query(value = "select hierarchy_level FROM loc_hierarchy_list where hierarchy_level_name = :heirarchyLevelName and lang_code=:languageCode and (is_deleted is null or is_deleted = false) and is_active = true", nativeQuery = true)
+	Integer findByheirarchyLevalNameAndLangCode(@Param("heirarchyLevelName") String heirarchyLevelName,@Param("languageCode") String languageCode);
 }

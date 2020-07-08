@@ -24,4 +24,7 @@ public interface RegExceptionalHolidayRepository
 	@Query("From RegExceptionalHoliday where langCode=?1 and (isDeleted is null or isDeleted = false) and isActive = true")
 	public List<RegExceptionalHoliday> findByLangcode(String langCode);
 
+	@Query("From RegExceptionalHoliday where registrationCenterId=?1  and exceptionHolidayDate= ?2 ")
+	public Object findByRegIdAndExpHoliday(String registrationCenterId, LocalDate exceptionHolidayDate);
+
 }

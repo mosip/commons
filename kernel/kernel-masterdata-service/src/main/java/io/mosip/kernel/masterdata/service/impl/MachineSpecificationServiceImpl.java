@@ -19,6 +19,7 @@ import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.masterdata.constant.MachineSpecificationErrorCode;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.dto.FilterData;
+import io.mosip.kernel.masterdata.dto.GenderTypeDto;
 import io.mosip.kernel.masterdata.dto.MachineSpecificationDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.MachineSpecificationExtnDto;
@@ -30,9 +31,7 @@ import io.mosip.kernel.masterdata.dto.request.SearchDto;
 import io.mosip.kernel.masterdata.dto.request.SearchFilter;
 import io.mosip.kernel.masterdata.dto.request.SearchSort;
 import io.mosip.kernel.masterdata.dto.response.ColumnCodeValue;
-import io.mosip.kernel.masterdata.dto.response.ColumnValue;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
-import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.entity.Machine;
 import io.mosip.kernel.masterdata.entity.MachineSpecification;
@@ -50,6 +49,7 @@ import io.mosip.kernel.masterdata.utils.ExceptionUtils;
 import io.mosip.kernel.masterdata.utils.MachineUtil;
 import io.mosip.kernel.masterdata.utils.MapperUtils;
 import io.mosip.kernel.masterdata.utils.MasterDataFilterHelper;
+import io.mosip.kernel.masterdata.utils.MasterdataCreationUtil;
 import io.mosip.kernel.masterdata.utils.MasterdataSearchHelper;
 import io.mosip.kernel.masterdata.utils.MetaDataUtils;
 import io.mosip.kernel.masterdata.utils.OptionalFilter;
@@ -102,6 +102,9 @@ public class MachineSpecificationServiceImpl implements MachineSpecificationServ
 	@Autowired
 	private AuditUtil auditUtil;
 
+	@Autowired
+	private MasterdataCreationUtil masterdataCreationUtil;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -113,11 +116,17 @@ public class MachineSpecificationServiceImpl implements MachineSpecificationServ
 
 		MachineSpecification renMachineSpecification = null;
 
-		MachineSpecification entity = MetaDataUtils.setCreateMetaData(machineSpecification, MachineSpecification.class);
+
 		try {
+
+			machineSpecification = masterdataCreationUtil.createMasterData(MachineSpecification.class,
+					machineSpecification);
+			MachineSpecification entity = MetaDataUtils.setCreateMetaData(machineSpecification,
+					MachineSpecification.class);
 			renMachineSpecification = machineSpecificationRepository.create(entity);
 			Objects.requireNonNull(renMachineSpecification);
-		} catch (DataAccessLayerException | DataAccessException | NullPointerException e) {
+		} catch (DataAccessLayerException | DataAccessException | NullPointerException | IllegalArgumentException
+				| IllegalAccessException | NoSuchFieldException | SecurityException e) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_CREATE, MachineSpecification.class.getCanonicalName()),
 					MasterDataConstant.AUDIT_SYSTEM,
@@ -133,7 +142,9 @@ public class MachineSpecificationServiceImpl implements MachineSpecificationServ
 
 		IdAndLanguageCodeID idAndLanguageCodeID = new IdAndLanguageCodeID();
 		MapperUtils.map(renMachineSpecification, idAndLanguageCodeID);
-
+		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_CREATE, MachineSpecification.class.getSimpleName()),
+				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC,
+						MachineSpecification.class.getSimpleName(), idAndLanguageCodeID.getId()));
 		return idAndLanguageCodeID;
 
 	}
@@ -153,7 +164,8 @@ public class MachineSpecificationServiceImpl implements MachineSpecificationServ
 					.findByIdAndLangCodeIsDeletedFalseorIsDeletedIsNull(machineSpecification.getId(),
 							machineSpecification.getLangCode());
 			if (renMachineSpecification != null) {
-
+				machineSpecification = masterdataCreationUtil.updateMasterData(MachineSpecification.class,
+						machineSpecification);
 				MetaDataUtils.setUpdateMetaData(machineSpecification, renMachineSpecification, false);
 				updMachineSpecification = machineSpecificationRepository.update(renMachineSpecification);
 			} else {
@@ -169,7 +181,8 @@ public class MachineSpecificationServiceImpl implements MachineSpecificationServ
 						MachineSpecificationErrorCode.MACHINE_SPECIFICATION_NOT_FOUND_EXCEPTION.getErrorCode(),
 						MachineSpecificationErrorCode.MACHINE_SPECIFICATION_NOT_FOUND_EXCEPTION.getErrorMessage());
 			}
-		} catch (DataAccessLayerException | DataAccessException e) {
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_UPDATE, MachineSpecification.class.getCanonicalName()),
 					MasterDataConstant.AUDIT_SYSTEM,
@@ -185,7 +198,9 @@ public class MachineSpecificationServiceImpl implements MachineSpecificationServ
 
 		IdAndLanguageCodeID idAndLanguageCodeID = new IdAndLanguageCodeID();
 		MapperUtils.map(updMachineSpecification, idAndLanguageCodeID);
-
+		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_UPDATE, MachineSpecification.class.getSimpleName()),
+				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC,
+						MachineSpecification.class.getSimpleName(), idAndLanguageCodeID.getId()));
 		return idAndLanguageCodeID;
 	}
 
@@ -377,7 +392,7 @@ public class MachineSpecificationServiceImpl implements MachineSpecificationServ
 	public FilterResponseCodeDto machineSpecificationFilterValues(FilterValueDto filterValueDto) {
 		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
 		List<ColumnCodeValue> columnValueList = new ArrayList<>();
-		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), Machine.class)) {
+		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), MachineSpecification.class)) {
 			for (FilterDto filterDto : filterValueDto.getFilters()) {
 				List<FilterData> filterValues = masterDataFilterHelper.filterValuesWithCode(MachineSpecification.class, filterDto,
 						filterValueDto,"id");

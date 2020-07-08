@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.Range;
 
 import io.mosip.kernel.masterdata.validator.FilterType;
 import io.mosip.kernel.masterdata.validator.FilterTypeEnum;
+import io.mosip.kernel.masterdata.validator.StringFormatter;
 import io.mosip.kernel.masterdata.validator.ValidLangCode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,15 +27,16 @@ public class LocationCreateDto {
 
 	private String code;
 
-	@Size(min = 0, max = 128)
-	@NotBlank
+
+	@NotNull
+	@StringFormatter(min = 0, max = 128)
 	private String name;
 
 	@Range(min = 0)
 	private short hierarchyLevel;
 
-	@Size(min = 0, max = 64)
-	@NotBlank
+	@NotNull
+	@StringFormatter(min = 0, max = 64)
 	private String hierarchyName;
 
 	private String parentLocCode;

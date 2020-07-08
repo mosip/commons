@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.mosip.kernel.core.dataaccess.spi.repository.BaseRepository;
-import io.mosip.kernel.masterdata.entity.Machine;
 import io.mosip.kernel.masterdata.entity.TemplateFileFormat;
 
 /**
@@ -28,7 +27,7 @@ public interface TemplateFileFormatRepository extends BaseRepository<TemplateFil
 	 * @param langCode is the language code present in database
 	 * @return object of {@link TemplateFileFormat}
 	 */
-	@Query("FROM TemplateFileFormat WHERE code =?1 AND langCode =?2 AND (isDeleted is null OR isDeleted = false) and isActive = true")
+	@Query("FROM TemplateFileFormat WHERE code =?1 AND langCode =?2 AND (isDeleted is null OR isDeleted = false)")
 	TemplateFileFormat findByCodeAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(String code, String langCode);
 
 	/**
