@@ -1,11 +1,15 @@
 package io.mosip.kernel.uingenerator.verticle;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.springframework.context.ApplicationContext;
 
 import io.mosip.kernel.uingenerator.constant.UINHealthConstants;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorConstant;
 import io.mosip.kernel.uingenerator.generator.UinProcesser;
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 
 /**
  * Verticle instance for Uin Generator
@@ -20,8 +24,7 @@ public class UinGeneratorVerticle extends AbstractVerticle {
 	/**
 	 * The field for logger
 	 */
-	// private static final Logger LOGGER =
-	// LoggerFactory.getLogger(UinGeneratorVerticle.class);
+	 private static final Logger LOGGER = LoggerFactory.getLogger(UinGeneratorVerticle.class);
 
 	/**
 	 * Field for UinProcesser
@@ -37,6 +40,8 @@ public class UinGeneratorVerticle extends AbstractVerticle {
 		uinProcesser = (UinProcesser) context.getBean("uinProcesser");
 	}
 
+	private volatile AtomicBoolean locked = new AtomicBoolean(false);
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -45,17 +50,19 @@ public class UinGeneratorVerticle extends AbstractVerticle {
 	@Override
 	public void start() {
 		vertx.eventBus().consumer(UinGeneratorConstant.UIN_GENERATOR_ADDRESS, receivedMessage -> {
-			if (receivedMessage.body().equals(UinGeneratorConstant.GENERATE_UIN) && uinProcesser.shouldGenerateUins()) {
+			if (receivedMessage.body().equals(UinGeneratorConstant.GENERATE_UIN) && uinProcesser.shouldGenerateUins()
+					&& !locked.get()) {
 				vertx.executeBlocking(future -> {
+					locked.set(true);
 					uinProcesser.generateUins();
 					future.complete();
 				}, result -> {
 					if (result.succeeded()) {
-
-						// LOGGER.info("Generated and persisted uins");
+						locked.set(false);
+						 LOGGER.info("Generated and persisted uins lock set to false");
 					} else {
 
-						// LOGGER.info("Uin Genaration failed", result.cause());
+						 LOGGER.error("Uin Genaration failed", result.cause());
 					}
 				});
 			}
