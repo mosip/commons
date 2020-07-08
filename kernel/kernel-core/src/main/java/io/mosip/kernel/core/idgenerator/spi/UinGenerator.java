@@ -12,6 +12,6 @@ public interface UinGenerator {
 	/**
 	 * Function to generate an Id
 	 */
-	void generateId();
+	void generateId(long noOfUINToGenerate);
 
 }
