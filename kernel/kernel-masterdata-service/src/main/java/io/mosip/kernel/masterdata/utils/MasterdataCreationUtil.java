@@ -33,6 +33,8 @@ import io.mosip.kernel.dataaccess.hibernate.constant.HibernateErrorCode;
 import io.mosip.kernel.masterdata.constant.RegistrationCenterErrorCode;
 import io.mosip.kernel.masterdata.constant.RequestErrorCode;
 import io.mosip.kernel.masterdata.entity.Device;
+import io.mosip.kernel.masterdata.entity.Machine;
+import io.mosip.kernel.masterdata.entity.RegistrationCenter;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
 
 /**
@@ -202,10 +204,7 @@ public class MasterdataCreationUtil {
 	private <E, T> T primaryBehaviour(String primaryKeyCol, Class<?> dtoClass, Class<E> entity, String id,
 			boolean activeDto, T t, boolean priSecIdentical)
 			throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		if (StringUtils.isBlank(id)) {
-			throw new MasterDataServiceException(RequestErrorCode.REQUEST_INVALID_PRI_LANG_ID.getErrorCode(),
-					RequestErrorCode.REQUEST_INVALID_PRI_LANG_ID.getErrorMessage());
-		}
+
 		Field isActive = null;
 		if (primaryKeyCol != null && primaryKeyCol.equals(CODE_COLUMN_NAME)) {
 			Field idColumn = dtoClass.getDeclaredField(CODE_COLUMN_NAME);
@@ -221,6 +220,7 @@ public class MasterdataCreationUtil {
 
 		}
 		if (primaryKeyCol != null && primaryKeyCol.equals(ID_COLUMN_NAME)) {
+			if (!(entity.equals(Machine.class) || entity.equals(RegistrationCenter.class))) {
 			Field idColumn = dtoClass.getDeclaredField(ID_COLUMN_NAME);
 			idColumn.setAccessible(true);
 			if (entity.equals(Device.class)) {
@@ -240,6 +240,7 @@ public class MasterdataCreationUtil {
 						RequestErrorCode.REQUEST_ID_ALREADY_EXIST.getErrorMessage());
 				}
 			}
+		 } 
 		}
 		setIsActive(dtoClass, activeDto, t, priSecIdentical,isActive);
 		return t;
