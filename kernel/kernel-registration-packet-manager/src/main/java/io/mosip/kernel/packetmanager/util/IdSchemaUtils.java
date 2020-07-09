@@ -84,7 +84,7 @@ public class IdSchemaUtils {
         try {
             JSONObject jsonObject = new JSONObject(response);
             JSONObject respObj = (JSONObject) jsonObject.get(IDschemaConstants.RESPONSE);
-            responseString = respObj != null ? (String) respObj.get(IDschemaConstants.SCHEMA_JSON) : null;
+            responseString = respObj != null ? respObj.get(IDschemaConstants.SCHEMA_JSON).toString() : null;
         } catch (JSONException e) {
             throw new IOException(e);
         }
