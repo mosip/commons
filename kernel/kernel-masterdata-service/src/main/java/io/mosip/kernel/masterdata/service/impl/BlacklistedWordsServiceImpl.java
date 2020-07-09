@@ -209,7 +209,7 @@ public class BlacklistedWordsServiceImpl implements BlacklistedWordsService {
 		int noOfRowAffected = 0;
 		Map<String, Object> params = bindDtoToMap(wordDto);
 		try {
-			if (wordDto.getDescription() != null) {
+			if (wordDto.getDescription() != null && !wordDto.getDescription().trim().isEmpty()) {
 				noOfRowAffected = blacklistedWordsRepository.createQueryUpdateOrDelete(
 						UpdateQueryConstants.BLACKLISTED_WORD_UPDATE_QUERY_WITH_DESCRIPTION.getQuery(), params);
 
