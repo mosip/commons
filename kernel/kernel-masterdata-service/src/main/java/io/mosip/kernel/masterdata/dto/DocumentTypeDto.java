@@ -27,7 +27,7 @@ import lombok.Data;
 public class DocumentTypeDto {
 
 	@NotNull
-	@StringFormatter(min = 0, max = 36)
+	@StringFormatter(min = 1, max = 36)
 	private String code;
 
 	@NotNull
