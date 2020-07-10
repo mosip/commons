@@ -243,6 +243,12 @@ public class HolidayServiceImpl implements HolidayService {
 			}
 			
 			holiday = holidayRepository.create(entity);
+			if(holiday.getIsActive()==true && holiday.getLangCode().equalsIgnoreCase(secondaryLang)) {
+				Holiday primholiday=holidayRepository.findHolidayByHolidayDateLocationCodeLangCode(holiday.getHolidayDate(),
+						holiday.getLocationCode(),primaryLang);
+				primholiday.setIsActive(true);
+				holidayRepository.update(primholiday);
+			}
 			MapperUtils.map(holiday, holidayId);
 			}
 		}catch (DataAccessLayerException | DataAccessException | IllegalArgumentException |  SecurityException e) {
