@@ -9,7 +9,7 @@ package io.mosip.kernel.core.deviceprovidermanager.spi;
  * @param <U>
  */
 
-public interface DeviceProviderService<ResponseDto, ValidateDeviceDto, ValidateDeviceHistoryDto, DeviceProviderDto, DeviceProviderExtnDto, DeviceProviderPutDto> {
+public interface DeviceProviderService<ResponseDto, ValidateDeviceDto, DeviceProviderDto, DeviceProviderExtnDto, DeviceProviderPutDto> {
 
 	/**
 	 * Validate device providers.
@@ -19,13 +19,6 @@ public interface DeviceProviderService<ResponseDto, ValidateDeviceDto, ValidateD
 	 */
 	public ResponseDto validateDeviceProviders(ValidateDeviceDto validateDeviceDto);
 
-	/**
-	 * Validate device provider history.
-	 *
-	 * @param validateDeviceDto the validate device dto
-	 * @return {@link ResponseDto} the response dto
-	 */
-	public ResponseDto validateDeviceProviderHistory(ValidateDeviceHistoryDto validateDeviceHistoryDto);
 
 	/**
 	 * Method to create Device Provider

@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -32,7 +31,6 @@ import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.masterdata.dto.DigitalIdDto;
 import io.mosip.kernel.masterdata.dto.ValidateDeviceDto;
-import io.mosip.kernel.masterdata.dto.ValidateDeviceHistoryDto;
 import io.mosip.kernel.masterdata.entity.DeviceProvider;
 import io.mosip.kernel.masterdata.entity.DeviceProviderHistory;
 import io.mosip.kernel.masterdata.entity.MOSIPDeviceService;
@@ -97,18 +95,18 @@ public class DeviceProviderManagementIntegrationTest {
 
 	private static final String DPM_URL = "/deviceprovidermanagement/validate";
 
-	private static final String DPM_HISTORY_URL = "/deviceprovidermanagement/validate/history";
+
 
 	private ValidateDeviceDto validateDeviceDto;
 
-	private ValidateDeviceHistoryDto validateDeviceHistoryDto;
+	private ValidateDeviceDto validateDeviceHistoryDto;
 
 	@Autowired
 	private ObjectMapper objectMapper;
 
 	private RequestWrapper<ValidateDeviceDto> requestWrapper;
 
-	private RequestWrapper<ValidateDeviceHistoryDto> requestWrapperHistory;
+	private RequestWrapper<ValidateDeviceDto> requestWrapperHistory;
 
 	@Before
 	public void setUp() {
@@ -151,7 +149,7 @@ public class DeviceProviderManagementIntegrationTest {
 		digitalIdDto.setDeviceSubType("Slab");
 		validateDeviceDto.setDigitalId(digitalIdDto);
 
-		validateDeviceHistoryDto = new ValidateDeviceHistoryDto();
+		validateDeviceHistoryDto = new ValidateDeviceDto();
 		validateDeviceHistoryDto.setDeviceCode("10001");
 		validateDeviceHistoryDto.setDeviceServiceVersion("0.1v");
 		validateDeviceHistoryDto.setDigitalId(digitalIdDto);
@@ -254,7 +252,7 @@ public class DeviceProviderManagementIntegrationTest {
 		when(deviceServiceHistoryRepository.findByDeviceDetailHistory(Mockito.anyString(), Mockito.anyString(),
 				Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.any()))
 						.thenReturn(null);
-		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
 				.andExpect(status().isOk());
 	}
 
@@ -267,7 +265,7 @@ public class DeviceProviderManagementIntegrationTest {
 		when(deviceServiceHistoryRepository.findByDeviceDetailHistory(Mockito.anyString(), Mockito.anyString(),
 				Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.any()))
 						.thenThrow(DataRetrievalFailureException.class);
-		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
 				.andExpect(status().isInternalServerError());
 	}
 
@@ -441,7 +439,7 @@ public class DeviceProviderManagementIntegrationTest {
 		mockSuccessTestCases();
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
-		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
 				.andExpect(status().isOk());
 	}
 
@@ -453,7 +451,7 @@ public class DeviceProviderManagementIntegrationTest {
 				Mockito.any())).thenReturn(new ArrayList<>());
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
-		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
 				.andExpect(status().isOk());
 	}
 
@@ -465,7 +463,7 @@ public class DeviceProviderManagementIntegrationTest {
 				Mockito.any())).thenThrow(DataRetrievalFailureException.class);
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
-		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
 				.andExpect(status().isInternalServerError());
 	}
 
@@ -477,7 +475,7 @@ public class DeviceProviderManagementIntegrationTest {
 				.thenReturn(null);
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
-		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
 				.andExpect(status().isOk());
 	}
 
@@ -489,7 +487,7 @@ public class DeviceProviderManagementIntegrationTest {
 				.thenThrow(DataRetrievalFailureException.class);
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
-		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
 				.andExpect(status().isInternalServerError());
 	}
 
@@ -501,7 +499,7 @@ public class DeviceProviderManagementIntegrationTest {
 				Mockito.any())).thenReturn(null);
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
-		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
 				.andExpect(status().isOk());
 	}
 
@@ -513,7 +511,7 @@ public class DeviceProviderManagementIntegrationTest {
 				Mockito.any())).thenThrow(DataRetrievalFailureException.class);
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
-		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
 				.andExpect(status().isInternalServerError());
 	}
 
@@ -524,7 +522,7 @@ public class DeviceProviderManagementIntegrationTest {
 		registeredDeviceHistory.setStatusCode("Revoked");
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
-		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
 				.andExpect(status().isOk());
 	}
 
@@ -543,7 +541,7 @@ public class DeviceProviderManagementIntegrationTest {
 		registeredDeviceHistory.setDeviceTypeCode("GV343434");
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
-		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
 				.andExpect(status().isOk());
 	}
 }
