@@ -3,6 +3,7 @@ package io.mosip.kernel.masterdata.dto;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
+import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,4 +30,12 @@ public class ValidateDeviceDto {
 	/** The device service version. */
 	@NotBlank
 	private String deviceServiceVersion;
+	
+
+	@ApiParam(value = "2019-09-09T09:09:09.000Z", required = true)
+	private String timeStamp;
+	
+
+
+	private String purpose;
 }

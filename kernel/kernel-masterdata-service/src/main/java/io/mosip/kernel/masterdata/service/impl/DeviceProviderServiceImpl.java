@@ -14,13 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.deviceprovidermanager.spi.DeviceProviderService;
 import io.mosip.kernel.core.exception.ServiceError;
+import io.mosip.kernel.core.util.StringUtils;
 import io.mosip.kernel.masterdata.constant.DeviceProviderManagementErrorCode;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.dto.DeviceProviderDto;
 import io.mosip.kernel.masterdata.dto.DeviceProviderPutDto;
 import io.mosip.kernel.masterdata.dto.DigitalIdDto;
 import io.mosip.kernel.masterdata.dto.ValidateDeviceDto;
-import io.mosip.kernel.masterdata.dto.ValidateDeviceHistoryDto;
 import io.mosip.kernel.masterdata.dto.getresponse.ResponseDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.DeviceProviderExtnDto;
 import io.mosip.kernel.masterdata.entity.DeviceProvider;
@@ -53,7 +53,7 @@ import io.mosip.kernel.masterdata.utils.MetaDataUtils;
  */
 @Service
 public class DeviceProviderServiceImpl implements
-		DeviceProviderService<ResponseDto, ValidateDeviceDto, ValidateDeviceHistoryDto, DeviceProviderDto, DeviceProviderExtnDto, DeviceProviderPutDto> {
+		DeviceProviderService<ResponseDto, ValidateDeviceDto, DeviceProviderDto, DeviceProviderExtnDto, DeviceProviderPutDto> {
 
 	private static final String UTC_DATETIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
@@ -83,22 +83,34 @@ public class DeviceProviderServiceImpl implements
 	@Override
 	public ResponseDto validateDeviceProviders(ValidateDeviceDto validateDeviceDto) {
 		ResponseDto responseDto = new ResponseDto();
-		RegisteredDevice registeredDevice = findRegisteredDevice(validateDeviceDto.getDeviceCode());
-		isDeviceProviderPresent(validateDeviceDto.getDigitalId().getDpId());
-		isValidServiceSoftwareVersion(validateDeviceDto.getDeviceServiceVersion());
-		checkMappingBetweenSwVersionDeviceTypeAndDeviceSubType(validateDeviceDto.getDeviceServiceVersion(),
-				registeredDevice);
-		validateDeviceCodeAndDigitalId(registeredDevice, validateDeviceDto.getDigitalId());
-		responseDto.setStatus(MasterDataConstant.VALID);
-		responseDto.setMessage("Device  details validated successfully");
+		if(StringUtils.isBlank(validateDeviceDto.getTimeStamp())) {
+			RegisteredDevice registeredDevice = findRegisteredDevice(validateDeviceDto.getDeviceCode(),
+					validateDeviceDto.getPurpose());
+			isDeviceProviderPresent(validateDeviceDto.getDigitalId().getDpId());
+			isValidServiceSoftwareVersion(validateDeviceDto.getDeviceServiceVersion());
+			checkMappingBetweenSwVersionDeviceTypeAndDeviceSubType(validateDeviceDto.getDeviceServiceVersion(),
+					registeredDevice);
+			validateDeviceCodeAndDigitalId(registeredDevice, validateDeviceDto.getDigitalId());
+			responseDto.setStatus(MasterDataConstant.VALID);
+			responseDto.setMessage("Device  details validated successfully");
+		}else {
+			responseDto = validateDeviceProviderHistory(validateDeviceDto);
+		}
+
 
 		return responseDto;
 	}
 
-	private RegisteredDevice findRegisteredDevice(String deviceCode) {
+	private RegisteredDevice findRegisteredDevice(String deviceCode, String purpose) {
 		RegisteredDevice registeredDevice = null;
 		try {
-			registeredDevice = registeredDeviceRepository.findByCodeAndIsActiveIsTrue(deviceCode);
+			if (StringUtils.isBlank(purpose)) {
+				registeredDevice = registeredDeviceRepository.findByCodeAndIsActiveIsTrue(deviceCode);
+			} else {
+				registeredDevice = registeredDeviceRepository.findByCodeAndPurposeIgnoreCaseAndIsActiveIsTrue(deviceCode,
+						purpose);
+			}
+
 		} catch (DataAccessException | DataAccessLayerException e) {
 			auditUtil.auditRequest(
 					MasterDataConstant.DEVICE_VALIDATION_FAILURE + ValidateDeviceDto.class.getSimpleName(),
@@ -321,14 +333,14 @@ public class DeviceProviderServiceImpl implements
 
 	}
 
-	@Override
-	public ResponseDto validateDeviceProviderHistory(ValidateDeviceHistoryDto validateDeviceDto) {
+
+	private ResponseDto validateDeviceProviderHistory(ValidateDeviceDto validateDeviceDto) {
 		ResponseDto responseDto = new ResponseDto();
 		responseDto.setStatus(MasterDataConstant.INVALID);
 		responseDto.setMessage("Device details history is invalid");
 		LocalDateTime effTimes = parseToLocalDateTime(validateDeviceDto.getTimeStamp());
 		RegisteredDeviceHistory registeredDeviceHistory = isRegisteredDeviceHistory(validateDeviceDto.getDeviceCode(),
-				effTimes);
+				effTimes, validateDeviceDto.getPurpose());
 		isDeviceProviderHistoryPresent(validateDeviceDto.getDigitalId().getDpId(), effTimes);
 		isValidServiceVersionFromHistory(validateDeviceDto.getDeviceServiceVersion(), effTimes);
 		checkMappingBetweenSWVerDTypeAndDSubTypeHistory(validateDeviceDto.getDeviceServiceVersion(),
@@ -483,11 +495,18 @@ public class DeviceProviderServiceImpl implements
 		return true;
 	}
 
-	private RegisteredDeviceHistory isRegisteredDeviceHistory(String deviceCode, LocalDateTime effTimes) {
+	private RegisteredDeviceHistory isRegisteredDeviceHistory(String deviceCode, LocalDateTime effTimes,
+			String purpose) {
 		RegisteredDeviceHistory registeredDeviceHistory = null;
 		try {
+			if (StringUtils.isBlank(purpose)) {
 			registeredDeviceHistory = registeredDeviceHistoryRepository
 					.findRegisteredDeviceHistoryByIdAndEffTimes(deviceCode, effTimes);
+			} else {
+				registeredDeviceHistory = registeredDeviceHistoryRepository
+						.findRegisteredDeviceHistoryByIdAndEffTimesAndPurpose(deviceCode, effTimes,
+								purpose.toUpperCase());
+			}
 		} catch (DataAccessException | DataAccessLayerException e) {
 			auditUtil.auditRequest(
 					MasterDataConstant.DEVICE_VALIDATION_HISTORY_FAILURE + ValidateDeviceDto.class.getSimpleName(),
