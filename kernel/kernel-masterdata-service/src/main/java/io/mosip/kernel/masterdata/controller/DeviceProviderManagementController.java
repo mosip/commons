@@ -17,7 +17,6 @@ import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.dto.DeviceProviderDto;
 import io.mosip.kernel.masterdata.dto.DeviceProviderPutDto;
 import io.mosip.kernel.masterdata.dto.ValidateDeviceDto;
-import io.mosip.kernel.masterdata.dto.ValidateDeviceHistoryDto;
 import io.mosip.kernel.masterdata.dto.getresponse.ResponseDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.DeviceProviderExtnDto;
 import io.mosip.kernel.masterdata.utils.AuditUtil;
@@ -38,7 +37,7 @@ public class DeviceProviderManagementController {
 	private AuditUtil auditUtil;
 
 	@Autowired
-	private DeviceProviderService<ResponseDto, ValidateDeviceDto, ValidateDeviceHistoryDto, DeviceProviderDto, DeviceProviderExtnDto, DeviceProviderPutDto> deviceProviderService;
+	private DeviceProviderService<ResponseDto, ValidateDeviceDto, DeviceProviderDto, DeviceProviderExtnDto, DeviceProviderPutDto> deviceProviderService;
 
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','ID_AUTHENTICATION','REGISTRATION_PROCESSOR','RESIDENT')")
 	@PostMapping("/validate")
@@ -61,27 +60,5 @@ public class DeviceProviderManagementController {
 
 	}
 
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','ID_AUTHENTICATION','REGISTRATION_PROCESSOR')")
-	@PostMapping("/validate/history")
-	@ResponseFilter
-	public ResponseWrapper<ResponseDto> validateDeviceProviderHistory(
-			@RequestBody @Valid RequestWrapper<ValidateDeviceHistoryDto> request) {
-		auditUtil.auditRequest(
-				MasterDataConstant.DEVICE_VALIDATION_HISTORY_API_CALLED
-						+ ValidateDeviceHistoryDto.class.getSimpleName(),
-				MasterDataConstant.AUDIT_SYSTEM, MasterDataConstant.DEVICE_VALIDATION_HISTORY_API_CALLED
-						+ ValidateDeviceHistoryDto.class.getSimpleName(),
-				"ADM-602");
-
-		ResponseWrapper<ResponseDto> responseWrapper = new ResponseWrapper<>();
-		responseWrapper.setResponse(deviceProviderService.validateDeviceProviderHistory(request.getRequest()));
-		auditUtil.auditRequest(
-				MasterDataConstant.DEVICE_VALIDATION_HISTORY_SUCCESS + ValidateDeviceHistoryDto.class.getSimpleName(),
-				MasterDataConstant.AUDIT_SYSTEM,
-				MasterDataConstant.DEVICE_VALIDATION_HISTORY_SUCCESS_DESC + ValidateDeviceDto.class.getSimpleName(),
-				"ADM-604");
-
-		return responseWrapper;
-	}
 
 }
