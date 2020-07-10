@@ -96,7 +96,7 @@ public class DeviceProviderServiceImpl implements
 		}else {
 			responseDto = validateDeviceProviderHistory(validateDeviceDto);
 		}
-		
+
 
 		return responseDto;
 	}

@@ -27,7 +27,7 @@ public class BlacklistedWordsDto {
 	@ValidLangCode(message = "Language Code is Invalid")
 	private String langCode;
 
-	@Size(min = 1, max = 256)
+	@Size(min = 0, max = 256)
 	private String description;
 
 	@NotNull

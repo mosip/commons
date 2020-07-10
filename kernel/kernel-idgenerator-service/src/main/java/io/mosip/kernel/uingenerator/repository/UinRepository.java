@@ -56,4 +56,6 @@ public interface UinRepository extends JpaRepository<UinEntity, String> {
 	
 	@Query(value = "select uu.uin, uu.cr_by, uu.cr_dtimes, uu.del_dtimes, uu.is_deleted, uu.upd_by, uu.upd_dtimes, uu.uin_status from kernel.uin uu where uu.uin_status=?", nativeQuery = true)
 	public List<UinEntity> findByStatus(String status);
+	
+	long countByStatusAndIsDeletedFalse(String status);
 }

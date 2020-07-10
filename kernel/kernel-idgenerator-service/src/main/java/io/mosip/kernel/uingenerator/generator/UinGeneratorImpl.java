@@ -89,13 +89,13 @@ public class UinGeneratorImpl implements UinGenerator {
 	 * @see io.mosip.kernel.core.spi.idgenerator.IdGenerator#generateId()
 	 */
 	@Override
-	public void generateId() {
+	public void generateId(long noOfUINToGenerate) {
 		int generatedIdLength = uinLength - 1;
 		long uinCount = 0;
 		long upperBound = Long.parseLong(StringUtils.repeat(UinGeneratorConstant.NINE, generatedIdLength));
 		long lowerBound = Long.parseLong(StringUtils.repeat(UinGeneratorConstant.ZERO, generatedIdLength));
 		uinWriter.setSession();
-		while (uinCount < uinsCount) {
+		while (uinCount < noOfUINToGenerate) {
 			String generatedUIN = generateSingleId(generatedIdLength, lowerBound, upperBound);
 			if (uinFilterUtils.isValidId(generatedUIN) && !uinService.uinExist(generatedUIN)) {
 				UinEntity uinBean = new UinEntity(generatedUIN, uinDefaultStatus);
