@@ -22,10 +22,10 @@ ARG is_glowroot
 ARG artifactory_url
 
 # can be passed during Docker build as build time environment management rmi server hostname
-ARG management_rmi_server_hostname
+#ARG management_rmi_server_hostname
 
 # can be passed during Docker build as build time environment management rmi server port
-ARG management_jmxremote_rmi_port
+#ARG management_jmxremote_rmi_port
 
 # environment variable to pass active profile such as DEV, QA etc at docker runtime
 ENV active_profile_env=${active_profile}
@@ -43,10 +43,10 @@ ENV is_glowroot_env=${is_glowroot}
 ENV artifactory_url_env=${artifactory_url}
 
 # environment variable to pass management rmi server hostname, at docker runtime
-ENV management_rmi_server_hostname_env=${management_rmi_server_hostname}
+#ENV management_rmi_server_hostname_env=${management_rmi_server_hostname}
 
 # environment variable to pass management rmi server port, at docker runtime
-ENV management_jmxremote_rmi_port_env=${management_jmxremote_rmi_port}
+#ENV management_jmxremote_rmi_port_env=${management_jmxremote_rmi_port}
 
 ADD configure_start.sh configure_start.sh
 RUN chmod +x configure_start.sh
@@ -66,7 +66,7 @@ CMD if [ "$is_glowroot_env" = "present" ]; then \
     unzip glowroot.zip ; \
     rm -rf glowroot.zip ; \
     sed -i 's/<service_name>/kernel-keymanager-service/g' glowroot/glowroot.properties ; \
-    java -jar -javaagent:glowroot/glowroot.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port="${management.jmxremote.rmi.port_env}" -Dcom.sun.management.jmxremote.rmi.port="${management.jmxremote.rmi.port_env}" -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname="${management.rmi.server.hostname_env}" -XX:HeapDumpPath=/home/  /kernel-keymanager-service.jar ; \
+    java -jar -javaagent:glowroot/glowroot.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -XX:HeapDumpPath=/home/  /kernel-keymanager-service.jar ; \
     else \
     java -jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" /kernel-keymanager-service.jar ; \
     fi
