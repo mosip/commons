@@ -39,12 +39,6 @@ ENV is_glowroot_env=${is_glowroot}
 # environment variable to pass artifactory url, at docker runtime
 ENV artifactory_url_env=${artifactory_url}
 
-# environment variable to pass management rmi server hostname, at docker runtime
-ENV management_rmi_server_hostname_env=${management_rmi_server_hostname}
-
-# environment variable to pass management rmi server port, at docker runtime
-ENV management_jmxremote_rmi_port_env=${management_jmxremote_rmi_port}
-
 COPY ./target/kernel-masterdata-service-*.jar kernel-masterdata-service.jar
 
 EXPOSE 8086
@@ -56,7 +50,7 @@ CMD if [ "$is_glowroot_env" = "present" ]; then \
     rm -rf glowroot.zip ; \
     
     sed -i 's/<service_name>/kernel-masterdata-service/g' glowroot/glowroot.properties ; \
-    java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 -XX:+HeapDumpOnOutOfMemoryError -XX:+UseG1GC -XX:+UseStringDeduplication -jar -javaagent:glowroot/glowroot.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.rmi.port="${management.jmxremote.rmi.port_env}" -Dcom.sun.management.jmxremote.port="${management.jmxremote.rmi.port_env}" -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.local.only=false -Djava.rmi.server.hostname="${management.rmi.server.hostname_env}" kernel-masterdata-service.jar ; \
+    java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 -XX:+HeapDumpOnOutOfMemoryError -XX:+UseG1GC -XX:+UseStringDeduplication -jar -javaagent:glowroot/glowroot.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" kernel-masterdata-service.jar ; \
     else \
     java  -jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" kernel-masterdata-service.jar; \
     fi
