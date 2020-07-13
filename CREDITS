@@ -30,6 +30,7 @@ Hemant C Vadher;hemant.vadher@google.com;Technoforte;Tester;Acceptance Testing
 Yogesh Pathak;Yogesh@technoforte.co.in;Technoforte;Test Lead;Acceptance Testing
 Reeba Thomas;reebs.thomas@gmail.com;Mindtree;Project Manager;Release and project management
 Rounak Nayak;nayakrounak@gmail.com;Mindtree;Business Analyst;Requirements
+Sasikumar Ganesan;gsasikumar@gmail.com;
 John David Panneerselvam;pjohndavid@gmail.com;Mindtree;Senior Architect;Architecture and Design
 Monobikash Das;monobikash@gmail.com;Mindtree;Technical Lead;Registration Processor
 Urvil Joshi;Urvvil08@gmail.com;Mindtree;Contributor;Kernel services
@@ -38,19 +39,19 @@ Saumya Saumya;prasharsaumya11@gmail.com;Mindtree;Contributor;Infrastructure
 Manoj SP;manoj_vsp@hotmail.com;Mindtree;Contributor;registration processor
 Tabish Khan;tabish.khansfc@gmail.com;Mindtree;Contributor;Test Automation
 Ravi Kant;ravikantvermahbti@gmail.com;Mindtree;Contributor;Identity Authentication
-Ragavendran Venkatesan;raghavdce@gmail.com;Mindtree;Contributor;Testing
 Anand Babaleshwar;anandsb123@gmail.com;Mindtree;Contributor;Test Automation
 Gaurav Shravan;gaurav.sharan4u@gmail.com;Mindtree;Contributor;Test Automation
-Megha Tanga;meghatanga18@gmail.com;Mindtree;Contributor;Kernel services
-Chukka Sreekar;Sreekar.sree97@gmail.com;Mindtree;Contributor;Registration Client
+Chukka Sreekar;Sreekar.sMegha Tanga;meghatanga18@gmail.com;Mindtree;Contributor;Kernel services
 Sadanandegowda Dm;gowdasadanand@gmail.com;Mindtree;Database Architect;Database
-Srinivasan Lakshmi Narasimhan;atulsrinivasan@gmail.com;Mindtree;Contributor;Administration Portal
-Taleev Aalam;alammdtalib@gmail.com;Mindtree;Contributor;Identity Authentication
 Yaswanth S;s2.yaswanth@gmail.com;Mindtree;Contributor;Registration Client
 Ajay J;J.AJAYISE@GMAIL.COM;Mindtree;Contributor;Administration Portal
 #
 # INACTIVE Members (in no particular order)
 # 
+Taleev Aalam;alammdtalib@gmail.com;Mindtree;Contributor;Identity Authentication
+Srinivasan Lakshmi Narasimhan;atulsrinivasan@gmail.com;Mindtree;Contributor;Administration Portal
+Megha Tanga;meghatanga18@gmail.com;Mindtree;Contributor;Kernel services
+Ragavendran Venkatesan;raghavdce@gmail.com;Mindtree;Contributor;Testing
 Sampath Mukudan;sampath.mukundan@gmail.com;Mindtree;Project Manager;MOSIP releases and project management
 Ramadurai Saravana Pandian;ramaduraipandian.s@gmail.com;Mindtree;Contributor;Kernel services
 Srijoni Sen;srijoni@mosip.io;MOSIP;;MOSIP Documentation, Strategy, Communications
