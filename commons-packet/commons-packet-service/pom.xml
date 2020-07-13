@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>commons-packet</artifactId>
+        <groupId>io.mosip</groupId>
+        <version>1.0.11-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>commons-packet-service</artifactId>
+    <version>1.0.11-SNAPSHOT</version>
+    <name>commons-packet-service</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.mosip.kernel</groupId>
+            <artifactId>kernel-core</artifactId>
+            <version>${kernel.core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.mosip.kernel</groupId>
+            <artifactId>kernel-auth-adapter</artifactId>
+            <version>${kernel.auth.adaptor.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.mosip.kernel</groupId>
+            <artifactId>kernel-logger-logback</artifactId>
+            <version>${kernel.logger.logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.mosip.kernel</groupId>
+            <artifactId>kernel-keygenerator-bouncycastle</artifactId>
+            <version>${kernel.keygenerator.bouncycastle.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.mosip</groupId>
+            <artifactId>commons-packet-manager</artifactId>
+            <version>1.0.11-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version>
+                <configuration>
+                    <executable>true</executable>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build-info</goal>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>lib</classifier>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>
