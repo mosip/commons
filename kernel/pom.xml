@@ -151,15 +151,15 @@
 		<module>kernel-pinvalidator</module>
 		<module>kernel-virusscanner-clamav</module>
 		<module>kernel-keygenerator-bouncycastle</module>
-		<module>kernel-crypto-jce</module>
-		<module>kernel-keymanager-softhsm</module>
+	<!-- 	<module>kernel-crypto-jce</module>
+		<module>kernel-keymanager-softhsm</module> -->
 		<module>kernel-templatemanager-velocity</module>
 		<module>kernel-pdfgenerator-itext</module>
 		<module>kernel-datamapper-orika</module>
 		<module>kernel-qrcodegenerator-zxing</module>
 		<module>kernel-cbeffutil-api</module>
 		<module>kernel-fsadapter-ceph</module>
-		<module>kernel-fsadapter-hdfs</module>
+		<!-- <module>kernel-fsadapter-hdfs</module> -->
 		<module>kernel-transliteration-icu4j</module>
 		<module>kernel-applicanttype-api</module>
 		<module>kernel-crypto-signature</module>
