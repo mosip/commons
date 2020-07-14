@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
@@ -26,6 +27,9 @@ import io.mosip.kernel.fsadapter.hdfs.util.ConnectionUtils;
 @RunWith(PowerMockRunner.class)
 @ContextConfiguration(classes = ConnectionUtils.class, loader = AnnotationConfigContextLoader.class)
 @PowerMockRunnerDelegate(SpringRunner.class)
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", 
+	  "javax.xml.*", "org.xml.*", "org.w3c.dom.*",
+	  "com.sun.org.apache.xalan.*", "javax.activation.*"})
 @PrepareForTest(value = { UserGroupInformation.class, FileSystem.class })
 public class ConnectionUtilTest {
 
