@@ -14,18 +14,17 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
 		<spring-cloud-config.version>2.0.0.RELEASE</spring-cloud-config.version>
 		<swagger.version>2.9.2</swagger.version>
-		<lombok.version>1.16.18</lombok.version>
+		<lombok.version>1.18.2</lombok.version>
 		<postgresql.version>42.2.2</postgresql.version>
 		<powermock.version>2.0.0</powermock.version>
 		<kernel.auth.adapter.version>1.0.9</kernel.auth.adapter.version>
 		<kernel.logger.logback.version>1.0.6</kernel.logger.logback.version>
 	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

@@ -21,18 +21,45 @@
 
 	</modules>
 
-	<properties>
+	<properties>		
 		<!-- maven -->
 		<maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
 		<maven.war.plugin.version>3.1.0</maven.war.plugin.version>
-		<maven.surefire.plugin.version>2.9</maven.surefire.plugin.version>
+		<maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version>
 		<maven.jacoco.plugin.version>0.8.1</maven.jacoco.plugin.version>
 		<maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version>
-		<maven.javadoc.version>3.1.0</maven.javadoc.version>
+		<maven.javadoc.version>3.2.0</maven.javadoc.version>
 		<sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/dto/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/security/**,**/*Config.java,**/*BootApplication.java,**/*VertxApplication.java,**/cbeffutil/**</sonar.coverage.exclusions>
 		<sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**</sonar.cpd.exclusions>
 	</properties>
-
+    <dependencies>
+    	<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>javax.activation</groupId>
+		    <artifactId>activation</artifactId>
+		    <version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
+			<version>2.3.0-b170127.1453</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.mockito</groupId>
+		    <artifactId>mockito-core</artifactId>
+		    <version>2.22.0</version>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.javassist</groupId>
+		    <artifactId>javassist</artifactId>
+		    <version>3.27.0-GA</version>
+		</dependency>
+    </dependencies>
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -43,6 +70,9 @@
 					<configuration>
 						<skip>false</skip>
 						<useFile>false</useFile>
+						<argLine>
+							--illegal-access=permit
+						</argLine>						
 					</configuration>
 				</plugin>
 				<plugin>
@@ -69,6 +99,7 @@
 					<version>${maven.javadoc.version}</version>
 					<configuration>
 						<aggregate>true</aggregate>
+						<doclint>none</doclint>
 					</configuration>
 				</plugin>
 			</plugins>
@@ -137,7 +168,15 @@
 					</archive>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${maven.javadoc.version}</version>
+				<configuration>
+					<aggregate>true</aggregate>
+					<doclint>none</doclint>
+				</configuration>
+			</plugin>			
 		</plugins>
 	</build>
 </project>
-
