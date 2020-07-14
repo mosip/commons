@@ -2,6 +2,7 @@ package io.mosip.commons.packet.spi;
 
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.dto.PacketInfo;
+import io.mosip.commons.packet.dto.ProviderInfo;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 
 /**
@@ -9,6 +10,8 @@ import io.mosip.kernel.biometrics.entities.BiometricRecord;
  *
  */
 public interface IPacketWriter {
+
+    public ProviderInfo init(String schemaUrl, byte[] publicKey, PacketSigner signer);
 
     public boolean setField(String fieldName, String value);
 

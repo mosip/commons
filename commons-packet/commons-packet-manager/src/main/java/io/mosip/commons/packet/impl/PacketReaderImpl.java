@@ -4,7 +4,9 @@ import io.mosip.commons.packet.PacketKeeper;
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.dto.Packet;
 import io.mosip.commons.packet.dto.PacketInfo;
+import io.mosip.commons.packet.dto.ProviderInfo;
 import io.mosip.commons.packet.spi.IPacketReader;
+import io.mosip.commons.packet.spi.PacketSigner;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,38 +16,58 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class PacketReaderImpl implements IPacketReader {
-
-    @Autowired
-    private PacketKeeper keeper;
-
-    public Map<String, Object> getAll(String id, final String source, final String process) {
+    
+    @Override
+    public ProviderInfo init(String schemaUrl, byte[] publicKey, PacketSigner signer) {
         return null;
     }
 
-    public String getField(String id, String field, String source, String process) {
-        List<PacketInfo> packetInfos = keeper.getManifest(id).getPacketInfos();
-        PacketInfo finalPacketInfo = packetInfos.stream().filter(
-                p -> p.getSource().equalsIgnoreCase(source) && p.getProcess().equalsIgnoreCase(process)).iterator().next();
+    /**
+     * idobject validation, cbeff validation(ex - biometric exception validation)
+     *
+     * @param id
+     * @param process
+     * @return
+     */
+    @Override
+    public boolean validatePacket(String id, String process) {
+        return false;
+    }
 
-        Packet packet = keeper.getPacket(finalPacketInfo);
-
-        // decrypt packet, get idobject and send as keyvalue pair
+    /**
+     * return data from idobject of all 3 subpackets
+     *
+     * @param id
+     * @param process
+     * @return
+     */
+    @Override
+    public Map<String, Object> getAll(String id, String process) {
         return null;
     }
 
-    public Map<String, String> getFields(String id, List<String> fields, String source, String process) {
+    @Override
+    public String getField(String id, String field, String process, boolean bypassCache) {
         return null;
     }
 
-    public Document getDocument(String id, String documentName, String source, String process) {
+    @Override
+    public Map<String, String> getFields(String id, List<String> fields, String process, boolean bypassCache) {
         return null;
     }
 
-    public BiometricRecord getBiometric(String id, String person, List<BiometricType> modalities, String source, String process) {
+    @Override
+    public Document getDocument(String id, String documentName, String process) {
         return null;
     }
 
-    public Map<String, String> getMetaInfo(String id, String source, String process) {
+    @Override
+    public BiometricRecord getBiometric(String id, String person, List<BiometricType> modalities, String process) {
+        return null;
+    }
+
+    @Override
+    public Map<String, String> getMetaInfo(String id, String source, String process, boolean bypassCache) {
         return null;
     }
 }
