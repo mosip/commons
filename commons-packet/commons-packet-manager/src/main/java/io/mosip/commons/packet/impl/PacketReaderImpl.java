@@ -11,6 +11,7 @@ import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -48,12 +49,21 @@ public class PacketReaderImpl implements IPacketReader {
 
     @Override
     public String getField(String id, String field, String process, boolean bypassCache) {
-        return null;
+    	Map<String, Object> allFields=getAll(id,process);
+    	
+        return (String) allFields.get(field);
     }
 
     @Override
     public Map<String, String> getFields(String id, List<String> fields, String process, boolean bypassCache) {
-        return null;
+    	Map<String, String> fieldsValue= new HashMap<String,String>();
+    	Map<String, Object> allFields=getAll(id,process);
+    
+    	for(String key:fields) {
+    		String value=(String) allFields.get(key);
+    		fieldsValue.put(key, value);
+    	}
+        return fieldsValue;
     }
 
     @Override
