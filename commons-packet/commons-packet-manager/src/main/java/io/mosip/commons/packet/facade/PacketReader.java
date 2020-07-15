@@ -1,13 +1,15 @@
 package io.mosip.commons.packet.facade;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.cache.annotation.Cacheable;
+
 import io.mosip.commons.packet.dto.Document;
+import io.mosip.commons.packet.exception.PacketReaderException;
 import io.mosip.commons.packet.spi.IPacketReader;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import org.springframework.cache.annotation.Cacheable;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * The packet Reader facade
@@ -44,16 +46,18 @@ public class PacketReader {
     }
 
     /**
-     * Get document by registration id, document name, source and process
-     *
-     * @param id : the registration id
-     * @param documentName : the document name
-     * @param source : the source packet. If not present return default
-     * @param process : the process
-     * @return Document : document information
-     */
+	 * Get document by registration id, document name, source and process
+	 *
+	 * @param id           : the registration id
+	 * @param documentName : the document name
+	 * @param source       : the source packet. If not present return default
+	 * @param process      : the process
+	 * @return Document : document information
+	 * @throws PacketReaderException
+	 */
     @Cacheable(value = "packets", key = "#id, #documentName, #source, #process")
-    public Document getDocument(String id, String documentName, String source, String process) {
+	public Document getDocument(String id, String documentName, String source, String process)
+			throws PacketReaderException {
         return getProvider(source, process).getDocument(id, documentName, process);
     }
 

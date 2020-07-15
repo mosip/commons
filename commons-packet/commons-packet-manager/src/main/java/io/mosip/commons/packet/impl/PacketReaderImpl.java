@@ -1,20 +1,25 @@
 package io.mosip.commons.packet.impl;
 
-import io.mosip.commons.packet.PacketKeeper;
-import io.mosip.commons.packet.dto.Document;
-import io.mosip.commons.packet.dto.Packet;
-import io.mosip.commons.packet.dto.PacketInfo;
-import io.mosip.commons.packet.dto.ProviderInfo;
-import io.mosip.commons.packet.spi.IPacketReader;
-import io.mosip.commons.packet.spi.PacketSigner;
-import io.mosip.kernel.biometrics.constant.BiometricType;
-import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+
+import org.json.simple.JSONObject;
+
+import io.mosip.commons.packet.constants.ErrorCode;
+import io.mosip.commons.packet.dto.Document;
+import io.mosip.commons.packet.dto.ProviderInfo;
+import io.mosip.commons.packet.exception.PacketReaderException;
+import io.mosip.commons.packet.spi.IPacketReader;
+import io.mosip.commons.packet.spi.PacketSigner;
+import io.mosip.kernel.biometrics.constant.BiometricType;
+import io.mosip.kernel.biometrics.entities.BiometricRecord;
+import io.mosip.kernel.core.exception.ExceptionUtils;
+import io.mosip.kernel.core.exception.IOException;
+import io.mosip.kernel.core.util.JsonUtils;
+import io.mosip.kernel.core.util.exception.JsonMappingException;
+import io.mosip.kernel.core.util.exception.JsonParseException;
 
 public class PacketReaderImpl implements IPacketReader {
     
@@ -67,7 +72,24 @@ public class PacketReaderImpl implements IPacketReader {
     }
 
     @Override
-    public Document getDocument(String id, String documentName, String process) {
+    public Document getDocument(String id, String documentName, String process) throws PacketReaderException {
+    	try {
+    	String doc=getField( id,documentName,process,false);
+    	  if(doc!=null) {
+    	
+				JSONObject documentJson = (JSONObject) JsonUtils.jsonStringToJavaObject(JSONObject.class, doc);
+				Document document = new Document();
+				document.setType((String) documentJson.get("type"));
+				// To do to get inpustream for the documentJson.get("value")
+			
+    	  }
+		} catch (JsonParseException | JsonMappingException e) {
+			throw new PacketReaderException(ErrorCode.JSON_PARSE_ERROR.getErrorCode(),
+					ErrorCode.JSON_PARSE_ERROR.getErrorMessage().concat(ExceptionUtils.getStackTrace(e)));
+		} catch (IOException e) {
+			throw new PacketReaderException(ErrorCode.SYSTEM_IO_ERROR.getErrorCode(),
+					ErrorCode.SYSTEM_IO_ERROR.getErrorMessage().concat(ExceptionUtils.getStackTrace(e)));
+		}
         return null;
     }
 

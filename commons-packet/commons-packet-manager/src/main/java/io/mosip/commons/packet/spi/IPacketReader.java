@@ -2,6 +2,7 @@ package io.mosip.commons.packet.spi;
 
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.dto.ProviderInfo;
+import io.mosip.commons.packet.exception.PacketReaderException;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 
@@ -24,7 +25,7 @@ public interface IPacketReader {
 
     public Map<String, String> getFields(String id, List<String> fields, String process, boolean bypassCache);
 
-    public Document getDocument(String id, String documentName, String process);
+    public Document getDocument(String id, String documentName, String process)throws PacketReaderException ;
 
     public BiometricRecord getBiometric(String id, String person, List<BiometricType> modalities, String process);
 
