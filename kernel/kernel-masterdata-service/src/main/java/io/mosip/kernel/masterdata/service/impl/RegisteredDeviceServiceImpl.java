@@ -316,29 +316,22 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 				+ CryptoUtil.encodeBase64String(signedResponse.getBytes());
 	}
 
-	private String getSignedResponse(RegisterDeviceResponse registerDeviceResponse) {
+	private String getSignedResponse(RegisterDeviceResponse registerDeviceResponse) throws IOException {
 		RequestWrapper<SignRequestDto> request = new RequestWrapper<>();
 		SignRequestDto signatureRequestDto = new SignRequestDto();
 		SignResponseDto signResponse = new SignResponseDto();
 		HttpEntity<RequestWrapper<SignRequestDto>> httpEntity = new HttpEntity<>(request, new HttpHeaders());
-		try {
+		
 			signatureRequestDto
 					.setData(CryptoUtil.encodeBase64String(mapper.writeValueAsBytes(registerDeviceResponse)));
 			request.setRequest(signatureRequestDto);
 			ResponseEntity<String> response = restTemplate.exchange(signUrl, HttpMethod.POST, httpEntity, String.class);
 			ResponseWrapper<?> responseObject;
-			try {
+			
 				responseObject = mapper.readValue(response.getBody(), ResponseWrapper.class);
 				signResponse = mapper.readValue(mapper.writeValueAsString(responseObject.getResponse()),
 						SignResponseDto.class);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			
 
 		return signResponse.getSignature();
 	}
