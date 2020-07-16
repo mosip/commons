@@ -40,7 +40,6 @@ import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.keymanager.softhsm.constant.KeymanagerErrorCode;
 import io.mosip.kernel.keymanager.softhsm.logging.KeymanagerLogger;
 import io.mosip.kernel.keymanager.softhsm.util.CertificateUtility;
-import sun.security.pkcs11.SunPKCS11;
 
 /**
  * Softhsm Keymanager implementation based on OpenDNSSEC that handles and stores
@@ -132,15 +131,16 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 		try {
 			switch (keystoreType) {
 			case "PKCS11":
-				provider = new SunPKCS11(configPath);
+				provider = Security.getProvider("SunPKCS11");
+				provider.configure(configPath);				
 				break;
 			case "BouncyCastleProvider":
 				provider = new BouncyCastleProvider();
 				break;
 			default:
-				provider = new SunPKCS11(configPath);
+				provider = Security.getProvider("SunPKCS11");
+				provider.configure(configPath);
 				break;
-
 			}
 		} catch (ProviderException providerException) {
 			throw new NoSuchSecurityProviderException(KeymanagerErrorCode.INVALID_CONFIG_FILE.getErrorCode(),
