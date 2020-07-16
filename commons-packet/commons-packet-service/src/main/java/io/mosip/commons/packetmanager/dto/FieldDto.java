@@ -7,8 +7,9 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode
 public class FieldDto {
 
-    String id;
-    String field;
-    String source;
-    String process;
+    private String id;
+    private String field;
+    private String source;
+    private String process;
+    private Boolean bypassCache;
 }

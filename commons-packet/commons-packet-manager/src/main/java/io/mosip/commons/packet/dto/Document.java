@@ -9,7 +9,8 @@ import java.io.InputStream;
 @EqualsAndHashCode
 public class Document {
 
+    private byte[] document;
+    private String value;
     private String type;
-    private String category;
-    private InputStream document;
+    private String format;
 }

@@ -1,9 +1,5 @@
 package io.mosip.commons.mstore;
 
-import io.mosip.commons.packet.PacketKeeper;
-import io.mosip.kernel.core.fsadapter.spi.FileSystemAdapter;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.io.InputStream;
 
 /**
@@ -49,9 +45,13 @@ public class StoreKeeper {
      * @param key : input key
      * @return InputStream : data
      */
-    public InputStream get(String key) {
+    public InputStream fetch(String key) {
         return null;
+    }
 
+    public InputStream get(String url) {
+        // get key from url
+        return null;
     }
 
 }

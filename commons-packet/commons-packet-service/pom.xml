@@ -20,6 +20,11 @@
             <version>${kernel.core.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+            <version>${spring-cloud-config.version}</version>
+        </dependency>
+        <dependency>
             <groupId>io.mosip.kernel</groupId>
             <artifactId>kernel-auth-adapter</artifactId>
             <version>${kernel.auth.adaptor.version}</version>
@@ -43,6 +48,22 @@
             <groupId>io.mosip</groupId>
             <artifactId>commons-packet-manager</artifactId>
             <version>1.0.11-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 
