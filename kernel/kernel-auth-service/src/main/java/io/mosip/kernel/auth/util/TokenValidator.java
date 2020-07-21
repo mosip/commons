@@ -103,6 +103,10 @@ public class TokenValidator {
 		return currentEpoch > expiryEpochTime;
 	}
 
+	public String getKeycloakRealm(String token) {
+		String issuer=getissuer(token);
+		return issuer.substring(issuer.lastIndexOf("/")+1);
+	}
 	public String getissuer(String token) {
 		DecodedJWT decodedJWT = JWT.decode(token);
 		return decodedJWT.getClaim("iss").asString();
@@ -200,5 +204,10 @@ public class TokenValidator {
 		}
 		LOGGER.debug("Token Invalid " + claims.getId());
 		return false;
+	}
+	
+	
+	public static void main(String[] args) {
+
 	}
 }
