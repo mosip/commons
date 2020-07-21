@@ -8,7 +8,8 @@ public enum PacketUtilityErrorCodes {
 	PACKET_DECRYPTION_FAILURE_EXCEPTION("KER-PUT-003", "Packet decryption failed"),
 	API_NOT_ACCESSIBLE_EXCEPTION("KER-PUT-005", "API not accessible"),
 	SYS_IO_EXCEPTION("KER-PUT-004", "Unable to Find File in Destination Folder"),
-	GET_ALL_IDENTITY_EXCEPTION("KER-PUT-005", "Unable to fetch identity json from all sub packets");
+	GET_ALL_IDENTITY_EXCEPTION("KER-PUT-005", "Unable to fetch identity json from all sub packets"),
+	SIGNATURE_EXCEPTION("KER-PUT-006", "Failed to generate digital signature");
 
 
 	private final String errorCode;
