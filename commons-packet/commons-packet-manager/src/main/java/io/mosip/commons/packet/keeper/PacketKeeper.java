@@ -28,9 +28,6 @@ import java.io.InputStream;
 @Component
 public class PacketKeeper {
 
-    @Autowired
-    private FileSystemAdapter fileSystemAdapter;
-
     /** The reg proc logger. */
     private static Logger LOGGER = PacketManagerLogger.getLogger(PacketKeeper.class);
 
@@ -92,9 +89,9 @@ public class PacketKeeper {
             throws PacketDecryptionFailureException, IOException, ApiNotAccessibleException {
         LOGGER.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), id,
                 "PacketKeeper::getFile() : getting packet from packet store");
-        InputStream data = fileSystemAdapter.getPacket(id);
-        //File file = new File("C:\\Users\\M1045447\\Downloads\\10001100770000220200715093118.zip");
-        //InputStream data = new FileInputStream(file);
+        //TODO :  InputStream data = fileSystemAdapter.getPacket(id);
+        File file = new File("C:\\Users\\M1045447\\Downloads\\10001100770000320200720092256.zip");
+        InputStream data = new FileInputStream(file);
         if (data == null) {
             throw new FileNotFoundInDestinationException(
                     PACKET_NOTAVAILABLE_ERROR_DESC);

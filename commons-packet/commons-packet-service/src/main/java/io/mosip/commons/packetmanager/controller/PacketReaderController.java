@@ -2,10 +2,13 @@ package io.mosip.commons.packetmanager.controller;
 
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.facade.PacketReader;
+import io.mosip.commons.packetmanager.dto.BiometricRequestDto;
 import io.mosip.commons.packetmanager.dto.DocumentDto;
 import io.mosip.commons.packetmanager.dto.FieldDto;
 import io.mosip.commons.packetmanager.dto.FieldDtos;
-import io.mosip.commons.packetmanager.dto.FieldDtosResponse;
+import io.mosip.commons.packetmanager.dto.FieldResponseDto;
+import io.mosip.commons.packetmanager.dto.MetaInfoDto;
+import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -27,24 +31,27 @@ public class PacketReaderController {
     @PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
     @ResponseFilter
     @PostMapping(path = "/searchField", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseWrapper<String> searchField(@RequestBody(required = true) RequestWrapper<FieldDto> fieldDto) {
+    public ResponseWrapper<FieldResponseDto> searchField(@RequestBody(required = true) RequestWrapper<FieldDto> fieldDto) {
 
         String resultField = packetReader.getField(fieldDto.getRequest().getId(),
                 fieldDto.getRequest().getField(), fieldDto.getRequest().getSource(), fieldDto.getRequest().getProcess(), fieldDto.getRequest().getBypassCache());
-        ResponseWrapper<String> response = new ResponseWrapper<String>();
-        response.setResponse(resultField);
+        ResponseWrapper<FieldResponseDto> response = new ResponseWrapper<FieldResponseDto>();
+        Map<String, String> responseMap = new HashMap<>();
+        responseMap.put(fieldDto.getRequest().getField(), resultField);
+        FieldResponseDto fieldResponseDto = new FieldResponseDto(responseMap);
+
+        response.setResponse(fieldResponseDto);
         return response;
     }
 
     @PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
     @ResponseFilter
     @PostMapping(path = "/searchFields", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseWrapper<FieldDtosResponse> searchFields(@RequestBody(required = true) RequestWrapper<FieldDtos> request) {
+    public ResponseWrapper<FieldResponseDto> searchFields(@RequestBody(required = true) RequestWrapper<FieldDtos> request) {
         FieldDtos fieldDtos = request.getRequest();
         Map<String, String> resultFields = packetReader.getFields(fieldDtos.getId(), fieldDtos.getFields(), fieldDtos.getSource(), fieldDtos.getProcess(), fieldDtos.getBypassCache());
-        FieldDtosResponse resultField = new FieldDtosResponse();
-        resultField.setFields(resultFields);
-        ResponseWrapper<FieldDtosResponse> response = new ResponseWrapper<FieldDtosResponse>();
+        FieldResponseDto resultField = new FieldResponseDto(resultFields);
+        ResponseWrapper<FieldResponseDto> response = new ResponseWrapper<FieldResponseDto>();
         response.setResponse(resultField);
         return response;
     }
@@ -57,6 +64,29 @@ public class PacketReaderController {
         Document document = packetReader.getDocument(documentDto.getId(), documentDto.getDocumentName(), documentDto.getSource(), documentDto.getProcess());
         ResponseWrapper<Document> response = new ResponseWrapper<Document>();
         response.setResponse(document);
+        return response;
+    }
+
+    @PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
+    @ResponseFilter
+    @PostMapping(path = "/biometrics", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseWrapper<BiometricRecord> getBiometrics(@RequestBody(required = true) RequestWrapper<BiometricRequestDto> request) {
+        BiometricRequestDto bioRequest = request.getRequest();
+        BiometricRecord responseDto = packetReader.getBiometric(bioRequest.getId(), bioRequest.getBiometricSchemaField(), bioRequest.getModalities(), bioRequest.getSource(), bioRequest.getProcess(), bioRequest.isBypassCache());
+        ResponseWrapper<BiometricRecord> response = new ResponseWrapper<BiometricRecord>();
+        response.setResponse(responseDto);
+        return response;
+    }
+
+    @PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
+    @ResponseFilter
+    @PostMapping(path = "/metaInfo", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseWrapper<FieldResponseDto> getMetaInfo(@RequestBody(required = true) RequestWrapper<MetaInfoDto> request) {
+        MetaInfoDto metaDto = request.getRequest();
+        Map<String, String> resultFields = packetReader.getMetaInfo(metaDto.getId(), metaDto.getSource(), metaDto.getProcess(), metaDto.getBypassCache());
+        FieldResponseDto resultField = new FieldResponseDto(resultFields);
+        ResponseWrapper<FieldResponseDto> response = new ResponseWrapper<FieldResponseDto>();
+        response.setResponse(resultField);
         return response;
     }
 }

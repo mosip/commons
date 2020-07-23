@@ -2,12 +2,23 @@ package io.mosip.commons.packet.facade;
 
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.dto.PacketInfo;
-import io.mosip.commons.packet.spi.IPacketReader;
+import io.mosip.commons.packet.dto.packet.AuditDto;
+import io.mosip.commons.packet.dto.packet.PacketDto;
+import io.mosip.commons.packet.exception.NoAvailableProviderException;
 import io.mosip.commons.packet.spi.IPacketWriter;
+import io.mosip.commons.packet.util.PacketHelper;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 /**
  * The packet writer facade
  *
@@ -15,40 +26,24 @@ import org.springframework.stereotype.Component;
 @Component
 public class PacketWriter {
 
-    private String id;
-    private String source;
-    private String process;
-
     private IPacketWriter iPacketWriter;
 
-    /**
-     * Constructor. Initialize id, source and process
-     *
-     * @param id : the registration id
-     * @param source : the source packet. Default if not provided.
-     * @param process : the process
-     */
-    /*private PacketWriter(String id, String source, String process) {
-        this.id = id;
-        this.source = source;
-        this.process = process;
-    }*/
+    @Autowired
+    private PacketHelper packetHelper;
 
-    /**
-     * Get the packet writer instance for id, source and process
-     *
-     * @param id : the registration id
-     * @param source : the source packet. Default if not provided.
-     * @param process : the process
-     * @return PacketWriter
-     */
-    /*public static PacketWriter getPacketWriter(String id, String source, String process) {
-        return new PacketWriter(id, source, process);
-    }*/
+    @Value("${mosip.commons.packet.provider.registration.source}")
+    private String sources;
 
-    public void initialize(String source, String process) {
-        iPacketWriter = this.getProvider(source, process);
-    }
+    @Value("${mosip.commons.packet.provider.registration.process}")
+    private String processes;
+
+    @Autowired
+    private IPacketWriter registrationProvider;
+
+    @Autowired(required = false)
+    @Qualifier("referenceWriterProviders")
+    @Lazy
+    private List<IPacketWriter> referenceWriterProviders;
 
     /**
      * Set field in identity object
@@ -57,8 +52,8 @@ public class PacketWriter {
      * @param value : the value to be set
      * @return PacketWriter
      */
-    public void setField(String fieldName, String value) {
-        iPacketWriter.setField(fieldName, value);
+    public void setField(String id, String fieldName, String value, String source, String process) throws JSONException {
+        getProvider(source, process).setField(id, fieldName, value);
     }
 
     /**
@@ -68,8 +63,8 @@ public class PacketWriter {
      * @param biometricRecord : the biometric information
      * @return PacketWriter
      */
-    public void setBiometric(String fieldName, BiometricRecord biometricRecord) {
-        iPacketWriter.setBiometric(fieldName, biometricRecord);
+    public void setBiometric(String id, String fieldName, BiometricRecord biometricRecord, String source, String process) {
+        getProvider(source, process).setBiometric(id, fieldName, biometricRecord);
 
     }
 
@@ -80,19 +75,30 @@ public class PacketWriter {
      * @param document : the document
      * @return PacketWriter
      */
-    public void setDocument(String documentName, Document document) {
-        iPacketWriter.setDocument(documentName, document);
+    public void setDocument(String id, String documentName, Document document, String source, String process) {
+        getProvider(source, process).setDocument(id, documentName, document);
     }
 
     /**
      * Set meta information
      *
-     * @param key : meta key
-     * @param value : meta value
+     * @param metaInfo : meta key value pairs
      * @return PacketWriter
      */
-    public PacketWriter setMetaInfo(String key, String value) {
-        return this;
+    public void setMetaInfo(String id, Map<String, String> metaInfo, String source, String process) {
+        getProvider(source, process).setMetaInfo(id, metaInfo);
+    }
+
+    /**
+     * Set audit information
+     *
+     * @param id : the registration id
+     * @param source : the source packet. Default if not provided.
+     * @param process : the process
+     * @return PacketInfo
+     */
+    public void setAudits(String id, List<AuditDto> audits, String source, String process) {
+        getProvider(source, process).setAudits(id, audits);
     }
 
     /**
@@ -103,8 +109,25 @@ public class PacketWriter {
      * @param process : the process
      * @return PacketInfo
      */
-    public PacketInfo persistPacket(String id, String source, String process) {
-        return  getProvider(source, process).persistPacket();
+    public PacketInfo persistPacket(String id, double version, String schemaJson, String source, String process) {
+        return getProvider(source, process).persistPacket(id, version, schemaJson);
+    }
+
+    public PacketInfo createPacket(PacketDto packetDto, boolean isServerCall) {
+        PacketInfo packetInfo = null;
+        IPacketWriter provider = getProvider(packetDto.getSource(), packetDto.getProcess());
+        try {
+            provider.setFields(packetDto.getId(), packetDto.getFields());
+            provider.setMetaInfo(packetDto.getId(), packetDto.getMetaInfo());
+            packetDto.getDocuments().entrySet().forEach(doc -> provider.setDocument(packetDto.getId(), doc.getKey(), doc.getValue()));
+            provider.setAudits(packetDto.getId(), packetDto.getAudits());
+            packetDto.getBiometrics().entrySet().forEach(bio -> provider.setBiometric(packetDto.getId(), bio.getKey(), bio.getValue()));
+            packetInfo = provider.persistPacket(packetDto.getId(), packetDto.getSchemaVersion(), packetDto.getSchemaJson());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return packetInfo;
     }
 
     /**
@@ -115,8 +138,21 @@ public class PacketWriter {
      * @return IPacketWriter : the provider instance
      */
     private IPacketWriter getProvider(String source, String process) {
-        iPacketWriter.initialize(source, process);
-        // return Packet Writer Impl instance for the source and provider;
-        return iPacketWriter;
+        IPacketWriter provider = null;
+        List<String> sourceList = Arrays.asList(sources.split(","));
+        List<String> processList = Arrays.asList(processes.split(","));
+        if (sourceList.contains(source) && processList.contains(process))
+            provider = registrationProvider;
+        else if (referenceWriterProviders != null && !referenceWriterProviders.isEmpty()) {
+            Optional<IPacketWriter> refProvider = referenceWriterProviders.stream().filter(refPr -> (packetHelper.isSourcePresent(refPr.getClass().getSimpleName()) && packetHelper.isProcessPresent(refPr.getClass().getSimpleName()))).findAny();
+            if (refProvider.isPresent() && refProvider.get() != null)
+                provider = refProvider.get();
+        }
+
+        if (provider == null) {
+            throw new NoAvailableProviderException();
+        }
+
+        return provider;
     }
 }

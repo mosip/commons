@@ -14,7 +14,7 @@ public class PacketInfo {
     private String packetName;
     private String source;
     private String process;
-    private String schemaVersion;
+    private double schemaVersion;
     private String signature;
     private String encryptedHash;
     private String providerName;

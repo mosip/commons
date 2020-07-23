@@ -115,7 +115,6 @@ public class PacketDecryptorUtil {
 			request.setRequesttime(localdatetime);
 			request.setVersion(environment.getProperty(REG_PROC_APPLICATION_VERSION));
 			HttpEntity<RequestWrapper<CryptomanagerRequestDto>> httpEntity = new HttpEntity<>(request);
-			System.out.println(SecurityContextHolder.getContext());
 
 			//TODO ResponseEntity<String> response = restTemplate.exchange(cryptomanagerDecryptUrl, HttpMethod.POST, httpEntity, String.class);
 			ResponseEntity<String> response = restTemplate.exchange(cryptomanagerDecryptUrl, HttpMethod.POST, httpEntity, String.class);

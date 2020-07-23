@@ -1,10 +1,14 @@
 package io.mosip.commons.packet.dto.packet;
 
-import io.mosip.commons.packet.constants.PacketManagerConstants;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
+import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
 import io.mosip.kernel.core.util.DateUtils;
 import lombok.Data;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,7 +18,7 @@ import java.util.Map;
 
 
 @Data
-public class PacketInfoDto {	
+public class PacketInfoDto {
 	
 	private String registrationId;
 	private double idSchemaVersion;
@@ -22,7 +26,7 @@ public class PacketInfoDto {
 	private Map<String, Object> demographics;
 	private Map<String, Document> documents;
 	private Map<String, BiometricRecord> biometrics;
-	private List<FieldValue> metaData;
+	private Map<String, Object> metaData;
 	/*private Map<String, List<BiometricsException>> exceptionBiometrics;*/
 	/*private List<FieldValue> operationsData;
 	private List<DeviceMetaInfo> capturedRegisteredDevices;
@@ -40,56 +44,61 @@ public class PacketInfoDto {
 		this.demographics = new HashMap<String, Object>();
 		this.documents = new HashMap<String, Document>();
 		this.biometrics = new HashMap<String, BiometricRecord>();
-		this.metaData = new ArrayList<FieldValue>();
+		this.metaData = new HashMap<String, Object>();
 		/*this.exceptionBiometrics = new HashMap<String, List<BiometricsException>>();
 		this.operationsData = new ArrayList<FieldValue>();
 		this.checkSum = new ArrayList<FieldValue>();*/
 		/*this.printingName = new ArrayList<SimpleType>();*/
 	}
-	
+
 	public void setField(String fieldName, String value) {
-		this.demographics.put(fieldName, value);
+		setFields(fieldName, value, demographics);
 	}
 	
-	public void setBiometricField(String fieldName, BiometricRecord biometricRecord) {
-		this.biometrics.put(fieldName, biometricRecord);
-	}	
+	public void setFields(Map<String, String> fields) {
+		fields.entrySet().forEach(entry -> {
+			setFields(entry.getKey(), entry.getValue(), demographics);
+		});
+	}
+	
+	public void setBiometricField(String fieldName, BiometricRecord value) {
+		this.biometrics.put(fieldName, value);
+	}
 	
 	public void setDocumentField(String fieldName, Document dto) {
 		this.documents.put(fieldName, dto);		
 	}
 
-	public void setMetaData(String label, String value) {
-		if(!this.metaData.contains(new FieldValue(label, value)))
-			this.metaData.add(new FieldValue(label, value));
+	public void setMetaData(Map<String, String> metaInfo) {
+		metaInfo.entrySet().forEach(meta -> {
+			setFields(meta.getKey(), meta.getValue(), this.metaData);
+		});
 	}
 
-	public void setMetaData(FieldValue fieldValue) {
-		if(!this.metaData.contains(fieldValue))
-			this.metaData.add(fieldValue);
-	}
-
-	public Map<String, Object> getIdentityObject() {
-		Map<String, Object> identityData = new HashMap<String, Object>();
-		identityData.put(PacketManagerConstants.IDSCHEMA_VERSION, idSchemaVersion);
-		identityData.putAll(this.demographics);
-		this.documents.forEach((k, v) ->{
-			Map<String, String> data =  new HashMap<>();
-			data.put("value", k);
-			data.put("type", v.getType());
-			data.put("format", v.getFormat());
-			identityData.put(k, data);
-		});
-		this.biometrics.forEach((k, v) -> {
-			Map<String, Object> data =  new HashMap<>();
-			data.put("value", String.format(PacketManagerConstants.CBEFF_FILENAME, k));
-			data.put("version", PacketManagerConstants.CBEFF_VERSION);
-			data.put("format", PacketManagerConstants.CBEFF_FILE_FORMAT);
-			identityData.put(k, data);
-		});
-		Map<String, Object> idObject = new HashMap<String, Object>();
-		idObject.put(PacketManagerConstants.IDENTITY, identityData);
-		return idObject;
+	private void setFields(String fieldName, String value, Map finalMap) {
+		try {
+			if (value != null) {
+				Object json = new JSONTokener(value).nextValue();
+				if (json instanceof JSONObject) {
+					HashMap<String, Object> hashMap = new ObjectMapper().readValue(value, HashMap.class);
+					finalMap.putIfAbsent(fieldName, hashMap);
+				}
+				else if (json instanceof JSONArray) {
+					List jsonList = new ArrayList<>();
+					JSONArray jsonArray = new JSONArray(value);
+					for (int i = 0; i < jsonArray.length(); i++) {
+						Object obj = jsonArray.get(i);
+						HashMap<String, Object> hashMap = new ObjectMapper().readValue(obj.toString(), HashMap.class);
+						jsonList.add(hashMap);
+					}
+					finalMap.putIfAbsent(fieldName, jsonList);
+				} else
+					finalMap.putIfAbsent(fieldName, value);
+			} else
+				finalMap.putIfAbsent(fieldName, value);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 

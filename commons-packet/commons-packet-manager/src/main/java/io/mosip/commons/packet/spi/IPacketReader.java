@@ -4,6 +4,8 @@ import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.dto.ProviderInfo;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
+import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
+import org.json.JSONException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,8 +18,6 @@ import java.util.Map;
 @Service
 public interface IPacketReader {
 
-    public ProviderInfo init(String schemaUrl, byte[] publicKey, PacketSigner signer);
-
     public boolean validatePacket(String id, String process);
 
     public Map<String, Object> getAll(String id, String process);
@@ -28,7 +28,7 @@ public interface IPacketReader {
 
     public Document getDocument(String id, String documentName, String process);
 
-    public BiometricRecord getBiometric(String id, String person, List<BiometricType> modalities, String process);
+    public BiometricRecord getBiometric(String id, String biometricSchemaField, List<BiometricType> modalities, String process);
 
-    public Map<String, String> getMetaInfo(String id, String source, String process);
+    public Map<String, String> getMetaInfo(String id, String process);
 }

@@ -1,17 +1,13 @@
 package io.mosip.commons.packet.config;
 
 import io.mosip.commons.packet.constants.LoggerFileConstant;
-import io.mosip.commons.packet.dto.Document;
-import io.mosip.commons.packet.dto.ProviderInfo;
 import io.mosip.commons.packet.spi.IPacketReader;
-import io.mosip.commons.packet.spi.PacketSigner;
 import io.mosip.commons.packet.util.PacketManagerLogger;
 import io.mosip.kernel.auth.adapter.config.RestTemplateInterceptor;
-import io.mosip.kernel.biometrics.constant.BiometricType;
-import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.core.logger.spi.Logger;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +16,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +33,12 @@ public class PacketManagerConfig {
     private Environment env;
 
     @Bean
+    @ConfigurationProperties(prefix = "mosip.commons.provider.referenceprovider")
+    public Map<String, String> configurations() {
+        return new HashMap<>();
+    }
+
+    @Bean
     public RestTemplate restTemplate() {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.setInterceptors(Collections.singletonList(new RestTemplateInterceptor()));
@@ -47,14 +51,36 @@ public class PacketManagerConfig {
      * @throws ClassNotFoundException the class not found exception
      */
     @PostConstruct
-    public void validateReferenceProvider() throws ClassNotFoundException {
-        if (StringUtils.isNotBlank(env.getProperty("mosip.commons.provider.referenceprovider"))) {
-            logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), null,
-                    "Validating the reference provider is present or not.");
-            Class.forName(env.getProperty("mosip.commons.provider.referenceprovider"));
+    public void validateReferenceReaderProvider() throws ClassNotFoundException {
+        if (StringUtils.isNotBlank(env.getProperty("mosip.commons.provider.referenceReaderProviders"))) {
+            String[] ClassNameWithPackage = env.getProperty("mosip.commons.provider.referenceReaderProviders").split(",");
+            for (String className : ClassNameWithPackage) {
+                logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), null,
+                        "Validating the reference provider readers are present or not.");
+                Class.forName(className);
+            }
         }
         logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), null,
-                "Reference provider class is not provided.");
+                "Reference provider reader class is not provided.");
+    }
+
+    /**
+     * Validate the reference provider.
+     *
+     * @throws ClassNotFoundException the class not found exception
+     */
+    @PostConstruct
+    public void validateReferenceWriterProvider() throws ClassNotFoundException {
+        if (StringUtils.isNotBlank(env.getProperty("mosip.commons.provider.referenceWriterProviders"))) {
+            String[] ClassNameWithPackage = env.getProperty("mosip.commons.provider.referenceWriterProviders").split(",");
+            for (String className : ClassNameWithPackage) {
+                logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), null,
+                        "Validating the reference provider writers are present or not.");
+                Class.forName(className);
+            }
+        }
+        logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), null,
+                "Reference provider writer class is not provided.");
     }
 
     /**
@@ -67,57 +93,51 @@ public class PacketManagerConfig {
      */
     @Bean
     @Lazy
-    public IPacketReader referenceProvider()
+    public List<IPacketReader> referenceReaderProviders()
             throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-        if (StringUtils.isNotBlank(env.getProperty("mosip.commons.provider.referenceprovider"))) {
-            logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), null,
-                    "Creating reference provider instance.");
-            return (IPacketReader) Class.forName(env.getProperty("mosip.commons.provider.referenceprovider")).newInstance();
+        List<IPacketReader> iPacketReaders = new ArrayList<>();
+        if (StringUtils.isNotBlank(env.getProperty("mosip.commons.provider.referenceReaderProviders"))) {
+            String[] ClassNameWithPackage = env.getProperty("mosip.commons.provider.referenceReaderProviders").split(",");
+            for (String className : ClassNameWithPackage) {
+                logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), null,
+                        "Creating reference provider reader instances.");
+                iPacketReaders.add((IPacketReader) Class.forName(className).newInstance());
+            }
+            return iPacketReaders;
+
         } else {
             logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), null,
-                    "reference provider is not present.");
-            return new IPacketReader() {
+                    "reference provider reader is not present.");
+            return null;
+        }
+    }
 
-                @Override
-                public ProviderInfo init(String schemaUrl, byte[] publicKey, PacketSigner signer) {
-                    return null;
-                }
+    /**
+     * Instantiate the reference provider bean
+     *
+     * @return the id object validator
+     * @throws ClassNotFoundException the class not found exception
+     * @throws InstantiationException the instantiation exception
+     * @throws IllegalAccessException the illegal access exception
+     */
+    @Bean
+    @Lazy
+    public List<IPacketReader> referenceWriterProviders()
+            throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+        List<IPacketReader> iPacketReaders = new ArrayList<>();
+        if (StringUtils.isNotBlank(env.getProperty("mosip.commons.provider.referenceWriterProviders"))) {
+            String[] ClassNameWithPackage = env.getProperty("mosip.commons.provider.referenceWriterProviders").split(",");
+            for (String className : ClassNameWithPackage) {
+                logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), null,
+                        "Creating reference provider writer instances.");
+                iPacketReaders.add((IPacketReader) Class.forName(className).newInstance());
+            }
+            return iPacketReaders;
 
-                @Override
-                public boolean validatePacket(String id, String process) {
-                    return false;
-                }
-
-                @Override
-                public Map<String, Object> getAll(String id, String process) {
-                    return null;
-                }
-
-                @Override
-                public String getField(String id, String field, String process) {
-                    return null;
-                }
-
-                @Override
-                public Map<String, String> getFields(String id, List<String> fields, String process) {
-                    return null;
-                }
-
-                @Override
-                public Document getDocument(String id, String documentName, String process) {
-                    return null;
-                }
-
-                @Override
-                public BiometricRecord getBiometric(String id, String person, List<BiometricType> modalities, String process) {
-                    return null;
-                }
-
-                @Override
-                public Map<String, String> getMetaInfo(String id, String source, String process) {
-                    return null;
-                }
-            };
+        } else {
+            logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), null,
+                    "reference provider writer is not present.");
+            return null;
         }
     }
 }

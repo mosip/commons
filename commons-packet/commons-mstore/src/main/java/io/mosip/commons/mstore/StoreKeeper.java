@@ -1,5 +1,8 @@
 package io.mosip.commons.mstore;
 
+import io.mosip.kernel.core.fsadapter.spi.FileSystemAdapter;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.io.InputStream;
 
 /**
@@ -7,6 +10,9 @@ import java.io.InputStream;
  *
  */
 public class StoreKeeper {
+
+    @Autowired
+    private FileSystemAdapter fileSystemAdapter;
 
     /**
      * This method stores data into persistence storage and returns the key.

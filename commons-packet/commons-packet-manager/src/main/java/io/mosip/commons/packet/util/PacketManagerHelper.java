@@ -1,6 +1,7 @@
 package io.mosip.commons.packet.util;
 
 import io.mosip.commons.packet.constants.PacketManagerConstants;
+import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.cbeffutil.container.impl.CbeffContainerImpl;
 import io.mosip.kernel.core.cbeffutil.common.CbeffValidator;
 import io.mosip.kernel.core.cbeffutil.entity.BIR;
@@ -9,6 +10,8 @@ import io.mosip.kernel.core.util.HMACUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
@@ -19,11 +22,11 @@ public class PacketManagerHelper {
 	//@Autowired
 	//private CbeffImpl xmlBuilder;
 	
-	public byte[] getXMLData(List<BIR> birs) throws Exception {
+	public byte[] getXMLData(BiometricRecord biometricRecord) throws Exception {
 		byte[] xmlBytes = null;
-		try(InputStream xsd = getClass().getClassLoader().getResourceAsStream(PacketManagerConstants.CBEFF_SCHEMA_FILE_PATH)) {
+		try(InputStream xsd = new FileInputStream(new File("C:\\Users\\M1045447\\Desktop\\cbeff.xsd"))) {//getClass().getClassLoader().getResourceAsStream(PacketManagerConstants.CBEFF_SCHEMA_FILE_PATH)) {
 			CbeffContainerImpl cbeffContainer = new CbeffContainerImpl();
-			BIRType bir = cbeffContainer.createBIRType(birs);
+			BIRType bir = cbeffContainer.createBIRType(biometricRecord.getSegments());
 			xmlBytes =  CbeffValidator.createXMLBytes(bir, IOUtils.toByteArray(xsd));
 		}
 		return xmlBytes;

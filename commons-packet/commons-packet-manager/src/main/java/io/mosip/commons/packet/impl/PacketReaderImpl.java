@@ -5,36 +5,56 @@ import io.mosip.commons.packet.constants.PacketManagerConstants;
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.dto.Packet;
 import io.mosip.commons.packet.dto.PacketInfo;
-import io.mosip.commons.packet.dto.ProviderInfo;
+import io.mosip.commons.packet.dto.packet.AuditDto;
 import io.mosip.commons.packet.exception.ApiNotAccessibleException;
+import io.mosip.commons.packet.exception.FieldNameNotFoundException;
 import io.mosip.commons.packet.exception.GetAllIdentityException;
+import io.mosip.commons.packet.exception.GetAllMetaInfoException;
 import io.mosip.commons.packet.exception.PacketDecryptionFailureException;
+import io.mosip.commons.packet.facade.PacketWriter;
 import io.mosip.commons.packet.keeper.PacketKeeper;
 import io.mosip.commons.packet.spi.IPacketReader;
-import io.mosip.commons.packet.spi.PacketSigner;
 import io.mosip.commons.packet.util.IdSchemaUtils;
 import io.mosip.commons.packet.util.ZipUtils;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
+import io.mosip.kernel.core.cbeffutil.common.CbeffValidator;
+import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
+import io.mosip.kernel.core.cbeffutil.spi.CbeffUtil;
+import io.mosip.kernel.core.util.JsonUtils;
+import io.mosip.kernel.core.util.exception.JsonProcessingException;
 import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static io.mosip.commons.packet.constants.PacketManagerConstants.FORMAT;
+import static io.mosip.commons.packet.constants.PacketManagerConstants.ID;
 import static io.mosip.commons.packet.constants.PacketManagerConstants.IDENTITY;
+import static io.mosip.commons.packet.constants.PacketManagerConstants.LABEL;
+import static io.mosip.commons.packet.constants.PacketManagerConstants.META_INFO_OPERATIONS_DATA;
 import static io.mosip.commons.packet.constants.PacketManagerConstants.TYPE;
 import static io.mosip.commons.packet.constants.PacketManagerConstants.VALUE;
 
+@RefreshScope
 @Component
 public class PacketReaderImpl implements IPacketReader {
+
+    @Autowired
+    private PacketWriter packetWriter;
 
     @Value("${mosip.commons.packetNames}")
     private String packetNames;
@@ -48,13 +68,11 @@ public class PacketReaderImpl implements IPacketReader {
     @Autowired
     private IdSchemaUtils idSchemaUtils;
 
-    @Override
-    public ProviderInfo init(String schemaUrl, byte[] publicKey, PacketSigner signer) {
-        return null;
-    }
+    @Autowired
+    private CbeffUtil cbeffUtil;
 
     /**
-     * idobject validation, cbeff validation(ex - biometric exception validation)
+     * idobject providerConfig, cbeff providerConfig(ex - biometric exception providerConfig)
      *
      * @param id
      * @param process
@@ -74,32 +92,45 @@ public class PacketReaderImpl implements IPacketReader {
      */
     @Override
     public Map<String, Object> getAll(String id, String process) {
-        PacketInfo packetInfo = new PacketInfo();
-        packetInfo.setId(id);
-        packetInfo.setProcess(process);
         Map<String, Object> finalMap = new LinkedHashMap<>();
-
         String[] sourcePacketNames = packetNames.split(",");
 
         try {
             for (String source : sourcePacketNames) {
-                packetInfo.setPacketName(source);
-                Packet packet = packetKeeper.getPacket(packetInfo);
+                Packet packet = packetKeeper.getPacket(getPacketInfo(id, source, process));
                 InputStream idJsonStream = ZipUtils.unzipAndGetFile(packet.getPacket(), "ID");
-                if(idJsonStream != null) {
+                if (idJsonStream != null) {
                     byte[] bytearray = IOUtils.toByteArray(idJsonStream);
                     String jsonString = new String(bytearray);
                     LinkedHashMap<String, Object> currentIdMap = (LinkedHashMap<String, Object>) mapper.readValue(jsonString, LinkedHashMap.class).get(IDENTITY);
 
-
                     currentIdMap.keySet().stream().forEach(key -> {
-                        finalMap.putIfAbsent(key, currentIdMap.get(key));
+                        Object value = currentIdMap.get(key);
+                        if (value != null && value instanceof Number)
+                            finalMap.putIfAbsent(key, value);
+                        else {
+                            try {
+                                finalMap.putIfAbsent(key, value != null ? JsonUtils.javaObjectToJsonString(currentIdMap.get(key)) : null);
+                            } catch (io.mosip.kernel.core.util.exception.JsonProcessingException e) {
+                                e.printStackTrace();
+                                throw new GetAllIdentityException(e.getMessage());
+                            }
+                        }
                     });
                 }
             }
         } catch (Exception e) {
             throw new GetAllIdentityException(e.getMessage());
         }
+        finalMap.entrySet().forEach(m -> {
+            try {
+                System.out.println(m.getKey() + ": " + JsonUtils.javaObjectToJsonString(m.getValue()) + ",");
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        });
+
+
         return finalMap;
     }
 
@@ -126,16 +157,13 @@ public class PacketReaderImpl implements IPacketReader {
     public Document getDocument(String id, String documentName, String process) {
         Map<String, Object> idobjectMap = getAll(id, process);
         Double schemaVersion = (Double) idobjectMap.get(PacketManagerConstants.IDSCHEMA_VERSION);
-        LinkedHashMap documentMap = (LinkedHashMap) idobjectMap.get(documentName);
+        String documentString = (String) idobjectMap.get(documentName);
         try {
-            if (documentMap != null && !documentMap.isEmpty() && schemaVersion != null) {
+            JSONObject documentMap = new JSONObject(documentString);
+            if (documentMap != null && schemaVersion != null) {
                 String packetName = idSchemaUtils.getSource(documentName, schemaVersion);
-                PacketInfo packetInfo = new PacketInfo();
-                packetInfo.setId(id);
-                packetInfo.setPacketName(packetName);
-                packetInfo.setProcess(process);
-                Packet packet = packetKeeper.getPacket(packetInfo);
-                String value = documentMap.get(VALUE) != null ? documentMap.get(VALUE).toString() : null;
+                Packet packet = packetKeeper.getPacket(getPacketInfo(id, packetName, process));
+                String value = documentMap.has(VALUE) ? documentMap.get(VALUE).toString() : null;
                 InputStream documentStream = ZipUtils.unzipAndGetFile(packet.getPacket(), value);
                 Document document = new Document();
                 document.setDocument(IOUtils.toByteArray(documentStream));
@@ -148,17 +176,144 @@ public class PacketReaderImpl implements IPacketReader {
             e.printStackTrace();
         } catch (ApiNotAccessibleException | PacketDecryptionFailureException e) {
             throw e;
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         return null;
     }
 
     @Override
-    public BiometricRecord getBiometric(String id, String person, List<BiometricType> modalities, String process) {
-        return null;
+    public BiometricRecord getBiometric(String id, String biometricFieldName, List<BiometricType> modalities, String process) {
+        BiometricRecord biometricRecord = null;
+        String packetName = null;
+        String fileName = null;
+        try {
+            Map<String, Object> idobjectMap = getAll(id, process);
+            String bioString = (String) idobjectMap.get(biometricFieldName);
+            JSONObject biometricMap = new JSONObject(bioString);
+            if (biometricMap == null || biometricMap.isNull(VALUE)) {
+                // biometric file not present in idobject. Search in meta data.
+                Map<String, String> metadataMap = getMetaInfo(id, process);
+                String operationsData = metadataMap.get(META_INFO_OPERATIONS_DATA);
+                JSONArray jsonArray = new JSONArray(operationsData);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                    if (jsonObject.has(LABEL) && jsonObject.get(LABEL).toString().equalsIgnoreCase(biometricFieldName)) {
+                        packetName = ID;
+                        fileName = jsonObject.isNull(VALUE) ? null : jsonObject.get(VALUE).toString();
+                        break;
+                    }
+                }
+            } else {
+                Double schemaVersion = (Double) idobjectMap.get(PacketManagerConstants.IDSCHEMA_VERSION);
+                packetName = idSchemaUtils.getSource(biometricFieldName, schemaVersion);
+                fileName = biometricMap.get(VALUE).toString();
+            }
+
+            if (packetName == null || fileName == null)
+                throw new FieldNameNotFoundException();
+
+            Packet packet = packetKeeper.getPacket(getPacketInfo(id, packetName, process));
+            InputStream biometrics = ZipUtils.unzipAndGetFile(packet.getPacket(), fileName);
+            BIRType birType = CbeffValidator.getBIRFromXML(IOUtils.toByteArray(biometrics));
+            biometricRecord = new BiometricRecord();
+            biometricRecord.setSegments(CbeffValidator.convertBIRTypeToBIR(birType.getBIR()));
+            //createPacket(birType, idobjectMap);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            System.out.println(idSchemaUtils.getIdSchema(new Double(0.1)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return biometricRecord;
     }
 
     @Override
-    public Map<String, String> getMetaInfo(String id, String source, String process) {
-        return null;
+    public Map<String, String> getMetaInfo(String id, String process) {
+        Map<String, String> finalMap = new LinkedHashMap<>();
+        String[] sourcePacketNames = packetNames.split(",");
+
+        try {
+            for (String packetName : sourcePacketNames) {
+                Packet packet = packetKeeper.getPacket(getPacketInfo(id, packetName, process));
+                InputStream idJsonStream = ZipUtils.unzipAndGetFile(packet.getPacket(), "PACKET_META_INFO");
+                if (idJsonStream != null) {
+                    byte[] bytearray = IOUtils.toByteArray(idJsonStream);
+                    String jsonString = new String(bytearray);
+                    LinkedHashMap<String, Object> currentIdMap = (LinkedHashMap<String, Object>) mapper.readValue(jsonString, LinkedHashMap.class).get(IDENTITY);
+
+                    currentIdMap.keySet().stream().forEach(key -> {
+                        try {
+                            finalMap.putIfAbsent(key, currentIdMap.get(key) != null ? JsonUtils.javaObjectToJsonString(currentIdMap.get(key)) : null);
+                        } catch (io.mosip.kernel.core.util.exception.JsonProcessingException e) {
+                            throw new GetAllMetaInfoException(e.getMessage());
+                        }
+                    });
+                }
+            }
+        } catch (Exception e) {
+            throw new GetAllMetaInfoException(e.getMessage());
+        }
+        return finalMap;
+    }
+
+
+    private PacketInfo getPacketInfo(String id, String packetName, String process) {
+        PacketInfo packetInfo = new PacketInfo();
+        packetInfo.setId(id);
+        packetInfo.setPacketName(packetName);
+        packetInfo.setProcess(process);
+        return packetInfo;
+    }
+
+    private void createPacket(BiometricRecord birTypes, Map<String, Object> idobjectMap) throws JSONException {
+        String id = "10001100770000320200720092256";
+        String process= "NEW";
+        String source= "registration";
+
+        AuditDto auditDto = new AuditDto();
+        auditDto.setActionTimeStamp(LocalDateTime.now());
+        auditDto.setApplicationId(source);
+        auditDto.setApplicationName(source);
+        auditDto.setEventId("Event1");
+        auditDto.setDescription("audit");
+        List<AuditDto> auditDtos = new ArrayList<>();
+        auditDtos.add(auditDto);
+
+        System.out.println(idobjectMap);
+
+        idobjectMap.entrySet().forEach(id1 -> {
+            try {
+                packetWriter.setField(id, id1.getKey(), id1.getValue().toString(), source, process);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        });
+
+        Map<String, String> metainfo = getMetaInfo(id, process);
+        System.out.println(metainfo);
+
+        packetWriter.setMetaInfo(id, metainfo, source, process);
+        System.out.println(birTypes);
+        packetWriter.setBiometric(id,"individualBiometrics", birTypes, source, process);
+
+        packetWriter.setDocument(id,"proofOfAddress", getDocument(id, "proofOfAddress", process), source, process);
+
+        packetWriter.setAudits(id, auditDtos, source, process);
+
+        try {
+            packetWriter.persistPacket(id, 0.1, idSchemaUtils.getIdSchema(new Double(0.1)), source, process);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }

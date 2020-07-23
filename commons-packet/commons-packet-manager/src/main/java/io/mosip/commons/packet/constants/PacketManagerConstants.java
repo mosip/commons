@@ -86,6 +86,7 @@ public class PacketManagerConstants {
 	public static final String FIELDCATEGORY = "fieldCategory";
 
 	public static final String PVT = "pvt";
+	public static final String LABEL = "label";
 	public static final String VALUE = "value";
 	public static final String TYPE = "type";
 	public static final String FORMAT = "format";
@@ -93,6 +94,10 @@ public class PacketManagerConstants {
 	public static final String IDSCHEMA_URL = "IDSCHEMA";
 	public static final String SCHEMA_JSON = "schemaJson";
 	public static final String RESPONSE = "response";
+
+	public static final String SOURCE = "source";
+	public static final String PROCESS = "process";
+	public static final String META_INFO_OPERATIONS_DATA = "operationsData";
 
 	//TODO During update flow if its non-biometric update, then the captured biometrics are sent in this file
 	public static final String META_AUTH_BIO_FILENAME = "authenticationBiometricFileName";
