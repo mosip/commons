@@ -1,8 +1,10 @@
 package io.mosip.kernel.biosdk.provider.util;
 
 import java.lang.reflect.Constructor;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.util.ReflectionUtils;
 
@@ -11,35 +13,41 @@ import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;
 
 public class BioProviderUtil {
-	
+
+	private static Map<String, Object> sdkIntances = new HashMap<>();
+
 	private static final Logger LOGGER = BioSDKProviderLoggerFactory.getLogger(BioProviderUtil.class);
-	
+
 	public static Object getSDKInstance(Map<String, String> modalityParams) throws BiometricException {
-		try {					
-			Class<?> object = (Class<?>) Class.forName(modalityParams.get(ProviderConstants.CLASSNAME));
-			Object[] args = new Object[0];				
-			if(modalityParams.get(ProviderConstants.ARGUMENTS) != null && !modalityParams.get(ProviderConstants.ARGUMENTS).isEmpty())
-				args = modalityParams.get(ProviderConstants.ARGUMENTS).split(",");
-			
-			Optional<Constructor<?>> result = ReflectionUtils.findConstructor(object, args);
-			if(result.isPresent()) {
-				Constructor<?> constructor = (Constructor<?>) result.get();
-				constructor.setAccessible(true);
-				LOGGER.info(ProviderConstants.LOGGER_SESSIONID, ProviderConstants.LOGGER_IDTYPE, 
-						"GET SDK INSTANCE", "SDK instance created with params >>> " + modalityParams);
-				return constructor.newInstance(args);
+		try {
+			if (sdkIntances.containsKey(modalityParams.values().stream().collect(Collectors.joining()))) {
+				return sdkIntances.get(modalityParams.values().stream().collect(Collectors.joining()));
 			}
-			else
-				throw new BiometricException(ErrorCode.NO_CONSTRUCTOR_FOUND.getErrorCode(), 
-						String.format(ErrorCode.NO_CONSTRUCTOR_FOUND.getErrorMessage(), 
+			Class<?> object = Class.forName(modalityParams.get(ProviderConstants.CLASSNAME));
+			Object[] args = new Object[0];
+			if (modalityParams.get(ProviderConstants.ARGUMENTS) != null
+					&& !modalityParams.get(ProviderConstants.ARGUMENTS).isEmpty())
+				args = modalityParams.get(ProviderConstants.ARGUMENTS).split(",");
+
+			Optional<Constructor<?>> result = ReflectionUtils.findConstructor(object, args);
+			if (result.isPresent()) {
+				Constructor<?> constructor = result.get();
+				constructor.setAccessible(true);
+				LOGGER.info(ProviderConstants.LOGGER_SESSIONID, ProviderConstants.LOGGER_IDTYPE, "GET SDK INSTANCE",
+						"SDK instance created with params >>> " + modalityParams);
+				Object newInstance = constructor.newInstance(args);
+				sdkIntances.put(modalityParams.values().stream().collect(Collectors.joining()), newInstance);
+				return newInstance;
+			} else {
+				throw new BiometricException(ErrorCode.NO_CONSTRUCTOR_FOUND.getErrorCode(),
+						String.format(ErrorCode.NO_CONSTRUCTOR_FOUND.getErrorMessage(),
 								modalityParams.get(ProviderConstants.CLASSNAME),
 								modalityParams.get(ProviderConstants.ARGUMENTS)));
-			
+			}
 		} catch (Exception e) {
-			throw new BiometricException(ErrorCode.SDK_INITIALIZATION_FAILED.getErrorCode(), 
-					String.format(ErrorCode.SDK_INITIALIZATION_FAILED.getErrorMessage(), 
-							modalityParams.get(ProviderConstants.CLASSNAME),
-							ExceptionUtils.getStackTrace(e)));
+			throw new BiometricException(ErrorCode.SDK_INITIALIZATION_FAILED.getErrorCode(),
+					String.format(ErrorCode.SDK_INITIALIZATION_FAILED.getErrorMessage(),
+							modalityParams.get(ProviderConstants.CLASSNAME), ExceptionUtils.getStackTrace(e)));
 		}
 	}
 
