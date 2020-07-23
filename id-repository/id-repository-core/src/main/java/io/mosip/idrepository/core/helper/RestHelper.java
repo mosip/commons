@@ -82,20 +82,17 @@ public class RestHelper {
 
 	/** The mosipLogger. */
 	private static Logger mosipLogger = IdRepoLogger.getLogger(RestHelper.class);
-
+	
 	@Autowired
 	private WebClient webClient;
-
+	
 	/**
 	 * Request to send/receive HTTP requests and return the response synchronously.
 	 *
-	 * @param <T>
-	 *            the generic type
-	 * @param request
-	 *            the request
+	 * @param         <T> the generic type
+	 * @param request the request
 	 * @return the response object or null in case of exception
-	 * @throws RestServiceException
-	 *             the rest service exception
+	 * @throws RestServiceException the rest service exception
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T requestSync(@Valid RestRequestDTO request) throws RestServiceException {
@@ -144,49 +141,52 @@ public class RestHelper {
 	/**
 	 * Request to send/receive HTTP requests and return the response asynchronously.
 	 *
-	 * @param request
-	 *            the request
+	 * @param request the request
 	 * @return the supplier
 	 */
 	public Supplier<Object> requestAsync(@Valid RestRequestDTO request) {
-		mosipLogger.debug(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, METHOD_REQUEST_ASYNC,
-				PREFIX_REQUEST + request);
+		mosipLogger.debug(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, METHOD_REQUEST_ASYNC, PREFIX_REQUEST + request);
 		Mono<?> sendRequest = request(request);
 		sendRequest.subscribe();
-		mosipLogger.debug(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, METHOD_REQUEST_ASYNC,
-				"Request subscribed");
+		mosipLogger.debug(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, METHOD_REQUEST_ASYNC, "Request subscribed");
 		return () -> sendRequest.block();
 	}
 
 	/**
 	 * Method to send/receive HTTP requests and return the response as Mono.
 	 *
-	 * @param request
-	 *            the request
-	 * @param sslContext
-	 *            the ssl context
+	 * @param request    the request
+	 * @param sslContext the ssl context
 	 * @return the mono
 	 */
 	private Mono<?> request(RestRequestDTO request) {
 		Mono<?> monoResponse;
 		RequestBodySpec requestBodySpec;
 		ResponseSpec exchange;
-
+		
 		if (request.getParams() != null && request.getPathVariables() == null) {
-			request.setUri(UriComponentsBuilder.fromUriString(request.getUri()).queryParams(request.getParams())
+			request.setUri(UriComponentsBuilder
+					.fromUriString(request.getUri())
+					.queryParams(request.getParams())
 					.toUriString());
 		} else if (request.getParams() == null && request.getPathVariables() != null) {
-			request.setUri(UriComponentsBuilder.fromUriString(request.getUri())
-					.buildAndExpand(request.getPathVariables()).toUriString());
+			request.setUri(UriComponentsBuilder
+					.fromUriString(request.getUri())
+					.buildAndExpand(request.getPathVariables())
+					.toUriString());
 		} else if (request.getParams() != null && request.getPathVariables() != null) {
-			request.setUri(UriComponentsBuilder.fromUriString(request.getUri()).queryParams(request.getParams())
-					.buildAndExpand(request.getPathVariables()).toUriString());
+			request.setUri(UriComponentsBuilder
+					.fromUriString(request.getUri())
+					.queryParams(request.getParams())
+					.buildAndExpand(request.getPathVariables())
+					.toUriString());
 		}
-
+		
 		requestBodySpec = webClient.method(request.getHttpMethod()).uri(request.getUri());
 
 		if (request.getHeaders() != null) {
-			requestBodySpec = requestBodySpec.headers(headers -> headers.addAll(request.getHeaders()));
+			requestBodySpec = requestBodySpec
+					.headers(headers -> headers.addAll(request.getHeaders()));
 		}
 
 		if (request.getRequestBody() != null) {
@@ -203,12 +203,9 @@ public class RestHelper {
 	/**
 	 * Check error response.
 	 *
-	 * @param response
-	 *            the response
-	 * @param responseType
-	 *            the response type
-	 * @throws RestServiceException
-	 *             the rest service exception
+	 * @param response     the response
+	 * @param responseType the response type
+	 * @throws RestServiceException the rest service exception
 	 */
 	private void checkErrorResponse(Object response, Class<?> responseType) throws RestServiceException {
 		try {
@@ -236,10 +233,8 @@ public class RestHelper {
 	/**
 	 * Handle 4XX/5XX status error.
 	 *
-	 * @param e
-	 *            the response
-	 * @param responseType
-	 *            the response type
+	 * @param e            the response
+	 * @param responseType the response type
 	 * @return the mono<? extends throwable>
 	 */
 	private RestServiceException handleStatusError(WebClientResponseException e, Class<?> responseType) {
@@ -252,17 +247,17 @@ public class RestHelper {
 							"request failed with status code :" + e.getRawStatusCode(),
 							"\n\n" + e.getResponseBodyAsString());
 					List<ServiceError> errorList = ExceptionUtils.getServiceErrorList(e.getResponseBodyAsString());
-					mosipLogger.error(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER,
-							"Throwing AuthenticationException", errorList.toString());
+					mosipLogger.error(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, "Throwing AuthenticationException",
+							errorList.toString());
 					throw new AuthenticationException(errorList.get(0).getErrorCode(), errorList.get(0).getMessage(),
 							e.getRawStatusCode());
-
+					
 				} else {
-					mosipLogger.error(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, METHOD_HANDLE_STATUS_ERROR,
-							"Status error - returning RestServiceException - CLIENT_ERROR -- "
-									+ e.getResponseBodyAsString());
-					return new RestServiceException(CLIENT_ERROR, e.getResponseBodyAsString(),
-							mapper.readValue(e.getResponseBodyAsString().getBytes(), responseType));
+				mosipLogger.error(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, METHOD_HANDLE_STATUS_ERROR,
+						"Status error - returning RestServiceException - CLIENT_ERROR -- "
+								+ e.getResponseBodyAsString());
+				return new RestServiceException(CLIENT_ERROR, e.getResponseBodyAsString(),
+						mapper.readValue(e.getResponseBodyAsString().getBytes(), responseType));
 				}
 			} else {
 				mosipLogger.error(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, METHOD_HANDLE_STATUS_ERROR,
@@ -272,8 +267,7 @@ public class RestHelper {
 						mapper.readValue(e.getResponseBodyAsString().getBytes(), responseType));
 			}
 		} catch (IOException ex) {
-			mosipLogger.error(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, METHOD_HANDLE_STATUS_ERROR,
-					ex.getMessage());
+			mosipLogger.error(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, METHOD_HANDLE_STATUS_ERROR, ex.getMessage());
 			return new RestServiceException(UNKNOWN_ERROR, ex);
 		}
 
