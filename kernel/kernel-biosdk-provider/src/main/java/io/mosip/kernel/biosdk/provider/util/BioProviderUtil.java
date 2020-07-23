@@ -21,6 +21,9 @@ public class BioProviderUtil {
 	public static Object getSDKInstance(Map<String, String> modalityParams) throws BiometricException {
 		try {
 			if (sdkIntances.containsKey(modalityParams.values().stream().collect(Collectors.joining()))) {
+				LOGGER.debug(ProviderConstants.LOGGER_SESSIONID, ProviderConstants.LOGGER_IDTYPE, "GET SDK INSTANCE",
+						"SDK instance reused for modality class >>> "
+								+ modalityParams.get(ProviderConstants.CLASSNAME));
 				return sdkIntances.get(modalityParams.values().stream().collect(Collectors.joining()));
 			}
 			Class<?> object = Class.forName(modalityParams.get(ProviderConstants.CLASSNAME));
@@ -33,7 +36,7 @@ public class BioProviderUtil {
 			if (result.isPresent()) {
 				Constructor<?> constructor = result.get();
 				constructor.setAccessible(true);
-				LOGGER.info(ProviderConstants.LOGGER_SESSIONID, ProviderConstants.LOGGER_IDTYPE, "GET SDK INSTANCE",
+				LOGGER.debug(ProviderConstants.LOGGER_SESSIONID, ProviderConstants.LOGGER_IDTYPE, "GET SDK INSTANCE",
 						"SDK instance created with params >>> " + modalityParams);
 				Object newInstance = constructor.newInstance(args);
 				sdkIntances.put(modalityParams.values().stream().collect(Collectors.joining()), newInstance);
