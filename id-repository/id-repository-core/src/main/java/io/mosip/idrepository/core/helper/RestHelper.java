@@ -101,8 +101,11 @@ public class RestHelper {
 			requestTime = DateUtils.getUTCCurrentDateTime();
 			mosipLogger.debug(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, METHOD_REQUEST_SYNC,
 					"Request received at : " + requestTime);
+			mosipLogger.debug(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, METHOD_REQUEST_SYNC, PREFIX_REQUEST + request);
 			if (request.getTimeout() != null) {
 				response = request(request).timeout(Duration.ofSeconds(request.getTimeout())).block();
+				mosipLogger.debug(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, METHOD_REQUEST_SYNC,
+						PREFIX_RESPONSE + response);
 			} else {
 				response = request(request).block();
 				mosipLogger.debug(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, METHOD_REQUEST_SYNC,
@@ -213,8 +216,6 @@ public class RestHelper {
 				ObjectNode responseNode = mapper.readValue(mapper.writeValueAsBytes(response), ObjectNode.class);
 				if (responseNode.has(ERRORS) && !responseNode.get(ERRORS).isNull() && responseNode.get(ERRORS).isArray()
 						&& responseNode.get(ERRORS).size() > 0) {
-					mosipLogger.error(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, "checkErrorResponse",
-							responseNode.toString());
 					throw new RestServiceException(CLIENT_ERROR, responseNode.toString(),
 							mapper.readValue(responseNode.toString().getBytes(), responseType));
 				}
