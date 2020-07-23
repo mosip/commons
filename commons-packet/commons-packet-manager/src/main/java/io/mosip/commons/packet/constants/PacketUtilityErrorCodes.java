@@ -12,7 +12,8 @@ public enum PacketUtilityErrorCodes {
 	NO_AVAILABLE_PROVIDER("KER-PUT-006", "No available provider for given source and process"),
 	BIOMETRIC_FIELDNAME_NOT_FOUND("KER-PUT-007", "Biometric fieldname is not present inside packet"),
 	GET_ALL_METAINFO_EXCEPTION("KER-PUT-008", "Unable to fetch meta information from all sub packets"),
-	ZIP_PARSING_EXCEPTION("KER-PUT-009", "Unable to parse the zip");
+	ZIP_PARSING_EXCEPTION("KER-PUT-009", "Unable to parse the zip"),
+	SIGNATURE_EXCEPTION("KER-PUT-010", "Failed to generate digital signature");
 
 
 	private final String errorCode;
