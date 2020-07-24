@@ -62,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Value("${mosip.security.csrf-enable:false}")
 	private boolean isCSRFEnable;
 
-	@Value("${mosip.security.cors-enable:true}")
+	@Value("${mosip.security.cors-enable:false}")
 	private boolean isCORSEnable;
 
 	@Value("${mosip.security.origins:localhost:8080}")
