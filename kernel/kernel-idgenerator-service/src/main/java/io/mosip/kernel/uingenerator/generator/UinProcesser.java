@@ -1,5 +1,7 @@
 package io.mosip.kernel.uingenerator.generator;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -31,6 +33,9 @@ public class UinProcesser {
 	@Value("${mosip.kernel.uin.min-unused-threshold}")
 	private long thresholdUinCount;
 
+	@Value("${mosip.kernel.uin.uins-to-generate}")
+	long uinsCount;
+
 	/**
 	 * Check whether to generate uin or not
 	 * 
@@ -47,7 +52,8 @@ public class UinProcesser {
 	 * Create list of uins
 	 */
 	public void generateUins() {
-		uinGeneratorImpl.generateId();
+		long noOfUnUsedUins = uinRepository.countByStatusAndIsDeletedFalse(UinGeneratorConstant.UNUSED);
+		uinGeneratorImpl.generateId(uinsCount <= noOfUnUsedUins ? 0 : uinsCount - noOfUnUsedUins);
 	}
 
 }

@@ -6,8 +6,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Range;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import io.mosip.kernel.masterdata.validator.StringFormatter;
 import io.mosip.kernel.masterdata.validator.ValidLangCode;
 import lombok.Data;
 
@@ -20,12 +23,12 @@ import lombok.Data;
  */
 @Data
 public class RegistrationCenterDto {
-	@NotBlank
-	@Size(min = 1, max = 10)
+	@NotNull
+	@StringFormatter(min = 1, max = 10)
 	private String id;
 
-	@NotBlank
-	@Size(min = 1, max = 128)
+	@NotNull
+	@StringFormatter(min = 1, max = 128)
 	private String name;
 
 	@Size(min = 1, max = 36)
@@ -46,8 +49,8 @@ public class RegistrationCenterDto {
 	@Size(min = 1, max = 32)
 	private String longitude;
 
-	@NotBlank
-	@Size(min = 1, max = 36)
+	@NotNull
+	@StringFormatter(min = 1, max = 36)
 	private String locationCode;
 
 	@Size(min = 1, max = 36)
@@ -59,7 +62,7 @@ public class RegistrationCenterDto {
 	@Size(min = 1, max = 32)
 	private String workingHours;
 
-	@ValidLangCode
+	@ValidLangCode(message = "Language Code is Invalid")
 	private String langCode;
 
 	private Short numberOfKiosks;

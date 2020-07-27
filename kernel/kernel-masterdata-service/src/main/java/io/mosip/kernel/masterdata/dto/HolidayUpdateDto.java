@@ -2,6 +2,8 @@ package io.mosip.kernel.masterdata.dto;
 
 import java.time.LocalDate;
 
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
@@ -22,6 +24,7 @@ public class HolidayUpdateDto {
 
 	private String locationCode;
 
+	
 	@DateTimeFormat(pattern="yyyy-mm-dd")
 	private LocalDate holidayDate;
 

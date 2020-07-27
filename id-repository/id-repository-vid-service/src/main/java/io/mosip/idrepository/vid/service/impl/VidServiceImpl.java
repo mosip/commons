@@ -155,7 +155,7 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 	 */
 	@Override
 	public ResponseWrapper<VidResponseDTO> generateVid(VidRequestDTO vidRequest) throws IdRepoAppException {
-		String uin = vidRequest.getUin().toString();
+		String uin = vidRequest.getUin();
 		try {
 			Vid vid = generateVid(uin, vidRequest.getVidType());
 			VidResponseDTO responseDTO = new VidResponseDTO();
@@ -215,7 +215,7 @@ public class VidServiceImpl implements VidService<VidRequestDTO, ResponseWrapper
 			vidObject.setUpdatedDTimes(DateUtils.getUTCCurrentDateTime());
 			vidObject.setUin(uinToEncrypt);
 			vidRepo.saveAndFlush(vidObject);
-			notify(EventType.CREATE_VID, Collections.singletonList(vidObject), uinToEncrypt, false);
+			notify(EventType.UPDATE_VID, Collections.singletonList(vidObject), uinToEncrypt, true);
 			return generateVid(uin, vidType);
 		} else {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO_VID_SERVICE, CREATE_VID,

@@ -1,7 +1,6 @@
 package io.mosip.kernel.masterdata.utils;
 
 import java.lang.reflect.Field;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -35,7 +34,6 @@ import io.mosip.kernel.masterdata.constant.ValidationErrorCode;
 import io.mosip.kernel.masterdata.dto.RegCenterPostReqDto;
 import io.mosip.kernel.masterdata.dto.RegCenterPutReqDto;
 import io.mosip.kernel.masterdata.dto.RegcenterBaseDto;
-import io.mosip.kernel.masterdata.dto.WorkingNonWorkingDaysDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.RegistrationCenterExtnDto;
 import io.mosip.kernel.masterdata.dto.postresponse.RegistrationCenterPostResponseDto;
 import io.mosip.kernel.masterdata.entity.Holiday;
@@ -43,7 +41,6 @@ import io.mosip.kernel.masterdata.entity.Machine;
 import io.mosip.kernel.masterdata.entity.RegistrationCenter;
 import io.mosip.kernel.masterdata.entity.RegistrationCenterHistory;
 import io.mosip.kernel.masterdata.entity.Zone;
-import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
 import io.mosip.kernel.masterdata.exception.RequestException;
 import io.mosip.kernel.masterdata.exception.ValidationException;
 import io.mosip.kernel.masterdata.repository.HolidayRepository;
@@ -856,9 +853,9 @@ public class RegistrationCenterValidator {
 	// is valid zoneCode
 	private void zoneUserMapValidation(RegCenterPutReqDto registrationCenterDto, List<ServiceError> errors,
 			List<String> zoneIds) {
-		String centerZoneCode=registrationCenterRepository.findByLangCodeAndId(registrationCenterDto.getId(), registrationCenterDto.getLangCode()).getZoneCode();
+
 		if (!zoneIds.isEmpty()) {
-			if (!zoneIds.contains(centerZoneCode) || !zoneIds.contains(registrationCenterDto.getZoneCode())) { 
+			if (!zoneIds.contains(registrationCenterDto.getZoneCode())) {
 				errors.add(new ServiceError(RegistrationCenterErrorCode.INVALIDE_ZONE.getErrorCode(),
 						String.format(RegistrationCenterErrorCode.INVALIDE_ZONE.getErrorMessage(),
 								registrationCenterDto.getZoneCode())));

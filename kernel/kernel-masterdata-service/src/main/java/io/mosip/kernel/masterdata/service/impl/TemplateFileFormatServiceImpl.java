@@ -9,13 +9,11 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
-import io.mosip.kernel.masterdata.constant.MachineErrorCode;
+import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.constant.TemplateFileFormatErrorCode;
-import io.mosip.kernel.masterdata.dto.MachineDto;
 import io.mosip.kernel.masterdata.dto.TemplateFileFormatDto;
 import io.mosip.kernel.masterdata.dto.TemplateFileFormatResponseDto;
 import io.mosip.kernel.masterdata.dto.postresponse.CodeResponseDto;
-import io.mosip.kernel.masterdata.entity.Machine;
 import io.mosip.kernel.masterdata.entity.Template;
 import io.mosip.kernel.masterdata.entity.TemplateFileFormat;
 import io.mosip.kernel.masterdata.entity.id.CodeAndLanguageCodeID;
@@ -25,6 +23,7 @@ import io.mosip.kernel.masterdata.exception.RequestException;
 import io.mosip.kernel.masterdata.repository.TemplateFileFormatRepository;
 import io.mosip.kernel.masterdata.repository.TemplateRepository;
 import io.mosip.kernel.masterdata.service.TemplateFileFormatService;
+import io.mosip.kernel.masterdata.utils.AuditUtil;
 import io.mosip.kernel.masterdata.utils.ExceptionUtils;
 import io.mosip.kernel.masterdata.utils.MapperUtils;
 import io.mosip.kernel.masterdata.utils.MasterdataCreationUtil;
@@ -38,10 +37,13 @@ public class TemplateFileFormatServiceImpl implements TemplateFileFormatService 
 
 	@Autowired
 	private TemplateRepository templateRepository;
-	
-	
+
+
 	@Autowired
 	private MasterdataCreationUtil masterdataCreationUtil;
+
+	@Autowired
+	private AuditUtil auditUtil;
 
 	/*
 	 * (non-Javadoc)
@@ -51,12 +53,22 @@ public class TemplateFileFormatServiceImpl implements TemplateFileFormatService 
 	 */
 	@Override
 	public CodeAndLanguageCodeID createTemplateFileFormat(TemplateFileFormatDto templateFileFormatRequestDto) {
-		TemplateFileFormat entity = MetaDataUtils.setCreateMetaData(templateFileFormatRequestDto,
-				TemplateFileFormat.class);
+
 		TemplateFileFormat templateFileFormat;
 		try {
+			templateFileFormatRequestDto = masterdataCreationUtil.createMasterData(TemplateFileFormat.class,
+					templateFileFormatRequestDto);
+			TemplateFileFormat entity = MetaDataUtils.setCreateMetaData(templateFileFormatRequestDto,
+					TemplateFileFormat.class);
 			templateFileFormat = templateFileFormatRepository.create(entity);
-		} catch (DataAccessException | DataAccessLayerException e) {
+		} catch (DataAccessException | DataAccessLayerException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
+			auditUtil.auditRequest(
+					String.format(MasterDataConstant.CREATE_ERROR_AUDIT, TemplateFileFormat.class.getSimpleName()),
+					MasterDataConstant.AUDIT_SYSTEM,
+					String.format(MasterDataConstant.FAILURE_DESC,
+							TemplateFileFormatErrorCode.TEMPLATE_FILE_FORMAT_INSERT_EXCEPTION.getErrorCode(),
+							TemplateFileFormatErrorCode.TEMPLATE_FILE_FORMAT_INSERT_EXCEPTION.getErrorMessage()));
 			throw new MasterDataServiceException(
 					TemplateFileFormatErrorCode.TEMPLATE_FILE_FORMAT_INSERT_EXCEPTION.getErrorCode(),
 					TemplateFileFormatErrorCode.TEMPLATE_FILE_FORMAT_INSERT_EXCEPTION.getErrorMessage() + " "
@@ -64,6 +76,10 @@ public class TemplateFileFormatServiceImpl implements TemplateFileFormatService 
 		}
 		CodeAndLanguageCodeID codeLangCodeId = new CodeAndLanguageCodeID();
 		MapperUtils.map(templateFileFormat, codeLangCodeId);
+		auditUtil.auditRequest(
+				String.format(MasterDataConstant.SUCCESSFUL_CREATE, TemplateFileFormat.class.getSimpleName()),
+				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC,
+						TemplateFileFormat.class.getSimpleName(), codeLangCodeId.getCode()));
 		return codeLangCodeId;
 	}
 
@@ -82,6 +98,8 @@ public class TemplateFileFormatServiceImpl implements TemplateFileFormatService 
 							templateFileFormatRequestDto.getLangCode());
 
 			if (templateFileFormat != null) {
+				templateFileFormatRequestDto = masterdataCreationUtil.updateMasterData(TemplateFileFormat.class,
+						templateFileFormatRequestDto);
 				MetaDataUtils.setUpdateMetaData(templateFileFormatDto, templateFileFormat, false);
 				templateFileFormatRepository.update(templateFileFormat);
 				if(!templateFileFormatRequestDto.getIsActive()) {
@@ -94,12 +112,25 @@ public class TemplateFileFormatServiceImpl implements TemplateFileFormatService 
 						TemplateFileFormatErrorCode.TEMPLATE_FILE_FORMAT_NOT_FOUND.getErrorMessage());
 			}
 
-		} catch (DataAccessLayerException | DataAccessException e) {
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
+
+			auditUtil.auditRequest(
+					String.format(MasterDataConstant.FAILURE_UPDATE, TemplateFileFormat.class.getSimpleName()),
+					MasterDataConstant.AUDIT_SYSTEM,
+					String.format(MasterDataConstant.FAILURE_DESC,
+							TemplateFileFormatErrorCode.TEMPLATE_FILE_FORMAT_UPDATE_EXCEPTION.getErrorCode(),
+							TemplateFileFormatErrorCode.TEMPLATE_FILE_FORMAT_UPDATE_EXCEPTION.getErrorMessage()
+									+ ExceptionUtils.parseException(e)));
 			throw new MasterDataServiceException(
 					TemplateFileFormatErrorCode.TEMPLATE_FILE_FORMAT_UPDATE_EXCEPTION.getErrorCode(),
 					TemplateFileFormatErrorCode.TEMPLATE_FILE_FORMAT_UPDATE_EXCEPTION.getErrorMessage() + " "
 							+ ExceptionUtils.parseException(e));
 		}
+		auditUtil.auditRequest(
+				String.format(MasterDataConstant.SUCCESSFUL_UPDATE, TemplateFileFormat.class.getSimpleName()),
+				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC,
+						TemplateFileFormat.class.getSimpleName(), templateFileFormatId.getCode()));
 		return templateFileFormatId;
 	}
 

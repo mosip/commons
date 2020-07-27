@@ -42,9 +42,7 @@ import io.mosip.kernel.masterdata.dto.request.SearchDto;
 import io.mosip.kernel.masterdata.dto.request.SearchFilter;
 import io.mosip.kernel.masterdata.dto.request.SearchSort;
 import io.mosip.kernel.masterdata.dto.response.ColumnCodeValue;
-import io.mosip.kernel.masterdata.dto.response.ColumnValue;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
-import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.MachineSearchDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.entity.Machine;
@@ -841,8 +839,8 @@ public class MachineServiceImpl implements MachineService {
 					String.format(MasterDataConstant.FAILURE_DECOMMISSION, MachineDto.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
 					String.format(MasterDataConstant.FAILURE_DESC,
-							MachineErrorCode.MACHINE_DELETE_EXCEPTION.getErrorCode(),
-							MachineErrorCode.MACHINE_DELETE_EXCEPTION.getErrorMessage() + exception.getCause()),
+							MachineErrorCode.MACHINE_INSERT_EXCEPTION.getErrorCode(),
+							MachineErrorCode.MACHINE_INSERT_EXCEPTION.getErrorMessage() + exception.getCause()),
 					"ADM-540");
 			throw new MasterDataServiceException(MachineErrorCode.MACHINE_INSERT_EXCEPTION.getErrorCode(),
 					MachineErrorCode.MACHINE_INSERT_EXCEPTION.getErrorMessage()
@@ -922,7 +920,7 @@ public class MachineServiceImpl implements MachineService {
 			} else {
 				// if given Id and language code is not present in DB
 				auditUtil.auditRequest(
-						String.format(MasterDataConstant.FAILURE_UPDATE, MachinePutReqDto.class.getSimpleName()),
+						String.format(MasterDataConstant.FAILURE_UPDATE, Machine.class.getSimpleName()),
 						MasterDataConstant.AUDIT_SYSTEM,
 						String.format(MasterDataConstant.FAILURE_DESC,
 								MachineErrorCode.MACHINE_NOT_FOUND_EXCEPTION.getErrorCode(),
@@ -934,7 +932,7 @@ public class MachineServiceImpl implements MachineService {
 		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
 				| NoSuchFieldException | SecurityException exception) {
 			auditUtil.auditRequest(
-					String.format(MasterDataConstant.FAILURE_UPDATE, MachinePutReqDto.class.getSimpleName()),
+					String.format(MasterDataConstant.FAILURE_UPDATE, Machine.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
 					String.format(MasterDataConstant.FAILURE_DESC,
 							MachineErrorCode.MACHINE_UPDATE_EXCEPTION.getErrorCode(),
@@ -945,9 +943,9 @@ public class MachineServiceImpl implements MachineService {
 					MachineErrorCode.MACHINE_UPDATE_EXCEPTION.getErrorMessage()
 							+ ExceptionUtils.parseException(exception));
 		}
-		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_UPDATE, MachineDto.class.getSimpleName()),
+		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_UPDATE, Machine.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC,
-						MachineDto.class.getSimpleName(), updMachine.getId()),
+						Machine.class.getSimpleName(), updMachine.getId()),
 				"ADM-544");
 		return MapperUtils.map(updMachine, MachineExtnDto.class);
 

@@ -23,6 +23,7 @@ import io.mosip.kernel.idgenerator.config.ConfigUrlsBuilder;
 import io.mosip.kernel.idgenerator.config.HibernateDaoConfig;
 import io.mosip.kernel.idgenerator.verticle.HttpServerVerticle;
 import io.mosip.kernel.templatemanager.velocity.builder.TemplateManagerBuilderImpl;
+import io.mosip.kernel.uingenerator.constant.UinGeneratorConstant;
 import io.mosip.kernel.uingenerator.verticle.UinGeneratorVerticle;
 import io.mosip.kernel.uingenerator.verticle.UinTransferVerticle;
 import io.mosip.kernel.vidgenerator.constant.EventType;
@@ -91,7 +92,7 @@ public class IDGeneratorVertxApplication {
 	}
 
 	@PostConstruct
-	private static void initPool() {
+	private static void initVIDPool() {
 		LOGGER.info("Service will be started after pooling vids..");
 		EventBus eventBus = vertx.eventBus();
 		LOGGER.info("eventBus deployer {}", eventBus);
@@ -171,7 +172,7 @@ public class IDGeneratorVertxApplication {
 		Verticle[] workerVerticles = { new VidPoolCheckerVerticle(context), new VidPopulatorVerticle(context),
 				new VidExpiryVerticle(context) };
 		Stream.of(workerVerticles).forEach(verticle -> deploy(verticle, workerOptions, vertx));
-		vertx.setTimer(1000, handler -> initPool());
+		vertx.setTimer(1000, handler -> initVIDPool());
 		Verticle[] uinVerticles = { new UinGeneratorVerticle(context),new UinTransferVerticle(context)};
 		Stream.of(uinVerticles).forEach(verticle -> vertx.deployVerticle(verticle, stringAsyncResult -> {
 			if (stringAsyncResult.succeeded()) {
@@ -181,7 +182,17 @@ public class IDGeneratorVertxApplication {
 						+ stringAsyncResult.cause());
 			}
 		}));
+		vertx.setTimer(1000, handler -> initUINPool());
 	}
+
+	@PostConstruct
+	private static void initUINPool() {
+		LOGGER.info("Service will be started after pooling vids..");
+		EventBus eventBus = vertx.eventBus();
+		LOGGER.info("eventBus deployer {}", eventBus);
+		eventBus.publish(UinGeneratorConstant.UIN_GENERATOR_ADDRESS, UinGeneratorConstant.GENERATE_UIN);
+	}
+
 
 	private static void deploy(Verticle verticle, DeploymentOptions opts, Vertx vertx) {
 		vertx.deployVerticle(verticle, opts, res -> {

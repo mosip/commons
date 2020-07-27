@@ -12,6 +12,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.web.authentication.www.NonceExpiredException;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -81,6 +82,11 @@ import io.swagger.annotations.Api;
 public class AuthController {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
+
+    
+	@Value("${mosip.security.secure-cookie:false}")
+	private boolean isSecureCookie;
+
 	/**
 	 * Autowired reference for {@link MosipEnvironment}
 	 */
@@ -131,7 +137,7 @@ public class AuthController {
 		final Cookie cookie = new Cookie(mosipEnvironment.getAuthTokenHeader(), content);
 		cookie.setMaxAge(expirationTimeSeconds);
 		cookie.setHttpOnly(true);
-		cookie.setSecure(false);
+		cookie.setSecure(isSecureCookie);
 		cookie.setPath("/");
 		return cookie;
 	}

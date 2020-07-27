@@ -3,6 +3,9 @@ package io.mosip.kernel.masterdata.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -80,4 +83,12 @@ public interface RegistrationCenterTypeRepository
 	 */
 	@Query("FROM RegistrationCenterType WHERE code =?1 AND langCode =?2 AND (isDeleted is null OR isDeleted = false)")
 	RegistrationCenterType findByCodeAndLangCode(String code, String langCode);
+
+	/**
+	 * This method triggers query to fetch registration center type
+	 *
+	 * @return the registration center types.
+	 */
+	@Query( "select r from RegistrationCenterType r WHERE isActive=?1 AND (isDeleted is null OR isDeleted = false)" )
+	Page<RegistrationCenterType> findAllByIsActive(boolean isActive, Pageable pageable);
 }

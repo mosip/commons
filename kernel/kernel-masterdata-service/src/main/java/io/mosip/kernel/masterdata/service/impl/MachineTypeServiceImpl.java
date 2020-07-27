@@ -3,8 +3,6 @@ package io.mosip.kernel.masterdata.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -15,24 +13,19 @@ import org.springframework.stereotype.Service;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
-import io.mosip.kernel.masterdata.constant.IndividualTypeErrorCode;
 import io.mosip.kernel.masterdata.constant.MachineTypeErrorCode;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.dto.FilterData;
 import io.mosip.kernel.masterdata.dto.MachineTypeDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
-import io.mosip.kernel.masterdata.dto.getresponse.extn.IndividualTypeExtnDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.MachineTypeExtnDto;
 import io.mosip.kernel.masterdata.dto.request.FilterDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
 import io.mosip.kernel.masterdata.dto.request.SearchFilter;
 import io.mosip.kernel.masterdata.dto.response.ColumnCodeValue;
-import io.mosip.kernel.masterdata.dto.response.ColumnValue;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
-import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
-import io.mosip.kernel.masterdata.entity.IndividualType;
 import io.mosip.kernel.masterdata.entity.Machine;
 import io.mosip.kernel.masterdata.entity.MachineType;
 import io.mosip.kernel.masterdata.entity.id.CodeAndLanguageCodeID;
@@ -114,11 +107,14 @@ public class MachineTypeServiceImpl implements MachineTypeService {
 	public CodeAndLanguageCodeID createMachineType(MachineTypeDto machineType) {
 		MachineType renMachineType = null;
 
-		MachineType entity = MetaDataUtils.setCreateMetaData(machineType, MachineType.class);
+
 
 		try {
+			machineType = masterdataCreationUtil.createMasterData(MachineType.class, machineType);
+			MachineType entity = MetaDataUtils.setCreateMetaData(machineType, MachineType.class);
 			renMachineType = machineTypeRepository.create(entity);
-		} catch (DataAccessLayerException | DataAccessException e) {
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_CREATE, MachineType.class.getCanonicalName()),
 					MasterDataConstant.AUDIT_SYSTEM,
@@ -133,6 +129,9 @@ public class MachineTypeServiceImpl implements MachineTypeService {
 
 		CodeAndLanguageCodeID codeLangCodeId = new CodeAndLanguageCodeID();
 		MapperUtils.map(renMachineType, codeLangCodeId);
+		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_CREATE, MachineType.class.getSimpleName()),
+				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC,
+						MachineType.class.getSimpleName(), codeLangCodeId.getCode()));
 		return codeLangCodeId;
 	}
 	
@@ -142,6 +141,7 @@ public class MachineTypeServiceImpl implements MachineTypeService {
 		try {
 			MachineType machineType = machineTypeRepository.findMachineTypeByCodeAndByLangCode(machineTypeDto.getCode(),machineTypeDto.getLangCode());
 			if (!EmptyCheckUtils.isNullEmpty(machineType)) {
+				machineTypeDto = masterdataCreationUtil.updateMasterData(MachineType.class, machineTypeDto);
 				MetaDataUtils.setUpdateMetaData(machineTypeDto, machineType, false);
 				machineTypeRepository.update(machineType);
 				MapperUtils.map(machineType, codeAndLanguageCodeID);
@@ -152,7 +152,8 @@ public class MachineTypeServiceImpl implements MachineTypeService {
 				throw new RequestException(MachineTypeErrorCode.MACHINE_TYPE_NOT_FOUND.getErrorCode(),
 						MachineTypeErrorCode.MACHINE_TYPE_NOT_FOUND.getErrorMessage());
 			}
-		} catch (DataAccessLayerException | DataAccessException e) {
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_CREATE, MachineType.class.getCanonicalName()),
 					MasterDataConstant.AUDIT_SYSTEM,
@@ -164,6 +165,9 @@ public class MachineTypeServiceImpl implements MachineTypeService {
 					MachineTypeErrorCode.MACHINE_TYPE_UPDATE_EXCEPTION.getErrorMessage()
 							+ ExceptionUtils.parseException(e));
 		}
+		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_UPDATE, MachineType.class.getSimpleName()),
+				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC,
+						MachineType.class.getSimpleName(), codeAndLanguageCodeID.getCode()));
 		return codeAndLanguageCodeID;
 	}
 	/*codeLangCodeId

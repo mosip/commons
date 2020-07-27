@@ -32,7 +32,8 @@ import io.mosip.kernel.core.util.StringUtils;
 import io.mosip.kernel.dataaccess.hibernate.constant.HibernateErrorCode;
 import io.mosip.kernel.masterdata.constant.RegistrationCenterErrorCode;
 import io.mosip.kernel.masterdata.constant.RequestErrorCode;
-import io.mosip.kernel.masterdata.entity.DeviceType;
+import io.mosip.kernel.masterdata.entity.Device;
+import io.mosip.kernel.masterdata.entity.Machine;
 import io.mosip.kernel.masterdata.entity.RegistrationCenter;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
 
@@ -84,8 +85,8 @@ public class MasterdataCreationUtil {
 		}
 		E primaryEntity = getResultSet(entity, primaryLang, id, primaryKeyCol);
 		if (primaryEntity == null) {
-			throw new MasterDataServiceException(RequestErrorCode.REQUEST_INVALID_SEC_LANG_ID.getErrorCode(),
-					RequestErrorCode.REQUEST_INVALID_SEC_LANG_ID.getErrorMessage());
+			throw new MasterDataServiceException(RequestErrorCode.REQUEST_INVALID_SEC_LANG.getErrorCode(),
+					RequestErrorCode.REQUEST_INVALID_SEC_LANG.getErrorMessage());
 		}
 		for (Field field : primaryEntity.getClass().getDeclaredFields()) {
 			field.setAccessible(true);
@@ -146,15 +147,11 @@ public class MasterdataCreationUtil {
 	private <T, E> T callMethodBasedOnFilters(Class<E> entity, T t, String langCode, String id, String primaryId,
 			boolean activeDto, boolean activePrimary, String primaryKeyCol, Class<?> dtoClass, boolean priSecIdentical)
 			throws NoSuchFieldException, IllegalAccessException {
-		if (priSecIdentical) {
+		if (langCode.equals(primaryLang) || priSecIdentical) {
 
-			return callPrimaryOrSecondary(entity, t, id, primaryId, activeDto, activePrimary, primaryKeyCol, dtoClass,
-					priSecIdentical);
+			return primaryBehaviour(primaryKeyCol, dtoClass, entity, id, activeDto, t, priSecIdentical);
 
-		} else if ((langCode.equals(primaryLang)) && !priSecIdentical) {
-			return primaryBehaviour(primaryKeyCol, dtoClass, entity, primaryId, activeDto, t, priSecIdentical);
 		}
-
 		else if (langCode.equals(secondaryLang) && !priSecIdentical) {
 			return secondaryBehaviour(id, entity, primaryKeyCol, activePrimary, activeDto, dtoClass, t,
 					priSecIdentical);
@@ -204,7 +201,7 @@ public class MasterdataCreationUtil {
 		}
 	}
 
-	private <E, T> T primaryBehaviour(String primaryKeyCol, Class<?> dtoClass, Class<E> entity, String primaryId,
+	private <E, T> T primaryBehaviour(String primaryKeyCol, Class<?> dtoClass, Class<E> entity, String id,
 			boolean activeDto, T t, boolean priSecIdentical)
 			throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 
@@ -212,29 +209,38 @@ public class MasterdataCreationUtil {
 		if (primaryKeyCol != null && primaryKeyCol.equals(CODE_COLUMN_NAME)) {
 			Field idColumn = dtoClass.getDeclaredField(CODE_COLUMN_NAME);
 			idColumn.setAccessible(true);
-			if (!entity.equals(DeviceType.class)) {
-				primaryId = generateId();
-				E primary = getResultSet(entity, primaryLang, primaryId, primaryKeyCol);
-				if (primary != null) {
-					idColumn.set(t, primaryId);
+
+				E primary = getResultSet(entity, primaryLang, id, primaryKeyCol);
+				if (primary == null) {
+				idColumn.set(t, id);
 				} else {
-					idColumn.set(t, generateId());
+				throw new MasterDataServiceException(RequestErrorCode.REQUEST_CODE_ALREADY_EXIST.getErrorCode(),
+						RequestErrorCode.REQUEST_CODE_ALREADY_EXIST.getErrorMessage());
 				}
-			}
 
 		}
 		if (primaryKeyCol != null && primaryKeyCol.equals(ID_COLUMN_NAME)) {
+			if (!(entity.equals(Machine.class) || entity.equals(RegistrationCenter.class))) {
 			Field idColumn = dtoClass.getDeclaredField(ID_COLUMN_NAME);
 			idColumn.setAccessible(true);
-			if (!entity.equals(RegistrationCenter.class)) {
-				primaryId = generateId();
-				E primary = getResultSet(entity, primaryLang, primaryId, primaryKeyCol);
+			if (entity.equals(Device.class)) {
+				id = generateId();
+				E primary = getResultSet(entity, primaryLang, id, primaryKeyCol);
 				if (primary != null) {
-					idColumn.set(t, primaryId);
+					idColumn.set(t, id);
 				} else {
 					idColumn.set(t, generateId());
 				}
+			} else {
+				E primary = getResultSet(entity, primaryLang, id, primaryKeyCol);
+				if (primary == null) {
+				idColumn.set(t, id);
+				} else {
+				throw new MasterDataServiceException(RequestErrorCode.REQUEST_ID_ALREADY_EXIST.getErrorCode(),
+						RequestErrorCode.REQUEST_ID_ALREADY_EXIST.getErrorMessage());
+				}
 			}
+		 } 
 		}
 		setIsActive(dtoClass, activeDto, t, priSecIdentical,isActive);
 		return t;
@@ -254,9 +260,7 @@ public class MasterdataCreationUtil {
 		}
 	}
 
-	private String generateId() {
-		return UUID.randomUUID().toString();
-	}
+
 
 	private <E> int updatePrimaryToTrue(Class<E> entityClass, String id, String primaryKeyCol, boolean active) {
 		List<Predicate> predicates = new ArrayList<Predicate>();
@@ -305,6 +309,10 @@ public class MasterdataCreationUtil {
 		}
 
 		if (langCode.equals(primaryLang)) {
+			if (StringUtils.isBlank(id)) {
+				throw new MasterDataServiceException(RequestErrorCode.REQUEST_INVALID_PRI_LANG_ID.getErrorCode(),
+						RequestErrorCode.REQUEST_INVALID_PRI_LANG_ID.getErrorMessage());
+			}
 			E secondaryEntity = getResultSet(entity, secondaryLang, id, primaryKeyCol);
 			if (activeDto == true) {
 				if (secondaryEntity != null) {
@@ -474,5 +482,9 @@ public class MasterdataCreationUtil {
 			}
 		}
 		return null;
+	}
+
+	private String generateId() {
+		return UUID.randomUUID().toString();
 	}
 }

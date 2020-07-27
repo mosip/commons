@@ -2,14 +2,13 @@
 name: MOSIP Bug report
 about: Create a report to help us improve
 title: "[BUG]  <use verb instead of noun such as 'unable to register...'"
-labels: Critical, Fixed, Major, Minor, Normal, Verified, duplicate, invalid, wontfix
-assignees: anadi, ananda-mosip, gitapvr, hosurkrishnan, johnpsmindtree, pjoshi751,
-  ramesh-n, shravanpoorigali
+labels: To be fixed, On hold, Assigned, Fixed, Verified, Duplicate, Invalid, Wontfix, Critical, Major, Minor, Normal,
+assignees: 
 
 ---
+A clear and concise description of w,Critical, 
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+**Describe the bug*hat the bug is.
 
 **To Reproduce**
 Steps to reproduce the behavior:

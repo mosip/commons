@@ -78,7 +78,7 @@ public class IdObjectSchemaValidator implements IdObjectValidator {
 		try {
 			final JsonSchema jsonSchema = getJsonSchema(identitySchema);
 			JsonNode jsonIdObjectNode = mapper.readTree(mapper.writeValueAsString(identityObject));
-			ProcessingReport report = jsonSchema.validate(jsonIdObjectNode);
+			ProcessingReport report = jsonSchema.validate(jsonIdObjectNode, true);
 			logger.debug("schema validation report generated : " + report);
 
 			List<ServiceError> errorList = getErrorList(report, requiredFields);
