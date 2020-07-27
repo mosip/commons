@@ -5,6 +5,10 @@ import io.mosip.kernel.logger.logback.appender.RollingFileAppender;
 import io.mosip.kernel.logger.logback.factory.Logfactory;
 
 public class PacketManagerLogger {
+
+	public static final String SESSIONID = "SESSION_ID";
+	public static final String REGISTRATIONID = "REGISTRATION_ID";
+
 	/** The mosip rolling file appender. */
 	private static RollingFileAppender mosipRollingFileAppender;
 

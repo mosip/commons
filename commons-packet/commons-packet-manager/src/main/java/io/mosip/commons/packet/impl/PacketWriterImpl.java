@@ -9,7 +9,7 @@ import io.mosip.commons.packet.dto.packet.AuditDto;
 import io.mosip.commons.packet.dto.packet.BiometricsType;
 import io.mosip.commons.packet.dto.packet.DocumentType;
 import io.mosip.commons.packet.dto.packet.HashSequenceMetaInfo;
-import io.mosip.commons.packet.dto.packet.PacketInfoDto;
+import io.mosip.commons.packet.dto.packet.RegistrationPacket;
 import io.mosip.commons.packet.exception.PacketCreatorException;
 import io.mosip.commons.packet.spi.IPacketWriter;
 import io.mosip.commons.packet.util.CbeffBIRBuilder;
@@ -78,14 +78,14 @@ public class PacketWriterImpl implements IPacketWriter {
 	@Value("${mosip.kernel.packetmanager.default_subpacket_name:id}")
 	private String defaultSubpacketName;
 	
-	private PacketInfoDto packetInfoDto = null;
+	private RegistrationPacket registrationPacket = null;
 
-	public PacketInfoDto initialize(String id) {
-		if (this.packetInfoDto == null || !packetInfoDto.getRegistrationId().equalsIgnoreCase(id)) {
-			this.packetInfoDto = new PacketInfoDto();
-			this.packetInfoDto.setRegistrationId(id);
+	public RegistrationPacket initialize(String id) {
+		if (this.registrationPacket == null || !registrationPacket.getRegistrationId().equalsIgnoreCase(id)) {
+			this.registrationPacket = new RegistrationPacket();
+			this.registrationPacket.setRegistrationId(id);
 		}
-		return packetInfoDto;
+		return registrationPacket;
 	}
 
 	@Override
@@ -118,26 +118,10 @@ public class PacketWriterImpl implements IPacketWriter {
 	public void setMetaInfo(String id, Map<String, String> metaInfo) {
 		this.initialize(id).setMetaData(metaInfo);
 	}
-	
-	/*@Override
-	public void setOperationsInfo(String label, String value) {
-		this.packetInfoDto.setOperationsData(label, value);
-	}
-
-	@Override
-	public void setBiometricExcetpion(String fieldName, List<BiometricsException> modalityExceptions) {
-		this.packetInfoDto.setExceptionBiometrics(fieldName, modalityExceptions);
-	}
-	
-	@Override
-	public void setAcknowledgement(String acknowledgeReceiptName, byte[] acknowledgeReceipt) {
-		this.packetInfoDto.setAcknowledgeReceipt(acknowledgeReceipt);
-		this.packetInfoDto.setAcknowledgeReceiptName(acknowledgeReceiptName);
-	}*/
 
 	private byte[] createPacket(String registrationId, double version, String schemaJson) throws PacketCreatorException {
 		LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), registrationId, "Started packet creation");
-		if(this.packetInfoDto == null || !packetInfoDto.getRegistrationId().equalsIgnoreCase(registrationId))
+		if(this.registrationPacket == null || !registrationPacket.getRegistrationId().equalsIgnoreCase(registrationId))
 			throw new PacketCreatorException(ErrorCode.INITIALIZATION_ERROR.getErrorCode(),
 					ErrorCode.INITIALIZATION_ERROR.getErrorMessage());
 		try {
@@ -169,7 +153,7 @@ public class PacketWriterImpl implements IPacketWriter {
 			throw new PacketCreatorException(ErrorCode.PKT_ZIP_ERROR.getErrorCode(), 
 					ErrorCode.PKT_ZIP_ERROR.getErrorMessage().concat(ExceptionUtils.getStackTrace(e)));
 		} finally {
-			this.packetInfoDto = null;
+			this.registrationPacket = null;
 		}
 		LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), 
 				registrationId, "Exiting packet creation");
@@ -190,8 +174,8 @@ public class PacketWriterImpl implements IPacketWriter {
 			Map<String, HashSequenceMetaInfo> hashSequences = new HashMap<>();
 
 			identity.put(PacketManagerConstants.IDSCHEMA_VERSION, version);			
-			this.packetInfoDto.getMetaData().put(PacketManagerConstants.REGISTRATIONID, registrationId);
-			this.packetInfoDto.getMetaData().put(PacketManagerConstants.META_CREATION_DATE, this.packetInfoDto.getCreationDate());
+			this.registrationPacket.getMetaData().put(PacketManagerConstants.REGISTRATIONID, registrationId);
+			this.registrationPacket.getMetaData().put(PacketManagerConstants.META_CREATION_DATE, this.registrationPacket.getCreationDate());
 						
 			for(Object obj : schemaFields) {
 				Map<String, Object> field = (Map<String, Object>) obj;
@@ -200,16 +184,16 @@ public class PacketWriterImpl implements IPacketWriter {
 						registrationId, "Adding field : "+ fieldName);
 				switch ((String) field.get(PacketManagerConstants.SCHEMA_TYPE)) {
 				case PacketManagerConstants.BIOMETRICS_TYPE:
-					if(this.packetInfoDto.getBiometrics().get(fieldName) != null)					
+					if(this.registrationPacket.getBiometrics().get(fieldName) != null)
 						addBiometricDetailsToZip(fieldName, identity, subpacketZip, hashSequences);
 					break;					
 				case PacketManagerConstants.DOCUMENTS_TYPE:
-					if(this.packetInfoDto.getDocuments().get(fieldName) != null)
+					if(this.registrationPacket.getDocuments().get(fieldName) != null)
 						addDocumentDetailsToZip(fieldName, identity, subpacketZip, hashSequences);
 					break;
 				default:
-					if(this.packetInfoDto.getDemographics().get(fieldName) != null)
-						identity.put(fieldName, this.packetInfoDto.getDemographics().get(fieldName));
+					if(this.registrationPacket.getDemographics().get(fieldName) != null)
+						identity.put(fieldName, this.registrationPacket.getDemographics().get(fieldName));
 					break;
 				}
 			}
@@ -232,12 +216,12 @@ public class PacketWriterImpl implements IPacketWriter {
 	
 	private void addDocumentDetailsToZip(String fieldName, Map<String, Object> identity,
 			ZipOutputStream zipOutputStream, Map<String, HashSequenceMetaInfo> hashSequences) throws PacketCreatorException {
-		Document document = this.packetInfoDto.getDocuments().get(fieldName);
+		Document document = this.registrationPacket.getDocuments().get(fieldName);
 		//filename without extension must be set as value in ID.json
 		identity.put(fieldName, new DocumentType(fieldName, document.getType(), document.getFormat()));
 		String fileName = String.format("%s.%s", fieldName, document.getFormat());
 		addEntryToZip(fileName, document.getDocument(), zipOutputStream);
-		this.packetInfoDto.getMetaData().put(fieldName, document.getType());
+		this.registrationPacket.getMetaData().put(fieldName, document.getType());
 		
 		addHashSequenceWithSource(PacketManagerConstants.DEMOGRAPHIC_SEQ, fieldName, document.getDocument(),
 				hashSequences);
@@ -245,7 +229,7 @@ public class PacketWriterImpl implements IPacketWriter {
 	
 	private void addBiometricDetailsToZip(String fieldName, Map<String, Object> identity,
 										  ZipOutputStream zipOutputStream, Map<String, HashSequenceMetaInfo> hashSequences) throws PacketCreatorException {
-		BiometricRecord birType = this.packetInfoDto.getBiometrics().get("individualBiometrics");
+		BiometricRecord birType = this.registrationPacket.getBiometrics().get("individualBiometrics");
 		if(birType != null) {
 			byte[] xmlBytes;
 			try {
@@ -260,9 +244,7 @@ public class PacketWriterImpl implements IPacketWriter {
 					PacketManagerConstants.CBEFF_VERSION, String.format(PacketManagerConstants.CBEFF_FILENAME, fieldName)));
 			addHashSequenceWithSource(PacketManagerConstants.BIOMETRIC_SEQ, String.format(PacketManagerConstants.CBEFF_FILENAME, 
 					fieldName), xmlBytes, hashSequences);			
-		}						
-		/*if(this.packetInfoDto.getExceptionBiometrics().containsKey(fieldName))
-			metaInfo.setBiometricException(this.packetInfoDto.getExceptionBiometrics().get(fieldName));*/
+		}
 	}
 	
 	private void addHashSequenceWithSource(String sequenceType, String name, byte[] bytes, 
@@ -283,10 +265,10 @@ public class PacketWriterImpl implements IPacketWriter {
 			addOperationsBiometricsToZip(PacketManagerConstants.SUPERVISOR,
 					zipOutputStream, hashSequences);
 			
-			if(this.packetInfoDto.getAudits() == null || this.packetInfoDto.getAudits().isEmpty())
+			if(this.registrationPacket.getAudits() == null || this.registrationPacket.getAudits().isEmpty())
 				throw new PacketCreatorException(ErrorCode.AUDITS_REQUIRED.getErrorCode(), ErrorCode.AUDITS_REQUIRED.getErrorMessage());
 			
-			byte[] auditBytes = JsonUtils.javaObjectToJsonString(this.packetInfoDto.getAudits()).getBytes();
+			byte[] auditBytes = JsonUtils.javaObjectToJsonString(this.registrationPacket.getAudits()).getBytes();
 			addEntryToZip(PacketManagerConstants.AUDIT_FILENAME_WITH_EXT, auditBytes, zipOutputStream);
 			addHashSequenceWithSource(PacketManagerConstants.OPERATIONS_SEQ, PacketManagerConstants.AUDIT_FILENAME, auditBytes,
 					hashSequences);
@@ -295,11 +277,11 @@ public class PacketWriterImpl implements IPacketWriter {
 			addEntryToZip(PacketManagerConstants.PACKET_OPER_HASH_FILENAME, 
 					helper.generateHash(hashSequenceMetaInfo.getValue(), hashSequenceMetaInfo.getHashSource()),
 					zipOutputStream);
-			this.packetInfoDto.getMetaData().putAll(hashSequences);
+			this.registrationPacket.getMetaData().putAll(hashSequences);
 		}
 		
 		addPacketDataHash(hashSequences, zipOutputStream);
-		addEntryToZip(PacketManagerConstants.PACKET_META_FILENAME,  getIdentity(this.packetInfoDto.getMetaData()).getBytes(), zipOutputStream);
+		addEntryToZip(PacketManagerConstants.PACKET_META_FILENAME,  getIdentity(this.registrationPacket.getMetaData()).getBytes(), zipOutputStream);
 	}
 	
 	private void addPacketDataHash(Map<String, HashSequenceMetaInfo> hashSequences,
@@ -310,66 +292,18 @@ public class PacketWriterImpl implements IPacketWriter {
 		if(hashSequences.containsKey(PacketManagerConstants.BIOMETRIC_SEQ)) {
 			sequence.addAll(hashSequences.get(PacketManagerConstants.BIOMETRIC_SEQ).getValue());
 			data.putAll(hashSequences.get(PacketManagerConstants.BIOMETRIC_SEQ).getHashSource());
-			this.packetInfoDto.getMetaData().putAll(hashSequences);
+			this.registrationPacket.getMetaData().putAll(hashSequences);
 		}		
 		if(hashSequences.containsKey(PacketManagerConstants.DEMOGRAPHIC_SEQ)) {
 			sequence.addAll(hashSequences.get(PacketManagerConstants.DEMOGRAPHIC_SEQ).getValue());
 			data.putAll(hashSequences.get(PacketManagerConstants.DEMOGRAPHIC_SEQ).getHashSource());
-			this.packetInfoDto.getMetaData().putAll(hashSequences);
+			this.registrationPacket.getMetaData().putAll(hashSequences);
 		}
 		
 		addEntryToZip(PacketManagerConstants.PACKET_DATA_HASH_FILENAME, helper.generateHash(sequence, data),
 				zipOutputStream);		
 	}
-	
-	
-	//private void fillAllMetaInfo(MetaInfo metaInfo) {
-		/*if(this.packetInfoDto.getMetaData() != null) {
-			for(FieldValue fieldValue : this.packetInfoDto.getMetaData()) {
-				metaInfo.addMetaData(fieldValue);
-			}
-		}*/
-		
-		/*if(this.packetInfoDto.getOperationsData() != null) {
-			for(FieldValue fieldValue : this.packetInfoDto.getOperationsData()) {
-				metaInfo.addOperationsData(fieldValue);
-			}
-		}*/
-		
-		/*metaInfo.setCapturedRegisteredDevices(this.packetInfoDto.getCapturedRegisteredDevices());
-		metaInfo.setCapturedNonRegisteredDevices(this.packetInfoDto.getCapturedNonRegisteredDevices());
-		metaInfo.setCheckSum(this.packetInfoDto.getCheckSum());		
-		metaInfo.setPrintingName(this.packetInfoDto.getPrintingName());*/
-	//}
-	
-	/*private void addOperationsBiometricsToZip(List<BiometricsDto> list, String operationType,
-			ZipOutputStream zipOutputStream, MetaInfo metaInfo, Map<String, HashSequenceMetaInfo> hashSequences) throws PacketCreatorException {
-		if(list != null && !list.isEmpty()) {	
-			List<BIR> birs = new ArrayList<BIR>();
-			for(BiometricsDto bioDto : list) {
-				BIR bir = cbeffBIRBuilder.buildBIR(bioDto.getAttributeISO(), bioDto.getQualityScore(),
-						Biometric.getSingleTypeByAttribute(bioDto.getBioAttribute()), bioDto.getBioAttribute());
-				birs.add(bir);
-			}
-			
-			byte[] xmlBytes;
-			try {
-				xmlBytes = helper.getXMLData(birs);
-			} catch (Exception e) {
-				throw new PacketCreatorException(ErrorCode.BIR_TO_XML_ERROR.getErrorCode(), 
-						ErrorCode.BIR_TO_XML_ERROR.getErrorMessage().concat(ExceptionUtils.getStackTrace(e)));
-			}
-			
-			if(xmlBytes != null) {
-				String fileName = String.format(PacketManagerConstants.CBEFF_FILENAME_WITH_EXT, operationType);
-				addEntryToZip(fileName, xmlBytes, zipOutputStream);
-				metaInfo.addOperationsData(new FieldValue(String.format("%sBiometricFileName", operationType), fileName));
-				addHashSequenceWithSource(PacketManagerConstants.OPERATIONS_SEQ, String.format(PacketManagerConstants.CBEFF_FILENAME,
-						operationType), xmlBytes, hashSequences);
-			}			
-		}
-	}*/
-	
+
 	private Map<String, List<Object>> loadSchemaFields(String schemaJson) throws PacketCreatorException {		
 		Map<String, List<Object>> packetBasedMap = new HashMap<String, List<Object>>();
 		
@@ -411,7 +345,7 @@ public class PacketWriterImpl implements IPacketWriter {
 	private void addEntryToZip(String fileName, byte[] data, ZipOutputStream zipOutputStream) 
 			throws PacketCreatorException {	
 		LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), 
-				this.packetInfoDto.getRegistrationId(), "Adding file : "+ fileName);
+				this.registrationPacket.getRegistrationId(), "Adding file : "+ fileName);
 		try {			
 			if(data != null) {
 				ZipEntry zipEntry = new ZipEntry(fileName);
@@ -428,45 +362,10 @@ public class PacketWriterImpl implements IPacketWriter {
 		return "{ \"identity\" : " + JsonUtils.javaObjectToJsonString(object) + " } ";
 	}
 
-	/*@Override
-	public void setChecksum(String key, String value) {
-		this.packetInfoDto.setChecksum(key, value);
-	}
-
-	@Override
-	public void setRegisteredDeviceDetails(List<DeviceMetaInfo> deviceDetails) {
-		this.packetInfoDto.setCapturedRegisteredDevices(deviceDetails);		
-	}
-
-	@Override
-	public void setPrintingName(String langauge, String printingName) {
-		this.packetInfoDto.setPrintingName(langauge, printingName);		
-	}
-
-	@Override
-	public Map<String, Object> getIdentityObject() {
-		return this.packetInfoDto.getIdentityObject();
-	}
-
-	@Override
-	public void setOfficerBiometric(String userId, String officerRole, List<BiometricsDto> value) {
-		if(Objects.isNull(value))
-			return;
-		
-		switch (officerRole.toLowerCase()) {
-		case "officer":
-			this.packetInfoDto.setOfficerBiometrics(value);
-			break;
-		case "supervisor":
-			this.packetInfoDto.setSupervisorBiometrics(value);
-			break;
-		}		
-	}*/
-
 	private void addOperationsBiometricsToZip(String operationType,
 											  ZipOutputStream zipOutputStream, Map<String, HashSequenceMetaInfo> hashSequences) throws PacketCreatorException {
 
-		BiometricRecord biometrics = this.packetInfoDto.getBiometrics().get(operationType);
+		BiometricRecord biometrics = this.registrationPacket.getBiometrics().get(operationType);
 
 		if (biometrics != null && biometrics.getSegments() != null && !biometrics.getSegments().isEmpty()) {
 			byte[] xmlBytes;
@@ -480,7 +379,7 @@ public class PacketWriterImpl implements IPacketWriter {
 			if(xmlBytes != null) {
 				String fileName = String.format(PacketManagerConstants.CBEFF_FILENAME_WITH_EXT, operationType);
 				addEntryToZip(fileName, xmlBytes, zipOutputStream);
-				this.packetInfoDto.getMetaData().put(String.format("%sBiometricFileName", operationType), fileName);
+				this.registrationPacket.getMetaData().put(String.format("%sBiometricFileName", operationType), fileName);
 				addHashSequenceWithSource(PacketManagerConstants.OPERATIONS_SEQ, String.format(PacketManagerConstants.CBEFF_FILENAME,
 						operationType), xmlBytes, hashSequences);
 			}

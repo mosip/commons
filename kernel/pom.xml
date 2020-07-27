@@ -182,6 +182,7 @@
 		<module>kernel-salt-generator</module>
 		<module>kernel-biometrics-api</module>
 		<module>kernel-biosdk-provider</module>
+		<module>object-store</module>
 	</modules>
 
 	<dependencies>

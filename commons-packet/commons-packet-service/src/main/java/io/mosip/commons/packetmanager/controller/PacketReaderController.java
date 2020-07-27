@@ -12,6 +12,7 @@ import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
+import io.mosip.kernel.core.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -73,7 +74,7 @@ public class PacketReaderController {
     public ResponseWrapper<BiometricRecord> getBiometrics(@RequestBody(required = true) RequestWrapper<BiometricRequestDto> request) {
         BiometricRequestDto bioRequest = request.getRequest();
         BiometricRecord responseDto = packetReader.getBiometric(bioRequest.getId(), bioRequest.getBiometricSchemaField(), bioRequest.getModalities(), bioRequest.getSource(), bioRequest.getProcess(), bioRequest.isBypassCache());
-        ResponseWrapper<BiometricRecord> response = new ResponseWrapper<BiometricRecord>();
+        ResponseWrapper<BiometricRecord> response = getResponseWrapper();
         response.setResponse(responseDto);
         return response;
     }
@@ -85,8 +86,16 @@ public class PacketReaderController {
         MetaInfoDto metaDto = request.getRequest();
         Map<String, String> resultFields = packetReader.getMetaInfo(metaDto.getId(), metaDto.getSource(), metaDto.getProcess(), metaDto.getBypassCache());
         FieldResponseDto resultField = new FieldResponseDto(resultFields);
-        ResponseWrapper<FieldResponseDto> response = new ResponseWrapper<FieldResponseDto>();
+        ResponseWrapper<FieldResponseDto> response = getResponseWrapper();
         response.setResponse(resultField);
+        return response;
+    }
+
+    private ResponseWrapper getResponseWrapper() {
+        ResponseWrapper<Object> response = new ResponseWrapper<>();
+        response.setId("mosip.registration.packet.reader");
+        response.setVersion("v1");
+        response.setResponsetime(DateUtils.getUTCCurrentDateTime());
         return response;
     }
 }

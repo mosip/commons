@@ -6,21 +6,26 @@ import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.dto.Packet;
 import io.mosip.commons.packet.dto.PacketInfo;
 import io.mosip.commons.packet.dto.packet.AuditDto;
+import io.mosip.commons.packet.dto.packet.BiometricsException;
 import io.mosip.commons.packet.exception.ApiNotAccessibleException;
 import io.mosip.commons.packet.exception.FieldNameNotFoundException;
 import io.mosip.commons.packet.exception.GetAllIdentityException;
 import io.mosip.commons.packet.exception.GetAllMetaInfoException;
+import io.mosip.commons.packet.exception.GetBiometricException;
+import io.mosip.commons.packet.exception.GetDocumentException;
 import io.mosip.commons.packet.exception.PacketDecryptionFailureException;
 import io.mosip.commons.packet.facade.PacketWriter;
 import io.mosip.commons.packet.keeper.PacketKeeper;
 import io.mosip.commons.packet.spi.IPacketReader;
 import io.mosip.commons.packet.util.IdSchemaUtils;
+import io.mosip.commons.packet.util.PacketManagerLogger;
 import io.mosip.commons.packet.util.ZipUtils;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.core.cbeffutil.common.CbeffValidator;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
 import io.mosip.kernel.core.cbeffutil.spi.CbeffUtil;
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.JsonUtils;
 import io.mosip.kernel.core.util.exception.JsonProcessingException;
 import org.apache.commons.io.IOUtils;
@@ -52,6 +57,8 @@ import static io.mosip.commons.packet.constants.PacketManagerConstants.VALUE;
 @RefreshScope
 @Component
 public class PacketReaderImpl implements IPacketReader {
+
+    Logger LOGGER = PacketManagerLogger.getLogger(PacketReaderImpl.class);
 
     @Autowired
     private PacketWriter packetWriter;
@@ -92,6 +99,7 @@ public class PacketReaderImpl implements IPacketReader {
      */
     @Override
     public Map<String, Object> getAll(String id, String process) {
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, "Getting all fields :: enrtry");
         Map<String, Object> finalMap = new LinkedHashMap<>();
         String[] sourcePacketNames = packetNames.split(",");
 
@@ -120,25 +128,19 @@ public class PacketReaderImpl implements IPacketReader {
                 }
             }
         } catch (Exception e) {
+            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, e.getStackTrace().toString());
             throw new GetAllIdentityException(e.getMessage());
         }
-        finalMap.entrySet().forEach(m -> {
-            try {
-                System.out.println(m.getKey() + ": " + JsonUtils.javaObjectToJsonString(m.getValue()) + ",");
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-        });
-
 
         return finalMap;
     }
 
     @Override
     public String getField(String id, String field, String process) {
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, "getField :: for - " + field);
         Map<String, Object> allFields = getAll(id, process);
         if (allFields != null) {
-            Object fieldObj = (Object) allFields.get(field);
+            Object fieldObj = allFields.get(field);
             return fieldObj != null ? fieldObj.toString() : null;
         }
         return null;
@@ -146,6 +148,7 @@ public class PacketReaderImpl implements IPacketReader {
 
     @Override
     public Map<String, String> getFields(String id, List<String> fields, String process) {
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, "getFields :: for - " + fields.toString());
         Map<String, String> result = new HashMap<>();
         Map<String, Object> allFields = getAll(id, process);
         fields.stream().forEach(field -> result.put(field, allFields.get(field) != null ? allFields.get(field).toString() : null));
@@ -155,6 +158,7 @@ public class PacketReaderImpl implements IPacketReader {
 
     @Override
     public Document getDocument(String id, String documentName, String process) {
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, "getDocument :: for - " + documentName);
         Map<String, Object> idobjectMap = getAll(id, process);
         Double schemaVersion = (Double) idobjectMap.get(PacketManagerConstants.IDSCHEMA_VERSION);
         String documentString = (String) idobjectMap.get(documentName);
@@ -172,18 +176,16 @@ public class PacketReaderImpl implements IPacketReader {
                 document.setFormat(documentMap.get(FORMAT) != null ? documentMap.get(FORMAT).toString() : null);
                 return document;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ApiNotAccessibleException | PacketDecryptionFailureException e) {
-            throw e;
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (IOException | ApiNotAccessibleException | PacketDecryptionFailureException | JSONException e) {
+            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, e.getStackTrace().toString());
+            throw new GetDocumentException(e.getMessage());
         }
         return null;
     }
 
     @Override
     public BiometricRecord getBiometric(String id, String biometricFieldName, List<BiometricType> modalities, String process) {
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, "getBiometric :: for - " + biometricFieldName);
         BiometricRecord biometricRecord = null;
         String packetName = null;
         String fileName = null;
@@ -218,20 +220,11 @@ public class PacketReaderImpl implements IPacketReader {
             BIRType birType = CbeffValidator.getBIRFromXML(IOUtils.toByteArray(biometrics));
             biometricRecord = new BiometricRecord();
             biometricRecord.setSegments(CbeffValidator.convertBIRTypeToBIR(birType.getBIR()));
-            //createPacket(birType, idobjectMap);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, e.getStackTrace().toString());
+            throw new GetBiometricException(e.getMessage());
         }
 
-        try {
-            System.out.println(idSchemaUtils.getIdSchema(new Double(0.1)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         return biometricRecord;
     }
 
@@ -271,49 +264,5 @@ public class PacketReaderImpl implements IPacketReader {
         packetInfo.setPacketName(packetName);
         packetInfo.setProcess(process);
         return packetInfo;
-    }
-
-    private void createPacket(BiometricRecord birTypes, Map<String, Object> idobjectMap) throws JSONException {
-        String id = "10001100770000320200720092256";
-        String process= "NEW";
-        String source= "registration";
-
-        AuditDto auditDto = new AuditDto();
-        auditDto.setActionTimeStamp(LocalDateTime.now());
-        auditDto.setApplicationId(source);
-        auditDto.setApplicationName(source);
-        auditDto.setEventId("Event1");
-        auditDto.setDescription("audit");
-        List<AuditDto> auditDtos = new ArrayList<>();
-        auditDtos.add(auditDto);
-
-        System.out.println(idobjectMap);
-
-        idobjectMap.entrySet().forEach(id1 -> {
-            try {
-                packetWriter.setField(id, id1.getKey(), id1.getValue().toString(), source, process);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        });
-
-        Map<String, String> metainfo = getMetaInfo(id, process);
-        System.out.println(metainfo);
-
-        packetWriter.setMetaInfo(id, metainfo, source, process);
-        System.out.println(birTypes);
-        packetWriter.setBiometric(id,"individualBiometrics", birTypes, source, process);
-
-        packetWriter.setDocument(id,"proofOfAddress", getDocument(id, "proofOfAddress", process), source, process);
-
-        packetWriter.setAudits(id, auditDtos, source, process);
-
-        try {
-            packetWriter.persistPacket(id, 0.1, idSchemaUtils.getIdSchema(new Double(0.1)), source, process);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
     }
 }

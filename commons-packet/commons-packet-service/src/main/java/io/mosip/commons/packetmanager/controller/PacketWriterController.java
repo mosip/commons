@@ -7,6 +7,7 @@ import io.mosip.commons.packet.dto.packet.PacketDto;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
+import io.mosip.kernel.core.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,8 +30,16 @@ public class PacketWriterController {
     public ResponseWrapper<PacketInfo> createPacket(@RequestBody(required = true) RequestWrapper<PacketDto> requestr) {
 
         PacketInfo resultField = packetWriter.createPacket(requestr.getRequest(), true);
-        ResponseWrapper<PacketInfo> response = new ResponseWrapper<PacketInfo>();
+        ResponseWrapper<PacketInfo> response = getResponseWrapper();
         response.setResponse(resultField);
+        return response;
+    }
+
+    private ResponseWrapper getResponseWrapper() {
+        ResponseWrapper<Object> response = new ResponseWrapper<>();
+        response.setId("mosip.registration.packet.reader");
+        response.setVersion("v1");
+        response.setResponsetime(DateUtils.getUTCCurrentDateTime());
         return response;
     }
 }

@@ -1,6 +1,9 @@
 package io.mosip.commons.packetmanager.controller;
 
 import io.mosip.commons.packet.exception.FieldNameNotFoundException;
+import io.mosip.commons.packet.exception.GetAllIdentityException;
+import io.mosip.commons.packet.exception.GetBiometricException;
+import io.mosip.commons.packet.exception.GetDocumentException;
 import io.mosip.commons.packet.exception.NoAvailableProviderException;
 import io.mosip.kernel.core.exception.BaseCheckedException;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
@@ -25,6 +28,21 @@ public class PacketServiceControllerAdvice {
 
     @ExceptionHandler(NoAvailableProviderException.class)
     public ResponseEntity noAvailableProviderException(NoAvailableProviderException e) {
+        return buildPrintApiExceptionResponse((Exception) e);
+    }
+
+    @ExceptionHandler(GetAllIdentityException.class)
+    public ResponseEntity getAllIdentityException(GetAllIdentityException e) {
+        return buildPrintApiExceptionResponse((Exception) e);
+    }
+
+    @ExceptionHandler(GetDocumentException.class)
+    public ResponseEntity getDocumentException(GetDocumentException e) {
+        return buildPrintApiExceptionResponse((Exception) e);
+    }
+
+    @ExceptionHandler(GetBiometricException.class)
+    public ResponseEntity getBiometricException(GetBiometricException e) {
         return buildPrintApiExceptionResponse((Exception) e);
     }
 

@@ -142,7 +142,9 @@ public class PacketReader {
         if (sourceList.contains(source) && processList.contains(process))
             provider = registrationProvider;
         else if (referenceReaderProviders != null && !referenceReaderProviders.isEmpty()) {
-            Optional<IPacketReader> refProvider = referenceReaderProviders.stream().filter(refPr -> (packetHelper.isSourcePresent(refPr.getClass().getSimpleName()) && packetHelper.isProcessPresent(refPr.getClass().getSimpleName()))).findAny();
+            Optional<IPacketReader> refProvider = referenceReaderProviders.stream().filter(refPr ->
+                    (packetHelper.isSourcePresent(refPr.getClass().getSimpleName(), source) &&
+                            packetHelper.isProcessPresent(refPr.getClass().getSimpleName(), process))).findAny();
             if (refProvider.isPresent() && refProvider.get() != null)
                 provider = refProvider.get();
         }

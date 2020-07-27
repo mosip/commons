@@ -25,16 +25,18 @@ public class PacketHelper {
     @Value("${mosip.commons.packet.provider.registration.process}")
     private String processes;
 
-    public boolean isSourcePresent(String providerName) {
+    public boolean isSourcePresent(String providerName, String providerSource) {
         List<String> sourceKeys = configurations.keySet().stream().filter(key -> key.contains(SOURCE)).collect(Collectors.toList());
-        Optional<String> source = sourceKeys.stream().filter(key -> key.contains(providerName)).findAny();
-        return source.isPresent() && source.get() != null;
+        Optional<String> provider = sourceKeys.stream().filter(key -> key.contains(providerName)).findAny();
+        Optional<Map.Entry<String, String>> source = configurations.entrySet().stream().filter(key -> key.getValue().contains(providerSource)).findAny();
+        return (provider.isPresent() && provider.get() != null) && (source.isPresent() && source.get().getValue().equalsIgnoreCase(providerSource));
 
     }
 
-    public boolean isProcessPresent(String providerName) {
+    public boolean isProcessPresent(String providerName, String providerProcess) {
         List<String> providerKeys = configurations.keySet().stream().filter(key -> key.contains(PROCESS)).collect(Collectors.toList());
         Optional<String> provider = providerKeys.stream().filter(key -> key.contains(providerName)).findAny();
-        return provider.isPresent() && provider.get() != null;
+        Optional<Map.Entry<String, String>> process = configurations.entrySet().stream().filter(key -> key.getValue().contains(providerProcess)).findAny();
+        return provider.isPresent() && provider.get() != null && (process.isPresent() && process.get().getValue().equalsIgnoreCase(providerProcess));
     }
 }

@@ -3,7 +3,6 @@ package io.mosip.commons.packet.dto.packet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
 import io.mosip.kernel.core.util.DateUtils;
 import lombok.Data;
 import org.json.JSONArray;
@@ -18,7 +17,7 @@ import java.util.Map;
 
 
 @Data
-public class PacketInfoDto {
+public class RegistrationPacket {
 	
 	private String registrationId;
 	private double idSchemaVersion;
@@ -27,28 +26,16 @@ public class PacketInfoDto {
 	private Map<String, Document> documents;
 	private Map<String, BiometricRecord> biometrics;
 	private Map<String, Object> metaData;
-	/*private Map<String, List<BiometricsException>> exceptionBiometrics;*/
-	/*private List<FieldValue> operationsData;
-	private List<DeviceMetaInfo> capturedRegisteredDevices;
-	private List<FieldValue> capturedNonRegisteredDevices;*/
-	/*private List<FieldValue> checkSum;*/
-	/*private List<SimpleType> printingName;*/
-	/*private List<BiometricsDto> officerBiometrics;
-	private List<BiometricsDto> supervisorBiometrics;	*/
 	private List<AuditDto> audits;	
 	private byte[] acknowledgeReceipt;
 	private String acknowledgeReceiptName;
 		
-	public PacketInfoDto() {
+	public RegistrationPacket() {
 		this.creationDate = DateUtils.formatToISOString(LocalDateTime.now());
 		this.demographics = new HashMap<String, Object>();
 		this.documents = new HashMap<String, Document>();
 		this.biometrics = new HashMap<String, BiometricRecord>();
 		this.metaData = new HashMap<String, Object>();
-		/*this.exceptionBiometrics = new HashMap<String, List<BiometricsException>>();
-		this.operationsData = new ArrayList<FieldValue>();
-		this.checkSum = new ArrayList<FieldValue>();*/
-		/*this.printingName = new ArrayList<SimpleType>();*/
 	}
 
 	public void setField(String fieldName, String value) {
@@ -100,34 +87,4 @@ public class PacketInfoDto {
 			e.printStackTrace();
 		}
 	}
-
-
-	/*public void setField(String fieldName, List<SimpleDto> value) {
-		List<SimpleType> list = new ArrayList<SimpleType>();
-		for(SimpleDto dto : value) {
-			list.add(new SimpleType(dto.getLanguage(), dto.getValue()));
-		}
-		this.demographics.put(fieldName, list);
-	}*/
-
-	/*public void setExceptionBiometrics(String fieldName, List<BiometricsException> exceptionList) {
-		this.exceptionBiometrics.put(fieldName, exceptionList);
-	}
-
-	public void setOperationsData(String key, String value) {
-		if(!this.operationsData.contains(new FieldValue(key, value)))
-			this.operationsData.add(new FieldValue(key, value));
-	}
-	
-	public void setChecksum(String key, String value) {
-		if(!this.checkSum.contains(new FieldValue(key, value)))
-			this.checkSum.add(new FieldValue(key, value));
-	}*/
-	
-	/*public void setPrintingName(String language, String value) {
-		this.getPrintingName().add(new SimpleType(language, value));
-	}*/
-	
-
-	
 }
