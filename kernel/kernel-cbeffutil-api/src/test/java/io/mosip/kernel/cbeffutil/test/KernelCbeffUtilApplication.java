@@ -3,6 +3,7 @@
  */
 package io.mosip.kernel.cbeffutil.test;
 
+import org.junit.Ignore;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
  * @author Ramadurai Pandian
  *
  */
+@Ignore
 @SpringBootApplication
 @ComponentScan(basePackages = "io.mosip.kernel.*")
 public class KernelCbeffUtilApplication {

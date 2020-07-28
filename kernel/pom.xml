@@ -159,7 +159,7 @@
 		<module>kernel-qrcodegenerator-zxing</module>
 		<module>kernel-cbeffutil-api</module>
 		<module>kernel-fsadapter-ceph</module>
-		<!-- <module>kernel-fsadapter-hdfs</module> -->
+		<module>kernel-fsadapter-hdfs</module>
 		<module>kernel-transliteration-icu4j</module>
 		<module>kernel-applicanttype-api</module>
 		<module>kernel-crypto-signature</module>
@@ -233,7 +233,6 @@
 		    <version>3.27.0-GA</version>
 		</dependency> 
 	</dependencies>
-
 	<build>
 		<pluginManagement>
 			<plugins>

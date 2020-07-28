@@ -212,7 +212,7 @@ public class CryptoCoreTest {
 		cryptoCore.symmetricDecrypt(setSymmetricUp(15, "AES"), encryptedData, keyBytes, MOCKAAD.getBytes());
 	}
 
-	@Test(expected = InvalidDataException.class)
+	@Test(expected = InvalidKeyException.class)
 	public void testRSAPKS1AsymmetricPrivateDecryptInvalidDataIllegalBlockSize() {
 		cryptoCore.asymmetricDecrypt(rsaPair.getPrivate(), new byte[121]);
 	}

@@ -132,14 +132,14 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 			switch (keystoreType) {
 			case "PKCS11":
 				provider = Security.getProvider("SunPKCS11");
-				provider.configure(configPath);				
+				provider = provider.configure(configPath);				
 				break;
 			case "BouncyCastleProvider":
 				provider = new BouncyCastleProvider();
 				break;
 			default:
 				provider = Security.getProvider("SunPKCS11");
-				provider.configure(configPath);
+				provider = provider.configure(configPath);
 				break;
 			}
 		} catch (ProviderException providerException) {
@@ -385,7 +385,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 			LocalDateTime validityTo) {
 		X509Certificate[] chain = new X509Certificate[1];
 		chain[0] = CertificateUtility.generateX509Certificate(keyPair, commonName, organizationalUnit, organization,
-				country, validityFrom, validityTo);
+				country, validityFrom, validityTo,provider == null ? "BC" :provider.getName());
 		storeCertificate(alias, chain, keyPair.getPrivate());
 	}
 
