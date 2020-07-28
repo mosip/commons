@@ -170,6 +170,9 @@ public class AuthServiceImpl implements AuthService {
 
 	@Value("${mosip.kernel.prereg.realm-id}")
 	private String preRegRealmID;
+	
+	@Value("${mosip.keycloak.base-url}")
+	private String keycloakBaseURL;
 
 	@Autowired
 	private AuthUtil authUtil;
@@ -566,10 +569,10 @@ public class AuthServiceImpl implements AuthService {
 		if (EmptyCheckUtils.isNullEmpty(token)) {
 			throw new AuthenticationServiceException(AuthErrorCode.INVALID_TOKEN.getErrorMessage());
 		}
-		String issuer = tokenValidator.getissuer(token);
+		String realm = tokenValidator.getKeycloakRealm(token);
 		ResponseEntity<String> response = null;
 		MosipUserDto mosipUserDto = null;
-		StringBuilder urlBuilder = new StringBuilder().append(issuer).append("/protocol/openid-connect/userinfo");
+		StringBuilder urlBuilder = new StringBuilder().append(keycloakBaseURL).append("/auth/realms/").append(realm).append("/protocol/openid-connect/userinfo");
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(urlBuilder.toString());
 		LOGGER.info("validate token request to " + uriComponentsBuilder.toUriString() );
 
