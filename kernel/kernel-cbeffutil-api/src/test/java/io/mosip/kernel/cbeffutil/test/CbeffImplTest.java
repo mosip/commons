@@ -1,14 +1,14 @@
 package io.mosip.kernel.cbeffutil.test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -21,15 +21,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import io.mosip.kernel.cbeffutil.impl.CbeffImpl;
+import io.mosip.kernel.core.cbeffutil.common.CbeffValidator;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import io.mosip.kernel.core.cbeffutil.common.CbeffISOReader;
 import io.mosip.kernel.core.cbeffutil.entity.BDBInfo;
 import io.mosip.kernel.core.cbeffutil.entity.BIR;
@@ -42,27 +44,18 @@ import io.mosip.kernel.core.cbeffutil.jaxbclasses.RegistryIDType;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.SingleType;
 import io.mosip.kernel.core.cbeffutil.spi.CbeffUtil;
 
-@Ignore
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({URL.class, CbeffValidator.class})
 public class CbeffImplTest {
 
-	@Autowired
-	private CbeffUtil cbeffUtilImpl;
+	@InjectMocks
+	private CbeffUtil cbeffUtilImpl = new CbeffImpl();
 
-	/*
-	 * XSD storage path from config server
-	 */
+	@Mock
+	private InputStream inputStream;
 
-	@Value("${mosip.kernel.xsdstorage-uri}:test")
-	private String configServerFileStorageURL;
-
-	/*
-	 * XSD file name
-	 */
-
-	@Value("${mosip.kernel.xsdfile}:test")
-	private String schemaName;
+	@Mock
+	private URL mockURL;
 
 	private List<BIR> createList;
 	private List<BIR> updateList;
@@ -70,6 +63,10 @@ public class CbeffImplTest {
 
 	@Before
 	public void setUp() throws Exception {
+		PowerMockito.whenNew(URL.class).withArguments(Mockito.anyString()).thenReturn(mockURL);
+		when(mockURL.openStream()).thenReturn(inputStream);
+
+
 		byte[] rindexFinger = CbeffISOReader.readISOImage(localpath + "/images/" + "FingerPrintRight_Index.iso",
 				"Finger");
 		byte[] rmiddleFinger = CbeffISOReader.readISOImage(localpath + "/images/" + "FingerPrintRight_Middle.iso",
@@ -272,6 +269,8 @@ public class CbeffImplTest {
 
 	@Test
 	public void testCreateXMLFromLocal() throws Exception {
+		PowerMockito.mockStatic(CbeffValidator.class);
+		when(CbeffValidator.createXMLBytes(any(), any())).thenReturn(readCreatedXML("createCbeffLatest2"));
 		byte[] createXml = cbeffUtilImpl.createXML(createList, readXSD("updatedcbeff"));
 		createXMLFile(createXml, "createCbeffLatest2");
 		assertEquals(new String(createXml), new String(readCreatedXML("createCbeffLatest2")));
@@ -300,17 +299,6 @@ public class CbeffImplTest {
 		byte[] updateXml = cbeffUtilImpl.updateXML(updateList, readCreatedXML("createCbeff"));
 		createXMLFile(updateXml, "updateCbeff");
 		assertEquals(new String(updateXml), new String(readCreatedXML("updateCbeff")));
-	}
-
-	// @Test
-	public void testValidateXML() throws IOException, Exception {
-		assertTrue(cbeffUtilImpl.validateXML(readCreatedXML("createCbeff"), getXSDfromConfigServer()));
-	}
-
-	private byte[] getXSDfromConfigServer() throws URISyntaxException, IOException {
-		InputStream input = new URL(configServerFileStorageURL + schemaName).openStream();
-		byte[] fileContent = readbytesFromStream(input);
-		return fileContent;
 	}
 
 	private byte[] readbytesFromStream(InputStream inputStream) throws IOException {

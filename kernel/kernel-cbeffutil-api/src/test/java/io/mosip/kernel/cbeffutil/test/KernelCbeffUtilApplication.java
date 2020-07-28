@@ -12,7 +12,6 @@ import org.springframework.context.annotation.ComponentScan;
  * @author Ramadurai Pandian
  *
  */
-@Ignore
 @SpringBootApplication
 @ComponentScan(basePackages = "io.mosip.kernel.*")
 public class KernelCbeffUtilApplication {
