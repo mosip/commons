@@ -316,6 +316,9 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 		return unpadOAEPPadding(paddedPlainText,key);
 	}
 
+//	  This is a hack of removing OEAP padding after decryption with NO Padding as
+//	  SoftHSM does not support it.Will be removed after HSM implementation
+	
 	/**
 	 * 
 	 * @param paddedPlainText
@@ -335,34 +338,6 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 					.getErrorCode(), e.getMessage(), e);
 		}	    
 	}
-	
-	
-//	  This is a hack of removing OEAP padding after decryption with NO Padding as
-//	  SoftHSM does not support it.Will be removed after HSM implementation
-//	 
-	
-	/*
-	 * @SuppressWarnings("restriction") private byte[] unpadOEAPPadding(byte[]
-	 * paddedPlainText, OAEPParameterSpec paramSpec) { byte[] unpaddedData = null;
-	 * try {
-	 * 		final OAEPParameterSpec oaepParams = new OAEPParameterSpec(HASH_ALGO, MGF1, MGF1ParameterSpec.SHA256,
-				PSpecified.DEFAULT);
-
-	 * sun.security.rsa.RSAPadding padding =
-	 * sun.security.rsa.RSAPadding.getInstance(
-	 * sun.security.rsa.RSAPadding.PAD_OAEP_MGF1, asymmetricKeyLength / 8, new
-	 * SecureRandom(), paramSpec); unpaddedData = padding.unpad(paddedPlainText); }
-	 * catch (java.security.InvalidKeyException e) { throw new
-	 * InvalidKeyException(SecurityExceptionCodeConstant.MOSIP_INVALID_KEY_EXCEPTION
-	 * .getErrorCode(), e.getMessage(), e); } catch
-	 * (InvalidAlgorithmParameterException e) { throw new InvalidParamSpecException(
-	 * SecurityExceptionCodeConstant.MOSIP_INVALID_PARAM_SPEC_EXCEPTION.getErrorCode
-	 * (), SecurityExceptionCodeConstant.MOSIP_INVALID_PARAM_SPEC_EXCEPTION.
-	 * getErrorMessage(), e); } catch (BadPaddingException e) { throw new
-	 * InvalidDataException(SecurityExceptionCodeConstant.
-	 * MOSIP_INVALID_DATA_EXCEPTION.getErrorCode(), e.getMessage(), e); } return
-	 * unpaddedData; }
-	 */
 	 
 
 	@Override
