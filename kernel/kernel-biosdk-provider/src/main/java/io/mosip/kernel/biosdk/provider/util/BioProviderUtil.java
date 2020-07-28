@@ -20,7 +20,8 @@ public class BioProviderUtil {
 
 	public static Object getSDKInstance(Map<String, String> modalityParams) throws BiometricException {
 		try {
-			String instanceKey = modalityParams.values().stream().collect(Collectors.joining());
+			String instanceKey = modalityParams.entrySet().stream().sorted(Map.Entry.comparingByKey())
+					.map(entry -> entry.getKey() + entry.getValue()).collect(Collectors.joining());
 			if (sdkInstances.containsKey(instanceKey)) {
 				LOGGER.debug(ProviderConstants.LOGGER_SESSIONID, ProviderConstants.LOGGER_IDTYPE, "GET SDK INSTANCE",
 						"SDK instance reused for modality class >>> "
