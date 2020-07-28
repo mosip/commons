@@ -14,17 +14,17 @@ import io.mosip.kernel.core.logger.spi.Logger;
 
 public class BioProviderUtil {
 
-	private static Map<String, Object> sdkIntances = new HashMap<>();
+	private static Map<String, Object> sdkInstances = new HashMap<>();
 
 	private static final Logger LOGGER = BioSDKProviderLoggerFactory.getLogger(BioProviderUtil.class);
 
 	public static Object getSDKInstance(Map<String, String> modalityParams) throws BiometricException {
 		try {
-			if (sdkIntances.containsKey(modalityParams.values().stream().collect(Collectors.joining()))) {
+			if (sdkInstances.containsKey(modalityParams.values().stream().collect(Collectors.joining()))) {
 				LOGGER.debug(ProviderConstants.LOGGER_SESSIONID, ProviderConstants.LOGGER_IDTYPE, "GET SDK INSTANCE",
 						"SDK instance reused for modality class >>> "
 								+ modalityParams.get(ProviderConstants.CLASSNAME));
-				return sdkIntances.get(modalityParams.values().stream().collect(Collectors.joining()));
+				return sdkInstances.get(modalityParams.values().stream().collect(Collectors.joining()));
 			}
 			Class<?> object = Class.forName(modalityParams.get(ProviderConstants.CLASSNAME));
 			Object[] args = new Object[0];
@@ -39,7 +39,7 @@ public class BioProviderUtil {
 				LOGGER.debug(ProviderConstants.LOGGER_SESSIONID, ProviderConstants.LOGGER_IDTYPE, "GET SDK INSTANCE",
 						"SDK instance created with params >>> " + modalityParams);
 				Object newInstance = constructor.newInstance(args);
-				sdkIntances.put(modalityParams.values().stream().collect(Collectors.joining()), newInstance);
+				sdkInstances.put(modalityParams.values().stream().collect(Collectors.joining()), newInstance);
 				return newInstance;
 			} else {
 				throw new BiometricException(ErrorCode.NO_CONSTRUCTOR_FOUND.getErrorCode(),
