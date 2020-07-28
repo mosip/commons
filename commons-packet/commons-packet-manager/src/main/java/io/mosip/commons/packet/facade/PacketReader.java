@@ -35,18 +35,6 @@ import static io.mosip.commons.packet.constants.PacketManagerConstants.SOURCE;
 @Component
 public class PacketReader {
 
-    @Value("${mosip.commons.packet.provider.registration.source}")
-    private String sources;
-
-    @Value("${mosip.commons.packet.provider.registration.process}")
-    private String processes;
-
-    @Autowired
-    private PacketReaderImpl registrationProvider;
-
-    @Autowired
-    private PacketHelper packetHelper;
-
     @Autowired(required = false)
     @Qualifier("referenceReaderProviders")
     @Lazy
@@ -137,14 +125,9 @@ public class PacketReader {
 
     private IPacketReader getProvider(String source, String process) {
         IPacketReader provider = null;
-        List<String> sourceList = Arrays.asList(sources.split(","));
-        List<String> processList = Arrays.asList(processes.split(","));
-        if (sourceList.contains(source) && processList.contains(process))
-            provider = registrationProvider;
-        else if (referenceReaderProviders != null && !referenceReaderProviders.isEmpty()) {
+        if (referenceReaderProviders != null && !referenceReaderProviders.isEmpty()) {
             Optional<IPacketReader> refProvider = referenceReaderProviders.stream().filter(refPr ->
-                    (packetHelper.isSourcePresent(refPr.getClass().getSimpleName(), source) &&
-                            packetHelper.isProcessPresent(refPr.getClass().getSimpleName(), process))).findAny();
+                    (PacketHelper.isSourceAndProcessPresent(refPr.getClass().getName(), source, process, PacketHelper.Provider.READER))).findAny();
             if (refProvider.isPresent() && refProvider.get() != null)
                 provider = refProvider.get();
         }

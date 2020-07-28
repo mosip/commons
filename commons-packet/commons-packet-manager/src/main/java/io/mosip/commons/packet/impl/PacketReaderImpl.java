@@ -5,8 +5,6 @@ import io.mosip.commons.packet.constants.PacketManagerConstants;
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.dto.Packet;
 import io.mosip.commons.packet.dto.PacketInfo;
-import io.mosip.commons.packet.dto.packet.AuditDto;
-import io.mosip.commons.packet.dto.packet.BiometricsException;
 import io.mosip.commons.packet.exception.ApiNotAccessibleException;
 import io.mosip.commons.packet.exception.FieldNameNotFoundException;
 import io.mosip.commons.packet.exception.GetAllIdentityException;
@@ -63,7 +61,7 @@ public class PacketReaderImpl implements IPacketReader {
     @Autowired
     private PacketWriter packetWriter;
 
-    @Value("${mosip.commons.packetNames}")
+    @Value("${mosip.commons.packetnames}")
     private String packetNames;
 
     @Autowired

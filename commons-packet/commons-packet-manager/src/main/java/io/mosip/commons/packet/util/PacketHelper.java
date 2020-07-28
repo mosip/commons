@@ -1,42 +1,124 @@
 package io.mosip.commons.packet.util;
 
+import io.mosip.commons.packet.dto.packet.ProviderDto;
+import io.mosip.commons.packet.exception.NoAvailableProviderException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static io.mosip.commons.packet.constants.PacketManagerConstants.PROCESS;
 import static io.mosip.commons.packet.constants.PacketManagerConstants.SOURCE;
 
-@Component
 public class PacketHelper {
 
-    /** The providerConfig. */
-    @Autowired
-    private Map<String, String> configurations;
+    private static String SOURCE = "source";
+    private static String PROCESS = "process";
+    private static String CLASSNAME = "classname";
 
-    @Value("${mosip.commons.packet.provider.registration.source}")
-    private String sources;
+    private static List<ProviderDto> readerProvider = null;
 
-    @Value("${mosip.commons.packet.provider.registration.process}")
-    private String processes;
+    private static List<ProviderDto> writerProvider = null;
 
-    public boolean isSourcePresent(String providerName, String providerSource) {
-        List<String> sourceKeys = configurations.keySet().stream().filter(key -> key.contains(SOURCE)).collect(Collectors.toList());
-        Optional<String> provider = sourceKeys.stream().filter(key -> key.contains(providerName)).findAny();
-        Optional<Map.Entry<String, String>> source = configurations.entrySet().stream().filter(key -> key.getValue().contains(providerSource)).findAny();
-        return (provider.isPresent() && provider.get() != null) && (source.isPresent() && source.get().getValue().equalsIgnoreCase(providerSource));
-
+    public enum Provider {
+        READER, WRITER;
     }
 
-    public boolean isProcessPresent(String providerName, String providerProcess) {
-        List<String> providerKeys = configurations.keySet().stream().filter(key -> key.contains(PROCESS)).collect(Collectors.toList());
-        Optional<String> provider = providerKeys.stream().filter(key -> key.contains(providerName)).findAny();
-        Optional<Map.Entry<String, String>> process = configurations.entrySet().stream().filter(key -> key.getValue().contains(providerProcess)).findAny();
-        return provider.isPresent() && provider.get() != null && (process.isPresent() && process.get().getValue().equalsIgnoreCase(providerProcess));
+    /** The providerConfig. */
+    private static Map<String, String> readerConfiguration;
+    /** The providerConfig. */
+    private static Map<String, String> writerConfiguration;
+
+    public static Set<String> getReaderProvider(Map<String, String> readerConfig) {
+        readerConfiguration = readerConfig;
+        Set<String> readerProvider = null;
+        List<ProviderDto> providerDtos = getReader(readerConfig);
+        if (providerDtos != null && !providerDtos.isEmpty()) {
+            readerProvider = providerDtos.stream().map(p -> p.getClassName()).collect(Collectors.toSet());
+        }
+        return readerProvider;
+    }
+
+    public static Set<String> getWriterProvider(Map<String, String> writerConfig) {
+        writerConfiguration = writerConfig;
+        Set<String> writerProvider = null;
+        List<ProviderDto> providerDtos = getWriter(writerConfig);
+        if (providerDtos != null && !providerDtos.isEmpty()) {
+            writerProvider = providerDtos.stream().map(p -> p.getClassName()).collect(Collectors.toSet());
+        }
+        return writerProvider;
+    }
+
+    public static boolean isSourceAndProcessPresent(String providerName, String providerSource, String providerProcess, Provider providerEnum) {
+        List<ProviderDto> configurations = null;
+
+        if (Provider.READER.equals(providerEnum))
+            configurations = getReader(readerConfiguration);
+        else if (Provider.WRITER.equals(providerEnum))
+            configurations = getWriter(writerConfiguration);
+
+        if (configurations == null)
+            throw new  NoAvailableProviderException();
+
+        Optional<ProviderDto> providerDto = configurations.stream().filter(dto -> dto.getSource().contains(providerSource) && dto.getProcess().contains(providerProcess)).findAny();
+        return providerDto.isPresent() && providerDto.get() != null && providerDto.get().getClassName().contains(providerName);
+    }
+
+    private static List<ProviderDto> getReader(Map<String, String> readerConfiguration) {
+        if (readerProvider == null) {
+            List<ProviderDto> providerDtos = new ArrayList<>();
+            if (readerConfiguration != null && !readerConfiguration.isEmpty()) {
+                for (String value : readerConfiguration.values()) {
+                    String[] values = value.split(",");
+                    ProviderDto providerDto = new ProviderDto();
+                    for (String provider : values) {
+                        if (provider != null) {
+                            if (provider.startsWith(SOURCE))
+                                providerDto.setSource(provider.replace(SOURCE + ":", ""));
+                            else if (provider.startsWith(PROCESS))
+                                providerDto.setProcess(provider.replace(PROCESS + ":", ""));
+                            else if (provider.startsWith(CLASSNAME))
+                                providerDto.setClassName(provider.replace(CLASSNAME + ":", ""));
+                        }
+                    }
+                    providerDtos.add(providerDto);
+                }
+            }
+            readerProvider = providerDtos;
+        }
+
+        return readerProvider;
+    }
+
+    private static List<ProviderDto> getWriter(Map<String, String> writerConfiguration) {
+        if (writerProvider == null) {
+            List<ProviderDto> providerDtos = new ArrayList<>();
+            if (writerConfiguration != null && !writerConfiguration.isEmpty()) {
+                for (String value : writerConfiguration.values()) {
+                    String[] values = value.split(",");
+                    ProviderDto providerDto = new ProviderDto();
+                    for (String provider : values) {
+                        if (provider != null) {
+                            if (provider.startsWith(SOURCE))
+                                providerDto.setSource(provider.replace(SOURCE + ":", ""));
+                            else if (provider.startsWith(PROCESS))
+                                providerDto.setProcess(provider.replace(PROCESS + ":", ""));
+                            else if (provider.startsWith(CLASSNAME))
+                                providerDto.setClassName(provider.replace(CLASSNAME + ":", ""));
+                        }
+                    }
+                    providerDtos.add(providerDto);
+                }
+            }
+            writerProvider = providerDtos;
+        }
+        return writerProvider;
     }
 }

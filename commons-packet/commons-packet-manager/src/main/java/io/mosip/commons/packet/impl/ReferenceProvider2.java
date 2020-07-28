@@ -5,10 +5,12 @@ import io.mosip.commons.packet.dto.ProviderInfo;
 import io.mosip.commons.packet.spi.IPacketReader;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class ReferenceProvider2 implements IPacketReader {
 
     @Override

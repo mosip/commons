@@ -26,20 +26,6 @@ import java.util.Optional;
 @Component
 public class PacketWriter {
 
-    private IPacketWriter iPacketWriter;
-
-    @Autowired
-    private PacketHelper packetHelper;
-
-    @Value("${mosip.commons.packet.provider.registration.source}")
-    private String sources;
-
-    @Value("${mosip.commons.packet.provider.registration.process}")
-    private String processes;
-
-    @Autowired
-    private IPacketWriter registrationProvider;
-
     @Autowired(required = false)
     @Qualifier("referenceWriterProviders")
     @Lazy
@@ -139,14 +125,9 @@ public class PacketWriter {
      */
     private IPacketWriter getProvider(String source, String process) {
         IPacketWriter provider = null;
-        List<String> sourceList = Arrays.asList(sources.split(","));
-        List<String> processList = Arrays.asList(processes.split(","));
-        if (sourceList.contains(source) && processList.contains(process))
-            provider = registrationProvider;
-        else if (referenceWriterProviders != null && !referenceWriterProviders.isEmpty()) {
+        if (referenceWriterProviders != null && !referenceWriterProviders.isEmpty()) {
             Optional<IPacketWriter> refProvider = referenceWriterProviders.stream().filter(refPr ->
-                    (packetHelper.isSourcePresent(refPr.getClass().getSimpleName(), source) &&
-                            packetHelper.isProcessPresent(refPr.getClass().getSimpleName(), process))).findAny();
+                    (PacketHelper.isSourceAndProcessPresent(refPr.getClass().getName(), source, process, PacketHelper.Provider.READER))).findAny();
             if (refProvider.isPresent() && refProvider.get() != null)
                 provider = refProvider.get();
         }

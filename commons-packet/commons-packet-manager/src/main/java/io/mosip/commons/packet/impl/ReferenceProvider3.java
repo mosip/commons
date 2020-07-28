@@ -9,10 +9,12 @@ import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.core.cbeffutil.entity.BIR;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
 import org.json.JSONException;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class ReferenceProvider3 implements IPacketWriter {
     @Override
     public void setField(String id, String fieldName, String value) {
