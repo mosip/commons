@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,7 +39,7 @@ public class RegistrationCenterMachineController {
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@ApiOperation(value = "Un-map center to machine map ")
-	@GetMapping("/unmap/{regCenterId}/{machineId}")
+	@PutMapping("/unmap/{regCenterId}/{machineId}")
 	public ResponseWrapper<ResponseDto> unMapRegistrationCenterMachine(
 			@ApiParam("Registration center id") @PathVariable String regCenterId,
 			@ApiParam("MachineId id ") @PathVariable String machineId) {
@@ -62,7 +63,7 @@ public class RegistrationCenterMachineController {
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@ApiOperation(value = "map center to machine map ")
-	@GetMapping("/map/{regCenterId}/{machineId}")
+	@PutMapping("/map/{regCenterId}/{machineId}")
 	public ResponseWrapper<ResponseDto> mapRegistrationCenterMachine(
 			@ApiParam("Registration center id") @PathVariable String regCenterId,
 			@ApiParam("MachineId id ") @PathVariable String machineId) {

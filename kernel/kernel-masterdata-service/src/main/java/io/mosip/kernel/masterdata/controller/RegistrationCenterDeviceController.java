@@ -90,7 +90,7 @@ public class RegistrationCenterDeviceController {
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@ApiOperation(value = "map registration center with device")
-	@GetMapping("map/{regCenterId}/{deviceId}")
+	@PutMapping("map/{regCenterId}/{deviceId}")
 	public ResponseWrapper<ResponseDto> mapRegistrationCenterDevice(
 			@ApiParam("Registration center id ") @PathVariable String regCenterId,
 			@ApiParam("DeviceId id ") @PathVariable String deviceId) {
