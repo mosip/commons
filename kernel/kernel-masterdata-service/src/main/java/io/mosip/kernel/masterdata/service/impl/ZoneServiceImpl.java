@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
@@ -85,12 +86,17 @@ public class ZoneServiceImpl implements ZoneService {
 	@Override
 	public List<ZoneExtnDto> getUserLeafZone(String langCode) {
 		List<Zone> zones = zoneUtils.getUserLeafZones(langCode);
+		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
 		if (zones != null && !zones.isEmpty()) {
 			List<Zone> zoneList = zones.parallelStream().filter(z -> z.getLangCode().equals(langCode))
 					.collect(Collectors.toList());
 			return MapperUtils.mapAll(zoneList, ZoneExtnDto.class);
 		}
-		return Collections.emptyList();
+		else {
+			throw new DataNotFoundException(ZoneErrorCode.USER_ZONE_UNAVAILABLE.getErrorCode(),
+					String.format(ZoneErrorCode.USER_ZONE_UNAVAILABLE.getErrorMessage(),userName));
+		}
+		
 	}
 
 	@Override
