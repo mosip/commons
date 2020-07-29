@@ -24,9 +24,7 @@ public class BiometricExtractionServiceImpl implements BiometricExtractionServic
 		String promiseId = createPromiseId(bioExtractRequestDTO.getBiometricsUrl());
 		asyncHelper.runAsync(() -> doBioExtraction(bioExtractRequestDTO.getBiometricsUrl(), promiseId));
 		bioExtractPromiseResponseDTO.setPromiseId(promiseId);
-		throw new RuntimeException("test");
-
-//		return bioExtractPromiseResponseDTO;
+		return bioExtractPromiseResponseDTO;
 	}
 
 	private String createPromiseId(String biometricsUrl) {
