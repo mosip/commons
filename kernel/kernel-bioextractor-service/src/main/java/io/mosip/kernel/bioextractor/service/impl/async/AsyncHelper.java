@@ -4,9 +4,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AsyncHelper {
+public class AsyncHelper<E extends Exception> {
 	@Async
-	public void runAsync(Runnable runnable) {
+	public void runAsync(RunnableWithException<E> runnable) throws E{
 		runnable.run();
 	}
 	
