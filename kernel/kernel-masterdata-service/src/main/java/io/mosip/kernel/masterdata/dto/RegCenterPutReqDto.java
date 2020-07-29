@@ -68,7 +68,7 @@ public class RegCenterPutReqDto {
 	private String longitude;
 
 	@NotBlank
-	@Size(min = 0, max = 36)
+	@Size(min = 1, max = 36)
 	private String locationCode;
 
 	@NotBlank
@@ -103,8 +103,8 @@ public class RegCenterPutReqDto {
 	@Size(min = 0, max = 64)
 	private String timeZone;
 
-	@NotNull
-	@Size(min = 0, max = 36)
+	@NotBlank
+	@Size(min = 1, max = 36)
 	private String zoneCode;
 
 	private WorkingNonWorkingDaysDto workingNonWorkingDays;

@@ -373,8 +373,8 @@ public class MasterdataCreationUtil {
 			}
 			E primaryEntity = getResultSet(entity, primaryLang, id, primaryKeyCol);
 			if (primaryEntity == null) {
-				throw new MasterDataServiceException(RequestErrorCode.REQUEST_INVALID_SEC_LANG_ID.getErrorCode(),
-						RequestErrorCode.REQUEST_INVALID_SEC_LANG_ID.getErrorMessage());
+				throw new MasterDataServiceException(RequestErrorCode.REQUEST_INVALID_SEC_LANG.getErrorCode(),
+						RequestErrorCode.REQUEST_INVALID_SEC_LANG.getErrorMessage());
 			}
 				for (Field field : primaryEntity.getClass().getDeclaredFields()) {
 					field.setAccessible(true);
@@ -429,7 +429,7 @@ public class MasterdataCreationUtil {
 				return null;
 			} else {
 				throw new MasterDataServiceException(HibernateErrorCode.HIBERNATE_EXCEPTION.getErrorCode(),
-						e.getMessage());
+						e.toString());
 			}
 		}
 		return result;
