@@ -15,7 +15,8 @@ public enum PacketUtilityErrorCodes {
 	ZIP_PARSING_EXCEPTION("KER-PUT-009", "Unable to parse the zip"),
 	SIGNATURE_EXCEPTION("KER-PUT-010", "Failed to generate digital signature"),
 	DOCUMENT_EXCEPTION("KER-PUT-011", "Failed to get document"),
-	BIOMETRIC_EXCEPTION("KER-PUT-012", "Unable to get biometric"),;
+	BIOMETRIC_EXCEPTION("KER-PUT-012", "Unable to get biometric"),
+	OS_ADAPTER_EXCEPTION("KER-PUT-013", "No Object store adapter found.");
 
 
 	private final String errorCode;

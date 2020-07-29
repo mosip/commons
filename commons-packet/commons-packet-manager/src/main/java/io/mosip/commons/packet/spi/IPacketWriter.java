@@ -29,5 +29,5 @@ public interface IPacketWriter {
 
     public void setAudits(String id, List<AuditDto> audits);
 
-    public PacketInfo persistPacket(String id, double version, String schemaJson);
+    public List<PacketInfo> persistPacket(String id, double version, String schemaJson, String source, String process);
 }

@@ -1,8 +1,8 @@
 package io.mosip.commons.packet.exception;
 
-import io.mosip.kernel.core.exception.BaseCheckedException;
+import io.mosip.kernel.core.exception.BaseUncheckedException;
 
-public class PacketCreatorException extends BaseCheckedException {
+public class PacketCreatorException extends BaseUncheckedException {
 
 	/**
 	 * 

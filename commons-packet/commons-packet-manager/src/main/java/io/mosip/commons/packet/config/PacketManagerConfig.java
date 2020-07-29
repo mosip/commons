@@ -103,8 +103,7 @@ public class PacketManagerConfig {
      */
     @Bean
     @Lazy
-    public List<IPacketReader> referenceReaderProviders()
-            throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+    public List<IPacketReader> referenceReaderProviders() throws ClassNotFoundException {
         List<IPacketReader> iPacketReaders = new ArrayList<>();
         Set<String> readerProviders = PacketHelper.getReaderProvider(readerConfiguration());
         if (!CollectionUtils.isEmpty(readerProviders)) {
@@ -130,8 +129,7 @@ public class PacketManagerConfig {
      */
     @Bean
     @Lazy
-    public List<IPacketWriter> referenceWriterProviders()
-            throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+    public List<IPacketWriter> referenceWriterProviders() throws ClassNotFoundException {
         List<IPacketWriter> iPacketWriters = new ArrayList<>();
         Set<String> writerProviders = PacketHelper.getWriterProvider(writerConfiguration());
         if (!CollectionUtils.isEmpty(writerProviders)) {

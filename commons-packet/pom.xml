@@ -33,6 +33,7 @@
         <kernel-dataaccess-hibernate.version>1.0.7</kernel-dataaccess-hibernate.version>
         <kernel.logger.logback.version>1.0.6</kernel.logger.logback.version>
         <spring.boot.co>2.0.2.RELEASE</spring.boot.co>
+        <khazana.version>1.0.11</khazana.version>
     </properties>
 
     <modules>

@@ -4,6 +4,7 @@ import io.mosip.commons.packet.constants.ErrorCode;
 import io.mosip.commons.packet.constants.LoggerFileConstant;
 import io.mosip.commons.packet.constants.PacketManagerConstants;
 import io.mosip.commons.packet.dto.Document;
+import io.mosip.commons.packet.dto.Packet;
 import io.mosip.commons.packet.dto.PacketInfo;
 import io.mosip.commons.packet.dto.packet.AuditDto;
 import io.mosip.commons.packet.dto.packet.BiometricsType;
@@ -11,13 +12,17 @@ import io.mosip.commons.packet.dto.packet.DocumentType;
 import io.mosip.commons.packet.dto.packet.HashSequenceMetaInfo;
 import io.mosip.commons.packet.dto.packet.RegistrationPacket;
 import io.mosip.commons.packet.exception.PacketCreatorException;
+import io.mosip.commons.packet.keeper.PacketKeeper;
+import io.mosip.commons.packet.spi.IPacketCryptoHelper;
 import io.mosip.commons.packet.spi.IPacketWriter;
 import io.mosip.commons.packet.util.CbeffBIRBuilder;
 import io.mosip.commons.packet.util.IdSchemaUtils;
-import io.mosip.commons.packet.util.PacketCryptoHelper;
 import io.mosip.commons.packet.util.PacketManagerHelper;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.core.exception.ExceptionUtils;
+import io.mosip.kernel.core.signatureutil.spi.SignatureUtil;
+import io.mosip.kernel.core.util.CryptoUtil;
+import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.core.util.JsonUtils;
 import io.mosip.kernel.core.util.exception.JsonProcessingException;
 import org.json.JSONArray;
@@ -31,11 +36,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -51,9 +54,6 @@ public class PacketWriterImpl implements IPacketWriter {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(PacketWriterImpl.class);
 	private static Map<String, String> categorySubpacketMapping = new HashMap<>();
-
-	private String source = null;
-	private String process = null;
 	
 	static {
 		categorySubpacketMapping.put("pvt", "id");
@@ -73,7 +73,10 @@ public class PacketWriterImpl implements IPacketWriter {
 	private CbeffBIRBuilder cbeffBIRBuilder;
 	
 	@Autowired
-	private PacketCryptoHelper packetCryptoHelper;
+	private IPacketCryptoHelper packetCryptoHelper;
+
+	@Autowired
+	private PacketKeeper packetKeeper;
 	
 	@Value("${mosip.kernel.packetmanager.default_subpacket_name:id}")
 	private String defaultSubpacketName;
@@ -119,11 +122,14 @@ public class PacketWriterImpl implements IPacketWriter {
 		this.initialize(id).setMetaData(metaInfo);
 	}
 
-	private byte[] createPacket(String registrationId, double version, String schemaJson) throws PacketCreatorException {
+	private List<PacketInfo> createPacket(String registrationId, double version, String schemaJson, String source, String process) throws PacketCreatorException {
 		LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), registrationId, "Started packet creation");
 		if(this.registrationPacket == null || !registrationPacket.getRegistrationId().equalsIgnoreCase(registrationId))
 			throw new PacketCreatorException(ErrorCode.INITIALIZATION_ERROR.getErrorCode(),
 					ErrorCode.INITIALIZATION_ERROR.getErrorMessage());
+
+		List<PacketInfo> packetInfos = new ArrayList<>();
+
 		try {
 			schemaJson = idSchemaUtils.getIdSchema(version);
 		} catch (IOException e) {
@@ -131,8 +137,7 @@ public class PacketWriterImpl implements IPacketWriter {
 		}
 		Map<String, List<Object>> identityProperties = loadSchemaFields(schemaJson);
 		
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		try(ZipOutputStream packetZip = new ZipOutputStream(new BufferedOutputStream(out))) {
+		try {
 			
 			for(String subpacketName : identityProperties.keySet()) {
 				LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), 
@@ -141,15 +146,31 @@ public class PacketWriterImpl implements IPacketWriter {
 				byte[] subpacketBytes = createSubpacket(version, schemaFields, defaultSubpacketName.equalsIgnoreCase(subpacketName), 
 						registrationId);
 				
-				//TODO sign zip
-				//subpacketBytes = CryptoUtil.encodeBase64(packetCryptoHelper.encryptPacket(subpacketBytes, publicKey)).getBytes();
-				addEntryToZip(String.format(PacketManagerConstants.SUBPACKET_ZIP_FILE_NAME, registrationId, subpacketName),
-						subpacketBytes, packetZip);
+				subpacketBytes = CryptoUtil.encodeBase64(packetCryptoHelper.encrypt(registrationId, subpacketBytes)).getBytes();
+
+				PacketInfo packetInfo = new PacketInfo();
+				packetInfo.setProviderName(this.getClass().getSimpleName());
+				packetInfo.setSchemaVersion(version);
+				packetInfo.setId(registrationId);
+				packetInfo.setSource(source);
+				packetInfo.setProcess(process);
+				packetInfo.setPacketName(registrationId + "_" +subpacketName);
+				packetInfo.setCreationDate(DateUtils.parseUTCToDate(DateUtils.getUTCCurrentDateTimeString()));
+				// TODO
+				packetInfo.setEncryptedHash("TODO");
+				packetInfo.setProviderVersion("TODO");
+				packetInfo.setSignature(new String(packetCryptoHelper.sign(subpacketBytes)));
+
+				Packet packet = new Packet();
+				packet.setPacketInfo(packetInfo);
+				packet.setPacket(new ByteArrayInputStream(subpacketBytes));
+				packetKeeper.putPacket(packet);
+				packetInfos.add(packetInfo);
 				LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), 
 						registrationId, "Completed Subpacket: "+ subpacketName);
 			}
 			
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new PacketCreatorException(ErrorCode.PKT_ZIP_ERROR.getErrorCode(), 
 					ErrorCode.PKT_ZIP_ERROR.getErrorMessage().concat(ExceptionUtils.getStackTrace(e)));
 		} finally {
@@ -157,9 +178,7 @@ public class PacketWriterImpl implements IPacketWriter {
 		}
 		LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), 
 				registrationId, "Exiting packet creation");
-		//TODO sign zip
-
-		return out.toByteArray();
+		return packetInfos;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -387,30 +406,12 @@ public class PacketWriterImpl implements IPacketWriter {
 	}
 
 	@Override
-	public final PacketInfo persistPacket(String id, double version, String schemaJson) {
-		// TODO : signature, encryption, zip operations.
-		//        //packetKeeper.putPacket();
-		PacketInfo packetInfo = new PacketInfo();
-
-		File file = new File("C:\\Users\\M1045447\\Desktop\\decryptor\\" + id + ".zip");
-
+	public final List<PacketInfo> persistPacket(String id, double version, String schemaJson, String source, String process) {
 		try {
-			OutputStream os = new FileOutputStream(file);
-			os.write(createPacket(id, version, schemaJson));
-			System.out.println("Packet created and stored Successfully");
-			os.close();
-			packetInfo.setProcess(process);
-			packetInfo.setSource(source);
-			packetInfo.setId(id);
-			packetInfo.setSchemaVersion(version);
-			packetInfo.setProviderName(this.getClass().getSimpleName());
+			return createPacket(id, version, schemaJson, source, process);
+		} catch (PacketCreatorException e) {
+			throw e;
 		}
-
-		catch (Exception e) {
-			System.out.println("Exception: " + e);
-		}
-
-		return packetInfo;
 	}
 	
 }

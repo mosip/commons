@@ -1,10 +1,15 @@
 package io.mosip.commons.khazana.impl;
 
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.util.Map;
 
+@Service
+@Qualifier("PosixAdapter")
 public class PosixAdapter implements ObjectStoreAdapter {
 
     public InputStream getObject(String account, String container, String objectName) {

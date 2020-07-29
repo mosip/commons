@@ -68,7 +68,7 @@ public class PacketHelper {
             throw new  NoAvailableProviderException();
 
         Optional<ProviderDto> providerDto = configurations.stream().filter(dto -> dto.getSource().contains(providerSource) && dto.getProcess().contains(providerProcess)).findAny();
-        return providerDto.isPresent() && providerDto.get() != null && providerDto.get().getClassName().contains(providerName);
+        return providerDto.isPresent() && providerDto.get() != null && providerName.contains(providerDto.get().getClassName());
     }
 
     private static List<ProviderDto> getReader(Map<String, String> readerConfiguration) {

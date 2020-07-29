@@ -4,9 +4,9 @@ public interface IPacketCryptoHelper {
 
     public byte[] sign(byte[] packet);
 
-    public byte[] encrypt(byte[] packet);
+    public byte[] encrypt(String id, byte[] packet);
 
-    public byte[] decrypt(byte[] packet);
+    public byte[] decrypt(String id, byte[] packet);
 
     public boolean verify(byte[] packet);
 }

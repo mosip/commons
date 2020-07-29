@@ -95,12 +95,12 @@ public class PacketWriter {
      * @param process : the process
      * @return PacketInfo
      */
-    public PacketInfo persistPacket(String id, double version, String schemaJson, String source, String process) {
-        return getProvider(source, process).persistPacket(id, version, schemaJson);
+    public List<PacketInfo> persistPacket(String id, double version, String schemaJson, String source, String process, byte[] publicKey) {
+        return getProvider(source, process).persistPacket(id, version, schemaJson, source, process);
     }
 
-    public PacketInfo createPacket(PacketDto packetDto, boolean isServerCall) {
-        PacketInfo packetInfo = null;
+    public List<PacketInfo> createPacket(PacketDto packetDto, boolean isServerCall) {
+        List<PacketInfo> packetInfos = null;
         IPacketWriter provider = getProvider(packetDto.getSource(), packetDto.getProcess());
         try {
             provider.setFields(packetDto.getId(), packetDto.getFields());
@@ -108,12 +108,13 @@ public class PacketWriter {
             packetDto.getDocuments().entrySet().forEach(doc -> provider.setDocument(packetDto.getId(), doc.getKey(), doc.getValue()));
             provider.setAudits(packetDto.getId(), packetDto.getAudits());
             packetDto.getBiometrics().entrySet().forEach(bio -> provider.setBiometric(packetDto.getId(), bio.getKey(), bio.getValue()));
-            packetInfo = provider.persistPacket(packetDto.getId(), packetDto.getSchemaVersion(), packetDto.getSchemaJson());
+            packetInfos = provider.persistPacket(packetDto.getId(), packetDto.getSchemaVersion(),
+                    packetDto.getSchemaJson(), packetDto.getSource(), packetDto.getProcess());
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return packetInfo;
+        return packetInfos;
     }
 
     /**
@@ -127,7 +128,7 @@ public class PacketWriter {
         IPacketWriter provider = null;
         if (referenceWriterProviders != null && !referenceWriterProviders.isEmpty()) {
             Optional<IPacketWriter> refProvider = referenceWriterProviders.stream().filter(refPr ->
-                    (PacketHelper.isSourceAndProcessPresent(refPr.getClass().getName(), source, process, PacketHelper.Provider.READER))).findAny();
+                    (PacketHelper.isSourceAndProcessPresent(refPr.getClass().getName(), source, process, PacketHelper.Provider.WRITER))).findAny();
             if (refProvider.isPresent() && refProvider.get() != null)
                 provider = refProvider.get();
         }

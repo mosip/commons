@@ -42,7 +42,7 @@ public class ReferenceProvider4 implements IPacketWriter {
     }
 
     @Override
-    public PacketInfo persistPacket(String id, double version, String schemaJson) {
+    public List<PacketInfo> persistPacket(String id, double version, String schemaJson, String source, String process) {
         return null;
     }
 

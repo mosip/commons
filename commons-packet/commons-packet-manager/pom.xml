@@ -79,6 +79,16 @@
             <artifactId>kernel-auth-adapter</artifactId>
             <version>${kernel.auth.adaptor.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.mosip.commons</groupId>
+            <artifactId>khazana</artifactId>
+            <version>${khazana.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.mosip.kernel</groupId>
+            <artifactId>kernel-crypto-signature</artifactId>
+            <version>1.0.9</version>
+        </dependency>
 
     </dependencies>
 
