@@ -1,4 +1,4 @@
-package io.mosip.kernel.auth.dto;
+package io.mosip.kernel.core.authmanager.model;
 
 import java.io.Serializable;
 
