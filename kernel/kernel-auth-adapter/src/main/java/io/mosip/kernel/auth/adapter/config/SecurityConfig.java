@@ -8,12 +8,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,13 +23,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import io.mosip.kernel.auth.adapter.filter.AuthFilter;
 import io.mosip.kernel.auth.adapter.filter.CorsFilter;
-import io.mosip.kernel.auth.adapter.handler.AuthHandler;
 import io.mosip.kernel.auth.adapter.handler.AuthSuccessHandler;
 
 /**
@@ -69,15 +71,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private String origins;
 
 	@Autowired
-	private AuthHandler authProvider;
+	private AbstractUserDetailsAuthenticationProvider authProvider;
 
 	@Bean
 	public AuthenticationManager authenticationManager() {
 		return new ProviderManager(Collections.singletonList(authProvider));
 	}
 
+	@ConditionalOnMissingBean(AbstractAuthenticationProcessingFilter.class)
 	@Bean
-	public AuthFilter authFilter() {
+	public AbstractAuthenticationProcessingFilter authFilter() {
 		RequestMatcher requestMatcher = new AntPathRequestMatcher("*");
 		AuthFilter filter = new AuthFilter(requestMatcher);
 		filter.setAuthenticationManager(authenticationManager());
@@ -86,8 +89,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
-	public FilterRegistrationBean<AuthFilter> registration(AuthFilter filter) {
-		FilterRegistrationBean<AuthFilter> registration = new FilterRegistrationBean<AuthFilter>(filter);
+	public FilterRegistrationBean<AbstractAuthenticationProcessingFilter> registration(AbstractAuthenticationProcessingFilter filter) {
+		FilterRegistrationBean<AbstractAuthenticationProcessingFilter> registration = new FilterRegistrationBean<>(filter);
 		registration.setEnabled(false);
 		return registration;
 	}

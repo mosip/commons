@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,10 +53,10 @@ public class RestInterceptor implements ClientHttpRequestInterceptor {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	@Value("${mosip.kernel.open-id-url}")
+	@Value("${mosip.iam.open-id-url}")
 	private String keycloakOpenIdUrl;
 
-	@Value("${mosip.master.realm-id}")
+	@Value("${mosip.iam.master.realm-id}")
 	private String realmId;
 
 	@Value("${mosip.keycloak.admin.client.id}")
