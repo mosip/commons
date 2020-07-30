@@ -3,6 +3,7 @@
  */
 package io.mosip.kernel.auth.dto;
 
+import io.mosip.kernel.core.authmanager.model.ClientSecret;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
