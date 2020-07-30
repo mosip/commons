@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -33,16 +34,12 @@ import io.mosip.kernel.auth.config.MosipEnvironment;
 import io.mosip.kernel.auth.constant.AuthConstant;
 import io.mosip.kernel.auth.constant.AuthErrorCode;
 import io.mosip.kernel.auth.dto.AccessTokenResponse;
-import io.mosip.kernel.auth.dto.AuthNResponseDto;
-import io.mosip.kernel.auth.dto.MosipUserDto;
-import io.mosip.kernel.auth.dto.MosipUserTokenDto;
 import io.mosip.kernel.auth.dto.otp.OtpEmailSendResponseDto;
 import io.mosip.kernel.auth.dto.otp.OtpGenerateRequest;
 import io.mosip.kernel.auth.dto.otp.OtpGenerateResponseDto;
 import io.mosip.kernel.auth.dto.otp.OtpSmsSendRequestDto;
 import io.mosip.kernel.auth.dto.otp.OtpTemplateDto;
 import io.mosip.kernel.auth.dto.otp.OtpTemplateResponseDto;
-import io.mosip.kernel.auth.dto.otp.OtpUser;
 import io.mosip.kernel.auth.dto.otp.OtpValidatorResponseDto;
 import io.mosip.kernel.auth.dto.otp.SmsResponseDto;
 import io.mosip.kernel.auth.dto.otp.email.OTPEmailTemplate;
@@ -54,6 +51,10 @@ import io.mosip.kernel.auth.service.TokenGenerationService;
 import io.mosip.kernel.auth.util.OtpValidator;
 import io.mosip.kernel.auth.util.ProxyTokenGenerator;
 import io.mosip.kernel.auth.util.TemplateUtil;
+import io.mosip.kernel.core.authmanager.model.AuthNResponseDto;
+import io.mosip.kernel.core.authmanager.model.MosipUserDto;
+import io.mosip.kernel.core.authmanager.model.MosipUserTokenDto;
+import io.mosip.kernel.core.authmanager.model.OtpUser;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
@@ -63,6 +64,7 @@ import io.mosip.kernel.core.http.ResponseWrapper;
  * @author Urvil Joshi
  *
  */
+@ConditionalOnProperty(name = "mosip.iam.use.default.impl",havingValue = "true")
 @Profile("local")
 @Service
 public class ProxyOTPServiceImpl implements OTPService {
@@ -95,10 +97,10 @@ public class ProxyOTPServiceImpl implements OTPService {
 	@Autowired
 	private OtpValidator authOtpValidator;
 
-	@Value("${mosip.kernel.open-id-url}")
+	@Value("${mosip.iam.open-id-url}")
 	private String keycloakOpenIdUrl;
 
-	@Value("${mosip.kernel.realm-id}")
+	@Value("${mosip.iam.default.realm-id}")
 	private String realmId;
 
 	@Value("${mosip.kernel.auth.client.id}")
@@ -125,7 +127,7 @@ public class ProxyOTPServiceImpl implements OTPService {
 	@Value("${mosip.admin.clientsecret}")
 	private String mosipAdminSecret;
 
-	@Value("${mosip.admin.pre-reg_user_password}")
+	@Value("${mosip.iam.pre-reg_user_password}")
 	private String preRegUserPassword;
 
 	@Value("${mosip.kernel.prereg.realm-id}")

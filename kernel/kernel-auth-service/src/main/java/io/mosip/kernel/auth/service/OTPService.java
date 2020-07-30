@@ -5,10 +5,10 @@ package io.mosip.kernel.auth.service;
 
 import java.util.List;
 
-import io.mosip.kernel.auth.dto.AuthNResponseDto;
-import io.mosip.kernel.auth.dto.MosipUserDto;
-import io.mosip.kernel.auth.dto.MosipUserTokenDto;
-import io.mosip.kernel.auth.dto.otp.OtpUser;
+import io.mosip.kernel.core.authmanager.model.AuthNResponseDto;
+import io.mosip.kernel.core.authmanager.model.MosipUserDto;
+import io.mosip.kernel.core.authmanager.model.MosipUserTokenDto;
+import io.mosip.kernel.core.authmanager.model.OtpUser;
 
 /**
  * @author Ramadurai Pandian

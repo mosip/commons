@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.auth.config.MosipEnvironment;
@@ -26,6 +27,7 @@ import io.mosip.kernel.auth.repository.UserStoreFactory;
  * @author Ramadurai Pandian
  *
  */
+@ConditionalOnProperty(name = "mosip.iam.use.default.impl",havingValue = "true")
 @Component
 public class UserStoreFactoryImpl implements UserStoreFactory {
 

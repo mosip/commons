@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -33,13 +34,13 @@ import io.mosip.kernel.auth.config.MosipEnvironment;
 import io.mosip.kernel.auth.constant.AuthConstant;
 import io.mosip.kernel.auth.constant.AuthErrorCode;
 import io.mosip.kernel.auth.constant.OTPErrorCode;
-import io.mosip.kernel.auth.dto.MosipUserDto;
-import io.mosip.kernel.auth.dto.otp.OtpUser;
 import io.mosip.kernel.auth.dto.otp.idrepo.ResponseDTO;
 import io.mosip.kernel.auth.exception.AuthManagerException;
 import io.mosip.kernel.auth.exception.AuthManagerServiceException;
 import io.mosip.kernel.auth.service.TokenGenerationService;
 import io.mosip.kernel.auth.service.UinService;
+import io.mosip.kernel.core.authmanager.model.MosipUserDto;
+import io.mosip.kernel.core.authmanager.model.OtpUser;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -49,7 +50,7 @@ import io.mosip.kernel.core.util.StringUtils;
  * @author M1049825
  *
  */
-
+@ConditionalOnProperty(name = "mosip.iam.use.default.impl",havingValue = "true")
 @Component
 public class UinServiceImpl implements UinService {
 

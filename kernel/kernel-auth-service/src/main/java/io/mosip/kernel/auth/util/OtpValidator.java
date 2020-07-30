@@ -6,8 +6,8 @@ package io.mosip.kernel.auth.util;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.auth.constant.AuthErrorCode;
-import io.mosip.kernel.auth.dto.otp.OtpUser;
 import io.mosip.kernel.auth.exception.AuthManagerException;
+import io.mosip.kernel.core.authmanager.model.OtpUser;
 
 /**
  * @author Ramadurai Pandian

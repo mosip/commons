@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -40,45 +41,45 @@ import io.mosip.kernel.auth.constant.AuthConstant;
 import io.mosip.kernel.auth.constant.AuthErrorCode;
 import io.mosip.kernel.auth.constant.KeycloakConstants;
 import io.mosip.kernel.auth.dto.AccessTokenResponse;
-import io.mosip.kernel.auth.dto.AccessTokenResponseDTO;
-import io.mosip.kernel.auth.dto.AuthNResponse;
-import io.mosip.kernel.auth.dto.AuthNResponseDto;
-import io.mosip.kernel.auth.dto.AuthResponseDto;
 import io.mosip.kernel.auth.dto.AuthToken;
-import io.mosip.kernel.auth.dto.AuthZResponseDto;
-import io.mosip.kernel.auth.dto.ClientSecret;
 import io.mosip.kernel.auth.dto.KeycloakErrorResponseDto;
-import io.mosip.kernel.auth.dto.LoginUser;
-import io.mosip.kernel.auth.dto.MosipUserDto;
-import io.mosip.kernel.auth.dto.MosipUserListDto;
-import io.mosip.kernel.auth.dto.MosipUserSaltListDto;
-import io.mosip.kernel.auth.dto.MosipUserTokenDto;
-import io.mosip.kernel.auth.dto.PasswordDto;
-import io.mosip.kernel.auth.dto.RIdDto;
 import io.mosip.kernel.auth.dto.RealmAccessDto;
-import io.mosip.kernel.auth.dto.RefreshTokenRequest;
-import io.mosip.kernel.auth.dto.RefreshTokenResponse;
-import io.mosip.kernel.auth.dto.RolesListDto;
-import io.mosip.kernel.auth.dto.UserDetailsResponseDto;
-import io.mosip.kernel.auth.dto.UserNameDto;
-import io.mosip.kernel.auth.dto.UserOtp;
-import io.mosip.kernel.auth.dto.UserPasswordRequestDto;
-import io.mosip.kernel.auth.dto.UserPasswordResponseDto;
-import io.mosip.kernel.auth.dto.UserRegistrationRequestDto;
-import io.mosip.kernel.auth.dto.UserRoleDto;
-import io.mosip.kernel.auth.dto.ValidationResponseDto;
-import io.mosip.kernel.auth.dto.otp.OtpUser;
 import io.mosip.kernel.auth.exception.AuthManagerException;
 import io.mosip.kernel.auth.exception.LoginException;
 import io.mosip.kernel.auth.repository.UserStoreFactory;
 import io.mosip.kernel.auth.repository.impl.KeycloakImpl;
-import io.mosip.kernel.auth.service.AuthService;
 import io.mosip.kernel.auth.service.OTPService;
 import io.mosip.kernel.auth.service.TokenService;
 import io.mosip.kernel.auth.service.UinService;
 import io.mosip.kernel.auth.util.AuthUtil;
 import io.mosip.kernel.auth.util.TokenGenerator;
 import io.mosip.kernel.auth.util.TokenValidator;
+import io.mosip.kernel.core.authmanager.model.AccessTokenResponseDTO;
+import io.mosip.kernel.core.authmanager.model.AuthNResponse;
+import io.mosip.kernel.core.authmanager.model.AuthNResponseDto;
+import io.mosip.kernel.core.authmanager.model.AuthResponseDto;
+import io.mosip.kernel.core.authmanager.model.AuthZResponseDto;
+import io.mosip.kernel.core.authmanager.model.ClientSecret;
+import io.mosip.kernel.core.authmanager.model.LoginUser;
+import io.mosip.kernel.core.authmanager.model.MosipUserDto;
+import io.mosip.kernel.core.authmanager.model.MosipUserListDto;
+import io.mosip.kernel.core.authmanager.model.MosipUserSaltListDto;
+import io.mosip.kernel.core.authmanager.model.MosipUserTokenDto;
+import io.mosip.kernel.core.authmanager.model.OtpUser;
+import io.mosip.kernel.core.authmanager.model.PasswordDto;
+import io.mosip.kernel.core.authmanager.model.RIdDto;
+import io.mosip.kernel.core.authmanager.model.RefreshTokenRequest;
+import io.mosip.kernel.core.authmanager.model.RefreshTokenResponse;
+import io.mosip.kernel.core.authmanager.model.RolesListDto;
+import io.mosip.kernel.core.authmanager.model.UserDetailsResponseDto;
+import io.mosip.kernel.core.authmanager.model.UserNameDto;
+import io.mosip.kernel.core.authmanager.model.UserOtp;
+import io.mosip.kernel.core.authmanager.model.UserPasswordRequestDto;
+import io.mosip.kernel.core.authmanager.model.UserPasswordResponseDto;
+import io.mosip.kernel.core.authmanager.model.UserRegistrationRequestDto;
+import io.mosip.kernel.core.authmanager.model.UserRoleDto;
+import io.mosip.kernel.core.authmanager.model.ValidationResponseDto;
+import io.mosip.kernel.core.authmanager.spi.AuthService;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 
 /**
@@ -89,6 +90,14 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
  * @author Srinivasan
  *
  */
+/*
+ * This is default impl of authservice provided by mosip. if this property mosip.iam.use.default.impl is true then it 
+ * will be enabled along with other default beans which are included by mosip as default implementation for auth service 
+ * features. 
+ */
+
+
+@ConditionalOnProperty(name = "mosip.iam.use.default.impl",havingValue = "true")
 @Profile("!local")
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -105,7 +114,7 @@ public class AuthServiceImpl implements AuthService {
 
 	private static final String SUCCESSFULLY_LOGGED_OUT = "successfully loggedout";
 
-	@Value("${mosip.kernel.open-id-url}")
+	@Value("${mosip.iam.open-id-url}")
 	private String keycloakOpenIdUrl;
 
 	@Autowired
@@ -138,7 +147,7 @@ public class AuthServiceImpl implements AuthService {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	@Value("${mosip.kernel.open-id-url}")
+	@Value("${mosip.iam.open-id-url}")
 	private String openIdUrl;
 
 	@Value("${mosip.admin.login_flow.name}")
@@ -159,10 +168,10 @@ public class AuthServiceImpl implements AuthService {
 	@Value("${mosip.admin.login_flow.response_type}")
 	private String responseType;
 
-	@Value("${mosip.keycloak.authorization_endpoint}")
+	@Value("${mosip.iam.authorization_endpoint}")
 	private String authorizationEndpoint;
 
-	@Value("${mosip.keycloak.token_endpoint}")
+	@Value("${mosip.iam.token_endpoint}")
 	private String tokenEndpoint;
 
 	 @Value("${mosip.admin_realm_id}")
@@ -171,7 +180,7 @@ public class AuthServiceImpl implements AuthService {
 	@Value("${mosip.kernel.prereg.realm-id}")
 	private String preRegRealmID;
 	
-	@Value("${mosip.keycloak.base-url}")
+	@Value("${mosip.iam.base-url}")
 	private String keycloakBaseURL;
 
 	@Autowired
