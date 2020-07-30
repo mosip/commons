@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserPasswordRequestDto {
-	
 	@NotBlank(message = AuthConstant.INVALID_REQUEST)
 	private String appId;
 	@NotBlank(message = AuthConstant.INVALID_REQUEST)
