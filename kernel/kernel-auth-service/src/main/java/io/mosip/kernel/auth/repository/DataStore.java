@@ -5,23 +5,23 @@ package io.mosip.kernel.auth.repository;
 
 import java.util.List;
 
-import io.mosip.kernel.auth.dto.AuthZResponseDto;
-import io.mosip.kernel.auth.dto.ClientSecret;
-import io.mosip.kernel.auth.dto.LoginUser;
-import io.mosip.kernel.auth.dto.MosipUserDto;
-import io.mosip.kernel.auth.dto.MosipUserListDto;
-import io.mosip.kernel.auth.dto.MosipUserSaltListDto;
-import io.mosip.kernel.auth.dto.PasswordDto;
-import io.mosip.kernel.auth.dto.RIdDto;
-import io.mosip.kernel.auth.dto.RolesListDto;
-import io.mosip.kernel.auth.dto.UserDetailsResponseDto;
-import io.mosip.kernel.auth.dto.UserNameDto;
-import io.mosip.kernel.auth.dto.UserOtp;
-import io.mosip.kernel.auth.dto.UserPasswordRequestDto;
-import io.mosip.kernel.auth.dto.UserPasswordResponseDto;
-import io.mosip.kernel.auth.dto.UserRegistrationRequestDto;
-import io.mosip.kernel.auth.dto.ValidationResponseDto;
-import io.mosip.kernel.auth.dto.otp.OtpUser;
+import io.mosip.kernel.core.authmanager.model.AuthZResponseDto;
+import io.mosip.kernel.core.authmanager.model.ClientSecret;
+import io.mosip.kernel.core.authmanager.model.LoginUser;
+import io.mosip.kernel.core.authmanager.model.MosipUserDto;
+import io.mosip.kernel.core.authmanager.model.MosipUserListDto;
+import io.mosip.kernel.core.authmanager.model.MosipUserSaltListDto;
+import io.mosip.kernel.core.authmanager.model.OtpUser;
+import io.mosip.kernel.core.authmanager.model.PasswordDto;
+import io.mosip.kernel.core.authmanager.model.RIdDto;
+import io.mosip.kernel.core.authmanager.model.RolesListDto;
+import io.mosip.kernel.core.authmanager.model.UserDetailsResponseDto;
+import io.mosip.kernel.core.authmanager.model.UserNameDto;
+import io.mosip.kernel.core.authmanager.model.UserOtp;
+import io.mosip.kernel.core.authmanager.model.UserPasswordRequestDto;
+import io.mosip.kernel.core.authmanager.model.UserPasswordResponseDto;
+import io.mosip.kernel.core.authmanager.model.UserRegistrationRequestDto;
+import io.mosip.kernel.core.authmanager.model.ValidationResponseDto;
 
 /**
  * @author Ramadurai Pandian

@@ -10,6 +10,7 @@ import java.util.Date;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -29,6 +30,7 @@ import io.mosip.kernel.auth.service.TokenService;
  * @author Ramadurai Pandian
  *
  */
+@ConditionalOnProperty(name = "mosip.iam.use.default.impl",havingValue = "true")
 @Repository
 public class TokenServicesImpl implements TokenService {
 

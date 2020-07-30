@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,14 +24,14 @@ import io.mosip.kernel.auth.adapter.exception.AuthZException;
 import io.mosip.kernel.auth.config.MosipEnvironment;
 import io.mosip.kernel.auth.constant.AuthConstant;
 import io.mosip.kernel.auth.constant.AuthErrorCode;
-import io.mosip.kernel.auth.dto.MosipUserDto;
 import io.mosip.kernel.auth.dto.otp.OtpGenerateRequest;
 import io.mosip.kernel.auth.dto.otp.OtpGenerateRequestDto;
 import io.mosip.kernel.auth.dto.otp.OtpGenerateResponseDto;
-import io.mosip.kernel.auth.dto.otp.OtpUser;
 import io.mosip.kernel.auth.exception.AuthManagerException;
 import io.mosip.kernel.auth.exception.AuthManagerServiceException;
 import io.mosip.kernel.auth.service.OTPGenerateService;
+import io.mosip.kernel.core.authmanager.model.MosipUserDto;
+import io.mosip.kernel.core.authmanager.model.OtpUser;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
@@ -40,6 +41,7 @@ import io.mosip.kernel.core.http.ResponseWrapper;
  * @author Ramadurai Pandian
  *
  */
+@ConditionalOnProperty(name = "mosip.iam.use.default.impl",havingValue = "true")
 @Component
 public class OTPGenerateServiceImpl implements OTPGenerateService {
 

@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -31,7 +32,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -47,61 +48,62 @@ import io.mosip.kernel.auth.adapter.exception.AuthNException;
 import io.mosip.kernel.auth.adapter.exception.AuthZException;
 import io.mosip.kernel.auth.constant.AuthConstant;
 import io.mosip.kernel.auth.constant.AuthErrorCode;
-import io.mosip.kernel.auth.dto.AuthZResponseDto;
-import io.mosip.kernel.auth.dto.ClientSecret;
 import io.mosip.kernel.auth.dto.KeycloakPasswordDTO;
 import io.mosip.kernel.auth.dto.KeycloakRequestDto;
-import io.mosip.kernel.auth.dto.LoginUser;
-import io.mosip.kernel.auth.dto.MosipUserDto;
-import io.mosip.kernel.auth.dto.MosipUserListDto;
-import io.mosip.kernel.auth.dto.MosipUserSalt;
-import io.mosip.kernel.auth.dto.MosipUserSaltListDto;
-import io.mosip.kernel.auth.dto.PasswordDto;
-import io.mosip.kernel.auth.dto.RIdDto;
-import io.mosip.kernel.auth.dto.Role;
 import io.mosip.kernel.auth.dto.Roles;
-import io.mosip.kernel.auth.dto.RolesListDto;
-import io.mosip.kernel.auth.dto.UserDetailsResponseDto;
-import io.mosip.kernel.auth.dto.UserNameDto;
-import io.mosip.kernel.auth.dto.UserOtp;
-import io.mosip.kernel.auth.dto.UserPasswordRequestDto;
-import io.mosip.kernel.auth.dto.UserPasswordResponseDto;
-import io.mosip.kernel.auth.dto.UserRegistrationRequestDto;
-import io.mosip.kernel.auth.dto.ValidationResponseDto;
-import io.mosip.kernel.auth.dto.otp.OtpUser;
 import io.mosip.kernel.auth.repository.DataStore;
 import io.mosip.kernel.auth.util.AuthUtil;
+import io.mosip.kernel.core.authmanager.model.AuthZResponseDto;
+import io.mosip.kernel.core.authmanager.model.ClientSecret;
+import io.mosip.kernel.core.authmanager.model.LoginUser;
+import io.mosip.kernel.core.authmanager.model.MosipUserDto;
+import io.mosip.kernel.core.authmanager.model.MosipUserListDto;
+import io.mosip.kernel.core.authmanager.model.MosipUserSalt;
+import io.mosip.kernel.core.authmanager.model.MosipUserSaltListDto;
+import io.mosip.kernel.core.authmanager.model.OtpUser;
+import io.mosip.kernel.core.authmanager.model.PasswordDto;
+import io.mosip.kernel.core.authmanager.model.RIdDto;
+import io.mosip.kernel.core.authmanager.model.Role;
+import io.mosip.kernel.core.authmanager.model.RolesListDto;
+import io.mosip.kernel.core.authmanager.model.UserDetailsResponseDto;
+import io.mosip.kernel.core.authmanager.model.UserNameDto;
+import io.mosip.kernel.core.authmanager.model.UserOtp;
+import io.mosip.kernel.core.authmanager.model.UserPasswordRequestDto;
+import io.mosip.kernel.core.authmanager.model.UserPasswordResponseDto;
+import io.mosip.kernel.core.authmanager.model.UserRegistrationRequestDto;
+import io.mosip.kernel.core.authmanager.model.ValidationResponseDto;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.util.CryptoUtil;
 
-@Service
+@ConditionalOnProperty(name = "mosip.iam.use.default.impl",havingValue = "true")
+@Component
 public class KeycloakImpl implements DataStore {
 
 	private static final String INDIVIDUAL = "INDIVIDUAL";
 
-	@Value("${mosip.kernel.base-url}")
+	@Value("${mosip.iam.realm.operations.base-url}")
 	private String keycloakBaseUrl;
 
-	@Value("${mosip.kernel.admin-url}")
+	@Value("${mosip.iam.admin-url}")
 	private String keycloakAdminUrl;
 
-	@Value("${mosip.kernel.admin-realm-id}")
+	@Value("${mosip.iam.admin-realm-id}")
 	private String adminRealmId;
 
-	// @Value("${mosip.kernel.realm-id}")
+	// @Value("${mosip.iam.default.realm-id}")
 	// private String realmId;
 
 	@Autowired
 	private AuthUtil authUtil;
 
-	@Value("${mosip.kernel.roles-url}")
+	@Value("${mosip.iam.roles-extn-url}")
 	private String roles;
 
-	@Value("${mosip.kernel.users-url}")
+	@Value("${mosip.iam.users-extn-url}")
 	private String users;
 
-	@Value("${mosip.kernel.role-user-mapping-url}")
+	@Value("${mosip.iam.role-user-mapping-url}")
 	private String roleUserMappingurl;
 
 	@Qualifier(value = "keycloakRestTemplate")
@@ -123,7 +125,7 @@ public class KeycloakImpl implements DataStore {
 	@Value("${db_3_DS.keycloak.driverClassName}")
 	private String keycloakDriver;
 
-	@Value("${mosip.admin.pre-reg_user_password}")
+	@Value("${mosip.iam.pre-reg_user_password}")
 	private String preRegUserPassword;
 
 	@Value("${hikari.maximumPoolSize:25}")
