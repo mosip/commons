@@ -3,8 +3,6 @@ package io.mosip.kernel.core.authmanager.model;
 import java.io.Serializable;
 import java.util.List;
 
-
-
 /**
  * @author Sabbu Uday Kumar
  * @since 1.0.0
