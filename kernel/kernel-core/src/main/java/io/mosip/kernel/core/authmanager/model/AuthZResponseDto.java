@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package io.mosip.kernel.core.authmanager.model;
 
 import lombok.AllArgsConstructor;
