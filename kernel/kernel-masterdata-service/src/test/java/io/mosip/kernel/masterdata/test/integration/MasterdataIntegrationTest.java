@@ -1651,81 +1651,7 @@ public class MasterdataIntegrationTest {
 
 	}
 
-	// -------RegistrationCenter mapping-------------------------
-
-	@Test
-	@WithUserDetails("global-admin")
-	public void mapRegistrationCenterAndDeviceTest() throws Exception {
-		RequestWrapper<RegistrationCenterDeviceDto> requestDto = new RequestWrapper<>();
-		requestDto.setId("mosip.match.regcentr.deviceid");
-		requestDto.setVersion("1.0.0");
-		requestDto.setRequest(registrationCenterDeviceDto);
-		String content = mapper.writeValueAsString(requestDto);
-		when(registrationCenterDeviceRepository.create(Mockito.any())).thenReturn(registrationCenterDevice);
-		when(registrationCenterDeviceHistoryRepository.create(Mockito.any()))
-				.thenReturn(registrationCenterDeviceHistory);
-
-		mockMvc.perform(post("/registrationcenterdevice").contentType(MediaType.APPLICATION_JSON).content(content))
-				.andExpect(status().isOk());
-	}
-
-	@Test
-	@WithUserDetails("global-admin")
-	public void mapRegistrationCenterAndDeviceDataAccessLayerExceptionTest() throws Exception {
-		RequestWrapper<RegistrationCenterDeviceDto> requestDto = new RequestWrapper<>();
-		requestDto.setId("mosip.match.regcentr.deviceid");
-		requestDto.setVersion("1.0.0");
-		requestDto.setRequest(registrationCenterDeviceDto);
-		String content = mapper.writeValueAsString(requestDto);
-		when(registrationCenterDeviceRepository.create(Mockito.any())).thenThrow(DataAccessLayerException.class);
-		when(registrationCenterDeviceHistoryRepository.create(Mockito.any()))
-				.thenReturn(registrationCenterDeviceHistory);
-
-		mockMvc.perform(post("/registrationcenterdevice").contentType(MediaType.APPLICATION_JSON).content(content))
-				.andExpect(status().isInternalServerError());
-
-	}
-
-	@Test
-	@WithUserDetails("global-admin")
-	public void mapRegistrationCenterAndDeviceBadRequestTest() throws Exception {
-		RequestWrapper<RegistrationCenterDeviceDto> requestDto = new RequestWrapper<>();
-		requestDto.setId("mosip.match.regcentr.deviceid");
-		requestDto.setVersion("1.0.0");
-		String content = mapper.writeValueAsString(requestDto);
-		mockMvc.perform(post("/registrationcenterdevice").contentType(MediaType.APPLICATION_JSON).content(content))
-				.andExpect(status().isOk());
-
-	}
-
-	@Test
-	@WithUserDetails("global-admin")
-	public void deleteRegistrationCenterAndDeviceMappingTest() throws Exception {
-		when(registrationCenterDeviceRepository.findAllNondeletedMappings(Mockito.any()))
-				.thenReturn(Optional.of(registrationCenterDevice));
-		when(registrationCenterDeviceHistoryRepository.create(Mockito.any()))
-				.thenReturn(registrationCenterDeviceHistory);
-		when(registrationCenterDeviceRepository.update(Mockito.any())).thenReturn(registrationCenterDevice);
-		mockMvc.perform(delete("/registrationcenterdevice/RC001/DC001")).andExpect(status().isOk());
-	}
-
-	@Test
-	@WithUserDetails("global-admin")
-	public void deleteRegistrationCenterAndDeviceMappingDataNotFoundExceptionTest() throws Exception {
-		when(registrationCenterDeviceRepository.findAllNondeletedMappings(Mockito.any())).thenReturn(Optional.empty());
-		mockMvc.perform(delete("/registrationcenterdevice/RC001/DC001")).andExpect(status().isOk());
-	}
-
-	@Test
-	@WithUserDetails("global-admin")
-	public void deleteRegistrationCenterAndDeviceMappingDataAccessLayerExceptionTest() throws Exception {
-		when(registrationCenterDeviceRepository.findAllNondeletedMappings(Mockito.any()))
-				.thenReturn(Optional.of(registrationCenterDevice));
-		when(registrationCenterDeviceHistoryRepository.create(Mockito.any()))
-				.thenThrow(new DataAccessLayerException("errorCode", "errorMessage", null));
-		mockMvc.perform(delete("/registrationcenterdevice/RC001/DC001")).andExpect(status().isInternalServerError());
-	}
-
+	
 
 	// -------RegistrationCentermachineDevice mapping-------------------------
 
@@ -6528,7 +6454,7 @@ public class MasterdataIntegrationTest {
 		// device.setZoneCode("STH");
 		when(deviceRepository.findByIdAndLangCode(Mockito.anyString(), Mockito.anyString())).thenReturn(device);
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcenterdevice/map/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcenterdevice/map/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
@@ -6615,7 +6541,7 @@ public class MasterdataIntegrationTest {
 				.thenReturn(registrationCenterDeviceHistory);
 		when(registrationCenterRepository.update(Mockito.any())).thenReturn(registrationCenter);
 		when(repositoryCenterHistoryRepository.create(Mockito.any())).thenReturn(registrationCenterHistory);
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcenterdevice/map/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcenterdevice/map/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
@@ -6669,7 +6595,7 @@ public class MasterdataIntegrationTest {
 		when(registrationCenterDeviceHistoryRepository.create(Mockito.any()))
 				.thenReturn(registrationCenterDeviceHistory);
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcenterdevice/map/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcenterdevice/map/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
@@ -6698,7 +6624,7 @@ public class MasterdataIntegrationTest {
 		when(registrationCenterMachineHistoryRepository.create(Mockito.any()))
 				.thenReturn(registrationCenterMachineHistory);
 		when(registrationCenterRepository.update(Mockito.any())).thenReturn(registrationCenter);
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/unmap/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/unmap/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
@@ -6718,7 +6644,7 @@ public class MasterdataIntegrationTest {
 		machine.setZoneCode("JRD");
 		when(machineRepository.findMachineByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(machine);
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/unmap/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/unmap/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
@@ -6738,7 +6664,7 @@ public class MasterdataIntegrationTest {
 		machine.setZoneCode("JOD");
 		when(machineRepository.findMachineByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(machine);
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/unmap/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/unmap/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
@@ -6817,7 +6743,7 @@ public class MasterdataIntegrationTest {
 		registrationCenters.get(0).setNumberOfKiosks((short) 9);
 		when(zoneUtils.getUserZones()).thenReturn(getZones());
 		when(registrationCenterRepository.findByIdAndIsDeletedFalseOrNull(Mockito.anyString())).thenReturn(null);
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/unmap/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/unmap/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
@@ -6833,7 +6759,7 @@ public class MasterdataIntegrationTest {
 		when(machineRepository.findMachineByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(machine);
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/unmap/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/unmap/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -6849,7 +6775,7 @@ public class MasterdataIntegrationTest {
 		when(registrationCenterMachineRepository.findByRegIdAndMachineId(Mockito.anyString(), Mockito.anyString(),
 				Mockito.anyString())).thenReturn(null);
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/unmap/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/unmap/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -6870,7 +6796,7 @@ public class MasterdataIntegrationTest {
 		when(machineRepository.findMachineByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(machine);
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/map/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/map/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
@@ -6890,7 +6816,7 @@ public class MasterdataIntegrationTest {
 		when(machineRepository.findMachineByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(machine);
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/map/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/map/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
@@ -6910,7 +6836,7 @@ public class MasterdataIntegrationTest {
 		when(machineRepository.findMachineByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(machine);
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/map/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/map/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
@@ -6932,7 +6858,7 @@ public class MasterdataIntegrationTest {
 		registrationCenterMachine.setIsActive(false);
 		when(registrationCenterMachineRepository.findByRegIdAndMachineId(Mockito.anyString(), Mockito.anyString(),
 				Mockito.anyString())).thenReturn(registrationCenterMachine);
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/map/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/map/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
@@ -7026,7 +6952,7 @@ public class MasterdataIntegrationTest {
 		when(machineRepository.findMachineByIdAndLangCode(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
 		machine.setZoneCode("NTH");
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/map/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/map/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -7092,7 +7018,7 @@ public class MasterdataIntegrationTest {
 				.thenReturn(registrationCenterMachineHistory);
 		when(registrationCenterRepository.update(Mockito.any())).thenReturn(registrationCenter);
 		when(repositoryCenterHistoryRepository.create(Mockito.any())).thenReturn(registrationCenterHistory);
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/map/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/map/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -7149,7 +7075,7 @@ public class MasterdataIntegrationTest {
 				.thenReturn(registrationCenterMachineHistory);
 		when(registrationCenterRepository.update(Mockito.any())).thenReturn(registrationCenter);
 		when(repositoryCenterHistoryRepository.create(Mockito.any())).thenReturn(registrationCenterHistory);
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/map/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/map/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 

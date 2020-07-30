@@ -85,82 +85,6 @@ public class RegistrationCenterDeviceServiceImpl implements RegistrationCenterDe
 	 * (non-Javadoc)
 	 * 
 	 * @see io.mosip.kernel.masterdata.service.RegistrationCenterDeviceService#
-	 * createRegistrationCenterAndDevice(io.mosip.kernel.masterdata.dto.
-	 * RegistrationCenterDeviceDto)
-	 */
-	@Override
-	@Transactional
-	public ResponseRegistrationCenterDeviceDto createRegistrationCenterAndDevice(
-			RegistrationCenterDeviceDto requestDto) {
-		ResponseRegistrationCenterDeviceDto registrationCenterDeviceDto = null;
-		try {
-			RegistrationCenterDevice registrationCenterDevice = MetaDataUtils.setCreateMetaData(requestDto,
-					RegistrationCenterDevice.class);
-			RegistrationCenterDevice savedRegistrationCenterDevice = registrationCenterDeviceRepository
-					.create(registrationCenterDevice);
-
-			RegistrationCenterDeviceHistory registrationCenterDeviceHistory = MetaDataUtils
-					.setCreateMetaData(requestDto, RegistrationCenterDeviceHistory.class);
-			registrationCenterDeviceHistory.getRegistrationCenterDeviceHistoryPk()
-					.setEffectivetimes(registrationCenterDeviceHistory.getCreatedDateTime());
-			registrationCenterDeviceHistoryRepository.create(registrationCenterDeviceHistory);
-
-			registrationCenterDeviceDto = MapperUtils.map(savedRegistrationCenterDevice.getRegistrationCenterDevicePk(),
-					ResponseRegistrationCenterDeviceDto.class);
-
-		} catch (DataAccessLayerException | DataAccessException e) {
-			throw new MasterDataServiceException(
-					RegistrationCenterDeviceErrorCode.REGISTRATION_CENTER_DEVICE_CREATE_EXCEPTION.getErrorCode(),
-					RegistrationCenterDeviceErrorCode.REGISTRATION_CENTER_DEVICE_CREATE_EXCEPTION.getErrorMessage()
-							+ ExceptionUtils.parseException(e));
-		}
-
-		return registrationCenterDeviceDto;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.mosip.kernel.masterdata.service.RegistrationCenterDeviceService#
-	 * deleteRegistrationCenterDeviceMapping(java.lang.String, java.lang.String)
-	 */
-	@Transactional
-	@Override
-	public RegistrationCenterDeviceID deleteRegistrationCenterDeviceMapping(String regCenterId, String deviceId) {
-		RegistrationCenterDeviceID registrationCenterDeviceID = null;
-		try {
-			registrationCenterDeviceID = new RegistrationCenterDeviceID(regCenterId, deviceId);
-			Optional<RegistrationCenterDevice> registrationCenterDevice = registrationCenterDeviceRepository
-					.findAllNondeletedMappings(registrationCenterDeviceID);
-			if (!registrationCenterDevice.isPresent()) {
-				throw new RequestException(
-						RegistrationCenterDeviceErrorCode.REGISTRATION_CENTER_DEVICE_DATA_NOT_FOUND.getErrorCode(),
-						RegistrationCenterDeviceErrorCode.REGISTRATION_CENTER_DEVICE_DATA_NOT_FOUND.getErrorMessage());
-			} else {
-				RegistrationCenterDevice centerDevice = registrationCenterDevice.get();
-				centerDevice = MetaDataUtils.setDeleteMetaData(centerDevice);
-				RegistrationCenterDeviceHistory history = MapperUtils.map(centerDevice,
-						RegistrationCenterDeviceHistory.class);
-				history.setRegistrationCenterDeviceHistoryPk(
-						MapperUtils.map(registrationCenterDeviceID, RegistrationCenterDeviceHistoryPk.class));
-				history.getRegistrationCenterDeviceHistoryPk().setEffectivetimes(centerDevice.getDeletedDateTime());
-				MapperUtils.setBaseFieldValue(centerDevice, history);
-				registrationCenterDeviceHistoryRepository.create(history);
-				registrationCenterDeviceRepository.update(centerDevice);
-			}
-		} catch (DataAccessLayerException | DataAccessException e) {
-			throw new MasterDataServiceException(
-					RegistrationCenterDeviceErrorCode.REGISTRATION_CENTER_DEVICE_DELETE_EXCEPTION.getErrorCode(),
-					RegistrationCenterDeviceErrorCode.REGISTRATION_CENTER_DEVICE_DELETE_EXCEPTION.getErrorMessage()
-							+ ExceptionUtils.parseException(e));
-		}
-		return registrationCenterDeviceID;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.mosip.kernel.masterdata.service.RegistrationCenterDeviceService#
 	 * unmapDeviceRegCenter(java.lang.String, java.lang.String)
 	 */
 	@Transactional
@@ -227,16 +151,16 @@ public class RegistrationCenterDeviceServiceImpl implements RegistrationCenterDe
 									MasterDataConstant.FAILURE_UNMAP, RegistrationCenterDevice.class.getCanonicalName()),
 							MasterDataConstant.AUDIT_SYSTEM,
 							String.format(MasterDataConstant.FAILURE_DESC,
-									RegistrationCenterDeviceErrorCode.DEVICE_AND_REG_CENTER_MAPPING_NOT_FOUND_EXCEPTION
+									RegistrationCenterDeviceErrorCode.REGISTRATION_CENTER_DEVICE_ALREADY_UNMAPPED_EXCEPTION
 											.getErrorCode(),
-									RegistrationCenterDeviceErrorCode.DEVICE_AND_REG_CENTER_MAPPING_NOT_FOUND_EXCEPTION
+									RegistrationCenterDeviceErrorCode.REGISTRATION_CENTER_DEVICE_ALREADY_UNMAPPED_EXCEPTION
 											.getErrorMessage()),
 							"ADM-738");
 					throw new RequestException(
-							RegistrationCenterDeviceErrorCode.DEVICE_AND_REG_CENTER_MAPPING_NOT_FOUND_EXCEPTION
+							RegistrationCenterDeviceErrorCode.REGISTRATION_CENTER_DEVICE_ALREADY_UNMAPPED_EXCEPTION
 									.getErrorCode(),
 							String.format(
-									RegistrationCenterDeviceErrorCode.DEVICE_AND_REG_CENTER_MAPPING_NOT_FOUND_EXCEPTION
+									RegistrationCenterDeviceErrorCode.REGISTRATION_CENTER_DEVICE_ALREADY_UNMAPPED_EXCEPTION
 											.getErrorMessage(),
 									deviceId, regCenterId));
 				}

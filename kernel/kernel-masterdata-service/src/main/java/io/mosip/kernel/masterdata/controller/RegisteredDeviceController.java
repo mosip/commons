@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
+import io.mosip.kernel.masterdata.dto.DeRegisterDevicePostDto;
 import io.mosip.kernel.masterdata.dto.DeviceDeRegisterResponse;
 import io.mosip.kernel.masterdata.dto.DeviceRegisterResponseDto;
 import io.mosip.kernel.masterdata.dto.getresponse.ResponseDto;
@@ -72,11 +73,12 @@ public class RegisteredDeviceController {
 	 */
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN')")
 	@ApiOperation(value = "DeRegister Device")
-	@DeleteMapping("/deregister/{deviceCode}")
+	@PostMapping("/deregister")
 	@ResponseFilter
-	public ResponseWrapper<DeviceDeRegisterResponse> deRegisterDevice(@Valid @PathVariable String deviceCode) {
-		ResponseWrapper<DeviceDeRegisterResponse> response = new ResponseWrapper<>();
-		response.setResponse(registeredDeviceService.deRegisterDevice(deviceCode));
+	public ResponseWrapper<String> deRegisterDevice(@Valid @RequestBody RequestWrapper<DeRegisterDevicePostDto>
+							deRegisterDevicePostDto) {
+		ResponseWrapper<String> response = new ResponseWrapper<>();
+		response.setResponse(registeredDeviceService.deRegisterDevice(deRegisterDevicePostDto.getRequest()));
 		return response;
 	}
 
