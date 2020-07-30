@@ -13,9 +13,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.mosip.kernel.auth.config.MosipEnvironment;
 import io.mosip.kernel.auth.constant.AuthErrorCode;
 import io.mosip.kernel.auth.dto.BasicTokenDto;
-import io.mosip.kernel.auth.dto.MosipUserDto;
 import io.mosip.kernel.auth.dto.TimeToken;
 import io.mosip.kernel.auth.exception.AuthManagerException;
+import io.mosip.kernel.core.authmanager.model.MosipUserDto;
 
 @Component
 public class TokenGenerator {

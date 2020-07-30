@@ -5,17 +5,19 @@ package io.mosip.kernel.auth.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import io.mosip.kernel.auth.dto.AuthNResponseDto;
-import io.mosip.kernel.auth.dto.ClientSecret;
-import io.mosip.kernel.auth.service.AuthService;
 import io.mosip.kernel.auth.service.TokenGenerationService;
+import io.mosip.kernel.core.authmanager.model.AuthNResponseDto;
+import io.mosip.kernel.core.authmanager.model.ClientSecret;
+import io.mosip.kernel.core.authmanager.spi.AuthService;
 
 /**
  * @author Ramadurai Pandian
  *
  */
+@ConditionalOnProperty(name = "mosip.iam.use.default.impl",havingValue = "true")
 @Component
 public class TokenGenerationServiceImpl implements TokenGenerationService {
 
