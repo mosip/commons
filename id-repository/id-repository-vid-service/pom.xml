@@ -7,7 +7,7 @@
 		<version>1.0.6</version>
 	</parent>
 	<artifactId>id-repository-vid-service</artifactId>
-	<version>1.0.10-rc1</version>
+	<version>1.1.1-rc1</version>
 	<name>vid-service</name>
 	<description>ID-Repository Virtual ID Service</description>
 
