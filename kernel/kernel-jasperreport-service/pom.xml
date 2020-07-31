@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>kernel-jasperreport-service</artifactId>
-	<version>0.0.1-rc1</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<properties>
 		<kernel.core.version>1.0.6</kernel.core.version>
 		<kernel.auth-adapter.version>1.0.8</kernel.auth-adapter.version>
