@@ -1,7 +1,7 @@
 /**
  * 
  */
-package io.mosip.kernel.auth.repository;
+package io.mosip.kernel.auth.defaultimpl.repository;
 
 import java.util.List;
 
