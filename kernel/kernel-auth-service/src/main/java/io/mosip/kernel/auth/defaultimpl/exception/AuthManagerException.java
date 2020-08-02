@@ -1,5 +1,5 @@
 
-package io.mosip.kernel.auth.exception;
+package io.mosip.kernel.auth.defaultimpl.exception;
 
 /**
  * @author Ramadurai Pandian

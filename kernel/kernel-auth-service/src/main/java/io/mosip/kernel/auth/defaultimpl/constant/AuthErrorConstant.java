@@ -1,7 +1,7 @@
 /**
  * 
  */
-package io.mosip.kernel.auth.constant;
+package io.mosip.kernel.auth.defaultimpl.constant;
 
 /**
  * @author Ramadurai Pandian
