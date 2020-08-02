@@ -1,4 +1,4 @@
-package io.mosip.kernel.auth.dto.otp.idrepo;
+package io.mosip.kernel.auth.defaultimpl.dto.otp.idrepo;
 
 import java.util.List;
 
