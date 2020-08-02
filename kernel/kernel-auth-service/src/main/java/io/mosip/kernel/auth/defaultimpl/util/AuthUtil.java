@@ -1,4 +1,4 @@
-package io.mosip.kernel.auth.util;
+package io.mosip.kernel.auth.defaultimpl.util;
 
 import java.util.Map;
 
@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.auth.adapter.exception.AuthManagerException;
-import io.mosip.kernel.auth.constant.AuthErrorCode;
+import io.mosip.kernel.auth.defaultimpl.constant.AuthErrorCode;
 
 /**
  * The Class AuthUtil.

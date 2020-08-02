@@ -1,7 +1,7 @@
 /**
  * 
  */
-package io.mosip.kernel.auth.dto;
+package io.mosip.kernel.auth.defaultimpl.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
