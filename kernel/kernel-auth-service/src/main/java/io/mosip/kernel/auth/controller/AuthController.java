@@ -30,12 +30,12 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import io.mosip.kernel.auth.config.MosipEnvironment;
-import io.mosip.kernel.auth.constant.AuthConstant;
-import io.mosip.kernel.auth.constant.AuthErrorCode;
-import io.mosip.kernel.auth.dto.ClientSecretDto;
-import io.mosip.kernel.auth.dto.UserDetailsRequestDto;
-import io.mosip.kernel.auth.dto.UserRegistrationResponseDto;
-import io.mosip.kernel.auth.exception.AuthManagerException;
+import io.mosip.kernel.auth.defaultimpl.constant.AuthConstant;
+import io.mosip.kernel.auth.defaultimpl.constant.AuthErrorCode;
+import io.mosip.kernel.auth.defaultimpl.dto.ClientSecretDto;
+import io.mosip.kernel.auth.defaultimpl.dto.UserDetailsRequestDto;
+import io.mosip.kernel.auth.defaultimpl.dto.UserRegistrationResponseDto;
+import io.mosip.kernel.auth.defaultimpl.exception.AuthManagerException;
 import io.mosip.kernel.core.authmanager.model.AccessTokenResponseDTO;
 import io.mosip.kernel.core.authmanager.model.AuthNResponse;
 import io.mosip.kernel.core.authmanager.model.AuthNResponseDto;
