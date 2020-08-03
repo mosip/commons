@@ -30,9 +30,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.kernel.auth.adapter.exception.AuthNException;
-import io.mosip.kernel.auth.adapter.exception.AuthZException;
 import io.mosip.kernel.auth.config.MosipEnvironment;
+import io.mosip.kernel.auth.defaultadapter.exception.AuthNException;
+import io.mosip.kernel.auth.defaultadapter.exception.AuthZException;
 import io.mosip.kernel.auth.defaultimpl.constant.AuthConstant;
 import io.mosip.kernel.auth.defaultimpl.constant.AuthErrorCode;
 import io.mosip.kernel.auth.defaultimpl.constant.OTPErrorCode;

@@ -1,4 +1,4 @@
-package io.mosip.kernel.auth.adapter.config;
+package io.mosip.kernel.auth.defaultadapter.config;
 
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -23,8 +23,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import io.mosip.kernel.auth.adapter.constant.AuthAdapterConstant;
-import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
+import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterConstant;
+import io.mosip.kernel.auth.defaultadapter.model.AuthUserDetails;
 
 @Configuration
 public class BeanConfig {

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package io.mosip.kernel.auth.adapter.exception;
+package io.mosip.kernel.auth.defaultadapter.exception;
 
 import java.util.ArrayList;
 import java.util.List;

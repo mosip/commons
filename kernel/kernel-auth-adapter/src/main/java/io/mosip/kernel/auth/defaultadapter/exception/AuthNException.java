@@ -1,4 +1,4 @@
-package io.mosip.kernel.auth.adapter.exception;
+package io.mosip.kernel.auth.defaultadapter.exception;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import io.mosip.kernel.core.exception.ServiceError;
  * @author Srinivasan
  *
  */
-public class AuthZException extends BaseUncheckedException {
+public class AuthNException extends BaseUncheckedException {
 
 	/**
 	 * Serializable version ID.
@@ -25,7 +25,7 @@ public class AuthZException extends BaseUncheckedException {
 	/**
 	 * @param list The error list.
 	 */
-	public AuthZException(List<ServiceError> list) {
+	public AuthNException(List<ServiceError> list) {
 		this.list = list;
 	}
 
