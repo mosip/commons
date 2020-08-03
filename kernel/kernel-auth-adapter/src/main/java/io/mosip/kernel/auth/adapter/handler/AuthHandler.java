@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -75,7 +74,7 @@ import io.vertx.ext.web.RoutingContext;
  * @author Urvil Joshi
  * @since 1.0.0
  */
-@ConditionalOnMissingBean(AbstractUserDetailsAuthenticationProvider.class)
+//@ConditionalOnMissingBean(AbstractUserDetailsAuthenticationProvider.class)
 @Component
 public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 
