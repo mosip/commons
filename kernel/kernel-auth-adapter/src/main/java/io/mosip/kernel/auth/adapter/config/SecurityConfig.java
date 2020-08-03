@@ -78,7 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return new ProviderManager(Collections.singletonList(authProvider));
 	}
 
-	@ConditionalOnMissingBean(AbstractAuthenticationProcessingFilter.class)
+	//@ConditionalOnMissingBean(AbstractAuthenticationProcessingFilter.class)
 	@Bean
 	public AbstractAuthenticationProcessingFilter authFilter() {
 		RequestMatcher requestMatcher = new AntPathRequestMatcher("*");
