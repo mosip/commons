@@ -1,4 +1,4 @@
-package io.mosip.kernel.auth.adapter.model;
+package io.mosip.kernel.auth.defaultadapter.model;
 
 import java.util.Collection;
 import java.util.stream.Collectors;

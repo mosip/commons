@@ -1,4 +1,4 @@
-package io.mosip.kernel.auth.adapter.config;
+package io.mosip.kernel.auth.defaultadapter.config;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -28,9 +28,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import io.mosip.kernel.auth.adapter.filter.AuthFilter;
-import io.mosip.kernel.auth.adapter.filter.CorsFilter;
-import io.mosip.kernel.auth.adapter.handler.AuthSuccessHandler;
+import io.mosip.kernel.auth.defaultadapter.filter.AuthFilter;
+import io.mosip.kernel.auth.defaultadapter.filter.CorsFilter;
+import io.mosip.kernel.auth.defaultadapter.handler.AuthHandler;
+import io.mosip.kernel.auth.defaultadapter.handler.AuthSuccessHandler;
 
 /**
  * Holds the main configuration for authentication and authorization using
@@ -52,6 +53,7 @@ import io.mosip.kernel.auth.adapter.handler.AuthSuccessHandler;
  * @author Sabbu Uday Kumar
  * @author Ramadurai Saravana Pandian
  * @author Raj Jha
+ * @author Urvil Joshi
  * 
  * @since 1.0.0
  **/
@@ -71,8 +73,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private String origins;
 
 	@Autowired
-	private AbstractUserDetailsAuthenticationProvider authProvider;
+	private AuthHandler authProvider;
 
+	//@ConditionalOnMissingBean(AuthenticationManager.class)
 	@Bean
 	public AuthenticationManager authenticationManager() {
 		return new ProviderManager(Collections.singletonList(authProvider));

@@ -43,9 +43,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import io.mosip.kernel.auth.adapter.exception.AuthManagerException;
-import io.mosip.kernel.auth.adapter.exception.AuthNException;
-import io.mosip.kernel.auth.adapter.exception.AuthZException;
+import io.mosip.kernel.auth.defaultadapter.exception.AuthManagerException;
+import io.mosip.kernel.auth.defaultadapter.exception.AuthNException;
+import io.mosip.kernel.auth.defaultadapter.exception.AuthZException;
 import io.mosip.kernel.auth.defaultimpl.constant.AuthConstant;
 import io.mosip.kernel.auth.defaultimpl.constant.AuthErrorCode;
 import io.mosip.kernel.auth.defaultimpl.dto.KeycloakPasswordDTO;

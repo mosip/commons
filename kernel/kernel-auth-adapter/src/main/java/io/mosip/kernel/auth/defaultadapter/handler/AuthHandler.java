@@ -1,5 +1,5 @@
 
-package io.mosip.kernel.auth.adapter.handler;
+package io.mosip.kernel.auth.defaultadapter.handler;
 
 import java.io.IOException;
 import java.security.KeyManagementException;
@@ -41,13 +41,13 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.mosip.kernel.auth.adapter.config.RestTemplateInterceptor;
-import io.mosip.kernel.auth.adapter.constant.AuthAdapterConstant;
-import io.mosip.kernel.auth.adapter.constant.AuthAdapterErrorCode;
-import io.mosip.kernel.auth.adapter.exception.AuthManagerException;
-import io.mosip.kernel.auth.adapter.model.AuthToken;
-import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
-import io.mosip.kernel.auth.adapter.model.MosipUserDto;
+import io.mosip.kernel.auth.defaultadapter.config.RestTemplateInterceptor;
+import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterConstant;
+import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterErrorCode;
+import io.mosip.kernel.auth.defaultadapter.exception.AuthManagerException;
+import io.mosip.kernel.auth.defaultadapter.model.AuthToken;
+import io.mosip.kernel.auth.defaultadapter.model.AuthUserDetails;
+import io.mosip.kernel.auth.defaultadapter.model.MosipUserDto;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;

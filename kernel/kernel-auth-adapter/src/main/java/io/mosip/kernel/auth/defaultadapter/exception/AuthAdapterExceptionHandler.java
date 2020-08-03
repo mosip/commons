@@ -1,4 +1,4 @@
-package io.mosip.kernel.auth.adapter.exception;
+package io.mosip.kernel.auth.defaultadapter.exception;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import io.mosip.kernel.auth.adapter.constant.AuthAdapterErrorCode;
+import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterErrorCode;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;

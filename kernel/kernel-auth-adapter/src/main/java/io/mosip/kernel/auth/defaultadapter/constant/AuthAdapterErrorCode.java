@@ -1,4 +1,4 @@
-package io.mosip.kernel.auth.adapter.constant;
+package io.mosip.kernel.auth.defaultadapter.constant;
 
 /**
  * Error Code for Auth Adapter

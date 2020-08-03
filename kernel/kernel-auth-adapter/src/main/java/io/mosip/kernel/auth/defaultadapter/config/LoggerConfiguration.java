@@ -1,6 +1,6 @@
-package io.mosip.kernel.auth.adapter.config;
+package io.mosip.kernel.auth.defaultadapter.config;
 
-import io.mosip.kernel.auth.adapter.constant.AuthAdapterConstant;
+import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterConstant;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.logger.logback.appender.ConsoleAppender;
 import io.mosip.kernel.logger.logback.factory.Logfactory;
