@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -35,6 +36,7 @@ public class BiometricExtractorController {
 		binder.setValidator(validator);
 	}
 
+	@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
 	@PostMapping(value="/extracttemplates", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseWrapper<BioExtractPromiseResponseDTO> extractTemplates(@Valid  @RequestBody RequestWrapper<BioExtractRequestDTO> bioExtractReqDTO, @ApiIgnore Errors errors) throws BiometricExtractionException{
 		

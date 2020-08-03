@@ -9,6 +9,7 @@ import io.mosip.kernel.bioextractor.api.BiometricExtractionService;
 import io.mosip.kernel.bioextractor.dto.BioExtractPromiseResponseDTO;
 import io.mosip.kernel.bioextractor.dto.BioExtractRequestDTO;
 import io.mosip.kernel.bioextractor.exception.BiometricExtractionException;
+import io.mosip.kernel.bioextractor.integration.DataShareManager;
 import io.mosip.kernel.bioextractor.service.impl.async.AsyncHelper;
 import io.mosip.kernel.core.util.HMACUtils;
 
@@ -17,6 +18,9 @@ public class BiometricExtractionServiceImpl implements BiometricExtractionServic
 
 	@Autowired
 	private AsyncHelper<BiometricExtractionException> asyncHelper;
+	
+	@Autowired
+	private DataShareManager dataShareManager;
 	
 	@Override
 	public BioExtractPromiseResponseDTO extractBiometrics(BioExtractRequestDTO bioExtractRequestDTO)  throws BiometricExtractionException{
@@ -34,14 +38,11 @@ public class BiometricExtractionServiceImpl implements BiometricExtractionServic
 	}
 
 	private void doBioExtraction(String biometricsUrl, String promiseId) throws BiometricExtractionException{
-		System.out.println("Started " + promiseId);
-		try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("Completed " + promiseId);
+		String encryptedCbeff = downloadCbeffFile(biometricsUrl);
+	}
+
+	private String downloadCbeffFile(String biometricsUrl) throws BiometricExtractionException {
+		return dataShareManager.downloadObject(biometricsUrl, String.class);
 	}
 
 }
