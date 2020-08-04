@@ -1,4 +1,4 @@
-package io.mosip.kernel.loginhelper.api.service;
+package io.mosip.kernel.authcodeflowproxy.api.service;
 
 import javax.servlet.http.Cookie;
 

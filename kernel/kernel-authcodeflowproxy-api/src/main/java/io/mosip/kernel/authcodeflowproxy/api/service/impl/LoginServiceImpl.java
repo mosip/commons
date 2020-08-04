@@ -1,4 +1,4 @@
-package io.mosip.kernel.loginhelper.api.service.impl;
+package io.mosip.kernel.authcodeflowproxy.api.service.impl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import io.mosip.kernel.loginhelper.api.service.LoginService;
+import io.mosip.kernel.authcodeflowproxy.api.service.LoginService;
 
 public class LoginServiceImpl implements LoginService {
 	

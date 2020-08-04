@@ -1,4 +1,4 @@
-package io.mosip.kernel.loginhelper.api.controller;
+package io.mosip.kernel.authcodeflowproxy.api.controller;
 
 import java.io.IOException;
 
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.mosip.kernel.loginhelper.api.service.LoginService;
+import io.mosip.kernel.authcodeflowproxy.api.service.LoginService;
 
 
 @RestController
