@@ -49,7 +49,6 @@
 			<artifactId>kernel-logger-logback</artifactId>
 			<version>${kernel.logger.version}</version>
 		</dependency>
-
 	</dependencies>
 	<build>
 		<plugins>
