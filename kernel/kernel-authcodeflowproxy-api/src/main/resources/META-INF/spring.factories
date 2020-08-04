@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+io.mosip.kernel.loginhelper.api.LoginController,\
+io.mosip.kernel.loginhelper.api.service.impl.LoginServiceImpl
