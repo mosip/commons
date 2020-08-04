@@ -1,16 +1,43 @@
 package io.mosip.kernel.authcodeflowproxy.api.service.impl;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+
+import java.util.HashMap;
+
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
 
 import org.apache.commons.codec.binary.Base64;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
+import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
+import io.mosip.kernel.authcodeflowproxy.api.exception.AuthRestException;
+import io.mosip.kernel.authcodeflowproxy.api.exception.ServiceException;
+import io.mosip.kernel.authcodeflowproxy.api.service.LoginService;
+import io.mosip.kernel.core.exception.ExceptionUtils;
+import io.mosip.kernel.core.exception.ServiceError;
+import io.mosip.kernel.core.http.ResponseWrapper;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import io.mosip.kernel.authcodeflowproxy.api.service.LoginService;
+
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -34,6 +61,15 @@ public class LoginServiceImpl implements LoginService {
 	private String moduleRedirectURL;
 	
 
+	@Value("${auth.server.admin.validate.url}")
+	private String validateUrl;
+	
+	@Autowired
+	private RestTemplate restTemplate;
+	
+	@Autowired ObjectMapper objectMapper;
+
+
 	@Override
 	public String login(String redirectURI, String state) {
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(authServiceLoginURL);
@@ -50,6 +86,34 @@ public class LoginServiceImpl implements LoginService {
 		cookie.setSecure(isSecureCookie);
 		cookie.setPath("/");
 		return cookie;
+	}
+  
+	@Override
+	public MosipUserDto valdiateToken(String authToken) {
+		HttpHeaders headers= new HttpHeaders();
+		headers.add("Cookie", authTokenHeader+"="+authToken);
+		HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+		HttpEntity<String> response = restTemplate.exchange(validateUrl, HttpMethod.GET, requestEntity, String.class);
+		if (response == null) {
+			throw new ServiceException(Errors.CANNOT_CONNECT_TO_AUTH_SERVICE.getErrorCode(),
+					Errors.CANNOT_CONNECT_TO_AUTH_SERVICE.getErrorMessage());
+		}
+		String responseBody = response.getBody();
+		List<ServiceError> validationErrorList = ExceptionUtils.getServiceErrorList(responseBody);
+		if (!validationErrorList.isEmpty()) {
+			throw new AuthRestException(validationErrorList);
+		}
+		ResponseWrapper<?> responseObject;
+		MosipUserDto mosipUserDto;
+		try {
+			responseObject = objectMapper.readValue(response.getBody(), ResponseWrapper.class);
+			mosipUserDto = objectMapper.readValue(objectMapper.writeValueAsString(responseObject.getResponse()),
+					MosipUserDto.class);
+		} catch (IOException e) {
+			throw new ServiceException(Errors.IO_EXCEPTION.getErrorCode(),
+					Errors.IO_EXCEPTION.getErrorMessage());
+		}
+		return mosipUserDto;
 	}
 
 	
