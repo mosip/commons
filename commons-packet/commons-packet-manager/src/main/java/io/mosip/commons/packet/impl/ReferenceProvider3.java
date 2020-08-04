@@ -43,7 +43,7 @@ public class ReferenceProvider3 implements IPacketWriter {
 
 
     @Override
-    public List<PacketInfo> persistPacket(String id, double version, String schemaJson, String source, String process) {
+    public List<PacketInfo> persistPacket(String id, double version, String schemaJson, String source, String process, boolean offline) {
         return null;
     }
     @Override

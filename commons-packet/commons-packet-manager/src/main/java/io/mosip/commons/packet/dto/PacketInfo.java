@@ -14,10 +14,10 @@ public class PacketInfo {
     private String packetName;
     private String source;
     private String process;
-    private double schemaVersion;
+    private String schemaVersion;
     private String signature;
     private String encryptedHash;
     private String providerName;
     private String providerVersion;
-    private Date creationDate;
+    private String creationDate;
 }

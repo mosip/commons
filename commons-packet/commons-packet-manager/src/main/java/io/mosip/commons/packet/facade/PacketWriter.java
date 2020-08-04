@@ -7,7 +7,9 @@ import io.mosip.commons.packet.dto.packet.PacketDto;
 import io.mosip.commons.packet.exception.NoAvailableProviderException;
 import io.mosip.commons.packet.spi.IPacketWriter;
 import io.mosip.commons.packet.util.PacketHelper;
+import io.mosip.commons.packet.util.PacketManagerLogger;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
+import io.mosip.kernel.core.logger.spi.Logger;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,6 +28,8 @@ import java.util.Optional;
 @Component
 public class PacketWriter {
 
+    private static final Logger LOGGER = PacketManagerLogger.getLogger(PacketWriter.class);
+
     @Autowired(required = false)
     @Qualifier("referenceWriterProviders")
     @Lazy
@@ -39,6 +43,8 @@ public class PacketWriter {
      * @return PacketWriter
      */
     public void setField(String id, String fieldName, String value, String source, String process) throws JSONException {
+        LOGGER.info(PacketManagerLogger.SESSIONID,PacketManagerLogger.REGISTRATIONID, id,
+                "setField for field name : " + fieldName + " source : " + source + " process : " + process);
         getProvider(source, process).setField(id, fieldName, value);
     }
 
@@ -50,6 +56,8 @@ public class PacketWriter {
      * @return PacketWriter
      */
     public void setBiometric(String id, String fieldName, BiometricRecord biometricRecord, String source, String process) {
+        LOGGER.info(PacketManagerLogger.SESSIONID,PacketManagerLogger.REGISTRATIONID, id,
+                "setBiometric for field name : " + fieldName + " source : " + source + " process : " + process);
         getProvider(source, process).setBiometric(id, fieldName, biometricRecord);
 
     }
@@ -62,6 +70,8 @@ public class PacketWriter {
      * @return PacketWriter
      */
     public void setDocument(String id, String documentName, Document document, String source, String process) {
+        LOGGER.info(PacketManagerLogger.SESSIONID,PacketManagerLogger.REGISTRATIONID, id,
+                "setDocument for field name : " + documentName + " source : " + source + " process : " + process);
         getProvider(source, process).setDocument(id, documentName, document);
     }
 
@@ -72,6 +82,8 @@ public class PacketWriter {
      * @return PacketWriter
      */
     public void setMetaInfo(String id, Map<String, String> metaInfo, String source, String process) {
+        LOGGER.info(PacketManagerLogger.SESSIONID,PacketManagerLogger.REGISTRATIONID, id,
+                "setMetaInfo for source : " + source + " process : " + process);
         getProvider(source, process).setMetaInfo(id, metaInfo);
     }
 
@@ -84,6 +96,8 @@ public class PacketWriter {
      * @return PacketInfo
      */
     public void setAudits(String id, List<AuditDto> audits, String source, String process) {
+        LOGGER.info(PacketManagerLogger.SESSIONID,PacketManagerLogger.REGISTRATIONID, id,
+                "setAudits for source : " + source + " process : " + process);
         getProvider(source, process).setAudits(id, audits);
     }
 
@@ -95,11 +109,15 @@ public class PacketWriter {
      * @param process : the process
      * @return PacketInfo
      */
-    public List<PacketInfo> persistPacket(String id, double version, String schemaJson, String source, String process, byte[] publicKey) {
-        return getProvider(source, process).persistPacket(id, version, schemaJson, source, process);
+    public List<PacketInfo> persistPacket(String id, double version, String schemaJson, String source, String process, byte[] publicKey, boolean offlineMode) {
+        LOGGER.info(PacketManagerLogger.SESSIONID,PacketManagerLogger.REGISTRATIONID, id,
+                "persistPacket for source : " + source + " process : " + process);
+        return getProvider(source, process).persistPacket(id, version, schemaJson, source, process, offlineMode);
     }
 
-    public List<PacketInfo> createPacket(PacketDto packetDto, boolean isServerCall) {
+    public List<PacketInfo> createPacket(PacketDto packetDto, boolean offlineMode) {
+        LOGGER.info(PacketManagerLogger.SESSIONID,PacketManagerLogger.REGISTRATIONID, packetDto.getId(),
+                "createPacket for RID : " + packetDto.getId() + " source : " + packetDto.getSource() + " process : " + packetDto.getProcess());
         List<PacketInfo> packetInfos = null;
         IPacketWriter provider = getProvider(packetDto.getSource(), packetDto.getProcess());
         try {
@@ -109,10 +127,10 @@ public class PacketWriter {
             provider.setAudits(packetDto.getId(), packetDto.getAudits());
             packetDto.getBiometrics().entrySet().forEach(bio -> provider.setBiometric(packetDto.getId(), bio.getKey(), bio.getValue()));
             packetInfos = provider.persistPacket(packetDto.getId(), packetDto.getSchemaVersion(),
-                    packetDto.getSchemaJson(), packetDto.getSource(), packetDto.getProcess());
+                    packetDto.getSchemaJson(), packetDto.getSource(), packetDto.getProcess(), offlineMode);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(PacketManagerLogger.SESSIONID,PacketManagerLogger.REGISTRATIONID, packetDto.getId(), e.getStackTrace().toString());
         }
         return packetInfos;
     }

@@ -108,18 +108,6 @@ public class IdSchemaUtils {
     }
 
     /**
-     * Gets the json.
-     *
-     * @param configServerFileStorageURL the config server file storage URL
-     * @param uri                        the uri
-     * @return the json
-     */
-    public static String getJson(String configServerFileStorageURL, String uri) {
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.getForObject(configServerFileStorageURL + uri, String.class);
-    }
-
-    /**
      * Gets the field category.
      *
      * @param jsonObject the json object

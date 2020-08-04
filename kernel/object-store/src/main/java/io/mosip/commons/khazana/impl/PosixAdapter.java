@@ -1,38 +1,200 @@
 package io.mosip.commons.khazana.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.mosip.commons.khazana.constant.KhazanaErrorCodes;
+import io.mosip.commons.khazana.exception.FileNotFoundInDestinationException;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
+import io.mosip.kernel.core.util.FileUtils;
+import io.mosip.kernel.core.util.JsonUtils;
+import io.mosip.kernel.core.util.exception.JsonProcessingException;
+import org.apache.commons.io.IOUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 @Service
 @Qualifier("PosixAdapter")
 public class PosixAdapter implements ObjectStoreAdapter {
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JossAdapter.class);
+
+    @Value("${object.store.base.location}")
+    private String baseLocation;
+
+    private static final String ZIP = ".zip";
+    private static final String JSON = ".json";
+
     public InputStream getObject(String account, String container, String objectName) {
+        try {
+            File containerZip = new File(baseLocation + container + ZIP);
+            if (!containerZip.exists())
+                throw new FileNotFoundInDestinationException(KhazanaErrorCodes.CONTAINER_NOT_PRESENT_IN_DESTINATION.getErrorCode(),
+                        KhazanaErrorCodes.CONTAINER_NOT_PRESENT_IN_DESTINATION.getErrorMessage());
+
+            InputStream ios = new FileInputStream(containerZip);
+            Map<ZipEntry, ByteArrayOutputStream> entries = getAllExistingEntries(ios);
+
+            Optional<ZipEntry> zipEntry = entries.keySet().stream().filter(e -> e.getName().contains(objectName + ZIP)).findAny();
+
+            if (zipEntry.isPresent() && zipEntry.get() != null)
+                return new ByteArrayInputStream(entries.get(zipEntry.get()).toByteArray());
+
+        } catch (FileNotFoundInDestinationException e) {
+            LOGGER.error("exception occured. Will create a new connection.", e);
+            throw e;
+        } catch (IOException  e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     public boolean exists(String account, String container, String objectName) {
-        return false;
+        return getObject(account, container, objectName) != null;
     }
 
     public boolean putObject(String account, String container, String objectName, InputStream data) {
+        try {
+            createContainerZipWithSubpacket(container, objectName + ZIP, data);
+            return true;
+        } catch (Exception e) {
+            LOGGER.error("exception occured. Will create a new connection.", e);
+        }
         return false;
     }
 
     public Map<String, Object> addObjectMetaData(String account, String container, String objectName, Map<String, Object> metadata) {
-        return null;
+        try {
+            JSONObject jsonObject = new JSONObject(metadata);
+            createContainerZipWithSubpacket(container, objectName + JSON,
+                    new ByteArrayInputStream(JsonUtils.javaObjectToJsonString(jsonObject.toString()).getBytes()));
+        } catch (io.mosip.kernel.core.exception.IOException | IOException | JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return metadata;
     }
 
     public Map<String, Object> addObjectMetaData(String account, String container, String objectName, String key, String value) {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(key, value);
+            createContainerZipWithSubpacket(container, objectName + JSON, new ByteArrayInputStream(jsonObject.toString().getBytes()));
+        } catch (io.mosip.kernel.core.exception.IOException e) {
+            e.printStackTrace();
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     public Map<String, Object> getMetaData(String account, String container, String objectName) {
-        return null;
+        Map<String, Object> metaMap = null;
+        try {
+            File containerZip = new File(baseLocation + container + ZIP);
+            if (!containerZip.exists())
+                throw new FileNotFoundInDestinationException(KhazanaErrorCodes.CONTAINER_NOT_PRESENT_IN_DESTINATION.getErrorCode(),
+                        KhazanaErrorCodes.CONTAINER_NOT_PRESENT_IN_DESTINATION.getErrorMessage());
+
+            InputStream ios = new FileInputStream(containerZip);
+            Map<ZipEntry, ByteArrayOutputStream> entries = getAllExistingEntries(ios);
+
+            Optional<ZipEntry> zipEntry = entries.keySet().stream().filter(e -> e.getName().contains(objectName + JSON)).findAny();
+
+            if (zipEntry.isPresent() && zipEntry.get() != null) {
+                String string = entries.get(zipEntry.get()).toString();
+                JSONObject jsonObject = objectMapper.readValue(string, JSONObject.class);
+                metaMap = objectMapper.readValue(jsonObject.toString(), HashMap.class);
+            }
+        } catch (FileNotFoundInDestinationException e) {
+            LOGGER.error("exception occured. Will create a new connection.", e);
+            throw e;
+        } catch (IOException  e) {
+            e.printStackTrace();
+        }
+        return metaMap;
+    }
+
+    private void createContainerZipWithSubpacket(String container, String objectName, InputStream data) throws io.mosip.kernel.core.exception.IOException, IOException {
+        File containerZip = new File(baseLocation + container + ZIP);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        if (!containerZip.exists()) {
+            try (ZipOutputStream packetZip = new ZipOutputStream(new BufferedOutputStream(out))) {
+                addEntryToZip(String.format(objectName),
+                        IOUtils.toByteArray(data), packetZip);
+            }
+        } else {
+            InputStream ios = new FileInputStream(containerZip);
+            Map<ZipEntry, ByteArrayOutputStream> entries = getAllExistingEntries(ios);
+            try (ZipOutputStream packetZip = new ZipOutputStream(out)) {
+                entries.entrySet().forEach(e -> {
+                    try {
+                        packetZip.putNextEntry(e.getKey());
+                        packetZip.write(e.getValue().toByteArray());
+                    } catch (IOException e1) {
+                        LOGGER.error("exception occured. Will create a new connection.", e1);
+                    }
+                });
+                addEntryToZip(String.format(objectName),
+                        IOUtils.toByteArray(data), packetZip);
+            }
+        }
+
+        FileUtils.copyToFile(new ByteArrayInputStream(out.toByteArray()), containerZip);
+    }
+
+    private void addEntryToZip(String fileName, byte[] data, ZipOutputStream zipOutputStream) {
+        try {
+            if (data != null) {
+                ZipEntry zipEntry = new ZipEntry(fileName);
+                zipOutputStream.putNextEntry(zipEntry);
+                zipOutputStream.write(data);
+            }
+        } catch (IOException e) {
+            LOGGER.error("exception occured. Will create a new connection.", e);
+        }
+    }
+
+    private Map<ZipEntry, ByteArrayOutputStream> getAllExistingEntries(InputStream packetStream) throws IOException {
+        Map<ZipEntry, ByteArrayOutputStream> entries = new HashMap<>();
+        try (ZipInputStream zis = new ZipInputStream(packetStream)) {
+            ZipEntry ze = zis.getNextEntry();
+            while (ze != null) {
+                int len;
+                byte[] buffer = new byte[2048];
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                while ((len = zis.read(buffer)) > 0) {
+                    out.write(buffer, 0, len);
+                }
+                entries.put(ze, out);
+                zis.closeEntry();
+                ze = zis.getNextEntry();
+                out.close();
+            }
+            zis.closeEntry();
+        } finally {
+            packetStream.close();
+        }
+        return entries;
     }
 }

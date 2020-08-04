@@ -12,6 +12,7 @@ import io.mosip.commons.packet.exception.GetAllMetaInfoException;
 import io.mosip.commons.packet.exception.GetBiometricException;
 import io.mosip.commons.packet.exception.GetDocumentException;
 import io.mosip.commons.packet.exception.PacketDecryptionFailureException;
+import io.mosip.commons.packet.exception.PacketKeeperException;
 import io.mosip.commons.packet.facade.PacketWriter;
 import io.mosip.commons.packet.keeper.PacketKeeper;
 import io.mosip.commons.packet.spi.IPacketReader;
@@ -56,7 +57,7 @@ import static io.mosip.commons.packet.constants.PacketManagerConstants.VALUE;
 @Component
 public class PacketReaderImpl implements IPacketReader {
 
-    Logger LOGGER = PacketManagerLogger.getLogger(PacketReaderImpl.class);
+    private static final Logger LOGGER = PacketManagerLogger.getLogger(PacketReaderImpl.class);
 
     @Autowired
     private PacketWriter packetWriter;
@@ -174,7 +175,7 @@ public class PacketReaderImpl implements IPacketReader {
                 document.setFormat(documentMap.get(FORMAT) != null ? documentMap.get(FORMAT).toString() : null);
                 return document;
             }
-        } catch (IOException | ApiNotAccessibleException | PacketDecryptionFailureException | JSONException e) {
+        } catch (IOException | ApiNotAccessibleException | PacketDecryptionFailureException | JSONException | PacketKeeperException e) {
             LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, e.getStackTrace().toString());
             throw new GetDocumentException(e.getMessage());
         }

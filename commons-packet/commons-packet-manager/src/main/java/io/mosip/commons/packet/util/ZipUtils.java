@@ -25,7 +25,7 @@ public class ZipUtils {
 	 * Method to unzip the file in-memeory and search the required file and return
 	 * it
 	 * 
-	 * @param packetStream
+	 * @param packet
 	 *            zip file to be unzipped
 	 * @param file
 	 *            file to search within zip file
@@ -33,7 +33,8 @@ public class ZipUtils {
 	 * @throws IOException
 	 *             if any error occored while unzipping the file
 	 */
-	public static InputStream unzipAndGetFile(InputStream packetStream, String file) throws IOException {
+	public static InputStream unzipAndGetFile(byte[] packet, String file) throws IOException {
+		ByteArrayInputStream packetStream = new ByteArrayInputStream(packet);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		boolean flag = false;
 		byte[] buffer = new byte[2048];

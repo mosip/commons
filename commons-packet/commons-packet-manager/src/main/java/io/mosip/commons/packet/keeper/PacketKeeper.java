@@ -1,16 +1,19 @@
 package io.mosip.commons.packet.keeper;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
-import io.mosip.commons.packet.constants.LoggerFileConstant;
+import io.mosip.commons.packet.constants.PacketUtilityErrorCodes;
 import io.mosip.commons.packet.dto.Packet;
 import io.mosip.commons.packet.dto.Manifest;
 import io.mosip.commons.packet.dto.PacketInfo;
-import io.mosip.commons.packet.exception.ApiNotAccessibleException;
+import io.mosip.commons.packet.exception.CryptoException;
 import io.mosip.commons.packet.exception.ObjectStoreAdapterException;
-import io.mosip.commons.packet.exception.PacketDecryptionFailureException;
-import io.mosip.commons.packet.spi.IPacketCryptoHelper;
+import io.mosip.commons.packet.exception.PacketKeeperException;
+import io.mosip.commons.packet.spi.IPacketCryptoService;
+import io.mosip.commons.packet.util.PacketManagerHelper;
 import io.mosip.commons.packet.util.PacketManagerLogger;
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.kernel.core.util.HMACUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,8 +21,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 /**
  * The packet keeper is used to store & retrieve packet, creation of audit, encrypt and sign packet.
@@ -29,13 +32,13 @@ import java.io.InputStream;
 @Component
 public class PacketKeeper {
 
+    @Autowired
+    private ObjectMapper mapper;
+
     /** The reg proc logger. */
     private static Logger LOGGER = PacketManagerLogger.getLogger(PacketKeeper.class);
 
     private static final String PACKET_MANAGER_ACCOUNT = "PACKET_MANAGER_ACCOUNT";
-
-    /** The Constant PACKET_NOTAVAILABLE_ERROR_DESC. */
-    private static final String PACKET_NOTAVAILABLE_ERROR_DESC = "the requested file is not found in the destination";
 
     @Autowired
     @Qualifier("JossAdapter")
@@ -45,12 +48,21 @@ public class PacketKeeper {
     @Qualifier("PosixAdapter")
     private ObjectStoreAdapter posixAdapter;
 
-    /** The decryptor. */
-    @Autowired
-    private IPacketCryptoHelper decryptor;
-
     @Value("${objectstore.adapter.name}")
     private String adapterName;
+
+    @Value("${objectstore.crypto.name}")
+    private String cryptoName;
+
+    @Autowired
+    @Qualifier("OnlinePacketCryptoServiceImpl")
+    private IPacketCryptoService onlineCrypto;
+
+    @Autowired
+    @Qualifier("OfflinePacketCryptoServiceImpl")
+    private IPacketCryptoService offlineCrypto;
+
+    private static final String UNDERSCORE = "_";
 
     /**
      * Get the manifest information for given packet id
@@ -59,7 +71,18 @@ public class PacketKeeper {
      * @return : Manifest
      */
     public Manifest getManifest(String id) {
-        return new Manifest();
+        Manifest manifest = new Manifest();
+
+        Map<String, Object> metaMap = getAdapter().getMetaData(PACKET_MANAGER_ACCOUNT, id, null);
+
+        metaMap.entrySet().forEach(entry -> {
+            Map<String, Object> tempMap = (Map<String, Object>) entry.getValue();
+            PacketInfo packetInfo = PacketManagerHelper.getPacketInfo(tempMap);
+            manifest.getPacketInfos().add(packetInfo);
+        });
+
+
+        return manifest;
     }
 
     /**
@@ -78,13 +101,21 @@ public class PacketKeeper {
      * @param packetInfo : packet info
      * @return : Packet
      */
-    public Packet getPacket(PacketInfo packetInfo) throws IOException, PacketDecryptionFailureException, ApiNotAccessibleException {
-        InputStream is = getAdapter().getObject(PACKET_MANAGER_ACCOUNT, packetInfo.getId(), packetInfo.getPacketName());
-        InputStream subPacket = decryptPacket(is, packetInfo.getId());
-        Packet packet = new Packet();
-        packet.setPacket(subPacket);
-        packet.setPacketInfo(packetInfo);
-        return packet;
+    public Packet getPacket(PacketInfo packetInfo) throws PacketKeeperException {
+        try {
+            InputStream is = getAdapter().getObject(PACKET_MANAGER_ACCOUNT, packetInfo.getId(), getName(packetInfo.getId(), packetInfo.getPacketName()));
+            byte[] subPacket = getCryptoService().decrypt(packetInfo.getId(), IOUtils.toByteArray(is));
+            Packet packet = new Packet();
+            packet.setPacket(subPacket);
+            Map<String, Object> metaInfo = getAdapter().getMetaData(PACKET_MANAGER_ACCOUNT, packetInfo.getId(), getName(packetInfo.getId(), packetInfo.getPacketName()));
+            packet.setPacketInfo(PacketManagerHelper.getPacketInfo(metaInfo));
+
+            return packet;
+        } catch (Exception e) {
+            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packetInfo.getId(), e.getStackTrace().toString());
+            throw new PacketKeeperException(PacketUtilityErrorCodes.PACKET_KEEPER_GET_ERROR.getErrorCode(),
+                    "Failed to persist packet in object store : " + e.getMessage(), e);
+        }
     }
 
     /**
@@ -93,10 +124,35 @@ public class PacketKeeper {
      * @param packet : the Packet
      * @return PacketInfo
      */
-    public PacketInfo putPacket(Packet packet) {
-        boolean result = getAdapter().putObject(PACKET_MANAGER_ACCOUNT,
-                packet.getPacketInfo().getId(), packet.getPacketInfo().getPacketName(), packet.getPacket());
-        return result ? packet.getPacketInfo() : null;
+    public PacketInfo putPacket(Packet packet) throws PacketKeeperException {
+        try {
+            // encrypt packet
+            byte[] encryptedSubPacket = getCryptoService().encrypt(packet.getPacketInfo().getId(), packet.getPacket());
+
+            // put packet in object store
+            boolean response = getAdapter().putObject(PACKET_MANAGER_ACCOUNT,
+                    packet.getPacketInfo().getId(), packet.getPacketInfo().getPacketName(), new ByteArrayInputStream(encryptedSubPacket));
+
+            if (response) {
+                PacketInfo packetInfo = packet.getPacketInfo();
+                // sign encrypted packet
+                packetInfo.setSignature(new String(getCryptoService().sign(encryptedSubPacket)));
+                // generate encrypted packet hash
+                packetInfo.setEncryptedHash(new String(HMACUtils.generateHash(encryptedSubPacket)));
+                Map<String, Object> metaMap = PacketManagerHelper.getMetaMap(packetInfo);
+                metaMap = getAdapter().addObjectMetaData(PACKET_MANAGER_ACCOUNT,
+                        packet.getPacketInfo().getId(), packet.getPacketInfo().getPacketName(), metaMap);
+                return PacketManagerHelper.getPacketInfo(metaMap);
+            } else
+                throw new PacketKeeperException(PacketUtilityErrorCodes
+                        .PACKET_KEEPER_PUT_ERROR.getErrorCode(), "Unable to store packet in object store");
+
+
+        } catch (Exception e) {
+            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packet.getPacketInfo().getId(), e.getStackTrace().toString());
+            throw new PacketKeeperException(PacketUtilityErrorCodes.PACKET_KEEPER_PUT_ERROR.getErrorCode(),
+                    "Failed to persist packet in object store : " + e.getMessage(), e);
+        }
     }
 
     private ObjectStoreAdapter getAdapter() {
@@ -108,17 +164,17 @@ public class PacketKeeper {
             throw new ObjectStoreAdapterException();
     }
 
-    private InputStream decryptPacket(InputStream is, String id)
-            throws PacketDecryptionFailureException, IOException, ApiNotAccessibleException {
-        LOGGER.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), id,
-                "PacketKeeper::getFile() : getting packet from packet store");
-
-        LOGGER.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), id,
-                "PacketKeeper::getFile(regid)::decrypt sub packet");
-        byte[] decryptedData = decryptor.decrypt(id, IOUtils.toByteArray(is));
-        if (decryptedData == null) {
-            throw new PacketDecryptionFailureException();
-        }
-        return new ByteArrayInputStream(decryptedData);
+    private IPacketCryptoService getCryptoService() {
+        if (cryptoName.equalsIgnoreCase(onlineCrypto.getClass().getSimpleName()))
+            return onlineCrypto;
+        else if (cryptoName.equalsIgnoreCase(offlineCrypto.getClass().getSimpleName()))
+            return offlineCrypto;
+        else
+            throw new CryptoException();
     }
+
+    private String getName(String id, String name) {
+        return id + UNDERSCORE + name;
+    }
+
 }

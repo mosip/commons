@@ -10,5 +10,5 @@ import java.io.InputStream;
 public class Packet {
 
     private PacketInfo packetInfo;
-    private InputStream packet;
+    private byte[] packet;
 }

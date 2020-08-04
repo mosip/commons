@@ -26,7 +26,7 @@ public class PacketManagerLogger {
 	}
 
 	/**
-	 * Instantiates a new reg processor logger.
+	 * Instantiates a new packet manager logger.
 	 */
 	private PacketManagerLogger() {
 	}

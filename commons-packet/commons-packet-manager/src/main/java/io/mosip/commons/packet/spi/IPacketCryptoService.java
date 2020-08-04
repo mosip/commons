@@ -1,6 +1,6 @@
 package io.mosip.commons.packet.spi;
 
-public interface IPacketCryptoHelper {
+public interface IPacketCryptoService {
 
     public byte[] sign(byte[] packet);
 

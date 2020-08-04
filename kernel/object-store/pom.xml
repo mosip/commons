@@ -27,6 +27,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.mosip.kernel</groupId>
+            <artifactId>kernel-core</artifactId>
+            <version>1.0.9</version>
+        </dependency>
+        <dependency>
             <groupId>org.javaswift</groupId>
             <artifactId>joss</artifactId>
             <version>${joss.adapter.version}</version>

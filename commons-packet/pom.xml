@@ -39,7 +39,6 @@
     <modules>
         <module>commons-packet-manager</module>
         <module>commons-packet-service</module>
-        <module>commons-mstore</module>
     </modules>
 
 

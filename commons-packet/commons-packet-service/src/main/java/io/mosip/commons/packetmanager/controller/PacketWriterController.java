@@ -29,7 +29,7 @@ public class PacketWriterController {
     @PostMapping(path = "/createPacket", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseWrapper<List<PacketInfo>> createPacket(@RequestBody(required = true) RequestWrapper<PacketDto> requestr) {
 
-        List<PacketInfo> resultField = packetWriter.createPacket(requestr.getRequest(), true);
+        List<PacketInfo> resultField = packetWriter.createPacket(requestr.getRequest(), false);
         ResponseWrapper<List<PacketInfo>> response = getResponseWrapper();
         response.setResponse(resultField);
         return response;

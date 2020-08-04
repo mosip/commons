@@ -43,24 +43,19 @@ public class JossAdapter implements ObjectStoreAdapter {
 
 
 
-    @Value("object.store.username")
+    @Value("object.store.username:test")
     private String userName;
 
-    @Value("object.store.password")
+    @Value("object.store.password:testing")
     private String password;
 
-    @Value("object.store.authurl")
+    @Value("object.store.authurl:52.172.53.239:9000/auth/v1.0")
     private String authUrl;
 
     private List<Account> accounts = new ArrayList<Account>();
 
 
     public InputStream getObject(String account, String containerName, String objectName) {
-        //TODO ----- MOCK IMPL ------------- START
-        if (true)
-            return MockPacket.getMockPacket(containerName, objectName);
-        //TODO ----- MOCK IMPL ------------- END
-
         Container container = getConnection(account).getContainer(containerName);
         if (!container.exists())
             container = getConnection(account).getContainer(containerName).create();
@@ -68,16 +63,12 @@ public class JossAdapter implements ObjectStoreAdapter {
     }
 
     public boolean putObject(String account, String containerName, String objectName, InputStream data) {
-        //TODO ----- MOCK IMPL ------------- START
-        if (true)
-            return MockPacket.putMock(containerName, objectName, data);
-        //TODO ----- MOCK IMPL ------------- END
-
         Container container = getConnection(account).getContainer(containerName);
         if (!container.exists())
             container = getConnection(account).getContainer(containerName).create();
         StoredObject storedObject = container.getObject(objectName);
         storedObject.uploadObject(data);
+
         return true;
     }
 
@@ -111,11 +102,17 @@ public class JossAdapter implements ObjectStoreAdapter {
     }
 
     public Map<String, Object> getMetaData(String account, String containerName, String objectName) {
+        Map<String, Object> metaData = new HashMap<>();
         Container container = getConnection(account).getContainer(containerName);
         if (!container.exists())
             return null;
-        StoredObject storedObject = container.getObject(objectName);
-        return storedObject.getMetadata();
+        if (objectName == null)
+            container.list().forEach(obj -> metaData.put(obj.getName(), obj.getMetadata()));
+        else {
+            StoredObject storedObject = container.getObject(objectName);
+            metaData.put(storedObject.getName(), storedObject.getMetadata());
+        }
+        return metaData;
     }
 
     private Account getConnection(String accountName) {
@@ -137,6 +134,7 @@ public class JossAdapter implements ObjectStoreAdapter {
         config.setPassword(password);
         config.setAuthUrl(authUrl);
         config.setTenantName(accountName);
+        //config.setMock(true);
         config.setAuthenticationMethod(AuthenticationMethod.BASIC);
         Account account = new AccountFactory(config).setAllowReauthenticate(true).createAccount();
         accounts.add(account);
