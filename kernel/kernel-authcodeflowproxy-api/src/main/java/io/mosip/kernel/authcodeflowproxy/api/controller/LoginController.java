@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
 import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
 import io.mosip.kernel.authcodeflowproxy.api.exception.ClientException;
@@ -42,6 +43,7 @@ public class LoginController {
 
 	@GetMapping(value = "/login-redirect/{redirectURI}")
 	public void loginRedirect(@PathVariable("redirectURI") String redirectURI,
+
 			@CookieValue("Authorization") String authCookie, HttpServletResponse res) throws IOException {
 		Cookie cookie = loginService.createCookie(authCookie);
 		String uri = new String(Base64.decodeBase64(redirectURI.getBytes()));
@@ -78,5 +80,4 @@ public class LoginController {
 		responseWrapper.setResponse(mosipUserDto);
 		return responseWrapper;
 	}
-
 }
