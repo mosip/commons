@@ -2,12 +2,15 @@ package io.mosip.kernel.bioextractor.service.helper;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
@@ -22,18 +25,28 @@ import io.mosip.kernel.core.util.DateUtils;
 @Component
 public final class RestHelper {
 
+	private static final String AUTHORIZATION = "Authorization";
+	private static final String COOKIE = "Cookie";
+	private static final String AUTHORIZATION_PREFIX = AUTHORIZATION + "=";
 	@Autowired
 	private RestTemplate restTemplate;
 
-	private String getToken() {
-		AuthUserDetails userDetail = (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication()
-				.getPrincipal();
-		return userDetail.getToken();
+	private Optional<String> getToken() {
+		return Optional.ofNullable(SecurityContextHolder.getContext())
+											 .map(SecurityContext::getAuthentication)
+											 .map(Authentication::getPrincipal)
+											 .filter(auth -> auth instanceof AuthUserDetails)
+											 .map(auth -> (AuthUserDetails)auth)
+											 .map(AuthUserDetails::getToken);
+												
 	}
 
 	public Map<String, String> createTokenHeaderMap() {
 		Map<String, String> headersMap = new LinkedHashMap<>();
-		headersMap.put("Cookie", "Authorization=" + getToken());
+		Optional<String> token = getToken();
+		if(token.isPresent()) {
+			headersMap.put(COOKIE, AUTHORIZATION_PREFIX + token.get());
+		}
 		return headersMap;
 	}
 
