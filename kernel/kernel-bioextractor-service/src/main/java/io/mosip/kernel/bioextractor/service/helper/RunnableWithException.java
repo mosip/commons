@@ -1,4 +1,4 @@
-package io.mosip.kernel.bioextractor.service.impl.async;
+package io.mosip.kernel.bioextractor.service.helper;
 
 @FunctionalInterface
 public interface RunnableWithException<E extends Exception> {

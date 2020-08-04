@@ -1,4 +1,4 @@
-package io.mosip.kernel.bioextractor.service.impl.async;
+package io.mosip.kernel.bioextractor.service.helper;
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;

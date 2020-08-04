@@ -1,9 +1,5 @@
 package io.mosip.kernel.bioextractor.config;
 
-import static io.mosip.kernel.bioextractor.config.constant.BioExtractorConstants.APP_ENVIRONMENT_LOCAL;
-import static io.mosip.kernel.bioextractor.config.constant.BioExtractorConstants.SERVER_PORT;
-import static io.mosip.kernel.bioextractor.config.constant.BioExtractorConstants.SWAGGER_BASE_URL;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -17,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import io.mosip.kernel.bioextractor.config.constant.BioExtractorConfigKeyConstants;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -38,13 +35,13 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
 
-	@Value("${" + APP_ENVIRONMENT_LOCAL+ ":false}")
+	@Value("${" + BioExtractorConfigKeyConstants.APP_ENVIRONMENT_LOCAL+ ":false}")
 	private Boolean localEnv;
 
-	@Value("${" + SWAGGER_BASE_URL + ":#{null}}")
+	@Value("${" + BioExtractorConfigKeyConstants.SWAGGER_BASE_URL + ":#{null}}")
 	private String swaggerUrl;
 
-	@Value("${" + SERVER_PORT + ":8080}")
+	@Value("${" + BioExtractorConfigKeyConstants.SERVER_PORT + ":8080}")
 	private int serverPort;
 
 	private String host;
