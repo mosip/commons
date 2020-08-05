@@ -42,6 +42,7 @@ public class LoginController {
 
 	@GetMapping(value = "/login-redirect/{redirectURI}")
 	public void loginRedirect(@PathVariable("redirectURI") String redirectURI,
+
 			@CookieValue("Authorization") String authCookie, HttpServletResponse res) throws IOException {
 		Cookie cookie = loginService.createCookie(authCookie);
 		String uri = new String(Base64.decodeBase64(redirectURI.getBytes()));
@@ -78,5 +79,4 @@ public class LoginController {
 		responseWrapper.setResponse(mosipUserDto);
 		return responseWrapper;
 	}
-
 }

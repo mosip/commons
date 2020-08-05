@@ -3,13 +3,17 @@ package io.mosip.kernel.authcodeflowproxy.api.service.impl;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+
+
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
 
 import org.apache.commons.codec.binary.Base64;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -28,6 +32,7 @@ import io.mosip.kernel.authcodeflowproxy.api.service.LoginService;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
+
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -50,6 +55,7 @@ public class LoginServiceImpl implements LoginService {
 	@Value("${mosip.module.auth.auth-code-flow-login-redirect-url}")
 	private String moduleRedirectURL;
 	
+
 	@Value("${auth.server.admin.validate.url}")
 	private String validateUrl;
 	
@@ -57,7 +63,7 @@ public class LoginServiceImpl implements LoginService {
 	private RestTemplate restTemplate;
 	
 	@Autowired ObjectMapper objectMapper;
-	
+
 
 	@Override
 	public String login(String redirectURI, String state) {
