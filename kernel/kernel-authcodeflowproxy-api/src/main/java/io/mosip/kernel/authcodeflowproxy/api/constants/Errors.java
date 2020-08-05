@@ -25,7 +25,7 @@ public enum Errors {
 	 */
 	RESPONSE_PARSE_ERROR("KER-ACP-005", "Error occur while parsing error from response"),
 	
-	ACESSTOKEN_EXCEPTION("KER-ACP-006", "Error Occured while getting access token from keycloak"),
+	ACESSTOKEN_EXCEPTION("KER-ACP-006", "Error Occured while getting access token from iam"),
 	
 	STATE_EXCEPTION("KER-ACP-007", "state is not maching"),
 	;
