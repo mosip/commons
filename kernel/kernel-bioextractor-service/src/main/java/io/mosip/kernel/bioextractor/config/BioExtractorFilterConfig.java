@@ -9,7 +9,7 @@ import io.mosip.kernel.bioextractor.filter.BiometricExtractorFilter;
 /**
  * The configuration for adding filters.
  *
- * @author Manoj SP
+ * @author Loganathan Sekar
  */
 @Configuration
 public class BioExtractorFilterConfig {

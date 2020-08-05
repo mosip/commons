@@ -11,14 +11,13 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import io.mosip.kernel.bioextractor.logger.BioExtractorLogger;
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.DateUtils;
 
 public class BiometricExtractorFilter implements Filter {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(BiometricExtractorFilter.class);
+	private static final Logger LOGGER = BioExtractorLogger.getLogger(BiometricExtractorFilter.class);
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -34,7 +33,7 @@ public class BiometricExtractorFilter implements Filter {
 		}
 		
 		LocalDateTime requestTime = DateUtils.getUTCCurrentDateTime();
-		LOGGER.info("Request at : " + requestTime);
+		LOGGER.info("", this.getClass().getSimpleName(), "doFilter", "Request at : " + requestTime);
 		chain.doFilter(request, response);
 	}
 
