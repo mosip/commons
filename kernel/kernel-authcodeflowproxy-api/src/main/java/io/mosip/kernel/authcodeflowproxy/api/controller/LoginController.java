@@ -12,9 +12,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
+import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponseDTO;
 import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
 import io.mosip.kernel.authcodeflowproxy.api.exception.ClientException;
 import io.mosip.kernel.authcodeflowproxy.api.service.LoginService;
@@ -34,21 +36,23 @@ public class LoginController {
 	public void login(@CookieValue("state") String state, @PathVariable("redirectURI") String redirectURI,
 			HttpServletResponse res) throws IOException {
 		String uri = loginService.login(redirectURI, state);
-		Cookie cookie = new Cookie("state", state);
-		res.addCookie(cookie);
 		res.setStatus(302);
 		res.sendRedirect(uri);
 	}
 
+
 	@GetMapping(value = "/login-redirect/{redirectURI}")
-	public void loginRedirect(@PathVariable("redirectURI") String redirectURI,
-			@CookieValue("Authorization") String authCookie, HttpServletResponse res) throws IOException {
-		Cookie cookie = loginService.createCookie(authCookie);
-		String uri = new String(Base64.decodeBase64(redirectURI.getBytes()));
+	public void loginRedirect(@PathVariable("redirectURI") String redirectURI, @RequestParam("state") String state,
+			@RequestParam("session_state") String sessionState, @RequestParam("code") String code,
+			@CookieValue("state") String stateCookie, HttpServletResponse res) throws IOException {
+		AccessTokenResponseDTO jwtResponseDTO = loginService.loginRedirect(state, sessionState, code, stateCookie,
+				redirectURI);
+		Cookie cookie = loginService.createCookie(jwtResponseDTO.getAccessToken());
 		res.addCookie(cookie);
 		res.setStatus(302);
-		res.sendRedirect(uri);
-	}
+		String uri = new String(Base64.decodeBase64(redirectURI.getBytes()));
+		res.sendRedirect(uri);	
+		}
 
 	@ResponseFilter
 	@GetMapping(value = "/authorize/admin/validateToken")
