@@ -55,51 +55,14 @@ public class BioExtractionHelper {
 			
 			return cbeffUtil.createXML(allExtractedTemplates);
 			
-		} catch (Exception e) {e.printStackTrace();
+		} catch (Exception e) {
 			throw new BiometricExtractionException(TECHNICAL_ERROR, e);
 		}
 	}
 
 	private List<BIR> getBirs(byte[] cbeffContent) throws Exception {
 		List<BIRType> birDataFromXML = cbeffUtil.getBIRDataFromXML(cbeffContent);
-		List<BIR> birs = getBIRList(birDataFromXML);
-		return birs;
-	}
-	
-	private static List<BIR> getBIRList(List<BIRType> birTypeList) {
-		List<BIR> birList = new ArrayList<>();
-		for (BIRType birType : birTypeList) {
-			RegistryIDType format = new RegistryIDType();
-			format.setOrganization(birType.getBDBInfo().getFormat().getOrganization());
-			format.setType(birType.getBDBInfo().getFormat().getType());
-			BIR.BIRBuilder birBuilder = new BIR.BIRBuilder();
-			birBuilder.withBdb(birType.getBDB()).withElement(birType.getAny())
-					.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(birType.getBIRInfo().isIntegrity()).build())
-					.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format)
-							.withQuality(birType.getBDBInfo().getQuality()).withType(birType.getBDBInfo().getType())
-							.withSubtype(birType.getBDBInfo().getSubtype())
-							.withPurpose(birType.getBDBInfo().getPurpose()).withLevel(birType.getBDBInfo().getLevel())
-							.withCreationDate(birType.getBDBInfo().getCreationDate()).build());
-			VersionType versionType = birType.getVersion();
-			if(versionType != null) {
-				BIRVersionBuilder birVersionBuilder = new BIRVersionBuilder();
-				birVersionBuilder.withMajor((int)versionType.getMajor());
-				birVersionBuilder.withMinor((int)versionType.getMajor());
-				birBuilder.withVersion(birVersionBuilder.build());
-			}
-			
-			VersionType cbeffversionType = birType.getCBEFFVersion();
-			if(cbeffversionType != null) {
-				BIRVersionBuilder birVersionBuilder = new BIRVersionBuilder();
-				birVersionBuilder.withMajor((int)cbeffversionType.getMajor());
-				birVersionBuilder.withMinor((int)cbeffversionType.getMajor());
-				birBuilder.withCbeffversion(birVersionBuilder.build());
-			}
-			
-			BIR bir = birBuilder.build();
-			birList.add(bir);
-		}
-		return birList;
+		return cbeffUtil.convertBIRTypeToBIR(birDataFromXML);
 	}
 	
 

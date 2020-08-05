@@ -104,16 +104,17 @@ public class BiometricExtractionServiceImpl implements BiometricExtractionServic
 			throws BiometricExtractionException {
 		byte[] extractedTemplatesCbeff = bioExractionHelper.extractTemplates(cbeffContent);
 		
-		String encryptedData = encrypt(extractedTemplatesCbeff);
+		String encryptedData = encrypt(extractedTemplatesCbeff, (Map<String, String>)properties.get(HEADER));
+		System.out.println(encryptedData);
 	}
 
-	private String encrypt(byte[] extractedTemplatesCbeff) throws BiometricExtractionException {
-		return securityManager.encrypt(extractedTemplatesCbeff, cbeffEncryptionAppId, null);
+	private String encrypt(byte[] extractedTemplatesCbeff, Map<String, String> headers) throws BiometricExtractionException {
+		return securityManager.encrypt(extractedTemplatesCbeff, cbeffEncryptionAppId, null, headers);
 	}
 
 	private String decryptCbeffFile(String encryptedCbeff)
 			throws BiometricExtractionException {
-		return securityManager.decrypt(encryptedCbeff, cbeffDecryptionAppId, null);
+		return securityManager.decrypt(encryptedCbeff, cbeffDecryptionAppId, null, null);
 	}
 
 	private String downloadCbeffFile(String biometricsUrl) throws BiometricExtractionException {

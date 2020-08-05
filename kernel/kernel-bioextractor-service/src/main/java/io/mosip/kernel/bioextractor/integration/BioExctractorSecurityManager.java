@@ -1,5 +1,6 @@
 package io.mosip.kernel.bioextractor.integration;
 import static io.mosip.kernel.bioextractor.config.constant.BioExtractorConfigKeyConstants.KERNEL_DECRYPT_URL;
+import static io.mosip.kernel.bioextractor.config.constant.BioExtractorConfigKeyConstants.KERNEL_ENCRYPT_URL;
 import static io.mosip.kernel.bioextractor.config.constant.BiometricExtractionErrorConstants.DECRYPTION_ERROR;
 import static io.mosip.kernel.bioextractor.config.constant.BiometricExtractionErrorConstants.ENCRYPTION_ERROR;
 
@@ -33,8 +34,11 @@ public class BioExctractorSecurityManager {
 	@Value("${" + KERNEL_DECRYPT_URL + "}")
 	private String decryptUrl;
 	
+	@Value("${" + KERNEL_ENCRYPT_URL + "}")
+	private String encryptUrl;
+	
 	@SuppressWarnings("unchecked")
-	public String decrypt(String encryptedData, String appId, String refId) throws BiometricExtractionException {
+	public String decrypt(String encryptedData, String appId, String refId, Map<String, String> headers) throws BiometricExtractionException {
 		RequestWrapper<Map<String, Object>> requestWrapper = restHelper.createRequtestWrapper();
 		Map<String, Object> request = new HashMap<>();
 		request.put(DATA, encryptedData);
@@ -51,7 +55,7 @@ public class BioExctractorSecurityManager {
 		
 	}
 
-	public String encrypt(byte[] data, String appId, String refId) throws BiometricExtractionException {
+	public String encrypt(byte[] data, String appId, String refId, Map<String, String> headers) throws BiometricExtractionException {
 		RequestWrapper<Map<String, Object>> requestWrapper = restHelper.createRequtestWrapper();
 		Map<String, Object> request = new HashMap<>();
 		request.put(DATA, data);
@@ -59,7 +63,7 @@ public class BioExctractorSecurityManager {
 		request.put(REFERENCE_ID, refId);
 		request.put(TIME_STAMP, DateUtils.getUTCCurrentDateTime());
 		requestWrapper.setRequest(request);
-		ResponseWrapper<Map<String, Object>>  response = restHelper.doPost(decryptUrl, requestWrapper, null,DECRYPTION_ERROR, ResponseWrapper.class);
+		ResponseWrapper<Map<String, Object>>  response = restHelper.doPost(encryptUrl, requestWrapper, headers, DECRYPTION_ERROR, ResponseWrapper.class);
 		if(response.getErrors() != null && !response.getErrors().isEmpty()) {
 			throw new BiometricExtractionException(ENCRYPTION_ERROR, new Exception(String.valueOf(response.getErrors())));
 		} else {
