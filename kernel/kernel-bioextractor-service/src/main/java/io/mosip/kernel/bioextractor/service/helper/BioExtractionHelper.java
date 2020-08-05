@@ -1,6 +1,6 @@
 package io.mosip.kernel.bioextractor.service.helper;
 
-import static io.mosip.kernel.bioextractor.config.constant.BiometricExtractionErrorConstants.INVALID_CBEFF;
+import static io.mosip.kernel.bioextractor.config.constant.BiometricExtractionErrorConstants.TECHNICAL_ERROR;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -49,7 +49,7 @@ public class BioExtractionHelper {
 			return cbeffUtil.createXML(allExtractedTemplates);
 			
 		} catch (Exception e) {
-			throw new BiometricExtractionException(INVALID_CBEFF, e);
+			throw new BiometricExtractionException(TECHNICAL_ERROR, e);
 		}
 	}
 	
