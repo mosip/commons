@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -62,10 +63,10 @@ public class PosixAdapter implements ObjectStoreAdapter {
                 return new ByteArrayInputStream(entries.get(zipEntry.get()).toByteArray());
 
         } catch (FileNotFoundInDestinationException e) {
-            LOGGER.error("exception occured. Will create a new connection.", e);
+            LOGGER.error("exception occured to get object for id - " + container, e);
             throw e;
         } catch (IOException  e) {
-            e.printStackTrace();
+            LOGGER.error("exception occured to get object for id - " + container, e);
         }
         return null;
     }
@@ -86,24 +87,25 @@ public class PosixAdapter implements ObjectStoreAdapter {
 
     public Map<String, Object> addObjectMetaData(String account, String container, String objectName, Map<String, Object> metadata) {
         try {
-            JSONObject jsonObject = new JSONObject(metadata);
+            JSONObject jsonObject = objectMetadata(account, container, objectName, metadata);
             createContainerZipWithSubpacket(container, objectName + JSON,
                     new ByteArrayInputStream(JsonUtils.javaObjectToJsonString(jsonObject.toString()).getBytes()));
         } catch (io.mosip.kernel.core.exception.IOException | IOException | JsonProcessingException e) {
-            e.printStackTrace();
+            LOGGER.error("exception occured to add metadata for id - " + container, e);
         }
         return metadata;
     }
 
     public Map<String, Object> addObjectMetaData(String account, String container, String objectName, String key, String value) {
         try {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put(key, value);
+            Map<String, Object> metaMap = new HashMap<>();
+            metaMap.put(key, value);
+            JSONObject jsonObject = objectMetadata(account, container, objectName, metaMap);
             createContainerZipWithSubpacket(container, objectName + JSON, new ByteArrayInputStream(jsonObject.toString().getBytes()));
         } catch (io.mosip.kernel.core.exception.IOException e) {
-            e.printStackTrace();
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
+            LOGGER.error("exception occured to add metadata for id - " + container, e);
+        } catch (IOException e) {
+            LOGGER.error("exception occured to add metadata for id - " + container, e);
         }
         return null;
     }
@@ -130,7 +132,7 @@ public class PosixAdapter implements ObjectStoreAdapter {
             LOGGER.error("exception occured. Will create a new connection.", e);
             throw e;
         } catch (IOException  e) {
-            e.printStackTrace();
+            LOGGER.error("exception occured to get metadata for id - " + container, e);
         }
         return metaMap;
     }
@@ -196,5 +198,20 @@ public class PosixAdapter implements ObjectStoreAdapter {
             packetStream.close();
         }
         return entries;
+    }
+
+    private JSONObject objectMetadata(String account, String container,
+                                      String objectName, Map<String, Object> metadata) {
+        JSONObject jsonObject = new JSONObject(metadata);
+        Map<String, Object> existingMetaData = getMetaData(account, container, objectName);
+        if (!CollectionUtils.isEmpty(existingMetaData))
+            existingMetaData.entrySet().forEach(entry -> {
+                try {
+                    jsonObject.put(entry.getKey(), entry.getValue());
+                } catch (JSONException e) {
+                    LOGGER.error("exception occured to add metadata for id - " + container, e);
+                }
+            });
+        return jsonObject;
     }
 }

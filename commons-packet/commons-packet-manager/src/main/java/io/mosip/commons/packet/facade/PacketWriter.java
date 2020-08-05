@@ -152,6 +152,8 @@ public class PacketWriter {
         }
 
         if (provider == null) {
+            LOGGER.error(PacketManagerLogger.SESSIONID,PacketManagerLogger.REGISTRATIONID, null,
+                    "No available provider found for source : " + source + " process : " + process);
             throw new NoAvailableProviderException();
         }
 
