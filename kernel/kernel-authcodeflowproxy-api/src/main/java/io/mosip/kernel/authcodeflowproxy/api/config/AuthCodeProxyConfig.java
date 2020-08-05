@@ -7,7 +7,7 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class AuthCodeProxyConfig {
 
-	@Bean
+	@Bean(name = "restTemplateProxyAuthCode")
 	RestTemplate restTemplate() {
 		return new RestTemplate();
 	}

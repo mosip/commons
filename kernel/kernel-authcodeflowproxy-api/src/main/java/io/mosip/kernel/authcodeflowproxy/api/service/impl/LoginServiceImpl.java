@@ -9,6 +9,7 @@ import javax.servlet.http.Cookie;
 
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -52,6 +53,7 @@ public class LoginServiceImpl implements LoginService {
 	@Value("${auth.server.admin.validate.url}")
 	private String validateUrl;
 	
+	@Qualifier("restTemplateProxyAuthCode")
 	@Autowired
 	private RestTemplate restTemplate;
 	
