@@ -19,6 +19,7 @@ import io.mosip.kernel.bioextractor.exception.BiometricExtractionException;
 import io.mosip.kernel.bioextractor.integration.BioExctractorSecurityManager;
 import io.mosip.kernel.bioextractor.integration.DataShareManager;
 import io.mosip.kernel.bioextractor.service.helper.AsyncHelper;
+import io.mosip.kernel.bioextractor.service.helper.BioExtractionHelper;
 import io.mosip.kernel.bioextractor.service.helper.RestHelper;
 import io.mosip.kernel.core.cbeffutil.spi.CbeffUtil;
 import io.mosip.kernel.core.util.CryptoUtil;
@@ -46,6 +47,9 @@ public class BiometricExtractionServiceImpl implements BiometricExtractionServic
 	
 	@Autowired
 	private CbeffUtil cbeffUtil;
+	
+	@Autowired
+	private BioExtractionHelper bioExractionHelper;
 
 	@Override
 	public BioExtractPromiseResponseDTO extractBiometrics(BioExtractRequestDTO bioExtractRequestDTO)
@@ -53,7 +57,7 @@ public class BiometricExtractionServiceImpl implements BiometricExtractionServic
 		BioExtractPromiseResponseDTO bioExtractPromiseResponseDTO = new BioExtractPromiseResponseDTO();
 		
 		String biometricsUrl = bioExtractRequestDTO.getBiometricsUrl();
-		String cbeffFileContent = getCbeffFileContent(biometricsUrl);
+		byte[] cbeffFileContent = getCbeffFileContent(biometricsUrl);
 		validateCbeffConent(cbeffFileContent);
 		
 		String promiseId = createPromiseId(biometricsUrl);
@@ -76,30 +80,32 @@ public class BiometricExtractionServiceImpl implements BiometricExtractionServic
 		return HMACUtils.digestAsPlainText(HMACUtils.generateHash(randStr.getBytes()));
 	}
 
-	private String getCbeffFileContent(String biometricsUrl)
+	private byte[] getCbeffFileContent(String biometricsUrl)
 			throws BiometricExtractionException {
 		String encryptedCbeff = downloadCbeffFile(biometricsUrl);
 		String decryptedCbeff = decryptCbeffFile(encryptedCbeff);
-		String cbeffContent = new String(CryptoUtil.decodeBase64(decryptedCbeff));
+		byte[] cbeffContent = CryptoUtil.decodeBase64(decryptedCbeff);
 		return cbeffContent;
 	}
 	
-	private void doBioExtraction(String cbeffContent, String promiseId, Map<String, Object> properties)
-			throws BiometricExtractionException {
-		
-	}
-
-	private void validateCbeffConent(String cbeffContent) throws BiometricExtractionException {
+	public void validateCbeffConent(byte[] cbeffContent) throws BiometricExtractionException {
 		try {
-			cbeffUtil.validateXML(cbeffContent.getBytes());
+			cbeffUtil.validateXML(cbeffContent);
 		} catch (Exception e) {
 			throw new BiometricExtractionException(INVALID_CBEFF, e);
 		}
 	}
+	
+	private void doBioExtraction(byte[] cbeffContent, String promiseId, Map<String, Object> properties)
+			throws BiometricExtractionException {
+		byte[] extractedTemplatesCbeff = bioExractionHelper.extractTemplates(cbeffContent);
+		
+		System.out.println(extractedTemplatesCbeff);
+	}
 
 	private String decryptCbeffFile(String encryptedCbeff)
 			throws BiometricExtractionException {
-		return new String(securityManager.decrypt(encryptedCbeff, cbeffDecryptionAppId, null));
+		return securityManager.decrypt(encryptedCbeff, cbeffDecryptionAppId, null);
 	}
 
 	private String downloadCbeffFile(String biometricsUrl) throws BiometricExtractionException {

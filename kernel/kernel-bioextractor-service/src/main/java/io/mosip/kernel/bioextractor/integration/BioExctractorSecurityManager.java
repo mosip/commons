@@ -33,7 +33,7 @@ public class BioExctractorSecurityManager {
 	private String decryptUrl;
 	
 	@SuppressWarnings("unchecked")
-	public byte [] decrypt(String encryptedData, String appId, String refId) throws BiometricExtractionException {
+	public String decrypt(String encryptedData, String appId, String refId) throws BiometricExtractionException {
 		RequestWrapper<Map<String, Object>> requestWrapper = restHelper.createRequtestWrapper();
 		Map<String, Object> request = new HashMap<>();
 		request.put(DATA, encryptedData);
@@ -45,7 +45,7 @@ public class BioExctractorSecurityManager {
 		if(response.getErrors() != null && !response.getErrors().isEmpty()) {
 			throw new BiometricExtractionException(DECRYPTION_ERROR, new Exception(String.valueOf(response.getErrors())));
 		} else {
-			return ((String)(response.getResponse()).get(DATA)).getBytes();
+			return (String)(response.getResponse()).get(DATA);
 		}
 		
 	}
