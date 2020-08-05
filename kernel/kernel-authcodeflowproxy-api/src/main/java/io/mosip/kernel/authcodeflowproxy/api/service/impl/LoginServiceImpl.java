@@ -53,7 +53,6 @@ public class LoginServiceImpl implements LoginService {
 	@Value("${auth.server.admin.validate.url}")
 	private String validateUrl;
 	
-	@Qualifier("restTemplateProxyAuthCode")
 	@Autowired
 	private RestTemplate restTemplate;
 	
