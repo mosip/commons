@@ -27,7 +27,6 @@ import java.util.Map;
 /**
  * The packet keeper is used to store & retrieve packet, creation of audit, encrypt and sign packet.
  * Packet keeper is used to get container information and list of sources from a packet.
- *
  */
 @Component
 public class PacketKeeper {
@@ -35,7 +34,9 @@ public class PacketKeeper {
     @Autowired
     private ObjectMapper mapper;
 
-    /** The reg proc logger. */
+    /**
+     * The reg proc logger.
+     */
     private static Logger LOGGER = PacketManagerLogger.getLogger(PacketKeeper.class);
 
     private static final String PACKET_MANAGER_ACCOUNT = "PACKET_MANAGER_ACCOUNT";

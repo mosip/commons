@@ -31,9 +31,13 @@ public class PacketHelper {
         READER, WRITER;
     }
 
-    /** The providerConfig. */
+    /**
+     * The providerConfig.
+     */
     private static Map<String, String> readerConfiguration;
-    /** The providerConfig. */
+    /**
+     * The providerConfig.
+     */
     private static Map<String, String> writerConfiguration;
 
     public static Set<String> getReaderProvider(Map<String, String> readerConfig) {
@@ -65,7 +69,7 @@ public class PacketHelper {
             configurations = getWriter(writerConfiguration);
 
         if (configurations == null)
-            throw new  NoAvailableProviderException();
+            throw new NoAvailableProviderException();
 
         Optional<ProviderDto> providerDto = configurations.stream().filter(dto -> dto.getSource().contains(providerSource) && dto.getProcess().contains(providerProcess)).findAny();
         return providerDto.isPresent() && providerDto.get() != null && providerName.contains(providerDto.get().getClassName());

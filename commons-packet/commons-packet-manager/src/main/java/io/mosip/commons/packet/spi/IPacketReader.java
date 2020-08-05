@@ -13,7 +13,6 @@ import java.util.Map;
 
 /**
  * The packet reader interface
- *
  */
 @Service
 public interface IPacketReader {

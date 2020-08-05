@@ -12,7 +12,6 @@ import java.util.Map;
 
 /**
  * The packet Writer interface
- *
  */
 @Service
 public interface IPacketWriter {

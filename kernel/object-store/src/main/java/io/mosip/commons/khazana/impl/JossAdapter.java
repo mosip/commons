@@ -42,7 +42,6 @@ public class JossAdapter implements ObjectStoreAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(JossAdapter.class);
 
 
-
     @Value("object.store.username:test")
     private String userName;
 

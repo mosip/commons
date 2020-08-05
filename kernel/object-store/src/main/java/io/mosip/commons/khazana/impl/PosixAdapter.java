@@ -65,7 +65,7 @@ public class PosixAdapter implements ObjectStoreAdapter {
         } catch (FileNotFoundInDestinationException e) {
             LOGGER.error("exception occured to get object for id - " + container, e);
             throw e;
-        } catch (IOException  e) {
+        } catch (IOException e) {
             LOGGER.error("exception occured to get object for id - " + container, e);
         }
         return null;
@@ -131,7 +131,7 @@ public class PosixAdapter implements ObjectStoreAdapter {
         } catch (FileNotFoundInDestinationException e) {
             LOGGER.error("exception occured. Will create a new connection.", e);
             throw e;
-        } catch (IOException  e) {
+        } catch (IOException e) {
             LOGGER.error("exception occured to get metadata for id - " + container, e);
         }
         return metaMap;

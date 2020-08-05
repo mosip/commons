@@ -27,8 +27,6 @@ import static io.mosip.commons.packet.constants.PacketManagerConstants.SCHEMA_JS
 
 /**
  * The Class IdSchemaUtils.
- *
- * @author Sowmya
  */
 
 /**
@@ -55,8 +53,8 @@ public class IdSchemaUtils {
     /**
      * Gets the source field category from id schema
      *
-     * @param fieldName the field name in schema
-     * @param  idschemaVersion : the idschema version used to create packet
+     * @param fieldName       the field name in schema
+     * @param idschemaVersion : the idschema version used to create packet
      * @return the source
      * @throws IOException
      */
@@ -82,7 +80,7 @@ public class IdSchemaUtils {
             return idschema.get(version);
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(idschemaUrl);
         if (version != null)
-            builder.queryParam(PacketManagerConstants.SCHEMA_VERSION_QUERY_PARAM,version);
+            builder.queryParam(PacketManagerConstants.SCHEMA_VERSION_QUERY_PARAM, version);
         UriComponents uriComponents = builder.build(false).encode();
 
         String response = restTemplate.getForObject(uriComponents.toUri(), String.class);

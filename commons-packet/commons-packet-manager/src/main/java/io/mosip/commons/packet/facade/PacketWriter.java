@@ -21,9 +21,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 /**
  * The packet writer facade
- *
  */
 @Component
 public class PacketWriter {
@@ -39,11 +39,11 @@ public class PacketWriter {
      * Set field in identity object
      *
      * @param fieldName : name of the field
-     * @param value : the value to be set
+     * @param value     : the value to be set
      * @return PacketWriter
      */
     public void setField(String id, String fieldName, String value, String source, String process) throws JSONException {
-        LOGGER.info(PacketManagerLogger.SESSIONID,PacketManagerLogger.REGISTRATIONID, id,
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "setField for field name : " + fieldName + " source : " + source + " process : " + process);
         getProvider(source, process).setField(id, fieldName, value);
     }
@@ -51,12 +51,12 @@ public class PacketWriter {
     /**
      * Set Biometric
      *
-     * @param fieldName : name of the field
+     * @param fieldName       : name of the field
      * @param biometricRecord : the biometric information
      * @return PacketWriter
      */
     public void setBiometric(String id, String fieldName, BiometricRecord biometricRecord, String source, String process) {
-        LOGGER.info(PacketManagerLogger.SESSIONID,PacketManagerLogger.REGISTRATIONID, id,
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "setBiometric for field name : " + fieldName + " source : " + source + " process : " + process);
         getProvider(source, process).setBiometric(id, fieldName, biometricRecord);
 
@@ -66,11 +66,11 @@ public class PacketWriter {
      * Set documents
      *
      * @param documentName : name of the document
-     * @param document : the document
+     * @param document     : the document
      * @return PacketWriter
      */
     public void setDocument(String id, String documentName, Document document, String source, String process) {
-        LOGGER.info(PacketManagerLogger.SESSIONID,PacketManagerLogger.REGISTRATIONID, id,
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "setDocument for field name : " + documentName + " source : " + source + " process : " + process);
         getProvider(source, process).setDocument(id, documentName, document);
     }
@@ -82,7 +82,7 @@ public class PacketWriter {
      * @return PacketWriter
      */
     public void setMetaInfo(String id, Map<String, String> metaInfo, String source, String process) {
-        LOGGER.info(PacketManagerLogger.SESSIONID,PacketManagerLogger.REGISTRATIONID, id,
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "setMetaInfo for source : " + source + " process : " + process);
         getProvider(source, process).setMetaInfo(id, metaInfo);
     }
@@ -90,13 +90,13 @@ public class PacketWriter {
     /**
      * Set audit information
      *
-     * @param id : the registration id
-     * @param source : the source packet. Default if not provided.
+     * @param id      : the registration id
+     * @param source  : the source packet. Default if not provided.
      * @param process : the process
      * @return PacketInfo
      */
     public void setAudits(String id, List<AuditDto> audits, String source, String process) {
-        LOGGER.info(PacketManagerLogger.SESSIONID,PacketManagerLogger.REGISTRATIONID, id,
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "setAudits for source : " + source + " process : " + process);
         getProvider(source, process).setAudits(id, audits);
     }
@@ -104,19 +104,19 @@ public class PacketWriter {
     /**
      * Persist the packet into storage.
      *
-     * @param id : the registration id
-     * @param source : the source packet. Default if not provided.
+     * @param id      : the registration id
+     * @param source  : the source packet. Default if not provided.
      * @param process : the process
      * @return PacketInfo
      */
     public List<PacketInfo> persistPacket(String id, double version, String schemaJson, String source, String process, byte[] publicKey, boolean offlineMode) {
-        LOGGER.info(PacketManagerLogger.SESSIONID,PacketManagerLogger.REGISTRATIONID, id,
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "persistPacket for source : " + source + " process : " + process);
         return getProvider(source, process).persistPacket(id, version, schemaJson, source, process, offlineMode);
     }
 
     public List<PacketInfo> createPacket(PacketDto packetDto, boolean offlineMode) {
-        LOGGER.info(PacketManagerLogger.SESSIONID,PacketManagerLogger.REGISTRATIONID, packetDto.getId(),
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packetDto.getId(),
                 "createPacket for RID : " + packetDto.getId() + " source : " + packetDto.getSource() + " process : " + packetDto.getProcess());
         List<PacketInfo> packetInfos = null;
         IPacketWriter provider = getProvider(packetDto.getSource(), packetDto.getProcess());
@@ -130,7 +130,7 @@ public class PacketWriter {
                     packetDto.getSchemaJson(), packetDto.getSource(), packetDto.getProcess(), offlineMode);
 
         } catch (Exception e) {
-            LOGGER.error(PacketManagerLogger.SESSIONID,PacketManagerLogger.REGISTRATIONID, packetDto.getId(), e.getStackTrace().toString());
+            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packetDto.getId(), e.getStackTrace().toString());
         }
         return packetInfos;
     }
@@ -138,7 +138,7 @@ public class PacketWriter {
     /**
      * Get the packet writer provider instance for source and process
      *
-     * @param source : the source packet. Default if not provided.
+     * @param source  : the source packet. Default if not provided.
      * @param process : the process
      * @return IPacketWriter : the provider instance
      */
@@ -152,7 +152,7 @@ public class PacketWriter {
         }
 
         if (provider == null) {
-            LOGGER.error(PacketManagerLogger.SESSIONID,PacketManagerLogger.REGISTRATIONID, null,
+            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, null,
                     "No available provider found for source : " + source + " process : " + process);
             throw new NoAvailableProviderException();
         }
