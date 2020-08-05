@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,11 +39,12 @@ public class BioExtractionHelper {
 			
 			List<BIR> allExtractedTemplates =  new ArrayList<>();
 			
-			for (SingleType modality : birsByType.keySet()) {
+			for (Entry<SingleType,List<BIR>> entry : birsByType.entrySet()) {
+				SingleType modality = entry.getKey();
 				iBioProviderApi bioProvider = bioApiFactory.getBioProvider(BiometricType.fromValue(modality.value()),
 						BiometricFunction.EXTRACT);
 				Map<String, String> flags = new LinkedHashMap<>();
-				List<BIR> extractedTemplates = bioProvider.extractTemplate(birsByType.get(modality), flags);
+				List<BIR> extractedTemplates = bioProvider.extractTemplate(entry.getValue(), flags);
 				allExtractedTemplates.addAll(extractedTemplates);
 			}
 			
