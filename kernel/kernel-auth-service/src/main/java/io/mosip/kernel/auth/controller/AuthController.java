@@ -643,10 +643,12 @@ public class AuthController {
 			@CookieValue("state") String stateCookie, HttpServletResponse res) throws IOException {
 		AccessTokenResponseDTO jwtResponseDTO = authService.loginRedirect(state, sessionState, code, stateCookie,
 				redirectURI);
+
 		Cookie cookie = createCookie(jwtResponseDTO.getAccessToken(), Integer.parseInt(jwtResponseDTO.getExpiresIn()));
 		res.addCookie(cookie);
 		res.setStatus(302);
 		String uri = new String(Base64.decodeBase64(redirectURI.getBytes()));
+
 		LOGGER.info("login-redirect open id login uri " + uri );
 		res.sendRedirect(uri);	
 		}

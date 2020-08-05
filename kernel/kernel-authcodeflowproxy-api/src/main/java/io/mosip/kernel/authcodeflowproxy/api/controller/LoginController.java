@@ -12,11 +12,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
 import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponseDTO;
+
 import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
 import io.mosip.kernel.authcodeflowproxy.api.exception.ClientException;
 import io.mosip.kernel.authcodeflowproxy.api.service.LoginService;
@@ -36,9 +38,11 @@ public class LoginController {
 	public void login(@CookieValue("state") String state, @PathVariable("redirectURI") String redirectURI,
 			HttpServletResponse res) throws IOException {
 		String uri = loginService.login(redirectURI, state);
+
 		res.setStatus(302);
 		res.sendRedirect(uri);
 	}
+
 
 
 	@GetMapping(value = "/login-redirect/{redirectURI}")
@@ -53,6 +57,7 @@ public class LoginController {
 		String uri = new String(Base64.decodeBase64(redirectURI.getBytes()));
 		res.sendRedirect(uri);	
 		}
+
 
 	@ResponseFilter
 	@GetMapping(value = "/authorize/admin/validateToken")
@@ -82,5 +87,4 @@ public class LoginController {
 		responseWrapper.setResponse(mosipUserDto);
 		return responseWrapper;
 	}
-
 }

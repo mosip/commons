@@ -18,6 +18,7 @@ public enum Errors {
 	/**
 	 * Cannot connect to auth service
 	 */
+
 	CANNOT_CONNECT_TO_AUTH_SERVICE("KER-ACP-004","Problem in connecting to auth service"),
 	
 	/**
@@ -27,9 +28,9 @@ public enum Errors {
 	
 	ACESSTOKEN_EXCEPTION("KER-ACP-006", "Error Occured while getting access token from iam"),
 	
-	STATE_EXCEPTION("KER-ACP-007", "state is not maching"),
-	;
+	STATE_EXCEPTION("KER-ACP-007", "state is not maching");
 	
+
 
 	/**
 	 * The error code

@@ -3,15 +3,19 @@ package io.mosip.kernel.authcodeflowproxy.api.service.impl;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,10 +24,12 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
+
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 import io.mosip.kernel.authcodeflowproxy.api.constants.Constants;
 import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
@@ -33,11 +39,13 @@ import io.mosip.kernel.authcodeflowproxy.api.dto.IAMErrorResponseDto;
 import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
 import io.mosip.kernel.authcodeflowproxy.api.exception.AuthRestException;
 import io.mosip.kernel.authcodeflowproxy.api.exception.ClientException;
+
 import io.mosip.kernel.authcodeflowproxy.api.exception.ServiceException;
 import io.mosip.kernel.authcodeflowproxy.api.service.LoginService;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
+
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -111,6 +119,7 @@ public class LoginServiceImpl implements LoginService {
 		uriComponentsBuilder.queryParam(Constants.SCOPE, scope);
 
 		return uriComponentsBuilder.buildAndExpand(pathParam).toString();
+
 	}
 
 	@Override
@@ -125,6 +134,7 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public MosipUserDto valdiateToken(String authToken) {
+
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Cookie", authTokenHeader + "=" + authToken);
 		HttpEntity<String> requestEntity = new HttpEntity<>(headers);
@@ -149,6 +159,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 		return mosipUserDto;
 	}
+
 
 	@Override
 	public AccessTokenResponseDTO loginRedirect(String state, String sessionState, String code, String stateCookie,
@@ -206,5 +217,6 @@ public class LoginServiceImpl implements LoginService {
 		}
 		return keycloakErrorResponseDto;
 	}
+
 
 }
