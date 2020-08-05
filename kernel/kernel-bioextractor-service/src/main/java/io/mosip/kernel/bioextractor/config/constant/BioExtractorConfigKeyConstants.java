@@ -7,5 +7,6 @@ public class BioExtractorConfigKeyConstants {
 	public static final String SERVER_PORT = "server.port";
 	public static final String KERNEL_DECRYPT_URL = "kernel-decrypt-url";
 	public static final String CBEFF_DECRYPTION_APP_ID = "cbeff-decryption.app-id";
+	public static final String CBEFF_ENCRYPTION_APP_ID = "cbeff-encryption.app-id";
 
 }

@@ -1,6 +1,7 @@
 package io.mosip.kernel.bioextractor.integration;
 import static io.mosip.kernel.bioextractor.config.constant.BioExtractorConfigKeyConstants.KERNEL_DECRYPT_URL;
 import static io.mosip.kernel.bioextractor.config.constant.BiometricExtractionErrorConstants.DECRYPTION_ERROR;
+import static io.mosip.kernel.bioextractor.config.constant.BiometricExtractionErrorConstants.ENCRYPTION_ERROR;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,6 +49,22 @@ public class BioExctractorSecurityManager {
 			return (String)(response.getResponse()).get(DATA);
 		}
 		
+	}
+
+	public String encrypt(byte[] data, String appId, String refId) throws BiometricExtractionException {
+		RequestWrapper<Map<String, Object>> requestWrapper = restHelper.createRequtestWrapper();
+		Map<String, Object> request = new HashMap<>();
+		request.put(DATA, data);
+		request.put(APPLICATION_ID, appId);
+		request.put(REFERENCE_ID, refId);
+		request.put(TIME_STAMP, DateUtils.getUTCCurrentDateTime());
+		requestWrapper.setRequest(request);
+		ResponseWrapper<Map<String, Object>>  response = restHelper.doPost(decryptUrl, requestWrapper, null,DECRYPTION_ERROR, ResponseWrapper.class);
+		if(response.getErrors() != null && !response.getErrors().isEmpty()) {
+			throw new BiometricExtractionException(ENCRYPTION_ERROR, new Exception(String.valueOf(response.getErrors())));
+		} else {
+			return (String)(response.getResponse()).get(DATA);
+		}
 	}
 
 

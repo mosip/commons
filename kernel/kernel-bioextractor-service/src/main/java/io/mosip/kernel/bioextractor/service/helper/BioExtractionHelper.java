@@ -17,9 +17,15 @@ import io.mosip.kernel.biometrics.constant.BiometricFunction;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biosdk.provider.factory.BioAPIFactory;
 import io.mosip.kernel.biosdk.provider.spi.iBioProviderApi;
+import io.mosip.kernel.core.cbeffutil.entity.BDBInfo;
 import io.mosip.kernel.core.cbeffutil.entity.BIR;
+import io.mosip.kernel.core.cbeffutil.entity.BIRInfo;
+import io.mosip.kernel.core.cbeffutil.entity.BIRVersion;
+import io.mosip.kernel.core.cbeffutil.entity.BIRVersion.BIRVersionBuilder;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
+import io.mosip.kernel.core.cbeffutil.jaxbclasses.RegistryIDType;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.SingleType;
+import io.mosip.kernel.core.cbeffutil.jaxbclasses.VersionType;
 import io.mosip.kernel.core.cbeffutil.spi.CbeffUtil;
 
 @Component
@@ -33,8 +39,7 @@ public class BioExtractionHelper {
 	
 	public byte[] extractTemplates(byte[] cbeffContent) throws BiometricExtractionException {
 		try {
-			List<BIRType> birDataFromXML = cbeffUtil.getBIRDataFromXML(cbeffContent);
-			List<BIR> birs = cbeffUtil.convertBIRTypeToBIR(birDataFromXML);
+			List<BIR> birs = getBirs(cbeffContent);
 			Map<SingleType, List<BIR>> birsByType = birs.stream().collect(Collectors.groupingBy(bir -> bir.getBdbInfo().getType().get(0)));
 			
 			List<BIR> allExtractedTemplates =  new ArrayList<>();
@@ -50,9 +55,51 @@ public class BioExtractionHelper {
 			
 			return cbeffUtil.createXML(allExtractedTemplates);
 			
-		} catch (Exception e) {
+		} catch (Exception e) {e.printStackTrace();
 			throw new BiometricExtractionException(TECHNICAL_ERROR, e);
 		}
+	}
+
+	private List<BIR> getBirs(byte[] cbeffContent) throws Exception {
+		List<BIRType> birDataFromXML = cbeffUtil.getBIRDataFromXML(cbeffContent);
+		List<BIR> birs = getBIRList(birDataFromXML);
+		return birs;
+	}
+	
+	private static List<BIR> getBIRList(List<BIRType> birTypeList) {
+		List<BIR> birList = new ArrayList<>();
+		for (BIRType birType : birTypeList) {
+			RegistryIDType format = new RegistryIDType();
+			format.setOrganization(birType.getBDBInfo().getFormat().getOrganization());
+			format.setType(birType.getBDBInfo().getFormat().getType());
+			BIR.BIRBuilder birBuilder = new BIR.BIRBuilder();
+			birBuilder.withBdb(birType.getBDB()).withElement(birType.getAny())
+					.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(birType.getBIRInfo().isIntegrity()).build())
+					.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format)
+							.withQuality(birType.getBDBInfo().getQuality()).withType(birType.getBDBInfo().getType())
+							.withSubtype(birType.getBDBInfo().getSubtype())
+							.withPurpose(birType.getBDBInfo().getPurpose()).withLevel(birType.getBDBInfo().getLevel())
+							.withCreationDate(birType.getBDBInfo().getCreationDate()).build());
+			VersionType versionType = birType.getVersion();
+			if(versionType != null) {
+				BIRVersionBuilder birVersionBuilder = new BIRVersionBuilder();
+				birVersionBuilder.withMajor((int)versionType.getMajor());
+				birVersionBuilder.withMinor((int)versionType.getMajor());
+				birBuilder.withVersion(birVersionBuilder.build());
+			}
+			
+			VersionType cbeffversionType = birType.getCBEFFVersion();
+			if(cbeffversionType != null) {
+				BIRVersionBuilder birVersionBuilder = new BIRVersionBuilder();
+				birVersionBuilder.withMajor((int)cbeffversionType.getMajor());
+				birVersionBuilder.withMinor((int)cbeffversionType.getMajor());
+				birBuilder.withCbeffversion(birVersionBuilder.build());
+			}
+			
+			BIR bir = birBuilder.build();
+			birList.add(bir);
+		}
+		return birList;
 	}
 	
 

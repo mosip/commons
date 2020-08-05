@@ -7,8 +7,9 @@ public enum BiometricExtractionErrorConstants {
 	INVALID_INPUT_PARAMETER("KER_BIE-003", "Invalid Input Parameter - %s"),
 	DOWNLOAD_BIOMETRICS_ERROR("KER_BIE-004", "Error in downloading biometrics"),
 	DECRYPTION_ERROR("KER_BIE-005", "Decryption error"),
-	INVALID_CBEFF("KER_BIE-006", "Invalid CBEFF"),
-	TECHNICAL_ERROR("KER_BIE-007", "Technical Error in Biometric Extraction"),
+	ENCRYPTION_ERROR("KER_BIE-006", "Encryption error"),
+	INVALID_CBEFF("KER_BIE-007", "Invalid CBEFF"),
+	TECHNICAL_ERROR("KER_BIE-008", "Technical Error in Biometric Extraction"),
 	;
 	
 	private final String errorCode;

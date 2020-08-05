@@ -3,7 +3,6 @@ package io.mosip.kernel.bioextractor.service.helper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import io.mosip.kernel.bioextractor.exception.BiometricExtractionExceptionHandler;
 import io.mosip.kernel.bioextractor.logger.BioExtractorLogger;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;

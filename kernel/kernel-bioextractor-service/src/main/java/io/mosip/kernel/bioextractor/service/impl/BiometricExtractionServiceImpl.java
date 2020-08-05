@@ -1,6 +1,7 @@
 package io.mosip.kernel.bioextractor.service.impl;
 
 import static io.mosip.kernel.bioextractor.config.constant.BioExtractorConfigKeyConstants.CBEFF_DECRYPTION_APP_ID;
+import static io.mosip.kernel.bioextractor.config.constant.BioExtractorConfigKeyConstants.CBEFF_ENCRYPTION_APP_ID;
 import static io.mosip.kernel.bioextractor.config.constant.BiometricExtractionErrorConstants.DOWNLOAD_BIOMETRICS_ERROR;
 import static io.mosip.kernel.bioextractor.config.constant.BiometricExtractionErrorConstants.INVALID_CBEFF;
 
@@ -44,6 +45,9 @@ public class BiometricExtractionServiceImpl implements BiometricExtractionServic
 
 	@Value("${" + CBEFF_DECRYPTION_APP_ID + "}")
 	private String cbeffDecryptionAppId;
+	
+	@Value("${" + CBEFF_ENCRYPTION_APP_ID + "}")
+	private String cbeffEncryptionAppId;
 	
 	@Autowired
 	private CbeffUtil cbeffUtil;
@@ -100,7 +104,11 @@ public class BiometricExtractionServiceImpl implements BiometricExtractionServic
 			throws BiometricExtractionException {
 		byte[] extractedTemplatesCbeff = bioExractionHelper.extractTemplates(cbeffContent);
 		
-		System.out.println(extractedTemplatesCbeff);
+		String encryptedData = encrypt(extractedTemplatesCbeff);
+	}
+
+	private String encrypt(byte[] extractedTemplatesCbeff) throws BiometricExtractionException {
+		return securityManager.encrypt(extractedTemplatesCbeff, cbeffEncryptionAppId, null);
 	}
 
 	private String decryptCbeffFile(String encryptedCbeff)

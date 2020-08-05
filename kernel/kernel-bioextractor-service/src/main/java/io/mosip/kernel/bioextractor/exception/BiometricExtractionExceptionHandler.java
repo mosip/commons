@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import io.mosip.kernel.bioextractor.config.constant.BiometricExtractionErrorConstants;
-import io.mosip.kernel.bioextractor.filter.BiometricExtractorFilter;
 import io.mosip.kernel.bioextractor.logger.BioExtractorLogger;
 import io.mosip.kernel.core.exception.BaseCheckedException;
 import io.mosip.kernel.core.exception.ExceptionUtils;
