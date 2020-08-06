@@ -113,7 +113,7 @@ public class PacketWriterImpl implements IPacketWriter {
         this.initialize(id).setMetaData(metaInfo);
     }
 
-    private List<PacketInfo> createPacket(String id, double version, String schemaJson, String source, String process, boolean offlineMode) throws PacketCreatorException {
+    private List<PacketInfo> createPacket(String id, String version, String schemaJson, String source, String process, boolean offlineMode) throws PacketCreatorException {
         LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), id, "Started packet creation");
         if (this.registrationPacket == null || !registrationPacket.getRegistrationId().equalsIgnoreCase(id))
             throw new PacketCreatorException(ErrorCode.INITIALIZATION_ERROR.getErrorCode(),
@@ -122,7 +122,7 @@ public class PacketWriterImpl implements IPacketWriter {
         List<PacketInfo> packetInfos = new ArrayList<>();
 
         try {
-            schemaJson = idSchemaUtils.getIdSchema(version);
+            schemaJson = idSchemaUtils.getIdSchema(Double.valueOf(version));
         } catch (IOException e) {
             LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, e.getStackTrace().toString());
         }
@@ -134,7 +134,7 @@ public class PacketWriterImpl implements IPacketWriter {
                 LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(),
                         id, "Started Subpacket: " + subPacketName);
                 List<Object> schemaFields = identityProperties.get(subPacketName);
-                byte[] subpacketBytes = createSubpacket(version, schemaFields, defaultSubpacketName.equalsIgnoreCase(subPacketName),
+                byte[] subpacketBytes = createSubpacket(Double.valueOf(version), schemaFields, defaultSubpacketName.equalsIgnoreCase(subPacketName),
                         id, offlineMode);
 
                 PacketInfo packetInfo = new PacketInfo();
@@ -391,7 +391,7 @@ public class PacketWriterImpl implements IPacketWriter {
     }
 
     @Override
-    public final List<PacketInfo> persistPacket(String id, double version, String schemaJson, String source, String process, boolean offlineMode) {
+    public final List<PacketInfo> persistPacket(String id, String version, String schemaJson, String source, String process, boolean offlineMode) {
         try {
             return createPacket(id, version, schemaJson, source, process, offlineMode);
         } catch (PacketCreatorException e) {

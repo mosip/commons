@@ -1,13 +1,9 @@
 package io.mosip.commons.khazana.impl;
 
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
-import io.mosip.commons.khazana.util.MockPacket;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.javaswift.joss.client.factory.AccountConfig;
 import org.javaswift.joss.client.factory.AccountFactory;
 import org.javaswift.joss.client.factory.AuthenticationMethod;
-import org.javaswift.joss.command.shared.identity.tenant.Tenant;
 import org.javaswift.joss.model.Account;
 import org.javaswift.joss.model.Container;
 import org.javaswift.joss.model.StoredObject;
@@ -17,29 +13,19 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 @Service
-@Qualifier("JossAdapter")
-public class JossAdapter implements ObjectStoreAdapter {
+@Qualifier("SwiftAdapter")
+public class SwiftAdapter implements ObjectStoreAdapter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JossAdapter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SwiftAdapter.class);
 
 
     @Value("object.store.username:test")

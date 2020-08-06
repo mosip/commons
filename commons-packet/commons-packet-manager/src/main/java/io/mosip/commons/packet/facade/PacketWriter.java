@@ -109,7 +109,7 @@ public class PacketWriter {
      * @param process : the process
      * @return PacketInfo
      */
-    public List<PacketInfo> persistPacket(String id, double version, String schemaJson, String source, String process, byte[] publicKey, boolean offlineMode) {
+    public List<PacketInfo> persistPacket(String id, String version, String schemaJson, String source, String process, byte[] publicKey, boolean offlineMode) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "persistPacket for source : " + source + " process : " + process);
         return getProvider(source, process).persistPacket(id, version, schemaJson, source, process, offlineMode);

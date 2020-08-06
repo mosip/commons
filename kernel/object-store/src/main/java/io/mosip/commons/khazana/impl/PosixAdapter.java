@@ -5,8 +5,6 @@ import io.mosip.commons.khazana.constant.KhazanaErrorCodes;
 import io.mosip.commons.khazana.exception.FileNotFoundInDestinationException;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.kernel.core.util.FileUtils;
-import io.mosip.kernel.core.util.JsonUtils;
-import io.mosip.kernel.core.util.exception.JsonProcessingException;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,7 +37,7 @@ public class PosixAdapter implements ObjectStoreAdapter {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JossAdapter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SwiftAdapter.class);
 
     @Value("${object.store.base.location}")
     private String baseLocation;
@@ -49,7 +47,10 @@ public class PosixAdapter implements ObjectStoreAdapter {
 
     public InputStream getObject(String account, String container, String objectName) {
         try {
-            File containerZip = new File(baseLocation + container + ZIP);
+            File accountLoc = new File(baseLocation + "/" + account);
+            if (!accountLoc.exists())
+                return null;
+            File containerZip = new File(accountLoc.getPath() + "/" + container + ZIP);
             if (!containerZip.exists())
                 throw new FileNotFoundInDestinationException(KhazanaErrorCodes.CONTAINER_NOT_PRESENT_IN_DESTINATION.getErrorCode(),
                         KhazanaErrorCodes.CONTAINER_NOT_PRESENT_IN_DESTINATION.getErrorMessage());
@@ -77,7 +78,7 @@ public class PosixAdapter implements ObjectStoreAdapter {
 
     public boolean putObject(String account, String container, String objectName, InputStream data) {
         try {
-            createContainerZipWithSubpacket(container, objectName + ZIP, data);
+            createContainerZipWithSubpacket(account, container, objectName + ZIP, data);
             return true;
         } catch (Exception e) {
             LOGGER.error("exception occured. Will create a new connection.", e);
@@ -88,9 +89,9 @@ public class PosixAdapter implements ObjectStoreAdapter {
     public Map<String, Object> addObjectMetaData(String account, String container, String objectName, Map<String, Object> metadata) {
         try {
             JSONObject jsonObject = objectMetadata(account, container, objectName, metadata);
-            createContainerZipWithSubpacket(container, objectName + JSON,
-                    new ByteArrayInputStream(JsonUtils.javaObjectToJsonString(jsonObject.toString()).getBytes()));
-        } catch (io.mosip.kernel.core.exception.IOException | IOException | JsonProcessingException e) {
+            createContainerZipWithSubpacket(account, container, objectName + JSON,
+                    new ByteArrayInputStream(jsonObject.toString().getBytes()));
+        } catch (io.mosip.kernel.core.exception.IOException | IOException e) {
             LOGGER.error("exception occured to add metadata for id - " + container, e);
         }
         return metadata;
@@ -101,7 +102,7 @@ public class PosixAdapter implements ObjectStoreAdapter {
             Map<String, Object> metaMap = new HashMap<>();
             metaMap.put(key, value);
             JSONObject jsonObject = objectMetadata(account, container, objectName, metaMap);
-            createContainerZipWithSubpacket(container, objectName + JSON, new ByteArrayInputStream(jsonObject.toString().getBytes()));
+            createContainerZipWithSubpacket(account, container, objectName + JSON, new ByteArrayInputStream(jsonObject.toString().getBytes()));
         } catch (io.mosip.kernel.core.exception.IOException e) {
             LOGGER.error("exception occured to add metadata for id - " + container, e);
         } catch (IOException e) {
@@ -113,7 +114,10 @@ public class PosixAdapter implements ObjectStoreAdapter {
     public Map<String, Object> getMetaData(String account, String container, String objectName) {
         Map<String, Object> metaMap = null;
         try {
-            File containerZip = new File(baseLocation + container + ZIP);
+            File accountLoc = new File(baseLocation + "/" + account);
+            if (!accountLoc.exists())
+                return null;
+            File containerZip = new File(accountLoc.getPath() + "/" + container + ZIP);
             if (!containerZip.exists())
                 throw new FileNotFoundInDestinationException(KhazanaErrorCodes.CONTAINER_NOT_PRESENT_IN_DESTINATION.getErrorCode(),
                         KhazanaErrorCodes.CONTAINER_NOT_PRESENT_IN_DESTINATION.getErrorMessage());
@@ -137,8 +141,11 @@ public class PosixAdapter implements ObjectStoreAdapter {
         return metaMap;
     }
 
-    private void createContainerZipWithSubpacket(String container, String objectName, InputStream data) throws io.mosip.kernel.core.exception.IOException, IOException {
-        File containerZip = new File(baseLocation + container + ZIP);
+    private void createContainerZipWithSubpacket(String account, String container, String objectName, InputStream data) throws io.mosip.kernel.core.exception.IOException, IOException {
+        File accountLocation = new File(baseLocation + "/" + account);
+        if (!accountLocation.exists())
+            accountLocation.mkdir();
+        File containerZip = new File(accountLocation.getPath() + "/" + container + ZIP);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         if (!containerZip.exists()) {
             try (ZipOutputStream packetZip = new ZipOutputStream(new BufferedOutputStream(out))) {

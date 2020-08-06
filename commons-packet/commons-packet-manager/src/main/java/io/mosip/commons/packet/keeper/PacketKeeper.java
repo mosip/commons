@@ -42,8 +42,12 @@ public class PacketKeeper {
     private static final String PACKET_MANAGER_ACCOUNT = "PACKET_MANAGER_ACCOUNT";
 
     @Autowired
-    @Qualifier("JossAdapter")
-    private ObjectStoreAdapter jossAdapter;
+    @Qualifier("SwiftAdapter")
+    private ObjectStoreAdapter swiftAdapter;
+
+    @Autowired
+    @Qualifier("S3Adapter")
+    private ObjectStoreAdapter s3Adapter;
 
     @Autowired
     @Qualifier("PosixAdapter")
@@ -93,6 +97,13 @@ public class PacketKeeper {
      * @return : boolean
      */
     public boolean checkIntegrity(PacketInfo packetInfo) {
+        // hmac encrypted packet
+        return false;
+    }
+
+    public boolean checkSignature(PacketInfo packetInfo) {
+        checkIntegrity(packetInfo);
+        // check signature of decrypted packet
         return false;
     }
 
@@ -105,7 +116,7 @@ public class PacketKeeper {
     public Packet getPacket(PacketInfo packetInfo) throws PacketKeeperException {
         try {
             InputStream is = getAdapter().getObject(PACKET_MANAGER_ACCOUNT, packetInfo.getId(), getName(packetInfo.getId(), packetInfo.getPacketName()));
-            byte[] subPacket = getCryptoService().decrypt(packetInfo.getId(), IOUtils.toByteArray(is));
+            byte[] subPacket = IOUtils.toByteArray(is);//getCryptoService().decrypt(packetInfo.getId(), IOUtils.toByteArray(is));
             Packet packet = new Packet();
             packet.setPacket(subPacket);
             Map<String, Object> metaInfo = getAdapter().getMetaData(PACKET_MANAGER_ACCOUNT, packetInfo.getId(), getName(packetInfo.getId(), packetInfo.getPacketName()));
@@ -128,7 +139,7 @@ public class PacketKeeper {
     public PacketInfo putPacket(Packet packet) throws PacketKeeperException {
         try {
             // encrypt packet
-            byte[] encryptedSubPacket = getCryptoService().encrypt(packet.getPacketInfo().getId(), packet.getPacket());
+            byte[] encryptedSubPacket = packet.getPacket();//getCryptoService().encrypt(packet.getPacketInfo().getId(), packet.getPacket());
 
             // put packet in object store
             boolean response = getAdapter().putObject(PACKET_MANAGER_ACCOUNT,
@@ -157,10 +168,12 @@ public class PacketKeeper {
     }
 
     private ObjectStoreAdapter getAdapter() {
-        if (adapterName.equalsIgnoreCase(jossAdapter.getClass().getSimpleName()))
-            return jossAdapter;
+        if (adapterName.equalsIgnoreCase(swiftAdapter.getClass().getSimpleName()))
+            return swiftAdapter;
         else if (adapterName.equalsIgnoreCase(posixAdapter.getClass().getSimpleName()))
             return posixAdapter;
+        else if (adapterName.equalsIgnoreCase(s3Adapter.getClass().getSimpleName()))
+            return s3Adapter;
         else
             throw new ObjectStoreAdapterException();
     }

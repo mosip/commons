@@ -16,7 +16,7 @@ public class PacketDto {
     private String id;
     private String process;
     private String source;
-    private Double schemaVersion;
+    private String schemaVersion;
     private String schemaJson;
     private Map<String, String> fields;
     private Map<String, String> metaInfo;
