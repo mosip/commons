@@ -165,8 +165,9 @@
 		<module>kernel-idobjectvalidator</module>
 		<module>kernel-bioapi-provider</module>
 		<module>kernel-smsserviceprovider-msg91</module>
-        	<module>kernel-fsadapter-proxy</module>
+        <module>kernel-fsadapter-proxy</module>
 		<module>kernel-registration-packet-manager</module>
+		<module>kernel-authcodeflowproxy-api</module>
 
 		<module>kernel-masterdata-service</module>
 		<module>kernel-auditmanager-service</module>
