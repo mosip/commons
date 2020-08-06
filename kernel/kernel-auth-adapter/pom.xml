@@ -13,7 +13,7 @@
 	<artifactId>kernel-auth-adapter</artifactId>
 	<packaging>jar</packaging>
 	<description>***</description>
-	<version>1.1.1-rc1</version>
+	<version>1.1.1</version>
 	<properties>
 		<sonar.skip>true</sonar.skip>
 	</properties>
