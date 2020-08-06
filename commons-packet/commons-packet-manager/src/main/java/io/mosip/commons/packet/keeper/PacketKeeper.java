@@ -116,11 +116,12 @@ public class PacketKeeper {
     public Packet getPacket(PacketInfo packetInfo) throws PacketKeeperException {
         try {
             InputStream is = getAdapter().getObject(PACKET_MANAGER_ACCOUNT, packetInfo.getId(), getName(packetInfo.getId(), packetInfo.getPacketName()));
-            byte[] subPacket = IOUtils.toByteArray(is);//getCryptoService().decrypt(packetInfo.getId(), IOUtils.toByteArray(is));
+            byte[] subPacket = getCryptoService().decrypt(packetInfo.getId(), IOUtils.toByteArray(is));
             Packet packet = new Packet();
             packet.setPacket(subPacket);
             Map<String, Object> metaInfo = getAdapter().getMetaData(PACKET_MANAGER_ACCOUNT, packetInfo.getId(), getName(packetInfo.getId(), packetInfo.getPacketName()));
-            packet.setPacketInfo(PacketManagerHelper.getPacketInfo(metaInfo));
+            if (metaInfo != null && !metaInfo.isEmpty())
+                packet.setPacketInfo(PacketManagerHelper.getPacketInfo(metaInfo));
 
             return packet;
         } catch (Exception e) {
@@ -139,7 +140,7 @@ public class PacketKeeper {
     public PacketInfo putPacket(Packet packet) throws PacketKeeperException {
         try {
             // encrypt packet
-            byte[] encryptedSubPacket = packet.getPacket();//getCryptoService().encrypt(packet.getPacketInfo().getId(), packet.getPacket());
+            byte[] encryptedSubPacket = getCryptoService().encrypt(packet.getPacketInfo().getId(), packet.getPacket());
 
             // put packet in object store
             boolean response = getAdapter().putObject(PACKET_MANAGER_ACCOUNT,

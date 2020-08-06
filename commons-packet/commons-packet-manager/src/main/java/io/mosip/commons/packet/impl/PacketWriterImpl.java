@@ -121,11 +121,6 @@ public class PacketWriterImpl implements IPacketWriter {
 
         List<PacketInfo> packetInfos = new ArrayList<>();
 
-        try {
-            schemaJson = idSchemaUtils.getIdSchema(Double.valueOf(version));
-        } catch (IOException e) {
-            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, e.getStackTrace().toString());
-        }
         Map<String, List<Object>> identityProperties = loadSchemaFields(schemaJson);
 
         try {

@@ -107,7 +107,7 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
             String centerId = id.substring(0, centerIdLength);
             String machineId = id.substring(centerIdLength, centerIdLength + machineIdLength);
             String refId = centerId + "_" + machineId;
-            String packetString = IOUtils.toString(packet, "UTF-8");
+            String packetString = CryptoUtil.encodeBase64String(packet);
             CryptomanagerRequestDto cryptomanagerRequestDto = new CryptomanagerRequestDto();
             RequestWrapper<CryptomanagerRequestDto> request = new RequestWrapper<>();
             cryptomanagerRequestDto.setApplicationId(APPLICATION_ID);

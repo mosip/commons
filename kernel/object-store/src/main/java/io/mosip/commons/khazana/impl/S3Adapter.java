@@ -8,15 +8,11 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
-import org.javaswift.joss.model.Container;
-import org.javaswift.joss.model.StoredObject;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +26,8 @@ public class S3Adapter implements ObjectStoreAdapter {
 
     @Override
     public InputStream getObject(String account, String container, String objectName) {
-        return null;
+        S3Object s3Object = getConnection().getObject(container, objectName);
+        return s3Object == null ? null : s3Object.getObjectContent();
     }
 
     @Override
@@ -40,12 +37,8 @@ public class S3Adapter implements ObjectStoreAdapter {
 
     @Override
     public boolean putObject(String account, final String container, String objectName, InputStream data) {
-        Bucket bucket = null;
         Optional<Bucket> optionalBucket = getConnection().listBuckets().stream().filter(b -> b.getName().equalsIgnoreCase(container)).findAny();
-        if (!optionalBucket.isPresent())
-            bucket = getConnection().createBucket(container);
-        else
-            bucket = optionalBucket.get();
+        Bucket bucket = !optionalBucket.isPresent() ? getConnection().createBucket(container) : optionalBucket.get();
         getConnection().putObject(bucket.getName(), objectName, data, null);
         return true;
     }
@@ -56,28 +49,28 @@ public class S3Adapter implements ObjectStoreAdapter {
         metadata.entrySet().stream().forEach(m -> meta.put(m.getKey(), m.getValue().toString()));
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setUserMetadata(meta);
-        Bucket bucket = null;
-        Optional<Bucket> optionalBucket = getConnection().listBuckets().stream().filter(b -> b.getName().equalsIgnoreCase(container)).findAny();
-        if (!optionalBucket.isPresent())
-            bucket = getConnection().createBucket(container);
-        else
-            bucket = optionalBucket.get();
 
-        getConnection().getObject(container, objectName).setObjectMetadata(objectMetadata);
-        /*PutObjectRequest request = new PutObjectRequest(container, objectName, s3Object.getObjectContent(), objectMetadata);
-            getConnection().putObject(request);*/
+        S3Object s3Object = getConnection().getObject(container, objectName);
+        getConnection().putObject(container, objectName, s3Object.getObjectContent(), objectMetadata);
 
         return metadata;
     }
 
     @Override
     public Map<String, Object> addObjectMetaData(String account, String container, String objectName, String key, String value) {
-        return null;
+        Map<String, Object> meta = new HashMap<>();
+        meta.put(key, value);
+        return addObjectMetaData(account, container, objectName, meta);
     }
 
     @Override
     public Map<String, Object> getMetaData(String account, String container, String objectName) {
-        return null;
+        Map<String, Object> metaData = null;
+        ObjectMetadata objectMetadata = getConnection().getObject(container, objectName).getObjectMetadata();
+        if (objectMetadata != null && objectMetadata.getUserMetadata() != null)
+            objectMetadata.getUserMetadata().entrySet().forEach(entry -> metaData.put(entry.getKey(), entry.getValue()));
+
+        return metaData;
     }
 
     private AmazonS3 getConnection() {
