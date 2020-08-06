@@ -1,6 +1,6 @@
 package io.mosip.kernel.bioextractor.service.helper;
 
-import static io.mosip.kernel.bioextractor.config.constant.BiometricExtractionErrorConstants.TECHNICAL_ERROR;
+import static io.mosip.kernel.bioextractor.constant.BiometricExtractionErrorConstants.TECHNICAL_ERROR;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

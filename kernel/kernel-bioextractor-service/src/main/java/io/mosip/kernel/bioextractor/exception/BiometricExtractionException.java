@@ -3,7 +3,7 @@
  */
 package io.mosip.kernel.bioextractor.exception;
 
-import io.mosip.kernel.bioextractor.config.constant.BiometricExtractionErrorConstants;
+import io.mosip.kernel.bioextractor.constant.BiometricExtractionErrorConstants;
 import io.mosip.kernel.core.exception.BaseCheckedException;
 
 /**

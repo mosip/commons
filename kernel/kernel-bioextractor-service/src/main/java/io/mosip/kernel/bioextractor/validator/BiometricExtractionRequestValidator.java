@@ -1,8 +1,8 @@
 package io.mosip.kernel.bioextractor.validator;
 
-import static io.mosip.kernel.bioextractor.config.constant.BioExtractorConstants.REQUEST;
-import static io.mosip.kernel.bioextractor.config.constant.BiometricExtractionErrorConstants.INVALID_INPUT_PARAMETER;
-import static io.mosip.kernel.bioextractor.config.constant.BiometricExtractionErrorConstants.MISSING_INPUT_PARAMETER;
+import static io.mosip.kernel.bioextractor.constant.BioExtractorConstants.REQUEST;
+import static io.mosip.kernel.bioextractor.constant.BiometricExtractionErrorConstants.INVALID_INPUT_PARAMETER;
+import static io.mosip.kernel.bioextractor.constant.BiometricExtractionErrorConstants.MISSING_INPUT_PARAMETER;
 
 import java.net.MalformedURLException;
 import java.net.URL;

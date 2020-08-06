@@ -1,4 +1,4 @@
-package io.mosip.kernel.bioextractor.config.constant;
+package io.mosip.kernel.bioextractor.constant;
 
 public final class BioExtractorConstants {
 	

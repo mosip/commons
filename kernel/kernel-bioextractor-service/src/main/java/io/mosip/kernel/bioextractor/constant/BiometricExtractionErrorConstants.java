@@ -1,4 +1,4 @@
-package io.mosip.kernel.bioextractor.config.constant;
+package io.mosip.kernel.bioextractor.constant;
 
 public enum BiometricExtractionErrorConstants {
 	
@@ -10,6 +10,8 @@ public enum BiometricExtractionErrorConstants {
 	ENCRYPTION_ERROR("KER_BIE-006", "Encryption error"),
 	INVALID_CBEFF("KER_BIE-007", "Invalid CBEFF"),
 	TECHNICAL_ERROR("KER_BIE-008", "Technical Error in Biometric Extraction"),
+	UPLOAD_BIOMETRICS_ERROR("KER_BIE-009", "Error in uploading extracted biometrics"),
+
 	;
 	
 	private final String errorCode;

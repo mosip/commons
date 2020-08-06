@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import io.mosip.kernel.bioextractor.config.constant.BiometricExtractionErrorConstants;
+import io.mosip.kernel.bioextractor.constant.BiometricExtractionErrorConstants;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**

@@ -1,7 +1,7 @@
 package io.mosip.kernel.bioextractor.config;
 
-import static io.mosip.kernel.bioextractor.config.constant.BioExtractorConfigKeyConstants.CONCURRENT_JOB_LIMIT_KEY;
-import static io.mosip.kernel.bioextractor.config.constant.BioExtractorConstants.CONCURRENT_JOB_LIMIT_VALUE_DEFAULT;
+import static io.mosip.kernel.bioextractor.constant.BioExtractorConfigKeyConstants.CONCURRENT_JOB_LIMIT_KEY;
+import static io.mosip.kernel.bioextractor.constant.BioExtractorConstants.CONCURRENT_JOB_LIMIT_VALUE_DEFAULT;
 
 import java.util.concurrent.Executor;
 

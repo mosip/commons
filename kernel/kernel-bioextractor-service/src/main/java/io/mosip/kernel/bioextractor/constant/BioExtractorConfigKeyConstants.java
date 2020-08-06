@@ -1,4 +1,4 @@
-package io.mosip.kernel.bioextractor.config.constant;
+package io.mosip.kernel.bioextractor.constant;
 
 public class BioExtractorConfigKeyConstants {
 	public static final String CONCURRENT_JOB_LIMIT_KEY = "kernel-bio-extractor-concurrent-jobs-limit";
@@ -9,5 +9,8 @@ public class BioExtractorConfigKeyConstants {
 	public static final String KERNEL_ENCRYPT_URL = "kernel-encrypt-url";
 	public static final String CBEFF_DECRYPTION_APP_ID = "cbeff-decryption.app-id";
 	public static final String CBEFF_ENCRYPTION_APP_ID = "cbeff-encryption.app-id";
+	public static final String DATA_SHARE_SERVICE_CREATE_SHARE_URL = "cbeff-encryption.app-id";
+	public static final String DATA_SHARE_SERVICE_POLICY_ID = "data-share-service-policy-id";
+	public static final String DATA_SHARE_SERVICE_SUBSCRIBER_ID = "data-share-service-subscriber-id";
 
 }

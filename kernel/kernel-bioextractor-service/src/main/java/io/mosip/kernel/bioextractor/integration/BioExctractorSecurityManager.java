@@ -1,8 +1,8 @@
 package io.mosip.kernel.bioextractor.integration;
-import static io.mosip.kernel.bioextractor.config.constant.BioExtractorConfigKeyConstants.KERNEL_DECRYPT_URL;
-import static io.mosip.kernel.bioextractor.config.constant.BioExtractorConfigKeyConstants.KERNEL_ENCRYPT_URL;
-import static io.mosip.kernel.bioextractor.config.constant.BiometricExtractionErrorConstants.DECRYPTION_ERROR;
-import static io.mosip.kernel.bioextractor.config.constant.BiometricExtractionErrorConstants.ENCRYPTION_ERROR;
+import static io.mosip.kernel.bioextractor.constant.BioExtractorConfigKeyConstants.KERNEL_DECRYPT_URL;
+import static io.mosip.kernel.bioextractor.constant.BioExtractorConfigKeyConstants.KERNEL_ENCRYPT_URL;
+import static io.mosip.kernel.bioextractor.constant.BiometricExtractionErrorConstants.DECRYPTION_ERROR;
+import static io.mosip.kernel.bioextractor.constant.BiometricExtractionErrorConstants.ENCRYPTION_ERROR;
 
 import java.util.HashMap;
 import java.util.Map;

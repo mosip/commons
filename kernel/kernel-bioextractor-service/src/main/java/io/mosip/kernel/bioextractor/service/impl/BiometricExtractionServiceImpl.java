@@ -1,9 +1,9 @@
 package io.mosip.kernel.bioextractor.service.impl;
 
-import static io.mosip.kernel.bioextractor.config.constant.BioExtractorConfigKeyConstants.CBEFF_DECRYPTION_APP_ID;
-import static io.mosip.kernel.bioextractor.config.constant.BioExtractorConfigKeyConstants.CBEFF_ENCRYPTION_APP_ID;
-import static io.mosip.kernel.bioextractor.config.constant.BiometricExtractionErrorConstants.DOWNLOAD_BIOMETRICS_ERROR;
-import static io.mosip.kernel.bioextractor.config.constant.BiometricExtractionErrorConstants.INVALID_CBEFF;
+import static io.mosip.kernel.bioextractor.constant.BioExtractorConfigKeyConstants.CBEFF_DECRYPTION_APP_ID;
+import static io.mosip.kernel.bioextractor.constant.BioExtractorConfigKeyConstants.CBEFF_ENCRYPTION_APP_ID;
+import static io.mosip.kernel.bioextractor.constant.BiometricExtractionErrorConstants.DOWNLOAD_BIOMETRICS_ERROR;
+import static io.mosip.kernel.bioextractor.constant.BiometricExtractionErrorConstants.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -100,12 +100,15 @@ public class BiometricExtractionServiceImpl implements BiometricExtractionServic
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void doBioExtraction(byte[] cbeffContent, String promiseId, Map<String, Object> properties)
 			throws BiometricExtractionException {
 		byte[] extractedTemplatesCbeff = bioExractionHelper.extractTemplates(cbeffContent);
 		
 		String encryptedData = encrypt(extractedTemplatesCbeff, (Map<String, String>)properties.get(HEADER));
-		System.out.println(encryptedData);
+		String url = dataShareManager.uploadBytes(encryptedData.getBytes(), UPLOAD_BIOMETRICS_ERROR);
+		
+		
 	}
 
 	private String encrypt(byte[] extractedTemplatesCbeff, Map<String, String> headers) throws BiometricExtractionException {
