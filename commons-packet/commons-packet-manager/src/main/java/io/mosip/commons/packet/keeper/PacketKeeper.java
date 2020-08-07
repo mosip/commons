@@ -13,6 +13,7 @@ import io.mosip.commons.packet.spi.IPacketCryptoService;
 import io.mosip.commons.packet.util.PacketManagerHelper;
 import io.mosip.commons.packet.util.PacketManagerLogger;
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.HMACUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,9 +150,9 @@ public class PacketKeeper {
             if (response) {
                 PacketInfo packetInfo = packet.getPacketInfo();
                 // sign encrypted packet
-                packetInfo.setSignature(new String(getCryptoService().sign(encryptedSubPacket)));
+                packetInfo.setSignature(new String(CryptoUtil.encodeBase64(getCryptoService().sign(encryptedSubPacket))));
                 // generate encrypted packet hash
-                packetInfo.setEncryptedHash(new String(HMACUtils.generateHash(encryptedSubPacket)));
+                packetInfo.setEncryptedHash(new String(CryptoUtil.encodeBase64(HMACUtils.generateHash(encryptedSubPacket))));
                 Map<String, Object> metaMap = PacketManagerHelper.getMetaMap(packetInfo);
                 metaMap = getAdapter().addObjectMetaData(PACKET_MANAGER_ACCOUNT,
                         packet.getPacketInfo().getId(), packet.getPacketInfo().getPacketName(), metaMap);

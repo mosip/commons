@@ -18,6 +18,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -52,9 +53,18 @@ public class PacketReader {
      * @param process : the process
      * @return String field
      */
-    @Cacheable(value = "packets", key = "#id.concat('-').concat(#field).concat('-').concat(#source).concat('-').concat(#process)", condition = "#bypassCache == false")
+    @PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
     public String getField(String id, String field, String source, String process, boolean bypassCache) {
-        return getProvider(source, process).getField(id, field, process);
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
+                "getFields for fields : " + field + " source : " + source + " process : " + process);
+        String value;
+        if (bypassCache)
+            value = getProvider(source, process).getField(id, field, process);
+        else {
+            Optional<Object> optionalValue = getAllFields(id, source, process).entrySet().stream().filter(m-> m.getKey().equalsIgnoreCase(field)).map(m -> m.getValue()).findAny();
+            value = optionalValue.isPresent() ? optionalValue.get().toString() : null;
+        }
+        return value;
     }
 
     /**
@@ -66,11 +76,18 @@ public class PacketReader {
      * @param process : the process
      * @return Map fields
      */
-    @Cacheable(value = "packets", key = "#id.concat('-').concat(#fields).concat(#source).concat(#process)", condition = "#bypassCache == false")
+    @PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
     public Map<String, String> getFields(String id, List<String> fields, String source, String process, boolean bypassCache) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "getFields for fields : " + fields.toString() + " source : " + source + " process : " + process);
-        return getProvider(source, process).getFields(id, fields, process);
+        Map<String, String> values;
+        if (bypassCache)
+            values = getProvider(source, process).getFields(id, fields, process);
+        else {
+            values = getAllFields(id, source, process).entrySet()
+                    .stream().filter(m -> fields.contains(m.getKey())).collect(Collectors.toMap(m -> m.getKey(), m -> m.getKey()));
+        }
+        return values;
     }
 
     /**
@@ -82,6 +99,7 @@ public class PacketReader {
      * @param process      : the process
      * @return Document : document information
      */
+    @PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
     @Cacheable(value = "packets", key = "#id.concat('-').concat(#documentName).concat('-').concat(#source).concat('-').concat(#process)")
     public Document getDocument(String id, String documentName, String source, String process) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
@@ -99,6 +117,7 @@ public class PacketReader {
      * @param process    : the process
      * @return BiometricRecord : the biometric record
      */
+    @PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
     @Cacheable(value = "packets", key = "#id.concat('-').concat(#person).concat('-').concat(#modalities).concat('-').concat(#source).concat('-').concat(#process)", condition = "#bypassCache == false")
     public BiometricRecord getBiometric(String id, String person, List<BiometricType> modalities, String source, String process, boolean bypassCache) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
@@ -114,6 +133,7 @@ public class PacketReader {
      * @param process : the process
      * @return Map fields
      */
+    @PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
     @Cacheable(value = "packets", key = "{#id.concat('-').concat(#source).concat('-').concat(#process)}", condition = "#bypassCache == false")
     public Map<String, String> getMetaInfo(String id, String source, String process, boolean bypassCache) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
@@ -130,7 +150,7 @@ public class PacketReader {
      * @return Map fields
      */
     @Cacheable(value = "packets", key = "{#id.concat('-').concat(#source).concat('-').concat(#process)}")
-    public Map<String, Object> getAllFields(String id, String source, String process) {
+    private Map<String, Object> getAllFields(String id, String source, String process) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "getAllFields for source : " + source + " process : " + process);
         return getProvider(source, process).getAll(id, process);
