@@ -8,7 +8,7 @@
 		<version>1.0.6</version>
 	</parent>
 
-	<version>1.0.6</version>
+	<version>1.2.0-SNAPSHOT</version>
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-parent</artifactId>
 	<packaging>pom</packaging>
@@ -34,7 +34,7 @@
 		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
 		<spring.data.jpa.version>2.0.7.RELEASE</spring.data.jpa.version>
 		<spring.security.test.version>5.0.5.RELEASE</spring.security.test.version>
-		<spring-cloud-config.version>2.0.0.RELEASE</spring-cloud-config.version>
+		<spring-cloud-config.version>2.0.4.RELEASE</spring-cloud-config.version>
                 
 		<!-- swagger -->
 		<swagger.core.version>2.0.7</swagger.core.version>
@@ -206,6 +206,13 @@
 			<artifactId>jcl-over-slf4j</artifactId>
 			<version>${jcl.to.slf4j.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-sleuth</artifactId>
+			<version>${spring-cloud-config.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

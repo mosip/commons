@@ -94,6 +94,9 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 
 	@Autowired
 	private ObjectMapper objectMapper;
+	
+	@Autowired
+	private RestTemplate restTemplate;
 
 	@Override
 	protected void additionalAuthenticationChecks(UserDetails userDetails,
@@ -175,8 +178,9 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 		headers.set(AuthAdapterConstant.AUTH_HEADER_COOKIE, AuthAdapterConstant.AUTH_COOOKIE_HEADER + token);
 		HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 		try {
-			return getRestTemplate().exchange(validateUrl, HttpMethod.POST, entity, String.class);
-		} catch (RestClientException | KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
+			//return getRestTemplate().exchange(validateUrl, HttpMethod.POST, entity, String.class);
+			return restTemplate.exchange(validateUrl, HttpMethod.POST, entity, String.class);
+		} catch (RestClientException /* | KeyManagementException | NoSuchAlgorithmException | KeyStoreException */ e) {
 			throw new AuthManagerException(AuthAdapterErrorCode.UNAUTHORIZED.getErrorCode(), e.getMessage(), e);
 		}
 	}
@@ -185,15 +189,15 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 		HttpHeaders headers = new HttpHeaders();
 		headers.set(AuthAdapterConstant.AUTH_HEADER_COOKIE, AuthAdapterConstant.AUTH_COOOKIE_HEADER + token);
 		HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
-		try {
-			LOGGER.info("url " + adminValidateUrl);
-			return getRestTemplate().exchange(adminValidateUrl, HttpMethod.GET, entity, String.class);
-		} catch (RestClientException | KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
+		try {			
+			//return getRestTemplate().exchange(adminValidateUrl, HttpMethod.GET, entity, String.class);
+			return restTemplate.exchange(adminValidateUrl, HttpMethod.GET, entity, String.class);
+		} catch (RestClientException /* | KeyManagementException | NoSuchAlgorithmException | KeyStoreException */ e) {
 			throw new AuthManagerException(AuthAdapterErrorCode.UNAUTHORIZED.getErrorCode(), e.getMessage(), e);
 		}
 	}
 
-	public RestTemplate getRestTemplate() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+	/*public RestTemplate getRestTemplate() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
 //        TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
 //        SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom().loadTrustMaterial(null, acceptingTrustStrategy)
 //                     .build();
@@ -205,7 +209,7 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.setInterceptors(Collections.singletonList(new RestTemplateInterceptor()));
 		return restTemplate;
-	}
+	}*/
 
 	public void addCorsFilter(HttpServer httpServer, Vertx vertx) {
 		Router router = Router.router(vertx);

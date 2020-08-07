@@ -7,7 +7,7 @@
 		</encoder>
 	</appender>
 	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
-		<file>logs/kernel-emailnotification-service.log</file>
+		<file>logs/kernel-masterdata-service.log</file>
 		<append>true</append>
 		<immediateFlush>true</immediateFlush>
 		<encoder>
