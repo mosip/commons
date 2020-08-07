@@ -14,11 +14,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import io.mosip.kernel.bioextractor.api.BiometricExtractionService;
+import io.mosip.kernel.bioextractor.dto.BioExtractNotifyRequestDTO;
 import io.mosip.kernel.bioextractor.dto.BioExtractPromiseResponseDTO;
 import io.mosip.kernel.bioextractor.dto.BioExtractRequestDTO;
 import io.mosip.kernel.bioextractor.exception.BiometricExtractionException;
 import io.mosip.kernel.bioextractor.integration.BioExctractorSecurityManager;
 import io.mosip.kernel.bioextractor.integration.DataShareManager;
+import io.mosip.kernel.bioextractor.integration.IdRepoNotificationManager;
 import io.mosip.kernel.bioextractor.service.helper.AsyncHelper;
 import io.mosip.kernel.bioextractor.service.helper.BioExtractionHelper;
 import io.mosip.kernel.bioextractor.service.helper.RestHelper;
@@ -45,25 +47,28 @@ public class BiometricExtractionServiceImpl implements BiometricExtractionServic
 
 	@Value("${" + CBEFF_DECRYPTION_APP_ID + "}")
 	private String cbeffDecryptionAppId;
-	
+
 	@Value("${" + CBEFF_ENCRYPTION_APP_ID + "}")
 	private String cbeffEncryptionAppId;
-	
+
 	@Autowired
 	private CbeffUtil cbeffUtil;
-	
+
 	@Autowired
 	private BioExtractionHelper bioExractionHelper;
+
+	@Autowired
+	private IdRepoNotificationManager idRepoNotificationManager;
 
 	@Override
 	public BioExtractPromiseResponseDTO extractBiometrics(BioExtractRequestDTO bioExtractRequestDTO)
 			throws BiometricExtractionException {
 		BioExtractPromiseResponseDTO bioExtractPromiseResponseDTO = new BioExtractPromiseResponseDTO();
-		
+
 		String biometricsUrl = bioExtractRequestDTO.getBiometricsUrl();
 		byte[] cbeffFileContent = getCbeffFileContent(biometricsUrl);
 		validateCbeffConent(cbeffFileContent);
-		
+
 		String promiseId = createPromiseId(biometricsUrl);
 		Map<String, Object> properties = createProperties();
 		asyncHelper.runAsync(() -> doBioExtraction(cbeffFileContent, promiseId, properties));
@@ -84,14 +89,13 @@ public class BiometricExtractionServiceImpl implements BiometricExtractionServic
 		return HMACUtils.digestAsPlainText(HMACUtils.generateHash(randStr.getBytes()));
 	}
 
-	private byte[] getCbeffFileContent(String biometricsUrl)
-			throws BiometricExtractionException {
+	private byte[] getCbeffFileContent(String biometricsUrl) throws BiometricExtractionException {
 		String encryptedCbeff = downloadCbeffFile(biometricsUrl);
 		String decryptedCbeff = decryptCbeffFile(encryptedCbeff);
 		byte[] cbeffContent = CryptoUtil.decodeBase64(decryptedCbeff);
 		return cbeffContent;
 	}
-	
+
 	public void validateCbeffConent(byte[] cbeffContent) throws BiometricExtractionException {
 		try {
 			cbeffUtil.validateXML(cbeffContent);
@@ -99,24 +103,27 @@ public class BiometricExtractionServiceImpl implements BiometricExtractionServic
 			throw new BiometricExtractionException(INVALID_CBEFF, e);
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private void doBioExtraction(byte[] cbeffContent, String promiseId, Map<String, Object> properties)
 			throws BiometricExtractionException {
 		byte[] extractedTemplatesCbeff = bioExractionHelper.extractTemplates(cbeffContent);
-		
+
 		String encryptedData = encrypt(extractedTemplatesCbeff, (Map<String, String>)properties.get(HEADER));
-		String url = dataShareManager.uploadBytes(encryptedData.getBytes(), UPLOAD_BIOMETRICS_ERROR);
 		
+		String url = dataShareManager.uploadBytes(encryptedData.getBytes(), UPLOAD_BIOMETRICS_ERROR);
+	    
+		BioExtractNotifyRequestDTO bioExtractNotifyReqDTO = new BioExtractNotifyRequestDTO(promiseId, url);
+		idRepoNotificationManager.notifyIdRepo(bioExtractNotifyReqDTO);
 		
 	}
 
-	private String encrypt(byte[] extractedTemplatesCbeff, Map<String, String> headers) throws BiometricExtractionException {
+	private String encrypt(byte[] extractedTemplatesCbeff, Map<String, String> headers)
+			throws BiometricExtractionException {
 		return securityManager.encrypt(extractedTemplatesCbeff, cbeffEncryptionAppId, null, headers);
 	}
 
-	private String decryptCbeffFile(String encryptedCbeff)
-			throws BiometricExtractionException {
+	private String decryptCbeffFile(String encryptedCbeff) throws BiometricExtractionException {
 		return securityManager.decrypt(encryptedCbeff, cbeffDecryptionAppId, null, null);
 	}
 

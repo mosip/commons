@@ -11,6 +11,7 @@ public enum BiometricExtractionErrorConstants {
 	INVALID_CBEFF("KER_BIE-007", "Invalid CBEFF"),
 	TECHNICAL_ERROR("KER_BIE-008", "Technical Error in Biometric Extraction"),
 	UPLOAD_BIOMETRICS_ERROR("KER_BIE-009", "Error in uploading extracted biometrics"),
+	NOTIFY_IDREPO_ERROR("KER_BIE-009", "Error in notifying ID-Repository with Biometric Extraction Event"),
 
 	;
 	
