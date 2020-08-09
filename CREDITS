@@ -23,45 +23,48 @@ Sanjeev Kumar Srivastava;mosip.sanjeev@gmail.com;Technoforte;Developer;Partner M
 Nagarjuna Kuchi;nagarjunabtechece@gmail.com;Technoforte;Developer;Partner Management
 Piyush singh;piyush.singh@technoforte.co.in;Technoforte;Tester;Acceptance Testing
 Mandeep Kumar;mandeep.dhiman90@gmail.com;Technoforte;Security Test Lead;Security Testing
-Alok Kumar Tiwari;alokt0037@gmail.com;Technoforte;Automation Tester;Acceptance Test Rig
-Chandra Keshav Mishra;chandrakeshavmishra@gmail.com;Technoforte;DevOps;Build and Deployment
-Niyati Swamy,niyati.swami@gmail.com,Technoforte;Tester,Acceptance Testing
-Hemant C Vadher;hemant.vadher@google.com;Technoforte;Tester;Acceptance Testing
-Yogesh Pathak;Yogesh@technoforte.co.in;Technoforte;Test Lead;Acceptance Testing
+Alok Kumar Tiwari;alokt0037@gmail.com;Technoforte;Automation Tester;Automation
+Chandra Keshav Mishra;chandrakeshavmishra@gmail.com;Technoforte;DevOps;Infra
+Niyati Swamy,niyati.swami@gmail.com,Technoforte;Testing
+Hemant C Vadher;hemant.vadher@google.com;Technoforte;Tester;Automation
+Yogesh Pathak;Yogesh@technoforte.co.in;Technoforte;Test Lead;Automation
 Reeba Thomas;reebs.thomas@gmail.com;Mindtree;Project Manager;Release and project management
 Rounak Nayak;nayakrounak@gmail.com;Mindtree;Business Analyst;Requirements
-Sasikumar Ganesan;gsasikumar@gmail.com;MOSIP;Architect;MOSIP Security
-Mahammed Taheer;mohd.taheer@gmail.com;mosip;Architect;MOSIP Security
+Sasikumar Ganesan;gsasikumar@gmail.com;MOSIP;Architect;services
+Mahammed Taheer;mohd.taheer@gmail.com;mosip;Architect;Authentication
 Anusha Sunkadh;sunkadaeanusha@gmail.com;mosip;Lead Developer;Registration Client 
-Aravindhan Alagesan;aravindh2090@gmail.com;mosip;Developer;Admin Services
+Aravindhan Alagesan;aravindh2090@gmail.com;mosip;Developer;admin services
 John David Panneerselvam;pjohndavid@gmail.com;Mindtree;Senior Architect;Architecture and Design
-Monobikash Das;monobikash@gmail.com;Mindtree;Technical Lead;Registration Processor
-Urvil Joshi;Urvvil08@gmail.com;Mindtree;Contributor;Kernel services
-Loganathan Sekar;loganathan001@gmail.com;Mindtree;Lead Developer;Authentication Services
-Saumya Saumya;prasharsaumya11@gmail.com;Mindtree;Contributor;Infrastructure
-Manoj SP;manoj_vsp@hotmail.com;Mindtree;Contributor;registration processor
-Tabish Khan;tabish.khansfc@gmail.com;Mindtree;Contributor;Test Automation
-Ravi Kant;ravikantvermahbti@gmail.com;Mindtree;Contributor;Identity Authentication
-Anand Babaleshwar;anandsb123@gmail.com;Mindtree;Contributor;Test Automation
-Gaurav Shravan;gaurav.sharan4u@gmail.com;Mindtree;Contributor;Test Automation
-Sadanandegowda Dm;gowdasadanand@gmail.com;Mindtree;Database Architect;Database
+Monobikash Das;monobikash@gmail.com;Mindtree;Technical Lead;Registration
+Urvil Joshi;Urvvil08@gmail.com;Mindtree;Contributor;commons
+Loganathan Sekar;loganathan001@gmail.com;Mindtree;Lead Developer;Authentication
+Manoj SP;manoj_vsp@hotmail.com;Mindtree;Contributor;Authentication
+Tabish Khan;tabish.khansfc@gmail.com;Mindtree;Contributor;Automation
+Ravi Kant;ravikantvermahbti@gmail.com;Mindtree;Contributor;Automation
+Anand Babaleshwar;anandsb123@gmail.com;Mindtree;Contributor;Perforamnce Testing
+Gaurav Shravan;gaurav.sharan4u@gmail.com;Mindtree;Contributor;Automation
+Sadanandegowda Dm;gowdasadanand@gmail.com;Mindtree;Database Architect;Database and Reports
 Yaswanth S;s2.yaswanth@gmail.com;Mindtree;Developer;Registration Client
-Ajay J;J.AJAYISE@GMAIL.COM;Mindtree;Developer;Pre-registration client
+Ajay J;J.AJAYISE@GMAIL.COM;Mindtree;Developer;Pre-registration
+Sanjeev Shrivastavv;sanjeev.shrivastava;Technoforte;Developer;automation
+Nagarjuna;Nagarjuna.k@technoforte.com;Technoforte;Developer;Authentication
+Nikhilesh Kumar;Nikhilesh.kumar@technoforte.com;Technoforte;Tester;Test kit, registration, testing
 #
 # INACTIVE Members (in no particular order)
 # 
-Taleev Aalam;alammdtalib@gmail.com;Mindtree;Contributor;Identity Authentication
-Srinivasan Lakshmi Narasimhan;atulsrinivasan@gmail.com;Mindtree;Contributor;Administration Portal
-Megha Tanga;meghatanga18@gmail.com;Mindtree;Contributor;Kernel services
+Taleev Aalam;alammdtalib@gmail.com;Mindtree;Contributor;ID Authentication
+Srinivasan Lakshmi Narasimhan;atulsrinivasan@gmail.com;Mindtree;Contributor;Administration
+Megha Tanga;meghatanga18@gmail.com;Mindtree;Contributor;Commons
 Ragavendran Venkatesan;raghavdce@gmail.com;Mindtree;Contributor;Testing
+Saumya Saumya;prasharsaumya11@gmail.com;Mindtree;Contributor;Infrastructure
 Sampath Mukudan;sampath.mukundan@gmail.com;Mindtree;Project Manager;MOSIP releases and project management
-Ramadurai Saravana Pandian;ramaduraipandian.s@gmail.com;Mindtree;Contributor;Kernel services
-Srijoni Sen;srijoni@mosip.io;MOSIP;;MOSIP Documentation, Strategy, Communications
-Tarun Chawla;tctaruntc@gmail.com;Mindtree;Contributor;Infrastructure
-Rajath Kotebailu Raghuchandra;rajath.kr1249@gmail.com;Mindtree;Contributor;Pre Registration
+Ramadurai Saravana Pandian;ramaduraipandian.s@gmail.com;Mindtree;Contributor;commons
+Srijoni Sen;srijoni@mosip.io;MOSIP;;MOSIP Documentation,Strategy,Communications
+Tarun Chawla;tctaruntc@gmail.com;Mindtree;Contributor;Infra
+Rajath Kotebailu Raghuchandra;rajath.kr1249@gmail.com;Mindtree;Contributor;Pre-Registration
 Vignesh Vijayakumar;vjvignesh4@gmail.com;Mindtree;Contributor;Testing
-Abhishek Kumar;abhi.go@hotmail.com;Mindtree;Contributor;Kernel services
-Agnitra Banerjee;agneetra10@gmail.com;Mindtree;Contributor;Pre Registration
+Abhishek Kumar;abhi.go@hotmail.com;Mindtree;Contributor;commons
+Agnitra Banerjee;agneetra10@gmail.com;Mindtree;Contributor;Pre-Registration
 Alok Ranjan;alokranjan1106@gmail.com;Mindtree;Contributor;Registration Processor
 GIRISH YARRU;venkatgirish5@gmail.com;Mindtree;Contributor;Registration Processor
 Jyoti Prakash Nayak; Jyotiprakashnayak103@gmail.com;Mindtree;Contributor;Registration Processor
@@ -70,11 +73,11 @@ Sravan Kalla;sravan.par@gmail.com;Mindtree;Contributor;Testing
 YADIMALA THARUN KUMAR;yadimalatharunkumar@gmail.com;Mindtree;Contributor;Testing
 Gita Vittal Rao Phutane;Gita.phutane@gmail.com;Mindtree;Testing;Functional Testing
 Amandeep Khanuja;amandeepk2403@gmail.com;Mindtree;Business Analyst;Requirements
-Resham Chugani;resham.chugani@gmail.com;Mindtree;Business Analyst Lead;Functional Requirements
+Resham Chugani;resham.chugani@gmail.com;Mindtree;Business Analyst Lead;Requirements
 Gayathri Krishna Kumar;gayatriram@yahoo.com;Mindtree;Project Manager;Release and project management
-Balamurugan Ramamoorthy;balapkr@gmail.com;Mindtree;Contributor;Registration services
-Ajit Singh;as.ajitsingh@outlook.com;Mindtree;Contributor;Core Module
-Akshay Jain;jainakshay510@gmail.com;Mindtree;Contributor;Pre Registration
+Balamurugan Ramamoorthy;balapkr@gmail.com;Mindtree;Contributor;Registration
+Ajit Singh;as.ajitsingh@outlook.com;Mindtree;Contributor;commons
+Akshay Jain;jainakshay510@gmail.com;Mindtree;Contributor;Pre-Registration
 Akshaya Rajagopal;aksh1985@gmail.com;Mindtree;Business Analyst;Requirements
 Channakeshava Puttaswamy;Channakeshava.p@zoho.com;Technoforte;Automation Tester;Acceptance Test Rig
 Arjun Chandramohan;Arjun.ac7@gmail.com;Mindtree;Contributor;Testing
@@ -139,3 +142,5 @@ Ritesh Sinha;sinha.ritesh08@gmail.com;Mindtree;Contributor;Kernel services
 Romila Mattu;romila.mattu@gmail.com;Mindtree;Program Manager;MOSIP releases and project management
 Rudra Prasad Tripathy;Rudra1in@yahoo.com;Mindtree;Technical Architect;Pre Registration
 Sachin Jojaware;sjojaware@gmail.com;Mindtree;Technical Architect;Partner Management
+Sagar Mahapatra;sagarmahapatra96@gmail.com;Mindtree;Contributor;Kernel services
+Sanober Noor;sanobernoor12@gmail.com;Mindtree;Contributor;Pre Registration
