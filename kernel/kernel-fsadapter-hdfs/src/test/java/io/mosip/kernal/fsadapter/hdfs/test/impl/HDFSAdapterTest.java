@@ -17,6 +17,7 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.FileSystem.Statistics;
 import org.apache.hadoop.fs.Path;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -30,6 +31,7 @@ import io.mosip.kernel.core.fsadapter.exception.FSAdapterException;
 import io.mosip.kernel.fsadapter.hdfs.impl.HDFSAdapterImpl;
 import io.mosip.kernel.fsadapter.hdfs.util.ConnectionUtils;
 
+@Ignore
 @RunWith(SpringRunner.class)
 public class HDFSAdapterTest {
 
