@@ -10,10 +10,22 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>commons-packet</artifactId>
-    <version>1.0.11-SNAPSHOT</version>
+    <version>1.2.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
+        <!-- maven -->
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.version>3.7.0</maven.compiler.version>
+        <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
+        <maven.war.plugin.version>3.1.0</maven.war.plugin.version>
+        <maven.surefire.plugin.version>2.9</maven.surefire.plugin.version>
+        <maven.jacoco.plugin.version>0.8.1</maven.jacoco.plugin.version>
+        <maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version>
+        <maven.javadoc.version>3.0.1</maven.javadoc.version>
+        <maven-shade-plugin.version>2.3</maven-shade-plugin.version>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -34,7 +46,7 @@
         <kernel-dataaccess-hibernate.version>1.0.7</kernel-dataaccess-hibernate.version>
         <kernel.logger.logback.version>1.0.6</kernel.logger.logback.version>
         <spring.boot.co>2.0.2.RELEASE</spring.boot.co>
-        <khazana.version>1.0.11</khazana.version>
+        <khazana.version>1.2.0-SNAPSHOT</khazana.version>
         <sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**,**/handler/**,**/utilities/**,
             **/validator/**, **/exception/**,**/util/**,**/constants/**</sonar.cpd.exclusions>
     </properties>
