@@ -92,7 +92,7 @@ public class KeyStoreImplExceptionTest {
 		keyStoreImpl.getSymmetricKey("alias");
 	}
 
-	@Test(expected = NoSuchSecurityProviderException.class)
+	@Test(expected = java.security.InvalidParameterException.class)
 	public void testAfterPropertiesSet() throws Exception {
 		keyStoreImpl.afterPropertiesSet();
 	}

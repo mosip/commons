@@ -1,5 +1,6 @@
 package io.mosip.kernel.crypto.jce.core;
 
+import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -7,6 +8,7 @@ import java.security.SecureRandom;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
+import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.MGF1ParameterSpec;
 import java.util.ArrayList;
@@ -27,7 +29,11 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PSource.PSpecified;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
-
+import org.bouncycastle.crypto.InvalidCipherTextException;
+import org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.crypto.encodings.OAEPEncoding;
+import org.bouncycastle.crypto.engines.RSAEngine;
+import org.bouncycastle.crypto.params.RSAKeyParameters;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwx.CompactSerializer;
 import org.jose4j.lang.JoseException;
@@ -288,6 +294,7 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 					SecurityExceptionCodeConstant.MOSIP_NO_SUCH_ALGORITHM_EXCEPTION.getErrorCode(),
 					SecurityExceptionCodeConstant.MOSIP_NO_SUCH_ALGORITHM_EXCEPTION.getErrorMessage(), e);
 		}
+
 		try {
 			cipher.init(Cipher.DECRYPT_MODE, key);
 		} catch (java.security.InvalidKeyException e) {
@@ -305,36 +312,33 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 					paddedPlainText.length);
 			paddedPlainText = tempPipe;
 		}
-		final OAEPParameterSpec oaepParams = new OAEPParameterSpec(HASH_ALGO, MGF1, MGF1ParameterSpec.SHA256,
-				PSpecified.DEFAULT);
-		return unpadOEAPPadding(paddedPlainText, oaepParams);
-
+		
+		return unpadOAEPPadding(paddedPlainText,key);
 	}
 
-	/*
-	 * This is a hack of removing OEAP padding after decryption with NO Padding as
-	 * SoftHSM does not support it.Will be removed after HSM implementation
+//	  This is a hack of removing OEAP padding after decryption with NO Padding as
+//	  SoftHSM does not support it.Will be removed after HSM implementation
+	
+	/**
+	 * 
+	 * @param paddedPlainText
+	 * @param privateKey
+	 * @return
 	 */
-	@SuppressWarnings("restriction")
-	private byte[] unpadOEAPPadding(byte[] paddedPlainText, OAEPParameterSpec paramSpec) {
-		byte[] unpaddedData = null;
-		try {
-			sun.security.rsa.RSAPadding padding = sun.security.rsa.RSAPadding.getInstance(
-					sun.security.rsa.RSAPadding.PAD_OAEP_MGF1, asymmetricKeyLength / 8, new SecureRandom(), paramSpec);
-			unpaddedData = padding.unpad(paddedPlainText);
-		} catch (java.security.InvalidKeyException e) {
-			throw new InvalidKeyException(SecurityExceptionCodeConstant.MOSIP_INVALID_KEY_EXCEPTION.getErrorCode(),
-					e.getMessage(), e);
-		} catch (InvalidAlgorithmParameterException e) {
-			throw new InvalidParamSpecException(
-					SecurityExceptionCodeConstant.MOSIP_INVALID_PARAM_SPEC_EXCEPTION.getErrorCode(),
-					SecurityExceptionCodeConstant.MOSIP_INVALID_PARAM_SPEC_EXCEPTION.getErrorMessage(), e);
-		} catch (BadPaddingException e) {
-			throw new InvalidDataException(SecurityExceptionCodeConstant.MOSIP_INVALID_DATA_EXCEPTION.getErrorCode(),
-					e.getMessage(), e);
-		}
-		return unpaddedData;
+	private byte[] unpadOAEPPadding(byte[] paddedPlainText, PrivateKey privateKey) {
+		
+	    try {
+	    	OAEPEncoding encode = new OAEPEncoding(new RSAEngine(), new SHA256Digest(), null);
+		    BigInteger exponent = new BigInteger("1");
+		    RSAKeyParameters keyParams = new RSAKeyParameters(false, ((RSAPrivateKey)privateKey).getModulus(), exponent);
+		    encode.init(false, keyParams);
+			return encode.processBlock(paddedPlainText, 0, paddedPlainText.length);
+		} catch (InvalidCipherTextException e) {
+			throw new InvalidKeyException(SecurityExceptionCodeConstant.MOSIP_INVALID_KEY_EXCEPTION
+					.getErrorCode(), e.getMessage(), e);
+		}	    
 	}
+	 
 
 	@Override
 	public String hash(byte[] data, byte[] salt) {

@@ -1,10 +1,7 @@
-FROM openjdk:8
+FROM openjdk:11
 RUN apt-get update \
     && apt-get -y upgrade \
     && apt-get -y install unzip
-
-#Uncomment below and Comment above line(i.e. FROM openjdk:8) for OS specific (e.g. Alpine OS ) docker base image
-#FROM openjdk:8-jdk-alpine
 
 # can be passed during Docker build as build time environment for github branch to pickup configuration from.
 ARG spring_config_label

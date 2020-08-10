@@ -8,6 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -23,6 +24,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import io.mosip.kernel.core.fsadapter.exception.FSAdapterException;
 import io.mosip.kernel.fsadapter.hdfs.util.ConnectionUtils;
 
+@Ignore
 @RunWith(PowerMockRunner.class)
 @ContextConfiguration(classes = ConnectionUtils.class, loader = AnnotationConfigContextLoader.class)
 @PowerMockRunnerDelegate(SpringRunner.class)
