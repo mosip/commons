@@ -10,6 +10,10 @@ public class GetBiometricException extends BaseUncheckedException {
                 PacketUtilityErrorCodes.DOCUMENT_EXCEPTION.getErrorMessage());
     }
 
+    public GetBiometricException(String errorCode, String message) {
+        super(errorCode, message);
+    }
+
     public GetBiometricException(String message) {
         super(PacketUtilityErrorCodes.DOCUMENT_EXCEPTION.getErrorCode(),
                 message);

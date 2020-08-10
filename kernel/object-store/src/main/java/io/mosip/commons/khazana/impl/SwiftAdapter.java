@@ -28,13 +28,13 @@ public class SwiftAdapter implements ObjectStoreAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(SwiftAdapter.class);
 
 
-    @Value("object.store.username:test")
+    @Value("object.store.swift.username:test")
     private String userName;
 
-    @Value("object.store.password:testing")
+    @Value("object.store.swift.password:test")
     private String password;
 
-    @Value("object.store.authurl:52.172.53.239:9000/auth/v1.0")
+    @Value("object.store.swift.url:null")
     private String authUrl;
 
     private List<Account> accounts = new ArrayList<Account>();

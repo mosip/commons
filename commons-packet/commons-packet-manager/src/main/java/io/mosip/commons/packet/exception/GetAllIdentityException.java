@@ -15,9 +15,8 @@ public class GetAllIdentityException extends BaseUncheckedException {
                 message);
     }
 
-    public GetAllIdentityException(Throwable e) {
-        super(PacketUtilityErrorCodes.GET_ALL_IDENTITY_EXCEPTION.getErrorCode(),
-                PacketUtilityErrorCodes.GET_ALL_IDENTITY_EXCEPTION.getErrorMessage(), e);
+    public GetAllIdentityException(String errorCode, String message) {
+        super(errorCode, message);
     }
 
     public GetAllIdentityException(String errorMessage, Throwable t) {

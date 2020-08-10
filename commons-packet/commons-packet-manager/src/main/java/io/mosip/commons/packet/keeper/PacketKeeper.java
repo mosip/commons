@@ -8,10 +8,13 @@ import io.mosip.commons.packet.dto.Manifest;
 import io.mosip.commons.packet.dto.PacketInfo;
 import io.mosip.commons.packet.exception.CryptoException;
 import io.mosip.commons.packet.exception.ObjectStoreAdapterException;
+import io.mosip.commons.packet.exception.PacketIntegrityFailureException;
 import io.mosip.commons.packet.exception.PacketKeeperException;
 import io.mosip.commons.packet.spi.IPacketCryptoService;
 import io.mosip.commons.packet.util.PacketManagerHelper;
 import io.mosip.commons.packet.util.PacketManagerLogger;
+import io.mosip.kernel.core.exception.BaseCheckedException;
+import io.mosip.kernel.core.exception.BaseUncheckedException;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.HMACUtils;
@@ -97,15 +100,18 @@ public class PacketKeeper {
      * @param packetInfo : the packet information
      * @return : boolean
      */
-    public boolean checkIntegrity(PacketInfo packetInfo) {
-        // hmac encrypted packet
-        return false;
+    public boolean checkIntegrity(PacketInfo packetInfo, byte[] encryptedSubPacket) {
+        String hash = new String(CryptoUtil.encodeBase64(HMACUtils.generateHash(encryptedSubPacket)));
+        boolean result = hash.equals(packetInfo.getEncryptedHash());
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packetInfo.getId(), "Integrity check : " + result);
+        return result;
     }
 
-    public boolean checkSignature(PacketInfo packetInfo) {
-        checkIntegrity(packetInfo);
-        // check signature of decrypted packet
-        return false;
+    public boolean checkSignature(Packet packet, byte[] encryptedSubPacket) {
+        String signature = new String(CryptoUtil.encodeBase64(getCryptoService().sign(packet.getPacket())));
+        boolean result = checkIntegrity(packet.getPacketInfo(), encryptedSubPacket) && (signature.equals(packet.getPacketInfo().getSignature()));
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packet.getPacketInfo().getId(), "Integrity and signature check : " + result);
+        return result;
     }
 
     /**
@@ -117,18 +123,35 @@ public class PacketKeeper {
     public Packet getPacket(PacketInfo packetInfo) throws PacketKeeperException {
         try {
             InputStream is = getAdapter().getObject(PACKET_MANAGER_ACCOUNT, packetInfo.getId(), getName(packetInfo.getId(), packetInfo.getPacketName()));
-            byte[] subPacket = getCryptoService().decrypt(packetInfo.getId(), IOUtils.toByteArray(is));
+            byte[] encryptedSubPacket = IOUtils.toByteArray(is);
+            byte[] subPacket = getCryptoService().decrypt(packetInfo.getId(), encryptedSubPacket);
+
             Packet packet = new Packet();
             packet.setPacket(subPacket);
             Map<String, Object> metaInfo = getAdapter().getMetaData(PACKET_MANAGER_ACCOUNT, packetInfo.getId(), getName(packetInfo.getId(), packetInfo.getPacketName()));
             if (metaInfo != null && !metaInfo.isEmpty())
                 packet.setPacketInfo(PacketManagerHelper.getPacketInfo(metaInfo));
 
+
+                if (!checkSignature(packet, encryptedSubPacket)) {
+                LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packet.getPacketInfo().getId(), "Packet Integrity and Signature check failed");
+                throw new PacketIntegrityFailureException();
+            }
+
+
             return packet;
         } catch (Exception e) {
             LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packetInfo.getId(), e.getStackTrace().toString());
-            throw new PacketKeeperException(PacketUtilityErrorCodes.PACKET_KEEPER_GET_ERROR.getErrorCode(),
-                    "Failed to persist packet in object store : " + e.getMessage(), e);
+            if (e instanceof BaseCheckedException) {
+                BaseCheckedException ex = (BaseCheckedException) e;
+                throw new PacketKeeperException(ex.getErrorCode(), ex.getMessage());
+            }
+            else if (e instanceof BaseUncheckedException) {
+                BaseUncheckedException ex = (BaseUncheckedException) e;
+                throw new PacketKeeperException(ex.getErrorCode(), ex.getMessage());
+            } else
+                throw new PacketKeeperException(PacketUtilityErrorCodes.PACKET_KEEPER_GET_ERROR.getErrorCode(),
+                    "Failed to get packet from object store : " + e.getMessage(), e);
         }
     }
 
@@ -150,7 +173,7 @@ public class PacketKeeper {
             if (response) {
                 PacketInfo packetInfo = packet.getPacketInfo();
                 // sign encrypted packet
-                packetInfo.setSignature(new String(CryptoUtil.encodeBase64(getCryptoService().sign(encryptedSubPacket))));
+                packetInfo.setSignature(new String(CryptoUtil.encodeBase64(getCryptoService().sign(packet.getPacket()))));
                 // generate encrypted packet hash
                 packetInfo.setEncryptedHash(new String(CryptoUtil.encodeBase64(HMACUtils.generateHash(encryptedSubPacket))));
                 Map<String, Object> metaMap = PacketManagerHelper.getMetaMap(packetInfo);
@@ -164,6 +187,13 @@ public class PacketKeeper {
 
         } catch (Exception e) {
             LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packet.getPacketInfo().getId(), e.getStackTrace().toString());
+            if (e instanceof BaseCheckedException) {
+                BaseCheckedException ex = (BaseCheckedException) e;
+                throw new PacketKeeperException(ex.getErrorCode(), ex.getMessage());
+            } else if (e instanceof BaseUncheckedException) {
+                BaseUncheckedException ex = (BaseUncheckedException) e;
+                throw new PacketKeeperException(ex.getErrorCode(), ex.getMessage());
+            }
             throw new PacketKeeperException(PacketUtilityErrorCodes.PACKET_KEEPER_PUT_ERROR.getErrorCode(),
                     "Failed to persist packet in object store : " + e.getMessage(), e);
         }

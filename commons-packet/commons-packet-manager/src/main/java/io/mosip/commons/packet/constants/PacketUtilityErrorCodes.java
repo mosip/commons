@@ -21,7 +21,8 @@ public enum PacketUtilityErrorCodes {
 	PACKET_KEEPER_PUT_ERROR("KER-PUT-015", "Packet keeper exception occured."),
 	PACKET_KEEPER_GETMETA_ERROR("KER-PUT-016", "Packet keeper exception occured."),
 	PACKET_KEEPER_INTEGRITY_ERROR("KER-PUT-017", "Packet keeper exception occured."),
-	CRYPTO_EXCEPTION("KER-PUT-018", "No available crypto service exception.");
+	CRYPTO_EXCEPTION("KER-PUT-018", "No available crypto service exception."),
+	INTEGRITY_FAILURE("KER-PUT-019", "Packet Integrity check failed.");
 
 
 	private final String errorCode;

@@ -24,6 +24,8 @@ import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.core.cbeffutil.common.CbeffValidator;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
 import io.mosip.kernel.core.cbeffutil.spi.CbeffUtil;
+import io.mosip.kernel.core.exception.BaseCheckedException;
+import io.mosip.kernel.core.exception.BaseUncheckedException;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.JsonUtils;
 import io.mosip.kernel.core.util.exception.JsonProcessingException;
@@ -128,6 +130,13 @@ public class PacketReaderImpl implements IPacketReader {
             }
         } catch (Exception e) {
             LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, e.getStackTrace().toString());
+            if (e instanceof BaseCheckedException) {
+                BaseCheckedException ex = (BaseCheckedException) e;
+                throw new GetAllIdentityException(ex.getErrorCode(), ex.getMessage());
+            } else if (e instanceof BaseUncheckedException) {
+                BaseUncheckedException ex = (BaseUncheckedException) e;
+                throw new GetAllIdentityException(ex.getErrorCode(), ex.getMessage());
+            }
             throw new GetAllIdentityException(e.getMessage());
         }
 
@@ -221,6 +230,13 @@ public class PacketReaderImpl implements IPacketReader {
             biometricRecord.setSegments(CbeffValidator.convertBIRTypeToBIR(birType.getBIR()));
         } catch (Exception e) {
             LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, e.getStackTrace().toString());
+            if (e instanceof BaseCheckedException) {
+                BaseCheckedException ex = (BaseCheckedException) e;
+                throw new GetBiometricException(ex.getErrorCode(), ex.getMessage());
+            } else if (e instanceof BaseUncheckedException) {
+                BaseUncheckedException ex = (BaseUncheckedException) e;
+                throw new GetBiometricException(ex.getErrorCode(), ex.getMessage());
+            }
             throw new GetBiometricException(e.getMessage());
         }
 
@@ -251,6 +267,13 @@ public class PacketReaderImpl implements IPacketReader {
                 }
             }
         } catch (Exception e) {
+            if (e instanceof BaseCheckedException) {
+                BaseCheckedException ex = (BaseCheckedException) e;
+                throw new GetAllMetaInfoException(ex.getErrorCode(), ex.getMessage());
+            } else if (e instanceof BaseUncheckedException) {
+                BaseUncheckedException ex = (BaseUncheckedException) e;
+                throw new GetAllMetaInfoException(ex.getErrorCode(), ex.getMessage());
+            }
             throw new GetAllMetaInfoException(e.getMessage());
         }
         return finalMap;

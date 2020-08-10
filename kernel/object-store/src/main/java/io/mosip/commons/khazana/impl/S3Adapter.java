@@ -12,6 +12,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -22,6 +23,21 @@ import java.util.Optional;
 @Service
 @Qualifier("S3Adapter")
 public class S3Adapter implements ObjectStoreAdapter {
+
+    @Value("${object.store.s3.accesskey:accesskey}")
+    private String accessKey;
+
+    @Value("${object.store.s3.secretkey:secretkey}")
+    private String secretKey;
+
+    @Value("${object.store.s3.url:null}")
+    private String url;
+
+    @Value("${object.store.s3.region:null}")
+    private String region;
+
+    @Value("${object.store.s3.readlimit:10000000}")
+    private int readlimit;
 
     private AmazonS3 connection = null;
 
@@ -56,7 +72,7 @@ public class S3Adapter implements ObjectStoreAdapter {
                 s3Object.getObjectMetadata().getUserMetadata().entrySet().forEach(m -> objectMetadata.addUserMetadata(m.getKey(), m.getValue()));
 
             PutObjectRequest putObjectRequest = new PutObjectRequest(container, objectName, s3Object.getObjectContent(), objectMetadata);
-            putObjectRequest.getRequestClientOptions().setReadLimit(10000000);
+            putObjectRequest.getRequestClientOptions().setReadLimit(readlimit);
             getConnection().putObject(putObjectRequest);
         } catch (Exception e) {
             e.printStackTrace();
@@ -85,9 +101,9 @@ public class S3Adapter implements ObjectStoreAdapter {
 
     private AmazonS3 getConnection() {
         if (connection == null) {
-            AWSCredentials awsCredentials = new BasicAWSCredentials("minio", "minio123");
+            AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
             connection = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
-                    .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("http://52.172.53.239:9000", null)).build();
+                    .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(url, region)).build();
         }
         return connection;
     }

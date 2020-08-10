@@ -16,6 +16,10 @@ public class GetAllMetaInfoException extends BaseUncheckedException {
                 message);
     }
 
+    public GetAllMetaInfoException(String errorCode, String message) {
+        super(errorCode, message);
+    }
+
     public GetAllMetaInfoException(Throwable e) {
         super(PacketUtilityErrorCodes.GET_ALL_METAINFO_EXCEPTION.getErrorCode(),
                 PacketUtilityErrorCodes.GET_ALL_METAINFO_EXCEPTION.getErrorMessage(), e);

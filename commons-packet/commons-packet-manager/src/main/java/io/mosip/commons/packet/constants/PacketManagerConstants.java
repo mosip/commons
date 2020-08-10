@@ -100,15 +100,15 @@ public class PacketManagerConstants {
 
 	// Packet meta info constants
 	public static final String ID = "id";
-	public static final String PACKET_NAME = "packetName";
+	public static final String PACKET_NAME = "packetname";
 	public static final String SOURCE = "source";
 	public static final String PROCESS = "process";
-	public static final String SCHEMA_VERSION = "schemaVersion";
+	public static final String SCHEMA_VERSION = "schemaversion";
 	public static final String SIGNATURE = "signature";
-	public static final String ENCRYPTED_HASH = "encryptedHash";
-	public static final String PROVIDER_NAME = "providerName";
-	public static final String PROVIDER_VERSION = "providerVersion";
-	public static final String CREATION_DATE = "creationDate";
+	public static final String ENCRYPTED_HASH = "encryptedhash";
+	public static final String PROVIDER_NAME = "providername";
+	public static final String PROVIDER_VERSION = "providerversion";
+	public static final String CREATION_DATE = "creationdate";
 
 
 }
