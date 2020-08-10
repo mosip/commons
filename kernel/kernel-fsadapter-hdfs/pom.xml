@@ -83,27 +83,7 @@
 						<source>${maven.compiler.source}</source>
 						<target>${maven.compiler.target}</target>
 					</configuration>
-				</plugin>
-				<plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-toolchains-plugin</artifactId>
-			    <version>3.0.0</version>
-			    <executions>
-			      <execution>
-			        <goals>
-			          <goal>toolchain</goal>
-			        </goals>
-			      </execution>
-			    </executions>
-			    <configuration>
-			      <toolchains>
-			        <jdk>
-			          <version>1.8</version>
-			          <vendor>sun</vendor>
-			        </jdk>
-			      </toolchains>
-			    </configuration>
-			  </plugin>			
+				</plugin>					
 			</plugins>
 		</pluginManagement>
 	</build>
