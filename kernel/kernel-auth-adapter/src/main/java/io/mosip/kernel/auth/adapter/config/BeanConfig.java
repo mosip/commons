@@ -23,7 +23,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import ch.qos.logback.classic.helpers.MDCInsertingServletFilter;
 import io.mosip.kernel.auth.adapter.constant.AuthAdapterConstant;
+import io.mosip.kernel.auth.adapter.filter.TraceLogFilter;
 import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
 
 @Configuration
@@ -84,5 +86,15 @@ public class BeanConfig {
 			}
 			return next.exchange(filtered);
 		}).build();
+	}
+	
+	@Bean
+	public MDCInsertingServletFilter mdcInsertingServletFilter() {
+		return new MDCInsertingServletFilter();
+	}
+	
+	@Bean
+	public TraceLogFilter traceLogFilter() {
+		return new TraceLogFilter();
 	}
 }
