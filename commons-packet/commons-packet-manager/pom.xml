@@ -26,7 +26,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter</artifactId>
             <version>${spring.boot.version}</version>
         </dependency>
         <dependency>
@@ -44,11 +44,6 @@
             <artifactId>kernel-cbeffutil-api</artifactId>
             <version>1.0.6</version>
         </dependency>
-        <!--<dependency>
-            <groupId>io.mosip.kernel</groupId>
-            <artifactId>kernel-fsadapter-hdfs</artifactId>
-            <version>1.0.6</version>
-        </dependency>-->
         <dependency>
             <groupId>io.mosip.kernel</groupId>
             <artifactId>kernel-crypto-jce</artifactId>
@@ -78,11 +73,6 @@
             <groupId>io.mosip.kernel</groupId>
             <artifactId>kernel-cbeffutil-api</artifactId>
             <version>1.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>io.mosip.kernel</groupId>
-            <artifactId>kernel-auth-adapter</artifactId>
-            <version>${kernel.auth.adaptor.version}</version>
         </dependency>
         <dependency>
             <groupId>io.mosip.commons</groupId>

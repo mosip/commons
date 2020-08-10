@@ -1,4 +1,4 @@
-package io.mosip.commons.packet.config;
+package io.mosip.commons.packetmanager.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

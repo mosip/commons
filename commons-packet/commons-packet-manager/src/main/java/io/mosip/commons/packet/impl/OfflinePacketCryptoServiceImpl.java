@@ -16,7 +16,7 @@ import java.security.PublicKey;
 @Qualifier("OfflinePacketCryptoServiceImpl")
 public class OfflinePacketCryptoServiceImpl implements IPacketCryptoService {
 
-    @Value("${mosip.kernel.data-key-splitter}")
+    @Value("${mosip.kernel.data-key-splitter:KEY_SPLITTER}")
     private String KEY_SPLITTER;
 
     @Autowired

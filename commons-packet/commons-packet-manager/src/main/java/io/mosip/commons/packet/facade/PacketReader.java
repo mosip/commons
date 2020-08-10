@@ -2,33 +2,24 @@ package io.mosip.commons.packet.facade;
 
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.exception.NoAvailableProviderException;
-import io.mosip.commons.packet.impl.PacketReaderImpl;
 import io.mosip.commons.packet.spi.IPacketReader;
 import io.mosip.commons.packet.util.PacketHelper;
 import io.mosip.commons.packet.util.PacketManagerLogger;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
 import io.mosip.kernel.core.logger.spi.Logger;
-import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static io.mosip.commons.packet.constants.PacketManagerConstants.PROCESS;
-import static io.mosip.commons.packet.constants.PacketManagerConstants.SOURCE;
 
 /**
  * The packet Reader facade
@@ -53,7 +44,7 @@ public class PacketReader {
      * @param process : the process
      * @return String field
      */
-    //@PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
+    @PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
     public String getField(String id, String field, String source, String process, boolean bypassCache) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "getFields for fields : " + field + " source : " + source + " process : " + process);
@@ -76,7 +67,7 @@ public class PacketReader {
      * @param process : the process
      * @return Map fields
      */
-    @PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
+    //@PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
     public Map<String, String> getFields(String id, List<String> fields, String source, String process, boolean bypassCache) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "getFields for fields : " + fields.toString() + " source : " + source + " process : " + process);
@@ -99,7 +90,7 @@ public class PacketReader {
      * @param process      : the process
      * @return Document : document information
      */
-    @PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
+    //@PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
     @Cacheable(value = "packets", key = "#id.concat('-').concat(#documentName).concat('-').concat(#source).concat('-').concat(#process)")
     public Document getDocument(String id, String documentName, String source, String process) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
@@ -117,7 +108,7 @@ public class PacketReader {
      * @param process    : the process
      * @return BiometricRecord : the biometric record
      */
-    @PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
+    //@PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
     @Cacheable(value = "packets", key = "#id.concat('-').concat(#person).concat('-').concat(#modalities).concat('-').concat(#source).concat('-').concat(#process)", condition = "#bypassCache == false")
     public BiometricRecord getBiometric(String id, String person, List<BiometricType> modalities, String source, String process, boolean bypassCache) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
@@ -133,7 +124,7 @@ public class PacketReader {
      * @param process : the process
      * @return Map fields
      */
-    @PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
+    //@PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
     @Cacheable(value = "packets", key = "{#id.concat('-').concat(#source).concat('-').concat(#process)}", condition = "#bypassCache == false")
     public Map<String, String> getMetaInfo(String id, String source, String process, boolean bypassCache) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,

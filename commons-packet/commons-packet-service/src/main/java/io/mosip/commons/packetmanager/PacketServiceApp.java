@@ -1,4 +1,4 @@
-package io.mosip.commons.packet;
+package io.mosip.commons.packetmanager;
 
 import io.mosip.commons.packet.facade.PacketReader;
 import io.mosip.commons.packet.facade.PacketWriter;

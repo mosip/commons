@@ -32,7 +32,6 @@
         <!-- spring -->
         <spring.boot.version>2.0.2.RELEASE</spring.boot.version>
         <spring.data.jpa.version>2.0.7.RELEASE</spring.data.jpa.version>
-        <spring.security.test.version>5.0.5.RELEASE</spring.security.test.version>
         <spring-cloud-config.version>2.0.0.RELEASE</spring-cloud-config.version>
         <h2.version>1.4.197</h2.version>
         <jackson.datatype.version>2.9.8</jackson.datatype.version>
