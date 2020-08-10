@@ -86,6 +86,10 @@ public class AuthController {
     
 	@Value("${mosip.security.secure-cookie:false}")
 	private boolean isSecureCookie;
+	
+	
+	@Value("${mosip.kernel.auth-code-url-splitter:#URISPLITTER#}")
+	private String urlSplitter;
 
 	/**
 	 * Autowired reference for {@link MosipEnvironment}
@@ -639,13 +643,15 @@ public class AuthController {
 			@CookieValue("state") String stateCookie, HttpServletResponse res) throws IOException {
 		AccessTokenResponseDTO jwtResponseDTO = authService.loginRedirect(state, sessionState, code, stateCookie,
 				redirectURI);
-		String uri = new String(Base64.decodeBase64(redirectURI.getBytes()));
-		LOGGER.info("login-redirect open id login uri " + uri );
+
 		Cookie cookie = createCookie(jwtResponseDTO.getAccessToken(), Integer.parseInt(jwtResponseDTO.getExpiresIn()));
 		res.addCookie(cookie);
 		res.setStatus(302);
-		res.sendRedirect(uri);
-	}
+		String uri = new String(Base64.decodeBase64(redirectURI.getBytes()));
+
+		LOGGER.info("login-redirect open id login uri " + uri );
+		res.sendRedirect(uri);	
+		}
 
 	/**
 	 * Erases Cookie from browser
@@ -657,4 +663,5 @@ public class AuthController {
 		cookie.setPath("/");
 		cookie.setMaxAge(0);
 	}
+
 }

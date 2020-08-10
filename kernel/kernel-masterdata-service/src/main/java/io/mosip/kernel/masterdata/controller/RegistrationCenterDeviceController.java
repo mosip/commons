@@ -49,40 +49,7 @@ public class RegistrationCenterDeviceController {
 	@Autowired
 	private RegistrationCenterDeviceService registrationCenterDeviceService;
 
-	@ResponseFilter
-	@PostMapping
-	@ApiOperation(value = "Map provided registration center and device", notes = "Map provided registration center id and device id")
-	@ApiResponses({ @ApiResponse(code = 201, message = "When registration center and device mapped"),
-			@ApiResponse(code = 400, message = "When Request body passed  is invalid"),
-			@ApiResponse(code = 500, message = "While mapping registration center and device") })
-	public ResponseWrapper<ResponseRegistrationCenterDeviceDto> createRegistrationCenterAndDevice(
-			@Valid @RequestBody RequestWrapper<RegistrationCenterDeviceDto> requestDto) {
-
-		ResponseWrapper<ResponseRegistrationCenterDeviceDto> responseWrapper = new ResponseWrapper<>();
-		responseWrapper.setResponse(
-				registrationCenterDeviceService.createRegistrationCenterAndDevice(requestDto.getRequest()));
-		return responseWrapper;
-	}
-
-	/**
-	 * Delete the mapping of registration center and device
-	 * 
-	 * @param regCenterId Registration center id to be deleted
-	 * @param deviceId    DeviceId id to be deleted
-	 * @return {@link RegistrationCenterDeviceID}
-	 */
-	@ResponseFilter
-	@ApiOperation(value = "Delete the mapping of registration center and device")
-	@DeleteMapping("/{regCenterId}/{deviceId}")
-	public ResponseWrapper<RegistrationCenterDeviceID> deleteRegistrationCenterDeviceMapping(
-			@ApiParam("Registration center id to be deleted") @PathVariable String regCenterId,
-			@ApiParam("DeviceId id to be deleted") @PathVariable String deviceId) {
-
-		ResponseWrapper<RegistrationCenterDeviceID> responseWrapper = new ResponseWrapper<>();
-		responseWrapper.setResponse(
-				registrationCenterDeviceService.deleteRegistrationCenterDeviceMapping(regCenterId, deviceId));
-		return responseWrapper;
-	}
+	
 
 	/**
 	 * Api to un-map Device from a Registration Center .
@@ -123,7 +90,7 @@ public class RegistrationCenterDeviceController {
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@ApiOperation(value = "map registration center with device")
-	@GetMapping("map/{regCenterId}/{deviceId}")
+	@PutMapping("map/{regCenterId}/{deviceId}")
 	public ResponseWrapper<ResponseDto> mapRegistrationCenterDevice(
 			@ApiParam("Registration center id ") @PathVariable String regCenterId,
 			@ApiParam("DeviceId id ") @PathVariable String deviceId) {
