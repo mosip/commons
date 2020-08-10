@@ -53,7 +53,7 @@ public class PacketReader {
      * @param process : the process
      * @return String field
      */
-    @PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
+    //@PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
     public String getField(String id, String field, String source, String process, boolean bypassCache) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "getFields for fields : " + field + " source : " + source + " process : " + process);

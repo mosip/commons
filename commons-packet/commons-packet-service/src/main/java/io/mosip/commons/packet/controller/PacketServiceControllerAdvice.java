@@ -1,4 +1,4 @@
-package io.mosip.commons.packetmanager.controller;
+package io.mosip.commons.packet.controller;
 
 import io.mosip.kernel.core.exception.BaseCheckedException;
 import io.mosip.kernel.core.exception.BaseUncheckedException;

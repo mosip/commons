@@ -1,8 +1,7 @@
-package io.mosip.commons.packetmanager.controller;
+package io.mosip.commons.packet.controller;
 
 import io.mosip.commons.packet.dto.PacketInfo;
 import io.mosip.commons.packet.facade.PacketWriter;
-import io.mosip.commons.packetmanager.dto.FieldResponseDto;
 import io.mosip.commons.packet.dto.packet.PacketDto;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class PacketWriterController {

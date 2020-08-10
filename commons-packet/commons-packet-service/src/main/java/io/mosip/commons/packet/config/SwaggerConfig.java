@@ -1,4 +1,4 @@
-package io.mosip.commons.packetmanager.config;
+package io.mosip.commons.packet.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +23,7 @@ public class SwaggerConfig {
 	@Bean
 	public Docket swaggerBean() {
 		return new Docket(DocumentationType.SWAGGER_2).groupName("Packet manager").select()
-				.apis(RequestHandlerSelectors.basePackage("io.mosip.commons.packetmanager.controller"))
+				.apis(RequestHandlerSelectors.basePackage("io.mosip.commons.packet.controller"))
 				.paths(PathSelectors.ant("/*")).build();
 	}
 	

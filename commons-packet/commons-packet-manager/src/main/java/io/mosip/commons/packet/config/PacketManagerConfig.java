@@ -1,5 +1,6 @@
 package io.mosip.commons.packet.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.commons.packet.constants.LoggerFileConstant;
 import io.mosip.commons.packet.spi.IPacketReader;
 import io.mosip.commons.packet.spi.IPacketWriter;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Primary;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
@@ -143,6 +145,12 @@ public class PacketManagerConfig {
                     "reference provider writer is not present.");
         }
         return iPacketWriters;
+    }
+
+    @Bean
+    @Primary
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 
     private Object getBean(String className) throws ClassNotFoundException {

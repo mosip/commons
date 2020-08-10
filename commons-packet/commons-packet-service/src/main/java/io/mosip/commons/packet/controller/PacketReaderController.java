@@ -1,13 +1,13 @@
-package io.mosip.commons.packetmanager.controller;
+package io.mosip.commons.packet.controller;
 
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.facade.PacketReader;
-import io.mosip.commons.packetmanager.dto.BiometricRequestDto;
-import io.mosip.commons.packetmanager.dto.DocumentDto;
-import io.mosip.commons.packetmanager.dto.FieldDto;
-import io.mosip.commons.packetmanager.dto.FieldDtos;
-import io.mosip.commons.packetmanager.dto.FieldResponseDto;
-import io.mosip.commons.packetmanager.dto.MetaInfoDto;
+import io.mosip.commons.packet.dto.BiometricRequestDto;
+import io.mosip.commons.packet.dto.DocumentDto;
+import io.mosip.commons.packet.dto.FieldDto;
+import io.mosip.commons.packet.dto.FieldDtos;
+import io.mosip.commons.packet.dto.FieldResponseDto;
+import io.mosip.commons.packet.dto.MetaInfoDto;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
@@ -32,7 +32,7 @@ public class PacketReaderController {
     @PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
     @ResponseFilter
     @PostMapping(path = "/searchField", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseWrapper<FieldResponseDto> searchField(@RequestBody(required = true) RequestWrapper<FieldDto> fieldDto) {
+        public ResponseWrapper<FieldResponseDto> searchField(@RequestBody(required = true) RequestWrapper<FieldDto> fieldDto) {
 
         String resultField = packetReader.getField(fieldDto.getRequest().getId(),
                 fieldDto.getRequest().getField(), fieldDto.getRequest().getSource(), fieldDto.getRequest().getProcess(), fieldDto.getRequest().getBypassCache());

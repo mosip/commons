@@ -66,7 +66,7 @@ public class PacketWriterImpl implements IPacketWriter {
     @Autowired
     private PacketKeeper packetKeeper;
 
-    @Value("${mosip.kernel.packetmanager.default_subpacket_name:id}")
+    @Value("${mosip.kernel.packet.default_subpacket_name:id}")
     private String defaultSubpacketName;
 
     @Value("${default.provider.version:v1.0}")
