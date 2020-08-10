@@ -42,11 +42,14 @@ import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.util.CryptoUtil;
+import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.kernel.core.util.StringUtils;
 import io.mosip.kernel.masterdata.constant.DeviceRegisterErrorCode;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.constant.RegisteredDeviceErrorCode;
 import io.mosip.kernel.masterdata.constant.RequestErrorCode;
+import io.mosip.kernel.masterdata.dto.DeRegisterDevicePostDto;
+import io.mosip.kernel.masterdata.dto.DeRegisterDeviceReqDto;
 import io.mosip.kernel.masterdata.dto.DeviceDeRegisterResponse;
 import io.mosip.kernel.masterdata.dto.getresponse.ResponseDto;
 import io.mosip.kernel.masterdata.dto.registerdevice.DeviceData;
@@ -316,29 +319,22 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 				+ CryptoUtil.encodeBase64String(signedResponse.getBytes());
 	}
 
-	private String getSignedResponse(RegisterDeviceResponse registerDeviceResponse) {
+	private String getSignedResponse(RegisterDeviceResponse registerDeviceResponse) throws IOException {
 		RequestWrapper<SignRequestDto> request = new RequestWrapper<>();
 		SignRequestDto signatureRequestDto = new SignRequestDto();
 		SignResponseDto signResponse = new SignResponseDto();
 		HttpEntity<RequestWrapper<SignRequestDto>> httpEntity = new HttpEntity<>(request, new HttpHeaders());
-		try {
+		
 			signatureRequestDto
 					.setData(CryptoUtil.encodeBase64String(mapper.writeValueAsBytes(registerDeviceResponse)));
 			request.setRequest(signatureRequestDto);
 			ResponseEntity<String> response = restTemplate.exchange(signUrl, HttpMethod.POST, httpEntity, String.class);
 			ResponseWrapper<?> responseObject;
-			try {
+			
 				responseObject = mapper.readValue(response.getBody(), ResponseWrapper.class);
 				signResponse = mapper.readValue(mapper.writeValueAsString(responseObject.getResponse()),
 						SignResponseDto.class);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			
 
 		return signResponse.getSignature();
 	}
@@ -363,11 +359,15 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 	}
 
 	@Override
-	public DeviceDeRegisterResponse deRegisterDevice(@Valid String deviceCode) {
+	public String deRegisterDevice(DeRegisterDevicePostDto deRegisterDevicePostDto) {
 		RegisteredDevice deviceRegisterEntity = null;
 		RegisteredDeviceHistory deviceRegisterHistory = new RegisteredDeviceHistory();
+		String headerString, signedResponse, deRegisterDevice = null;
+		String devicePayLoad = getPayLoad(deRegisterDevicePostDto.getDevice());
 		try {
-			deviceRegisterEntity = registeredDeviceRepository.findByCodeAndIsActiveIsTrue(deviceCode);
+			DeRegisterDeviceReqDto device = mapper.readValue(CryptoUtil.decodeBase64(devicePayLoad), DeRegisterDeviceReqDto.class);
+			validate(device);
+			deviceRegisterEntity = registeredDeviceRepository.findByCodeAndIsActiveIsTrue(device.getDeviceCode());
 			if (deviceRegisterEntity != null) {
 				if (Arrays.asList(REVOKED, RETIRED).contains(deviceRegisterEntity.getStatusCode())) {
 					throw new MasterDataServiceException(
@@ -381,6 +381,19 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 				MapperUtils.map(deviceRegisterEntity, deviceRegisterHistory);
 				deviceRegisterHistory.setEffectivetimes(deviceRegisterEntity.getUpdatedDateTime());
 				registeredDeviceHistoryRepo.create(deviceRegisterHistory);
+				DeviceDeRegisterResponse deviceDeRegisterResponse = new DeviceDeRegisterResponse();
+				deviceDeRegisterResponse.setStatus("success");
+				deviceDeRegisterResponse.setDeviceCode(deviceRegisterEntity.getCode());
+				deviceDeRegisterResponse.setEnv(activeProfile);
+				DigitalId digitalId=mapper.readValue(deviceRegisterEntity.getDigitalId(),DigitalId.class);
+				deviceDeRegisterResponse.setTimeStamp(digitalId.getDateTime());
+				HeaderRequest header = new HeaderRequest();
+				header.setAlg("RS256");
+				header.setType("JWS");
+				headerString = mapper.writeValueAsString(header);
+				Objects.requireNonNull(deviceDeRegisterResponse);
+				signedResponse = getSignedResponse(deviceDeRegisterResponse);
+				deRegisterDevice = mapper.writeValueAsString(deviceDeRegisterResponse);
 			} else {
 
 				throw new DataNotFoundException(
@@ -388,16 +401,49 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 						DeviceRegisterErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorMessage());
 			}
 
-		} catch (DataAccessLayerException | DataAccessException e) {
+		} catch (DataAccessLayerException | DataAccessException | IOException e) {
 			throw new MasterDataServiceException(
 					DeviceRegisterErrorCode.DEVICE_REGISTER_DELETED_EXCEPTION.getErrorCode(),
 					DeviceRegisterErrorCode.DEVICE_REGISTER_DELETED_EXCEPTION.getErrorMessage() + " "
 							+ ExceptionUtils.parseException(e));
 		}
-		DeviceDeRegisterResponse response = new DeviceDeRegisterResponse();
-		response.setStatus("success");
-		response.setMessage("Device deregistered successfully");
-		return response;
+		
+		return convertToJWS(headerString, deRegisterDevice, signedResponse);
+		
+	}
+	
+	private String getSignedResponse(DeviceDeRegisterResponse registerDeviceResponse) throws IOException {
+		RequestWrapper<SignRequestDto> request = new RequestWrapper<>();
+		SignRequestDto signatureRequestDto = new SignRequestDto();
+		SignResponseDto signResponse = new SignResponseDto();
+		HttpEntity<RequestWrapper<SignRequestDto>> httpEntity = new HttpEntity<>(request, new HttpHeaders());
+		
+			signatureRequestDto
+					.setData(CryptoUtil.encodeBase64String(mapper.writeValueAsBytes(registerDeviceResponse)));
+			request.setRequest(signatureRequestDto);
+			ResponseEntity<String> response = restTemplate.exchange(signUrl, HttpMethod.POST, httpEntity, String.class);
+			ResponseWrapper<?> responseObject;
+			
+				responseObject = mapper.readValue(response.getBody(), ResponseWrapper.class);
+				signResponse = mapper.readValue(mapper.writeValueAsString(responseObject.getResponse()),
+						SignResponseDto.class);
+			
+
+		return signResponse.getSignature();
+	}
+
+	private void validate(DeRegisterDeviceReqDto device) {
+		if(EmptyCheckUtils.isNullEmpty(device.getDeviceCode()) || EmptyCheckUtils.isNullEmpty(device.getEnv())) {
+			throw new RequestException(DeviceRegisterErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorCode(),
+					DeviceRegisterErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorMessage());
+		}else if(device.getDeviceCode().length()>36) {
+			throw new RequestException(DeviceRegisterErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorCode(),
+					DeviceRegisterErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorMessage());
+		}else if(!device.getEnv().equals(activeProfile)) {
+			throw new RequestException(DeviceRegisterErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorCode(),
+					DeviceRegisterErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorMessage());
+		}
+		
 	}
 
 	@Transactional

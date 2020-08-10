@@ -39,6 +39,7 @@ import io.mosip.kernel.masterdata.utils.AuditUtil;
 import io.mosip.kernel.masterdata.utils.ExceptionUtils;
 import io.mosip.kernel.masterdata.utils.MapperUtils;
 import io.mosip.kernel.masterdata.utils.MasterDataFilterHelper;
+import io.mosip.kernel.masterdata.utils.MasterdataCreationUtil;
 import io.mosip.kernel.masterdata.utils.MasterdataSearchHelper;
 import io.mosip.kernel.masterdata.utils.MetaDataUtils;
 import io.mosip.kernel.masterdata.utils.PageUtils;
@@ -78,6 +79,10 @@ public class TemplateServiceImpl implements TemplateService {
 
 	@Autowired
 	private AuditUtil auditUtil;
+
+	@Autowired
+	private MasterdataCreationUtil masterdataCreationUtil;
+
 
 	/*
 	 * (non-Javadoc)
@@ -166,14 +171,17 @@ public class TemplateServiceImpl implements TemplateService {
 	 */
 	@Override
 	public IdAndLanguageCodeID createTemplate(TemplateDto template) {
-		Template entity = MetaDataUtils.setCreateMetaData(template, Template.class);
+
 		Template templateEntity;
 		try {
+			template = masterdataCreationUtil.createMasterData(Template.class, template);
+			Template entity = MetaDataUtils.setCreateMetaData(template, Template.class);
 			templateEntity = templateRepository.create(entity);
 
-		} catch (DataAccessLayerException | DataAccessException e) {
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
 			auditUtil.auditRequest(
-					String.format(MasterDataConstant.CREATE_ERROR_AUDIT, TemplateDto.class.getSimpleName()),
+					String.format(MasterDataConstant.CREATE_ERROR_AUDIT, Template.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
 					String.format(MasterDataConstant.FAILURE_DESC,
 							TemplateErrorCode.TEMPLATE_INSERT_EXCEPTION.getErrorCode(),
@@ -186,9 +194,9 @@ public class TemplateServiceImpl implements TemplateService {
 
 		IdAndLanguageCodeID idAndLanguageCodeID = new IdAndLanguageCodeID();
 		MapperUtils.map(templateEntity, idAndLanguageCodeID);
-		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_CREATE, TemplateDto.class.getSimpleName()),
+		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_CREATE, Template.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC,
-						TemplateDto.class.getSimpleName(), idAndLanguageCodeID.getId()),
+						Template.class.getSimpleName(), idAndLanguageCodeID.getId()),
 				"ADM-813");
 		return idAndLanguageCodeID;
 	}
@@ -207,13 +215,14 @@ public class TemplateServiceImpl implements TemplateService {
 			Template entity = templateRepository.findTemplateByIDAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(
 					template.getId(), template.getLangCode());
 			if (!EmptyCheckUtils.isNullEmpty(entity)) {
+				template = masterdataCreationUtil.updateMasterData(Template.class, template);
 				MetaDataUtils.setUpdateMetaData(template, entity, false);
 				templateRepository.update(entity);
 				idAndLanguageCodeID.setId(entity.getId());
 				idAndLanguageCodeID.setLangCode(entity.getLangCode());
 			} else {
 				auditUtil.auditRequest(
-						String.format(MasterDataConstant.FAILURE_UPDATE, TemplateDto.class.getSimpleName()),
+						String.format(MasterDataConstant.FAILURE_UPDATE, Template.class.getSimpleName()),
 						MasterDataConstant.AUDIT_SYSTEM,
 						String.format(MasterDataConstant.FAILURE_DESC,
 								TemplateErrorCode.TEMPLATE_NOT_FOUND.getErrorCode(),
@@ -222,8 +231,9 @@ public class TemplateServiceImpl implements TemplateService {
 				throw new RequestException(TemplateErrorCode.TEMPLATE_NOT_FOUND.getErrorCode(),
 						TemplateErrorCode.TEMPLATE_NOT_FOUND.getErrorMessage());
 			}
-		} catch (DataAccessLayerException | DataAccessException e) {
-			auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_UPDATE, TemplateDto.class.getSimpleName()),
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
+			auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_UPDATE, Template.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
 					String.format(MasterDataConstant.FAILURE_DESC,
 							TemplateErrorCode.TEMPLATE_UPDATE_EXCEPTION.getErrorCode(),
@@ -233,9 +243,9 @@ public class TemplateServiceImpl implements TemplateService {
 			throw new MasterDataServiceException(TemplateErrorCode.TEMPLATE_UPDATE_EXCEPTION.getErrorCode(),
 					TemplateErrorCode.TEMPLATE_UPDATE_EXCEPTION.getErrorMessage() + ExceptionUtils.parseException(e));
 		}
-		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_UPDATE, TemplateDto.class.getSimpleName()),
+		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_UPDATE, Template.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC,
-						TemplateDto.class.getSimpleName(), idAndLanguageCodeID.getId()),
+						Template.class.getSimpleName(), idAndLanguageCodeID.getId()),
 				"ADM-816");
 		return idAndLanguageCodeID;
 	}

@@ -37,7 +37,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -76,7 +75,6 @@ import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.idgenerator.spi.MachineIdGenerator;
 import io.mosip.kernel.core.util.CryptoUtil;
-import io.mosip.kernel.core.util.JsonUtils;
 import io.mosip.kernel.masterdata.constant.MachinePutReqDto;
 import io.mosip.kernel.masterdata.dto.BiometricAttributeDto;
 import io.mosip.kernel.masterdata.dto.BlacklistedWordsDto;
@@ -655,8 +653,10 @@ public class MasterdataIntegrationTest {
 		users.add(user);
 	}
 
+	IndividualType fr;
+	IndividualTypeDto frDto;
 	private void individualTypeSetup() {
-		IndividualType fr = new IndividualType();
+		fr = new IndividualType();
 		// fr.setIndividualTypeID(new CodeAndLanguageCodeID("FR", "eng"));
 		fr.setCode("FR");
 		fr.setLangCode("eng");
@@ -674,7 +674,7 @@ public class MasterdataIntegrationTest {
 		individualTypes.add(nfr);
 
 		individualTypeResponseDto = new IndividualTypeResponseDto();
-		IndividualTypeDto frDto = new IndividualTypeDto();
+		frDto = new IndividualTypeDto();
 		MapperUtils.map(fr, frDto);
 		IndividualTypeDto nfrDto = new IndividualTypeDto();
 		MapperUtils.map(nfr, nfrDto);
@@ -706,6 +706,69 @@ public class MasterdataIntegrationTest {
 		mockMvc.perform(get("/individualtypes").contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isInternalServerError());
 
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void createIndividualTypeTest() throws Exception {
+		RequestWrapper<IndividualTypeDto> requestDto = new RequestWrapper<>();
+		requestDto.setId("mosip.match.regcentr.Dcode");
+		requestDto.setVersion("1.0.0");
+		requestDto.setRequest(frDto);
+
+		String individualTypeJson = mapper.writeValueAsString(requestDto);
+		when(individualTypeRepository.create(Mockito.any())).thenReturn(fr);
+		when(masterdataCreationUtil.createMasterData(IndividualType.class, frDto)).thenReturn(frDto);
+		mockMvc.perform(post("/individualtypes").contentType(MediaType.APPLICATION_JSON).content(individualTypeJson))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void createIndividualTypeExceptionTest() throws Exception {
+		RequestWrapper<IndividualTypeDto> requestDto = new RequestWrapper<>();
+		requestDto.setId("mosip.match.regcentr.Dcode");
+		requestDto.setVersion("1.0.0");
+		requestDto.setRequest(frDto);
+
+		String individualTypeJson = mapper.writeValueAsString(requestDto);
+		when(individualTypeRepository.create(Mockito.any())).thenThrow(DataAccessLayerException.class);
+		when(masterdataCreationUtil.createMasterData(IndividualType.class, frDto)).thenReturn(frDto);
+		mockMvc.perform(post("/individualtypes").contentType(MediaType.APPLICATION_JSON).content(individualTypeJson))
+				.andExpect(status().isInternalServerError());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void updateIndividualTypeTest() throws Exception {
+		RequestWrapper<IndividualTypeDto> requestDto = new RequestWrapper<>();
+		requestDto.setId("mosip.match.regcentr.Dcode");
+		requestDto.setVersion("1.0.0");
+		requestDto.setRequest(frDto);
+
+		String individualTypeJson = mapper.writeValueAsString(requestDto);
+		when(individualTypeRepository.findIndividualTypeByCodeAndLangCode(Mockito.any(), Mockito.any())).thenReturn(fr);
+		when(individualTypeRepository.update(Mockito.any())).thenReturn(fr);
+		when(masterdataCreationUtil.updateMasterData(IndividualType.class, frDto)).thenReturn(frDto);
+		mockMvc.perform(put("/individualtypes").contentType(MediaType.APPLICATION_JSON).content(individualTypeJson))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void updateIndividualTypeExceptionTest() throws Exception {
+		RequestWrapper<IndividualTypeDto> requestDto = new RequestWrapper<>();
+		requestDto.setId("mosip.match.regcentr.Dcode");
+		requestDto.setVersion("1.0.0");
+		requestDto.setRequest(frDto);
+
+		String individualTypeJson = mapper.writeValueAsString(requestDto);
+		when(individualTypeRepository.findIndividualTypeByCodeAndLangCode(Mockito.any(), Mockito.any()))
+				.thenThrow(DataAccessLayerException.class);
+		when(individualTypeRepository.update(Mockito.any())).thenReturn(fr);
+		when(masterdataCreationUtil.updateMasterData(IndividualType.class, frDto)).thenReturn(frDto);
+		mockMvc.perform(put("/individualtypes").contentType(MediaType.APPLICATION_JSON).content(individualTypeJson))
+				.andExpect(status().isInternalServerError());
 	}
 
 	/* Applicant type code */
@@ -795,6 +858,8 @@ public class MasterdataIntegrationTest {
 
 	private MachineType machineType;
 	private MachineTypeDto machineTypeDto;
+
+
 
 	private void machinetypeSetUp() {
 		mapper = new ObjectMapper();
@@ -1586,151 +1651,7 @@ public class MasterdataIntegrationTest {
 
 	}
 
-	// -------RegistrationCenter mapping-------------------------
-
-	@Test
-	@WithUserDetails("global-admin")
-	public void mapRegistrationCenterAndDeviceTest() throws Exception {
-		RequestWrapper<RegistrationCenterDeviceDto> requestDto = new RequestWrapper<>();
-		requestDto.setId("mosip.match.regcentr.deviceid");
-		requestDto.setVersion("1.0.0");
-		requestDto.setRequest(registrationCenterDeviceDto);
-		String content = mapper.writeValueAsString(requestDto);
-		when(registrationCenterDeviceRepository.create(Mockito.any())).thenReturn(registrationCenterDevice);
-		when(registrationCenterDeviceHistoryRepository.create(Mockito.any()))
-				.thenReturn(registrationCenterDeviceHistory);
-
-		mockMvc.perform(post("/registrationcenterdevice").contentType(MediaType.APPLICATION_JSON).content(content))
-				.andExpect(status().isOk());
-	}
-
-	@Test
-	@WithUserDetails("global-admin")
-	public void mapRegistrationCenterAndDeviceDataAccessLayerExceptionTest() throws Exception {
-		RequestWrapper<RegistrationCenterDeviceDto> requestDto = new RequestWrapper<>();
-		requestDto.setId("mosip.match.regcentr.deviceid");
-		requestDto.setVersion("1.0.0");
-		requestDto.setRequest(registrationCenterDeviceDto);
-		String content = mapper.writeValueAsString(requestDto);
-		when(registrationCenterDeviceRepository.create(Mockito.any())).thenThrow(DataAccessLayerException.class);
-		when(registrationCenterDeviceHistoryRepository.create(Mockito.any()))
-				.thenReturn(registrationCenterDeviceHistory);
-
-		mockMvc.perform(post("/registrationcenterdevice").contentType(MediaType.APPLICATION_JSON).content(content))
-				.andExpect(status().isInternalServerError());
-
-	}
-
-	@Test
-	@WithUserDetails("global-admin")
-	public void mapRegistrationCenterAndDeviceBadRequestTest() throws Exception {
-		RequestWrapper<RegistrationCenterDeviceDto> requestDto = new RequestWrapper<>();
-		requestDto.setId("mosip.match.regcentr.deviceid");
-		requestDto.setVersion("1.0.0");
-		String content = mapper.writeValueAsString(requestDto);
-		mockMvc.perform(post("/registrationcenterdevice").contentType(MediaType.APPLICATION_JSON).content(content))
-				.andExpect(status().isOk());
-
-	}
-
-	@Test
-	@WithUserDetails("global-admin")
-	public void deleteRegistrationCenterAndDeviceMappingTest() throws Exception {
-		when(registrationCenterDeviceRepository.findAllNondeletedMappings(Mockito.any()))
-				.thenReturn(Optional.of(registrationCenterDevice));
-		when(registrationCenterDeviceHistoryRepository.create(Mockito.any()))
-				.thenReturn(registrationCenterDeviceHistory);
-		when(registrationCenterDeviceRepository.update(Mockito.any())).thenReturn(registrationCenterDevice);
-		mockMvc.perform(delete("/registrationcenterdevice/RC001/DC001")).andExpect(status().isOk());
-	}
-
-	@Test
-	@WithUserDetails("global-admin")
-	public void deleteRegistrationCenterAndDeviceMappingDataNotFoundExceptionTest() throws Exception {
-		when(registrationCenterDeviceRepository.findAllNondeletedMappings(Mockito.any())).thenReturn(Optional.empty());
-		mockMvc.perform(delete("/registrationcenterdevice/RC001/DC001")).andExpect(status().isOk());
-	}
-
-	@Test
-	@WithUserDetails("global-admin")
-	public void deleteRegistrationCenterAndDeviceMappingDataAccessLayerExceptionTest() throws Exception {
-		when(registrationCenterDeviceRepository.findAllNondeletedMappings(Mockito.any()))
-				.thenReturn(Optional.of(registrationCenterDevice));
-		when(registrationCenterDeviceHistoryRepository.create(Mockito.any()))
-				.thenThrow(new DataAccessLayerException("errorCode", "errorMessage", null));
-		mockMvc.perform(delete("/registrationcenterdevice/RC001/DC001")).andExpect(status().isInternalServerError());
-	}
-
-	// -------RegistrationCenterMachine mapping-------------------------
-
-	@Test
-	@WithUserDetails("global-admin")
-	public void mapRegistrationCenterAndMachineTest() throws Exception {
-		RequestWrapper<RegistrationCenterMachineDto> requestDto = new RequestWrapper<>();
-		requestDto.setId("mosip.match.regcentr.machineid");
-		requestDto.setVersion("1.0.0");
-		requestDto.setRequest(registrationCenterMachineDto);
-		String content = mapper.writeValueAsString(requestDto);
-		when(registrationCenterMachineRepository.create(Mockito.any())).thenReturn(registrationCenterMachine);
-		when(registrationCenterMachineHistoryRepository.create(Mockito.any()))
-				.thenReturn(registrationCenterMachineHistory);
-		mockMvc.perform(post("/registrationcentermachine").contentType(MediaType.APPLICATION_JSON).content(content))
-				.andExpect(status().isOk());
-	}
-
-	@Test
-	@WithUserDetails("global-admin")
-	public void mapRegistrationCenterAndMachineDataAccessLayerExceptionTest() throws Exception {
-		RequestWrapper<RegistrationCenterMachineDto> requestDto = new RequestWrapper<>();
-		requestDto.setId("mosip.match.regcentr.machineid");
-		requestDto.setVersion("1.0.0");
-		requestDto.setRequest(registrationCenterMachineDto);
-		String content = mapper.writeValueAsString(requestDto);
-		when(registrationCenterMachineRepository.create(Mockito.any())).thenThrow(DataAccessLayerException.class);
-		when(registrationCenterMachineHistoryRepository.create(Mockito.any()))
-				.thenReturn(registrationCenterMachineHistory);
-		mockMvc.perform(post("/registrationcentermachine").contentType(MediaType.APPLICATION_JSON).content(content))
-				.andExpect(status().isInternalServerError());
-	}
-
-	@Test
-	@WithUserDetails("global-admin")
-	public void mapRegistrationCenterAndMachineBadRequestTest() throws Exception {
-		RequestWrapper<RegistrationCenterMachineDto> requestDto = new RequestWrapper<>();
-		requestDto.setId("mosip.match.regcentr.machineid");
-		requestDto.setVersion("1.0.0");
-		String content = mapper.writeValueAsString(requestDto);
-		mockMvc.perform(post("/registrationcentermachine").contentType(MediaType.APPLICATION_JSON).content(content))
-				.andExpect(status().isOk());
-	}
-
-	@Test
-	@WithUserDetails("global-admin")
-	public void deleteRegistrationCenterAndMachineMappingTest() throws Exception {
-		when(registrationCenterMachineRepository.findAllNondeletedMappings(Mockito.any()))
-				.thenReturn(Optional.of(registrationCenterMachine));
-		when(registrationCenterMachineHistoryRepository.create(Mockito.any()))
-				.thenReturn(registrationCenterMachineHistory);
-		when(registrationCenterMachineRepository.update(Mockito.any())).thenReturn(registrationCenterMachine);
-		mockMvc.perform(delete("/registrationcentermachine/RC001/MC001")).andExpect(status().isOk());
-	}
-
-	@Test
-	@WithUserDetails("global-admin")
-	public void deleteRegistrationCenterAndMachineMappingDataNotFoundExceptionTest() throws Exception {
-		when(registrationCenterMachineRepository.findAllNondeletedMappings(Mockito.any())).thenReturn(Optional.empty());
-		mockMvc.perform(delete("/registrationcentermachine/RC001/MC001")).andExpect(status().isOk());
-	}
-
-	@Test
-	@WithUserDetails("global-admin")
-	public void deleteRegistrationCenterAndMachineMappingDataAccessLayerExceptionTest() throws Exception {
-		when(registrationCenterMachineRepository.findAllNondeletedMappings(Mockito.any()))
-				.thenReturn(Optional.of(registrationCenterMachine));
-		when(registrationCenterMachineHistoryRepository.create(Mockito.any()))
-				.thenThrow(new DataAccessLayerException("errorCode", "errorMessage", null));
-		mockMvc.perform(delete("/registrationcentermachine/RC001/MC001")).andExpect(status().isInternalServerError());
-	}
+	
 
 	// -------RegistrationCentermachineDevice mapping-------------------------
 
@@ -2949,12 +2870,20 @@ public class MasterdataIntegrationTest {
 	@Test
 	@WithUserDetails("global-admin")
 	public void saveTitleTest() throws Exception {
-		String content = "{\n" + "  \"id\": \"string\",\n" + "  \"metadata\": {},\n" + "  \"request\": {\n"
-				+ "    \"code\": \"43\",\n" + "    \"isActive\": true,\n" + "    \"langCode\": \"eng\",\n"
-				+ "    \"titleDescription\": \"string\",\n" + "    \"titleName\": \"string\"\n" + "  },\n"
-				+ "  \"requesttime\": \"2018-12-17T09:10:25.829Z\",\n" + "  \"version\": \"string\"\n" + "}";
+		RequestWrapper<TitleDto> requestDto = new RequestWrapper<>();
+		requestDto.setId("mosip.title.update");
+		requestDto.setVersion("1.0");
+		TitleDto titleDto = new TitleDto();
+		titleDto.setCode("001");
+		titleDto.setTitleDescription("mosip");
+		titleDto.setIsActive(true);
+		titleDto.setLangCode("eng");
+		titleDto.setTitleName("mosip");
+		requestDto.setRequest(titleDto);
+		String contentJson = mapper.writeValueAsString(requestDto);
 		when(titleRepository.create(Mockito.any())).thenReturn(title);
-		mockMvc.perform(post("/title").contentType(MediaType.APPLICATION_JSON).content(content))
+		when(masterdataCreationUtil.createMasterData(Title.class, titleDto)).thenReturn(titleDto);
+		mockMvc.perform(post("/title").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isOk());
 	}
 
@@ -2969,14 +2898,21 @@ public class MasterdataIntegrationTest {
 	@Test
 	@WithUserDetails("global-admin")
 	public void saveTitleExceptionTest() throws Exception {
-
-		String content = "{\n" + "  \"id\": \"string\",\n" + "  \"metadata\": {},\n" + "  \"request\": {\n"
-				+ "    \"code\": \"43\",\n" + "    \"isActive\": true,\n" + "    \"langCode\": \"eng\",\n"
-				+ "    \"titleDescription\": \"string\",\n" + "    \"titleName\": \"string\"\n" + "  },\n"
-				+ "  \"requesttime\": \"2018-12-17T09:10:25.829Z\",\n" + "  \"version\": \"string\"\n" + "}";
+		RequestWrapper<TitleDto> requestDto = new RequestWrapper<>();
+		requestDto.setId("mosip.title.update");
+		requestDto.setVersion("1.0");
+		TitleDto titleDto = new TitleDto();
+		titleDto.setCode("001");
+		titleDto.setTitleDescription("mosip");
+		titleDto.setIsActive(true);
+		titleDto.setLangCode("eng");
+		titleDto.setTitleName("mosip");
+		requestDto.setRequest(titleDto);
+		String contentJson = mapper.writeValueAsString(requestDto);
 		when(titleRepository.create(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot execute ", null));
-		mockMvc.perform(post("/title").contentType(MediaType.APPLICATION_JSON).content(content))
+		when(masterdataCreationUtil.createMasterData(Title.class, titleDto)).thenReturn(titleDto);
+		mockMvc.perform(post("/title").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isInternalServerError());
 
 	}
@@ -2996,6 +2932,7 @@ public class MasterdataIntegrationTest {
 		requestDto.setRequest(titleDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
 		when(titleRepository.findById(Mockito.any(), Mockito.any())).thenReturn(title);
+		when(masterdataCreationUtil.updateMasterData(Title.class, titleDto)).thenReturn(titleDto);
 		mockMvc.perform(put("/title").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isOk());
 
@@ -3088,6 +3025,7 @@ public class MasterdataIntegrationTest {
 		requestDto.setRequest(genderDto);
 		String content = mapper.writeValueAsString(requestDto);
 		when(genderTypeRepository.create(Mockito.any())).thenReturn(genderType);
+		when(masterdataCreationUtil.createMasterData(Gender.class, genderDto)).thenReturn(genderDto);
 		mockMvc.perform(post("/gendertypes").contentType(MediaType.APPLICATION_JSON).content(content))
 				.andExpect(status().isOk());
 	}
@@ -3101,6 +3039,7 @@ public class MasterdataIntegrationTest {
 		genderDto.setLangCode("akk");
 		requestDto.setRequest(genderDto);
 		String content = mapper.writeValueAsString(requestDto);
+		when(masterdataCreationUtil.createMasterData(Gender.class, genderDto)).thenReturn(genderDto);
 		mockMvc.perform(post("/gendertypes").contentType(MediaType.APPLICATION_JSON).content(content))
 				.andExpect(status().isOk());
 	}
@@ -3116,6 +3055,7 @@ public class MasterdataIntegrationTest {
 		String content = mapper.writeValueAsString(requestDto);
 		when(genderTypeRepository.create(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot execute ", null));
+		when(masterdataCreationUtil.createMasterData(Gender.class, genderDto)).thenReturn(genderDto);
 		mockMvc.perform(post("/gendertypes").contentType(MediaType.APPLICATION_JSON).content(content))
 				.andExpect(status().isInternalServerError());
 
@@ -3132,6 +3072,7 @@ public class MasterdataIntegrationTest {
 		String contentJson = mapper.writeValueAsString(requestDto);
 		when(genderTypeRepository.updateGenderType(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(),
 				Mockito.any(), Mockito.any())).thenReturn(1);
+		when(masterdataCreationUtil.updateMasterData(Gender.class, genderTypeDto)).thenReturn(genderTypeDto);
 		mockMvc.perform(put("/gendertypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isOk());
 
@@ -3148,6 +3089,7 @@ public class MasterdataIntegrationTest {
 		String contentJson = mapper.writeValueAsString(requestDto);
 		when(genderTypeRepository.updateGenderType(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(),
 				Mockito.any(), Mockito.any())).thenReturn(0);
+		when(masterdataCreationUtil.updateMasterData(Gender.class, genderTypeDto)).thenReturn(genderTypeDto);
 		mockMvc.perform(put("/gendertypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isOk());
 
@@ -3165,6 +3107,7 @@ public class MasterdataIntegrationTest {
 		when(genderTypeRepository.updateGenderType(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(),
 				Mockito.any(), Mockito.any()))
 						.thenThrow(new DataAccessLayerException("", "cannot execute statement", null));
+		when(masterdataCreationUtil.updateMasterData(Gender.class, genderTypeDto)).thenReturn(genderTypeDto);
 		mockMvc.perform(put("/gendertypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isInternalServerError());
 	}
@@ -3207,6 +3150,9 @@ public class MasterdataIntegrationTest {
 		requestDto.setVersion("1.0.0");
 		requestDto.setRequest(biometricAttributeDto);
 		String content = mapper.writeValueAsString(requestDto);
+		when(masterdataCreationUtil.createMasterData(BiometricAttribute.class, biometricAttributeDto))
+				.thenReturn(biometricAttributeDto);
+
 		Mockito.when(biometricAttributeRepository.create(Mockito.any())).thenReturn(biometricAttribute);
 		mockMvc.perform(post("/biometricattributes").contentType(MediaType.APPLICATION_JSON).content(content))
 				.andExpect(status().isOk());
@@ -3222,6 +3168,8 @@ public class MasterdataIntegrationTest {
 		String content = mapper.writeValueAsString(requestDto);
 		when(biometricAttributeRepository.create(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot insert", null));
+		when(masterdataCreationUtil.createMasterData(BiometricAttribute.class, biometricAttributeDto))
+				.thenReturn(biometricAttributeDto);
 		mockMvc.perform(post("/biometricattributes").contentType(MediaType.APPLICATION_JSON).content(content))
 				.andExpect(status().isInternalServerError());
 	}
@@ -3235,6 +3183,8 @@ public class MasterdataIntegrationTest {
 		biometricAttributeDto.setLangCode("akk");
 		requestDto.setRequest(biometricAttributeDto);
 		String content = mapper.writeValueAsString(requestDto);
+		when(masterdataCreationUtil.createMasterData(BiometricAttribute.class, biometricAttributeDto))
+				.thenReturn(biometricAttributeDto);
 		mockMvc.perform(post("/biometricattributes").contentType(MediaType.APPLICATION_JSON).content(content))
 				.andExpect(status().isOk());
 	}
@@ -3249,6 +3199,7 @@ public class MasterdataIntegrationTest {
 		requestDto.setRequest(templateDto);
 		String content = mapper.writeValueAsString(requestDto);
 		Mockito.when(templateRepository.create(Mockito.any())).thenReturn(template);
+		when(masterdataCreationUtil.createMasterData(Template.class, templateDto)).thenReturn(templateDto);
 		mockMvc.perform(post("/templates").contentType(MediaType.APPLICATION_JSON).content(content))
 				.andExpect(status().isOk());
 	}
@@ -3262,6 +3213,7 @@ public class MasterdataIntegrationTest {
 		templateDto.setLangCode("akk");
 		requestDto.setRequest(templateDto);
 		String content = mapper.writeValueAsString(requestDto);
+		when(masterdataCreationUtil.createMasterData(Template.class, templateDto)).thenReturn(templateDto);
 		mockMvc.perform(post("/templates").contentType(MediaType.APPLICATION_JSON).content(content))
 				.andExpect(status().isOk());
 	}
@@ -3276,6 +3228,7 @@ public class MasterdataIntegrationTest {
 		String content = mapper.writeValueAsString(requestDto);
 		when(templateRepository.create(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot insert", null));
+		when(masterdataCreationUtil.createMasterData(Template.class, templateDto)).thenReturn(templateDto);
 		mockMvc.perform(post("/templates").contentType(MediaType.APPLICATION_JSON).content(content))
 				.andExpect(status().isInternalServerError());
 	}
@@ -3290,6 +3243,7 @@ public class MasterdataIntegrationTest {
 		requestDto.setRequest(templateTypeDto);
 		String content = mapper.writeValueAsString(requestDto);
 		Mockito.when(templateTypeRepository.create(Mockito.any())).thenReturn(templateType);
+		when(masterdataCreationUtil.createMasterData(TemplateType.class, templateTypeDto)).thenReturn(templateTypeDto);
 		mockMvc.perform(post("/templatetypes").contentType(MediaType.APPLICATION_JSON).content(content))
 				.andExpect(status().isOk());
 	}
@@ -3304,6 +3258,7 @@ public class MasterdataIntegrationTest {
 		String content = mapper.writeValueAsString(requestDto);
 		when(templateTypeRepository.create(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot insert", null));
+		when(masterdataCreationUtil.createMasterData(TemplateType.class, templateTypeDto)).thenReturn(templateTypeDto);
 		mockMvc.perform(post("/templatetypes").contentType(MediaType.APPLICATION_JSON).content(content))
 				.andExpect(status().isInternalServerError());
 	}
@@ -3317,6 +3272,7 @@ public class MasterdataIntegrationTest {
 		templateTypeDto.setLangCode("akk");
 		requestDto.setRequest(templateTypeDto);
 		String content = mapper.writeValueAsString(requestDto);
+		when(masterdataCreationUtil.createMasterData(TemplateType.class, templateTypeDto)).thenReturn(templateTypeDto);
 		mockMvc.perform(post("/templatetypes").contentType(MediaType.APPLICATION_JSON).content(content))
 				.andExpect(status().isOk());
 	}
@@ -3385,7 +3341,10 @@ public class MasterdataIntegrationTest {
 		requestDto.setRequest(deviceSpecificationDto);
 
 		String deviceSpecificationJson = mapper.writeValueAsString(requestDto);
-
+		when(deviceTypeRepository.findDeviceTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+				.thenReturn(deviceType);
+		when(masterdataCreationUtil.createMasterData(DeviceSpecification.class, deviceSpecificationDto))
+				.thenReturn(deviceSpecificationDto);
 		when(deviceSpecificationRepository.create(Mockito.any())).thenReturn(deviceSpecification);
 		mockMvc.perform(
 				post("/devicespecifications").contentType(MediaType.APPLICATION_JSON).content(deviceSpecificationJson))
@@ -3415,9 +3374,11 @@ public class MasterdataIntegrationTest {
 		requestDto.setId("mosip.match.regcentr.DeviceSpecificationcode");
 		requestDto.setVersion("1.0.0");
 		requestDto.setRequest(deviceSpecificationDto);
-
+		when(deviceTypeRepository.findDeviceTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+				.thenReturn(deviceType);
 		String DeviceSpecificationJson = mapper.writeValueAsString(requestDto);
-
+		when(deviceTypeRepository.findDeviceTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+				.thenReturn(deviceType);
 		Mockito.when(deviceSpecificationRepository.create(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot insert", null));
 		mockMvc.perform(MockMvcRequestBuilders.post("/devicespecifications").contentType(MediaType.APPLICATION_JSON)
@@ -3452,10 +3413,47 @@ public class MasterdataIntegrationTest {
 		requestDto.setRequest(deviceTypeDto);
 
 		String DeviceTypeJson = mapper.writeValueAsString(requestDto);
-
+		when(masterdataCreationUtil.createMasterData(DeviceType.class, deviceTypeDto)).thenReturn(deviceTypeDto);
 		Mockito.when(deviceTypeRepository.create(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot insert", null));
 		mockMvc.perform(MockMvcRequestBuilders.post("/devicetypes").contentType(MediaType.APPLICATION_JSON)
+				.content(DeviceTypeJson)).andExpect(status().isInternalServerError());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void updateDeviceTypeTest() throws Exception {
+
+		RequestWrapper<DeviceTypeDto> requestDto = new RequestWrapper<>();
+		requestDto.setId("mosip.match.regcentr.Devicetypecode");
+		requestDto.setVersion("1.0.0");
+		requestDto.setRequest(deviceTypeDto);
+
+		String DeviceTypeJson = mapper.writeValueAsString(requestDto);
+		when(masterdataCreationUtil.updateMasterData(DeviceType.class, deviceTypeDto)).thenReturn(deviceTypeDto);
+		when(deviceTypeRepository.update(Mockito.any())).thenReturn(deviceType);
+		when(deviceTypeRepository.findDeviceTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+				.thenReturn(deviceType);
+		mockMvc.perform(put("/devicetypes").contentType(MediaType.APPLICATION_JSON).content(DeviceTypeJson))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void updateDeviceTypeExceptionTest() throws Exception {
+
+		RequestWrapper<DeviceTypeDto> requestDto = new RequestWrapper<>();
+		requestDto.setId("mosip.match.regcentr.Devicetypecode");
+		requestDto.setVersion("1.0.0");
+		requestDto.setRequest(deviceTypeDto);
+
+		String DeviceTypeJson = mapper.writeValueAsString(requestDto);
+		when(masterdataCreationUtil.updateMasterData(DeviceType.class, deviceTypeDto)).thenReturn(deviceTypeDto);
+		when(deviceTypeRepository.findDeviceTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+				.thenReturn(deviceType);
+		Mockito.when(deviceTypeRepository.update(Mockito.any()))
+				.thenThrow(new DataAccessLayerException("", "cannot update", null));
+		mockMvc.perform(MockMvcRequestBuilders.put("/devicetypes").contentType(MediaType.APPLICATION_JSON)
 				.content(DeviceTypeJson)).andExpect(status().isInternalServerError());
 	}
 
@@ -3471,7 +3469,10 @@ public class MasterdataIntegrationTest {
 		requestDto.setRequest(machineSpecificationDto);
 
 		String machineSpecificationJson = mapper.writeValueAsString(requestDto);
-
+		when(masterdataCreationUtil.createMasterData(MachineSpecification.class, machineSpecificationDto))
+				.thenReturn(machineSpecificationDto);
+		when(machineTypeRepository.findMachineTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+				.thenReturn(machineType);
 		when(machineSpecificationRepository.create(Mockito.any())).thenReturn(machineSpecification);
 		mockMvc.perform(post("/machinespecifications").contentType(MediaType.APPLICATION_JSON)
 				.content(machineSpecificationJson)).andExpect(status().isOk());
@@ -3508,7 +3509,8 @@ public class MasterdataIntegrationTest {
 		requestDto.setRequest(machineSpecificationDto);
 
 		String machineSpecificationJson = mapper.writeValueAsString(requestDto);
-
+		when(machineTypeRepository.findMachineTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+				.thenReturn(machineType);
 		Mockito.when(machineSpecificationRepository.create(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot insert", null));
 		mockMvc.perform(MockMvcRequestBuilders.post("/machinespecifications").contentType(MediaType.APPLICATION_JSON)
@@ -3539,10 +3541,13 @@ public class MasterdataIntegrationTest {
 		requestDto.setVersion("1.0.0");
 		requestDto.setRequest(machineSpecificationDto);
 		String content = mapper.writeValueAsString(requestDto);
+		when(machineTypeRepository.findMachineTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+		.thenReturn(machineType);
 		when(machineSpecificationRepository.findByIdAndLangCodeIsDeletedFalseorIsDeletedIsNull(Mockito.any(),
 				Mockito.any())).thenReturn(machineSpecification);
 		Mockito.when(machineSpecificationRepository.update(Mockito.any())).thenReturn(machineSpecification);
-
+		when(masterdataCreationUtil.updateMasterData(MachineSpecification.class, machineSpecificationDto))
+				.thenReturn(machineSpecificationDto);
 		mockMvc.perform(MockMvcRequestBuilders.put("/machinespecifications").contentType(MediaType.APPLICATION_JSON)
 				.content(content)).andExpect(status().isOk());
 
@@ -3558,6 +3563,8 @@ public class MasterdataIntegrationTest {
 		machineSpecificationDto.setLangCode("xxx");
 		requestDto.setRequest(machineSpecificationDto);
 		String content = mapper.writeValueAsString(requestDto);
+		when(machineTypeRepository.findMachineTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+		.thenReturn(machineType);
 		when(machineSpecificationRepository.findByIdAndLangCodeIsDeletedFalseorIsDeletedIsNull(Mockito.any(),
 				Mockito.any())).thenReturn(machineSpecification);
 		Mockito.when(machineSpecificationRepository.update(Mockito.any())).thenReturn(machineSpecification);
@@ -3576,6 +3583,8 @@ public class MasterdataIntegrationTest {
 		requestDto.setVersion("1.0.0");
 		requestDto.setRequest(machineSpecificationDto);
 		String content = mapper.writeValueAsString(requestDto);
+		when(machineTypeRepository.findMachineTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+		.thenReturn(machineType);
 		when(machineSpecificationRepository.findByIdAndLangCodeIsDeletedFalseorIsDeletedIsNull(Mockito.any(),
 				Mockito.any())).thenReturn(null);
 
@@ -3593,6 +3602,8 @@ public class MasterdataIntegrationTest {
 		requestDto.setVersion("1.0.0");
 		requestDto.setRequest(machineSpecificationDto);
 		String content = mapper.writeValueAsString(requestDto);
+		when(machineTypeRepository.findMachineTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+		.thenReturn(machineType);
 		when(machineSpecificationRepository.findByIdAndLangCodeIsDeletedFalseorIsDeletedIsNull(Mockito.any(),
 				Mockito.any())).thenThrow(DataAccessLayerException.class);
 
@@ -3801,6 +3812,7 @@ public class MasterdataIntegrationTest {
 
 		String machineTypeJson = mapper.writeValueAsString(requestDto);
 		when(machineTypeRepository.create(Mockito.any())).thenReturn(machineType);
+		when(masterdataCreationUtil.createMasterData(MachineType.class, machineTypeDto)).thenReturn(machineTypeDto);
 		mockMvc.perform(post("/machinetypes").contentType(MediaType.APPLICATION_JSON).content(machineTypeJson))
 				.andExpect(status().isOk());
 	}
@@ -3815,6 +3827,7 @@ public class MasterdataIntegrationTest {
 		requestDto.setRequest(machineTypeDto);
 
 		String machineTypeJson = mapper.writeValueAsString(requestDto);
+		when(masterdataCreationUtil.createMasterData(MachineType.class, machineTypeDto)).thenReturn(machineTypeDto);
 		mockMvc.perform(post("/machinetypes").contentType(MediaType.APPLICATION_JSON).content(machineTypeJson))
 				.andExpect(status().isOk());
 	}
@@ -3831,10 +3844,45 @@ public class MasterdataIntegrationTest {
 
 		Mockito.when(machineTypeRepository.create(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot insert", null));
+		when(masterdataCreationUtil.createMasterData(MachineType.class, machineTypeDto)).thenReturn(machineTypeDto);
 		mockMvc.perform(MockMvcRequestBuilders.post("/machinetypes").contentType(MediaType.APPLICATION_JSON)
 				.content(machineTypeJson)).andExpect(status().isInternalServerError());
 	}
 
+	@Test
+	@WithUserDetails("global-admin")
+	public void updateMachineTypeTest() throws Exception {
+		RequestWrapper<MachineTypeDto> requestDto = new RequestWrapper<>();
+		requestDto.setId("mosip.match.regcentr.machinetypecode");
+		requestDto.setVersion("1.0.0");
+		requestDto.setRequest(machineTypeDto);
+
+		String machineTypeJson = mapper.writeValueAsString(requestDto);
+		when(machineTypeRepository.findMachineTypeByCodeAndByLangCode(Mockito.anyString(), Mockito.anyString()))
+				.thenReturn(machineType);
+		when(machineTypeRepository.update(Mockito.any())).thenReturn(machineType);
+		when(masterdataCreationUtil.updateMasterData(MachineType.class, machineTypeDto)).thenReturn(machineTypeDto);
+		mockMvc.perform(put("/machinetypes").contentType(MediaType.APPLICATION_JSON).content(machineTypeJson))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("global-admin")
+	public void updateMachineTypeExceptionTest() throws Exception {
+		RequestWrapper<MachineTypeDto> requestDto = new RequestWrapper<>();
+		requestDto.setId("mosip.match.regcentr.machinetypecode");
+		requestDto.setVersion("1.0.0");
+		requestDto.setRequest(machineTypeDto);
+
+		String machineTypeJson = mapper.writeValueAsString(requestDto);
+		when(machineTypeRepository.findMachineTypeByCodeAndByLangCode(Mockito.anyString(), Mockito.anyString()))
+				.thenReturn(machineType);
+		Mockito.when(machineTypeRepository.update(Mockito.any()))
+				.thenThrow(new DataAccessLayerException("", "cannot update", null));
+		when(masterdataCreationUtil.updateMasterData(MachineType.class, machineTypeDto)).thenReturn(machineTypeDto);
+		mockMvc.perform(MockMvcRequestBuilders.put("/machinetypes").contentType(MediaType.APPLICATION_JSON)
+				.content(machineTypeJson)).andExpect(status().isInternalServerError());
+	}
 	// --------------------------------DeviceTest-------------------------------------------------
 	@Test
 	@WithUserDetails("zonal-admin")
@@ -4147,6 +4195,8 @@ public class MasterdataIntegrationTest {
 		registrationCenterTypeDto.setName("testname");
 		requestDto.setRequest(registrationCenterTypeDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
+		when(masterdataCreationUtil.createMasterData(RegistrationCenterType.class, registrationCenterTypeDto))
+				.thenReturn(registrationCenterTypeDto);
 		when(registrationCenterTypeRepository.create(Mockito.any())).thenReturn(regCenterType);
 		mockMvc.perform(post("/registrationcentertypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isOk());
@@ -4167,6 +4217,8 @@ public class MasterdataIntegrationTest {
 		requestDto.setRequest(registrationCenterTypeDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
 		when(registrationCenterTypeRepository.create(Mockito.any())).thenReturn(regCenterType);
+		when(masterdataCreationUtil.createMasterData(RegistrationCenterType.class, registrationCenterTypeDto))
+				.thenReturn(registrationCenterTypeDto);
 		mockMvc.perform(post("/registrationcentertypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isOk());
 	}
@@ -4187,6 +4239,8 @@ public class MasterdataIntegrationTest {
 		String contentJson = mapper.writeValueAsString(requestDto);
 		when(registrationCenterTypeRepository.create(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot execute statement", null));
+		when(masterdataCreationUtil.createMasterData(RegistrationCenterType.class, registrationCenterTypeDto))
+				.thenReturn(registrationCenterTypeDto);
 		mockMvc.perform(post("/registrationcentertypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isInternalServerError());
 	}
@@ -4497,7 +4551,8 @@ public class MasterdataIntegrationTest {
 		documentCategoryDto.setName("POI");
 		requestDto.setRequest(documentCategoryDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
-
+		when(masterdataCreationUtil.createMasterData(DocumentCategory.class, documentCategoryDto))
+				.thenReturn(documentCategoryDto);
 		when(documentCategoryRepository.create(Mockito.any())).thenReturn(category);
 		mockMvc.perform(post("/documentcategories").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isOk());
@@ -4558,8 +4613,10 @@ public class MasterdataIntegrationTest {
 		documentCategoryDto.setName("POI");
 		requestDto.setRequest(documentCategoryDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
-		when(documentCategoryRepository.findByCodeAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.any(),
+		when(documentCategoryRepository.findByCodeAndLangCode(Mockito.any(),
 				Mockito.any())).thenReturn(category);
+		when(masterdataCreationUtil.updateMasterData(DocumentCategory.class, documentCategoryDto))
+				.thenReturn(documentCategoryDto);
 		mockMvc.perform(put("/documentcategories").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isOk());
 
@@ -4579,8 +4636,10 @@ public class MasterdataIntegrationTest {
 		documentCategoryDto.setName("POI");
 		requestDto.setRequest(documentCategoryDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
-		when(documentCategoryRepository.findByCodeAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.any(),
+		when(documentCategoryRepository.findByCodeAndLangCode(Mockito.any(),
 				Mockito.any())).thenReturn(null);
+		when(masterdataCreationUtil.updateMasterData(DocumentCategory.class, documentCategoryDto))
+				.thenReturn(documentCategoryDto);
 		mockMvc.perform(put("/documentcategories").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isOk());
 
@@ -4600,10 +4659,12 @@ public class MasterdataIntegrationTest {
 		documentCategoryDto.setName("POI");
 		requestDto.setRequest(documentCategoryDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
-		when(documentCategoryRepository.findByCodeAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.any(),
+		when(documentCategoryRepository.findByCodeAndLangCode(Mockito.any(),
 				Mockito.any())).thenReturn(category);
 		when(documentCategoryRepository.update(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot execute statement", null));
+		when(masterdataCreationUtil.updateMasterData(DocumentCategory.class, documentCategoryDto))
+				.thenReturn(documentCategoryDto);
 		mockMvc.perform(put("/documentcategories").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isInternalServerError());
 	}
@@ -4763,8 +4824,12 @@ public class MasterdataIntegrationTest {
 		requestDto.setVersion("1.0");
 		requestDto.setRequest(deviceSpecificationDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
+		when(deviceTypeRepository.findDeviceTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+				.thenReturn(deviceType);
 		when(deviceSpecificationRepository.findByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.any(),
 				Mockito.any())).thenReturn(deviceSpecification);
+		when(masterdataCreationUtil.updateMasterData(DeviceSpecification.class, deviceSpecificationDto))
+				.thenReturn(deviceSpecificationDto);
 		when(deviceSpecificationRepository.update(Mockito.any())).thenReturn(deviceSpecification);
 		mockMvc.perform(put("/devicespecifications").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isOk());
@@ -4780,6 +4845,8 @@ public class MasterdataIntegrationTest {
 		deviceSpecificationDto.setLangCode("akk");
 		requestDto.setRequest(deviceSpecificationDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
+		when(masterdataCreationUtil.updateMasterData(DeviceSpecification.class, deviceSpecificationDto))
+				.thenReturn(deviceSpecificationDto);
 		mockMvc.perform(put("/devicespecifications").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isOk());
 
@@ -4794,8 +4861,12 @@ public class MasterdataIntegrationTest {
 
 		requestDto.setRequest(deviceSpecificationDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
+		when(deviceTypeRepository.findDeviceTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+				.thenReturn(deviceType);
 		when(deviceSpecificationRepository.findByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.any(),
 				Mockito.any())).thenReturn(null);
+		when(masterdataCreationUtil.updateMasterData(DeviceSpecification.class, deviceSpecificationDto))
+				.thenReturn(deviceSpecificationDto);
 		mockMvc.perform(put("/devicespecifications").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isOk());
 
@@ -4809,10 +4880,15 @@ public class MasterdataIntegrationTest {
 		requestDto.setVersion("1.0");
 		requestDto.setRequest(deviceSpecificationDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
+
+		when(deviceTypeRepository.findDeviceTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
+				.thenReturn(deviceType);
 		when(deviceSpecificationRepository.findByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.any(),
 				Mockito.any())).thenReturn(deviceSpecification);
 		when(deviceSpecificationRepository.update(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot execute statement", null));
+		when(masterdataCreationUtil.updateMasterData(DeviceSpecification.class, deviceSpecificationDto))
+				.thenReturn(deviceSpecificationDto);
 		mockMvc.perform(put("/devicespecifications").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isInternalServerError());
 	}
@@ -4823,8 +4899,6 @@ public class MasterdataIntegrationTest {
 
 		when(deviceSpecificationRepository.findByIdAndIsDeletedFalseorIsDeletedIsNull(Mockito.any()))
 				.thenReturn(deviceSpecList);
-		when(deviceSpecificationRepository.findByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.any(),
-				Mockito.any())).thenReturn(deviceSpecification);
 		when(deviceRepository.findDeviceByDeviceSpecIdAndIsDeletedFalseorIsDeletedIsNull(deviceSpecification.getId()))
 				.thenReturn(new ArrayList<Device>());
 		when(deviceSpecificationRepository.update(Mockito.any())).thenReturn(deviceSpecification);
@@ -4879,6 +4953,7 @@ public class MasterdataIntegrationTest {
 		when(templateRepository.findTemplateByIDAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.any(),
 				Mockito.any())).thenReturn(template);
 		when(templateRepository.update(Mockito.any())).thenReturn(template);
+		when(masterdataCreationUtil.updateMasterData(Template.class, templateDto)).thenReturn(templateDto);
 		mockMvc.perform(put("/templates").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isOk());
 	}
@@ -4965,6 +5040,8 @@ public class MasterdataIntegrationTest {
 				.findByCodeAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(templateFileFormat);
 		Mockito.when(templateFileFormatRepository.update(Mockito.any())).thenReturn(templateFileFormat);
+		when(masterdataCreationUtil.updateMasterData(TemplateFileFormat.class, templateFileFormatDto))
+				.thenReturn(templateFileFormatDto);
 		mockMvc.perform(MockMvcRequestBuilders.put("/templatefileformats").contentType(MediaType.APPLICATION_JSON)
 				.content(content)).andExpect(status().isOk());
 	}
@@ -5258,8 +5335,10 @@ public class MasterdataIntegrationTest {
 		registrationCenterType.setName("POI");
 		String contentJson = mapper.writeValueAsString(requestDto);
 
-		when(registrationCenterTypeRepository.findByCodeAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.any(),
+		when(registrationCenterTypeRepository.findByCodeAndLangCode(Mockito.any(),
 				Mockito.any())).thenReturn(registrationCenterType);
+		when(masterdataCreationUtil.updateMasterData(RegistrationCenterType.class, registrationCenterTypeDto))
+				.thenReturn(registrationCenterTypeDto);
 		when(registrationCenterTypeRepository.update(Mockito.any())).thenReturn(registrationCenterType);
 		mockMvc.perform(put("/registrationcentertypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isOk());
@@ -5283,8 +5362,9 @@ public class MasterdataIntegrationTest {
 		registrationCenterType.setDescr("TEST DESCR");
 		registrationCenterType.setName("POI");
 		String contentJson = mapper.writeValueAsString(requestDto);
-
-		when(registrationCenterTypeRepository.findByCodeAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.any(),
+		when(masterdataCreationUtil.updateMasterData(RegistrationCenterType.class, registrationCenterTypeDto))
+				.thenReturn(registrationCenterTypeDto);
+		when(registrationCenterTypeRepository.findByCodeAndLangCode(Mockito.any(),
 				Mockito.any())).thenReturn(registrationCenterType);
 		when(registrationCenterTypeRepository.update(Mockito.any())).thenReturn(registrationCenterType);
 		mockMvc.perform(put("/registrationcentertypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
@@ -5309,8 +5389,9 @@ public class MasterdataIntegrationTest {
 		registrationCenterType.setDescr("TEST DESCR");
 		registrationCenterType.setName("POI");
 		String contentJson = mapper.writeValueAsString(requestDto);
-
-		when(registrationCenterTypeRepository.findByCodeAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.any(),
+		when(masterdataCreationUtil.updateMasterData(RegistrationCenterType.class, registrationCenterTypeDto))
+				.thenReturn(registrationCenterTypeDto);
+		when(registrationCenterTypeRepository.findByCodeAndLangCode(Mockito.any(),
 				Mockito.any())).thenReturn(null);
 		when(registrationCenterTypeRepository.update(Mockito.any())).thenReturn(registrationCenterType);
 		mockMvc.perform(put("/registrationcentertypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
@@ -5336,10 +5417,12 @@ public class MasterdataIntegrationTest {
 		registrationCenterType.setDescr("TEST DESCR");
 		registrationCenterType.setName("POI");
 		String contentJson = mapper.writeValueAsString(requestDto);
-		when(registrationCenterTypeRepository.findByCodeAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.any(),
+		when(registrationCenterTypeRepository.findByCodeAndLangCode(Mockito.any(),
 				Mockito.any())).thenReturn(registrationCenterType);
 		when(registrationCenterTypeRepository.update(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot execute statement", null));
+		when(masterdataCreationUtil.updateMasterData(RegistrationCenterType.class, registrationCenterTypeDto))
+				.thenReturn(registrationCenterTypeDto);
 		mockMvc.perform(put("/registrationcentertypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isInternalServerError());
 	}
@@ -6371,7 +6454,7 @@ public class MasterdataIntegrationTest {
 		// device.setZoneCode("STH");
 		when(deviceRepository.findByIdAndLangCode(Mockito.anyString(), Mockito.anyString())).thenReturn(device);
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcenterdevice/map/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcenterdevice/map/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
@@ -6458,7 +6541,7 @@ public class MasterdataIntegrationTest {
 				.thenReturn(registrationCenterDeviceHistory);
 		when(registrationCenterRepository.update(Mockito.any())).thenReturn(registrationCenter);
 		when(repositoryCenterHistoryRepository.create(Mockito.any())).thenReturn(registrationCenterHistory);
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcenterdevice/map/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcenterdevice/map/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
@@ -6512,7 +6595,7 @@ public class MasterdataIntegrationTest {
 		when(registrationCenterDeviceHistoryRepository.create(Mockito.any()))
 				.thenReturn(registrationCenterDeviceHistory);
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcenterdevice/map/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcenterdevice/map/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
@@ -6541,7 +6624,7 @@ public class MasterdataIntegrationTest {
 		when(registrationCenterMachineHistoryRepository.create(Mockito.any()))
 				.thenReturn(registrationCenterMachineHistory);
 		when(registrationCenterRepository.update(Mockito.any())).thenReturn(registrationCenter);
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/unmap/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/unmap/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
@@ -6561,7 +6644,7 @@ public class MasterdataIntegrationTest {
 		machine.setZoneCode("JRD");
 		when(machineRepository.findMachineByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(machine);
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/unmap/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/unmap/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
@@ -6581,7 +6664,7 @@ public class MasterdataIntegrationTest {
 		machine.setZoneCode("JOD");
 		when(machineRepository.findMachineByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(machine);
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/unmap/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/unmap/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
@@ -6660,7 +6743,7 @@ public class MasterdataIntegrationTest {
 		registrationCenters.get(0).setNumberOfKiosks((short) 9);
 		when(zoneUtils.getUserZones()).thenReturn(getZones());
 		when(registrationCenterRepository.findByIdAndIsDeletedFalseOrNull(Mockito.anyString())).thenReturn(null);
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/unmap/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/unmap/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
@@ -6676,7 +6759,7 @@ public class MasterdataIntegrationTest {
 		when(machineRepository.findMachineByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(machine);
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/unmap/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/unmap/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -6692,7 +6775,7 @@ public class MasterdataIntegrationTest {
 		when(registrationCenterMachineRepository.findByRegIdAndMachineId(Mockito.anyString(), Mockito.anyString(),
 				Mockito.anyString())).thenReturn(null);
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/unmap/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/unmap/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -6713,7 +6796,7 @@ public class MasterdataIntegrationTest {
 		when(machineRepository.findMachineByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(machine);
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/map/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/map/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
@@ -6733,7 +6816,7 @@ public class MasterdataIntegrationTest {
 		when(machineRepository.findMachineByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(machine);
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/map/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/map/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
@@ -6753,7 +6836,7 @@ public class MasterdataIntegrationTest {
 		when(machineRepository.findMachineByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(machine);
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/map/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/map/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
@@ -6775,7 +6858,7 @@ public class MasterdataIntegrationTest {
 		registrationCenterMachine.setIsActive(false);
 		when(registrationCenterMachineRepository.findByRegIdAndMachineId(Mockito.anyString(), Mockito.anyString(),
 				Mockito.anyString())).thenReturn(registrationCenterMachine);
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/map/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/map/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 	}
@@ -6869,7 +6952,7 @@ public class MasterdataIntegrationTest {
 		when(machineRepository.findMachineByIdAndLangCode(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
 		machine.setZoneCode("NTH");
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/map/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/map/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -6935,7 +7018,7 @@ public class MasterdataIntegrationTest {
 				.thenReturn(registrationCenterMachineHistory);
 		when(registrationCenterRepository.update(Mockito.any())).thenReturn(registrationCenter);
 		when(repositoryCenterHistoryRepository.create(Mockito.any())).thenReturn(registrationCenterHistory);
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/map/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/map/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -6992,7 +7075,7 @@ public class MasterdataIntegrationTest {
 				.thenReturn(registrationCenterMachineHistory);
 		when(registrationCenterRepository.update(Mockito.any())).thenReturn(registrationCenter);
 		when(repositoryCenterHistoryRepository.create(Mockito.any())).thenReturn(registrationCenterHistory);
-		mockMvc.perform(MockMvcRequestBuilders.get("/registrationcentermachine/map/10001/10001"))
+		mockMvc.perform(MockMvcRequestBuilders.put("/registrationcentermachine/map/10001/10001"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -7969,7 +8052,7 @@ public class MasterdataIntegrationTest {
 
 		foundationalTrustUpdateProviderDto = new FoundationalTrustProviderPutDto();
 		foundationalTrustUpdateProviderDto.setId("24233443444");
-		foundationalTrustUpdateProviderDto.setActive(true);
+		foundationalTrustUpdateProviderDto.setIsActive(true);
 		foundationalTrustUpdateProviderDto.setAddress("test address");
 		foundationalTrustUpdateProviderDto.setCertAlias("141d3962380139742ac9a1e4b23e0221");
 		foundationalTrustUpdateProviderDto.setContactNo("9876378945");

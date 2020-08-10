@@ -19,7 +19,7 @@ public enum RegistrationCenterDeviceErrorCode {
 	REGISTRATION_CENTER_NOT_FOUND_EXCEPTION("KER-MSD-409", "Registration Center not found"),
 	REGISTRATION_CENTER_DEVICE_FETCH_EXCEPTION("KER-MSD-433", "Error occurred while fetching Center Device details"),
 	REGISTRATION_CENTER_DEVICE_ALREADY_UNMAPPED_EXCEPTION("KER-MSD-434",
-			"Device-Registration Center un-mapping already exist"),
+			"Already is in inactive status"),
 	DEVICE_AND_REG_CENTER_MAPPING_NOT_FOUND_EXCEPTION("KER-MSD-435",
 			"Device Id %s - Center Id %s mapping does not exist"),
 	INVALIDE_DEVICE_ZONE("KER-MSD-415", "Admin not authorized to map/un-map this Device"),

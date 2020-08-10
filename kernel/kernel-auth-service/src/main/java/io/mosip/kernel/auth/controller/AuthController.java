@@ -12,6 +12,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.web.authentication.www.NonceExpiredException;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -81,6 +82,15 @@ import io.swagger.annotations.Api;
 public class AuthController {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
+
+    
+	@Value("${mosip.security.secure-cookie:false}")
+	private boolean isSecureCookie;
+	
+	
+	@Value("${mosip.kernel.auth-code-url-splitter:#URISPLITTER#}")
+	private String urlSplitter;
+
 	/**
 	 * Autowired reference for {@link MosipEnvironment}
 	 */
@@ -131,7 +141,7 @@ public class AuthController {
 		final Cookie cookie = new Cookie(mosipEnvironment.getAuthTokenHeader(), content);
 		cookie.setMaxAge(expirationTimeSeconds);
 		cookie.setHttpOnly(true);
-		cookie.setSecure(false);
+		cookie.setSecure(isSecureCookie);
 		cookie.setPath("/");
 		return cookie;
 	}
@@ -633,13 +643,15 @@ public class AuthController {
 			@CookieValue("state") String stateCookie, HttpServletResponse res) throws IOException {
 		AccessTokenResponseDTO jwtResponseDTO = authService.loginRedirect(state, sessionState, code, stateCookie,
 				redirectURI);
-		String uri = new String(Base64.decodeBase64(redirectURI.getBytes()));
-		LOGGER.info("login-redirect open id login uri " + uri );
+
 		Cookie cookie = createCookie(jwtResponseDTO.getAccessToken(), Integer.parseInt(jwtResponseDTO.getExpiresIn()));
 		res.addCookie(cookie);
 		res.setStatus(302);
-		res.sendRedirect(uri);
-	}
+		String uri = new String(Base64.decodeBase64(redirectURI.getBytes()));
+
+		LOGGER.info("login-redirect open id login uri " + uri );
+		res.sendRedirect(uri);	
+		}
 
 	/**
 	 * Erases Cookie from browser
@@ -651,4 +663,5 @@ public class AuthController {
 		cookie.setPath("/");
 		cookie.setMaxAge(0);
 	}
+
 }

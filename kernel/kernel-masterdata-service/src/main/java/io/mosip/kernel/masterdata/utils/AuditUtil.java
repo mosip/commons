@@ -9,7 +9,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +27,6 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-
-import ch.qos.logback.classic.Logger;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.auth.adapter.exception.AuthNException;
@@ -141,8 +137,10 @@ public class AuditUtil {
 				   environment -> (environment.equalsIgnoreCase("local")) )) {
 			LOGGER.info("Recieved Audit : "+auditRequestDto.toString());
 			
+		} else {
+			callAuditManager(auditRequestDto);
 		}
-		//callAuditManager(auditRequestDto);
+
 
 	}
 

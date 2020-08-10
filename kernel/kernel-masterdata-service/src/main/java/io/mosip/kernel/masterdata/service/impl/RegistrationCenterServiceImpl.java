@@ -962,34 +962,8 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 		List<ExceptionalHolidayPutPostDto> exceptionalHolidayPutPostDtoList = new ArrayList<>();
 		List<ServiceError> errors = new ArrayList<>();
 
-		// List<RegistrationCenter> registrationCenterList = new ArrayList<>();
-		// List<RegistrationCenterExtnDto> registrationCenterDtoList = null;
-		// List<String> inputLangCodeList = new ArrayList<>();
+
 		String uniqueId = "";
-
-		// List<RegCenterPostReqDto> validateRegistrationCenterDtos = new
-		// ArrayList<>();
-		// List<RegCenterPostReqDto> constraintViolationedSecList = new
-		// ArrayList<>();
-		// List<ServiceError> errors = new ArrayList<>();
-
-		// Method to validate all mandatory fields of both primary and secondary
-		// language input objects
-		// registrationCenterValidator.validatePrimarySencodaryLangMandatoryFields(regCenterPostReqDto,
-		// registrationCenterPostResponseDto, inputLangCodeList,
-		// validateRegistrationCenterDtos,
-		// constraintViolationedSecList, errors);
-
-		// validate to if Records with duplicate language code
-		/*
-		 * if ((new HashSet<String>(inputLangCodeList).size()) !=
-		 * inputLangCodeList.size()) { throw new RequestException(
-		 * RegistrationCenterErrorCode.
-		 * REGISTRATION_CENTER_LANGUAGECODE_EXCEPTION.getErrorCode(),
-		 * RegistrationCenterErrorCode.
-		 * REGISTRATION_CENTER_LANGUAGECODE_EXCEPTION.getErrorMessage()); }
-		 */
-
 		try {
 
 			registrationCenterValidator.validateRegCenterCreate(regCenterPostReqDto, errors);
@@ -1252,7 +1226,14 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 						regExceptionalHoliday.setExceptionHolidayName(expHoliday.getExceptionHolidayName());
 						regExceptionalHoliday.setExceptionHolidayReson(expHoliday.getExceptionHolidayReson());
 						regExceptionalHoliday.setIsActive(true);
+						if(regExceptionalHolidayRepository.findByRegIdAndExpHoliday(
+							regExceptionalHoliday.getRegistrationCenterId(), 
+							regExceptionalHoliday.getExceptionHolidayDate())==null) {
 						regExceptionalHolidayRepository.create(regExceptionalHoliday);
+						}
+						else {
+							regExceptionalHolidayRepository.update(regExceptionalHoliday);
+						}
 					}
 				}
 			}

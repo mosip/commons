@@ -15,9 +15,7 @@ import org.springframework.stereotype.Service;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
-import io.mosip.kernel.masterdata.constant.TemplateErrorCode;
 import io.mosip.kernel.masterdata.constant.TitleErrorCode;
-import io.mosip.kernel.masterdata.dto.TemplateDto;
 import io.mosip.kernel.masterdata.dto.TitleDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
 import io.mosip.kernel.masterdata.dto.getresponse.TitleResponseDto;
@@ -29,7 +27,6 @@ import io.mosip.kernel.masterdata.dto.request.SearchDto;
 import io.mosip.kernel.masterdata.dto.response.ColumnValue;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
-import io.mosip.kernel.masterdata.dto.response.RegistrationCenterSearchDto;
 import io.mosip.kernel.masterdata.entity.Title;
 import io.mosip.kernel.masterdata.entity.id.CodeAndLanguageCodeID;
 import io.mosip.kernel.masterdata.exception.DataNotFoundException;
@@ -151,11 +148,14 @@ public class TitleServiceImpl implements TitleService {
 	 */
 	@Override
 	public CodeAndLanguageCodeID saveTitle(TitleDto titleRequestDto) {
-		Title entity = MetaDataUtils.setCreateMetaData(titleRequestDto, Title.class);
+
 		Title title;
 		try {
+			titleRequestDto = masterdataCreationUtil.createMasterData(Title.class, titleRequestDto);
+			Title entity = MetaDataUtils.setCreateMetaData(titleRequestDto, Title.class);
 			title = titleRepository.create(entity);
-		} catch (DataAccessLayerException | DataAccessException e) {
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
 			auditUtil.auditRequest(String.format(MasterDataConstant.CREATE_ERROR_AUDIT, TitleDto.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.FAILURE_DESC,
 							TitleErrorCode.TITLE_INSERT_EXCEPTION.getErrorCode(), ExceptionUtils.parseException(e)),
@@ -192,6 +192,7 @@ public class TitleServiceImpl implements TitleService {
 			Title title = titleRepository.findById(Title.class, titleId);
 
 			if (title != null) {
+				titles = masterdataCreationUtil.updateMasterData(Title.class, titles);
 				MetaDataUtils.setUpdateMetaData(titleDto, title, false);
 				titleRepository.update(title);
 				if(!titles.getIsActive()) {
@@ -207,7 +208,8 @@ public class TitleServiceImpl implements TitleService {
 						TitleErrorCode.TITLE_NOT_FOUND.getErrorMessage());
 			}
 
-		} catch (DataAccessLayerException | DataAccessException e) {
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
 			auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_UPDATE, TitleDto.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
 					String.format(MasterDataConstant.FAILURE_DESC, TitleErrorCode.TITLE_UPDATE_EXCEPTION.getErrorCode(),

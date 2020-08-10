@@ -18,8 +18,6 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
@@ -40,6 +38,9 @@ public class PacketReaderServiceImpl implements PacketReaderService {
 	@Value("${packet.default.source}")
 	private String defaultSource;
 
+	/** The file system adapter. */
+	@Autowired
+	private FileSystemAdapter fileSystemAdapter;
 
 	/** The decryptor. */
 	@Autowired
@@ -103,8 +104,7 @@ public class PacketReaderServiceImpl implements PacketReaderService {
 			throws PacketDecryptionFailureException, IOException, ApiNotAccessibleException {
 		packetUtilityLogger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), id,
 				"PacketReaderServiceImpl::fileSystemAdapter.getPacket()");
-		File file = new File("C:\\Users\\M1045447\\Downloads\\10002100740000520200724104243.zip");
-		InputStream data = new FileInputStream(file);//fileSystemAdapter.getPacket(id);
+		InputStream data = fileSystemAdapter.getPacket(id);
 		if (data == null) {
 			throw new FileNotFoundInDestinationException(
 					PACKET_NOTAVAILABLE_ERROR_DESC);

@@ -3,6 +3,7 @@ package io.mosip.kernel.masterdata.service;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
+import io.mosip.kernel.masterdata.dto.DeRegisterDevicePostDto;
 import io.mosip.kernel.masterdata.dto.DeviceDeRegisterResponse;
 import io.mosip.kernel.masterdata.dto.EncodedRegisteredDeviceResponse;
 import io.mosip.kernel.masterdata.dto.RegisteredDevicePostReqDto;
@@ -29,10 +30,10 @@ public interface RegisteredDeviceService {
 	/**
 	 * Method to De-Register a device
 	 * 
-	 * @param deviceCode
+	 * @param deRegisterDevicePostDto
 	 * @return DeviceDeRegisterResponse
 	 */
-	public DeviceDeRegisterResponse deRegisterDevice(@Valid String deviceCode);
+	public String deRegisterDevice( DeRegisterDevicePostDto deRegisterDevicePostDto);
 
 	/**
 	 * Method to update status of a device

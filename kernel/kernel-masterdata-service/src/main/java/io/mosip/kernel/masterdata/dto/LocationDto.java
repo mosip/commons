@@ -29,16 +29,16 @@ public class LocationDto {
 	@StringFormatter(min = 1, max = 36)
 	private String code;
 
-	@Size(min = 0, max = 128)
-	@NotBlank
+	@NotNull
+	@StringFormatter(min = 0, max = 128)
 	@FilterType(types = { FilterTypeEnum.EQUALS, FilterTypeEnum.STARTSWITH, FilterTypeEnum.CONTAINS })
 	private String name;
 
 	@Range(min = 0)
 	private short hierarchyLevel;
 
-	@Size(min = 0, max = 64)
-	@NotBlank
+	@NotNull
+	@StringFormatter(min = 1, max = 64)
 	private String hierarchyName;
 
 	@Size(max = 32)

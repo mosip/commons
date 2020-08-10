@@ -39,9 +39,7 @@ public class IdTypeDto {
 	/**
 	 * The language code.
 	 */
-	@ValidLangCode
-	@NotBlank
-	@Size(min = 1, max = 3)
+	@ValidLangCode(message = "Language Code is Invalid")
 	private String langCode;
 
 	/**

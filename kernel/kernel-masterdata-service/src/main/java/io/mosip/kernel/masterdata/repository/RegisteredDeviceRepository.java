@@ -42,4 +42,14 @@ public interface RegisteredDeviceRepository extends BaseRepository<RegisteredDev
 	 * @return the registered device
 	 */	
 	RegisteredDevice findByDpIdAndSerialNoAndIsActiveIsTrue(String providerId,String serialno);
+
+	/**
+	 * Find by code and purpose and is active is true.
+	 *
+	 * @param deviceCode the device code
+	 * @param purpose    the purpose
+	 * @return the registered device
+	 */
+	RegisteredDevice findByCodeAndPurposeIgnoreCaseAndIsActiveIsTrue(String deviceCode, String purpose);
+
 }

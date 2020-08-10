@@ -19,7 +19,7 @@ public interface IndividualTypeRepository extends BaseRepository<IndividualType,
 	@Query(value = "FROM IndividualType t where t.isActive = true and (t.isDeleted is null or t.isDeleted = false)")
 	public List<IndividualType> findAll();
 	
-	@Query(value = "FROM IndividualType t where t.code = ?1 and t.langCode=?2 and (t.isDeleted is null or t.isDeleted = false) AND isActive=true")
+	@Query(value = "FROM IndividualType t where t.code = ?1 and t.langCode=?2 and (t.isDeleted is null or t.isDeleted = false)")
 	public IndividualType findIndividualTypeByCodeAndLangCode(String code, String langCode);
 
 }

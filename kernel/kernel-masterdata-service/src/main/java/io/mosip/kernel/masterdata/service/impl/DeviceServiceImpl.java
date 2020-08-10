@@ -40,10 +40,8 @@ import io.mosip.kernel.masterdata.dto.request.SearchDto;
 import io.mosip.kernel.masterdata.dto.request.SearchFilter;
 import io.mosip.kernel.masterdata.dto.request.SearchSort;
 import io.mosip.kernel.masterdata.dto.response.ColumnCodeValue;
-import io.mosip.kernel.masterdata.dto.response.ColumnValue;
 import io.mosip.kernel.masterdata.dto.response.DeviceSearchDto;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
-import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.entity.Device;
 import io.mosip.kernel.masterdata.entity.DeviceHistory;
@@ -221,9 +219,7 @@ public class DeviceServiceImpl implements DeviceService {
 				entityHistory = MetaDataUtils.setCreateMetaData(deviceDto, DeviceHistory.class);
 				entityHistory.setEffectDateTime(entity.getCreatedDateTime());
 				entityHistory.setCreatedDateTime(entity.getCreatedDateTime());
-				// entity.setIsActive(false);
-				// String id = UUID.fromString(deviceDto.getName()).toString();
-				// entity.setId(id);
+
 				device = deviceRepository.create(entity);
 				deviceHistoryService.createDeviceHistory(entityHistory);
 				MapperUtils.map(device, deviceExtnDto);
@@ -243,8 +239,7 @@ public class DeviceServiceImpl implements DeviceService {
 					DeviceErrorCode.DEVICE_INSERT_EXCEPTION.getErrorMessage() + " "
 							+ ExceptionUtils.parseException(e1));
 		}
-		// IdAndLanguageCodeID idAndLanguageCodeID = new IdAndLanguageCodeID();
-		// MapperUtils.map(device, idAndLanguageCodeID);
+
 		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_CREATE, DeviceExtnDto.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM,
 				String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC, device!=null?device.getId():null), "ADM-508");

@@ -10,7 +10,7 @@
 
 	<artifactId>kernel-biosdk-provider</artifactId>
 	<groupId>io.mosip.kernel</groupId>
-	<version>0.9</version>
+	<version>0.9.1-SNAPSHOT</version>
 	<name>kernel-biosdk-provider</name>
 	<description>Implementation of biosdk provider</description>
 	<packaging>jar</packaging>

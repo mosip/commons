@@ -3,7 +3,6 @@ package io.mosip.kernel.masterdata.service.impl;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +18,7 @@ import io.mosip.kernel.masterdata.constant.MachineErrorCode;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.constant.RegistrationCenterDeviceErrorCode;
 import io.mosip.kernel.masterdata.constant.RegistrationCenterMachineErrorCode;
-import io.mosip.kernel.masterdata.dto.RegistrationCenterMachineDto;
-import io.mosip.kernel.masterdata.dto.ResponseRrgistrationCenterMachineDto;
 import io.mosip.kernel.masterdata.dto.getresponse.ResponseDto;
-import io.mosip.kernel.masterdata.entity.MOSIPDeviceService;
 import io.mosip.kernel.masterdata.entity.Machine;
 import io.mosip.kernel.masterdata.entity.RegistrationCenter;
 import io.mosip.kernel.masterdata.entity.RegistrationCenterDevice;
@@ -84,82 +80,6 @@ public class RegistrationCenterMachineServiceImpl implements RegistrationCenterM
 	@Autowired
 	private RegistrationCenterRepository regRepo;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.mosip.kernel.masterdata.service.RegistrationCenterMachineService#
-	 * createRegistrationCenterAndMachine(io.mosip.kernel.masterdata.dto.RequestDto)
-	 */
-	@Override
-	@Transactional
-	public ResponseRrgistrationCenterMachineDto createRegistrationCenterAndMachine(
-			RegistrationCenterMachineDto requestDto) {
-		ResponseRrgistrationCenterMachineDto responseRrgistrationCenterMachineDto = null;
-
-		try {
-			RegistrationCenterMachine registrationCenterMachine = MetaDataUtils.setCreateMetaData(requestDto,
-					RegistrationCenterMachine.class);
-			RegistrationCenterMachine savedRegistrationCenterMachine = registrationCenterMachineRepository
-					.create(registrationCenterMachine);
-
-			RegistrationCenterMachineHistory registrationCenterMachineHistory = MetaDataUtils
-					.setCreateMetaData(requestDto, RegistrationCenterMachineHistory.class);
-			registrationCenterMachineHistory.getRegistrationCenterMachineHistoryPk()
-					.setEffectivetimes(savedRegistrationCenterMachine.getCreatedDateTime());
-			registrationCenterMachineHistoryRepository.create(registrationCenterMachineHistory);
-
-			responseRrgistrationCenterMachineDto = MapperUtils.map(
-					savedRegistrationCenterMachine.getRegistrationCenterMachinePk(),
-					ResponseRrgistrationCenterMachineDto.class);
-		} catch (DataAccessLayerException | DataAccessException e) {
-			throw new MasterDataServiceException(
-					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_CREATE_EXCEPTION.getErrorCode(),
-					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_CREATE_EXCEPTION.getErrorMessage()
-							+ ExceptionUtils.parseException(e));
-		}
-
-		return responseRrgistrationCenterMachineDto;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.mosip.kernel.masterdata.service.RegistrationCenterMachineService#
-	 * deleteRegistrationCenterMachineMapping(java.lang.String, java.lang.String)
-	 */
-	@Transactional
-	@Override
-	public RegistrationCenterMachineID deleteRegistrationCenterMachineMapping(String regCenterId, String machineId) {
-		RegistrationCenterMachineID registrationCenterMachineID = null;
-		try {
-			registrationCenterMachineID = new RegistrationCenterMachineID(regCenterId, machineId);
-			Optional<RegistrationCenterMachine> registrationCenterMachine = registrationCenterMachineRepository
-					.findAllNondeletedMappings(registrationCenterMachineID);
-			if (!registrationCenterMachine.isPresent()) {
-				throw new RequestException(
-						RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_DATA_NOT_FOUND.getErrorCode(),
-						RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_DATA_NOT_FOUND
-								.getErrorMessage());
-			} else {
-				RegistrationCenterMachine centerMachine = registrationCenterMachine.get();
-				centerMachine = MetaDataUtils.setDeleteMetaData(centerMachine);
-				RegistrationCenterMachineHistory history = MapperUtils.map(centerMachine,
-						RegistrationCenterMachineHistory.class);
-				history.setRegistrationCenterMachineHistoryPk(
-						MapperUtils.map(registrationCenterMachineID, RegistrationCenterMachineHistoryID.class));
-				history.getRegistrationCenterMachineHistoryPk().setEffectivetimes(centerMachine.getDeletedDateTime());
-				MapperUtils.setBaseFieldValue(centerMachine, history);
-				registrationCenterMachineHistoryRepository.create(history);
-				registrationCenterMachineRepository.update(centerMachine);
-			}
-		} catch (DataAccessLayerException | DataAccessException e) {
-			throw new MasterDataServiceException(
-					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_DELETE_EXCEPTION.getErrorCode(),
-					RegistrationCenterMachineErrorCode.REGISTRATION_CENTER_MACHINE_DELETE_EXCEPTION.getErrorMessage()
-							+ ExceptionUtils.parseException(e));
-		}
-		return registrationCenterMachineID;
-	}
 
 	@Override
 	@Transactional

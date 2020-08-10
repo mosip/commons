@@ -2,20 +2,14 @@ package io.mosip.kernel.masterdata.dto;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.mosip.kernel.masterdata.validator.OptionalStringFormatter;
 import io.mosip.kernel.masterdata.validator.StringFormatter;
-import io.mosip.kernel.masterdata.validator.StringTrimmer;
 import io.mosip.kernel.masterdata.validator.ValidLangCode;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -35,8 +29,7 @@ public class MachinePostReqDto {
 	/**
 	 * Field for machine id
 	 */
-	@StringFormatter(min = 0, max = 10)
-	@ApiModelProperty(value = "id", required = true, dataType = "java.lang.String")
+
 	private String id;
 	/**
 	 * Field for machine name
@@ -76,8 +69,6 @@ public class MachinePostReqDto {
 	 * Field for language code
 	 */
 	@ValidLangCode(message = "Language Code is Invalid")
-//	@NotNull
-//	@Size(min = 1, max = 3)
 	@ApiModelProperty(value = "langCode", required = true, dataType = "java.lang.String")
 	private String langCode;
 	/**

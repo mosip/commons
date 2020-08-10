@@ -32,14 +32,11 @@ import io.mosip.kernel.masterdata.dto.request.SearchDto;
 import io.mosip.kernel.masterdata.dto.request.SearchFilter;
 import io.mosip.kernel.masterdata.dto.request.SearchSort;
 import io.mosip.kernel.masterdata.dto.response.ColumnCodeValue;
-import io.mosip.kernel.masterdata.dto.response.ColumnValue;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
-import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.entity.Device;
 import io.mosip.kernel.masterdata.entity.DeviceSpecification;
 import io.mosip.kernel.masterdata.entity.DeviceType;
-import io.mosip.kernel.masterdata.entity.MachineSpecification;
 import io.mosip.kernel.masterdata.entity.id.IdAndLanguageCodeID;
 import io.mosip.kernel.masterdata.exception.DataNotFoundException;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
@@ -52,6 +49,7 @@ import io.mosip.kernel.masterdata.utils.DeviceUtils;
 import io.mosip.kernel.masterdata.utils.ExceptionUtils;
 import io.mosip.kernel.masterdata.utils.MapperUtils;
 import io.mosip.kernel.masterdata.utils.MasterDataFilterHelper;
+import io.mosip.kernel.masterdata.utils.MasterdataCreationUtil;
 import io.mosip.kernel.masterdata.utils.MasterdataSearchHelper;
 import io.mosip.kernel.masterdata.utils.MetaDataUtils;
 import io.mosip.kernel.masterdata.utils.OptionalFilter;
@@ -102,6 +100,8 @@ public class DeviceSpecificationServiceImpl implements DeviceSpecificationServic
 	@Autowired
 	private PageUtils pageUtils;
 
+	@Autowired
+	private MasterdataCreationUtil masterdataCreationUtil;
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -171,11 +171,16 @@ public class DeviceSpecificationServiceImpl implements DeviceSpecificationServic
 	public IdAndLanguageCodeID createDeviceSpecification(DeviceSpecificationDto deviceSpecifications) {
 		DeviceSpecification renDeviceSpecification = null;
 
-		DeviceSpecification entity = MetaDataUtils.setCreateMetaData(deviceSpecifications, DeviceSpecification.class);
+
 		try {
+			deviceSpecifications = masterdataCreationUtil.createMasterData(DeviceSpecification.class,
+					deviceSpecifications);
+			DeviceSpecification entity = MetaDataUtils.setCreateMetaData(deviceSpecifications,
+					DeviceSpecification.class);
 			renDeviceSpecification = deviceSpecificationRepository.create(entity);
 			Objects.requireNonNull(renDeviceSpecification);
-		} catch (DataAccessLayerException | DataAccessException | NullPointerException e) {
+		} catch (DataAccessLayerException | DataAccessException | NullPointerException | IllegalArgumentException
+				| IllegalAccessException | NoSuchFieldException | SecurityException e) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_CREATE, DeviceSpecification.class.getCanonicalName()),
 					MasterDataConstant.AUDIT_SYSTEM,
@@ -187,6 +192,7 @@ public class DeviceSpecificationServiceImpl implements DeviceSpecificationServic
 					DeviceSpecificationErrorCode.DEVICE_SPECIFICATION_INSERT_EXCEPTION.getErrorCode(),
 					DeviceSpecificationErrorCode.DEVICE_SPECIFICATION_INSERT_EXCEPTION.getErrorMessage()
 							+ ExceptionUtils.parseException(e));
+
 		}
 
 		IdAndLanguageCodeID idAndLanguageCodeID = new IdAndLanguageCodeID();
@@ -209,6 +215,8 @@ public class DeviceSpecificationServiceImpl implements DeviceSpecificationServic
 					.findByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(deviceSpecification.getId(),
 							deviceSpecification.getLangCode());
 			if (!EmptyCheckUtils.isNullEmpty(entity)) {
+				deviceSpecification = masterdataCreationUtil.updateMasterData(DeviceSpecification.class,
+						deviceSpecification);
 				MetaDataUtils.setUpdateMetaData(deviceSpecification, entity, false);
 				deviceSpecificationRepository.update(entity);
 				idAndLanguageCodeID.setId(entity.getId());
@@ -226,7 +234,8 @@ public class DeviceSpecificationServiceImpl implements DeviceSpecificationServic
 						DeviceSpecificationErrorCode.DEVICE_SPECIFICATION_NOT_FOUND_EXCEPTION.getErrorCode(),
 						DeviceSpecificationErrorCode.DEVICE_SPECIFICATION_NOT_FOUND_EXCEPTION.getErrorMessage());
 			}
-		} catch (DataAccessLayerException | DataAccessException e) {
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
 			auditUtil.auditRequest(
 					String.format(MasterDataConstant.FAILURE_UPDATE, DeviceSpecification.class.getCanonicalName()),
 					MasterDataConstant.AUDIT_SYSTEM,
@@ -239,6 +248,7 @@ public class DeviceSpecificationServiceImpl implements DeviceSpecificationServic
 					DeviceSpecificationErrorCode.DEVICE_SPECIFICATION_UPDATE_EXCEPTION.getErrorMessage()
 							+ ExceptionUtils.parseException(e));
 		}
+
 		return idAndLanguageCodeID;
 	}
 

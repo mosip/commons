@@ -160,6 +160,9 @@ public class DeviceController {
 				MasterDataConstant.UPDATE_API_IS_CALLED + DeviceDto.class.getCanonicalName(), "ADM-502");
 		ResponseWrapper<DeviceExtnDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(deviceService.updateDevice(devicePutReqDto.getRequest()));
+		auditUtil.auditRequest(MasterDataConstant.SUCCESSFUL_UPDATE + DeviceDto.class.getCanonicalName(),
+				MasterDataConstant.AUDIT_SYSTEM,
+				MasterDataConstant.SUCCESSFUL_UPDATE + DeviceDto.class.getCanonicalName());
 		return responseWrapper;
 	}
 
