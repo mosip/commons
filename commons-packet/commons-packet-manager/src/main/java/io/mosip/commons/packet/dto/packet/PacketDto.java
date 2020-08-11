@@ -21,7 +21,7 @@ public class PacketDto {
     private Map<String, String> fields;
     private Map<String, String> metaInfo;
     private Map<String, Document> documents;
-    private List<AuditDto> audits;
+    private List<Map<String, String>> audits;
     private Map<String, BiometricRecord> biometrics;
 
 

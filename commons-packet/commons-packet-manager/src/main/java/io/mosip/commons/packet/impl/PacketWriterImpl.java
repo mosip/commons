@@ -104,13 +104,23 @@ public class PacketWriterImpl implements IPacketWriter {
 
 
     @Override
-    public void setAudits(String id, List<AuditDto> auditList) {
+    public void addAudits(String id, List<Map<String, String>> auditList) {
         this.initialize(id).setAudits(auditList);
     }
 
     @Override
-    public void setMetaInfo(String id, Map<String, String> metaInfo) {
+    public void addAudit(String id, Map<String, String> audit) {
+        this.initialize(id).setAudit(audit);
+    }
+
+    @Override
+    public void addMetaInfo(String id, Map<String, String> metaInfo) {
         this.initialize(id).setMetaData(metaInfo);
+    }
+
+    @Override
+    public void addMetaInfo(String id, String key, String value) {
+        this.initialize(id).addMetaData(key, value);
     }
 
     private List<PacketInfo> createPacket(String id, String version, String schemaJson, String source, String process, boolean offlineMode) throws PacketCreatorException {

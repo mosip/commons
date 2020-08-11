@@ -1,16 +1,13 @@
-package io.mosip.commons.packetmanager.dto;
+package io.mosip.commons.packet.dto;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.List;
-
 @Data
 @EqualsAndHashCode
-public class FieldDtos {
+public class InfoDto {
 
     private String id;
-    private List<String> fields;
     private String source;
     private String process;
     private Boolean bypassCache;

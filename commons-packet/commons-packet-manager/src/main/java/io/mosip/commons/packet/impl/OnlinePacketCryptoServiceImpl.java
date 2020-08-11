@@ -45,19 +45,19 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
     private static final String IO_EXCEPTION = "Exception while reading packet inputStream";
     private static final String DATE_TIME_EXCEPTION = "Error while parsing packet timestamp";
 
-    @Value("${mosip.utc-datetime-pattern}")
+    @Value("${mosip.utc-datetime-pattern:yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}")
     private String DATETIME_PATTERN;
 
-    @Value("${mosip.kernel.cryptomanager.request_version}")
+    @Value("${mosip.kernel.cryptomanager.request_version:v1}")
     private String APPLICATION_VERSION;
 
-    @Value("${mosip.kernel.registrationcenterid.length}")
+    @Value("${mosip.kernel.registrationcenterid.length:5}")
     private int centerIdLength;
 
-    @Value("${CRYPTOMANAGER_DECRYPT}")
+    @Value("${CRYPTOMANAGER_DECRYPT:null}")
     private String cryptomanagerDecryptUrl;
 
-    @Value("${mosip.kernel.machineid.length}")
+    @Value("${mosip.kernel.machineid.length:5}")
     private int machineIdLength;
 
     @Autowired
@@ -66,10 +66,10 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
     @Autowired
     private ObjectMapper mapper;
 
-    @Value("${CRYPTOMANAGER_ENCRYPT}")
+    @Value("${CRYPTOMANAGER_ENCRYPT:null}")
     private String cryptomanagerEncryptUrl;
 
-    @Value("${KEYMANAGER_SIGN}")
+    @Value("${KEYMANAGER_SIGN:null}")
     private String keymanagerSignUrl;
 
     @Override

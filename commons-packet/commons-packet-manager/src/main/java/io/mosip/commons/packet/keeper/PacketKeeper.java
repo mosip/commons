@@ -1,6 +1,5 @@
 package io.mosip.commons.packet.keeper;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.commons.packet.constants.PacketUtilityErrorCodes;
 import io.mosip.commons.packet.dto.Packet;
@@ -34,9 +33,6 @@ import java.util.Map;
  */
 @Component
 public class PacketKeeper {
-
-    @Autowired
-    private ObjectMapper mapper;
 
     /**
      * The reg proc logger.
@@ -107,6 +103,14 @@ public class PacketKeeper {
         return result;
     }
 
+    /**
+     * Check integrity and signature of the packet
+     *
+     *
+     * @param packet
+     * @param encryptedSubPacket
+     * @return
+     */
     public boolean checkSignature(Packet packet, byte[] encryptedSubPacket) {
         String signature = new String(CryptoUtil.encodeBase64(getCryptoService().sign(packet.getPacket())));
         boolean result = checkIntegrity(packet.getPacketInfo(), encryptedSubPacket) && (signature.equals(packet.getPacketInfo().getSignature()));

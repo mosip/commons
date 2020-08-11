@@ -147,6 +147,21 @@ public class PacketReader {
         return getProvider(source, process).getAll(id, process);
     }
 
+    /**
+     * Get all fields from packet by id, source and process
+     *
+     * @param id      : the registration id
+     * @param source  : the source packet. If not present return default
+     * @param process : the process
+     * @return Map fields
+     */
+    @Cacheable(value = "packets", key = "{#id.concat('-').concat(#source).concat('-').concat(#process)}", condition = "#bypassCache == false")
+    public List<Map<String, String>> getAudits(String id, String source, String process, boolean bypassCache) {
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
+                "getAllFields for source : " + source + " process : " + process);
+        return getProvider(source, process).getAuditInfo(id, process);
+    }
+
     private IPacketReader getProvider(String source, String process) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, null,
                 "getProvider for source : " + source + " process : " + process);

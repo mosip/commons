@@ -76,29 +76,56 @@ public class PacketWriter {
     }
 
     /**
-     * Set meta information
+     * Set all meta information
      *
      * @param metaInfo : meta key value pairs
      * @return PacketWriter
      */
-    public void setMetaInfo(String id, Map<String, String> metaInfo, String source, String process) {
+    public void addMetaInfo(String id, Map<String, String> metaInfo, String source, String process) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "setMetaInfo for source : " + source + " process : " + process);
-        getProvider(source, process).setMetaInfo(id, metaInfo);
+        getProvider(source, process).addMetaInfo(id, metaInfo);
     }
 
     /**
-     * Set audit information
+     * Set individual meta information
+     *
+     * @param key : meta key
+     * @Param value : meta value
+     * @return PacketWriter
+     */
+    public void addMetaInfo(String id, String key, String value, String source, String process) {
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
+                "setMetaInfo for source : " + source + " process : " + process);
+        getProvider(source, process).addMetaInfo(id, key, value);
+    }
+
+    /**
+     * Add audit list information
      *
      * @param id      : the registration id
      * @param source  : the source packet. Default if not provided.
      * @param process : the process
      * @return PacketInfo
      */
-    public void setAudits(String id, List<AuditDto> audits, String source, String process) {
+    public void addAudits(String id, List<Map<String, String>> audits, String source, String process) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "setAudits for source : " + source + " process : " + process);
-        getProvider(source, process).setAudits(id, audits);
+        getProvider(source, process).addAudits(id, audits);
+    }
+
+    /**
+     * Add single audit information
+     *
+     * @param id      : the registration id
+     * @param source  : the source packet. Default if not provided.
+     * @param process : the process
+     * @return PacketInfo
+     */
+    public void addAudit(String id, Map<String, String> audit, String source, String process) {
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
+                "setAudits for source : " + source + " process : " + process);
+        getProvider(source, process).addAudit(id, audit);
     }
 
     /**
@@ -122,9 +149,9 @@ public class PacketWriter {
         IPacketWriter provider = getProvider(packetDto.getSource(), packetDto.getProcess());
         try {
             provider.setFields(packetDto.getId(), packetDto.getFields());
-            provider.setMetaInfo(packetDto.getId(), packetDto.getMetaInfo());
+            provider.addMetaInfo(packetDto.getId(), packetDto.getMetaInfo());
             packetDto.getDocuments().entrySet().forEach(doc -> provider.setDocument(packetDto.getId(), doc.getKey(), doc.getValue()));
-            provider.setAudits(packetDto.getId(), packetDto.getAudits());
+            provider.addAudits(packetDto.getId(), packetDto.getAudits());
             packetDto.getBiometrics().entrySet().forEach(bio -> provider.setBiometric(packetDto.getId(), bio.getKey(), bio.getValue()));
             packetInfos = provider.persistPacket(packetDto.getId(), packetDto.getSchemaVersion(),
                     packetDto.getSchemaJson(), packetDto.getSource(), packetDto.getProcess(), offlineMode);

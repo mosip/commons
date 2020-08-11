@@ -147,12 +147,6 @@ public class PacketManagerConfig {
         return iPacketWriters;
     }
 
-    @Bean
-    @Primary
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
-    }
-
     private Object getBean(String className) throws ClassNotFoundException {
         Class<?> clazz = Class.forName(className);
         return applicationContext.getBean(clazz);

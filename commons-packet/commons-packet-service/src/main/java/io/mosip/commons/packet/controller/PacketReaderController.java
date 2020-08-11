@@ -1,13 +1,13 @@
-package io.mosip.commons.packetmanager.controller;
+package io.mosip.commons.packet.controller;
 
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.facade.PacketReader;
-import io.mosip.commons.packetmanager.dto.BiometricRequestDto;
-import io.mosip.commons.packetmanager.dto.DocumentDto;
-import io.mosip.commons.packetmanager.dto.FieldDto;
-import io.mosip.commons.packetmanager.dto.FieldDtos;
-import io.mosip.commons.packetmanager.dto.FieldResponseDto;
-import io.mosip.commons.packetmanager.dto.MetaInfoDto;
+import io.mosip.commons.packet.dto.BiometricRequestDto;
+import io.mosip.commons.packet.dto.DocumentDto;
+import io.mosip.commons.packet.dto.FieldDto;
+import io.mosip.commons.packet.dto.FieldDtos;
+import io.mosip.commons.packet.dto.FieldResponseDto;
+import io.mosip.commons.packet.dto.InfoDto;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -82,11 +84,29 @@ public class PacketReaderController {
     @PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
     @ResponseFilter
     @PostMapping(path = "/metaInfo", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseWrapper<FieldResponseDto> getMetaInfo(@RequestBody(required = true) RequestWrapper<MetaInfoDto> request) {
-        MetaInfoDto metaDto = request.getRequest();
+    public ResponseWrapper<FieldResponseDto> getMetaInfo(@RequestBody(required = true) RequestWrapper<InfoDto> request) {
+        InfoDto metaDto = request.getRequest();
         Map<String, String> resultFields = packetReader.getMetaInfo(metaDto.getId(), metaDto.getSource(), metaDto.getProcess(), metaDto.getBypassCache());
         FieldResponseDto resultField = new FieldResponseDto(resultFields);
         ResponseWrapper<FieldResponseDto> response = getResponseWrapper();
+        response.setResponse(resultField);
+        return response;
+    }
+
+    @PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
+    @ResponseFilter
+    @PostMapping(path = "/audits", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseWrapper<List<FieldResponseDto>> getAudits(@RequestBody(required = true) RequestWrapper<InfoDto> request) {
+        InfoDto metaDto = request.getRequest();
+        List<Map<String, String>> resultFields = packetReader.getAudits(metaDto.getId(), metaDto.getSource(), metaDto.getProcess(), metaDto.getBypassCache());
+        List<FieldResponseDto> resultField = new ArrayList<>();
+        if (resultFields != null && !resultFields.isEmpty()) {
+            resultFields.stream().forEach(e -> {
+                FieldResponseDto fieldResponseDto = new FieldResponseDto(e);
+                resultField.add(fieldResponseDto);
+            });
+        }
+        ResponseWrapper<List<FieldResponseDto>> response = getResponseWrapper();
         response.setResponse(resultField);
         return response;
     }

@@ -3,12 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>commons</artifactId>
         <groupId>io.mosip</groupId>
+        <artifactId>commons</artifactId>
         <version>1.0.6</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>io.mosip.commons</groupId>
     <artifactId>commons-packet</artifactId>
     <version>1.2.0-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -39,9 +40,10 @@
         <swagger.version>2.9.2</swagger.version>
         <powermock.beta.version>2.0.0-beta.5</powermock.beta.version>
 
-        <kernel.core.version>1.0.9</kernel.core.version>
+        <kernel.core.version>1.2.0-SNAPSHOT</kernel.core.version>
+        <kernel.biometrics.api.version>1.2.0-SNAPSHOT</kernel.biometrics.api.version>
         <kernel.crypto-jce.version>1.0.6</kernel.crypto-jce.version>
-        <kernel.auth.adaptor.version>1.0.9</kernel.auth.adaptor.version>
+        <kernel.auth.adaptor.version>1.2.0-SNAPSHOT</kernel.auth.adaptor.version>
         <kernel-dataaccess-hibernate.version>1.0.7</kernel-dataaccess-hibernate.version>
         <kernel.logger.logback.version>1.0.6</kernel.logger.logback.version>
         <spring.boot.co>2.0.2.RELEASE</spring.boot.co>

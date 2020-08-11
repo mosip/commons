@@ -81,6 +81,13 @@ public class PacketReaderImpl implements IPacketReader {
 
     /**
      * idobject providerConfig, cbeff providerConfig(ex - biometric exception providerConfig)
+     * Perform packet validations and audit errors.
+     * List of validations -
+     * 1. schema validation
+     * 2. files validation
+     * 3. cbeff validation
+     * 4. document validation
+     *
      *
      * @param id
      * @param process
@@ -88,6 +95,7 @@ public class PacketReaderImpl implements IPacketReader {
      */
     @Override
     public boolean validatePacket(String id, String process) {
+        //packetKeeper.checkSignature();
         return false;
     }
 
@@ -275,6 +283,36 @@ public class PacketReaderImpl implements IPacketReader {
                 throw new GetAllMetaInfoException(ex.getErrorCode(), ex.getMessage());
             }
             throw new GetAllMetaInfoException(e.getMessage());
+        }
+        return finalMap;
+    }
+
+    @Override
+    public List<Map<String, String>> getAuditInfo(String id, String process) {
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, "getAuditInfo :: enrtry");
+        List<Map<String, String>> finalMap = new ArrayList<>();
+        String[] sourcePacketNames = packetNames.split(",");
+        try {
+            for (String source : sourcePacketNames) {
+                Packet packet = packetKeeper.getPacket(getPacketInfo(id, source, process));
+                InputStream auditJson = ZipUtils.unzipAndGetFile(packet.getPacket(), "audit");
+                if (auditJson != null) {
+                    byte[] bytearray = IOUtils.toByteArray(auditJson);
+                    String jsonString = new String(bytearray);
+                    List<Map<String, String>> currentMap = (List<Map<String, String>>) mapper.readValue(jsonString, List.class);
+                    finalMap.addAll(currentMap);
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, e.getStackTrace().toString());
+            if (e instanceof BaseCheckedException) {
+                BaseCheckedException ex = (BaseCheckedException) e;
+                throw new GetAllIdentityException(ex.getErrorCode(), ex.getMessage());
+            } else if (e instanceof BaseUncheckedException) {
+                BaseUncheckedException ex = (BaseUncheckedException) e;
+                throw new GetAllIdentityException(ex.getErrorCode(), ex.getMessage());
+            }
+            throw new GetAllIdentityException(e.getMessage());
         }
         return finalMap;
     }

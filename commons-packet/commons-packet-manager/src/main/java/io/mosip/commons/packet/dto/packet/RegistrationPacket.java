@@ -26,16 +26,15 @@ public class RegistrationPacket {
 	private Map<String, Document> documents;
 	private Map<String, BiometricRecord> biometrics;
 	private Map<String, Object> metaData;
-	private List<AuditDto> audits;	
-	private byte[] acknowledgeReceipt;
-	private String acknowledgeReceiptName;
-		
+	private List<Map<String, String>> audits;
+
 	public RegistrationPacket() {
 		this.creationDate = DateUtils.formatToISOString(LocalDateTime.now());
 		this.demographics = new HashMap<String, Object>();
 		this.documents = new HashMap<String, Document>();
 		this.biometrics = new HashMap<String, BiometricRecord>();
 		this.metaData = new HashMap<String, Object>();
+		this.audits = new ArrayList<Map<String, String>>();
 	}
 
 	public void setField(String fieldName, String value) {
@@ -60,6 +59,18 @@ public class RegistrationPacket {
 		metaInfo.entrySet().forEach(meta -> {
 			setFields(meta.getKey(), meta.getValue(), this.metaData);
 		});
+	}
+
+	public void addMetaData(String key, String value) {
+		setFields(key, value, this.metaData);
+	}
+
+	public void setAudits(List<Map<String, String>> audits) {
+		getAudits().addAll(audits);
+	}
+
+	public void setAudit(Map<String, String> audit) {
+		getAudits().add(audit);
 	}
 
 	private void setFields(String fieldName, String value, Map finalMap) {

@@ -30,4 +30,6 @@ public interface IPacketReader {
     public BiometricRecord getBiometric(String id, String biometricSchemaField, List<BiometricType> modalities, String process);
 
     public Map<String, String> getMetaInfo(String id, String process);
+
+    public List<Map<String, String>> getAuditInfo(String id, String process);
 }

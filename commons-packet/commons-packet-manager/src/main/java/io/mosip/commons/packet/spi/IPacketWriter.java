@@ -24,9 +24,13 @@ public interface IPacketWriter {
 
     public void setDocument(String id, String documentName, Document document);
 
-    public void setMetaInfo(String id, Map<String, String> metaInfo);
+    public void addMetaInfo(String id, Map<String, String> metaInfo);
 
-    public void setAudits(String id, List<AuditDto> audits);
+    public void addMetaInfo(String id, String key, String value);
+
+    public void addAudits(String id, List<Map<String, String>> audits);
+
+    public void addAudit(String id, Map<String, String> audit);
 
     public List<PacketInfo> persistPacket(String id, String version, String schemaJson, String source, String process, boolean offlineMode);
 }
