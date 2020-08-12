@@ -33,18 +33,18 @@ public class OfflinePacketCryptoServiceImpl implements IPacketCryptoService {
 
     @Override
     public byte[] encrypt(String id, byte[] packet) {
-        return new byte[0];
+        return packet;
     }
 
     @Override
     public byte[] decrypt(String id, byte[] packet) {
         // TODO : To be implemented
-        return new byte[0];
+        return packet;
     }
 
     @Override
     public boolean verify(byte[] packet) {
         // TODO : To be implemented
-        return false;
+        return true;
     }
 }
