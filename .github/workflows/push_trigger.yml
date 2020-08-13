@@ -104,7 +104,7 @@ jobs:
         
     - name: Publish the maven package
       run: |
-        chmod +x ./deploy.sh
+        chmod +x ./deploy_test.sh
         ./deploy_test.sh kernel $GITHUB_WORKSPACE/settings.xml .*
 #        ./deploy.sh id-repository $GITHUB_WORKSPACE/settings.xml .*
       env:
