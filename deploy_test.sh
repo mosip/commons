@@ -11,6 +11,6 @@ counter=0
 #    xmllint xmllint --nowarning --xpath '/*[local-name()="project"]/*[local-name()="version"]' $F | grep $version
 #    if [ $? -eq 0 ] ; then
 cd ./kernel/kernel-core/
-mvn deploy -DskipTests -s $settings_file -f 1.1.1
+mvn deploy -DskipTests -s $settings_file
 #    fi
 #done
