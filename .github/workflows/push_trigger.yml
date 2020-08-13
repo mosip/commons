@@ -102,13 +102,13 @@ jobs:
     - name: Build with Maven
       run: mvn -B package -DskipTests --file pom.xml -s $GITHUB_WORKSPACE/settings.xml
         
-    #- name: Publish the maven package
-      #run: |
-        #chmod +x ./deploy.sh
-        #./deploy.sh kernel $GITHUB_WORKSPACE/settings.xml .*
-        #./deploy.sh id-repository $GITHUB_WORKSPACE/settings.xml .*
-      #env:
-        #GPG_TTY: $(tty)
+    - name: Publish the maven package
+      run: |
+        chmod +x ./deploy.sh
+        ./deploy_test.sh kernel $GITHUB_WORKSPACE/settings.xml .*
+#        ./deploy.sh id-repository $GITHUB_WORKSPACE/settings.xml .*
+      env:
+        GPG_TTY: $(tty)
     #- name: Analyze with SonarCloud
       #run: mvn -B verify sonar:sonar -Dsonar.projectKey=${{ secrets.PROJECT_KEY }} -Dsonar.organization=${{ secrets.ORG_KEY }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
       #env:
