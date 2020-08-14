@@ -1,10 +1,8 @@
 package io.mosip.common.packet.facade;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.commons.packet.config.PacketManagerConfig;
 import io.mosip.commons.packet.facade.PacketReader;
 import io.mosip.commons.packet.impl.PacketReaderImpl;
-import io.mosip.commons.packet.spi.IPacketReader;
 import io.mosip.commons.packet.util.PacketHelper;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -17,18 +15,14 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.anyString;

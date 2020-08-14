@@ -1,11 +1,8 @@
 package io.mosip.commons.packet.spi;
 
 import io.mosip.commons.packet.dto.Document;
-import io.mosip.commons.packet.dto.ProviderInfo;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
-import org.json.JSONException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

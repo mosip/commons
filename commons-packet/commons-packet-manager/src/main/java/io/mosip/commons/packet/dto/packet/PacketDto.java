@@ -2,7 +2,6 @@ package io.mosip.commons.packet.dto.packet;
 
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

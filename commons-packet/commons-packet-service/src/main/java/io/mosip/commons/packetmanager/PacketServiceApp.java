@@ -1,4 +1,4 @@
-package io.mosip.commons.packet;
+package io.mosip.commons.packetmanager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

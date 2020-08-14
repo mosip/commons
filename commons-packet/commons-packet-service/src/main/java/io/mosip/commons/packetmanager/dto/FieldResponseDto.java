@@ -1,4 +1,4 @@
-package io.mosip.commons.packet.dto;
+package io.mosip.commons.packetmanager.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

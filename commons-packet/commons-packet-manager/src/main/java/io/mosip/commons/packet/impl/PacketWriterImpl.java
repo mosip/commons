@@ -7,7 +7,6 @@ import io.mosip.commons.packet.constants.PacketManagerConstants;
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.dto.Packet;
 import io.mosip.commons.packet.dto.PacketInfo;
-import io.mosip.commons.packet.dto.packet.AuditDto;
 import io.mosip.commons.packet.dto.packet.BiometricsType;
 import io.mosip.commons.packet.dto.packet.DocumentType;
 import io.mosip.commons.packet.dto.packet.HashSequenceMetaInfo;

@@ -1,4 +1,4 @@
-package io.mosip.commons.packet.dto;
+package io.mosip.commons.packetmanager.dto;
 
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import lombok.Data;
@@ -11,7 +11,7 @@ import java.util.List;
 public class BiometricRequestDto {
 
     private String id;
-    private String biometricSchemaField;
+    private String person;
     private List<BiometricType> modalities;
     private String source;
     private String process;

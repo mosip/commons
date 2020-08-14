@@ -2,7 +2,6 @@ package io.mosip.commons.packet.spi;
 
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.dto.PacketInfo;
-import io.mosip.commons.packet.dto.packet.AuditDto;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import org.json.JSONException;
 import org.springframework.stereotype.Service;

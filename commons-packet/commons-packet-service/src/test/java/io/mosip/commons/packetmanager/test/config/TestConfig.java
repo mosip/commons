@@ -1,4 +1,4 @@
-package io.mosip.commons.packet.config;
+package io.mosip.commons.packetmanager.test.config;
 
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;

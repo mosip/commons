@@ -2,20 +2,13 @@ package io.mosip.commons.packet.util;
 
 import io.mosip.commons.packet.dto.packet.ProviderDto;
 import io.mosip.commons.packet.exception.NoAvailableProviderException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static io.mosip.commons.packet.constants.PacketManagerConstants.PROCESS;
-import static io.mosip.commons.packet.constants.PacketManagerConstants.SOURCE;
 
 public class PacketHelper {
 

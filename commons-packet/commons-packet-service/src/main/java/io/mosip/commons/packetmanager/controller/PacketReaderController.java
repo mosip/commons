@@ -1,14 +1,14 @@
-package io.mosip.commons.packet.controller;
+package io.mosip.commons.packetmanager.controller;
 
 import io.mosip.commons.packet.dto.Document;
-import io.mosip.commons.packet.dto.ValidatePacketResponse;
+import io.mosip.commons.packetmanager.dto.ValidatePacketResponse;
 import io.mosip.commons.packet.facade.PacketReader;
-import io.mosip.commons.packet.dto.BiometricRequestDto;
-import io.mosip.commons.packet.dto.DocumentDto;
-import io.mosip.commons.packet.dto.FieldDto;
-import io.mosip.commons.packet.dto.FieldDtos;
-import io.mosip.commons.packet.dto.FieldResponseDto;
-import io.mosip.commons.packet.dto.InfoDto;
+import io.mosip.commons.packetmanager.dto.BiometricRequestDto;
+import io.mosip.commons.packetmanager.dto.DocumentDto;
+import io.mosip.commons.packetmanager.dto.FieldDto;
+import io.mosip.commons.packetmanager.dto.FieldDtos;
+import io.mosip.commons.packetmanager.dto.FieldResponseDto;
+import io.mosip.commons.packetmanager.dto.InfoDto;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
@@ -76,7 +76,7 @@ public class PacketReaderController {
     @PostMapping(path = "/biometrics", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseWrapper<BiometricRecord> getBiometrics(@RequestBody(required = true) RequestWrapper<BiometricRequestDto> request) {
         BiometricRequestDto bioRequest = request.getRequest();
-        BiometricRecord responseDto = packetReader.getBiometric(bioRequest.getId(), bioRequest.getBiometricSchemaField(), bioRequest.getModalities(), bioRequest.getSource(), bioRequest.getProcess(), bioRequest.isBypassCache());
+        BiometricRecord responseDto = packetReader.getBiometric(bioRequest.getId(), bioRequest.getPerson(), bioRequest.getModalities(), bioRequest.getSource(), bioRequest.getProcess(), bioRequest.isBypassCache());
         ResponseWrapper<BiometricRecord> response = getResponseWrapper();
         response.setResponse(responseDto);
         return response;
