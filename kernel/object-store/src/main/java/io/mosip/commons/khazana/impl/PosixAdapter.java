@@ -65,7 +65,6 @@ public class PosixAdapter implements ObjectStoreAdapter {
 
         } catch (FileNotFoundInDestinationException e) {
             LOGGER.error("exception occured to get object for id - " + container, e);
-            throw e;
         } catch (IOException e) {
             LOGGER.error("exception occured to get object for id - " + container, e);
         }
@@ -103,6 +102,7 @@ public class PosixAdapter implements ObjectStoreAdapter {
             metaMap.put(key, value);
             JSONObject jsonObject = objectMetadata(account, container, objectName, metaMap);
             createContainerZipWithSubpacket(account, container, objectName + JSON, new ByteArrayInputStream(jsonObject.toString().getBytes()));
+            return metaMap;
         } catch (io.mosip.kernel.core.exception.IOException e) {
             LOGGER.error("exception occured to add metadata for id - " + container, e);
         } catch (IOException e) {

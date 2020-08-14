@@ -24,6 +24,7 @@
         <joss.adapter.version>0.10.2</joss.adapter.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <powermock.beta.version>2.0.0-beta.5</powermock.beta.version>
     </properties>
 
     <dependencies>
@@ -46,6 +47,18 @@
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk</artifactId>
             <version>${aws.javasdk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>${powermock.beta.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito2</artifactId>
+            <version>${powermock.beta.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
