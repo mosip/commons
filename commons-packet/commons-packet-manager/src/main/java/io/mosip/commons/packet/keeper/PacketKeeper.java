@@ -137,7 +137,7 @@ public class PacketKeeper {
                 packet.setPacketInfo(PacketManagerHelper.getPacketInfo(metaInfo));
 
 
-                if (!checkSignature(packet, encryptedSubPacket)) {
+            if (!checkSignature(packet, encryptedSubPacket)) {
                 LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packet.getPacketInfo().getId(), "Packet Integrity and Signature check failed");
                 throw new PacketIntegrityFailureException();
             }

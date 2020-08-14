@@ -27,6 +27,8 @@ public class RegistrationPacket {
 	private Map<String, BiometricRecord> biometrics;
 	private Map<String, Object> metaData;
 	private List<Map<String, String>> audits;
+	private List<HashSequenceMetaInfo> hashSequence1;
+	private List<HashSequenceMetaInfo> hashSequence2;
 
 	public RegistrationPacket() {
 		this.creationDate = DateUtils.formatToISOString(LocalDateTime.now());

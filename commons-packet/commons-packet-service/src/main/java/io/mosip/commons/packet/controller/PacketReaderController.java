@@ -1,6 +1,7 @@
 package io.mosip.commons.packet.controller;
 
 import io.mosip.commons.packet.dto.Document;
+import io.mosip.commons.packet.dto.ValidatePacketResponse;
 import io.mosip.commons.packet.facade.PacketReader;
 import io.mosip.commons.packet.dto.BiometricRequestDto;
 import io.mosip.commons.packet.dto.DocumentDto;
@@ -108,6 +109,17 @@ public class PacketReaderController {
         }
         ResponseWrapper<List<FieldResponseDto>> response = getResponseWrapper();
         response.setResponse(resultField);
+        return response;
+    }
+
+    @PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
+    @ResponseFilter
+    @PostMapping(path = "/validatePacket", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseWrapper<ValidatePacketResponse> validatePacket(@RequestBody(required = true) RequestWrapper<InfoDto> request) {
+        InfoDto metaDto = request.getRequest();
+        boolean resultFields = packetReader.validatePacket(metaDto.getId(), metaDto.getSource(), metaDto.getProcess());
+        ResponseWrapper<ValidatePacketResponse> response = getResponseWrapper();
+        response.setResponse(new ValidatePacketResponse(resultFields));
         return response;
     }
 

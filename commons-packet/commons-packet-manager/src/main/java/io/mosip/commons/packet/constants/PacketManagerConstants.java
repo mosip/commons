@@ -9,9 +9,6 @@ public class PacketManagerConstants {
 	public static final String PACKET_META_FILENAME = "packet_meta_info.json";
 	public static final String PACKET_DATA_HASH_FILENAME = "packet_data_hash.txt";
 	public static final String PACKET_OPER_HASH_FILENAME = "packet_operations_hash.txt";
-		
-	public static final String VERSION_FIELD_NAME = "IDSchemaVersion";
-	
 	public static final String CBEFF_FILE_FORMAT = "cbeff";
 	public static final double CBEFF_VERSION = 1.0;
 	public static final String CBEFF_SCHEMA_FILE_PATH = "cbeff.xsd";

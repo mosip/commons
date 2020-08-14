@@ -1,6 +1,5 @@
 package io.mosip.commons.packet.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.commons.packet.constants.LoggerFileConstant;
 import io.mosip.commons.packet.spi.IPacketReader;
 import io.mosip.commons.packet.spi.IPacketWriter;
@@ -16,7 +15,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Primary;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
@@ -67,12 +65,12 @@ public class PacketManagerConfig {
             Set<String> readerProviders = PacketHelper.getReaderProvider(readerConfiguration());
             if (!CollectionUtils.isEmpty(readerProviders)) {
                 for (String className : readerProviders) {
-                    logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), null,
+                    logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.ID.toString(), null,
                             "Validating the reference provider readers are present or not.");
                     getBean(className);
                 }
             } else
-            logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), null,
+            logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.ID.toString(), null,
                     "Reference provider reader class is not provided.");
     }
 
@@ -86,12 +84,12 @@ public class PacketManagerConfig {
         Set<String> writerProviders = PacketHelper.getWriterProvider(writerConfiguration());
         if (!CollectionUtils.isEmpty(writerProviders)) {
             for (String className : writerProviders) {
-                logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), null,
+                logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.ID.toString(), null,
                         "Validating the reference provider writers are present or not.");
                 getBean(className);
             }
         } else
-            logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), null,
+            logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.ID.toString(), null,
                 "Reference provider writer class is not provided.");
     }
 
@@ -110,12 +108,12 @@ public class PacketManagerConfig {
         Set<String> readerProviders = PacketHelper.getReaderProvider(readerConfiguration());
         if (!CollectionUtils.isEmpty(readerProviders)) {
             for (String className : readerProviders) {
-                logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), null,
+                logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.ID.toString(), null,
                         "Validating the reference provider readers are present or not.");
                 iPacketReaders.add((IPacketReader) getBean(className));
             }
         } else {
-            logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), null,
+            logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.ID.toString(), null,
                     "reference provider reader is not present.");
         }
         return iPacketReaders;
@@ -136,12 +134,12 @@ public class PacketManagerConfig {
         Set<String> writerProviders = PacketHelper.getWriterProvider(writerConfiguration());
         if (!CollectionUtils.isEmpty(writerProviders)) {
             for (String className : writerProviders) {
-                logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), null,
+                logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.ID.toString(), null,
                         "Validating the reference provider writers are present or not.");
                 iPacketWriters.add((IPacketWriter) getBean(className));
             }
         } else {
-            logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), null,
+            logger.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.ID.toString(), null,
                     "reference provider writer is not present.");
         }
         return iPacketWriters;

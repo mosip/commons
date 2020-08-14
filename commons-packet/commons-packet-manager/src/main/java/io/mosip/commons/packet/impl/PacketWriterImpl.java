@@ -1,5 +1,6 @@
 package io.mosip.commons.packet.impl;
 
+import com.google.common.collect.Lists;
 import io.mosip.commons.packet.constants.ErrorCode;
 import io.mosip.commons.packet.constants.LoggerFileConstant;
 import io.mosip.commons.packet.constants.PacketManagerConstants;
@@ -14,7 +15,6 @@ import io.mosip.commons.packet.dto.packet.RegistrationPacket;
 import io.mosip.commons.packet.exception.PacketCreatorException;
 import io.mosip.commons.packet.keeper.PacketKeeper;
 import io.mosip.commons.packet.spi.IPacketWriter;
-import io.mosip.commons.packet.util.IdSchemaUtils;
 import io.mosip.commons.packet.util.PacketManagerHelper;
 import io.mosip.commons.packet.util.PacketManagerLogger;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
@@ -48,6 +48,8 @@ public class PacketWriterImpl implements IPacketWriter {
     private static final Logger LOGGER = LoggerFactory.getLogger(PacketWriterImpl.class);
     private static Map<String, String> categorySubpacketMapping = new HashMap<>();
     private static final String UNDERSCORE = "_";
+    private static final String HASHSEQUENCE1 = "hashSequence1";
+    private static final String HASHSEQUENCE2 = "hashSequence2";
 
     static {
         categorySubpacketMapping.put("pvt", "id");
@@ -56,9 +58,6 @@ public class PacketWriterImpl implements IPacketWriter {
         categorySubpacketMapping.put("evidence", "evidence");
         categorySubpacketMapping.put("optional", "optional");
     }
-
-    @Autowired
-    private IdSchemaUtils idSchemaUtils;
 
     @Autowired
     private PacketManagerHelper packetManagerHelper;
@@ -124,7 +123,7 @@ public class PacketWriterImpl implements IPacketWriter {
     }
 
     private List<PacketInfo> createPacket(String id, String version, String schemaJson, String source, String process, boolean offlineMode) throws PacketCreatorException {
-        LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(), id, "Started packet creation");
+        LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.ID.toString(), id, "Started packet creation");
         if (this.registrationPacket == null || !registrationPacket.getRegistrationId().equalsIgnoreCase(id))
             throw new PacketCreatorException(ErrorCode.INITIALIZATION_ERROR.getErrorCode(),
                     ErrorCode.INITIALIZATION_ERROR.getErrorMessage());
@@ -136,7 +135,7 @@ public class PacketWriterImpl implements IPacketWriter {
         try {
 
             for (String subPacketName : identityProperties.keySet()) {
-                LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(),
+                LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.ID.toString(),
                         id, "Started Subpacket: " + subPacketName);
                 List<Object> schemaFields = identityProperties.get(subPacketName);
                 byte[] subpacketBytes = createSubpacket(Double.valueOf(version), schemaFields, defaultSubpacketName.equalsIgnoreCase(subPacketName),
@@ -156,7 +155,7 @@ public class PacketWriterImpl implements IPacketWriter {
                 packet.setPacket(subpacketBytes);
                 packetKeeper.putPacket(packet);
                 packetInfos.add(packetInfo);
-                LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(),
+                LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.ID.toString(),
                         id, "Completed Subpacket: " + subPacketName);
             }
 
@@ -166,7 +165,7 @@ public class PacketWriterImpl implements IPacketWriter {
         } finally {
             this.registrationPacket = null;
         }
-        LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(),
+        LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.ID.toString(),
                 id, "Exiting packet creation");
         return packetInfos;
     }
@@ -177,7 +176,7 @@ public class PacketWriterImpl implements IPacketWriter {
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try (ZipOutputStream subpacketZip = new ZipOutputStream(new BufferedOutputStream(out))) {
-            LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(),
+            LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.ID.toString(),
                     id, "Identified fields >>> " + schemaFields.size());
             Map<String, Object> identity = new HashMap<String, Object>();
             Map<String, HashSequenceMetaInfo> hashSequences = new HashMap<>();
@@ -189,7 +188,7 @@ public class PacketWriterImpl implements IPacketWriter {
             for (Object obj : schemaFields) {
                 Map<String, Object> field = (Map<String, Object>) obj;
                 String fieldName = (String) field.get(PacketManagerConstants.SCHEMA_ID);
-                LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(),
+                LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.ID.toString(),
                         id, "Adding field : " + fieldName);
                 switch ((String) field.get(PacketManagerConstants.SCHEMA_TYPE)) {
                     case PacketManagerConstants.BIOMETRICS_TYPE:
@@ -286,7 +285,8 @@ public class PacketWriterImpl implements IPacketWriter {
             addEntryToZip(PacketManagerConstants.PACKET_OPER_HASH_FILENAME,
                     PacketManagerHelper.generateHash(hashSequenceMetaInfo.getValue(), hashSequenceMetaInfo.getHashSource()),
                     zipOutputStream);
-            this.registrationPacket.getMetaData().putAll(hashSequences);
+
+            this.registrationPacket.getMetaData().put(HASHSEQUENCE2, Lists.newArrayList(hashSequenceMetaInfo));
         }
 
         addPacketDataHash(hashSequences, zipOutputStream);
@@ -297,17 +297,20 @@ public class PacketWriterImpl implements IPacketWriter {
                                    ZipOutputStream zipOutputStream) throws PacketCreatorException {
 
         LinkedList<String> sequence = new LinkedList<String>();
+        List<HashSequenceMetaInfo> hashSequenceMetaInfos = new ArrayList<>();
         Map<String, byte[]> data = new HashMap<>();
         if (hashSequences.containsKey(PacketManagerConstants.BIOMETRIC_SEQ)) {
             sequence.addAll(hashSequences.get(PacketManagerConstants.BIOMETRIC_SEQ).getValue());
             data.putAll(hashSequences.get(PacketManagerConstants.BIOMETRIC_SEQ).getHashSource());
-            this.registrationPacket.getMetaData().putAll(hashSequences);
+            hashSequenceMetaInfos.add(hashSequences.get(PacketManagerConstants.BIOMETRIC_SEQ));
         }
         if (hashSequences.containsKey(PacketManagerConstants.DEMOGRAPHIC_SEQ)) {
             sequence.addAll(hashSequences.get(PacketManagerConstants.DEMOGRAPHIC_SEQ).getValue());
             data.putAll(hashSequences.get(PacketManagerConstants.DEMOGRAPHIC_SEQ).getHashSource());
-            this.registrationPacket.getMetaData().putAll(hashSequences);
+            hashSequenceMetaInfos.add(hashSequences.get(PacketManagerConstants.DEMOGRAPHIC_SEQ));
         }
+        if (hashSequenceMetaInfos.size() > 0)
+            this.registrationPacket.getMetaData().put(HASHSEQUENCE1, hashSequenceMetaInfos);
 
         addEntryToZip(PacketManagerConstants.PACKET_DATA_HASH_FILENAME, PacketManagerHelper.generateHash(sequence, data),
                 zipOutputStream);
@@ -353,7 +356,7 @@ public class PacketWriterImpl implements IPacketWriter {
 
     private void addEntryToZip(String fileName, byte[] data, ZipOutputStream zipOutputStream)
             throws PacketCreatorException {
-        LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.REGISTRATIONID.toString(),
+        LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.ID.toString(),
                 this.registrationPacket.getRegistrationId(), "Adding file : " + fileName);
         try {
             if (data != null) {

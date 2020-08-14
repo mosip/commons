@@ -18,17 +18,16 @@ import io.mosip.commons.packet.keeper.PacketKeeper;
 import io.mosip.commons.packet.spi.IPacketReader;
 import io.mosip.commons.packet.util.IdSchemaUtils;
 import io.mosip.commons.packet.util.PacketManagerLogger;
+import io.mosip.commons.packet.util.PacketValidator;
 import io.mosip.commons.packet.util.ZipUtils;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.core.cbeffutil.common.CbeffValidator;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
-import io.mosip.kernel.core.cbeffutil.spi.CbeffUtil;
 import io.mosip.kernel.core.exception.BaseCheckedException;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.JsonUtils;
-import io.mosip.kernel.core.util.exception.JsonProcessingException;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +39,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -77,16 +75,16 @@ public class PacketReaderImpl implements IPacketReader {
     private IdSchemaUtils idSchemaUtils;
 
     @Autowired
-    private CbeffUtil cbeffUtil;
+    private PacketValidator packetValidator;
 
     /**
-     * idobject providerConfig, cbeff providerConfig(ex - biometric exception providerConfig)
      * Perform packet validations and audit errors.
      * List of validations -
-     * 1. schema validation
+     * 1. schema & idobject reference validation
      * 2. files validation
-     * 3. cbeff validation
-     * 4. document validation
+     * 3. decrypted packet checksum validation
+     * 4. cbeff validation
+     * 5. document validation
      *
      *
      * @param id
@@ -95,7 +93,12 @@ public class PacketReaderImpl implements IPacketReader {
      */
     @Override
     public boolean validatePacket(String id, String process) {
-        //packetKeeper.checkSignature();
+        try {
+            return packetValidator.validate(id, process, getAll(id, process));
+        } catch (Exception e) {
+            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
+                    id, "Packet Validation exception : "  + e.getStackTrace().toString());
+        }
         return false;
     }
 
@@ -123,8 +126,10 @@ public class PacketReaderImpl implements IPacketReader {
 
                     currentIdMap.keySet().stream().forEach(key -> {
                         Object value = currentIdMap.get(key);
-                        if (value != null && value instanceof Number)
+                        if (value != null && (value instanceof Number))
                             finalMap.putIfAbsent(key, value);
+                        else if (value != null && (value instanceof String))
+                            finalMap.putIfAbsent(key, value.toString().replaceAll("^\"|\"$", ""));
                         else {
                             try {
                                 finalMap.putIfAbsent(key, value != null ? JsonUtils.javaObjectToJsonString(currentIdMap.get(key)) : null);
