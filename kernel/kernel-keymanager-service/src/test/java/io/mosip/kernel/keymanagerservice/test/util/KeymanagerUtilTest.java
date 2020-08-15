@@ -64,7 +64,7 @@ public class KeymanagerUtilTest {
 		keyPairMaster = keyGen.generateKeyPair();
 		keyPair = keyGen.generateKeyPair();
 		X509Certificate x509Certificate = CertificateUtility.generateX509Certificate(keyPair, "mosip", "mosip", "mosip",
-				"india", LocalDateTime.of(2010, 1, 1, 12, 00), LocalDateTime.of(2011, 1, 1, 12, 00));
+				"india", LocalDateTime.of(2010, 1, 1, 12, 00), LocalDateTime.of(2011, 1, 1, 12, 00), "BC");
 		chain = new X509Certificate[1];
 		chain[0] = x509Certificate;
 		privateKeyEntry = new PrivateKeyEntry(keyPair.getPrivate(), chain);

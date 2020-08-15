@@ -8,6 +8,8 @@ package io.mosip.kernel.cryptomanager.service;
 
 import org.springframework.stereotype.Service;
 
+import io.mosip.kernel.cryptomanager.dto.CryptoWithPinRequestDto;
+import io.mosip.kernel.cryptomanager.dto.CryptoWithPinResponseDto;
 import io.mosip.kernel.cryptomanager.dto.CryptomanagerRequestDto;
 import io.mosip.kernel.cryptomanager.dto.CryptomanagerResponseDto;
 
@@ -38,4 +40,19 @@ public interface CryptomanagerService {
 	 */
 	public CryptomanagerResponseDto decrypt(CryptomanagerRequestDto cryptoRequestDto);
 
+	/**
+	 * Encrypt the data requested with metadata.
+	 *
+	 * @param requestDto {@link CryptoWithPinRequestDto} instance
+	 * @return encrypted data
+	 */
+	public CryptoWithPinResponseDto encryptWithPin(CryptoWithPinRequestDto requestDto);
+
+	/**
+	 * Decrypt data requested with metadata.
+	 *
+	 * @param requestDto {@link CryptoWithPinRequestDto} instance
+	 * @return decrypted data
+	 */
+	public CryptoWithPinResponseDto decryptWithPin(CryptoWithPinRequestDto requestDto);
 }
