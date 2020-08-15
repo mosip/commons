@@ -18,6 +18,7 @@ import java.util.Optional;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import io.mosip.kernel.core.exception.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -153,4 +154,31 @@ public class CryptomanagerUtils {
 		return LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern(UTC_DATETIME_PATTERN));
 	}
 
+	/**
+	 * hex decode string to byte array
+	 *
+	 * @param hexData type {@link String} 
+	 * @return a {@link byte[]} of given data
+	 */
+	public byte[] hexDecode(String hexData) {
+
+		char[] hexDataCharArr = hexData.toCharArray();
+		int dataLength = hexDataCharArr.length;
+
+        if ((dataLength & 0x01) != 0) {
+			throw new ParseException(CryptomanagerErrorCode.HEX_DATA_PARSE_EXCEPTION.getErrorCode(), 
+					CryptomanagerErrorCode.HEX_DATA_PARSE_EXCEPTION.getErrorMessage());
+        }
+
+        byte[] decodedBytes = new byte[dataLength >> 1];
+
+        for (int i = 0, j = 0; j < dataLength; i++) {
+            int f = Character.digit(hexDataCharArr[j], 16) << 4;
+            j++;
+            f = f | Character.digit(hexDataCharArr[j], 16);
+            j++;
+            decodedBytes[i] = (byte) (f & 0xFF);
+        }
+        return decodedBytes;
+	}
 }
