@@ -39,11 +39,11 @@ public class S3Adapter implements ObjectStoreAdapter {
     @Value("${object.store.s3.readlimit:10000000}")
     private int readlimit;
 
-    private AmazonS3 connection = null;
+    private Map<String, AmazonS3> connections = new HashMap<>();
 
     @Override
     public InputStream getObject(String account, String container, String objectName) {
-        S3Object s3Object = getConnection().getObject(container, objectName);
+        S3Object s3Object = getConnection(account).getObject(container, objectName);
         return s3Object == null ? null : s3Object.getObjectContent();
     }
 
@@ -54,10 +54,10 @@ public class S3Adapter implements ObjectStoreAdapter {
 
     @Override
     public boolean putObject(String account, final String container, String objectName, InputStream data) {
-        Optional<Bucket> optionalBucket = getConnection().listBuckets().stream().filter(b -> b.getName().equalsIgnoreCase(container)).findAny();
-        Bucket bucket = !optionalBucket.isPresent() ? getConnection().createBucket(container) : optionalBucket.get();
+        Optional<Bucket> optionalBucket = getConnection(account).listBuckets().stream().filter(b -> b.getName().equalsIgnoreCase(container)).findAny();
+        Bucket bucket = !optionalBucket.isPresent() ? getConnection(account).createBucket(container) : optionalBucket.get();
 
-        getConnection().putObject(bucket.getName(), objectName, data, null);
+        getConnection(account).putObject(bucket.getName(), objectName, data, null);
         return true;
     }
 
@@ -67,13 +67,13 @@ public class S3Adapter implements ObjectStoreAdapter {
         metadata.entrySet().stream().forEach(m -> objectMetadata.addUserMetadata(m.getKey(), m.getValue() != null ? m.getValue().toString() : null));
 
         try {
-            S3Object s3Object = getConnection().getObject(container, objectName);
+            S3Object s3Object = getConnection(account).getObject(container, objectName);
             if (s3Object.getObjectMetadata() != null && s3Object.getObjectMetadata().getUserMetadata() != null)
                 s3Object.getObjectMetadata().getUserMetadata().entrySet().forEach(m -> objectMetadata.addUserMetadata(m.getKey(), m.getValue()));
 
             PutObjectRequest putObjectRequest = new PutObjectRequest(container, objectName, s3Object.getObjectContent(), objectMetadata);
             putObjectRequest.getRequestClientOptions().setReadLimit(readlimit);
-            getConnection().putObject(putObjectRequest);
+            getConnection(account).putObject(putObjectRequest);
         } catch (Exception e) {
             e.printStackTrace();
             metadata = null;
@@ -92,19 +92,23 @@ public class S3Adapter implements ObjectStoreAdapter {
     @Override
     public Map<String, Object> getMetaData(String account, String container, String objectName) {
         Map<String, Object> metaData = new HashMap<>();
-        ObjectMetadata objectMetadata = getConnection().getObject(container, objectName).getObjectMetadata();
+        ObjectMetadata objectMetadata = getConnection(account).getObject(container, objectName).getObjectMetadata();
         if (objectMetadata != null && objectMetadata.getUserMetadata() != null)
             objectMetadata.getUserMetadata().entrySet().forEach(entry -> metaData.put(entry.getKey(), entry.getValue()));
 
         return metaData;
     }
 
-    private AmazonS3 getConnection() {
-        if (connection == null) {
-            AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
-            connection = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
-                    .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(url, region)).build();
-        }
+    private AmazonS3 getConnection(String account) {
+        if (!connections.isEmpty() && connections.get(account) != null)
+            return connections.get(account);
+
+        AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
+        AmazonS3 connection = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
+                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(url, region)).build();
+
+        connections.put(account, connection);
+
         return connection;
     }
 }

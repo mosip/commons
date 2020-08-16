@@ -1,4 +1,4 @@
-package io.mosip.commons.khazana.test;
+package io.mosip.commons.khazana.test.adapter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.commons.khazana.impl.PosixAdapter;

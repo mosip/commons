@@ -25,6 +25,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <powermock.beta.version>2.0.0-beta.5</powermock.beta.version>
+        <s3mock.version>0.2.4</s3mock.version>
     </properties>
 
     <dependencies>
@@ -58,6 +59,12 @@
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito2</artifactId>
             <version>${powermock.beta.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.findify</groupId>
+            <artifactId>s3mock_2.12</artifactId>
+            <version>${s3mock.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

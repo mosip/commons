@@ -37,7 +37,7 @@ public class SwiftAdapter implements ObjectStoreAdapter {
     @Value("object.store.swift.url:null")
     private String authUrl;
 
-    private List<Account> accounts = new ArrayList<Account>();
+    private Map<String, Account> accounts = new HashMap<>();
 
 
     public InputStream getObject(String account, String containerName, String objectName) {
@@ -101,28 +101,17 @@ public class SwiftAdapter implements ObjectStoreAdapter {
     }
 
     private Account getConnection(String accountName) {
-        if (!accounts.isEmpty()) {
-            try {
-                Optional<Account> account = accounts.stream().filter(acc ->
-                        acc.getTenants().getEnabledTenants().stream().map(t ->
-                                t.name).collect(Collectors.toSet()).contains(accountName)).findAny();
-                if (account.isPresent())
-                    return account.get();
-                else
-                    throw new Exception("Could not find existing account. Will create new connection.");
-            } catch (Exception e) {
-                LOGGER.error("exception occured. Will create a new connection.", e);
-            }
-        }
+        if (!accounts.isEmpty() && accounts.get(accountName) != null)
+            return accounts.get(accountName);
+
         AccountConfig config = new AccountConfig();
         config.setUsername(userName);
         config.setPassword(password);
         config.setAuthUrl(authUrl);
         config.setTenantName(accountName);
-        //config.setMock(true);
         config.setAuthenticationMethod(AuthenticationMethod.BASIC);
         Account account = new AccountFactory(config).setAllowReauthenticate(true).createAccount();
-        accounts.add(account);
+        accounts.put(accountName, account);
         return account;
     }
 }
