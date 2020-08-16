@@ -32,6 +32,24 @@
 			<artifactId>kernel-logger-logback</artifactId>
 			<version>${kernel.logger.logback.version}</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
+		<dependency>
+		    <groupId>org.bouncycastle</groupId>
+		    <artifactId>bcprov-jdk15on</artifactId>
+		    <version>1.66</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcpkix-jdk15on -->
+		<dependency>
+		    <groupId>org.bouncycastle</groupId>
+		    <artifactId>bcpkix-jdk15on</artifactId>
+		    <version>1.66</version>
+		</dependency>		
+		<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcmail-jdk15 -->
+		<dependency>
+		    <groupId>org.bouncycastle</groupId>
+		    <artifactId>bcmail-jdk15</artifactId>
+		    <version>1.46</version>
+		</dependency>				
 	</dependencies>
 	<build>
 		<resources>
@@ -42,5 +60,35 @@
 				</excludes>
 			</resource>
 		</resources>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven.compiler.version}</version>
+				<configuration>
+                    <maven.compiler.source>11</maven.compiler.source>
+                    <maven.compiler.target>11</maven.compiler.target>           
+                    <compilerArgs>
+                    	<arg>--add-exports</arg><arg>java.base/sun.security.x509=ALL-UNNAMED</arg>
+                    </compilerArgs>         
+                </configuration>
+			</plugin>
+			<plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-javadoc-plugin</artifactId>
+		    <executions>
+		        <execution>
+		            <id>attach-javadocs</id>
+		            <goals>
+		            <goal>jar</goal>
+		            </goals>
+		            <configuration>
+		                    <properties>
+		                    <maven.javadoc.skip>true</maven.javadoc.skip>
+		                    </properties>
+		            </configuration>
+		        </execution>
+    		</executions>
+		</plugin>
+		</plugins>
 	</build>
 </project>

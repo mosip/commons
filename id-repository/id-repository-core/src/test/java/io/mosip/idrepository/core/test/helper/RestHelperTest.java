@@ -24,6 +24,7 @@ import org.junit.runners.MethodSorters;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
@@ -77,6 +78,9 @@ import reactor.core.publisher.Mono;
 @ContextConfiguration(classes = { TestContext.class, WebApplicationContext.class })
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(SpringJUnit4ClassRunner.class)
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", 
+	  "javax.xml.*", "org.xml.*", "org.w3c.dom.*",
+	  "com.sun.org.apache.xalan.*", "javax.activation.*"})
 @WebMvcTest
 @AutoConfigureMockMvc
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)

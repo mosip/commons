@@ -19,15 +19,16 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- maven -->
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<maven.compiler.version>3.7.0</maven.compiler.version>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.version>3.8.0</maven.compiler.version>
+		<maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version>
+		
 		<maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
-		<maven.war.plugin.version>3.1.0</maven.war.plugin.version>
-		<maven.surefire.plugin.version>2.9</maven.surefire.plugin.version>
+		<maven.war.plugin.version>3.1.0</maven.war.plugin.version>		
 		<maven.jacoco.plugin.version>0.8.1</maven.jacoco.plugin.version>
 		<maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version>
-		<maven.javadoc.version>3.0.1</maven.javadoc.version>
+		<maven.javadoc.version>3.2.0</maven.javadoc.version>
 		<maven-shade-plugin.version>2.3</maven-shade-plugin.version>
 
 		<!-- spring -->
@@ -64,9 +65,9 @@
 
 		<!-- test -->
 		<junit.version>4.12</junit.version>
-		<mockito.version>1.10.19</mockito.version>
+		<mockito.version>2.23.4</mockito.version>
 		<powermock.version>1.7.4</powermock.version>
-		<powermock.beta.version>2.0.0-beta.5</powermock.beta.version>
+		<powermock.beta.version>2.0.7</powermock.beta.version>
 
 		<!-- logger -->
 		<logback.version>1.2.3</logback.version>
@@ -108,7 +109,7 @@
 		<icu4j.version>63.1</icu4j.version>
 		<seventeam-otp.version>1.0.0</seventeam-otp.version>
 		<google.zxing.version>3.3.3</google.zxing.version>
-		<hadoop-client>2.8.1</hadoop-client>
+		<hadoop-client>3.1.0</hadoop-client>
 		<htrace-core4>4.1.0-incubating</htrace-core4>
 		<aws.javasdk.version>1.11.368</aws.javasdk.version>
 		<s3mock.version>0.2.4</s3mock.version>
@@ -206,6 +207,32 @@
 			<artifactId>jcl-over-slf4j</artifactId>
 			<version>${jcl.to.slf4j.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>javax.activation</groupId>
+		    <artifactId>activation</artifactId>
+		    <version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
+			<version>2.3.0-b170127.1453</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.mockito</groupId>
+		    <artifactId>mockito-core</artifactId>
+		    <version>2.22.0</version>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.javassist</groupId>
+		    <artifactId>javassist</artifactId>
+		    <version>3.27.0-GA</version>
+		</dependency> 
 
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -213,8 +240,8 @@
 			<version>${spring-cloud-config.version}</version>
 		</dependency>
 
-	</dependencies>
 
+	</dependencies>
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -225,6 +252,9 @@
 					<configuration>
 						<skipTests>${skipTests}</skipTests>
 						<skip>false</skip>
+						<argLine>
+							--illegal-access=permit
+						</argLine>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -249,6 +279,9 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>${maven.javadoc.version}</version>
+					<configuration>
+           				<doclint>none</doclint>
+       				</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -318,10 +351,21 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${maven.javadoc.version}</version>
 				<configuration>
 					<aggregate>true</aggregate>
+					<doclint>none</doclint>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven.compiler.version}</version>
+				<configuration>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+				</configuration>
+			</plugin>			
 		</plugins>
 	</build>
 </project>
