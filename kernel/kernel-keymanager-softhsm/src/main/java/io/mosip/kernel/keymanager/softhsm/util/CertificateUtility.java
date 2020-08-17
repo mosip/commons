@@ -40,6 +40,7 @@ public class CertificateUtility {
 	private CertificateUtility() {
 	}
 
+	private static BouncyCastleProvider provider;
 	/**
 	 * Generate X509 Certificate
 	 * 
@@ -53,20 +54,21 @@ public class CertificateUtility {
 	 * @return The certificate
 	 */
 	public static X509Certificate generateX509Certificate(KeyPair keyPair, String commonName, String organizationalUnit,
-			String organization, String country, LocalDateTime validityFrom, LocalDateTime validityTo,String providerName) {
+			String organization, String country, LocalDateTime validityFrom, LocalDateTime validityTo) {
     	X509Certificate rootCert;
+    	addProvider();
 		try {
 			BigInteger rootSerialNum = new BigInteger(Long.toString(new SecureRandom().nextLong()));
 	    	X500Name rootCertIssuer = new X500Name(getCertificateAttributes(commonName, organizationalUnit, organization, country));
 	        X500Name rootCertSubject = rootCertIssuer;
 	        
-			ContentSigner rootCertContentSigner = new JcaContentSignerBuilder(KeymanagerConstant.SIGNATURE_ALGORITHM).setProvider(providerName).build(keyPair.getPrivate());
+			ContentSigner rootCertContentSigner = new JcaContentSignerBuilder(KeymanagerConstant.SIGNATURE_ALGORITHM).setProvider(provider.getName()).build(keyPair.getPrivate());
 			X509v3CertificateBuilder rootCertBuilder = new JcaX509v3CertificateBuilder(rootCertIssuer, rootSerialNum, getDateFromLocalDateTime(validityFrom), getDateFromLocalDateTime(validityTo), rootCertSubject, keyPair.getPublic());
 	        JcaX509ExtensionUtils rootCertExtUtils = new JcaX509ExtensionUtils();
 	        rootCertBuilder.addExtension(Extension.basicConstraints, true, new BasicConstraints(true));
 			rootCertBuilder.addExtension(Extension.subjectKeyIdentifier, false, rootCertExtUtils.createSubjectKeyIdentifier(keyPair.getPublic()));
 			X509CertificateHolder rootCertHolder = rootCertBuilder.build(rootCertContentSigner);	        
-			rootCert = new JcaX509CertificateConverter().setProvider(providerName).getCertificate(rootCertHolder);
+			rootCert = new JcaX509CertificateConverter().setProvider(provider.getName()).getCertificate(rootCertHolder);
 		} catch (OperatorCreationException|NoSuchAlgorithmException | CertIOException| CertificateException e) {
 			throw new KeystoreProcessingException(KeymanagerErrorCode.CERTIFICATE_PROCESSING_ERROR.getErrorCode(),
 					KeymanagerErrorCode.CERTIFICATE_PROCESSING_ERROR.getErrorMessage() + e.getMessage(), e);
@@ -95,5 +97,13 @@ public class CertificateUtility {
     private static String getCertificateAttributes(String commonName, String organizationalUnit,
 			String organization, String country ) {
     	return "CN=" + commonName + ", OU =" + organizationalUnit + ",O=" + organization + ", C=" + country;
+    }
+    
+    /**
+     * bouncy castle provider
+     */
+    private static void addProvider() {
+    	provider = new BouncyCastleProvider();
+    	Security.addProvider(provider);
     }
 }

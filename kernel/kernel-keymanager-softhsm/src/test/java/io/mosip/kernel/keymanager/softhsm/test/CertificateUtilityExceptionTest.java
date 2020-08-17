@@ -33,6 +33,6 @@ public class CertificateUtilityExceptionTest {
 		keyGenerator = KeyPairGenerator.getInstance("ELGAMAL", provider);
 		keyGenerator.initialize(2048, random);
 		CertificateUtility.generateX509Certificate(keyGenerator.generateKeyPair(), "commonName", "organizationalUnit",
-				"organization", "country", LocalDateTime.now(), LocalDateTime.now().minusDays(100),"BC");
+				"organization", "country", LocalDateTime.now(), LocalDateTime.now().minusDays(100));
 	}
 }

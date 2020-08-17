@@ -385,7 +385,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 			LocalDateTime validityTo) {
 		X509Certificate[] chain = new X509Certificate[1];
 		chain[0] = CertificateUtility.generateX509Certificate(keyPair, commonName, organizationalUnit, organization,
-				country, validityFrom, validityTo,provider == null ? "BC" :provider.getName());
+				country, validityFrom, validityTo);
 		storeCertificate(alias, chain, keyPair.getPrivate());
 	}
 
