@@ -7,7 +7,6 @@ import static io.mosip.idrepository.core.constant.IdRepoErrorConstants.UNKNOWN_E
 
 import java.io.IOException;
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeoutException;
@@ -34,7 +33,6 @@ import io.mosip.idrepository.core.security.IdRepoSecurityManager;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.logger.spi.Logger;
-import io.mosip.kernel.core.util.DateUtils;
 import lombok.NoArgsConstructor;
 import reactor.core.publisher.Mono;
 
@@ -75,8 +73,6 @@ public class RestHelper {
 	/** The Constant REQUEST_SYNC_RUNTIME_EXCEPTION. */
 	private static final String REQUEST_SYNC_RUNTIME_EXCEPTION = "requestSync-RuntimeException";
 
-	private LocalDateTime requestTime;
-
 	/** The mosipLogger. */
 	private static Logger mosipLogger = IdRepoLogger.getLogger(RestHelper.class);
 	
@@ -95,15 +91,16 @@ public class RestHelper {
 	public <T> T requestSync(@Valid RestRequestDTO request) throws RestServiceException {
 		Object response;
 		try {
-			requestTime = DateUtils.getUTCCurrentDateTime();
 			mosipLogger.debug(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, METHOD_REQUEST_SYNC,
-					"Request received at : " + requestTime);
+					request.getUri());
 			if (request.getTimeout() != null) {
 				response = request(request).timeout(Duration.ofSeconds(request.getTimeout())).block();
 			} else {
 				response = request(request).block();
 			}
 			checkErrorResponse(response, request.getResponseType());
+			mosipLogger.debug(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, METHOD_REQUEST_SYNC,
+					"Received valid response");
 			return (T) response;
 		} catch (WebClientResponseException e) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, METHOD_REQUEST_SYNC,
@@ -120,17 +117,7 @@ public class RestHelper {
 						THROWING_REST_SERVICE_EXCEPTION + "- UNKNOWN_ERROR - " + e.getMessage());
 				throw new RestServiceException(UNKNOWN_ERROR, e);
 			}
-		} finally {
-			LocalDateTime responseTime = DateUtils.getUTCCurrentDateTime();
-			mosipLogger.debug(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, METHOD_REQUEST_SYNC,
-					"Response sent at : " + responseTime);
-			long duration = Duration.between(requestTime, responseTime).toMillis();
-			mosipLogger.debug(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, METHOD_REQUEST_SYNC,
-					"Time difference between request and response in millis:" + duration
-							+ ".  Time difference between request and response in Seconds: "
-							+ ((double) duration / 1000));
 		}
-
 	}
 
 	/**
@@ -140,10 +127,10 @@ public class RestHelper {
 	 * @return the supplier
 	 */
 	public Supplier<Object> requestAsync(@Valid RestRequestDTO request) {
-		mosipLogger.debug(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, METHOD_REQUEST_ASYNC, PREFIX_REQUEST + request);
+		mosipLogger.debug(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, METHOD_REQUEST_ASYNC,
+				PREFIX_REQUEST + request.getUri());
 		Mono<?> sendRequest = request(request);
 		sendRequest.subscribe();
-		mosipLogger.debug(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, METHOD_REQUEST_ASYNC, "Request subscribed");
 		return () -> sendRequest.block();
 	}
 
