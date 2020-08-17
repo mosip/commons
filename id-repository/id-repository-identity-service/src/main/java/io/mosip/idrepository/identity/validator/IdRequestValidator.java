@@ -40,7 +40,6 @@ import io.mosip.idrepository.core.helper.RestHelper;
 import io.mosip.idrepository.core.logger.IdRepoLogger;
 import io.mosip.idrepository.core.security.IdRepoSecurityManager;
 import io.mosip.idrepository.core.validator.BaseIdRepoValidator;
-import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorErrorConstant;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectIOException;
@@ -211,7 +210,7 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 				validateRid(registrationId);
 			} catch (InvalidIDException e) {
 				mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REQUEST_VALIDATOR, "validateRegId",
-						"\n" + ExceptionUtils.getStackTrace(e));
+						"\n" + e.getMessage());
 				errors.rejectValue(REQUEST, INVALID_INPUT_PARAMETER.getErrorCode(),
 						String.format(INVALID_INPUT_PARAMETER.getErrorMessage(), REGISTRATION_ID));
 			}
@@ -273,12 +272,12 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 			}
 		} catch (IdRepoAppException e) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO, ID_REQUEST_VALIDATOR,
-					(VALIDATE_REQUEST + ExceptionUtils.getStackTrace(e)));
+					(VALIDATE_REQUEST + e.getMessage()));
 			errors.rejectValue(REQUEST, INVALID_INPUT_PARAMETER.getErrorCode(),
 					String.format(INVALID_INPUT_PARAMETER.getErrorMessage(), ROOT_PATH));
 		} catch (IdObjectValidationFailedException e) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO, ID_REQUEST_VALIDATOR,
-					(VALIDATE_REQUEST + ExceptionUtils.getStackTrace(e)));
+					(VALIDATE_REQUEST + e.getMessage()));
 			IntStream.range(0, e.getErrorTexts().size()).boxed().forEach(index ->
 				errors.rejectValue(REQUEST,
 						e.getCodes().get(index)
@@ -295,7 +294,7 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 			);
 		} catch (InvalidIdSchemaException | IdObjectIOException e) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO, ID_REQUEST_VALIDATOR,
-					VALIDATE_REQUEST + ExceptionUtils.getStackTrace(e));
+					VALIDATE_REQUEST + e.getMessage());
 			errors.rejectValue(REQUEST, ID_OBJECT_PROCESSING_FAILED.getErrorCode(),
 					ID_OBJECT_PROCESSING_FAILED.getErrorMessage());
 		}
@@ -343,7 +342,7 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 			}
 		} catch (IdRepoAppException e) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO, ID_REQUEST_VALIDATOR,
-					(VALIDATE_REQUEST + ExceptionUtils.getStackTrace(e)));
+					(VALIDATE_REQUEST + e.getMessage()));
 			errors.rejectValue(REQUEST, INVALID_INPUT_PARAMETER.getErrorCode(),
 					String.format(INVALID_INPUT_PARAMETER.getErrorMessage(), ROOT_PATH));
 		}
@@ -391,7 +390,7 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 			}
 		} catch (IdRepoDataValidationException | RestServiceException e) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REQUEST_VALIDATOR, "getSchema",
-					"\n" + ExceptionUtils.getStackTrace(e));
+					"\n" + e.getMessage());
 			throw new IdRepoAppUncheckedException(IdRepoErrorConstants.SCHEMA_RETRIEVE_ERROR);
 		}
 	}
@@ -427,14 +426,14 @@ public class IdRequestValidator extends BaseIdRepoValidator implements Validator
 		} catch (InvalidIDException e) {
 			if(!idType.equals(READ)) {
 			mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REQUEST_VALIDATOR, "validateUin",
-					"\n" + ExceptionUtils.getStackTrace(e));
+					"\n" + e.getMessage());
 				throw new IdRepoAppException(INVALID_INPUT_PARAMETER.getErrorCode(),
 						String.format(INVALID_INPUT_PARAMETER.getErrorMessage(),
 								env.getProperty(MOSIP_KERNEL_IDREPO_JSON_PATH)).replace(".", "/"));
 			}
 			else {
 				mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REQUEST_VALIDATOR, "validateUin",
-						"\n" + ExceptionUtils.getStackTrace(e));
+						"\n" + e.getMessage());
 				throw new IdRepoAppException(INVALID_INPUT_PARAMETER.getErrorCode(),
 						String.format(INVALID_INPUT_PARAMETER.getErrorMessage(), UIN), e);
 			}

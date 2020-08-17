@@ -80,7 +80,8 @@ public final class IdRepoFilter extends BaseIdRepoFilter {
 				idResponse.setErrors(Collections.singletonList(errors));
 				return mapper.writeValueAsString(idResponse);
 			} catch (IOException e) {
-				mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO, ID_REPO_FILTER, "\n" + ExceptionUtils.getStackTrace(e));
+				mosipLogger.error(IdRepoSecurityManager.getUser(), ID_REPO, ID_REPO_FILTER,
+						"\n" + e.getMessage());
 				throw new IdRepoAppUncheckedException(UNKNOWN_ERROR);
 			}
 		} else {

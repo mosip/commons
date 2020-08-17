@@ -208,6 +208,9 @@ public class RestHelper {
 				ObjectNode responseNode = mapper.readValue(mapper.writeValueAsBytes(response), ObjectNode.class);
 				if (responseNode.has(ERRORS) && !responseNode.get(ERRORS).isNull() && responseNode.get(ERRORS).isArray()
 						&& responseNode.get(ERRORS).size() > 0) {
+					mosipLogger.error(IdRepoSecurityManager.getUser(), CLASS_REST_HELPER, "checkErrorResponse",
+							THROWING_REST_SERVICE_EXCEPTION + "- UNKNOWN_ERROR - "
+									+ responseNode.get(ERRORS).toString());
 					throw new RestServiceException(CLIENT_ERROR, responseNode.toString(),
 							mapper.readValue(responseNode.toString().getBytes(), responseType));
 				}

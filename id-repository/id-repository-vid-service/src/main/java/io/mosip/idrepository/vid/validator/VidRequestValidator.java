@@ -20,7 +20,6 @@ import io.mosip.idrepository.core.logger.IdRepoLogger;
 import io.mosip.idrepository.core.security.IdRepoSecurityManager;
 import io.mosip.idrepository.core.validator.BaseIdRepoValidator;
 import io.mosip.idrepository.vid.provider.VidPolicyProvider;
-import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.idvalidator.exception.InvalidIDException;
 import io.mosip.kernel.core.idvalidator.spi.UinValidator;
@@ -157,10 +156,10 @@ public class VidRequestValidator extends BaseIdRepoValidator implements Validato
 					String.format(MISSING_INPUT_PARAMETER.getErrorMessage(), UIN));
 		} else {
 			try {
-				uinValidator.validateId(uin.toString());
+				uinValidator.validateId(uin);
 			} catch (InvalidIDException e) {
 				mosipLogger.error(IdRepoSecurityManager.getUser(), VID_REQUEST_VALIDATOR, "validateUin",
-						"\n" + ExceptionUtils.getStackTrace(e));
+						"\n" + e.getMessage());
 				errors.rejectValue(REQUEST, INVALID_INPUT_PARAMETER.getErrorCode(),
 						String.format(INVALID_INPUT_PARAMETER.getErrorMessage(), UIN));
 			}
