@@ -5,14 +5,14 @@
 	<parent>
 		<groupId>io.mosip.kernel</groupId>
 		<artifactId>kernel-parent</artifactId>
-		<version>1.0.6</version>
+		<version>1.2.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>kernel-idgenerator-partnerid</artifactId>
 	<version>1.0.6</version>
 	<name>kernel-idgenerator-partnerid</name>
 	<url>http://maven.apache.org</url>
 	<properties>
-		<kernel.core.version>1.0.6</kernel.core.version>
+		<kernel.core.version>1.2.0-SNAPSHOT</kernel.core.version>
 		<kernel.dataaccess-hibernate.version>1.0.6</kernel.dataaccess-hibernate.version>
 		<kernel.logger.version>1.0.6</kernel.logger.version>
 	</properties>
