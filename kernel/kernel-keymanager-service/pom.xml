@@ -21,7 +21,7 @@
 		<kernel.crypto.jce.version>1.0.6</kernel.crypto.jce.version>
 		<kernel.keygenerator.bouncycastle.version>1.0.6</kernel.keygenerator.bouncycastle.version>
 		<kernel.logger.logback.version>1.0.6</kernel.logger.logback.version>
-		<kernel.keymanager.softhsm.version>1.0.6</kernel.keymanager.softhsm.version>
+		<kernel.keymanager.softhsm.version>1.0.7</kernel.keymanager.softhsm.version>
 		<kernel.pdfgenerator.itext.version>1.0.6</kernel.pdfgenerator.itext.version>
 	</properties>
 
