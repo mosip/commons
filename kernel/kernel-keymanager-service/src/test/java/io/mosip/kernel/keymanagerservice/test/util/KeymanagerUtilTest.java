@@ -7,7 +7,6 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
-import java.security.Provider;
 import java.security.Security;
 import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
@@ -55,19 +54,18 @@ public class KeymanagerUtilTest {
 
 	private KeyPair keyPair;
 
-	private X509Certificate[] chain;	
-	private Provider provider;
+	private X509Certificate[] chain;
 
-	@Before
+		@Before
 	public void setupKey() throws NoSuchAlgorithmException {
-		provider = new BouncyCastleProvider();
-		Security.addProvider(provider);
+		BouncyCastleProvider provider = new BouncyCastleProvider();
+        Security.addProvider(provider);
 		KeyPairGenerator keyGen = KeyPairGenerator.getInstance(KeymanagerConstant.RSA);
 		keyGen.initialize(2048);
 		keyPairMaster = keyGen.generateKeyPair();
 		keyPair = keyGen.generateKeyPair();
 		X509Certificate x509Certificate = CertificateUtility.generateX509Certificate(keyPair, "mosip", "mosip", "mosip",
-				"india", LocalDateTime.of(2010, 1, 1, 12, 00), LocalDateTime.of(2011, 1, 1, 12, 00), provider.getName());
+				"india", LocalDateTime.of(2010, 1, 1, 12, 00), LocalDateTime.of(2011, 1, 1, 12, 00), "BC");
 		chain = new X509Certificate[1];
 		chain[0] = x509Certificate;
 	}
