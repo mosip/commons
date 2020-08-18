@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -112,8 +113,10 @@ public final class ExceptionUtils {
 		return null;
 	}
 
+	//TODO - configure to either print message / stacktrace based on flag
+	//TODO - replace sysout with logger
 	public static void logRootCause(Throwable exception) {
-		System.out.println("\n\n");
+		System.out.println("\n\n[" + MDC.get("X-B3-TraceId") + "]");
 //		Optional<Throwable> rootCause = Stream.iterate(exception, Throwable::getCause)
 //				.filter(element -> element.getCause() == null).findFirst();
 //		if (rootCause.isPresent()) {

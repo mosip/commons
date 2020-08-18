@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
+import io.mosip.kernel.cryptomanager.dto.CryptoWithPinRequestDto;
+import io.mosip.kernel.cryptomanager.dto.CryptoWithPinResponseDto;
 import io.mosip.kernel.cryptomanager.dto.CryptomanagerRequestDto;
 import io.mosip.kernel.cryptomanager.dto.CryptomanagerResponseDto;
 import io.mosip.kernel.cryptomanager.service.CryptomanagerService;
@@ -73,5 +75,37 @@ public class CryptomanagerController {
 		ResponseWrapper<CryptomanagerResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(cryptomanagerService.decrypt(cryptomanagerRequestDto.getRequest()));
 		return response;
+	}
+
+	/**
+	 * Controller for Encrypt the data Using Pin
+	 * 
+	 * @param requestDto {@link CryptoWithPinRequestDto} request
+	 * @return {@link CryptoWithPinResponseDto} encrypted Data
+	 */
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION','TEST', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@ResponseFilter
+	@PostMapping(value = "/encryptWithPin", produces = "application/json")
+	public ResponseWrapper<CryptoWithPinResponseDto> encryptWithPin(
+			@ApiParam("Pin and Data to encrypt") @RequestBody @Valid RequestWrapper<CryptoWithPinRequestDto> requestDto) {
+		ResponseWrapper<CryptoWithPinResponseDto> responseDto = new ResponseWrapper<>();
+		responseDto.setResponse(cryptomanagerService.encryptWithPin(requestDto.getRequest()));
+		return responseDto;
+	}
+
+	/**
+	 * Controller for Decrypt the data Using Pin
+	 * 
+	 * @param requestDto {@link CryptoWithPinRequestDto} request
+	 * @return {@link CryptoWithPinResponseDto} decrypted Data
+	 */
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION', 'TEST', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@ResponseFilter
+	@PostMapping(value = "/decryptWithPin", produces = "application/json")
+	public ResponseWrapper<CryptoWithPinResponseDto> decryptWithPin(
+			@ApiParam("Pin and Data to decrypt") @RequestBody @Valid RequestWrapper<CryptoWithPinRequestDto> requestDto) {
+		ResponseWrapper<CryptoWithPinResponseDto> responseDto = new ResponseWrapper<>();
+		responseDto.setResponse(cryptomanagerService.decryptWithPin(requestDto.getRequest()));
+		return responseDto;
 	}
 }
