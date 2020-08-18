@@ -165,7 +165,7 @@ public class KeymanagerIntegrationTest {
 		keyGen.initialize(1024);
 		key = keyGen.generateKeyPair();
 		X509Certificate x509Certificate = CertificateUtility.generateX509Certificate(key, "mosip", "mosip", "mosip",
-				"india", LocalDateTime.of(2010, 1, 1, 12, 00), LocalDateTime.of(2011, 1, 1, 12, 00));
+				"india", LocalDateTime.of(2010, 1, 1, 12, 00), LocalDateTime.of(2011, 1, 1, 12, 00),"BC");
 		X509Certificate[] chain = new X509Certificate[1];
 		chain[0] = x509Certificate;
 		privateKeyEntry = new PrivateKeyEntry(key.getPrivate(), chain);
