@@ -110,6 +110,7 @@ jobs:
       run: mvn -B deploy
       env:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+         GPG_TTY: $(tty) 
     #- name: Publish the maven package
      # run: |
      #   chmod +x ./deploy_test.sh
