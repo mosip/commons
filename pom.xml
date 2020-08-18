@@ -50,8 +50,8 @@
                         <url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository> 
                  <repository>
-                        <id>ossrh</id>
-                        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                        <id>github</id>
+                        <url>https://maven.pkg.github.com/io/mosip/</url>
                 </repository> 
         </distributionManagement> 
         <build>
