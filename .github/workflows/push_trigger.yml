@@ -101,14 +101,22 @@ jobs:
       
     - name: Build with Maven
       run: mvn -B package -DskipTests --file pom.xml -s $GITHUB_WORKSPACE/settings.xml
-        
-    - name: Publish the maven package
-      run: |
-        chmod +x ./deploy_test.sh
-        ./deploy_test.sh kernel $GITHUB_WORKSPACE/settings.xml .*
-#        ./deploy.sh id-repository $GITHUB_WORKSPACE/settings.xml .*
+
+    - name: Set up Java for publishing to GitHub Packages
+      uses: actions/setup-java@v1
+      with:
+         java-version: 1.8
+    - name: Publish to GitHub Packages
+      run: mvn -B deploy
       env:
-        GPG_TTY: $(tty)
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #- name: Publish the maven package
+     # run: |
+     #   chmod +x ./deploy_test.sh
+     #   ./deploy_test.sh kernel $GITHUB_WORKSPACE/settings.xml .*
+#        ./deploy.sh id-repository $GITHUB_WORKSPACE/settings.xml .*
+      #env:
+       # GPG_TTY: $(tty)
     #- name: Analyze with SonarCloud
       #run: mvn -B verify sonar:sonar -Dsonar.projectKey=${{ secrets.PROJECT_KEY }} -Dsonar.organization=${{ secrets.ORG_KEY }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
       #env:
