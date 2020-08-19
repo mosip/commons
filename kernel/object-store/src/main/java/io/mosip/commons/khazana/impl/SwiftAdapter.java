@@ -1,6 +1,9 @@
 package io.mosip.commons.khazana.impl;
 
-import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.javaswift.joss.client.factory.AccountConfig;
 import org.javaswift.joss.client.factory.AccountFactory;
 import org.javaswift.joss.client.factory.AuthenticationMethod;
@@ -13,13 +16,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 
 @Service
 @Qualifier("SwiftAdapter")
@@ -114,4 +111,16 @@ public class SwiftAdapter implements ObjectStoreAdapter {
         accounts.put(accountName, account);
         return account;
     }
+
+	@Override
+	public int incMetadata(String account, String container, String objectName, String metaDataKey) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int decMetadata(String account, String container, String objectName, String metaDataKey) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

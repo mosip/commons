@@ -1,21 +1,5 @@
 package io.mosip.commons.khazana.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.mosip.commons.khazana.constant.KhazanaErrorCodes;
-import io.mosip.commons.khazana.exception.FileNotFoundInDestinationException;
-import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
-import io.mosip.kernel.core.util.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -29,6 +13,24 @@ import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+
+import org.apache.commons.io.IOUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.mosip.commons.khazana.constant.KhazanaErrorCodes;
+import io.mosip.commons.khazana.exception.FileNotFoundInDestinationException;
+import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
+import io.mosip.kernel.core.util.FileUtils;
 
 @Service
 @Qualifier("PosixAdapter")
@@ -221,4 +223,16 @@ public class PosixAdapter implements ObjectStoreAdapter {
             });
         return jsonObject;
     }
+
+	@Override
+	public int incMetadata(String account, String container, String objectName, String metaDataKey) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int decMetadata(String account, String container, String objectName, String metaDataKey) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
