@@ -35,7 +35,7 @@ public class DynamicFieldController {
 	
 	@ResponseFilter
 	@GetMapping
-	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN')")
+	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN','INDIVIDUAL')")
 	@ApiOperation(value = "Service to fetch all dynamic fields")
 	public ResponseWrapper<PageDto<DynamicFieldResponseDto>> getAllDynamicFields(
 			@RequestParam(name = "pageNumber", defaultValue = "0") @ApiParam(value = "page number", defaultValue = "0") int pageNumber,
