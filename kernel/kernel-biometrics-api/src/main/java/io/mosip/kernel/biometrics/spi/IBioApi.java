@@ -71,7 +71,7 @@ public interface IBioApi {
 	Response<BiometricRecord> extractTemplate(BiometricRecord sample, List<BiometricType> modalitiesToExtract, Map<String, String> flags);
 
 	/**
-	 * It segment the single biometric image into multiple biometric images. Eg:
+	 * It segment the biometric image into multiple biometric images. Eg:
 	 * Split the thumb slab into multiple fingers
 	 * if modalitiesToSegment is null/empty, each modality found in the sample is segmented.
 	 * 
