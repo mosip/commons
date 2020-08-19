@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<parent>
 		<groupId>io.mosip.kernel</groupId>
 		<artifactId>kernel-parent</artifactId>
@@ -14,7 +14,7 @@
 	<name>kernel-biosdk-provider</name>
 	<description>Implementation of biosdk provider</description>
 	<packaging>jar</packaging>
-	
+
 	<properties>
 		<kernel.core.version>1.2.0-SNAPSHOT</kernel.core.version>
 		<kernel.biometricsdk.version>0.10.0-SNAPSHOT</kernel.biometricsdk.version>
@@ -22,7 +22,7 @@
 		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
 		<kernel.logger.logback.version>1.0.6</kernel.logger.logback.version>
 	</properties>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -43,11 +43,11 @@
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
 			<version>${kernel.core.version}</version>
-    </dependency>
+		</dependency>
 		<dependency>
-      <groupId>io.mosip.kernel</groupId>
-      <artifactId>kernel-logger-logback</artifactId>
-      <version>${kernel.logger.logback.version}</version>
-    </dependency>
+			<groupId>io.mosip.kernel</groupId>
+			<artifactId>kernel-logger-logback</artifactId>
+			<version>${kernel.logger.logback.version}</version>
+		</dependency>
 	</dependencies>
 </project>
