@@ -10,8 +10,11 @@ import static java.util.Arrays.copyOfRange;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.SecureRandom;
+import java.util.Arrays;
 
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +22,8 @@ import org.springframework.stereotype.Service;
 
 import io.mosip.kernel.core.crypto.spi.CryptoCoreSpec;
 import io.mosip.kernel.core.util.CryptoUtil;
+import io.mosip.kernel.cryptomanager.dto.CryptoWithPinRequestDto;
+import io.mosip.kernel.cryptomanager.dto.CryptoWithPinResponseDto;
 import io.mosip.kernel.cryptomanager.dto.CryptomanagerRequestDto;
 import io.mosip.kernel.cryptomanager.dto.CryptomanagerResponseDto;
 import io.mosip.kernel.cryptomanager.service.CryptomanagerService;
@@ -35,6 +40,12 @@ import io.mosip.kernel.keygenerator.bouncycastle.KeyGenerator;
  */
 @Service
 public class CryptomanagerServiceImpl implements CryptomanagerService {
+
+	private static final int GCM_NONCE_LENGTH = 12;
+
+	private static final int PBE_SALT_LENGTH = 32;
+
+	private static final String AES_KEY_TYPE = "AES";
 
 	/**
 	 * KeySplitter for splitting key and data
@@ -116,6 +127,68 @@ public class CryptomanagerServiceImpl implements CryptomanagerService {
 		CryptomanagerResponseDto cryptoResponseDto = new CryptomanagerResponseDto();
 		cryptoResponseDto.setData(CryptoUtil.encodeBase64(decryptedData));
 		return cryptoResponseDto;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.mosip.kernel.cryptomanager.service.CryptomanagerService#encryptWithPin(io.mosip.
+	 * kernel.cryptomanager.dto.CryptoWithPinRequestDto)
+	 */
+	@Override
+	public CryptoWithPinResponseDto encryptWithPin(CryptoWithPinRequestDto requestDto) {
+
+		String dataToEnc = requestDto.getData();
+		String userPin = requestDto.getUserPin();
+
+		SecureRandom sRandom = new SecureRandom(); 
+		byte[] pbeSalt = new byte[PBE_SALT_LENGTH];
+		sRandom.nextBytes(pbeSalt);
+
+		SecretKey derivedKey = getDerivedKey(userPin, pbeSalt);
+		byte[] gcmNonce = new byte[GCM_NONCE_LENGTH];
+		sRandom.nextBytes(gcmNonce);
+		byte[] encryptedData = cryptoCore.symmetricEncrypt(derivedKey, dataToEnc.getBytes(), gcmNonce, pbeSalt);
+
+		byte[] finalEncryptedData = new byte[encryptedData.length + PBE_SALT_LENGTH + GCM_NONCE_LENGTH];
+		System.arraycopy(pbeSalt, 0, finalEncryptedData, 0, pbeSalt.length);
+		System.arraycopy(gcmNonce, 0, finalEncryptedData, pbeSalt.length, gcmNonce.length);
+		System.arraycopy(encryptedData, 0, finalEncryptedData, pbeSalt.length + gcmNonce.length, encryptedData.length);
+		CryptoWithPinResponseDto responseDto = new CryptoWithPinResponseDto();
+		responseDto.setData(CryptoUtil.encodeBase64(finalEncryptedData));
+		return responseDto;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.mosip.kernel.cryptomanager.service.CryptomanagerService#decryptWithPin(io.mosip.
+	 * kernel.cryptomanager.dto.CryptoWithPinRequestDto)
+	 */
+	@Override
+	public CryptoWithPinResponseDto decryptWithPin(CryptoWithPinRequestDto requestDto) {
+
+		String dataToDec = requestDto.getData();
+		String userPin = requestDto.getUserPin();
+
+		byte[] decodedEncryptedData = CryptoUtil.decodeBase64(dataToDec);
+		byte[] pbeSalt = Arrays.copyOfRange(decodedEncryptedData, 0, PBE_SALT_LENGTH);
+		byte[] gcmNonce = Arrays.copyOfRange(decodedEncryptedData, PBE_SALT_LENGTH, PBE_SALT_LENGTH + GCM_NONCE_LENGTH);
+		byte[] encryptedData = Arrays.copyOfRange(decodedEncryptedData, PBE_SALT_LENGTH + GCM_NONCE_LENGTH,	decodedEncryptedData.length);
+
+		SecretKey derivedKey = getDerivedKey(userPin, pbeSalt);
+		byte[]  decryptedData = cryptoCore.symmetricDecrypt(derivedKey, encryptedData, gcmNonce, pbeSalt);
+		CryptoWithPinResponseDto responseDto = new CryptoWithPinResponseDto();
+		responseDto.setData(new String(decryptedData));
+		return responseDto;
+	}
+
+	private SecretKey getDerivedKey(String userPin, byte[] salt) {
+		String derivedKeyHex = cryptoCore.hash(userPin.getBytes(), salt);
+		byte[] derivedKey = cryptomanagerUtil.hexDecode(derivedKeyHex);
+		return new SecretKeySpec(derivedKey, AES_KEY_TYPE);
 	}
 
 }

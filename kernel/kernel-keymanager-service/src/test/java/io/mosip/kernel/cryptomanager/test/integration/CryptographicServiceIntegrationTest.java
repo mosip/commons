@@ -38,8 +38,11 @@ import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.keymanager.spi.KeyStore;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.DateUtils;
+import io.mosip.kernel.cryptomanager.dto.CryptoWithPinRequestDto;
+import io.mosip.kernel.cryptomanager.dto.CryptoWithPinResponseDto;
 import io.mosip.kernel.cryptomanager.dto.CryptomanagerRequestDto;
 import io.mosip.kernel.cryptomanager.dto.CryptomanagerResponseDto;
+import io.mosip.kernel.cryptomanager.util.CryptomanagerUtils;
 import io.mosip.kernel.keygenerator.bouncycastle.KeyGenerator;
 import io.mosip.kernel.keymanagerservice.dto.PublicKeyResponse;
 import io.mosip.kernel.keymanagerservice.dto.SymmetricKeyRequestDto;
@@ -57,6 +60,9 @@ public class CryptographicServiceIntegrationTest {
 	 */
 	@MockBean
 	private CryptoCoreSpec<byte[], byte[], SecretKey, PublicKey, PrivateKey, String> cryptoCore;
+
+	@MockBean
+	private CryptomanagerUtils cryptomanagerUtil;
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -80,6 +86,10 @@ public class CryptographicServiceIntegrationTest {
 
 	private RequestWrapper<CryptomanagerRequestDto> requestWrapper;
 
+	private CryptoWithPinRequestDto requestWithPinDto;
+
+	private RequestWrapper<CryptoWithPinRequestDto> requestWithPinWrapper;
+
 	private static final String ID = "mosip.crypto.service";
 	private static final String VERSION = "V1.0";
 
@@ -94,6 +104,10 @@ public class CryptographicServiceIntegrationTest {
 		requestWrapper.setVersion(VERSION);
 		requestWrapper.setRequesttime(LocalDateTime.now(ZoneId.of("UTC")));
 
+		requestWithPinWrapper = new RequestWrapper<>();
+		requestWithPinWrapper.setId(ID);
+		requestWithPinWrapper.setVersion(VERSION);
+		requestWithPinWrapper.setRequesttime(LocalDateTime.now(ZoneId.of("UTC")));
 	}
 
 	@WithUserDetails("reg-processor")
@@ -134,7 +148,6 @@ public class CryptographicServiceIntegrationTest {
 	}
 
 	@WithUserDetails("reg-processor")
-
 	@Test
 	public void testDecrypt() throws Exception {
 		SymmetricKeyResponseDto symmetricKeyResponseDto = new SymmetricKeyResponseDto(
@@ -168,4 +181,55 @@ public class CryptographicServiceIntegrationTest {
 		assertThat(cryptomanagerResponseDto.getData(), isA(String.class));
 	}
 
+	@WithUserDetails("reg-processor")
+	@Test
+	public void testEncryptWithPin() throws Exception {
+		when(cryptoCore.hash(Mockito.any(), Mockito.any())).thenReturn("MOCKSECRETKEY");
+		when(cryptoCore.symmetricEncrypt(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+				.thenReturn("MOCKENCRYPTEDDATA".getBytes());
+		when(cryptomanagerUtil.hexDecode(Mockito.any())).thenReturn("MOCKHEXDATA".getBytes());
+		
+		requestWithPinDto = new CryptoWithPinRequestDto();
+		requestWithPinDto.setData("Test Pin Encryption.");
+		requestWithPinDto.setUserPin("AB1234");
+		requestWithPinWrapper.setRequest(requestWithPinDto);
+		
+		String requestBody = objectMapper.writeValueAsString(requestWithPinWrapper);
+
+		MvcResult result = mockMvc
+				.perform(post("/encryptWithPin").contentType(MediaType.APPLICATION_JSON).content(requestBody))
+				.andExpect(status().isOk()).andReturn();
+		ResponseWrapper<?> responseWrapper = objectMapper.readValue(result.getResponse().getContentAsString(),
+				ResponseWrapper.class);
+		CryptoWithPinResponseDto responseDto = objectMapper.readValue(
+				objectMapper.writeValueAsString(responseWrapper.getResponse()), CryptoWithPinResponseDto.class);
+
+		assertThat(responseDto.getData(), isA(String.class));
+	}
+
+	@WithUserDetails("reg-processor")
+	@Test
+	public void testDecryptWithPin() throws Exception {
+		when(cryptoCore.hash(Mockito.any(), Mockito.any())).thenReturn("MOCKSECRETKEY");
+		when(cryptoCore.symmetricDecrypt(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+				.thenReturn("MOCKENCRYPTEDDATA".getBytes());
+		when(cryptomanagerUtil.hexDecode(Mockito.any())).thenReturn("MOCKHEXDATA".getBytes());
+		
+		requestWithPinDto = new CryptoWithPinRequestDto();
+		requestWithPinDto.setData("GeB26aCD779DlCzRKkHlwAyctlI1Fh5SvLTctR_8uCZW-OOUombMq_Pt9eM4r40nWxoD_Mt-j3OVd9t9uXrcmECh5ec");
+		requestWithPinDto.setUserPin("AB1234");
+		requestWithPinWrapper.setRequest(requestWithPinDto);
+		
+		String requestBody = objectMapper.writeValueAsString(requestWithPinWrapper);
+
+		MvcResult result = mockMvc
+				.perform(post("/decryptWithPin").contentType(MediaType.APPLICATION_JSON).content(requestBody))
+				.andExpect(status().isOk()).andReturn();
+		ResponseWrapper<?> responseWrapper = objectMapper.readValue(result.getResponse().getContentAsString(),
+				ResponseWrapper.class);
+		CryptoWithPinResponseDto responseDto = objectMapper.readValue(
+				objectMapper.writeValueAsString(responseWrapper.getResponse()), CryptoWithPinResponseDto.class);
+
+		assertThat(responseDto.getData(), isA(String.class));
+	}
 }
