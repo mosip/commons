@@ -169,6 +169,7 @@
         <module>kernel-fsadapter-proxy</module>
 		<module>kernel-registration-packet-manager</module>
 		<module>kernel-authcodeflowproxy-api</module>
+		<module>kernel-websubclient-api</module>
 
 		<module>kernel-masterdata-service</module>
 		<module>kernel-auditmanager-service</module>
