@@ -254,7 +254,7 @@ publish_to_nexus:
    #       docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
    #       docker push $IMAGE_ID:$VERSION
 
-  docker-kernel-masterdata-service:
+docker-kernel-masterdata-service:
     needs: build
 
     runs-on: ubuntu-latest
@@ -307,7 +307,7 @@ publish_to_nexus:
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
 
-  docker-kernel-syncdata-service:
+docker-kernel-syncdata-service:
     needs: build
 
     runs-on: ubuntu-latest
@@ -360,7 +360,7 @@ publish_to_nexus:
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
 
-  docker-kernel-auditmanager-service:
+docker-kernel-auditmanager-service:
     needs: build
 
     runs-on: ubuntu-latest
@@ -413,7 +413,7 @@ publish_to_nexus:
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
 
-  docker-kernel-ridgenerator-service:
+docker-kernel-ridgenerator-service:
     needs: build
 
     runs-on: ubuntu-latest
@@ -466,7 +466,7 @@ publish_to_nexus:
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
 
-  docker-kernel-notification-service:
+docker-kernel-notification-service:
     needs: build
 
     runs-on: ubuntu-latest
@@ -519,7 +519,7 @@ publish_to_nexus:
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
 
-  docker-kernel-auth-service:
+docker-kernel-auth-service:
     needs: build
 
     runs-on: ubuntu-latest
@@ -572,7 +572,7 @@ publish_to_nexus:
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
 
-  docker-kernel-keymanager-service:
+docker-kernel-keymanager-service:
     needs: build
 
     runs-on: ubuntu-latest
@@ -625,7 +625,7 @@ publish_to_nexus:
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
 
-  docker-kernel-pridgenerator-service:
+docker-kernel-pridgenerator-service:
     needs: build
 
     runs-on: ubuntu-latest
@@ -678,7 +678,7 @@ publish_to_nexus:
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
 
-  docker-kernel-otpmanager-service:
+docker-kernel-otpmanager-service:
     needs: build
 
     runs-on: ubuntu-latest
@@ -731,7 +731,7 @@ publish_to_nexus:
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
 
-  docker-kernel-idgenerator-service:
+docker-kernel-idgenerator-service:
     needs: build
 
     runs-on: ubuntu-latest
@@ -783,17 +783,17 @@ publish_to_nexus:
           echo VERSION=$VERSION
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
+        
+docker-kernel-salt-generator:
+     needs: build
 
-  docker-kernel-salt-generator:
-    needs: build
-
-    runs-on: ubuntu-latest
-    env:
+     runs-on: ubuntu-latest
+     env:
       NAMESPACE: ${{ secrets. dev_namespace_docker_hub }}
       SERVICE_NAME: kernel-salt-generator
       SERVICE_LOCATION: kernel/kernel-salt-generator
 
-    steps:
+     steps:
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v1
         with:
