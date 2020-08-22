@@ -189,6 +189,24 @@ public class PacketManagerControllerTest {
 
     @Test
     @WithUserDetails("reg-processor")
+    public void testValidatePacket() throws Exception {
+        InfoDto infoDto = new InfoDto();
+        infoDto.setBypassCache(false);
+        infoDto.setId("id");
+        infoDto.setProcess("NEW");
+        infoDto.setSource("REGISTRATION");
+
+        Mockito.when(
+                packetReader.validatePacket(anyString(), anyString(), anyString())).thenReturn(true);
+
+        request.setRequest(infoDto);
+
+        this.mockMvc.perform(post("/validatePacket").contentType(MediaType.APPLICATION_JSON).content(JsonUtils.javaObjectToJsonString(request)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithUserDetails("reg-processor")
     public void testCreatePacket() throws Exception {
         PacketDto packetDto = new PacketDto();
         packetDto.setId("id");

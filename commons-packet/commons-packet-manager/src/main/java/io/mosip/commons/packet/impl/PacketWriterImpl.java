@@ -398,7 +398,7 @@ public class PacketWriterImpl implements IPacketWriter {
     }
 
     @Override
-    public final List<PacketInfo> persistPacket(String id, String version, String schemaJson, String source, String process, boolean offlineMode) {
+    public List<PacketInfo> persistPacket(String id, String version, String schemaJson, String source, String process, boolean offlineMode) {
         try {
             return createPacket(id, version, schemaJson, source, process, offlineMode);
         } catch (PacketCreatorException e) {

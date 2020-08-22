@@ -1,5 +1,6 @@
 package io.mosip.commons.packet.facade;
 
+import com.google.common.collect.Lists;
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.exception.NoAvailableProviderException;
 import io.mosip.commons.packet.spi.IPacketReader;
@@ -114,6 +115,7 @@ public class PacketReader {
     public BiometricRecord getBiometric(String id, String person, List<BiometricType> modalities, String source, String process, boolean bypassCache) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "getBiometric for source : " + source + " process : " + process);
+        modalities = modalities == null ? Lists.newArrayList() : modalities;
         return getProvider(source, process).getBiometric(id, person, modalities, process);
     }
 

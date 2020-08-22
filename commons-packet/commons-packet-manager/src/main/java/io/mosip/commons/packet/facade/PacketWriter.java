@@ -47,6 +47,18 @@ public class PacketWriter {
     }
 
     /**
+     * Set fields in identity object
+     *
+     * @param fields : name value pair
+     * @return PacketWriter
+     */
+    public void setFields(String id, Map<String, String> fields, String source, String process) throws JSONException {
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
+                "setFields : source : " + source + " process : " + process);
+        getProvider(source, process).setFields(id, fields);
+    }
+
+    /**
      * Set Biometric
      *
      * @param fieldName       : name of the field
@@ -134,7 +146,7 @@ public class PacketWriter {
      * @param process : the process
      * @return PacketInfo
      */
-    public List<PacketInfo> persistPacket(String id, String version, String schemaJson, String source, String process, byte[] publicKey, boolean offlineMode) {
+    public List<PacketInfo> persistPacket(String id, String version, String schemaJson, String source, String process, boolean offlineMode) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "persistPacket for source : " + source + " process : " + process);
         return getProvider(source, process).persistPacket(id, version, schemaJson, source, process, offlineMode);
