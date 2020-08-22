@@ -9,16 +9,13 @@ import org.springframework.stereotype.Component;
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.masterdata.constant.DeviceSpecificationErrorCode;
 import io.mosip.kernel.masterdata.constant.DeviceTypeErrorCode;
-import io.mosip.kernel.masterdata.constant.RegistrationCenterDeviceErrorCode;
 import io.mosip.kernel.masterdata.constant.RegistrationCenterErrorCode;
 import io.mosip.kernel.masterdata.entity.DeviceSpecification;
 import io.mosip.kernel.masterdata.entity.DeviceType;
 import io.mosip.kernel.masterdata.entity.RegistrationCenter;
-import io.mosip.kernel.masterdata.entity.RegistrationCenterDevice;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
 import io.mosip.kernel.masterdata.repository.DeviceSpecificationRepository;
 import io.mosip.kernel.masterdata.repository.DeviceTypeRepository;
-import io.mosip.kernel.masterdata.repository.RegistrationCenterDeviceRepository;
 import io.mosip.kernel.masterdata.repository.RegistrationCenterRepository;
 
 @Component
@@ -30,8 +27,7 @@ public class DeviceUtils {
 	@Autowired
 	private DeviceSpecificationRepository deviceSpecificationRepository;
 
-	@Autowired
-	private RegistrationCenterDeviceRepository deviceCenterRepository;
+	
 
 	@Autowired
 	private RegistrationCenterRepository centerRepository;
@@ -56,15 +52,7 @@ public class DeviceUtils {
 		}
 	}
 
-	public List<RegistrationCenterDevice> getAllDeviceCentersList() {
-		try {
-			return deviceCenterRepository.findAllCenterDevices();
-		} catch (DataAccessLayerException | DataAccessException e) {
-			throw new MasterDataServiceException(
-					RegistrationCenterDeviceErrorCode.REGISTRATION_CENTER_DEVICE_FETCH_EXCEPTION.getErrorCode(),
-					RegistrationCenterDeviceErrorCode.REGISTRATION_CENTER_DEVICE_FETCH_EXCEPTION.getErrorMessage());
-		}
-	}
+	
 
 	public List<RegistrationCenter> getAllRegistrationCenters() {
 		try {

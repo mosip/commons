@@ -11,11 +11,11 @@ import io.mosip.kernel.syncdata.dto.RegistrationCenterMachineHistoryDto;
 import io.mosip.kernel.syncdata.dto.RegistrationCenterUserHistoryDto;
 import io.mosip.kernel.syncdata.dto.RegistrationCenterUserMachineMappingHistoryDto;
 import io.mosip.kernel.syncdata.dto.response.SyncDataBaseDto;
-import io.mosip.kernel.syncdata.entity.RegistrationCenterDeviceHistory;
-import io.mosip.kernel.syncdata.entity.RegistrationCenterMachineDeviceHistory;
-import io.mosip.kernel.syncdata.entity.RegistrationCenterMachineHistory;
-import io.mosip.kernel.syncdata.entity.RegistrationCenterUserHistory;
-import io.mosip.kernel.syncdata.entity.RegistrationCenterUserMachineHistory;
+import io.mosip.kernel.syncdata.service.helper.beans.RegistrationCenterDeviceHistory;
+import io.mosip.kernel.syncdata.service.helper.beans.RegistrationCenterMachineDeviceHistory;
+import io.mosip.kernel.syncdata.service.helper.beans.RegistrationCenterMachineHistory;
+import io.mosip.kernel.syncdata.service.helper.beans.RegistrationCenterUserHistory;
+import io.mosip.kernel.syncdata.service.helper.beans.RegistrationCenterUserMachineHistory;
 import io.mosip.kernel.syncdata.utils.SyncMasterDataServiceHelper;
 
 public class HistoryDataHelper {

@@ -36,13 +36,14 @@ import io.mosip.kernel.masterdata.entity.RegistrationCenter;
 import io.mosip.kernel.masterdata.entity.RegistrationCenterType;
 import io.mosip.kernel.masterdata.entity.Zone;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
+import io.mosip.kernel.masterdata.repository.DeviceRepository;
 import io.mosip.kernel.masterdata.repository.LocationRepository;
+import io.mosip.kernel.masterdata.repository.MachineRepository;
 import io.mosip.kernel.masterdata.repository.RegExceptionalHolidayRepository;
 import io.mosip.kernel.masterdata.repository.RegWorkingNonWorkingRepo;
-import io.mosip.kernel.masterdata.repository.RegistrationCenterDeviceRepository;
-import io.mosip.kernel.masterdata.repository.RegistrationCenterMachineRepository;
+
 import io.mosip.kernel.masterdata.repository.RegistrationCenterTypeRepository;
-import io.mosip.kernel.masterdata.repository.RegistrationCenterUserRepository;
+import io.mosip.kernel.masterdata.repository.UserDetailsRepository;
 import io.mosip.kernel.masterdata.validator.FilterTypeEnum;
 import io.mosip.kernel.masterdata.validator.FilterTypeValidator;
 
@@ -66,13 +67,13 @@ public class RegistrationCenterServiceHelper {
 	private RegistrationCenterTypeRepository registrationCenterTypeRepository;
 
 	@Autowired
-	private RegistrationCenterDeviceRepository registrationCenterDeviceRepository;
+	private DeviceRepository deviceRepository;
 
 	@Autowired
-	private RegistrationCenterMachineRepository registrationCenterMachineRepository;
+	private MachineRepository machineRepository;
 
 	@Autowired
-	private RegistrationCenterUserRepository registrationCenterUserRepository;
+	private UserDetailsRepository userDetailsRepository;
 
 	@Autowired
 	private ZoneUtils zoneUtils;
@@ -498,7 +499,7 @@ public class RegistrationCenterServiceHelper {
 	 */
 	private boolean setDevices(RegistrationCenterSearchDto centerDto) {
 		try {
-			long devices = registrationCenterDeviceRepository.countCenterDevices(centerDto.getId());
+			long devices = deviceRepository.countCenterDevices(centerDto.getId());
 			centerDto.setDevices(devices);
 		} catch (DataAccessException e) {
 			throw new MasterDataServiceException(
@@ -517,7 +518,7 @@ public class RegistrationCenterServiceHelper {
 	 */
 	private boolean setMachines(RegistrationCenterSearchDto centerDto) {
 		try {
-			long machines = registrationCenterMachineRepository.countCenterMachines(centerDto.getId());
+			long machines = machineRepository.countCenterMachines(centerDto.getId());
 			centerDto.setMachines(machines);
 		} catch (DataAccessException e) {
 			throw new MasterDataServiceException(
@@ -536,7 +537,7 @@ public class RegistrationCenterServiceHelper {
 	 */
 	private boolean setUsers(RegistrationCenterSearchDto centerDto) {
 		try {
-			long users = registrationCenterUserRepository.countCenterUsers(centerDto.getId());
+			long users = userDetailsRepository.countCenterUsers(centerDto.getId());
 			centerDto.setUsers(users);
 		} catch (DataAccessException e) {
 			throw new MasterDataServiceException(
