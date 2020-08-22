@@ -402,7 +402,7 @@ public class PacketWriterImpl implements IPacketWriter {
         try {
             return createPacket(id, version, schemaJson, source, process, offlineMode);
         } catch (PacketCreatorException e) {
-            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, e.getStackTrace().toString());
+            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, ExceptionUtils.getStackTrace(e));
             throw e;
         }
     }

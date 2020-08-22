@@ -11,23 +11,26 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@Service
+@Component
 @Qualifier("S3Adapter")
 public class S3Adapter implements ObjectStoreAdapter {
 
-    @Value("${object.store.s3.accesskey:accesskey}")
+    @Value("${object.store.s3.accesskey:accesskey:accesskey}")
     private String accessKey;
 
-    @Value("${object.store.s3.secretkey:secretkey}")
+    @Value("${object.store.s3.secretkey:secretkey:secretkey}")
     private String secretKey;
 
     @Value("${object.store.s3.url:null}")
@@ -44,12 +47,21 @@ public class S3Adapter implements ObjectStoreAdapter {
     @Override
     public InputStream getObject(String account, String container, String objectName) {
         S3Object s3Object = getConnection(account).getObject(container, objectName);
-        return s3Object == null ? null : s3Object.getObjectContent();
+        try {
+            if (s3Object != null) {
+                ByteArrayInputStream bis = new ByteArrayInputStream(IOUtils.toByteArray(s3Object.getObjectContent()));
+                s3Object.close();
+                return bis;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
     public boolean exists(String account, String container, String objectName) {
-        return false;
+        return getObject(account, container, objectName) != null;
     }
 
     @Override
@@ -65,9 +77,9 @@ public class S3Adapter implements ObjectStoreAdapter {
     public Map<String, Object> addObjectMetaData(String account, String container, String objectName, Map<String, Object> metadata) {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         metadata.entrySet().stream().forEach(m -> objectMetadata.addUserMetadata(m.getKey(), m.getValue() != null ? m.getValue().toString() : null));
-
+        S3Object s3Object = null;
         try {
-            S3Object s3Object = getConnection(account).getObject(container, objectName);
+            s3Object = getConnection(account).getObject(container, objectName);
             if (s3Object.getObjectMetadata() != null && s3Object.getObjectMetadata().getUserMetadata() != null)
                 s3Object.getObjectMetadata().getUserMetadata().entrySet().forEach(m -> objectMetadata.addUserMetadata(m.getKey(), m.getValue()));
 
@@ -77,6 +89,13 @@ public class S3Adapter implements ObjectStoreAdapter {
         } catch (Exception e) {
             e.printStackTrace();
             metadata = null;
+        } finally {
+            try {
+                if (s3Object != null)
+                    s3Object.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         return metadata;

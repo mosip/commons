@@ -92,6 +92,9 @@ public class PacketManagerConstants {
 
 	public static final String META_INFO_OPERATIONS_DATA = "operationsData";
 
+	public static final String OFFICER_BIOMETRIC = "officerBiometricFileName";
+	public static final String SUPERVISOR_BIOMETRIC = "supervisorBiometricFileName";
+
 	//TODO During update flow if its non-biometric update, then the captured biometrics are sent in this file
 	public static final String META_AUTH_BIO_FILENAME = "authenticationBiometricFileName";
 

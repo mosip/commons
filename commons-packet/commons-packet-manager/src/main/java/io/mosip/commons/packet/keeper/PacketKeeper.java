@@ -14,6 +14,7 @@ import io.mosip.commons.packet.util.PacketManagerHelper;
 import io.mosip.commons.packet.util.PacketManagerLogger;
 import io.mosip.kernel.core.exception.BaseCheckedException;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
+import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.HMACUtils;
@@ -145,7 +146,7 @@ public class PacketKeeper {
 
             return packet;
         } catch (Exception e) {
-            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packetInfo.getId(), e.getStackTrace().toString());
+            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packetInfo.getId(), ExceptionUtils.getStackTrace(e));
             if (e instanceof BaseCheckedException) {
                 BaseCheckedException ex = (BaseCheckedException) e;
                 throw new PacketKeeperException(ex.getErrorCode(), ex.getMessage());
@@ -190,7 +191,7 @@ public class PacketKeeper {
 
 
         } catch (Exception e) {
-            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packet.getPacketInfo().getId(), e.getStackTrace().toString());
+            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packet.getPacketInfo().getId(), ExceptionUtils.getStackTrace(e));
             if (e instanceof BaseCheckedException) {
                 BaseCheckedException ex = (BaseCheckedException) e;
                 throw new PacketKeeperException(ex.getErrorCode(), ex.getMessage());

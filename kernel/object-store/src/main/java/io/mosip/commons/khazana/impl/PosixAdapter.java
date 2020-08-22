@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -30,7 +31,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-@Service
+@Component
 @Qualifier("PosixAdapter")
 public class PosixAdapter implements ObjectStoreAdapter {
 
@@ -39,7 +40,7 @@ public class PosixAdapter implements ObjectStoreAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SwiftAdapter.class);
 
-    @Value("${object.store.base.location}")
+    @Value("${object.store.base.location:home}")
     private String baseLocation;
 
     private static final String ZIP = ".zip";

@@ -8,6 +8,7 @@ import io.mosip.commons.packet.spi.IPacketWriter;
 import io.mosip.commons.packet.util.PacketHelper;
 import io.mosip.commons.packet.util.PacketManagerLogger;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
+import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -154,7 +155,7 @@ public class PacketWriter {
                     packetDto.getSchemaJson(), packetDto.getSource(), packetDto.getProcess(), offlineMode);
 
         } catch (Exception e) {
-            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packetDto.getId(), e.getStackTrace().toString());
+            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packetDto.getId(), ExceptionUtils.getStackTrace(e));
         }
         return packetInfos;
     }

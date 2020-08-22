@@ -26,6 +26,7 @@ import io.mosip.kernel.core.cbeffutil.common.CbeffValidator;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
 import io.mosip.kernel.core.exception.BaseCheckedException;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
+import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.JsonUtils;
 import org.apache.commons.io.IOUtils;
@@ -97,7 +98,7 @@ public class PacketReaderImpl implements IPacketReader {
             return packetValidator.validate(id, process, getAll(id, process));
         } catch (Exception e) {
             LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
-                    id, "Packet Validation exception : "  + e.getStackTrace().toString());
+                    id, "Packet Validation exception : "  + ExceptionUtils.getStackTrace(e));
         }
         return false;
     }
@@ -142,7 +143,7 @@ public class PacketReaderImpl implements IPacketReader {
                 }
             }
         } catch (Exception e) {
-            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, e.getStackTrace().toString());
+            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, ExceptionUtils.getStackTrace(e));
             if (e instanceof BaseCheckedException) {
                 BaseCheckedException ex = (BaseCheckedException) e;
                 throw new GetAllIdentityException(ex.getErrorCode(), ex.getMessage());
@@ -181,7 +182,7 @@ public class PacketReaderImpl implements IPacketReader {
     public Document getDocument(String id, String documentName, String process) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, "getDocument :: for - " + documentName);
         Map<String, Object> idobjectMap = getAll(id, process);
-        Double schemaVersion = (Double) idobjectMap.get(PacketManagerConstants.IDSCHEMA_VERSION);
+        Double schemaVersion = idobjectMap.get(PacketManagerConstants.IDSCHEMA_VERSION) != null ? Double.valueOf(idobjectMap.get(PacketManagerConstants.IDSCHEMA_VERSION).toString()) : null;
         String documentString = (String) idobjectMap.get(documentName);
         try {
             JSONObject documentMap = new JSONObject(documentString);
@@ -198,7 +199,7 @@ public class PacketReaderImpl implements IPacketReader {
                 return document;
             }
         } catch (IOException | ApiNotAccessibleException | PacketDecryptionFailureException | JSONException | PacketKeeperException e) {
-            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, e.getStackTrace().toString());
+            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, ExceptionUtils.getStackTrace(e));
             throw new GetDocumentException(e.getMessage());
         }
         return null;
@@ -228,7 +229,8 @@ public class PacketReaderImpl implements IPacketReader {
                     }
                 }
             } else {
-                Double schemaVersion = (Double) idobjectMap.get(PacketManagerConstants.IDSCHEMA_VERSION);
+                Double schemaVersion = idobjectMap.get(PacketManagerConstants.IDSCHEMA_VERSION) != null ?
+                        Double.valueOf(idobjectMap.get(PacketManagerConstants.IDSCHEMA_VERSION).toString()) : null;
                 packetName = idSchemaUtils.getSource(biometricFieldName, schemaVersion);
                 fileName = biometricMap.get(VALUE).toString();
             }
@@ -242,7 +244,7 @@ public class PacketReaderImpl implements IPacketReader {
             biometricRecord = new BiometricRecord();
             biometricRecord.setSegments(CbeffValidator.convertBIRTypeToBIR(birType.getBIR()));
         } catch (Exception e) {
-            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, e.getStackTrace().toString());
+            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, ExceptionUtils.getStackTrace(e));
             if (e instanceof BaseCheckedException) {
                 BaseCheckedException ex = (BaseCheckedException) e;
                 throw new GetBiometricException(ex.getErrorCode(), ex.getMessage());
@@ -272,7 +274,7 @@ public class PacketReaderImpl implements IPacketReader {
 
                     currentIdMap.keySet().stream().forEach(key -> {
                         try {
-                            finalMap.putIfAbsent(key, currentIdMap.get(key) != null ? JsonUtils.javaObjectToJsonString(currentIdMap.get(key)) : null);
+                            finalMap.putIfAbsent(key, currentIdMap.get(key) != null ? JsonUtils.javaObjectToJsonString(currentIdMap.get(key)).replaceAll("^\"|\"$", "") : null);
                         } catch (io.mosip.kernel.core.util.exception.JsonProcessingException e) {
                             throw new GetAllMetaInfoException(e.getMessage());
                         }
@@ -309,7 +311,7 @@ public class PacketReaderImpl implements IPacketReader {
                 }
             }
         } catch (Exception e) {
-            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, e.getStackTrace().toString());
+            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, ExceptionUtils.getStackTrace(e));
             if (e instanceof BaseCheckedException) {
                 BaseCheckedException ex = (BaseCheckedException) e;
                 throw new GetAllIdentityException(ex.getErrorCode(), ex.getMessage());
