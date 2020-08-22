@@ -1,5 +1,17 @@
 package io.mosip.commons.khazana.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -10,20 +22,10 @@ import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
-import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-@Component
+@Service
 @Qualifier("S3Adapter")
 public class S3Adapter implements ObjectStoreAdapter {
 
@@ -130,4 +132,16 @@ public class S3Adapter implements ObjectStoreAdapter {
 
         return connection;
     }
+
+	@Override
+	public int incMetadata(String account, String container, String objectName, String metaDataKey) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int decMetadata(String account, String container, String objectName, String metaDataKey) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

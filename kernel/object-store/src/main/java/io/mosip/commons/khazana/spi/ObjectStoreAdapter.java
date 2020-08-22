@@ -16,5 +16,9 @@ public interface ObjectStoreAdapter {
     public Map<String, Object> addObjectMetaData(String account, String container, String objectName, String key, String value);
 
     public Map<String, Object> getMetaData(String account, String container, String objectName);
+	
+	public int incMetadata(String account, String container, String objectName,String metaDataKey);
+	//Stops at zero
+	public int decMetadata(String account, String container, String objectName,String metaDataKey);
 
 }
