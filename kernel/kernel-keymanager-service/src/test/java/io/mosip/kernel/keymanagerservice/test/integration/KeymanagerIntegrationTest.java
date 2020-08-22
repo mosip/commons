@@ -165,7 +165,7 @@ public class KeymanagerIntegrationTest {
 		keyGen.initialize(1024);
 		key = keyGen.generateKeyPair();
 		X509Certificate x509Certificate = CertificateUtility.generateX509Certificate(key, "mosip", "mosip", "mosip",
-				"india", LocalDateTime.of(2010, 1, 1, 12, 00), LocalDateTime.of(2011, 1, 1, 12, 00));
+				"india", LocalDateTime.of(2010, 1, 1, 12, 00), LocalDateTime.of(2011, 1, 1, 12, 00), "BC");
 		X509Certificate[] chain = new X509Certificate[1];
 		chain[0] = x509Certificate;
 		privateKeyEntry = new PrivateKeyEntry(key.getPrivate(), chain);
@@ -473,7 +473,7 @@ public class KeymanagerIntegrationTest {
 		ResponseWrapper<SignatureResponseDto> responseWrapper = objectMapper.readValue(
 				result.getResponse().getContentAsString(), new TypeReference<ResponseWrapper<SignatureResponseDto>>() {
 				});
-		assertThat(responseWrapper.getErrors().get(0).getErrorCode(), is("KER-KMS-003"));
+		assertThat(responseWrapper.getErrors().get(0).getErrorCode(), is("KER-KMS-006"));
 	}
 
 	@WithUserDetails("reg-processor")
@@ -505,7 +505,7 @@ public class KeymanagerIntegrationTest {
 		ResponseWrapper<SignatureResponseDto> responseWrapper = objectMapper.readValue(
 				result.getResponse().getContentAsString(), new TypeReference<ResponseWrapper<SignatureResponseDto>>() {
 				});
-		assertThat(responseWrapper.getErrors().get(0).getErrorCode(), is("KER-KMS-003"));
+		assertThat(responseWrapper.getErrors().get(0).getErrorCode(), is("KER-KMS-006"));
 	}
 
 }

@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>io.mosip.kernel</groupId>
 		<artifactId>kernel-parent</artifactId>
-		<version>1.0.6</version>
+		<version>1.2.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>kernel-virusscanner-clamav</artifactId>
@@ -15,7 +15,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<kernel.core.version>1.0.6</kernel.core.version>
+		<kernel.core.version>1.2.0-SNAPSHOT</kernel.core.version>
 	</properties>
 
 	<dependencies>
