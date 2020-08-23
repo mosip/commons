@@ -4,7 +4,7 @@
  * 
  * 
  */
-package io.mosip.kernel.keymanagerservice.dto;
+package io.mosip.kernel.signature.dto;
 
 import javax.validation.constraints.NotBlank;
 
