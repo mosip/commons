@@ -70,7 +70,7 @@ public class RegistrationCenterDeviceHistoryServiceImpl implements RegistrationC
 		}
 		if (deviceHistorys != null) {
 			for(DeviceHistory deviceHistory:deviceHistorys) {
-				if(deviceHistorys != null) {
+				if(deviceHistory != null) {
 			
 			registrationCenterDeviceHistoryDto.setDeviceId(deviceHistory.getId());
 			registrationCenterDeviceHistoryDto.setEffectivetimes(deviceHistory.getEffectDateTime());
