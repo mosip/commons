@@ -149,7 +149,7 @@ public class KeymanagerExceptionHandler {
 
 	@ExceptionHandler(KeymanagerServiceException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> keymanagerServiceException(
-			HttpServletRequest httpServletRequest, final CryptoException e) throws IOException {
+			HttpServletRequest httpServletRequest, final KeymanagerServiceException e) throws IOException {
 		ExceptionUtils.logRootCause(e);
 		return new ResponseEntity<>(
 				getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText(), HttpStatus.OK), HttpStatus.OK);

@@ -26,4 +26,13 @@ public interface KeyPolicyRepository extends JpaRepository<KeyPolicy, String> {
 	 */
 	Optional<KeyPolicy> findByApplicationId(String applicationId);
 
+
+	/**
+	 * Function to find KeyPolicy by applicationId
+	 * 
+	 * @param applicationId applicationId
+	 * @return KeyPolicy
+	 */
+	Optional<KeyPolicy> findByApplicationIdAndIsActive(String applicationId, boolean isActive);
+
 }
