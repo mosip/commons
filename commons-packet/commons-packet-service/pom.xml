@@ -54,6 +54,12 @@
             <version>${h2.version}</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>1.8.22</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 

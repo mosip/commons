@@ -16,20 +16,18 @@
 
     <properties>
         <!-- maven -->
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.version>3.7.0</maven.compiler.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.version>3.8.0</maven.compiler.version>
+        <maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version>
         <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
         <maven.war.plugin.version>3.1.0</maven.war.plugin.version>
-        <maven.surefire.plugin.version>2.9</maven.surefire.plugin.version>
         <maven.jacoco.plugin.version>0.8.1</maven.jacoco.plugin.version>
         <maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version>
-        <maven.javadoc.version>3.0.1</maven.javadoc.version>
+        <maven.javadoc.version>3.2.0</maven.javadoc.version>
         <maven-shade-plugin.version>2.3</maven-shade-plugin.version>
 
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
         <!-- spring -->
         <spring.boot.version>2.0.2.RELEASE</spring.boot.version>
         <spring.data.jpa.version>2.0.7.RELEASE</spring.data.jpa.version>
@@ -38,7 +36,7 @@
         <jackson.datatype.version>2.9.8</jackson.datatype.version>
         <kernel.keygenerator.bouncycastle.version>1.0.6</kernel.keygenerator.bouncycastle.version>
         <swagger.version>2.9.2</swagger.version>
-        <powermock.beta.version>2.0.0-beta.5</powermock.beta.version>
+        <powermock.beta.version>2.0.7</powermock.beta.version>
 
         <kernel.core.version>1.2.0-SNAPSHOT</kernel.core.version>
         <kernel.biometrics.api.version>1.2.0-SNAPSHOT</kernel.biometrics.api.version>
@@ -48,8 +46,8 @@
         <kernel.logger.logback.version>1.0.6</kernel.logger.logback.version>
         <spring.boot.co>2.0.2.RELEASE</spring.boot.co>
         <khazana.version>1.2.0-SNAPSHOT</khazana.version>
-        <sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**,**/handler/**,**/utilities/**,
-            **/validator/**, **/exception/**,**/util/**,**/constants/**</sonar.cpd.exclusions>
+        <sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/dto/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/security/**,**/*Config.java,**/*BootApplication.java,**/*VertxApplication.java,**/cbeffutil/**,**/*Utils.java,**/*Validator.java,**/*Helper.java,**/verticle/**,**/VidWriter.java/**,**/masterdata/utils/**,**/spi/**,**/core/http/**,"**/LocationServiceImpl.java","**/RegistrationCenterMachineServiceImpl.java","**/RegistrationCenterServiceImpl.java","**/pridgenerator/**","**/idgenerator/prid","**/proxy/**","**/cryptosignature/**"</sonar.coverage.exclusions>
+        <sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**</sonar.cpd.exclusions>
     </properties>
 
     <modules>
@@ -62,69 +60,14 @@
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven.compiler.version}</version>
-                    <configuration>
-                        <source>${maven.compiler.source}</source>
-                        <target>${maven.compiler.target}</target>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>${maven.jar.plugin.version}</version>
-                    <configuration>
-                        <archive>
-                            <manifest>
-                                <addClasspath>true</addClasspath>
-                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            </manifest>
-                            <manifestEntries>
-                                <Project-Name>${project.name}</Project-Name>
-                                <Project-Version>${project.version}</Project-Version>
-                                <Built-By>${user.name}</Built-By>
-                                <Built-OS>${os.name}</Built-OS>
-                                <Local-Build-Date>${maven.build.timestamp}</Local-Build-Date>
-                                <Build-Number>${env.BUILD_NUMBER}</Build-Number>
-                                <Build-Date>${env.BUILD_ID}</Build-Date>
-                                <Build-URL>${env.BUILD_URL}</Build-URL>
-                            </manifestEntries>
-                        </archive>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-war-plugin</artifactId>
-                    <version>${maven.war.plugin.version}</version>
-                    <configuration>
-                        <archive>
-                            <manifest>
-                                <addClasspath>true</addClasspath>
-                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            </manifest>
-                            <manifestEntries>
-                                <Project-Name>${project.name}</Project-Name>
-                                <Project-Version>${project.version}</Project-Version>
-                                <Built-By>${user.name}</Built-By>
-                                <Built-OS>${os.name}</Built-OS>
-                                <Local-Build-Date>${maven.build.timestamp}</Local-Build-Date>
-                                <Build-Number>${env.BUILD_NUMBER}</Build-Number>
-                                <Build-Date>${env.BUILD_ID}</Build-Date>
-                                <Build-URL>${env.BUILD_URL}</Build-URL>
-                            </manifestEntries>
-                        </archive>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven.surefire.plugin.version}</version>
                     <configuration>
+                        <skipTests>${skipTests}</skipTests>
                         <skip>false</skip>
-                        <useFile>false</useFile>
-                        <excludes>
-                            <exclude>**/*IntegrationTest.java</exclude>
-                        </excludes>
+                        <argLine>
+                            --illegal-access=permit
+                        </argLine>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -144,6 +87,40 @@
                             </goals>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven.jar.plugin.version}</version>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addClasspath>true</addClasspath>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            </manifest>
+                            <manifestEntries>
+                                <Project-Name>${project.name}</Project-Name>
+                                <Project-Version>${project.version}</Project-Version>
+                            </manifestEntries>
+                        </archive>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>${maven.war.plugin.version}</version>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addClasspath>true</addClasspath>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            </manifest>
+                            <manifestEntries>
+                                <Project-Name>${project.name}</Project-Name>
+                                <Project-Version>${project.version}</Project-Version>
+                            </manifestEntries>
+                        </archive>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -178,10 +155,11 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven.javadoc.version}</version>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.version}</version>
                 <configuration>
-                    <aggregate>true</aggregate>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
         </plugins>
