@@ -121,7 +121,7 @@ public interface DeviceRepository extends BaseRepository<Device, String> {
 	@Query(value = "Select * from master.device_spec ds where (ds.is_deleted is null or ds.is_deleted = false) and ds.is_active = true and ds.dtyp_code IN (select code from master.device_type dt where dt.name=?1) and ds.lang_code=?2", nativeQuery = true)
 	List<Object[]> findDeviceSpecByDeviceTypeNameAndLangCode(String typeName, String langCode);
 
-	@Query(value = "select d.name from master.registration_center r,master.device_master d where r.id=d.regcntr_id   and r.lang_code=d.lang_code and d.id in(?1) and dd.lang_code=?2", nativeQuery = true)
+	@Query(value = "select d.name from master.registration_center r,master.device_master d where r.id=d.regcntr_id   and r.lang_code=d.lang_code and d.id in(?1) and d.lang_code=?2", nativeQuery = true)
 	List<String> findDeviceNameByDevicesAndLangCode(List<String> devices, String langCode);
 
 	/**
