@@ -604,6 +604,7 @@ public class MasterdataIntegrationTest {
 	private void userDetailsHistorySetup() {
 		user = new UserDetailsHistory();
 		user.setId("11001");
+		user.setRegCenterId("10002");
 		user.setEmail("abcd");
 		user.setLangCode("eng");
 		user.setMobile("124134");
@@ -7287,7 +7288,7 @@ public class MasterdataIntegrationTest {
 		when(registrationCenterRepository.findByIdAndLangCodeAndIsDeletedTrue(Mockito.any(), Mockito.any()))
 				.thenReturn(registrationCenter11);
 		when(deviceRepository.findByRegIdAndIsDeletedFalseOrIsDeletedIsNull(Mockito.any()))
-			.thenReturn(Arrays.asList(device));
+			.thenReturn(Arrays.asList());
 		when(daysOfWeekListRepo.findBylangCode(Mockito.any())).thenReturn(getDaysOfWeek());
 		when(regWorkingNonWorkingRepo
 				.findByRegCenterIdAndlanguagecode(Mockito.any(), Mockito.any())).thenReturn(getWorkingNonWorkingDays());
@@ -7310,7 +7311,7 @@ public class MasterdataIntegrationTest {
 		zone.setCode("JRD");
 		List<Zone> zones = new ArrayList<>();
 		device.setZoneCode("JRD");
-		device.setRegCenterId("10002");
+		device.setRegCenterId("676");
 		zones.add(zone);
 		System.out.println(primaryLang);
 		when(registrationCenterRepository.findByIdAndIsDeletedFalseOrNull(Mockito.any())).thenReturn(Arrays.asList(new RegistrationCenter() ));
@@ -7325,7 +7326,7 @@ public class MasterdataIntegrationTest {
 		when(registrationCenterRepository.findByIdAndLangCodeAndIsDeletedTrue(Mockito.any(), Mockito.any()))
 				.thenReturn(registrationCenter11);
 		when(deviceRepository.findByRegIdAndIsDeletedFalseOrIsDeletedIsNull(Mockito.any()))
-		.thenReturn(Arrays.asList(device));
+		.thenReturn(Arrays.asList());
 		when(daysOfWeekListRepo.findBylangCode(Mockito.any())).thenReturn(getDaysOfWeek());
 		when(zoneUtils.getChildZoneList(Mockito.any(), Mockito.any(),Mockito.any())).thenReturn(zones);
 		when(registrationCenterRepository.update(Mockito.any())).thenReturn(registrationCenter11);

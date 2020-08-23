@@ -1378,7 +1378,7 @@ public class SyncMasterDataServiceHelper {
 							dto.setMachineId(machine.getId());
 							dto.setUsrId(userDetail.getId());
 							if(machine.getEffectDateTime()!=null &&userDetail.getEffDTimes() !=null) {
-							dto.setEffectivetimes(machine.getEffectDateTime().isBefore( userDetail.getEffDTimes())? machine.getEffectDateTime() : userDetail.getEffDTimes() );
+							dto.setEffectivetimes(machine.getEffectDateTime().isAfter( userDetail.getEffDTimes())? machine.getEffectDateTime() : userDetail.getEffDTimes() );
 							}
 							registrationCenterUserMachineMappingHistoryDtos.add(dto);
 						}
@@ -1442,7 +1442,7 @@ public class SyncMasterDataServiceHelper {
 							if(device.getEffectDateTime() == null)dto.setEffectivetimes(machine.getEffectDateTime());
 							if(machine.getEffectDateTime() == null)dto.setEffectivetimes(device.getEffectDateTime());
 							if(device.getEffectDateTime() != null && machine.getEffectDateTime()!= null) {
-								dto.setEffectivetimes(machine.getEffectDateTime().isBefore( device.getEffectDateTime())? machine.getEffectDateTime() : device.getEffectDateTime() );
+								dto.setEffectivetimes(machine.getEffectDateTime().isAfter( device.getEffectDateTime())? machine.getEffectDateTime() : device.getEffectDateTime() );
 							}
 							dto.setLangCode(device.getLangCode());
 							

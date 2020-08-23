@@ -1004,8 +1004,8 @@ public class MachineServiceImpl implements MachineService {
 		RegistrationCenterHistory registrationCenterHistoryEntity;
 		registrationCenterHistoryEntity = MetaDataUtils.setCreateMetaData(updRegistrationCenter,
 				RegistrationCenterHistory.class);
-		registrationCenterHistoryEntity.setEffectivetimes(updRegistrationCenter.getCreatedDateTime());
-		registrationCenterHistoryEntity.setCreatedDateTime(updRegistrationCenter.getCreatedDateTime());
+		registrationCenterHistoryEntity.setEffectivetimes(updRegistrationCenter.getUpdatedDateTime());
+		registrationCenterHistoryEntity.setCreatedDateTime(updRegistrationCenter.getUpdatedDateTime());
 		registrationCenterHistoryRepository.create(registrationCenterHistoryEntity);
 	}
 }

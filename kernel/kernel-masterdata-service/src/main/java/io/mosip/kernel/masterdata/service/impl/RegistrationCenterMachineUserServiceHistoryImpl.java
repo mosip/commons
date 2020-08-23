@@ -91,7 +91,17 @@ public class RegistrationCenterMachineUserServiceHistoryImpl implements Registra
 					if(userHistory.getLangCode().equals(machinesHistory.getLangCode())) {
 					RegistrationCenterUserMachineMappingHistoryDto dto=new RegistrationCenterUserMachineMappingHistoryDto();
 					dto.setCntrId(userHistory.getRegCenterId());
-					dto.setIsActive(userHistory.getIsActive() && machinesHistory.getIsActive());
+					if(userHistory.getIsActive() == null)dto.setIsActive(machinesHistory.getIsActive());
+					if(machinesHistory.getIsActive() == null)dto.setIsActive(userHistory.getIsActive());
+					if(userHistory.getIsActive() != null && machinesHistory.getIsActive()!= null) {
+						dto.setIsActive(userHistory.getIsActive() && machinesHistory.getIsActive());
+					}
+					
+					if(userHistory.getEffDTimes() == null)dto.setEffectivetimes(machinesHistory.getEffectDateTime());
+					if(machinesHistory.getEffectDateTime() == null)dto.setEffectivetimes(userHistory.getEffDTimes());
+					if(userHistory.getEffDTimes() != null && machinesHistory.getEffectDateTime()!= null) {
+						dto.setEffectivetimes(machinesHistory.getEffectDateTime().isAfter( userHistory.getEffDTimes())? machinesHistory.getEffectDateTime() : userHistory.getEffDTimes() );
+					}
 					dto.setLangCode(userHistory.getLangCode());
 					dto.setMachineId(machinesHistory.getId());
 					dto.setUsrId(userHistory.getId());
