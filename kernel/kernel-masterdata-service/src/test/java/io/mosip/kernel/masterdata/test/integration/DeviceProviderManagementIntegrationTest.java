@@ -266,7 +266,7 @@ public class DeviceProviderManagementIntegrationTest {
 				Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.any()))
 						.thenThrow(DataRetrievalFailureException.class);
 		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
-				.andExpect(status().isInternalServerError());
+				.andExpect(status().isOk());
 	}
 
 	@WithUserDetails("zonal-admin")
@@ -464,7 +464,7 @@ public class DeviceProviderManagementIntegrationTest {
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
 		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
-				.andExpect(status().isInternalServerError());
+				.andExpect(status().isOk());
 	}
 
 	@Test
@@ -488,7 +488,7 @@ public class DeviceProviderManagementIntegrationTest {
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
 		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
-				.andExpect(status().isInternalServerError());
+				.andExpect(status().isOk());
 	}
 
 	@Test
@@ -512,7 +512,7 @@ public class DeviceProviderManagementIntegrationTest {
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
 		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
-				.andExpect(status().isInternalServerError());
+				.andExpect(status().isOk());
 	}
 
 	@Test
