@@ -1,4 +1,4 @@
-package io.mosip.kernel.auth.adapter.filter;
+package io.mosip.kernel.auth.defaultadapter.filter;
 
 import java.io.IOException;
 

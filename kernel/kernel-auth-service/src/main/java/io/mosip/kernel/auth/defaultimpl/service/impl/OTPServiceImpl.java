@@ -9,7 +9,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -29,9 +28,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.auth.config.MosipEnvironment;
-import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterConstant;
-import io.mosip.kernel.auth.defaultadapter.exception.AuthNException;
-import io.mosip.kernel.auth.defaultadapter.exception.AuthZException;
 import io.mosip.kernel.auth.defaultimpl.constant.AuthConstant;
 import io.mosip.kernel.auth.defaultimpl.constant.AuthErrorCode;
 import io.mosip.kernel.auth.defaultimpl.dto.AccessTokenResponse;
@@ -51,6 +47,8 @@ import io.mosip.kernel.auth.defaultimpl.service.OTPService;
 import io.mosip.kernel.auth.defaultimpl.util.MemoryCache;
 import io.mosip.kernel.auth.defaultimpl.util.OtpValidator;
 import io.mosip.kernel.auth.defaultimpl.util.TemplateUtil;
+import io.mosip.kernel.core.authmanager.exception.AuthNException;
+import io.mosip.kernel.core.authmanager.exception.AuthZException;
 import io.mosip.kernel.core.authmanager.model.AuthNResponseDto;
 import io.mosip.kernel.core.authmanager.model.MosipUserDto;
 import io.mosip.kernel.core.authmanager.model.MosipUserTokenDto;
@@ -145,7 +143,7 @@ public class OTPServiceImpl implements OTPService {
 			// token = tokenService.getInternalTokenGenerationService();
 			AccessTokenResponse accessTokenResponse = getAuthAccessToken(authClientID,
 					"050c7e61-e415-4390-a1ac-03e1624e2b1d", realmId);
-			token = AuthAdapterConstant.AUTH_ADMIN_COOKIE_PREFIX + accessTokenResponse.getAccess_token();
+			token =  accessTokenResponse.getAccess_token();
 		} catch (HttpClientErrorException | HttpServerErrorException ex) {
 			List<ServiceError> validationErrorsList = ExceptionUtils.getServiceErrorList(ex.getResponseBodyAsString());
 
