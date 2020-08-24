@@ -60,5 +60,8 @@ public class UserDetailsHistory extends BaseEntity implements Serializable {
 
 	@Column(name = "last_login_method", length = 64)
 	private String lastLoginMethod;
+	
+	@Column(name = "regcntr_id", length = 10)
+	private String regCenterId;
 
 }

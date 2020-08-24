@@ -34,14 +34,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.auth.adapter.exception.AuthNException;
 import io.mosip.kernel.auth.adapter.exception.AuthZException;
-import io.mosip.kernel.syncdata.entity.RegistrationCenterUser;
-import io.mosip.kernel.syncdata.entity.id.RegistrationCenterUserID;
+import io.mosip.kernel.syncdata.entity.UserDetails;
 import io.mosip.kernel.syncdata.exception.DataNotFoundException;
 import io.mosip.kernel.syncdata.exception.ParseResponseException;
 import io.mosip.kernel.syncdata.exception.SyncDataServiceException;
 import io.mosip.kernel.syncdata.exception.SyncServiceException;
 import io.mosip.kernel.syncdata.repository.MachineRepository;
-import io.mosip.kernel.syncdata.repository.RegistrationCenterUserRepository;
+import io.mosip.kernel.syncdata.repository.UserDetailsRepository;
 import io.mosip.kernel.syncdata.service.SyncJobDefService;
 import io.mosip.kernel.syncdata.service.SyncRolesService;
 import io.mosip.kernel.syncdata.service.SyncUserDetailsService;
@@ -54,6 +53,8 @@ public class SyncUserDetailsAndRolesServiceTest {
 
 	@MockBean
 	MachineRepository machineRespository;
+	@MockBean
+	private UserDetailsRepository userDetailsRepository;
 
 	@Autowired
 	private SyncRolesService syncRolesService;
@@ -63,9 +64,6 @@ public class SyncUserDetailsAndRolesServiceTest {
 
 	@Autowired
 	RestTemplate restTemplate;
-
-	@MockBean
-	RegistrationCenterUserRepository registrationCenterUserRepository;
 
 	@MockBean
 	private SyncJobDefService registrationCenterUserService;
@@ -92,18 +90,19 @@ public class SyncUserDetailsAndRolesServiceTest {
 
 	private StringBuilder builder;
 
-	private List<RegistrationCenterUser> registrationCenterUsers = null;
+	private List<UserDetails> registrationCenterUsers = null;
+
+	
 
 	@Before
 	public void setup() {
 
 		registrationCenterUsers = new ArrayList<>();
-		RegistrationCenterUserID regCenterId = new RegistrationCenterUserID();
-		regCenterId.setRegCenterId("10001");
-		regCenterId.setUserId("M10411022");
-		RegistrationCenterUser registrationCenterUser = new RegistrationCenterUser();
+		
+		UserDetails registrationCenterUser = new UserDetails();
 		registrationCenterUser.setIsActive(true);
-		registrationCenterUser.setRegistrationCenterUserID(regCenterId);
+		registrationCenterUser.setRegCenterId("10001");
+		registrationCenterUser.setId("M10411022");
 		registrationCenterUsers.add(registrationCenterUser);
 
 		userDetailsUri = new StringBuilder();
@@ -122,7 +121,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 
 		String regId = "10044";
 
-		when(registrationCenterUserRepository.findByRegistrationCenterUserByRegCenterId(regId))
+		when(userDetailsRepository.findByUsersByRegCenterId(regId))
 				.thenReturn(registrationCenterUsers);
 
 		MockRestServiceServer mockRestServiceServer = MockRestServiceServer.bindTo(restTemplate).build();
@@ -137,7 +136,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 
 		String regId = "10044";
 
-		when(registrationCenterUserRepository.findByRegistrationCenterUserByRegCenterId(regId))
+		when(userDetailsRepository.findByUsersByRegCenterId(regId))
 				.thenReturn(registrationCenterUsers);
 
 		MockRestServiceServer mockRestServiceServer = MockRestServiceServer.bindTo(restTemplate).build();
@@ -151,7 +150,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 
 		String regId = "10044";
 
-		when(registrationCenterUserRepository.findByRegistrationCenterUserByRegCenterId(regId))
+		when(userDetailsRepository.findByUsersByRegCenterId(regId))
 				.thenReturn(registrationCenterUsers);
 
 		MockRestServiceServer mockRestServiceServer = MockRestServiceServer.bindTo(restTemplate).build();
@@ -165,7 +164,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 
 		String regId = "10044";
 
-		when(registrationCenterUserRepository.findByRegistrationCenterUserByRegCenterId(regId))
+		when(userDetailsRepository.findByUsersByRegCenterId(regId))
 				.thenReturn(registrationCenterUsers);
 
 		MockRestServiceServer mockRestServiceServer = MockRestServiceServer.bindTo(restTemplate).build();
@@ -179,7 +178,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 		String response = "{\"id\":\"SYNCDATA.REQUEST\",\"version\":\"v1.0\",\"responsetime\":\"2019-03-31T10:40:29.935Z\",\"metadata\":null,\"response\":{\"mosipUserDtoList\":[\"userId\":\"110001\",\"mobile\":\"9663175928\",\"mail\":\"110001@mosip.io\",\"langCode\":null,\"userPassword\":\"e1NTSEE1MTJ9L25EVy9tajdSblBMZFREYjF0dXB6TzdCTmlWczhKVnY1TXJ1aXRSZlBrSCtNVmJDTXVIM2lyb2thcVhsdlR6WkNKYXAwSncrSXc5SFc3aWRYUnpnaHBTQktrNXRSVTA3\",\"name\":\"user\",\"role\":\"REGISTRATION_ADMIN,REGISTRATION_OFFICER\"}]},\"errors\":null}";
 		String regId = "10044";
 
-		when(registrationCenterUserRepository.findByRegistrationCenterUserByRegCenterId(regId))
+		when(userDetailsRepository.findByUsersByRegCenterId(regId))
 				.thenReturn(registrationCenterUsers);
 
 		MockRestServiceServer mockRestServiceServer = MockRestServiceServer.bindTo(restTemplate).build();
@@ -193,7 +192,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 		String response = "{ \"id\": null, \"version\": null, \"responsetime\": \"2019-03-31T11:40:39.847Z\", \"metadata\": null, \"response\": null, \"errors\": [ { \"errorCode\": \"KER-SNC-303\", \"message\": \"Registration center user not found \" } ] }";
 		String regId = "10044";
 
-		when(registrationCenterUserRepository.findByRegistrationCenterUserByRegCenterId(regId))
+		when(userDetailsRepository.findByUsersByRegCenterId(regId))
 				.thenReturn(registrationCenterUsers);
 
 		MockRestServiceServer mockRestServiceServer = MockRestServiceServer.bindTo(restTemplate).build();
@@ -207,7 +206,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 		String response = "{ \"id\": null, \"version\": null, \"responsetime\": \"2019-03-31T11:40:39.847Z\", \"metadata\": null, \"response\": null, \"errors\": [ { \"errorCode\": \"KER-SNC-303\", \"message\": \"Registration center user not found \" } ] }";
 		String regId = "10044";
 
-		when(registrationCenterUserRepository.findByRegistrationCenterUserByRegCenterId(regId))
+		when(userDetailsRepository.findByUsersByRegCenterId(regId))
 				.thenReturn(registrationCenterUsers);
 
 		MockRestServiceServer mockRestServiceServer = MockRestServiceServer.bindTo(restTemplate).build();
@@ -221,7 +220,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 		String response = "{ \"id\": null, \"version\": null, \"responsetime\": \"2019-05-11T11:02:20.521Z\", \"metadata\": null, \"response\": null, \"errors\": [ { \"errorCode\": \"KER-ATH-402\", \"message\": \"Token expired\" } ] }";
 		String regId = "10044";
 
-		when(registrationCenterUserRepository.findByRegistrationCenterUserByRegCenterId(regId))
+		when(userDetailsRepository.findByUsersByRegCenterId(regId))
 				.thenReturn(registrationCenterUsers);
 
 		MockRestServiceServer mockRestServiceServer = MockRestServiceServer.bindTo(restTemplate).build();
@@ -235,7 +234,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 		String response = "{ \"id\": null, \"version\": null, \"responsetime\": \"2019-05-11T11:02:20.521Z\", \"metadata\": null, \"response\": null, \"errors\": [ { \"errorCode\": \"KER-ATH-402\", \"message\": \"Token expired\" } ] }";
 		String regId = "10044";
 
-		when(registrationCenterUserRepository.findByRegistrationCenterUserByRegCenterId(regId))
+		when(userDetailsRepository.findByUsersByRegCenterId(regId))
 				.thenReturn(registrationCenterUsers);
 
 		MockRestServiceServer mockRestServiceServer = MockRestServiceServer.bindTo(restTemplate).build();
@@ -249,7 +248,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 
 		String regId = "10044";
 
-		when(registrationCenterUserRepository.findByRegistrationCenterUserByRegCenterId(regId))
+		when(userDetailsRepository.findByUsersByRegCenterId(regId))
 				.thenReturn(registrationCenterUsers);
 
 		MockRestServiceServer mockRestServiceServer = MockRestServiceServer.bindTo(restTemplate).build();
@@ -263,7 +262,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 
 		String regId = "10044";
 
-		when(registrationCenterUserRepository.findByRegistrationCenterUserByRegCenterId(regId))
+		when(userDetailsRepository.findByUsersByRegCenterId(regId))
 				.thenReturn(registrationCenterUsers);
 
 		MockRestServiceServer mockRestServiceServer = MockRestServiceServer.bindTo(restTemplate).build();
@@ -277,7 +276,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 		String response = "{ \"id\": null, \"version\": null, \"responsetime\": \"2019-05-11T11:02:20.521Z\", \"metadata\": null, \"response\": null, \"errors\": [ { \"errorCode\": \"KER-ATH-403\", \"message\": \"Forbidden\" } ] }";
 		String regId = "10044";
 
-		when(registrationCenterUserRepository.findByRegistrationCenterUserByRegCenterId(regId))
+		when(userDetailsRepository.findByUsersByRegCenterId(regId))
 				.thenReturn(registrationCenterUsers);
 
 		MockRestServiceServer mockRestServiceServer = MockRestServiceServer.bindTo(restTemplate).build();
@@ -291,7 +290,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 		String response = "{ \"id\": null, \"version\": null, \"responsetime\": \"2019-05-11T11:02:20.521Z\", \"metadata\": null, \"response\": null, \"errors\": [ { \"errorCode\": \"KER-ATH-403\", \"message\": \"Forbidden\" } ] }";
 		String regId = "10044";
 
-		when(registrationCenterUserRepository.findByRegistrationCenterUserByRegCenterId(regId))
+		when(userDetailsRepository.findByUsersByRegCenterId(regId))
 				.thenReturn(registrationCenterUsers);
 
 		MockRestServiceServer mockRestServiceServer = MockRestServiceServer.bindTo(restTemplate).build();
@@ -305,7 +304,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 
 		String regId = "10044";
 
-		when(registrationCenterUserRepository.findByRegistrationCenterUserByRegCenterId(regId))
+		when(userDetailsRepository.findByUsersByRegCenterId(regId))
 				.thenReturn(registrationCenterUsers);
 
 		MockRestServiceServer mockRestServiceServer = MockRestServiceServer.bindTo(restTemplate).build();
@@ -319,7 +318,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 
 		String regId = "10044";
 
-		when(registrationCenterUserRepository.findByRegistrationCenterUserByRegCenterId(regId))
+		when(userDetailsRepository.findByUsersByRegCenterId(regId))
 				.thenReturn(registrationCenterUsers);
 
 		MockRestServiceServer mockRestServiceServer = MockRestServiceServer.bindTo(restTemplate).build();
@@ -333,7 +332,7 @@ public class SyncUserDetailsAndRolesServiceTest {
 
 		String regId = "10044";
 
-		when(registrationCenterUserRepository.findByRegistrationCenterUserByRegCenterId(regId))
+		when(userDetailsRepository.findByUsersByRegCenterId(regId))
 				.thenThrow(DataRetrievalFailureException.class);
 
 		syncUserDetailsService.getAllUserDetail(regId);
@@ -344,8 +343,8 @@ public class SyncUserDetailsAndRolesServiceTest {
 
 		String regId = "10044";
 
-		when(registrationCenterUserRepository.findByRegistrationCenterUserByRegCenterId(regId))
-				.thenReturn(new ArrayList<RegistrationCenterUser>());
+		when(userDetailsRepository.findByUsersByRegCenterId(regId))
+				.thenReturn(new ArrayList<UserDetails>());
 
 		syncUserDetailsService.getAllUserDetail(regId);
 	}
@@ -413,8 +412,8 @@ public class SyncUserDetailsAndRolesServiceTest {
 		String response = "{ \"id\": null, \"version\": null, \"responsetime\": \"2019-05-11T11:02:20.521Z\", \"metadata\": null, \"response\": null, \"errors\": [ { \"errorCode\": \"KER-ATH-403\", \"message\": \"Forbidden\" } ] }";
 		String regId = "10044";
 
-		when(registrationCenterUserRepository.findByRegistrationCenterUserByRegCenterId(regId))
-				.thenReturn(registrationCenterUsers);
+//		when(registrationCenterUserRepository.findByRegistrationCenterUserByRegCenterId(regId))
+//				.thenReturn(registrationCenterUsers);
 
 		MockRestServiceServer mockRestServiceServer = MockRestServiceServer.bindTo(restTemplate).build();
 		mockRestServiceServer.expect(requestTo(builder.toString() + "/registrationclient"))
@@ -427,8 +426,8 @@ public class SyncUserDetailsAndRolesServiceTest {
 
 		String regId = "10044";
 
-		when(registrationCenterUserRepository.findByRegistrationCenterUserByRegCenterId(regId))
-				.thenReturn(registrationCenterUsers);
+//		when(registrationCenterUserRepository.findByRegistrationCenterUserByRegCenterId(regId))
+//				.thenReturn(registrationCenterUsers);
 
 		MockRestServiceServer mockRestServiceServer = MockRestServiceServer.bindTo(restTemplate).build();
 		mockRestServiceServer.expect(requestTo(builder.toString() + "/registrationclient"))
