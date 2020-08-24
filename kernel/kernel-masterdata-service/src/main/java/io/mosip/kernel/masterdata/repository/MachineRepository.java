@@ -105,17 +105,17 @@ public interface MachineRepository extends BaseRepository<Machine, String> {
 	 * @return Machine fetch the list of Machine details those are mapped with the
 	 *         given regCenterId
 	 */
-	@Query(value = "SELECT mm.id, mm.name, mm.mac_address, mm.serial_num, mm.ip_address,mm.zone_code, mm.mspec_id, mm.lang_code, mm.is_active,mm.validity_end_dtimes, mm.cr_by, mm.cr_dtimes, mm.upd_by, mm.upd_dtimes, mm.is_deleted, mm.del_dtimes FROM master.machine_master mm inner join master.reg_center_machine rcm on mm.id = rcm.machine_id where rcm.regcntr_id =?1", countQuery = "SELECT count(*) FROM  master.machine_master mm inner join master.reg_center_machine rcm on mm.id = rcm.machine_id where rcm.regcntr_id =?1", nativeQuery = true)
+	@Query(value = "SELECT * FROM master.machine_master mm  where mm.regcntr_id =?1", countQuery = "SELECT count(*) FROM  master.machine_master mm   where mm.regcntr_id =?1", nativeQuery = true)
 	Page<Machine> findMachineByRegCenterId(String regCenterId, Pageable pageable);
 
 	@Query("FROM Machine m where m.id = ?1 and m.langCode = ?2 and (m.isDeleted is null or m.isDeleted = false)")
 	Machine findMachineByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNullWithoutActiveStatusCheck(String id,
 			String langCode);
 
-	@Query(value = "select m.id from master.machine_master m where m.id in(select  distinct rcm.machine_id from master.reg_center_machine rcm ) and m.lang_code=?1", nativeQuery = true)
+	@Query(value = "select m.id from master.machine_master m where m.regcntr_id is not null  and m.lang_code=?1", nativeQuery = true)
 	List<String> findMappedMachineId(String langCode);
 
-	@Query(value = "select m.id from master.machine_master m where m.id not in(select  distinct rcm.machine_id from master.reg_center_machine rcm ) and m.lang_code=?1", nativeQuery = true)
+	@Query(value = "select m.id from master.machine_master m where m.regcntr_id is  null and m.lang_code=?1", nativeQuery = true)
 	List<String> findNotMappedMachineId(String langCode);
 
 	@Query(value = "Select * from master.machine_spec ms where (ms.is_deleted is null or ms.is_deleted = false) and ms.is_active = true and ms.mtyp_code IN (select code from master.machine_type mt where mt.name=?1) and ms.lang_code=?2", nativeQuery = true)
@@ -147,4 +147,13 @@ public interface MachineRepository extends BaseRepository<Machine, String> {
 	@Modifying
 	@Transactional
 	int decommissionMachine(String id, String deCommissionedBy, LocalDateTime deCommissionedDateTime);
+	
+	@Query(value = "select count(*) from master.machine_master where regcntr_id=?1 and (is_deleted is null or is_deleted=false)", nativeQuery = true)
+	long countCenterMachines(String id);
+
+	@Query("FROM Machine WHERE (isDeleted is null or isDeleted =false) and isActive = true")
+	List<Machine> getAllMachines();
+
+	@Query("FROM Machine WHERE regCenterId=?1 and (isDeleted is null or isDeleted =false) and isActive = true")
+	List<Machine> findByRegIdAndIsDeletedFalseOrIsDeletedIsNull(String regId);
 }

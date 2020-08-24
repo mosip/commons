@@ -71,6 +71,10 @@ public class MachineDto {
 	@StringFormatter(min = 1, max = 36)
 	@ApiModelProperty(value = "machineSpecId", required = true, dataType = "java.lang.String")
 	private String machineSpecId;
+	
+	@StringFormatter(min = 0, max = 10)
+	@ApiModelProperty(value = "regCenterId",  dataType = "java.lang.String")
+	private String regCenterId;
 	/**
 	 * Field for language code
 	 */

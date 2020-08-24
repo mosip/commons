@@ -90,7 +90,7 @@ public class SwaggerConfig {
 		}
 
 		Docket docket = new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo())
-				.tags(new Tag("keymanager", "operation related to keymanagement and interaction with softhsm"))
+				.tags(new Tag("keymanager", "Operations related to keymanagement and interaction with Softhsm/real HSM for Key Generation."))
 				.groupName(TITLE).select().apis(RequestHandlerSelectors.any())
 				.paths(PathSelectors.regex("(?!/(error).*).*")).build();
 

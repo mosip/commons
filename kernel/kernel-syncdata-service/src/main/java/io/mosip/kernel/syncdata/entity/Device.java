@@ -85,6 +85,9 @@ public class Device extends BaseEntity implements Serializable {
 
 	@Column(name = "validity_end_dtimes")
 	private LocalDateTime validityDateTime;
+	
+	@Column(name = "regcntr_id", length = 10)
+	private String regCenterId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumns({ @JoinColumn(name = "dspec_id", referencedColumnName = "id", insertable = false, updatable = false),

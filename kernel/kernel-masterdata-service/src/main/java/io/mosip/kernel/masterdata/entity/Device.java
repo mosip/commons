@@ -89,6 +89,9 @@ public class Device extends BaseEntity implements Serializable {
 
 	@Column(name = "zone_code", length = 36)
 	private String zoneCode;
+	
+	@Column(name = "regcntr_id", length = 10)
+	private String regCenterId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumns({ @JoinColumn(name = "dspec_id", referencedColumnName = "id", insertable = false, updatable = false),
