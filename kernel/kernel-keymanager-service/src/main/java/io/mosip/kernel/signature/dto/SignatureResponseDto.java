@@ -4,7 +4,7 @@
  * 
  * 
  */
-package io.mosip.kernel.keymanagerservice.dto;
+package io.mosip.kernel.signature.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
