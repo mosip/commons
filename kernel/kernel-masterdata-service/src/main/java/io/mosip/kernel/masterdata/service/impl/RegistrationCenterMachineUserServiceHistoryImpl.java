@@ -2,6 +2,7 @@ package io.mosip.kernel.masterdata.service.impl;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +13,13 @@ import io.mosip.kernel.masterdata.constant.RegistrationCenterErrorCode;
 import io.mosip.kernel.masterdata.constant.RegistrationCenterUserMappingHistoryErrorCode;
 import io.mosip.kernel.masterdata.dto.RegistrationCenterUserMachineMappingHistoryDto;
 import io.mosip.kernel.masterdata.dto.getresponse.RegistrationCenterUserMachineMappingHistoryResponseDto;
-import io.mosip.kernel.masterdata.entity.RegistrationCenterUserMachineHistory;
+import io.mosip.kernel.masterdata.entity.MachineHistory;
+import io.mosip.kernel.masterdata.entity.UserDetailsHistory;
 import io.mosip.kernel.masterdata.exception.DataNotFoundException;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
 import io.mosip.kernel.masterdata.exception.RequestException;
-import io.mosip.kernel.masterdata.repository.RegistrationCenterUserMachineHistoryRepository;
+import io.mosip.kernel.masterdata.repository.MachineHistoryRepository;
+import io.mosip.kernel.masterdata.repository.UserDetailsHistoryRepository;
 import io.mosip.kernel.masterdata.service.RegistrationCenterMachineUserHistoryService;
 import io.mosip.kernel.masterdata.utils.ExceptionUtils;
 import io.mosip.kernel.masterdata.utils.MapperUtils;
@@ -35,7 +38,10 @@ public class RegistrationCenterMachineUserServiceHistoryImpl implements Registra
 	 * {@link RegistrationCenterUserMachineHistoryRepository} instance
 	 */
 	@Autowired
-	RegistrationCenterUserMachineHistoryRepository registrationCenterUserMachineHistoryRepository;
+	MachineHistoryRepository machineHistoryRepository;
+	
+	@Autowired
+	UserDetailsHistoryRepository usersHistoryRepository;
 
 	/*
 	 * (non-Javadoc)
@@ -48,7 +54,8 @@ public class RegistrationCenterMachineUserServiceHistoryImpl implements Registra
 	@Override
 	public RegistrationCenterUserMachineMappingHistoryResponseDto getRegistrationCentersMachineUserMapping(
 			String effectiveTimestamp, String registrationCenterId, String machineId, String userId) {
-		List<RegistrationCenterUserMachineHistory> registrationCenterUserMachines = null;
+		List<MachineHistory> machinesHistories = null;
+		List<UserDetailsHistory> usersHistories = null;
 		RegistrationCenterUserMachineMappingHistoryResponseDto centerUserMachineMappingResponseDto = new RegistrationCenterUserMachineMappingHistoryResponseDto();
 		LocalDateTime lDateAndTime = null;
 		try {
@@ -58,9 +65,12 @@ public class RegistrationCenterMachineUserServiceHistoryImpl implements Registra
 					RegistrationCenterErrorCode.DATE_TIME_PARSE_EXCEPTION.getErrorMessage());
 		}
 		try {
-			registrationCenterUserMachines = registrationCenterUserMachineHistoryRepository
-					.findByCntrIdAndUsrIdAndMachineIdAndEffectivetimesLessThanEqualAndIsDeletedFalseOrIsDeletedIsNull(
-							registrationCenterId, userId, machineId, lDateAndTime);
+			machinesHistories = machineHistoryRepository
+					.findByCntrIdAndMachineIdAndEffectivetimesLessThanEqualAndIsDeletedFalseOrIsDeletedIsNull(
+							registrationCenterId,  machineId, lDateAndTime);
+			usersHistories=usersHistoryRepository
+					.findByCntrIdAndUsrIdAndEffectivetimesLessThanEqualAndIsDeletedFalseOrIsDeletedIsNull(
+							registrationCenterId,  userId, lDateAndTime);
 		} catch (DataAccessLayerException dataAccessLayerException) {
 			throw new MasterDataServiceException(
 					RegistrationCenterUserMappingHistoryErrorCode.REGISTRATION_CENTER_USER_MACHINE_MAPPING_HISTORY_FETCH_EXCEPTION
@@ -68,16 +78,38 @@ public class RegistrationCenterMachineUserServiceHistoryImpl implements Registra
 					RegistrationCenterUserMappingHistoryErrorCode.REGISTRATION_CENTER_USER_MACHINE_MAPPING_HISTORY_FETCH_EXCEPTION
 							.getErrorMessage() + ExceptionUtils.parseException(dataAccessLayerException));
 		}
-		if (registrationCenterUserMachines == null || registrationCenterUserMachines.isEmpty()) {
+		if (machinesHistories == null || machinesHistories.isEmpty() || usersHistories== null || usersHistories.isEmpty()) {
 			throw new DataNotFoundException(
 					RegistrationCenterUserMappingHistoryErrorCode.REGISTRATION_CENTER_USER_MACHINE_MAPPING_HISTORY_NOT_FOUND
 							.getErrorCode(),
 					RegistrationCenterUserMappingHistoryErrorCode.REGISTRATION_CENTER_USER_MACHINE_MAPPING_HISTORY_NOT_FOUND
 							.getErrorMessage());
 		} else {
-			List<RegistrationCenterUserMachineMappingHistoryDto> registrationCenters = null;
-			registrationCenters = MapperUtils.mapAll(registrationCenterUserMachines,
-					RegistrationCenterUserMachineMappingHistoryDto.class);
+			List<RegistrationCenterUserMachineMappingHistoryDto> registrationCenters = new ArrayList<>();
+			for(MachineHistory machinesHistory: machinesHistories) {
+				for(UserDetailsHistory userHistory: usersHistories) {
+					if(userHistory.getLangCode().equals(machinesHistory.getLangCode())) {
+					RegistrationCenterUserMachineMappingHistoryDto dto=new RegistrationCenterUserMachineMappingHistoryDto();
+					dto.setCntrId(userHistory.getRegCenterId());
+					if(userHistory.getIsActive() == null)dto.setIsActive(machinesHistory.getIsActive());
+					if(machinesHistory.getIsActive() == null)dto.setIsActive(userHistory.getIsActive());
+					if(userHistory.getIsActive() != null && machinesHistory.getIsActive()!= null) {
+						dto.setIsActive(userHistory.getIsActive() && machinesHistory.getIsActive());
+					}
+					
+					if(userHistory.getEffDTimes() == null)dto.setEffectivetimes(machinesHistory.getEffectDateTime());
+					if(machinesHistory.getEffectDateTime() == null)dto.setEffectivetimes(userHistory.getEffDTimes());
+					if(userHistory.getEffDTimes() != null && machinesHistory.getEffectDateTime()!= null) {
+						dto.setEffectivetimes(machinesHistory.getEffectDateTime().isAfter( userHistory.getEffDTimes())? machinesHistory.getEffectDateTime() : userHistory.getEffDTimes() );
+					}
+					dto.setLangCode(userHistory.getLangCode());
+					dto.setMachineId(machinesHistory.getId());
+					dto.setUsrId(userHistory.getId());
+					dto.setEffectivetimes(userHistory.getEffDTimes().isBefore(machinesHistory.getEffectDateTime()) ? userHistory.getEffDTimes() :machinesHistory.getEffectDateTime());
+					registrationCenters.add(dto);
+				}
+				}
+			}
 			centerUserMachineMappingResponseDto.setRegistrationCenters(registrationCenters);
 		}
 		return centerUserMachineMappingResponseDto;

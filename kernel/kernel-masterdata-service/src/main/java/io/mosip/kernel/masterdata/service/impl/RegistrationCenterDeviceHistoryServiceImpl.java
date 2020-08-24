@@ -2,6 +2,7 @@ package io.mosip.kernel.masterdata.service.impl;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -11,11 +12,11 @@ import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.masterdata.constant.RegistrationCenterDeviceHistoryErrorCode;
 import io.mosip.kernel.masterdata.dto.RegistrationCenterDeviceHistoryDto;
 import io.mosip.kernel.masterdata.dto.getresponse.RegistrationCenterDeviceHistoryResponseDto;
-import io.mosip.kernel.masterdata.entity.RegistrationCenterDeviceHistory;
+import io.mosip.kernel.masterdata.entity.DeviceHistory;
 import io.mosip.kernel.masterdata.exception.DataNotFoundException;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
 import io.mosip.kernel.masterdata.exception.RequestException;
-import io.mosip.kernel.masterdata.repository.RegistrationCenterDeviceHistoryRepository;
+import io.mosip.kernel.masterdata.repository.DeviceHistoryRepository;
 import io.mosip.kernel.masterdata.service.RegistrationCenterDeviceHistoryService;
 import io.mosip.kernel.masterdata.utils.ExceptionUtils;
 import io.mosip.kernel.masterdata.utils.MapperUtils;
@@ -29,7 +30,7 @@ import io.mosip.kernel.masterdata.utils.MapperUtils;
 public class RegistrationCenterDeviceHistoryServiceImpl implements RegistrationCenterDeviceHistoryService {
 
 	@Autowired
-	RegistrationCenterDeviceHistoryRepository registrationCenterDeviceHistoryRepository;
+	DeviceHistoryRepository deviceHistoryRepository;
 
 	/*
 	 * (non-Javadoc)
@@ -53,11 +54,11 @@ public class RegistrationCenterDeviceHistoryServiceImpl implements RegistrationC
 							.getErrorMessage() + ExceptionUtils.parseException(e));
 		}
 
-		RegistrationCenterDeviceHistory registrationCenterDeviceHistory;
-		RegistrationCenterDeviceHistoryDto registrationCenterDeviceHistoryDto;
+		List<DeviceHistory> deviceHistorys;
+		RegistrationCenterDeviceHistoryDto registrationCenterDeviceHistoryDto=new RegistrationCenterDeviceHistoryDto();
 		RegistrationCenterDeviceHistoryResponseDto registrationCenterDeviceHistoryResponseDto = new RegistrationCenterDeviceHistoryResponseDto();
 		try {
-			registrationCenterDeviceHistory = registrationCenterDeviceHistoryRepository
+			deviceHistorys = deviceHistoryRepository
 					.findByFirstByRegCenterIdAndDeviceIdAndEffectDtimesLessThanEqualAndIsDeletedFalseOrIsDeletedIsNull(
 							regCenterId, deviceId, lDateAndTime);
 		} catch (DataAccessException | DataAccessLayerException e) {
@@ -67,10 +68,18 @@ public class RegistrationCenterDeviceHistoryServiceImpl implements RegistrationC
 					RegistrationCenterDeviceHistoryErrorCode.REGISTRATION_CENTER_DEVICE_HISTORY_FETCH_EXCEPTION
 							.getErrorMessage() + ExceptionUtils.parseException(e));
 		}
-		if (registrationCenterDeviceHistory != null) {
-
-			registrationCenterDeviceHistoryDto = MapperUtils.map(registrationCenterDeviceHistory,
-					RegistrationCenterDeviceHistoryDto.class);
+		if (deviceHistorys != null) {
+			for(DeviceHistory deviceHistory:deviceHistorys) {
+				if(deviceHistory != null) {
+			
+			registrationCenterDeviceHistoryDto.setDeviceId(deviceHistory.getId());
+			registrationCenterDeviceHistoryDto.setEffectivetimes(deviceHistory.getEffectDateTime());
+			registrationCenterDeviceHistoryDto.setIsActive(deviceHistory.getIsActive());
+			registrationCenterDeviceHistoryDto.setLangCode(deviceHistory.getLangCode());
+			registrationCenterDeviceHistoryDto.setRegCenterId(deviceHistory.getRegCenterId());
+			break;
+			}
+			}
 		} else {
 			throw new DataNotFoundException(
 					RegistrationCenterDeviceHistoryErrorCode.REGISTRATION_CENTER_DEVICE_HISTORY_NOT_FOUND_EXCEPTION
