@@ -83,14 +83,14 @@ import io.mosip.kernel.syncdata.entity.AppAuthenticationMethod;
 import io.mosip.kernel.syncdata.entity.Machine;
 import io.mosip.kernel.syncdata.entity.MachineHistory;
 import io.mosip.kernel.syncdata.entity.RegistrationCenter;
-import io.mosip.kernel.syncdata.entity.RegistrationCenterMachine;
+
 import io.mosip.kernel.syncdata.exception.ParseResponseException;
 import io.mosip.kernel.syncdata.exception.RequestException;
 import io.mosip.kernel.syncdata.exception.SyncDataServiceException;
 import io.mosip.kernel.syncdata.exception.SyncServiceException;
 import io.mosip.kernel.syncdata.repository.MachineHistoryRepository;
 import io.mosip.kernel.syncdata.repository.MachineRepository;
-import io.mosip.kernel.syncdata.repository.RegistrationCenterMachineRepository;
+
 import io.mosip.kernel.syncdata.repository.RegistrationCenterRepository;
 import io.mosip.kernel.syncdata.service.SyncMasterDataService;
 import io.mosip.kernel.syncdata.service.helper.ApplicationDataHelper;
@@ -142,17 +142,9 @@ import io.mosip.kernel.syncdata.entity.ReasonCategory;
 import io.mosip.kernel.syncdata.entity.ReasonList;
 import io.mosip.kernel.syncdata.entity.RegisteredDevice;
 import io.mosip.kernel.syncdata.entity.RegistrationCenter;
-import io.mosip.kernel.syncdata.entity.RegistrationCenterDevice;
-import io.mosip.kernel.syncdata.entity.RegistrationCenterDeviceHistory;
-import io.mosip.kernel.syncdata.entity.RegistrationCenterMachine;
-import io.mosip.kernel.syncdata.entity.RegistrationCenterMachineDevice;
-import io.mosip.kernel.syncdata.entity.RegistrationCenterMachineDeviceHistory;
-import io.mosip.kernel.syncdata.entity.RegistrationCenterMachineHistory;
+
 import io.mosip.kernel.syncdata.entity.RegistrationCenterType;
-import io.mosip.kernel.syncdata.entity.RegistrationCenterUser;
-import io.mosip.kernel.syncdata.entity.RegistrationCenterUserHistory;
-import io.mosip.kernel.syncdata.entity.RegistrationCenterUserMachine;
-import io.mosip.kernel.syncdata.entity.RegistrationCenterUserMachineHistory;
+
 import io.mosip.kernel.syncdata.entity.ScreenAuthorization;
 import io.mosip.kernel.syncdata.entity.ScreenDetail;
 import io.mosip.kernel.syncdata.entity.SyncJobDef;
@@ -178,9 +170,6 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 
 	@Autowired
 	SyncMasterDataServiceHelper serviceHelper;
-
-	@Autowired
-	RegistrationCenterMachineRepository registrationCenterMachineRepository;
 
 	@Autowired
 	RegistrationCenterRepository registrationCenterRepository;
@@ -433,26 +422,26 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 
 		try {
 			if (macId != null && serialNum != null && keyIndex != null) {
-				machineList = registrationCenterMachineRepository
+				machineList = machineRepo
 						.getRegistrationCenterMachineWithMacAddressAndSerialNumAndKeyIndex(macId, serialNum, keyIndex);
 
 			} else if (macId != null && keyIndex != null) {
-				machineList = registrationCenterMachineRepository
+				machineList = machineRepo
 						.getRegistrationCenterMachineWithMacAddressAndKeyIndex(macId, keyIndex);
 
 			} else if (serialNum != null && keyIndex != null) {
-				machineList = registrationCenterMachineRepository
+				machineList = machineRepo
 						.getRegistrationCenterMachineWithSerialNumberAndKeyIndex(serialNum, keyIndex);
 
 			} else if (macId != null && serialNum != null) {
-				machineList = registrationCenterMachineRepository
+				machineList = machineRepo
 						.getRegistrationCenterMachineWithMacAddressAndSerialNum(macId, serialNum);
 			} else if (keyIndex != null) {
-				machineList = registrationCenterMachineRepository.getRegistrationCenterMachineWithKeyIndex(keyIndex);
+				machineList = machineRepo.getRegistrationCenterMachineWithKeyIndex(keyIndex);
 			} else if (macId != null) {
-				machineList = registrationCenterMachineRepository.getRegistrationCenterMachineWithMacAddress(macId);
+				machineList = machineRepo.getRegistrationCenterMachineWithMacAddress(macId);
 			} else if (serialNum != null) {
-				machineList = registrationCenterMachineRepository
+				machineList = machineRepo
 						.getRegistrationCenterMachineWithSerialNumber(serialNum);
 			} else {
 				throw new RequestException(MasterDataErrorCode.EMPTY_MAC_OR_SERIAL_NUMBER.getErrorCode(),
@@ -494,8 +483,8 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 	private RegistrationCenterMachineDto getRegCenterMachineMappingWithRegCenterId(String regCenterId, String macId,
 			String serialNum, String keyIndex) {
 		RegistrationCenterMachineDto regCenterMachine = getRegistationMachineMapping(macId, serialNum, keyIndex);
-		RegistrationCenterMachine registrationCenterMachine = null;
-
+		List<Machine> machines = null;
+		
 		try {
 			List<RegistrationCenter> regCenterList = registrationCenterRepository
 					.findRegistrationCenterByIdAndIsActiveIsTrue(regCenterId);
@@ -503,20 +492,27 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 				throw new RequestException(MasterDataErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorCode(),
 						MasterDataErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorMessage());
 			}
-			registrationCenterMachine = registrationCenterMachineRepository
+			machines = machineRepo
 					.getRegCenterIdWithRegIdAndMachineId(regCenterId, regCenterMachine.getMachineId());
 		} catch (DataAccessException | DataAccessLayerException e) {
 			throw new SyncDataServiceException(MasterDataErrorCode.REG_CENTER_MACHINE_FETCH_EXCEPTION.getErrorCode(),
 					MasterDataErrorCode.REG_CENTER_MACHINE_FETCH_EXCEPTION.getErrorMessage());
 		}
 
-		if (registrationCenterMachine == null) {
+		if (machines == null || machines.isEmpty()) {
 			throw new RequestException(MasterDataErrorCode.REG_CENTER_UPDATED.getErrorCode(),
 					MasterDataErrorCode.REG_CENTER_UPDATED.getErrorMessage());
 		}
-
-		MapperUtils.map(registrationCenterMachine, regCenterMachine);
-
+		for(Machine machine:machines) {
+			if(machine.getLangCode().equals("eng")) {
+				regCenterMachine.setIsActive(machine.getIsActive());
+				regCenterMachine.setIsDeleted(machine.getIsDeleted());
+				regCenterMachine.setLangCode(machine.getLangCode());
+				regCenterMachine.setMachineId(machine.getId());
+				regCenterMachine.setRegCenterId(machine.getRegCenterId());
+			}
+		}
+		
 		return regCenterMachine;
 	}
 
@@ -655,7 +651,7 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 	private RegistrationCenterMachineDto getRegistrationCenterMachine(String registrationCenterId, String keyIndex) throws SyncDataServiceException {
 		try {			
 			
-			List<Object[]> regCenterMachines = registrationCenterMachineRepository.getRegistrationCenterMachineWithKeyIndex(keyIndex);
+			List<Object[]> regCenterMachines = machineRepo.getRegistrationCenterMachineWithKeyIndex(keyIndex);
 			
 			if (regCenterMachines.isEmpty()) {
 				throw new RequestException(MasterDataErrorCode.INVALID_KEY_INDEX.getErrorCode(),

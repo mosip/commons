@@ -51,7 +51,7 @@ import io.mosip.kernel.syncdata.dto.response.MasterDataResponseDto;
 import io.mosip.kernel.syncdata.dto.response.RolesResponseDto;
 import io.mosip.kernel.syncdata.exception.RequestException;
 import io.mosip.kernel.syncdata.exception.SyncDataServiceException;
-import io.mosip.kernel.syncdata.repository.RegistrationCenterUserRepository;
+import io.mosip.kernel.syncdata.repository.UserDetailsRepository;
 import io.mosip.kernel.syncdata.service.SyncConfigDetailsService;
 import io.mosip.kernel.syncdata.service.SyncMasterDataService;
 import io.mosip.kernel.syncdata.service.SyncRolesService;
@@ -80,7 +80,7 @@ public class SyncDataControllerTest {
 	private SyncRolesService syncRolesService;
 
 	@MockBean
-	private RegistrationCenterUserRepository registrationCenterUserRepository;
+	private UserDetailsRepository userRepository;
 
 	private SignatureResponse signResponse;
 
