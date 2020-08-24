@@ -1,6 +1,7 @@
 package io.mosip.kernel.syncdata.service.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,12 +39,12 @@ import io.mosip.kernel.syncdata.dto.UserDetailMapDto;
 import io.mosip.kernel.syncdata.dto.UserDetailRequestDto;
 import io.mosip.kernel.syncdata.dto.response.RegistrationCenterUserResponseDto;
 import io.mosip.kernel.syncdata.dto.response.UserDetailResponseDto;
-import io.mosip.kernel.syncdata.entity.RegistrationCenterUser;
+import io.mosip.kernel.syncdata.entity.UserDetails;
 import io.mosip.kernel.syncdata.exception.DataNotFoundException;
 import io.mosip.kernel.syncdata.exception.ParseResponseException;
 import io.mosip.kernel.syncdata.exception.SyncDataServiceException;
 import io.mosip.kernel.syncdata.exception.SyncServiceException;
-import io.mosip.kernel.syncdata.repository.RegistrationCenterUserRepository;
+import io.mosip.kernel.syncdata.repository.UserDetailsRepository;
 import io.mosip.kernel.syncdata.service.SyncUserDetailsService;
 import io.mosip.kernel.syncdata.utils.MapperUtils;
 
@@ -88,7 +89,7 @@ public class SyncUserDetailsServiceImpl implements SyncUserDetailsService {
 	private String syncDataVersionId;
 
 	@Autowired
-	RegistrationCenterUserRepository registrationCenterUserRepo;
+	UserDetailsRepository userDetailsRepository;
 
 	/*
 	 * (non-Javadoc)
@@ -220,24 +221,32 @@ public class SyncUserDetailsServiceImpl implements SyncUserDetailsService {
 	}
 
 	public RegistrationCenterUserResponseDto getUsersBasedOnRegistrationCenterId(String regCenterId) {
-		List<RegistrationCenterUser> registrationCenterUsers = null;
-		List<RegistrationCenterUserDto> registrationCenterUserDtos = null;
+		List<UserDetails> users = null;
+		List<RegistrationCenterUserDto> registrationCenterUserDtos = new ArrayList<RegistrationCenterUserDto>();
 		RegistrationCenterUserResponseDto registrationCenterUserResponseDto = new RegistrationCenterUserResponseDto();
 		try {
-			registrationCenterUsers = registrationCenterUserRepo.findByRegistrationCenterUserByRegCenterId(regCenterId);
+			users = userDetailsRepository.findByUsersByRegCenterId(regCenterId);
 		} catch (DataAccessException | DataAccessLayerException ex) {
 			throw new SyncDataServiceException(
 					RegistrationCenterUserErrorCode.REGISTRATION_USER_FETCH_EXCEPTION.getErrorCode(),
 					RegistrationCenterUserErrorCode.REGISTRATION_USER_FETCH_EXCEPTION.getErrorMessage());
 		}
 
-		if (registrationCenterUsers.isEmpty()) {
+		if (users.isEmpty()) {
 			throw new DataNotFoundException(
 					RegistrationCenterUserErrorCode.REGISTRATION_USER_DATA_NOT_FOUND_EXCEPTION.getErrorCode(),
 					RegistrationCenterUserErrorCode.REGISTRATION_USER_DATA_NOT_FOUND_EXCEPTION.getErrorMessage());
 		}
 
-		registrationCenterUserDtos = MapperUtils.mapAll(registrationCenterUsers, RegistrationCenterUserDto.class);
+		for(UserDetails userDetails:users) {
+			RegistrationCenterUserDto dto=new RegistrationCenterUserDto();
+			dto.setIsActive(userDetails.getIsActive());
+			dto.setIsDeleted(userDetails.getIsDeleted());
+			dto.setLangCode(userDetails.getLangCode());
+			dto.setRegCenterId(userDetails.getRegCenterId());
+			dto.setUserId(userDetails.getId());
+			registrationCenterUserDtos.add(dto);
+		}
 		registrationCenterUserResponseDto.setRegistrationCenterUsers(registrationCenterUserDtos);
 		return registrationCenterUserResponseDto;
 	}
