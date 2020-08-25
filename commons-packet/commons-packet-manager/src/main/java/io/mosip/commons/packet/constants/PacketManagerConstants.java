@@ -23,8 +23,8 @@ public class PacketManagerConstants {
 	public static final String BIOMETRIC_SEQ = "biometricSequence";
 	public static final String OPERATIONS_SEQ = "otherFiles";
 	
-	public static final String OFFICER = "officer";
-	public static final String SUPERVISOR = "supervisor";
+	public static final String OFFICER = "officer_bio_cbeff";
+	public static final String SUPERVISOR = "supervisor_bio_cbeff";
 	
 	public static final String PROPERTIES = "properties";
 	public static final String IDENTITY = "identity";
