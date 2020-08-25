@@ -1,3 +1,4 @@
+/*
 package io.mosip.kernel.dataaccess.hibernate.test;
 
 import static org.mockito.Mockito.doThrow;
@@ -434,4 +435,4 @@ public class HibernateRepositoryTest {
 		repository.createNamedQueryUpdateOrDelete(name, Person.class, null);
 	}
 
-}
+}*/

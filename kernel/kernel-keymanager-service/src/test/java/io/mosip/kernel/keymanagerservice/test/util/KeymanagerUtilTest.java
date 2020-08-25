@@ -24,14 +24,15 @@ import io.mosip.kernel.core.keymanager.exception.KeystoreProcessingException;
 import io.mosip.kernel.core.keymanager.model.CertificateEntry;
 import io.mosip.kernel.core.keymanager.spi.KeyStore;
 import io.mosip.kernel.core.util.DateUtils;
-import io.mosip.kernel.keymanager.softhsm.util.CertificateUtility;
+import io.mosip.kernel.keymanager.hsm.util.CertificateUtility;
 import io.mosip.kernel.keymanagerservice.constant.KeymanagerConstant;
 import io.mosip.kernel.keymanagerservice.repository.KeyAliasRepository;
 import io.mosip.kernel.keymanagerservice.repository.KeyPolicyRepository;
 import io.mosip.kernel.keymanagerservice.repository.KeyStoreRepository;
+import io.mosip.kernel.keymanagerservice.test.KeymanagerTestBootApplication;
 import io.mosip.kernel.keymanagerservice.util.KeymanagerUtil;
 
-@SpringBootTest
+@SpringBootTest(classes = { KeymanagerTestBootApplication.class })
 @RunWith(SpringRunner.class)
 public class KeymanagerUtilTest {
 
@@ -56,7 +57,7 @@ public class KeymanagerUtilTest {
 
 	private X509Certificate[] chain;
 
-		@Before
+	@Before
 	public void setupKey() throws NoSuchAlgorithmException {
 		BouncyCastleProvider provider = new BouncyCastleProvider();
         Security.addProvider(provider);
@@ -64,8 +65,8 @@ public class KeymanagerUtilTest {
 		keyGen.initialize(2048);
 		keyPairMaster = keyGen.generateKeyPair();
 		keyPair = keyGen.generateKeyPair();
-		X509Certificate x509Certificate = CertificateUtility.generateX509Certificate(keyPair, "mosip", "mosip", "mosip",
-				"india", LocalDateTime.of(2010, 1, 1, 12, 00), LocalDateTime.of(2011, 1, 1, 12, 00), "BC");
+		X509Certificate x509Certificate = CertificateUtility.generateX509Certificate(keyPair.getPrivate(), keyPair.getPublic(), "mosip", "mosip", "mosip",
+				"india", LocalDateTime.of(2010, 1, 1, 12, 00), LocalDateTime.of(2011, 1, 1, 12, 00), "SHA256withRSA", "BC");
 		chain = new X509Certificate[1];
 		chain[0] = x509Certificate;
 	}
@@ -74,7 +75,7 @@ public class KeymanagerUtilTest {
 	public void encryptdecryptPrivateKeyTest() {
 		byte[] key = keymanagerUtil.encryptKey(keyPair.getPrivate(), keyPairMaster.getPublic());
 		assertThat(key, isA(byte[].class));
-		assertThat(keymanagerUtil.decryptKey(key, keyPairMaster.getPrivate()), isA(byte[].class));
+		assertThat(keymanagerUtil.decryptKey(key, keyPairMaster.getPrivate(), keyPairMaster.getPublic()), isA(byte[].class));
 	}
 
 	@Test(expected = KeystoreProcessingException.class)

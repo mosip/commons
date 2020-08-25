@@ -36,10 +36,11 @@ import io.mosip.kernel.core.signatureutil.model.SignatureResponse;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.keygenerator.bouncycastle.KeyGenerator;
 import io.mosip.kernel.keymanagerservice.dto.PublicKeyResponse;
-import io.mosip.kernel.keymanagerservice.dto.SignatureResponseDto;
+import io.mosip.kernel.signature.dto.SignatureResponseDto;
 import io.mosip.kernel.keymanagerservice.service.KeymanagerService;
 import io.mosip.kernel.keymanagerservice.test.KeymanagerTestBootApplication;
 import io.mosip.kernel.signature.dto.TimestampRequestDto;
+import io.mosip.kernel.signature.service.SignatureService;
 
 @SpringBootTest(classes = KeymanagerTestBootApplication.class)
 @RunWith(SpringRunner.class)
@@ -72,6 +73,9 @@ public class CryptoSignatureIntegrationTest {
 	private KeymanagerService keyManagerService;
 
 	@MockBean
+	private SignatureService signatureService;
+
+	@MockBean
 	private RestTemplate restTemplate;
 
 	private static final String SIGNRESPONSEREQUEST = "{ \"id\": \"string\", \"metadata\": {}, \"request\": { \"data\": \"admin\" }, \"requesttime\": \"2018-12-10T06:12:52.994Z\", \"version\": \"string\" }";
@@ -101,7 +105,7 @@ public class CryptoSignatureIntegrationTest {
 	@Test
 	@WithUserDetails("reg-processor")
 	public void signResponseSuccess() throws Exception {
-		when(keyManagerService.sign(Mockito.any())).thenReturn(signatureResponseDTO);
+		when(signatureService.sign(Mockito.any())).thenReturn(signResponse);
 		mockMvc.perform(post("/sign").contentType(MediaType.APPLICATION_JSON).content(SIGNRESPONSEREQUEST))
 				.andExpect(status().isOk());
 	}
@@ -146,7 +150,7 @@ public class CryptoSignatureIntegrationTest {
 		TimestampRequestDto dto= new TimestampRequestDto(signedData,data,LocalDateTime.now(ZoneId.of("UTC")));
 		requestWrapper.setRequest(dto);
 		mockMvc.perform(post("/validate").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(requestWrapper)))
-				.andExpect(status().isInternalServerError());
+				.andExpect(status().isOk());
 	}
 
 }
