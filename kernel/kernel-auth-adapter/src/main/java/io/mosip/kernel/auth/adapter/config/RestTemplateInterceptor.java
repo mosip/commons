@@ -1,22 +1,13 @@
 package io.mosip.kernel.auth.adapter.config;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
-import io.mosip.kernel.auth.adapter.filter.CorsFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
-import org.springframework.cloud.client.loadbalancer.LoadBalancerRequestFactory;
-import org.springframework.cloud.client.loadbalancer.reactive.ReactiveLoadBalancerAutoConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.*;
@@ -25,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.auth.adapter.constant.AuthAdapterConstant;
 import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
-import org.springframework.web.reactive.function.client.ClientRequest;
 
 /***********************************************************************************************************************
  * It is used to intercept any http calls made using rest template from this
@@ -49,9 +39,6 @@ import org.springframework.web.reactive.function.client.ClientRequest;
 public class RestTemplateInterceptor implements ClientHttpRequestInterceptor {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RestTemplateInterceptor.class);
-
-	@Autowired
-	private DiscoveryClient discoveryClient;
 
 	@Autowired
 	private ClientHttpRequestFactory requestFactory;

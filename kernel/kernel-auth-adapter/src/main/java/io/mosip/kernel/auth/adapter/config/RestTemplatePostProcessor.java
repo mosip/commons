@@ -1,9 +1,9 @@
 package io.mosip.kernel.auth.adapter.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
-import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
@@ -14,6 +14,8 @@ import java.util.List;
 
 @Configuration
 public class RestTemplatePostProcessor implements BeanPostProcessor {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RestTemplatePostProcessor.class);
 
     @Bean
     public RestTemplateInterceptor restTemplateInterceptor() {
@@ -32,14 +34,14 @@ public class RestTemplatePostProcessor implements BeanPostProcessor {
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if(bean instanceof RestTemplate) {
-            //log the bean name
-           return getRestTemplate(bean);
+        if(bean instanceof RestTemplate &&
+                !beanName.equalsIgnoreCase("keycloakRestTemplate")) {
+            LOGGER.info("Post processing REST_TEMPLATE bean : {} ", beanName);
+            return getRestTemplate(bean);
         }
         return bean;
     }
 
-    //@LoadBalanced
     private RestTemplate getRestTemplate(Object bean) {
         final RestTemplate restTemplate = (RestTemplate) bean;
         List<ClientHttpRequestInterceptor> list = restTemplate.getInterceptors();
