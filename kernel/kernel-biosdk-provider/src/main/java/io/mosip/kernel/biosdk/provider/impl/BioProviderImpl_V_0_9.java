@@ -250,7 +250,7 @@ public class BioProviderImpl_V_0_9 implements iBioProviderApi {
 		
 		io.mosip.kernel.biometrics.constant.PurposeType purposeType;
 		if(Objects.nonNull(bir.getBdbInfo().getPurpose())) {
-			purposeType = io.mosip.kernel.biometrics.constant.PurposeType.fromValue(bir.getBdbInfo().getPurpose().name());
+			purposeType = io.mosip.kernel.biometrics.constant.PurposeType.fromValue(bir.getBdbInfo().getPurpose().value());
 		} else {
 			purposeType = null;
 		}
@@ -258,7 +258,7 @@ public class BioProviderImpl_V_0_9 implements iBioProviderApi {
 		io.mosip.kernel.biometrics.constant.ProcessedLevelType processedLevelType;
 		if(Objects.nonNull(bir.getBdbInfo().getLevel())) {
 			processedLevelType = io.mosip.kernel.biometrics.constant.ProcessedLevelType.fromValue(
-					bir.getBdbInfo().getLevel().name());
+					bir.getBdbInfo().getLevel().value());
 		} else{
 			processedLevelType = null;
 		}
@@ -313,8 +313,8 @@ public class BioProviderImpl_V_0_9 implements iBioProviderApi {
 						.withQuality(qualityType)
 						.withCreationDate(bir.getBdbInfo().getCreationDate())
 						.withIndex(bir.getBdbInfo().getIndex())
-						.withPurpose(PurposeType.fromValue(bir.getBdbInfo().getPurpose().name()))
-						.withLevel(ProcessedLevelType.fromValue(bir.getBdbInfo().getLevel().name()))
+						.withPurpose(PurposeType.fromValue(bir.getBdbInfo().getPurpose().value()))
+						.withLevel(ProcessedLevelType.fromValue(bir.getBdbInfo().getLevel().value()))
 						.withSubtype(bir.getBdbInfo().getSubtype()).build()).build();
 	}
 	
