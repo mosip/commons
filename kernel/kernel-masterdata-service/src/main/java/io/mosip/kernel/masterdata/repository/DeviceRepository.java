@@ -92,7 +92,7 @@ public interface DeviceRepository extends BaseRepository<Device, String> {
 	 * @return Device fetched all device those are mapped with the given
 	 *         registration center from database
 	 */
-	@Query(value = "SELECT dm.id, dm.name, dm.mac_address, dm.serial_num, dm.ip_address, dm.dspec_id, dm.lang_code, dm.is_active, dm.validity_end_dtimes, dm.cr_by, dm.cr_dtimes, dm.upd_by, dm.upd_dtimes, dm.is_deleted, dm.del_dtimes, dm.zone_code FROM master.device_master dm inner join master.reg_center_device rcd on dm.id = rcd.device_id where rcd.regcntr_id=?1", countQuery = "SELECT count(*) FROM master.device_master dm inner join master.reg_center_device rcd on dm.id = rcd.device_id where rcd.regcntr_id=?1", nativeQuery = true)
+	@Query(value = "SELECT * FROM master.device_master dm   where dm.regcntr_id=?1", countQuery = "SELECT count(*) FROM master.device_master dm  where dm.regcntr_id=?1", nativeQuery = true)
 	Page<Device> findDeviceByRegCenterId(String regCenterId, Pageable pageable);
 
 	@Query("FROM Device d where d.id = ?1 and d.langCode = ?2 AND (d.isDeleted is null or d.isDeleted = false)")
@@ -105,7 +105,7 @@ public interface DeviceRepository extends BaseRepository<Device, String> {
 	 * @return Device id's fetched for all device those are mapped with the
 	 *         registration center from database
 	 */
-	@Query(value = "select d.id from master.device_master d where d.id in(select  distinct rdm.device_id from master.reg_center_device rdm ) and d.lang_code=?1", nativeQuery = true)
+	@Query(value = "select d.id from master.device_master d where d.regcntr_id is not null and d.lang_code=?1", nativeQuery = true)
 	List<String> findMappedDeviceId(String langCode);
 
 	/**
@@ -115,13 +115,13 @@ public interface DeviceRepository extends BaseRepository<Device, String> {
 	 * @return Device id's fetched for all device those are not mapped with the
 	 *         registration center from database
 	 */
-	@Query(value = "select d.id from master.device_master d where d.id not in(select  distinct rdm.device_id from master.reg_center_device rdm ) and d.lang_code=?1", nativeQuery = true)
+	@Query(value = "select d.id from master.device_master d where d.regcntr_id is null and d.lang_code=?1", nativeQuery = true)
 	List<String> findNotMappedDeviceId(String langCode);
 
 	@Query(value = "Select * from master.device_spec ds where (ds.is_deleted is null or ds.is_deleted = false) and ds.is_active = true and ds.dtyp_code IN (select code from master.device_type dt where dt.name=?1) and ds.lang_code=?2", nativeQuery = true)
 	List<Object[]> findDeviceSpecByDeviceTypeNameAndLangCode(String typeName, String langCode);
 
-	@Query(value = "select d.name from master.reg_center_device rd,master.registration_center r,master.device_master d where r.id=rd.regcntr_id and rd.device_id=d.id and d.lang_code=rd.lang_code and r.lang_code=rd.lang_code and rd.device_id in(?1) and rd.lang_code=?2", nativeQuery = true)
+	@Query(value = "select d.name from master.registration_center r,master.device_master d where r.id=d.regcntr_id   and r.lang_code=d.lang_code and d.id in(?1) and d.lang_code=?2", nativeQuery = true)
 	List<String> findDeviceNameByDevicesAndLangCode(List<String> devices, String langCode);
 
 	/**
@@ -172,5 +172,12 @@ public interface DeviceRepository extends BaseRepository<Device, String> {
 
 	@Query("FROM Device d where d.serialNum = ?1 and (d.isDeleted is null or d.isDeleted = false)")
 	List<Device> findDeviceBySerialNumberAndIsDeletedFalseorIsDeletedIsNullNoIsActive(String serialNum);
+	
+	@Query(value = "select count(*) from master.device_master where regcntr_id=?1 and (is_deleted is null or is_deleted=false);", nativeQuery = true)
+	long countCenterDevices(String id);
+	@Query("FROM Device WHERE (isDeleted is null or isDeleted =false) and isActive = true")
+	List<Device> getAllDevicesList();
+	@Query("FROM Device WHERE regCenterId=?1 and(isDeleted is null or isDeleted =false) and isActive = true")
+	List<Device> findByRegIdAndIsDeletedFalseOrIsDeletedIsNull(String id);
 
 }

@@ -12,11 +12,15 @@ import io.mosip.kernel.core.cbeffutil.jaxbclasses.PurposeType;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.QualityType;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.RegistryIDType;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.SingleType;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Ramadurai Pandian
  *
  */
+@Data
+@NoArgsConstructor
 public class BDBInfo {
 
 	private byte[] challengeResponse;

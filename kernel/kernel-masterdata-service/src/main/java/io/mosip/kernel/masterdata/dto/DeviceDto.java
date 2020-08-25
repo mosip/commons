@@ -85,5 +85,8 @@ public class DeviceDto {
 
 	@StringFormatter(min = 0, max = 36)
 	private String zoneCode;
+	
+	@StringFormatter(min = 0, max = 10)
+	private String regCenterId;
 
 }
