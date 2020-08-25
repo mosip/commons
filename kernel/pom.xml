@@ -150,9 +150,9 @@
 		<module>kernel-idvalidator-mispid</module>
 		<module>kernel-pinvalidator</module>
 		<module>kernel-virusscanner-clamav</module>
-		<module>kernel-keygenerator-bouncycastle</module>
+		<!-- <module>kernel-keygenerator-bouncycastle</module>
 		<module>kernel-crypto-jce</module>
-		<module>kernel-keymanager-softhsm</module>
+		<module>kernel-keymanager-softhsm</module>  -->
 		<module>kernel-templatemanager-velocity</module>
 		<module>kernel-pdfgenerator-itext</module>
 		<module>kernel-datamapper-orika</module>
