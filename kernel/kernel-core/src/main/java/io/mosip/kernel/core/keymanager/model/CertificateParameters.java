@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
  * Certificate Parameters for generating Certficate.
  * 
  * @author Mahammed Taheer
- * @since 1.0.10
+ * @since 1.2.0
  * 
  */
 @Data
