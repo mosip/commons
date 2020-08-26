@@ -1,5 +1,6 @@
 package io.mosip.commons.packetmanager.controller;
 
+import com.google.common.collect.Lists;
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packetmanager.dto.ValidatePacketResponse;
 import io.mosip.commons.packet.facade.PacketReader;
@@ -9,6 +10,7 @@ import io.mosip.commons.packetmanager.dto.FieldDto;
 import io.mosip.commons.packetmanager.dto.FieldDtos;
 import io.mosip.commons.packetmanager.dto.FieldResponseDto;
 import io.mosip.commons.packetmanager.dto.InfoDto;
+import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
@@ -76,7 +78,8 @@ public class PacketReaderController {
     @PostMapping(path = "/biometrics", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseWrapper<BiometricRecord> getBiometrics(@RequestBody(required = true) RequestWrapper<BiometricRequestDto> request) {
         BiometricRequestDto bioRequest = request.getRequest();
-        BiometricRecord responseDto = packetReader.getBiometric(bioRequest.getId(), bioRequest.getPerson(), bioRequest.getModalities(), bioRequest.getSource(), bioRequest.getProcess(), bioRequest.isBypassCache());
+        List<BiometricType> modalities = bioRequest.getModalities() == null ? Lists.newArrayList() : bioRequest.getModalities();
+        BiometricRecord responseDto = packetReader.getBiometric(bioRequest.getId(), bioRequest.getPerson(), modalities, bioRequest.getSource(), bioRequest.getProcess(), bioRequest.isBypassCache());
         ResponseWrapper<BiometricRecord> response = getResponseWrapper();
         response.setResponse(responseDto);
         return response;
