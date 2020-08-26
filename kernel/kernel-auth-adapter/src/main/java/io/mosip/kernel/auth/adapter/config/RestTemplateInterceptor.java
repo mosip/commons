@@ -2,11 +2,15 @@ package io.mosip.kernel.auth.adapter.config;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
-import org.springframework.http.client.ClientHttpRequestExecution;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
-import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.client.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -34,10 +38,19 @@ import io.mosip.kernel.auth.adapter.model.AuthUserDetails;
 @Component
 public class RestTemplateInterceptor implements ClientHttpRequestInterceptor {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(RestTemplateInterceptor.class);
+
+	@Autowired
+	private ClientHttpRequestFactory requestFactory;
+
+	@Autowired(required = false)
+	private LoadBalancerClient loadBalancerClient;
+
 	@Override
 	public ClientHttpResponse intercept(HttpRequest httpRequest, byte[] bytes,
 			ClientHttpRequestExecution clientHttpRequestExecution) throws IOException {
 		addHeadersToRequest(httpRequest, bytes);
+		httpRequest = resolveServiceId(httpRequest);
 		ClientHttpResponse response = clientHttpRequestExecution.execute(httpRequest, bytes);
 		// getHeadersFromResponse(response);
 		return response;
@@ -65,6 +78,25 @@ public class RestTemplateInterceptor implements ClientHttpRequestInterceptor {
 		String responseToken = headers.get(AuthAdapterConstant.AUTH_HEADER_SET_COOKIE).get(0)
 				.replaceAll(AuthAdapterConstant.AUTH_COOOKIE_HEADER, "");
 		getAuthUserDetails().setToken(responseToken);
+	}
+
+	private HttpRequest resolveServiceId(HttpRequest request) {
+		LOGGER.info("Injected load balancer : {} ", loadBalancerClient.toString());
+		try {
+			if(loadBalancerClient != null) {
+				ServiceInstance instance = loadBalancerClient.choose(request.getURI().getHost());
+				if (instance != null) {
+					final ClientHttpRequest newRequest = requestFactory.createRequest(
+							loadBalancerClient.reconstructURI(instance, request.getURI()), request.getMethod());
+					newRequest.getHeaders().addAll(request.getHeaders());
+					return newRequest;
+				}
+			}
+		} catch (Exception ex) {
+			LOGGER.warn("Failed to choose service instance : " + ex.getMessage());
+			LOGGER.debug("Failed to choose service instance", ex);
+		}
+		return request;
 	}
 
 }

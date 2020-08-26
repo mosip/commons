@@ -67,7 +67,7 @@ public class BeanConfig {
 		} else {
 			restTemplate = new RestTemplate();
 		}
-		restTemplate.setInterceptors(Collections.singletonList(new RestTemplateInterceptor()));
+		//interceptor added in RestTemplatePostProcessor
 		return restTemplate;
 	}
 
