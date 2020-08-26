@@ -37,13 +37,13 @@ public class IdSchemaUtils {
 
     private Map<Double, String> idschema = null;
 
-    @Value("${packet.default.source}")
+    @Value("${packet.default.source:REGISTRATION_CLIENT}")
     private String defaultSource;
 
-    @Value("${schema.default.fieldCategory}")
+    @Value("${schema.default.fieldCategory:pvt,none}")
     private String defaultFieldCategory;
 
-    @Value("${IDSCHEMAURL}")
+    @Value("${IDSCHEMAURL:null}")
     private String idschemaUrl;
 
     @Autowired

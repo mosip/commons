@@ -115,7 +115,6 @@ public class PacketReader {
     public BiometricRecord getBiometric(String id, String person, List<BiometricType> modalities, String source, String process, boolean bypassCache) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "getBiometric for source : " + source + " process : " + process);
-        modalities = modalities == null ? Lists.newArrayList() : modalities;
         return getProvider(source, process).getBiometric(id, person, modalities, process);
     }
 
@@ -143,7 +142,6 @@ public class PacketReader {
      * @param process : the process
      * @return Map fields
      */
-    @Cacheable(value = "packets", key = "{'allFields'.concat('-').concat(#id).concat('-').concat(#source).concat('-').concat(#process)}")
     private Map<String, Object> getAllFields(String id, String source, String process) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "getAllFields for source : " + source + " process : " + process);

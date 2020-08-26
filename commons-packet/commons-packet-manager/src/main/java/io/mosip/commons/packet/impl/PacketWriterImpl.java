@@ -44,6 +44,10 @@ import java.util.zip.ZipOutputStream;
 @Component
 public class PacketWriterImpl implements IPacketWriter {
 
+    /*@Value("${mosip.kernel.packetmanager.cbeff_only_unique_tags:Y}")
+    private String uniqueTagsEnabled;
+    private static SecureRandom random = new SecureRandom(String.valueOf(5000).getBytes());*/
+
     private static final Logger LOGGER = LoggerFactory.getLogger(PacketWriterImpl.class);
     private static Map<String, String> categorySubpacketMapping = new HashMap<>();
     private static final String UNDERSCORE = "_";
@@ -236,8 +240,9 @@ public class PacketWriterImpl implements IPacketWriter {
 
     private void addBiometricDetailsToZip(String fieldName, Map<String, Object> identity,
                                           ZipOutputStream zipOutputStream, Map<String, HashSequenceMetaInfo> hashSequences, boolean offlineMode) throws PacketCreatorException {
-        BiometricRecord birType = this.registrationPacket.getBiometrics().get("individualBiometrics");
-        if (birType != null) {
+        BiometricRecord birType = this.registrationPacket.getBiometrics().get(fieldName);
+        if (birType != null && birType.getSegments() != null && !birType.getSegments().isEmpty()) {
+
             byte[] xmlBytes;
             try {
                 xmlBytes = packetManagerHelper.getXMLData(birType, offlineMode);
@@ -253,6 +258,28 @@ public class PacketWriterImpl implements IPacketWriter {
                     fieldName), xmlBytes, hashSequences);
         }
     }
+
+    /*private JAXBElement<String> getCBEFFTestTag(SingleType biometricType) {
+        String testTagElementName = null;
+        String testTagType = "y".equalsIgnoreCase(uniqueTagsEnabled) ? "Unique" :
+                (random.nextInt() % 2 == 0 ? "Duplicate" : "Unique");
+
+        switch (biometricType) {
+            case FINGER:
+                testTagElementName = "TestFinger";
+                break;
+            case IRIS:
+                testTagElementName = "TestIris";
+                break;
+            case FACE:
+                testTagElementName = "TestFace";
+                break;
+            default:
+                break;
+        }
+
+        return new JAXBElement<>(new QName("testschema", testTagElementName), String.class, testTagType);
+    }*/
 
     private void addHashSequenceWithSource(String sequenceType, String name, byte[] bytes,
                                            Map<String, HashSequenceMetaInfo> hashSequences) {
