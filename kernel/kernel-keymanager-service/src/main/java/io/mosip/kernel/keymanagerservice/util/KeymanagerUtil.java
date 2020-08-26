@@ -389,14 +389,4 @@ public class KeymanagerUtil {
 		}
 		privateKey = null;
 	}
-
-	public void destoryKey(SecretKey secretKey) {
-		try {
-			secretKey.destroy();
-		} catch (DestroyFailedException e) {
-			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.EMPTY, KeymanagerConstant.EMPTY,
-					"Error while destorying Private Key Object.");
-		}
-		secretKey = null;
-	}
 }

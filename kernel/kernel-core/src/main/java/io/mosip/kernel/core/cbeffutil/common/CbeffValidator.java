@@ -26,14 +26,12 @@ import io.mosip.kernel.core.cbeffutil.constant.CbeffConstant;
 import io.mosip.kernel.core.cbeffutil.entity.BDBInfo;
 import io.mosip.kernel.core.cbeffutil.entity.BIR;
 import io.mosip.kernel.core.cbeffutil.entity.BIRInfo;
-import io.mosip.kernel.core.cbeffutil.entity.BIRVersion.BIRVersionBuilder;
 import io.mosip.kernel.core.cbeffutil.exception.CbeffException;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.BDBInfoType;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.RegistryIDType;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.SingleAnySubtypeType;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.SingleType;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.VersionType;
 import io.mosip.kernel.core.util.CryptoUtil;
 
 /**
@@ -411,32 +409,14 @@ public class CbeffValidator {
 			RegistryIDType format = new RegistryIDType();
 			format.setOrganization(birType.getBDBInfo().getFormat().getOrganization());
 			format.setType(birType.getBDBInfo().getFormat().getType());
-			BIR.BIRBuilder birBuilder = new BIR.BIRBuilder();
-			birBuilder.withBdb(birType.getBDB()).withElement(birType.getAny())
+			BIR bir = new BIR.BIRBuilder().withBdb(birType.getBDB()).withElement(birType.getAny())
 					.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(birType.getBIRInfo().isIntegrity()).build())
 					.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format)
 							.withQuality(birType.getBDBInfo().getQuality()).withType(birType.getBDBInfo().getType())
 							.withSubtype(birType.getBDBInfo().getSubtype())
 							.withPurpose(birType.getBDBInfo().getPurpose()).withLevel(birType.getBDBInfo().getLevel())
-							.withCreationDate(birType.getBDBInfo().getCreationDate()).build());
-			
-			VersionType versionType = birType.getVersion();
-			if(versionType != null) {
-				BIRVersionBuilder birVersionBuilder = new BIRVersionBuilder();
-				birVersionBuilder.withMajor((int)versionType.getMajor());
-				birVersionBuilder.withMinor((int)versionType.getMajor());
-				birBuilder.withVersion(birVersionBuilder.build());
-			}
-			
-			VersionType cbeffversionType = birType.getCBEFFVersion();
-			if(cbeffversionType != null) {
-				BIRVersionBuilder birVersionBuilder = new BIRVersionBuilder();
-				birVersionBuilder.withMajor((int)cbeffversionType.getMajor());
-				birVersionBuilder.withMinor((int)cbeffversionType.getMajor());
-				birBuilder.withCbeffversion(birVersionBuilder.build());
-			}
-			
-			BIR bir = birBuilder.build();
+							.withCreationDate(birType.getBDBInfo().getCreationDate()).build())
+					.build();
 			birList.add(bir);
 		}
 		return birList;

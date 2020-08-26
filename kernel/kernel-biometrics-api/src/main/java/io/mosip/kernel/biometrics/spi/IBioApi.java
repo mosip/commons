@@ -4,11 +4,12 @@ import java.util.List;
 import java.util.Map;
 
 import io.mosip.kernel.biometrics.constant.BiometricType;
+import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
+import io.mosip.kernel.biometrics.model.SDKInfo;
 import io.mosip.kernel.biometrics.model.MatchDecision;
 import io.mosip.kernel.biometrics.model.QualityCheck;
 import io.mosip.kernel.biometrics.model.Response;
-import io.mosip.kernel.biometrics.model.SDKInfo;
 
 
 /**
@@ -71,7 +72,7 @@ public interface IBioApi {
 	Response<BiometricRecord> extractTemplate(BiometricRecord sample, List<BiometricType> modalitiesToExtract, Map<String, String> flags);
 
 	/**
-	 * It segment the biometric image into multiple biometric images. Eg:
+	 * It segment the single biometric image into multiple biometric images. Eg:
 	 * Split the thumb slab into multiple fingers
 	 * if modalitiesToSegment is null/empty, each modality found in the sample is segmented.
 	 * 
@@ -80,7 +81,7 @@ public interface IBioApi {
 	 * @param flags
 	 * @return
 	 */
-	Response<BiometricRecord> segment(BiometricRecord sample, List<BiometricType> modalitiesToSegment, Map<String, String> flags);
+	Response<BiometricRecord> segment(BIR sample, List<BiometricType> modalitiesToSegment, Map<String, String> flags);
 	
 	/**
 	 * Converts the provided BDBData from source format to target format for all segments
