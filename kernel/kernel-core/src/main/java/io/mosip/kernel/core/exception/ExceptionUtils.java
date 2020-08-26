@@ -113,22 +113,8 @@ public final class ExceptionUtils {
 		return null;
 	}
 
-	//TODO - configure to either print message / stacktrace based on flag
-	//TODO - replace sysout with logger
 	public static void logRootCause(Throwable exception) {
-		System.out.println("\n\n[" + MDC.get("X-B3-TraceId") + "]");
-//		Optional<Throwable> rootCause = Stream.iterate(exception, Throwable::getCause)
-//				.filter(element -> element.getCause() == null).findFirst();
-//		if (rootCause.isPresent()) {
-//			logger.error("Error : " + exception.getMessage());
-//			logger.error("RootCause Error : ", rootCause.get());
-//		} else {
-//			logger.error("Error : ", exception);
-//		}
-
-		// System.out.println("Error : " + exception.getMessage());
-		exception.printStackTrace();
-
-		System.out.println("\n");
+		logger.error("Exception Root Cause: {} ", exception.getMessage());
+		logger.debug("Exception Root Cause:", exception);
 	}
 }
