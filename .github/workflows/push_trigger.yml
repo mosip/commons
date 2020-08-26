@@ -114,6 +114,7 @@ jobs:
      #    GPG_TTY: $(tty) 
     - name: setting up xml for github release
       run: echo "<settings> <servers>  <server>  <id>github</id>    <username>${{secrets.github_user}}</username> <password>${{secrets.github_password}}</password> </server> </servers> <profiles> <profile>     <id>github</id> <activation> <activeByDefault>true</activeByDefault> </activation>  </profile> <profile> <id>allow-snapshots</id>       <activation><activeByDefault>true</activeByDefault></activation> <repositories> <repository>        <id>snapshots-repo</id> <url>https://maven.pkg.github.com</url> <releases><enabled>false</enabled></releases> <snapshots><enabled>true</enabled></snapshots> </repository>  <repository>         <id>releases-repo</id>  <url>https://maven.pkg.github.com</url>         <releases><enabled>true</enabled></releases>         <snapshots><enabled>false</enabled></snapshots> </repository> </repositories>  </profile> <profile> <id>sonar</id> <properties>  <sonar.sources>.</sonar.sources> <sonar.host.url>https://sonarcloud.io</sonar.host.url>  </properties> <activation> <activeByDefault>false</activeByDefault> </activation> </profile> </profiles> </settings>" > $GITHUB_WORKSPACE/settings1.xml
+
     - name: Publish the maven package
       run: |
         chmod +x ./deploy.sh
