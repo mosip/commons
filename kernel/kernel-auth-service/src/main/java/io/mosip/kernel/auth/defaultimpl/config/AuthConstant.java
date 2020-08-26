@@ -1,4 +1,4 @@
-package io.mosip.kernel.auth.config;
+package io.mosip.kernel.auth.defaultimpl.config;
 public class AuthConstant {
 
 	public static final String AUTH_COOOKIE_HEADER = "Authorization=";

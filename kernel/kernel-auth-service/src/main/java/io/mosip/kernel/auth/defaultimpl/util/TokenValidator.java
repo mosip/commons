@@ -18,7 +18,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureException;
-import io.mosip.kernel.auth.config.MosipEnvironment;
+import io.mosip.kernel.auth.defaultimpl.config.MosipEnvironment;
 import io.mosip.kernel.auth.defaultimpl.constant.AuthErrorCode;
 import io.mosip.kernel.auth.defaultimpl.dto.MosipUser;
 import io.mosip.kernel.auth.defaultimpl.dto.MosipUserToken;

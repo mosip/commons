@@ -12,8 +12,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -30,9 +28,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.kernel.auth.config.MosipEnvironment;
-import io.mosip.kernel.auth.defaultadapter.exception.AuthNException;
-import io.mosip.kernel.auth.defaultadapter.exception.AuthZException;
+import io.mosip.kernel.auth.defaultimpl.config.MosipEnvironment;
 import io.mosip.kernel.auth.defaultimpl.constant.AuthConstant;
 import io.mosip.kernel.auth.defaultimpl.constant.AuthErrorCode;
 import io.mosip.kernel.auth.defaultimpl.constant.OTPErrorCode;
@@ -41,6 +37,8 @@ import io.mosip.kernel.auth.defaultimpl.exception.AuthManagerException;
 import io.mosip.kernel.auth.defaultimpl.exception.AuthManagerServiceException;
 import io.mosip.kernel.auth.defaultimpl.service.TokenGenerationService;
 import io.mosip.kernel.auth.defaultimpl.service.UinService;
+import io.mosip.kernel.core.authmanager.exception.AuthNException;
+import io.mosip.kernel.core.authmanager.exception.AuthZException;
 import io.mosip.kernel.core.authmanager.model.MosipUserDto;
 import io.mosip.kernel.core.authmanager.model.OtpUser;
 import io.mosip.kernel.core.exception.ExceptionUtils;

@@ -10,7 +10,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.mosip.kernel.auth.config.MosipEnvironment;
+import io.mosip.kernel.auth.defaultimpl.config.MosipEnvironment;
 import io.mosip.kernel.auth.defaultimpl.constant.AuthErrorCode;
 import io.mosip.kernel.auth.defaultimpl.dto.BasicTokenDto;
 import io.mosip.kernel.auth.defaultimpl.dto.TimeToken;

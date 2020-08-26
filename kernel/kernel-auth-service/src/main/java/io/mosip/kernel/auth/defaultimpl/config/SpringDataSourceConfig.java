@@ -1,7 +1,7 @@
 /**
  * 
  */
-package io.mosip.kernel.auth.config;
+package io.mosip.kernel.auth.defaultimpl.config;
 
 import javax.sql.DataSource;
 

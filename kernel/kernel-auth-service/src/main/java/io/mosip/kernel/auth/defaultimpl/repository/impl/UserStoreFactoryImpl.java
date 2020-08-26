@@ -12,10 +12,9 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import io.mosip.kernel.auth.config.MosipEnvironment;
+import io.mosip.kernel.auth.defaultimpl.config.MosipEnvironment;
 import io.mosip.kernel.auth.defaultimpl.constant.AuthConstant;
 import io.mosip.kernel.auth.defaultimpl.constant.AuthErrorCode;
 import io.mosip.kernel.auth.defaultimpl.dto.DataBaseProps;

@@ -1,4 +1,4 @@
-package io.mosip.kernel.auth.config;
+package io.mosip.kernel.auth.defaultimpl.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.EnvironmentAware;

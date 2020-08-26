@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.bouncycastle.util.Arrays;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

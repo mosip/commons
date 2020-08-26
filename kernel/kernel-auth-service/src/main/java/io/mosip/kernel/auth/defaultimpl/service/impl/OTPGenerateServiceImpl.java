@@ -19,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.kernel.auth.config.MosipEnvironment;
+import io.mosip.kernel.auth.defaultimpl.config.MosipEnvironment;
 import io.mosip.kernel.auth.defaultimpl.constant.AuthConstant;
 import io.mosip.kernel.auth.defaultimpl.constant.AuthErrorCode;
 import io.mosip.kernel.auth.defaultimpl.dto.otp.OtpGenerateRequest;

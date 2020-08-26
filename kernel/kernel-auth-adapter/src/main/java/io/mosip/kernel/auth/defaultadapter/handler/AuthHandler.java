@@ -6,7 +6,6 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,7 +40,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.mosip.kernel.auth.defaultadapter.config.RestTemplateInterceptor;
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterConstant;
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterErrorCode;
 import io.mosip.kernel.auth.defaultadapter.exception.AuthManagerException;

@@ -5,7 +5,6 @@ package io.mosip.kernel.auth.defaultimpl.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.auth.defaultimpl.service.TokenGenerationService;

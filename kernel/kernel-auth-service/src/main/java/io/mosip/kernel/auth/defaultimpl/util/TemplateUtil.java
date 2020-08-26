@@ -33,9 +33,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.kernel.auth.config.MosipEnvironment;
-import io.mosip.kernel.auth.defaultadapter.exception.AuthNException;
-import io.mosip.kernel.auth.defaultadapter.exception.AuthZException;
+import io.mosip.kernel.auth.defaultimpl.config.MosipEnvironment;
 import io.mosip.kernel.auth.defaultimpl.constant.AuthConstant;
 import io.mosip.kernel.auth.defaultimpl.constant.AuthErrorCode;
 import io.mosip.kernel.auth.defaultimpl.constant.OTPErrorCode;
@@ -44,6 +42,8 @@ import io.mosip.kernel.auth.defaultimpl.dto.otp.OtpTemplateResponseDto;
 import io.mosip.kernel.auth.defaultimpl.dto.otp.email.OTPEmailTemplate;
 import io.mosip.kernel.auth.defaultimpl.exception.AuthManagerException;
 import io.mosip.kernel.auth.defaultimpl.exception.AuthManagerServiceException;
+import io.mosip.kernel.core.authmanager.exception.AuthNException;
+import io.mosip.kernel.core.authmanager.exception.AuthZException;
 import io.mosip.kernel.core.authmanager.model.OtpUser;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;

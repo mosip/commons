@@ -1,4 +1,4 @@
-package io.mosip.kernel.auth.config;
+package io.mosip.kernel.auth.defaultimpl.config;
 
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.logger.logback.appender.ConsoleAppender;

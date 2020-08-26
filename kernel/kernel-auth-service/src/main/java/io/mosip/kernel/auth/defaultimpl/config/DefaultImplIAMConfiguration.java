@@ -13,17 +13,16 @@ import io.mosip.kernel.auth.defaultimpl.intercepter.RestInterceptor;
 import io.mosip.kernel.auth.defaultimpl.util.MemoryCache;
 
 @Configuration
-public class DefaultImplConfiguration {
+public class DefaultImplIAMConfiguration {
 	
+	@Autowired
+	private RestInterceptor restInterceptor;
 
-	@Primary
-	@Bean(name = "authRestTemplate")
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
+	@Bean(name = "keycloakRestTemplate")
+	public RestTemplate getRestTemplate() {
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.setInterceptors(Collections.singletonList(restInterceptor));
+		return restTemplate;
 	}
 
-	@Bean
-	public MemoryCache<String, AccessTokenResponse> memoryCache() {
-		return new MemoryCache<>(1);
-	}
 }
