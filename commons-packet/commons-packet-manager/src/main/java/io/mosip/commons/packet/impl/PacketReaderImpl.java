@@ -35,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
@@ -111,6 +112,7 @@ public class PacketReaderImpl implements IPacketReader {
      * @return
      */
     @Override
+    @Cacheable(value = "packets", key = "{'allFields'.concat('-').concat(#id).concat('-').concat(#process)}")
     public Map<String, Object> getAll(String id, String process) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, "Getting all fields :: enrtry");
         Map<String, Object> finalMap = new LinkedHashMap<>();
