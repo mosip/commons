@@ -40,7 +40,8 @@ public class PacketKeeper {
      */
     private static Logger LOGGER = PacketManagerLogger.getLogger(PacketKeeper.class);
 
-    private static final String PACKET_MANAGER_ACCOUNT = "PACKET_MANAGER_ACCOUNT";
+    @Value("packet.manager.account.name")
+    private String PACKET_MANAGER_ACCOUNT;
 
     @Autowired
     @Qualifier("SwiftAdapter")
@@ -113,8 +114,9 @@ public class PacketKeeper {
      * @return
      */
     public boolean checkSignature(Packet packet, byte[] encryptedSubPacket) {
-        String signature = new String(CryptoUtil.encodeBase64(getCryptoService().sign(packet.getPacket())));
-        boolean result = checkIntegrity(packet.getPacketInfo(), encryptedSubPacket) && (signature.equals(packet.getPacketInfo().getSignature()));
+        boolean result = getCryptoService().verify(packet.getPacket(), packet.getPacketInfo().getSignature().getBytes());
+        if (result)
+            result = checkIntegrity(packet.getPacketInfo(), encryptedSubPacket);
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packet.getPacketInfo().getId(), "Integrity and signature check : " + result);
         return result;
     }
