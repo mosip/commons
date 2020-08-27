@@ -140,7 +140,7 @@ jobs:
       run: |
         chmod +x ./deploy.sh
         ./deploy.sh kernel $GITHUB_WORKSPACE/settings.xml SNAPSHOT ${{ secrets.MAVEN_REPO_URL }} 
-        ./deploy.sh id-repository $GITHUB_WORKSPACE/settings.xml SNAPSHOT ${{ secrets.MAVEN_REPO_URL }} 
+        #  ./deploy.sh id-repository $GITHUB_WORKSPACE/settings.xml SNAPSHOT ${{ secrets.MAVEN_REPO_URL }} 
         ./deploy.sh commons-packet $GITHUB_WORKSPACE/settings.xml SNAPSHOT ${{ secrets.MAVEN_REPO_URL }} 
       env:
         GPG_TTY: $(tty)
