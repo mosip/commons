@@ -84,9 +84,9 @@ public class RestTemplateInterceptor implements ClientHttpRequestInterceptor {
 	}
 
 	private HttpRequest resolveServiceId(HttpRequest request) {
-		LOGGER.info("Injected load balancer : {} ", loadBalancerClient.toString());
 		try {
 			if(loadBalancerClient != null) {
+				LOGGER.info("Injected load balancer : {} ", loadBalancerClient.toString());
 				ServiceInstance instance = loadBalancerClient.choose(request.getURI().getHost());
 				if (instance != null) {
 					final ClientHttpRequest newRequest = requestFactory.createRequest(
