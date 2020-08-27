@@ -5,7 +5,7 @@ import io.mosip.commons.packet.spi.IPacketReader;
 import io.mosip.commons.packet.spi.IPacketWriter;
 import io.mosip.commons.packet.util.PacketHelper;
 import io.mosip.commons.packet.util.PacketManagerLogger;
-import io.mosip.kernel.auth.adapter.config.RestTemplateInterceptor;
+import io.mosip.kernel.auth.defaultadapter.config.RestTemplateInterceptor;
 import io.mosip.kernel.core.logger.spi.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
