@@ -139,7 +139,7 @@ jobs:
     - name: Publish the maven package
       run: |
         chmod +x ./deploy.sh
-        ./deploy.sh kernel $GITHUB_WORKSPACE/settings.xml SNAPSHOT
+        ./deploy.sh kernel $GITHUB_WORKSPACE/settings.xml SNAPSHOT ossrh
     #    ./deploy.sh id-repository $GITHUB_WORKSPACE/settings.xml SNAPSHOT 
       env:
         GPG_TTY: $(tty)
