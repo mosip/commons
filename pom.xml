@@ -51,7 +51,7 @@
 		</snapshotRepository> 
                  <repository>
                         <id>github</id>
-                        <url>https://maven.pkg.github.com/io/mosip/</url>
+                        <url>https://maven.pkg.github.com/mosip/commons</url>
                 </repository> 
         </distributionManagement> 
         <build>
