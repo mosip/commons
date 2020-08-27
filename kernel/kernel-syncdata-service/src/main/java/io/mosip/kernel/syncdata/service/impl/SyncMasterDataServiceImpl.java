@@ -3,9 +3,7 @@ package io.mosip.kernel.syncdata.service.impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
@@ -79,18 +77,15 @@ import io.mosip.kernel.syncdata.dto.ValidDocumentDto;
 import io.mosip.kernel.syncdata.dto.response.MasterDataResponseDto;
 import io.mosip.kernel.syncdata.dto.response.SyncDataBaseDto;
 import io.mosip.kernel.syncdata.dto.response.SyncDataResponseDto;
-import io.mosip.kernel.syncdata.entity.AppAuthenticationMethod;
 import io.mosip.kernel.syncdata.entity.Machine;
 import io.mosip.kernel.syncdata.entity.MachineHistory;
 import io.mosip.kernel.syncdata.entity.RegistrationCenter;
-
 import io.mosip.kernel.syncdata.exception.ParseResponseException;
 import io.mosip.kernel.syncdata.exception.RequestException;
 import io.mosip.kernel.syncdata.exception.SyncDataServiceException;
 import io.mosip.kernel.syncdata.exception.SyncServiceException;
 import io.mosip.kernel.syncdata.repository.MachineHistoryRepository;
 import io.mosip.kernel.syncdata.repository.MachineRepository;
-
 import io.mosip.kernel.syncdata.repository.RegistrationCenterRepository;
 import io.mosip.kernel.syncdata.service.SyncMasterDataService;
 import io.mosip.kernel.syncdata.service.helper.ApplicationDataHelper;
@@ -107,52 +102,6 @@ import io.mosip.kernel.syncdata.utils.ExceptionUtils;
 import io.mosip.kernel.syncdata.utils.MapperUtils;
 import io.mosip.kernel.syncdata.utils.MetaDataUtils;
 import io.mosip.kernel.syncdata.utils.SyncMasterDataServiceHelper;
-
-import io.mosip.kernel.syncdata.entity.AppAuthenticationMethod;
-import io.mosip.kernel.syncdata.entity.AppDetail;
-import io.mosip.kernel.syncdata.entity.AppRolePriority;
-import io.mosip.kernel.syncdata.entity.ApplicantValidDocument;
-import io.mosip.kernel.syncdata.entity.Application;
-import io.mosip.kernel.syncdata.entity.BaseEntity;
-import io.mosip.kernel.syncdata.entity.BiometricAttribute;
-import io.mosip.kernel.syncdata.entity.BiometricType;
-import io.mosip.kernel.syncdata.entity.BlacklistedWords;
-import io.mosip.kernel.syncdata.entity.Device;
-import io.mosip.kernel.syncdata.entity.DeviceProvider;
-import io.mosip.kernel.syncdata.entity.DeviceService;
-import io.mosip.kernel.syncdata.entity.DeviceSpecification;
-import io.mosip.kernel.syncdata.entity.DeviceSubTypeDPM;
-import io.mosip.kernel.syncdata.entity.DeviceType;
-import io.mosip.kernel.syncdata.entity.DeviceTypeDPM;
-import io.mosip.kernel.syncdata.entity.DocumentCategory;
-import io.mosip.kernel.syncdata.entity.DocumentType;
-import io.mosip.kernel.syncdata.entity.FoundationalTrustProvider;
-import io.mosip.kernel.syncdata.entity.Gender;
-import io.mosip.kernel.syncdata.entity.Holiday;
-import io.mosip.kernel.syncdata.entity.IdType;
-import io.mosip.kernel.syncdata.entity.IndividualType;
-import io.mosip.kernel.syncdata.entity.Language;
-import io.mosip.kernel.syncdata.entity.Location;
-import io.mosip.kernel.syncdata.entity.Machine;
-import io.mosip.kernel.syncdata.entity.MachineHistory;
-import io.mosip.kernel.syncdata.entity.MachineSpecification;
-import io.mosip.kernel.syncdata.entity.MachineType;
-import io.mosip.kernel.syncdata.entity.ProcessList;
-import io.mosip.kernel.syncdata.entity.ReasonCategory;
-import io.mosip.kernel.syncdata.entity.ReasonList;
-import io.mosip.kernel.syncdata.entity.RegisteredDevice;
-import io.mosip.kernel.syncdata.entity.RegistrationCenter;
-
-import io.mosip.kernel.syncdata.entity.RegistrationCenterType;
-
-import io.mosip.kernel.syncdata.entity.ScreenAuthorization;
-import io.mosip.kernel.syncdata.entity.ScreenDetail;
-import io.mosip.kernel.syncdata.entity.SyncJobDef;
-import io.mosip.kernel.syncdata.entity.Template;
-import io.mosip.kernel.syncdata.entity.TemplateFileFormat;
-import io.mosip.kernel.syncdata.entity.TemplateType;
-import io.mosip.kernel.syncdata.entity.Title;
-import io.mosip.kernel.syncdata.entity.ValidDocument;
 
 /**
  * Masterdata sync handler service impl
