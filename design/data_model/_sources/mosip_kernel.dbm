@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="0,375" last-zoom="0.7"
+<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="0,138" last-zoom="0.7"
 	 default-schema="public" default-owner="postgres">
 <role name="sysadmin"
       superuser="true"
@@ -215,7 +215,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="kernel"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Key Store: In MOSIP, data related to an individual in stored in encrypted form. This table is to manage all the keys(private and public keys) used. ]]></comment>
-	<position x="320" y="300"/>
+	<position x="360" y="260"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[ID: ID is a unique identifier (UUID) used for managing encryption keys]]></comment>
@@ -225,12 +225,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<comment><![CDATA[Master Key: Master key is used to encrypt the other keys (Public / Private)]]></comment>
 	</column>
 	<column name="private_key" not-null="true">
-		<type name="bytea" length="0"/>
+		<type name="character varying" length="2500"/>
 		<comment><![CDATA[Private Key: Private key]]></comment>
 	</column>
-	<column name="public_key" not-null="true">
-		<type name="bytea" length="0"/>
-		<comment><![CDATA[Public Key: Public key]]></comment>
+	<column name="certificate_data" not-null="true">
+		<type name="character varying" length="1500"/>
+		<comment><![CDATA[Certificate Data: Data of the Certificate]]></comment>
 	</column>
 	<column name="cr_by" not-null="true">
 		<type name="character varying" length="256"/>
@@ -401,7 +401,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="kernel"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Sync Job Definition: Stores Sync jobs definition that MOSIP supports. This jobs are used to sync data from one application / module to another based on the sync frequency and other setup.]]></comment>
-	<position x="460" y="600"/>
+	<position x="620" y="540"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[ID: Sync job id, a unique id generated for sync jobs configured.]]></comment>
@@ -565,7 +565,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="kernel"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[UIN: Stores pre-generated UINs that are assigned to an individual as part of registration process.]]></comment>
-	<position x="80" y="680"/>
+	<position x="40" y="660"/>
 	<column name="uin" not-null="true">
 		<type name="character varying" length="28"/>
 		<comment><![CDATA[UIN: Pre-generated UINs (Unique Identification Number), which will be used to assign to an individual]]></comment>
@@ -616,60 +616,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 			<column name="key_gen_dtimes"/>
 		</idxelement>
 </index>
-
-<table name="dao_key_store" alias="dks">
-	<schema name="kernel"/>
-	<role name="sysadmin"/>
-	<comment><![CDATA[DAO Key Store: In MOSIP, data related to an individual in stored in encrypted form. This table is to manage all the security keys used for DAO layer encryption. ]]></comment>
-	<position x="580" y="260"/>
-	<column name="id" not-null="true">
-		<type name="character varying" length="36"/>
-		<comment><![CDATA[ID: ID is a unique identifier (UUID) used for managing encryption keys]]></comment>
-	</column>
-	<column name="key" not-null="true">
-		<type name="character varying" length="256"/>
-		<comment><![CDATA[Key: Security key is used to encrypt / decrypt at DAO layer]]></comment>
-	</column>
-	<column name="key_gen_dtimes">
-		<type name="timestamp" length="0"/>
-		<comment><![CDATA[Key Generated Date Time: Date and time when the key was generated.]]></comment>
-	</column>
-	<column name="key_expire_dtimes">
-		<type name="timestamp" length="0"/>
-		<comment><![CDATA[Key Expiry Date Time : Date and time when the key will be expired.]]></comment>
-	</column>
-	<column name="is_expired" not-null="true">
-		<type name="boolean" length="0"/>
-		<comment><![CDATA[Is Expired : This is the flag to check whether the security key is expired or not.]]></comment>
-	</column>
-	<column name="cr_by" not-null="true">
-		<type name="character varying" length="256"/>
-		<comment><![CDATA[Created By : ID or name of the user who create / insert record]]></comment>
-	</column>
-	<column name="cr_dtimes" not-null="true">
-		<type name="timestamp" length="0"/>
-		<comment><![CDATA[Created DateTimestamp : Date and Timestamp when the record is created/inserted]]></comment>
-	</column>
-	<column name="upd_by">
-		<type name="character varying" length="256"/>
-		<comment><![CDATA[Updated By : ID or name of the user who update the record with new values]]></comment>
-	</column>
-	<column name="upd_dtimes">
-		<type name="timestamp" length="0"/>
-		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
-	</column>
-	<column name="is_deleted">
-		<type name="boolean" length="0"/>
-		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
-	</column>
-	<column name="del_dtimes">
-		<type name="timestamp" length="0"/>
-		<comment><![CDATA[Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE]]></comment>
-	</column>
-	<constraint name="pk_daokeystr_id" type="pk-constr" table="kernel.dao_key_store">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-</table>
 
 <table name="vid">
 	<schema name="kernel"/>
@@ -798,6 +744,44 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<constraint name="pk_uinass_id" type="pk-constr" table="kernel.uin_assigned">
 		<columns names="uin" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="data_encrypt_keystore">
+	<schema name="kernel"/>
+	<role name="sysadmin"/>
+	<comment><![CDATA[Data Encrypt Keystore: Table is used to store the encryption key aliases which is used encrypt the data stored in identity cache table store.]]></comment>
+	<position x="340" y="500"/>
+	<column name="id" not-null="true">
+		<type name="bigint" length="36"/>
+		<comment><![CDATA[Id: Id of an encryption key alias]]></comment>
+	</column>
+	<column name="key" not-null="true">
+		<type name="character varying" length="64"/>
+		<comment><![CDATA[Key: Encryption key, Key which is used to encrypt the data used in identity cache tables store]]></comment>
+	</column>
+	<column name="key_status">
+		<type name="character varying" length="16"/>
+		<comment><![CDATA[Key Status: Status of the key for ex. Key is expired, active or any other state which is defined in system]]></comment>
+	</column>
+	<column name="cr_by" not-null="true">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Created By : ID or name of the user who create / insert record]]></comment>
+	</column>
+	<column name="cr_dtimes" not-null="true">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Created DateTimestamp : Date and Timestamp when the record is created/inserted]]></comment>
+	</column>
+	<column name="upd_by">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Updated By : ID or name of the user who update the record with new values]]></comment>
+	</column>
+	<column name="upd_dtimes">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
+	</column>
+	<constraint name="pk_dekstr_id" type="pk-constr" table="kernel.data_encrypt_keystore">
+		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 

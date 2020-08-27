@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.StringUtils;
+import io.mosip.kernel.masterdata.constant.DeviceErrorCode;
 import io.mosip.kernel.masterdata.constant.MachineErrorCode;
 import io.mosip.kernel.masterdata.constant.MachinePutReqDto;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
@@ -51,9 +52,6 @@ import io.mosip.kernel.masterdata.entity.MachineSpecification;
 import io.mosip.kernel.masterdata.entity.MachineType;
 import io.mosip.kernel.masterdata.entity.RegistrationCenter;
 import io.mosip.kernel.masterdata.entity.RegistrationCenterHistory;
-import io.mosip.kernel.masterdata.entity.RegistrationCenterMachine;
-import io.mosip.kernel.masterdata.entity.RegistrationCenterMachineDevice;
-import io.mosip.kernel.masterdata.entity.RegistrationCenterUserMachine;
 import io.mosip.kernel.masterdata.entity.Zone;
 import io.mosip.kernel.masterdata.exception.DataNotFoundException;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
@@ -63,9 +61,6 @@ import io.mosip.kernel.masterdata.repository.MachineRepository;
 import io.mosip.kernel.masterdata.repository.MachineSpecificationRepository;
 import io.mosip.kernel.masterdata.repository.MachineTypeRepository;
 import io.mosip.kernel.masterdata.repository.RegistrationCenterHistoryRepository;
-import io.mosip.kernel.masterdata.repository.RegistrationCenterMachineDeviceRepository;
-import io.mosip.kernel.masterdata.repository.RegistrationCenterMachineRepository;
-import io.mosip.kernel.masterdata.repository.RegistrationCenterMachineUserRepository;
 import io.mosip.kernel.masterdata.repository.RegistrationCenterRepository;
 import io.mosip.kernel.masterdata.service.MachineHistoryService;
 import io.mosip.kernel.masterdata.service.MachineService;
@@ -118,15 +113,6 @@ public class MachineServiceImpl implements MachineService {
 	MachineTypeRepository machineTypeRepository;
 
 	@Autowired
-	RegistrationCenterMachineRepository registrationCenterMachineRepository;
-
-	@Autowired
-	RegistrationCenterMachineUserRepository registrationCenterMachineUserRepository;
-
-	@Autowired
-	RegistrationCenterMachineDeviceRepository registrationCenterMachineDeviceRepository;
-
-	@Autowired
 	private MasterdataSearchHelper masterdataSearchHelper;
 
 	@Autowired
@@ -173,6 +159,9 @@ public class MachineServiceImpl implements MachineService {
 
 	@Value("${mosip.primary-language}")
 	private String primaryLangCode;
+
+	@Autowired
+	private RegistrationCenterRepository regCenterRepository;
 
 	/*
 	 * (non-Javadoc)
@@ -276,15 +265,7 @@ public class MachineServiceImpl implements MachineService {
 			if (!renMachineList.isEmpty()) {
 				for (Machine renMachine : renMachineList) {
 
-					List<RegistrationCenterMachine> registrationCenterMachineList = registrationCenterMachineRepository
-							.findByMachineIdAndIsDeletedFalseOrIsDeletedIsNull(renMachine.getId());
-					List<RegistrationCenterUserMachine> registrationCenterMachineUser = registrationCenterMachineUserRepository
-							.findByMachineIdAndIsDeletedFalseOrIsDeletedIsNull(renMachine.getId());
-					List<RegistrationCenterMachineDevice> registrationCenterMachineDevice = registrationCenterMachineDeviceRepository
-							.findByMachineIdAndIsDeletedFalseOrIsDeletedIsNull(renMachine.getId());
-
-					if (registrationCenterMachineList.isEmpty() && registrationCenterMachineUser.isEmpty()
-							&& registrationCenterMachineDevice.isEmpty()) {
+					
 						MetaDataUtils.setDeleteMetaData(renMachine);
 						delMachine = machineRepository.update(renMachine);
 
@@ -295,10 +276,6 @@ public class MachineServiceImpl implements MachineService {
 						machineHistory.setEffectDateTime(delMachine.getDeletedDateTime());
 						machineHistory.setDeletedDateTime(delMachine.getDeletedDateTime());
 						machineHistoryService.createMachineHistory(machineHistory);
-					} else {
-						throw new RequestException(MachineErrorCode.DEPENDENCY_EXCEPTION.getErrorCode(),
-								MachineErrorCode.DEPENDENCY_EXCEPTION.getErrorMessage());
-					}
 				}
 			} else {
 				throw new RequestException(MachineErrorCode.MACHINE_NOT_FOUND_EXCEPTION.getErrorCode(),
@@ -538,16 +515,16 @@ public class MachineServiceImpl implements MachineService {
 	 * @param list the {@link MachineSearchDto}.
 	 */
 	private void setMapStatus(List<MachineSearchDto> list) {
-		List<RegistrationCenterMachine> centerMachineList = machineUtil.getAllMachineCentersList();
+		List<Machine> machineList = machineRepository.getAllMachines();
 		List<RegistrationCenter> registrationCenterList = machineUtil.getAllRegistrationCenters();
 		list.forEach(machineSearchDto -> {
-			centerMachineList.forEach(centerMachine -> {
-				if (centerMachine.getMachine().getId().equals(machineSearchDto.getId())
-						&& centerMachine.getLangCode().equals(machineSearchDto.getLangCode())) {
-					String regId = centerMachine.getRegistrationCenter().getId();
+			machineList.forEach(machine -> {
+				if (machine.getId().equals(machineSearchDto.getId())
+						&& machine.getLangCode().equals(machineSearchDto.getLangCode())) {
+					String regId = machine.getRegCenterId();
 					registrationCenterList.forEach(registrationCenter -> {
 						if (registrationCenter.getId().equals(regId)
-								&& centerMachine.getLangCode().equals(registrationCenter.getLangCode())) {
+								&& machine.getLangCode().equals(registrationCenter.getLangCode())) {
 							machineSearchDto.setMapStatus(registrationCenter.getName());
 						}
 					});
@@ -742,18 +719,20 @@ public class MachineServiceImpl implements MachineService {
 					MachineErrorCode.INVALIDE_MACHINE_ZONE.getErrorMessage());
 		}
 		try {
-			if (!registrationCenterMachineRepository.findByMachineIdAndIsDeletedFalseOrIsDeletedIsNull(machineId)
-					.isEmpty()) {
-				auditUtil.auditRequest(
-						String.format(MasterDataConstant.FAILURE_DECOMMISSION, MachineSearchDto.class.getSimpleName()),
-						MasterDataConstant.AUDIT_SYSTEM,
-						String.format(MasterDataConstant.FAILURE_DESC,
-								MachineErrorCode.INVALIDE_MACHINE_ZONE.getErrorCode(),
-								MachineErrorCode.INVALIDE_MACHINE_ZONE.getErrorMessage()),
-						"ADM-538");
-				throw new RequestException(MachineErrorCode.MAPPED_TO_REGCENTER.getErrorCode(),
-						MachineErrorCode.MAPPED_TO_REGCENTER.getErrorMessage());
+			for(Machine machine: machines) {
+				if(!(machine.getRegCenterId() ==null || machine.getRegCenterId().isEmpty())) {
+					auditUtil.auditRequest(
+							String.format(MasterDataConstant.FAILURE_DECOMMISSION, MachineSearchDto.class.getSimpleName()),
+							MasterDataConstant.AUDIT_SYSTEM,
+							String.format(MasterDataConstant.FAILURE_DESC,
+									MachineErrorCode.INVALIDE_MACHINE_ZONE.getErrorCode(),
+									MachineErrorCode.INVALIDE_MACHINE_ZONE.getErrorMessage()),
+							"ADM-538");
+					throw new RequestException(MachineErrorCode.MAPPED_TO_REGCENTER.getErrorCode(),
+							MachineErrorCode.MAPPED_TO_REGCENTER.getErrorMessage());
+				}
 			}
+			
 			decommissionedMachine = machineRepository.decommissionMachine(machineId, MetaDataUtils.getContextUser(),
 					MetaDataUtils.getCurrentDateTime());
 
@@ -806,6 +785,10 @@ public class MachineServiceImpl implements MachineService {
 		// not
 		validateZone(machineZone);
 		try {
+			if(machinePostReqDto.getRegCenterId() != null && !machinePostReqDto.getRegCenterId().isEmpty()) {
+				validateRegistrationCenter(machinePostReqDto.getRegCenterId());
+				validateRegistrationCenterZone(machineZone,machinePostReqDto.getRegCenterId());
+			}
 			// call method to set isActive value based on primary/Secondary language
 			machinePostReqDto = masterdataCreationUtil.createMasterData(Machine.class, machinePostReqDto);
 			
@@ -867,6 +850,23 @@ public class MachineServiceImpl implements MachineService {
 					MachineErrorCode.INVALIDE_MACHINE_ZONE.getErrorMessage());
 		}
 	}
+	
+	private void validateRegistrationCenter(String regCenterId) {
+		List<RegistrationCenter> centers=regCenterRepository.findByIdAndIsDeletedFalseOrNull(regCenterId);
+		if(centers==null ||centers.isEmpty()) {
+			throw new RequestException(DeviceErrorCode.INVALID_CENTER.getErrorCode(),
+					DeviceErrorCode.INVALID_CENTER.getErrorMessage());
+		}
+		
+	}
+	
+	private void validateRegistrationCenterZone(String zoneCode, String regCenterId) {
+		List<RegistrationCenter> centers=regCenterRepository.findByRegIdAndZone(regCenterId, zoneCode);
+		if(centers==null ||centers.isEmpty()) {
+			throw new RequestException(DeviceErrorCode.INVALID_CENTER_ZONE.getErrorCode(),
+					DeviceErrorCode.INVALID_CENTER_ZONE.getErrorMessage());
+		}
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -886,7 +886,10 @@ public class MachineServiceImpl implements MachineService {
 		// not
 		validateZone(machineZone);
 		try {
-
+			if(machinePutReqDto.getRegCenterId() != null && !machinePutReqDto.getRegCenterId().isEmpty()) {
+				validateRegistrationCenter(machinePutReqDto.getRegCenterId());
+				validateRegistrationCenterZone(machineZone,machinePutReqDto.getRegCenterId());
+			}
 			// find requested machine is there or not in Machine Table
 			Machine renMachine = machineRepository
 					.findMachineByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNullWithoutActiveStatusCheck(
@@ -954,13 +957,11 @@ public class MachineServiceImpl implements MachineService {
 	// method to update the NumKiosis for the regCenter id which has got mapped with
 	// machine id
 	private void updateNumKiosksRegCenter(MachinePutReqDto machinePutReqDto, Machine renMachine) {
-		// find given machine id is attached to which regCenter center id
-		List<RegistrationCenterMachine> regCenterMachines = registrationCenterMachineRepository
-				.findByMachineIdAndIsDeletedFalseOrIsDeletedIsNull(renMachine.getId());
+		
 
 		// given machine id is attached to regCenter center or not
-		if (!regCenterMachines.isEmpty()) {
-			String regCenterId = regCenterMachines.get(0).getRegistrationCenterMachinePk().getRegCenterId();
+		if (!renMachine.getRegCenterId().isEmpty()) {
+			String regCenterId = renMachine.getRegCenterId();
 			List<RegistrationCenter> renRegistrationCenters = registrationCenterRepository
 					.findByRegIdAndIsDeletedFalseOrNull(regCenterId);
 
@@ -1003,8 +1004,8 @@ public class MachineServiceImpl implements MachineService {
 		RegistrationCenterHistory registrationCenterHistoryEntity;
 		registrationCenterHistoryEntity = MetaDataUtils.setCreateMetaData(updRegistrationCenter,
 				RegistrationCenterHistory.class);
-		registrationCenterHistoryEntity.setEffectivetimes(updRegistrationCenter.getCreatedDateTime());
-		registrationCenterHistoryEntity.setCreatedDateTime(updRegistrationCenter.getCreatedDateTime());
+		registrationCenterHistoryEntity.setEffectivetimes(updRegistrationCenter.getUpdatedDateTime());
+		registrationCenterHistoryEntity.setCreatedDateTime(updRegistrationCenter.getUpdatedDateTime());
 		registrationCenterHistoryRepository.create(registrationCenterHistoryEntity);
 	}
 }

@@ -137,6 +137,13 @@ TRUNCATE TABLE master.identity_schema cascade ;
 \COPY master.identity_schema (id,id_version,title,description,id_attr_json,schema_json,status_code,add_props,effective_from,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-identity_schema.csv' delimiter ',' HEADER  csv;
 
 
+----- TRUNCATE master.dynamic_field TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.dynamic_field cascade ;
+
+\COPY master.dynamic_field (id,name,description,data_type,value_json,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-dynamic_field.csv' delimiter ',' HEADER  csv;
+
+
+
 -------------- Level 2 data load scripts ------------------------
 
 ----- TRUNCATE master.location TABLE Data and It's reference Data and COPY Data from CSV file -----

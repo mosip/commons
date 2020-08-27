@@ -5,11 +5,15 @@ package io.mosip.kernel.core.cbeffutil.entity;
 
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.RegistryIDType;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.SBInfoType;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Ramadurai Pandian
  *
  */
+@Data
+@NoArgsConstructor
 public class SBInfo {
 
 	private RegistryIDType format;

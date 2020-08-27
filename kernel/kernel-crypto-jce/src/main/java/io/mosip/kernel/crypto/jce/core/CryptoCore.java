@@ -483,4 +483,10 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 		}
 
 	}
+
+	@Override
+	public byte[] asymmetricDecrypt(PrivateKey privateKey, PublicKey publicKey, byte[] data) {
+		return null;
+	}
+
 }

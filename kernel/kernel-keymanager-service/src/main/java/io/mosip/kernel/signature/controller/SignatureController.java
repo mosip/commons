@@ -18,6 +18,8 @@ import io.mosip.kernel.signature.dto.SignResponseDto;
 import io.mosip.kernel.signature.dto.TimestampRequestDto;
 import io.mosip.kernel.signature.dto.ValidatorResponseDto;
 import io.mosip.kernel.signature.service.SignatureService;
+import io.mosip.kernel.signature.dto.PDFSignatureRequestDto;
+import io.mosip.kernel.signature.dto.SignatureResponseDto;
 
 /**
  * 
@@ -60,6 +62,16 @@ public class SignatureController {
 			@RequestBody @Valid RequestWrapper<TimestampRequestDto> timestampRequestDto) {
 		ResponseWrapper<ValidatorResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(service.validate(timestampRequestDto.getRequest()));
+		return response;
+	}
+
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@ResponseFilter
+	@PostMapping("/pdf/sign")
+	public ResponseWrapper<SignatureResponseDto> signPDF(
+			@RequestBody @Valid RequestWrapper<PDFSignatureRequestDto> signatureResponseDto) {
+		ResponseWrapper<SignatureResponseDto> response = new ResponseWrapper<>();
+		response.setResponse(service.signPDF(signatureResponseDto.getRequest()));
 		return response;
 	}
 
