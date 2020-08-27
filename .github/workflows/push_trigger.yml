@@ -121,7 +121,7 @@ jobs:
 #        ./deploy.sh id-repository $GITHUB_WORKSPACE/settings.xml .*
       env:
         GPG_TTY: $(tty)
-        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN1 }}
     #- name: Analyze with SonarCloud
       #run: mvn -B verify sonar:sonar -Dsonar.projectKey=${{ secrets.PROJECT_KEY }} -Dsonar.organization=${{ secrets.ORG_KEY }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
       #env:
