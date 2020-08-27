@@ -144,7 +144,10 @@ jobs:
         
     - name: Publish the maven package
       run: |
-        mvn deploy -DskipTests -s $GITHUB_WORKSPACE/settings.xml -f pom.xml
+        chmod +x ./deploy.sh
+        ./deploy.sh kernel $GITHUB_WORKSPACE/settings.xml SNAPSHOT ${{ secrets.MAVEN_REPO_URL }} 
+        ./deploy.sh id-repository $GITHUB_WORKSPACE/settings.xml SNAPSHOT ${{ secrets.MAVEN_REPO_URL }} 
+        ./deploy.sh commons-packet $GITHUB_WORKSPACE/settings.xml SNAPSHOT ${{ secrets.MAVEN_REPO_URL }} 
       env:
         GPG_TTY: $(tty)
     - name: Analyze with SonarCloud
