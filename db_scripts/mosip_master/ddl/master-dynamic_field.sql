@@ -17,7 +17,7 @@ CREATE TABLE master.dynamic_field(
 	name character varying(36) NOT NULL,
 	description character varying(256),
 	data_type character varying(16),
-	value_json character varying(4086),
+	value_json character varying,
 	lang_code character varying(3) NOT NULL,
 	is_active boolean NOT NULL,
 	cr_by character varying(256) NOT NULL,

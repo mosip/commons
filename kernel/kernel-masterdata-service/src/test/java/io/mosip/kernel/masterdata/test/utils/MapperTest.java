@@ -15,11 +15,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.kernel.masterdata.dto.LanguageDto;
 import io.mosip.kernel.masterdata.dto.RegistrationCenterDeviceDto;
 import io.mosip.kernel.masterdata.entity.Language;
-import io.mosip.kernel.masterdata.entity.RegistrationCenterDevice;
 import io.mosip.kernel.masterdata.utils.MapperUtils;
 
 /**
@@ -63,18 +61,7 @@ public class MapperTest {
 		setCreateMetaData(new LanguageDto(), null);
 	}
 
-	@Test
-	public void testMapWithDestinationObject() {
-		RegistrationCenterDevice rcd = null;
-
-		rcd = setCreateMetaData(rcdDto, RegistrationCenterDevice.class);
-		assertTrue(rcd != null);
-
-		RegistrationCenterDeviceDto newRcdDto = map(rcd, RegistrationCenterDeviceDto.class);
-
-		assertTrue(newRcdDto != null);
-
-	}
+	
 
 	@Test
 	public void testCopyEntities() {
@@ -114,10 +101,6 @@ public class MapperTest {
 		assertTrue(entity.getUpdatedDateTime() != null);
 	}
 
-	@Test
-	public void testSetCreateMetaDataList() {
-		List<RegistrationCenterDevice> rcds = setCreateMetaData(rcdDtos, RegistrationCenterDevice.class);
-		assertTrue(!EmptyCheckUtils.isNullEmpty(rcds));
-	}
+	
 
 }
