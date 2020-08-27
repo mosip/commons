@@ -12,6 +12,13 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * Takes care of adding @{@link RestTemplateInterceptor} to all the RestTemplate beans
+ * to automatically handle client-side load balancing
+ *
+ * @author Anusha
+ * @since  1.2.0
+ */
 @Configuration
 public class RestTemplatePostProcessor implements BeanPostProcessor {
 
