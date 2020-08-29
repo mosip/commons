@@ -25,11 +25,6 @@
             <version>${kernel.auth.adaptor.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>${jackson.datatype.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
             <version>${spring.boot.version}</version>
@@ -56,11 +51,6 @@
         </dependency>
         <dependency>
             <groupId>io.mosip.kernel</groupId>
-            <artifactId>kernel-crypto-jce</artifactId>
-            <version>${kernel.crypto-jce.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.mosip.kernel</groupId>
             <artifactId>kernel-biometrics-api</artifactId>
             <version>${kernel.biometrics.api.version}</version>
         </dependency>
@@ -78,11 +68,6 @@
             <groupId>io.mosip.commons</groupId>
             <artifactId>khazana</artifactId>
             <version>${khazana.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.mosip.kernel</groupId>
-            <artifactId>kernel-crypto-signature</artifactId>
-            <version>1.0.9</version>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
