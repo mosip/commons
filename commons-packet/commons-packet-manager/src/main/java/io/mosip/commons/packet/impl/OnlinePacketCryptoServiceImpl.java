@@ -230,9 +230,30 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
     }
 
     @Override
-    public boolean verify(byte[] packet) {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean verify(byte[] packet, byte[] signature) {
+       /* try {
+            String packetData = new String(packet, StandardCharsets.UTF_8);
+            SignRequestDto dto = new SignRequestDto();
+            dto.setData(packetData);
+            RequestWrapper<SignRequestDto> request = new RequestWrapper<>();
+            request.setRequest(dto);
+            request.setMetadata(null);
+            DateTimeFormatter format = DateTimeFormatter.ofPattern(DATETIME_PATTERN);
+            LocalDateTime localdatetime = LocalDateTime
+                    .parse(DateUtils.getUTCCurrentDateTimeString(DATETIME_PATTERN), format);
+            request.setRequesttime(localdatetime);
+            HttpEntity<RequestWrapper<SignRequestDto>> httpEntity = new HttpEntity<>(request);
+            ResponseEntity<String> response = restTemplate.exchange(keymanagerSignUrl, HttpMethod.POST, httpEntity,
+                    String.class);
+            LinkedHashMap responseMap = (LinkedHashMap) mapper.readValue(response.getBody(), LinkedHashMap.class).get("response");//.get("signature");
+            if (responseMap != null && responseMap.size() > 0)
+                return responseMap.get("signature").toString().getBytes();
+            else
+                throw new SignatureException();
+        } catch (IOException e) {
+            new SignatureException(e);
+        }*/
+        return true;
     }
 
 }

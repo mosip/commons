@@ -1,15 +1,7 @@
 package io.mosip.commons.packet.util;
 
-import io.mosip.commons.packet.constants.LoggerFileConstant;
-import io.mosip.commons.packet.exception.ApiNotAccessibleException;
-import io.mosip.commons.packet.exception.PacketDecryptionFailureException;
 import io.mosip.kernel.core.logger.spi.Logger;
-import org.jose4j.json.JsonUtil;
-import org.json.simple.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
 
 @Component
 public class IdObjectsSchemaValidationOperationMapper {
