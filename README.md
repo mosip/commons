@@ -59,6 +59,8 @@ This project is licensed under the terms of [Mozilla Public License 2.0](https:/
 ### Communication
 Join the [developer mailing list](https://groups.io/g/mosip-dev)
 
+You may also be interested in joining our community room on Gitter via [![Gitter](https://badges.gitter.im/mosip-community/community.svg)](https://gitter.im/mosip-community/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![Join the chat at https://gitter.im/mosip-community/Commons-Kernel](https://badges.gitter.im/mosip-community/Commons-Kernel.svg)](https://gitter.im/mosip-community/Commons-Kernel?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)  where you could get some great community support
+
 ## Comprehensive review 
 During comprehensive review, inline documentation of kernel will be changed. Look for Jira issue MOS-31009
 
