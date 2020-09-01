@@ -227,6 +227,8 @@
 		<kernel.logger.logback.version>1.0.6</kernel.logger.logback.version>
 		<kernel.pdfgenerator.itext.version>1.0.6</kernel.pdfgenerator.itext.version>
 		<jose4j.version>0.6.5</jose4j.version>
+
+		<tss.version>0.3.0</tss.version>
 	</properties>
 
 	<dependencies>
@@ -270,6 +272,11 @@
 			<groupId>org.bitbucket.b_c</groupId>
 			<artifactId>jose4j</artifactId>
 			<version>${jose4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.microsoft</groupId>
+			<artifactId>TSS.Java</artifactId>
+			<version>${tss.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
