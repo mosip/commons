@@ -32,8 +32,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.kernel.auth.adapter.exception.AuthNException;
-import io.mosip.kernel.auth.adapter.exception.AuthZException;
+import io.mosip.kernel.core.authmanager.exception.AuthNException;
+import io.mosip.kernel.core.authmanager.exception.AuthZException;
 import io.mosip.kernel.syncdata.entity.UserDetails;
 import io.mosip.kernel.syncdata.exception.DataNotFoundException;
 import io.mosip.kernel.syncdata.exception.ParseResponseException;

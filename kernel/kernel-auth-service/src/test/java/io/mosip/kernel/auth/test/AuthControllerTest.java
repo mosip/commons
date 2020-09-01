@@ -3,9 +3,9 @@ package io.mosip.kernel.auth.test;
 import static org.mockito.Mockito.when;
 
 import io.mosip.kernel.auth.controller.AuthController;
-import io.mosip.kernel.auth.dto.AuthNResponseDto;
-import io.mosip.kernel.auth.dto.LoginUser;
-import io.mosip.kernel.auth.service.AuthService;
+import io.mosip.kernel.core.authmanager.model.AuthNResponseDto;
+import io.mosip.kernel.core.authmanager.model.LoginUser;
+import io.mosip.kernel.core.authmanager.spi.AuthService;
 
 /**
  * //@author Ramadurai Pandian
