@@ -22,6 +22,7 @@ CREATE TABLE master.device_master_h(
 	validity_end_dtimes timestamp,
 	dspec_id 	character varying(36) NOT NULL,
 	zone_code 	character varying(36) NOT NULL,
+	regcntr_id  character varying(10),
 	lang_code 	character varying(3) NOT NULL,
 	is_active 	boolean NOT NULL,
 	cr_by 		character varying(256) NOT NULL,
@@ -52,6 +53,8 @@ COMMENT ON COLUMN master.device_master_h.validity_end_dtimes IS 'Validity End Da
 COMMENT ON COLUMN master.device_master_h.dspec_id IS 'Device Specification ID : Device specification id refers to master.device_spec.id';
 -- ddl-end --
 COMMENT ON COLUMN master.device_master_h.zone_code IS 'Zone Code : Unique zone code generated or entered by admin while creating zones, It is referred to master.zone.code. ';
+-- ddl-end --
+COMMENT ON COLUMN master.device_master.regcntr_id IS 'Registration Center ID : registration center id refers to master.registration_center.id';
 -- ddl-end --
 COMMENT ON COLUMN master.device_master_h.lang_code IS 'Language Code : For multilanguage implementation this attribute Refers master.language.code. The value of some of the attributes in current record is stored in this respective language. ';
 -- ddl-end --
