@@ -20,6 +20,7 @@ CREATE TABLE master.user_detail(
 	email character varying(256),
 	mobile character varying(16),
 	status_code character varying(36) NOT NULL,
+	regcntr_id character varying(10),
 	lang_code character varying(3) NOT NULL,
 	last_login_dtimes timestamp,
 	last_login_method character varying(64),
@@ -47,6 +48,8 @@ COMMENT ON COLUMN master.user_detail.email IS 'Email: Email address of the user'
 COMMENT ON COLUMN master.user_detail.mobile IS 'Mobile: Mobile number of the user';
 -- ddl-end --
 COMMENT ON COLUMN master.user_detail.status_code IS 'Status Code: User status. Refers to master.status_master.code';
+-- ddl-end --
+COMMENT ON COLUMN master.user_detail.regcntr_id IS 'Registration Center ID : registration center id refers to master.registration_center.id';
 -- ddl-end --
 COMMENT ON COLUMN master.user_detail.lang_code IS 'Language Code : For multilanguage implementation this attribute Refers master.language.code. The value of some of the attributes in current record is stored in this respective language. ';
 -- ddl-end --
