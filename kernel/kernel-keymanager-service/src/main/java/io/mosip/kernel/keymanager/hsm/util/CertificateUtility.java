@@ -1,5 +1,6 @@
 package io.mosip.kernel.keymanager.hsm.util;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -15,9 +16,11 @@ import java.util.Objects;
 import javax.security.auth.x500.X500Principal;
 
 import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x500.X500NameBuilder;
+import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.asn1.x500.style.RFC4519Style;
 import org.bouncycastle.asn1.x509.BasicConstraints;
 import org.bouncycastle.asn1.x509.Extension;
-import org.bouncycastle.cert.CertIOException;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
@@ -78,27 +81,28 @@ public class CertificateUtility {
 	 */
 	public static X509Certificate generateX509Certificate(PrivateKey signPrivateKey, PublicKey publicKey, CertificateParameters certParams, 
 						X500Principal signerPrincipal, String signAlgorithm, String providerName) { 
-
-		X500Name certSubject = new X500Name(getCertificateAttributes(certParams));
-		X500Name certIssuer = Objects.nonNull(signerPrincipal)? new X500Name(signerPrincipal.getName()) : certSubject;
+		// Using RFC4519Style instance to preserve the RDN sequence because in certificate creation the RDN sequence is getting reversed.
+		X500Name certSubject = getCertificateAttributes(certParams); //new X500Name(RFC4519Style.INSTANCE, getCertificateAttributes(certParams));
+		X500Name certIssuer = Objects.nonNull(signerPrincipal)? new X500Name(RFC4519Style.INSTANCE, signerPrincipal.getName()) : certSubject;
 		
-		return generateX509Certificate(signPrivateKey, publicKey, certIssuer, certSubject, signAlgorithm, providerName, certParams.getNotBefore(), certParams.getNotAfter());
+		return generateX509Certificate(signPrivateKey, publicKey, certIssuer, certSubject, signAlgorithm, providerName, 
+									certParams.getNotBefore(), certParams.getNotAfter());
 	}
 
 	private static X509Certificate generateX509Certificate(PrivateKey signPrivateKey, PublicKey publicKey, X500Name certIssuer, X500Name certSubject, 
 						String signAlgorithm, String providerName, LocalDateTime notBefore, LocalDateTime notAfter) {
 		try {
-			BigInteger rootSerialNum = new BigInteger(Long.toString(new SecureRandom().nextLong()));
+			BigInteger certSerialNum = new BigInteger(Long.toString(new SecureRandom().nextLong()));
 			
-			ContentSigner rootCertContentSigner = new JcaContentSignerBuilder(signAlgorithm).setProvider(providerName).build(signPrivateKey);
-			X509v3CertificateBuilder rootCertBuilder = new JcaX509v3CertificateBuilder(certIssuer, rootSerialNum, getDateFromLocalDateTime(notBefore), 
+			ContentSigner certContentSigner = new JcaContentSignerBuilder(signAlgorithm).setProvider(providerName).build(signPrivateKey);
+			X509v3CertificateBuilder certBuilder = new JcaX509v3CertificateBuilder(certIssuer, certSerialNum, getDateFromLocalDateTime(notBefore), 
 													getDateFromLocalDateTime(notAfter), certSubject, publicKey);
-			JcaX509ExtensionUtils rootCertExtUtils = new JcaX509ExtensionUtils();
-			rootCertBuilder.addExtension(Extension.basicConstraints, true, new BasicConstraints(true));
-			rootCertBuilder.addExtension(Extension.subjectKeyIdentifier, false, rootCertExtUtils.createSubjectKeyIdentifier(publicKey));
-			X509CertificateHolder rootCertHolder = rootCertBuilder.build(rootCertContentSigner);	        
-			return new JcaX509CertificateConverter().getCertificate(rootCertHolder);
-		} catch (OperatorCreationException|NoSuchAlgorithmException | CertIOException| CertificateException e) {
+			JcaX509ExtensionUtils certExtUtils = new JcaX509ExtensionUtils();
+			certBuilder.addExtension(Extension.basicConstraints, true, new BasicConstraints(true));
+			certBuilder.addExtension(Extension.subjectKeyIdentifier, false, certExtUtils.createSubjectKeyIdentifier(publicKey));
+			X509CertificateHolder certHolder = certBuilder.build(certContentSigner);	        
+			return new JcaX509CertificateConverter().getCertificate(certHolder);
+		} catch (OperatorCreationException|NoSuchAlgorithmException | CertificateException | IOException e) {
 			throw new KeystoreProcessingException(KeymanagerErrorCode.CERTIFICATE_PROCESSING_ERROR.getErrorCode(),
 					KeymanagerErrorCode.CERTIFICATE_PROCESSING_ERROR.getErrorMessage() + e.getMessage(), e);
 		}
@@ -127,8 +131,17 @@ public class CertificateUtility {
 	}
 	
 	
-	private static String getCertificateAttributes(CertificateParameters certParams) {
-		return "CN=" + certParams.getCommonName() + ", OU =" + certParams.getOrganizationUnit() + ",O=" + certParams.getOrganization() 
-					+ ", L=" + certParams.getLocation() + ", ST=" + certParams.getState() + ", C=" + certParams.getCountry();
+	private static X500Name getCertificateAttributes(CertificateParameters certParams) {
+		 
+		/* return "CN=" + certParams.getCommonName() + ", OU =" + certParams.getOrganizationUnit() + ",O=" + certParams.getOrganization() 
+					+ ", L=" + certParams.getLocation() + ", ST=" + certParams.getState() + ", C=" + certParams.getCountry(); */
+		return new X500NameBuilder(RFC4519Style.INSTANCE)
+										.addRDN(BCStyle.C, certParams.getCountry())
+										.addRDN(BCStyle.ST, certParams.getState())
+										.addRDN(BCStyle.L, certParams.getLocation())
+										.addRDN(BCStyle.O, certParams.getOrganization())
+										.addRDN(BCStyle.OU, certParams.getOrganizationUnit())
+										.addRDN(BCStyle.CN, certParams.getCommonName())
+										.build();
     }
 }
