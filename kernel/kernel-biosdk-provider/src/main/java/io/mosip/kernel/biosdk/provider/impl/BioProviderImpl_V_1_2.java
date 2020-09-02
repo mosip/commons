@@ -29,7 +29,7 @@ import io.mosip.kernel.core.bioapi.exception.BiometricException;
 import io.mosip.kernel.core.cbeffutil.entity.BIR;
 
 @Component
-public class BioProviderImpl_V_0_9 implements iBioProviderApi {
+public class BioProviderImpl_V_1_2 implements iBioProviderApi {
 
 	private static final String API_VERSION = "0.9";
 	private Map<BiometricType, Map<BiometricFunction, IBioApi>> sdkRegistry = new HashMap<>();
