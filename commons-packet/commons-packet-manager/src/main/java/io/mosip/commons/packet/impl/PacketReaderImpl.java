@@ -29,6 +29,7 @@ import io.mosip.kernel.core.exception.BaseUncheckedException;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.JsonUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -216,6 +217,8 @@ public class PacketReaderImpl implements IPacketReader {
         try {
             Map<String, Object> idobjectMap = getAll(id, process);
             String bioString = (String) idobjectMap.get(biometricFieldName);
+            if (bioString == null)
+                return null;
             JSONObject biometricMap = new JSONObject(bioString);
             if (biometricMap == null || biometricMap.isNull(VALUE)) {
                 // biometric file not present in idobject. Search in meta data.
@@ -257,7 +260,8 @@ public class PacketReaderImpl implements IPacketReader {
             throw new GetBiometricException(e.getMessage());
         }
 
-        return biometricRecord;
+        // TODO : remove removeDummyElements() method
+        return removeDummyElements(biometricRecord);
     }
 
     @Override
@@ -324,6 +328,18 @@ public class PacketReaderImpl implements IPacketReader {
             throw new GetAllIdentityException(e.getMessage());
         }
         return finalMap;
+    }
+
+    /**
+     * Temp code. Fix for reg-client issue. Remove this.
+     * @param biometricRecord
+     * @return
+     */
+    private BiometricRecord removeDummyElements(BiometricRecord biometricRecord) {
+        if (biometricRecord != null && CollectionUtils.isNotEmpty(biometricRecord.getSegments())) {
+            biometricRecord.getSegments().forEach(s -> s.setElement(null));
+        }
+        return biometricRecord;
     }
 
 
