@@ -102,9 +102,9 @@ public class RegCenterPutReqDto {
 
 	@Size(min = 0, max = 64)
 	private String timeZone;
-
-	@NotBlank
-	@Size(min = 1, max = 36)
+	
+	@NotNull
+	@StringFormatter(min = 1, max = 36)
 	private String zoneCode;
 
 	private WorkingNonWorkingDaysDto workingNonWorkingDays;
