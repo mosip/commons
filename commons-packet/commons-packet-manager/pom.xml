@@ -51,14 +51,6 @@
         </dependency>
         <dependency>
             <groupId>io.mosip.kernel</groupId>
-<<<<<<< HEAD
-            <artifactId>kernel-crypto-jce</artifactId>
-            <version>${kernel.crypto-jce.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.mosip.kernel</groupId>
-=======
->>>>>>> ba8d135cd2bd562d1f1ab4afabc97510b2997ced
             <artifactId>kernel-biometrics-api</artifactId>
             <version>${kernel.biometrics.api.version}</version>
         </dependency>
@@ -78,14 +70,6 @@
             <version>${khazana.version}</version>
         </dependency>
         <dependency>
-<<<<<<< HEAD
-            <groupId>io.mosip.kernel</groupId>
-            <artifactId>kernel-crypto-signature</artifactId>
-            <version>1.0.9</version>
-        </dependency>
-        <dependency>
-=======
->>>>>>> ba8d135cd2bd562d1f1ab4afabc97510b2997ced
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
             <version>${powermock.beta.version}</version>
