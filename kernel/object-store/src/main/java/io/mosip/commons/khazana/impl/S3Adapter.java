@@ -125,7 +125,7 @@ public class S3Adapter implements ObjectStoreAdapter {
             return connections.get(account);
 
         AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
-        AmazonS3 connection = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
+        AmazonS3 connection = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCredentials)).enablePathStyleAccess()
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(url, region)).build();
 
         connections.put(account, connection);
