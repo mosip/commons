@@ -221,7 +221,7 @@
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
 	<kernel.core.version>1.2.0-SNAPSHOT</kernel.core.version>
-	<kernel.auth.adaptor.version>1.0.6</kernel.auth.adaptor.version>
+	<kernel.auth.adaptor.version>1.2.0-SNAPSHOT</kernel.auth.adaptor.version>
 	<kernel.crypto.jce.version>1.0.6</kernel.crypto.jce.version>
 	<kernel.keygenerator.bouncycastle.version>1.0.6</kernel.keygenerator.bouncycastle.version>
 	</properties>
