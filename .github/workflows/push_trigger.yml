@@ -112,10 +112,10 @@ jobs:
     #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
      #    GPG_TTY: $(tty) 
     - name: setting up xml for github release
-      run: echo "<settings> <servers>  <server>  <id>ossrh</id>    <username>mosip</username> <password>0267ba5265c39afb0b1abf8ab4cbbb5dd9eb234e</password> </server> </servers> <profiles> <profile>     <id>ossrh</id> <activation> <activeByDefault>true</activeByDefault> </activation>  </profile> <profile> <id>allow-snapshots</id>       <activation><activeByDefault>true</activeByDefault></activation> <repositories>   <repository>         <id>github</id>  <url>https://maven.pkg.github.com/mosip/commons</url>         <releases><enabled>true</enabled></releases>         <snapshots><enabled>false</enabled></snapshots> </repository> </repositories>  </profile> <profile> <id>sonar</id> <properties>  <sonar.sources>.</sonar.sources> <sonar.host.url>https://sonarcloud.io</sonar.host.url>  </properties> <activation> <activeByDefault>false</activeByDefault> </activation> </profile> </profiles> </settings>" > $GITHUB_WORKSPACE/settings1.xml
+      run: echo "<settings> <servers>  <server>  <id>ossrh</id>    <username>johnpsmindtree</username> <password>877ae12d6271cdf55f578d2d121f8623d19e2fec</password> </server> </servers> <profiles> <profile>     <id>ossrh</id> <activation> <activeByDefault>true</activeByDefault> </activation>  </profile> <profile> <id>allow-snapshots</id>       <activation><activeByDefault>true</activeByDefault></activation> <repositories>   <repository>         <id>github</id>  <url>https://maven.pkg.github.com/mosip/commons</url>         <releases><enabled>true</enabled></releases>         <snapshots><enabled>false</enabled></snapshots> </repository> </repositories>  </profile> <profile> <id>sonar</id> <properties>  <sonar.sources>.</sonar.sources> <sonar.host.url>https://sonarcloud.io</sonar.host.url>  </properties> <activation> <activeByDefault>false</activeByDefault> </activation> </profile> </profiles> </settings>" > $GITHUB_WORKSPACE/settings1.xml
       env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-       GPG_TTY: $(tty) 
+       GITHUB_TOKEN: 877ae12d6271cdf55f578d2d121f8623d19e2fec
+       #GPG_TTY: $(tty) 
     - name: Publish the maven package
       run: |
         chmod +x ./deploy.sh
