@@ -13,7 +13,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication(scanBasePackages = { "io.mosip.kernel.cryptomanager.*","io.mosip.kernel.keymanagerservice.*", 
 											"io.mosip.kernel.auth.*","io.mosip.kernel.signature.*","io.mosip.kernel.tokenidgenerator.*",
 											"io.mosip.kernel.lkeymanager.*", "io.mosip.kernel.keymanager.*", "io.mosip.kernel.keygenerator.*",
-											"io.mosip.kernel.crypto.*", "io.mosip.kernel.zkcryptoservice.*"})
+											"io.mosip.kernel.crypto.*", "io.mosip.kernel.zkcryptoservice.*", 
+											"io.mosip.kernel.partnercertservice.*" })
 public class KeymanagerBootApplication {
 
 	/**

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
@@ -39,9 +40,11 @@ import io.mosip.kernel.core.keymanager.spi.KeyStore;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.DateUtils;
+import io.mosip.kernel.keymanagerservice.constant.KeymanagerConstant;
 import io.mosip.kernel.keymanagerservice.dto.SymmetricKeyRequestDto;
 import io.mosip.kernel.keymanagerservice.entity.KeyAlias;
 import io.mosip.kernel.keymanagerservice.exception.NoUniqueAliasException;
+import io.mosip.kernel.keymanagerservice.helper.KeymanagerDBHelper;
 import io.mosip.kernel.keymanagerservice.logger.KeymanagerLogger;
 import io.mosip.kernel.keymanagerservice.repository.DataEncryptKeystoreRepository;
 import io.mosip.kernel.keymanagerservice.repository.KeyAliasRepository;
@@ -96,11 +99,14 @@ public class ZKCryptoManagerServiceImpl implements ZKCryptoManagerService {
     @Autowired
 	private DataEncryptKeystoreRepository dataEncryptKeystoreRepository;
 
+	/**
+	 * KeymanagerDBHelper instance to handle all DB operations
+	 */
 	@Autowired
-	private KeyAliasRepository keyAliasRepository;
+	private KeymanagerDBHelper dbHelper;
 	
 	@Autowired
-	KeyStoreRepository keyStoreRepository;
+	private KeyStoreRepository keyStoreRepository;
 
 	/**
 	 * Keystore instance to handles and store cryptographic keys.
@@ -270,13 +276,10 @@ public class ZKCryptoManagerServiceImpl implements ZKCryptoManagerService {
 	private String getKeyAlias(String keyAppId, String keyRefId) {
 		LOGGER.info(ZKCryptoManagerConstants.SESSIONID, ZKCryptoManagerConstants.MASTER_KEY, 
 						ZKCryptoManagerConstants.RANDOM_KEY, "Retrieve Master Key Alias from DB.");
-		List<KeyAlias> keyAliases = keyAliasRepository.findByApplicationIdAndReferenceId(keyAppId, keyRefId)
-				.stream().sorted((alias1, alias2) -> {
-					return alias1.getKeyGenerationTime().compareTo(alias2.getKeyGenerationTime());
-				}).collect(Collectors.toList());
-		List<KeyAlias> currentKeyAliases = keyAliases.stream().filter((keyAlias) -> {
-					return isValidTimestamp(DateUtils.getUTCCurrentDateTime(), keyAlias);
-				}).collect(Collectors.toList());
+
+		Map<String, List<KeyAlias>> keyAliasMap = dbHelper.getKeyAliases(keyAppId, keyRefId, DateUtils.getUTCCurrentDateTime());
+		
+		List<KeyAlias> currentKeyAliases = keyAliasMap.get(KeymanagerConstant.CURRENTKEYALIAS);
 
 		if (!currentKeyAliases.isEmpty() && currentKeyAliases.size() == 1) {
 			LOGGER.info(ZKCryptoManagerConstants.SESSIONID, ZKCryptoManagerConstants.MASTER_CURRENT_ALIAS, "getKeyAlias",
@@ -288,12 +291,6 @@ public class ZKCryptoManagerServiceImpl implements ZKCryptoManagerService {
 					ZKCryptoManagerConstants.RANDOM_KEY, "CurrentKeyAlias is not unique. KeyAlias count: " + currentKeyAliases.size());
 		throw new NoUniqueAliasException(ZKCryptoErrorConstants.NO_UNIQUE_ALIAS.getErrorCode(),
 						ZKCryptoErrorConstants.NO_UNIQUE_ALIAS.getErrorMessage());
-	}
-
-	private boolean isValidTimestamp(LocalDateTime timeStamp, KeyAlias keyAlias) {
-		return timeStamp.isEqual(keyAlias.getKeyGenerationTime()) || timeStamp.isEqual(keyAlias.getKeyExpiryTime())
-				|| timeStamp.isAfter(keyAlias.getKeyGenerationTime())
-						&& timeStamp.isBefore(keyAlias.getKeyExpiryTime());
 	}
 
 	private byte[] doCipherOps(Key key, byte[] data, int mode, byte[] nonce, byte[] aad) {

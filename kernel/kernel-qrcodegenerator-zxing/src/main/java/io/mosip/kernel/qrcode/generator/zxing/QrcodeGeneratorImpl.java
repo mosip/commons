@@ -2,6 +2,7 @@ package io.mosip.kernel.qrcode.generator.zxing;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -70,5 +71,14 @@ public class QrcodeGeneratorImpl implements QrCodeGenerator<QrVersion> {
 		MatrixToImageWriter.writeToStream(byteMatrix, QrcodeConstants.FILE_FORMAT, outputStream);
 		return outputStream.toByteArray();
 
+	}
+
+	@Override
+	public byte[] generateQrCodeFromBinaryData(String data, QrVersion version)
+			throws QrcodeGenerationException, IOException {
+		QrcodegeneratorUtils.verifyInput(data, version);
+		StringBuilder stringBuilder = new StringBuilder();
+		Arrays.stream(data.split("(?<=\\G.{8})")).forEach(s -> stringBuilder.append((char) Integer.parseInt(s, 2))); 
+		return generateQrCode(stringBuilder.toString(), version);
 	}
 }

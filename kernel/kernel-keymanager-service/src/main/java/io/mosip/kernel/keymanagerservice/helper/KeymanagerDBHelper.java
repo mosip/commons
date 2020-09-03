@@ -16,14 +16,13 @@ import io.mosip.kernel.keymanagerservice.constant.KeymanagerConstant;
 import io.mosip.kernel.keymanagerservice.constant.KeymanagerErrorConstant;
 import io.mosip.kernel.keymanagerservice.entity.KeyAlias;
 import io.mosip.kernel.keymanagerservice.entity.KeyPolicy;
+import io.mosip.kernel.keymanagerservice.entity.KeyStore;
 import io.mosip.kernel.keymanagerservice.exception.InvalidApplicationIdException;
-import io.mosip.kernel.keymanagerservice.exception.NoUniqueAliasException;
 import io.mosip.kernel.keymanagerservice.logger.KeymanagerLogger;
 import io.mosip.kernel.keymanagerservice.repository.KeyAliasRepository;
 import io.mosip.kernel.keymanagerservice.repository.KeyPolicyRepository;
 import io.mosip.kernel.keymanagerservice.repository.KeyStoreRepository;
 import io.mosip.kernel.keymanagerservice.util.KeymanagerUtil;
-import io.mosip.kernel.keymanagerservice.entity.KeyStore;
 
 /**
  * DB Helper class for Keymanager
