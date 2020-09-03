@@ -148,13 +148,6 @@ TRUNCATE TABLE master.dynamic_field cascade ;
 
 
 
------ TRUNCATE master.dynamic_field TABLE Data and It's reference Data and COPY Data from CSV file -----
-TRUNCATE TABLE master.dynamic_field cascade ;
-
-\COPY master.dynamic_field (id,name,description,data_type,value_json,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-dynamic_field.csv' delimiter ',' HEADER  csv;
-
-
-
 -------------- Level 2 data load scripts ------------------------
 
 ----- TRUNCATE master.location TABLE Data and It's reference Data and COPY Data from CSV file -----
