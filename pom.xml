@@ -169,7 +169,6 @@
         </build>
         <modules>
            <module>kernel</module>
-           <module>id-repository</module>
            <module>commons-packet</module>
         </modules>
 </project>
