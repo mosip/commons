@@ -14,7 +14,12 @@
 	<packaging>pom</packaging>
 	<name>kernel</name>
 	<description>Parent project of MOSIP Kernel</description>
-
+	<distributionManagement>
+                <repository>
+                        <id>github</id>
+                        <url>https://maven.pkg.github.com/mosip/commons</url>
+                </repository> 
+        </distributionManagement> 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
