@@ -91,5 +91,9 @@ public class DevicePutReqDto {
 	@StringFormatter(min = 1, max = 36)
 	@ApiModelProperty(value = "zoneCode", required = true, dataType = "java.lang.String")
 	private String zoneCode;
+	
+	@StringFormatter(min = 0, max = 10)
+	@ApiModelProperty(value = "regCenterId", required = true, dataType = "java.lang.String")
+	private String regCenterId;
 
 }

@@ -36,7 +36,7 @@ public class LocationCreateDto {
 	private short hierarchyLevel;
 
 	@NotNull
-	@StringFormatter(min = 0, max = 64)
+	@StringFormatter(min = 1, max = 64)
 	private String hierarchyName;
 
 	private String parentLocCode;

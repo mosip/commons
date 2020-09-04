@@ -1,4 +1,4 @@
-FROM openjdk:8
+FROM openjdk:11
 
 # can be passed during Docker build as build time environment for github branch to pickup configuration from.
 ARG spring_config_label
@@ -36,12 +36,6 @@ ENV is_glowroot_env=${is_glowroot}
 # environment variable to pass artifactory url, at docker runtime
 ENV artifactory_url_env=${artifactory_url}
 
-# environment variable to pass management rmi server hostname, at docker runtime
-ENV management_rmi_server_hostname_env=${management_rmi_server_hostname}
-
-# environment variable to pass management rmi server port, at docker runtime
-ENV management_jmxremote_rmi_port_env=${management_jmxremote_rmi_port}
-
 ADD ./target/*.jar /target/
 RUN find /target -name '*.jar' -executable -type f "-print0" | xargs "-0" cp -t / \
     && rm -rf /target \
@@ -56,7 +50,7 @@ CMD if [ "$is_glowroot_env" = "present" ]; then \
     unzip glowroot.zip ; \
     rm -rf glowroot.zip ; \
     sed -i 's/<service_name>/kernel-idgenerator-service/g' glowroot/glowroot.properties ; \
-    java -jar -javaagent:glowroot/glowroot.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port="${management.jmxremote.rmi.port_env}" -Dcom.sun.management.jmxremote.rmi.port="${management.jmxremote.rmi.port_env}" -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname="${management.rmi.server.hostname_env}" -XX:HeapDumpPath=/home/  kernel-idgenerator-service.jar ; \
+    java -jar -javaagent:glowroot/glowroot.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -XX:HeapDumpPath=/home/  kernel-idgenerator-service.jar ; \
     else \
     java -jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" kernel-idgenerator-service.jar ; \
     fi

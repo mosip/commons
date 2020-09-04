@@ -31,7 +31,9 @@ public enum DeviceErrorCode {
 	MAPPED_TO_REGCENTER("KER-MSD-438", "Device cannot be Decommissioned as it is assigned to a Registration Center"),
 	DEVICE_ERROR("KER-MSD-XXX", "Device Error"),
 	INVALID_DEVICE_ZONE("KER-MSD-439", "Admin not authorized to access this Device for this Zone"),
-	DECOMMISSIONED("KER-MSD-DDD", "Device has been already decommissioned or Device not found");
+	DECOMMISSIONED("KER-MSD-DDD", "Device has been already decommissioned or Device not found"), 
+	INVALID_CENTER_ZONE("KER-MSD-440", "The zone of the  registration center in the request does not match the zone of the device"),
+	INVALID_CENTER("KER-MSD-441", "The registration center in the request is not present in db");
 
 	private final String errorCode;
 	private final String errorMessage;

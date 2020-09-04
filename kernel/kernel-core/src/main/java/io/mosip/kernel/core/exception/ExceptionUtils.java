@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -113,19 +114,7 @@ public final class ExceptionUtils {
 	}
 
 	public static void logRootCause(Throwable exception) {
-		System.out.println("\n\n");
-//		Optional<Throwable> rootCause = Stream.iterate(exception, Throwable::getCause)
-//				.filter(element -> element.getCause() == null).findFirst();
-//		if (rootCause.isPresent()) {
-//			logger.error("Error : " + exception.getMessage());
-//			logger.error("RootCause Error : ", rootCause.get());
-//		} else {
-//			logger.error("Error : ", exception);
-//		}
-
-		// System.out.println("Error : " + exception.getMessage());
-		exception.printStackTrace();
-
-		System.out.println("\n");
+		logger.error("Exception Root Cause: {} ", exception.getMessage());
+		logger.debug("Exception Root Cause:", exception);
 	}
 }

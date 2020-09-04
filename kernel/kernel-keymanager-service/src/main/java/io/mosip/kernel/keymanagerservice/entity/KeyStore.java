@@ -35,14 +35,14 @@ public class KeyStore extends BaseEntity {
 	/**
 	 * The field publicKey
 	 */
-	@Column(name = "public_key")
-	private byte[] publicKey;
+	@Column(name = "certificate_data")
+	private String certificateData;
 
 	/**
 	 * The field privateKey
 	 */
 	@Column(name = "private_key")
-	private byte[] privateKey;
+	private String privateKey;
 
 	/**
 	 * The field masterAlias

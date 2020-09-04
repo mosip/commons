@@ -1,5 +1,6 @@
 package io.mosip.kernel.keymanager.softhsm.test;
 
+import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.SecureRandom;
 import java.security.Security;
@@ -32,7 +33,8 @@ public class CertificateUtilityExceptionTest {
 	public void testGenerateX509CertificateException() throws Exception {
 		keyGenerator = KeyPairGenerator.getInstance("ELGAMAL", provider);
 		keyGenerator.initialize(2048, random);
-		CertificateUtility.generateX509Certificate(keyGenerator.generateKeyPair(), "commonName", "organizationalUnit",
-				"organization", "country", LocalDateTime.now(), LocalDateTime.now().minusDays(100));
+		KeyPair keyPair = keyGenerator.generateKeyPair();
+		CertificateUtility.generateX509Certificate(keyPair.getPrivate(), keyPair.getPublic(),  "commonName", "organizationalUnit",
+				"organization", "country", LocalDateTime.now(), LocalDateTime.now().minusDays(100), "SHA256withRSA", "BC");
 	}
 }

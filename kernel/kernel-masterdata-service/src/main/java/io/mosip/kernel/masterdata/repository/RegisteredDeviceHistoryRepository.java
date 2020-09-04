@@ -25,4 +25,7 @@ public interface RegisteredDeviceHistoryRepository extends BaseRepository<Regist
 	RegisteredDeviceHistory findRegisteredDeviceHistoryByIdDpIdAndEffTimes(String code, String dpId,
 			LocalDateTime effTimes);
 
+	@Query(value = "(select * from registered_device_master_h rdh WHERE code = ?1 AND eff_dtimes<= ?2 AND upper(purpose)= ?3 and is_active=true and(is_deleted is null or is_deleted =false) ORDER BY eff_dtimes DESC) LIMIT 1 ", nativeQuery = true)
+	RegisteredDeviceHistory findRegisteredDeviceHistoryByIdAndEffTimesAndPurpose(String code, LocalDateTime effTimes,
+			String purpose);
 }

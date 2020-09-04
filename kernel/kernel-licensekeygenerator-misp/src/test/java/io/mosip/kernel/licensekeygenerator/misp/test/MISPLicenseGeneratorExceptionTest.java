@@ -6,6 +6,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
@@ -27,6 +28,9 @@ import io.mosip.kernel.licensekeygenerator.misp.util.MISPLicenseKeyGeneratorUtil
 @SpringBootTest(classes = MISPLicenseKeyGeneratorUtil.class)
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(SpringRunner.class)
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", 
+	  "javax.xml.*", "org.xml.*", "org.w3c.dom.*",
+	  "com.sun.org.apache.xalan.*", "javax.activation.*"})
 @PrepareForTest(value = RandomStringUtils.class)
 public class MISPLicenseGeneratorExceptionTest {
 	/**

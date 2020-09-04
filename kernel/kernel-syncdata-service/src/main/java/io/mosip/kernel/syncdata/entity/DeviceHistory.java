@@ -50,6 +50,9 @@ public class DeviceHistory extends BaseEntity implements Serializable {
 	 */
 	@Column(name = "serial_num", nullable = false, length = 64)
 	private String serialNum;
+	
+	@Column(name = "regcntr_id", length = 10)
+	private String regCenterId;
 
 	/**
 	 * Field for device ip address
