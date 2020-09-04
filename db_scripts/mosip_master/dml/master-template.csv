@@ -1,16 +1,16 @@
-id,name,descr,file_format_code,model,file_txt,module_id,module_name,template_typ_code,lang_code,is_active,cr_by,cr_dtimes
+﻿id,name,descr,file_format_code,model,file_txt,module_id,module_name,template_typ_code,lang_code,is_active,cr_by,cr_dtimes
 1101,Template for authorization content,Template for authorization content,txt,,"Dear $name
 Your Authentication of UIN $uin using $authType on $date at $time Hrs $status at a device deployed by MOSIP Services",10004,ID Authentication,auth-email-content,eng,TRUE,superadmin,now()
 1102,Template for authorization subject,Template for authorization subject,txt,,UIN $uin Authentication $status,10004,ID Authentication,auth-email-subject,eng,TRUE,superadmin,now()
 1103,Template for authorization SMS,Template for authorization SMS,txt,,Your Authentication of UIN $uin using $authType on $date at $time Hrs $status at a device deployed by MOSIP Services.,10004,ID Authentication,auth-sms,eng,TRUE,superadmin,now()
 1101,قالب لمحتوى التخويل,قالب لمحتوى التخويل,txt,,"عزيزي $name ،
-مصادقة UIN $uin باستخدام $authType على $date في $time Hrs $status على جهاز تم نشره بواسطة ""خدمات MOSIP"".",10004,مصادقة الهوية,auth-email-content,ara,TRUE,superadmin,now()
+مصادقة UIN $uin باستخدام $authType على $date في $time Hrs $status على جهاز تم نشره بواسطة ""خدمات MOSIP.",10004,مصادقة الهوية,auth-email-content,ara,TRUE,superadmin,now()
 1102,قالب لموضوع التخويل,قالب لموضوع التخويل,txt,,UIN $uin: مصادقة $status,10004,مصادقة الهوية,auth-email-subject,ara,TRUE,superadmin,now()
-1103,قالب لرسالة التفويض,قالب لرسالة التفويض,txt,,مصادقتك على UIN $uin باستخدام $authType في $date في $time Hrs $status على جهاز تم نشره بواسطة "خدمات MOSIP".,10004,مصادقة الهوية,auth-sms,ara,TRUE,superadmin,now()
+1103,قالب لرسالة التفويض,قالب لرسالة التفويض,txt,,مصادقتك على UIN $uin باستخدام $authType في $date في $time Hrs $status في جهاز تم نشره بواسطة خدمات MOSIP.,10004,مصادقة الهوية,auth-sms,ara,TRUE,superadmin,now()
 1101,Modèle de contenu dautorisation,Modèle de contenu dautorisation,txt,,"Cher $name,
 Votre authentification UIN $uin utilisant $authType le $date à $time Hrs $status sur un périphérique déployé par ""MOSIP Services""",10004,Authentification ID,auth-email-content,fra,TRUE,superadmin,now()
 1102,Modèle pour sujet dautorisation,Modèle pour sujet dautorisation,txt,,UIN $uin: $status dauthentification,10004,Authentification ID,auth-email-subject,fra,TRUE,superadmin,now()
-1103,Modèle de SMS dautorisation,Modèle de SMS dautorisation,txt,,Votre authentification UIN $uin utilisant $authType le $date à $time Hrs $status sur un périphérique déployé par "MOSIP Services".,10004,Authentification ID,auth-sms,fra,TRUE,superadmin,now()
+1103,Modèle de SMS dautorisation,Modèle de SMS dautorisation,txt,,Votre authentification de UIN $uin à l'aide de $authType le $date à $time Hrs $status sur un appareil déployé par les services MOSIP.,10004,Authentification ID,auth-sms,fra,TRUE,superadmin,now()
 1107,Template for duplicate UIN Email,Template for duplicate UIN Email,txt,,"Dear $!name_eng,
 
 Your request for UIN for Registration ID: $!RID has failed because a duplicate UIN has been found against your details. Please visit your nearest Registration office or visit https://mosip.io/grievances
@@ -720,95 +720,95 @@ Si vous avez des intérêts, veuillez vous rendre au centre d’enregistrement l
 
 Merci",10003,Processeur dinscription,RPR_UIN_REAC_EMAIL,fra,TRUE,superadmin,now()
 1136,Acknowledgement SMS Template,Registration Acknowledgement Template,txt,velocity,"Dear ${FULLNAME},
-Thank you for registering with Digital Identity platform . Your registration id is ""${RID}"". The demographic details are as follows:
-1.Date:${Date}
-2.Full Name:${FULLNAME}
-3.Date of Birth:${DOB}
-4.Gender:${GENDER}
-5.Address Line 1:${ADDRESSLINE1}
-6.Address Line 2:${ADDRESSLINE2}
-7.Address Line 3:${ADDRESSLINE3}
-8.Region:${REGION}
-9.City:${CITY}
-10.Province:${PROVINCE}
-11.Postal Code:${POSTALCODE}
-12.Mobile Number:${PHONE}
-13.Email:${EMAIL}",10005,Registration,reg-sms-notification,eng,TRUE,superadmin,now()
-1136,قالب SMS شكر,نموذج شكر التسجيل,txt,velocity,"العزيز ${FULLNAME},
-شكرًا لك على التسجيل في نظام الهوية الرقمية. معرف التسجيل الخاص بك هو ""${RID}"". التفاصيل الديموغرافية هي كما يلي:
-${Date}: تاريخ.1
-${FULLNAME}: الاسم الكامل.2
-${DOB}: تاريخ الولادة.3
-${GENDER}: جنس.4
-${ADDRESSLINE1}: 1 خط عنوان.5
-${ADDRESSLINE2}: 2 خط عنوان.6
-${ADDRESSLINE3}: 3 خط عنوان.7
-${REGION}: منطقة.8
-${CITY}: مدينة.9
-${PROVINCE}: المحافظة.10
-${POSTALCODE}: الرمز البريدي.11
-${PHONE}: رقم الهاتف المحمول.12
-${EMAIL}: البريد الإلكتروني.13",10005,التسجيل,reg-sms-notification,ara,TRUE,superadmin,now()
-1136,Modèle SMS de reconnaissance,Modèle de confirmation dinscription,txt,velocity,"cher ${FULLNAME},
-Merci de vous être inscrit à la plateforme d’’identité numérique. Votre identifiant d''inscription est ""${RID}"". Les détails démographiques sont les suivants:
-1.Rendez-vous amoureux:${Date}
-2.Nom complet:${FULLNAME}
-3.Date de naissance:${DOB}
-4.Le sexe:${GENDER}
-5.Adresse Ligne 1:${ADDRESSLINE1}
-6.Adresse Ligne 2:${ADDRESSLINE2}
-7.Adresse ligne 3:${ADDRESSLINE3}
-8.Région:${REGION}
-9.Ville:${CITY}
-10.Province:${PROVINCE}
-11.code postal:${POSTALCODE}
-12.Numéro de portable:${PHONE}
-13.Email:${EMAIL}",10005,Inscription,reg-sms-notification,fra,TRUE,superadmin,now()
+Thank you for registering with Digital Identity platform . Your registration id is """"${RID}"""". The demographic details are as follows:
+1. Date: ${Date}
+2. Full Name: ${FULLNAME}
+3. Date of Birth: ${DOB}
+4. Gender: ${GENDER}
+5. Address Line 1: ${ADDRESSLINE1}
+6. Address Line 2: ${ADDRESSLINE2}
+7. Address Line 3: ${ADDRESSLINE3}
+8. Region: ${REGION}
+9. City: ${CITY}
+10. Province: ${PROVINCE}
+11. Postal Code: ${POSTALCODE}
+12. Mobile Number: ${PHONE}
+13. Email: ${EMAIL}",10005,Registration,reg-sms-notification,eng,TRUE,superadmin,now()
+1136,قالب SMS شكر,نموذج شكر التسجيل,txt,velocity,"عزيزي ${FULLNAME} ،
+شكرًا لك على التسجيل في منصة الهوية الرقمية. معرف التسجيل الخاص بك هو """" ${RID} """". التفاصيل الديموغرافية كما يلي:
+1. تاريخ : ${Date}
+2. الاسم الكامل: ${FULLNAME}
+3. تاريخ الميلاد: ${DOB}
+4. الجنس: ${GENDER}
+5. سطر العنوان 1: ${ADDRESSLINE1}
+6. سطر العنوان 2: ${ADDRESSLINE2}
+7. سطر العنوان 3: ${ADDRESSLINE3}
+8. المنطقة: ${REGION}
+9. مدينة : ${CITY}
+10. المنطقة: ${PROVINCE}
+11. الرمز البريدي: ${POSTALCODE}
+12. رقم الجوال: ${PHONE}
+13. البريد الإلكتروني : ${EMAIL}",10005,التسجيل,reg-sms-notification,ara,TRUE,superadmin,now()
+1136,Modèle SMS de reconnaissance,Modèle de confirmation dinscription,txt,velocity,"Cher ${FULLNAME},
+Merci de vous être inscrit sur la plateforme d'identité numérique. Votre identifiant d'enregistrement est """" ${RID} """". Les détails démographiques sont les suivants:
+1. Date : ${Date}
+2. Nom complet: ${FULLNAME}
+3. Date de naissance: ${DOB}
+4. Sexe: ${GENDER}
+5. Adresse ligne 1: ${ADDRESSLINE1}
+6. Adresse Ligne 2: ${ADDRESSLINE2}
+7. Adresse ligne 3: ${ADDRESSLINE3}
+8. Région: ${REGION}
+9. Ville: ${CITY}
+10. Province: ${PROVINCE}
+11. Code postal: ${POSTALCODE}
+12. Numéro de mobile: ${PHONE}
+13. Email: ${EMAIL}",10005,Inscription,reg-sms-notification,fra,TRUE,superadmin,now()
 1137,Acknowledgement Email Template,Registration Acknowledgement Template,txt,velocity,"Dear ${FULLNAME},
-Thank you for registering with Digital Identity platform . Your registration id is ""${RID}"". The demographic details are as follows:
-1.Date:${Date}
-2.Full Name:${FULLNAME}
-3.Date of Birth:${DOB}
-4.Gender:${GENDER}
-5.Address Line 1:${ADDRESSLINE1}
-6.Address Line 2:${ADDRESSLINE2}
-7.Address Line 3:${ADDRESSLINE3}
-8.Region:${REGION}
-9.City:${CITY}
-10.Province:${PROVINCE}
-11.Postal Code:${POSTALCODE}
-12.Mobile Number:${PHONE}
-13.Email:${EMAIL}",10005,Registration,reg-email-notification,eng,TRUE,superadmin,now()
-1137,نموذج البريد الإلكتروني شكرًا,نموذج شكر التسجيل,txt,velocity,"العزيز ${FULLNAME},
-شكرًا لك على التسجيل في نظام الهوية الرقمية. معرف التسجيل الخاص بك هو ""${RID}"". التفاصيل الديموغرافية هي كما يلي:
-${Date}: تاريخ.1
-${FULLNAME}: الاسم الكامل.2
-${DOB}: تاريخ الولادة.3
-${GENDER}: جنس.4
-${ADDRESSLINE1}: 1 خط عنوان.5
-${ADDRESSLINE2}: 2 خط عنوان.6
-${ADDRESSLINE3}: 3 خط عنوان.7
-${REGION}: منطقة.8
-${CITY}: مدينة.9
-${PROVINCE}: المحافظة.10
-${POSTALCODE}: الرمز البريدي.11
-${PHONE}: رقم الهاتف المحمول.12
-${EMAIL}: البريد الإلكتروني.13",10005,التسجيل,reg-email-notification,ara,TRUE,superadmin,now()
-1137,Modèle de courrier électronique daccusé de réception,Modèle de confirmation d inscription,txt,velocity,"cher ${FULLNAME},
-Merci de vous être inscrit à la plateforme d’’identité numérique. Votre identifiant d''inscription est ""${RID}"". Les détails démographiques sont les suivants:
-1.Rendez-vous amoureux:${Date}
-2.Nom complet:${FULLNAME}
-3.Date de naissance:${DOB}
-4.Le sexe:${GENDER}
-5.Adresse Ligne 1:${ADDRESSLINE1}
-6.Adresse Ligne 2:${ADDRESSLINE2}
-7.Adresse ligne 3:${ADDRESSLINE3}
-8.Région:${REGION}
-9.Ville:${CITY}
-10.Province:${PROVINCE}
-11.code postal:${POSTALCODE}
-12.Numéro de portable:${PHONE}
-13.Email:${EMAIL}",10005,Inscription,reg-email-notification,fra,TRUE,superadmin,now()
+Thank you for registering with Digital Identity platform . Your registration id is """"${RID}"""". The demographic details are as follows:
+1. Date: ${Date}
+2. Full Name: ${FULLNAME}
+3. Date of Birth: ${DOB}
+4. Gender: ${GENDER}
+5. Address Line 1: ${ADDRESSLINE1}
+6. Address Line 2: ${ADDRESSLINE2}
+7. Address Line 3: ${ADDRESSLINE3}
+8. Region: ${REGION}
+9. City: ${CITY}
+10. Province: ${PROVINCE}
+11. Postal Code: ${POSTALCODE}
+12. Mobile Number: ${PHONE}
+13. Email: ${EMAIL}",10005,Registration,reg-email-notification,eng,TRUE,superadmin,now()
+1137,نموذج البريد الإلكتروني شكرًا,نموذج شكر التسجيل,txt,velocity,"عزيزي ${FULLNAME} ،
+شكرًا لك على التسجيل في منصة الهوية الرقمية. معرف التسجيل الخاص بك هو """" ${RID} """". التفاصيل الديموغرافية كما يلي:
+1. تاريخ : ${Date}
+2. الاسم الكامل: ${FULLNAME}
+3. تاريخ الميلاد: ${DOB}
+4. الجنس: ${GENDER}
+5. سطر العنوان 1: ${ADDRESSLINE1}
+6. سطر العنوان 2: ${ADDRESSLINE2}
+7. سطر العنوان 3: ${ADDRESSLINE3}
+8. المنطقة: ${REGION}
+9. مدينة : ${CITY}
+10. المنطقة: ${PROVINCE}
+11. الرمز البريدي: ${POSTALCODE}
+12. رقم الجوال: ${PHONE}
+13. البريد الإلكتروني : ${EMAIL}",10005,التسجيل,reg-email-notification,ara,TRUE,superadmin,now()
+1137,Modèle de courrier électronique daccusé de réception,Modèle de confirmation d inscription,txt,velocity,"Cher ${FULLNAME},
+Merci de vous être inscrit sur la plateforme d'identité numérique. Votre identifiant d'enregistrement est """" ${RID} """". Les détails démographiques sont les suivants:
+1. Date : ${Date}
+2. Nom complet: ${FULLNAME}
+3. Date de naissance: ${DOB}
+4. Sexe: ${GENDER}
+5. Adresse ligne 1: ${ADDRESSLINE1}
+6. Adresse Ligne 2: ${ADDRESSLINE2}
+7. Adresse ligne 3: ${ADDRESSLINE3}
+8. Région: ${REGION}
+9. Ville: ${CITY}
+10. Province: ${PROVINCE}
+11. Code postal: ${POSTALCODE}
+12. Numéro de mobile: ${PHONE}
+13. Email: ${EMAIL}",10005,Inscription,reg-email-notification,fra,TRUE,superadmin,now()
 1138,Registration Acknowledgement Template - Part 1,Acknowledgement generated after registration - Part 1,txt,velocity,"<!DOCTYPE html><html><head><style>body{font-family:""Roboto"";}table, .head{font-size:13px;}.previewPhoto{float:right;position:absolute;top:220px;}.photo{float:right;position:absolute;top:280px;}
 .applicantPhoto{position:absolute;top:-35px;left:500px;}
 .applicantPhotoLabel{color:#808080;font-size:10px;position:absolute;white-space:nowrap;top:-70px;left:520px;}
@@ -857,19 +857,23 @@ input[type=""radio""]:checked + label:before { background-color: #FF4081; border
 </style><script>function changeColour(element) { var div = document.getElementById(""radioId""); if(element.value == ""yes""){div.style = ""border: 2px solid #68A933"";}
 if(element.value == ""no""){div.style = ""border: 2px solid #FF0000"";}}
 document.onreadystatechange = function () {if(document.readyState === ""complete""){var body = document.getElementsByTagName(""body"")[0]; body.addEventListener(""dragstart"", function(event) {event.preventDefault();}); body.addEventListener(""selectstart"", function(event) {event.preventDefault();});}}</script></head>",10005,Inscription,reg-ack-template-part1,fra,TRUE,superadmin,now()
-1139,Registration Acknowledgement Template - Part 2,Acknowledgement generated after registration - Part 2,txt,velocity,<body><div class="section"><div class="form"><table ${AckReceipt} class="${headerTable}"><tr><td class="bottom"><img src="${QRCodeSource}" width="85" height="85"/></td><td class="bottom"><p class="headings">${RIDPrimLabel} / ${RIDSecLabel}</p><br/>${RID}</td><td ${UINUpdate} class="bottom"><p class="headings">${UINPrimLabel} / ${UINSecLabel}</p><br/>${UIN}</td><td class="bottom"><p class="headings">${DatePrimLabel} / ${DateSecLabel}</p><br/>${Date}</td></tr></table><table ${Preview} class="headerTable"><tr><td ${IsPreRegIDPresent}><p class="headings">${PreRegIDPrimLabel} / ${PreRegIDSecLabel}</p><br/>${PreRegID}</td><td><p class="headings">${DatePrimLabel} / ${DateSecLabel}</p><br/>${Date}</td></tr></table><br/><hr/><p class="head"><b> ${DemographicInfo} / ${DemographicInfoSecondary} </b></p><div ${Preview} class="modify"><img src="${ModifyImageSource}" border="0" width="15" height="15"/><button id="modifyDemographicInfo">${Modify}</button></div><hr/><table class="dataTable">#foreach( $data in $demographicsdata ) #if(""!=$data.get("primaryValue"))<tr><td><p class="headings">$data.get("primaryLabel")/$data.get("secondaryLabel")</p> <br/><p> $data.get("primaryValue")/$data.get("secondaryValue")</p></td></tr> #end #end </table><br/><p ${DocumentsEnabled} class="head"><b>${DocumentsPrimLabel} / ${DocumentsSecLabel}</b></p><div ${DocumentsEnabled} ${Preview} class="modify"><img src="${ModifyImageSource}" border="0" width="15" height="15"/><button id="modifyDocuments">${Modify}</button></div><hr ${DocumentsEnabled}/><table ${DocumentsEnabled}><tr><td><br/>${Documents}<br/>${DocumentsSec}</td></tr></table><br/>,10005,Registration,reg-ack-template-part2,eng,TRUE,superadmin,now()
-1139,الإقرار المتولد بعد التسجيل - الجزء 2,الب الاعتراف بالتسجيل - الجزء 2,txt,velocity,<body><div class="section"><div class="form"><table ${AckReceipt} class="${headerTable}"><tr><td class="bottom"><img src="${QRCodeSource}" width="85" height="85"/></td><td class="bottom"><p class="headings">${RIDPrimLabel} / ${RIDSecLabel}</p><br/>${RID}</td><td ${UINUpdate} class="bottom"><p class="headings">${UINPrimLabel} / ${UINSecLabel}</p><br/>${UIN}</td><td class="bottom"><p class="headings">${DatePrimLabel} / ${DateSecLabel}</p><br/>${Date}</td></tr></table><table ${Preview} class="headerTable"><tr><td ${IsPreRegIDPresent}><p class="headings">${PreRegIDPrimLabel} / ${PreRegIDSecLabel}</p><br/>${PreRegID}</td><td><p class="headings">${DatePrimLabel} / ${DateSecLabel}</p><br/>${Date}</td></tr></table><br/><hr/><p class="head"><b> ${DemographicInfo} / ${DemographicInfoSecondary} </b></p><div ${Preview} class="modify"><img src="${ModifyImageSource}" border="0" width="15" height="15"/><button id="modifyDemographicInfo">${Modify}</button></div><hr/><table class="dataTable">#foreach( $data in $demographicsdata ) #if(""!=$data.get("primaryValue"))<tr><td><p class="headings">$data.get("primaryLabel")/$data.get("secondaryLabel")</p> <br/><p> $data.get("primaryValue")/$data.get("secondaryValue")</p></td></tr> #end #end </table><br/><p ${DocumentsEnabled} class="head"><b>${DocumentsPrimLabel} / ${DocumentsSecLabel}</b></p><div ${DocumentsEnabled} ${Preview} class="modify"><img src="${ModifyImageSource}" border="0" width="15" height="15"/><button id="modifyDocuments">${Modify}</button></div><hr ${DocumentsEnabled}/><table ${DocumentsEnabled}><tr><td><br/>${Documents}<br/>${DocumentsSec}</td></tr></table><br/>,10005,التسجيل,reg-ack-template-part2,ara,TRUE,superadmin,now()
-1139,enregistrement Modèle de remerciement - Partie 2,Accusé de réception généré après lenregistrement - Partie 2,txt,velocity,<body><div class="section"><div class="form"><table ${AckReceipt} class="${headerTable}"><tr><td class="bottom"><img src="${QRCodeSource}" width="85" height="85"/></td><td class="bottom"><p class="headings">${RIDPrimLabel} / ${RIDSecLabel}</p><br/>${RID}</td><td ${UINUpdate} class="bottom"><p class="headings">${UINPrimLabel} / ${UINSecLabel}</p><br/>${UIN}</td><td class="bottom"><p class="headings">${DatePrimLabel} / ${DateSecLabel}</p><br/>${Date}</td></tr></table><table ${Preview} class="headerTable"><tr><td ${IsPreRegIDPresent}><p class="headings">${PreRegIDPrimLabel} / ${PreRegIDSecLabel}</p><br/>${PreRegID}</td><td><p class="headings">${DatePrimLabel} / ${DateSecLabel}</p><br/>${Date}</td></tr></table><br/><hr/><p class="head"><b> ${DemographicInfo} / ${DemographicInfoSecondary} </b></p><div ${Preview} class="modify"><img src="${ModifyImageSource}" border="0" width="15" height="15"/><button id="modifyDemographicInfo">${Modify}</button></div><hr/><table class="dataTable">#foreach( $data in $demographicsdata ) #if(""!=$data.get("primaryValue"))<tr><td><p class="headings">$data.get("primaryLabel")/$data.get("secondaryLabel")</p> <br/><p> $data.get("primaryValue")/$data.get("secondaryValue")</p></td></tr> #end #end </table><br/><p ${DocumentsEnabled} class="head"><b>${DocumentsPrimLabel} / ${DocumentsSecLabel}</b></p><div ${DocumentsEnabled} ${Preview} class="modify"><img src="${ModifyImageSource}" border="0" width="15" height="15"/><button id="modifyDocuments">${Modify}</button></div><hr ${DocumentsEnabled}/><table ${DocumentsEnabled}><tr><td><br/>${Documents}<br/>${DocumentsSec}</td></tr></table><br/>,10005,Inscription,reg-ack-template-part2,fra,TRUE,superadmin,now()
-1140,Registration Acknowledgement Template - Part 3,Acknowledgement generated after registration - Part 3,txt,velocity,<p ${BiometricsEnabled} class="head"><b>${BiometricsPrimLabel} / ${BiometricsSecLabel}</b></p><div ${BiometricsEnabled} ${Preview} class="modify"><img src="${ModifyImageSource}" border="0" width="15" height="15"/><button id="modifyBiometrics">${Modify}</button></div><hr ${BiometricsEnabled}/>#foreach( $biodata in $biometricsData )<table ${BiometricsEnabled}><tr><td>$biodata.get("BiometricsFieldPrimLabel")/ $biodata.get("BiometricsFieldSecLabel")<br/><p class="headings">$biodata.get("Biometrics")<br/>$biodata.get("BiometricsSec")</p><br/></td></tr><table ${BiometricsEnabled} class="biometricsTable"><tr><td $biodata.get("leftEyeCaptured") ><p class="headings">$biodata.get("LeftEyePrimLabel") / $biodata.get("LeftEyeSecLabel")</p></td><td $biodata.get("rightEyeCaptured") ><p class="headings">$biodata.get("RightEyePrimLabel") / $biodata.get("RightEyeSecLabel")</p></td></tr><tr ${AckReceipt}><td $biodata.get("leftEyeCaptured") ><div class="biometrics"><h5 class="parentIris1">$biodata.get("LeftEye")</h5><img src=$biodata.get("EyeImageSource") border="0" width="85" height="80"/></div></td><td $biodata.get("rightEyeCaptured") ><div class="biometrics"><h5 class="parentIris1">$biodata.get("RightEye")</h5><img src=$biodata.get("EyeImageSource") border="0" width="85" height="80"/></div></td></tr><tr ${Preview}><td $biodata.get("leftEyeCaptured") ><img src=$biodata.get("CapturedLeftEye") border="0" width="85" height="80"/></td><td $biodata.get("rightEyeCaptured") ><img src=$biodata.get("CapturedRightEye") border="0" width="85" height="80"/></td></tr></table><table ${BiometricsEnabled} $biodata.get("FingerprintsCaptured") class="biometricsTable"><tr><td $biodata.get("leftSlapCaptured") ><p class="headings">$biodata.get("LeftPalmPrimLabel") /  $biodata.get("LeftPalmSecLabel")</p></td><td $biodata.get("rightSlapCaptured") ><p class="headings">$biodata.get("RightPalmPrimLabel") / $biodata.get("RightPalmSecLabel")</p></td><td $biodata.get("thumbsCaptured") ><p class="headings">$biodata.get("ThumbsPrimLabel") /  $biodata.get("ThumbsSecLabel")</p></td></tr><tr ${AckReceipt}><td $biodata.get("leftSlapCaptured") ><div class="biometrics"><h5 class="leftLittle">$biodata.get("leftLittle")</h5><h5 class="leftRing">$biodata.get("leftRing")</h5><h5 class="leftMiddle">$biodata.get("leftMiddle")</h5><h5 class="leftIndex">$biodata.get("leftIndex")</h5><img src=$biodata.get("LeftPalmImageSource") border="0" width="85" height="80"/></div></td><td $biodata.get("rightSlapCaptured") ><div class="biometrics"><h5 class="rightIndex">$biodata.get("rightIndex")</h5><h5 class="rightMiddle">$biodata.get("rightMiddle")</h5><h5 class="rightRing">$biodata.get("rightRing")</h5><h5 class="rightLittle">$biodata.get("rightLittle")</h5><img src=$biodata.get("RightPalmImageSource") border="0" width="85" height="80"/></div></td><td $biodata.get("thumbsCaptured") ><div class="biometrics"><h5 class="leftThumb">$biodata.get("leftThumb")</h5><h5 class="rightThumb">$biodata.get("rightThumb")</h5><img src=$biodata.get("ThumbsImageSource") border="0" width="85" height="80"/></div></td></tr><tr ${Preview}><td $biodata.get("leftSlapCaptured") ><img src=$biodata.get("CapturedLeftSlap") border="0" width="85" height="80"/></td><td $biodata.get("rightSlapCaptured") ><img src=$biodata.get("CapturedRightSlap") border="0" width="85" height="80"/></td><td $biodata.get("thumbsCaptured") ><img src=$biodata.get("CapturedThumbs") border="0" width="85" height="80"/></td></tr></table>,10005,Registration,reg-ack-template-part3,eng,TRUE,superadmin,now()
-1140,إقرار تم إنشاؤه بعد التسجيل - الجزء 3,قالب الاعتراف بالتسجيل - الجزء 3,txt,velocity,<p ${BiometricsEnabled} class="head"><b>${BiometricsPrimLabel} / ${BiometricsSecLabel}</b></p><div ${BiometricsEnabled} ${Preview} class="modify"><img src="${ModifyImageSource}" border="0" width="15" height="15"/><button id="modifyBiometrics">${Modify}</button></div><hr ${BiometricsEnabled}/>#foreach( $biodata in $biometricsData )<table ${BiometricsEnabled}><tr><td>$biodata.get("BiometricsFieldPrimLabel")/ $biodata.get("BiometricsFieldSecLabel")<br/><p class="headings">$biodata.get("Biometrics")<br/>$biodata.get("BiometricsSec")</p><br/></td></tr><table ${BiometricsEnabled} class="biometricsTable"><tr><td $biodata.get("leftEyeCaptured") ><p class="headings">$biodata.get("LeftEyePrimLabel") / $biodata.get("LeftEyeSecLabel")</p></td><td $biodata.get("rightEyeCaptured") ><p class="headings">$biodata.get("RightEyePrimLabel") / $biodata.get("RightEyeSecLabel")</p></td></tr><tr ${AckReceipt}><td $biodata.get("leftEyeCaptured") ><div class="biometrics"><h5 class="parentIris1">$biodata.get("LeftEye")</h5><img src=$biodata.get("EyeImageSource") border="0" width="85" height="80"/></div></td><td $biodata.get("rightEyeCaptured") ><div class="biometrics"><h5 class="parentIris1">$biodata.get("RightEye")</h5><img src=$biodata.get("EyeImageSource") border="0" width="85" height="80"/></div></td></tr><tr ${Preview}><td $biodata.get("leftEyeCaptured") ><img src=$biodata.get("CapturedLeftEye") border="0" width="85" height="80"/></td><td $biodata.get("rightEyeCaptured") ><img src=$biodata.get("CapturedRightEye") border="0" width="85" height="80"/></td></tr></table><table ${BiometricsEnabled} $biodata.get("FingerprintsCaptured") class="biometricsTable"><tr><td $biodata.get("leftSlapCaptured") ><p class="headings">$biodata.get("LeftPalmPrimLabel") /  $biodata.get("LeftPalmSecLabel")</p></td><td $biodata.get("rightSlapCaptured") ><p class="headings">$biodata.get("RightPalmPrimLabel") / $biodata.get("RightPalmSecLabel")</p></td><td $biodata.get("thumbsCaptured") ><p class="headings">$biodata.get("ThumbsPrimLabel") /  $biodata.get("ThumbsSecLabel")</p></td></tr><tr ${AckReceipt}><td $biodata.get("leftSlapCaptured") ><div class="biometrics"><h5 class="leftLittle">$biodata.get("leftLittle")</h5><h5 class="leftRing">$biodata.get("leftRing")</h5><h5 class="leftMiddle">$biodata.get("leftMiddle")</h5><h5 class="leftIndex">$biodata.get("leftIndex")</h5><img src=$biodata.get("LeftPalmImageSource") border="0" width="85" height="80"/></div></td><td $biodata.get("rightSlapCaptured") ><div class="biometrics"><h5 class="rightIndex">$biodata.get("rightIndex")</h5><h5 class="rightMiddle">$biodata.get("rightMiddle")</h5><h5 class="rightRing">$biodata.get("rightRing")</h5><h5 class="rightLittle">$biodata.get("rightLittle")</h5><img src=$biodata.get("RightPalmImageSource") border="0" width="85" height="80"/></div></td><td $biodata.get("thumbsCaptured") ><div class="biometrics"><h5 class="leftThumb">$biodata.get("leftThumb")</h5><h5 class="rightThumb">$biodata.get("rightThumb")</h5><img src=$biodata.get("ThumbsImageSource") border="0" width="85" height="80"/></div></td></tr><tr ${Preview}><td $biodata.get("leftSlapCaptured") ><img src=$biodata.get("CapturedLeftSlap") border="0" width="85" height="80"/></td><td $biodata.get("rightSlapCaptured") ><img src=$biodata.get("CapturedRightSlap") border="0" width="85" height="80"/></td><td $biodata.get("thumbsCaptured") ><img src=$biodata.get("CapturedThumbs") border="0" width="85" height="80"/></td></tr></table>,10005,التسجيل,reg-ack-template-part3,ara,TRUE,superadmin,now()
-1140,enregistrement Modèle de remerciement - Partie 3,Accusé de réception généré après lenregistrement - Partie 3,txt,velocity,<p ${BiometricsEnabled} class="head"><b>${BiometricsPrimLabel} / ${BiometricsSecLabel}</b></p><div ${BiometricsEnabled} ${Preview} class="modify"><img src="${ModifyImageSource}" border="0" width="15" height="15"/><button id="modifyBiometrics">${Modify}</button></div><hr ${BiometricsEnabled}/>#foreach( $biodata in $biometricsData )<table ${BiometricsEnabled}><tr><td>$biodata.get("BiometricsFieldPrimLabel")/ $biodata.get("BiometricsFieldSecLabel")<br/><p class="headings">$biodata.get("Biometrics")<br/>$biodata.get("BiometricsSec")</p><br/></td></tr><table ${BiometricsEnabled} class="biometricsTable"><tr><td $biodata.get("leftEyeCaptured") ><p class="headings">$biodata.get("LeftEyePrimLabel") / $biodata.get("LeftEyeSecLabel")</p></td><td $biodata.get("rightEyeCaptured") ><p class="headings">$biodata.get("RightEyePrimLabel") / $biodata.get("RightEyeSecLabel")</p></td></tr><tr ${AckReceipt}><td $biodata.get("leftEyeCaptured") ><div class="biometrics"><h5 class="parentIris1">$biodata.get("LeftEye")</h5><img src=$biodata.get("EyeImageSource") border="0" width="85" height="80"/></div></td><td $biodata.get("rightEyeCaptured") ><div class="biometrics"><h5 class="parentIris1">$biodata.get("RightEye")</h5><img src=$biodata.get("EyeImageSource") border="0" width="85" height="80"/></div></td></tr><tr ${Preview}><td $biodata.get("leftEyeCaptured") ><img src=$biodata.get("CapturedLeftEye") border="0" width="85" height="80"/></td><td $biodata.get("rightEyeCaptured") ><img src=$biodata.get("CapturedRightEye") border="0" width="85" height="80"/></td></tr></table><table ${BiometricsEnabled} $biodata.get("FingerprintsCaptured") class="biometricsTable"><tr><td $biodata.get("leftSlapCaptured") ><p class="headings">$biodata.get("LeftPalmPrimLabel") /  $biodata.get("LeftPalmSecLabel")</p></td><td $biodata.get("rightSlapCaptured") ><p class="headings">$biodata.get("RightPalmPrimLabel") / $biodata.get("RightPalmSecLabel")</p></td><td $biodata.get("thumbsCaptured") ><p class="headings">$biodata.get("ThumbsPrimLabel") /  $biodata.get("ThumbsSecLabel")</p></td></tr><tr ${AckReceipt}><td $biodata.get("leftSlapCaptured") ><div class="biometrics"><h5 class="leftLittle">$biodata.get("leftLittle")</h5><h5 class="leftRing">$biodata.get("leftRing")</h5><h5 class="leftMiddle">$biodata.get("leftMiddle")</h5><h5 class="leftIndex">$biodata.get("leftIndex")</h5><img src=$biodata.get("LeftPalmImageSource") border="0" width="85" height="80"/></div></td><td $biodata.get("rightSlapCaptured") ><div class="biometrics"><h5 class="rightIndex">$biodata.get("rightIndex")</h5><h5 class="rightMiddle">$biodata.get("rightMiddle")</h5><h5 class="rightRing">$biodata.get("rightRing")</h5><h5 class="rightLittle">$biodata.get("rightLittle")</h5><img src=$biodata.get("RightPalmImageSource") border="0" width="85" height="80"/></div></td><td $biodata.get("thumbsCaptured") ><div class="biometrics"><h5 class="leftThumb">$biodata.get("leftThumb")</h5><h5 class="rightThumb">$biodata.get("rightThumb")</h5><img src=$biodata.get("ThumbsImageSource") border="0" width="85" height="80"/></div></td></tr><tr ${Preview}><td $biodata.get("leftSlapCaptured") ><img src=$biodata.get("CapturedLeftSlap") border="0" width="85" height="80"/></td><td $biodata.get("rightSlapCaptured") ><img src=$biodata.get("CapturedRightSlap") border="0" width="85" height="80"/></td><td $biodata.get("thumbsCaptured") ><img src=$biodata.get("CapturedThumbs") border="0" width="85" height="80"/></td></tr></table>,10005,Inscription,reg-ack-template-part3,fra,TRUE,superadmin,now()
+1139,Registration Acknowledgement Template - Part 2,Acknowledgement generated after registration - Part 2,txt,velocity,"<body><div class=""section""><div class=""form""><table ${AckReceipt} class=""${headerTable}""><tr><td class=""bottom""><img src=""${QRCodeSource}"" width=""85"" height=""85""/></td><td class=""bottom""><p class=""headings"">${RIDPrimLabel} / ${RIDSecLabel}</p><br/>${RID}</td><td ${UINUpdate} class=""bottom""><p class=""headings"">${UINPrimLabel} / ${UINSecLabel}</p><br/>${UIN}</td><td class=""bottom""><p class=""headings"">${DatePrimLabel} / ${DateSecLabel}</p><br/>${Date}</td></tr></table><table ${Preview} class=""headerTable""><tr><td ${IsPreRegIDPresent}><p class=""headings"">${PreRegIDPrimLabel} / ${PreRegIDSecLabel}</p><br/>${PreRegID}</td><td><p class=""headings"">${DatePrimLabel} / ${DateSecLabel}</p><br/>${Date}</td></tr></table><br/><hr/><p class=""head""><b> ${DemographicInfo} / ${DemographicInfoSecondary} </b></p><div ${Preview} class=""modify""><img src=""${ModifyImageSource}"" border=""0"" width=""15"" height=""15""/><button id=""modifyDemographicInfo"">${Modify}</button></div><hr/><table class=""dataTable"">#foreach( $data in $demographicsdata ) #if(""""!=$data.get(""primaryValue""))<tr><td><p class=""headings"">$data.get(""primaryLabel"")/$data.get(""secondaryLabel"")</p> <br/><p> $data.get(""primaryValue"")/$data.get(""secondaryValue"")</p></td></tr> #end #end </table><br/><p ${DocumentsEnabled} class=""head""><b>${DocumentsPrimLabel} / ${DocumentsSecLabel}</b></p><div ${DocumentsEnabled} ${Preview} class=""modify""><img src=""${ModifyImageSource}"" border=""0"" width=""15"" height=""15""/><button id=""modifyDocuments"">${Modify}</button></div><hr ${DocumentsEnabled}/><table ${DocumentsEnabled}><tr><td><br/>${Documents}<br/>${DocumentsSec}</td></tr></table><br/>",10005,Registration,reg-ack-template-part2,eng,TRUE,superadmin,now()
+1139,الإقرار المتولد بعد التسجيل - الجزء 2,الب الاعتراف بالتسجيل - الجزء 2,txt,velocity,"<body><div class=""section""><div class=""form""><table ${AckReceipt} class=""${headerTable}""><tr><td class=""bottom""><img src=""${QRCodeSource}"" width=""85"" height=""85""/></td><td class=""bottom""><p class=""headings"">${RIDPrimLabel} / ${RIDSecLabel}</p><br/>${RID}</td><td ${UINUpdate} class=""bottom""><p class=""headings"">${UINPrimLabel} / ${UINSecLabel}</p><br/>${UIN}</td><td class=""bottom""><p class=""headings"">${DatePrimLabel} / ${DateSecLabel}</p><br/>${Date}</td></tr></table><table ${Preview} class=""headerTable""><tr><td ${IsPreRegIDPresent}><p class=""headings"">${PreRegIDPrimLabel} / ${PreRegIDSecLabel}</p><br/>${PreRegID}</td><td><p class=""headings"">${DatePrimLabel} / ${DateSecLabel}</p><br/>${Date}</td></tr></table><br/><hr/><p class=""head""><b> ${DemographicInfo} / ${DemographicInfoSecondary} </b></p><div ${Preview} class=""modify""><img src=""${ModifyImageSource}"" border=""0"" width=""15"" height=""15""/><button id=""modifyDemographicInfo"">${Modify}</button></div><hr/><table class=""dataTable"">#foreach( $data in $demographicsdata ) #if(""""!=$data.get(""primaryValue""))<tr><td><p class=""headings"">$data.get(""primaryLabel"")/$data.get(""secondaryLabel"")</p> <br/><p> $data.get(""primaryValue"")/$data.get(""secondaryValue"")</p></td></tr> #end #end </table><br/><p ${DocumentsEnabled} class=""head""><b>${DocumentsPrimLabel} / ${DocumentsSecLabel}</b></p><div ${DocumentsEnabled} ${Preview} class=""modify""><img src=""${ModifyImageSource}"" border=""0"" width=""15"" height=""15""/><button id=""modifyDocuments"">${Modify}</button></div><hr ${DocumentsEnabled}/><table ${DocumentsEnabled}><tr><td><br/>${Documents}<br/>${DocumentsSec}</td></tr></table><br/>",10005,التسجيل,reg-ack-template-part2,ara,TRUE,superadmin,now()
+1139,enregistrement Modèle de remerciement - Partie 2,Accusé de réception généré après lenregistrement - Partie 2,txt,velocity,"<body><div class=""section""><div class=""form""><table ${AckReceipt} class=""${headerTable}""><tr><td class=""bottom""><img src=""${QRCodeSource}"" width=""85"" height=""85""/></td><td class=""bottom""><p class=""headings"">${RIDPrimLabel} / ${RIDSecLabel}</p><br/>${RID}</td><td ${UINUpdate} class=""bottom""><p class=""headings"">${UINPrimLabel} / ${UINSecLabel}</p><br/>${UIN}</td><td class=""bottom""><p class=""headings"">${DatePrimLabel} / ${DateSecLabel}</p><br/>${Date}</td></tr></table><table ${Preview} class=""headerTable""><tr><td ${IsPreRegIDPresent}><p class=""headings"">${PreRegIDPrimLabel} / ${PreRegIDSecLabel}</p><br/>${PreRegID}</td><td><p class=""headings"">${DatePrimLabel} / ${DateSecLabel}</p><br/>${Date}</td></tr></table><br/><hr/><p class=""head""><b> ${DemographicInfo} / ${DemographicInfoSecondary} </b></p><div ${Preview} class=""modify""><img src=""${ModifyImageSource}"" border=""0"" width=""15"" height=""15""/><button id=""modifyDemographicInfo"">${Modify}</button></div><hr/><table class=""dataTable"">#foreach( $data in $demographicsdata ) #if(""""!=$data.get(""primaryValue""))<tr><td><p class=""headings"">$data.get(""primaryLabel"")/$data.get(""secondaryLabel"")</p> <br/><p> $data.get(""primaryValue"")/$data.get(""secondaryValue"")</p></td></tr> #end #end </table><br/><p ${DocumentsEnabled} class=""head""><b>${DocumentsPrimLabel} / ${DocumentsSecLabel}</b></p><div ${DocumentsEnabled} ${Preview} class=""modify""><img src=""${ModifyImageSource}"" border=""0"" width=""15"" height=""15""/><button id=""modifyDocuments"">${Modify}</button></div><hr ${DocumentsEnabled}/><table ${DocumentsEnabled}><tr><td><br/>${Documents}<br/>${DocumentsSec}</td></tr></table><br/>",10005,Inscription,reg-ack-template-part2,fra,TRUE,superadmin,now()
+1140,Registration Acknowledgement Template - Part 3,Acknowledgement generated after registration - Part 3,txt,velocity,"<p ${BiometricsEnabled} class=""head""><b>${BiometricsPrimLabel} / ${BiometricsSecLabel}</b></p><div ${BiometricsEnabled} ${Preview} class=""modify""><img src=""${ModifyImageSource}"" border=""0"" width=""15"" height=""15""/><button id=""modifyBiometrics"">${Modify}</button></div><hr ${BiometricsEnabled}/>#foreach( $biodata in $biometricsData )<table ${BiometricsEnabled}><tr><td>$biodata.get(""BiometricsFieldPrimLabel"")/ $biodata.get(""BiometricsFieldSecLabel"")<br/><p class=""headings"">$biodata.get(""Biometrics"")<br/>$biodata.get(""BiometricsSec"")</p><br/></td></tr><table ${BiometricsEnabled} class=""biometricsTable""><tr><td $biodata.get(""leftEyeCaptured"") ><p class=""headings"">$biodata.get(""LeftEyePrimLabel"") / $biodata.get(""LeftEyeSecLabel"")</p></td><td $biodata.get(""rightEyeCaptured"") ><p class=""headings"">$biodata.get(""RightEyePrimLabel"") / $biodata.get(""RightEyeSecLabel"")</p></td></tr><tr ${AckReceipt}><td $biodata.get(""leftEyeCaptured"") ><div class=""biometrics""><h5 class=""parentIris1"">$biodata.get(""LeftEye"")</h5><img src=$biodata.get(""EyeImageSource"") border=""0"" width=""85"" height=""80""/></div></td><td $biodata.get(""rightEyeCaptured"") ><div class=""biometrics""><h5 class=""parentIris1"">$biodata.get(""RightEye"")</h5><img src=$biodata.get(""EyeImageSource"") border=""0"" width=""85"" height=""80""/></div></td></tr><tr ${Preview}><td $biodata.get(""leftEyeCaptured"") ><img src=$biodata.get(""CapturedLeftEye"") border=""0"" width=""85"" height=""80""/></td><td $biodata.get(""rightEyeCaptured"") ><img src=$biodata.get(""CapturedRightEye"") border=""0"" width=""85"" height=""80""/></td></tr></table><table ${BiometricsEnabled} $biodata.get(""FingerprintsCaptured"") class=""biometricsTable""><tr><td $biodata.get(""leftSlapCaptured"") ><p class=""headings"">$biodata.get(""LeftPalmPrimLabel"") /  $biodata.get(""LeftPalmSecLabel"")</p></td><td $biodata.get(""rightSlapCaptured"") ><p class=""headings"">$biodata.get(""RightPalmPrimLabel"") / $biodata.get(""RightPalmSecLabel"")</p></td><td $biodata.get(""thumbsCaptured"") ><p class=""headings"">$biodata.get(""ThumbsPrimLabel"") /  $biodata.get(""ThumbsSecLabel"")</p></td></tr><tr ${AckReceipt}><td $biodata.get(""leftSlapCaptured"") ><div class=""biometrics""><h5 class=""leftLittle"">$biodata.get(""leftLittle"")</h5><h5 class=""leftRing"">$biodata.get(""leftRing"")</h5><h5 class=""leftMiddle"">$biodata.get(""leftMiddle"")</h5><h5 class=""leftIndex"">$biodata.get(""leftIndex"")</h5><img src=$biodata.get(""LeftPalmImageSource"") border=""0"" width=""85"" height=""80""/></div></td><td $biodata.get(""rightSlapCaptured"") ><div class=""biometrics""><h5 class=""rightIndex"">$biodata.get(""rightIndex"")</h5><h5 class=""rightMiddle"">$biodata.get(""rightMiddle"")</h5><h5 class=""rightRing"">$biodata.get(""rightRing"")</h5><h5 class=""rightLittle"">$biodata.get(""rightLittle"")</h5><img src=$biodata.get(""RightPalmImageSource"") border=""0"" width=""85"" height=""80""/></div></td><td $biodata.get(""thumbsCaptured"") ><div class=""biometrics""><h5 class=""leftThumb"">$biodata.get(""leftThumb"")</h5><h5 class=""rightThumb"">$biodata.get(""rightThumb"")</h5><img src=$biodata.get(""ThumbsImageSource"") border=""0"" width=""85"" height=""80""/></div></td></tr><tr ${Preview}><td $biodata.get(""leftSlapCaptured"") ><img src=$biodata.get(""CapturedLeftSlap"") border=""0"" width=""85"" height=""80""/></td><td $biodata.get(""rightSlapCaptured"") ><img src=$biodata.get(""CapturedRightSlap"") border=""0"" width=""85"" height=""80""/></td><td $biodata.get(""thumbsCaptured"") ><img src=$biodata.get(""CapturedThumbs"") border=""0"" width=""85"" height=""80""/></td></tr></table>",10005,Registration,reg-ack-template-part3,eng,TRUE,superadmin,now()
+1140,إقرار تم إنشاؤه بعد التسجيل - الجزء 3,قالب الاعتراف بالتسجيل - الجزء 3,txt,velocity,"<table ${IrisEnabled} ${WithException} class=""biometricsTable""><tr ${AckReceipt}><td><p class=""headings"">${ExceptionPhotoPrimLabel} / ${ExceptionPhotoSecLabel}</p></td><td ${parentLeftEye}><p class=""headings"">${LeftEyePrimLabel} / ${LeftEyeSecLabel}</p></td><td ${parentRightEye}><p class=""headings"">${RightEyePrimLabel} / ${RightEyeSecLabel}</p></td></tr><tr ${Preview}><td><p class=""headings"">${ExceptionPhotoPrimLabel} / ${ExceptionPhotoSecLabel}</p></td><td ${leftEyeCaptured}><p class=""headings"">${LeftEyePrimLabel} / ${LeftEyeSecLabel}</p></td><td ${rightEyeCaptured}><p class=""headings"">${RightEyePrimLabel} / ${RightEyeSecLabel}</p></td></tr><tr ${AckReceipt}><td><img src=""${ExceptionImageSource}"" border=""0"" width=""80"" height=""80""/></td><td ${parentLeftEye}><div class=""biometrics""><h5 class=""${irisWithException}"">${LeftEye}</h5><img src=""${EyeImageSource}"" border=""0"" width=""85"" height=""80""/></div></td><td ${parentRightEye}><div class=""biometrics""><h5 class=""${irisWithException}"">${RightEye}</h5><img src=""${EyeImageSource}"" border=""0"" width=""85"" height=""80""/></div></td>
+</tr><tr ${Preview}><td><img src=""${ExceptionImageSource}"" border=""0"" width=""80"" height=""80""/></td><td ${leftEyeCaptured}><img src=""${CapturedLeftEye}"" border=""0"" width=""85"" height=""80""/></td><td ${rightEyeCaptured}><img src=""${CapturedRightEye}"" border=""0"" width=""85"" height=""80""/></td></tr></table>
+<table ${IrisEnabled} class=""tableWithoutException"" ${WithoutException}><tr ${AckReceipt}><td ${parentLeftEye}><p class=""headings"">${LeftEyePrimLabel} / ${LeftEyeSecLabel}</p></td><td ${parentRightEye}><p class=""headings"">${RightEyePrimLabel} / ${RightEyeSecLabel}</p></td></tr><tr ${Preview}><td ${leftEyeCaptured}><p class=""headings"">${LeftEyePrimLabel} / ${LeftEyeSecLabel}</p></td><td ${rightEyeCaptured}><p class=""headings"">${RightEyePrimLabel} / ${RightEyeSecLabel}</p></td></tr><tr ${AckReceipt}><td ${parentLeftEye}><div class=""biometrics""><h5 class=""${irisStyle}"">${LeftEye}</h5><img src=""${EyeImageSource}"" border=""0"" width=""85"" height=""80""/></div></td><td ${parentRightEye}><div class=""biometrics""><h5 class=""${irisStyle}"">${RightEye}</h5><img src=""${EyeImageSource}"" border=""0"" width=""85"" height=""80""/></div></td></tr><tr ${Preview}><td ${leftEyeCaptured}><img src=""${CapturedLeftEye}"" border=""0"" width=""85"" height=""80""/></td><td ${rightEyeCaptured}><img src=""${CapturedRightEye}"" border=""0"" width=""85"" height=""80""/></td></tr></table>
+<table ${FingerprintsCaptured} class=""biometricsTable""><tr ${AckReceipt}><td ${parentLeftSlap}><p class=""headings"">${LeftPalmPrimLabel} / ${LeftPalmSecLabel}</p></td><td ${parentRightSlap}><p class=""headings"">${RightPalmPrimLabel} / ${RightPalmSecLabel}</p></td><td ${parentThumbs}><p class=""headings"">${ThumbsPrimLabel} / ${ThumbsSecLabel}</p></td></tr><tr ${Preview}><td ${leftSlapCaptured}><p class=""headings"">${LeftPalmPrimLabel} / ${LeftPalmSecLabel}</p></td><td ${rightSlapCaptured}><p class=""headings"">${RightPalmPrimLabel} / ${RightPalmSecLabel}</p></td><td ${thumbsCaptured}><p class=""headings"">${ThumbsPrimLabel} / ${ThumbsSecLabel}</p></td></tr><tr ${AckReceipt}><td ${parentLeftSlap}><div class=""biometrics""><h5 ${isChild} class=""leftLittle"">${leftLittle}</h5><h5 ${isChild} class=""leftRing"">${leftRing}</h5><h5 ${isChild} class=""leftMiddle"">${leftMiddle}</h5><h5 class=""${childLeft}"">${leftIndex}</h5><img src=""${LeftPalmImageSource}"" border=""0"" width=""85"" height=""80""/></div></td><td ${parentRightSlap}><div class=""biometrics""><h5 ${isChild} class=""rightIndex"">${rightIndex}</h5><h5 ${isChild} class=""rightMiddle"">${rightMiddle}</h5><h5 ${isChild} class=""rightRing"">${rightRing}</h5><h5 class=""${childRight}"">${rightLittle}</h5><img src=""${RightPalmImageSource}"" border=""0"" width=""85"" height=""80""/></div></td><td ${parentThumbs}><div class=""biometrics""><h5 ${isChild} class=""leftThumb"">${leftThumb}</h5><h5 class=""${childThumbs}"">${rightThumb}</h5><img src=""${ThumbsImageSource}"" border=""0"" width=""85"" height=""80""/></div></td></tr>",10005,التسجيل,reg-ack-template-part3,ara,TRUE,superadmin,now()
+1140,enregistrement Modèle de remerciement - Partie 3,Accusé de réception généré après lenregistrement - Partie 3,txt,velocity,"<p ${BiometricsEnabled} class=""head""><b>${BiometricsPrimLabel} / ${BiometricsSecLabel}</b></p><div ${BiometricsEnabled} ${Preview} class=""modify""><img src=""${ModifyImageSource}"" border=""0"" width=""15"" height=""15""/><button id=""modifyBiometrics"">${Modify}</button></div><hr ${BiometricsEnabled}/>#foreach( $biodata in $biometricsData )<table ${BiometricsEnabled}><tr><td>$biodata.get(""BiometricsFieldPrimLabel"")/ $biodata.get(""BiometricsFieldSecLabel"")<br/><p class=""headings"">$biodata.get(""Biometrics"")<br/>$biodata.get(""BiometricsSec"")</p><br/></td></tr><table ${BiometricsEnabled} class=""biometricsTable""><tr><td $biodata.get(""leftEyeCaptured"") ><p class=""headings"">$biodata.get(""LeftEyePrimLabel"") / $biodata.get(""LeftEyeSecLabel"")</p></td><td $biodata.get(""rightEyeCaptured"") ><p class=""headings"">$biodata.get(""RightEyePrimLabel"") / $biodata.get(""RightEyeSecLabel"")</p></td></tr><tr ${AckReceipt}><td $biodata.get(""leftEyeCaptured"") ><div class=""biometrics""><h5 class=""parentIris1"">$biodata.get(""LeftEye"")</h5><img src=$biodata.get(""EyeImageSource"") border=""0"" width=""85"" height=""80""/></div></td><td $biodata.get(""rightEyeCaptured"") ><div class=""biometrics""><h5 class=""parentIris1"">$biodata.get(""RightEye"")</h5><img src=$biodata.get(""EyeImageSource"") border=""0"" width=""85"" height=""80""/></div></td></tr><tr ${Preview}><td $biodata.get(""leftEyeCaptured"") ><img src=$biodata.get(""CapturedLeftEye"") border=""0"" width=""85"" height=""80""/></td><td $biodata.get(""rightEyeCaptured"") ><img src=$biodata.get(""CapturedRightEye"") border=""0"" width=""85"" height=""80""/></td></tr></table><table ${BiometricsEnabled} $biodata.get(""FingerprintsCaptured"") class=""biometricsTable""><tr><td $biodata.get(""leftSlapCaptured"") ><p class=""headings"">$biodata.get(""LeftPalmPrimLabel"") /  $biodata.get(""LeftPalmSecLabel"")</p></td><td $biodata.get(""rightSlapCaptured"") ><p class=""headings"">$biodata.get(""RightPalmPrimLabel"") / $biodata.get(""RightPalmSecLabel"")</p></td><td $biodata.get(""thumbsCaptured"") ><p class=""headings"">$biodata.get(""ThumbsPrimLabel"") /  $biodata.get(""ThumbsSecLabel"")</p></td></tr><tr ${AckReceipt}><td $biodata.get(""leftSlapCaptured"") ><div class=""biometrics""><h5 class=""leftLittle"">$biodata.get(""leftLittle"")</h5><h5 class=""leftRing"">$biodata.get(""leftRing"")</h5><h5 class=""leftMiddle"">$biodata.get(""leftMiddle"")</h5><h5 class=""leftIndex"">$biodata.get(""leftIndex"")</h5><img src=$biodata.get(""LeftPalmImageSource"") border=""0"" width=""85"" height=""80""/></div></td><td $biodata.get(""rightSlapCaptured"") ><div class=""biometrics""><h5 class=""rightIndex"">$biodata.get(""rightIndex"")</h5><h5 class=""rightMiddle"">$biodata.get(""rightMiddle"")</h5><h5 class=""rightRing"">$biodata.get(""rightRing"")</h5><h5 class=""rightLittle"">$biodata.get(""rightLittle"")</h5><img src=$biodata.get(""RightPalmImageSource"") border=""0"" width=""85"" height=""80""/></div></td><td $biodata.get(""thumbsCaptured"") ><div class=""biometrics""><h5 class=""leftThumb"">$biodata.get(""leftThumb"")</h5><h5 class=""rightThumb"">$biodata.get(""rightThumb"")</h5><img src=$biodata.get(""ThumbsImageSource"") border=""0"" width=""85"" height=""80""/></div></td></tr><tr ${Preview}><td $biodata.get(""leftSlapCaptured"") ><img src=$biodata.get(""CapturedLeftSlap"") border=""0"" width=""85"" height=""80""/></td><td $biodata.get(""rightSlapCaptured"") ><img src=$biodata.get(""CapturedRightSlap"") border=""0"" width=""85"" height=""80""/></td><td $biodata.get(""thumbsCaptured"") ><img src=$biodata.get(""CapturedThumbs"") border=""0"" width=""85"" height=""80""/></td></tr></table>,10005,التسجيل,reg-ack-template-part3,ara,TRUE,superadmin,now()
+1140,enregistrement Modèle de remerciement - Partie 3,Accusé de réception généré après lenregistrement - Partie 3,txt,velocity,<p ${BiometricsEnabled} class=""head""><b>${BiometricsPrimLabel} / ${BiometricsSecLabel}</b></p><div ${BiometricsEnabled} ${Preview} class=""modify""><img src=""${ModifyImageSource}"" border=""0"" width=""15"" height=""15""/><button id=""modifyBiometrics"">${Modify}</button></div><hr ${BiometricsEnabled}/>#foreach( $biodata in $biometricsData )<table ${BiometricsEnabled}><tr><td>$biodata.get(""BiometricsFieldPrimLabel"")/ $biodata.get(""BiometricsFieldSecLabel"")<br/><p class=""headings"">$biodata.get(""Biometrics"")<br/>$biodata.get(""BiometricsSec"")</p><br/></td></tr><table ${BiometricsEnabled} class=""biometricsTable""><tr><td $biodata.get(""leftEyeCaptured"") ><p class=""headings"">$biodata.get(""LeftEyePrimLabel"") / $biodata.get(""LeftEyeSecLabel"")</p></td><td $biodata.get(""rightEyeCaptured"") ><p class=""headings"">$biodata.get(""RightEyePrimLabel"") / $biodata.get(""RightEyeSecLabel"")</p></td></tr><tr ${AckReceipt}><td $biodata.get(""leftEyeCaptured"") ><div class=""biometrics""><h5 class=""parentIris1"">$biodata.get(""LeftEye"")</h5><img src=$biodata.get(""EyeImageSource"") border=""0"" width=""85"" height=""80""/></div></td><td $biodata.get(""rightEyeCaptured"") ><div class=""biometrics""><h5 class=""parentIris1"">$biodata.get(""RightEye"")</h5><img src=$biodata.get(""EyeImageSource"") border=""0"" width=""85"" height=""80""/></div></td></tr><tr ${Preview}><td $biodata.get(""leftEyeCaptured"") ><img src=$biodata.get(""CapturedLeftEye"") border=""0"" width=""85"" height=""80""/></td><td $biodata.get(""rightEyeCaptured"") ><img src=$biodata.get(""CapturedRightEye"") border=""0"" width=""85"" height=""80""/></td></tr></table><table ${BiometricsEnabled} $biodata.get(""FingerprintsCaptured"") class=""biometricsTable""><tr><td $biodata.get(""leftSlapCaptured"") ><p class=""headings"">$biodata.get(""LeftPalmPrimLabel"") /  $biodata.get(""LeftPalmSecLabel"")</p></td><td $biodata.get(""rightSlapCaptured"") ><p class=""headings"">$biodata.get(""RightPalmPrimLabel"") / $biodata.get(""RightPalmSecLabel"")</p></td><td $biodata.get(""thumbsCaptured"") ><p class=""headings"">$biodata.get(""ThumbsPrimLabel"") /  $biodata.get(""ThumbsSecLabel"")</p></td></tr><tr ${AckReceipt}><td $biodata.get(""leftSlapCaptured"") ><div class=""biometrics""><h5 class=""leftLittle"">$biodata.get(""leftLittle"")</h5><h5 class=""leftRing"">$biodata.get(""leftRing"")</h5><h5 class=""leftMiddle"">$biodata.get(""leftMiddle"")</h5><h5 class=""leftIndex"">$biodata.get(""leftIndex"")</h5><img src=$biodata.get(""LeftPalmImageSource"") border=""0"" width=""85"" height=""80""/></div></td><td $biodata.get(""rightSlapCaptured"") ><div class=""biometrics""><h5 class=""rightIndex"">$biodata.get(""rightIndex"")</h5><h5 class=""rightMiddle"">$biodata.get(""rightMiddle"")</h5><h5 class=""rightRing"">$biodata.get(""rightRing"")</h5><h5 class=""rightLittle"">$biodata.get(""rightLittle"")</h5><img src=$biodata.get(""RightPalmImageSource"") border=""0"" width=""85"" height=""80""/></div></td><td $biodata.get(""thumbsCaptured"") ><div class=""biometrics""><h5 class=""leftThumb"">$biodata.get(""leftThumb"")</h5><h5 class=""rightThumb"">$biodata.get(""rightThumb"")</h5><img src=$biodata.get(""ThumbsImageSource"") border=""0"" width=""85"" height=""80""/></div></td></tr><tr ${Preview}><td $biodata.get(""leftSlapCaptured"") ><img src=$biodata.get(""CapturedLeftSlap"") border=""0"" width=""85"" height=""80""/></td><td $biodata.get(""rightSlapCaptured"") ><img src=$biodata.get(""CapturedRightSlap"") border=""0"" width=""85"" height=""80""/></td><td $biodata.get(""thumbsCaptured"") ><img src=$biodata.get(""CapturedThumbs"") border=""0"" width=""85"" height=""80""/></td></tr></table>",10005,Inscription,reg-ack-template-part3,fra,TRUE,superadmin,now()
 preregistration,otp service,OTP Send Service,txt,string,Please find the OTP $otp,10001,Pre-Registration,otp-sms-template,eng ,TRUE,superadmin,now()
 ida,otp service,OTP Send Service,txt,string,Please find the OTP $otp,10002,login,otp-sms-template,eng ,TRUE,superadmin,now()
 registrationprocessor,otp service,OTP Send Service,txt,string,Please find the OTP $!otp,10003,login,otp-sms-template,eng ,TRUE,superadmin,now()
 registrationclient,otp service,OTP Send Service,txt,string,Please find the OTP $otp,10004,ID Authentication,otp-sms-template,eng ,TRUE,superadmin,now()
-1141,Registration Acknowledgement Template - Part 4,Acknowledgement generated after registration - Part 4,txt,velocity,<table ${BiometricsEnabled} class="biometricsTable"><tr><td $biodata.get("WithException") ><p class="headings">$biodata.get("ExceptionPhotoPrimLabel") / $biodata.get("ExceptionPhotoSecLabel")</p></td><td $biodata.get("FaceCaptureEnabled") ><p class="headings">$biodata.get("PhotoPrim") /  $biodata.get("PhotoSec")</p></td></tr><tr><td $biodata.get("WithException") ><img src=$biodata.get("ExceptionImageSource") border="0" width="80" height="80"/></td><td $biodata.get("FaceCaptureEnabled") ><img src=$biodata.get("FaceImageSource") border="0" width="100" height="100"/></td></tr></table></table><br/>#end<br/><div ${Preview}><p class="head"><b>${Consent}</b></p><div class="consent-block" id="radioId"><div class="consent-text">${ConsentData}</div><input type="radio" name="consent" id="consent-yes" value="yes" ${SelectedYes} onchange="changeColour(this)"><label for="consent-yes">${Yes}</label> &nbsp;&nbsp;&nbsp;<input type="radio" name="consent" id="consent-no" value="no" ${SelectedNo} onchange="changeColour(this)"><label for="consent-no">${No}</label></div></div><table class="dataTable"><tr><td ${ROImage}><img src="${ROImageSource}" border="0" width="80" height="80"/></td><td><p class="headings">${RONamePrimLabel} / ${RONameSecLabel}</p><br/>${ROName}<br/>${RONameSec}</td><td><p class="headings">${RegCenterPrimLabel} / ${RegCenterSecLabel}</p><br/>${RegCenter}<br/>${RegCenterSec}</td></tr></table><hr/><br/></div><div ${applicantPhoto} ${Preview} class="previewPhoto"><p class="applicantPhotoLabel">${PhotoPrim} / ${PhotoSec}</p><img class="applicantPhoto" src="${ApplicantImageSource}" border="0" width="100" height="100"/></div><div ${applicantPhoto} ${AckReceipt} class="photo"><p class="applicantPhotoLabel">${PhotoPrim} / ${PhotoSec}</p><img class="applicantPhoto" src="${ApplicantImageSource}" border="0" width="100" height="100"/></div><div ${AckReceipt}><p>${ImportantGuidelines}</p><ul>${Guidelines}</ul></div></div></body></html>,10005,Registration,reg-ack-template-part4,eng ,TRUE,superadmin,now()
-1141,"قالب الاعتراف بالتسجيل - الجزء 4','الإ",ر المتولد بعد التسجيل - الجزء 4,txt,velocity,<table ${BiometricsEnabled} class="biometricsTable"><tr><td $biodata.get("WithException") ><p class="headings">$biodata.get("ExceptionPhotoPrimLabel") / $biodata.get("ExceptionPhotoSecLabel")</p></td><td $biodata.get("FaceCaptureEnabled") ><p class="headings">$biodata.get("PhotoPrim") /  $biodata.get("PhotoSec")</p></td></tr><tr><td $biodata.get("WithException") ><img src=$biodata.get("ExceptionImageSource") border="0" width="80" height="80"/></td><td $biodata.get("FaceCaptureEnabled") ><img src=$biodata.get("FaceImageSource") border="0" width="100" height="100"/></td></tr></table></table><br/>#end<br/><div ${Preview}><p class="head"><b>${Consent}</b></p><div class="consent-block" id="radioId"><div class="consent-text">${ConsentData}</div><input type="radio" name="consent" id="consent-yes" value="yes" ${SelectedYes} onchange="changeColour(this)"><label for="consent-yes">${Yes}</label> &nbsp;&nbsp;&nbsp;<input type="radio" name="consent" id="consent-no" value="no" ${SelectedNo} onchange="changeColour(this)"><label for="consent-no">${No}</label></div></div><table class="dataTable"><tr><td ${ROImage}><img src="${ROImageSource}" border="0" width="80" height="80"/></td><td><p class="headings">${RONamePrimLabel} / ${RONameSecLabel}</p><br/>${ROName}<br/>${RONameSec}</td><td><p class="headings">${RegCenterPrimLabel} / ${RegCenterSecLabel}</p><br/>${RegCenter}<br/>${RegCenterSec}</td></tr></table><hr/><br/></div><div ${applicantPhoto} ${Preview} class="previewPhoto"><p class="applicantPhotoLabel">${PhotoPrim} / ${PhotoSec}</p><img class="applicantPhoto" src="${ApplicantImageSource}" border="0" width="100" height="100"/></div><div ${applicantPhoto} ${AckReceipt} class="photo"><p class="applicantPhotoLabel">${PhotoPrim} / ${PhotoSec}</p><img class="applicantPhoto" src="${ApplicantImageSource}" border="0" width="100" height="100"/></div><div ${AckReceipt}><p>${ImportantGuidelines}</p><ul>${Guidelines}</ul></div></div></body></html>,10005,التسجيل,reg-ack-template-part4,ara,TRUE,superadmin,now()
-1141,enregistrement Modèle de remerciement - Partie 4,Accusé de réception généré après lenregistrement - Partie 4,txt,velocity,<table ${BiometricsEnabled} class="biometricsTable"><tr><td $biodata.get("WithException") ><p class="headings">$biodata.get("ExceptionPhotoPrimLabel") / $biodata.get("ExceptionPhotoSecLabel")</p></td><td $biodata.get("FaceCaptureEnabled") ><p class="headings">$biodata.get("PhotoPrim") /  $biodata.get("PhotoSec")</p></td></tr><tr><td $biodata.get("WithException") ><img src=$biodata.get("ExceptionImageSource") border="0" width="80" height="80"/></td><td $biodata.get("FaceCaptureEnabled") ><img src=$biodata.get("FaceImageSource") border="0" width="100" height="100"/></td></tr></table></table><br/>#end<br/><div ${Preview}><p class="head"><b>${Consent}</b></p><div class="consent-block" id="radioId"><div class="consent-text">${ConsentData}</div><input type="radio" name="consent" id="consent-yes" value="yes" ${SelectedYes} onchange="changeColour(this)"><label for="consent-yes">${Yes}</label> &nbsp;&nbsp;&nbsp;<input type="radio" name="consent" id="consent-no" value="no" ${SelectedNo} onchange="changeColour(this)"><label for="consent-no">${No}</label></div></div><table class="dataTable"><tr><td ${ROImage}><img src="${ROImageSource}" border="0" width="80" height="80"/></td><td><p class="headings">${RONamePrimLabel} / ${RONameSecLabel}</p><br/>${ROName}<br/>${RONameSec}</td><td><p class="headings">${RegCenterPrimLabel} / ${RegCenterSecLabel}</p><br/>${RegCenter}<br/>${RegCenterSec}</td></tr></table><hr/><br/></div><div ${applicantPhoto} ${Preview} class="previewPhoto"><p class="applicantPhotoLabel">${PhotoPrim} / ${PhotoSec}</p><img class="applicantPhoto" src="${ApplicantImageSource}" border="0" width="100" height="100"/></div><div ${applicantPhoto} ${AckReceipt} class="photo"><p class="applicantPhotoLabel">${PhotoPrim} / ${PhotoSec}</p><img class="applicantPhoto" src="${ApplicantImageSource}" border="0" width="100" height="100"/></div><div ${AckReceipt}><p>${ImportantGuidelines}</p><ul>${Guidelines}</ul></div></div></body></html>,10005,Inscription,reg-ack-template-part4,fra,TRUE,superadmin,now()
+1141,Registration Acknowledgement Template - Part 4,Acknowledgement generated after registration - Part 4,txt,velocity,"<table ${BiometricsEnabled} class=""biometricsTable""><tr><td $biodata.get(""WithException"") ><p class=""headings"">$biodata.get(""ExceptionPhotoPrimLabel"") / $biodata.get(""ExceptionPhotoSecLabel"")</p></td><td $biodata.get(""FaceCaptureEnabled"") ><p class=""headings"">$biodata.get(""PhotoPrim"") /  $biodata.get(""PhotoSec"")</p></td></tr><tr><td $biodata.get(""WithException"") ><img src=$biodata.get(""ExceptionImageSource"") border=""0"" width=""80"" height=""80""/></td><td $biodata.get(""FaceCaptureEnabled"") ><img src=$biodata.get(""FaceImageSource"") border=""0"" width=""100"" height=""100""/></td></tr></table></table><br/>#end<br/><div ${Preview}><p class=""head""><b>${Consent}</b></p><div class=""consent-block"" id=""radioId""><div class=""consent-text"">${ConsentData}</div><input type=""radio"" name=""consent"" id=""consent-yes"" value=""yes"" ${SelectedYes} onchange=""changeColour(this)""><label for=""consent-yes"">${Yes}</label> &nbsp;&nbsp;&nbsp;<input type=""radio"" name=""consent"" id=""consent-no"" value=""no"" ${SelectedNo} onchange=""changeColour(this)""><label for=""consent-no"">${No}</label></div></div><table class=""dataTable""><tr><td ${ROImage}><img src=""${ROImageSource}"" border=""0"" width=""80"" height=""80""/></td><td><p class=""headings"">${RONamePrimLabel} / ${RONameSecLabel}</p><br/>${ROName}<br/>${RONameSec}</td><td><p class=""headings"">${RegCenterPrimLabel} / ${RegCenterSecLabel}</p><br/>${RegCenter}<br/>${RegCenterSec}</td></tr></table><hr/><br/></div><div ${applicantPhoto} ${Preview} class=""previewPhoto""><p class=""applicantPhotoLabel"">${PhotoPrim} / ${PhotoSec}</p><img class=""applicantPhoto"" src=""${ApplicantImageSource}"" border=""0"" width=""100"" height=""100""/></div><div ${applicantPhoto} ${AckReceipt} class=""photo""><p class=""applicantPhotoLabel"">${PhotoPrim} / ${PhotoSec}</p><img class=""applicantPhoto"" src=""${ApplicantImageSource}"" border=""0"" width=""100"" height=""100""/></div><div ${AckReceipt}><p>${ImportantGuidelines}</p><ul>${Guidelines}</ul></div></div></body></html>",10005,Registration,reg-ack-template-part4,eng ,TRUE,superadmin,now()
+1141,"قالب الاعتراف بالتسجيل - الجزء 4','الإ",ر المتولد بعد التسجيل - الجزء 4,txt,velocity,"<table ${BiometricsEnabled} class=""biometricsTable""><tr><td $biodata.get(""WithException"") ><p class=""headings"">$biodata.get(""ExceptionPhotoPrimLabel"") / $biodata.get(""ExceptionPhotoSecLabel"")</p></td><td $biodata.get(""FaceCaptureEnabled"") ><p class=""headings"">$biodata.get(""PhotoPrim"") /  $biodata.get(""PhotoSec"")</p></td></tr><tr><td $biodata.get(""WithException"") ><img src=$biodata.get(""ExceptionImageSource"") border=""0"" width=""80"" height=""80""/></td><td $biodata.get(""FaceCaptureEnabled"") ><img src=$biodata.get(""FaceImageSource"") border=""0"" width=""100"" height=""100""/></td></tr></table></table><br/>#end<br/><div ${Preview}><p class=""head""><b>${Consent}</b></p><div class=""consent-block"" id=""radioId""><div class=""consent-text"">${ConsentData}</div><input type=""radio"" name=""consent"" id=""consent-yes"" value=""yes"" ${SelectedYes} onchange=""changeColour(this)""><label for=""consent-yes"">${Yes}</label> &nbsp;&nbsp;&nbsp;<input type=""radio"" name=""consent"" id=""consent-no"" value=""no"" ${SelectedNo} onchange=""changeColour(this)""><label for=""consent-no"">${No}</label></div></div><table class=""dataTable""><tr><td ${ROImage}><img src=""${ROImageSource}"" border=""0"" width=""80"" height=""80""/></td><td><p class=""headings"">${RONamePrimLabel} / ${RONameSecLabel}</p><br/>${ROName}<br/>${RONameSec}</td><td><p class=""headings"">${RegCenterPrimLabel} / ${RegCenterSecLabel}</p><br/>${RegCenter}<br/>${RegCenterSec}</td></tr></table><hr/><br/></div><div ${applicantPhoto} ${Preview} class=""previewPhoto""><p class=""applicantPhotoLabel"">${PhotoPrim} / ${PhotoSec}</p><img class=""applicantPhoto"" src=""${ApplicantImageSource}"" border=""0"" width=""100"" height=""100""/></div><div ${applicantPhoto} ${AckReceipt} class=""photo""><p class=""applicantPhotoLabel"">${PhotoPrim} / ${PhotoSec}</p><img class=""applicantPhoto"" src=""${ApplicantImageSource}"" border=""0"" width=""100"" height=""100""/></div><div ${AckReceipt}><p>${ImportantGuidelines}</p><ul>${Guidelines}</ul></div></div></body></html>",10005,التسجيل,reg-ack-template-part4,ara,TRUE,superadmin,now()
+1141,enregistrement Modèle de remerciement - Partie 4,Accusé de réception généré après lenregistrement - Partie 4,txt,velocity,"<table ${BiometricsEnabled} class=""biometricsTable""><tr><td $biodata.get(""WithException"") ><p class=""headings"">$biodata.get(""ExceptionPhotoPrimLabel"") / $biodata.get(""ExceptionPhotoSecLabel"")</p></td><td $biodata.get(""FaceCaptureEnabled"") ><p class=""headings"">$biodata.get(""PhotoPrim"") /  $biodata.get(""PhotoSec"")</p></td></tr><tr><td $biodata.get(""WithException"") ><img src=$biodata.get(""ExceptionImageSource"") border=""0"" width=""80"" height=""80""/></td><td $biodata.get(""FaceCaptureEnabled"") ><img src=$biodata.get(""FaceImageSource"") border=""0"" width=""100"" height=""100""/></td></tr></table></table><br/>#end<br/><div ${Preview}><p class=""head""><b>${Consent}</b></p><div class=""consent-block"" id=""radioId""><div class=""consent-text"">${ConsentData}</div><input type=""radio"" name=""consent"" id=""consent-yes"" value=""yes"" ${SelectedYes} onchange=""changeColour(this)""><label for=""consent-yes"">${Yes}</label> &nbsp;&nbsp;&nbsp;<input type=""radio"" name=""consent"" id=""consent-no"" value=""no"" ${SelectedNo} onchange=""changeColour(this)""><label for=""consent-no"">${No}</label></div></div><table class=""dataTable""><tr><td ${ROImage}><img src=""${ROImageSource}"" border=""0"" width=""80"" height=""80""/></td><td><p class=""headings"">${RONamePrimLabel} / ${RONameSecLabel}</p><br/>${ROName}<br/>${RONameSec}</td><td><p class=""headings"">${RegCenterPrimLabel} / ${RegCenterSecLabel}</p><br/>${RegCenter}<br/>${RegCenterSec}</td></tr></table><hr/><br/></div><div ${applicantPhoto} ${Preview} class=""previewPhoto""><p class=""applicantPhotoLabel"">${PhotoPrim} / ${PhotoSec}</p><img class=""applicantPhoto"" src=""${ApplicantImageSource}"" border=""0"" width=""100"" height=""100""/></div><div ${applicantPhoto} ${AckReceipt} class=""photo""><p class=""applicantPhotoLabel"">${PhotoPrim} / ${PhotoSec}</p><img class=""applicantPhoto"" src=""${ApplicantImageSource}"" border=""0"" width=""100"" height=""100""/></div><div ${AckReceipt}><p>${ImportantGuidelines}</p><ul>${Guidelines}</ul></div></div></body></html>",10005,Inscription,reg-ack-template-part4,fra,TRUE,superadmin,now()
 1142,auth otp service,auth otp service for sending otp,txt,velocity,يرجى الاطلاع على otp $otp,10001,ما قبل التسجيل,auth-otp-sms-template,ara,TRUE,superadmin,now()
 1142,auth otp service,auth otp service for sending otp,txt,velocity,Please find the otp $otp,10001,Pre-Registration,auth-otp-sms-template,eng,TRUE,superadmin,now()
 1142,auth otp service,auth otp service for sending otp,txt,velocity,Please find the otp $otp,10001,Pré-inscription,auth-otp-sms-template,fra,TRUE,superadmin,now()
@@ -898,7 +902,7 @@ registrationclient,otp service,OTP Send Service,txt,string,Please find the OTP $
 1150,auth otp email service subject,auth otp email service subject,txt,velocity,Please find the otp $otp,10004,ID Authentication,auth-otp-email-content-template,eng,TRUE,superadmin,now()
 1150,auth otp email service subject,auth otp email service subject,txt,velocity,Sil vous plaît trouver le otp $otp,10004,Authentification ID,auth-otp-email-content-template,fra,TRUE,superadmin,now()
 1151,Template for Email Content,Template for Email Content,txt,model,Dear $name\nOTP for UIN  $uin is $otp and is valid for $validTime minutes. (Generated on $date at $time Hrs),10004,ID Authentication,ida-auth-otp-email-content-template,eng,TRUE,superadmin,now()
-1151,قالب لمحتوى البريد الإلكتروني,قالب لمحتوى البريد الإلكتروني,txt,model,عزيزي $name ،\nOTP لـ UIN $uin هو $otp وهو صالح لمدة $validTime دقيقة. (التي تم إنشاؤها على $date في $time ساعات),10004,مصادقة الهوية,ida-auth-otp-email-content-template,ara,TRUE,superadmin,now()
+1151,قالب لمحتوى البريد الإلكتروني,قالب لمحتوى البريد الإلكتروني,txt,model,عزيزي $name \ nOTP لـ UIN $uin هو $otp وهو صالح لمدة $validTime دقيقة. (تم إنشاؤه في $date في $time Hrs),10004,مصادقة الهوية,ida-auth-otp-email-content-template,ara,TRUE,superadmin,now()
 1151,Modèle de contenu de courrier électronique,Modèle de contenu de courrier électronique,txt,,"Cher $name,OTP pour UIN $uin est $otp et est valide pour $validTime minutes. (Généré le $date à $time Hrs)",10004,Authentification ID,ida-auth-otp-email-content-template,fra,TRUE,superadmin,now()
 1152,Template for Email Subject,Template for Email Subject,txt,model,UIN $uin: OTP Request,10004,ID Authentication,ida-auth-otp-email-subject-template,eng,TRUE,superadmin,now()
 1152,قالب لموضوع البريد الإلكتروني,قالب لموضوع البريد الإلكتروني,txt,model,UIN $uin: طلب OTP,10004,مصادقة الهوية,ida-auth-otp-email-subject-template,ara,TRUE,superadmin,now()
@@ -936,10 +940,10 @@ Je comprends également que ces informations seront stockées et traitées dans 
 1156,قالب الاعتراف,تسجيل قالب الاعتراف,txt,velocity,"العزيز ${ResidentName}, شكرًا لك على تحديث التفاصيل الخاصة بك باستخدام نظام الهوية الرقمية. معرف التسجيل الخاص بك هو ""${RID}"".",10005,التسجيل,updateUIN-sms-notification,ara,TRUE,superadmin,now()
 1156,Acknowledgement SMS Template,Registration Acknowledgement Template,txt,velocity,"Dear ${ResidentName}, Thank you for updating your details with Digital Identity platform. Your registration id is ""${RID}"".",10005,Registration,updateUIN-sms-notification,eng,TRUE,superadmin,now()
 1156,Modèle de SMS de reconnaissance,Modèle de confirmation d'inscription,txt,velocity,"Dear ${ResidentName}, Merci de mettre à jour vos coordonnées avec la plateforme d’identité numérique. Votre identifiant d'inscription est ""${RID}"".",10005,Inscription,updateUIN-sms-notification,fra,TRUE,superadmin,now()
-1157,اعتراف قالب البريد الإلكتروني,تسجيل قالب الاعتراف,txt,velocity,عزيزي المستخدم ، شكرًا على طلبك لاسترداد UIN المفقود. معرف تسجيلك لهذا الطلب هو"${RID}".,10005,التسجيل,lostUIN-email-notification,ara,TRUE,superadmin,now()
+1157,اعتراف قالب البريد الإلكتروني,تسجيل قالب الاعتراف,txt,velocity,"عزيزي المستخدم ، شكرًا لك على طلبك لاسترداد رقم التعريف الشخصي المفقود. معرف التسجيل الخاص بك لهذا الطلب هو ""${RID}"".",10005,التسجيل,lostUIN-email-notification,ara,TRUE,superadmin,now()
 1157,Acknowledgement Email Template,Registration Acknowledgement Template,txt,velocity,"Dear user, Thank you for your request to retrieve your lost UIN. Your registration id for this request is  ""${RID}"".",10005,Registration,lostUIN-email-notification,eng,TRUE,superadmin,now()
 1157,Modèle d'email de reconnaissance,Modèle de confirmation d'inscription,txt,velocity,"Cher utilisateur, Merci pour votre demande de récupération de votre UIN perdu. Votre identifiant d'enregistrement pour cette demande est  ""${RID}"".",10005,Inscription,lostUIN-email-notification,fra,TRUE,superadmin,now()
-1158,قالب رسالة شكر وتقدير الإلكتروني,تسجيل قالب الاعتراف,txt,velocity,عزيزي المستخدم ، شكرًا على طلبك لاسترداد UIN المفقود. معرف تسجيلك لهذا الطلب هو"${RID}".,10005,التسجيل,lostUIN-sms-notification,ara,TRUE,superadmin,now()
+1158,قالب رسالة شكر وتقدير الإلكتروني,تسجيل قالب الاعتراف,txt,velocity,"عزيزي المستخدم ، شكرًا لك على طلبك لاسترداد رقم التعريف الشخصي المفقود. معرف التسجيل الخاص بك لهذا الطلب هو ""${RID}"".",10005,التسجيل,lostUIN-sms-notification,ara,TRUE,superadmin,now()
 1158,Acknowledgement SMS Template,Registration Acknowledgement Template,txt,velocity,"Dear user, Thank you for your request to retrieve your lost UIN. Your registration id for this request is  ""${RID}"".",10005,Registration,lostUIN-sms-notification,eng,TRUE,superadmin,now()
 1158,Modèle de SMS de reconnaissance,Modèle de confirmation d'inscription,txt,velocity,"Cher utilisateur, Merci pour votre demande de récupération de votre UIN perdu. Votre identifiant d'enregistrement pour cette demande est  ""${RID}"".",10005,Inscription,lostUIN-sms-notification,fra,TRUE,superadmin,now()
 1159,Template for Cancel Appointment,Template for Cancel Appointment,txt,velocity,"Dear $name,
@@ -1966,3 +1970,276 @@ Thank You!",10006,Resident Services,RS_UIN_UPDATE_FAILURE_SMS,eng,TRUE,superadmi
 Nous n'avons pas pu traiter votre demande de «mise à jour UIN». Veuillez réessayer plus tard.
 
 Merci!",10006,Resident Services,RS_UIN_UPDATE_FAILURE_SMS,fra,TRUE,superadmin,now()
+1211,Registration Packet Validation Success Email,Registration Packet Validation Success Email,txt,velocity,"Hi $!name_eng,
+
+We have received your request for registration against the RID: $!RID. 
+This request is under processing.
+
+Thank You",10003,Registration Processor,RPR_RPV_SUC_EMAIL,eng,TRUE,superadmin,now()
+1211,Registration Packet Validation Success Email,Registration Packet Validation Success Email,txt,velocity,"مرحبًا $!name_ara ،
+
+لقد تلقينا طلبك للتسجيل في RID: $!RID.
+هذا الطلب قيد المعالجة.
+
+شكرا",10003,Registration Processor,RPR_RPV_SUC_EMAIL,ara,TRUE,superadmin,now()
+1211,Registration Packet Validation Success Email,Registration Packet Validation Success Email,txt,velocity,"Bonjour $!name_fra,
+
+Nous avons reçu votre demande d'inscription contre le RID: $!RID.
+Cette demande est en cours de traitement.
+
+Merci",10003,Registration Processor,RPR_RPV_SUC_EMAIL,fra,TRUE,superadmin,now()
+1212,Registration Packet Validation Success SMS,Registration Packet Validation Success SMS,txt,velocity,"Hi $!name_eng,
+
+We have received your request for registration against the RID: $!RID. 
+This request is under processing.
+
+Thank You",10003,Registration Processor,RPR_RPV_SUC_SMS,eng,TRUE,superadmin,now()
+1212,Registration Packet Validation Success SMS,Registration Packet Validation Success SMS,txt,velocity,"مرحبًا $!name_ara ،
+
+لقد تلقينا طلبك للتسجيل في RID: $!RID.
+هذا الطلب قيد المعالجة.
+
+شكرا",10003,Registration Processor,RPR_RPV_SUC_SMS,ara,TRUE,superadmin,now()
+1212,Registration Packet Validation Success SMS,Registration Packet Validation Success SMS,txt,velocity,"Bonjour $!name_fra,
+
+Nous avons reçu votre demande d'inscription contre le RID: $!RID.
+Cette demande est en cours de traitement.
+
+Merci",10003,Registration Processor,RPR_RPV_SUC_SMS,fra,TRUE,superadmin,now()
+1213,Update Packet Validation Success Email,Update Packet Validation Success Email,txt,velocity,"Hi $!name_eng,
+
+We have received your request for updating your details against the RID: $!RID. 
+This request is under processing.
+
+Thank You",10003,Registration Processor,RPR_UPV_SUC_EMAIL,eng,TRUE,superadmin,now()
+1213,Update Packet Validation Success Email,Update Packet Validation Success Email,txt,velocity,"مرحبًا $!name_ara ،
+
+لقد تلقينا طلبك لتحديث التفاصيل الخاصة بك مقابل RID: $!RID.
+هذا الطلب قيد المعالجة.
+
+شكرا",10003,Registration Processor,RPR_UPV_SUC_EMAIL,ara,TRUE,superadmin,now()
+1213,Update Packet Validation Success Email,Update Packet Validation Success Email,txt,velocity,"Bonjour $!name_fra,
+
+Nous avons reçu votre demande de mise à jour de vos coordonnées par rapport au RID: $!RID.
+Cette demande est en cours de traitement.
+
+Merci",10003,Registration Processor,RPR_UPV_SUC_EMAIL,fra,TRUE,superadmin,now()
+1214,Update Packet Validation Success SMS,Update Packet Validation Success SMS,txt,velocity,"Hi $!name_eng,
+
+We have received your request for updating your details against the RID: $!RID. 
+This request is under processing.
+
+Thank You",10003,Registration Processor,RPR_UPV_SUC_SMS,eng,TRUE,superadmin,now()
+1214,Update Packet Validation Success SMS,Update Packet Validation Success SMS,txt,velocity,"مرحبًا $!name_ara ،
+
+لقد تلقينا طلبك لتحديث التفاصيل الخاصة بك مقابل RID: $!RID.
+هذا الطلب قيد المعالجة.
+
+شكرا",10003,Registration Processor,RPR_UPV_SUC_SMS,ara,TRUE,superadmin,now()
+1214,Update Packet Validation Success SMS,Update Packet Validation Success SMS,txt,velocity,"Bonjour $!name_fra,
+
+Nous avons reçu votre demande de mise à jour de vos coordonnées par rapport au RID: $!RID.
+Cette demande est en cours de traitement.
+
+Merci",10003,Registration Processor,RPR_UPV_SUC_SMS,fra,TRUE,superadmin,now()
+1215,Lost Packet Validation Success Email,Lost Packet Validation Success Email,txt,velocity,"Hi $!name_eng,
+
+We have received your request for finding your UIN details against the RID: $!RID. 
+This request is under processing.
+
+Thank You",10003,Registration Processor,RPR_LPV_SUC_EMAIL,eng,TRUE,superadmin,now()
+1215,Lost Packet Validation Success Email,Lost Packet Validation Success Email,txt,velocity,"مرحبًا $!name_ara ،
+
+لقد تلقينا طلبك لتحديث التفاصيل الخاصة بك مقابل RID: $!RID.
+هذا الطلب قيد المعالجة.
+
+شكرا",10003,Registration Processor,RPR_LPV_SUC_EMAIL,ara,TRUE,superadmin,now()
+1215,Lost Packet Validation Success Email,Lost Packet Validation Success Email,txt,velocity,"Bonjour $!name_fra,
+
+Nous avons reçu votre demande de recherche des détails de votre UIN par rapport au RID: $RID.
+Cette demande est en cours de traitement.
+
+Merci",10003,Registration Processor,RPR_LPV_SUC_EMAIL,fra,TRUE,superadmin,now()
+1216,Lost Packet Validation Success SMS,Lost Packet Validation Success SMS,txt,velocity,"Hi $!name_eng,
+
+We have received your request for finding your UIN details against the RID: $!RID. 
+This request is under processing.
+
+Thank You",10003,Registration Processor,RPR_LPV_SUC_SMS,eng,TRUE,superadmin,now()
+1216,Lost Packet Validation Success SMS,Lost Packet Validation Success SMS,txt,velocity,"مرحبًا $!name_ara ،
+
+لقد تلقينا طلبك لتحديث التفاصيل الخاصة بك مقابل RID: $!RID.
+هذا الطلب قيد المعالجة.
+
+شكرا",10003,Registration Processor,RPR_LPV_SUC_SMS,ara,TRUE,superadmin,now()
+1216,Lost Packet Validation Success SMS,Lost Packet Validation Success SMS,txt,velocity,"Bonjour $!name_fra,
+
+Nous avons reçu votre demande de recherche des détails de votre UIN par rapport au RID: $RID.
+Cette demande est en cours de traitement.
+
+Merci",10003,Registration Processor,RPR_LPV_SUC_SMS,fra,TRUE,superadmin,now()
+1217,Resident Update Packet Validation Success Email,Resident Update Packet Validation Success Email,txt,velocity,"Hi $!name_eng,
+
+We have received your request for updating your details against the RID: $!RID. 
+This request is under processing.
+
+Thank You",10003,Registration Processor,RPR_RUPV_SUC_EMAIL,eng,TRUE,superadmin,now()
+1217,Resident Update Packet Validation Success Email,Resident Update Packet Validation Success Email,txt,velocity,"مرحبًا $!name_ara ،
+
+لقد تلقينا طلبك لتحديث التفاصيل الخاصة بك مقابل RID: $!RID.
+هذا الطلب قيد المعالجة.
+
+شكرا",10003,Registration Processor,RPR_RUPV_SUC_EMAIL,ara,TRUE,superadmin,now()
+1217,Resident Update Packet Validation Success Email,Resident Update Packet Validation Success Email,txt,velocity,"Bonjour $!name_fra,
+
+Nous avons reçu votre demande de mise à jour de vos coordonnées par rapport au RID: $!RID.
+Cette demande est en cours de traitement.
+
+Merci",10003,Registration Processor,RPR_RUPV_SUC_EMAIL,fra,TRUE,superadmin,now()
+1218,Resident Update Packet Validation Success SMS,Resident Update Packet Validation Success SMS,txt,velocity,"Hi $!name_eng,
+
+We have received your request for updating your details against the RID: $!RID. 
+This request is under processing.
+
+Thank You",10003,Registration Processor,RPR_RUPV_SUC_SMS,eng,TRUE,superadmin,now()
+1218,Resident Update Packet Validation Success SMS,Resident Update Packet Validation Success SMS,txt,velocity,"مرحبًا $!name_ara ،
+
+لقد تلقينا طلبك لتحديث التفاصيل الخاصة بك مقابل RID: $!RID.
+هذا الطلب قيد المعالجة.
+
+شكرا",10003,Registration Processor,RPR_RUPV_SUC_SMS,ara,TRUE,superadmin,now()
+1218,Resident Update Packet Validation Success SMS,Resident Update Packet Validation Success SMS,txt,velocity,"Bonjour $!name_fra,
+
+Nous avons reçu votre demande de mise à jour de vos coordonnées par rapport au RID: $!RID.
+Cette demande est en cours de traitement.
+
+Merci",10003,Registration Processor,RPR_RUPV_SUC_SMS,fra,TRUE,superadmin,now()
+1219,Re-print Packet Validation Success Email,Re-print Packet Validation Success Email,txt,velocity,"Hi $!name_eng,
+
+We have received your request for re-printing your UIN against the RID: $!RID. 
+This request is under processing.
+
+Thank You",10003,Registration Processor,RPR_PPV_SUC_EMAIL,eng,TRUE,superadmin,now()
+1219,Re-print Packet Validation Success Email,Re-print Packet Validation Success Email,txt,velocity,"مرحبًا $!name_ara ،
+
+لقد تلقينا طلبك لإعادة طباعة UIN الخاص بك مقابل RID: $!RID.
+هذا الطلب قيد المعالجة.
+
+شكرا",10003,Registration Processor,RPR_PPV_SUC_EMAIL,ara,TRUE,superadmin,now()
+1219,Re-print Packet Validation Success Email,Re-print Packet Validation Success Email,txt,velocity,"Bonjour $!name_fra,
+
+Nous avons reçu votre demande de réimpression de votre UIN par rapport au RID: $!RID.
+Cette demande est en cours de traitement.
+
+Merci",10003,Registration Processor,RPR_PPV_SUC_EMAIL,fra,TRUE,superadmin,now()
+1220,Re-print Packet Validation Success SMS,Re-print Packet Validation Success SMS,txt,velocity,"Hi $!name_eng,
+
+We have received your request for re-printing your UIN against the RID: $!RID. 
+This request is under processing.
+
+Thank You",10003,Registration Processor,RPR_PPV_SUC_SMS,eng,TRUE,superadmin,now()
+1220,Re-print Packet Validation Success SMS,Re-print Packet Validation Success SMS,txt,velocity,"مرحبًا $!name_ara ،
+
+لقد تلقينا طلبك لإعادة طباعة UIN الخاص بك مقابل RID: $!RID.
+هذا الطلب قيد المعالجة.
+
+شكرا",10003,Registration Processor,RPR_PPV_SUC_SMS,ara,TRUE,superadmin,now()
+1220,Re-print Packet Validation Success SMS,Re-print Packet Validation Success SMS,txt,velocity,"Bonjour $!name_fra,
+
+Nous avons reçu votre demande de réimpression de votre UIN par rapport au RID: $!RID.
+Cette demande est en cours de traitement.
+
+Merci",10003,Registration Processor,RPR_PPV_SUC_SMS,fra,TRUE,superadmin,now()
+1221,Activate Packet Validation Success Email,Activate Packet Validation Success Email,txt,velocity,"Hi $!name_eng,
+
+We have received your request for activating your UIN against the RID: $!RID. 
+This request is under processing.
+
+Thank You",10003,Registration Processor,RPR_APV_SUC_EMAIL,eng,TRUE,superadmin,now()
+1221,Activate Packet Validation Success Email,Activate Packet Validation Success Email,txt,velocity,"مرحبًا $!name_ara ،
+
+لقد تلقينا طلبك لتفعيل UIN الخاص بك مقابل RID: $!RID.
+هذا الطلب قيد المعالجة.
+
+شكرا",10003,Registration Processor,RPR_APV_SUC_EMAIL,ara,TRUE,superadmin,now()
+1221,Activate Packet Validation Success Email,Activate Packet Validation Success Email,txt,velocity,"Bonjour $!name_fra,
+
+Nous avons reçu votre demande d'activation de votre UIN par rapport au RID: $!RID.
+Cette demande est en cours de traitement.
+
+Merci",10003,Registration Processor,RPR_APV_SUC_EMAIL,fra,TRUE,superadmin,now()
+1222,Activate Packet Validation Success SMS,Activate Packet Validation Success SMS,txt,velocity,"Hi $!name_eng,
+
+We have received your request for activating your UIN against the RID: $!RID. 
+This request is under processing.
+
+Thank You",10003,Registration Processor,RPR_APV_SUC_SMS,eng,TRUE,superadmin,now()
+1222,Activate Packet Validation Success SMS,Activate Packet Validation Success SMS,txt,velocity,"مرحبًا $!name_ara ،
+
+لقد تلقينا طلبك لتفعيل UIN الخاص بك مقابل RID: $!RID.
+هذا الطلب قيد المعالجة.
+
+شكرا",10003,Registration Processor,RPR_APV_SUC_SMS,ara,TRUE,superadmin,now()
+1222,Activate Packet Validation Success SMS,Activate Packet Validation Success SMS,txt,velocity,"Bonjour $!name_fra,
+
+Nous avons reçu votre demande d'activation de votre UIN par rapport au RID: $!RID.
+Cette demande est en cours de traitement.
+
+Merci",10003,Registration Processor,RPR_APV_SUC_SMS,fra,TRUE,superadmin,now()
+1223,De-activate Packet Validation Success Email,De-activate Packet Validation Success Email,txt,velocity,"Hi $!name_eng,
+
+We have received your request for de-activating your UIN against the RID: $!RID. 
+This request is under processing.
+
+Thank You",10003,Registration Processor,RPR_DPV_SUC_EMAIL,eng,TRUE,superadmin,now()
+1223,De-activate Packet Validation Success Email,De-activate Packet Validation Success Email,txt,velocity,"مرحبًا $!name_ara ،
+
+لقد تلقينا طلبك لإلغاء تنشيط UIN الخاص بك مقابل RID: $!RID.
+هذا الطلب قيد المعالجة.
+
+شكرا",10003,Registration Processor,RPR_DPV_SUC_EMAIL,ara,TRUE,superadmin,now()
+1223,De-activate Packet Validation Success Email,De-activate Packet Validation Success Email,txt,velocity,"Bonjour $!name_fra,
+
+Nous avons reçu votre demande de désactivation de votre UIN par rapport au RID: $!RID.
+Cette demande est en cours de traitement.
+
+Merci",10003,Registration Processor,RPR_DPV_SUC_EMAIL,fra,TRUE,superadmin,now()
+1224,De-activate Packet Validation Success SMS,De-activate Packet Validation Success SMS,txt,velocity,"Hi $!name_eng,
+
+We have received your request for de-activating your UIN against the RID: $!RID. 
+This request is under processing.
+
+Thank You",10003,Registration Processor,RPR_DPV_SUC_SMS,eng,TRUE,superadmin,now()
+1224,De-activate Packet Validation Success SMS,De-activate Packet Validation Success SMS,txt,velocity,"مرحبًا $!name_ara ،
+
+لقد تلقينا طلبك لإلغاء تنشيط UIN الخاص بك مقابل RID: $!RID.
+هذا الطلب قيد المعالجة.
+
+شكرا",10003,Registration Processor,RPR_DPV_SUC_SMS,ara,TRUE,superadmin,now()
+1224,De-activate Packet Validation Success SMS,De-activate Packet Validation Success SMS,txt,velocity,"Bonjour $!name_fra,
+
+Nous avons reçu votre demande de désactivation de votre UIN par rapport au RID: $!RID.
+Cette demande est en cours de traitement.
+
+Merci",10003,Registration Processor,RPR_DPV_SUC_SMS,fra,TRUE,superadmin,now()
+1225,Registration Packet Validation Success Email Sub,Registration Packet Validation Success Email Sub,txt,velocity,Registration Confirmation,10003,Registration Processor,RPR_RPV_SUC_EMAIL_SUB,eng,TRUE,superadmin,now()
+1225,Registration Packet Validation Success Email Sub,Registration Packet Validation Success Email Sub,txt,velocity,تأكيد التسجيل,10003,Registration Processor,RPR_RPV_SUC_EMAIL_SUB,ara,TRUE,superadmin,now()
+1225,Registration Packet Validation Success Email Sub,Registration Packet Validation Success Email Sub,txt,velocity,confirmation d'enregistrement,10003,Registration Processor,RPR_RPV_SUC_EMAIL_SUB,fra,TRUE,superadmin,now()
+1226,Update Packet Validation Success Email Sub,Update Packet Validation Success Email Sub,txt,velocity,Update Request Confirmation,10003,Registration Processor,RPR_UPV_SUC_EMAIL_SUB,eng,TRUE,superadmin,now()
+1226,Update Packet Validation Success Email Sub,Update Packet Validation Success Email Sub,txt,velocity,تأكيد طلب التحديث,10003,Registration Processor,RPR_UPV_SUC_EMAIL_SUB,ara,TRUE,superadmin,now()
+1226,Update Packet Validation Success Email Sub,Update Packet Validation Success Email Sub,txt,velocity,Confirmation de la demande de mise à jour,10003,Registration Processor,RPR_UPV_SUC_EMAIL_SUB,fra,TRUE,superadmin,now()
+1227,Lost Packet Validation Success Email Sub,Lost Packet Validation Success Email Sub,txt,velocity,Lost Request Confirmation,10003,Registration Processor,RPR_LPV_SUC_EMAIL_SUB,eng,TRUE,superadmin,now()
+1227,Lost Packet Validation Success Email Sub,Lost Packet Validation Success Email Sub,txt,velocity,تأكيد الطلب المفقود,10003,Registration Processor,RPR_LPV_SUC_EMAIL_SUB,ara,TRUE,superadmin,now()
+1227,Lost Packet Validation Success Email Sub,Lost Packet Validation Success Email Sub,txt,velocity,Confirmation de demande perdue,10003,Registration Processor,RPR_LPV_SUC_EMAIL_SUB,fra,TRUE,superadmin,now()
+1228,Re-print Packet Validation Success Email Sub,Re-print Packet Validation Success Email Sub,txt,velocity,Re-print Request Confirmation,10003,Registration Processor,RPR_PPV_SUC_EMAIL_SUB,eng,TRUE,superadmin,now()
+1228,Re-print Packet Validation Success Email Sub,Re-print Packet Validation Success Email Sub,txt,velocity,إعادة طباعة تأكيد الطلب,10003,Registration Processor,RPR_PPV_SUC_EMAIL_SUB,ara,TRUE,superadmin,now()
+1228,Re-print Packet Validation Success Email Sub,Re-print Packet Validation Success Email Sub,txt,velocity,Confirmation de la demande de réimpression,10003,Registration Processor,RPR_PPV_SUC_EMAIL_SUB,fra,TRUE,superadmin,now()
+1229,Resident Update Packet Validation Success Email Sub,Resident Update Packet Validation Success Email Sub,txt,velocity,Update Request Confirmation,10003,Registration Processor,RPR_RUPV_SUC_EMAIL_SUB,eng,TRUE,superadmin,now()
+1229,Resident Update Packet Validation Success Email Sub,Resident Update Packet Validation Success Email Sub,txt,velocity,تأكيد طلب التحديث,10003,Registration Processor,RPR_RUPV_SUC_EMAIL_SUB,ara,TRUE,superadmin,now()
+1229,Resident Update Packet Validation Success Email Sub,Resident Update Packet Validation Success Email Sub,txt,velocity,Confirmation de la demande de mise à jour,10003,Registration Processor,RPR_RUPV_SUC_EMAIL_SUB,fra,TRUE,superadmin,now()
+1230,Activate Packet Validation Success Email Sub,Activate Packet Validation Success Email Sub,txt,velocity,Activation Request Confirmation,10003,Registration Processor,RPR_APV_SUC_EMAIL_SUB,eng,TRUE,superadmin,now()
+1230,Activate Packet Validation Success Email Sub,Activate Packet Validation Success Email Sub,txt,velocity,تأكيد طلب التفعيل,10003,Registration Processor,RPR_APV_SUC_EMAIL_SUB,ara,TRUE,superadmin,now()
+1230,Activate Packet Validation Success Email Sub,Activate Packet Validation Success Email Sub,txt,velocity,Confirmation de la demande d'activation,10003,Registration Processor,RPR_APV_SUC_EMAIL_SUB,fra,TRUE,superadmin,now()
+1231,De-activate Packet Validation Success Email Sub,De-activate Packet Validation Success Email Sub,txt,velocity,Deactivation Request Confirmation,10003,Registration Processor,RPR_DPV_SUC_EMAIL_SUB,eng,TRUE,superadmin,now()
+1231,De-activate Packet Validation Success Email Sub,De-activate Packet Validation Success Email Sub,txt,velocity,تأكيد طلب الإلغاء,10003,Registration Processor,RPR_DPV_SUC_EMAIL_SUB,ara,TRUE,superadmin,now()
+1231,De-activate Packet Validation Success Email Sub,De-activate Packet Validation Success Email Sub,txt,velocity,Confirmation de la demande de désactivation,10003,Registration Processor,RPR_DPV_SUC_EMAIL_SUB,fra,TRUE,superadmin,now()
