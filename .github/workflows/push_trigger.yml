@@ -119,8 +119,8 @@ jobs:
     - name: Publish the maven package
       run: |
         chmod +x ./deploy.sh
-        ./deploy.sh kernel $GITHUB_WORKSPACE/settings1.xml .*
-#        ./deploy.sh id-repository $GITHUB_WORKSPACE/settings.xml .*
+        ./deploy.sh id-repository $GITHUB_WORKSPACE/settings1.xml .*
+#        ./deploy.sh kernel $GITHUB_WORKSPACE/settings.xml .*
       env:
         GPG_TTY: $(tty)
         GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN1 }}
