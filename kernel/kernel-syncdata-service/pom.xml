@@ -221,7 +221,7 @@
 		<kernel.core.version>1.2.0-SNAPSHOT</kernel.core.version>
 		<kernel.auth.adaptor.version>1.2.0-SNAPSHOT</kernel.auth.adaptor.version>
 		<kernel.logger.version>1.0.6</kernel.logger.version>
-		<kernel.crypto.version>1.0.9</kernel.crypto.version>	
+		<kernel.crypto.version>1.2.0-SNAPSHOT</kernel.crypto.version>	
 	</properties>
 	<dependencies>
 		<dependency>
@@ -234,8 +234,6 @@
 			<artifactId>kernel-auth-adapter</artifactId>
 			<version>${kernel.auth.adaptor.version}</version>
 		</dependency>
-		<!-- <dependency> <groupId>io.mosip.kernel</groupId> <artifactId>kernel-dataaccess-hibernate</artifactId> 
-			<version>${project.version}</version> </dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
