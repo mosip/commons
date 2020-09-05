@@ -63,10 +63,10 @@ public class PartnerCertificateStore extends BaseEntity {
     private LocalDateTime certNotAfter;
 
     /**
-	 * The field partner_type
+	 * The field partner_domain
 	 */
-    @Column(name = "partner_type", nullable = false)
-    private String partnerType;
+    @Column(name = "partner_domain", nullable = false)
+    private String partnerDomain;
 
     /**
 	 * The field cert_data

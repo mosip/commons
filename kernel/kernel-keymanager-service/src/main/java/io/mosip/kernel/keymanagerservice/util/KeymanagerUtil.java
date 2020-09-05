@@ -34,6 +34,8 @@ import javax.security.auth.x500.X500Principal;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.asn1.x500.style.IETFUtils;
@@ -292,12 +294,19 @@ public class KeymanagerUtil {
 		try {
 			StringReader strReader = new StringReader(certData);
 			PemReader pemReader = new PemReader(strReader);
-			byte[] certBytes = ((PemObject)pemReader.readPemObject()).getContent();
+			PemObject pemObject = pemReader.readPemObject();
+			if (Objects.isNull(pemObject)) {
+				LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.CERTIFICATE_PARSE, 
+								KeymanagerConstant.CERTIFICATE_PARSE, "Error Parsing Certificate.");
+				throw new KeymanagerServiceException(io.mosip.kernel.keymanagerservice.constant.KeymanagerErrorConstant.CERTIFICATE_PARSING_ERROR.getErrorCode(),
+								KeymanagerErrorConstant.CERTIFICATE_PARSING_ERROR.getErrorMessage());				
+			}
+			byte[] certBytes = pemObject.getContent();
 			CertificateFactory certFactory = CertificateFactory.getInstance(KeymanagerConstant.CERTIFICATE_TYPE);
 			return certFactory.generateCertificate(new ByteArrayInputStream(certBytes));
 		} catch(IOException | CertificateException e) {
-			throw new KeymanagerServiceException(io.mosip.kernel.keymanagerservice.constant.KeymanagerErrorConstant.CERTIFICATE_PARSING_ERROR.getErrorCode(),
-					io.mosip.kernel.keymanagerservice.constant.KeymanagerErrorConstant.CERTIFICATE_PARSING_ERROR.getErrorMessage() + e.getMessage());
+			throw new KeymanagerServiceException(KeymanagerErrorConstant.CERTIFICATE_PARSING_ERROR.getErrorCode(),
+					KeymanagerErrorConstant.CERTIFICATE_PARSING_ERROR.getErrorMessage() + e.getMessage());
 		}
 	}
 
@@ -318,16 +327,25 @@ public class KeymanagerUtil {
 
 		CertificateParameters certParams = new CertificateParameters();
 		X500Name x500Name = new X500Name(latestCertPrincipal.getName());
+
 		certParams.setCommonName(IETFUtils.valueToString((x500Name.getRDNs(BCStyle.CN)[0]).getFirst().getValue()));
-		certParams.setOrganizationUnit(getParamValue(IETFUtils.valueToString((x500Name.getRDNs(BCStyle.OU)[0]).getFirst().getValue()), organizationUnit));
-		certParams.setOrganization(getParamValue(IETFUtils.valueToString((x500Name.getRDNs(BCStyle.O)[0]).getFirst().getValue()), organization));
-		certParams.setLocation(getParamValue(IETFUtils.valueToString((x500Name.getRDNs(BCStyle.L)[0]).getFirst().getValue()), location));
-		certParams.setState(getParamValue(IETFUtils.valueToString((x500Name.getRDNs(BCStyle.ST)[0]).getFirst().getValue()), state));
-		certParams.setCountry(getParamValue(IETFUtils.valueToString((x500Name.getRDNs(BCStyle.C)[0]).getFirst().getValue()), country));
+		certParams.setOrganizationUnit(getParamValue(getAttributeIfExist(x500Name, BCStyle.OU), organizationUnit));
+		certParams.setOrganization(getParamValue(getAttributeIfExist(x500Name, BCStyle.O), organization));
+		certParams.setLocation(getParamValue(getAttributeIfExist(x500Name, BCStyle.L), location));
+		certParams.setState(getParamValue(getAttributeIfExist(x500Name, BCStyle.ST), state));
+		certParams.setCountry(getParamValue(getAttributeIfExist(x500Name, BCStyle.C), country));
 		certParams.setNotBefore(notBefore);
 		certParams.setNotAfter(notAfter);
 		return certParams;
 	}
+
+	private static String getAttributeIfExist(X500Name x500Name, ASN1ObjectIdentifier identifier) {
+        RDN[] rdns = x500Name.getRDNs(identifier);
+        if (rdns.length == 0) {
+            return KeymanagerConstant.EMPTY;
+        }
+        return IETFUtils.valueToString((rdns[0]).getFirst().getValue());
+    }
 
 	public CertificateParameters getCertificateParameters(KeyPairGenerateRequestDto request, LocalDateTime notBefore, LocalDateTime notAfter) {
 

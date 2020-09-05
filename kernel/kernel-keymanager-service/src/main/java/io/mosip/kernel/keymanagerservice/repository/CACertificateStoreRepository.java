@@ -49,5 +49,14 @@ public interface CACertificateStoreRepository extends JpaRepository<CACertificat
 	 * @param certSubject Certificate Subject
 	 * @return list of CACertificateStore
 	 */
-    List<CACertificateStore> findByCertSubject(String certSubject);
+	List<CACertificateStore> findByCertSubject(String certSubject);
+	
+	/**
+	 * Function to find CACertificates by Partner Domain. 
+	 * 
+	 * @param partnerDomain Certificate Subject
+	 * @return list of CACertificateStore
+	 */
+	List<CACertificateStore> findByPartnerDomain(String partnerDomain);
+	
 }

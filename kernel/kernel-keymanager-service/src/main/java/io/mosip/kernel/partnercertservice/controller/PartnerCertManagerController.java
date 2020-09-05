@@ -3,7 +3,10 @@ package io.mosip.kernel.partnercertservice.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,7 +49,7 @@ public class PartnerCertManagerController {
 	 * @param caCertRequestDto {@link CACertificateRequestDto} request
 	 * @return {@link CACertficateResponseDto} Upload Success
 	 */
-	//@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION','TEST', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL', 'PMS_ADMIN')")
 	@ResponseFilter
 	@PostMapping(value = "/uploadCACertificate", produces = "application/json")
 	public ResponseWrapper<CACertificateResponseDto> uploadCACertificate(
@@ -63,7 +66,7 @@ public class PartnerCertManagerController {
 	 * @param partnerCertRequestDto {@link PartnerCertificateRequestDto} request
 	 * @return {@link PartnerCertificateResponseDto} signed certificate response
 	 */
-	//@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION','TEST', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL', 'ID_AUTHENTICATION', 'PMS_USER')")
 	@ResponseFilter
 	@PostMapping(value = "/uploadPartnerCertificate", produces = "application/json")
 	public ResponseWrapper<PartnerCertificateResponseDto> uploadPartnerCertificate(
@@ -80,14 +83,15 @@ public class PartnerCertManagerController {
 	 * @param certDownloadRequestDto {@link PartnerCertDownloadRequestDto} request
 	 * @return {@link PartnerCertDownloadResponeDto} encrypted Data
 	 */
-	//@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION','TEST', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL', 'ID_AUTHENTICATION', 'PMS_USER')")
 	@ResponseFilter
-	@PostMapping(value = "/getPartnerCertificate", produces = "application/json")
+	@GetMapping(value = "/getPartnerCertificate/{partnerCertId}")
 	public ResponseWrapper<PartnerCertDownloadResponeDto> getPartnerCertificate(
-			@ApiParam("To download resigned partner certificate.") @RequestBody @Valid RequestWrapper<PartnerCertDownloadRequestDto> certDownloadRequestDto) {
-		
+			@ApiParam("To download re-signed partner certificate.") @PathVariable("partnerCertId") String partnerCertId) {
+		PartnerCertDownloadRequestDto certDownloadRequestDto = new PartnerCertDownloadRequestDto();
+		certDownloadRequestDto.setPartnerCertId(partnerCertId);
 		ResponseWrapper<PartnerCertDownloadResponeDto> response = new ResponseWrapper<>();
-		response.setResponse(partnerCertManagerService.getPartnerCertificate(certDownloadRequestDto.getRequest()));
+		response.setResponse(partnerCertManagerService.getPartnerCertificate(certDownloadRequestDto));
 		return response;
     }
     

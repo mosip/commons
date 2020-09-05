@@ -135,13 +135,25 @@ public class CertificateUtility {
 		 
 		/* return "CN=" + certParams.getCommonName() + ", OU =" + certParams.getOrganizationUnit() + ",O=" + certParams.getOrganization() 
 					+ ", L=" + certParams.getLocation() + ", ST=" + certParams.getState() + ", C=" + certParams.getCountry(); */
-		return new X500NameBuilder(RFC4519Style.INSTANCE)
-										.addRDN(BCStyle.C, certParams.getCountry())
-										.addRDN(BCStyle.ST, certParams.getState())
-										.addRDN(BCStyle.L, certParams.getLocation())
-										.addRDN(BCStyle.O, certParams.getOrganization())
-										.addRDN(BCStyle.OU, certParams.getOrganizationUnit())
-										.addRDN(BCStyle.CN, certParams.getCommonName())
-										.build();
+		X500NameBuilder builder = new X500NameBuilder(RFC4519Style.INSTANCE);
+		if (certParams.getCountry() != null && !certParams.getCountry().isEmpty())
+			builder.addRDN(BCStyle.C, certParams.getCountry());
+		
+		if (certParams.getState() != null && !certParams.getState().isEmpty())
+			builder.addRDN(BCStyle.ST, certParams.getState());
+
+		if (certParams.getLocation() != null && !certParams.getLocation().isEmpty())
+			builder.addRDN(BCStyle.L, certParams.getLocation());
+
+		if (certParams.getOrganization() != null && !certParams.getOrganization().isEmpty())
+			builder.addRDN(BCStyle.O, certParams.getOrganization());
+
+		if (certParams.getOrganizationUnit() != null && !certParams.getOrganizationUnit().isEmpty())
+			builder.addRDN(BCStyle.OU, certParams.getOrganizationUnit());
+
+		if (certParams.getCommonName() != null && !certParams.getCommonName().isEmpty())
+			builder.addRDN(BCStyle.CN, certParams.getCommonName());
+		
+		return builder.build();
     }
 }
