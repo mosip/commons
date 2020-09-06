@@ -24,6 +24,7 @@ CREATE TABLE keymgr.ca_cert_store(
 	cert_data character varying(2500),
 	cert_thumbprint character varying(100),
 	cert_serial_no character varying(50),
+	partner_domain character varying(36),
 	cr_by character varying(256),
 	cr_dtimes timestamp,
 	upd_by character varying(256),
@@ -55,6 +56,8 @@ COMMENT ON COLUMN keymgr.ca_cert_store.cert_data IS 'Certificate Data: PEM Encod
 COMMENT ON COLUMN keymgr.ca_cert_store.cert_thumbprint IS 'Certificate Thumb Print: SHA1 generated certificate thumbprint.';
 -- ddl-end --
 COMMENT ON COLUMN keymgr.ca_cert_store.cert_serial_no IS 'Certificate Serial No: Serial Number of the certificate.';
+-- ddl-end --
+COMMENT ON COLUMN keymgr.ca_cert_store.partner_domain IS 'Partner Domain : To add Partner Domain in CA/Sub-CA certificate chain';
 -- ddl-end --
 COMMENT ON COLUMN keymgr.ca_cert_store.cr_by IS 'Created By : ID or name of the user who create / insert record';
 -- ddl-end --
