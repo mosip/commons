@@ -39,7 +39,7 @@ public class PartnerCertificateRequestDto {
     /**
 	 * Partner Type.
 	 */
-	@ApiModelProperty(notes = "Partner Type", required = true)
+	@ApiModelProperty(notes = "Partner Domain", required = true)
 	@NotBlank(message = KeymanagerConstant.INVALID_REQUEST)
-	String partnerType;
+	String partnerDomain;
 }

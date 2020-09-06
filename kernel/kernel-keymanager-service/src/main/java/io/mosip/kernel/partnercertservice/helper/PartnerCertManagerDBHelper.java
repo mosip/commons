@@ -73,7 +73,7 @@ public class PartnerCertManagerDBHelper {
     }
 
     public void storeCACertificate(String certId, String certSubject, String certIssuer, String issuerId, 
-                    X509Certificate reqX509Cert, String certThumbprint) {
+                    X509Certificate reqX509Cert, String certThumbprint, String partnerDomain) {
 
         String certSerialNo = reqX509Cert.getSerialNumber().toString();
         LocalDateTime notBeforeDate = DateUtils.parseDateToLocalDateTime(reqX509Cert.getNotBefore());
@@ -89,13 +89,14 @@ public class PartnerCertManagerDBHelper {
         certStoreObj.setCertData(certData);
         certStoreObj.setCertThumbprint(certThumbprint);
         certStoreObj.setCertSerialNo(certSerialNo);
+        certStoreObj.setPartnerDomain(partnerDomain);
         caCertificateStoreRepository.saveAndFlush(keymanagerUtil.setMetaData(certStoreObj));
     }
 
-    public Map<String, Set<?>> getTrustAnchors() {
+    public Map<String, Set<?>> getTrustAnchors(String partnerDomain) {
         Set<TrustAnchor> rootTrust = new HashSet<>();
         Set<X509Certificate> intermediateCerts = new HashSet<>();
-        caCertificateStoreRepository.findAll().stream().forEach(
+        caCertificateStoreRepository.findByPartnerDomain(partnerDomain).stream().forEach(
             trustCert -> {
                 String certificateData = trustCert.getCertData();
                 X509Certificate x509Cert = (X509Certificate) keymanagerUtil.convertToCertificate(certificateData);
@@ -129,7 +130,7 @@ public class PartnerCertManagerDBHelper {
     }
 
     public void storePartnerCertificate(String certId, String certSubject, String certIssuer, String issuerId, 
-                    X509Certificate reqX509Cert, String certThumbprint, String orgName, String partnerType,
+                    X509Certificate reqX509Cert, String certThumbprint, String orgName, String partnerDomain,
                     String signedCertData) {
 
         String certSerialNo = reqX509Cert.getSerialNumber().toString();
@@ -148,7 +149,7 @@ public class PartnerCertManagerDBHelper {
         partnerStoreObj.setCertThumbprint(certThumbprint);
         partnerStoreObj.setCertSerialNo(certSerialNo);
         partnerStoreObj.setOrganizationName(orgName);
-        partnerStoreObj.setPartnerType(partnerType);
+        partnerStoreObj.setPartnerDomain(partnerDomain);
         partnerStoreObj.setKeyUsage(PartnerCertManagerConstants.EMPTY); //TODO update key usage later.
         partnerStoreObj.setSignedCertData(signedCertData);
         partnerCertificateStoreRepository.saveAndFlush(keymanagerUtil.setMetaData(partnerStoreObj));

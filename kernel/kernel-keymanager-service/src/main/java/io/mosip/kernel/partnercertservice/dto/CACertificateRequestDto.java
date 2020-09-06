@@ -28,4 +28,11 @@ public class CACertificateRequestDto {
 	@ApiModelProperty(notes = "X509 Certificate Data", required = true)
 	@NotBlank(message = KeymanagerConstant.INVALID_REQUEST)
 	String certificateData;
+
+	 /**
+	 * Certificate Data of CA or Sub-CA.
+	 */
+	@ApiModelProperty(notes = "Partner Domain", required = true)
+	@NotBlank(message = KeymanagerConstant.INVALID_REQUEST)
+	String partnerDomain;
 }

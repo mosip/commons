@@ -33,7 +33,7 @@ public enum KeymanagerErrorConstant {
 
 	KEY_GENERATION_NOT_DONE("KER-KMS-012", "Key Generation Process is not completed."),
 
-	CERTIFICATE_PARSING_ERROR("KER-KMS-013", "Certificating Parsing Error."),
+	CERTIFICATE_PARSING_ERROR("KER-KMS-013", "Certificate Parsing Error."),
 
 	KEY_NOT_MATCHING("KER-KMS-014", "Certificate Key Not Matching with stored Key."),
 

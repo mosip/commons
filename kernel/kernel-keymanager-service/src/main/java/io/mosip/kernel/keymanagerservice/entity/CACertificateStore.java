@@ -86,4 +86,10 @@ public class CACertificateStore extends BaseEntity {
     @Column(name = "cert_serial_no")
     private String certSerialNo;
     
+    /**
+	 * The field partner_domain
+	 */
+    @Column(name = "partner_domain")
+    private String partnerDomain;
+    
 }
