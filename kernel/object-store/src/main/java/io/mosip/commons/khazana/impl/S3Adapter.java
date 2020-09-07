@@ -57,6 +57,14 @@ public class S3Adapter implements ObjectStoreAdapter {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (s3Object != null) {
+                try {
+                    s3Object.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return null;
     }
