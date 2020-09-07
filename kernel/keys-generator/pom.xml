@@ -1,16 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	
-	<artifactId>kernel-biosdk-provider</artifactId>
-	<groupId>io.mosip.kernel</groupId>
-	<version>1.2.0-SNAPSHOT</version>
-	<name>kernel-biosdk-provider</name>
-	<description>Implementation of biosdk provider</description>
-	<packaging>jar</packaging>
-	
-	<properties>
-	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+ 
+  <groupId>io.mosip.kernel</groupId>
+  <artifactId>keys-generator</artifactId>
+  <version>1.2.0-SNAPSHOT</version>
+  <properties>		
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- maven -->
 		<maven.compiler.source>11</maven.compiler.source>
@@ -30,12 +25,12 @@
 		<spring.data.jpa.version>2.0.7.RELEASE</spring.data.jpa.version>
 		<spring.security.test.version>5.0.5.RELEASE</spring.security.test.version>
 		<spring-cloud-config.version>2.0.4.RELEASE</spring-cloud-config.version>
-
+                
 		<!-- swagger -->
 		<swagger.core.version>2.0.7</swagger.core.version>
 		<swagger.annotations.version>1.5.21</swagger.annotations.version>
 		<springfox.version>2.9.2</springfox.version>
-
+                
 		<!-- vertx -->
 		<vertx.version>3.6.2</vertx.version>
 		<vertx.health.check.version>3.7.0</vertx.health.check.version>
@@ -115,53 +110,97 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.2.0-SNAPSHOT</kernel.core.version>
-		<kernel.biometricsdk.version>1.2.0-SNAPSHOT</kernel.biometricsdk.version>
-		<kernel.logger.logback.version>1.0.6</kernel.logger.logback.version>
-	</properties>
-	
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-			<version>${spring.boot.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<version>${spring.boot.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-biometrics-api</artifactId>
-			<version>${kernel.biometricsdk.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-core</artifactId>
-			<version>${kernel.core.version}</version>
-		</dependency>
-		
-		 <dependency>
-            <groupId>io.mosip.kernel</groupId>
-            <artifactId>kernel-logger-logback</artifactId>
-            <version>${kernel.logger.logback.version}</version>
-        </dependency>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+		<icu4j.version>63.1</icu4j.version>
+		<seventeam-otp.version>1.0.0</seventeam-otp.version>
+		<google.zxing.version>3.3.3</google.zxing.version>
+		<hadoop-client>3.1.0</hadoop-client>
+		<htrace-core4>4.1.0-incubating</htrace-core4>
+		<aws.javasdk.version>1.11.368</aws.javasdk.version>
+		<s3mock.version>0.2.4</s3mock.version>
+		<ignite.version>2.3.0</ignite.version>
+		<findbugs.version>3.0.1</findbugs.version>
+		<byte.buddy.version>1.9.12</byte.buddy.version>
+		<io.jsonwebtoken.jjwt.version>0.6.0</io.jsonwebtoken.jjwt.version>
+		<apache.directory.api.version>2.0.0.AM2</apache.directory.api.version>
+		<aspectjweaver.version>1.8.12</aspectjweaver.version>
+		<micrometer.core.version>1.4.2</micrometer.core.version>
+		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
+		<kernel.core.version>1.2.0-SNAPSHOT</kernel.core.version>
+		<kernel.auth.adaptor.version>1.2.0-SNAPSHOT</kernel.auth.adaptor.version>
+		<kernel-dataaccess-hibernate.version>1.0.7</kernel-dataaccess-hibernate.version>
+		<kernel.logger.logback.version>1.0.6</kernel.logger.logback.version>
+		<kernel.pdfgenerator.itext.version>1.0.6</kernel.pdfgenerator.itext.version>
+		<kernel-keymanager-service.version>1.2.0-SNAPSHOT</kernel-keymanager-service.version>
+		<jose4j.version>0.6.5</jose4j.version>
+
+		<tss.version>0.3.0</tss.version>
+	</properties>
+
+  <dependencies>
+  	<dependency>
+  		<groupId>org.projectlombok</groupId>
+  		<artifactId>lombok</artifactId>
+  		<version>${lombok.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.springframework.boot</groupId>
+  		<artifactId>spring-boot-starter-web</artifactId>
+  		<version>${spring.boot.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.springframework.boot</groupId>
+  		<artifactId>spring-boot-starter-data-jpa</artifactId>
+  		<version>${spring.boot.version}</version>
+  	</dependency>
+  			<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+			<version>${spring-cloud-config.version}</version>
+		</dependency>				
+  	<dependency>
+  		<groupId>org.postgresql</groupId>
+  		<artifactId>postgresql</artifactId>
+  		<version>42.2.1</version>
+  	</dependency>
+	  <dependency>
+			<groupId>io.mosip.kernel</groupId>
+			<artifactId>kernel-keymanager-service</artifactId>
+			<version>${kernel-keymanager-service.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.security</groupId>
+					<artifactId>spring-security-config</artifactId>
+				</exclusion>
+			</exclusions>
+			<classifier>lib</classifier>
+		</dependency>
 		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>${lombok.version}</version>
-			<scope>compile</scope>
-		</dependency>
-		
-		 <dependency>
-			<artifactId>mock-sdk</artifactId>
-			<groupId>io.mosip.mock.sdk</groupId>
-			<version>0.9.1-SNAPSHOT</version>
-			<scope>test</scope>
-		</dependency>
-				
-				
-	</dependencies>
+    <groupId>org.javassist</groupId>
+    <artifactId>javassist</artifactId>
+    <version>3.25.0-GA</version>
+</dependency>
+  </dependencies>
+  <build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${spring.boot.version}</version>
+				<configuration>
+					<executable>true</executable>
+					<layout>ZIP</layout>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>build-info</goal>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

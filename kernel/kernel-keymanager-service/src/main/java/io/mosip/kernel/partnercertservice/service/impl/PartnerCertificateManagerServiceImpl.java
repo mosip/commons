@@ -14,10 +14,15 @@ import java.security.cert.TrustAnchor;
 import java.security.cert.X509CertSelector;
 import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.security.auth.x500.X500Principal;
 
@@ -66,7 +71,10 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
 
     @Value("${mosip.kernel.partner.sign.masterkey.application.id}")
 	private String masterSignKeyAppId;
-
+    
+    @Value("${mosip.kernel.partner.allowed.domains}")
+    private String partnerAllowedDomains;
+    
     /**
 	 * Utility to generate Metadata
 	 */
@@ -107,6 +115,8 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
         String certThumbprint = PartnerCertificateManagerUtil.getCertificateThumbprint(reqX509Cert);
         validateBasicCACertParams(reqX509Cert, certThumbprint);
         
+        String partnerDomain = validateAllowedDomains(caCertRequestDto.getPartnerDomain());
+        
         String certSubject = PartnerCertificateManagerUtil.formatCertificateDN(reqX509Cert.getSubjectX500Principal().getName());
         String certIssuer = PartnerCertificateManagerUtil.formatCertificateDN(reqX509Cert.getIssuerX500Principal().getName());
         boolean selfSigned = PartnerCertificateManagerUtil.isSelfSignedCertificate(reqX509Cert);
@@ -115,12 +125,12 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
             LOGGER.info(PartnerCertManagerConstants.SESSIONID, PartnerCertManagerConstants.UPLOAD_CA_CERT, 
                     PartnerCertManagerConstants.EMPTY,	"Adding Self-signed Certificate in store.");
             String certId = UUID.randomUUID().toString();
-            certDBHelper.storeCACertificate(certId, certSubject, certIssuer, certId, reqX509Cert, certThumbprint);
+            certDBHelper.storeCACertificate(certId, certSubject, certIssuer, certId, reqX509Cert, certThumbprint, partnerDomain);
         } else {
             LOGGER.info(PartnerCertManagerConstants.SESSIONID, PartnerCertManagerConstants.UPLOAD_CA_CERT, 
                     PartnerCertManagerConstants.EMPTY,	"Adding Intermediate Certificates in store.");
             
-            boolean certValid = validateCertificatePath(reqX509Cert);
+            boolean certValid = validateCertificatePath(reqX509Cert, partnerDomain);
             if (!certValid) {
                 LOGGER.error(PartnerCertManagerConstants.SESSIONID, PartnerCertManagerConstants.UPLOAD_CA_CERT, 
                     PartnerCertManagerConstants.EMPTY, "Sub-CA Certificate not allowed to upload as root CA is not available.");
@@ -129,7 +139,7 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
             }
             String issuerId = certDBHelper.getIssuerCertId(certIssuer);
             String certId = UUID.randomUUID().toString();
-            certDBHelper.storeCACertificate(certId, certSubject, certIssuer, issuerId, reqX509Cert, certThumbprint);
+            certDBHelper.storeCACertificate(certId, certSubject, certIssuer, issuerId, reqX509Cert, certThumbprint, partnerDomain);
         }
         CACertificateResponseDto responseDto = new CACertificateResponseDto();
         responseDto.setStatus(PartnerCertManagerConstants.SUCCESS_UPLOAD);
@@ -155,10 +165,19 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
         }
     }
 
-    private boolean validateCertificatePath(X509Certificate reqX509Cert) {
+    private String validateAllowedDomains(String partnerDomain) {
+        String validPartnerDomain = Stream.of(partnerAllowedDomains.split(","))
+                                    .map(String::trim).filter(allowedDomain -> allowedDomain.equalsIgnoreCase(partnerDomain))
+                                    .findFirst().orElseThrow(() -> new PartnerCertManagerException(
+                                                 PartnerCertManagerErrorConstants.INVALID_PARTNER_DOMAIN.getErrorCode(),
+                                                 PartnerCertManagerErrorConstants.INVALID_PARTNER_DOMAIN.getErrorMessage()));
+        return validPartnerDomain.toUpperCase();
+    }
+
+    private boolean validateCertificatePath(X509Certificate reqX509Cert, String partnerDomain) {
         
         try {
-            Map<String, Set<?>> trustStoreMap = certDBHelper.getTrustAnchors();
+            Map<String, Set<?>> trustStoreMap = certDBHelper.getTrustAnchors(partnerDomain);
             Set<TrustAnchor> rootTrustAnchors = (Set<TrustAnchor>) trustStoreMap.get(PartnerCertManagerConstants.TRUST_ROOT);
             Set<X509Certificate> interCerts = (Set<X509Certificate>) trustStoreMap.get(PartnerCertManagerConstants.TRUST_INTER);
 
@@ -201,18 +220,19 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
         X509Certificate reqX509Cert = (X509Certificate) keymanagerUtil.convertToCertificate(certificateData);
         String certThumbprint = PartnerCertificateManagerUtil.getCertificateThumbprint(reqX509Cert);
         String reqOrgName = partnerCertRequesteDto.getOrganizationName();
-        validateBasicPartnerCertParams(reqX509Cert, certThumbprint, reqOrgName);
+        String partnerDomain = validateAllowedDomains(partnerCertRequesteDto.getPartnerDomain());
+
+        validateBasicPartnerCertParams(reqX509Cert, certThumbprint, reqOrgName, partnerDomain);
 
         String certSubject = PartnerCertificateManagerUtil.formatCertificateDN(reqX509Cert.getSubjectX500Principal().getName());
         String certIssuer = PartnerCertificateManagerUtil.formatCertificateDN(reqX509Cert.getIssuerX500Principal().getName());
         String issuerId = certDBHelper.getIssuerCertId(certIssuer);
         String certId = UUID.randomUUID().toString();
-        String partnerType = partnerCertRequesteDto.getPartnerType();
         
         X509Certificate resignedCert = reSignPartnerKey(reqX509Cert);
         String signedCertData = keymanagerUtil.getPEMFormatedData(resignedCert);
         certDBHelper.storePartnerCertificate(certId, certSubject, certIssuer, issuerId, reqX509Cert, certThumbprint, reqOrgName, 
-                                           partnerType, signedCertData);
+                                partnerDomain, signedCertData);
         PartnerCertificateResponseDto responseDto = new PartnerCertificateResponseDto();
         responseDto.setCertificateId(certId);
         responseDto.setSignedCertificateData(signedCertData);
@@ -220,7 +240,7 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
         return responseDto;
     }
 
-    private void validateBasicPartnerCertParams(X509Certificate reqX509Cert, String certThumbprint, String reqOrgName) {
+    private void validateBasicPartnerCertParams(X509Certificate reqX509Cert, String certThumbprint, String reqOrgName, String partnerDomain) {
         boolean certExist = certDBHelper.isPartnerCertificateExist(certThumbprint);
         if (certExist) {
             LOGGER.error(PartnerCertManagerConstants.SESSIONID, PartnerCertManagerConstants.UPLOAD_PARTNER_CERT, 
@@ -237,7 +257,7 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
                             PartnerCertManagerErrorConstants.CERTIFICATE_DATES_NOT_VALID.getErrorMessage());
         }
 
-        boolean certValid = validateCertificatePath(reqX509Cert);
+        boolean certValid = validateCertificatePath(reqX509Cert, partnerDomain);
         if (!certValid) {
             LOGGER.error(PartnerCertManagerConstants.SESSIONID, PartnerCertManagerConstants.UPLOAD_PARTNER_CERT, 
                 PartnerCertManagerConstants.EMPTY, "Partner Certificate not allowed to upload as root CA/Intermediate CAs are not available.");
@@ -259,6 +279,25 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
                 PartnerCertManagerConstants.EMPTY, "Partner Certificate Organization and Partner Organization Name not matching.");
             throw new PartnerCertManagerException(PartnerCertManagerErrorConstants.PARTNER_ORG_NOT_MATCH.getErrorCode(),
                         PartnerCertManagerErrorConstants.PARTNER_ORG_NOT_MATCH.getErrorMessage());
+        }
+
+        String keyAlgorithm = reqX509Cert.getPublicKey().getAlgorithm();
+        if (keyAlgorithm.equalsIgnoreCase(PartnerCertManagerConstants.RSA_ALGORITHM)) {
+            int keySize = ((java.security.interfaces.RSAPublicKey)reqX509Cert.getPublicKey()).getModulus().bitLength();
+            if (keySize < PartnerCertManagerConstants.RSA_MIN_KEY_SIZE) {
+                LOGGER.error(PartnerCertManagerConstants.SESSIONID, PartnerCertManagerConstants.UPLOAD_PARTNER_CERT, 
+                    PartnerCertManagerConstants.EMPTY, "Partner Certificate key is less than allowed size.");
+                throw new PartnerCertManagerException(PartnerCertManagerErrorConstants.CERT_KEY_NOT_ALLOWED.getErrorCode(),
+                        PartnerCertManagerErrorConstants.CERT_KEY_NOT_ALLOWED.getErrorMessage());
+            }
+        }
+        
+        String signatureAlgorithm = reqX509Cert.getSigAlgName();
+        if (!signatureAlgorithm.toUpperCase().startsWith(PartnerCertManagerConstants.HASH_SHA2)){
+            LOGGER.error(PartnerCertManagerConstants.SESSIONID, PartnerCertManagerConstants.UPLOAD_PARTNER_CERT, 
+                    PartnerCertManagerConstants.EMPTY, "Signature Algorithm not supported.");
+                throw new PartnerCertManagerException(PartnerCertManagerErrorConstants.CERT_SIGNATURE_ALGO_NOT_ALLOWED.getErrorCode(),
+                        PartnerCertManagerErrorConstants.CERT_SIGNATURE_ALGO_NOT_ALLOWED.getErrorMessage());
         }
     }
 
@@ -297,7 +336,7 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
         PublicKey partnerPublicKey = reqX509Cert.getPublicKey();
         LocalDateTime notBeforeDate = DateUtils.parseDateToLocalDateTime(reqX509Cert.getNotBefore());
         LocalDateTime notAfterDate = DateUtils.parseDateToLocalDateTime(reqX509Cert.getNotAfter());
-        CertificateParameters certParams = keymanagerUtil.getCertificateParameters(subjectPrincipal, notBeforeDate, notAfterDate);
+        CertificateParameters certParams = PartnerCertificateManagerUtil.getCertificateParameters(subjectPrincipal, notBeforeDate, notAfterDate);
         return (X509Certificate) keyStore.generateCertificate(signPrivateKey, partnerPublicKey, certParams, signerPrincipal);
     }
 
@@ -313,6 +352,13 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
                             PartnerCertManagerErrorConstants.INVALID_CERTIFICATE_ID.getErrorMessage());
         }
         PartnerCertificateStore partnerCertStore = certDBHelper.getPartnetCert(partnetCertId);
+        if (Objects.isNull(partnerCertStore)){
+            LOGGER.error(PartnerCertManagerConstants.SESSIONID, PartnerCertManagerConstants.UPLOAD_PARTNER_CERT, 
+                PartnerCertManagerConstants.EMPTY, "Partner Certificate ID not found.");
+			throw new PartnerCertManagerException(PartnerCertManagerErrorConstants.PARTNER_CERT_ID_NOT_FOUND.getErrorCode(),
+                            PartnerCertManagerErrorConstants.PARTNER_CERT_ID_NOT_FOUND.getErrorMessage());
+        }
+
         PartnerCertDownloadResponeDto responseDto = new PartnerCertDownloadResponeDto();
         responseDto.setCertificateData(partnerCertStore.getSignedCertData());
         responseDto.setTimestamp(DateUtils.getUTCCurrentDateTime());

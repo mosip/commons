@@ -86,4 +86,12 @@
 \ir ddl/master-bulkupload_transaction.sql
 \ir ddl/master-sync_job_def.sql
 
+\ir ddl/master-batch_job_execution.sql
+\ir ddl/master-batch_job_execution_context.sql
+\ir ddl/master-batch_job_execution_param.sql
+\ir ddl/master-batch_job_instance.sql
+\ir ddl/master-batch_step_execution.sql
+\ir ddl/master-batch_step_execution_context.sql
+
 \ir ddl/master-fk.sql
+\ir ddl/master-batch-fk.sql

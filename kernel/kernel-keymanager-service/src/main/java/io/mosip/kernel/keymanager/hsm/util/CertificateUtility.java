@@ -15,6 +15,7 @@ import java.util.Objects;
 
 import javax.security.auth.x500.X500Principal;
 
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
@@ -135,13 +136,18 @@ public class CertificateUtility {
 		 
 		/* return "CN=" + certParams.getCommonName() + ", OU =" + certParams.getOrganizationUnit() + ",O=" + certParams.getOrganization() 
 					+ ", L=" + certParams.getLocation() + ", ST=" + certParams.getState() + ", C=" + certParams.getCountry(); */
-		return new X500NameBuilder(RFC4519Style.INSTANCE)
-										.addRDN(BCStyle.C, certParams.getCountry())
-										.addRDN(BCStyle.ST, certParams.getState())
-										.addRDN(BCStyle.L, certParams.getLocation())
-										.addRDN(BCStyle.O, certParams.getOrganization())
-										.addRDN(BCStyle.OU, certParams.getOrganizationUnit())
-										.addRDN(BCStyle.CN, certParams.getCommonName())
-										.build();
-    }
+		X500NameBuilder builder = new X500NameBuilder(RFC4519Style.INSTANCE);
+		addRDN(certParams.getCountry(), builder, BCStyle.C);
+		addRDN(certParams.getState(), builder, BCStyle.ST);
+		addRDN(certParams.getLocation(), builder, BCStyle.L);
+		addRDN(certParams.getOrganization(), builder, BCStyle.O);
+		addRDN(certParams.getOrganizationUnit(), builder, BCStyle.OU);
+		addRDN(certParams.getCommonName(), builder, BCStyle.CN);
+		return builder.build();
+	}
+	
+	private static void addRDN(String dnValue, X500NameBuilder builder, ASN1ObjectIdentifier identifier) {
+		if (dnValue != null && !dnValue.isEmpty())
+			builder.addRDN(identifier, dnValue);
+	}
 }

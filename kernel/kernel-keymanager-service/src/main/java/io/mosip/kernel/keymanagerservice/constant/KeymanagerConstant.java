@@ -153,4 +153,6 @@ public class KeymanagerConstant {
 	public static final String BASE_KEY_POLICY_CONST = "BASE";
 
 	public static final String UPLOAD_SUCCESS = "Upload Success";
+
+	public static final String CERTIFICATE_PARSE = "CERTIFICATE_PARSE";
 }

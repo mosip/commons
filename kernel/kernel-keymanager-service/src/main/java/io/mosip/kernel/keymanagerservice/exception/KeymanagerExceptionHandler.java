@@ -50,6 +50,7 @@ import io.mosip.kernel.keymanagerservice.constant.KeymanagerConstant;
 import io.mosip.kernel.keymanagerservice.constant.KeymanagerErrorConstant;
 import io.mosip.kernel.lkeymanager.exception.InvalidArgumentsException;
 import io.mosip.kernel.lkeymanager.exception.LicenseKeyServiceException;
+import io.mosip.kernel.partnercertservice.exception.PartnerCertManagerException;
 import io.mosip.kernel.signature.exception.RequestException;
 import io.mosip.kernel.signature.exception.SignatureFailureException;
 import io.mosip.kernel.zkcryptoservice.exception.ZKCryptoException;
@@ -234,6 +235,14 @@ public class KeymanagerExceptionHandler {
 	@ExceptionHandler(ZKRandomKeyDecryptionException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> zkRandomKeyDecryptionException(
 			HttpServletRequest httpServletRequest, final ZKRandomKeyDecryptionException e) throws IOException {
+		ExceptionUtils.logRootCause(e);
+		return new ResponseEntity<>(
+				getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText(), HttpStatus.OK), HttpStatus.OK);
+	}
+
+	@ExceptionHandler(PartnerCertManagerException.class)
+	public ResponseEntity<ResponseWrapper<ServiceError>> partnerCertManagerException(
+			HttpServletRequest httpServletRequest, final PartnerCertManagerException e) throws IOException {
 		ExceptionUtils.logRootCause(e);
 		return new ResponseEntity<>(
 				getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText(), HttpStatus.OK), HttpStatus.OK);
