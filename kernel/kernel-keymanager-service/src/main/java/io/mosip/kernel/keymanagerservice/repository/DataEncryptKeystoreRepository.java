@@ -34,4 +34,12 @@ public interface DataEncryptKeystoreRepository extends JpaRepository<DataEncrypt
 	 */
 	@Query("SELECT d.id from DataEncryptKeystore d where d.keyStatus = :status")
 	List<Integer> getIdsByKeyStatus(@Param("status") String status);
+
+	/**
+	 * Get the max id.
+	 * 
+	 * @return the max id
+	 */
+	@Query("SELECT MAX(d.id) from DataEncryptKeystore d")
+	Long findMaxId();
 }
