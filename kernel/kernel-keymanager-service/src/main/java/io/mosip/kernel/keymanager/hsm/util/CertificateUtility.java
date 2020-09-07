@@ -15,6 +15,7 @@ import java.util.Objects;
 
 import javax.security.auth.x500.X500Principal;
 
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
@@ -136,24 +137,17 @@ public class CertificateUtility {
 		/* return "CN=" + certParams.getCommonName() + ", OU =" + certParams.getOrganizationUnit() + ",O=" + certParams.getOrganization() 
 					+ ", L=" + certParams.getLocation() + ", ST=" + certParams.getState() + ", C=" + certParams.getCountry(); */
 		X500NameBuilder builder = new X500NameBuilder(RFC4519Style.INSTANCE);
-		if (certParams.getCountry() != null && !certParams.getCountry().isEmpty())
-			builder.addRDN(BCStyle.C, certParams.getCountry());
-		
-		if (certParams.getState() != null && !certParams.getState().isEmpty())
-			builder.addRDN(BCStyle.ST, certParams.getState());
-
-		if (certParams.getLocation() != null && !certParams.getLocation().isEmpty())
-			builder.addRDN(BCStyle.L, certParams.getLocation());
-
-		if (certParams.getOrganization() != null && !certParams.getOrganization().isEmpty())
-			builder.addRDN(BCStyle.O, certParams.getOrganization());
-
-		if (certParams.getOrganizationUnit() != null && !certParams.getOrganizationUnit().isEmpty())
-			builder.addRDN(BCStyle.OU, certParams.getOrganizationUnit());
-
-		if (certParams.getCommonName() != null && !certParams.getCommonName().isEmpty())
-			builder.addRDN(BCStyle.CN, certParams.getCommonName());
-		
+		addRDN(certParams.getCountry(), builder, BCStyle.C);
+		addRDN(certParams.getState(), builder, BCStyle.ST);
+		addRDN(certParams.getLocation(), builder, BCStyle.L);
+		addRDN(certParams.getOrganization(), builder, BCStyle.O);
+		addRDN(certParams.getOrganizationUnit(), builder, BCStyle.OU);
+		addRDN(certParams.getCommonName(), builder, BCStyle.CN);
 		return builder.build();
-    }
+	}
+	
+	private static void addRDN(String dnValue, X500NameBuilder builder, ASN1ObjectIdentifier identifier) {
+		if (dnValue != null && !dnValue.isEmpty())
+			builder.addRDN(identifier, dnValue);
+	}
 }
