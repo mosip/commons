@@ -44,11 +44,11 @@ public class S3Adapter implements ObjectStoreAdapter {
     @Value("${object.store.s3.readlimit:10000000}")
     private int readlimit;
 
-    private Map<String, AmazonS3> connections = new HashMap<>();
+    private AmazonS3 connection = null;
 
     @Override
     public InputStream getObject(String account, String container, String objectName) {
-        S3Object s3Object = getConnection(account).getObject(container, objectName);
+        S3Object s3Object = getConnection(container).getObject(container, objectName);
         try {
             if (s3Object != null) {
                 ByteArrayInputStream bis = new ByteArrayInputStream(IOUtils.toByteArray(s3Object.getObjectContent()));
@@ -57,6 +57,14 @@ public class S3Adapter implements ObjectStoreAdapter {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (s3Object != null) {
+                try {
+                    s3Object.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return null;
     }
@@ -68,10 +76,10 @@ public class S3Adapter implements ObjectStoreAdapter {
 
     @Override
     public boolean putObject(String account, final String container, String objectName, InputStream data) {
-        Optional<Bucket> optionalBucket = getConnection(account).listBuckets().stream().filter(b -> b.getName().equalsIgnoreCase(container)).findAny();
-        Bucket bucket = !optionalBucket.isPresent() ? getConnection(account).createBucket(container) : optionalBucket.get();
+        Optional<Bucket> optionalBucket = getConnection(container).listBuckets().stream().filter(b -> b.getName().equalsIgnoreCase(container)).findAny();
+        Bucket bucket = !optionalBucket.isPresent() ? getConnection(container).createBucket(container) : optionalBucket.get();
 
-        getConnection(account).putObject(bucket.getName(), objectName, data, null);
+        getConnection(container).putObject(bucket.getName(), objectName, data, null);
         return true;
     }
 
@@ -81,13 +89,13 @@ public class S3Adapter implements ObjectStoreAdapter {
         metadata.entrySet().stream().forEach(m -> objectMetadata.addUserMetadata(m.getKey(), m.getValue() != null ? m.getValue().toString() : null));
         S3Object s3Object = null;
         try {
-            s3Object = getConnection(account).getObject(container, objectName);
+            s3Object = getConnection(container).getObject(container, objectName);
             if (s3Object.getObjectMetadata() != null && s3Object.getObjectMetadata().getUserMetadata() != null)
                 s3Object.getObjectMetadata().getUserMetadata().entrySet().forEach(m -> objectMetadata.addUserMetadata(m.getKey(), m.getValue()));
 
             PutObjectRequest putObjectRequest = new PutObjectRequest(container, objectName, s3Object.getObjectContent(), objectMetadata);
             putObjectRequest.getRequestClientOptions().setReadLimit(readlimit);
-            getConnection(account).putObject(putObjectRequest);
+            getConnection(container).putObject(putObjectRequest);
         } catch (Exception e) {
             e.printStackTrace();
             metadata = null;
@@ -113,22 +121,26 @@ public class S3Adapter implements ObjectStoreAdapter {
     @Override
     public Map<String, Object> getMetaData(String account, String container, String objectName) {
         Map<String, Object> metaData = new HashMap<>();
-        ObjectMetadata objectMetadata = getConnection(account).getObject(container, objectName).getObjectMetadata();
+        ObjectMetadata objectMetadata = getConnection(container).getObject(container, objectName).getObjectMetadata();
         if (objectMetadata != null && objectMetadata.getUserMetadata() != null)
             objectMetadata.getUserMetadata().entrySet().forEach(entry -> metaData.put(entry.getKey(), entry.getValue()));
 
         return metaData;
     }
 
-    private AmazonS3 getConnection(String account) {
-        if (!connections.isEmpty() && connections.get(account) != null)
-            return connections.get(account);
-
+    private AmazonS3 getConnection(String container) {
+        try {
+            if (connection != null) {
+                connection.doesBucketExistV2(container);
+                return connection;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Exception occured. Will try to create new connection");
+        }
         AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
-        AmazonS3 connection = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCredentials)).enablePathStyleAccess()
+        connection = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCredentials)).enablePathStyleAccess()
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(url, region)).build();
-
-        connections.put(account, connection);
 
         return connection;
     }
