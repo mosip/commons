@@ -179,6 +179,7 @@
 		<module>kernel-biometrics-api</module>
 		<module>kernel-biosdk-provider</module>
 		<module>object-store</module>
+		<module>keys-generator</module>
 	</modules>
 
 	<build>

@@ -49,7 +49,7 @@ public class PartnerCertManagerController {
 	 * @param caCertRequestDto {@link CACertificateRequestDto} request
 	 * @return {@link CACertficateResponseDto} Upload Success
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL', 'PMS_ADMIN')")
+	//@PreAuthorize("hasAnyRole('INDIVIDUAL', 'PMS_ADMIN')")
 	@ResponseFilter
 	@PostMapping(value = "/uploadCACertificate", produces = "application/json")
 	public ResponseWrapper<CACertificateResponseDto> uploadCACertificate(
@@ -66,7 +66,7 @@ public class PartnerCertManagerController {
 	 * @param partnerCertRequestDto {@link PartnerCertificateRequestDto} request
 	 * @return {@link PartnerCertificateResponseDto} signed certificate response
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL', 'ID_AUTHENTICATION', 'PMS_USER')")
+	//@PreAuthorize("hasAnyRole('INDIVIDUAL', 'ID_AUTHENTICATION', 'PMS_USER')")
 	@ResponseFilter
 	@PostMapping(value = "/uploadPartnerCertificate", produces = "application/json")
 	public ResponseWrapper<PartnerCertificateResponseDto> uploadPartnerCertificate(
@@ -83,7 +83,7 @@ public class PartnerCertManagerController {
 	 * @param certDownloadRequestDto {@link PartnerCertDownloadRequestDto} request
 	 * @return {@link PartnerCertDownloadResponeDto} encrypted Data
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL', 'ID_AUTHENTICATION', 'PMS_USER')")
+	//@PreAuthorize("hasAnyRole('INDIVIDUAL', 'ID_AUTHENTICATION', 'PMS_USER')")
 	@ResponseFilter
 	@GetMapping(value = "/getPartnerCertificate/{partnerCertId}")
 	public ResponseWrapper<PartnerCertDownloadResponeDto> getPartnerCertificate(
