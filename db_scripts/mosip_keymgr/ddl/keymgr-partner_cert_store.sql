@@ -20,7 +20,7 @@ CREATE TABLE keymgr.partner_cert_store(
 	issuer_id character varying(36) NOT NULL,
 	cert_not_before timestamp,
 	cert_not_after timestamp,
-	partner_type character varying(36),
+	partner_domain character varying(36),
 	cert_data character varying(2500),
 	signed_cert_data character varying(2500),
 	key_usage character varying(150),
@@ -51,7 +51,7 @@ COMMENT ON COLUMN keymgr.partner_cert_store.cert_not_before IS 'Certificate Star
 -- ddl-end --
 COMMENT ON COLUMN keymgr.partner_cert_store.cert_not_after IS 'Certificate Validity end Date: Certificate Interval - Validity End Date & Time';
 -- ddl-end --
-COMMENT ON COLUMN keymgr.partner_cert_store.partner_type IS 'Partner Type: Type of Partner example..Type are Auth Provider, DP, FTM';
+COMMENT ON COLUMN keymgr.partner_cert_store.partner_domain IS 'Partner Domain: Domain of Partner example..Type are Auth Provider, DP, FTM';
 -- ddl-end --
 COMMENT ON COLUMN keymgr.partner_cert_store.cert_data IS 'Certificate Data: PEM Encoded actual certificate data.';
 -- ddl-end --

@@ -22,6 +22,7 @@ import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.asn1.x500.style.IETFUtils;
 
+import io.mosip.kernel.core.keymanager.model.CertificateParameters;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.keymanagerservice.entity.CACertificateStore;
@@ -137,5 +138,30 @@ public class PartnerCertificateManagerUtil {
 
     public static boolean isValidCertificateID(String certID) {
 		return certID != null && !certID.trim().isEmpty();
+    }
+    
+    public static CertificateParameters getCertificateParameters(X500Principal latestCertPrincipal, LocalDateTime notBefore, 
+                                        LocalDateTime notAfter) {
+
+		CertificateParameters certParams = new CertificateParameters();
+		X500Name x500Name = new X500Name(latestCertPrincipal.getName());
+
+        certParams.setCommonName(IETFUtils.valueToString((x500Name.getRDNs(BCStyle.CN)[0]).getFirst().getValue()));
+        certParams.setOrganizationUnit(getAttributeValueIfExist(x500Name, BCStyle.OU));
+        certParams.setOrganization(getAttributeValueIfExist(x500Name, BCStyle.O));
+        certParams.setLocation(getAttributeValueIfExist(x500Name, BCStyle.L));
+        certParams.setState(getAttributeValueIfExist(x500Name, BCStyle.ST));
+        certParams.setCountry(getAttributeValueIfExist(x500Name, BCStyle.C));
+		certParams.setNotBefore(notBefore);
+		certParams.setNotAfter(notAfter);
+        return certParams;
 	}
+
+    private static String getAttributeValueIfExist(X500Name x500Name, ASN1ObjectIdentifier identifier) {
+        RDN[] rdns = x500Name.getRDNs(identifier);
+        if (rdns.length == 0) {
+            return PartnerCertManagerConstants.EMPTY;
+        }
+        return IETFUtils.valueToString((rdns[0]).getFirst().getValue());
+    }
 }

@@ -74,7 +74,7 @@ public class OtpValidatorServiceImpl implements OtpValidator<ResponseEntity<OtpV
 	@Override
 	public ResponseEntity<OtpValidatorResponseDto> validateOtp(String key, String otp) {
 		ResponseEntity<OtpValidatorResponseDto> validationResponseEntity;
-		if(activeProfile.equalsIgnoreCase("local") || proxyOtp) {
+		if(activeProfile.equalsIgnoreCase("local")) {
 		return proxyForLocalProfile(otp);
 		}
 		// This method validates the input parameters.
