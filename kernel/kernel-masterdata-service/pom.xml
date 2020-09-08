@@ -221,6 +221,7 @@
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<kernel.applicant-type.version>1.0.6</kernel.applicant-type.version>
+		<kernel.logger.logback.version>1.2.0-SNAPSHOT</kernel.logger.logback.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -278,7 +279,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-logger-logback</artifactId>
-			<version>1.0.6</version>
+			<version>${kernel.logger.logback.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
