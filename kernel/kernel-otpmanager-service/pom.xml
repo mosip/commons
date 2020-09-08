@@ -222,7 +222,7 @@
 		<kernel.core.version>1.2.0-SNAPSHOT</kernel.core.version>
 		<kernel.auth-adapter.version>1.2.0-SNAPSHOT</kernel.auth-adapter.version>
 		<kernel.dataaccess-hibernate.version>1.0.6</kernel.dataaccess-hibernate.version>
-		<kernel.logger.version>1.0.6</kernel.logger.version>
+		<kernel.logger.version>1.2.0-SNAPSHOT</kernel.logger.version>
 	</properties>
 	<name>kernel-otpmanager-service</name>
 
