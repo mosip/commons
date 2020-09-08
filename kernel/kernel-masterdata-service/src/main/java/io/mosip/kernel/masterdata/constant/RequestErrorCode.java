@@ -16,7 +16,7 @@ public enum RequestErrorCode {
 	ALREADY_ACTIVE_OR_INACTIVE("KER-MSD-998", "Already activated or deactivated"),
 	REQUEST_INVALID_PRI_LANG_ID("KER-MSD-997", "Invalid id passed for Primary language"),
 	REQUEST_ID_ALREADY_EXIST("KER-MSD-996", "Id already exists"),
-	REQUEST_INVALID_SEC_LANG("KER-MSD-995",
+	REQUEST_INVALID_SEC_LANG("KER-MSD-999",
 			"Cannot create data in secondary language as data does not exist in primary language"),
 	REQUEST_CODE_ALREADY_EXIST("KER-MSD-994", "Code already exists");
 
