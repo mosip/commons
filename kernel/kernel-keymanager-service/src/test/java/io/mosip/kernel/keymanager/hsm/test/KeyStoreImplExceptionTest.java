@@ -84,7 +84,7 @@ public class KeyStoreImplExceptionTest {
 		keyStoreImpl.getSymmetricKey("alias");
 	}
 
-	@Test(expected = KeystoreProcessingException.class)
+	@Test(expected = NoSuchSecurityProviderException.class)
 	public void testGetSymmetricKeyKeystoreProcessingException() throws Exception {
 		when(keyStore.entryInstanceOf("alias", SecretKeyEntry.class)).thenReturn(true);
 		when(keyStore.getEntry(Mockito.anyString(), Mockito.any())).thenThrow(KeyStoreException.class);

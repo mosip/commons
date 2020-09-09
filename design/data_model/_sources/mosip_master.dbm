@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="0,1511" last-zoom="0.5"
+<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="1182,534" last-zoom="0.5"
 	 default-schema="public" default-owner="postgres">
 <role name="sysadmin"
       superuser="true"
@@ -2913,7 +2913,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Template : Templates are defined to standardize the communication process within the system. For ex., notications, alerts, etc.]]></comment>
-	<position x="3100" y="1160"/>
+	<position x="3120" y="1160"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Template ID : Unique ID generated / assigned for a template]]></comment>
@@ -2935,7 +2935,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<comment><![CDATA[Template Model : velocity, free maker, jasper report....etc]]></comment>
 	</column>
 	<column name="file_txt">
-		<type name="character varying" length="4086"/>
+		<type name="character varying" length="10240"/>
 		<comment><![CDATA[File Text: Contents of the template]]></comment>
 	</column>
 	<column name="module_id">

@@ -4,7 +4,7 @@
 	
 	<artifactId>kernel-biosdk-provider</artifactId>
 	<groupId>io.mosip.kernel</groupId>
-	<version>0.9.1-SNAPSHOT</version>
+	<version>1.2.0-SNAPSHOT</version>
 	<name>kernel-biosdk-provider</name>
 	<description>Implementation of biosdk provider</description>
 	<packaging>jar</packaging>
@@ -116,7 +116,7 @@
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
 		<kernel.core.version>1.2.0-SNAPSHOT</kernel.core.version>
-		<kernel.biometricsdk.version>0.9</kernel.biometricsdk.version>
+		<kernel.biometricsdk.version>1.2.0-SNAPSHOT</kernel.biometricsdk.version>
 		<kernel.logger.logback.version>1.0.6</kernel.logger.logback.version>
 	</properties>
 	
@@ -158,7 +158,7 @@
 		 <dependency>
 			<artifactId>mock-sdk</artifactId>
 			<groupId>io.mosip.mock.sdk</groupId>
-			<version>0.9-SNAPSHOT</version>
+			<version>0.9.1-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 				

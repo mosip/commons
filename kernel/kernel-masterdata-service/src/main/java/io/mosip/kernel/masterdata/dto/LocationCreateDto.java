@@ -25,8 +25,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LocationCreateDto {
 
+	@NotNull
+	@StringFormatter(min = 1, max = 32)
 	private String code;
-
 
 	@NotNull
 	@StringFormatter(min = 0, max = 128)
