@@ -53,7 +53,7 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
 				"/**/configuration/security", "/**/swagger-resources/**", "/**/swagger-ui.html", "/**/csrf", "/*/",
 				"**/authenticate/**", "/**/actuator/**", "/**/authmanager/**", "/sendOtp", "/validateOtp",
 				"/invalidateToken", "/config", "/login", "/logout", "/validateOTP", "/sendOTP", "/**/login",
-				"/**/login/**","/**/login-redirect/**","/**/logout","/**/h2-console/**","/**/**/license/**" };
+				"/**/login/**","/**/login-redirect/**","/**/logout","/**/h2-console/**","/**/**/license/**","/**/callback/**" };
 
 	}
 
