@@ -35,13 +35,19 @@ public class ClientCryptoManagerServiceImpl implements ClientCryptoManagerServic
     }
 
     @Override
-    public boolean csVerify(byte[] data, byte[] signature) {
-        return clientCryptoFacade.getClientSecurity().validateSignature(signature, data);
+    public TpmSignVerifyResponseDto csVerify(TpmSignVerifyRequestDto tpmSignVerifyRequestDto) {
+        boolean result = clientCryptoFacade.getClientSecurity().validateSignature(
+                CryptoUtil.decodeBase64(tpmSignVerifyRequestDto.getSignature()),
+                CryptoUtil.decodeBase64(tpmSignVerifyRequestDto.getData()));
+
+        TpmSignVerifyResponseDto tpmSignVerifyResponseDto = new TpmSignVerifyResponseDto();
+        tpmSignVerifyResponseDto.setVerified(result);
+        return tpmSignVerifyResponseDto;
     }
 
     @Override
     public byte[] csEncrypt(String refId, byte[] data) {
-        //TODO
+        //TODO -
         return data;
     }
 
