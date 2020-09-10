@@ -19,11 +19,10 @@ public interface ClientCryptoManagerService {
 
     /**
      * Verify provided signature and data with TPM public key
-     * @param data
-     * @param signature
-     * @return true only if signature is valid
+     * @param tpmSignVerifyRequestDto
+     * @return TpmSignVerifyResponseDto
      */
-    public boolean csVerify(byte[] data, byte[] signature);
+    public TpmSignVerifyResponseDto csVerify(TpmSignVerifyRequestDto tpmSignVerifyRequestDto);
 
     /**
      * Encrypt data based on the provided refId
