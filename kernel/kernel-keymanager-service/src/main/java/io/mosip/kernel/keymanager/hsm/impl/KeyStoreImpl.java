@@ -365,9 +365,11 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	}
 
 	private void reloadProvider() {
-		LOGGER.debug("sessionId", "KeyStoreImpl", "getAsymmetricKey", "reloading provider");
+		LOGGER.info("sessionId", "KeyStoreImpl", "KeyStoreImpl", "reloading provider");
+		if (Objects.nonNull(provider)) {
+			Security.removeProvider(provider.getName());
+		}
 		Provider provider = setupProvider(configPath);
-		Security.removeProvider(provider.getName());
 		addProvider(provider);
 		this.keyStore = getKeystoreInstance(keystoreType, provider);
 		loadKeystore();
@@ -445,18 +447,42 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	@Override
 	public SecretKey getSymmetricKey(String alias) {
 		SecretKey secretKey = null;
-		try {
-			if (keyStore.entryInstanceOf(alias, SecretKeyEntry.class)) {
-				ProtectionParameter password = new PasswordProtection(keystorePass.toCharArray());
-				SecretKeyEntry retrivedSecret = (SecretKeyEntry) keyStore.getEntry(alias, password);
-				secretKey = retrivedSecret.getSecretKey();
-			} else {
-				throw new NoSuchSecurityProviderException(KeymanagerErrorCode.NO_SUCH_ALIAS.getErrorCode(),
-						KeymanagerErrorCode.NO_SUCH_ALIAS.getErrorMessage() + alias);
+		int i = 0;
+		boolean isException = false;
+		String expMessage = "";
+		Exception exp = null;
+		do {
+			try {
+				if (keyStore.entryInstanceOf(alias, SecretKeyEntry.class)) {
+					ProtectionParameter password = new PasswordProtection(keystorePass.toCharArray());
+					SecretKeyEntry retrivedSecret = (SecretKeyEntry) keyStore.getEntry(alias, password);
+					secretKey = retrivedSecret.getSecretKey();
+					if (secretKey != null) {
+						LOGGER.debug("sessionId", "KeyStoreImpl", "getSymmetricKey", "secretKey is not null");
+						break;
+					}
+				} else {
+					throw new NoSuchSecurityProviderException(KeymanagerErrorCode.NO_SUCH_ALIAS.getErrorCode(),
+							KeymanagerErrorCode.NO_SUCH_ALIAS.getErrorMessage() + alias);
+				}
+			} catch (NoSuchAlgorithmException | UnrecoverableEntryException e) {
+				throw new KeystoreProcessingException(KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorCode(),
+						KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorMessage() + e.getMessage(), e);
+			} catch (KeyStoreException kse) {
+				isException = true;
+				expMessage = kse.getMessage();
+				exp = kse;
+				LOGGER.debug("sessionId", "KeyStoreImpl", "getSymmetricKey", expMessage);
 			}
-		} catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableEntryException e) {
+			if (isException) {
+				reloadProvider();
+				isException = false;
+			}
+		} while (i++ < NO_OF_RETRIES);
+		if (Objects.isNull(secretKey)) {
+			LOGGER.debug("sessionId", "KeyStoreImpl", "getSymmetricKey", "secretKey is null");
 			throw new KeystoreProcessingException(KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorCode(),
-					KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorMessage() + e.getMessage(), e);
+					KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorMessage() + expMessage, exp);
 		}
 		return secretKey;
 	}

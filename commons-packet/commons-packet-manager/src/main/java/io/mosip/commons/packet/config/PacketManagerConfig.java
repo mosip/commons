@@ -8,6 +8,7 @@ import io.mosip.commons.packet.util.PacketManagerLogger;
 import io.mosip.kernel.auth.defaultadapter.config.RestTemplateInterceptor;
 import io.mosip.kernel.core.logger.spi.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ApplicationContext;
@@ -49,6 +50,7 @@ public class PacketManagerConfig {
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public RestTemplate restTemplate() {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.setInterceptors(Collections.singletonList(new RestTemplateInterceptor()));
