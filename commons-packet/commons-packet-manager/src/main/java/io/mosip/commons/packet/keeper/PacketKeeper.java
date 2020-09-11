@@ -77,7 +77,7 @@ public class PacketKeeper {
      * @param id : packet id
      * @return : Manifest
      */
-    public Manifest getManifest(String id) {
+    /*public Manifest getManifest(String id) {
         Manifest manifest = new Manifest();
 
         Map<String, Object> metaMap = getAdapter().getMetaData(PACKET_MANAGER_ACCOUNT, id, null);
@@ -87,10 +87,8 @@ public class PacketKeeper {
             PacketInfo packetInfo = PacketManagerHelper.getPacketInfo(tempMap);
             manifest.getPacketInfos().add(packetInfo);
         });
-
-
         return manifest;
-    }
+    }*/
 
     /**
      * Check packet integrity.
@@ -144,7 +142,6 @@ public class PacketKeeper {
                 LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packet.getPacketInfo().getId(), "Packet Integrity and Signature check failed");
                 throw new PacketIntegrityFailureException();
             }
-
 
             return packet;
         } catch (Exception e) {
