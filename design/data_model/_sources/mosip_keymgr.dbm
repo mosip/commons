@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="0,138" last-zoom="1"
+<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="0,275" last-zoom="0.6"
 	 default-owner="postgres">
 <role name="sysadmin"
       superuser="true"
@@ -476,6 +476,170 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<columns names="cert_id" ref-type="src-columns"/>
 	</constraint>
 </table>
+
+<table name="licensekey_list">
+	<schema name="keymgr"/>
+	<role name="sysadmin"/>
+	<comment><![CDATA[License Key : Holds list of license keys which will be used by TSPs]]></comment>
+	<position x="180" y="640"/>
+	<column name="license_key" not-null="true">
+		<type name="character varying" length="255"/>
+		<comment><![CDATA[License Key : License key which is created to map partners, license key will have information related to authentication type access.]]></comment>
+	</column>
+	<column name="created_dtime">
+		<type name="timestamp" length="64"/>
+		<comment><![CDATA[Created Date and Time : Licence key created date and time]]></comment>
+	</column>
+	<column name="expiry_dtime">
+		<type name="timestamp" length="16"/>
+		<comment><![CDATA[Expiry Date and Time: Expiry date and time of license key]]></comment>
+	</column>
+	<column name="is_active" not-null="true">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[Flag to mark whether the record is Active or In-active]]></comment>
+	</column>
+	<column name="cr_by" not-null="true">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Created By : ID or name of the user who create / insert record]]></comment>
+	</column>
+	<column name="cr_dtimes" not-null="true">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Created DateTimestamp : Date and Timestamp when the record is created/inserted]]></comment>
+	</column>
+	<column name="upd_by">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Updated By : ID or name of the user who update the record with new values]]></comment>
+	</column>
+	<column name="upd_dtimes">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
+	</column>
+	<column name="is_deleted">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
+	</column>
+	<column name="del_dtimes">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE']]></comment>
+	</column>
+	<constraint name="pk_lkeylst" type="pk-constr" table="keymgr.licensekey_list">
+		<columns names="license_key" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tsp_licensekey_map" alias="tsplkeym">
+	<schema name="keymgr"/>
+	<role name="sysadmin"/>
+	<comment><![CDATA[TSP License keys : TSP and License key mapping]]></comment>
+	<position x="540" y="780"/>
+	<column name="tsp_id" not-null="true">
+		<type name="character varying" length="36"/>
+		<comment><![CDATA[TSP ID: ID of the thirdparty service provider]]></comment>
+	</column>
+	<column name="license_key" not-null="true">
+		<type name="character varying" length="255"/>
+		<comment><![CDATA[License Key : License key which is mapped to TSP, This will refer to master.licensekey_list.license_key]]></comment>
+	</column>
+	<column name="is_active" not-null="true">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[Flag to mark whether the record is Active or In-active]]></comment>
+	</column>
+	<column name="cr_by" not-null="true">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Created By : ID or name of the user who create / insert record]]></comment>
+	</column>
+	<column name="cr_dtimes" not-null="true">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Created DateTimestamp : Date and Timestamp when the record is created/inserted]]></comment>
+	</column>
+	<column name="upd_by">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Updated By : ID or name of the user who update the record with new values]]></comment>
+	</column>
+	<column name="upd_dtimes">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
+	</column>
+	<column name="is_deleted">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
+	</column>
+	<column name="del_dtimes">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE']]></comment>
+	</column>
+	<constraint name="pk_tsplkeym" type="pk-constr" table="keymgr.tsp_licensekey_map">
+		<columns names="tsp_id,license_key" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="licensekey_permission" alias="lkeyper">
+	<schema name="keymgr"/>
+	<role name="sysadmin"/>
+	<comment><![CDATA[Permissions: List of permissions associated with license key]]></comment>
+	<position x="840" y="620"/>
+	<column name="license_key" not-null="true">
+		<type name="character varying" length="255"/>
+		<comment><![CDATA[License Key : License key which is mapped to TSP, This will refer to master.licensekey_list.license_key]]></comment>
+	</column>
+	<column name="permission">
+		<type name="character varying" length="512"/>
+		<comment><![CDATA[Permission: List of authentication permission which are assigned to license key]]></comment>
+	</column>
+	<column name="is_active" not-null="true">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[Flag to mark whether the record is Active or In-active]]></comment>
+	</column>
+	<column name="cr_by" not-null="true">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Created By : ID or name of the user who create / insert record]]></comment>
+	</column>
+	<column name="cr_dtimes" not-null="true">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Created DateTimestamp : Date and Timestamp when the record is created/inserted]]></comment>
+	</column>
+	<column name="upd_by">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Updated By : ID or name of the user who update the record with new values]]></comment>
+	</column>
+	<column name="upd_dtimes">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
+	</column>
+	<column name="is_deleted">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
+	</column>
+	<column name="del_dtimes">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE']]></comment>
+	</column>
+	<constraint name="pk_lkeyper" type="pk-constr" table="keymgr.licensekey_permission">
+		<columns names="license_key" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<constraint name="fk_tsplkeym" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="keymgr.licensekey_list" table="keymgr.tsp_licensekey_map">
+	<columns names="license_key" ref-type="src-columns"/>
+	<columns names="license_key" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_lkeyper" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="keymgr.licensekey_list" table="keymgr.licensekey_permission">
+	<columns names="license_key" ref-type="src-columns"/>
+	<columns names="license_key" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="rel_licensekey_permission_licensekey_list" type="relfk"
+	 src-table="keymgr.licensekey_permission"
+	 dst-table="keymgr.licensekey_list" reference-fk="fk_lkeyper"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tsp_licensekey_map_licensekey_list" type="relfk"
+	 src-table="keymgr.tsp_licensekey_map"
+	 dst-table="keymgr.licensekey_list" reference-fk="fk_tsplkeym"
+	 src-required="false" dst-required="false"/>
 
 <permission>
 	<object name="mosip_kernel" type="database"/>

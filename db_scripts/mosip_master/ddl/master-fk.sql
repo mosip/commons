@@ -124,12 +124,6 @@ REFERENCES master.device_type (code,lang_code) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
--- object: fk_lkeyper | type: CONSTRAINT --
--- ALTER TABLE master.licensekey_permission DROP CONSTRAINT IF EXISTS fk_lkeyper CASCADE;
-ALTER TABLE master.licensekey_permission ADD CONSTRAINT fk_lkeyper FOREIGN KEY (license_key)
-REFERENCES master.licensekey_list (license_key) MATCH SIMPLE
-ON DELETE NO ACTION ON UPDATE NO ACTION;
--- ddl-end --
 
 -- object: fk_machm_mspec | type: CONSTRAINT --
 -- ALTER TABLE master.machine_master DROP CONSTRAINT IF EXISTS fk_machm_mspec CASCADE;
@@ -234,13 +228,6 @@ ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ALTER TABLE master.template DROP CONSTRAINT IF EXISTS fk_tmplt_moddtl CASCADE;
 ALTER TABLE master.template ADD CONSTRAINT fk_tmplt_moddtl FOREIGN KEY (module_id,lang_code)
 REFERENCES master.module_detail (id,lang_code) MATCH SIMPLE
-ON DELETE NO ACTION ON UPDATE NO ACTION;
--- ddl-end --
-
--- object: fk_tsplkeym | type: CONSTRAINT --
--- ALTER TABLE master.tsp_licensekey_map DROP CONSTRAINT IF EXISTS fk_tsplkeym CASCADE;
-ALTER TABLE master.tsp_licensekey_map ADD CONSTRAINT fk_tsplkeym FOREIGN KEY (license_key)
-REFERENCES master.licensekey_list (license_key) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
