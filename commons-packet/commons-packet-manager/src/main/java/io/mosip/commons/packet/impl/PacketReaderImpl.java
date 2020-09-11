@@ -217,10 +217,10 @@ public class PacketReaderImpl implements IPacketReader {
         try {
             Map<String, Object> idobjectMap = getAll(id, process);
             String bioString = (String) idobjectMap.get(biometricFieldName);
-            if (bioString == null)
-                return null;
-            JSONObject biometricMap = new JSONObject(bioString);
-            if (biometricMap == null || biometricMap.isNull(VALUE)) {
+            JSONObject biometricMap = null;
+            if (bioString != null)
+                biometricMap = new JSONObject(bioString);
+            if (bioString == null || biometricMap == null || biometricMap.isNull(VALUE)) {
                 // biometric file not present in idobject. Search in meta data.
                 Map<String, String> metadataMap = getMetaInfo(id, process);
                 String operationsData = metadataMap.get(META_INFO_OPERATIONS_DATA);

@@ -88,15 +88,14 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
             HttpEntity<RequestWrapper<SignRequestDto>> httpEntity = new HttpEntity<>(request);
             ResponseEntity<String> response = restTemplate.exchange(keymanagerSignUrl, HttpMethod.POST, httpEntity,
                     String.class);
-            LinkedHashMap responseMap = (LinkedHashMap) mapper.readValue(response.getBody(), LinkedHashMap.class).get("response");//.get("signature");
+            LinkedHashMap responseMap = (LinkedHashMap) mapper.readValue(response.getBody(), LinkedHashMap.class).get("response");
             if (responseMap != null && responseMap.size() > 0)
                 return responseMap.get("signature").toString().getBytes();
             else
                 throw new SignatureException();
         } catch (IOException e) {
-            new SignatureException(e);
+            throw new SignatureException(e);
         }
-        return null;
     }
 
     @Override
