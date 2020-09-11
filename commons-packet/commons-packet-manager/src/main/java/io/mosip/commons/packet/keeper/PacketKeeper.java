@@ -40,7 +40,7 @@ public class PacketKeeper {
      */
     private static Logger LOGGER = PacketManagerLogger.getLogger(PacketKeeper.class);
 
-    @Value("packet.manager.account.name")
+    @Value("${packet.manager.account.name}")
     private String PACKET_MANAGER_ACCOUNT;
 
     @Autowired

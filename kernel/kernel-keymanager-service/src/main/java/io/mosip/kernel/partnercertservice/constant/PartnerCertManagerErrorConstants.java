@@ -27,7 +27,15 @@ public enum PartnerCertManagerErrorConstants {
 
 	NO_UNIQUE_ALIAS("KER-PCM-009", "No Unique Alias found."),
 
-	INVALID_CERTIFICATE_ID("KER-PCM-010", "Invalid Certificate ID.")
+	INVALID_CERTIFICATE_ID("KER-PCM-010", "Invalid Partner Certificate ID."),
+
+	INVALID_PARTNER_DOMAIN("KER-PCM-011", "Invalid Partner Domain."),
+
+	PARTNER_CERT_ID_NOT_FOUND("KER-PCM-012", "Partner Certificate not found for the given ID."),
+
+	CERT_KEY_NOT_ALLOWED("KER-PCM-013", "Partner Certificate Key Size is less than allowed size."),
+
+	CERT_SIGNATURE_ALGO_NOT_ALLOWED("KER-PCM-014", "Partner Certificate Signature algorithm not supported."),
     ;
 
 	/**

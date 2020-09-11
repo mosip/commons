@@ -1,22 +1,11 @@
 <configuration>
 	<springProperty scope="context" name="appName" source="spring.application.name"/>
-	<appender name="STDOUT"
-		class="ch.qos.logback.core.ConsoleAppender">
-		<encoder>
-			<pattern>%d [${appName},%X{traceId},%X{spanId},%X{req.requestURI}] [%t] %p [%C{1}].%M.%L : %m%n</pattern>
-		</encoder>
-	</appender>
-	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
-		<file>logs/kernel-otpmanager-service.log</file>
-		<append>true</append>
-		<immediateFlush>true</immediateFlush>
-		<encoder>
-			<pattern>%d [${appName},%X{traceId},%X{spanId},%X{req.requestURI}] [%t] %p [%C{1}].%M.%L : %m%n</pattern>
-		</encoder>
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
 	</appender>
 
 	<root level="INFO">
 		<appender-ref ref="STDOUT" />
-		<appender-ref ref="FILE" />
 	</root>
+
 </configuration>

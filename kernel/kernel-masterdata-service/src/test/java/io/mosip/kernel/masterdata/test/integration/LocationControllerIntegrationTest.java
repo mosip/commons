@@ -135,7 +135,7 @@ public class LocationControllerIntegrationTest {
 		// when(repo.findByNameAndLevelLangCode(Mockito.any(),Mockito.any(),Mockito.any())).thenReturn(parentLocList);
 		// when(repo.create(Mockito.any())).thenReturn(location1);
 		mockMvc.perform(post("/locations").contentType(MediaType.APPLICATION_JSON).content(requestJson))
-				.andExpect(status().is5xxServerError());
+				.andExpect(status().isOk());
 	}
 	
 	@Test
@@ -147,7 +147,7 @@ public class LocationControllerIntegrationTest {
 		when(repo.findLocationHierarchyByCodeAndLanguageCode(Mockito.any(), Mockito.any())).thenReturn(null);
 		// when(repo.create(Mockito.any())).thenReturn(location1);
 		mockMvc.perform(post("/locations").contentType(MediaType.APPLICATION_JSON).content(requestJson))
-				.andExpect(status().is5xxServerError());
+				.andExpect(status().isOk());
 	}
 
 	@Test
@@ -306,7 +306,7 @@ public class LocationControllerIntegrationTest {
 		when(repo.findLocationHierarchyByCodeAndLanguageCode(Mockito.any(), Mockito.any()))
 				.thenThrow(new MasterDataServiceException("", "Location not Exist"));
 		mockMvc.perform(post("/locations").contentType(MediaType.APPLICATION_JSON).content(requestJson))
-				.andExpect(status().is5xxServerError());
+				.andExpect(status().isOk());
 	}
 
 	@Test
@@ -417,7 +417,7 @@ public class LocationControllerIntegrationTest {
 		when(repo.findLocationHierarchyByCodeAndLanguageCode(Mockito.any(), Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot insert", null));
 		mockMvc.perform(post("/locations").contentType(MediaType.APPLICATION_JSON).content(requestJson))
-				.andExpect(status().is5xxServerError());
+				.andExpect(status().isOk());
 	}
 
 	@Test
@@ -430,7 +430,7 @@ public class LocationControllerIntegrationTest {
 		when(repo.findLocationHierarchyByCodeAndLanguageCode(Mockito.any(), Mockito.any()))
 				.thenThrow(new IllegalArgumentException());
 		mockMvc.perform(post("/locations").contentType(MediaType.APPLICATION_JSON).content(requestJson))
-				.andExpect(status().is5xxServerError());
+				.andExpect(status().isOk());
 	}
 	
 	@Test

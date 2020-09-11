@@ -59,4 +59,19 @@ public interface PartnerCertManagerConstants {
 	 * The constant UPLOAD_PARTNER_CERT
 	 */
 	String UPLOAD_PARTNER_CERT = "UploadPartnerCertificate";
+
+	/**
+	 * The constant RSA_ALGORITHM
+	 */
+	String RSA_ALGORITHM = "RSA";
+
+	/**
+	 * The constant RSA_MIN_KEY_SIZE
+	 */
+	int RSA_MIN_KEY_SIZE = 2048;
+
+	/**
+	 * The constant HASH_SHA2
+	 */
+	String HASH_SHA2 = "SHA2";
 }
