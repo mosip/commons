@@ -8,7 +8,9 @@ import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.EmbeddedValueResolverAware;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringValueResolver;
 
 import io.mosip.kernel.websub.api.annotation.PreAuthenticateContentAndVerifyIntent;
 import io.mosip.kernel.websub.api.filter.IntentVerificationFilter;
@@ -23,9 +25,16 @@ import io.mosip.kernel.websub.api.filter.IntentVerificationFilter;
  *
  */
 @Component
-public class IntentVerificationConfig implements ApplicationContextAware {
+public class IntentVerificationConfig implements ApplicationContextAware,EmbeddedValueResolverAware {
 
 	private Map<String, String> mappings = null;
+	private StringValueResolver resolver=null;
+	
+	@Override
+	public void setEmbeddedValueResolver(StringValueResolver resolver) {
+		this.resolver=resolver;	
+	}
+
 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -42,7 +51,13 @@ public class IntentVerificationConfig implements ApplicationContextAware {
 				if (method.isAnnotationPresent(PreAuthenticateContentAndVerifyIntent.class)) {
 					PreAuthenticateContentAndVerifyIntent preAuthenticateContent = method
 							.getAnnotation(PreAuthenticateContentAndVerifyIntent.class);
-					mappings.put(preAuthenticateContent.callback(), preAuthenticateContent.topic());
+					
+					if(preAuthenticateContent.topic().startsWith("${") && preAuthenticateContent.topic().endsWith("}")) {
+						mappings.put(preAuthenticateContent.callback(), resolver.resolveStringValue(preAuthenticateContent.topic()));
+					}else {
+						mappings.put(preAuthenticateContent.callback(), preAuthenticateContent.topic());
+					}
+						
 				}
 			}
 			IntentVerificationFilter intentVerificationFilter = applicationContext
@@ -50,5 +65,4 @@ public class IntentVerificationConfig implements ApplicationContextAware {
 			intentVerificationFilter.setMappings(mappings);
 		}
 	}
-
 }
