@@ -155,13 +155,5 @@
 			<scope>compile</scope>
 		</dependency>
 		
-		 <dependency>
-			<artifactId>mock-sdk</artifactId>
-			<groupId>io.mosip.mock.sdk</groupId>
-			<version>0.9.1-SNAPSHOT</version>
-			<scope>test</scope>
-		</dependency>
-				
-				
 	</dependencies>
 </project>

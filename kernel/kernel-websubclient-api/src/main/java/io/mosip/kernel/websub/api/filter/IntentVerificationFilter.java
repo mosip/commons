@@ -76,7 +76,7 @@ public class IntentVerificationFilter extends OncePerRequestFilter {
 			for(String keys:mappingKeys){
 				int pathParamIndex=keys.indexOf("/{");
 				if(pathParamIndex==-1) {
-					return null;
+					continue;
 				}
 				String url =keys.substring(0,pathParamIndex );
 				if(requestURI.contains(url)) {
