@@ -11,7 +11,7 @@ import javax.net.ssl.SSLSession;
 
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -35,20 +35,7 @@ public class BeanConfig {
 
 	@Bean
 	public RestTemplate restTemplate() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
-		// TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String
-		// authType) -> true;
-		// SSLContext sslContext =
-		// org.apache.http.ssl.SSLContexts.custom().loadTrustMaterial(null,
-		// acceptingTrustStrategy)
-		// .build();
-		// SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
-		// CloseableHttpClient httpClient =
-		// HttpClients.custom().setSSLSocketFactory(csf).build();
-		// HttpComponentsClientHttpRequestFactory requestFactory = new
-		// HttpComponentsClientHttpRequestFactory();
-		// requestFactory.setHttpClient(httpClient);
-		// RestTemplate restTemplate = new RestTemplate(requestFactory);
-
+		HttpClientBuilder httpClientBuilder = HttpClients.custom().disableCookieManagement();
 		RestTemplate restTemplate = null;
 		if (sslBypass) {
 			TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
@@ -59,13 +46,11 @@ public class BeanConfig {
 					return true;
 				}
 			});
-			CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(csf).build();
-			HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-			requestFactory.setHttpClient(httpClient);
-			restTemplate = new RestTemplate(requestFactory);
-		} else {
-			restTemplate = new RestTemplate();
-		}
+			httpClientBuilder.setSSLSocketFactory(csf);			
+		} 
+		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+		requestFactory.setHttpClient(httpClientBuilder.build());
+		restTemplate = new RestTemplate(requestFactory);
 		//interceptor added in RestTemplatePostProcessor
 		return restTemplate;
 	}
