@@ -129,7 +129,7 @@
 		<maven.jacoco.plugin.version>0.8.1</maven.jacoco.plugin.version>
 		<maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version>
 		<maven.javadoc.version>3.2.0</maven.javadoc.version>
-		<maven-shade-plugin.version>2.3</maven-shade-plugin.version>
+		<maven.shade.plugin.version>3.2.4</maven.shade.plugin.version>
 
 		<!-- spring -->
 		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
@@ -308,39 +308,20 @@
 				<configuration>
 					<layout>ZIP</layout>
 				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-						<configuration>
-							<classifier>exec</classifier>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin> -->
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.4.1</version>
-				<configuration>
-					<!-- get all project dependencies -->
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					
-				</configuration>
-				<executions>
-				  <execution>
-					<id>make-assembly</id>
-                                        <!-- bind to the packaging phase -->
-					<phase>package</phase>
-					<goals>
-						<goal>single</goal>
-					</goals>
-				  </execution>
-				</executions>
-			</plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>${maven.shade.plugin.version}</version>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>shade</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
 		</plugins>
 	</build>
 </project>
