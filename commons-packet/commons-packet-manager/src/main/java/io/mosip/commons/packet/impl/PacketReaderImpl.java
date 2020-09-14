@@ -241,7 +241,7 @@ public class PacketReaderImpl implements IPacketReader {
             }
 
             if (packetName == null || fileName == null)
-                throw new FieldNameNotFoundException();
+                return null;
 
             Packet packet = packetKeeper.getPacket(getPacketInfo(id, packetName, process));
             InputStream biometrics = ZipUtils.unzipAndGetFile(packet.getPacket(), fileName);
