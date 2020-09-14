@@ -1,9 +1,10 @@
 package io.mosip.commons.packet.exception;
 
 import io.mosip.commons.packet.constants.PacketUtilityErrorCodes;
+import io.mosip.kernel.core.exception.BaseCheckedException;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
-public class PacketIntegrityFailureException extends BaseUncheckedException {
+public class PacketIntegrityFailureException extends BaseCheckedException {
 
     /** Serializable version Id. */
     private static final long serialVersionUID = 1L;

@@ -24,8 +24,6 @@
 \ir ddl/master-individual_type.sql
 \ir ddl/master-introducer_type.sql
 \ir ddl/master-language.sql
-\ir ddl/master-licensekey_list.sql
-\ir ddl/master-licensekey_permission.sql
 \ir ddl/master-location.sql
 \ir ddl/master-loc_holiday.sql
 \ir ddl/master-machine_master.sql
@@ -51,7 +49,6 @@
 \ir ddl/master-template_file_format.sql
 \ir ddl/master-template_type.sql
 \ir ddl/master-title.sql
-\ir ddl/master-tsp_licensekey_map.sql
 \ir ddl/master-tspid_seq.sql
 \ir ddl/master-user_detail.sql
 \ir ddl/master-user_detail_h.sql
