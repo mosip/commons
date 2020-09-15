@@ -46,7 +46,7 @@ public class PacketReader {
      * @param process : the process
      * @return String field
      */
-    @PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
+    @PreAuthorize("hasRole('DATA_READ')")
     public String getField(String id, String field, String source, String process, boolean bypassCache) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "getFields for fields : " + field + " source : " + source + " process : " + process);
@@ -69,7 +69,7 @@ public class PacketReader {
      * @param process : the process
      * @return Map fields
      */
-    @PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
+    @PreAuthorize("hasRole('DATA_READ')")
     public Map<String, String> getFields(String id, List<String> fields, String source, String process, boolean bypassCache) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "getFields for fields : " + fields.toString() + " source : " + source + " process : " + process);
@@ -92,7 +92,7 @@ public class PacketReader {
      * @param process      : the process
      * @return Document : document information
      */
-    @PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
+    @PreAuthorize("hasRole('DOCUMENT_READ')")
     @Cacheable(value = "packets", key = "'documents'.concat('-').concat(#id).concat('-').concat(#documentName).concat('-').concat(#source).concat('-').concat(#process)")
     public Document getDocument(String id, String documentName, String source, String process) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
@@ -110,7 +110,7 @@ public class PacketReader {
      * @param process    : the process
      * @return BiometricRecord : the biometric record
      */
-    @PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
+    @PreAuthorize("hasRole('BIOMETRIC_READ')")
     @Cacheable(value = "packets", key = "'biometrics'.concat('-').#id.concat('-').concat(#person).concat('-').concat(#modalities).concat('-').concat(#source).concat('-').concat(#process)", condition = "#bypassCache == false")
     public BiometricRecord getBiometric(String id, String person, List<BiometricType> modalities, String source, String process, boolean bypassCache) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
@@ -126,7 +126,7 @@ public class PacketReader {
      * @param process : the process
      * @return Map fields
      */
-    @PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
+    @PreAuthorize("hasRole('METADATA_READ')")
     @Cacheable(value = "packets", key = "{'metaInfo'.concat('-').concat(#id).concat('-').concat(#source).concat('-').concat(#process)}", condition = "#bypassCache == false")
     public Map<String, String> getMetaInfo(String id, String source, String process, boolean bypassCache) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
