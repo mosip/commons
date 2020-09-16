@@ -229,11 +229,6 @@
 			<version>1.2.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-auth-adapter</artifactId>
-			<version>1.2.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 			<version>${spring.boot.version}</version>
@@ -336,6 +331,7 @@
 				<version>${spring.boot.version}</version>
 				<configuration>
 					<executable>true</executable>
+					<layout>ZIP</layout>
 				</configuration>
 				<executions>
 					<execution>

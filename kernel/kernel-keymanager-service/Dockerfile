@@ -38,6 +38,8 @@ ENV is_glowroot_env=${is_glowroot}
 
 # environment variable to pass artifactory url, at docker runtime
 ENV artifactory_url_env=${artifactory_url}
+# environment variable to pass iam_adapter url, at docker runtime
+ENV iam_adapter_url_env=${iam_adapter_url}
 
 # environment variable to pass management rmi server hostname, at docker runtime
 #ENV management_rmi_server_hostname_env=${management_rmi_server_hostname}
@@ -63,8 +65,12 @@ CMD if [ "$is_glowroot_env" = "present" ]; then \
     unzip glowroot.zip ; \
     rm -rf glowroot.zip ; \
     sed -i 's/<service_name>/kernel-keymanager-service/g' glowroot/glowroot.properties ; \
-    java -jar -javaagent:glowroot/glowroot.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -XX:HeapDumpPath=/home/  /kernel-keymanager-service.jar ; \
+    iam_jar_name= echo "${iam_adapter_url_env}" | sed -r 's|.*/(.*)$|\1|'; \
+    wget "${artifactory_url_env}"/"${iam_adapter_url_env}" $iam_jar_name; \
+    java -jar -javaagent:glowroot/glowroot.jar -Dloader.path=./$iam_jar_name -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -XX:HeapDumpPath=/home/  /kernel-keymanager-service.jar ; \
     else \
-    java -jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" /kernel-keymanager-service.jar ; \
+    iam_jar_name= echo "${iam_adapter_url_env}" | sed -r 's|.*/(.*)$|\1|'; \
+    wget "${artifactory_url_env}"/"${iam_adapter_url_env}" $iam_jar_name; \
+    java -jar -Dloader.path=./$iam_jar_name -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" /kernel-keymanager-service.jar ; \
     fi
 

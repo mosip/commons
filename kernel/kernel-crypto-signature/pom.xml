@@ -4,12 +4,12 @@
 	xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-<groupId>io.mosip.kernel</groupId>
+	<groupId>io.mosip.kernel</groupId>
 
 	<artifactId>kernel-crypto-signature</artifactId>
 	<name>kernel-crypto-signature</name>
 	<version>1.2.0-SNAPSHOT</version>
-<properties>		
+	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- maven -->
@@ -30,12 +30,12 @@
 		<spring.data.jpa.version>2.0.7.RELEASE</spring.data.jpa.version>
 		<spring.security.test.version>5.0.5.RELEASE</spring.security.test.version>
 		<spring-cloud-config.version>2.0.4.RELEASE</spring-cloud-config.version>
-                
+
 		<!-- swagger -->
 		<swagger.core.version>2.0.7</swagger.core.version>
 		<swagger.annotations.version>1.5.21</swagger.annotations.version>
 		<springfox.version>2.9.2</springfox.version>
-                
+
 		<!-- vertx -->
 		<vertx.version>3.6.2</vertx.version>
 		<vertx.health.check.version>3.7.0</vertx.health.check.version>
@@ -135,12 +135,12 @@
 		<spring.data.jpa.version>2.0.7.RELEASE</spring.data.jpa.version>
 		<spring.security.test.version>5.0.5.RELEASE</spring.security.test.version>
 		<spring-cloud-config.version>2.0.4.RELEASE</spring-cloud-config.version>
-                
+
 		<!-- swagger -->
 		<swagger.core.version>2.0.7</swagger.core.version>
 		<swagger.annotations.version>1.5.21</swagger.annotations.version>
 		<springfox.version>2.9.2</springfox.version>
-                
+
 		<!-- vertx -->
 		<vertx.version>3.6.2</vertx.version>
 		<vertx.health.check.version>3.7.0</vertx.health.check.version>
@@ -220,10 +220,10 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-	<kernel.core.version>1.2.0-SNAPSHOT</kernel.core.version>
-	<kernel.auth.adaptor.version>1.2.0-SNAPSHOT</kernel.auth.adaptor.version>
-	<kernel.crypto.jce.version>1.0.6</kernel.crypto.jce.version>
-	<kernel.keygenerator.bouncycastle.version>1.0.6</kernel.keygenerator.bouncycastle.version>
+		<kernel.core.version>1.2.0-SNAPSHOT</kernel.core.version>
+		<kernel.auth.adaptor.version>1.2.0-SNAPSHOT</kernel.auth.adaptor.version>
+		<kernel.crypto.jce.version>1.0.6</kernel.crypto.jce.version>
+		<kernel.keygenerator.bouncycastle.version>1.0.6</kernel.keygenerator.bouncycastle.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -232,9 +232,24 @@
 			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-auth-adapter</artifactId>
-			<version>${kernel.auth.adaptor.version}</version>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${springfox.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${springfox.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+			<version>${spring.boot.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<version>${spring.security.test.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
