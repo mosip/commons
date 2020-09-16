@@ -15,9 +15,9 @@ import java.util.Map;
 @Service
 public interface IPacketWriter {
 
-    public void setField(String id, String fieldName, String value) throws JSONException;
+    public void setField(String id, String fieldName, String value);
 
-    public void setFields(String id, Map<String, String> fields) throws JSONException;
+    public void setFields(String id, Map<String, String> fields);
 
     public void setBiometric(String id, String fieldName, BiometricRecord biometricRecord);
 
