@@ -174,9 +174,9 @@ public class S3Adapter implements ObjectStoreAdapter {
             e.printStackTrace();
             System.out.println("Exception occured. Will try to create new connection");
         }
-        AWSCredentials awsCredentials = new BasicAWSCredentials("minio", "minio123");
+        AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
         connection = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCredentials)).enablePathStyleAccess()
-                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("http://52.172.53.239:9000", region)).build();
+                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(url, region)).build();
 
         return connection;
     }
