@@ -16,7 +16,7 @@ import io.mosip.kernel.core.cbeffutil.jaxbclasses.QualityType;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.RegistryIDType;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.SingleType;
 import org.junit.Before;
-import org.junit.Ignore;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

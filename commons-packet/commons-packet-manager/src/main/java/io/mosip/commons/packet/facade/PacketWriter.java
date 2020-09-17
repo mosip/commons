@@ -40,7 +40,7 @@ public class PacketWriter {
      * @param value     : the value to be set
      * @return PacketWriter
      */
-    public void setField(String id, String fieldName, String value, String source, String process) throws JSONException {
+    public void setField(String id, String fieldName, String value, String source, String process){
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "setField for field name : " + fieldName + " source : " + source + " process : " + process);
         getProvider(source, process).setField(id, fieldName, value);
@@ -52,7 +52,7 @@ public class PacketWriter {
      * @param fields : name value pair
      * @return PacketWriter
      */
-    public void setFields(String id, Map<String, String> fields, String source, String process) throws JSONException {
+    public void setFields(String id, Map<String, String> fields, String source, String process) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "setFields : source : " + source + " process : " + process);
         getProvider(source, process).setFields(id, fields);
