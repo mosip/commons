@@ -1,29 +1,26 @@
 package io.mosip.commons.khazana.impl;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
-
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
+import io.mosip.commons.khazana.util.ObjectStoreUtil;
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @Qualifier("S3Adapter")
@@ -47,15 +44,17 @@ public class S3Adapter implements ObjectStoreAdapter {
     private AmazonS3 connection = null;
 
     @Override
-    public InputStream getObject(String account, String container, String objectName) {
-        S3Object s3Object = getConnection(container).getObject(container, objectName);
+    public InputStream getObject(String account, String container, String source, String process, String objectName) {
+        String finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
+        S3Object s3Object = null;
         try {
+            s3Object = getConnection(container).getObject(container, finalObjectName);
             if (s3Object != null) {
                 ByteArrayInputStream bis = new ByteArrayInputStream(IOUtils.toByteArray(s3Object.getObjectContent()));
                 s3Object.close();
                 return bis;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             if (s3Object != null) {
@@ -70,30 +69,34 @@ public class S3Adapter implements ObjectStoreAdapter {
     }
 
     @Override
-    public boolean exists(String account, String container, String objectName) {
-        return getObject(account, container, objectName) != null;
+    public boolean exists(String account, String container, String source, String process, String objectName) {
+        return getObject(account, container, source, process, objectName) != null;
     }
 
     @Override
-    public boolean putObject(String account, final String container, String objectName, InputStream data) {
-        Optional<Bucket> optionalBucket = getConnection(container).listBuckets().stream().filter(b -> b.getName().equalsIgnoreCase(container)).findAny();
-        Bucket bucket = !optionalBucket.isPresent() ? getConnection(container).createBucket(container) : optionalBucket.get();
+    public boolean putObject(String account, final String container, String source, String process, String objectName, InputStream data) {
+        AmazonS3 connection = getConnection(container);
+        if (!connection.doesBucketExistV2(container))
+            connection.createBucket(container);
 
-        getConnection(container).putObject(bucket.getName(), objectName, data, null);
+        String finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
+        connection.putObject(container, finalObjectName, data, null);
         return true;
     }
 
     @Override
-    public Map<String, Object> addObjectMetaData(String account, String container, String objectName, Map<String, Object> metadata) {
+    public Map<String, Object> addObjectMetaData(String account, String container, String source, String process,
+                                                 String objectName, Map<String, Object> metadata) {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         metadata.entrySet().stream().forEach(m -> objectMetadata.addUserMetadata(m.getKey(), m.getValue() != null ? m.getValue().toString() : null));
         S3Object s3Object = null;
         try {
-            s3Object = getConnection(container).getObject(container, objectName);
+            String finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
+            s3Object = getConnection(container).getObject(container, finalObjectName);
             if (s3Object.getObjectMetadata() != null && s3Object.getObjectMetadata().getUserMetadata() != null)
                 s3Object.getObjectMetadata().getUserMetadata().entrySet().forEach(m -> objectMetadata.addUserMetadata(m.getKey(), m.getValue()));
 
-            PutObjectRequest putObjectRequest = new PutObjectRequest(container, objectName, s3Object.getObjectContent(), objectMetadata);
+            PutObjectRequest putObjectRequest = new PutObjectRequest(container, finalObjectName, s3Object.getObjectContent(), objectMetadata);
             putObjectRequest.getRequestClientOptions().setReadLimit(readlimit);
             getConnection(container).putObject(putObjectRequest);
         } catch (Exception e) {
@@ -112,20 +115,53 @@ public class S3Adapter implements ObjectStoreAdapter {
     }
 
     @Override
-    public Map<String, Object> addObjectMetaData(String account, String container, String objectName, String key, String value) {
+    public Map<String, Object> addObjectMetaData(String account, String container, String source, String process,
+                                                 String objectName, String key, String value) {
         Map<String, Object> meta = new HashMap<>();
         meta.put(key, value);
-        return addObjectMetaData(account, container, objectName, meta);
+        String finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
+        return addObjectMetaData(account, container, source, process, finalObjectName, meta);
     }
 
     @Override
-    public Map<String, Object> getMetaData(String account, String container, String objectName) {
+    public Map<String, Object> getMetaData(String account, String container, String source, String process,
+                                           String objectName) {
         Map<String, Object> metaData = new HashMap<>();
-        ObjectMetadata objectMetadata = getConnection(container).getObject(container, objectName).getObjectMetadata();
+        String finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
+        ObjectMetadata objectMetadata = getConnection(container).getObject(container, finalObjectName).getObjectMetadata();
         if (objectMetadata != null && objectMetadata.getUserMetadata() != null)
             objectMetadata.getUserMetadata().entrySet().forEach(entry -> metaData.put(entry.getKey(), entry.getValue()));
 
         return metaData;
+    }
+
+    @Override
+    public Integer incMetadata(String account, String container, String source, String process, String objectName, String metaDataKey) {
+        Map<String, Object> metadata = getMetaData(account, container, source, process, objectName);
+        if (metadata.get(metaDataKey) != null) {
+            addObjectMetaData(account, container, source, process, objectName, metadata);
+            metadata.put(metaDataKey, Integer.valueOf(metadata.get(metaDataKey).toString()) + 1);
+            return Integer.valueOf(metadata.get(metaDataKey).toString());
+        }
+        return null;
+    }
+
+    @Override
+    public Integer decMetadata(String account, String container, String source, String process, String objectName, String metaDataKey) {
+        Map<String, Object> metadata = getMetaData(account, container, source, process, objectName);
+        if (metadata.get(metaDataKey) != null) {
+            metadata.put(metaDataKey, Integer.valueOf(metadata.get(metaDataKey).toString()) - 1);
+            addObjectMetaData(account, container, source, process, objectName, metadata);
+            return Integer.valueOf(metadata.get(metaDataKey).toString());
+        }
+        return null;
+    }
+
+    @Override
+    public boolean deleteObject(String account, String container, String source, String process, String objectName) {
+        String finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
+        getConnection(container).deleteObject(container, finalObjectName);
+        return true;
     }
 
     private AmazonS3 getConnection(String container) {
@@ -145,15 +181,5 @@ public class S3Adapter implements ObjectStoreAdapter {
         return connection;
     }
 
-	@Override
-	public int incMetadata(String account, String container, String objectName, String metaDataKey) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
-	@Override
-	public int decMetadata(String account, String container, String objectName, String metaDataKey) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 }

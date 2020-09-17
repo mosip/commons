@@ -67,7 +67,9 @@ public class TestSecurityConfig extends WebSecurityConfigurerAdapter {
 				Arrays.asList(new SimpleGrantedAuthority("ROLE_REGISTRATION_SUPERVISOR"))));
 		users.add(new User("reg-admin", "mosip", Arrays.asList(new SimpleGrantedAuthority("ROLE_REGISTRATION_ADMIN"))));
 		users.add(new User("reg-processor", "mosip",
-				Arrays.asList(new SimpleGrantedAuthority("ROLE_REGISTRATION_PROCESSOR"))));
+				Arrays.asList(new SimpleGrantedAuthority("ROLE_DATA_READ"), new SimpleGrantedAuthority("ROLE_DOCUMENT_READ"),
+						new SimpleGrantedAuthority("ROLE_REGISTRATION_PROCESSOR"), new SimpleGrantedAuthority("ROLE_BIOMETRIC_READ"),
+						new SimpleGrantedAuthority("ROLE_METADATA_READ"))));
 		users.add(new User("id-auth", "mosip", Arrays.asList(new SimpleGrantedAuthority("ROLE_ID_AUTHENTICATION"))));
 		users.add(new User("individual", "mosip", Arrays.asList(new SimpleGrantedAuthority("ROLE_INDIVIDUAL"))));
 		users.add(new User("test", "mosip", Arrays.asList(new SimpleGrantedAuthority("ROLE_TEST"),

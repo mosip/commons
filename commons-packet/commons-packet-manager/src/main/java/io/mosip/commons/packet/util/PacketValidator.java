@@ -75,12 +75,12 @@ public class PacketValidator {
     private AuditLogEntry auditLogEntry;
 
 
-    public boolean validate(String id, String process, Map<String, Object> allMap) throws IdObjectIOException, IdObjectValidationFailedException, InvalidIdSchemaException, IOException, JsonProcessingException, PacketKeeperException {
+    public boolean validate(String id, String source, String process, Map<String, Object> allMap) throws IdObjectIOException, IdObjectValidationFailedException, InvalidIdSchemaException, IOException, JsonProcessingException, PacketKeeperException {
         boolean result = validateSchema(id, process, allMap);
         if(result) {
             LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, "Id object validation successful for process name : " + process);
             auditLogEntry.addAudit("Id object validation successful", eventId, eventName, eventType, null, null, id);
-            result = fileAndChecksumValidation(id, process);
+            result = fileAndChecksumValidation(id, source, process);
         } else {
             LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, "Id object validation failed for process name : " + process);
             auditLogEntry.addAudit("Id object validation failed", eventId, eventName, eventType, null, null, id);
@@ -115,11 +115,11 @@ public class PacketValidator {
      * @return true, if successful
      * @throws IOException
      */
-    public boolean fileAndChecksumValidation(String id, String process) throws IOException, JsonProcessingException, PacketKeeperException {
+    public boolean fileAndChecksumValidation(String id, String source, String process) throws IOException, JsonProcessingException, PacketKeeperException {
         boolean isValid = false;
         // perform file and checksum validation for each source
         for (String packetName : packetNames.split(",")) {
-            Packet packet = packetKeeper.getPacket(getPacketInfo(id, packetName, process));
+            Packet packet = packetKeeper.getPacket(getPacketInfo(id, packetName, source, process));
             Map<String, String> finalMap = getMetaInfoJson(packet);
             if (!finalMap.isEmpty()) {
 
@@ -156,11 +156,12 @@ public class PacketValidator {
         return isValid;
     }
 
-    private PacketInfo getPacketInfo(String id, String source, String process) {
+    private PacketInfo getPacketInfo(String id, String packetName, String source, String process) {
         PacketInfo packetInfo = new PacketInfo();
         packetInfo.setId(id);
-        packetInfo.setPacketName(source);
+        packetInfo.setPacketName(packetName);
         packetInfo.setProcess(process);
+        packetInfo.setSource(source);
         return packetInfo;
     }
 

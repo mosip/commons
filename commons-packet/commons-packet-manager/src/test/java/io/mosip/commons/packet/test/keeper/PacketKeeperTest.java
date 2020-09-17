@@ -87,14 +87,14 @@ public class PacketKeeperTest {
 
         Mockito.when(onlineCrypto.encrypt(any(), any())).thenReturn("encryptedpacket".getBytes());
         Mockito.when(onlineCrypto.sign(any())).thenReturn("signed data".getBytes());
-        Mockito.when(swiftAdapter.putObject(any(), any(), any(), any())).thenReturn(true);
-        Mockito.when(swiftAdapter.addObjectMetaData(any(), any(), any(), any())).thenReturn(metaMap);
+        Mockito.when(swiftAdapter.putObject(any(), any(), any(),any(), any(), any())).thenReturn(true);
+        Mockito.when(swiftAdapter.addObjectMetaData(any(), any(), any(),any(), any(), any())).thenReturn(metaMap);
 
         InputStream is = new ByteArrayInputStream("input".getBytes());
 
-        Mockito.when(swiftAdapter.getObject(any(), any(), any())).thenReturn(is);
+        Mockito.when(swiftAdapter.getObject(any(), any(),any(), any(), any())).thenReturn(is);
         Mockito.when(onlineCrypto.decrypt(any(), any())).thenReturn("decryptedpacket".getBytes());
-        Mockito.when(swiftAdapter.getMetaData(any(), any(), any())).thenReturn(metaMap);
+        Mockito.when(swiftAdapter.getMetaData(any(), any(),any(), any(), any())).thenReturn(metaMap);
         Mockito.when(onlineCrypto.verify(any(), any())).thenReturn(true);
     }
 
@@ -139,7 +139,7 @@ public class PacketKeeperTest {
 
     @Test(expected = PacketKeeperException.class)
     public void testGetPacketFailure() throws PacketKeeperException {
-        Mockito.when(swiftAdapter.getObject(any(), any(), any())).thenThrow(new BaseUncheckedException("code","message"));
+        Mockito.when(swiftAdapter.getObject(any(), any(), any(), any(), any())).thenThrow(new BaseUncheckedException("code","message"));
 
         packetKeeper.getPacket(packetInfo);
     }

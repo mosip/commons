@@ -164,11 +164,20 @@ public class OnlinePacketCryptoServiceTest {
     }
 
     @Test
-    public void verifyTest() {
-        byte[] signature = "1234".getBytes();
+    public void verifyTest() throws IOException {
+        String expected = "signature";
         byte[] packet = "packet".getBytes();
+        LinkedHashMap submap = new LinkedHashMap();
+        submap.put("status", "success");
+        LinkedHashMap responseMap = new LinkedHashMap();
+        responseMap.put("response", submap);
+        ReflectionTestUtils.setField(onlinePacketCryptoService, "keymanagerValidateUrl", "localhost");
+        ResponseEntity<String> response = new ResponseEntity<>("hello", HttpStatus.OK);
 
-        boolean result = onlinePacketCryptoService.verify(packet, signature);
+        Mockito.when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class), any(Class.class))).thenReturn(response);
+        Mockito.when(mapper.readValue(anyString(), any(Class.class))).thenReturn(responseMap);
+
+        boolean result = onlinePacketCryptoService.verify(packet, expected.getBytes());
         assertTrue(result);
     }
 }
