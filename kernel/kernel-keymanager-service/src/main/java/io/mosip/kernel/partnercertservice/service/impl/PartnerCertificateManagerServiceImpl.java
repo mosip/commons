@@ -14,14 +14,11 @@ import java.security.cert.TrustAnchor;
 import java.security.cert.X509CertSelector;
 import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.security.auth.x500.X500Principal;
@@ -113,9 +110,9 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
         }
         X509Certificate reqX509Cert = (X509Certificate) keymanagerUtil.convertToCertificate(certificateData);
         String certThumbprint = PartnerCertificateManagerUtil.getCertificateThumbprint(reqX509Cert);
-        validateBasicCACertParams(reqX509Cert, certThumbprint);
-        
         String partnerDomain = validateAllowedDomains(caCertRequestDto.getPartnerDomain());
+
+        validateBasicCACertParams(reqX509Cert, certThumbprint, partnerDomain);
         
         String certSubject = PartnerCertificateManagerUtil.formatCertificateDN(reqX509Cert.getSubjectX500Principal().getName());
         String certIssuer = PartnerCertificateManagerUtil.formatCertificateDN(reqX509Cert.getIssuerX500Principal().getName());
@@ -147,8 +144,8 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
         return responseDto;
     }
 
-    private void validateBasicCACertParams(X509Certificate reqX509Cert, String certThumbprint) {
-        boolean certExist = certDBHelper.isCertificateExist(certThumbprint);
+    private void validateBasicCACertParams(X509Certificate reqX509Cert, String certThumbprint, String partnerDomain) {
+        boolean certExist = certDBHelper.isCertificateExist(certThumbprint, partnerDomain);
         if (certExist) {
             LOGGER.error(PartnerCertManagerConstants.SESSIONID, PartnerCertManagerConstants.UPLOAD_CA_CERT, 
                 PartnerCertManagerConstants.EMPTY, "CA/sub-CA certificate already exists in Store.");
@@ -174,6 +171,7 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
         return validPartnerDomain.toUpperCase();
     }
 
+    @SuppressWarnings("unchecked")
     private boolean validateCertificatePath(X509Certificate reqX509Cert, String partnerDomain) {
         
         try {
@@ -194,10 +192,7 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
             CertPathBuilder certPathBuilder = CertPathBuilder.getInstance("PKIX");
             certPathBuilder.build(pkixBuilderParams);
             /* PKIXCertPathBuilderResult result = (PKIXCertPathBuilderResult) */ 
-            /* List<? extends Certificate> certList = result.getCertPath().getCertificates();
-            certList.stream().forEach(cert -> {
-                System.out.println(PartnerCertificateManagerUtil.formatCertificateDN(((X509Certificate)cert).getSubjectX500Principal().getName()));
-            }); */
+            /* List<? extends Certificate> certList = result.getCertPath().getCertificates(); */
             return true;
         } catch(CertPathBuilderException | InvalidAlgorithmParameterException | NoSuchAlgorithmException exp) {
             LOGGER.info(PartnerCertManagerConstants.SESSIONID, PartnerCertManagerConstants.UPLOAD_CA_CERT,
@@ -241,7 +236,7 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
     }
 
     private void validateBasicPartnerCertParams(X509Certificate reqX509Cert, String certThumbprint, String reqOrgName, String partnerDomain) {
-        boolean certExist = certDBHelper.isPartnerCertificateExist(certThumbprint);
+        boolean certExist = certDBHelper.isPartnerCertificateExist(certThumbprint, partnerDomain);
         if (certExist) {
             LOGGER.error(PartnerCertManagerConstants.SESSIONID, PartnerCertManagerConstants.UPLOAD_PARTNER_CERT, 
                 PartnerCertManagerConstants.EMPTY, "Partner certificate already exists in Store.");

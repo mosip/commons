@@ -216,7 +216,7 @@ public class ZKCryptoManagerServiceImpl implements ZKCryptoManagerService {
 
 	private String getEncryptedRandomKey(String randomKey) {
 		LOGGER.info(ZKCryptoManagerConstants.SESSIONID, ZKCryptoManagerConstants.RANDOM_KEY, 
-						ZKCryptoManagerConstants.RANDOM_KEY, "Random Key Decryption.");
+						ZKCryptoManagerConstants.RANDOM_KEY, "Random Key Encryption.");
 		byte[] wrappedKey = doFinal(randomKey, Cipher.ENCRYPT_MODE);
 		return Base64.getEncoder().encodeToString(wrappedKey);
 	}
@@ -229,7 +229,7 @@ public class ZKCryptoManagerServiceImpl implements ZKCryptoManagerService {
 			cipher.init(mode, getMasterKeyFromHSM());
 			return cipher.doFinal(secretDataBytes, 0, secretDataBytes.length);
 		} catch(NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException
-			| IllegalBlockSizeException | BadPaddingException e) {
+			| IllegalBlockSizeException | BadPaddingException | IllegalArgumentException e) {
 			LOGGER.error(ZKCryptoManagerConstants.SESSIONID, ZKCryptoManagerConstants.RANDOM_KEY, 
 						ZKCryptoManagerConstants.EMPTY,	"Error Cipher Operations of Random Key.");
 			throw new ZKKeyDerivationException(ZKCryptoErrorConstants.RANDOM_KEY_CIPHER_FAILED.getErrorCode(), 
@@ -374,7 +374,7 @@ public class ZKCryptoManagerServiceImpl implements ZKCryptoManagerService {
 		SymmetricKeyRequestDto symmetricKeyRequestDto = new SymmetricKeyRequestDto(
 									pubKeyApplicationId, localDateTimeStamp, pubKeyReferenceId, encryptedKey);
 		String randomKey = keyManagerService.decryptSymmetricKey(symmetricKeyRequestDto).getSymmetricKey();
-		String encryptedRandomKey = getEncryptedRandomKey(randomKey);
+		String encryptedRandomKey = getEncryptedRandomKey(Base64.getEncoder().encodeToString(CryptoUtil.decodeBase64(randomKey)));
 		ReEncryptRandomKeyResponseDto responseDto = new ReEncryptRandomKeyResponseDto();
 		responseDto.setEncryptedKey(encryptedRandomKey);
 		return responseDto;

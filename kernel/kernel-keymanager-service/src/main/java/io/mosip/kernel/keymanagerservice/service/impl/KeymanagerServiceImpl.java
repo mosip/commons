@@ -483,7 +483,8 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 			throw new NoUniqueAliasException(KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorCode(),
 					KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorMessage());
 		}
-		return new SignatureCertificate(alias, certificateEntry, generationDateTime, expiryDateTime);
+		String providerName = keyStore.getKeystoreProviderName();
+		return new SignatureCertificate(alias, certificateEntry, generationDateTime, expiryDateTime, providerName);
 	}
 
 	@Override
@@ -719,7 +720,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 		return responseDto;
 	}
 
-	 private KeyAlias getKeyAlias(String appId, String refId){
+	private KeyAlias getKeyAlias(String appId, String refId){
 
 		if (!keymanagerUtil.isValidApplicationId(appId)) {
 			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, null,

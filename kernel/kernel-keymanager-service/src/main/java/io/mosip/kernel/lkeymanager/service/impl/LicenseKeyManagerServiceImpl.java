@@ -35,7 +35,7 @@ import io.mosip.kernel.lkeymanager.util.LicenseKeyManagerUtil;
  *
  */
 @Service
-@Transactional("lKeymanagerTransactionManager")
+@Transactional
 public class LicenseKeyManagerServiceImpl
 		implements LicenseKeyManagerService<String, LicenseKeyGenerationDto, LicenseKeyMappingDto> {
 	/**
