@@ -1,19 +1,11 @@
 package io.mosip.commons.khazana.impl;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.mosip.commons.khazana.constant.KhazanaErrorCodes;
+import io.mosip.commons.khazana.exception.FileNotFoundInDestinationException;
+import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
+import io.mosip.commons.khazana.util.ObjectStoreUtil;
+import io.mosip.kernel.core.util.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,34 +17,33 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.mosip.commons.khazana.constant.KhazanaErrorCodes;
-import io.mosip.commons.khazana.exception.FileNotFoundInDestinationException;
-import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
-import io.mosip.kernel.core.util.FileUtils;
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 @Service
 @Qualifier("PosixAdapter")
 public class PosixAdapter implements ObjectStoreAdapter {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SwiftAdapter.class);
+    private static final String SEPARATOR = "/";
+    private static final String ZIP = ".zip";
+    private static final String JSON = ".json";
     @Autowired
     private ObjectMapper objectMapper;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(SwiftAdapter.class);
-
     @Value("${object.store.base.location:home}")
     private String baseLocation;
 
-    private static final String ZIP = ".zip";
-    private static final String JSON = ".json";
-
-    public InputStream getObject(String account, String container, String objectName) {
+    public InputStream getObject(String account, String container, String source, String process, String objectName) {
         try {
-            File accountLoc = new File(baseLocation + "/" + account);
+            File accountLoc = new File(baseLocation + SEPARATOR + account);
             if (!accountLoc.exists())
                 return null;
-            File containerZip = new File(accountLoc.getPath() + "/" + container + ZIP);
+            File containerZip = new File(accountLoc.getPath() + SEPARATOR + container + ZIP);
             if (!containerZip.exists())
                 throw new FileNotFoundInDestinationException(KhazanaErrorCodes.CONTAINER_NOT_PRESENT_IN_DESTINATION.getErrorCode(),
                         KhazanaErrorCodes.CONTAINER_NOT_PRESENT_IN_DESTINATION.getErrorMessage());
@@ -60,7 +51,8 @@ public class PosixAdapter implements ObjectStoreAdapter {
             InputStream ios = new FileInputStream(containerZip);
             Map<ZipEntry, ByteArrayOutputStream> entries = getAllExistingEntries(ios);
 
-            Optional<ZipEntry> zipEntry = entries.keySet().stream().filter(e -> e.getName().contains(objectName + ZIP)).findAny();
+            Optional<ZipEntry> zipEntry = entries.keySet().stream().filter(e ->
+                    e.getName().contains(ObjectStoreUtil.getName(source, process, objectName) + ZIP)).findAny();
 
             if (zipEntry.isPresent() && zipEntry.get() != null)
                 return new ByteArrayInputStream(entries.get(zipEntry.get()).toByteArray());
@@ -73,13 +65,13 @@ public class PosixAdapter implements ObjectStoreAdapter {
         return null;
     }
 
-    public boolean exists(String account, String container, String objectName) {
-        return getObject(account, container, objectName) != null;
+    public boolean exists(String account, String container, String source, String process, String objectName) {
+        return getObject(account, container, source, process, objectName) != null;
     }
 
-    public boolean putObject(String account, String container, String objectName, InputStream data) {
+    public boolean putObject(String account, String container, String source, String process, String objectName, InputStream data) {
         try {
-            createContainerZipWithSubpacket(account, container, objectName + ZIP, data);
+            createContainerZipWithSubpacket(account, container, source, process, objectName + ZIP, data);
             return true;
         } catch (Exception e) {
             LOGGER.error("exception occured. Will create a new connection.", e);
@@ -87,10 +79,10 @@ public class PosixAdapter implements ObjectStoreAdapter {
         return false;
     }
 
-    public Map<String, Object> addObjectMetaData(String account, String container, String objectName, Map<String, Object> metadata) {
+    public Map<String, Object> addObjectMetaData(String account, String container, String source, String process, String objectName, Map<String, Object> metadata) {
         try {
-            JSONObject jsonObject = objectMetadata(account, container, objectName, metadata);
-            createContainerZipWithSubpacket(account, container, objectName + JSON,
+            JSONObject jsonObject = objectMetadata(account, container, source, process, objectName, metadata);
+            createContainerZipWithSubpacket(account, container, source, process, objectName + JSON,
                     new ByteArrayInputStream(jsonObject.toString().getBytes()));
         } catch (io.mosip.kernel.core.exception.IOException | IOException e) {
             LOGGER.error("exception occured to add metadata for id - " + container, e);
@@ -98,12 +90,12 @@ public class PosixAdapter implements ObjectStoreAdapter {
         return metadata;
     }
 
-    public Map<String, Object> addObjectMetaData(String account, String container, String objectName, String key, String value) {
+    public Map<String, Object> addObjectMetaData(String account, String container, String source, String process, String objectName, String key, String value) {
         try {
             Map<String, Object> metaMap = new HashMap<>();
             metaMap.put(key, value);
-            JSONObject jsonObject = objectMetadata(account, container, objectName, metaMap);
-            createContainerZipWithSubpacket(account, container, objectName + JSON, new ByteArrayInputStream(jsonObject.toString().getBytes()));
+            JSONObject jsonObject = objectMetadata(account, container, source, process, objectName, metaMap);
+            createContainerZipWithSubpacket(account, container, source, process, objectName + JSON, new ByteArrayInputStream(jsonObject.toString().getBytes()));
             return metaMap;
         } catch (io.mosip.kernel.core.exception.IOException e) {
             LOGGER.error("exception occured to add metadata for id - " + container, e);
@@ -113,13 +105,13 @@ public class PosixAdapter implements ObjectStoreAdapter {
         return null;
     }
 
-    public Map<String, Object> getMetaData(String account, String container, String objectName) {
+    public Map<String, Object> getMetaData(String account, String container, String source, String process, String objectName) {
         Map<String, Object> metaMap = null;
         try {
-            File accountLoc = new File(baseLocation + "/" + account);
+            File accountLoc = new File(baseLocation + SEPARATOR + account);
             if (!accountLoc.exists())
                 return null;
-            File containerZip = new File(accountLoc.getPath() + "/" + container + ZIP);
+            File containerZip = new File(accountLoc.getPath() + SEPARATOR + container + ZIP);
             if (!containerZip.exists())
                 throw new FileNotFoundInDestinationException(KhazanaErrorCodes.CONTAINER_NOT_PRESENT_IN_DESTINATION.getErrorCode(),
                         KhazanaErrorCodes.CONTAINER_NOT_PRESENT_IN_DESTINATION.getErrorMessage());
@@ -131,7 +123,7 @@ public class PosixAdapter implements ObjectStoreAdapter {
 
             if (zipEntry.isPresent() && zipEntry.get() != null) {
                 String string = entries.get(zipEntry.get()).toString();
-                JSONObject jsonObject = objectMapper.readValue(string, JSONObject.class);
+                JSONObject jsonObject = objectMapper.readValue(objectMapper.writeValueAsString(string), JSONObject.class);
                 metaMap = objectMapper.readValue(jsonObject.toString(), HashMap.class);
             }
         } catch (FileNotFoundInDestinationException e) {
@@ -143,16 +135,16 @@ public class PosixAdapter implements ObjectStoreAdapter {
         return metaMap;
     }
 
-    private void createContainerZipWithSubpacket(String account, String container, String objectName, InputStream data) throws io.mosip.kernel.core.exception.IOException, IOException {
-        File accountLocation = new File(baseLocation + "/" + account);
+    private void createContainerZipWithSubpacket(String account, String container, String source, String process, String objectName, InputStream data) throws io.mosip.kernel.core.exception.IOException, IOException {
+        File accountLocation = new File(baseLocation + SEPARATOR + account);
         if (!accountLocation.exists())
             accountLocation.mkdir();
-        File containerZip = new File(accountLocation.getPath() + "/" + container + ZIP);
+        File containerZip = new File(accountLocation.getPath() + SEPARATOR + container + ZIP);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         if (!containerZip.exists()) {
             try (ZipOutputStream packetZip = new ZipOutputStream(new BufferedOutputStream(out))) {
                 addEntryToZip(String.format(objectName),
-                        IOUtils.toByteArray(data), packetZip);
+                        IOUtils.toByteArray(data), packetZip, source, process);
             }
         } else {
             InputStream ios = new FileInputStream(containerZip);
@@ -167,17 +159,17 @@ public class PosixAdapter implements ObjectStoreAdapter {
                     }
                 });
                 addEntryToZip(String.format(objectName),
-                        IOUtils.toByteArray(data), packetZip);
+                        IOUtils.toByteArray(data), packetZip, source, process);
             }
         }
 
         FileUtils.copyToFile(new ByteArrayInputStream(out.toByteArray()), containerZip);
     }
 
-    private void addEntryToZip(String fileName, byte[] data, ZipOutputStream zipOutputStream) {
+    private void addEntryToZip(String fileName, byte[] data, ZipOutputStream zipOutputStream, String source, String process) {
         try {
             if (data != null) {
-                ZipEntry zipEntry = new ZipEntry(fileName);
+                ZipEntry zipEntry = new ZipEntry(ObjectStoreUtil.getName(source, process, fileName));
                 zipOutputStream.putNextEntry(zipEntry);
                 zipOutputStream.write(data);
             }
@@ -209,10 +201,10 @@ public class PosixAdapter implements ObjectStoreAdapter {
         return entries;
     }
 
-    private JSONObject objectMetadata(String account, String container,
+    private JSONObject objectMetadata(String account, String container, String source, String process,
                                       String objectName, Map<String, Object> metadata) {
         JSONObject jsonObject = new JSONObject(metadata);
-        Map<String, Object> existingMetaData = getMetaData(account, container, objectName);
+        Map<String, Object> existingMetaData = getMetaData(account, container, source, process, objectName);
         if (!CollectionUtils.isEmpty(existingMetaData))
             existingMetaData.entrySet().forEach(entry -> {
                 try {
@@ -224,15 +216,20 @@ public class PosixAdapter implements ObjectStoreAdapter {
         return jsonObject;
     }
 
-	@Override
-	public int incMetadata(String account, String container, String objectName, String metaDataKey) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public Integer incMetadata(String account, String container, String source, String process, String objectName, String metaDataKey) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-	@Override
-	public int decMetadata(String account, String container, String objectName, String metaDataKey) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public Integer decMetadata(String account, String container, String source, String process, String objectName, String metaDataKey) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public boolean deleteObject(String account, String container, String source, String process, String objectName) {
+        return true;
+    }
 }

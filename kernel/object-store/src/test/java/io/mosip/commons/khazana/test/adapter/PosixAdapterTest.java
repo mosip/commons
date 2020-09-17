@@ -24,10 +24,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
@@ -41,9 +38,12 @@ public class PosixAdapterTest {
 
     private static final String account = "acc";
     private static final String container = "reg123";
+    private static final String source = "source";
+    private static final String process = "process";
     private static final String objectName = "id";
     private static final String ZIP = ".zip";
     private static final String JSON = ".json";
+    private static final String SEPARATOR = "/";
 
     @InjectMocks
     private PosixAdapter posixAdapter = new PosixAdapter();
@@ -79,7 +79,7 @@ public class PosixAdapterTest {
         PowerMockito.whenNew(ZipInputStream.class).withAnyArguments().thenReturn(zipInputStream);
 
         when(zipInputStream.getNextEntry()).thenReturn(zipEntry).thenReturn(null);
-        when(zipEntry.getName()).thenReturn(objectName + ZIP);
+        when(zipEntry.getName()).thenReturn(source + SEPARATOR + process + SEPARATOR + objectName + ZIP);
 
         PowerMockito.mockStatic(IOUtils.class);
         PowerMockito.mockStatic(FileUtils.class);
@@ -89,28 +89,28 @@ public class PosixAdapterTest {
         PowerMockito.whenNew(ZipOutputStream.class).withAnyArguments().thenReturn(zipOutputStream);
         doNothing().when(zipOutputStream).putNextEntry(any());
         doNothing().when(zipOutputStream).write(any());
+        when(objectMapper.writeValueAsString(any())).thenReturn("string");
 
     }
 
     @Test
     public void testGetObject() throws Exception {
 
-
-        InputStream is = posixAdapter.getObject(account, container, objectName);
+        InputStream is = posixAdapter.getObject(account, container, source, process, objectName);
         assertNotNull("Get object should not be null", is);
     }
 
     @Test
     public void testExists() throws Exception {
 
-        boolean result = posixAdapter.exists(account, container, objectName);
+        boolean result = posixAdapter.exists(account, container, source, process, objectName);
         assertTrue("Get object should not be present", result);
     }
 
     @Test
     public void testPutObject() throws Exception {
 
-        boolean result = posixAdapter.putObject(account, container, objectName, fileInputStream);
+        boolean result = posixAdapter.putObject(account, container, source, process, objectName, fileInputStream);
         assertTrue("Put object should not be false", result);
     }
 
@@ -119,7 +119,7 @@ public class PosixAdapterTest {
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("obj1", new String("obj"));
 
-        Map<String, Object> result = posixAdapter.addObjectMetaData(account, container, objectName, metadata);
+        Map<String, Object> result = posixAdapter.addObjectMetaData(account, container, source, process, objectName, metadata);
         assertTrue("Put object should not be false", result.size() == 1);
     }
 
@@ -131,7 +131,7 @@ public class PosixAdapterTest {
 
         when(objectMapper.readValue(anyString(), any(Class.class))).thenReturn(jsonObject).thenReturn(metadata);
 
-        Map<String, Object> result = posixAdapter.addObjectMetaData(account, container, objectName, "obj", "obj1");
+        Map<String, Object> result = posixAdapter.addObjectMetaData(account, container, source, process, objectName, "obj", "obj1");
         assertTrue("Put object should not be false", result.size() == 1);
     }
 
@@ -143,7 +143,7 @@ public class PosixAdapterTest {
 
         when(objectMapper.readValue(anyString(), any(Class.class))).thenReturn(jsonObject).thenReturn(metadata);
 
-        Map<String, Object> result = posixAdapter.getMetaData(account, container, objectName);
+        Map<String, Object> result = posixAdapter.getMetaData(account, container, source, process, objectName);
         assertTrue("Put object should not be false", result.size() == 1);
     }
 
@@ -151,14 +151,14 @@ public class PosixAdapterTest {
     public void testException() throws Exception {
         PowerMockito.when(FileUtils.class, "copyToFile", any(), any()).thenThrow(new io.mosip.kernel.core.exception.IOException("", "exception occured"));
 
-        boolean result = posixAdapter.putObject(account, container, objectName, fileInputStream);
+        boolean result = posixAdapter.putObject(account, container, source, process, objectName, fileInputStream);
         assertFalse("Put object should be false", result);
     }
 
     @Test
     public void testFileNotFoundInDestinationException() throws Exception {
         when(file.exists()).thenReturn(false);
-        InputStream result = posixAdapter.getObject(account, container, objectName);
+        InputStream result = posixAdapter.getObject(account, container, source, process, objectName);
         assertNull("Put object should be null", result);
     }
 

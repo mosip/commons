@@ -112,7 +112,7 @@ public class PacketKeeper {
      * @return
      */
     public boolean checkSignature(Packet packet, byte[] encryptedSubPacket) {
-        boolean result = getCryptoService().verify(packet.getPacket(), packet.getPacketInfo().getSignature().getBytes());
+        boolean result = getCryptoService().verify(packet.getPacket(), CryptoUtil.decodeBase64(packet.getPacketInfo().getSignature()));
         if (result)
             result = checkIntegrity(packet.getPacketInfo(), encryptedSubPacket);
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packet.getPacketInfo().getId(), "Integrity and signature check : " + result);
@@ -127,13 +127,15 @@ public class PacketKeeper {
      */
     public Packet getPacket(PacketInfo packetInfo) throws PacketKeeperException {
         try {
-            InputStream is = getAdapter().getObject(PACKET_MANAGER_ACCOUNT, packetInfo.getId(), getName(packetInfo.getId(), packetInfo.getPacketName()));
+            InputStream is = getAdapter().getObject(PACKET_MANAGER_ACCOUNT, packetInfo.getId(), packetInfo.getSource(),
+                    packetInfo.getProcess(), getName(packetInfo.getId(), packetInfo.getPacketName()));
             byte[] encryptedSubPacket = IOUtils.toByteArray(is);
             byte[] subPacket = getCryptoService().decrypt(packetInfo.getId(), encryptedSubPacket);
 
             Packet packet = new Packet();
             packet.setPacket(subPacket);
-            Map<String, Object> metaInfo = getAdapter().getMetaData(PACKET_MANAGER_ACCOUNT, packetInfo.getId(), getName(packetInfo.getId(), packetInfo.getPacketName()));
+            Map<String, Object> metaInfo = getAdapter().getMetaData(PACKET_MANAGER_ACCOUNT, packetInfo.getId(),
+                    packetInfo.getSource(), packetInfo.getProcess(), getName(packetInfo.getId(), packetInfo.getPacketName()));
             if (metaInfo != null && !metaInfo.isEmpty())
                 packet.setPacketInfo(PacketManagerHelper.getPacketInfo(metaInfo));
 
@@ -172,7 +174,8 @@ public class PacketKeeper {
 
             // put packet in object store
             boolean response = getAdapter().putObject(PACKET_MANAGER_ACCOUNT,
-                    packet.getPacketInfo().getId(), packet.getPacketInfo().getPacketName(), new ByteArrayInputStream(encryptedSubPacket));
+                    packet.getPacketInfo().getId(), packet.getPacketInfo().getSource(),
+                    packet.getPacketInfo().getProcess(), packet.getPacketInfo().getPacketName(), new ByteArrayInputStream(encryptedSubPacket));
 
             if (response) {
                 PacketInfo packetInfo = packet.getPacketInfo();
@@ -182,7 +185,7 @@ public class PacketKeeper {
                 packetInfo.setEncryptedHash(new String(CryptoUtil.encodeBase64(HMACUtils.generateHash(encryptedSubPacket))));
                 Map<String, Object> metaMap = PacketManagerHelper.getMetaMap(packetInfo);
                 metaMap = getAdapter().addObjectMetaData(PACKET_MANAGER_ACCOUNT,
-                        packet.getPacketInfo().getId(), packet.getPacketInfo().getPacketName(), metaMap);
+                        packet.getPacketInfo().getId(), packet.getPacketInfo().getSource(), packet.getPacketInfo().getProcess(), packet.getPacketInfo().getPacketName(), metaMap);
                 return PacketManagerHelper.getPacketInfo(metaMap);
             } else
                 throw new PacketKeeperException(PacketUtilityErrorCodes

@@ -34,7 +34,7 @@ public class PacketReaderController {
     @Autowired
     private PacketReader packetReader;
 
-    @PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
+    @PreAuthorize("hasAnyRole('DATA_READ')")
     @ResponseFilter
     @PostMapping(path = "/searchField", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseWrapper<FieldResponseDto> searchField(@RequestBody(required = true) RequestWrapper<FieldDto> fieldDto) {
@@ -50,7 +50,7 @@ public class PacketReaderController {
         return response;
     }
 
-    @PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
+    @PreAuthorize("hasAnyRole('DATA_READ')")
     @ResponseFilter
     @PostMapping(path = "/searchFields", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseWrapper<FieldResponseDto> searchFields(@RequestBody(required = true) RequestWrapper<FieldDtos> request) {
@@ -62,7 +62,7 @@ public class PacketReaderController {
         return response;
     }
 
-    @PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
+    @PreAuthorize("hasAnyRole('DOCUMENT_READ')")
     @ResponseFilter
     @PostMapping(path = "/document", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseWrapper<Document> getDocument(@RequestBody(required = true) RequestWrapper<DocumentDto> request) {
@@ -73,7 +73,7 @@ public class PacketReaderController {
         return response;
     }
 
-    @PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
+    @PreAuthorize("hasAnyRole('BIOMETRIC_READ')")
     @ResponseFilter
     @PostMapping(path = "/biometrics", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseWrapper<BiometricRecord> getBiometrics(@RequestBody(required = true) RequestWrapper<BiometricRequestDto> request) {
@@ -85,7 +85,7 @@ public class PacketReaderController {
         return response;
     }
 
-    @PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
+    @PreAuthorize("hasAnyRole('METADATA_READ')")
     @ResponseFilter
     @PostMapping(path = "/metaInfo", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseWrapper<FieldResponseDto> getMetaInfo(@RequestBody(required = true) RequestWrapper<InfoDto> request) {
