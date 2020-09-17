@@ -14,19 +14,19 @@ import java.util.Map;
 @Service
 public interface IPacketReader {
 
-    public boolean validatePacket(String id, String process);
+    public boolean validatePacket(String id, String source, String process);
 
-    public Map<String, Object> getAll(String id, String process);
+    public Map<String, Object> getAll(String id, String source, String process);
 
-    public String getField(String id, String field, String process);
+    public String getField(String id, String field, String source, String process);
 
-    public Map<String, String> getFields(String id, List<String> fields, String process);
+    public Map<String, String> getFields(String id, List<String> fields, String source, String process);
 
-    public Document getDocument(String id, String documentName, String process);
+    public Document getDocument(String id, String documentName, String source, String process);
 
-    public BiometricRecord getBiometric(String id, String biometricSchemaField, List<BiometricType> modalities, String process);
+    public BiometricRecord getBiometric(String id, String biometricSchemaField, List<BiometricType> modalities, String source, String process);
 
-    public Map<String, String> getMetaInfo(String id, String process);
+    public Map<String, String> getMetaInfo(String id, String source, String process);
 
-    public List<Map<String, String>> getAuditInfo(String id, String process);
+    public List<Map<String, String>> getAuditInfo(String id, String source, String process);
 }
