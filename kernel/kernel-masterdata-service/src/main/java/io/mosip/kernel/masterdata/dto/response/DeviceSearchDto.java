@@ -91,11 +91,6 @@ public class DeviceSearchDto extends BaseDto {
 	@FilterType(types = { FilterTypeEnum.EQUALS, FilterTypeEnum.STARTSWITH, FilterTypeEnum.CONTAINS })
 	private String regCenterId;
 	
-	
-	/**
-	 * name for regCenter.
-	 */
-	private String regCenterName;
 
 	/**
 	 * Zone Code for Device.

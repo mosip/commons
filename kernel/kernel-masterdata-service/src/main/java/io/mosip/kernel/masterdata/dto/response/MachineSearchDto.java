@@ -94,11 +94,6 @@ public class MachineSearchDto extends BaseDto {
 	private String regCenterId;
 	
 	/**
-	 * name for regCenter.
-	 */
-	private String regCenterName;
-	
-	/**
 	 * Zone Code for Machine.
 	 */
 	private String zoneCode;
