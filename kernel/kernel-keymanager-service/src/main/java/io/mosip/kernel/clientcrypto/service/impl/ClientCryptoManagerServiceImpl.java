@@ -28,7 +28,6 @@ public class ClientCryptoManagerServiceImpl implements ClientCryptoManagerServic
     public TpmSignResponseDto csSign(TpmSignRequestDto tpmSignRequestDto) {
         byte[] signedData = clientCryptoFacade.getClientSecurity().signData(
                 CryptoUtil.decodeBase64(tpmSignRequestDto.getData()));
-
         TpmSignResponseDto tpmSignResponseDto = new TpmSignResponseDto();
         tpmSignResponseDto.setData(CryptoUtil.encodeBase64(signedData));
         return tpmSignResponseDto;
@@ -36,32 +35,22 @@ public class ClientCryptoManagerServiceImpl implements ClientCryptoManagerServic
 
     @Override
     public TpmSignVerifyResponseDto csVerify(TpmSignVerifyRequestDto tpmSignVerifyRequestDto) {
-        boolean result = clientCryptoFacade.getClientSecurity().validateSignature(
+        boolean result = clientCryptoFacade.validateSignature(
+                CryptoUtil.decodeBase64(tpmSignVerifyRequestDto.getPublicKey()),
                 CryptoUtil.decodeBase64(tpmSignVerifyRequestDto.getSignature()),
-                CryptoUtil.decodeBase64(tpmSignVerifyRequestDto.getData()));
-
+                CryptoUtil.decodeBase64(tpmSignVerifyRequestDto.getData()),
+                tpmSignVerifyRequestDto.isTpm());
         TpmSignVerifyResponseDto tpmSignVerifyResponseDto = new TpmSignVerifyResponseDto();
         tpmSignVerifyResponseDto.setVerified(result);
         return tpmSignVerifyResponseDto;
     }
 
     @Override
-    public byte[] csEncrypt(String refId, byte[] data) {
-        //TODO -
-        return data;
-    }
-
-    @Override
-    public byte[] csDecrypt(String refId, byte[] cipher) {
-        //TODO
-        return cipher;
-    }
-
-    @Override
     public TpmCryptoResponseDto csEncrypt(TpmCryptoRequestDto tpmCryptoRequestDto) {
-        byte[] cipher = clientCryptoFacade.getClientSecurity().asymmetricEncrypt(
-                tpmCryptoRequestDto.getValue().getBytes());
-
+        byte[] cipher = clientCryptoFacade.encrypt(
+                CryptoUtil.decodeBase64(tpmCryptoRequestDto.getPublicKey()),
+                CryptoUtil.decodeBase64(tpmCryptoRequestDto.getValue()),
+                tpmCryptoRequestDto.isTpm());
         TpmCryptoResponseDto tpmCryptoResponseDto = new TpmCryptoResponseDto();
         tpmCryptoResponseDto.setValue(CryptoUtil.encodeBase64(cipher));
         return tpmCryptoResponseDto;
@@ -69,7 +58,7 @@ public class ClientCryptoManagerServiceImpl implements ClientCryptoManagerServic
 
     @Override
     public TpmCryptoResponseDto csDecrypt(TpmCryptoRequestDto tpmCryptoRequestDto) {
-        byte[] plainData = clientCryptoFacade.getClientSecurity().asymmetricDecrypt(tpmCryptoRequestDto.getValue().getBytes());
+        byte[] plainData = clientCryptoFacade.decrypt(CryptoUtil.decodeBase64(tpmCryptoRequestDto.getValue()));
         TpmCryptoResponseDto tpmCryptoResponseDto = new TpmCryptoResponseDto();
         tpmCryptoResponseDto.setValue(CryptoUtil.encodeBase64(plainData));
         return tpmCryptoResponseDto;
@@ -77,22 +66,17 @@ public class ClientCryptoManagerServiceImpl implements ClientCryptoManagerServic
 
     @Override
     public PublicKeyResponseDto getSigningPublicKey(PublicKeyRequestDto publicKeyRequestDto) {
-        if(ClientCryptoManagerConstant.SERVER_PROD_PROFILE.equalsIgnoreCase(publicKeyRequestDto.getServerProfile())
-                && !clientCryptoFacade.getClientSecurity().isTPMInstance()) {
-            LOGGER.error(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.INITIALIZATION,
-                    ClientCryptoManagerConstant.EMPTY, "TPM INITIALIZATION IS MANDATORY.");
-
-            throw new ClientCryptoException(ClientCryptoErrorConstants.TPM_REQUIRED.getErrorCode(),
-                    ClientCryptoErrorConstants.TPM_REQUIRED.getErrorMessage());
-        }
-
-        LOGGER.info(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.INITIALIZATION,
-                ClientCryptoManagerConstant.EMPTY, "CURRENT PROFILE : " + publicKeyRequestDto.getServerProfile() != null ?
-                        publicKeyRequestDto.getServerProfile() : ClientCryptoManagerConstant.EMPTY);
-
         PublicKeyResponseDto publicKeyResponseDto = new PublicKeyResponseDto();
         publicKeyResponseDto.setPublicKey(CryptoUtil.encodeBase64(clientCryptoFacade.getClientSecurity().
                 getSigningPublicPart()));
+        return publicKeyResponseDto;
+    }
+
+    @Override
+    public PublicKeyResponseDto getEncPublicKey(PublicKeyRequestDto publicKeyRequestDto) {
+        PublicKeyResponseDto publicKeyResponseDto = new PublicKeyResponseDto();
+        publicKeyResponseDto.setPublicKey(CryptoUtil.encodeBase64(clientCryptoFacade.getClientSecurity().
+                getEncryptionPublicPart()));
         return publicKeyResponseDto;
     }
 }
