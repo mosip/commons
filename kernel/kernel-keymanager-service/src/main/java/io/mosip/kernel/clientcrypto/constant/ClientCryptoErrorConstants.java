@@ -5,7 +5,8 @@ public enum ClientCryptoErrorConstants {
     TPM_REQUIRED("KER-CC-001", "TPM INSTANCE IS REQUIRED"),
     INITIALIZATION_ERROR("KER-CC-002", "FAILED TO INITIALIZE CC INSTANCE"),
     CONTEXT_RELOAD_REQUIRED("KER-CC-003", "Restart / reload context"),
-    CRYPTO_FAILED("KER-CC-004", "Failed crypto operation");
+    CRYPTO_FAILED("KER-CC-004", "Failed crypto operation"),
+    TPM_REQUIRED_FLAG_NOT_SET("KER-CC-005", "TPM required flag not set");
 
     /**
      * The error code.

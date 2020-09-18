@@ -24,21 +24,6 @@ public interface ClientCryptoManagerService {
      */
     public TpmSignVerifyResponseDto csVerify(TpmSignVerifyRequestDto tpmSignVerifyRequestDto);
 
-    /**
-     * Encrypt data based on the provided refId
-     * @param refId
-     * @param data
-     * @return cipher
-     */
-    public byte[] csEncrypt(String refId, byte[] data);
-
-    /**
-     * Decrypt cipher based on the provided refId
-     * @param refId
-     * @param cipher
-     * @return plain data
-     */
-    public byte[] csDecrypt(String refId, byte[] cipher);
 
     /**
      * Encrypt data with TPM public key
@@ -60,5 +45,12 @@ public interface ClientCryptoManagerService {
      * @return
      */
     public PublicKeyResponseDto getSigningPublicKey(PublicKeyRequestDto publicKeyRequestDto);
+
+    /**
+     * Returns TPM encryption public key
+     * @param publicKeyRequestDto
+     * @return
+     */
+    public PublicKeyResponseDto getEncPublicKey(PublicKeyRequestDto publicKeyRequestDto);
 
 }

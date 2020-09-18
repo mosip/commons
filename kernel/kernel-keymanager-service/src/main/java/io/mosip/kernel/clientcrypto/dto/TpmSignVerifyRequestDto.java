@@ -30,5 +30,16 @@ public class TpmSignVerifyRequestDto {
     @NotBlank(message = KeymanagerConstant.INVALID_REQUEST)
     private String signature;
 
+    /**
+     * public key in BASE64 encoding
+     */
+    @ApiModelProperty(notes = "Signing public key", required = true)
+    @NotBlank(message = KeymanagerConstant.INVALID_REQUEST)
+    private String publicKey;
 
+    /**
+     * Flag to identify TPM or Non-TPM validations
+     */
+    @ApiModelProperty(notes = "Defaults to TPM, set to false for non-tpm based verification", required = false)
+    private boolean isTpm;
 }
