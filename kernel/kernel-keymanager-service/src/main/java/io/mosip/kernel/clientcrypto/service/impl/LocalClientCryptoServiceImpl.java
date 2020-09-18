@@ -5,11 +5,15 @@ import io.mosip.kernel.clientcrypto.constant.ClientCryptoManagerConstant;
 import io.mosip.kernel.clientcrypto.exception.ClientCryptoException;
 import io.mosip.kernel.clientcrypto.service.spi.ClientCryptoService;
 import io.mosip.kernel.core.crypto.spi.CryptoCoreSpec;
+import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.keymanagerservice.logger.KeymanagerLogger;
+import io.mosip.kernel.zkcryptoservice.constant.ZKCryptoManagerConstants;
 
+import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import javax.validation.constraints.NotNull;
 import java.io.*;
 import java.net.InetAddress;
@@ -21,6 +25,7 @@ import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -43,8 +48,8 @@ class LocalClientCryptoServiceImpl implements ClientCryptoService {
     private static final String PUBLIC_KEY = "reg.pub";
     private static final String README = "readme.txt";
 
-    private SecureRandom secureRandom = null;
-    private CryptoCoreSpec<byte[], byte[], SecretKey, PublicKey, PrivateKey, String> cryptoCore;
+    private static SecureRandom secureRandom = null;
+    private static CryptoCoreSpec<byte[], byte[], SecretKey, PublicKey, PrivateKey, String> cryptoCore;
 
 
     /**
@@ -105,18 +110,7 @@ class LocalClientCryptoServiceImpl implements ClientCryptoService {
     public boolean validateSignature(@NotNull byte[] signature, @NotNull byte[] actualData)
             throws ClientCryptoException{
         try {
-            Signature sign = Signature.getInstance(SIGN_ALGORITHM);
-            sign.initVerify(getPublicKey());
-
-            try(ByteArrayInputStream in = new ByteArrayInputStream(actualData)) {
-                byte[] buffer = new byte[2048];
-                int len = 0;
-
-                while((len = in.read(buffer)) != -1) {
-                    sign.update(buffer, 0, len);
-                }
-                return sign.verify(signature);
-            }
+           return validateSignature(getPublicKey(),signature, actualData);
         } catch (Exception ex) {
             throw new ClientCryptoException(ClientCryptoErrorConstants.CRYPTO_FAILED.getErrorCode(),
                     ClientCryptoErrorConstants.CRYPTO_FAILED.getErrorMessage(), ex);
@@ -124,9 +118,9 @@ class LocalClientCryptoServiceImpl implements ClientCryptoService {
     }
 
     @Override
-    public byte[] asymmetricEncrypt(@NotNull byte[] plainData) throws ClientCryptoException{
+    public byte[] asymmetricEncrypt(@NotNull byte[] dataToEncrypt) throws ClientCryptoException{
         try {
-            return cryptoCore.asymmetricEncrypt(getPublicKey(), plainData);
+            return cryptoCore.asymmetricEncrypt(getPublicKey(), dataToEncrypt);
         } catch (Exception ex) {
             throw new ClientCryptoException(ClientCryptoErrorConstants.CRYPTO_FAILED.getErrorCode(),
                     ClientCryptoErrorConstants.CRYPTO_FAILED.getErrorMessage(), ex);
@@ -134,9 +128,9 @@ class LocalClientCryptoServiceImpl implements ClientCryptoService {
     }
 
     @Override
-    public byte[] asymmetricDecrypt(@NotNull byte[] cipher) throws ClientCryptoException{
+    public byte[] asymmetricDecrypt(@NotNull byte[] dataToDecrypt) throws ClientCryptoException{
         try {
-            return cryptoCore.asymmetricDecrypt(getPrivateKey(), cipher);
+            return cryptoCore.asymmetricDecrypt(getPrivateKey(), dataToDecrypt);
         } catch (Exception ex) {
             throw new ClientCryptoException(ClientCryptoErrorConstants.CRYPTO_FAILED.getErrorCode(),
                     ClientCryptoErrorConstants.CRYPTO_FAILED.getErrorMessage(), ex);
@@ -164,14 +158,68 @@ class LocalClientCryptoServiceImpl implements ClientCryptoService {
         return false;
     }
 
-    @Override
-    public byte[] generateRandomBytes(int length) {
+    public static byte[] generateRandomBytes(int length) {
         if(secureRandom == null)
             secureRandom = new SecureRandom();
 
         byte[] bytes = new byte[length];
         secureRandom.nextBytes(bytes);
         return bytes;
+    }
+
+    @Override
+    public byte[] getEncryptionPublicPart() {
+        try {
+            return getPublicKey().getEncoded();
+        } catch (Exception ex) {
+            throw new ClientCryptoException(ClientCryptoErrorConstants.CRYPTO_FAILED.getErrorCode(),
+                    ClientCryptoErrorConstants.CRYPTO_FAILED.getErrorMessage(), ex);
+        }
+    }
+
+    public static boolean validateSignature(@NotNull byte[] publicKey, @NotNull byte[] signature, @NotNull byte[] actualData) throws ClientCryptoException {
+        try {
+            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicKey);
+            KeyFactory kf = KeyFactory.getInstance(ALGORITHM);
+            return validateSignature(kf.generatePublic(keySpec), signature, actualData);
+        } catch (Exception ex) {
+            throw new ClientCryptoException(ClientCryptoErrorConstants.CRYPTO_FAILED.getErrorCode(),
+                    ClientCryptoErrorConstants.CRYPTO_FAILED.getErrorMessage(), ex);
+        }
+    }
+
+    public static byte[] asymmetricEncrypt(byte[] publicKey, byte[] dataToEncrypt) throws ClientCryptoException {
+        LOGGER.info(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.NON_TPM,
+                ClientCryptoManagerConstant.EMPTY, "LocalClientSecurity Asymmetric encrypt");
+        try {
+            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicKey);
+            KeyFactory kf = KeyFactory.getInstance(ALGORITHM);
+            return cryptoCore.asymmetricEncrypt(kf.generatePublic(keySpec), dataToEncrypt);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
+            throw new ClientCryptoException(ClientCryptoErrorConstants.CRYPTO_FAILED.getErrorCode(),
+                    ClientCryptoErrorConstants.CRYPTO_FAILED.getErrorMessage(), ex);
+        }
+    }
+
+    private static boolean validateSignature(PublicKey publicKey, byte[] signature, byte[] actualData)
+            throws ClientCryptoException {
+        try {
+            Signature sign = Signature.getInstance(SIGN_ALGORITHM);
+            sign.initVerify(publicKey);
+
+            try(ByteArrayInputStream in = new ByteArrayInputStream(actualData)) {
+                byte[] buffer = new byte[2048];
+                int len = 0;
+
+                while((len = in.read(buffer)) != -1) {
+                    sign.update(buffer, 0, len);
+                }
+                return sign.verify(signature);
+            }
+        } catch (Exception ex) {
+            throw new ClientCryptoException(ClientCryptoErrorConstants.CRYPTO_FAILED.getErrorCode(),
+                    ClientCryptoErrorConstants.CRYPTO_FAILED.getErrorMessage(), ex);
+        }
     }
 
     private void setupKeysDir() {
@@ -208,6 +256,8 @@ class LocalClientCryptoServiceImpl implements ClientCryptoService {
         KeyFactory kf = KeyFactory.getInstance(ALGORITHM);
         return kf.generatePublic(keySpec);
     }
+
+
 
     private void createReadMe(PublicKey publicKey) throws IOException {
         StringBuilder builder = new StringBuilder();

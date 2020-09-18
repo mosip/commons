@@ -81,11 +81,24 @@ public class ClientCryptoController {
      * @param publicKeyRequestDtoRequestWrapper
      * @return
      */
-    @PostMapping(value = "/tpmpublickey", produces = "application/json")
+    @PostMapping(value = "/tpmsigning/publickey", produces = "application/json")
     public ResponseWrapper<PublicKeyResponseDto> getSigningPublicKey(@RequestBody @Valid RequestWrapper<PublicKeyRequestDto>
                                                                     publicKeyRequestDtoRequestWrapper) {
         ResponseWrapper<PublicKeyResponseDto> responseDtoResponseWrapper = new ResponseWrapper<>();
         responseDtoResponseWrapper.setResponse(clientCryptoManagerService.getSigningPublicKey(publicKeyRequestDtoRequestWrapper.getRequest()));
+        return responseDtoResponseWrapper;
+    }
+
+    /**
+     *
+     * @param publicKeyRequestDtoRequestWrapper
+     * @return
+     */
+    @PostMapping(value = "/tpmencryption/publickey", produces = "application/json")
+    public ResponseWrapper<PublicKeyResponseDto> getEncPublicKey(@RequestBody @Valid RequestWrapper<PublicKeyRequestDto>
+                                                                             publicKeyRequestDtoRequestWrapper) {
+        ResponseWrapper<PublicKeyResponseDto> responseDtoResponseWrapper = new ResponseWrapper<>();
+        responseDtoResponseWrapper.setResponse(clientCryptoManagerService.getEncPublicKey(publicKeyRequestDtoRequestWrapper.getRequest()));
         return responseDtoResponseWrapper;
     }
 }

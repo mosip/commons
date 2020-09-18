@@ -21,4 +21,17 @@ public class TpmCryptoRequestDto {
     @ApiModelProperty(notes = "Data to Encrypt/Decrypt", example = "Any String", required = true)
     @NotBlank(message = KeymanagerConstant.INVALID_REQUEST)
     private String value;
+
+    /**
+     * public key in BASE64 encoding
+     */
+    @ApiModelProperty(notes = "encrypting public key", required = true)
+    @NotBlank(message = KeymanagerConstant.INVALID_REQUEST)
+    private String publicKey;
+
+    /**
+     * Flag to identify TPM or Non-TPM validations
+     */
+    @ApiModelProperty(notes = "Defaults to TPM, set to false for non-tpm based verification", required = false)
+    private boolean isTpm;
 }

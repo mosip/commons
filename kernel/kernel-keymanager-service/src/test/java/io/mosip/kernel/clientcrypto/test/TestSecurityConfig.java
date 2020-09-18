@@ -23,21 +23,21 @@ import java.util.Arrays;
 import java.util.List;
 
 @Configuration
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-public class TestSecurityConfig extends WebSecurityConfigurerAdapter {
+//@EnableWebSecurity
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class TestSecurityConfig {// extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public HttpFirewall defaultHttpFirewall() {
 		return new DefaultHttpFirewall();
 	}
 
-	@Override
+	/*@Override
 	public void configure(WebSecurity webSecurity) throws Exception {
 		webSecurity.ignoring().antMatchers(allowedEndPoints());
 		super.configure(webSecurity);
 		webSecurity.httpFirewall(defaultHttpFirewall());
-	}
+	}*/
 
 	private String[] allowedEndPoints() {
 		return new String[] { "/assets/**", "/icons/**", "/screenshots/**", "/favicon**", "/**/favicon**", "/css/**",
@@ -45,13 +45,13 @@ public class TestSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/*/configuration/security", "/*/swagger-resources/**", "/*/swagger-ui.html" };
 	}
 
-	@Override
+	/*@Override
 	protected void configure(final HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.csrf().disable();
 		httpSecurity.httpBasic().and().authorizeRequests().anyRequest().authenticated().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().exceptionHandling()
 				.authenticationEntryPoint(unauthorizedEntryPoint());
-	}
+	}*/
 
 	@Bean
 	public AuthenticationEntryPoint unauthorizedEntryPoint() {
