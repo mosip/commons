@@ -3,6 +3,7 @@ package io.mosip.kernel.keygenerator.generator;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -79,6 +80,10 @@ public class KeysGenerator {
 
     @Value("${mosip.kernel.zkcrypto.publickey.reference.id}")
     private String idaPubKeyRefId;
+
+    @Value("${mosip.kernel.keymanager.autogen.basekeys.list}")
+    private String baseKeys;
+
     
 	@Autowired
 	private KeyAliasRepository keyAliasRepository;
@@ -127,6 +132,24 @@ public class KeysGenerator {
         if (genPubKeyFlag) {
             createIDAPublicKeyEntry();
         }
+
+        List<String> baseKeysList = getBaseKeysList();
+
+        baseKeysList.forEach(appId -> {
+            String[] strArr = appId.split(":", -1);
+            if (strArr.length == 2) {
+                String applicationId = strArr[0];
+                String referenceId = strArr[1];
+                if (referenceId.length() != 0) {
+                    generateBaseKey(applicationId, referenceId);
+                    System.out.println("Base Key Successful. AppId: " +  applicationId + ", refId: " + referenceId);
+                } else {
+                    System.err.println("Configured Reference Id is not valid. Configured value: " + appId);
+                }
+            } else {
+                System.err.println("Configured Base Key is not valid. Configured value: " + appId);
+            }
+        });
     }
 
     private List<String> getListKeys() {
@@ -134,6 +157,11 @@ public class KeysGenerator {
                 .filter(appId -> !appId.equalsIgnoreCase(ROOT_APP_ID))
                 .collect(Collectors.toList());
     }
+
+    private List<String> getBaseKeysList() {
+        return Stream.of(baseKeys.split(",")).map(String::trim)
+               .collect(Collectors.toList());
+   }
 
     private String getKeyAlias(String applicationId, String referenceId) {
 		List<KeyAlias> keyAliases = keyAliasRepository.findByApplicationIdAndReferenceId(applicationId, referenceId)
@@ -180,5 +208,9 @@ public class KeysGenerator {
             dbHelper.storeKeyInAlias(idaAppId, localDateTimeStamp, idaPubKeyRefId, alias, localDateTimeStamp.plusDays(730));
             dbHelper.storeKeyInDBStore(alias, alias, "", "NA");
         }
+    }
+
+    private void generateBaseKey(String appId, String refId){
+        keymanagerService.getCertificate(appId, Optional.of(refId));
     }
 }

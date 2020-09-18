@@ -3,9 +3,10 @@ package io.mosip.kernel.keymanagerservice.config;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,6 @@ import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -28,9 +28,6 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-
 import io.mosip.kernel.keymanagerservice.constant.HibernatePersistenceConstant;
 
 
@@ -38,7 +35,7 @@ import io.mosip.kernel.keymanagerservice.constant.HibernatePersistenceConstant;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-		basePackages = "io.mosip.kernel.keymanagerservice.repository", 
+		basePackages = {"io.mosip.kernel.keymanagerservice.repository", "io.mosip.kernel.lkeymanager.repository"}, 
 		entityManagerFactoryRef = "keymanagerEntityManagerFactory", 
 		transactionManagerRef = "keymanagerTransactionManager")
 public class KeymanagerDaoConfig {
@@ -90,7 +87,9 @@ public class KeymanagerDaoConfig {
 	public LocalContainerEntityManagerFactoryBean keymanagerEntityManagerFactory() {
 		LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
 		entityManagerFactory.setDataSource(keymanagerDataSource());
-		entityManagerFactory.setPackagesToScan("io.mosip.kernel.keymanagerservice.entity");
+		entityManagerFactory.setPackagesToScan(new String [] 
+													{"io.mosip.kernel.keymanagerservice.entity",
+													 "io.mosip.kernel.lkeymanager.entity" });
 		entityManagerFactory.setPersistenceUnitName(HibernatePersistenceConstant.HIBERNATE);
 		entityManagerFactory.setJpaPropertyMap(keymanagerJpaProperties());
 		entityManagerFactory.setJpaVendorAdapter(keymanagerJpaVendorAdapter());

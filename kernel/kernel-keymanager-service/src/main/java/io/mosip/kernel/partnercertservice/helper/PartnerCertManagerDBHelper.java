@@ -56,16 +56,18 @@ public class PartnerCertManagerDBHelper {
 	@Autowired
     KeymanagerUtil keymanagerUtil;
     
-    public boolean isCertificateExist(String certThumbprint){
-        CACertificateStore caCertificate = caCertificateStoreRepository.findByCertThumbprint(certThumbprint);
+    public boolean isCertificateExist(String certThumbprint, String partnerDomain){
+        CACertificateStore caCertificate = caCertificateStoreRepository
+                                            .findByCertThumbprintAndPartnerDomain(certThumbprint, partnerDomain);
         if (Objects.nonNull(caCertificate)) {
             return true;
         }
         return false;
     }
 
-    public boolean isPartnerCertificateExist(String certThumbprint){
-        PartnerCertificateStore partnerCertificate = partnerCertificateStoreRepository.findByCertThumbprint(certThumbprint);
+    public boolean isPartnerCertificateExist(String certThumbprint, String partnerDomain){
+        PartnerCertificateStore partnerCertificate = partnerCertificateStoreRepository
+                                                     .findByCertThumbprintAndPartnerDomain(certThumbprint, partnerDomain);
         if (Objects.nonNull(partnerCertificate)) {
             return true;
         }
