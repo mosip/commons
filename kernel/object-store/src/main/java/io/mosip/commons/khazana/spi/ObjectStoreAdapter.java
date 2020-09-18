@@ -5,20 +5,22 @@ import java.util.Map;
 
 public interface ObjectStoreAdapter {
 
-    public InputStream getObject(String account, String container, String objectName);
+    public InputStream getObject(String account, String container, String source, String process, String objectName);
 
-    public boolean exists(String account, String container, String objectName);
+    public boolean exists(String account, String container, String source, String process, String objectName);
 
-    public boolean putObject(String account, String container, String objectName, InputStream data);
+    public boolean putObject(String account, String container, String source, String process, String objectName, InputStream data);
 
-    public Map<String, Object> addObjectMetaData(String account, String container, String objectName, Map<String, Object> metadata);
+    public Map<String, Object> addObjectMetaData(String account, String container, String source, String process, String objectName, Map<String, Object> metadata);
 
-    public Map<String, Object> addObjectMetaData(String account, String container, String objectName, String key, String value);
+    public Map<String, Object> addObjectMetaData(String account, String container, String source, String process, String objectName, String key, String value);
 
-    public Map<String, Object> getMetaData(String account, String container, String objectName);
-	
-	public int incMetadata(String account, String container, String objectName,String metaDataKey);
-	//Stops at zero
-	public int decMetadata(String account, String container, String objectName,String metaDataKey);
+    public Map<String, Object> getMetaData(String account, String container, String source, String process, String objectName);
+
+    public Integer incMetadata(String account, String container, String source, String process, String objectName, String metaDataKey);
+
+    public Integer decMetadata(String account, String container, String source, String process, String objectName, String metaDataKey);
+
+    public boolean deleteObject(String account, String container, String source, String process, String objectName);
 
 }

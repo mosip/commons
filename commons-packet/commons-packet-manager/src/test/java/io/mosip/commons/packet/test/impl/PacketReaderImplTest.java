@@ -207,23 +207,23 @@ public class PacketReaderImplTest {
 
     @Test
     public void validatePacketTest() throws JsonProcessingException, PacketKeeperException, InvalidIdSchemaException, IdObjectValidationFailedException, IdObjectIOException, IOException {
-        when(packetValidator.validate(anyString(), anyString(), anyMap())).thenReturn(true);
-        boolean result = iPacketReader.validatePacket("id", "process");
+        when(packetValidator.validate(anyString(), anyString(), anyString(), anyMap())).thenReturn(true);
+        boolean result = iPacketReader.validatePacket("id", "source", "process");
 
         assertTrue("Should be true", result);
     }
 
     @Test
     public void validatePacketExceptionTest() throws JsonProcessingException, PacketKeeperException, InvalidIdSchemaException, IdObjectValidationFailedException, IdObjectIOException, IOException {
-        when(packetValidator.validate(anyString(), anyString(), anyMap())).thenThrow(new IOException("exception"));
-        boolean result = iPacketReader.validatePacket("id", "process");
+        when(packetValidator.validate(anyString(), anyString(), anyString(), anyMap())).thenThrow(new IOException("exception"));
+        boolean result = iPacketReader.validatePacket("id",  "source","process");
 
         assertFalse("Should be true", result);
     }
 
     @Test
     public void getAllTest() {
-        Map<String, Object> result = iPacketReader.getAll("id", "process");
+        Map<String, Object> result = iPacketReader.getAll("id", "source", "process");
 
         assertTrue("Should be true", result.size() == 6);
     }
@@ -232,7 +232,7 @@ public class PacketReaderImplTest {
     public void getAllExceptionTest() throws IOException {
         when(objectMapper.readValue(anyString(), any(Class.class))).thenReturn(null);
 
-        Map<String, Object> result = iPacketReader.getAll("id", "process");
+        Map<String, Object> result = iPacketReader.getAll("id", "source", "process");
     }
 
     @Test(expected = GetAllIdentityException.class)
@@ -245,12 +245,12 @@ public class PacketReaderImplTest {
         when(objectMapper.readValue(anyString(), any(Class.class))).thenReturn(finalMap);
 
         when(JsonUtils.javaObjectToJsonString(anyObject())).thenThrow(new JsonProcessingException("errormessage"));
-        Map<String, Object> result = iPacketReader.getAll("id", "process");
+        Map<String, Object> result = iPacketReader.getAll("id", "source", "process");
     }
 
     @Test
     public void getFieldTest() {
-        String result = iPacketReader.getField("id", "phone", "process");
+        String result = iPacketReader.getField("id", "phone",  "source","process");
 
         assertTrue("Should be true", result.equals("9606139887"));
     }
@@ -259,7 +259,7 @@ public class PacketReaderImplTest {
     public void getFieldsTest() {
         List<String> list = Lists.newArrayList("phone", "email");
 
-        Map<String, String> result = iPacketReader.getFields("id", list, "process");
+        Map<String, String> result = iPacketReader.getFields("id", list, "source", "process");
 
         assertTrue("Should be true", result.size() == 2);
     }
@@ -268,7 +268,7 @@ public class PacketReaderImplTest {
     public void getDocumentTest() {
         List<String> list = Lists.newArrayList("phone", "email");
 
-        Document result = iPacketReader.getDocument("id", docName, "process");
+        Document result = iPacketReader.getDocument("id", docName, "source", "process");
 
         assertTrue("Should be true", result.getDocument() != null);
     }
@@ -279,7 +279,7 @@ public class PacketReaderImplTest {
 
         when(idSchemaUtils.getSource(any(), any())).thenThrow(new IOException("exception"));
 
-        Document result = iPacketReader.getDocument("id", docName, "process");
+        Document result = iPacketReader.getDocument("id", docName, "source", "process");
 
     }
 
@@ -297,7 +297,7 @@ public class PacketReaderImplTest {
         when(CbeffValidator.getBIRFromXML(any())).thenReturn(birType);
         when(CbeffValidator.convertBIRTypeToBIR(any())).thenReturn(Lists.newArrayList(bir1, bir2));
 
-        BiometricRecord result = iPacketReader.getBiometric("id", biometricFieldName, null, "process");
+        BiometricRecord result = iPacketReader.getBiometric("id", biometricFieldName, null, "source", "process");
 
         assertTrue("Should be true", result.getSegments().size() == 2);
     }
@@ -325,7 +325,7 @@ public class PacketReaderImplTest {
         when(CbeffValidator.getBIRFromXML(any())).thenReturn(birType);
         when(CbeffValidator.convertBIRTypeToBIR(any())).thenReturn(Lists.newArrayList(bir1, bir2));
 
-        BiometricRecord result = iPacketReader.getBiometric("id", "officerBiometric", null, "process");
+        BiometricRecord result = iPacketReader.getBiometric("id", "officerBiometric", null, "source", "process");
 
         assertTrue("Should be true", result.getSegments().size() == 2);
     }
@@ -370,7 +370,7 @@ public class PacketReaderImplTest {
 
         when(objectMapper.readValue(anyString(), any(Class.class))).thenReturn(finalMap);
 
-        Map<String, String> result = iPacketReader.getMetaInfo("id", "process");
+        Map<String, String> result = iPacketReader.getMetaInfo("id", "source", "process");
 
         assertTrue("Should be true", result.size() == 2);
     }
@@ -386,7 +386,7 @@ public class PacketReaderImplTest {
 
         when(objectMapper.readValue(anyString(), any(Class.class))).thenReturn(finalMap);
 
-        List<Map<String, String>> result = iPacketReader.getAuditInfo("id", "process");
+        List<Map<String, String>> result = iPacketReader.getAuditInfo("id", "source", "process");
 
         assertTrue("Should be true", result.size() == 1);
     }
@@ -395,14 +395,14 @@ public class PacketReaderImplTest {
     public void metaInfoExceptionTest() throws IOException {
         when(objectMapper.readValue(anyString(), any(Class.class))).thenThrow(new IOException("exception"));
 
-        iPacketReader.getMetaInfo("id", "process");
+        iPacketReader.getMetaInfo("id", "source", "process");
     }
 
     @Test(expected = GetAllIdentityException.class)
     public void getAuditExceptionTest() throws IOException {
         when(objectMapper.readValue(anyString(), any(Class.class))).thenThrow(new IOException("exception"));
 
-        iPacketReader.getAuditInfo("id", "process");
+        iPacketReader.getAuditInfo("id", "source", "process");
     }
 
 }

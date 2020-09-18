@@ -1,9 +1,6 @@
 package io.mosip.commons.khazana.impl;
 
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-
+import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import org.javaswift.joss.client.factory.AccountConfig;
 import org.javaswift.joss.client.factory.AccountFactory;
 import org.javaswift.joss.client.factory.AuthenticationMethod;
@@ -16,7 +13,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @Qualifier("SwiftAdapter")
@@ -37,14 +36,14 @@ public class SwiftAdapter implements ObjectStoreAdapter {
     private Map<String, Account> accounts = new HashMap<>();
 
 
-    public InputStream getObject(String account, String containerName, String objectName) {
+    public InputStream getObject(String account, String containerName, String source, String process, String objectName) {
         Container container = getConnection(account).getContainer(containerName);
         if (!container.exists())
             container = getConnection(account).getContainer(containerName).create();
         return container.getObject(objectName).downloadObjectAsInputStream();
     }
 
-    public boolean putObject(String account, String containerName, String objectName, InputStream data) {
+    public boolean putObject(String account, String containerName, String source, String process, String objectName, InputStream data) {
         Container container = getConnection(account).getContainer(containerName);
         if (!container.exists())
             container = getConnection(account).getContainer(containerName).create();
@@ -54,12 +53,12 @@ public class SwiftAdapter implements ObjectStoreAdapter {
         return true;
     }
 
-    public boolean exists(String account, String containerName, String objectName) {
+    public boolean exists(String account, String containerName, String source, String process, String objectName) {
         Container container = getConnection(account).getContainer(containerName);
         return container.exists() && container.getObject(objectName).exists();
     }
 
-    public Map<String, Object> addObjectMetaData(String account, String containerName, String objectName, Map<String, Object> metadata) {
+    public Map<String, Object> addObjectMetaData(String account, String containerName, String source, String process, String objectName, Map<String, Object> metadata) {
 
         Container container = getConnection(account).getContainer(containerName);
         if (!container.exists())
@@ -70,7 +69,7 @@ public class SwiftAdapter implements ObjectStoreAdapter {
         return metadata;
     }
 
-    public Map<String, Object> addObjectMetaData(String account, String containerName, String objectName, String key, String value) {
+    public Map<String, Object> addObjectMetaData(String account, String containerName, String source, String process, String objectName, String key, String value) {
         Container container = getConnection(account).getContainer(containerName);
         if (!container.exists())
             return null;
@@ -83,7 +82,7 @@ public class SwiftAdapter implements ObjectStoreAdapter {
         return existingMetadata;
     }
 
-    public Map<String, Object> getMetaData(String account, String containerName, String objectName) {
+    public Map<String, Object> getMetaData(String account, String containerName, String source, String process, String objectName) {
         Map<String, Object> metaData = new HashMap<>();
         Container container = getConnection(account).getContainer(containerName);
         if (!container.exists())
@@ -112,15 +111,20 @@ public class SwiftAdapter implements ObjectStoreAdapter {
         return account;
     }
 
-	@Override
-	public int incMetadata(String account, String container, String objectName, String metaDataKey) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public Integer incMetadata(String account, String container, String source, String process, String objectName, String metaDataKey) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-	@Override
-	public int decMetadata(String account, String container, String objectName, String metaDataKey) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public Integer decMetadata(String account, String container, String source, String process, String objectName, String metaDataKey) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public boolean deleteObject(String account, String container, String source, String process, String objectName) {
+        return true;
+    }
 }
