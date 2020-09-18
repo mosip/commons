@@ -646,4 +646,12 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 		return CertificateUtility.generateX509Certificate(signPrivateKey, publicKey, certParams, signerPrincipal, signAlgorithm, provider.getName());
 	}
 
+	@Override
+	public String getKeystoreProviderName() {
+		if (Objects.nonNull(keyStore)) {
+			return keyStore.getProvider().getName();
+		}
+		throw new KeystoreProcessingException(KeymanagerErrorCode.KEYSTORE_NOT_INSTANTIATED.getErrorCode(),
+					KeymanagerErrorCode.KEYSTORE_NOT_INSTANTIATED.getErrorMessage());
+	}
 }

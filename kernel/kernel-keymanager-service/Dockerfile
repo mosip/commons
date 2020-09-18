@@ -18,6 +18,9 @@ ARG is_glowroot
 # can be passed during Docker build as build time environment for artifactory URL
 ARG artifactory_url
 
+# can be passed during Docker build as build time environment for hsm client zip file path
+ARG client_zip_path
+
 # can be passed during Docker build as build time environment management rmi server hostname
 #ARG management_rmi_server_hostname
 
@@ -40,6 +43,9 @@ ENV is_glowroot_env=${is_glowroot}
 ENV artifactory_url_env=${artifactory_url}
 # environment variable to pass iam_adapter url, at docker runtime
 ENV iam_adapter_url_env=${iam_adapter_url}
+
+# environment variable to pass hsm client zip file path, at docker runtime
+ENV zip_file_path=${client_zip_path}
 
 # environment variable to pass management rmi server hostname, at docker runtime
 #ENV management_rmi_server_hostname_env=${management_rmi_server_hostname}

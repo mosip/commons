@@ -27,7 +27,7 @@ import lombok.Data;
 @Data
 @Entity
 @IdClass(LicenseKeyPermissionID.class)
-@Table(schema = "master", name = "licensekey_permission")
+@Table(name = "licensekey_permission")
 public class LicenseKeyPermission {
 	/**
 	 * Composite Primary ID : License Key & Permission.
