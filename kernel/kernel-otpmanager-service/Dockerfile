@@ -43,13 +43,13 @@ CMD if [ "$is_glowroot_env" = "present" ]; then \
     rm -rf glowroot.zip ; \
     
     sed -i 's/<service_name>/kernel-otpmanager-service/g' glowroot/glowroot.properties ; \
-    iam_jar_name= echo "${iam_adapter_url_env}" | sed -r 's|.*/(.*)$|\1|'; \
-    wget "${artifactory_url_env}"/"${iam_adapter_url_env}" $iam_jar_name; \
-    java -jar -javaagent:glowroot/glowroot.jar -Dloader.path=./$iam_jar_name -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" kernel-otpmanager-service.jar ; \
+    
+     wget "${iam_adapter_url_env}" -O kernel-auth-adapter.jar; \
+    java -jar -javaagent:glowroot/glowroot.jar -Dloader.path=./kernel-auth-adapter.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" kernel-otpmanager-service.jar ; \
     else \
-    iam_jar_name= echo "${iam_adapter_url_env}" | sed -r 's|.*/(.*)$|\1|'; \
-    wget "${artifactory_url_env}"/"${iam_adapter_url_env}" $iam_jar_name; \
-    java -jar -Dloader.path=./$iam_jar_name -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" kernel-otpmanager-service.jar ; \
+    
+     wget "${iam_adapter_url_env}" -O kernel-auth-adapter.jar; \
+    java -jar -Dloader.path=./kernel-auth-adapter.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" kernel-otpmanager-service.jar ; \
     fi
 
 #CMD ["java","-jar","-javaagent:glowroot/glowroot.jar","-Dspring.cloud.config.label=${spring_config_label_env}","-Dspring.profiles.active=${active_profile_env}","-Dspring.cloud.config.uri=${spring_config_url_env}","kernel-otpmanager-service.jar"]
