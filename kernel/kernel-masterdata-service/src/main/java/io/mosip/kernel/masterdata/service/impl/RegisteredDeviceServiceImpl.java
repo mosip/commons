@@ -473,7 +473,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 			throw new RequestException(DeviceRegisterErrorCode.INVALID_STATUS_CODE.getErrorCode(),
 					DeviceRegisterErrorCode.INVALID_STATUS_CODE.getErrorMessage());
 		}
-		if(deviceRegister.getStatusCode().equals(REVOKED)) {
+		if(deviceRegister.getStatusCode().equalsIgnoreCase(REVOKED)) {
 			throw new RequestException(DeviceRegisterErrorCode.DEVICE_REVOKED.getErrorCode(),
 					DeviceRegisterErrorCode.DEVICE_REVOKED.getErrorMessage());
 		}
