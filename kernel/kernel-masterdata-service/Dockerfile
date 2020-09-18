@@ -25,6 +25,7 @@ ENV is_glowroot_env=${is_glowroot}
 ENV artifactory_url_env=${artifactory_url}
 # environment variable to pass iam_adapter url, at docker runtime
 ENV iam_adapter_url_env=${iam_adapter_url}
+
 COPY ./target/kernel-masterdata-service-*.jar kernel-masterdata-service.jar
 EXPOSE 8086
 CMD if [ "$is_glowroot_env" = "present" ]; then \
