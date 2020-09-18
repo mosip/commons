@@ -84,6 +84,18 @@ public class DeviceSearchDto extends BaseDto {
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private LocalDateTime validityDateTime;
+	
+	/**
+	 * Field for is regCenter of the Device
+	 */
+	@FilterType(types = { FilterTypeEnum.EQUALS, FilterTypeEnum.STARTSWITH, FilterTypeEnum.CONTAINS })
+	private String regCenterId;
+	
+	
+	/**
+	 * name for regCenter.
+	 */
+	private String regCenterName;
 
 	/**
 	 * Zone Code for Device.
