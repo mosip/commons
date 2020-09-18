@@ -49,7 +49,7 @@ public class ClientCryptoManagerServiceImpl implements ClientCryptoManagerServic
     public TpmCryptoResponseDto csEncrypt(TpmCryptoRequestDto tpmCryptoRequestDto) {
         byte[] cipher = clientCryptoFacade.encrypt(
                 CryptoUtil.decodeBase64(tpmCryptoRequestDto.getPublicKey()),
-                tpmCryptoRequestDto.getValue().getBytes(),
+                CryptoUtil.decodeBase64(tpmCryptoRequestDto.getValue()),
                 tpmCryptoRequestDto.isTpm());
         TpmCryptoResponseDto tpmCryptoResponseDto = new TpmCryptoResponseDto();
         tpmCryptoResponseDto.setValue(CryptoUtil.encodeBase64(cipher));
@@ -58,7 +58,7 @@ public class ClientCryptoManagerServiceImpl implements ClientCryptoManagerServic
 
     @Override
     public TpmCryptoResponseDto csDecrypt(TpmCryptoRequestDto tpmCryptoRequestDto) {
-        byte[] plainData = clientCryptoFacade.decrypt(tpmCryptoRequestDto.getValue().getBytes());
+        byte[] plainData = clientCryptoFacade.decrypt(CryptoUtil.decodeBase64(tpmCryptoRequestDto.getValue()));
         TpmCryptoResponseDto tpmCryptoResponseDto = new TpmCryptoResponseDto();
         tpmCryptoResponseDto.setValue(CryptoUtil.encodeBase64(plainData));
         return tpmCryptoResponseDto;

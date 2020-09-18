@@ -16,7 +16,7 @@ import javax.validation.constraints.NotBlank;
 public class TpmCryptoRequestDto {
 
     /**
-     * data to encrypt/decrypt.
+     * Base64 encoded data to encrypt/decrypt.
      */
     @ApiModelProperty(notes = "Data to Encrypt/Decrypt", example = "Any String", required = true)
     @NotBlank(message = KeymanagerConstant.INVALID_REQUEST)
