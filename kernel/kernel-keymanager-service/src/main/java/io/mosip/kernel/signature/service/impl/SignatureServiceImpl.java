@@ -74,9 +74,6 @@ public class SignatureServiceImpl implements SignatureService {
 	@Value("${mosip.sign.refid:SIGN}")
 	private String signRefid;
 
-	@Value("${mosip.security.provider.name:SunPKCS11-SoftHSM2}")
-	private String providerName;
-
 	/**
 	 * Utility to generate Metadata
 	 */
@@ -149,8 +146,9 @@ public class SignatureServiceImpl implements SignatureService {
 				request.getUpperRightY());
 		OutputStream outputStream;
 		try {
+			String providerName = signatureCertificate.getProviderName();
 			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.SESSIONID, KeymanagerConstant.SESSIONID,
-					" mosip.security.provider.name property value" + providerName);
+					" Keystore Provider Name found: " + providerName);
 
 			Arrays.stream(Security.getProviders()).forEach(x -> {
 				LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.SESSIONID, KeymanagerConstant.SESSIONID,

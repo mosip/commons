@@ -19,4 +19,6 @@ public interface ClientCryptoManagerConstant {
     String KEYS_DIR = ".mosipkeys";
     String DB_PWD_FILE = "db.conf";
 
+    String ENABLED = "Y";
+    String DISABLED = "N";
 }

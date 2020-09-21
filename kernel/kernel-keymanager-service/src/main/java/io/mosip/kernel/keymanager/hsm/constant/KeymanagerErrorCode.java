@@ -16,7 +16,9 @@ public enum KeymanagerErrorCode {
 
 	NO_SUCH_ALIAS("KER-KMA-004", "No such alias: "),
 
-	CERTIFICATE_PROCESSING_ERROR("KER-KMA-005", "Error occured while processing exception: ");
+	CERTIFICATE_PROCESSING_ERROR("KER-KMA-005", "Error occured while processing exception: "),
+	
+	KEYSTORE_NOT_INSTANTIATED("KER-KMA-006", "Keystore not instantiated error.");
 
 	/**
 	 * The error code

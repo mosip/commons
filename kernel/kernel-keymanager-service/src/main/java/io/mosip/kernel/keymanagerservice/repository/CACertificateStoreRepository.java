@@ -59,4 +59,14 @@ public interface CACertificateStoreRepository extends JpaRepository<CACertificat
 	 */
 	List<CACertificateStore> findByPartnerDomain(String partnerDomain);
 	
+	/**
+	 * Function to find CACertificate by Certificate thumbprint and Partner domain. 
+	 * 
+	 * @param certThumbprint Certificate Thumbprint
+	 * @param partnerDomain Partner Domain
+	 * 
+	 * @return CACertificateStore
+	 */
+	CACertificateStore findByCertThumbprintAndPartnerDomain(String certThumbprint, String partnerDomain);
+
 }

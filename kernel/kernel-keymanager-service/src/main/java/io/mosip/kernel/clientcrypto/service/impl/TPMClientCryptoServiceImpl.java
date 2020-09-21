@@ -5,17 +5,30 @@ import io.mosip.kernel.clientcrypto.constant.ClientCryptoManagerConstant;
 import io.mosip.kernel.clientcrypto.exception.ClientCryptoException;
 import io.mosip.kernel.clientcrypto.service.spi.ClientCryptoService;
 
+import io.mosip.kernel.core.crypto.spi.CryptoCoreSpec;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.keymanagerservice.logger.KeymanagerLogger;
+import org.junit.Assert;
+import tss.Helpers;
 import tss.Tpm;
 import tss.TpmFactory;
 import tss.tpm.CreatePrimaryResponse;
 import tss.tpm.*;
 
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 
 
 /**
@@ -55,12 +68,18 @@ class TPMClientCryptoServiceImpl implements ClientCryptoService {
 
     private static final Logger LOGGER = KeymanagerLogger.getLogger(TPMClientCryptoServiceImpl.class);
     private static final byte[] NULL_VECTOR = new byte[0];
+
+    //Zero terminated string - RSA encoding params
+    private static byte[] label = Helpers.concatenate(Charset.forName("UTF-8").encode(new String(NULL_VECTOR)).array(),
+            new byte[] { 0 });
+
     //Note: TPM is single threaded
     private static Tpm tpm;
     private static CreatePrimaryResponse signingPrimaryResponse;
     private static CreatePrimaryResponse encPrimaryResponse;
 
-    TPMClientCryptoServiceImpl() throws Throwable {
+    TPMClientCryptoServiceImpl()
+            throws Throwable {
         LOGGER.debug(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.TPM,
                 ClientCryptoManagerConstant.EMPTY, "TPMClientCryptoServiceImpl constructor invoked");
 
@@ -94,23 +113,14 @@ class TPMClientCryptoServiceImpl implements ClientCryptoService {
 
     @Override
     public boolean validateSignature(byte[] signature, byte[] actualData) throws ClientCryptoException {
-        try {
-            TPMT_PUBLIC tpmPublic = TPMT_PUBLIC.fromTpm(getSigningPublicPart());
-            // Create Signature from signed data and algorithm
-            TPMU_SIGNATURE rsaSignature = new TPMS_SIGNATURE_RSASSA(TPM_ALG_ID.SHA256, signature);
-            // Validate the Signature using Public Template
-            return tpmPublic.validateSignature(actualData, rsaSignature);
-        } catch (Exception ex) {
-            throw new ClientCryptoException(ClientCryptoErrorConstants.CRYPTO_FAILED.getErrorCode(),
-                    ClientCryptoErrorConstants.CRYPTO_FAILED.getErrorMessage(), ex);
-        }
+        return validateSignature(getSigningPublicPart(), signature, actualData);
     }
 
     @Override
     public byte[] asymmetricEncrypt(byte[] plainData)  throws ClientCryptoException{
         try {
             CreatePrimaryResponse primaryResponse = createRSAKey();
-            return tpm.RSA_Encrypt(primaryResponse.handle, plainData, new TPMS_NULL_ASYM_SCHEME(), NULL_VECTOR);
+            return asymmetricEncrypt(primaryResponse.outPublic.toTpm(), plainData);
         } catch (Exception ex) {
             throw new ClientCryptoException(ClientCryptoErrorConstants.CRYPTO_FAILED.getErrorCode(),
                     ClientCryptoErrorConstants.CRYPTO_FAILED.getErrorMessage(), ex);
@@ -118,11 +128,12 @@ class TPMClientCryptoServiceImpl implements ClientCryptoService {
     }
 
     @Override
-    public byte[] asymmetricDecrypt(byte[] cipher)  throws ClientCryptoException{
+    public byte[] asymmetricDecrypt(byte[] dataToDecrypt)  throws ClientCryptoException{
         try {
+            Assert.assertNotNull(tpm);
             CreatePrimaryResponse primaryResponse = createRSAKey();
-            return new String(tpm.RSA_Decrypt(primaryResponse.handle,
-                    cipher, new TPMS_NULL_ASYM_SCHEME(), NULL_VECTOR)).trim().getBytes();
+            return tpm.RSA_Decrypt(primaryResponse.handle, dataToDecrypt, new TPMS_NULL_ASYM_SCHEME(),
+                    label);
         } catch (Exception ex) {
             throw new ClientCryptoException(ClientCryptoErrorConstants.CRYPTO_FAILED.getErrorCode(),
                     ClientCryptoErrorConstants.CRYPTO_FAILED.getErrorMessage(), ex);
@@ -157,9 +168,36 @@ class TPMClientCryptoServiceImpl implements ClientCryptoService {
      * @param length
      * @return
      */
-    @Override
-    public byte[] generateRandomBytes(int length) {
+    public static byte[] generateRandomBytes(int length) {
         return tpm.GetRandom(length);
+    }
+
+    @Override
+    public byte[] getEncryptionPublicPart() {
+        try {
+            return createRSAKey().outPublic.toTpm();
+        } catch (Exception ex) {
+            throw new ClientCryptoException(ClientCryptoErrorConstants.CRYPTO_FAILED.getErrorCode(),
+                    ClientCryptoErrorConstants.CRYPTO_FAILED.getErrorMessage(), ex);
+        }
+    }
+
+
+    public static boolean validateSignature(byte[] publicKey, byte[] signature, byte[] actualData)
+            throws ClientCryptoException {
+        TPMT_PUBLIC tpmPublic = TPMT_PUBLIC.fromTpm(publicKey);
+        // Create Signature from signed data and algorithm
+        TPMU_SIGNATURE rsaSignature = new TPMS_SIGNATURE_RSASSA(TPM_ALG_ID.SHA256, signature);
+        // Validate the Signature using Public Template
+        return tpmPublic.validateSignature(actualData, rsaSignature);
+    }
+
+
+    public static byte[] asymmetricEncrypt(byte[] publicKey, byte[] dataToEncrypt) throws ClientCryptoException {
+        LOGGER.info(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.TPM,
+                ClientCryptoManagerConstant.EMPTY, "TpmClientSecurity Asymmetric encrypt");
+        TPMT_PUBLIC tpmPublic = TPMT_PUBLIC.fromTpm(publicKey);
+        return tpmPublic.encrypt(dataToEncrypt, new String(NULL_VECTOR));
     }
 
     @Override
@@ -221,17 +259,17 @@ class TPMClientCryptoServiceImpl implements ClientCryptoService {
                 0x1b, 0x33, 0x14, 0x69, (byte) 0xaa };
 
         TPMT_PUBLIC template = new TPMT_PUBLIC(TPM_ALG_ID.SHA256,
-                new TPMA_OBJECT(TPMA_OBJECT.fixedTPM, TPMA_OBJECT.fixedParent, TPMA_OBJECT.decrypt,
-                        TPMA_OBJECT.sensitiveDataOrigin, TPMA_OBJECT.userWithAuth),
+                new TPMA_OBJECT(TPMA_OBJECT.fixedTPM, TPMA_OBJECT.fixedParent,
+                        TPMA_OBJECT.decrypt, TPMA_OBJECT.sensitiveDataOrigin, TPMA_OBJECT.userWithAuth),
                 standardEKPolicy,
-                new TPMS_RSA_PARMS(new TPMT_SYM_DEF_OBJECT(TPM_ALG_ID.NULL, 128, TPM_ALG_ID.NULL),
-                new TPMS_NULL_ASYM_SCHEME(), 2048, 65537),
+                new TPMS_RSA_PARMS(new TPMT_SYM_DEF_OBJECT(TPM_ALG_ID.NULL, 0, TPM_ALG_ID.NULL),
+                        new TPMS_ENC_SCHEME_OAEP(TPM_ALG_ID.SHA256), 2048, 65537),
                 new TPM2B_PUBLIC_KEY_RSA());
 
         TPMS_SENSITIVE_CREATE dataToBeSealedWithAuth = new TPMS_SENSITIVE_CREATE(NULL_VECTOR, NULL_VECTOR);
         TPM_HANDLE primaryHandle = TPM_HANDLE.from(TPM_RH.ENDORSEMENT);
         encPrimaryResponse = tpm.CreatePrimary(primaryHandle, dataToBeSealedWithAuth, template,
-                NULL_VECTOR, new TPMS_PCR_SELECTION[0]);
+                null, null);
 
         long secondsTaken = localDateTime.until(LocalDateTime.now(), ChronoUnit.SECONDS);
         LOGGER.info(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.TPM,
@@ -240,5 +278,17 @@ class TPMClientCryptoServiceImpl implements ClientCryptoService {
                         String.valueOf(secondsTaken)));
 
         return encPrimaryResponse;
+    }
+
+    private static SecretKey getSecretKey() {
+        try {
+            KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+            keyGenerator.init(256);
+            return keyGenerator.generateKey();
+        } catch (NoSuchAlgorithmException e) {
+            LOGGER.info(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.TPM,
+                    ClientCryptoManagerConstant.EMPTY, "Failed to generate secret key " + ExceptionUtils.getStackTrace(e));
+        }
+        return null;
     }
 }
