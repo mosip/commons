@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import io.mosip.kernel.biosdk.provider.util.BIRConverter;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.biometrics.constant.BiometricFunction;
@@ -164,7 +165,7 @@ public class BioProviderImpl_V_0_9 implements iBioProviderApi {
 					.get(BiometricType.fromValue(bir.getBdbInfo().getType().get(0).value()))
 					.get(BiometricFunction.EXTRACT).extractTemplate(getBiometricRecord(bir), null, flags);
 
-			templates.add(isSuccessResponse(response) ? response.getResponse().getSegments().get(0) : null);
+			templates.add(isSuccessResponse(response) ? BIRConverter.convertToBIR(response.getResponse().getSegments().get(0)) : null);
 		}
 		return templates;
 	}
@@ -203,7 +204,7 @@ public class BioProviderImpl_V_0_9 implements iBioProviderApi {
 		BiometricRecord biometricRecord = new BiometricRecord();
 		biometricRecord.setSegments(new LinkedList<>());
 		for (int i = 0; i < birs.length; i++) {
-			biometricRecord.getSegments().add(birs[i]);
+			biometricRecord.getSegments().add(BIRConverter.convertToBiometricRecordBIR(birs[i]));
 		}
 		return biometricRecord;
 	}
@@ -211,7 +212,7 @@ public class BioProviderImpl_V_0_9 implements iBioProviderApi {
 	// TODO - set cebffversion and version in biometricRecord
 	private BiometricRecord getBiometricRecord(BIR bir) {
 		BiometricRecord biometricRecord = new BiometricRecord();
-		biometricRecord.getSegments().add(bir);
+		biometricRecord.getSegments().add(BIRConverter.convertToBiometricRecordBIR(bir));
 		return biometricRecord;
 	}
 

@@ -16,8 +16,12 @@ import io.mosip.commons.packet.util.PacketValidator;
 import io.mosip.commons.packet.util.ZipUtils;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.core.cbeffutil.common.CbeffValidator;
+import io.mosip.kernel.core.cbeffutil.entity.BDBInfo;
 import io.mosip.kernel.core.cbeffutil.entity.BIR;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
+import io.mosip.kernel.core.cbeffutil.jaxbclasses.QualityType;
+import io.mosip.kernel.core.cbeffutil.jaxbclasses.RegistryIDType;
+import io.mosip.kernel.core.cbeffutil.jaxbclasses.SingleType;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectIOException;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectValidationFailedException;
 import io.mosip.kernel.core.idobjectvalidator.exception.InvalidIdSchemaException;
@@ -44,10 +48,7 @@ import org.springframework.util.CollectionUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static io.mosip.commons.packet.constants.PacketManagerConstants.*;
 import static io.mosip.commons.packet.constants.PacketManagerConstants.VALUE;
@@ -285,13 +286,29 @@ public class PacketReaderImplTest {
 
     @Test
     public void getBiometricsTest() throws Exception {
-        List<String> list = Lists.newArrayList("phone", "email");
         BIRType birType = new BIRType();
         BIRType birType1 = new BIRType();
         BIRType birType2 = new BIRType();
         birType.setBir(Lists.newArrayList(birType1, birType2));
         BIR bir1 = new BIR();
+        BDBInfo bdbInfoType1 = new BDBInfo();
+        RegistryIDType registryIDType = new RegistryIDType();
+        registryIDType.setOrganization("Mosip");
+        registryIDType.setType("257");
+        QualityType quality = new QualityType();
+        quality.setAlgorithm(registryIDType);
+        quality.setScore(90l);
+        bdbInfoType1.setQuality(quality);
+        SingleType singleType1 = SingleType.FINGER;
+        List<SingleType> singleTypeList1 = new ArrayList<>();
+        singleTypeList1.add(singleType1);
+        List<String> subtype1 = new ArrayList<>(Arrays.asList("Left", "RingFinger"));
+        bdbInfoType1.setSubtype(subtype1);
+        bdbInfoType1.setType(singleTypeList1);
+        bdbInfoType1.setFormat(registryIDType);
+        bir1.setBdbInfo(bdbInfoType1);
         BIR bir2 = new BIR();
+        bir2.setBdbInfo(bdbInfoType1);
 
         PowerMockito.mockStatic(CbeffValidator.class);
         when(CbeffValidator.getBIRFromXML(any())).thenReturn(birType);
@@ -311,7 +328,24 @@ public class PacketReaderImplTest {
         BIRType birType2 = new BIRType();
         birType.setBir(Lists.newArrayList(birType1, birType2));
         BIR bir1 = new BIR();
+        BDBInfo bdbInfoType1 = new BDBInfo();
+        RegistryIDType registryIDType = new RegistryIDType();
+        registryIDType.setOrganization("Mosip");
+        registryIDType.setType("257");
+        QualityType quality = new QualityType();
+        quality.setAlgorithm(registryIDType);
+        quality.setScore(90l);
+        bdbInfoType1.setQuality(quality);
+        SingleType singleType1 = SingleType.FINGER;
+        List<SingleType> singleTypeList1 = new ArrayList<>();
+        singleTypeList1.add(singleType1);
+        List<String> subtype1 = new ArrayList<>(Arrays.asList("Left", "RingFinger"));
+        bdbInfoType1.setSubtype(subtype1);
+        bdbInfoType1.setType(singleTypeList1);
+        bdbInfoType1.setFormat(registryIDType);
+        bir1.setBdbInfo(bdbInfoType1);
         BIR bir2 = new BIR();
+        bir2.setBdbInfo(bdbInfoType1);
 
         Map<String, Object> keyValueMap = new LinkedHashMap<>();
         keyValueMap.put("operationsData", "[{\n  \"label\\\" : \\\"officerId\\\",\n  \\\"value\\\" : \\\"110012\\\"\n}, {\n  \\\"label\\\" : \\\"officerBiometricFileName\\\",\n  \\\"value\\\" : \\\"officer_bio_cbeff\\\"\n}, {\n  \\\"label\\\" : \\\"supervisorId\\\",\n  \\\"value\\\" : null\n}, {\n  \\\"label\\\" : \\\"supervisorBiometricFileName\\\",\n  \\\"value\\\" : null\n}, {\n  \\\"label\\\" : \\\"supervisorPassword\\\",\n  \\\"value\\\" : \\\"false\\\"\n}, {\n  \\\"label\\\" : \\\"officerPassword\\\",\n  \\\"value\\\" : \\\"true\\\"\n}, {\n  \\\"label\\\" : \\\"supervisorPIN\\\",\n  \\\"value\\\" : null\n}, {\n  \\\"label\\\" : \\\"officerPIN\\\",\n  \\\"value\\\" : null\n}]");
