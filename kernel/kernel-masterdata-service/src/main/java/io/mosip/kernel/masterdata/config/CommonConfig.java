@@ -88,6 +88,7 @@ public class CommonConfig {
 	public AuditUtil auditUtil() {
 		return new AuditUtil();
 	}
+	
 	@Bean
 	public RestTemplate restTemplateConfig()
 			throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
@@ -105,4 +106,5 @@ public class CommonConfig {
 		requestFactory.setHttpClient(httpClient);
 		return new RestTemplate(requestFactory);
 	}
+	
 }
