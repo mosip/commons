@@ -15,9 +15,12 @@ public enum DeviceRegisterErrorCode {
 	DEVICE_REGISTER_DELETED_EXCEPTION("ADM-DPM-003", "Error occured while deleted Device Register details"),
 	DATA_NOT_FOUND_EXCEPTION("ADM-DPM-038", "Data not found for provided device code"),
 	DATA_NOT_FOUND_DEVICE_REGISTER("ADM-DPM-038", "Data not found for provided device code"),
-	DEVICE_DE_REGISTERED_ALREADY("KER-DPM-002", "Device already de-registered"),
-	DEVICE_REGISTER_NOT_FOUND_EXCEPTION("KER-DPM-001", "No register device found"),
-	DEVICE_REGISTERED_STATUS_ALREADY("KER-DPM-039", "Device already is in %s status");
+	DEVICE_DE_REGISTERED_ALREADY("KER-DPR-002", "Device already de-registered"),
+	DEVICE_REGISTER_NOT_FOUND_EXCEPTION("KER-DPR-001", "No register device found"),
+	INVALID_DEVICE_CODE_LENGTH("KER-DPR-003", "Device code length exceeds the accepted limit"),
+	INVALID_ENVIRONMENT("KER-DPR-004", "Invalid environment"),
+	DEVICE_REGISTERED_STATUS_ALREADY("KER-DPM-039", "Device already is in %s status"),
+	DEVICE_REVOKED("ADM-DPM-037", "Device has been revoked");
 
 	private final String errorCode;
 	private final String errorMessage;

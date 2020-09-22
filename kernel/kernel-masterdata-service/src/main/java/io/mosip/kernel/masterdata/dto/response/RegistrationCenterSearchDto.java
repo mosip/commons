@@ -123,7 +123,7 @@ public class RegistrationCenterSearchDto extends BaseDto {
 	private String city;
 
 	private String cityCode;
-
+	@FilterType(types = { FilterTypeEnum.EQUALS, FilterTypeEnum.STARTSWITH, FilterTypeEnum.CONTAINS })
 	private String zoneCode;
 
 	private String zone;

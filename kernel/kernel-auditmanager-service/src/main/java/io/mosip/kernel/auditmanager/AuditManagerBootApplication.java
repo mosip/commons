@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 1.0.0
  *
  */
-@SpringBootApplication(scanBasePackages = { "io.mosip.kernel.auditmanager.*", "io.mosip.kernel.auth.*" })
+@SpringBootApplication(scanBasePackages = { "io.mosip.kernel.auditmanager.*","${mosip.auth.adapter.impl.basepackage}" })
 public class AuditManagerBootApplication {
 
 	/**

@@ -33,7 +33,7 @@ public class HolidayValidator {
 				throw new RequestException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), "holiday_desc size must be between 1 and 128");
 			
 			if(!isValidLanguage(request.getLangCode()))
-				throw new RequestException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), "Language code is invalid");
+				throw new RequestException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), "Language Code is Invalid");
 		
 	}
 
@@ -54,7 +54,7 @@ public class HolidayValidator {
 			throw new RequestException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), "holiday_desc size must be between 1 and 128");
 		
 		if(!isValidLanguage(request.getLangCode()))
-			throw new RequestException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), "Language code is invalid");
+			throw new RequestException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), "Language Code is Invalid");
 	}
 	
 	public boolean isValidLanguage(String langCode) {

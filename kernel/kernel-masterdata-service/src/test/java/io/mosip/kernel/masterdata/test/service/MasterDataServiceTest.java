@@ -72,7 +72,7 @@ import io.mosip.kernel.masterdata.entity.Language;
 import io.mosip.kernel.masterdata.entity.Location;
 import io.mosip.kernel.masterdata.entity.LocationHierarchy;
 import io.mosip.kernel.masterdata.entity.RegistrationCenter;
-import io.mosip.kernel.masterdata.entity.RegistrationCenterMachineDeviceHistory;
+
 import io.mosip.kernel.masterdata.entity.Template;
 import io.mosip.kernel.masterdata.entity.TemplateFileFormat;
 import io.mosip.kernel.masterdata.entity.Zone;
@@ -95,7 +95,6 @@ import io.mosip.kernel.masterdata.repository.LanguageRepository;
 import io.mosip.kernel.masterdata.repository.LocationHierarchyRepository;
 import io.mosip.kernel.masterdata.repository.LocationRepository;
 import io.mosip.kernel.masterdata.repository.RegWorkingNonWorkingRepo;
-import io.mosip.kernel.masterdata.repository.RegistrationCenterMachineDeviceHistoryRepository;
 import io.mosip.kernel.masterdata.repository.RegistrationCenterRepository;
 import io.mosip.kernel.masterdata.repository.TemplateFileFormatRepository;
 import io.mosip.kernel.masterdata.repository.TemplateRepository;
@@ -113,7 +112,6 @@ import io.mosip.kernel.masterdata.service.LocationService;
 import io.mosip.kernel.masterdata.service.MachineHistoryService;
 import io.mosip.kernel.masterdata.service.RegWorkingNonWorkingService;
 import io.mosip.kernel.masterdata.service.RegistrationCenterDeviceHistoryService;
-import io.mosip.kernel.masterdata.service.RegistrationCenterMachineDeviceHistoryService;
 import io.mosip.kernel.masterdata.service.RegistrationCenterService;
 import io.mosip.kernel.masterdata.service.TemplateFileFormatService;
 import io.mosip.kernel.masterdata.service.TemplateService;
@@ -208,13 +206,7 @@ public class MasterDataServiceTest {
 	@Autowired
 	DocumentCategoryService documentCategoryService;
 
-	@MockBean
-	RegistrationCenterMachineDeviceHistoryRepository registrationCenterMachineDeviceHistoryRepository;
-
-	RegistrationCenterMachineDeviceHistory registrationCenterMachineDeviceHistory;
-
-	@Autowired
-	RegistrationCenterMachineDeviceHistoryService registrationCenterMachineDeviceHistoryService;
+	
 
 	@MockBean
 	RegWorkingNonWorkingRepo regWorkingNonWorkingRepo;
@@ -350,7 +342,7 @@ public class MasterDataServiceTest {
 		registrationCenterSetup();
 		updateRegistrationCenter();
 
-		registrationCenterMachineDeviceHistorySetup();
+		
 		LocationHierarchy hierarchy=new LocationHierarchy((short) 3, "City", "eng");
 		when(locationHierarchyRepository1.findByLangCodeAndLevelAndName(Mockito.anyString(), Mockito.anyShort(),
 				Mockito.anyString())).thenReturn(hierarchy);
@@ -937,21 +929,7 @@ public class MasterDataServiceTest {
 
 	}
 
-	private void registrationCenterMachineDeviceHistorySetup() {
-		registrationCenterMachimeDeviceHistoryDto = new RegistrationCenterMachineDeviceHistoryDto();
-		registrationCenterMachimeDeviceHistoryDto.setDeviceId("1");
-		registrationCenterMachimeDeviceHistoryDto.setMachineId("1000");
-		registrationCenterMachimeDeviceHistoryDto.setRegCenterId("10");
-		RegistrationCenterMachineDeviceHistoryID registrationCenterMachineDeviceHistoryPk = new RegistrationCenterMachineDeviceHistoryID();
-		regCenterMachineDeviceHistroyResponseDto = new RegCenterMachineDeviceHistoryResponseDto();
-		regCenterMachineDeviceHistroyResponseDto
-				.setRegistrationCenterMachineDeviceHistoryDto(registrationCenterMachimeDeviceHistoryDto);
-
-		registrationCenterMachineDeviceHistory = new RegistrationCenterMachineDeviceHistory();
-		registrationCenterMachineDeviceHistory
-				.setRegistrationCenterMachineDeviceHistoryPk(registrationCenterMachineDeviceHistoryPk);
-
-	}
+	
 
 	List<RegCenterPutReqDto> updRequestNotAllLang = null;
 	List<RegCenterPutReqDto> updRequestInvalideID = null;

@@ -8,6 +8,8 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 
@@ -16,6 +18,8 @@ import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
  * @author Ramadurai Pandian
  *
  */
+@Data
+@NoArgsConstructor
 public class BIR {
 
 	private BIRVersion version;

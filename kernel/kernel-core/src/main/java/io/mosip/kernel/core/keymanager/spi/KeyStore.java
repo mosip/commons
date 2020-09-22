@@ -10,6 +10,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.crypto.SecretKey;
+import javax.security.auth.x500.X500Principal;
+
+import io.mosip.kernel.core.keymanager.model.CertificateParameters;
 
 /**
  * Keymanager interface that handles and stores its cryptographic keys.
@@ -85,6 +88,7 @@ public interface KeyStore {
 	 * @param secretKey the secret key
 	 * @param alias     the alias
 	 */
+	
 	void storeSymmetricKey(SecretKey secretKey, String alias);
 
 	/**
@@ -95,7 +99,27 @@ public interface KeyStore {
 	 * @param validityFrom validityFrom
 	 * @param validityTo   validityTo
 	 */
+	
 	void storeAsymmetricKey(KeyPair keyPair, String alias, LocalDateTime validityFrom, LocalDateTime validityTo);
+
+
+	/**
+	 * Symmetric key will be generated based on the provider specified and Store the key in provider specific keystore
+	 * 
+	 * @param secretKey the secret key
+	 * @param alias     the alias
+	 */
+	void generateAndStoreSymmetricKey(String alias);
+
+	/**
+	 * Asymmetric(keypair) keys will be generated based on the provider specified and Store the keys 
+	 * along with self-signed certificate in provider specific keystore
+	 * 
+	 * @param alias        the alias
+	 * @param signKeyAlias alias used to sign the generated key
+	 * @param certParams   required Certificate Parameters to create the certificate
+	 */
+	void generateAndStoreAsymmetricKey(String alias, String signKeyAlias, CertificateParameters certParams);
 
 	/**
 	 * Delete key form keystore
@@ -104,6 +128,33 @@ public interface KeyStore {
 	 */
 	void deleteKey(String alias);
 
-	void storeCertificate(String alias, Certificate[] chain, PrivateKey privateKey);
+	//void storeCertificate(String alias, Certificate[] chain, PrivateKey privateKey);
 
+	/**
+	 * Stores the given trusted certificate to the given alias
+	 * 
+	 * @param alias        the alias
+	 * @param privateKey   privateKey reference of the provided certificate
+	 * @param certificate  Certificate to be stored
+	 */
+	void storeCertificate(String alias, PrivateKey privateKey, Certificate certificate);
+
+	/**
+	 * Creates a certificate for the given public key and signs the certificate with provided private key
+	 * 
+	 * 
+	 * @param signPrivateKey   privateKey used to create certificate
+	 * @param publicKey  	   publicKey to be signed to create certificate
+	 * @param certParams   	   required Certificate Parameters to create the certificate
+	 * @param signerPrincipal  Signer Principal 
+	 * @return returns the generated certificate.
+	 */
+	Certificate generateCertificate(PrivateKey signPrivateKey, PublicKey publicKey, CertificateParameters certParams, X500Principal signerPrincipal);
+
+	/**
+	 * Gets the keyStore provider name.
+	 * 
+	 * @param
+	 */
+	String getKeystoreProviderName();
 }

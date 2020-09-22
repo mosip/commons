@@ -25,8 +25,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LocationCreateDto {
 
+	@NotNull
+	@StringFormatter(min = 1, max = 32)
 	private String code;
-
 
 	@NotNull
 	@StringFormatter(min = 0, max = 128)
@@ -36,7 +37,7 @@ public class LocationCreateDto {
 	private short hierarchyLevel;
 
 	@NotNull
-	@StringFormatter(min = 0, max = 64)
+	@StringFormatter(min = 1, max = 64)
 	private String hierarchyName;
 
 	private String parentLocCode;

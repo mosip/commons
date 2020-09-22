@@ -22,7 +22,7 @@ import lombok.Data;
  */
 @Data
 @Entity
-@Table(schema = "master", name = "licensekey_list")
+@Table(name = "licensekey_list")
 public class LicenseKeyList {
 	/**
 	 * The generated unique license key.

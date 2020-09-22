@@ -5,12 +5,14 @@ package io.mosip.kernel.biometrics.entities;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 /**
  * @author Ramadurai Pandian
  *
  */
 @Data
+@JsonDeserialize(builder = BIRInfo.BIRInfoBuilder.class)
 public class BIRInfo {
 
 	private String creator;
