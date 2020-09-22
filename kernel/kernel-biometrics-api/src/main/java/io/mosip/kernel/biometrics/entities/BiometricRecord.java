@@ -5,8 +5,6 @@ package io.mosip.kernel.biometrics.entities;
 
 import java.util.ArrayList;
 import java.util.List;
-import io.mosip.kernel.core.cbeffutil.entity.BIR;
-import io.mosip.kernel.core.cbeffutil.entity.BIRInfo;
 
 import lombok.Data;
 

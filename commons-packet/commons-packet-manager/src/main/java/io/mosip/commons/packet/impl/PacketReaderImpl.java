@@ -16,11 +16,9 @@ import io.mosip.commons.packet.exception.PacketKeeperException;
 import io.mosip.commons.packet.facade.PacketWriter;
 import io.mosip.commons.packet.keeper.PacketKeeper;
 import io.mosip.commons.packet.spi.IPacketReader;
-import io.mosip.commons.packet.util.IdSchemaUtils;
-import io.mosip.commons.packet.util.PacketManagerLogger;
-import io.mosip.commons.packet.util.PacketValidator;
-import io.mosip.commons.packet.util.ZipUtils;
+import io.mosip.commons.packet.util.*;
 import io.mosip.kernel.biometrics.constant.BiometricType;
+import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.core.cbeffutil.common.CbeffValidator;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
@@ -247,7 +245,10 @@ public class PacketReaderImpl implements IPacketReader {
             InputStream biometrics = ZipUtils.unzipAndGetFile(packet.getPacket(), fileName);
             BIRType birType = CbeffValidator.getBIRFromXML(IOUtils.toByteArray(biometrics));
             biometricRecord = new BiometricRecord();
-            biometricRecord.setSegments(CbeffValidator.convertBIRTypeToBIR(birType.getBIR()));
+            List<BIR> segments = new ArrayList<>();
+            List<io.mosip.kernel.core.cbeffutil.entity.BIR> birList = CbeffValidator.convertBIRTypeToBIR(birType.getBIR());
+            birList.forEach(bir -> segments.add(PacketManagerHelper.convertToBiometricRecordBIR(bir)));
+            biometricRecord.setSegments(segments);
         } catch (Exception e) {
             LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, ExceptionUtils.getStackTrace(e));
             if (e instanceof BaseCheckedException) {
@@ -260,8 +261,7 @@ public class PacketReaderImpl implements IPacketReader {
             throw new GetBiometricException(e.getMessage());
         }
 
-        // TODO : remove removeDummyElements() method
-        return removeDummyElements(biometricRecord);
+        return biometricRecord;
     }
 
     @Override
@@ -328,18 +328,6 @@ public class PacketReaderImpl implements IPacketReader {
             throw new GetAllIdentityException(e.getMessage());
         }
         return finalMap;
-    }
-
-    /**
-     * Temp code. Fix for reg-client issue. Remove this.
-     * @param biometricRecord
-     * @return
-     */
-    private BiometricRecord removeDummyElements(BiometricRecord biometricRecord) {
-        if (biometricRecord != null && CollectionUtils.isNotEmpty(biometricRecord.getSegments())) {
-            biometricRecord.getSegments().forEach(s -> s.setElement(null));
-        }
-        return biometricRecord;
     }
 
 

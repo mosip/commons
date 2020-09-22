@@ -9,11 +9,12 @@ import io.mosip.commons.packet.facade.PacketWriter;
 import io.mosip.commons.packet.impl.PacketWriterImpl;
 import io.mosip.commons.packet.spi.IPacketWriter;
 import io.mosip.commons.packet.util.PacketHelper;
+import io.mosip.kernel.biometrics.constant.BiometricType;
+import io.mosip.kernel.biometrics.constant.QualityType;
+import io.mosip.kernel.biometrics.entities.BDBInfo;
+import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import io.mosip.kernel.core.cbeffutil.entity.BDBInfo;
-import io.mosip.kernel.core.cbeffutil.entity.BIR;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.QualityType;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.RegistryIDType;
+import io.mosip.kernel.biometrics.entities.RegistryIDType;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.SingleType;
 import org.junit.Before;
 
@@ -94,18 +95,16 @@ public class PacketWriterTest {
 
     @Test
     public void testSetBiometrics() {
-        List<BIR> birTypeList = new ArrayList<>();
-        BIR birType1 = new BIR();
-        BDBInfo bdbInfoType1 = new BDBInfo();
-        RegistryIDType registryIDType = new RegistryIDType();
-        registryIDType.setOrganization("Mosip");
-        registryIDType.setType("257");
-        QualityType quality = new QualityType();
+        List<io.mosip.kernel.biometrics.entities.BIR> birTypeList = new ArrayList<>();
+        io.mosip.kernel.biometrics.entities.BIR birType1 = new BIR.BIRBuilder().build();
+        io.mosip.kernel.biometrics.entities.BDBInfo bdbInfoType1 = new BDBInfo.BDBInfoBuilder().build();
+        io.mosip.kernel.biometrics.entities.RegistryIDType registryIDType = new RegistryIDType("Mosip", "257");
+        io.mosip.kernel.biometrics.constant.QualityType quality = new QualityType();
         quality.setAlgorithm(registryIDType);
         quality.setScore(90l);
         bdbInfoType1.setQuality(quality);
-        SingleType singleType1 = SingleType.FINGER;
-        List<SingleType> singleTypeList1 = new ArrayList<>();
+        BiometricType singleType1 = BiometricType.FINGER;
+        List<BiometricType> singleTypeList1 = new ArrayList<>();
         singleTypeList1.add(singleType1);
         List<String> subtype1 = new ArrayList<>(Arrays.asList("Left", "RingFinger"));
         bdbInfoType1.setSubtype(subtype1);
