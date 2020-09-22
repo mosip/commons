@@ -861,11 +861,33 @@ public class MachineServiceImpl implements MachineService {
 	}
 	
 	private void validateRegistrationCenterZone(String zoneCode, String regCenterId) {
-		List<RegistrationCenter> centers=regCenterRepository.findByRegIdAndZone(regCenterId, zoneCode);
-		if(centers==null ||centers.isEmpty()) {
+		List<Zone> userZones = zoneUtils.getUserZones();
+		boolean isRegCenterMappedToUserZone = false;
+		boolean isInSameHierarchy = false;
+		Zone registrationCenterZone = null;
+		List<String> zoneIds = userZones.parallelStream().map(Zone::getCode).collect(Collectors.toList());
+		List<RegistrationCenter> centers=regCenterRepository.findByRegIdAndLangCode(regCenterId, primaryLangCode);
+		for (Zone zone : userZones) {
+
+			if (zone.getCode().equals(centers.get(0).getZoneCode())) {
+				isRegCenterMappedToUserZone = true;
+				registrationCenterZone = zone;
+
+			}
+		}
+		if(!isRegCenterMappedToUserZone) {
 			throw new RequestException(DeviceErrorCode.INVALID_CENTER_ZONE.getErrorCode(),
 					DeviceErrorCode.INVALID_CENTER_ZONE.getErrorMessage());
 		}
+		Objects.requireNonNull(registrationCenterZone, "registrationCenterZone is empty");
+		String hierarchyPath = registrationCenterZone.getHierarchyPath();
+		List<String> zoneHierarchy = Arrays.asList(hierarchyPath.split("/"));
+		isInSameHierarchy = zoneHierarchy.stream().anyMatch(zone -> zone.equals(zoneCode));
+		if(!isInSameHierarchy) {
+			throw new RequestException(DeviceErrorCode.INVALID_CENTER_ZONE.getErrorCode(),
+					DeviceErrorCode.INVALID_CENTER_ZONE.getErrorMessage());
+		}
+	
 	}
 
 	/*
