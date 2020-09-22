@@ -64,7 +64,8 @@ public class PacketHelper {
         if (configurations == null)
             throw new NoAvailableProviderException();
 
-        Optional<ProviderDto> providerDto = configurations.stream().filter(dto -> dto.getSource().contains(providerSource) && dto.getProcess().contains(providerProcess)).findAny();
+        Optional<ProviderDto> providerDto = configurations.stream().filter(dto -> dto.getSource().toUpperCase().contains(providerSource.toUpperCase())
+                && dto.getProcess().toUpperCase().contains(providerProcess.toUpperCase())).findAny();
         return providerDto.isPresent() && providerDto.get() != null && providerName.contains(providerDto.get().getClassName());
     }
 
