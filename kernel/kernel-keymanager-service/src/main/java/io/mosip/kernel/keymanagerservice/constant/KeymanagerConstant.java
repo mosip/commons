@@ -155,4 +155,9 @@ public class KeymanagerConstant {
 	public static final String UPLOAD_SUCCESS = "Upload Success";
 
 	public static final String CERTIFICATE_PARSE = "CERTIFICATE_PARSE";
+
+	/**
+	 * The constant KeyStore PrivateKey NotAvailable
+	 */
+	public static final String KS_PK_NA = "NA";
 }
