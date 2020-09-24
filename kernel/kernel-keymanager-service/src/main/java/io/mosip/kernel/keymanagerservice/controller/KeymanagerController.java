@@ -152,4 +152,21 @@ public class KeymanagerController {
 		response.setResponse(keymanagerService.uploadCertificate(uploadCertRequestDto.getRequest()));
 		return response;
 	}
+
+	/**
+	 * Update signed certificate for the provided APP ID & REF ID for other domains.
+	 * 
+	 * @param uploadCertRequestDto     {@link UploadCertificateRequestDto} request
+	 * @return {@link UploadCertificateResponseDto} instance
+	*/
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@ResponseFilter
+	@PostMapping(value = "/uploadOtherDomainCertificate")
+	public ResponseWrapper<UploadCertificateResponseDto> uploadOtherDomainCertificate(
+		@RequestBody @Valid RequestWrapper<UploadCertificateRequestDto> uploadCertRequestDto) {
+
+		ResponseWrapper<UploadCertificateResponseDto> response = new ResponseWrapper<>();
+		response.setResponse(keymanagerService.uploadOtherDomainCertificate(uploadCertRequestDto.getRequest()));
+		return response;
+	}
 }

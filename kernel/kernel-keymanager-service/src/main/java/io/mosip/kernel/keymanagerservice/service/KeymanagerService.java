@@ -72,10 +72,18 @@ public interface KeymanagerService {
 	public KeyPairGenerateResponseDto generateCSR(CSRGenerateRequestDto csrGenRequestDto);
 
 	/**
-	 * Function to get CSR for the provided appId & refId.
+	 * Function to upload certificate for the provided appId & refId.
 	 * 
 	 * @param UploadCertificateRequestDto request
 	 * @return {@link UploadCertificateResponseDto} instance
 	 */
-	public UploadCertificateResponseDto uploadCertificate(UploadCertificateRequestDto csrGenRequestDto);
+	public UploadCertificateResponseDto uploadCertificate(UploadCertificateRequestDto uploadCertRequestDto);
+
+	/**
+	 * Function to upload other domain certificate for the provided appId & refId.
+	 * 
+	 * @param UploadCertificateRequestDto request
+	 * @return {@link UploadCertificateResponseDto} instance
+	 */
+	public UploadCertificateResponseDto uploadOtherDomainCertificate(UploadCertificateRequestDto uploadCertRequestDto);
 }

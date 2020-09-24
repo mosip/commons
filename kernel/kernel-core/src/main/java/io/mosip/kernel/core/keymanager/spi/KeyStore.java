@@ -154,7 +154,6 @@ public interface KeyStore {
 	/**
 	 * Gets the keyStore provider name.
 	 * 
-	 * @param
 	 */
 	String getKeystoreProviderName();
 }
