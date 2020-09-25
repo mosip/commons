@@ -1,148 +1,37 @@
 package io.mosip.commons.packet.impl;
 
-import java.nio.charset.StandardCharsets;
-import java.security.SecureRandom;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import io.mosip.commons.packet.constants.CryptomanagerConstant;
-import io.mosip.commons.packet.exception.PacketDecryptionFailureException;
 import io.mosip.commons.packet.spi.IPacketCryptoService;
-import io.mosip.kernel.core.util.CryptoUtil;
-import io.mosip.kernel.core.util.DateUtils;
-import io.mosip.kernel.cryptomanager.dto.CryptomanagerRequestDto;
-import io.mosip.kernel.cryptomanager.service.CryptomanagerService;
-import io.mosip.kernel.signature.dto.SignRequestDto;
-import io.mosip.kernel.signature.dto.TimestampRequestDto;
-import io.mosip.kernel.signature.service.SignatureService;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 @Component
 @Qualifier("OfflinePacketCryptoServiceImpl")
 public class OfflinePacketCryptoServiceImpl implements IPacketCryptoService {
 
-    public static final String APPLICATION_ID = "REGISTRATION";
-
-    @Value("${mosip.utc-datetime-pattern:yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}")
-    private String DATETIME_PATTERN;
-
-    /** The cryptomanager service. */
-	@Autowired
-	private CryptomanagerService cryptomanagerService;
-
-	/** The key manager. */
-	@Autowired
-	private SignatureService signatureService;
-
-	/** The sign applicationid. */
-	@Value("${mosip.sign.applicationid:KERNEL}")
-	private String signApplicationid;
-
-	/** The sign refid. */
-	@Value("${mosip.sign.refid:SIGN}")
-    private String signRefid;
-    
-    @Value("${mosip.kernel.registrationcenterid.length:5}")
-    private int centerIdLength;
-
-    @Value("${mosip.kernel.machineid.length:5}")
-    private int machineIdLength;
+    /*@Autowired
+    ClientCryptoManagerService clientCryptoManagerService;*/
 
     @Override
     public byte[] sign(byte[] packet) {
-        String packetData = new String(packet, StandardCharsets.UTF_8);
-        SignRequestDto signRequest = new SignRequestDto();
-        signRequest.setData(packetData);
-        return signatureService.sign(signRequest).getData().getBytes(StandardCharsets.UTF_8);
+        //return clientCryptoManagerService.csSign(packet);
+        return new byte[0];
     }
 
     @Override
     public byte[] encrypt(String id, byte[] packet) {
-        String centerId = id.substring(0, centerIdLength);
-        String machineId = id.substring(centerIdLength, centerIdLength + machineIdLength);
-        String refId = centerId + "_" + machineId;
-        String packetString = CryptoUtil.encodeBase64String(packet);
-        CryptomanagerRequestDto cryptomanagerRequestDto = new CryptomanagerRequestDto();
-        cryptomanagerRequestDto.setApplicationId(APPLICATION_ID);
-        cryptomanagerRequestDto.setData(packetString);
-        cryptomanagerRequestDto.setReferenceId(refId);
-        
-        SecureRandom sRandom = new SecureRandom();
-        byte[] nonce = new byte[CryptomanagerConstant.GCM_NONCE_LENGTH];
-        byte[] aad = new byte[CryptomanagerConstant.GCM_AAD_LENGTH];
-        sRandom.nextBytes(nonce);
-        sRandom.nextBytes(aad);
-        cryptomanagerRequestDto.setAad(CryptoUtil.encodeBase64String(aad));
-        cryptomanagerRequestDto.setSalt(CryptoUtil.encodeBase64String(nonce));
-        // setLocal Date Time
-        if (id.length() > 14) {
-            String packetCreatedDateTime = id.substring(id.length() - 14);
-            String formattedDate = packetCreatedDateTime.substring(0, 8) + "T"
-                    + packetCreatedDateTime.substring(packetCreatedDateTime.length() - 6);
-
-            cryptomanagerRequestDto.setTimeStamp(LocalDateTime.parse(formattedDate, DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss")));
-        } else {
-            throw new PacketDecryptionFailureException("Packet Encryption Failed-Invalid Packet format");
-        }
-        byte[] encryptedData = CryptoUtil.decodeBase64(cryptomanagerService.encrypt(cryptomanagerRequestDto).getData());
-        return mergeEncryptedData(encryptedData, nonce, aad);
+        //return clientCryptoManagerService.csEncrypt(packet);
+        return packet;
     }
-
-    private byte[] mergeEncryptedData(byte[] encryptedData, byte[] nonce, byte[] aad) {
-		byte[] finalEncData = new byte[encryptedData.length + CryptomanagerConstant.GCM_AAD_LENGTH + CryptomanagerConstant.GCM_NONCE_LENGTH];
-		System.arraycopy(nonce, 0, finalEncData, 0, nonce.length);
-		System.arraycopy(aad, 0, finalEncData, nonce.length, aad.length);
-		System.arraycopy(encryptedData, 0, finalEncData, nonce.length + aad.length,	encryptedData.length);
-		return encryptedData;
-	}
 
     @Override
     public byte[] decrypt(String id, byte[] packet) {
-        String centerId = id.substring(0, centerIdLength);
-        String machineId = id.substring(centerIdLength, centerIdLength + machineIdLength);
-        String refId = centerId + "_" + machineId;
-        
-        byte[] nonce = Arrays.copyOfRange(packet, 0, CryptomanagerConstant.GCM_NONCE_LENGTH);
-        byte[] aad = Arrays.copyOfRange(packet, CryptomanagerConstant.GCM_NONCE_LENGTH, 
-                                            CryptomanagerConstant.GCM_NONCE_LENGTH + CryptomanagerConstant.GCM_AAD_LENGTH);
-        byte[] encryptedData = Arrays.copyOfRange(packet, CryptomanagerConstant.GCM_NONCE_LENGTH + CryptomanagerConstant.GCM_AAD_LENGTH,
-                                        packet.length);
-
-        CryptomanagerRequestDto cryptomanagerRequestDto = new CryptomanagerRequestDto();
-        cryptomanagerRequestDto.setApplicationId(APPLICATION_ID);
-        cryptomanagerRequestDto.setReferenceId(refId);
-        cryptomanagerRequestDto.setAad(CryptoUtil.encodeBase64String(aad));
-        cryptomanagerRequestDto.setSalt(CryptoUtil.encodeBase64String(nonce));
-        cryptomanagerRequestDto.setData(CryptoUtil.encodeBase64String(encryptedData));
-        // setLocal Date Time
-        if (id.length() > 14) {
-            String packetCreatedDateTime = id.substring(id.length() - 14);
-            String formattedDate = packetCreatedDateTime.substring(0, 8) + "T"
-                    + packetCreatedDateTime.substring(packetCreatedDateTime.length() - 6);
-
-            cryptomanagerRequestDto.setTimeStamp(
-                    LocalDateTime.parse(formattedDate, DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss")));
-        } else {
-            throw new PacketDecryptionFailureException("Packet DecryptionFailed-Invalid Packet format");
-        }
-        return CryptoUtil.decodeBase64(cryptomanagerService.decrypt(cryptomanagerRequestDto).getData());
+        //return clientCryptoManagerService.csDecrypt(packet);
+        return packet;
     }
 
     @Override
     public boolean verify(byte[] packet, byte[] signature) {
-        String packetData = new String(packet, StandardCharsets.UTF_8);
-        String signatureData = new String(signature, StandardCharsets.UTF_8);
-        DateTimeFormatter format = DateTimeFormatter.ofPattern(DATETIME_PATTERN);
-        LocalDateTime localdatetime = LocalDateTime.parse(DateUtils.getUTCCurrentDateTimeString(DATETIME_PATTERN), format);
-        TimestampRequestDto requestDto = new TimestampRequestDto();
-        requestDto.setTimestamp(localdatetime);
-        requestDto.setData(packetData);
-        requestDto.setSignature(signatureData);
-        return signatureService.validate(requestDto).getStatus().equalsIgnoreCase(CryptomanagerConstant.SIGNATURES_SUCCESS);
+        //return clientCryptoManagerService.csVerify(packet, signature);
+        return true;
     }
 }
