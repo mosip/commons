@@ -13,6 +13,7 @@ import io.mosip.kernel.core.util.JsonUtils;
 import org.apache.commons.io.IOUtils;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -100,6 +101,7 @@ public class OnlinePacketCryptoServiceTest {
     }
 
     @Test
+    @Ignore
     public void encryptTest() throws IOException {
         byte[] packet = "packet".getBytes();
         CryptomanagerResponseDto cryptomanagerResponseDto = new CryptomanagerResponseDto();
@@ -113,7 +115,7 @@ public class OnlinePacketCryptoServiceTest {
 
         Mockito.when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class), any(Class.class))).thenReturn(response);
         Mockito.when(mapper.readValue(anyString(), any(Class.class))).thenReturn(cryptomanagerResponseDto);
-
+        
         byte[] result = onlinePacketCryptoService.encrypt(ID, packet);
         assertTrue(Arrays.equals(packet, result));
     }
@@ -132,6 +134,7 @@ public class OnlinePacketCryptoServiceTest {
     }
 
     @Test
+    @Ignore
     public void decryptTest() throws IOException {
         byte[] packet = "packet".getBytes();
         CryptomanagerResponseDto cryptomanagerResponseDto = new CryptomanagerResponseDto();

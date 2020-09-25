@@ -724,7 +724,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 
 		if (!keymanagerUtil.isValidApplicationId(appId)) {
 			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, null,
-					"Invalid application ID provided to get CSR details.");
+					"Invalid application ID provided to get Object details.");
 			throw new KeymanagerServiceException(KeymanagerErrorConstant.INVALID_REQUEST.getErrorCode(),
 					KeymanagerErrorConstant.INVALID_REQUEST.getErrorMessage());
 		}
@@ -822,6 +822,69 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 		UploadCertificateResponseDto responseDto = new UploadCertificateResponseDto();
 		responseDto.setStatus(KeymanagerConstant.UPLOAD_SUCCESS);
 		responseDto.setTimestamp(timestamp);
+		return responseDto;
+	}
+
+	@Override
+	public UploadCertificateResponseDto uploadOtherDomainCertificate(UploadCertificateRequestDto uploadCertRequestDto) {
+
+		String appId = uploadCertRequestDto.getApplicationId();
+		String refId = uploadCertRequestDto.getReferenceId();
+		String certificateData = uploadCertRequestDto.getCertificateData();
+
+		if (!keymanagerUtil.isValidCertificateData(certificateData) || !keymanagerUtil.isValidReferenceId(refId) ||
+						!keymanagerUtil.isValidApplicationId(appId)) {
+			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, null,
+					"Invalid Data provided to upload other domain certificate.");
+			throw new KeymanagerServiceException(KeymanagerErrorConstant.INVALID_REQUEST.getErrorCode(),
+					KeymanagerErrorConstant.INVALID_REQUEST.getErrorMessage());
+		}
+
+		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, appId,
+				"to get KeyInfo for application ID: " + appId + ", RefId: " + refId);
+		LocalDateTime timestamp = DateUtils.getUTCCurrentDateTime();
+		Map<String, List<KeyAlias>> keyAliasMap = dbHelper.getKeyAliases(appId, refId, timestamp);
+		List<KeyAlias> currentKeyAlias = keyAliasMap.get(KeymanagerConstant.CURRENTKEYALIAS);
+
+		if (currentKeyAlias.size() > 1) {
+			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.CURRENTKEYALIAS,
+					String.valueOf(currentKeyAlias.size()), "CurrentKeyAlias size more than one");
+			throw new NoUniqueAliasException(KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorCode(),
+					KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorMessage());
+		}
+
+		X509Certificate reqX509Cert = (X509Certificate) keymanagerUtil.convertToCertificate(certificateData);
+		LocalDateTime notBeforeDate = DateUtils.parseDateToLocalDateTime(reqX509Cert.getNotBefore());
+		LocalDateTime notAfterDate = DateUtils.parseDateToLocalDateTime(reqX509Cert.getNotAfter());
+		if (currentKeyAlias.isEmpty()) {
+			return storeAndBuildResponse(appId, refId, reqX509Cert, notBeforeDate, notAfterDate);
+		}
+		
+		String keyAlias = currentKeyAlias.get(0).getAlias();
+		Optional<io.mosip.kernel.keymanagerservice.entity.KeyStore> keyFromDBStore = dbHelper.getKeyStoreFromDB(keyAlias);
+		String masterKeyAlias = keyFromDBStore.get().getMasterAlias();
+		String privateKeyObj = keyFromDBStore.get().getPrivateKey();
+
+		if (!keyAlias.equals(masterKeyAlias) || !privateKeyObj.equals(KeymanagerConstant.KS_PK_NA)) {
+			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, null,
+					"Not Allowed to update certificate for other domains.");
+			throw new KeymanagerServiceException(KeymanagerErrorConstant.UPLOAD_NOT_ALLOWED.getErrorCode(),
+					KeymanagerErrorConstant.UPLOAD_NOT_ALLOWED.getErrorMessage());
+		}
+
+		LocalDateTime expireTime = timestamp.minusMinutes(1L);
+		dbHelper.storeKeyInAlias(appId, currentKeyAlias.get(0).getKeyGenerationTime(), refId, keyAlias, expireTime);
+		return storeAndBuildResponse(appId, refId, reqX509Cert, notBeforeDate, notAfterDate);
+	}
+
+	private UploadCertificateResponseDto storeAndBuildResponse(String appId, String refId, X509Certificate reqX509Cert, 
+															   LocalDateTime notBeforeDate, LocalDateTime notAfterDate) {
+		String alias = UUID.randomUUID().toString();
+		dbHelper.storeKeyInDBStore(alias, alias, keymanagerUtil.getPEMFormatedData(reqX509Cert), KeymanagerConstant.KS_PK_NA);
+		dbHelper.storeKeyInAlias(appId, notBeforeDate, refId, alias, notAfterDate);
+		UploadCertificateResponseDto responseDto = new UploadCertificateResponseDto();
+		responseDto.setStatus(KeymanagerConstant.UPLOAD_SUCCESS);
+		responseDto.setTimestamp(DateUtils.getUTCCurrentDateTime());
 		return responseDto;
 	}
 }
