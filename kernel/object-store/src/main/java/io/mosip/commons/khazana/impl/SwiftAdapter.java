@@ -127,4 +127,34 @@ public class SwiftAdapter implements ObjectStoreAdapter {
     public boolean deleteObject(String account, String container, String source, String process, String objectName) {
         return true;
     }
+
+    /**
+     * Not Supported in SwiftAdapter
+     *
+     * @param account
+     * @param container
+     * @param source
+     * @param process
+     * @return
+     */
+    @Override
+    public boolean removeContainer(String account, String container, String source, String process) {
+        return false;
+    }
+
+    /**
+     * Not Supported in SwiftAdapter
+     *
+     * @param account
+     * @param container
+     * @param source
+     * @param process
+     * @param objectName
+     * @param data
+     * @return
+     */
+    @Override
+    public boolean pack(String account, String container, String source, String process) {
+        return false;
+    }
 }

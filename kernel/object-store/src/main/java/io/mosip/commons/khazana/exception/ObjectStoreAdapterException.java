@@ -1,10 +1,10 @@
 package io.mosip.commons.khazana.exception;
 
-import io.mosip.kernel.core.exception.BaseCheckedException;
+import io.mosip.kernel.core.exception.BaseUncheckedException;
 
-public class ObjectStoreAdapterException extends BaseCheckedException {
+public class ObjectStoreAdapterException extends BaseUncheckedException {
 
-    public ObjectStoreAdapterException(String errorCode, String message, Throwable t) {
-        super(errorCode, message, t);
+    public ObjectStoreAdapterException(String errorCode, String message) {
+        super(errorCode, message);
     }
 }

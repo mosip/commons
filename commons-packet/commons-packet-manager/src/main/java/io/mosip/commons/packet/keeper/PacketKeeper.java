@@ -230,4 +230,11 @@ public class PacketKeeper {
         return id + UNDERSCORE + name;
     }
 
+    public boolean deletePacket(String id, String source, String process) {
+        return getAdapter().removeContainer(PACKET_MANAGER_ACCOUNT, id, source, process);
+    }
+
+    public boolean pack(String id, String source, String process) {
+        return getAdapter().pack(PACKET_MANAGER_ACCOUNT, id, source, process);
+    }
 }
