@@ -2299,3 +2299,42 @@ Merci",10006,Resident Services,RS_CRE_CANCEL_SUCCESS_EMAIL,fra,TRUE,superadmin,n
 1240,Credential Request Cancel Success EMAIL Subject,Credential Request Cancel Success EMAIL Subject,txt,velocity,Credential Request is cancelled successfully,10006,Resident Services,RS_CRE_CANCEL_SUCCESS_EMAIL_SUB,eng,TRUE,superadmin,now()
 1240,Credential Request Cancel Success EMAIL Subject,Credential Request Cancel Success EMAIL Subject,txt,velocity,تم إلغاء طلب الاعتماد بنجاح,10006,Resident Services,RS_CRE_CANCEL_SUCCESS_EMAIL_SUB,ara,TRUE,superadmin,now()
 1240,Credential Request Cancel Success EMAIL Subject,Credential Request Cancel Success EMAIL Subject,txt,velocity,La demande d'informations d'identification est annulée avec succès,10006,Resident Services,RS_CRE_CANCEL_SUCCESS_EMAIL_SUB,fra,TRUE,superadmin,now()
+1241,Credential Issuance Failure SMS,Credential Issuance Failure SMS,txt,velocity,"Hi $!fullName,
+
+We have received a request for $!credentialName from $!partnerName. The request id for the same is $!RID. 
+The request could not be processed. Please try again later.
+
+Thank You",10006,Resident Services,RS_CRE_REQ_FAILURE_SMS,eng,TRUE,superadmin,now()
+1241,Credential Issuance Failure SMS,Credential Issuance Failure SMS,txt,velocity,"مرحبًا $!fullName ،
+
+لقد تلقينا طلبًا للحصول على $!creditName من $!partnerName. معرف الطلب لنفسه هو $!RID.
+لا يمكن معالجة الطلب. الرجاء معاودة المحاولة في وقت لاحق.
+
+شكرا",10006,Resident Services,RS_CRE_REQ_FAILURE_SMS,ara,TRUE,superadmin,now()
+1241,Credential Issuance Failure SMS,Credential Issuance Failure SMS,txt,velocity,"Bonjour $!fullName,
+
+Nous avons reçu une demande de $!credentialName de $!partnerName. L'identifiant de demande pour le même est $!RID.
+La demande n'a pas pu être traitée. Veuillez réessayer plus tard.
+
+Merci",10006,Resident Services,RS_CRE_REQ_FAILURE_SMS,fra,TRUE,superadmin,now()
+1242,Credential Issuance Failure EMAIL,Credential Issuance Failure EMAIL,txt,velocity,"Hi $!fullName,
+
+We have received a request for $!credentialName from $!partnerName. The request id for the same is $!RID. 
+The request could not be processed. Please try again later.
+
+Thank You",10006,Resident Services,RS_CRE_REQ_FAILURE_EMAIL,eng,TRUE,superadmin,now()
+1242,Credential Issuance Failure EMAIL,Credential Issuance Failure EMAIL,txt,velocity,"مرحبًا $!fullName ،
+
+لقد تلقينا طلبًا للحصول على $!creditName من $!partnerName. معرف الطلب لنفسه هو $!RID.
+لا يمكن معالجة الطلب. الرجاء معاودة المحاولة في وقت لاحق.
+
+شكرا",10006,Resident Services,RS_CRE_REQ_FAILURE_EMAIL,ara,TRUE,superadmin,now()
+1242,Credential Issuance Failure EMAIL,Credential Issuance Failure EMAIL,txt,velocity,"Bonjour $!fullName,
+
+Nous avons reçu une demande de $!credentialName de $!partnerName. L'identifiant de demande pour le même est $!RID.
+La demande n'a pas pu être traitée. Veuillez réessayer plus tard.
+
+Merci",10006,Resident Services,RS_CRE_REQ_FAILURE_EMAIL,fra,TRUE,superadmin,now()
+1243,Credential Issuance Failure EMAIL Subject,Credential Issuance Failure EMAIL Subject,txt,velocity,Credential Issuance Failed,10006,Resident Services,RS_CRE_REQ_FAILURE_EMAIL_SUB,eng,TRUE,superadmin,now()
+1243,Credential Issuance Failure EMAIL Subject,Credential Issuance Failure EMAIL Subject,txt,velocity,فشل إصدار بيانات الاعتماد,10006,Resident Services,RS_CRE_REQ_FAILURE_EMAIL_SUB,ara,TRUE,superadmin,now()
+1243,Credential Issuance Failure EMAIL Subject,Credential Issuance Failure EMAIL Subject,txt,velocity,Échec de l'émission des informations d'identification,10006,Resident Services,RS_CRE_REQ_FAILURE_EMAIL_SUB,fra,TRUE,superadmin,now()
