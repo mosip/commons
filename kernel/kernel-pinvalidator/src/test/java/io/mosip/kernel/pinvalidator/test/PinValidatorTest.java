@@ -6,6 +6,7 @@ package io.mosip.kernel.pinvalidator.test;
 
 import static org.junit.Assert.assertEquals;
 
+import io.mosip.kernel.pinvalidator.impl.PinValidatorImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ import io.mosip.kernel.core.pinvalidator.spi.PinValidator;
  *
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = {PinValidatorImpl.class})
 public class PinValidatorTest {
 
 	@Autowired
