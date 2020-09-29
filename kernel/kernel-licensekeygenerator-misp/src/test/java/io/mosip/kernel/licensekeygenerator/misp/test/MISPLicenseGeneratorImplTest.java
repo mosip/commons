@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.isA;
 import static org.junit.Assert.assertThat;
 
+import io.mosip.kernel.licensekeygenerator.misp.impl.MISPLicenseKeyGeneratorImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import io.mosip.kernel.licensekeygenerator.misp.util.MISPLicenseKeyGeneratorUtil
  * @since 1.0.0
  *
  */
-@SpringBootTest
+@SpringBootTest(classes = {MISPLicenseKeyGeneratorImpl.class, MISPLicenseKeyGeneratorUtil.class})
 @RunWith(SpringRunner.class)
 public class MISPLicenseGeneratorImplTest {
 

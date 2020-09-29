@@ -5,6 +5,7 @@ package io.mosip.kernel.idvalidator.uin.test;
 
 import static org.junit.Assert.assertEquals;
 
+import io.mosip.kernel.idvalidator.uin.impl.UinValidatorImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import io.mosip.kernel.core.idvalidator.spi.UinValidator;
  *
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = {UinValidatorImpl.class})
 public class UinValidatorTest {
 
 	@Value("${mosip.kernel.uin.test.valid-uin}")
