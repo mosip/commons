@@ -25,6 +25,17 @@ DROP TABLE IF EXISTS master.transaction_type CASCADE;
 DROP TABLE IF EXISTS master.user_pwd CASCADE;
 DROP TABLE IF EXISTS master.user_role CASCADE;
 
+DROP TABLE IF EXISTS master.reg_device_type CASCADE;
+DROP TABLE IF EXISTS master.reg_device_sub_type CASCADE;
+DROP TABLE IF EXISTS master.mosip_device_service CASCADE;
+DROP TABLE IF EXISTS master.mosip_device_service_h CASCADE;
+DROP TABLE IF EXISTS master.device_provider CASCADE;
+DROP TABLE IF EXISTS master.device_provider_h CASCADE;
+DROP TABLE IF EXISTS master.foundational_trust_provider CASCADE;
+DROP TABLE IF EXISTS master.foundational_trust_provider_h CASCADE;
+DROP TABLE IF EXISTS master.registered_device_master CASCADE;
+DROP TABLE IF EXISTS master.registered_device_master_h CASCADE;
+
 \ir ../ddl/master-sync_job_def.sql
 \ir ../ddl/master-bulkupload_transaction.sql
 
