@@ -33,11 +33,11 @@ public class DeviceDataHelper {
 	CompletableFuture<List<DeviceDto>> devices = null;
 	CompletableFuture<List<DeviceSpecificationDto>> deviceSpecifications = null;
 	CompletableFuture<List<DeviceTypeDto>> deviceTypes = null;
-	CompletableFuture<List<DeviceTypeDPMDto>> deviceTypeDPMs = null;
+	/*CompletableFuture<List<DeviceTypeDPMDto>> deviceTypeDPMs = null;
 	CompletableFuture<List<DeviceSubTypeDPMDto>> deviceSubTypeDPMs = null;
 	CompletableFuture<List<DeviceProviderDto>> deviceProviders = null;
 	CompletableFuture<List<DeviceServiceDto>> deviceServices = null;
-	CompletableFuture<List<RegisteredDeviceDto>> registeredDevices = null;
+	CompletableFuture<List<RegisteredDeviceDto>> registeredDevices = null;*/
 
 
 	
@@ -51,20 +51,21 @@ public class DeviceDataHelper {
 		this.devices = serviceHelper.getDevices(this.regCenterId, this.lastUpdated, this.currentTimestamp);
 		this.deviceSpecifications = serviceHelper.getDeviceSpecifications(this.regCenterId, this.lastUpdated, this.currentTimestamp);
 		this.deviceTypes = serviceHelper.getDeviceType(this.regCenterId, this.lastUpdated, this.currentTimestamp);
-		this.deviceTypeDPMs = serviceHelper.getDeviceTypeDetails(this.lastUpdated, this.currentTimestamp);
+		/*this.deviceTypeDPMs = serviceHelper.getDeviceTypeDetails(this.lastUpdated, this.currentTimestamp);
 		this.deviceSubTypeDPMs = serviceHelper.getDeviceSubTypeDetails(this.lastUpdated, this.currentTimestamp);
 		this.deviceProviders = serviceHelper.getDeviceProviderDetails(this.lastUpdated, currentTimestamp);
 		this.deviceServices = serviceHelper.getDeviceServiceDetails(this.lastUpdated, this.currentTimestamp);
 		this.registeredDevices = serviceHelper.getRegisteredDeviceDetails(this.regCenterId, this.lastUpdated, this.currentTimestamp);
+		*/
 
 		futures.add(this.devices);
 		futures.add(this.deviceSpecifications);
 		futures.add(this.deviceTypes);
-		futures.add(this.deviceTypeDPMs);
+		/*futures.add(this.deviceTypeDPMs);
 		futures.add(this.deviceSubTypeDPMs);
 		futures.add(this.deviceProviders);
 		futures.add(this.deviceServices);
-		futures.add(this.registeredDevices);
+		futures.add(this.registeredDevices);*/
 	}
 	
 	public void fillRetrievedData(final SyncMasterDataServiceHelper serviceHelper, final List<SyncDataBaseDto> list) 
@@ -72,10 +73,10 @@ public class DeviceDataHelper {
 		list.add(serviceHelper.getSyncDataBaseDto(Device.class, "structured", this.devices.get()));
 		list.add(serviceHelper.getSyncDataBaseDto(DeviceSpecification.class, "structured", this.deviceSpecifications.get()));
 		list.add(serviceHelper.getSyncDataBaseDto(DeviceType.class, "structured", this.deviceTypes.get()));
-		list.add(serviceHelper.getSyncDataBaseDto(DeviceTypeDPM.class, "structured", this.deviceTypeDPMs.get()));
+		/*list.add(serviceHelper.getSyncDataBaseDto(DeviceTypeDPM.class, "structured", this.deviceTypeDPMs.get()));
 		list.add(serviceHelper.getSyncDataBaseDto(DeviceSubTypeDPM.class, "structured", this.deviceSubTypeDPMs.get()));
 		list.add(serviceHelper.getSyncDataBaseDto(DeviceProvider.class, "structured", this.deviceProviders.get()));
 		list.add(serviceHelper.getSyncDataBaseDto(DeviceService.class, "structured", this.deviceServices.get()));
-		list.add(serviceHelper.getSyncDataBaseDto(RegisteredDevice.class, "structured", this.registeredDevices.get()));	
+		list.add(serviceHelper.getSyncDataBaseDto(RegisteredDevice.class, "structured", this.registeredDevices.get()));*/
 	}
 }
