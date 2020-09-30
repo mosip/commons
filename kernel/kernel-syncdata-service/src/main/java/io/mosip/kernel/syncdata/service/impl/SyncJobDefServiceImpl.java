@@ -16,7 +16,7 @@ import io.mosip.kernel.syncdata.dto.SyncJobDefDto;
 import io.mosip.kernel.syncdata.entity.SyncJobDef;
 import io.mosip.kernel.syncdata.exception.AdminServiceException;
 import io.mosip.kernel.syncdata.service.SyncJobDefService;
-import io.mosip.kernel.syncdata.syncjob.repository.SyncJobDefRepository;
+import io.mosip.kernel.syncdata.repository.SyncJobDefRepository;
 import io.mosip.kernel.syncdata.utils.MapperUtils;
 
 /**
