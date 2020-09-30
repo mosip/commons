@@ -9,7 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author Ritesh Sinha
  * @since 1.0.0
  */
-@SpringBootApplication(scanBasePackages = { "io.mosip.kernel.ridgenerator.*", "${mosip.auth.adapter.impl.basepackage}" })
+@SpringBootApplication(scanBasePackages = { "io.mosip.kernel.ridgenerator.*", "${mosip.auth.adapter.impl.basepackage}",
+		"io.mosip.kernel.core.logger.config"})
 public class RidGeneratorBootApplication {
 
 	/**
