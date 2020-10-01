@@ -155,7 +155,6 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
                 ServiceError error = responseObject.getErrors().get(0);
                 throw new PacketDecryptionFailureException(error.getMessage());
             }
-            encryptedPacket = responseObject.getResponse().getData().getBytes();
             byte[] encryptedData = CryptoUtil.decodeBase64(responseObject.getResponse().getData());
             encryptedPacket = mergeEncryptedData(encryptedData, nonce, aad);
         } catch (IOException e) {
@@ -182,7 +181,7 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
 		System.arraycopy(nonce, 0, finalEncData, 0, nonce.length);
 		System.arraycopy(aad, 0, finalEncData, nonce.length, aad.length);
 		System.arraycopy(encryptedData, 0, finalEncData, nonce.length + aad.length,	encryptedData.length);
-		return encryptedData;
+		return finalEncData;
 	}
 
     @Override

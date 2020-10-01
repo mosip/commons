@@ -161,8 +161,11 @@ public class PacketWriterImpl implements IPacketWriter {
                 LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.ID.toString(),
                         id, "Completed Subpacket: " + subPacketName);
 
-                if (counter == identityProperties.keySet().size())
-                    packetKeeper.pack(packetInfo.getId(), packetInfo.getSource(), packetInfo.getProcess());
+                if (counter == identityProperties.keySet().size()) {
+                    boolean res = packetKeeper.pack(packetInfo.getId(), packetInfo.getSource(), packetInfo.getProcess());
+                    if (!res)
+                        packetKeeper.deletePacket(id, source, process);
+                }
 
                 counter++;
             }

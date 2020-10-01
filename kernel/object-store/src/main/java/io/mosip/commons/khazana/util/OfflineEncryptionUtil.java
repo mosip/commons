@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
-public class EncryptionUtil {
+public class OfflineEncryptionUtil {
     public static final String APPLICATION_ID = "REGISTRATION";
 
     @Autowired

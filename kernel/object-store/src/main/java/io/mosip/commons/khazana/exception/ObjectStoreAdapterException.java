@@ -7,4 +7,8 @@ public class ObjectStoreAdapterException extends BaseUncheckedException {
     public ObjectStoreAdapterException(String errorCode, String message) {
         super(errorCode, message);
     }
+
+    public ObjectStoreAdapterException(String errorCode, String message, Throwable e) {
+        super(errorCode, message, e);
+    }
 }

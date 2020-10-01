@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.commons.khazana.constant.KhazanaErrorCodes;
 import io.mosip.commons.khazana.exception.FileNotFoundInDestinationException;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
-import io.mosip.commons.khazana.util.EncryptionUtil;
+import io.mosip.commons.khazana.util.EncryptionHelper;
 import io.mosip.commons.khazana.util.ObjectStoreUtil;
 import io.mosip.kernel.core.util.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -40,7 +40,7 @@ public class PosixAdapter implements ObjectStoreAdapter {
     private String baseLocation;
 
     @Autowired
-    private EncryptionUtil encryptionUtil;
+    private EncryptionHelper helper;
 
     public InputStream getObject(String account, String container, String source, String process, String objectName) {
         try {
@@ -269,7 +269,7 @@ public class PosixAdapter implements ObjectStoreAdapter {
                         KhazanaErrorCodes.CONTAINER_NOT_PRESENT_IN_DESTINATION.getErrorMessage());
 
             InputStream ios = new FileInputStream(containerZip);
-            byte[] encryptedPacket = encryptionUtil.encrypt(container, IOUtils.toByteArray(ios));
+            byte[] encryptedPacket = helper.encrypt(container, IOUtils.toByteArray(ios));
             FileUtils.copyToFile(new ByteArrayInputStream(encryptedPacket), containerZip);
             return encryptedPacket != null;
         } catch (Exception e) {
