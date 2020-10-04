@@ -31,6 +31,7 @@ import io.mosip.kernel.cryptomanager.constant.CryptomanagerErrorCode;
 import io.mosip.kernel.cryptomanager.dto.CryptomanagerRequestDto;
 import io.mosip.kernel.keymanagerservice.dto.SymmetricKeyRequestDto;
 import io.mosip.kernel.keymanagerservice.service.KeymanagerService;
+import io.mosip.kernel.keymanagerservice.util.KeymanagerUtil;
 
 /**
  * Util class for this project.
@@ -63,6 +64,9 @@ public class CryptomanagerUtils {
 	@Autowired
 	private KeymanagerService keyManager;
 
+	@Autowired
+	private KeymanagerUtil keymanagerUtil;
+
 	/**
 	 * Calls Key-Manager-Service to get public key of an application.
 	 *
@@ -70,20 +74,10 @@ public class CryptomanagerUtils {
 	 * @return {@link PublicKey} returned by Key Manager Service
 	 */
 	public PublicKey getPublicKey(CryptomanagerRequestDto cryptomanagerRequestDto) {
-		try {
-			String 	publicKey = getPublicKeyFromKeyManager(cryptomanagerRequestDto.getApplicationId(),
-						DateUtils.formatToISOString(cryptomanagerRequestDto.getTimeStamp()),
-						cryptomanagerRequestDto.getReferenceId());
-			return KeyFactory.getInstance(asymmetricAlgorithmName)
-					.generatePublic(new X509EncodedKeySpec(CryptoUtil.decodeBase64(publicKey)));
-		} catch (InvalidKeySpecException e) {
-			throw new InvalidKeyException(CryptomanagerErrorCode.INVALID_SPEC_PUBLIC_KEY.getErrorCode(),
-					CryptomanagerErrorCode.INVALID_SPEC_PUBLIC_KEY.getErrorMessage());
-		} catch (NoSuchAlgorithmException e) {
-			throw new io.mosip.kernel.core.exception.NoSuchAlgorithmException(
-					CryptomanagerErrorCode.NO_SUCH_ALGORITHM_EXCEPTION.getErrorCode(),
-					CryptomanagerErrorCode.NO_SUCH_ALGORITHM_EXCEPTION.getErrorMessage());
-		}
+		String certData = getCertificateFromKeyManager(cryptomanagerRequestDto.getApplicationId(),
+										cryptomanagerRequestDto.getReferenceId());
+
+		return keymanagerUtil.convertToCertificate(certData).getPublicKey();
 	}
 
 	/**
@@ -94,8 +88,8 @@ public class CryptomanagerUtils {
 	 * @param refId the ref id
 	 * @return the public key from key manager
 	 */
-	private String getPublicKeyFromKeyManager(String appId, String timestamp, String refId) {
-		return keyManager.getPublicKey(appId, timestamp, Optional.ofNullable(refId)).getPublicKey();
+	private String getCertificateFromKeyManager(String appId, String refId) {
+		return keyManager.getCertificate(appId, Optional.ofNullable(refId)).getCertificate();
 	}
 
 
