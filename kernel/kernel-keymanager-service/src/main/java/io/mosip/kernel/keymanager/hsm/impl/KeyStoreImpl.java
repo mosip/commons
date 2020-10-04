@@ -401,7 +401,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	}
 
 	private void validatePKCS11KeyStore() {
-		if(KEYSTORE_TYPE_PKCS12.equals(keyStore.getType())){
+		if(keyStore.getType().equals(KEYSTORE_TYPE_PKCS12)){
 			throw new KeystoreProcessingException(KeymanagerErrorCode.NOT_VALID_PKCS11_STORE_TYPE.getErrorCode(),
 						KeymanagerErrorCode.NOT_VALID_PKCS11_STORE_TYPE.getErrorMessage() );
 		}
