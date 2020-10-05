@@ -2,6 +2,7 @@ package io.mosip.kernel.idvalidator.prid.test;
 
 import static org.junit.Assert.assertEquals;
 
+import io.mosip.kernel.idvalidator.prid.impl.PridValidatorImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ import io.mosip.kernel.core.idvalidator.spi.PridValidator;
  */
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = {PridValidatorImpl.class})
 public class PridValidatorTest {
 
 	@Value("${mosip.kernel.prid.test.valid-prid}")
