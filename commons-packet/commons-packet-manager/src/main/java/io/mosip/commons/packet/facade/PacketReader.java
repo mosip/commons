@@ -46,13 +46,13 @@ public class PacketReader {
      * @param process : the process
      * @return String field
      */
-    @PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
+    @PreAuthorize("hasRole('DATA_READ')")
     public String getField(String id, String field, String source, String process, boolean bypassCache) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "getFields for fields : " + field + " source : " + source + " process : " + process);
         String value;
         if (bypassCache)
-            value = getProvider(source, process).getField(id, field, process);
+            value = getProvider(source, process).getField(id, field, source, process);
         else {
             Optional<Object> optionalValue = getAllFields(id, source, process).entrySet().stream().filter(m-> m.getKey().equalsIgnoreCase(field)).map(m -> m.getValue()).findAny();
             value = optionalValue.isPresent() ? optionalValue.get().toString() : null;
@@ -69,13 +69,13 @@ public class PacketReader {
      * @param process : the process
      * @return Map fields
      */
-    @PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
+    @PreAuthorize("hasRole('DATA_READ')")
     public Map<String, String> getFields(String id, List<String> fields, String source, String process, boolean bypassCache) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "getFields for fields : " + fields.toString() + " source : " + source + " process : " + process);
         Map<String, String> values;
         if (bypassCache)
-            values = getProvider(source, process).getFields(id, fields, process);
+            values = getProvider(source, process).getFields(id, fields, source, process);
         else {
             values = getAllFields(id, source, process).entrySet()
                     .stream().filter(m -> fields.contains(m.getKey())).collect(Collectors.toMap(m -> m.getKey(), m -> m.getValue() != null ? m.getValue().toString() : null));
@@ -92,12 +92,12 @@ public class PacketReader {
      * @param process      : the process
      * @return Document : document information
      */
-    @PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
+    @PreAuthorize("hasRole('DOCUMENT_READ')")
     @Cacheable(value = "packets", key = "'documents'.concat('-').concat(#id).concat('-').concat(#documentName).concat('-').concat(#source).concat('-').concat(#process)")
     public Document getDocument(String id, String documentName, String source, String process) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "getDocument for documentName : " + documentName + " source : " + source + " process : " + process);
-        return getProvider(source, process).getDocument(id, documentName, process);
+        return getProvider(source, process).getDocument(id, documentName, source, process);
     }
 
     /**
@@ -110,12 +110,12 @@ public class PacketReader {
      * @param process    : the process
      * @return BiometricRecord : the biometric record
      */
-    @PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
+    @PreAuthorize("hasRole('BIOMETRIC_READ')")
     @Cacheable(value = "packets", key = "'biometrics'.concat('-').#id.concat('-').concat(#person).concat('-').concat(#modalities).concat('-').concat(#source).concat('-').concat(#process)", condition = "#bypassCache == false")
     public BiometricRecord getBiometric(String id, String person, List<BiometricType> modalities, String source, String process, boolean bypassCache) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "getBiometric for source : " + source + " process : " + process);
-        return getProvider(source, process).getBiometric(id, person, modalities, process);
+        return getProvider(source, process).getBiometric(id, person, modalities, source, process);
     }
 
     /**
@@ -126,12 +126,12 @@ public class PacketReader {
      * @param process : the process
      * @return Map fields
      */
-    @PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
+    @PreAuthorize("hasRole('METADATA_READ')")
     @Cacheable(value = "packets", key = "{'metaInfo'.concat('-').concat(#id).concat('-').concat(#source).concat('-').concat(#process)}", condition = "#bypassCache == false")
     public Map<String, String> getMetaInfo(String id, String source, String process, boolean bypassCache) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "getMetaInfo for source : " + source + " process : " + process);
-        return getProvider(source, process).getMetaInfo(id, process);
+        return getProvider(source, process).getMetaInfo(id, source, process);
     }
 
     /**
@@ -145,7 +145,7 @@ public class PacketReader {
     private Map<String, Object> getAllFields(String id, String source, String process) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "getAllFields for source : " + source + " process : " + process);
-        return getProvider(source, process).getAll(id, process);
+        return getProvider(source, process).getAll(id, source, process);
     }
 
     /**
@@ -160,11 +160,11 @@ public class PacketReader {
     public List<Map<String, String>> getAudits(String id, String source, String process, boolean bypassCache) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "getAllFields for source : " + source + " process : " + process);
-        return getProvider(source, process).getAuditInfo(id, process);
+        return getProvider(source, process).getAuditInfo(id, source, process);
     }
 
     public boolean validatePacket(String id, String source, String process) {
-        return getProvider(source, process).validatePacket(id, process);
+        return getProvider(source, process).validatePacket(id, source, process);
     }
 
     private IPacketReader getProvider(String source, String process) {

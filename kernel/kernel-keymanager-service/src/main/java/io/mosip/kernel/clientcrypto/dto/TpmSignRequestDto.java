@@ -16,7 +16,7 @@ import javax.validation.constraints.NotBlank;
 public class TpmSignRequestDto {
 
     /**
-     * Data in BASE64 encoding to encrypt/decrypt
+     * Data in BASE64 encoding to sign
      */
     @ApiModelProperty(notes = "Data to sign", required = true)
     @NotBlank(message = KeymanagerConstant.INVALID_REQUEST)

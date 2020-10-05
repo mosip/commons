@@ -6,6 +6,7 @@ package io.mosip.kernel.biometrics.entities;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.constant.ProcessedLevelType;
 import io.mosip.kernel.biometrics.constant.PurposeType;
@@ -18,6 +19,7 @@ import lombok.Data;
  *
  */
 @Data
+@JsonDeserialize(builder = BDBInfo.BDBInfoBuilder.class)
 public class BDBInfo {
 
 	private byte[] challengeResponse;

@@ -11,7 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 1.0.0
  *
  */
-@SpringBootApplication(scanBasePackages = { "io.mosip.kernel.masterdata.*", "io.mosip.kernel.auth.*" })
+@SpringBootApplication(scanBasePackages = { "io.mosip.kernel.masterdata.*", "${mosip.auth.adapter.impl.basepackage}",
+		"io.mosip.kernel.core.logger.config"})
 public class MasterDataBootApplication {
 
 	/**

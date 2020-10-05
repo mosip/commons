@@ -31,7 +31,7 @@ public class CryptoDataDto {
 	/**
 	 * actual data to encrypt/decrypt.
 	 */
-	@ApiModelProperty(notes = "Data to Encrypt/Decrypt", example = "Any String", required = true)
+	@ApiModelProperty(notes = "Data to Encrypt/Decrypt", example = "Plain/Encrypted String", required = true)
 	@NotBlank(message = KeymanagerConstant.INVALID_REQUEST)
 	private String value;
     

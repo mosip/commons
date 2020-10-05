@@ -124,12 +124,6 @@ REFERENCES master.device_type (code,lang_code) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
--- object: fk_lkeyper | type: CONSTRAINT --
--- ALTER TABLE master.licensekey_permission DROP CONSTRAINT IF EXISTS fk_lkeyper CASCADE;
-ALTER TABLE master.licensekey_permission ADD CONSTRAINT fk_lkeyper FOREIGN KEY (license_key)
-REFERENCES master.licensekey_list (license_key) MATCH SIMPLE
-ON DELETE NO ACTION ON UPDATE NO ACTION;
--- ddl-end --
 
 -- object: fk_machm_mspec | type: CONSTRAINT --
 -- ALTER TABLE master.machine_master DROP CONSTRAINT IF EXISTS fk_machm_mspec CASCADE;
@@ -237,13 +231,6 @@ REFERENCES master.module_detail (id,lang_code) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
--- object: fk_tsplkeym | type: CONSTRAINT --
--- ALTER TABLE master.tsp_licensekey_map DROP CONSTRAINT IF EXISTS fk_tsplkeym CASCADE;
-ALTER TABLE master.tsp_licensekey_map ADD CONSTRAINT fk_tsplkeym FOREIGN KEY (license_key)
-REFERENCES master.licensekey_list (license_key) MATCH SIMPLE
-ON DELETE NO ACTION ON UPDATE NO ACTION;
--- ddl-end --
-
 -- object: fk_usrdtl_center | type: CONSTRAINT --
 -- ALTER TABLE master.user_detail DROP CONSTRAINT IF EXISTS fk_usrdtl_center CASCADE;
 ALTER TABLE master.user_detail ADD CONSTRAINT fk_usrdtl_center FOREIGN KEY (regcntr_id,lang_code)
@@ -271,57 +258,6 @@ ALTER TABLE master.zone_user ADD CONSTRAINT fk_zoneuser_zone FOREIGN KEY (zone_c
 REFERENCES master.zone (code,lang_code) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
-
--- object: fk_rdstyp_dtype_code | type: CONSTRAINT --
--- ALTER TABLE master.reg_device_sub_type DROP CONSTRAINT IF EXISTS fk_rdstyp_dtype_code CASCADE;
-ALTER TABLE master.reg_device_sub_type ADD CONSTRAINT fk_rdstyp_dtype_code FOREIGN KEY (dtyp_code)
-REFERENCES master.reg_device_type (code) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION;
--- ddl-end --
-
--- object: fk_mds_devprd | type: CONSTRAINT --
--- ALTER TABLE master.mosip_device_service DROP CONSTRAINT IF EXISTS fk_mds_devprd CASCADE;
-ALTER TABLE master.mosip_device_service ADD CONSTRAINT fk_mds_devprd FOREIGN KEY (dprovider_id)
-REFERENCES master.device_provider (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION;
--- ddl-end --
-
--- object: fk_mds_dtype | type: CONSTRAINT --
--- ALTER TABLE master.mosip_device_service DROP CONSTRAINT IF EXISTS fk_mds_dtype CASCADE;
-ALTER TABLE master.mosip_device_service ADD CONSTRAINT fk_mds_dtype FOREIGN KEY (dtype_code)
-REFERENCES master.reg_device_type (code) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION;
--- ddl-end --
-
--- object: fk_mds_dstype | type: CONSTRAINT --
--- ALTER TABLE master.mosip_device_service DROP CONSTRAINT IF EXISTS fk_mds_dstype CASCADE;
-ALTER TABLE master.mosip_device_service ADD CONSTRAINT fk_mds_dstype FOREIGN KEY (dstype_code)
-REFERENCES master.reg_device_sub_type (code) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION;
--- ddl-end --
-
-
--- object: fk_regdevm_devprd | type: CONSTRAINT --
--- ALTER TABLE master.registered_device_master DROP CONSTRAINT IF EXISTS fk_regdevm_devprd CASCADE;
-ALTER TABLE master.registered_device_master ADD CONSTRAINT fk_regdevm_devprd FOREIGN KEY (provider_id)
-REFERENCES master.device_provider (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION;
--- ddl-end --
-
--- object: fk_regdevm_dtype | type: CONSTRAINT --
--- ALTER TABLE master.registered_device_master DROP CONSTRAINT IF EXISTS fk_regdevm_dtype CASCADE;
-ALTER TABLE master.registered_device_master ADD CONSTRAINT fk_regdevm_dtype FOREIGN KEY (dtype_code)
-REFERENCES master.reg_device_type (code) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION;
--- ddl-end --
-
--- object: fk_regdevm_dstype | type: CONSTRAINT --
--- ALTER TABLE master.registered_device_master DROP CONSTRAINT IF EXISTS fk_regdevm_dstype CASCADE;
-ALTER TABLE master.registered_device_master ADD CONSTRAINT fk_regdevm_dstype FOREIGN KEY (dstype_code)
-REFERENCES master.reg_device_sub_type (code) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION;
--- ddl-end --
-
 
 
 -- object: fk_rwn_daycode | type: CONSTRAINT --

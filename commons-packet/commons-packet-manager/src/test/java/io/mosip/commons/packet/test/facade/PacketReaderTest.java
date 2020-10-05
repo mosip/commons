@@ -7,11 +7,12 @@ import io.mosip.commons.packet.facade.PacketReader;
 import io.mosip.commons.packet.impl.PacketReaderImpl;
 import io.mosip.commons.packet.spi.IPacketReader;
 import io.mosip.commons.packet.util.PacketHelper;
+import io.mosip.kernel.biometrics.constant.BiometricType;
+import io.mosip.kernel.biometrics.constant.QualityType;
+import io.mosip.kernel.biometrics.entities.BDBInfo;
+import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import io.mosip.kernel.core.cbeffutil.entity.BDBInfo;
-import io.mosip.kernel.core.cbeffutil.entity.BIR;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.QualityType;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.RegistryIDType;
+import io.mosip.kernel.biometrics.entities.RegistryIDType;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.SingleType;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,14 +66,14 @@ public class PacketReaderTest {
         allFields.put("email", "mono@mono.com");
         allFields.put("phone", "1234567");
 
-        Mockito.when(packetReaderProvider.getAll(anyString(), anyString())).thenReturn(allFields);
+        Mockito.when(packetReaderProvider.getAll(anyString(), anyString(), anyString())).thenReturn(allFields);
 
     }
 
     @Test
     public void testGetFieldWithBypassCache() {
         String field = "name";
-        Mockito.when(packetReaderProvider.getField(anyString(), anyString(), anyString())).thenReturn(field);
+        Mockito.when(packetReaderProvider.getField(anyString(), anyString(), anyString(), anyString())).thenReturn(field);
 
         String result = packetReader.getField(id, field, source, process, true);
 
@@ -94,7 +95,7 @@ public class PacketReaderTest {
         List<String> fieldList = Lists.newArrayList(field);
         Map<String, String> fieldMap = new HashMap<>();
         fieldMap.put(field, field);
-        Mockito.when(packetReaderProvider.getFields(anyString(), anyList(), anyString())).thenReturn(fieldMap);
+        Mockito.when(packetReaderProvider.getFields(anyString(), anyList(), anyString(), anyString())).thenReturn(fieldMap);
 
         Map<String, String> result = packetReader.getFields(id, fieldList, source, process, true);
 
@@ -107,7 +108,7 @@ public class PacketReaderTest {
         List<String> fieldList = Lists.newArrayList(field);
         Map<String, String> fieldMap = new HashMap<>();
         fieldMap.put(field, field);
-        Mockito.when(packetReaderProvider.getFields(anyString(), anyList(), anyString())).thenReturn(fieldMap);
+        Mockito.when(packetReaderProvider.getFields(anyString(), anyList(), anyString(), anyString())).thenReturn(fieldMap);
 
         Map<String, String> result = packetReader.getFields(id, fieldList, source, process, false);
 
@@ -120,7 +121,7 @@ public class PacketReaderTest {
         Document document = new Document();
         document.setValue("document");
 
-        Mockito.when(packetReaderProvider.getDocument(anyString(), anyString(), anyString())).thenReturn(document);
+        Mockito.when(packetReaderProvider.getDocument(anyString(), anyString(), anyString(), anyString())).thenReturn(document);
 
         Document result = packetReader.getDocument(id, docName, source, process);
 
@@ -130,17 +131,15 @@ public class PacketReaderTest {
     @Test
     public void testGetBiometrics() {
         List<BIR> birTypeList = new ArrayList<>();
-        BIR birType1 = new BIR();
-        BDBInfo bdbInfoType1 = new BDBInfo();
-        RegistryIDType registryIDType = new RegistryIDType();
-        registryIDType.setOrganization("Mosip");
-        registryIDType.setType("257");
+        BIR birType1 = new BIR.BIRBuilder().build();
+        BDBInfo bdbInfoType1 = new BDBInfo.BDBInfoBuilder().build();
+        RegistryIDType registryIDType = new RegistryIDType("Mosip", "257");
         QualityType quality = new QualityType();
         quality.setAlgorithm(registryIDType);
         quality.setScore(90l);
         bdbInfoType1.setQuality(quality);
-        SingleType singleType1 = SingleType.FINGER;
-        List<SingleType> singleTypeList1 = new ArrayList<>();
+        BiometricType singleType1 = BiometricType.FINGER;
+        List<BiometricType> singleTypeList1 = new ArrayList<>();
         singleTypeList1.add(singleType1);
         List<String> subtype1 = new ArrayList<>(Arrays.asList("Left", "RingFinger"));
         bdbInfoType1.setSubtype(subtype1);
@@ -150,7 +149,7 @@ public class PacketReaderTest {
         BiometricRecord biometricRecord = new BiometricRecord();
         biometricRecord.setSegments(birTypeList);
 
-        Mockito.when(packetReaderProvider.getBiometric(anyString(), anyString(), anyList(), anyString())).thenReturn(biometricRecord);
+        Mockito.when(packetReaderProvider.getBiometric(anyString(), anyString(), anyList(), anyString(), anyString())).thenReturn(biometricRecord);
 
         BiometricRecord result = packetReader.getBiometric(id, "individualBiometrics", Lists.newArrayList(), source, process, true);
 
@@ -162,7 +161,7 @@ public class PacketReaderTest {
         Map<String, String> metaMap = new HashMap<>();
         metaMap.put("operationsData","officerid:1234");
 
-        Mockito.when(packetReaderProvider.getMetaInfo(anyString(), anyString())).thenReturn(metaMap);
+        Mockito.when(packetReaderProvider.getMetaInfo(anyString(), anyString(), anyString())).thenReturn(metaMap);
 
         Map<String, String> result = packetReader.getMetaInfo(id, source, process, true);
 
@@ -176,7 +175,7 @@ public class PacketReaderTest {
         List<Map<String, String>> auditList = new ArrayList<>();
         auditList.add(auditMap);
 
-        Mockito.when(packetReaderProvider.getAuditInfo(anyString(), anyString())).thenReturn(auditList);
+        Mockito.when(packetReaderProvider.getAuditInfo(anyString(), anyString(), anyString())).thenReturn(auditList);
 
         List<Map<String, String>> result = packetReader.getAudits(id, source, process, true);
 
@@ -190,7 +189,7 @@ public class PacketReaderTest {
         List<Map<String, String>> auditList = new ArrayList<>();
         auditList.add(auditMap);
 
-        Mockito.when(packetReaderProvider.validatePacket(anyString(), anyString())).thenReturn(true);
+        Mockito.when(packetReaderProvider.validatePacket(anyString(), anyString(), anyString())).thenReturn(true);
 
         boolean result = packetReader.validatePacket(id, source, process);
 

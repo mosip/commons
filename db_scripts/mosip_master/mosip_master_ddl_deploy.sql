@@ -24,8 +24,6 @@
 \ir ddl/master-individual_type.sql
 \ir ddl/master-introducer_type.sql
 \ir ddl/master-language.sql
-\ir ddl/master-licensekey_list.sql
-\ir ddl/master-licensekey_permission.sql
 \ir ddl/master-location.sql
 \ir ddl/master-loc_holiday.sql
 \ir ddl/master-machine_master.sql
@@ -51,7 +49,6 @@
 \ir ddl/master-template_file_format.sql
 \ir ddl/master-template_type.sql
 \ir ddl/master-title.sql
-\ir ddl/master-tsp_licensekey_map.sql
 \ir ddl/master-tspid_seq.sql
 \ir ddl/master-user_detail.sql
 \ir ddl/master-user_detail_h.sql
@@ -60,18 +57,6 @@
 \ir ddl/master-zone.sql
 \ir ddl/master-zone_user.sql
 \ir ddl/master-zone_user_h.sql
-
-\ir ddl/master-reg_device_type.sql
-\ir ddl/master-reg_device_sub_type.sql
-\ir ddl/master-mosip_device_service.sql
-\ir ddl/master-mosip_device_service_h.sql
-\ir ddl/master-device_provider.sql
-\ir ddl/master-device_provider_h.sql
-\ir ddl/master-foundational_trust_provider.sql
-\ir ddl/master-foundational_trust_provider_h.sql
-\ir ddl/master-registered_device_master.sql
-\ir ddl/master-registered_device_master_h.sql
-
 
 \ir ddl/master-daysofweek_list.sql
 \ir ddl/master-reg_working_nonworking.sql

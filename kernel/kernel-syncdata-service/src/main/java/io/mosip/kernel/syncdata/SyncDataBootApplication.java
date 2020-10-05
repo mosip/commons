@@ -14,7 +14,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
  * @author Abhishek Kumar
  * @since 1.0.0
  */
-@SpringBootApplication(scanBasePackages = { "io.mosip.kernel.syncdata.*", "io.mosip.kernel.auth.*" })
+@SpringBootApplication(scanBasePackages = { "io.mosip.kernel.syncdata.*", "${mosip.auth.adapter.impl.basepackage}",
+		"io.mosip.kernel.core.logger.config" })
 @EnableAsync
 public class SyncDataBootApplication {
 	/**

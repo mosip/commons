@@ -150,6 +150,7 @@
 		<javax.persistence.api.version>2.2</javax.persistence.api.version>
 		<javax.validation-api.version>2.0.1.Final</javax.validation-api.version>
 		<glassfish.javax.el>2.2.6</glassfish.javax.el>
+		<javax.servlet-api.version>4.0.1</javax.servlet-api.version>
 
 		<!-- data -->
 		<h2.version>1.4.197</h2.version>
@@ -234,6 +235,11 @@
 			<groupId>org.apache.velocity</groupId>
 			<artifactId>velocity-tools</artifactId>
 			<version>${velocity.tool.version}</version>
+		</dependency>
+			<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>${javax.servlet-api.version}</version>
 		</dependency>
 	</dependencies>
 </project>

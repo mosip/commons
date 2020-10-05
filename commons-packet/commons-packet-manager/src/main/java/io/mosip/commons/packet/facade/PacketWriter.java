@@ -40,7 +40,7 @@ public class PacketWriter {
      * @param value     : the value to be set
      * @return PacketWriter
      */
-    public void setField(String id, String fieldName, String value, String source, String process) throws JSONException {
+    public void setField(String id, String fieldName, String value, String source, String process){
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "setField for field name : " + fieldName + " source : " + source + " process : " + process);
         getProvider(source, process).setField(id, fieldName, value);
@@ -52,7 +52,7 @@ public class PacketWriter {
      * @param fields : name value pair
      * @return PacketWriter
      */
-    public void setFields(String id, Map<String, String> fields, String source, String process) throws JSONException {
+    public void setFields(String id, Map<String, String> fields, String source, String process) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "setFields : source : " + source + " process : " + process);
         getProvider(source, process).setFields(id, fields);
@@ -158,15 +158,22 @@ public class PacketWriter {
         List<PacketInfo> packetInfos = null;
         IPacketWriter provider = getProvider(packetDto.getSource(), packetDto.getProcess());
         try {
-            provider.setFields(packetDto.getId(), packetDto.getFields());
-            provider.addMetaInfo(packetDto.getId(), packetDto.getMetaInfo());
-            packetDto.getDocuments().entrySet().forEach(doc -> provider.setDocument(packetDto.getId(), doc.getKey(), doc.getValue()));
-            provider.addAudits(packetDto.getId(), packetDto.getAudits());
-            packetDto.getBiometrics().entrySet().forEach(bio -> provider.setBiometric(packetDto.getId(), bio.getKey(), bio.getValue()));
+            if (packetDto.getFields() != null)
+                provider.setFields(packetDto.getId(), packetDto.getFields());
+            if (packetDto.getMetaInfo() != null)
+                provider.addMetaInfo(packetDto.getId(), packetDto.getMetaInfo());
+            if (packetDto.getDocuments() != null)
+                packetDto.getDocuments().entrySet().forEach(doc -> provider.setDocument(packetDto.getId(), doc.getKey(), doc.getValue()));
+            if (packetDto.getAudits() != null)
+                provider.addAudits(packetDto.getId(), packetDto.getAudits());
+            if (packetDto.getBiometrics() != null)
+                packetDto.getBiometrics().entrySet().forEach(bio -> provider.setBiometric(packetDto.getId(), bio.getKey(), bio.getValue()));
             packetInfos = provider.persistPacket(packetDto.getId(), packetDto.getSchemaVersion(),
                     packetDto.getSchemaJson(), packetDto.getSource(), packetDto.getProcess(), offlineMode);
 
         } catch (Exception e) {
+            LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packetDto.getId(),
+                    ExceptionUtils.getStackTrace(e));
             LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packetDto.getId(), ExceptionUtils.getStackTrace(e));
         }
         return packetInfos;

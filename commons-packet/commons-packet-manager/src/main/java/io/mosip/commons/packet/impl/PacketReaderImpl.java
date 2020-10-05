@@ -16,11 +16,9 @@ import io.mosip.commons.packet.exception.PacketKeeperException;
 import io.mosip.commons.packet.facade.PacketWriter;
 import io.mosip.commons.packet.keeper.PacketKeeper;
 import io.mosip.commons.packet.spi.IPacketReader;
-import io.mosip.commons.packet.util.IdSchemaUtils;
-import io.mosip.commons.packet.util.PacketManagerLogger;
-import io.mosip.commons.packet.util.PacketValidator;
-import io.mosip.commons.packet.util.ZipUtils;
+import io.mosip.commons.packet.util.*;
 import io.mosip.kernel.biometrics.constant.BiometricType;
+import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.core.cbeffutil.common.CbeffValidator;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
@@ -95,9 +93,9 @@ public class PacketReaderImpl implements IPacketReader {
      * @return
      */
     @Override
-    public boolean validatePacket(String id, String process) {
+    public boolean validatePacket(String id, String source, String process) {
         try {
-            return packetValidator.validate(id, process, getAll(id, process));
+            return packetValidator.validate(id, source, process, getAll(id, source, process));
         } catch (Exception e) {
             LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
                     id, "Packet Validation exception : "  + ExceptionUtils.getStackTrace(e));
@@ -114,14 +112,14 @@ public class PacketReaderImpl implements IPacketReader {
      */
     @Override
     @Cacheable(value = "packets", key = "{'allFields'.concat('-').concat(#id).concat('-').concat(#process)}")
-    public Map<String, Object> getAll(String id, String process) {
+    public Map<String, Object> getAll(String id, String source, String process) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, "Getting all fields :: enrtry");
         Map<String, Object> finalMap = new LinkedHashMap<>();
         String[] sourcePacketNames = packetNames.split(",");
 
         try {
-            for (String source : sourcePacketNames) {
-                Packet packet = packetKeeper.getPacket(getPacketInfo(id, source, process));
+            for (String srcPacket : sourcePacketNames) {
+                Packet packet = packetKeeper.getPacket(getPacketInfo(id, srcPacket, source, process));
                 InputStream idJsonStream = ZipUtils.unzipAndGetFile(packet.getPacket(), "ID");
                 if (idJsonStream != null) {
                     byte[] bytearray = IOUtils.toByteArray(idJsonStream);
@@ -161,9 +159,9 @@ public class PacketReaderImpl implements IPacketReader {
     }
 
     @Override
-    public String getField(String id, String field, String process) {
+    public String getField(String id, String field, String source, String process) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, "getField :: for - " + field);
-        Map<String, Object> allFields = getAll(id, process);
+        Map<String, Object> allFields = getAll(id, source, process);
         if (allFields != null) {
             Object fieldObj = allFields.get(field);
             return fieldObj != null ? fieldObj.toString() : null;
@@ -172,26 +170,26 @@ public class PacketReaderImpl implements IPacketReader {
     }
 
     @Override
-    public Map<String, String> getFields(String id, List<String> fields, String process) {
+    public Map<String, String> getFields(String id, List<String> fields, String source, String process) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, "getFields :: for - " + fields.toString());
         Map<String, String> result = new HashMap<>();
-        Map<String, Object> allFields = getAll(id, process);
+        Map<String, Object> allFields = getAll(id, source, process);
         fields.stream().forEach(field -> result.put(field, allFields.get(field) != null ? allFields.get(field).toString() : null));
 
         return result;
     }
 
     @Override
-    public Document getDocument(String id, String documentName, String process) {
+    public Document getDocument(String id, String documentName, String source, String process) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, "getDocument :: for - " + documentName);
-        Map<String, Object> idobjectMap = getAll(id, process);
+        Map<String, Object> idobjectMap = getAll(id, source, process);
         Double schemaVersion = idobjectMap.get(PacketManagerConstants.IDSCHEMA_VERSION) != null ? Double.valueOf(idobjectMap.get(PacketManagerConstants.IDSCHEMA_VERSION).toString()) : null;
         String documentString = (String) idobjectMap.get(documentName);
         try {
             JSONObject documentMap = new JSONObject(documentString);
             if (documentMap != null && schemaVersion != null) {
                 String packetName = idSchemaUtils.getSource(documentName, schemaVersion);
-                Packet packet = packetKeeper.getPacket(getPacketInfo(id, packetName, process));
+                Packet packet = packetKeeper.getPacket(getPacketInfo(id, packetName, source, process));
                 String value = documentMap.has(VALUE) ? documentMap.get(VALUE).toString() : null;
                 InputStream documentStream = ZipUtils.unzipAndGetFile(packet.getPacket(), value);
                 Document document = new Document();
@@ -209,20 +207,20 @@ public class PacketReaderImpl implements IPacketReader {
     }
 
     @Override
-    public BiometricRecord getBiometric(String id, String biometricFieldName, List<BiometricType> modalities, String process) {
+    public BiometricRecord getBiometric(String id, String biometricFieldName, List<BiometricType> modalities, String source, String process) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, "getBiometric :: for - " + biometricFieldName);
         BiometricRecord biometricRecord = null;
         String packetName = null;
         String fileName = null;
         try {
-            Map<String, Object> idobjectMap = getAll(id, process);
+            Map<String, Object> idobjectMap = getAll(id, source, process);
             String bioString = (String) idobjectMap.get(biometricFieldName);
-            if (bioString == null)
-                return null;
-            JSONObject biometricMap = new JSONObject(bioString);
-            if (biometricMap == null || biometricMap.isNull(VALUE)) {
+            JSONObject biometricMap = null;
+            if (bioString != null)
+                biometricMap = new JSONObject(bioString);
+            if (bioString == null || biometricMap == null || biometricMap.isNull(VALUE)) {
                 // biometric file not present in idobject. Search in meta data.
-                Map<String, String> metadataMap = getMetaInfo(id, process);
+                Map<String, String> metadataMap = getMetaInfo(id, source, process);
                 String operationsData = metadataMap.get(META_INFO_OPERATIONS_DATA);
                 JSONArray jsonArray = new JSONArray(operationsData);
                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -241,13 +239,16 @@ public class PacketReaderImpl implements IPacketReader {
             }
 
             if (packetName == null || fileName == null)
-                throw new FieldNameNotFoundException();
+                return null;
 
-            Packet packet = packetKeeper.getPacket(getPacketInfo(id, packetName, process));
+            Packet packet = packetKeeper.getPacket(getPacketInfo(id, packetName, source, process));
             InputStream biometrics = ZipUtils.unzipAndGetFile(packet.getPacket(), fileName);
             BIRType birType = CbeffValidator.getBIRFromXML(IOUtils.toByteArray(biometrics));
             biometricRecord = new BiometricRecord();
-            biometricRecord.setSegments(CbeffValidator.convertBIRTypeToBIR(birType.getBIR()));
+            List<BIR> segments = new ArrayList<>();
+            List<io.mosip.kernel.core.cbeffutil.entity.BIR> birList = CbeffValidator.convertBIRTypeToBIR(birType.getBIR());
+            birList.forEach(bir -> segments.add(PacketManagerHelper.convertToBiometricRecordBIR(bir)));
+            biometricRecord.setSegments(segments);
         } catch (Exception e) {
             LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, ExceptionUtils.getStackTrace(e));
             if (e instanceof BaseCheckedException) {
@@ -260,18 +261,17 @@ public class PacketReaderImpl implements IPacketReader {
             throw new GetBiometricException(e.getMessage());
         }
 
-        // TODO : remove removeDummyElements() method
-        return removeDummyElements(biometricRecord);
+        return biometricRecord;
     }
 
     @Override
-    public Map<String, String> getMetaInfo(String id, String process) {
+    public Map<String, String> getMetaInfo(String id, String source, String process) {
         Map<String, String> finalMap = new LinkedHashMap<>();
         String[] sourcePacketNames = packetNames.split(",");
 
         try {
             for (String packetName : sourcePacketNames) {
-                Packet packet = packetKeeper.getPacket(getPacketInfo(id, packetName, process));
+                Packet packet = packetKeeper.getPacket(getPacketInfo(id, packetName, source, process));
                 InputStream idJsonStream = ZipUtils.unzipAndGetFile(packet.getPacket(), "PACKET_META_INFO");
                 if (idJsonStream != null) {
                     byte[] bytearray = IOUtils.toByteArray(idJsonStream);
@@ -301,13 +301,13 @@ public class PacketReaderImpl implements IPacketReader {
     }
 
     @Override
-    public List<Map<String, String>> getAuditInfo(String id, String process) {
+    public List<Map<String, String>> getAuditInfo(String id, String source, String process) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, "getAuditInfo :: enrtry");
         List<Map<String, String>> finalMap = new ArrayList<>();
         String[] sourcePacketNames = packetNames.split(",");
         try {
-            for (String source : sourcePacketNames) {
-                Packet packet = packetKeeper.getPacket(getPacketInfo(id, source, process));
+            for (String srcPacket : sourcePacketNames) {
+                Packet packet = packetKeeper.getPacket(getPacketInfo(id, srcPacket, source, process));
                 InputStream auditJson = ZipUtils.unzipAndGetFile(packet.getPacket(), "audit");
                 if (auditJson != null) {
                     byte[] bytearray = IOUtils.toByteArray(auditJson);
@@ -330,24 +330,13 @@ public class PacketReaderImpl implements IPacketReader {
         return finalMap;
     }
 
-    /**
-     * Temp code. Fix for reg-client issue. Remove this.
-     * @param biometricRecord
-     * @return
-     */
-    private BiometricRecord removeDummyElements(BiometricRecord biometricRecord) {
-        if (biometricRecord != null && CollectionUtils.isNotEmpty(biometricRecord.getSegments())) {
-            biometricRecord.getSegments().forEach(s -> s.setElement(null));
-        }
-        return biometricRecord;
-    }
 
-
-    private PacketInfo getPacketInfo(String id, String packetName, String process) {
+    private PacketInfo getPacketInfo(String id, String packetName, String source, String process) {
         PacketInfo packetInfo = new PacketInfo();
         packetInfo.setId(id);
         packetInfo.setPacketName(packetName);
         packetInfo.setProcess(process);
+        packetInfo.setSource(source);
         return packetInfo;
     }
 }

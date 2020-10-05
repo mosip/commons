@@ -27,7 +27,7 @@ import lombok.Data;
 @Data
 @Entity
 @IdClass(LicenseKeyTspMapID.class)
-@Table(schema = "master", name = "tsp_licensekey_map")
+@Table(name = "tsp_licensekey_map")
 public class LicenseKeyTspMap {
 	/**
 	 * Attributes of the primary key : TSP ID, License Key.

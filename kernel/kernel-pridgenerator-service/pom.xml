@@ -218,7 +218,7 @@
 		<kernel.core.version>1.2.0-SNAPSHOT</kernel.core.version>
 		<kernel.auth-adapter.version>1.2.0-SNAPSHOT</kernel.auth-adapter.version>
 		<kernel.templatemanager-velocity.version>1.0.6</kernel.templatemanager-velocity.version>
-		<kernel.logger.version>1.0.6</kernel.logger.version>
+		<kernel.logger.version>1.2.0-SNAPSHOT</kernel.logger.version>
 		<kernel.prid-generator.version>1.0.6</kernel.prid-generator.version>
 	</properties>
 	<artifactId>kernel-pridgenerator-service</artifactId>
@@ -339,7 +339,11 @@
 			 <version>1.4.2</version>
 		</dependency>
 
-
+		<dependency>
+			<groupId>io.mosip.kernel</groupId>
+			<artifactId>kernel-logger-logback</artifactId>
+			<version>${kernel.logger.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -350,6 +354,7 @@
 				<version>${spring.boot.version}</version>
 				<configuration>
 					<executable>true</executable>
+					<layout>ZIP</layout>
 				</configuration>
 				<executions>
 					<execution>

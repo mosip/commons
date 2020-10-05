@@ -2,6 +2,7 @@ package io.mosip.kernel.websub.api.filter;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.filter.OncePerRequestFilter;
+
 
 import io.mosip.kernel.websub.api.annotation.PreAuthenticateContentAndVerifyIntent;
 import io.mosip.kernel.websub.api.config.IntentVerificationConfig;
@@ -41,11 +43,11 @@ public class IntentVerificationFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-
-		if (request.getMethod().equals(HttpMethod.GET.name()) && mappings.containsKey(request.getRequestURI())) {
+		String topic=matchCallbackURL(request.getRequestURI());
+		if (request.getMethod().equals(HttpMethod.GET.name()) && topic!=null) {
 			String topicReq = request.getParameter(WebSubClientConstants.HUB_TOPIC);
 			String modeReq = request.getParameter(WebSubClientConstants.HUB_MODE);
-			if (intentVerifier.isIntentVerified(mappings.get(request.getRequestURI()),
+			if (intentVerifier.isIntentVerified(topic,
 					request.getParameter("intentMode"), topicReq, modeReq)) {
 				response.setStatus(HttpServletResponse.SC_ACCEPTED);
 				try {
@@ -66,4 +68,25 @@ public class IntentVerificationFilter extends OncePerRequestFilter {
 		}
 	}
 
+	private String matchCallbackURL(String requestURI) {
+		if(mappings.containsKey(requestURI)) {
+			return mappings.get(requestURI);
+		}else {
+			Set<String> mappingKeys=mappings.keySet();
+			for(String keys:mappingKeys){
+				int pathParamIndex=keys.indexOf("/{");
+				if(pathParamIndex==-1) {
+					continue;
+				}
+				String url =keys.substring(0,pathParamIndex );
+				if(requestURI.contains(url)) {
+					int pathParamCount=keys.split("\\/\\{").length - 1;
+					if(requestURI.substring(pathParamIndex).split("\\/").length-1==pathParamCount) {
+						return mappings.get(keys);
+					};
+				}
+			}
+		}
+		return null;
+	}
 }

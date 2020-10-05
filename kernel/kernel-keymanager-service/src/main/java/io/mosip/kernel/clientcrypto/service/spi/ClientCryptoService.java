@@ -67,9 +67,8 @@ public interface ClientCryptoService {
 
     /**
      *
-     * @param length number of bytes to be generated
-     * @return return secure random byte array
+     * @return public key as byte array
      */
-    byte[] generateRandomBytes(@NotNull int length);
+    byte[] getEncryptionPublicPart();
 
 }

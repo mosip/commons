@@ -151,4 +151,9 @@ public interface KeyStore {
 	 */
 	Certificate generateCertificate(PrivateKey signPrivateKey, PublicKey publicKey, CertificateParameters certParams, X500Principal signerPrincipal);
 
+	/**
+	 * Gets the keyStore provider name.
+	 * 
+	 */
+	String getKeystoreProviderName();
 }
