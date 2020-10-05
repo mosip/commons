@@ -25,6 +25,20 @@ public enum KeymanagerErrorConstant {
 
 	KEY_STORE_EXCEPTION("KER-KMS-008", "Service is  not able to store sign certificate"),
 
+	INVALID_RESPONSE_TYPE("KER-KMS-009", "Invalid Response Object Type."),
+
+	REFERENCE_ID_NOT_SUPPORTED("KER-KMS-010", "Reference Id Not Supported for the Application ID."),
+
+	ROOT_KEY_NOT_FOUND("KER-KMS-011", "Root Key not available to sign."),
+
+	KEY_GENERATION_NOT_DONE("KER-KMS-012", "Key Generation Process is not completed."),
+
+	CERTIFICATE_PARSING_ERROR("KER-KMS-013", "Certificate Parsing Error."),
+
+	KEY_NOT_MATCHING("KER-KMS-014", "Certificate Key Not Matching with stored Key."),
+
+	UPLOAD_NOT_ALLOWED("KER-KMS-015", "Upload of certificate will not be allowed to update other domains."),
+
 	INTERNAL_SERVER_ERROR("KER-KMS-500", "Internal server error");
 
 	/**

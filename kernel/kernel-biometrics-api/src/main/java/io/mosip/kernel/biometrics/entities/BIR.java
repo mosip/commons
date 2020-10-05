@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 
 
@@ -15,6 +16,7 @@ import lombok.Data;
  *
  */
 @Data
+@JsonDeserialize(builder = BIR.BIRBuilder.class)
 public class BIR {
 
 	private VersionType version;

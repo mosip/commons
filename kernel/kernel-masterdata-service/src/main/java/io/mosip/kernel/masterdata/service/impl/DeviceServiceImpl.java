@@ -48,15 +48,13 @@ import io.mosip.kernel.masterdata.entity.DeviceHistory;
 import io.mosip.kernel.masterdata.entity.DeviceSpecification;
 import io.mosip.kernel.masterdata.entity.DeviceType;
 import io.mosip.kernel.masterdata.entity.RegistrationCenter;
-import io.mosip.kernel.masterdata.entity.RegistrationCenterDevice;
-import io.mosip.kernel.masterdata.entity.RegistrationCenterMachineDevice;
+
 import io.mosip.kernel.masterdata.entity.Zone;
 import io.mosip.kernel.masterdata.exception.DataNotFoundException;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
 import io.mosip.kernel.masterdata.exception.RequestException;
 import io.mosip.kernel.masterdata.repository.DeviceRepository;
-import io.mosip.kernel.masterdata.repository.RegistrationCenterDeviceRepository;
-import io.mosip.kernel.masterdata.repository.RegistrationCenterMachineDeviceRepository;
+import io.mosip.kernel.masterdata.repository.RegistrationCenterRepository;
 import io.mosip.kernel.masterdata.service.DeviceHistoryService;
 import io.mosip.kernel.masterdata.service.DeviceService;
 import io.mosip.kernel.masterdata.service.ZoneService;
@@ -92,17 +90,14 @@ public class DeviceServiceImpl implements DeviceService {
 	 */
 	@Autowired
 	DeviceRepository deviceRepository;
+	
+	@Autowired
+	RegistrationCenterRepository regCenterRepository;
 	/**
 	 * Field to hold Device Service object
 	 */
 	@Autowired
 	DeviceHistoryService deviceHistoryService;
-
-	@Autowired
-	RegistrationCenterDeviceRepository registrationCenterDeviceRepository;
-
-	@Autowired
-	RegistrationCenterMachineDeviceRepository registrationCenterMachineDeviceRepository;
 
 	@Autowired
 	private MasterdataSearchHelper masterdataSearchHelper;
@@ -213,6 +208,11 @@ public class DeviceServiceImpl implements DeviceService {
 		DeviceExtnDto deviceExtnDto = new DeviceExtnDto();
 		try {
 			validateZone(deviceDto.getZoneCode());
+			if(deviceDto.getRegCenterId() != null && !deviceDto.getRegCenterId().isEmpty()) {
+				validateRegistrationCenter(deviceDto.getRegCenterId());
+				validateRegistrationCenterZone(deviceDto.getZoneCode(),deviceDto.getRegCenterId());
+			}
+			
 			deviceDto = masterdataCreationUtil.createMasterData(Device.class, deviceDto);
 			if (deviceDto != null) {
 				entity = MetaDataUtils.setCreateMetaData(deviceDto, Device.class);
@@ -247,6 +247,10 @@ public class DeviceServiceImpl implements DeviceService {
 
 	}
 
+	
+
+	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -263,13 +267,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 			if (foundDeviceList!=null && !foundDeviceList.isEmpty()) {
 				for (Device foundDevice : foundDeviceList) {
-
-					List<RegistrationCenterMachineDevice> registrationCenterMachineDeviceList = registrationCenterMachineDeviceRepository
-							.findByDeviceIdAndIsDeletedFalseOrIsDeletedIsNull(foundDevice.getId());
-					List<RegistrationCenterDevice> registrationCenterDeviceList = registrationCenterDeviceRepository
-							.findByDeviceIdAndIsDeletedFalseOrIsDeletedIsNull(foundDevice.getId());
-					if (registrationCenterMachineDeviceList.isEmpty() && registrationCenterDeviceList.isEmpty()) {
-
+						
 						MetaDataUtils.setDeleteMetaData(foundDevice);
 						deletedDevice = deviceRepository.update(foundDevice);
 
@@ -280,10 +278,7 @@ public class DeviceServiceImpl implements DeviceService {
 						deviceHistory.setEffectDateTime(deletedDevice.getDeletedDateTime());
 						deviceHistory.setDeletedDateTime(deletedDevice.getDeletedDateTime());
 						deviceHistoryService.createDeviceHistory(deviceHistory);
-					} else {
-						throw new RequestException(DeviceErrorCode.DEPENDENCY_EXCEPTION.getErrorCode(),
-								DeviceErrorCode.DEPENDENCY_EXCEPTION.getErrorMessage());
-					}
+					
 				}
 			} else {
 				throw new RequestException(DeviceErrorCode.DEVICE_NOT_FOUND_EXCEPTION.getErrorCode(),
@@ -512,16 +507,16 @@ public class DeviceServiceImpl implements DeviceService {
 	 */
 	private void setMapStatus(List<DeviceSearchDto> list, String langCode) {
 
-		List<RegistrationCenterDevice> centerDeviceList = deviceUtil.getAllDeviceCentersList();
+		List<Device> deviceList = deviceRepository.getAllDevicesList();
 		List<RegistrationCenter> registrationCenterList = deviceUtil.getAllRegistrationCenters();
 		list.forEach(deviceSearchDto -> {
-			centerDeviceList.forEach(centerDevice -> {
-				if (centerDevice.getDevice().getId().equals(deviceSearchDto.getId())
-						&& centerDevice.getLangCode().equals(deviceSearchDto.getLangCode())) {
-					String regId = centerDevice.getRegistrationCenter().getId();
+			deviceList.forEach(device -> {
+				if (device.getId().equals(deviceSearchDto.getId())
+						&& device.getLangCode().equals(deviceSearchDto.getLangCode())) {
+					String regId = device.getRegCenterId();
 					registrationCenterList.forEach(registrationCenter -> {
 						if (registrationCenter.getId().equals(regId)
-								&& centerDevice.getLangCode().equals(registrationCenter.getLangCode())) {
+								&& device.getLangCode().equals(registrationCenter.getLangCode())) {
 							deviceSearchDto.setMapStatus(registrationCenter.getName());
 						}
 					});
@@ -770,17 +765,18 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 		try {
 			// check the device has mapped to any reg-Center
-			if (!registrationCenterDeviceRepository.findByDeviceIdAndIsDeletedFalseOrIsDeletedIsNull(deviceId)
-					.isEmpty()) {
-				auditUtil.auditRequest(
-						String.format(MasterDataConstant.FAILURE_DECOMMISSION, DeviceDto.class.getSimpleName()),
-						MasterDataConstant.AUDIT_SYSTEM,
-						String.format(MasterDataConstant.FAILURE_DESC,
-								DeviceErrorCode.MAPPED_TO_REGCENTER.getErrorCode(),
-								DeviceErrorCode.MAPPED_TO_REGCENTER.getErrorMessage()),
-						"ADM-513");
-				throw new RequestException(DeviceErrorCode.MAPPED_TO_REGCENTER.getErrorCode(),
-						DeviceErrorCode.MAPPED_TO_REGCENTER.getErrorMessage());
+			for(Device device : devices) {
+				if(!(device.getRegCenterId() == null || device.getRegCenterId().isEmpty())) {
+					auditUtil.auditRequest(
+							String.format(MasterDataConstant.FAILURE_DECOMMISSION, DeviceDto.class.getSimpleName()),
+							MasterDataConstant.AUDIT_SYSTEM,
+							String.format(MasterDataConstant.FAILURE_DESC,
+									DeviceErrorCode.MAPPED_TO_REGCENTER.getErrorCode(),
+									DeviceErrorCode.MAPPED_TO_REGCENTER.getErrorMessage()),
+							"ADM-513");
+					throw new RequestException(DeviceErrorCode.MAPPED_TO_REGCENTER.getErrorCode(),
+							DeviceErrorCode.MAPPED_TO_REGCENTER.getErrorMessage());
+				}
 			}
 			decommissionedDevice = deviceRepository.decommissionDevice(deviceId, MetaDataUtils.getContextUser(),
 					MetaDataUtils.getCurrentDateTime());
@@ -835,7 +831,10 @@ public class DeviceServiceImpl implements DeviceService {
 		// not
 		validateZone(deviecZone);
 		try {
-
+			if(devicePutReqDto.getRegCenterId() != null && !devicePutReqDto.getRegCenterId().isEmpty()) {
+				validateRegistrationCenter(devicePutReqDto.getRegCenterId());
+				validateRegistrationCenterZone(devicePutReqDto.getZoneCode(),devicePutReqDto.getRegCenterId());
+			}
 			// find requested device is there or not in Device Table
 			Device renDevice = deviceRepository.findByIdAndLangCodeAndIsDeletedFalseOrIsDeletedIsNullNoIsActive(
 					devicePutReqDto.getId(), devicePutReqDto.getLangCode());
@@ -906,12 +905,51 @@ public class DeviceServiceImpl implements DeviceService {
 		List<String> zoneIds;
 		// get user zone and child zones list
 		List<Zone> userZones = zoneUtils.getUserZones();
+		
 		zoneIds = userZones.parallelStream().map(Zone::getCode).collect(Collectors.toList());
 
 		if (!(zoneIds.contains(deviceZone))) {
 			// check the given device zones will come under accessed user zones
 			throw new RequestException(DeviceErrorCode.INVALID_DEVICE_ZONE.getErrorCode(),
 					DeviceErrorCode.INVALID_DEVICE_ZONE.getErrorMessage());
+		}
+	}
+	
+	private void validateRegistrationCenter(String regCenterId) {
+		List<RegistrationCenter> centers=regCenterRepository.findByIdAndIsDeletedFalseOrNull(regCenterId);
+		if(centers==null ||centers.isEmpty()) {
+			throw new RequestException(DeviceErrorCode.INVALID_CENTER.getErrorCode(),
+					DeviceErrorCode.INVALID_CENTER.getErrorMessage());
+		}
+		
+	}
+	
+	private void validateRegistrationCenterZone(String zoneCode, String regCenterId) {
+		List<Zone> userZones = zoneUtils.getUserZones();
+		boolean isRegCenterMappedToUserZone = false;
+		boolean isInSameHierarchy = false;
+		Zone registrationCenterZone = null;
+		List<String> zoneIds = userZones.parallelStream().map(Zone::getCode).collect(Collectors.toList());
+		List<RegistrationCenter> centers=regCenterRepository.findByRegIdAndLangCode(regCenterId, primaryLangCode);
+		for (Zone zone : userZones) {
+
+			if (zone.getCode().equals(centers.get(0).getZoneCode())) {
+				isRegCenterMappedToUserZone = true;
+				registrationCenterZone = zone;
+
+			}
+		}
+		if(!isRegCenterMappedToUserZone) {
+			throw new RequestException(DeviceErrorCode.INVALID_CENTER_ZONE.getErrorCode(),
+					DeviceErrorCode.INVALID_CENTER_ZONE.getErrorMessage());
+		}
+		Objects.requireNonNull(registrationCenterZone, "registrationCenterZone is empty");
+		String hierarchyPath = registrationCenterZone.getHierarchyPath();
+		List<String> zoneHierarchy = Arrays.asList(hierarchyPath.split("/"));
+		isInSameHierarchy = zoneHierarchy.stream().anyMatch(zone -> zone.equals(zoneCode));
+		if(!isInSameHierarchy) {
+			throw new RequestException(DeviceErrorCode.INVALID_CENTER_ZONE.getErrorCode(),
+					DeviceErrorCode.INVALID_CENTER_ZONE.getErrorMessage());
 		}
 	}
 

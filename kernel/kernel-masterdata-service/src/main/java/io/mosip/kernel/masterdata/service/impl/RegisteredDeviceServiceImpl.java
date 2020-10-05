@@ -127,9 +127,9 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 
 	@Value("${mosip.kernel.sign-url}")
 	private String signUrl;
-
-	@Value("${spring.profiles.active}")
-	private String activeProfile;
+	
+	@Value("${mosip.stage.environment}")
+	private String envStage;
 
 	@Value("${masterdata.registerdevice.timestamp.validate:+5}")
 	private String registerDeviceTimeStamp;
@@ -210,7 +210,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 			registerDeviceResponse = MapperUtils.mapRegisteredDeviceResponse(entity, deviceData);
 			registerDeviceResponse
 					.setDigitalId(CryptoUtil.encodeBase64(mapper.writeValueAsString(digitalId).getBytes("UTF-8")));
-			registerDeviceResponse.setEnv(activeProfile);
+			registerDeviceResponse.setEnv(envStage);
 			HeaderRequest header = new HeaderRequest();
 			header.setAlg("RS256");
 			header.setType("JWS");
@@ -384,7 +384,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 				DeviceDeRegisterResponse deviceDeRegisterResponse = new DeviceDeRegisterResponse();
 				deviceDeRegisterResponse.setStatus("success");
 				deviceDeRegisterResponse.setDeviceCode(deviceRegisterEntity.getCode());
-				deviceDeRegisterResponse.setEnv(activeProfile);
+				deviceDeRegisterResponse.setEnv(envStage);
 				DigitalId digitalId=mapper.readValue(deviceRegisterEntity.getDigitalId(),DigitalId.class);
 				deviceDeRegisterResponse.setTimeStamp(digitalId.getDateTime());
 				HeaderRequest header = new HeaderRequest();
@@ -437,11 +437,11 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 			throw new RequestException(DeviceRegisterErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorCode(),
 					DeviceRegisterErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorMessage());
 		}else if(device.getDeviceCode().length()>36) {
-			throw new RequestException(DeviceRegisterErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorCode(),
-					DeviceRegisterErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorMessage());
-		}else if(!device.getEnv().equals(activeProfile)) {
-			throw new RequestException(DeviceRegisterErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorCode(),
-					DeviceRegisterErrorCode.DEVICE_REGISTER_NOT_FOUND_EXCEPTION.getErrorMessage());
+			throw new RequestException(DeviceRegisterErrorCode.INVALID_DEVICE_CODE_LENGTH.getErrorCode(),
+					DeviceRegisterErrorCode.INVALID_DEVICE_CODE_LENGTH.getErrorMessage());
+		}else if(!device.getEnv().equals(envStage)) {
+			throw new RequestException(DeviceRegisterErrorCode.INVALID_ENVIRONMENT.getErrorCode(),
+					DeviceRegisterErrorCode.INVALID_ENVIRONMENT.getErrorMessage());
 		}
 		
 	}
@@ -472,6 +472,10 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 		if (!Arrays.asList(REGISTERED, REVOKED, RETIRED).contains(statusCode)) {
 			throw new RequestException(DeviceRegisterErrorCode.INVALID_STATUS_CODE.getErrorCode(),
 					DeviceRegisterErrorCode.INVALID_STATUS_CODE.getErrorMessage());
+		}
+		if(deviceRegister.getStatusCode().equalsIgnoreCase(REVOKED)) {
+			throw new RequestException(DeviceRegisterErrorCode.DEVICE_REVOKED.getErrorCode(),
+					DeviceRegisterErrorCode.DEVICE_REVOKED.getErrorMessage());
 		}
 		deviceRegister.setStatusCode(statusCode);
 		updateRegisterDetails(deviceRegister);

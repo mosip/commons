@@ -14,12 +14,13 @@ import io.mosip.kernel.syncdata.dto.RegistrationCenterUserDto;
 import io.mosip.kernel.syncdata.dto.RegistrationCenterUserMachineMappingDto;
 import io.mosip.kernel.syncdata.dto.response.SyncDataBaseDto;
 import io.mosip.kernel.syncdata.entity.RegistrationCenter;
-import io.mosip.kernel.syncdata.entity.RegistrationCenterDevice;
-import io.mosip.kernel.syncdata.entity.RegistrationCenterMachine;
-import io.mosip.kernel.syncdata.entity.RegistrationCenterMachineDevice;
+
 import io.mosip.kernel.syncdata.entity.RegistrationCenterType;
-import io.mosip.kernel.syncdata.entity.RegistrationCenterUser;
-import io.mosip.kernel.syncdata.entity.RegistrationCenterUserMachine;
+import io.mosip.kernel.syncdata.service.helper.beans.RegistrationCenterDevice;
+import io.mosip.kernel.syncdata.service.helper.beans.RegistrationCenterMachine;
+import io.mosip.kernel.syncdata.service.helper.beans.RegistrationCenterMachineDevice;
+import io.mosip.kernel.syncdata.service.helper.beans.RegistrationCenterUser;
+import io.mosip.kernel.syncdata.service.helper.beans.RegistrationCenterUserMachine;
 import io.mosip.kernel.syncdata.utils.SyncMasterDataServiceHelper;
 
 public class RegistrationCenterDataHelper {

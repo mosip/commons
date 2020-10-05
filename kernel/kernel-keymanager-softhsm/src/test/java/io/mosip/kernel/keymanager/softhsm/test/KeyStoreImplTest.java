@@ -29,12 +29,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
-
 import io.mosip.kernel.keymanager.softhsm.impl.KeyStoreImpl;
 import io.mosip.kernel.keymanager.softhsm.util.CertificateUtility;
 
 @RunWith(SpringRunner.class)
-
 public class KeyStoreImplTest {
 
 	private java.security.KeyStore keyStore;
@@ -70,8 +68,8 @@ public class KeyStoreImplTest {
 		KeyPair keyPair = keyGenerator.generateKeyPair();
 		keyStoreImpl.storeAsymmetricKey(keyPair, "alias", LocalDateTime.now(), LocalDateTime.now().plusDays(100));
 		X509Certificate[] chain = new X509Certificate[1];
-		chain[0] = CertificateUtility.generateX509Certificate(keyPair, "commonName", "organizationalUnit",
-				"organization", "country", LocalDateTime.now(), LocalDateTime.now().plusDays(100),provider.getName());
+		chain[0] = CertificateUtility.generateX509Certificate(keyPair.getPrivate(), keyPair.getPublic(), "commonName", "organizationalUnit",
+				"organization", "country", LocalDateTime.now(), LocalDateTime.now().plusDays(100), "SHA256withRSA", "BC");
 		PrivateKeyEntry keyEntry = new PrivateKeyEntry(keyPair.getPrivate(), chain);
 		when(keyStore.entryInstanceOf("alias", PrivateKeyEntry.class)).thenReturn(true);
 		when(keyStore.getEntry(Mockito.anyString(), Mockito.any())).thenReturn(keyEntry);
@@ -101,8 +99,8 @@ public class KeyStoreImplTest {
 		keyGenerator.initialize(2048, random);
 		KeyPair keyPair = keyGenerator.generateKeyPair();
 		X509Certificate[] chain = new X509Certificate[1];
-		chain[0] = CertificateUtility.generateX509Certificate(keyPair, "commonName", "organizationalUnit",
-				"organization", "country", LocalDateTime.now(), LocalDateTime.now().plusDays(100),provider.getName());
+		chain[0] = CertificateUtility.generateX509Certificate(keyPair.getPrivate(), keyPair.getPublic(), "commonName", "organizationalUnit",
+				"organization", "country", LocalDateTime.now(), LocalDateTime.now().plusDays(100),  "SHA256withRSA", "BC");
 		PrivateKeyEntry keyEntry = new PrivateKeyEntry(keyPair.getPrivate(), chain);
 		when(keyStore.entryInstanceOf("alias", PrivateKeyEntry.class)).thenReturn(true);
 		when(keyStore.getEntry(Mockito.anyString(), Mockito.any())).thenReturn(keyEntry);
@@ -115,8 +113,8 @@ public class KeyStoreImplTest {
 		keyGenerator.initialize(2048, random);
 		KeyPair keyPair = keyGenerator.generateKeyPair();
 		X509Certificate[] chain = new X509Certificate[1];
-		chain[0] = CertificateUtility.generateX509Certificate(keyPair, "commonName", "organizationalUnit",
-				"organization", "country", LocalDateTime.now(), LocalDateTime.now().plusDays(100),provider.getName());
+		chain[0] = CertificateUtility.generateX509Certificate(keyPair.getPrivate(), keyPair.getPublic(), "commonName", "organizationalUnit",
+				"organization", "country", LocalDateTime.now(), LocalDateTime.now().plusDays(100), "SHA256withRSA", "BC");
 		PrivateKeyEntry keyEntry = new PrivateKeyEntry(keyPair.getPrivate(), chain);
 		when(keyStore.entryInstanceOf("alias", PrivateKeyEntry.class)).thenReturn(true);
 		when(keyStore.getEntry(Mockito.anyString(), Mockito.any())).thenReturn(keyEntry);
@@ -129,8 +127,8 @@ public class KeyStoreImplTest {
 		keyGenerator.initialize(2048, random);
 		KeyPair keyPair = keyGenerator.generateKeyPair();
 		X509Certificate[] chain = new X509Certificate[1];
-		chain[0] = CertificateUtility.generateX509Certificate(keyPair, "commonName", "organizationalUnit",
-				"organization", "country", LocalDateTime.now(), LocalDateTime.now().plusDays(100),provider.getName());
+		chain[0] = CertificateUtility.generateX509Certificate(keyPair.getPrivate(), keyPair.getPublic(), "commonName", "organizationalUnit",
+				"organization", "country", LocalDateTime.now(), LocalDateTime.now().plusDays(100), "SHA256withRSA", "BC");
 		PrivateKeyEntry keyEntry = new PrivateKeyEntry(keyPair.getPrivate(), chain);
 		when(keyStore.entryInstanceOf("alias", PrivateKeyEntry.class)).thenReturn(true);
 		when(keyStore.getEntry(Mockito.anyString(), Mockito.any())).thenReturn(keyEntry);

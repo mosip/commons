@@ -136,4 +136,28 @@ public class KeymanagerConstant {
 	public static final String INVALID_REQUEST = "should not be null or empty";
 
 	public static final String STORECERTIFICATE = "Storing certificate";
+
+	/**
+	 * The constant INVALID_REQUEST
+	 */
+	public static final String REQUEST_FOR_MASTER_KEY_GENERATION = "Request for Master Key Generation";
+
+	public static final String REQUEST_TYPE_CERTIFICATE = "CERTIFICATE";
+
+	public static final String REQUEST_TYPE_CSR = "CSR";
+
+	public static final String ROOT_KEY = "Root Key"; 
+
+	public static final String CERTIFICATE_TYPE = "X.509";
+
+	public static final String BASE_KEY_POLICY_CONST = "BASE";
+
+	public static final String UPLOAD_SUCCESS = "Upload Success";
+
+	public static final String CERTIFICATE_PARSE = "CERTIFICATE_PARSE";
+
+	/**
+	 * The constant KeyStore PrivateKey NotAvailable
+	 */
+	public static final String KS_PK_NA = "NA";
 }

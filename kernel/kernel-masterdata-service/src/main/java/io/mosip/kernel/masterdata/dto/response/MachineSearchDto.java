@@ -88,6 +88,12 @@ public class MachineSearchDto extends BaseDto {
 	private LocalDateTime validityDateTime;
 
 	/**
+	 * Field for is regCenter of the Device
+	 */
+	@FilterType(types = { FilterTypeEnum.EQUALS, FilterTypeEnum.STARTSWITH, FilterTypeEnum.CONTAINS })
+	private String regCenterId;
+	
+	/**
 	 * Zone Code for Machine.
 	 */
 	private String zoneCode;

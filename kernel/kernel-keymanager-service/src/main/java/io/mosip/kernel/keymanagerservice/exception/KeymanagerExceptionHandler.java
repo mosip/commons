@@ -14,6 +14,11 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +30,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import io.mosip.kernel.core.crypto.exception.InvalidDataException;
 import io.mosip.kernel.core.crypto.exception.InvalidKeyException;
 import io.mosip.kernel.core.crypto.exception.NullDataException;
@@ -40,6 +40,7 @@ import io.mosip.kernel.core.exception.NoSuchAlgorithmException;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.idgenerator.exception.TokenIdGeneratorException;
+import io.mosip.kernel.core.keymanager.exception.KeystoreProcessingException;
 import io.mosip.kernel.core.signatureutil.exception.ParseResponseException;
 import io.mosip.kernel.core.signatureutil.exception.SignatureUtilClientException;
 import io.mosip.kernel.core.signatureutil.exception.SignatureUtilException;
@@ -50,8 +51,12 @@ import io.mosip.kernel.keymanagerservice.constant.KeymanagerConstant;
 import io.mosip.kernel.keymanagerservice.constant.KeymanagerErrorConstant;
 import io.mosip.kernel.lkeymanager.exception.InvalidArgumentsException;
 import io.mosip.kernel.lkeymanager.exception.LicenseKeyServiceException;
+import io.mosip.kernel.partnercertservice.exception.PartnerCertManagerException;
 import io.mosip.kernel.signature.exception.RequestException;
 import io.mosip.kernel.signature.exception.SignatureFailureException;
+import io.mosip.kernel.zkcryptoservice.exception.ZKCryptoException;
+import io.mosip.kernel.zkcryptoservice.exception.ZKKeyDerivationException;
+import io.mosip.kernel.zkcryptoservice.exception.ZKRandomKeyDecryptionException;
 
 /**
  * Rest Controller Advice for Keymanager Service
@@ -149,7 +154,7 @@ public class KeymanagerExceptionHandler {
 
 	@ExceptionHandler(KeymanagerServiceException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> keymanagerServiceException(
-			HttpServletRequest httpServletRequest, final CryptoException e) throws IOException {
+			HttpServletRequest httpServletRequest, final KeymanagerServiceException e) throws IOException {
 		ExceptionUtils.logRootCause(e);
 		return new ResponseEntity<>(
 				getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText(), HttpStatus.OK), HttpStatus.OK);
@@ -211,7 +216,47 @@ public class KeymanagerExceptionHandler {
 		return new ResponseEntity<>(responseWrapper, HttpStatus.OK);
 
 	}
+
+	@ExceptionHandler(ZKCryptoException.class)
+	public ResponseEntity<ResponseWrapper<ServiceError>> zkCryptoException(
+			HttpServletRequest httpServletRequest, final ZKCryptoException e) throws IOException {
+		ExceptionUtils.logRootCause(e);
+		return new ResponseEntity<>(
+				getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText(), HttpStatus.OK), HttpStatus.OK);
+	}
+
+	@ExceptionHandler(ZKKeyDerivationException.class)
+	public ResponseEntity<ResponseWrapper<ServiceError>> zkKeyDerivationException(
+			HttpServletRequest httpServletRequest, final ZKKeyDerivationException e) throws IOException {
+		ExceptionUtils.logRootCause(e);
+		return new ResponseEntity<>(
+				getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText(), HttpStatus.OK), HttpStatus.OK);
+	}
+
+	@ExceptionHandler(ZKRandomKeyDecryptionException.class)
+	public ResponseEntity<ResponseWrapper<ServiceError>> zkRandomKeyDecryptionException(
+			HttpServletRequest httpServletRequest, final ZKRandomKeyDecryptionException e) throws IOException {
+		ExceptionUtils.logRootCause(e);
+		return new ResponseEntity<>(
+				getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText(), HttpStatus.OK), HttpStatus.OK);
+	}
+
+	@ExceptionHandler(PartnerCertManagerException.class)
+	public ResponseEntity<ResponseWrapper<ServiceError>> partnerCertManagerException(
+			HttpServletRequest httpServletRequest, final PartnerCertManagerException e) throws IOException {
+		ExceptionUtils.logRootCause(e);
+		return new ResponseEntity<>(
+				getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText(), HttpStatus.OK), HttpStatus.OK);
+	}
 	
+	
+	@ExceptionHandler(KeystoreProcessingException.class)
+	public ResponseEntity<ResponseWrapper<ServiceError>> keystoreProcessingException(
+			HttpServletRequest httpServletRequest, final KeystoreProcessingException e) throws IOException {
+		ExceptionUtils.logRootCause(e);
+		return new ResponseEntity<>(
+				getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText(), HttpStatus.OK), HttpStatus.OK);
+	}
 	/**
 	 * Method to handle {@link InvalidArgumentsException}.
 	 * 

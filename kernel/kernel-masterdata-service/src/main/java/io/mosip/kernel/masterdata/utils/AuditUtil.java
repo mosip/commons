@@ -29,8 +29,8 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.kernel.auth.adapter.exception.AuthNException;
-import io.mosip.kernel.auth.adapter.exception.AuthZException;
+import io.mosip.kernel.core.authmanager.exception.AuthNException;
+import io.mosip.kernel.core.authmanager.exception.AuthZException;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;

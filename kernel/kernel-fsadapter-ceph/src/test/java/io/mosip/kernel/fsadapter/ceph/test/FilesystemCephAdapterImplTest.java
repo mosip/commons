@@ -43,7 +43,7 @@ import io.mosip.kernel.fsadapter.ceph.util.ConnectionUtils;
  * @author Ranjitha
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = {ConnectionUtils.class})
 public class FilesystemCephAdapterImplTest {
 
 	/** The api. */
