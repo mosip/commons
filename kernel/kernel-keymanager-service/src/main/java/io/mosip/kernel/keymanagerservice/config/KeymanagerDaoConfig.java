@@ -14,6 +14,7 @@ import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -31,7 +32,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import io.mosip.kernel.keymanagerservice.constant.HibernatePersistenceConstant;
 
 
-
+@ConditionalOnProperty(value = "mosip.keymanager.dao.enabled", matchIfMissing = true)
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
