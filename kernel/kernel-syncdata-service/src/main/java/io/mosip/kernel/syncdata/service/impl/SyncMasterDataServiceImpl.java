@@ -4,12 +4,15 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 
 import javax.persistence.PersistenceException;
 
+import io.mosip.kernel.syncdata.dto.response.KeyPairGenerateResponseDto;
+import io.mosip.kernel.syncdata.service.helper.KeymanagerHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,6 +137,9 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 	
 	@Autowired
 	private IdentitySchemaHelper identitySchemaHelper;
+
+	@Autowired
+	private KeymanagerHelper keymanagerHelper;
 
 	/*
 	 * (non-Javadoc)
@@ -653,6 +659,11 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 	@Override
 	public IdSchemaDto getLatestPublishedIdSchema(LocalDateTime lastUpdated, double schemaVersion) {
 		return identitySchemaHelper.getLatestIdentitySchema(lastUpdated, schemaVersion);		
+	}
+
+	@Override
+	public KeyPairGenerateResponseDto getCertificate(String applicationId, Optional<String> referenceId) {
+		return keymanagerHelper.getCertificate(applicationId, referenceId);
 	}
 
 }
