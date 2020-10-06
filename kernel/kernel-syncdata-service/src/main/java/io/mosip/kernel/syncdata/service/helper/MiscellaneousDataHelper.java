@@ -33,7 +33,7 @@ public class MiscellaneousDataHelper {
 	CompletableFuture<List<ScreenAuthorizationDto>> screenAuthorizations = null;
 	CompletableFuture<List<ScreenDetailDto>> screenDetails = null;
 	CompletableFuture<List<ProcessListDto>> processList = null;
-	CompletableFuture<List<FoundationalTrustProviderDto>> ftps = null;
+	//CompletableFuture<List<FoundationalTrustProviderDto>> ftps = null;
 	CompletableFuture<List<SyncJobDefDto>> syncJobDefDtos = null;
 	
 	public MiscellaneousDataHelper(String machineId, LocalDateTime lastUpdated, LocalDateTime currentTimestamp) {
@@ -50,7 +50,7 @@ public class MiscellaneousDataHelper {
 		this.screenDetails = serviceHelper.getScreenDetails(this.lastUpdated, this.currentTimestamp);
 		
 		this.processList = serviceHelper.getProcessList(this.lastUpdated, this.currentTimestamp);		
-		this.ftps = serviceHelper.getFPDetails(this.lastUpdated, this.currentTimestamp);		
+		//this.ftps = serviceHelper.getFPDetails(this.lastUpdated, this.currentTimestamp);
 
 		this.syncJobDefDtos = serviceHelper.getSyncJobDefDetails(this.lastUpdated, this.currentTimestamp);
 		
@@ -61,7 +61,7 @@ public class MiscellaneousDataHelper {
 		futures.add(this.screenDetails);
 		
 		futures.add(this.processList);
-		futures.add(this.ftps);
+		//futures.add(this.ftps);
 		
 		futures.add(this.syncJobDefDtos);
 	}
@@ -75,7 +75,7 @@ public class MiscellaneousDataHelper {
 		list.add(serviceHelper.getSyncDataBaseDto(ScreenDetail.class, "structured", this.screenDetails.get()));
 		
 		list.add(serviceHelper.getSyncDataBaseDto(ProcessList.class, "structured", this.processList.get()));
-		list.add(serviceHelper.getSyncDataBaseDto(FoundationalTrustProvider.class, "structured", this.ftps.get()));	
+		//list.add(serviceHelper.getSyncDataBaseDto(FoundationalTrustProvider.class, "structured", this.ftps.get()));
 		
 		list.add(serviceHelper.getSyncDataBaseDto(SyncJobDef.class, "structured", this.syncJobDefDtos.get()));
 	}

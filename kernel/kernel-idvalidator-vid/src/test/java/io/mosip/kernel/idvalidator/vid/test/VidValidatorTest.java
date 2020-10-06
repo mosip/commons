@@ -2,6 +2,7 @@ package io.mosip.kernel.idvalidator.vid.test;
 
 import static org.junit.Assert.assertEquals;
 
+import io.mosip.kernel.idvalidator.vid.impl.VidValidatorImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import io.mosip.kernel.core.idvalidator.spi.VidValidator;
  * 
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = {VidValidatorImpl.class})
 public class VidValidatorTest {
 
 	@Value("${mosip.kernel.vid.test.valid-vid}")

@@ -3,6 +3,7 @@ package io.mosip.kernel.idvalidator.test.mispid;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import io.mosip.kernel.idvalidator.mispid.impl.MispIdValidatorImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import io.mosip.kernel.core.idvalidator.spi.IdValidator;
  *
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = {MispIdValidatorImpl.class})
 public class MispIdValidatorTest {
 
 	@Value("${mosip.kernel.mispid.test.valid-mispid}")

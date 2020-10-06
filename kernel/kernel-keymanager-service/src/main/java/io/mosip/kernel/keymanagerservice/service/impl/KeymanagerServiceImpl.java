@@ -283,6 +283,22 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.CURRENTKEYALIAS,
 					String.valueOf(currentKeyAlias.size()),
 					"CurrentKeyAlias size is zero. Will create new Keypair for this applicationId, referenceId and timestamp");
+			List<KeyAlias> keyAlias = keyAliasMap.get(KeymanagerConstant.KEYALIAS);
+			if (!keyAlias.isEmpty()) {
+				keyAlias.forEach(innerAlias -> {
+					String ksAlias = innerAlias.getAlias();
+					Optional<io.mosip.kernel.keymanagerservice.entity.KeyStore> keyFromDBStore = dbHelper.getKeyStoreFromDB(ksAlias);
+					String masterKeyAlias = keyFromDBStore.get().getMasterAlias();
+					String privateKeyObj = keyFromDBStore.get().getPrivateKey();
+
+					if (ksAlias.equals(masterKeyAlias) || privateKeyObj.equals(KeymanagerConstant.KS_PK_NA)) {
+						LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, null,
+								"Not Allowed to generate New Key Pair for other domains.");
+						throw new KeymanagerServiceException(KeymanagerErrorConstant.GENERATION_NOT_ALLOWED.getErrorCode(),
+								KeymanagerErrorConstant.GENERATION_NOT_ALLOWED.getErrorMessage());
+					}
+				});
+			}
 			String encryptedPrivateKey;
 			alias = UUID.randomUUID().toString();
 			KeyPair keypair = keyGenerator.getAsymmetricKey();
@@ -742,6 +758,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 			throw new NoUniqueAliasException(KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorCode(),
 					KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorMessage());
 		} else if (currentKeyAlias.isEmpty()) {
+			// checking empty because after certificate expiry new CSR request should be called to generate new key pair. 
 			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.CURRENTKEYALIAS,
 					String.valueOf(currentKeyAlias.size()),
 					"CurrentKeyAlias size is zero for this applicationId and timestamp");
@@ -839,7 +856,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 			throw new KeymanagerServiceException(KeymanagerErrorConstant.INVALID_REQUEST.getErrorCode(),
 					KeymanagerErrorConstant.INVALID_REQUEST.getErrorMessage());
 		}
-
+		
 		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, appId,
 				"to get KeyInfo for application ID: " + appId + ", RefId: " + refId);
 		LocalDateTime timestamp = DateUtils.getUTCCurrentDateTime();
@@ -853,18 +870,37 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 					KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorMessage());
 		}
 
+		List<KeyAlias> keyAliasList = keyAliasMap.get(KeymanagerConstant.KEYALIAS);
 		X509Certificate reqX509Cert = (X509Certificate) keymanagerUtil.convertToCertificate(certificateData);
 		LocalDateTime notBeforeDate = DateUtils.parseDateToLocalDateTime(reqX509Cert.getNotBefore());
 		LocalDateTime notAfterDate = DateUtils.parseDateToLocalDateTime(reqX509Cert.getNotAfter());
-		if (currentKeyAlias.isEmpty()) {
+		if (currentKeyAlias.isEmpty() && keyAliasList.isEmpty()) {
+			return storeAndBuildResponse(appId, refId, reqX509Cert, notBeforeDate, notAfterDate);
+		}
+
+		if (currentKeyAlias.isEmpty() && keyAliasList.size() > 0) {
+			String keyAlias = keyAliasList.get(0).getAlias();
+			Optional<io.mosip.kernel.keymanagerservice.entity.KeyStore> keyFromDBStore = dbHelper.getKeyStoreFromDB(keyAlias);
+			if (!keyFromDBStore.isPresent()) {
+				LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.EMPTY, KeymanagerConstant.EMPTY,
+									"Other valid key is available, so not allowed to upload certificate.");
+				throw new KeymanagerServiceException(KeymanagerErrorConstant.UPLOAD_NOT_ALLOWED.getErrorCode(),
+									KeymanagerErrorConstant.UPLOAD_NOT_ALLOWED.getErrorMessage());
+			}
 			return storeAndBuildResponse(appId, refId, reqX509Cert, notBeforeDate, notAfterDate);
 		}
 		
 		String keyAlias = currentKeyAlias.get(0).getAlias();
 		Optional<io.mosip.kernel.keymanagerservice.entity.KeyStore> keyFromDBStore = dbHelper.getKeyStoreFromDB(keyAlias);
+		if (!keyFromDBStore.isPresent() && currentKeyAlias.size() == 1) {
+			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.EMPTY, KeymanagerConstant.EMPTY,
+								"Other valid key is available, so not allowed to upload certificate.");
+			throw new KeymanagerServiceException(KeymanagerErrorConstant.UPLOAD_NOT_ALLOWED.getErrorCode(),
+								KeymanagerErrorConstant.UPLOAD_NOT_ALLOWED.getErrorMessage());
+		} 
+
 		String masterKeyAlias = keyFromDBStore.get().getMasterAlias();
 		String privateKeyObj = keyFromDBStore.get().getPrivateKey();
-
 		if (!keyAlias.equals(masterKeyAlias) || !privateKeyObj.equals(KeymanagerConstant.KS_PK_NA)) {
 			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, null,
 					"Not Allowed to update certificate for other domains.");

@@ -7,7 +7,7 @@
 	<groupId>io.mosip.kernel</groupId>
 
 	<artifactId>kernel-keymanager-service</artifactId>
-	<version>1.2.0-SNAPSHOT</version>
+	<version>1.1.2-SNAPSHOT</version>
 	<name>kernel-keymanager-service</name>
 
 	<properties>
@@ -133,10 +133,10 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.2.0-SNAPSHOT</kernel.core.version>
-		<kernel.auth.adaptor.version>1.2.0-SNAPSHOT</kernel.auth.adaptor.version>
+		<kernel.core.version>1.1.2-SNAPSHOT</kernel.core.version>
+		<kernel.auth.adaptor.version>1.1.2-SNAPSHOT</kernel.auth.adaptor.version>
 		<kernel-dataaccess-hibernate.version>1.0.7</kernel-dataaccess-hibernate.version>
-		<kernel.logger.logback.version>1.2.0-SNAPSHOT</kernel.logger.logback.version>
+		<kernel.logger.logback.version>1.1.2-SNAPSHOT</kernel.logger.logback.version>
 		<kernel.pdfgenerator.itext.version>1.0.6</kernel.pdfgenerator.itext.version>
 		<jose4j.version>0.6.5</jose4j.version>
 

@@ -17,6 +17,8 @@ public enum KeymanagerErrorCode {
 	NO_SUCH_ALIAS("KER-KMA-004", "No such alias: "),
 
 	CERTIFICATE_PROCESSING_ERROR("KER-KMA-005", "Error occured while processing exception: "),
+
+	NOT_VALID_PKCS11_STORE_TYPE("KER-KMA-007", "Keystore loaded as offline, Retrivial of Private is not allowed."),
 	
 	KEYSTORE_NOT_INSTANTIATED("KER-KMA-006", "Keystore not instantiated error.");
 

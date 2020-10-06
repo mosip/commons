@@ -14,6 +14,7 @@ import io.mosip.kernel.masterdata.dto.getresponse.extn.RegistrationCenterExtnDto
 import io.mosip.kernel.masterdata.dto.postresponse.IdResponseDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
+import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.dto.response.RegistrationCenterSearchDto;
@@ -172,7 +173,7 @@ public interface RegistrationCenterService {
 	 * @param filterValueDto the filter DTO.
 	 * @return the {@link FilterResponseDto}.
 	 */
-	public FilterResponseDto registrationCenterFilterValues(FilterValueDto filterValueDto);
+	public FilterResponseCodeDto registrationCenterFilterValues(FilterValueDto filterValueDto);
 
 	/**
 	 * This service method can be used to create registration center by admin,

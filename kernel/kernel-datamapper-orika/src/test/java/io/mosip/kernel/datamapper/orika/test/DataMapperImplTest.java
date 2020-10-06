@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.mosip.kernel.datamapper.orika.impl.DataMapperImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,8 @@ import io.mosip.kernel.datamapper.orika.test.model.PersonNameParts;
 import io.mosip.kernel.datamapper.orika.test.model.Personne;
 import io.mosip.kernel.datamapper.orika.test.model.SourceModel;
 
-@SpringBootTest
 @RunWith(SpringRunner.class)
+@SpringBootTest
 public class DataMapperImplTest {
 
 	@Qualifier("personneToPersonDestinationMapper")

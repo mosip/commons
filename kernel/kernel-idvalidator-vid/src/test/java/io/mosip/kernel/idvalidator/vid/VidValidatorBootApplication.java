@@ -10,7 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
  */
 
 @SpringBootApplication
-@ComponentScan(basePackages = "io.mosip.kernel.*")
+//@ComponentScan(basePackages = "io.mosip.kernel.*")
 public class VidValidatorBootApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(VidValidatorBootApplication.class, args);

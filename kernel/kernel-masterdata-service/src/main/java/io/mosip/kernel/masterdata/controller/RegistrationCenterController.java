@@ -30,6 +30,7 @@ import io.mosip.kernel.masterdata.dto.getresponse.extn.RegistrationCenterExtnDto
 import io.mosip.kernel.masterdata.dto.postresponse.IdResponseDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
+import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.dto.response.RegistrationCenterSearchDto;
@@ -295,7 +296,7 @@ public class RegistrationCenterController {
 	//@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@PostMapping("/registrationcenters/filtervalues")
-	public ResponseWrapper<FilterResponseDto> registrationCenterFilterValues(
+	public ResponseWrapper<FilterResponseCodeDto> registrationCenterFilterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.FILTER_API_IS_CALLED,
@@ -303,7 +304,7 @@ public class RegistrationCenterController {
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.FILTER_API_IS_CALLED,
 						RegistrationCenterSearchDto.class.getSimpleName()),
 				"ADM-519");
-		ResponseWrapper<FilterResponseDto> responseWrapper = new ResponseWrapper<>();
+		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(registrationCenterService.registrationCenterFilterValues(request.getRequest()));
 		auditUtil.auditRequest(
 				String.format(MasterDataConstant.SUCCESSFUL_FILTER, RegistrationCenterSearchDto.class.getSimpleName()),
