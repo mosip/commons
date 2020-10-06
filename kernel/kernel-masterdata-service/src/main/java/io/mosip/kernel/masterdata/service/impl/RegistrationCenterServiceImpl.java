@@ -39,6 +39,7 @@ import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.constant.RegistrationCenterDeviceHistoryErrorCode;
 import io.mosip.kernel.masterdata.constant.RegistrationCenterErrorCode;
 import io.mosip.kernel.masterdata.dto.ExceptionalHolidayPutPostDto;
+import io.mosip.kernel.masterdata.dto.FilterData;
 import io.mosip.kernel.masterdata.dto.HolidayDto;
 import io.mosip.kernel.masterdata.dto.PageDto;
 import io.mosip.kernel.masterdata.dto.RegCenterPostReqDto;
@@ -54,7 +55,9 @@ import io.mosip.kernel.masterdata.dto.request.FilterDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
 import io.mosip.kernel.masterdata.dto.request.SearchFilter;
+import io.mosip.kernel.masterdata.dto.response.ColumnCodeValue;
 import io.mosip.kernel.masterdata.dto.response.ColumnValue;
+import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.dto.response.RegistrationCenterSearchDto;
@@ -813,9 +816,9 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 	 * FilterValueDto)
 	 */
 	@Override
-	public FilterResponseDto registrationCenterFilterValues(FilterValueDto filterValueDto) {
-		FilterResponseDto filterResponseDto = new FilterResponseDto();
-		List<ColumnValue> columnValueList = new ArrayList<>();
+	public FilterResponseCodeDto registrationCenterFilterValues(FilterValueDto filterValueDto) {
+		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
+		List<ColumnCodeValue> columnValueList = new ArrayList<>();
 		List<Zone> zones = zoneUtils.getUserZones();
 		List<SearchFilter> zoneFilter = new ArrayList<>();
 		if (zones != null && !zones.isEmpty()) {
@@ -826,12 +829,13 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 		}
 		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), RegistrationCenter.class)) {
 			for (FilterDto filterDto : filterValueDto.getFilters()) {
-				List<?> filterValues = masterDataFilterHelper.filterValues(RegistrationCenter.class, filterDto,
-						filterValueDto);
+				List<FilterData> filterValues = masterDataFilterHelper.filterValuesWithCode(RegistrationCenter.class, filterDto,
+						filterValueDto,"id");
 				filterValues.forEach(filterValue -> {
-					ColumnValue columnValue = new ColumnValue();
+					ColumnCodeValue columnValue = new ColumnCodeValue();
+					columnValue.setFieldCode(filterValue.getFieldCode());
 					columnValue.setFieldID(filterDto.getColumnName());
-					columnValue.setFieldValue(filterValue.toString());
+					columnValue.setFieldValue(filterValue.getFieldValue());
 					columnValueList.add(columnValue);
 				});
 			}
