@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import io.mosip.kernel.syncdata.entity.SyncJobDef;
 import io.mosip.kernel.syncdata.service.SyncJobDefService;
-import io.mosip.kernel.syncdata.syncjob.repository.SyncJobDefRepository;
+import io.mosip.kernel.syncdata.repository.SyncJobDefRepository;
 import io.mosip.kernel.syncdata.test.TestBootApplication;
 
 @SpringBootTest(classes = TestBootApplication.class)
