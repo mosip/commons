@@ -1,11 +1,13 @@
 package io.mosip.kernel.syncdata.service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import io.mosip.kernel.syncdata.dto.IdSchemaDto;
 import io.mosip.kernel.syncdata.dto.UploadPublicKeyRequestDto;
 import io.mosip.kernel.syncdata.dto.UploadPublicKeyResponseDto;
+import io.mosip.kernel.syncdata.dto.response.KeyPairGenerateResponseDto;
 import io.mosip.kernel.syncdata.dto.response.MasterDataResponseDto;
 import io.mosip.kernel.syncdata.dto.response.SyncDataResponseDto;
 
@@ -72,4 +74,5 @@ public interface SyncMasterDataService {
 	 */
 	IdSchemaDto getLatestPublishedIdSchema(LocalDateTime lastUpdated, double schemaVersion);
 
+	KeyPairGenerateResponseDto getCertificate(String applicationId, Optional<String> referenceId);
 }
