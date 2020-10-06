@@ -2,10 +2,12 @@ package io.mosip.kernel.syncdata.controller;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import javax.validation.Valid;
 
+import io.mosip.kernel.syncdata.dto.response.KeyPairGenerateResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -387,6 +389,18 @@ public class SyncDataController {
 		
 		ResponseWrapper<IdSchemaDto> response = new ResponseWrapper<>();
 		response.setResponse(masterDataService.getLatestPublishedIdSchema(timestamp, schemaVersion));
+		return response;
+	}
+
+	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN','Default')")
+	@ResponseFilter
+	@GetMapping(value = "/getCertificate")
+	public ResponseWrapper<KeyPairGenerateResponseDto> getCertificate(
+			@ApiParam("Id of application") @RequestParam("applicationId") String applicationId,
+			@ApiParam("Refrence Id as metadata") @RequestParam("referenceId") Optional<String> referenceId) {
+
+		ResponseWrapper<KeyPairGenerateResponseDto> response = new ResponseWrapper<>();
+		response.setResponse(masterDataService.getCertificate(applicationId, referenceId));
 		return response;
 	}
 
