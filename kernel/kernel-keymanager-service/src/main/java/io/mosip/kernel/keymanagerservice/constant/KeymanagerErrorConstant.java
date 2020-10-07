@@ -41,6 +41,8 @@ public enum KeymanagerErrorConstant {
 
 	GENERATION_NOT_ALLOWED("KER-KMS-016", "not allowed to generate new key pair for other domains."),
 
+	CERTIFICATE_NOT_FOUND("KER-KMS-017", "Certificate Not found in keystore table."),
+
 	INTERNAL_SERVER_ERROR("KER-KMS-500", "Internal server error");
 
 	/**

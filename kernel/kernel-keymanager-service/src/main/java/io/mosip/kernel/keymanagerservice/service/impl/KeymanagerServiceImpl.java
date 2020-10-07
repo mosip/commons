@@ -1,5 +1,6 @@
 package io.mosip.kernel.keymanagerservice.service.impl;
 
+import java.security.Certificate;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyStore.PrivateKeyEntry;
@@ -32,6 +33,7 @@ import io.mosip.kernel.core.crypto.exception.NullDataException;
 import io.mosip.kernel.core.crypto.exception.NullKeyException;
 import io.mosip.kernel.core.crypto.exception.NullMethodException;
 import io.mosip.kernel.core.crypto.spi.CryptoCoreSpec;
+import io.mosip.kernel.core.keymanager.exception.KeystoreProcessingException;
 import io.mosip.kernel.core.keymanager.model.CertificateEntry;
 import io.mosip.kernel.core.keymanager.model.CertificateParameters;
 import io.mosip.kernel.core.keymanager.spi.KeyStore;
@@ -456,11 +458,11 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 	@Override
 	public SignatureCertificate getSignatureCertificate(String applicationId, Optional<String> referenceId,
 													String timestamp){
-		return getSigningCertificate(applicationId, referenceId, timestamp);
+		return getSigningCertificate(applicationId, referenceId, timestamp, true);
 	}
 
 	private SignatureCertificate getSigningCertificate(String applicationId, Optional<String> referenceId,
-			String timestamp) {
+			String timestamp, boolean isPrivateRequired) {
 		String alias = null;
 		List<KeyAlias> currentKeyAlias = null;
 		Map<String, List<KeyAlias>> keyAliasMap = null;
@@ -490,9 +492,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 			KeyAlias fetchedKeyAlias = currentKeyAlias.get(0);
 			alias = fetchedKeyAlias.getAlias();
 			// @TODO Not Sure why always check the existing HSM only. We need to get more details from team. 
-			PrivateKeyEntry privateKeyEntry = keyStore.getAsymmetricKey(alias);
-			certificateEntry = new CertificateEntry<>((X509Certificate[]) privateKeyEntry.getCertificateChain(),
-					privateKeyEntry.getPrivateKey());
+			certificateEntry = getCertificateEntry(alias, isPrivateRequired);
 			generationDateTime = fetchedKeyAlias.getKeyGenerationTime();
 			expiryDateTime = fetchedKeyAlias.getKeyExpiryTime();
 		} else if (currentKeyAlias.isEmpty()) {
@@ -503,13 +503,39 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 		return new SignatureCertificate(alias, certificateEntry, generationDateTime, expiryDateTime, providerName);
 	}
 
+	private CertificateEntry<X509Certificate, PrivateKey> getCertificateEntry(String alias, boolean isPrivateRequired) {
+		KeystoreProcessingException exception = null;
+		try {
+			PrivateKeyEntry privateKeyEntry = keyStore.getAsymmetricKey(alias);
+			return new CertificateEntry<>((X509Certificate[]) privateKeyEntry.getCertificateChain(),
+					privateKeyEntry.getPrivateKey());
+		} catch(KeystoreProcessingException kpe) {
+			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.CURRENTKEYALIAS, "Error", 
+							"Key Not found in HSM, keystore might have loaded as offline." + kpe.getMessage());
+			exception = kpe;
+		}
+		if (!isPrivateRequired) {
+			Optional<io.mosip.kernel.keymanagerservice.entity.KeyStore> keyFromDBStore = dbHelper.getKeyStoreFromDB(alias);
+			if (!keyFromDBStore.isPresent()) {
+				LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.CURRENTKEYALIAS, KeymanagerConstant.EMPTY,
+									"Certificate Not found in keystore table.");
+				throw new KeymanagerServiceException(KeymanagerErrorConstant.CERTIFICATE_NOT_FOUND.getErrorCode(),
+									KeymanagerErrorConstant.CERTIFICATE_NOT_FOUND.getErrorMessage());
+			}
+			String certificateData = keyFromDBStore.get().getCertificateData();
+			X509Certificate reqX509Cert = (X509Certificate) keymanagerUtil.convertToCertificate(certificateData);
+			return new CertificateEntry<>( new X509Certificate[] {reqX509Cert}, null);
+		}
+		throw exception;
+	}
+
 	@Override
 	public PublicKeyResponse<String> getSignPublicKey(String applicationId, String timestamp,
 			Optional<String> referenceId) {
 		// Ignoring the inputted timestamp and considering current system time to check the key expiry.
 		String localDateTimeStamp = DateUtils.getUTCCurrentDateTimeString(); //keymanagerUtil.parseToLocalDateTime(timeStamp);
 
-		SignatureCertificate certificateResponse = getSigningCertificate(applicationId, referenceId, localDateTimeStamp);
+		SignatureCertificate certificateResponse = getSigningCertificate(applicationId, referenceId, localDateTimeStamp, false);
 		return new PublicKeyResponse<>(certificateResponse.getAlias(),
 				CryptoUtil.encodeBase64(certificateResponse.getCertificateEntry().getChain()[0].getPublicKey().getEncoded()),
 				certificateResponse.getIssuedAt(), certificateResponse.getExpiryAt());
