@@ -59,10 +59,11 @@ public class OfflinePacketCryptoServiceImpl implements IPacketCryptoService {
 
     @Override
     public byte[] sign(byte[] packet) {
-        String packetData = new String(packet, StandardCharsets.UTF_8);
+        return new byte[0];
+        /*String packetData = new String(packet, StandardCharsets.UTF_8);
         SignRequestDto signRequest = new SignRequestDto();
         signRequest.setData(packetData);
-        return getSignatureService().sign(signRequest).getData().getBytes(StandardCharsets.UTF_8);
+        return getSignatureService().sign(signRequest).getData().getBytes(StandardCharsets.UTF_8);*/
     }
 
     @Override
