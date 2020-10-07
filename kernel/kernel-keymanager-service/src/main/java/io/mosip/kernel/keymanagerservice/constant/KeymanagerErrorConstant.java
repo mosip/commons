@@ -37,7 +37,9 @@ public enum KeymanagerErrorConstant {
 
 	KEY_NOT_MATCHING("KER-KMS-014", "Certificate Key Not Matching with stored Key."),
 
-	UPLOAD_NOT_ALLOWED("KER-KMS-015", "Upload of certificate will not be allowed to update other domains."),
+	UPLOAD_NOT_ALLOWED("KER-KMS-015", "Upload of certificate will not be allowed to update other domain certificate."),
+
+	GENERATION_NOT_ALLOWED("KER-KMS-016", "not allowed to generate new key pair for other domains."),
 
 	INTERNAL_SERVER_ERROR("KER-KMS-500", "Internal server error");
 
