@@ -853,8 +853,8 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 			throw new KeymanagerServiceException(KeymanagerErrorConstant.KEY_NOT_MATCHING.getErrorCode(),
 					KeymanagerErrorConstant.KEY_NOT_MATCHING.getErrorMessage());
 		}
-		LocalDateTime notBeforeDate = DateUtils.parseDateToLocalDateTime(reqX509Cert.getNotBefore());
-		LocalDateTime notAfterDate = DateUtils.parseDateToLocalDateTime(reqX509Cert.getNotAfter());
+		LocalDateTime notBeforeDate = keymanagerUtil.convertToUTC(reqX509Cert.getNotBefore());
+		LocalDateTime notAfterDate = keymanagerUtil.convertToUTC(reqX509Cert.getNotAfter());
 		if (!keyFromDBStore.isPresent()){
 			keyStore.storeCertificate(keyAlias, privateKey, reqX509Cert);
 		} else {
@@ -898,8 +898,8 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 
 		List<KeyAlias> keyAliasList = keyAliasMap.get(KeymanagerConstant.KEYALIAS);
 		X509Certificate reqX509Cert = (X509Certificate) keymanagerUtil.convertToCertificate(certificateData);
-		LocalDateTime notBeforeDate = DateUtils.parseDateToLocalDateTime(reqX509Cert.getNotBefore());
-		LocalDateTime notAfterDate = DateUtils.parseDateToLocalDateTime(reqX509Cert.getNotAfter());
+		LocalDateTime notBeforeDate = keymanagerUtil.convertToUTC(reqX509Cert.getNotBefore());
+		LocalDateTime notAfterDate = keymanagerUtil.convertToUTC(reqX509Cert.getNotAfter());
 		if (currentKeyAlias.isEmpty() && keyAliasList.isEmpty()) {
 			return storeAndBuildResponse(appId, refId, reqX509Cert, notBeforeDate, notAfterDate);
 		}
