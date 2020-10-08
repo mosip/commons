@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class HolidayUpdateDto {
 	
-	private Integer id;
+	private Integer holidayId;
 
 	private String locationCode;
 

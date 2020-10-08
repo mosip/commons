@@ -139,7 +139,7 @@ public class MachineTypeServiceImpl implements MachineTypeService {
 	public CodeAndLanguageCodeID updateMachineType(MachineTypeDto machineTypeDto) {
 		CodeAndLanguageCodeID codeAndLanguageCodeID = new CodeAndLanguageCodeID();
 		try {
-			MachineType machineType = machineTypeRepository.findMachineTypeByCodeAndByLangCode(machineTypeDto.getCode(),machineTypeDto.getLangCode());
+			MachineType machineType = machineTypeRepository.findtoUpdateMachineTypeByCodeAndByLangCode(machineTypeDto.getCode(),machineTypeDto.getLangCode());
 			if (!EmptyCheckUtils.isNullEmpty(machineType)) {
 				machineTypeDto = masterdataCreationUtil.updateMasterData(MachineType.class, machineTypeDto);
 				MetaDataUtils.setUpdateMetaData(machineTypeDto, machineType, false);
