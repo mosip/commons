@@ -3,6 +3,8 @@ package io.mosip.commons.packet.test.impl;
 import io.mosip.commons.packet.constants.CryptomanagerConstant;
 import io.mosip.commons.packet.impl.OfflinePacketCryptoServiceImpl;
 import io.mosip.commons.packet.util.ZipUtils;
+import io.mosip.kernel.clientcrypto.dto.TpmSignResponseDto;
+import io.mosip.kernel.clientcrypto.service.spi.ClientCryptoManagerService;
 import io.mosip.kernel.core.signatureutil.model.SignatureResponse;
 import io.mosip.kernel.core.util.JsonUtils;
 import io.mosip.kernel.cryptomanager.dto.CryptomanagerResponseDto;
@@ -46,11 +48,15 @@ public class OfflinePacketCryptoServiceTest {
     private CryptomanagerServiceImpl cryptomanagerService;
 
     @Mock
+    private ClientCryptoManagerService clientCryptoManagerService;
+
+    @Mock
     private SignatureServiceImpl signatureService;
 
     @Before
     public void setup() {
         Mockito.when(applicationContext.getBean(CryptomanagerServiceImpl.class)).thenReturn(cryptomanagerService);
+        Mockito.when(applicationContext.getBean(ClientCryptoManagerService.class)).thenReturn(clientCryptoManagerService);
         Mockito.when(applicationContext.getBean(SignatureService.class)).thenReturn(signatureService);
         ReflectionTestUtils.setField(offlinePacketCryptoService, "DATETIME_PATTERN", "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     }
@@ -58,10 +64,10 @@ public class OfflinePacketCryptoServiceTest {
     @Test
     public void signTest() {
         String packetSignature = "signature";
-        SignatureResponse signatureResponse = new SignatureResponse();
+        TpmSignResponseDto signatureResponse = new TpmSignResponseDto();
         signatureResponse.setData(packetSignature);
 
-        Mockito.when(signatureService.sign(any())).thenReturn(signatureResponse);
+        Mockito.when(clientCryptoManagerService.csSign(any())).thenReturn(signatureResponse);
 
         byte[] result = offlinePacketCryptoService.sign(packetSignature.getBytes());
         assertTrue(ArrayUtils.isEquals(packetSignature.getBytes(), result));
