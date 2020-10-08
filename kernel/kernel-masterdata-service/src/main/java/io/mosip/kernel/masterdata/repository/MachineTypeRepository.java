@@ -23,6 +23,9 @@ public interface MachineTypeRepository extends BaseRepository<MachineType, Strin
 	
 	@Query("FROM MachineType m where m.code = ?1 and m.langCode =?2 and (isDeleted is null OR isDeleted = false) AND m.isActive = true")
 	MachineType findMachineTypeByCodeAndByLangCode(String code, String langCode);
+	
+	@Query("FROM MachineType m where m.code = ?1 and m.langCode =?2 and (isDeleted is null OR isDeleted = false)")
+	MachineType findtoUpdateMachineTypeByCodeAndByLangCode(String code, String langCode);
 
 	@Query("FROM MachineType m where (isDeleted is null OR isDeleted = false) AND isActive = true")
 	List<MachineType> findAllMachineTypeByIsActiveAndIsDeletedFalseOrNull();
