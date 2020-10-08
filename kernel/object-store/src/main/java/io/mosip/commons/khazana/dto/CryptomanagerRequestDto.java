@@ -1,4 +1,4 @@
-package io.mosip.commons.packet.dto.packet;
+package io.mosip.commons.khazana.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -9,11 +9,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-/**
- * 
- * @author Sowmya
- *
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

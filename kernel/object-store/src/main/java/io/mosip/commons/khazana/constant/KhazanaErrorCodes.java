@@ -2,7 +2,8 @@ package io.mosip.commons.khazana.constant;
 
 public enum KhazanaErrorCodes {
 
-    CONTAINER_NOT_PRESENT_IN_DESTINATION("COM-KZN-001", "Container not found.");
+    CONTAINER_NOT_PRESENT_IN_DESTINATION("COM-KZN-001", "Container not found."),
+    ENCRYPTION_FAILURE("COM-KZN-002", "Packet Encryption Failed-Invalid Packet format");
 
 
     private final String errorCode;
