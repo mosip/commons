@@ -81,12 +81,11 @@ public class CryptomanagerUtils {
 	}
 
 	/**
-	 * Gets the public key from key manager.
+	 * Gets the certificate from key manager.
 	 *
 	 * @param appId the app id
-	 * @param timestamp the timestamp
 	 * @param refId the ref id
-	 * @return the public key from key manager
+	 * @return the certificate data from key manager
 	 */
 	private String getCertificateFromKeyManager(String appId, String refId) {
 		return keyManager.getCertificate(appId, Optional.ofNullable(refId)).getCertificate();
