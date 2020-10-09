@@ -72,7 +72,6 @@ public class OfflinePacketCryptoServiceImpl implements IPacketCryptoService {
 
     @Override
     public byte[] sign(byte[] packet) {
-        ClientCryptoFacade.setIsTPMRequired(false);
         String packetData = new String(packet, StandardCharsets.UTF_8);
         TpmSignRequestDto signRequest = new TpmSignRequestDto();
         signRequest.setData(packetData);

@@ -440,12 +440,12 @@ public class SyncDataServiceTest {
 	public void verifyPublicKeyMachineMappingSuccess() {			
 		LocalDateTime localdateTime = LocalDateTime.parse("2018-11-01T01:01:01");
 		Machine machine = new Machine("1001", "Laptop", "9876427", "172.12.01.128", "21:21:21:12", "1001", "ENG", localdateTime,
-				encodedTPMPublicKey, keyIndex, "ZONE","10002", null);
+				encodedTPMPublicKey, keyIndex, "ZONE","10002", null,encodedTPMPublicKey, keyIndex);
 		List<Machine> machines = new ArrayList<Machine>();
 		machines.add(machine);			
 		when(machineRespository.findByMachineNameAndIsActive(Mockito.anyString())).thenReturn(machines);
 		
-		UploadPublicKeyRequestDto dto = new UploadPublicKeyRequestDto("laptop", encodedTPMPublicKey);
+		UploadPublicKeyRequestDto dto = new UploadPublicKeyRequestDto("laptop", encodedTPMPublicKey, encodedTPMPublicKey);
 		UploadPublicKeyResponseDto resp = masterDataService.validateKeyMachineMapping(dto);
 		assertEquals(keyIndex, resp.getKeyIndex());
 	}
@@ -455,7 +455,7 @@ public class SyncDataServiceTest {
 	public void verifyPublicKeyMachineMappingNoMapping() {			
 		when(machineRespository.findByMachineNameAndIsActive(Mockito.anyString())).thenReturn(new ArrayList<Machine>());
 		
-		UploadPublicKeyRequestDto dto = new UploadPublicKeyRequestDto("laptop", encodedTPMPublicKey);
+		UploadPublicKeyRequestDto dto = new UploadPublicKeyRequestDto("laptop", encodedTPMPublicKey, encodedTPMPublicKey);
 		masterDataService.validateKeyMachineMapping(dto);		
 	}
 	
@@ -463,12 +463,12 @@ public class SyncDataServiceTest {
 	public void verifyPublicKeyMachineMappingNoKey() {			
 		LocalDateTime localdateTime = LocalDateTime.parse("2018-11-01T01:01:01");
 		Machine machine = new Machine("1001", "Laptop", "9876427", "172.12.01.128", "21:21:21:12", "1001", "ENG", localdateTime,
-				null, null, "ZONE","10002", null);
+				null, null, "ZONE","10002", null, null, null);
 		List<Machine> machines = new ArrayList<Machine>();
 		machines.add(machine);			
 		when(machineRespository.findByMachineNameAndIsActive(Mockito.anyString())).thenReturn(machines);
 		
-		UploadPublicKeyRequestDto dto = new UploadPublicKeyRequestDto("laptop", encodedTPMPublicKey);
+		UploadPublicKeyRequestDto dto = new UploadPublicKeyRequestDto("laptop", encodedTPMPublicKey,  encodedTPMPublicKey);
 		masterDataService.validateKeyMachineMapping(dto);
 	}
 	
@@ -476,12 +476,12 @@ public class SyncDataServiceTest {
 	public void verifyPublicKeyMachineMappingInvalidKey() {			
 		LocalDateTime localdateTime = LocalDateTime.parse("2018-11-01T01:01:01");
 		Machine machine = new Machine("1001", "Laptop", "9876427", "172.12.01.128", "21:21:21:12", "1001", "ENG", localdateTime,
-				encodedTPMPublicKey, keyIndex, "ZONE","10002", null);
+				encodedTPMPublicKey, keyIndex, "ZONE","10002", null, encodedTPMPublicKey, keyIndex);
 		List<Machine> machines = new ArrayList<Machine>();
 		machines.add(machine);			
 		when(machineRespository.findByMachineNameAndIsActive(Mockito.anyString())).thenReturn(machines);
 		
-		UploadPublicKeyRequestDto dto = new UploadPublicKeyRequestDto("laptop", "invalidKey");
+		UploadPublicKeyRequestDto dto = new UploadPublicKeyRequestDto("laptop", "invalidKey", "invalidKey");
 		masterDataService.validateKeyMachineMapping(dto);
 	}
 
