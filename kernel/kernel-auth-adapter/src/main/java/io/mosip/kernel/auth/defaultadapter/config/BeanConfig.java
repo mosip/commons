@@ -25,7 +25,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import ch.qos.logback.classic.helpers.MDCInsertingServletFilter;
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterConstant;
 import io.mosip.kernel.auth.defaultadapter.filter.TraceLogFilter;
-import io.mosip.kernel.auth.defaultadapter.model.AuthUserDetails;
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+
 
 @Configuration
 public class BeanConfig {
