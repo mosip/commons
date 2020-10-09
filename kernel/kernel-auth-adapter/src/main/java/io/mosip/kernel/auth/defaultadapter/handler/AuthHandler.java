@@ -45,7 +45,7 @@ import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterErrorCode;
 import io.mosip.kernel.auth.defaultadapter.exception.AuthManagerException;
 import io.mosip.kernel.auth.defaultadapter.model.AuthToken;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
-import io.mosip.kernel.core.authmanager.model.MosipUserDto;
+import io.mosip.kernel.core.authmanager.authadapter.model.MosipUserDto;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;

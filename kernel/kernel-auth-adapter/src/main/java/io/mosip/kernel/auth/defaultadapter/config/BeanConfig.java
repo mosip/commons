@@ -29,7 +29,6 @@ import io.mosip.kernel.auth.defaultadapter.filter.TraceLogFilter;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 
 
-
 @Configuration
 public class BeanConfig {
 
