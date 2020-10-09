@@ -39,9 +39,11 @@ public enum KeymanagerErrorConstant {
 
 	UPLOAD_NOT_ALLOWED("KER-KMS-015", "Upload of certificate will not be allowed to update other domain certificate."),
 
-	GENERATION_NOT_ALLOWED("KER-KMS-016", "not allowed to generate new key pair for other domains."),
+	GENERATION_NOT_ALLOWED("KER-KMS-016", "Not allowed to generate new key pair for other domains."),
 
 	CERTIFICATE_NOT_FOUND("KER-KMS-017", "Certificate Not found in keystore table."),
+
+	DECRYPTION_NOT_ALLOWED("KER-KMS-018", "Not Allowed to perform decryption with other domain key."),
 
 	INTERNAL_SERVER_ERROR("KER-KMS-500", "Internal server error");
 
