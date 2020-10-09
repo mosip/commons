@@ -37,7 +37,7 @@
         <kernel.crypto-jce.version>1.0.6</kernel.crypto-jce.version>
         <kernel.auth.adaptor.version>1.1.2-SNAPSHOT</kernel.auth.adaptor.version>
         <kernel-dataaccess-hibernate.version>1.0.7</kernel-dataaccess-hibernate.version>
-        <kernel.logger.logback.version>1.0.6</kernel.logger.logback.version>
+        <kernel.logger.logback.version>1.1.2-SNAPSHOT</kernel.logger.logback.version>
         <spring.boot.co>2.0.2.RELEASE</spring.boot.co>
         <khazana.version>1.1.2-SNAPSHOT</khazana.version>
         <sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/dto/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/security/**,**/*Config.java,**/*BootApplication.java,**/*VertxApplication.java,**/cbeffutil/**,**/*Utils.java,**/*Validator.java,**/*Helper.java,**/verticle/**,**/VidWriter.java/**,**/masterdata/utils/**,**/spi/**,**/core/http/**,"**/LocationServiceImpl.java","**/RegistrationCenterMachineServiceImpl.java","**/RegistrationCenterServiceImpl.java","**/pridgenerator/**","**/idgenerator/prid","**/proxy/**","**/cryptosignature/**"</sonar.coverage.exclusions>
@@ -82,6 +82,11 @@
             <artifactId>byte-buddy</artifactId>
             <version>1.8.22</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.mosip.kernel</groupId>
+            <artifactId>kernel-logger-logback</artifactId>
+            <version>${kernel.logger.logback.version}</version>
         </dependency>
     </dependencies>
 
