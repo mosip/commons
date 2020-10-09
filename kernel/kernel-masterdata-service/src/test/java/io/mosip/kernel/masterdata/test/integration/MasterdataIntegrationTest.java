@@ -7808,7 +7808,6 @@ public class MasterdataIntegrationTest {
 	
 	@Test
 	@WithUserDetails("zonal-admin")
-	@Ignore
 	public void createTestWithNoPublicKey() {
 		MachinePostReqDto req = new MachinePostReqDto();
 		req.setLangCode("eng");
@@ -7840,8 +7839,6 @@ public class MasterdataIntegrationTest {
 			ResponseWrapper<?> responseWrapper = objectMapper.readValue(result.getResponse().getContentAsString(),
 					ResponseWrapper.class);
 
-			assertThat(responseWrapper.getErrors().get(0).getErrorCode(), is("KER-MSD-999"));
-						
 		} catch(Exception e) {
 			Assert.fail(e.getMessage());
 		}
