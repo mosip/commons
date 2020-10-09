@@ -55,6 +55,8 @@ public enum CryptomanagerErrorCode {
 	 */
 	HEX_DATA_PARSE_EXCEPTION("KER-CRY-009", "Invalid Hex Data"),
 
+	CERTIFICATE_THUMBPRINT_ERROR("KER-CRY-010", "Error in generating Certificate Thumbprint."),
+
 	INTERNAL_SERVER_ERROR("KER-CRY-500", "Internal server error");
 
 
