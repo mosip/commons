@@ -78,7 +78,7 @@ public class CryptographicUtilWithKeyManagerTest {
 
 	@Test(expected = KeymanagerServiceException.class)
 	public void testEncrypt() throws Exception {
-		cryptomanagerUtil.getPublicKey(
+		cryptomanagerUtil.getCertificate(
 				new CryptomanagerRequestDto("REGISTRATION", "ref123", LocalDateTime.parse("2018-12-06T12:07:44.403"),
 						"dXJ2aWw", "ykrkpgjjtChlVdvDNJJEnQ", "VGhpcyBpcyBzYW1wbGUgYWFk"));
 	}

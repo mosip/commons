@@ -103,12 +103,24 @@ public class Machine extends BaseEntity implements Serializable {
 	/**
 	 * Field for reg machine public key
 	 */
-	@Column(name = "public_key", nullable = false, length=1024)
+	@Column(name = "public_key", nullable = true, length=1024)
 	private String publicKey;
 	
 	/**
 	 * Field for reg machine public key SHA256 hash
 	 */
-	@Column(name = "key_index", nullable = false)
+	@Column(name = "key_index", nullable = true)
 	private String keyIndex;
+
+	/**
+	 * Field for reg machine signature verification public key
+	 */
+	@Column(name = "sign_public_key", nullable = true, length=1024)
+	private String signPublicKey;
+
+	/**
+	 * Field for reg machine signature verification public key SHA256 hash
+	 */
+	@Column(name = "sign_key_index", nullable = true)
+	private String signKeyIndex;
 }
