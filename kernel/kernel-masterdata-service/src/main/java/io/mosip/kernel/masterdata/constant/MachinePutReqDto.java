@@ -96,4 +96,10 @@ public class MachinePutReqDto {
 	@ApiModelProperty(value = "regCenterId",  dataType = "java.lang.String")
 	private String regCenterId;
 
+	@ApiModelProperty(value = "publicKey", required = false, dataType = "java.lang.String")
+	private String publicKey;
+
+	@ApiModelProperty(value = "signPublicKey", required = false, dataType = "java.lang.String")
+	private String signPublicKey;
+
 }
