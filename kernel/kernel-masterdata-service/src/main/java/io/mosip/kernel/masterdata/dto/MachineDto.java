@@ -92,4 +92,10 @@ public class MachineDto {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private LocalDateTime validityDateTime;
 
+	@ApiModelProperty(value = "publicKey", required = false, dataType = "java.lang.String")
+	private String publicKey;
+
+	@ApiModelProperty(value = "signPublicKey", required = false, dataType = "java.lang.String")
+	private String signPublicKey;
+
 }

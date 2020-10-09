@@ -91,8 +91,10 @@ public class MachinePostReqDto {
 	@ApiModelProperty(value = "regCenterId",  dataType = "java.lang.String")
 	private String regCenterId;
 	
-	@NotNull
-	@ApiModelProperty(value = "publicKey", required = true, dataType = "java.lang.String")
+	@ApiModelProperty(value = "publicKey", required = false, dataType = "java.lang.String")
 	private String publicKey;
+
+	@ApiModelProperty(value = "signPublicKey", required = false, dataType = "java.lang.String")
+	private String signPublicKey;
 
 }

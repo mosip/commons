@@ -102,4 +102,16 @@ public class MachineHistory extends BaseEntity implements Serializable {
 	
 	@Column(name = "regcntr_id", length = 10)
 	private String regCenterId;
+
+	/**
+	 * Field for signature verification public key
+	 */
+	@Column(name = "sign_public_key", length=1024)
+	private String signPublicKey;
+
+	/**
+	 * Field for signature verification public key fingerprint
+	 */
+	@Column(name = "sign_key_index")
+	private String signKeyIndex;
 }
