@@ -38,7 +38,7 @@ public class HolidayValidator {
 	}
 
 	public void validate(HolidayUpdateDto request) {
-		if(request.getId()==null || EmptyCheckUtils.isNullEmpty(request.getLocationCode()) || 
+		if(request.getHolidayId()==null || EmptyCheckUtils.isNullEmpty(request.getLocationCode()) || 
 			request.getIsActive()==null || request.getHolidayDate()==null || EmptyCheckUtils.isNullEmpty(request.getHolidayName()) 
 			|| EmptyCheckUtils.isNullEmpty(request.getLangCode())) {
 			throw new RequestException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), "One or more input parameter(s) is missing");

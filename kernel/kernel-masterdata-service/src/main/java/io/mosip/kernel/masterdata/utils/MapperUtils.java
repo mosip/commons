@@ -470,7 +470,7 @@ public class MapperUtils {
 		holidays.forEach(holiday -> {
 			LocalDate date = holiday.getHolidayDate();
 			HolidayUpdateDto dto = new HolidayUpdateDto();
-			dto.setId(holiday.getHolidayId());
+			dto.setHolidayId(holiday.getHolidayId());
 			dto.setHolidayDate(date);
 			dto.setHolidayName(holiday.getHolidayName());
 			dto.setLangCode(holiday.getLangCode());

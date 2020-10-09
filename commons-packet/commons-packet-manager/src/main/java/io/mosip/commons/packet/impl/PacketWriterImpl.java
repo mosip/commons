@@ -136,7 +136,7 @@ public class PacketWriterImpl implements IPacketWriter {
         Map<String, List<Object>> identityProperties = loadSchemaFields(schemaJson);
 
         try {
-
+            int counter = 1;
             for (String subPacketName : identityProperties.keySet()) {
                 LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.ID.toString(),
                         id, "Started Subpacket: " + subPacketName);
@@ -160,9 +160,20 @@ public class PacketWriterImpl implements IPacketWriter {
                 packetInfos.add(packetInfo);
                 LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.ID.toString(),
                         id, "Completed Subpacket: " + subPacketName);
+
+                if (counter == identityProperties.keySet().size()) {
+                    boolean res = packetKeeper.pack(packetInfo.getId(), packetInfo.getSource(), packetInfo.getProcess());
+                    if (!res)
+                        packetKeeper.deletePacket(id, source, process);
+                }
+
+                counter++;
             }
 
         } catch (Exception e) {
+            LOGGER.error(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.ID.toString(),
+                    id, "Exception occured. Deleting the packet.");
+            packetKeeper.deletePacket(id, source, process);
             throw new PacketCreatorException(ErrorCode.PKT_ZIP_ERROR.getErrorCode(),
                     ErrorCode.PKT_ZIP_ERROR.getErrorMessage().concat(ExceptionUtils.getStackTrace(e)));
         } finally {
@@ -258,28 +269,6 @@ public class PacketWriterImpl implements IPacketWriter {
                     fieldName), xmlBytes, hashSequences);
         }
     }
-
-    /*private JAXBElement<String> getCBEFFTestTag(SingleType biometricType) {
-        String testTagElementName = null;
-        String testTagType = "y".equalsIgnoreCase(uniqueTagsEnabled) ? "Unique" :
-                (random.nextInt() % 2 == 0 ? "Duplicate" : "Unique");
-
-        switch (biometricType) {
-            case FINGER:
-                testTagElementName = "TestFinger";
-                break;
-            case IRIS:
-                testTagElementName = "TestIris";
-                break;
-            case FACE:
-                testTagElementName = "TestFace";
-                break;
-            default:
-                break;
-        }
-
-        return new JAXBElement<>(new QName("testschema", testTagElementName), String.class, testTagType);
-    }*/
 
     private void addHashSequenceWithSource(String sequenceType, String name, byte[] bytes,
                                            Map<String, HashSequenceMetaInfo> hashSequences) {

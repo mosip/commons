@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -25,6 +26,7 @@ public class AuditLogEntry {
 	private final Logger LOGGER = LoggerFactory.getLogger(AuditLogEntry.class);
 
 	@Autowired
+	@Lazy
 	private RestTemplate restTemplate;
 
 	@Autowired

@@ -374,7 +374,7 @@ public class HolidayServiceImpl implements HolidayService {
 	 */
 	private Map<String, Object> bindDtoToMap(HolidayUpdateDto dto) {
 		Map<String, Object> params = new HashMap<>();
-		params.put("holidayId", dto.getId());
+		params.put("holidayId", dto.getHolidayId());
 		params.put("holidayDesc", dto.getHolidayDesc());
 		params.put("isActive", dto.getIsActive());
 		params.put("holidayDate", dto.getHolidayDate());
