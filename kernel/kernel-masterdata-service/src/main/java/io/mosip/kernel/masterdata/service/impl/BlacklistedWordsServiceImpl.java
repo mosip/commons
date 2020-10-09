@@ -174,6 +174,10 @@ public class BlacklistedWordsServiceImpl implements BlacklistedWordsService {
 		BlacklistedWords blacklistedWords;
 		entity.setWord(entity.getWord().toLowerCase());
 		try {
+			if(blacklistedWordsRepository.findByOnlyWordAndLangCode(blackListedWordsRequestDto.getWord(), blackListedWordsRequestDto.getLangCode()) !=null) {
+				throw new RequestException(BlacklistedWordsErrorCode.DUPLICATE_BLACKLISTED_WORDS_FOUND.getErrorCode(),
+						BlacklistedWordsErrorCode.DUPLICATE_BLACKLISTED_WORDS_FOUND.getErrorMessage());
+			}
 			blacklistedWords = blacklistedWordsRepository.create(entity);
 		} catch (DataAccessLayerException | DataAccessException e) {
 			auditUtil.auditRequest(

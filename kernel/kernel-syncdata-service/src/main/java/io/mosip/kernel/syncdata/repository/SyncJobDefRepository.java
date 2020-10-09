@@ -1,4 +1,4 @@
-package io.mosip.kernel.syncdata.syncjob.repository;
+package io.mosip.kernel.syncdata.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;

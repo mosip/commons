@@ -72,14 +72,4 @@ public class BeanConfig {
 			return next.exchange(filtered);
 		}).build();
 	}
-	
-	@Bean
-	public MDCInsertingServletFilter mdcInsertingServletFilter() {
-		return new MDCInsertingServletFilter();
-	}
-	
-	@Bean
-	public TraceLogFilter traceLogFilter() {
-		return new TraceLogFilter();
-	}
 }

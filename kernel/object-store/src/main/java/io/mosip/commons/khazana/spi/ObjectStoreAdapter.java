@@ -23,4 +23,7 @@ public interface ObjectStoreAdapter {
 
     public boolean deleteObject(String account, String container, String source, String process, String objectName);
 
+    public boolean removeContainer(String account, String container, String source, String process);
+
+    public boolean pack(String account, String container, String source, String process);
 }

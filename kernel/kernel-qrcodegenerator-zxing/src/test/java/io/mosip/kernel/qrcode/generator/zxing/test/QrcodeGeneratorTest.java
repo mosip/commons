@@ -3,6 +3,7 @@ package io.mosip.kernel.qrcode.generator.zxing.test;
 import static org.hamcrest.CoreMatchers.isA;
 import static org.junit.Assert.assertThat;
 
+import io.mosip.kernel.qrcode.generator.zxing.QrcodeGeneratorImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import io.mosip.kernel.core.qrcodegenerator.exception.QrcodeGenerationException;
 import io.mosip.kernel.core.qrcodegenerator.spi.QrCodeGenerator;
 import io.mosip.kernel.qrcode.generator.zxing.constant.QrVersion;
 
-@SpringBootTest
+@SpringBootTest(classes = {QrcodeGeneratorImpl.class})
 @RunWith(SpringRunner.class)
 public class QrcodeGeneratorTest {
 
