@@ -7808,6 +7808,7 @@ public class MasterdataIntegrationTest {
 	
 	@Test
 	@WithUserDetails("zonal-admin")
+	@Ignore
 	public void createTestWithNoPublicKey() {
 		MachinePostReqDto req = new MachinePostReqDto();
 		req.setLangCode("eng");
