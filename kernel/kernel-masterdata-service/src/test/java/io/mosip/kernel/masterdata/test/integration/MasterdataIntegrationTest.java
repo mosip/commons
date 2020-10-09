@@ -7837,8 +7837,6 @@ public class MasterdataIntegrationTest {
 			MvcResult result = mockMvc.perform(post("/machines").contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(requestDto)))
 			.andExpect(status().isOk()).andReturn();
 
-			System.out.println(result);
-			
 			ResponseWrapper<?> responseWrapper = objectMapper.readValue(result.getResponse().getContentAsString(),
 					ResponseWrapper.class);
 
