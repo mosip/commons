@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="1088,0" last-zoom="0.5"
+<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="0,850" last-zoom="0.5"
 	 default-schema="public" default-owner="postgres">
 <role name="sysadmin"
       superuser="true"
@@ -169,7 +169,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[App Authentication Method : Store List of application, process, role and their user authentication methods mapped with sequence.]]></comment>
-	<position x="4280" y="2920"/>
+	<position x="3000" y="2740"/>
 	<column name="app_id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Application ID : of specific application module, for.ex.,  Registration client, Authentication application, Portal App, etc.  refers master.app_detail.id]]></comment>
@@ -382,7 +382,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Authentication Method : List of user Authentication methods supported by the system.]]></comment>
-	<position x="3720" y="3200"/>
+	<position x="3360" y="3120"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code :  unique authentication methods supported by the system, for ex., OTP, PASSWORD, BIO etc. ]]></comment>
@@ -482,7 +482,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Applicant Valid Document : This is mapping table that relates applicant type, document category and document type, that is valid document proof for UIN registration process.]]></comment>
-	<position x="3960" y="2160"/>
+	<position x="3380" y="1920"/>
 	<column name="apptyp_code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Applicant Type Code: Code of the applicant type defined/configured by the country admin]]></comment>
@@ -776,7 +776,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Device Master History : This to track changes to master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ), Effective DateTimestamp is used for identifying latest or point in time information. Refer master.device_master table description for details.   ]]></comment>
-	<position x="4220" y="500"/>
+	<position x="3280" y="780"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Device ID : Unique ID generated / assigned for device]]></comment>
@@ -982,7 +982,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Document Category : List document categories for registration for ex., POA, POI, etc]]></comment>
-	<position x="3440" y="1760"/>
+	<position x="2940" y="1700"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : category of documents for registration for ex., POA, POI, etc]]></comment>
@@ -1090,7 +1090,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Document Type : List of acceptable document types supported by the system, for ex., passport, driving license, etc]]></comment>
-	<position x="3880" y="2560"/>
+	<position x="3040" y="2180"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : acceptable type of documents to be uploaded during registration, for ex., passport, driving license, etc]]></comment>
@@ -1620,13 +1620,21 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Machine Specification ID : Machince specification id refers to master.machine_spec.id]]></comment>
 	</column>
-	<column name="public_key" not-null="true">
+	<column name="public_key">
 		<type name="character varying" length="1024"/>
 		<comment><![CDATA[Public Key: Public key of the machine,  This will be Machine Identification TPM Endorsement key]]></comment>
 	</column>
-	<column name="key_index" not-null="true">
+	<column name="key_index">
 		<type name="character varying" length="128"/>
 		<comment><![CDATA[Key Index: Fingerprint[Unique Hash ]  for the TPM public key]]></comment>
+	</column>
+	<column name="sign_public_key">
+		<type name="character varying" length="1024"/>
+		<comment><![CDATA[Signed Public Key: Field for signature verification publicKey]]></comment>
+	</column>
+	<column name="sign_key_index">
+		<type name="character varying" length="128"/>
+		<comment><![CDATA[Signed Key Index: Field for signature verification public key fingerprint]]></comment>
 	</column>
 	<column name="zone_code" not-null="true">
 		<type name="character varying" length="36"/>
@@ -1706,13 +1714,21 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Machine Specification ID : Machince specification id refers to master.machine_spec.id]]></comment>
 	</column>
-	<column name="public_key" not-null="true">
+	<column name="public_key">
 		<type name="character varying" length="1024"/>
 		<comment><![CDATA[Public Key: Public key of the machine,  This will be Machine Identification TPM Endorsement key]]></comment>
 	</column>
-	<column name="key_index" not-null="true">
+	<column name="key_index">
 		<type name="character varying" length="128"/>
 		<comment><![CDATA[Key Index: Fingerprint[Unique Hash ]  for the TPM public key]]></comment>
+	</column>
+	<column name="sign_public_key">
+		<type name="character varying" length="1024"/>
+		<comment><![CDATA[Signed Public Key: Field for signature verification publicKey]]></comment>
+	</column>
+	<column name="sign_key_index">
+		<type name="character varying" length="128"/>
+		<comment><![CDATA[Signed Key Index: Field for signature verification public key fingerprint]]></comment>
 	</column>
 	<column name="zone_code" not-null="true">
 		<type name="character varying" length="36"/>
@@ -1767,7 +1783,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Machine Specification :  Specification of Machines for each Machine type that are supported by system,  like laptop, desktop, dongle etc]]></comment>
-	<position x="1420" y="2960"/>
+	<position x="960" y="3040"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Machine Specification ID : Unique ID generated / assigned for machine specification]]></comment>
@@ -1891,7 +1907,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Message List : List of message texts that will be displayed or sent as alerts / notifications.]]></comment>
-	<position x="4260" y="200"/>
+	<position x="3720" y="740"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : unique code for various standard messages used for display , alerts, etc.]]></comment>
@@ -1983,7 +1999,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Module Detail : List of all application modules within the system.]]></comment>
-	<position x="4060" y="1140"/>
+	<position x="3700" y="1120"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Module ID : Unique ID generated / assigned for a module]]></comment>
@@ -2175,7 +2191,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Reason List : List of reasons for each category, for ex., photo mismatch, duplicate registration etc.]]></comment>
-	<position x="220" y="2880"/>
+	<position x="460" y="2980"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : list of reasons used related to specific reason categories defined, for ex., photo mismatch, duplicate registration etc.]]></comment>
@@ -2895,7 +2911,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Template File Format : Format of the template files that are used for notifications. For ex.,  xml, html, xslt, etc.]]></comment>
-	<position x="4060" y="1600"/>
+	<position x="3580" y="1620"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : format code of template documents, for ex., html, text, etc]]></comment>
@@ -2995,7 +3011,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Title : List of title, for ex.,  Mr, Mrs, etc]]></comment>
-	<position x="3560" y="820"/>
+	<position x="2920" y="820"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="16"/>
 		<comment><![CDATA[Code :  list of title for ex.,  Mr, Mrs, etc]]></comment>
@@ -3079,7 +3095,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[User Detail : List of applicatgion users in the system, who can perform UIN registration functions as per roles assigned.]]></comment>
-	<position x="4000" y="3620"/>
+	<position x="3360" y="3500"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="256"/>
 		<comment><![CDATA[User ID : Unique ID generated / assigned for a user]]></comment>
@@ -3239,7 +3255,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[User Password : Stores encripted password of users in master.user_details table.   ]]></comment>
-	<position x="3100" y="3080"/>
+	<position x="2880" y="3060"/>
 	<column name="usr_id" not-null="true">
 		<type name="character varying" length="256"/>
 		<comment><![CDATA[User ID : registration center id refers to master.user_detail.id]]></comment>
@@ -3347,7 +3363,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Valid Document : This is mapping table that relates  document category and document type, that is valid document proof for UIN registration process.]]></comment>
-	<position x="4240" y="2460"/>
+	<position x="3400" y="2380"/>
 	<column name="doctyp_code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Document Type Code: Refers to master.doc_type.code]]></comment>
@@ -3570,7 +3586,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Days of Week List : Stores all days of the week with Code and Name. The Days of week are kept with multiple language based on country configured languages.]]></comment>
-	<position x="160" y="2360"/>
+	<position x="140" y="2120"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="3"/>
 		<comment><![CDATA[Code of the day of the week, This can be single digit like (M,T,W,R,F,S,U) or three digit like (MON,TUE,WED,THU,FRI,SAT,SUN)]]></comment>

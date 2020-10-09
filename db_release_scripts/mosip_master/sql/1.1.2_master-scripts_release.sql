@@ -47,6 +47,12 @@ ALTER TABLE master.device_master_h ADD COLUMN IF NOT EXISTS regcntr_id character
 ALTER TABLE master.machine_master_h ADD COLUMN IF NOT EXISTS regcntr_id character varying(10);
 ALTER TABLE master.user_detail_h ADD COLUMN IF NOT EXISTS regcntr_id character varying(10);
 
+ALTER TABLE master.machine_master ADD COLUMN IF NOT EXISTS sign_public_key character varying(1024);
+ALTER TABLE master.machine_master_h ADD COLUMN IF NOT EXISTS sign_key_index character varying(128);
+
+ALTER TABLE master.machine_master ALTER COLUMN public_key TYPE character varying(1024);
+ALTER TABLE master.machine_master_h ALTER COLUMN key_index TYPE character varying(128);
+
 -- object: fk_machm_center | type: CONSTRAINT --
 ALTER TABLE master.machine_master DROP CONSTRAINT IF EXISTS fk_machm_center CASCADE;
 ALTER TABLE master.machine_master ADD CONSTRAINT fk_machm_center FOREIGN KEY (regcntr_id,lang_code)
