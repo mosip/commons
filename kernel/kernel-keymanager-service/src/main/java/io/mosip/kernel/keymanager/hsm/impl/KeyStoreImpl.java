@@ -154,7 +154,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		if (!isConfigFileValid()) {
-			LOGGER.info("sessionId", "KeyStoreImpl", "Creation", "Config File path is not valid or contents invalid entries." 
+			LOGGER.info("sessionId", "KeyStoreImpl", "Creation", "Config File path is not valid or contents invalid entries. " 
 						+ "So, Loading keystore as offline encryption.");
 			BouncyCastleProvider bouncyCastleProvider = new BouncyCastleProvider();
 			Security.addProvider(bouncyCastleProvider);

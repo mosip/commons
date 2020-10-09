@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.commons.khazana.constant.KhazanaErrorCodes;
 import io.mosip.commons.khazana.exception.FileNotFoundInDestinationException;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
+import io.mosip.commons.khazana.util.EncryptionHelper;
 import io.mosip.commons.khazana.util.ObjectStoreUtil;
 import io.mosip.kernel.core.util.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -37,6 +38,9 @@ public class PosixAdapter implements ObjectStoreAdapter {
     private ObjectMapper objectMapper;
     @Value("${object.store.base.location:home}")
     private String baseLocation;
+
+    @Autowired
+    private EncryptionHelper helper;
 
     public InputStream getObject(String account, String container, String source, String process, String objectName) {
         try {
@@ -231,5 +235,46 @@ public class PosixAdapter implements ObjectStoreAdapter {
     @Override
     public boolean deleteObject(String account, String container, String source, String process, String objectName) {
         return true;
+    }
+
+    @Override
+    public boolean removeContainer(String account, String container, String source, String process) {
+        try {
+            File accountLoc = new File(baseLocation + SEPARATOR + account);
+            if (!accountLoc.exists())
+                return false;
+            File containerZip = new File(accountLoc.getPath() + SEPARATOR + container + ZIP);
+            if (!containerZip.exists())
+                throw new FileNotFoundInDestinationException(KhazanaErrorCodes.CONTAINER_NOT_PRESENT_IN_DESTINATION.getErrorCode(),
+                        KhazanaErrorCodes.CONTAINER_NOT_PRESENT_IN_DESTINATION.getErrorMessage());
+            containerZip.delete();
+            FileUtils.forceDelete(containerZip);
+            return true;
+        } catch (Exception e) {
+            LOGGER.error("exception occured while packing.", e);
+            return false;
+        }
+
+    }
+
+    @Override
+    public boolean pack(String account, String container, String source, String process) {
+        try {
+            File accountLoc = new File(baseLocation + SEPARATOR + account);
+            if (!accountLoc.exists())
+                return false;
+            File containerZip = new File(accountLoc.getPath() + SEPARATOR + container + ZIP);
+            if (!containerZip.exists())
+                throw new FileNotFoundInDestinationException(KhazanaErrorCodes.CONTAINER_NOT_PRESENT_IN_DESTINATION.getErrorCode(),
+                        KhazanaErrorCodes.CONTAINER_NOT_PRESENT_IN_DESTINATION.getErrorMessage());
+
+            InputStream ios = new FileInputStream(containerZip);
+            byte[] encryptedPacket = helper.encrypt(container, IOUtils.toByteArray(ios));
+            FileUtils.copyToFile(new ByteArrayInputStream(encryptedPacket), containerZip);
+            return encryptedPacket != null;
+        } catch (Exception e) {
+            LOGGER.error("exception occured while packing.", e);
+            return false;
+        }
     }
 }
