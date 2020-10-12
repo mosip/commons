@@ -18,7 +18,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterConstant;
-import io.mosip.kernel.auth.defaultadapter.model.AuthUserDetails;
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+
 
 /***********************************************************************************************************************
  * It is used to intercept any http calls made using rest template from this

@@ -2,12 +2,12 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-<groupId>io.mosip.kernel</groupId>
+	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-crypto-jce</artifactId>
 	<version>1.1.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>kernel-crypto-jce</name>
-<properties>		
+	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- maven -->
@@ -26,12 +26,12 @@
 		<spring.data.jpa.version>2.0.7.RELEASE</spring.data.jpa.version>
 		<spring.security.test.version>5.0.5.RELEASE</spring.security.test.version>
 		<spring-cloud-config.version>2.0.4.RELEASE</spring-cloud-config.version>
-                
+
 		<!-- swagger -->
 		<swagger.core.version>2.0.7</swagger.core.version>
 		<swagger.annotations.version>1.5.21</swagger.annotations.version>
 		<springfox.version>2.9.2</springfox.version>
-                
+
 		<!-- vertx -->
 		<vertx.version>3.6.2</vertx.version>
 		<vertx.health.check.version>3.7.0</vertx.health.check.version>
@@ -131,12 +131,12 @@
 		<spring.data.jpa.version>2.0.7.RELEASE</spring.data.jpa.version>
 		<spring.security.test.version>5.0.5.RELEASE</spring.security.test.version>
 		<spring-cloud-config.version>2.0.4.RELEASE</spring-cloud-config.version>
-                
+
 		<!-- swagger -->
 		<swagger.core.version>2.0.7</swagger.core.version>
 		<swagger.annotations.version>1.5.21</swagger.annotations.version>
 		<springfox.version>2.9.2</springfox.version>
-                
+
 		<!-- vertx -->
 		<vertx.version>3.6.2</vertx.version>
 		<vertx.health.check.version>3.7.0</vertx.health.check.version>
@@ -225,6 +225,11 @@
 			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<version>${spring.boot.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.bitbucket.b_c</groupId>
 			<artifactId>jose4j</artifactId>
 			<version>${jose4j.version}</version>
@@ -236,12 +241,13 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven.compiler.version}</version>
 				<configuration>
-                    <maven.compiler.source>11</maven.compiler.source>
-                    <maven.compiler.target>11</maven.compiler.target>
-                    <compilerArgs>
-                		<arg>--add-exports</arg><arg>java.base/sun.security.rsa=ALL-UNNAMED</arg>
-                </compilerArgs>
-                </configuration>
+					<maven.compiler.source>11</maven.compiler.source>
+					<maven.compiler.target>11</maven.compiler.target>
+					<compilerArgs>
+						<arg>--add-exports</arg>
+						<arg>java.base/sun.security.rsa=ALL-UNNAMED</arg>
+					</compilerArgs>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

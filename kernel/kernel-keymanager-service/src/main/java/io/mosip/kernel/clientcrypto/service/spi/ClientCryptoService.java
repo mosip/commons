@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * @author Anusha Sunkada
- * @since 1.2.0
+ * @since 1.1.2
  */
 public interface ClientCryptoService {
 
