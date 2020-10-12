@@ -11,7 +11,7 @@ import io.mosip.kernel.partnercertservice.dto.PartnerCertificateResponseDto;
  * This interface provides the methods for Partner Certificate Management Service.
  * 
  * @author Mahammed Taheer
- * @since 1.2.0
+ * @since 1.1.2
  *
  */
 

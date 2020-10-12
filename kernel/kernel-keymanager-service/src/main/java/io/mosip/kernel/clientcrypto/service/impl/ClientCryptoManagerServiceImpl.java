@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * @author Anusha Sunkada
- * @since 1.2.0
+ * @since 1.1.2
  */
 @Service
 public class ClientCryptoManagerServiceImpl implements ClientCryptoManagerService {

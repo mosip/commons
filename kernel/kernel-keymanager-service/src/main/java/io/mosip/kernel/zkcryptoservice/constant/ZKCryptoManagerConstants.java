@@ -4,7 +4,7 @@ package io.mosip.kernel.zkcryptoservice.constant;
  * Constants for Zero Knowledge Crypto Manager.
  * 
  * @author Mahammed Taheer
- * @since 1.2.0
+ * @since 1.1.2
  *
  */
 public interface ZKCryptoManagerConstants {

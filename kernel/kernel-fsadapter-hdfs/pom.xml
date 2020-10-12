@@ -118,10 +118,10 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.version>3.7.0</maven.compiler.version>
     	<kernel.core.version>1.1.2-SNAPSHOT</kernel.core.version>
-		<kernel.auth-adapter.version>1.0.6</kernel.auth-adapter.version>
-		<kernel.applicant-type.version>1.0.6</kernel.applicant-type.version>
-		<kernel.dataaccess-hibernate.version>1.0.6</kernel.dataaccess-hibernate.version>
-		<kernel.logger.version>1.0.6</kernel.logger.version>
+		<kernel.auth-adapter.version>1.1.2-SNAPSHOT</kernel.auth-adapter.version>
+		<kernel.applicant-type.version>1.1.2-SNAPSHOT</kernel.applicant-type.version>
+		<kernel.dataaccess-hibernate.version>1.1.2-SNAPSHOT</kernel.dataaccess-hibernate.version>
+		<kernel.logger.version>1.1.2-SNAPSHOT</kernel.logger.version>
 		<hadoop-client>2.8.1</hadoop-client>
 		<junit.version>4.12</junit.version>
 		<mockito.version>1.10.19</mockito.version>
