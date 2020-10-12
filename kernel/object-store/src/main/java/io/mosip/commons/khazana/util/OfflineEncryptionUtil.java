@@ -71,15 +71,7 @@ public class OfflineEncryptionUtil {
             throw new ObjectStoreAdapterException(KhazanaErrorCodes.ENCRYPTION_FAILURE.getErrorCode(), KhazanaErrorCodes.ENCRYPTION_FAILURE.getErrorMessage());
         }
         byte[] encryptedData = CryptoUtil.decodeBase64(getCryptomanagerService().encrypt(cryptomanagerRequestDto).getData());
-        return mergeEncryptedData(encryptedData, nonce, aad);
-    }
-
-    private byte[] mergeEncryptedData(byte[] encryptedData, byte[] nonce, byte[] aad) {
-        byte[] finalEncData = new byte[encryptedData.length + KhazanaConstant.GCM_AAD_LENGTH + KhazanaConstant.GCM_NONCE_LENGTH];
-        System.arraycopy(nonce, 0, finalEncData, 0, nonce.length);
-        System.arraycopy(aad, 0, finalEncData, nonce.length, aad.length);
-        System.arraycopy(encryptedData, 0, finalEncData, nonce.length + aad.length,	encryptedData.length);
-        return finalEncData;
+        return EncryptionUtil.mergeEncryptedData(encryptedData, nonce, aad);
     }
 
     private CryptomanagerService getCryptomanagerService() {
