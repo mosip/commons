@@ -9,6 +9,7 @@ import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 
+import io.mosip.commons.khazana.util.EncryptionUtil;
 import io.mosip.commons.packet.dto.ValidateRequestDto;
 import io.mosip.commons.packet.dto.packet.CryptomanagerRequestDto;
 import io.mosip.commons.packet.dto.packet.CryptomanagerResponseDto;
@@ -16,7 +17,6 @@ import io.mosip.commons.packet.exception.ApiNotAccessibleException;
 import io.mosip.commons.packet.exception.PacketDecryptionFailureException;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.util.CryptoUtil;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -156,7 +156,7 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
                 throw new PacketDecryptionFailureException(error.getMessage());
             }
             byte[] encryptedData = CryptoUtil.decodeBase64(responseObject.getResponse().getData());
-            encryptedPacket = mergeEncryptedData(encryptedData, nonce, aad);
+            encryptedPacket = EncryptionUtil.mergeEncryptedData(encryptedData, nonce, aad);
         } catch (IOException e) {
             throw new PacketDecryptionFailureException(IO_EXCEPTION, e);
         } catch (DateTimeParseException e) {
@@ -175,14 +175,6 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
         }
         return encryptedPacket;
     }
-
-    private byte[] mergeEncryptedData(byte[] encryptedData, byte[] nonce, byte[] aad) {
-		byte[] finalEncData = new byte[encryptedData.length + CryptomanagerConstant.GCM_AAD_LENGTH + CryptomanagerConstant.GCM_NONCE_LENGTH];
-		System.arraycopy(nonce, 0, finalEncData, 0, nonce.length);
-		System.arraycopy(aad, 0, finalEncData, nonce.length, aad.length);
-		System.arraycopy(encryptedData, 0, finalEncData, nonce.length + aad.length,	encryptedData.length);
-		return finalEncData;
-	}
 
     @Override
     public byte[] decrypt(String id, byte[] packet) {
