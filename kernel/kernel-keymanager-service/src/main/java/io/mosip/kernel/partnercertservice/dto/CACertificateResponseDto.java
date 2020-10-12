@@ -8,7 +8,7 @@ import lombok.Data;
  * DTO class for upload certificate response.
  * 
  * @author Mahammed Taheer
- * @since 1.2.0
+ * @since 1.1.2
  *
  */
 @Data
