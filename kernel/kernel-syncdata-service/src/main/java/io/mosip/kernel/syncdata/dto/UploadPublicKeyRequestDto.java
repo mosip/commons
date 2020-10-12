@@ -20,4 +20,6 @@ public class UploadPublicKeyRequestDto {
 	@NotBlank(message = SyncDataConstant.INVALID_REQUEST)
 	private String publicKey;
 
+	private String signPublicKey;
+
 }

@@ -33,6 +33,7 @@
         <powermock.beta.version>2.0.7</powermock.beta.version>
         <junit.version>4.12</junit.version>
 
+        <kernel-keymanager-service.version>1.1.2-SNAPSHOT</kernel-keymanager-service.version>
         <kernel.core.version>1.1.2-SNAPSHOT</kernel.core.version>
         <kernel.biometrics.api.version>1.1.2-SNAPSHOT</kernel.biometrics.api.version>
         <kernel.crypto-jce.version>1.0.6</kernel.crypto-jce.version>
@@ -117,10 +118,10 @@
             <artifactId>jakarta.xml.bind-api</artifactId>
             <version>2.3.3</version>
         </dependency>
-        <!--<dependency>
+        <dependency>
             <groupId>io.mosip.kernel</groupId>
             <artifactId>kernel-keymanager-service</artifactId>
-            <version>1.1.2-SNAPSHOT</version>
+            <version>${kernel-keymanager-service.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.security</groupId>
@@ -128,7 +129,7 @@
                 </exclusion>
             </exclusions>
             <classifier>lib</classifier>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

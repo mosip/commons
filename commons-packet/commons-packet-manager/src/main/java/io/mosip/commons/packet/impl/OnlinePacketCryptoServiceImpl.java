@@ -2,11 +2,14 @@ package io.mosip.commons.packet.impl;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 
+import io.mosip.commons.khazana.util.EncryptionUtil;
 import io.mosip.commons.packet.dto.ValidateRequestDto;
 import io.mosip.commons.packet.dto.packet.CryptomanagerRequestDto;
 import io.mosip.commons.packet.dto.packet.CryptomanagerResponseDto;
@@ -14,7 +17,6 @@ import io.mosip.commons.packet.exception.ApiNotAccessibleException;
 import io.mosip.commons.packet.exception.PacketDecryptionFailureException;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.util.CryptoUtil;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +30,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.mosip.commons.packet.constants.CryptomanagerConstant;
 import io.mosip.commons.packet.dto.SignRequestDto;
 import io.mosip.commons.packet.exception.SignatureException;
 import io.mosip.commons.packet.spi.IPacketCryptoService;
@@ -116,6 +119,14 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
             cryptomanagerRequestDto.setApplicationId(APPLICATION_ID);
             cryptomanagerRequestDto.setData(packetString);
             cryptomanagerRequestDto.setReferenceId(refId);
+
+            SecureRandom sRandom = new SecureRandom();
+            byte[] nonce = new byte[CryptomanagerConstant.GCM_NONCE_LENGTH];
+            byte[] aad = new byte[CryptomanagerConstant.GCM_AAD_LENGTH];
+            sRandom.nextBytes(nonce);
+            sRandom.nextBytes(aad);
+            cryptomanagerRequestDto.setAad(CryptoUtil.encodeBase64String(aad));
+            cryptomanagerRequestDto.setSalt(CryptoUtil.encodeBase64String(nonce));
             // setLocal Date Time
             if (id.length() > 14) {
                 String packetCreatedDateTime = id.substring(id.length() - 14);
@@ -138,16 +149,14 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
             HttpEntity<RequestWrapper<CryptomanagerRequestDto>> httpEntity = new HttpEntity<>(request);
 
             ResponseEntity<String> response = restTemplate.exchange(cryptomanagerEncryptUrl, HttpMethod.POST, httpEntity, String.class);
-
             CryptomanagerResponseDto responseObject = mapper.readValue(response.getBody(), CryptomanagerResponseDto.class);
-
             if (responseObject != null &&
                     responseObject.getErrors() != null && !responseObject.getErrors().isEmpty()) {
                 ServiceError error = responseObject.getErrors().get(0);
                 throw new PacketDecryptionFailureException(error.getMessage());
             }
-            encryptedPacket = responseObject.getResponse().getData().getBytes();
-
+            byte[] encryptedData = CryptoUtil.decodeBase64(responseObject.getResponse().getData());
+            encryptedPacket = EncryptionUtil.mergeEncryptedData(encryptedData, nonce, aad);
         } catch (IOException e) {
             throw new PacketDecryptionFailureException(IO_EXCEPTION, e);
         } catch (DateTimeParseException e) {
@@ -175,12 +184,18 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
             String centerId = id.substring(0, centerIdLength);
             String machineId = id.substring(centerIdLength, centerIdLength + machineIdLength);
             String refId = centerId + "_" + machineId;
-            String packetString = IOUtils.toString(packet, "UTF-8");
             CryptomanagerRequestDto cryptomanagerRequestDto = new CryptomanagerRequestDto();
             RequestWrapper<CryptomanagerRequestDto> request = new RequestWrapper<>();
             cryptomanagerRequestDto.setApplicationId(APPLICATION_ID);
-            cryptomanagerRequestDto.setData(packetString);
             cryptomanagerRequestDto.setReferenceId(refId);
+            byte[] nonce = Arrays.copyOfRange(packet, 0, CryptomanagerConstant.GCM_NONCE_LENGTH);
+            byte[] aad = Arrays.copyOfRange(packet, CryptomanagerConstant.GCM_NONCE_LENGTH,
+                                            CryptomanagerConstant.GCM_NONCE_LENGTH + CryptomanagerConstant.GCM_AAD_LENGTH);
+            byte[] encryptedData = Arrays.copyOfRange(packet, CryptomanagerConstant.GCM_NONCE_LENGTH + CryptomanagerConstant.GCM_AAD_LENGTH,
+                                        packet.length);
+            cryptomanagerRequestDto.setAad(CryptoUtil.encodeBase64String(aad));
+            cryptomanagerRequestDto.setSalt(CryptoUtil.encodeBase64String(nonce));
+            cryptomanagerRequestDto.setData(CryptoUtil.encodeBase64String(encryptedData));
             // setLocal Date Time
             if (id.length() > 14) {
                 String packetCreatedDateTime = id.substring(id.length() - 14);

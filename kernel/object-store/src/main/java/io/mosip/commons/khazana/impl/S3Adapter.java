@@ -164,6 +164,36 @@ public class S3Adapter implements ObjectStoreAdapter {
         return true;
     }
 
+    /**
+     * Removing container not supported in S3Adapter
+     *
+     * @param account
+     * @param container
+     * @param source
+     * @param process
+     * @return
+     */
+    @Override
+    public boolean removeContainer(String account, String container, String source, String process) {
+        return false;
+    }
+
+    /**
+     * Not Supported in S3Adapter
+     *
+     * @param account
+     * @param container
+     * @param source
+     * @param process
+     * @param objectName
+     * @param data
+     * @return
+     */
+    @Override
+    public boolean pack(String account, String container, String source, String process) {
+        return false;
+    }
+
     private AmazonS3 getConnection(String container) {
         try {
             if (connection != null) {
