@@ -1,10 +1,10 @@
 package io.mosip.commons.packet.impl;
 
+import io.mosip.commons.khazana.util.EncryptionUtil;
 import io.mosip.commons.packet.constants.CryptomanagerConstant;
 import io.mosip.commons.packet.exception.PacketDecryptionFailureException;
 import io.mosip.commons.packet.spi.IPacketCryptoService;
 import io.mosip.kernel.clientcrypto.dto.TpmSignRequestDto;
-import io.mosip.kernel.clientcrypto.service.impl.ClientCryptoFacade;
 import io.mosip.kernel.clientcrypto.service.spi.ClientCryptoManagerService;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.DateUtils;
@@ -107,15 +107,7 @@ public class OfflinePacketCryptoServiceImpl implements IPacketCryptoService {
             throw new PacketDecryptionFailureException("Packet Encryption Failed-Invalid Packet format");
         }
         byte[] encryptedData = CryptoUtil.decodeBase64(getCryptomanagerService().encrypt(cryptomanagerRequestDto).getData());
-        return mergeEncryptedData(encryptedData, nonce, aad);
-    }
-
-    private byte[] mergeEncryptedData(byte[] encryptedData, byte[] nonce, byte[] aad) {
-        byte[] finalEncData = new byte[encryptedData.length + CryptomanagerConstant.GCM_AAD_LENGTH + CryptomanagerConstant.GCM_NONCE_LENGTH];
-        System.arraycopy(nonce, 0, finalEncData, 0, nonce.length);
-        System.arraycopy(aad, 0, finalEncData, nonce.length, aad.length);
-        System.arraycopy(encryptedData, 0, finalEncData, nonce.length + aad.length, encryptedData.length);
-        return finalEncData;
+        return EncryptionUtil.mergeEncryptedData(encryptedData, nonce, aad);
     }
 
     @Override
