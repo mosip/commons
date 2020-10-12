@@ -12,7 +12,7 @@ import io.mosip.kernel.keymanagerservice.entity.CACertificateStore;
  * This interface CACertificateStoreRepository for CRUD operations for CA/Sub-CA certificates.
  * 
  * @author Mahammed Taheer
- * @since 1.2.0
+ * @since 1.1.2
  *
  */
 @Repository

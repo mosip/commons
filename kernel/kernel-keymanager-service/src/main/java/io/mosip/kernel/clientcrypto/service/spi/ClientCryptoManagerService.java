@@ -5,7 +5,7 @@ import io.mosip.kernel.clientcrypto.dto.*;
 /**
  *
  * @author Anusha Sunkada
- * @since 1.2.0
+ * @since 1.1.2
  *
  */
 public interface ClientCryptoManagerService {
