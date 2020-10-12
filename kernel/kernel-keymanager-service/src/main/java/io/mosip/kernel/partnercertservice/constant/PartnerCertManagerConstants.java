@@ -4,7 +4,7 @@ package io.mosip.kernel.partnercertservice.constant;
  * Constants for Partner Certificate Manager
  * 
  * @author Mahammed Taheer
- * @since 1.2.0
+ * @since 1.1.2
  *
  */
 
