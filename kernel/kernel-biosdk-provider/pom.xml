@@ -117,7 +117,7 @@
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
 		<kernel.core.version>1.1.2-SNAPSHOT</kernel.core.version>
 		<kernel.biometricsdk.version>1.1.2-SNAPSHOT</kernel.biometricsdk.version>
-		<kernel.logger.logback.version>1.0.6</kernel.logger.logback.version>
+		<kernel.logger.logback.version>1.1.2-SNAPSHOT</kernel.logger.logback.version>
 	</properties>
 	
 	<dependencies>

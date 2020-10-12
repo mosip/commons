@@ -6,7 +6,7 @@ import io.mosip.kernel.core.exception.BaseUncheckedException;
  * Custom Exception Class in case of PartnerCertManagerException
  * 
  * @author Mahammed Taheer
- * @since 1.2.0
+ * @since 1.1.2
  *
  */
 public class PartnerCertManagerException extends BaseUncheckedException {

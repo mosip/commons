@@ -11,7 +11,7 @@ import io.mosip.kernel.zkcryptoservice.dto.ZKCryptoResponseDto;
  * Decryption.
  *
  * @author Mahammed Taheer
- * @since 1.2.0
+ * @since 1.1.2
  */
 @Service
 public interface ZKCryptoManagerService {
