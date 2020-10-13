@@ -22,7 +22,7 @@ import lombok.Data;
 //@ApiModel(value = "Template", description = "Template resource representation")
 public class TemplateDto {
 
-	@NotNull
+	
 	@StringFormatter(min = 1, max = 36)
 	@ApiModelProperty(value = "id", required = true, dataType = "java.lang.String")
 	private String id;

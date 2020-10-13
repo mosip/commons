@@ -2,10 +2,13 @@ package io.mosip.kernel.masterdata.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
+import io.mosip.kernel.masterdata.constant.RegistrationCenterErrorCode;
 import io.mosip.kernel.masterdata.constant.TemplateErrorCode;
 import io.mosip.kernel.masterdata.dto.TemplateDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
@@ -28,6 +32,7 @@ import io.mosip.kernel.masterdata.dto.request.SearchDto;
 import io.mosip.kernel.masterdata.dto.response.ColumnValue;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
+import io.mosip.kernel.masterdata.entity.RegistrationCenter;
 import io.mosip.kernel.masterdata.entity.Template;
 import io.mosip.kernel.masterdata.entity.id.IdAndLanguageCodeID;
 import io.mosip.kernel.masterdata.exception.DataNotFoundException;
@@ -82,6 +87,12 @@ public class TemplateServiceImpl implements TemplateService {
 
 	@Autowired
 	private MasterdataCreationUtil masterdataCreationUtil;
+
+	@Value("${mosip.primary-language:eng}")
+	private String primaryLang;
+
+	@Value("${mosip.secondary-language:ara}")
+	private String secondaryLang;
 
 
 	/*
@@ -173,7 +184,12 @@ public class TemplateServiceImpl implements TemplateService {
 	public IdAndLanguageCodeID createTemplate(TemplateDto template) {
 
 		Template templateEntity;
+		
 		try {
+			if (StringUtils.isNotEmpty(primaryLang) && primaryLang.equals(template.getLangCode())) {
+				String uniqueId = generateId();
+				template.setId(uniqueId);
+			}
 			template = masterdataCreationUtil.createMasterData(Template.class, template);
 			Template entity = MetaDataUtils.setCreateMetaData(template, Template.class);
 			templateEntity = templateRepository.create(entity);
@@ -199,6 +215,16 @@ public class TemplateServiceImpl implements TemplateService {
 						Template.class.getSimpleName(), idAndLanguageCodeID.getId()),
 				"ADM-813");
 		return idAndLanguageCodeID;
+	}
+	
+	private String generateId() throws DataAccessLayerException , DataAccessException{
+		UUID uuid = UUID.randomUUID();
+		String uniqueId = uuid.toString();
+		
+		Template template = templateRepository
+				.findTemplateByIDAndLangCode(uniqueId,primaryLang);
+			
+		return template ==null?uniqueId:generateId();
 	}
 
 	/*
