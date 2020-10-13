@@ -2805,8 +2805,10 @@ public class MasterdataIntegrationTest {
 		requestDto.setVersion("1.0.0");
 		requestDto.setRequest(templateDto);
 		String content = mapper.writeValueAsString(requestDto);
+		Mockito.when(templateRepository
+				.findTemplateByIDAndLangCode(Mockito.any(),Mockito.any())).thenReturn(null);
 		Mockito.when(templateRepository.create(Mockito.any())).thenReturn(template);
-		when(masterdataCreationUtil.createMasterData(Template.class, templateDto)).thenReturn(templateDto);
+		when(masterdataCreationUtil.createMasterData(Mockito.any(),Mockito.any())).thenReturn(templateDto);
 		mockMvc.perform(post("/templates").contentType(MediaType.APPLICATION_JSON).content(content))
 				.andExpect(status().isOk());
 	}
@@ -2820,7 +2822,9 @@ public class MasterdataIntegrationTest {
 		templateDto.setLangCode("akk");
 		requestDto.setRequest(templateDto);
 		String content = mapper.writeValueAsString(requestDto);
-		when(masterdataCreationUtil.createMasterData(Template.class, templateDto)).thenReturn(templateDto);
+		Mockito.when(templateRepository
+				.findTemplateByIDAndLangCode(Mockito.any(),Mockito.any())).thenReturn(null);
+		when(masterdataCreationUtil.createMasterData(Mockito.any(),Mockito.any())).thenReturn(templateDto);
 		mockMvc.perform(post("/templates").contentType(MediaType.APPLICATION_JSON).content(content))
 				.andExpect(status().isOk());
 	}
@@ -2833,9 +2837,11 @@ public class MasterdataIntegrationTest {
 		requestDto.setVersion("1.0.0");
 		requestDto.setRequest(templateDto);
 		String content = mapper.writeValueAsString(requestDto);
+		Mockito.when(templateRepository
+				.findTemplateByIDAndLangCode(Mockito.any(),Mockito.any())).thenReturn(null);
 		when(templateRepository.create(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot insert", null));
-		when(masterdataCreationUtil.createMasterData(Template.class, templateDto)).thenReturn(templateDto);
+		when(masterdataCreationUtil.createMasterData(Mockito.any(),Mockito.any())).thenReturn(templateDto);
 		mockMvc.perform(post("/templates").contentType(MediaType.APPLICATION_JSON).content(content))
 				.andExpect(status().isInternalServerError());
 	}
@@ -6246,6 +6252,7 @@ public class MasterdataIntegrationTest {
 		machinePutReqDto.setMachineSpecId("1010");
 		machinePutReqDto.setSerialNum("123");
 		machinePutReqDto.setRegCenterId("10001");
+		machinePutReqDto.setPublicKey("testPublic");
 		machinePutReqDto.setIsActive(true);
 
 		updMachine = new Machine();
