@@ -364,11 +364,11 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 				symmetricKeyRequestDto.getReferenceId(), symmetricKeyRequestDto.getTimeStamp());
 		PrivateKey privateKey = (PrivateKey) keys[0];
 		PublicKey publicKey = (PublicKey) keys[1];
-		byte[] concatedData = CryptoUtil.decodeBase64(symmetricKeyRequestDto.getEncryptedSymmetricKey());
+		byte[] encryptedSymmetricKey = CryptoUtil.decodeBase64(symmetricKeyRequestDto.getEncryptedSymmetricKey());
 		
-		byte[] certThumbprint = Arrays.copyOfRange(concatedData, 0, CryptomanagerConstant.THUMBPRINT_LENGTH);
-		byte[] encryptedSymmetricKey = Arrays.copyOfRange(concatedData, CryptomanagerConstant.THUMBPRINT_LENGTH, 
-									concatedData.length);
+		//byte[] certThumbprint = Arrays.copyOfRange(concatedData, 0, CryptomanagerConstant.THUMBPRINT_LENGTH);
+		//byte[] encryptedSymmetricKey = Arrays.copyOfRange(concatedData, CryptomanagerConstant.THUMBPRINT_LENGTH, 
+		//							concatedData.length);
 
 		byte[] decryptedSymmetricKey = cryptoCore.asymmetricDecrypt(privateKey, publicKey, encryptedSymmetricKey);
 		keyResponseDto.setSymmetricKey(CryptoUtil.encodeBase64(decryptedSymmetricKey));
