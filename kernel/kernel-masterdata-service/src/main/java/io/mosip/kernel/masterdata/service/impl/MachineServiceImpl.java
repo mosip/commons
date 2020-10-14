@@ -1041,7 +1041,7 @@ public class MachineServiceImpl implements MachineService {
 					null).toLowerCase());
 		}
 
-		if(StringUtils.isNotEmpty(publicKey)) {
+		if(StringUtils.isNotEmpty(signPublicKey)) {
 			machineEntity.setSignPublicKey(machineUtil.getX509EncodedPublicKey(signPublicKey));
 			machineEntity.setSignKeyIndex(CryptoUtil.computeFingerPrint(CryptoUtil.decodeBase64(machineEntity.getSignPublicKey()),
 					null).toLowerCase());
