@@ -1035,13 +1035,13 @@ public class MachineServiceImpl implements MachineService {
 	}
 
 	private void updatePublicKey(String publicKey, String signPublicKey, Machine machineEntity) {
-		if(Objects.nonNull(publicKey)) {
+		if(StringUtils.isNotEmpty(publicKey)) {
 			machineEntity.setPublicKey(machineUtil.getX509EncodedPublicKey(publicKey));
 			machineEntity.setKeyIndex(CryptoUtil.computeFingerPrint(CryptoUtil.decodeBase64(machineEntity.getPublicKey()),
 					null).toLowerCase());
 		}
 
-		if(Objects.nonNull(signPublicKey)) {
+		if(StringUtils.isNotEmpty(publicKey)) {
 			machineEntity.setSignPublicKey(machineUtil.getX509EncodedPublicKey(signPublicKey));
 			machineEntity.setSignKeyIndex(CryptoUtil.computeFingerPrint(CryptoUtil.decodeBase64(machineEntity.getSignPublicKey()),
 					null).toLowerCase());
