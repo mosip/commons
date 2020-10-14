@@ -380,9 +380,9 @@ public class ZKCryptoManagerServiceImpl implements ZKCryptoManagerService, Initi
 		X509Certificate x509Cert = (X509Certificate) keymanagerUtil.convertToCertificate(certificateData);
 		PublicKey publicKey = x509Cert.getPublicKey();
 		byte[] encryptedRandomKey = cryptoCore.asymmetricEncrypt(publicKey, secretRandomKey.getEncoded());
-		byte[] certThumbprint = cryptomanagerUtil.getCertificateThumbprint(x509Cert);
-		byte[] concatedData = cryptomanagerUtil.concatCertThumbprint(certThumbprint, encryptedRandomKey);
-		return CryptoUtil.encodeBase64(concatedData);
+		//byte[] certThumbprint = cryptomanagerUtil.getCertificateThumbprint(x509Cert);
+		//byte[] concatedData = cryptomanagerUtil.concatCertThumbprint(certThumbprint, encryptedRandomKey);
+		return CryptoUtil.encodeBase64(encryptedRandomKey);
 	}
 
 	@Override
