@@ -2956,7 +2956,9 @@ public class MasterdataIntegrationTest {
 		String deviceSpecificationJson = mapper.writeValueAsString(requestDto);
 		when(deviceTypeRepository.findDeviceTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
 				.thenReturn(deviceType);
-		when(masterdataCreationUtil.createMasterData(DeviceSpecification.class, deviceSpecificationDto))
+		when(deviceSpecificationRepository
+				.findDeviceSpecificationByIDAndLangCode(Mockito.any(),Mockito.any())).thenReturn(null);
+		when(masterdataCreationUtil.createMasterData(Mockito.any(), Mockito.any()))
 				.thenReturn(deviceSpecificationDto);
 		when(deviceSpecificationRepository.create(Mockito.any())).thenReturn(deviceSpecification);
 		mockMvc.perform(
@@ -2992,6 +2994,9 @@ public class MasterdataIntegrationTest {
 		String DeviceSpecificationJson = mapper.writeValueAsString(requestDto);
 		when(deviceTypeRepository.findDeviceTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
 				.thenReturn(deviceType);
+		when(deviceSpecificationRepository
+				.findDeviceSpecificationByIDAndLangCode(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		Mockito.when(deviceSpecificationRepository.create(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot insert", null));
 		mockMvc.perform(MockMvcRequestBuilders.post("/devicespecifications").contentType(MediaType.APPLICATION_JSON)
@@ -3082,7 +3087,9 @@ public class MasterdataIntegrationTest {
 		requestDto.setRequest(machineSpecificationDto);
 
 		String machineSpecificationJson = mapper.writeValueAsString(requestDto);
-		when(masterdataCreationUtil.createMasterData(MachineSpecification.class, machineSpecificationDto))
+		when(machineSpecificationRepository
+				.findMachineSpecificationByIDAndLangCode(Mockito.any(),Mockito.any())).thenReturn(null);
+		when(masterdataCreationUtil.createMasterData(Mockito.any(), Mockito.any()))
 				.thenReturn(machineSpecificationDto);
 		when(machineTypeRepository.findMachineTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
 				.thenReturn(machineType);
@@ -3122,6 +3129,9 @@ public class MasterdataIntegrationTest {
 		requestDto.setRequest(machineSpecificationDto);
 
 		String machineSpecificationJson = mapper.writeValueAsString(requestDto);
+		when(machineSpecificationRepository
+				.findMachineSpecificationByIDAndLangCode(Mockito.any(),Mockito.any())).thenReturn(null);
+		
 		when(machineTypeRepository.findMachineTypeByCodeAndByLangCode(Mockito.any(), Mockito.any()))
 				.thenReturn(machineType);
 		Mockito.when(machineSpecificationRepository.create(Mockito.any()))
