@@ -28,4 +28,7 @@ public interface MachineSpecificationRepository extends BaseRepository<MachineSp
 	@Query("FROM MachineSpecification m where  (m.isDeleted is null or m.isDeleted = false) and m.isActive = true")
 	List<MachineSpecification> findAllMachineSpecByIsActiveAndIsDeletedIsNullOrFalse();
 
+	@Query("FROM MachineSpecification WHERE id =?1 AND langCode=?2 ")
+	MachineSpecification findMachineSpecificationByIDAndLangCode(String uniqueId, String primaryLang);
+
 }

@@ -5,9 +5,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,6 +39,7 @@ import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.entity.Machine;
 import io.mosip.kernel.masterdata.entity.MachineSpecification;
 import io.mosip.kernel.masterdata.entity.MachineType;
+import io.mosip.kernel.masterdata.entity.Template;
 import io.mosip.kernel.masterdata.entity.id.IdAndLanguageCodeID;
 import io.mosip.kernel.masterdata.exception.DataNotFoundException;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
@@ -104,6 +108,12 @@ public class MachineSpecificationServiceImpl implements MachineSpecificationServ
 
 	@Autowired
 	private MasterdataCreationUtil masterdataCreationUtil;
+	
+	@Value("${mosip.primary-language:eng}")
+	private String primaryLang;
+
+	@Value("${mosip.secondary-language:ara}")
+	private String secondaryLang;
 
 	/*
 	 * (non-Javadoc)
@@ -118,7 +128,10 @@ public class MachineSpecificationServiceImpl implements MachineSpecificationServ
 
 
 		try {
-
+			if (StringUtils.isNotEmpty(primaryLang) && primaryLang.equals(machineSpecification.getLangCode())) {
+				String uniqueId = generateId();
+				machineSpecification.setId(uniqueId);
+			}
 			machineSpecification = masterdataCreationUtil.createMasterData(MachineSpecification.class,
 					machineSpecification);
 			MachineSpecification entity = MetaDataUtils.setCreateMetaData(machineSpecification,
@@ -148,6 +161,17 @@ public class MachineSpecificationServiceImpl implements MachineSpecificationServ
 		return idAndLanguageCodeID;
 
 	}
+	
+	private String generateId() throws DataAccessLayerException , DataAccessException{
+		UUID uuid = UUID.randomUUID();
+		String uniqueId = uuid.toString();
+		
+		MachineSpecification machineSpecification = machineSpecificationRepository
+				.findMachineSpecificationByIDAndLangCode(uniqueId,primaryLang);
+			
+		return machineSpecification ==null?uniqueId:generateId();
+	}
+
 
 	/*
 	 * (non-Javadoc)

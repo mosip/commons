@@ -5,9 +5,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,6 +40,7 @@ import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.entity.Device;
 import io.mosip.kernel.masterdata.entity.DeviceSpecification;
 import io.mosip.kernel.masterdata.entity.DeviceType;
+import io.mosip.kernel.masterdata.entity.Template;
 import io.mosip.kernel.masterdata.entity.id.IdAndLanguageCodeID;
 import io.mosip.kernel.masterdata.exception.DataNotFoundException;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
@@ -102,6 +106,12 @@ public class DeviceSpecificationServiceImpl implements DeviceSpecificationServic
 
 	@Autowired
 	private MasterdataCreationUtil masterdataCreationUtil;
+	
+	@Value("${mosip.primary-language:eng}")
+	private String primaryLang;
+
+	@Value("${mosip.secondary-language:ara}")
+	private String secondaryLang;
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -173,6 +183,10 @@ public class DeviceSpecificationServiceImpl implements DeviceSpecificationServic
 
 
 		try {
+			if (StringUtils.isNotEmpty(primaryLang) && primaryLang.equals(deviceSpecifications.getLangCode())) {
+				
+				deviceSpecifications.setId(generateId());
+			}
 			deviceSpecifications = masterdataCreationUtil.createMasterData(DeviceSpecification.class,
 					deviceSpecifications);
 			DeviceSpecification entity = MetaDataUtils.setCreateMetaData(deviceSpecifications,
@@ -199,6 +213,16 @@ public class DeviceSpecificationServiceImpl implements DeviceSpecificationServic
 		MapperUtils.map(renDeviceSpecification, idAndLanguageCodeID);
 
 		return idAndLanguageCodeID;
+	}
+	
+	private String generateId() throws DataAccessLayerException , DataAccessException{
+		UUID uuid = UUID.randomUUID();
+		String uniqueId = uuid.toString();
+		
+		DeviceSpecification deviceSpecification = deviceSpecificationRepository
+				.findDeviceSpecificationByIDAndLangCode(uniqueId,primaryLang);
+			
+		return deviceSpecification ==null?uniqueId:generateId();
 	}
 
 	/*

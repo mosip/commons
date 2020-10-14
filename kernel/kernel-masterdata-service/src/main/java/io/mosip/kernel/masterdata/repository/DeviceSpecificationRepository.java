@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import io.mosip.kernel.core.dataaccess.spi.repository.BaseRepository;
 import io.mosip.kernel.masterdata.entity.DeviceSpecification;
+import io.mosip.kernel.masterdata.entity.Template;
 
 /**
  * 
@@ -70,4 +71,7 @@ public interface DeviceSpecificationRepository extends BaseRepository<DeviceSpec
 
 	@Query("FROM DeviceSpecification d where  (d.isDeleted is null or d.isDeleted = false) and d.isActive = true")
 	List<DeviceSpecification> findAllDeviceSpecByIsActiveAndIsDeletedIsNullOrFalse();
+
+	@Query("FROM DeviceSpecification WHERE id =?1 AND langCode=?2 ")
+	DeviceSpecification findDeviceSpecificationByIDAndLangCode(String uniqueId, String primaryLang);
 }
