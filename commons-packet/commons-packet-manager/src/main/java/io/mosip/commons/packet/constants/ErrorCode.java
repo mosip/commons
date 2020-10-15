@@ -10,7 +10,8 @@ public enum ErrorCode {
 	PKT_ZIP_ERROR("KER-KPM-006", "Failed to create zip : "),
 	INVALID_DATA_ERROR("KER-KPM-007", "Invalid input provided : "),
 	AUDITS_REQUIRED("KER-KPM-008", "Registration audits is empty"),
-	INITIALIZATION_ERROR("KER-KPM-009", "Packet creator not initialized");
+	INITIALIZATION_ERROR("KER-KPM-009", "Packet creator not initialized"),
+	PACKET_NOT_FOUND("KER-KPM-010", "Packet not present in packet store");
 
 	ErrorCode(String errorCode, String errorMessage) {
 		this.setErrorCode(errorCode);

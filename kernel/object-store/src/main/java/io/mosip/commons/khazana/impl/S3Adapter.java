@@ -12,6 +12,8 @@ import com.amazonaws.services.s3.model.S3Object;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.commons.khazana.util.ObjectStoreUtil;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ import java.util.Map;
 @Service
 @Qualifier("S3Adapter")
 public class S3Adapter implements ObjectStoreAdapter {
+
+    private final Logger LOGGER = LoggerFactory.getLogger(S3Adapter.class);
 
     @Value("${object.store.s3.accesskey:accesskey:accesskey}")
     private String accessKey;
@@ -41,6 +45,11 @@ public class S3Adapter implements ObjectStoreAdapter {
     @Value("${object.store.s3.readlimit:10000000}")
     private int readlimit;
 
+    @Value("${object.store.connection.max.retry:5}")
+    private int maxRetry;
+
+    private int retry = 0;
+
     private AmazonS3 connection = null;
 
     @Override
@@ -55,13 +64,13 @@ public class S3Adapter implements ObjectStoreAdapter {
                 return bis;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Exception occured to getObject for : " + container, e);
         } finally {
             if (s3Object != null) {
                 try {
                     s3Object.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.error("IO occured : " + container, e);
                 }
             }
         }
@@ -100,14 +109,14 @@ public class S3Adapter implements ObjectStoreAdapter {
             putObjectRequest.getRequestClientOptions().setReadLimit(readlimit);
             getConnection(container).putObject(putObjectRequest);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Exception occured to addObjectMetaData for : " + container, e);
             metadata = null;
         } finally {
             try {
                 if (s3Object != null)
                     s3Object.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error("IO occured : " + container, e);
             }
         }
 
@@ -185,8 +194,6 @@ public class S3Adapter implements ObjectStoreAdapter {
      * @param container
      * @param source
      * @param process
-     * @param objectName
-     * @param data
      * @return
      */
     @Override
@@ -198,17 +205,31 @@ public class S3Adapter implements ObjectStoreAdapter {
         try {
             if (connection != null) {
                 connection.doesBucketExistV2(container);
+                retry = 0;
                 return connection;
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Exception occured. Will try to create new connection");
+            retry = retry + 1;
+            LOGGER.error("Exception occured while using existing connection for " + container +". Will try to create new. Retry count : " + retry, e);
         }
-        AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
-        connection = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCredentials)).enablePathStyleAccess()
-                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(url, region)).build();
+        try {
+            AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
+            connection = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCredentials)).enablePathStyleAccess()
+                    .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(url, region)).build();
+            retry = 0;
+            return connection;
 
-        return connection;
+        } catch (Exception e) {
+            if (retry == maxRetry) {
+                LOGGER.error("Maximum retry limit exceeded. Could not obtain connection for "+ container +". Retry count :" + retry, e);
+                throw e;
+            } else {
+                retry = retry + 1;
+                LOGGER.error("Exception occured while obtaining connection for "+ container +". Will try again. Retry count : " + retry, e);
+                getConnection(container);
+            }
+        }
+        return null;
     }
 
 
