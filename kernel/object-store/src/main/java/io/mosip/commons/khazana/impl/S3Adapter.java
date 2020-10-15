@@ -210,7 +210,7 @@ public class S3Adapter implements ObjectStoreAdapter {
             }
         } catch (Exception e) {
             retry = retry + 1;
-            LOGGER.error("Exception occured while using existing connection. Will try to create new.", e);
+            LOGGER.error("Exception occured while using existing connection for " + container +". Will try to create new. Retry count : " + retry, e);
         }
         try {
             AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
@@ -221,11 +221,11 @@ public class S3Adapter implements ObjectStoreAdapter {
 
         } catch (Exception e) {
             if (retry == maxRetry) {
-                LOGGER.error("Maximum retry limit exceeded. Could not obtain connection.", e);
+                LOGGER.error("Maximum retry limit exceeded. Could not obtain connection for "+ container +". Retry count :" + retry, e);
                 throw e;
             } else {
                 retry = retry + 1;
-                LOGGER.error("Exception occured while obtaining connection. Will try again.", e);
+                LOGGER.error("Exception occured while obtaining connection for "+ container +". Will try again. Retry count : " + retry, e);
                 getConnection(container);
             }
         }
