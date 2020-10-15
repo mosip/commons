@@ -41,6 +41,11 @@ public class S3Adapter implements ObjectStoreAdapter {
     @Value("${object.store.s3.readlimit:10000000}")
     private int readlimit;
 
+    @Value("${object.store.connection.max.retry:5}")
+    private int maxRetry;
+
+    private int retry = 0;
+
     private AmazonS3 connection = null;
 
     @Override
@@ -185,8 +190,6 @@ public class S3Adapter implements ObjectStoreAdapter {
      * @param container
      * @param source
      * @param process
-     * @param objectName
-     * @param data
      * @return
      */
     @Override
@@ -198,17 +201,34 @@ public class S3Adapter implements ObjectStoreAdapter {
         try {
             if (connection != null) {
                 connection.doesBucketExistV2(container);
+                retry = 0;
                 return connection;
             }
         } catch (Exception e) {
+            retry = retry + 1;
+            System.out.println("Exception occured while using existing connection. Will try to create new.");
             e.printStackTrace();
-            System.out.println("Exception occured. Will try to create new connection");
         }
-        AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
-        connection = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCredentials)).enablePathStyleAccess()
-                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(url, region)).build();
+        try {
+            AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
+            connection = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCredentials)).enablePathStyleAccess()
+                    .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(url, region)).build();
+            retry = 0;
+            return connection;
 
-        return connection;
+        } catch (Exception e) {
+            if (retry == maxRetry) {
+                System.out.println("Maximum retry limit exceeded. Could not obtain connection.");
+                e.printStackTrace();
+                throw e;
+            } else {
+                retry = retry + 1;
+                System.out.println("Exception occured while obtaining connection. Will try again.");
+                e.printStackTrace();
+                getConnection(container);
+            }
+        }
+        return null;
     }
 
 
