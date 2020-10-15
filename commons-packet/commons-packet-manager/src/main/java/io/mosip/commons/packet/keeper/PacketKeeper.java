@@ -1,6 +1,7 @@
 package io.mosip.commons.packet.keeper;
 
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
+import io.mosip.commons.packet.constants.ErrorCode;
 import io.mosip.commons.packet.constants.PacketUtilityErrorCodes;
 import io.mosip.commons.packet.dto.Packet;
 import io.mosip.commons.packet.dto.Manifest;
@@ -97,7 +98,7 @@ public class PacketKeeper {
      * @return : boolean
      */
     public boolean checkIntegrity(PacketInfo packetInfo, byte[] encryptedSubPacket) {
-        String hash = new String(CryptoUtil.encodeBase64(HMACUtils.generateHash(encryptedSubPacket)));
+        String hash = CryptoUtil.encodeBase64(HMACUtils.generateHash(encryptedSubPacket));
         boolean result = hash.equals(packetInfo.getEncryptedHash());
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packetInfo.getId(), "Integrity check : " + result);
         return result;
@@ -130,6 +131,10 @@ public class PacketKeeper {
         try {
             InputStream is = getAdapter().getObject(PACKET_MANAGER_ACCOUNT, packetInfo.getId(), packetInfo.getSource(),
                     packetInfo.getProcess(), getName(packetInfo.getId(), packetInfo.getPacketName()));
+            if (is == null) {
+                LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packetInfo.getId(), packetInfo.getProcess() + " Packet is not present in packet store.");
+                throw new PacketKeeperException(ErrorCode.PACKET_NOT_FOUND.getErrorCode(), ErrorCode.PACKET_NOT_FOUND.getErrorMessage());
+            }
             byte[] encryptedSubPacket = IOUtils.toByteArray(is);
             byte[] subPacket = getCryptoService().decrypt(packetInfo.getId(), encryptedSubPacket);
 
@@ -181,9 +186,9 @@ public class PacketKeeper {
             if (response) {
                 PacketInfo packetInfo = packet.getPacketInfo();
                 // sign encrypted packet
-                packetInfo.setSignature(new String(CryptoUtil.encodeBase64(getCryptoService().sign(packet.getPacket()))));
+                packetInfo.setSignature(CryptoUtil.encodeBase64(getCryptoService().sign(packet.getPacket())));
                 // generate encrypted packet hash
-                packetInfo.setEncryptedHash(new String(CryptoUtil.encodeBase64(HMACUtils.generateHash(encryptedSubPacket))));
+                packetInfo.setEncryptedHash(CryptoUtil.encodeBase64(HMACUtils.generateHash(encryptedSubPacket)));
                 Map<String, Object> metaMap = PacketManagerHelper.getMetaMap(packetInfo);
                 metaMap = getAdapter().addObjectMetaData(PACKET_MANAGER_ACCOUNT,
                         packet.getPacketInfo().getId(), packet.getPacketInfo().getSource(), packet.getPacketInfo().getProcess(), packet.getPacketInfo().getPacketName(), metaMap);
