@@ -62,7 +62,7 @@ import java.util.Arrays;
  *
  * @author Balaji Sridharan
  * @author Anusha Sunkada
- * @since 1.2.0
+ * @since 1.1.2
  */
 class TPMClientCryptoServiceImpl implements ClientCryptoService {
 

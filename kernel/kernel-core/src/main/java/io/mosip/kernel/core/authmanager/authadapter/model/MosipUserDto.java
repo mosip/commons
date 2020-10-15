@@ -1,4 +1,4 @@
-package io.mosip.kernel.auth.defaultadapter.model;
+package io.mosip.kernel.core.authmanager.authadapter.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

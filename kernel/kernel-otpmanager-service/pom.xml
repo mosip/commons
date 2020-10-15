@@ -221,7 +221,7 @@
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
 		<kernel.core.version>1.1.2-SNAPSHOT</kernel.core.version>
 		<kernel.auth-adapter.version>1.1.2-SNAPSHOT</kernel.auth-adapter.version>
-		<kernel.dataaccess-hibernate.version>1.0.6</kernel.dataaccess-hibernate.version>
+		<kernel.dataaccess-hibernate.version>1.1.2-SNAPSHOT</kernel.dataaccess-hibernate.version>
 		<kernel.logger.version>1.1.2-SNAPSHOT</kernel.logger.version>
 	</properties>
 	<name>kernel-otpmanager-service</name>

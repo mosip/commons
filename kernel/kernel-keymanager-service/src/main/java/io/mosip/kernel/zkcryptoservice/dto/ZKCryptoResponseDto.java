@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
  * Zero Knowledge Encrypt/Decrypt Request DTO.
  * 
  * @author Mahammed Taheer
- * @since 1.2.0
+ * @since 1.1.2
 */
 
 @Data
