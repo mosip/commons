@@ -12,6 +12,8 @@ import com.amazonaws.services.s3.model.S3Object;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.commons.khazana.util.ObjectStoreUtil;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ import java.util.Map;
 @Service
 @Qualifier("S3Adapter")
 public class S3Adapter implements ObjectStoreAdapter {
+
+    private final Logger LOGGER = LoggerFactory.getLogger(S3Adapter.class);
 
     @Value("${object.store.s3.accesskey:accesskey:accesskey}")
     private String accessKey;
@@ -60,13 +64,13 @@ public class S3Adapter implements ObjectStoreAdapter {
                 return bis;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Exception occured to getObject for : " + container, e);
         } finally {
             if (s3Object != null) {
                 try {
                     s3Object.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.error("IO occured : " + container, e);
                 }
             }
         }
@@ -105,14 +109,14 @@ public class S3Adapter implements ObjectStoreAdapter {
             putObjectRequest.getRequestClientOptions().setReadLimit(readlimit);
             getConnection(container).putObject(putObjectRequest);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Exception occured to addObjectMetaData for : " + container, e);
             metadata = null;
         } finally {
             try {
                 if (s3Object != null)
                     s3Object.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error("IO occured : " + container, e);
             }
         }
 
@@ -206,8 +210,7 @@ public class S3Adapter implements ObjectStoreAdapter {
             }
         } catch (Exception e) {
             retry = retry + 1;
-            System.out.println("Exception occured while using existing connection. Will try to create new.");
-            e.printStackTrace();
+            LOGGER.error("Exception occured while using existing connection. Will try to create new.", e);
         }
         try {
             AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
@@ -218,13 +221,11 @@ public class S3Adapter implements ObjectStoreAdapter {
 
         } catch (Exception e) {
             if (retry == maxRetry) {
-                System.out.println("Maximum retry limit exceeded. Could not obtain connection.");
-                e.printStackTrace();
+                LOGGER.error("Maximum retry limit exceeded. Could not obtain connection.", e);
                 throw e;
             } else {
                 retry = retry + 1;
-                System.out.println("Exception occured while obtaining connection. Will try again.");
-                e.printStackTrace();
+                LOGGER.error("Exception occured while obtaining connection. Will try again.", e);
                 getConnection(container);
             }
         }
