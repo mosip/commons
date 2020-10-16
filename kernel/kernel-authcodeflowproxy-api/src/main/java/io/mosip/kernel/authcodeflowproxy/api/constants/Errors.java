@@ -28,7 +28,10 @@ public enum Errors {
 	
 	ACESSTOKEN_EXCEPTION("KER-ACP-006", "Error Occured while getting access token from iam"),
 	
-	STATE_EXCEPTION("KER-ACP-007", "state is not maching");
+	STATE_EXCEPTION("KER-ACP-007", "state is not maching"),
+	
+	REST_EXCEPTION("KER-ACP-008", "Exception occured while consuming service"),
+	INVALID_TOKEN("KER-ATH-401", "Authentication Failed : Invalid Token :"),;
 	
 
 

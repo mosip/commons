@@ -3,48 +3,47 @@ package io.mosip.kernel.authcodeflowproxy.api.service.impl;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
-
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 
 import io.mosip.kernel.authcodeflowproxy.api.constants.Constants;
 import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
+import io.mosip.kernel.authcodeflowproxy.api.constants.IAMConstants;
 import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponse;
 import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponseDTO;
 import io.mosip.kernel.authcodeflowproxy.api.dto.IAMErrorResponseDto;
 import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
 import io.mosip.kernel.authcodeflowproxy.api.exception.AuthRestException;
 import io.mosip.kernel.authcodeflowproxy.api.exception.ClientException;
-
 import io.mosip.kernel.authcodeflowproxy.api.exception.ServiceException;
 import io.mosip.kernel.authcodeflowproxy.api.service.LoginService;
+import io.mosip.kernel.core.authmanager.model.AuthResponseDto;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
+import io.mosip.kernel.core.util.EmptyCheckUtils;
 
 
 @Service
@@ -97,6 +96,15 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	private ObjectMapper objectMapper;
+	
+	private static final String LOG_OUT_FAILED = "log out failed";
+
+	private static final String FAILED = "Failed";
+
+	private static final String SUCCESS = "Success";
+
+	private static final String SUCCESSFULLY_LOGGED_OUT = "successfully loggedout";
+
 
 	/*
 	 * @Override public String login(String redirectURI, String state) {
@@ -218,5 +226,41 @@ public class LoginServiceImpl implements LoginService {
 		return keycloakErrorResponseDto;
 	}
 
+	@Override
+	public AuthResponseDto logoutUser(String token) {
+		if (EmptyCheckUtils.isNullEmpty(token)) {
+			throw new AuthenticationServiceException(Errors.INVALID_TOKEN.getErrorMessage());
+		}
+		Map<String, String> pathparams = new HashMap<>();
+		String issuer = getissuer(token);
+		ResponseEntity<String> response = null;
+		AuthResponseDto authResponseDto = new AuthResponseDto();
+		StringBuilder urlBuilder = new StringBuilder().append(issuer).append("/protocol/openid-connect/logout");
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(urlBuilder.toString())
+				.queryParam(IAMConstants.ID_TOKEN_HINT, token);
+		
+		try {
+			response = restTemplate.getForEntity(uriComponentsBuilder.buildAndExpand(pathparams).toUriString(),
+					String.class);
+			
+		} catch (HttpClientErrorException | HttpServerErrorException e) {
+			throw new ServiceException(Errors.REST_EXCEPTION.getErrorCode(),
+					Errors.REST_EXCEPTION.getErrorMessage() + e.getResponseBodyAsString());
+		}
+
+		if (response.getStatusCode().is2xxSuccessful()) {
+			authResponseDto.setMessage(SUCCESSFULLY_LOGGED_OUT);
+			authResponseDto.setStatus(SUCCESS);
+		} else {
+			authResponseDto.setMessage(LOG_OUT_FAILED);
+			authResponseDto.setStatus(FAILED);
+		}
+		return authResponseDto;
+	}
+
+	public String getissuer(String token) {
+		DecodedJWT decodedJWT = JWT.decode(token);
+		return decodedJWT.getClaim("iss").asString();
+	}
 
 }
