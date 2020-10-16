@@ -26,7 +26,7 @@ public class MachineTypeExtnDto extends BaseDto {
 	@FilterType(types = { FilterTypeEnum.EQUALS })
 	@ApiModelProperty(value = "langCode", required = true, dataType = "java.lang.String")
 	private String langCode;
-
+	@FilterType(types = { FilterTypeEnum.EQUALS ,FilterTypeEnum.CONTAINS ,FilterTypeEnum.STARTSWITH})
 	@ApiModelProperty(value = "name", required = true, dataType = "java.lang.String")
 	private String name;
 
