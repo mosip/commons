@@ -88,7 +88,7 @@ public class KeymanagerController {
 	 * @param keyPairGenRequestDto     {@link KeyPairGenerateRequestDto} request
 	 * @return {@link KeyPairGenerateResponseDto} instance
 	*/
-	@PreAuthorize("hasAnyRole('KEY_MAKER', 'INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	//t@PreAuthorize("hasAnyRole('KEY_MAKER')")
 	@ResponseFilter
 	@PostMapping(value = "/generateMasterKey/{objectType}")
 	public ResponseWrapper<KeyPairGenerateResponseDto> generateMasterKey(
