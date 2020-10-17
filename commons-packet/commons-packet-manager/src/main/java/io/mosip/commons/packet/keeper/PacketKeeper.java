@@ -144,6 +144,10 @@ public class PacketKeeper {
                     packetInfo.getSource(), packetInfo.getProcess(), getName(packetInfo.getId(), packetInfo.getPacketName()));
             if (metaInfo != null && !metaInfo.isEmpty())
                 packet.setPacketInfo(PacketManagerHelper.getPacketInfo(metaInfo));
+            else {
+                LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, null, "metainfo not found for this packet");
+                packet.setPacketInfo(packetInfo);
+            }
 
 
             if (!checkSignature(packet, encryptedSubPacket)) {
