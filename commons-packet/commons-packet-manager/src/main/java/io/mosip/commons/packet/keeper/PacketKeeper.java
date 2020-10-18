@@ -145,7 +145,7 @@ public class PacketKeeper {
             if (metaInfo != null && !metaInfo.isEmpty())
                 packet.setPacketInfo(PacketManagerHelper.getPacketInfo(metaInfo));
             else {
-                LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, null, "metainfo not found for this packet");
+                LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packetInfo.getId(), "metainfo not found for this packet");
                 packet.setPacketInfo(packetInfo);
             }
 
