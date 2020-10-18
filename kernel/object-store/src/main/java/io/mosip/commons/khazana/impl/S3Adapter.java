@@ -9,11 +9,13 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+import io.mosip.commons.khazana.config.LoggerConfiguration;
+import io.mosip.commons.khazana.exception.ObjectStoreAdapterException;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.commons.khazana.util.ObjectStoreUtil;
+import io.mosip.kernel.core.exception.ExceptionUtils;
+import io.mosip.kernel.core.logger.spi.Logger;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,11 +26,15 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.mosip.commons.khazana.config.LoggerConfiguration.REGISTRATIONID;
+import static io.mosip.commons.khazana.config.LoggerConfiguration.SESSIONID;
+import static io.mosip.commons.khazana.constant.KhazanaErrorCodes.OBJECT_STORE_NOT_ACCESSIBLE;
+
 @Service
 @Qualifier("S3Adapter")
 public class S3Adapter implements ObjectStoreAdapter {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(S3Adapter.class);
+    private final Logger LOGGER = LoggerConfiguration.logConfig(S3Adapter.class);
 
     @Value("${object.store.s3.accesskey:accesskey:accesskey}")
     private String accessKey;
@@ -64,13 +70,14 @@ public class S3Adapter implements ObjectStoreAdapter {
                 return bis;
             }
         } catch (Exception e) {
-            LOGGER.error("Exception occured to getObject for : " + container, e);
+            LOGGER.error(SESSIONID, REGISTRATIONID, "Exception occured to getObject for : " + container, ExceptionUtils.getStackTrace(e));
+            throw new ObjectStoreAdapterException(OBJECT_STORE_NOT_ACCESSIBLE.getErrorCode(), OBJECT_STORE_NOT_ACCESSIBLE.getErrorMessage(), e);
         } finally {
             if (s3Object != null) {
                 try {
                     s3Object.close();
                 } catch (IOException e) {
-                    LOGGER.error("IO occured : " + container, e);
+                    LOGGER.error(SESSIONID, REGISTRATIONID, "IO occured : " + container, ExceptionUtils.getStackTrace(e));
                 }
             }
         }
@@ -96,10 +103,10 @@ public class S3Adapter implements ObjectStoreAdapter {
     @Override
     public Map<String, Object> addObjectMetaData(String account, String container, String source, String process,
                                                  String objectName, Map<String, Object> metadata) {
-        ObjectMetadata objectMetadata = new ObjectMetadata();
-        metadata.entrySet().stream().forEach(m -> objectMetadata.addUserMetadata(m.getKey(), m.getValue() != null ? m.getValue().toString() : null));
         S3Object s3Object = null;
         try {
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            metadata.entrySet().stream().forEach(m -> objectMetadata.addUserMetadata(m.getKey(), m.getValue() != null ? m.getValue().toString() : null));
             String finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
             s3Object = getConnection(container).getObject(container, finalObjectName);
             if (s3Object.getObjectMetadata() != null && s3Object.getObjectMetadata().getUserMetadata() != null)
@@ -108,19 +115,19 @@ public class S3Adapter implements ObjectStoreAdapter {
             PutObjectRequest putObjectRequest = new PutObjectRequest(container, finalObjectName, s3Object.getObjectContent(), objectMetadata);
             putObjectRequest.getRequestClientOptions().setReadLimit(readlimit);
             getConnection(container).putObject(putObjectRequest);
+            return metadata;
         } catch (Exception e) {
-            LOGGER.error("Exception occured to addObjectMetaData for : " + container, e);
+            LOGGER.error(SESSIONID, REGISTRATIONID,"Exception occured to addObjectMetaData for : " + container, ExceptionUtils.getStackTrace(e));
             metadata = null;
+            throw new ObjectStoreAdapterException(OBJECT_STORE_NOT_ACCESSIBLE.getErrorCode(), OBJECT_STORE_NOT_ACCESSIBLE.getErrorMessage(), e);
         } finally {
             try {
                 if (s3Object != null)
                     s3Object.close();
             } catch (IOException e) {
-                LOGGER.error("IO occured : " + container, e);
+                LOGGER.error(SESSIONID, REGISTRATIONID,"IO occured : " + container, ExceptionUtils.getStackTrace(e));
             }
         }
-
-        return metadata;
     }
 
     @Override
@@ -135,13 +142,18 @@ public class S3Adapter implements ObjectStoreAdapter {
     @Override
     public Map<String, Object> getMetaData(String account, String container, String source, String process,
                                            String objectName) {
-        Map<String, Object> metaData = new HashMap<>();
-        String finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
-        ObjectMetadata objectMetadata = getConnection(container).getObject(container, finalObjectName).getObjectMetadata();
-        if (objectMetadata != null && objectMetadata.getUserMetadata() != null)
-            objectMetadata.getUserMetadata().entrySet().forEach(entry -> metaData.put(entry.getKey(), entry.getValue()));
 
-        return metaData;
+        try {
+            Map<String, Object> metaData = new HashMap<>();
+            String finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
+            ObjectMetadata objectMetadata = getConnection(container).getObject(container, finalObjectName).getObjectMetadata();
+            if (objectMetadata != null && objectMetadata.getUserMetadata() != null)
+                objectMetadata.getUserMetadata().entrySet().forEach(entry -> metaData.put(entry.getKey(), entry.getValue()));
+            return metaData;
+        } catch (Exception e) {
+            LOGGER.error(SESSIONID, REGISTRATIONID,"Exception occured to getMetaData for : " + container, ExceptionUtils.getStackTrace(e));
+            throw new ObjectStoreAdapterException(OBJECT_STORE_NOT_ACCESSIBLE.getErrorCode(), OBJECT_STORE_NOT_ACCESSIBLE.getErrorMessage(), e);
+        }
     }
 
     @Override
@@ -204,28 +216,29 @@ public class S3Adapter implements ObjectStoreAdapter {
     private AmazonS3 getConnection(String container) {
         try {
             if (connection != null) {
+                // test connection once before returning it
                 connection.doesBucketExistV2(container);
-                retry = 0;
                 return connection;
             }
         } catch (Exception e) {
-            retry = retry + 1;
-            LOGGER.error("Exception occured while using existing connection for " + container +". Will try to create new. Retry count : " + retry, e);
+            LOGGER.error(SESSIONID, REGISTRATIONID,"Exception occured while using existing connection for " + container +". Will try to create new. Retry count : " + retry, ExceptionUtils.getStackTrace(e));
         }
         try {
             AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
             connection = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCredentials)).enablePathStyleAccess()
                     .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(url, region)).build();
+            // test connection once before returning it
+            connection.doesBucketExistV2(container);
             retry = 0;
             return connection;
 
         } catch (Exception e) {
-            if (retry == maxRetry) {
-                LOGGER.error("Maximum retry limit exceeded. Could not obtain connection for "+ container +". Retry count :" + retry, e);
-                throw e;
+            if (retry >= maxRetry) {
+                LOGGER.error(SESSIONID, REGISTRATIONID,"Maximum retry limit exceeded. Could not obtain connection for "+ container +". Retry count :" + retry, ExceptionUtils.getStackTrace(e));
+                throw new ObjectStoreAdapterException(OBJECT_STORE_NOT_ACCESSIBLE.getErrorCode(), OBJECT_STORE_NOT_ACCESSIBLE.getErrorMessage(), e);
             } else {
                 retry = retry + 1;
-                LOGGER.error("Exception occured while obtaining connection for "+ container +". Will try again. Retry count : " + retry, e);
+                LOGGER.error(SESSIONID, REGISTRATIONID,"Exception occured while obtaining connection for "+ container +". Will try again. Retry count : " + retry, ExceptionUtils.getStackTrace(e));
                 getConnection(container);
             }
         }
