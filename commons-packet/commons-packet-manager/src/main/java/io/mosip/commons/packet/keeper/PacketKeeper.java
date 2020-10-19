@@ -100,7 +100,8 @@ public class PacketKeeper {
     public boolean checkIntegrity(PacketInfo packetInfo, byte[] encryptedSubPacket) {
         String hash = CryptoUtil.encodeBase64(HMACUtils.generateHash(encryptedSubPacket));
         boolean result = hash.equals(packetInfo.getEncryptedHash());
-        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packetInfo.getId(), "Integrity check : " + result);
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
+                getName(packetInfo.getId(), packetInfo.getPacketName()), "Integrity check : " + result);
         return result;
     }
 
@@ -117,7 +118,8 @@ public class PacketKeeper {
         boolean result = true;//getCryptoService().verify(packet.getPacket(), CryptoUtil.decodeBase64(packet.getPacketInfo().getSignature()));
         if (result)
             result = checkIntegrity(packet.getPacketInfo(), encryptedSubPacket);
-        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packet.getPacketInfo().getId(), "Integrity and signature check : " + result);
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
+                getName(packet.getPacketInfo().getId(), packet.getPacketInfo().getPacketName()), "Integrity and signature check : " + result);
         return result;
     }
 
@@ -132,7 +134,8 @@ public class PacketKeeper {
             InputStream is = getAdapter().getObject(PACKET_MANAGER_ACCOUNT, packetInfo.getId(), packetInfo.getSource(),
                     packetInfo.getProcess(), getName(packetInfo.getId(), packetInfo.getPacketName()));
             if (is == null) {
-                LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packetInfo.getId(), packetInfo.getProcess() + " Packet is not present in packet store.");
+                LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
+                        getName(packetInfo.getId(), packetInfo.getPacketName()), packetInfo.getProcess() + " Packet is not present in packet store.");
                 throw new PacketKeeperException(ErrorCode.PACKET_NOT_FOUND.getErrorCode(), ErrorCode.PACKET_NOT_FOUND.getErrorMessage());
             }
             byte[] encryptedSubPacket = IOUtils.toByteArray(is);
@@ -144,10 +147,16 @@ public class PacketKeeper {
                     packetInfo.getSource(), packetInfo.getProcess(), getName(packetInfo.getId(), packetInfo.getPacketName()));
             if (metaInfo != null && !metaInfo.isEmpty())
                 packet.setPacketInfo(PacketManagerHelper.getPacketInfo(metaInfo));
+            else {
+                LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
+                        getName(packetInfo.getId(), packetInfo.getPacketName()), "metainfo not found for this packet");
+                packet.setPacketInfo(packetInfo);
+            }
 
 
             if (!checkSignature(packet, encryptedSubPacket)) {
-                LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packet.getPacketInfo().getId(), "Packet Integrity and Signature check failed");
+                LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
+                        getName(packet.getPacketInfo().getId(), packetInfo.getPacketName()), "Packet Integrity and Signature check failed");
                 throw new PacketIntegrityFailureException();
             }
 
@@ -232,7 +241,7 @@ public class PacketKeeper {
             throw new CryptoException();
     }
 
-    private String getName(String id, String name) {
+    private static String getName(String id, String name) {
         return id + UNDERSCORE + name;
     }
 

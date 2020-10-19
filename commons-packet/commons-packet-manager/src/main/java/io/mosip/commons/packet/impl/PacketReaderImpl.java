@@ -13,6 +13,7 @@ import io.mosip.commons.packet.exception.GetBiometricException;
 import io.mosip.commons.packet.exception.GetDocumentException;
 import io.mosip.commons.packet.exception.PacketDecryptionFailureException;
 import io.mosip.commons.packet.exception.PacketKeeperException;
+import io.mosip.commons.packet.exception.PacketValidationFailureException;
 import io.mosip.commons.packet.facade.PacketWriter;
 import io.mosip.commons.packet.keeper.PacketKeeper;
 import io.mosip.commons.packet.spi.IPacketReader;
@@ -96,11 +97,14 @@ public class PacketReaderImpl implements IPacketReader {
     public boolean validatePacket(String id, String source, String process) {
         try {
             return packetValidator.validate(id, source, process, getAll(id, source, process));
-        } catch (Exception e) {
+        } catch (BaseCheckedException | IOException e) {
             LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
                     id, "Packet Validation exception : "  + ExceptionUtils.getStackTrace(e));
+            if (e instanceof BaseCheckedException)
+                throw new PacketValidationFailureException(((BaseCheckedException) e).getMessage(), e);
+            else
+                throw new PacketValidationFailureException(((IOException) e).getMessage(), e);
         }
-        return false;
     }
 
     /**
