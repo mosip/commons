@@ -6,7 +6,7 @@
 	<artifactId>kernel-notification-service</artifactId>
 	<packaging>jar</packaging>
 	<name>kernel-notification-service</name>
-	<version>1.1.2-rc1</version>
+	<version>1.1.2-rc2</version>
 	<groupId>io.mosip.kernel</groupId>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -219,12 +219,12 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.1.2-rc1</kernel.core.version>
-		<kernel.auth-adapter.version>1.1.2-rc1</kernel.auth-adapter.version>
-		<kernel.applicant-type.version>1.1.2-rc1</kernel.applicant-type.version>
-		<kernel.dataaccess-hibernate.version>1.1.2-rc1</kernel.dataaccess-hibernate.version>
-		<kernel.logger.version>1.1.2-rc1</kernel.logger.version>
-		<kernel.smsserviceprovider.msg91.version>1.1.2-rc1</kernel.smsserviceprovider.msg91.version>
+		<kernel.core.version>1.1.2-rc2</kernel.core.version>
+		<kernel.auth-adapter.version>1.1.2-rc2</kernel.auth-adapter.version>
+		<kernel.applicant-type.version>1.1.2-rc2</kernel.applicant-type.version>
+		<kernel.dataaccess-hibernate.version>1.1.2-rc2</kernel.dataaccess-hibernate.version>
+		<kernel.logger.version>1.1.2-rc2</kernel.logger.version>
+		<kernel.smsserviceprovider.msg91.version>1.1.2-rc2</kernel.smsserviceprovider.msg91.version>
 	</properties>
 	<dependencies>
 		<dependency>

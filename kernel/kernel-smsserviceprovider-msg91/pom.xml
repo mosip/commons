@@ -6,7 +6,7 @@
 	<artifactId>kernel-smsserviceprovider-msg91</artifactId>
 	<name>kernel-smsserviceprovider-msg91</name>
 	<description>kernel-smsserviceprovider-msg91</description>
-	<version>1.1.2-rc1</version>
+	<version>1.1.2-rc2</version>
 <properties>		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -218,8 +218,8 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.1.2-rc1</kernel.core.version>
-        <kernel.auth.adaptor.version>1.1.2-rc1</kernel.auth.adaptor.version>
+		<kernel.core.version>1.1.2-rc2</kernel.core.version>
+        <kernel.auth.adaptor.version>1.1.2-rc2</kernel.auth.adaptor.version>
     </properties>
 	<dependencies>
 	

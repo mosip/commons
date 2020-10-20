@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>io.mosip.kernel</groupId>
-	<version>1.1.2-rc1</version>
+	<version>1.1.2-rc2</version>
 	<artifactId>kernel-config-server</artifactId>
 	<description>Config Server for Mosip</description>
 	<properties>
