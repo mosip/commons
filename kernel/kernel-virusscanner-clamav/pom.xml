@@ -5,7 +5,7 @@
 <groupId>io.mosip.kernel</groupId>
 
 	<artifactId>kernel-virusscanner-clamav</artifactId>
-    <version>1.1.2-rc1</version>
+    <version>1.1.2-rc2</version>
 <properties>		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -221,7 +221,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<kernel.core.version>1.1.2-rc1</kernel.core.version>
+		<kernel.core.version>1.1.2-rc2</kernel.core.version>
 	</properties>
 
 	<dependencies>
