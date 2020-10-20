@@ -7,7 +7,7 @@
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-masterdata-service</artifactId>
 	<name>kernel-masterdata-service</name>
-	<version>1.1.2-rc1</version>
+	<version>1.1.2-rc2</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -220,14 +220,14 @@
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<kernel.applicant-type.version>1.1.2-rc1</kernel.applicant-type.version>
-		<kernel.logger.logback.version>1.1.2-rc1</kernel.logger.logback.version>
+		<kernel.applicant-type.version>1.1.2-rc2</kernel.applicant-type.version>
+		<kernel.logger.logback.version>1.1.2-rc2</kernel.logger.logback.version>
 	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>1.1.2-rc1</version>
+			<version>1.1.2-rc2</version>
 		</dependency>
 		<dependency>
 			<groupId>io.springfox</groupId>
@@ -257,22 +257,22 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-idgenerator-regcenterid</artifactId>
-			<version>1.1.2-rc1</version>
+			<version>1.1.2-rc2</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-idgenerator-machineid</artifactId>
-			<version>1.1.2-rc1</version>
+			<version>1.1.2-rc2</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-datamapper-orika</artifactId>
-			<version>1.1.2-rc1</version>
+			<version>1.1.2-rc2</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-dataaccess-hibernate</artifactId>
-			<version>1.1.2-rc1</version>
+			<version>1.1.2-rc2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>

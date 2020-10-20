@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 <groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-keymanager-softhsm</artifactId>
-	<version>1.1.2-rc1</version>
+	<version>1.1.2-rc2</version>
 	<packaging>jar</packaging>
 	<name>kernel-keymanager-softhsm</name>
 <properties>		
@@ -218,9 +218,9 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.1.2-rc1</kernel.core.version>
-		<kernel.logger.logback.version>1.1.2-rc1</kernel.logger.logback.version>
-		<kernel.keygenerator.bouncycastle.version>1.1.2-rc1</kernel.keygenerator.bouncycastle.version>
+		<kernel.core.version>1.1.2-rc2</kernel.core.version>
+		<kernel.logger.logback.version>1.1.2-rc2</kernel.logger.logback.version>
+		<kernel.keygenerator.bouncycastle.version>1.1.2-rc2</kernel.keygenerator.bouncycastle.version>
 	</properties>
 	<dependencies>
 		<dependency>
