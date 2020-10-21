@@ -114,9 +114,9 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-    	<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<maven.compiler.version>3.7.0</maven.compiler.version>
+    	<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.version>3.8.0</maven.compiler.version>
     	<kernel.core.version>1.1.2-rc2</kernel.core.version>
 		<kernel.auth-adapter.version>1.1.2-rc2</kernel.auth-adapter.version>
 		<kernel.applicant-type.version>1.1.2-rc2</kernel.applicant-type.version>
@@ -127,9 +127,8 @@
 		<mockito.version>1.10.19</mockito.version>
 		<powermock.version>1.7.4</powermock.version>
 		<powermock.beta.version>2.0.0-beta.5</powermock.beta.version>
-		<java.version>1.8</java.version>	
+		<java.version>11</java.version>	
 		<maven.surefire.plugin.version>2.9</maven.surefire.plugin.version>	
-		<maven.javadoc.skip>true</maven.javadoc.skip>
     </properties> 
 	<dependencies>
 		<dependency>
@@ -176,19 +175,14 @@
 	</dependencies>
 
 <build>
-<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>${maven.compiler.version}</version>
-					<configuration>
-						<source>${maven.compiler.source}</source>
-						<target>${maven.compiler.target}</target>
-					</configuration>
-				</plugin>					
-			</plugins>
-		</pluginManagement>
+	<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>bootstrap.properties</exclude>
+				</excludes>
+			</resource>
+		</resources>
           <plugins>
             <plugin>
               <artifactId>maven-deploy-plugin</artifactId>
