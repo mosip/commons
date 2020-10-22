@@ -7,7 +7,7 @@
 	<name>kernel-syncdata-service</name>
 	<description>Mosip commons project </description>
         <url>https://github.com/mosip/commons</url>
-	<version>1.1.2</version>
+	<version>1.2.0-SNAPSHOT</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -220,10 +220,10 @@
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<kernel.core.version>1.1.2</kernel.core.version>
-		<kernel.auth.adaptor.version>1.1.2</kernel.auth.adaptor.version>
-		<kernel.logger.version>1.1.2</kernel.logger.version>
-		<kernel.crypto.version>1.1.2</kernel.crypto.version>
+		<kernel.core.version>1.2.0-SNAPSHOT</kernel.core.version>
+		<kernel.auth.adaptor.version>1.2.0-SNAPSHOT</kernel.auth.adaptor.version>
+		<kernel.logger.version>1.2.0-SNAPSHOT</kernel.logger.version>
+		<kernel.crypto.version>1.2.0-SNAPSHOT</kernel.crypto.version>
 	</properties>
 	<dependencies>
 		<dependency>
