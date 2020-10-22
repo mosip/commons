@@ -125,10 +125,10 @@ public class TemplateUtil {
 						OTPErrorCode.LANGUAGENOTCONFIGURED.getErrorMessage());
 			}
 			String emailSubject = getEmailData(otpUser, "email-subject-template", token, primaryLanguage,
-					secondaryLanguage);
+					null);
 			String mergedEmailSubject = getMergedEmailContent(otp, emailSubject, otpUser.getTemplateVariables());
 			String emailContent = getEmailData(otpUser, "email-content-template", token, primaryLanguage,
-					secondaryLanguage);
+					null);
 			String mergedEmailContent = getMergedEmailContent(otp, emailContent, otpUser.getTemplateVariables());
 			otpEmailTemplate.setEmailSubject(mergedEmailSubject);
 			otpEmailTemplate.setEmailContent(mergedEmailContent);
@@ -140,10 +140,10 @@ public class TemplateUtil {
 				throw new AuthManagerException(OTPErrorCode.LANGUAGENOTCONFIGURED.getErrorCode(),
 						OTPErrorCode.LANGUAGENOTCONFIGURED.getErrorMessage());
 			}
-			String emailSubject = getEmailData(otpUser, "email-subject-template", token, primaryLanguage,
+			String emailSubject = getEmailData(otpUser, "email-subject-template", token, null,
 					secondaryLanguage);
 			String mergedEmailSubject = getMergedEmailContent(otp, emailSubject, otpUser.getTemplateVariables());
-			String emailContent = getEmailData(otpUser, "email-content-template", token, primaryLanguage,
+			String emailContent = getEmailData(otpUser, "email-content-template", token, null,
 					secondaryLanguage);
 			String mergedEmailContent = getMergedEmailContent(otp, emailContent, otpUser.getTemplateVariables());
 			otpEmailTemplate.setEmailSubject(mergedEmailSubject);
