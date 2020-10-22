@@ -1,5 +1,6 @@
 package io.mosip.kernel.keymanagerservice.service.impl;
 
+import java.security.Certificate;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyStore.PrivateKeyEntry;
@@ -32,12 +33,14 @@ import io.mosip.kernel.core.crypto.exception.NullDataException;
 import io.mosip.kernel.core.crypto.exception.NullKeyException;
 import io.mosip.kernel.core.crypto.exception.NullMethodException;
 import io.mosip.kernel.core.crypto.spi.CryptoCoreSpec;
+import io.mosip.kernel.core.keymanager.exception.KeystoreProcessingException;
 import io.mosip.kernel.core.keymanager.model.CertificateEntry;
 import io.mosip.kernel.core.keymanager.model.CertificateParameters;
 import io.mosip.kernel.core.keymanager.spi.KeyStore;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.DateUtils;
+import io.mosip.kernel.cryptomanager.constant.CryptomanagerConstant;
 import io.mosip.kernel.keygenerator.bouncycastle.KeyGenerator;
 import io.mosip.kernel.keymanagerservice.constant.KeymanagerConstant;
 import io.mosip.kernel.keymanagerservice.constant.KeymanagerErrorConstant;
@@ -283,6 +286,22 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.CURRENTKEYALIAS,
 					String.valueOf(currentKeyAlias.size()),
 					"CurrentKeyAlias size is zero. Will create new Keypair for this applicationId, referenceId and timestamp");
+			List<KeyAlias> keyAlias = keyAliasMap.get(KeymanagerConstant.KEYALIAS);
+			if (!keyAlias.isEmpty()) {
+				keyAlias.forEach(innerAlias -> {
+					String ksAlias = innerAlias.getAlias();
+					Optional<io.mosip.kernel.keymanagerservice.entity.KeyStore> keyFromDBStore = dbHelper.getKeyStoreFromDB(ksAlias);
+					String masterKeyAlias = keyFromDBStore.get().getMasterAlias();
+					String privateKeyObj = keyFromDBStore.get().getPrivateKey();
+
+					if (ksAlias.equals(masterKeyAlias) || privateKeyObj.equals(KeymanagerConstant.KS_PK_NA)) {
+						LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, null,
+								"Not Allowed to generate New Key Pair for other domains.");
+						throw new KeymanagerServiceException(KeymanagerErrorConstant.GENERATION_NOT_ALLOWED.getErrorCode(),
+								KeymanagerErrorConstant.GENERATION_NOT_ALLOWED.getErrorMessage());
+					}
+				});
+			}
 			String encryptedPrivateKey;
 			alias = UUID.randomUUID().toString();
 			KeyPair keypair = keyGenerator.getAsymmetricKey();
@@ -345,8 +364,13 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 				symmetricKeyRequestDto.getReferenceId(), symmetricKeyRequestDto.getTimeStamp());
 		PrivateKey privateKey = (PrivateKey) keys[0];
 		PublicKey publicKey = (PublicKey) keys[1];
-		byte[] decryptedSymmetricKey = cryptoCore.asymmetricDecrypt(privateKey, publicKey,
-				CryptoUtil.decodeBase64(symmetricKeyRequestDto.getEncryptedSymmetricKey()));
+		byte[] encryptedSymmetricKey = CryptoUtil.decodeBase64(symmetricKeyRequestDto.getEncryptedSymmetricKey());
+		
+		//byte[] certThumbprint = Arrays.copyOfRange(concatedData, 0, CryptomanagerConstant.THUMBPRINT_LENGTH);
+		//byte[] encryptedSymmetricKey = Arrays.copyOfRange(concatedData, CryptomanagerConstant.THUMBPRINT_LENGTH, 
+		//							concatedData.length);
+
+		byte[] decryptedSymmetricKey = cryptoCore.asymmetricDecrypt(privateKey, publicKey, encryptedSymmetricKey);
 		keyResponseDto.setSymmetricKey(CryptoUtil.encodeBase64(decryptedSymmetricKey));
 		keymanagerUtil.destoryKey(privateKey);
 		return keyResponseDto;
@@ -408,13 +432,24 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 		} else {
 			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.EMPTY, KeymanagerConstant.EMPTY,
 					"Valid reference Id. Getting private key from DB Store");
-			Optional<io.mosip.kernel.keymanagerservice.entity.KeyStore> dbKeyStore = dbHelper.getKeyStoreFromDB(fetchedKeyAlias.getAlias());
+			String ksAlias = fetchedKeyAlias.getAlias();
+			Optional<io.mosip.kernel.keymanagerservice.entity.KeyStore> dbKeyStore = dbHelper.getKeyStoreFromDB(ksAlias);
 			if (!dbKeyStore.isPresent()) {
 				LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.KEYFROMDB, dbKeyStore.toString(),
 						"Key in DBStore does not exist for this alias. Throwing exception");
 				throw new NoUniqueAliasException(KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorCode(),
 						KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorMessage());
 			}
+			String masterKeyAlias = dbKeyStore.get().getMasterAlias();
+			String privateKeyObj = dbKeyStore.get().getPrivateKey();
+
+			if (ksAlias.equals(masterKeyAlias) || privateKeyObj.equals(KeymanagerConstant.KS_PK_NA)) {
+				LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, null,
+						"Not Allowed to perform decryption with other domain key.");
+				throw new KeymanagerServiceException(KeymanagerErrorConstant.DECRYPTION_NOT_ALLOWED.getErrorCode(),
+						KeymanagerErrorConstant.DECRYPTION_NOT_ALLOWED.getErrorMessage());
+			}
+			
 			PrivateKeyEntry masterKeyEntry = keyStore.getAsymmetricKey(dbKeyStore.get().getMasterAlias());
 			PrivateKey masterPrivateKey = masterKeyEntry.getPrivateKey();
 			PublicKey masterPublicKey = masterKeyEntry.getCertificate().getPublicKey();
@@ -440,11 +475,11 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 	@Override
 	public SignatureCertificate getSignatureCertificate(String applicationId, Optional<String> referenceId,
 													String timestamp){
-		return getSigningCertificate(applicationId, referenceId, timestamp);
+		return getSigningCertificate(applicationId, referenceId, timestamp, true);
 	}
 
 	private SignatureCertificate getSigningCertificate(String applicationId, Optional<String> referenceId,
-			String timestamp) {
+			String timestamp, boolean isPrivateRequired) {
 		String alias = null;
 		List<KeyAlias> currentKeyAlias = null;
 		Map<String, List<KeyAlias>> keyAliasMap = null;
@@ -474,9 +509,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 			KeyAlias fetchedKeyAlias = currentKeyAlias.get(0);
 			alias = fetchedKeyAlias.getAlias();
 			// @TODO Not Sure why always check the existing HSM only. We need to get more details from team. 
-			PrivateKeyEntry privateKeyEntry = keyStore.getAsymmetricKey(alias);
-			certificateEntry = new CertificateEntry<>((X509Certificate[]) privateKeyEntry.getCertificateChain(),
-					privateKeyEntry.getPrivateKey());
+			certificateEntry = getCertificateEntry(alias, isPrivateRequired);
 			generationDateTime = fetchedKeyAlias.getKeyGenerationTime();
 			expiryDateTime = fetchedKeyAlias.getKeyExpiryTime();
 		} else if (currentKeyAlias.isEmpty()) {
@@ -487,13 +520,39 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 		return new SignatureCertificate(alias, certificateEntry, generationDateTime, expiryDateTime, providerName);
 	}
 
+	private CertificateEntry<X509Certificate, PrivateKey> getCertificateEntry(String alias, boolean isPrivateRequired) {
+		KeystoreProcessingException exception = null;
+		try {
+			PrivateKeyEntry privateKeyEntry = keyStore.getAsymmetricKey(alias);
+			return new CertificateEntry<>((X509Certificate[]) privateKeyEntry.getCertificateChain(),
+					privateKeyEntry.getPrivateKey());
+		} catch(KeystoreProcessingException kpe) {
+			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.CURRENTKEYALIAS, "Error", 
+							"Key Not found in HSM, keystore might have loaded as offline." + kpe.getMessage());
+			exception = kpe;
+		}
+		if (!isPrivateRequired) {
+			Optional<io.mosip.kernel.keymanagerservice.entity.KeyStore> keyFromDBStore = dbHelper.getKeyStoreFromDB(alias);
+			if (!keyFromDBStore.isPresent()) {
+				LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.CURRENTKEYALIAS, KeymanagerConstant.EMPTY,
+									"Certificate Not found in keystore table.");
+				throw new KeymanagerServiceException(KeymanagerErrorConstant.CERTIFICATE_NOT_FOUND.getErrorCode(),
+									KeymanagerErrorConstant.CERTIFICATE_NOT_FOUND.getErrorMessage());
+			}
+			String certificateData = keyFromDBStore.get().getCertificateData();
+			X509Certificate reqX509Cert = (X509Certificate) keymanagerUtil.convertToCertificate(certificateData);
+			return new CertificateEntry<>( new X509Certificate[] {reqX509Cert}, null);
+		}
+		throw exception;
+	}
+
 	@Override
 	public PublicKeyResponse<String> getSignPublicKey(String applicationId, String timestamp,
 			Optional<String> referenceId) {
 		// Ignoring the inputted timestamp and considering current system time to check the key expiry.
 		String localDateTimeStamp = DateUtils.getUTCCurrentDateTimeString(); //keymanagerUtil.parseToLocalDateTime(timeStamp);
 
-		SignatureCertificate certificateResponse = getSigningCertificate(applicationId, referenceId, localDateTimeStamp);
+		SignatureCertificate certificateResponse = getSigningCertificate(applicationId, referenceId, localDateTimeStamp, false);
 		return new PublicKeyResponse<>(certificateResponse.getAlias(),
 				CryptoUtil.encodeBase64(certificateResponse.getCertificateEntry().getChain()[0].getPublicKey().getEncoded()),
 				certificateResponse.getIssuedAt(), certificateResponse.getExpiryAt());
@@ -742,6 +801,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 			throw new NoUniqueAliasException(KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorCode(),
 					KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorMessage());
 		} else if (currentKeyAlias.isEmpty()) {
+			// checking empty because after certificate expiry new CSR request should be called to generate new key pair. 
 			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.CURRENTKEYALIAS,
 					String.valueOf(currentKeyAlias.size()),
 					"CurrentKeyAlias size is zero for this applicationId and timestamp");
@@ -810,8 +870,8 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 			throw new KeymanagerServiceException(KeymanagerErrorConstant.KEY_NOT_MATCHING.getErrorCode(),
 					KeymanagerErrorConstant.KEY_NOT_MATCHING.getErrorMessage());
 		}
-		LocalDateTime notBeforeDate = DateUtils.parseDateToLocalDateTime(reqX509Cert.getNotBefore());
-		LocalDateTime notAfterDate = DateUtils.parseDateToLocalDateTime(reqX509Cert.getNotAfter());
+		LocalDateTime notBeforeDate = keymanagerUtil.convertToUTC(reqX509Cert.getNotBefore());
+		LocalDateTime notAfterDate = keymanagerUtil.convertToUTC(reqX509Cert.getNotAfter());
 		if (!keyFromDBStore.isPresent()){
 			keyStore.storeCertificate(keyAlias, privateKey, reqX509Cert);
 		} else {
@@ -839,7 +899,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 			throw new KeymanagerServiceException(KeymanagerErrorConstant.INVALID_REQUEST.getErrorCode(),
 					KeymanagerErrorConstant.INVALID_REQUEST.getErrorMessage());
 		}
-
+		
 		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, appId,
 				"to get KeyInfo for application ID: " + appId + ", RefId: " + refId);
 		LocalDateTime timestamp = DateUtils.getUTCCurrentDateTime();
@@ -853,18 +913,37 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 					KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorMessage());
 		}
 
+		List<KeyAlias> keyAliasList = keyAliasMap.get(KeymanagerConstant.KEYALIAS);
 		X509Certificate reqX509Cert = (X509Certificate) keymanagerUtil.convertToCertificate(certificateData);
-		LocalDateTime notBeforeDate = DateUtils.parseDateToLocalDateTime(reqX509Cert.getNotBefore());
-		LocalDateTime notAfterDate = DateUtils.parseDateToLocalDateTime(reqX509Cert.getNotAfter());
-		if (currentKeyAlias.isEmpty()) {
+		LocalDateTime notBeforeDate = keymanagerUtil.convertToUTC(reqX509Cert.getNotBefore());
+		LocalDateTime notAfterDate = keymanagerUtil.convertToUTC(reqX509Cert.getNotAfter());
+		if (currentKeyAlias.isEmpty() && keyAliasList.isEmpty()) {
+			return storeAndBuildResponse(appId, refId, reqX509Cert, notBeforeDate, notAfterDate);
+		}
+
+		if (currentKeyAlias.isEmpty() && keyAliasList.size() > 0) {
+			String keyAlias = keyAliasList.get(0).getAlias();
+			Optional<io.mosip.kernel.keymanagerservice.entity.KeyStore> keyFromDBStore = dbHelper.getKeyStoreFromDB(keyAlias);
+			if (!keyFromDBStore.isPresent()) {
+				LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.EMPTY, KeymanagerConstant.EMPTY,
+									"Other valid key is available, so not allowed to upload certificate.");
+				throw new KeymanagerServiceException(KeymanagerErrorConstant.UPLOAD_NOT_ALLOWED.getErrorCode(),
+									KeymanagerErrorConstant.UPLOAD_NOT_ALLOWED.getErrorMessage());
+			}
 			return storeAndBuildResponse(appId, refId, reqX509Cert, notBeforeDate, notAfterDate);
 		}
 		
 		String keyAlias = currentKeyAlias.get(0).getAlias();
 		Optional<io.mosip.kernel.keymanagerservice.entity.KeyStore> keyFromDBStore = dbHelper.getKeyStoreFromDB(keyAlias);
+		if (!keyFromDBStore.isPresent() && currentKeyAlias.size() == 1) {
+			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.EMPTY, KeymanagerConstant.EMPTY,
+								"Other valid key is available, so not allowed to upload certificate.");
+			throw new KeymanagerServiceException(KeymanagerErrorConstant.UPLOAD_NOT_ALLOWED.getErrorCode(),
+								KeymanagerErrorConstant.UPLOAD_NOT_ALLOWED.getErrorMessage());
+		} 
+
 		String masterKeyAlias = keyFromDBStore.get().getMasterAlias();
 		String privateKeyObj = keyFromDBStore.get().getPrivateKey();
-
 		if (!keyAlias.equals(masterKeyAlias) || !privateKeyObj.equals(KeymanagerConstant.KS_PK_NA)) {
 			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, null,
 					"Not Allowed to update certificate for other domains.");

@@ -36,6 +36,7 @@ import io.mosip.kernel.masterdata.entity.Device;
 import io.mosip.kernel.masterdata.entity.Machine;
 import io.mosip.kernel.masterdata.entity.RegistrationCenter;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
+import io.mosip.kernel.masterdata.exception.RequestException;
 
 /**
  * @author Ramadurai Pandian
@@ -80,12 +81,12 @@ public class MasterdataCreationUtil {
 			boolean activeDto, Class<?> dtoClass, T t, boolean priSecIdentical)
 			throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		if (StringUtils.isBlank(id)) {
-			throw new MasterDataServiceException(RequestErrorCode.REQUEST_INVALID_SEC_LANG_ID.getErrorCode(),
+			throw new RequestException(RequestErrorCode.REQUEST_INVALID_SEC_LANG_ID.getErrorCode(),
 					RequestErrorCode.REQUEST_INVALID_SEC_LANG_ID.getErrorMessage());
 		}
 		E primaryEntity = getResultSet(entity, primaryLang, id, primaryKeyCol);
 		if (primaryEntity == null) {
-			throw new MasterDataServiceException(RequestErrorCode.REQUEST_INVALID_SEC_LANG.getErrorCode(),
+			throw new RequestException(RequestErrorCode.REQUEST_INVALID_SEC_LANG.getErrorCode(),
 					RequestErrorCode.REQUEST_INVALID_SEC_LANG.getErrorMessage());
 		}
 		for (Field field : primaryEntity.getClass().getDeclaredFields()) {
@@ -214,7 +215,7 @@ public class MasterdataCreationUtil {
 				if (primary == null) {
 				idColumn.set(t, id);
 				} else {
-				throw new MasterDataServiceException(RequestErrorCode.REQUEST_CODE_ALREADY_EXIST.getErrorCode(),
+				throw new RequestException(RequestErrorCode.REQUEST_CODE_ALREADY_EXIST.getErrorCode(),
 						RequestErrorCode.REQUEST_CODE_ALREADY_EXIST.getErrorMessage());
 				}
 
@@ -236,7 +237,7 @@ public class MasterdataCreationUtil {
 				if (primary == null) {
 				idColumn.set(t, id);
 				} else {
-				throw new MasterDataServiceException(RequestErrorCode.REQUEST_ID_ALREADY_EXIST.getErrorCode(),
+				throw new RequestException(RequestErrorCode.REQUEST_ID_ALREADY_EXIST.getErrorCode(),
 						RequestErrorCode.REQUEST_ID_ALREADY_EXIST.getErrorMessage());
 				}
 			}
@@ -310,7 +311,7 @@ public class MasterdataCreationUtil {
 
 		if (langCode.equals(primaryLang)) {
 			if (StringUtils.isBlank(id)) {
-				throw new MasterDataServiceException(RequestErrorCode.REQUEST_INVALID_PRI_LANG_ID.getErrorCode(),
+				throw new RequestException(RequestErrorCode.REQUEST_INVALID_PRI_LANG_ID.getErrorCode(),
 						RequestErrorCode.REQUEST_INVALID_PRI_LANG_ID.getErrorMessage());
 			}
 			E secondaryEntity = getResultSet(entity, secondaryLang, id, primaryKeyCol);
@@ -368,12 +369,12 @@ public class MasterdataCreationUtil {
 		if (langCode.equals(secondaryLang)) {
 
 			if (StringUtils.isBlank(id)) {
-				throw new MasterDataServiceException(RequestErrorCode.REQUEST_INVALID_SEC_LANG_ID.getErrorCode(),
+				throw new RequestException(RequestErrorCode.REQUEST_INVALID_SEC_LANG_ID.getErrorCode(),
 						RequestErrorCode.REQUEST_INVALID_SEC_LANG_ID.getErrorMessage());
 			}
 			E primaryEntity = getResultSet(entity, primaryLang, id, primaryKeyCol);
 			if (primaryEntity == null) {
-				throw new MasterDataServiceException(RequestErrorCode.REQUEST_INVALID_SEC_LANG.getErrorCode(),
+				throw new RequestException(RequestErrorCode.REQUEST_INVALID_SEC_LANG.getErrorCode(),
 						RequestErrorCode.REQUEST_INVALID_SEC_LANG.getErrorMessage());
 			}
 				for (Field field : primaryEntity.getClass().getDeclaredFields()) {
@@ -397,7 +398,7 @@ public class MasterdataCreationUtil {
 			if (secondaryLang != null) {
 				return t;
 			} else {
-				throw new MasterDataServiceException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(),
+				throw new RequestException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(),
 						"Cannot update data in secondary language as data does not exist in primary language");
 			}
 		}

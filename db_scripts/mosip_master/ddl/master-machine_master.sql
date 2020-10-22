@@ -21,8 +21,10 @@ CREATE TABLE master.machine_master(
 	ip_address character varying(17),
 	validity_end_dtimes timestamp,
 	mspec_id character varying(36) NOT NULL,
-	public_key character varying(1024) NOT NULL,
-	key_index character varying(128) NOT NULL,
+	public_key character varying(1024),
+	key_index character varying(128),
+	sign_public_key character varying(1024),
+	sign_key_index character varying(128),
 	zone_code character varying(36) NOT NULL,
 	regcntr_id character varying(10),
 	lang_code character varying(3) NOT NULL,
@@ -57,6 +59,10 @@ COMMENT ON COLUMN master.machine_master.public_key IS 'Public Key: Public key of
 -- ddl-end --
 COMMENT ON COLUMN master.machine_master.key_index IS 'Key Index: Fingerprint[Unique Hash ]  for the TPM public key';
 -- ddl-end --
+COMMENT ON COLUMN master.machine_master.sign_public_key IS 'Signed Public Key: Field for signature verification publicKey';
+-- ddl-end --
+COMMENT ON COLUMN master.machine_master.sign_key_index IS 'Signed Key Index: Field for signature verification public key fingerprint';
+-- ddl-end --
 COMMENT ON COLUMN master.machine_master.zone_code IS 'Zone Code : Unique zone code generated or entered by admin while creating zones, It is referred to master.zone.code. ';
 -- ddl-end --
 COMMENT ON COLUMN master.machine_master.regcntr_id IS 'Registration Center ID : registration center id refers to master.registration_center.id';
@@ -77,4 +83,3 @@ COMMENT ON COLUMN master.machine_master.is_deleted IS 'IS_Deleted : Flag to mark
 -- ddl-end --
 COMMENT ON COLUMN master.machine_master.del_dtimes IS 'Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE';
 -- ddl-end --
-

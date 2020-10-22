@@ -21,8 +21,10 @@ CREATE TABLE master.machine_master_h(
 	ip_address character varying(17),
 	validity_end_dtimes timestamp,
 	mspec_id character varying(36) NOT NULL,
-	public_key character varying(1024) NOT NULL,
-	key_index character varying(128) NOT NULL,
+	public_key character varying(1024),
+	key_index character varying(128),
+	sign_public_key character varying(1024),
+	sign_key_index character varying(128),
 	zone_code character varying(36) NOT NULL,
 	regcntr_id character varying(10),
 	lang_code character varying(3) NOT NULL,
@@ -58,9 +60,13 @@ COMMENT ON COLUMN master.machine_master_h.public_key IS 'Public Key: Public key 
 -- ddl-end --
 COMMENT ON COLUMN master.machine_master_h.key_index IS 'Key Index: Fingerprint[Unique Hash ]  for the TPM public key';
 -- ddl-end --
+COMMENT ON COLUMN master.machine_master_h.sign_public_key IS 'Signed Public Key: Field for signature verification publicKey';
+-- ddl-end --
+COMMENT ON COLUMN master.machine_master_h.sign_key_index IS 'Signed Key Index: Field for signature verification public key fingerprint';
+-- ddl-end --
 COMMENT ON COLUMN master.machine_master_h.zone_code IS 'Zone Code : Unique zone code generated or entered by admin while creating zones, It is referred to master.zone.code. ';
 -- ddl-end --
-COMMENT ON COLUMN master.machine_master.regcntr_id IS 'Registration Center ID : registration center id refers to master.registration_center.id';
+COMMENT ON COLUMN master.machine_master_h.regcntr_id IS 'Registration Center ID : registration center id refers to master.registration_center.id';
 -- ddl-end --
 COMMENT ON COLUMN master.machine_master_h.lang_code IS 'Language Code : For multilanguage implementation this attribute Refers master.language.code. The value of some of the attributes in current record is stored in this respective language. ';
 -- ddl-end --

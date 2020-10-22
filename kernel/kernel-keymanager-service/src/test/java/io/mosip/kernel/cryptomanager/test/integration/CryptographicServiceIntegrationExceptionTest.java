@@ -44,6 +44,7 @@ import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.cryptomanager.dto.CryptomanagerRequestDto;
 import io.mosip.kernel.cryptomanager.dto.CryptomanagerResponseDto;
+import io.mosip.kernel.keymanagerservice.dto.KeyPairGenerateResponseDto;
 import io.mosip.kernel.keymanagerservice.dto.PublicKeyResponse;
 import io.mosip.kernel.keymanagerservice.service.KeymanagerService;
 import io.mosip.kernel.keymanagerservice.test.KeymanagerTestBootApplication;
@@ -105,9 +106,8 @@ public class CryptographicServiceIntegrationExceptionTest {
 	@Test
 	public void testInvalidSpecEncrypt() throws Exception {
 
-		PublicKeyResponse<String> publicKeyResponseDto = new PublicKeyResponse<>("alias",
-				CryptoUtil.encodeBase64("badprivatekey".getBytes()), LocalDateTime.now(),
-				LocalDateTime.now().plusDays(100));
+		KeyPairGenerateResponseDto keyPairGenerateResponseDto = new KeyPairGenerateResponseDto("badCertificateData", null, LocalDateTime.now(),
+				LocalDateTime.now().plusDays(100), LocalDateTime.now());
 	
 		String appid = "REGISTRATION";
 		String data = "dXJ2aWw";
@@ -121,8 +121,8 @@ public class CryptographicServiceIntegrationExceptionTest {
 		requestDto.setReferenceId(refid);
 		requestDto.setTimeStamp(DateUtils.parseToLocalDateTime(timeStamp));
 
-		when(keyManagerService.getPublicKey(Mockito.eq(appid), Mockito.eq(timeStamp), Mockito.eq(Optional.of(refid))))
-		.thenReturn(publicKeyResponseDto);
+		when(keyManagerService.getCertificate(Mockito.eq(appid), Mockito.eq(Optional.of(refid))))
+						.thenReturn(keyPairGenerateResponseDto);
 		String requestBody = objectMapper.writeValueAsString(requestWrapper);
 		MvcResult result = mockMvc
 				.perform(post("/encrypt").contentType(MediaType.APPLICATION_JSON).content(requestBody))
@@ -131,7 +131,7 @@ public class CryptographicServiceIntegrationExceptionTest {
 				result.getResponse().getContentAsString(),
 				new TypeReference<ResponseWrapper<CryptomanagerResponseDto>>() {
 				});
-		assertThat(responseWrapper.getErrors().get(0).getErrorCode(), is("KER-CRY-002"));
+		assertThat(responseWrapper.getErrors().get(0).getErrorCode(), is("KER-KMS-013"));
 	}
 
 	@WithUserDetails("reg-processor")

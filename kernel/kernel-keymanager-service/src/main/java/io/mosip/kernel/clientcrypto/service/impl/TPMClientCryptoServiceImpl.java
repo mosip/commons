@@ -62,7 +62,7 @@ import java.util.Arrays;
  *
  * @author Balaji Sridharan
  * @author Anusha Sunkada
- * @since 1.2.0
+ * @since 1.1.2
  */
 class TPMClientCryptoServiceImpl implements ClientCryptoService {
 
@@ -101,7 +101,7 @@ class TPMClientCryptoServiceImpl implements ClientCryptoService {
             TPMU_SIGNATURE signedData = tpm.Sign(signingKey.handle,
                     TPMT_HA.fromHashOf(TPM_ALG_ID.SHA256, dataToSign).digest, new TPMS_NULL_SIG_SCHEME(),
                     TPMT_TK_HASHCHECK.nullTicket());
-            tpm.FlushContext(signingKey.handle);
+            //tpm.FlushContext(signingKey.handle);
             LOGGER.info(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.TPM,
                     ClientCryptoManagerConstant.EMPTY, "Completed Signing data using TPM");
             return ((TPMS_SIGNATURE_RSASSA) signedData).sig;

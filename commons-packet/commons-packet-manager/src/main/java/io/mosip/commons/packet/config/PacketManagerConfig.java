@@ -15,6 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
@@ -29,7 +30,9 @@ import java.util.Set;
 
 @Configuration
 @EnableCaching
-@ComponentScan(basePackages = "io.mosip.*")
+@ComponentScan(basePackages = {"io.mosip.commons.packet.*", "io.mosip.commons.khazana.*",
+        "io.mosip.kernel.cbeffutil.*", "io.mosip.kernel.auth.*"})
+@Import({OfflineConfig.class})
 public class PacketManagerConfig {
 
     private static final Logger logger = PacketManagerLogger.getLogger(PacketManagerConfig.class);

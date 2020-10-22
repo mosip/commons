@@ -10,18 +10,18 @@ import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
 import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponseDTO;
-
 import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
 import io.mosip.kernel.authcodeflowproxy.api.exception.ClientException;
 import io.mosip.kernel.authcodeflowproxy.api.service.LoginService;
+import io.mosip.kernel.core.authmanager.model.AuthResponseDto;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
 
@@ -85,6 +85,16 @@ public class LoginController {
 		res.addCookie(cookie);
 		ResponseWrapper<MosipUserDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(mosipUserDto);
+		return responseWrapper;
+	}
+	
+	@ResponseFilter
+	@DeleteMapping(value = "/logout/user")
+	public ResponseWrapper<AuthResponseDto> logoutUser(
+			@CookieValue(value = "Authorization", required = false) String token, HttpServletResponse res) {
+		AuthResponseDto authResponseDto = loginService.logoutUser(token);
+		ResponseWrapper<AuthResponseDto> responseWrapper = new ResponseWrapper<>();
+		responseWrapper.setResponse(authResponseDto);
 		return responseWrapper;
 	}
 }

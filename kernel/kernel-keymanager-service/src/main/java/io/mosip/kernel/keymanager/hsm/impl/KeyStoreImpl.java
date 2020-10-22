@@ -2,6 +2,8 @@ package io.mosip.kernel.keymanager.hsm.impl;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.InvalidParameterException;
 import java.security.Key;
 import java.security.KeyPair;
@@ -65,6 +67,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 
 	private static final Logger LOGGER = KeymanagerLogger.getLogger(KeyStoreImpl.class);
 
+	private static final String KEYSTORE_TYPE_PKCS12 = "PKCS12";
 	/**
 	 * Common name for generating certificate
 	 */
@@ -150,6 +153,15 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
+		if (!isConfigFileValid()) {
+			LOGGER.info("sessionId", "KeyStoreImpl", "Creation", "Config File path is not valid or contents invalid entries. " 
+						+ "So, Loading keystore as offline encryption.");
+			BouncyCastleProvider bouncyCastleProvider = new BouncyCastleProvider();
+			Security.addProvider(bouncyCastleProvider);
+			this.keyStore = getKeystoreInstance(KEYSTORE_TYPE_PKCS12, bouncyCastleProvider);
+			loadKeystore();
+			return;
+		}
 		provider = setupProvider(configPath);
 		Security.removeProvider(provider.getName());
 		addProvider(provider);
@@ -158,6 +170,18 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 		this.keyStore = getKeystoreInstance(keystoreType, provider);
 		loadKeystore();
 		// loadCertificate();
+	}
+
+	private boolean isConfigFileValid() {
+		if (configPath.trim().length() == 0)
+			return false;
+		
+		try {
+			return Files.readString(Paths.get(configPath)).trim().length() != 0;
+		} catch (IOException e) {
+			LOGGER.error("sessionId", "KeyStoreImpl", "configFile", "Error reading pkcs11 config file.");
+		}
+		return true;
 	}
 
 	/**
@@ -323,6 +347,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	@SuppressWarnings("findsecbugs:HARD_CODE_PASSWORD")
 	@Override
 	public PrivateKeyEntry getAsymmetricKey(String alias) {
+		validatePKCS11KeyStore();
 		PrivateKeyEntry privateKeyEntry = null;
 		int i = 0;
 		boolean isException = false;
@@ -375,6 +400,12 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 		loadKeystore();
 	}
 
+	private void validatePKCS11KeyStore() {
+		if(KEYSTORE_TYPE_PKCS12.equals(keyStore.getType())){
+			throw new KeystoreProcessingException(KeymanagerErrorCode.NOT_VALID_PKCS11_STORE_TYPE.getErrorCode(),
+						KeymanagerErrorCode.NOT_VALID_PKCS11_STORE_TYPE.getErrorMessage() );
+		}
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -446,6 +477,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	@SuppressWarnings("findsecbugs:HARD_CODE_PASSWORD")
 	@Override
 	public SecretKey getSymmetricKey(String alias) {
+		validatePKCS11KeyStore();
 		SecretKey secretKey = null;
 		int i = 0;
 		boolean isException = false;
@@ -517,6 +549,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	 */
 	@Override
 	public void deleteKey(String alias) {
+		validatePKCS11KeyStore();
 		try {
 			keyStore.deleteEntry(alias);
 		} catch (KeyStoreException e) {
@@ -559,6 +592,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	@SuppressWarnings("findsecbugs:HARD_CODE_PASSWORD")
 	@Override
 	public void generateAndStoreAsymmetricKey(String alias, String signKeyAlias, CertificateParameters certParams) {
+		validatePKCS11KeyStore();
 		KeyPair keyPair = null;
 		PrivateKey signPrivateKey = null;
 		X500Principal signerPrincipal = null;
@@ -588,6 +622,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	@SuppressWarnings("findsecbugs:HARD_CODE_PASSWORD")
 	@Override
 	public void generateAndStoreSymmetricKey(String alias) {
+		validatePKCS11KeyStore();
 		SecretKey secretKey = generateSymmetricKey();
 		SecretKeyEntry secret = new SecretKeyEntry(secretKey);
 		ProtectionParameter password = new PasswordProtection(keystorePass.toCharArray());

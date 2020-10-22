@@ -1,6 +1,7 @@
 package io.mosip.commons.packet.keeper;
 
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
+import io.mosip.commons.packet.constants.ErrorCode;
 import io.mosip.commons.packet.constants.PacketUtilityErrorCodes;
 import io.mosip.commons.packet.dto.Packet;
 import io.mosip.commons.packet.dto.Manifest;
@@ -97,9 +98,10 @@ public class PacketKeeper {
      * @return : boolean
      */
     public boolean checkIntegrity(PacketInfo packetInfo, byte[] encryptedSubPacket) {
-        String hash = new String(CryptoUtil.encodeBase64(HMACUtils.generateHash(encryptedSubPacket)));
+        String hash = CryptoUtil.encodeBase64(HMACUtils.generateHash(encryptedSubPacket));
         boolean result = hash.equals(packetInfo.getEncryptedHash());
-        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packetInfo.getId(), "Integrity check : " + result);
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
+                getName(packetInfo.getId(), packetInfo.getPacketName()), "Integrity check : " + result);
         return result;
     }
 
@@ -112,10 +114,12 @@ public class PacketKeeper {
      * @return
      */
     public boolean checkSignature(Packet packet, byte[] encryptedSubPacket) {
-        boolean result = getCryptoService().verify(packet.getPacket(), CryptoUtil.decodeBase64(packet.getPacketInfo().getSignature()));
+        // TODO : disabling signature verification temporarily
+        boolean result = true;//getCryptoService().verify(packet.getPacket(), CryptoUtil.decodeBase64(packet.getPacketInfo().getSignature()));
         if (result)
             result = checkIntegrity(packet.getPacketInfo(), encryptedSubPacket);
-        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packet.getPacketInfo().getId(), "Integrity and signature check : " + result);
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
+                getName(packet.getPacketInfo().getId(), packet.getPacketInfo().getPacketName()), "Integrity and signature check : " + result);
         return result;
     }
 
@@ -129,6 +133,11 @@ public class PacketKeeper {
         try {
             InputStream is = getAdapter().getObject(PACKET_MANAGER_ACCOUNT, packetInfo.getId(), packetInfo.getSource(),
                     packetInfo.getProcess(), getName(packetInfo.getId(), packetInfo.getPacketName()));
+            if (is == null) {
+                LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
+                        getName(packetInfo.getId(), packetInfo.getPacketName()), packetInfo.getProcess() + " Packet is not present in packet store.");
+                throw new PacketKeeperException(ErrorCode.PACKET_NOT_FOUND.getErrorCode(), ErrorCode.PACKET_NOT_FOUND.getErrorMessage());
+            }
             byte[] encryptedSubPacket = IOUtils.toByteArray(is);
             byte[] subPacket = getCryptoService().decrypt(packetInfo.getId(), encryptedSubPacket);
 
@@ -138,10 +147,16 @@ public class PacketKeeper {
                     packetInfo.getSource(), packetInfo.getProcess(), getName(packetInfo.getId(), packetInfo.getPacketName()));
             if (metaInfo != null && !metaInfo.isEmpty())
                 packet.setPacketInfo(PacketManagerHelper.getPacketInfo(metaInfo));
+            else {
+                LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
+                        getName(packetInfo.getId(), packetInfo.getPacketName()), "metainfo not found for this packet");
+                packet.setPacketInfo(packetInfo);
+            }
 
 
             if (!checkSignature(packet, encryptedSubPacket)) {
-                LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packet.getPacketInfo().getId(), "Packet Integrity and Signature check failed");
+                LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
+                        getName(packet.getPacketInfo().getId(), packetInfo.getPacketName()), "Packet Integrity and Signature check failed");
                 throw new PacketIntegrityFailureException();
             }
 
@@ -180,9 +195,9 @@ public class PacketKeeper {
             if (response) {
                 PacketInfo packetInfo = packet.getPacketInfo();
                 // sign encrypted packet
-                packetInfo.setSignature(new String(CryptoUtil.encodeBase64(getCryptoService().sign(packet.getPacket()))));
+                packetInfo.setSignature(CryptoUtil.encodeBase64(getCryptoService().sign(packet.getPacket())));
                 // generate encrypted packet hash
-                packetInfo.setEncryptedHash(new String(CryptoUtil.encodeBase64(HMACUtils.generateHash(encryptedSubPacket))));
+                packetInfo.setEncryptedHash(CryptoUtil.encodeBase64(HMACUtils.generateHash(encryptedSubPacket)));
                 Map<String, Object> metaMap = PacketManagerHelper.getMetaMap(packetInfo);
                 metaMap = getAdapter().addObjectMetaData(PACKET_MANAGER_ACCOUNT,
                         packet.getPacketInfo().getId(), packet.getPacketInfo().getSource(), packet.getPacketInfo().getProcess(), packet.getPacketInfo().getPacketName(), metaMap);
@@ -226,8 +241,15 @@ public class PacketKeeper {
             throw new CryptoException();
     }
 
-    private String getName(String id, String name) {
+    private static String getName(String id, String name) {
         return id + UNDERSCORE + name;
     }
 
+    public boolean deletePacket(String id, String source, String process) {
+        return getAdapter().removeContainer(PACKET_MANAGER_ACCOUNT, id, source, process);
+    }
+
+    public boolean pack(String id, String source, String process) {
+        return getAdapter().pack(PACKET_MANAGER_ACCOUNT, id, source, process);
+    }
 }

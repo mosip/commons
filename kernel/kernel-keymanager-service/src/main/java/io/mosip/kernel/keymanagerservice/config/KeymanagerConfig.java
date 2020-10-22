@@ -15,7 +15,7 @@ import org.springframework.web.filter.CommonsRequestLoggingFilter;
  *
  */
 @Configuration
-public class Config {
+public class KeymanagerConfig {
 
 	@Bean
 	public FilterRegistrationBean<Filter> registerReqResFilter() {
