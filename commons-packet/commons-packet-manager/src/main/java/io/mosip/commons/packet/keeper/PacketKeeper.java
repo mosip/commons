@@ -30,226 +30,233 @@ import java.io.InputStream;
 import java.util.Map;
 
 /**
- * The packet keeper is used to store & retrieve packet, creation of audit, encrypt and sign packet.
- * Packet keeper is used to get container information and list of sources from a packet.
+ * The packet keeper is used to store & retrieve packet, creation of audit,
+ * encrypt and sign packet. Packet keeper is used to get container information
+ * and list of sources from a packet.
  */
 @Component
 public class PacketKeeper {
 
-    /**
-     * The reg proc logger.
-     */
-    private static Logger LOGGER = PacketManagerLogger.getLogger(PacketKeeper.class);
+	/**
+	 * The reg proc logger.
+	 */
+	private static Logger LOGGER = PacketManagerLogger.getLogger(PacketKeeper.class);
 
-    @Value("${packet.manager.account.name}")
-    private String PACKET_MANAGER_ACCOUNT;
+	@Value("${packet.manager.account.name}")
+	private String PACKET_MANAGER_ACCOUNT;
 
-    @Autowired
-    @Qualifier("SwiftAdapter")
-    private ObjectStoreAdapter swiftAdapter;
+	@Autowired
+	@Qualifier("SwiftAdapter")
+	private ObjectStoreAdapter swiftAdapter;
 
-    @Autowired
-    @Qualifier("S3Adapter")
-    private ObjectStoreAdapter s3Adapter;
+	@Autowired
+	@Qualifier("S3Adapter")
+	private ObjectStoreAdapter s3Adapter;
 
-    @Autowired
-    @Qualifier("PosixAdapter")
-    private ObjectStoreAdapter posixAdapter;
+	@Autowired
+	@Qualifier("PosixAdapter")
+	private ObjectStoreAdapter posixAdapter;
 
-    @Value("${objectstore.adapter.name}")
-    private String adapterName;
+	@Value("${objectstore.adapter.name}")
+	private String adapterName;
 
-    @Value("${objectstore.crypto.name}")
-    private String cryptoName;
+	@Value("${objectstore.crypto.name}")
+	private String cryptoName;
 
-    @Autowired
-    @Qualifier("OnlinePacketCryptoServiceImpl")
-    private IPacketCryptoService onlineCrypto;
+	@Autowired
+	@Qualifier("OnlinePacketCryptoServiceImpl")
+	private IPacketCryptoService onlineCrypto;
 
-    @Autowired
-    @Qualifier("OfflinePacketCryptoServiceImpl")
-    private IPacketCryptoService offlineCrypto;
+	@Autowired
+	@Qualifier("OfflinePacketCryptoServiceImpl")
+	private IPacketCryptoService offlineCrypto;
 
-    private static final String UNDERSCORE = "_";
+	private static final String UNDERSCORE = "_";
 
-    /**
-     * Get the manifest information for given packet id
-     *
-     * @param id : packet id
-     * @return : Manifest
-     */
-    /*public Manifest getManifest(String id) {
-        Manifest manifest = new Manifest();
+	/**
+	 * Get the manifest information for given packet id
+	 *
+	 * @param id : packet id
+	 * @return : Manifest
+	 */
+	/*
+	 * public Manifest getManifest(String id) { Manifest manifest = new Manifest();
+	 * 
+	 * Map<String, Object> metaMap =
+	 * getAdapter().getMetaData(PACKET_MANAGER_ACCOUNT, id, null);
+	 * 
+	 * metaMap.entrySet().forEach(entry -> { Map<String, Object> tempMap =
+	 * (Map<String, Object>) entry.getValue(); PacketInfo packetInfo =
+	 * PacketManagerHelper.getPacketInfo(tempMap);
+	 * manifest.getPacketInfos().add(packetInfo); }); return manifest; }
+	 */
 
-        Map<String, Object> metaMap = getAdapter().getMetaData(PACKET_MANAGER_ACCOUNT, id, null);
+	/**
+	 * Check packet integrity.
+	 *
+	 * @param packetInfo : the packet information
+	 * @return : boolean
+	 */
+	public boolean checkIntegrity(PacketInfo packetInfo, byte[] encryptedSubPacket) {
+		String hash = CryptoUtil.encodeBase64(HMACUtils.generateHash(encryptedSubPacket));
+		boolean result = hash.equals(packetInfo.getEncryptedHash());
+		LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
+				getName(packetInfo.getId(), packetInfo.getPacketName()), "Integrity check : " + result);
+		return result;
+	}
 
-        metaMap.entrySet().forEach(entry -> {
-            Map<String, Object> tempMap = (Map<String, Object>) entry.getValue();
-            PacketInfo packetInfo = PacketManagerHelper.getPacketInfo(tempMap);
-            manifest.getPacketInfos().add(packetInfo);
-        });
-        return manifest;
-    }*/
+	/**
+	 * Check integrity and signature of the packet
+	 *
+	 *
+	 * @param packet
+	 * @param encryptedSubPacket
+	 * @return
+	 */
+	public boolean checkSignature(Packet packet, byte[] encryptedSubPacket) {
+		// TODO : disabling signature verification temporarily
+		boolean result = true;// getCryptoService().verify(packet.getPacket(),
+								// CryptoUtil.decodeBase64(packet.getPacketInfo().getSignature()));
+		if (result)
+			result = checkIntegrity(packet.getPacketInfo(), encryptedSubPacket);
+		LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
+				getName(packet.getPacketInfo().getId(), packet.getPacketInfo().getPacketName()),
+				"Integrity and signature check : " + result);
+		return result;
+	}
 
-    /**
-     * Check packet integrity.
-     *
-     * @param packetInfo : the packet information
-     * @return : boolean
-     */
-    public boolean checkIntegrity(PacketInfo packetInfo, byte[] encryptedSubPacket) {
-        String hash = CryptoUtil.encodeBase64(HMACUtils.generateHash(encryptedSubPacket));
-        boolean result = hash.equals(packetInfo.getEncryptedHash());
-        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
-                getName(packetInfo.getId(), packetInfo.getPacketName()), "Integrity check : " + result);
-        return result;
-    }
+	/**
+	 * Get packet
+	 *
+	 * @param packetInfo : packet info
+	 * @return : Packet
+	 */
+	public Packet getPacket(PacketInfo packetInfo) throws PacketKeeperException {
+		try {
+			InputStream is = getAdapter().getObject(PACKET_MANAGER_ACCOUNT, packetInfo.getId(), packetInfo.getSource(),
+					packetInfo.getProcess(), getName(packetInfo.getId(), packetInfo.getPacketName()));
+			if (is == null) {
+				LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
+						getName(packetInfo.getId(), packetInfo.getPacketName()),
+						packetInfo.getProcess() + " Packet is not present in packet store.");
+				throw new PacketKeeperException(ErrorCode.PACKET_NOT_FOUND.getErrorCode(),
+						ErrorCode.PACKET_NOT_FOUND.getErrorMessage());
+			}
+			byte[] encryptedSubPacket = IOUtils.toByteArray(is);
+			byte[] subPacket = getCryptoService().decrypt(packetInfo.getId(), encryptedSubPacket);
 
-    /**
-     * Check integrity and signature of the packet
-     *
-     *
-     * @param packet
-     * @param encryptedSubPacket
-     * @return
-     */
-    public boolean checkSignature(Packet packet, byte[] encryptedSubPacket) {
-        // TODO : disabling signature verification temporarily
-        boolean result = true;//getCryptoService().verify(packet.getPacket(), CryptoUtil.decodeBase64(packet.getPacketInfo().getSignature()));
-        if (result)
-            result = checkIntegrity(packet.getPacketInfo(), encryptedSubPacket);
-        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
-                getName(packet.getPacketInfo().getId(), packet.getPacketInfo().getPacketName()), "Integrity and signature check : " + result);
-        return result;
-    }
+			Packet packet = new Packet();
+			packet.setPacket(subPacket);
+			Map<String, Object> metaInfo = getAdapter().getMetaData(PACKET_MANAGER_ACCOUNT, packetInfo.getId(),
+					packetInfo.getSource(), packetInfo.getProcess(),
+					getName(packetInfo.getId(), packetInfo.getPacketName()));
+			if (metaInfo != null && !metaInfo.isEmpty())
+				packet.setPacketInfo(PacketManagerHelper.getPacketInfo(metaInfo));
+			else {
+				LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
+						getName(packetInfo.getId(), packetInfo.getPacketName()), "metainfo not found for this packet");
+				packet.setPacketInfo(packetInfo);
+			}
 
-    /**
-     * Get packet
-     *
-     * @param packetInfo : packet info
-     * @return : Packet
-     */
-    public Packet getPacket(PacketInfo packetInfo) throws PacketKeeperException {
-        try {
-            InputStream is = getAdapter().getObject(PACKET_MANAGER_ACCOUNT, packetInfo.getId(), packetInfo.getSource(),
-                    packetInfo.getProcess(), getName(packetInfo.getId(), packetInfo.getPacketName()));
-            if (is == null) {
-                LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
-                        getName(packetInfo.getId(), packetInfo.getPacketName()), packetInfo.getProcess() + " Packet is not present in packet store.");
-                throw new PacketKeeperException(ErrorCode.PACKET_NOT_FOUND.getErrorCode(), ErrorCode.PACKET_NOT_FOUND.getErrorMessage());
-            }
-            byte[] encryptedSubPacket = IOUtils.toByteArray(is);
-            byte[] subPacket = getCryptoService().decrypt(packetInfo.getId(), encryptedSubPacket);
+			
+			  if (!checkSignature(packet, encryptedSubPacket)) {
+			  LOGGER.error(PacketManagerLogger.SESSIONID,
+			  PacketManagerLogger.REGISTRATIONID, getName(packet.getPacketInfo().getId(),
+			  packetInfo.getPacketName()), "Packet Integrity and Signature check failed");
+			  throw new PacketIntegrityFailureException(); }
+			 
 
-            Packet packet = new Packet();
-            packet.setPacket(subPacket);
-            Map<String, Object> metaInfo = getAdapter().getMetaData(PACKET_MANAGER_ACCOUNT, packetInfo.getId(),
-                    packetInfo.getSource(), packetInfo.getProcess(), getName(packetInfo.getId(), packetInfo.getPacketName()));
-            if (metaInfo != null && !metaInfo.isEmpty())
-                packet.setPacketInfo(PacketManagerHelper.getPacketInfo(metaInfo));
-            else {
-                LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
-                        getName(packetInfo.getId(), packetInfo.getPacketName()), "metainfo not found for this packet");
-                packet.setPacketInfo(packetInfo);
-            }
+			return packet;
+		} catch (Exception e) {
+			LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packetInfo.getId(),
+					ExceptionUtils.getStackTrace(e));
+			if (e instanceof BaseCheckedException) {
+				BaseCheckedException ex = (BaseCheckedException) e;
+				throw new PacketKeeperException(ex.getErrorCode(), ex.getMessage());
+			} else if (e instanceof BaseUncheckedException) {
+				BaseUncheckedException ex = (BaseUncheckedException) e;
+				throw new PacketKeeperException(ex.getErrorCode(), ex.getMessage());
+			} else
+				throw new PacketKeeperException(PacketUtilityErrorCodes.PACKET_KEEPER_GET_ERROR.getErrorCode(),
+						"Failed to get packet from object store : " + e.getMessage(), e);
+		}
+	}
 
+	/**
+	 * Put packet into storage/cache
+	 *
+	 * @param packet : the Packet
+	 * @return PacketInfo
+	 */
+	public PacketInfo putPacket(Packet packet) throws PacketKeeperException {
+		try {
+			// encrypt packet
+			byte[] encryptedSubPacket = getCryptoService().encrypt(packet.getPacketInfo().getId(), packet.getPacket());
 
-            if (!checkSignature(packet, encryptedSubPacket)) {
-                LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
-                        getName(packet.getPacketInfo().getId(), packetInfo.getPacketName()), "Packet Integrity and Signature check failed");
-                throw new PacketIntegrityFailureException();
-            }
+			// put packet in object store
+			boolean response = getAdapter().putObject(PACKET_MANAGER_ACCOUNT, packet.getPacketInfo().getId(),
+					packet.getPacketInfo().getSource(), packet.getPacketInfo().getProcess(),
+					packet.getPacketInfo().getPacketName(), new ByteArrayInputStream(encryptedSubPacket));
 
-            return packet;
-        } catch (Exception e) {
-            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packetInfo.getId(), ExceptionUtils.getStackTrace(e));
-            if (e instanceof BaseCheckedException) {
-                BaseCheckedException ex = (BaseCheckedException) e;
-                throw new PacketKeeperException(ex.getErrorCode(), ex.getMessage());
-            }
-            else if (e instanceof BaseUncheckedException) {
-                BaseUncheckedException ex = (BaseUncheckedException) e;
-                throw new PacketKeeperException(ex.getErrorCode(), ex.getMessage());
-            } else
-                throw new PacketKeeperException(PacketUtilityErrorCodes.PACKET_KEEPER_GET_ERROR.getErrorCode(),
-                    "Failed to get packet from object store : " + e.getMessage(), e);
-        }
-    }
+			if (response) {
+				PacketInfo packetInfo = packet.getPacketInfo();
+				// sign encrypted packet
+				packetInfo.setSignature(CryptoUtil.encodeBase64(getCryptoService().sign(packet.getPacket())));
+				// generate encrypted packet hash
+				packetInfo.setEncryptedHash(CryptoUtil.encodeBase64(HMACUtils.generateHash(encryptedSubPacket)));
+				Map<String, Object> metaMap = PacketManagerHelper.getMetaMap(packetInfo);
+				metaMap = getAdapter().addObjectMetaData(PACKET_MANAGER_ACCOUNT, packet.getPacketInfo().getId(),
+						packet.getPacketInfo().getSource(), packet.getPacketInfo().getProcess(),
+						packet.getPacketInfo().getPacketName(), metaMap);
+				return PacketManagerHelper.getPacketInfo(metaMap);
+			} else
+				throw new PacketKeeperException(PacketUtilityErrorCodes.PACKET_KEEPER_PUT_ERROR.getErrorCode(),
+						"Unable to store packet in object store");
 
-    /**
-     * Put packet into storage/cache
-     *
-     * @param packet : the Packet
-     * @return PacketInfo
-     */
-    public PacketInfo putPacket(Packet packet) throws PacketKeeperException {
-        try {
-            // encrypt packet
-            byte[] encryptedSubPacket = getCryptoService().encrypt(packet.getPacketInfo().getId(), packet.getPacket());
+		} catch (Exception e) {
+			LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
+					packet.getPacketInfo().getId(), ExceptionUtils.getStackTrace(e));
+			if (e instanceof BaseCheckedException) {
+				BaseCheckedException ex = (BaseCheckedException) e;
+				throw new PacketKeeperException(ex.getErrorCode(), ex.getMessage());
+			} else if (e instanceof BaseUncheckedException) {
+				BaseUncheckedException ex = (BaseUncheckedException) e;
+				throw new PacketKeeperException(ex.getErrorCode(), ex.getMessage());
+			}
+			throw new PacketKeeperException(PacketUtilityErrorCodes.PACKET_KEEPER_PUT_ERROR.getErrorCode(),
+					"Failed to persist packet in object store : " + e.getMessage(), e);
+		}
+	}
 
-            // put packet in object store
-            boolean response = getAdapter().putObject(PACKET_MANAGER_ACCOUNT,
-                    packet.getPacketInfo().getId(), packet.getPacketInfo().getSource(),
-                    packet.getPacketInfo().getProcess(), packet.getPacketInfo().getPacketName(), new ByteArrayInputStream(encryptedSubPacket));
+	private ObjectStoreAdapter getAdapter() {
+		if (adapterName.equalsIgnoreCase(swiftAdapter.getClass().getSimpleName()))
+			return swiftAdapter;
+		else if (adapterName.equalsIgnoreCase(posixAdapter.getClass().getSimpleName()))
+			return posixAdapter;
+		else if (adapterName.equalsIgnoreCase(s3Adapter.getClass().getSimpleName()))
+			return s3Adapter;
+		else
+			throw new ObjectStoreAdapterException();
+	}
 
-            if (response) {
-                PacketInfo packetInfo = packet.getPacketInfo();
-                // sign encrypted packet
-                packetInfo.setSignature(CryptoUtil.encodeBase64(getCryptoService().sign(packet.getPacket())));
-                // generate encrypted packet hash
-                packetInfo.setEncryptedHash(CryptoUtil.encodeBase64(HMACUtils.generateHash(encryptedSubPacket)));
-                Map<String, Object> metaMap = PacketManagerHelper.getMetaMap(packetInfo);
-                metaMap = getAdapter().addObjectMetaData(PACKET_MANAGER_ACCOUNT,
-                        packet.getPacketInfo().getId(), packet.getPacketInfo().getSource(), packet.getPacketInfo().getProcess(), packet.getPacketInfo().getPacketName(), metaMap);
-                return PacketManagerHelper.getPacketInfo(metaMap);
-            } else
-                throw new PacketKeeperException(PacketUtilityErrorCodes
-                        .PACKET_KEEPER_PUT_ERROR.getErrorCode(), "Unable to store packet in object store");
+	private IPacketCryptoService getCryptoService() {
+		if (cryptoName.equalsIgnoreCase(onlineCrypto.getClass().getSimpleName()))
+			return onlineCrypto;
+		else if (cryptoName.equalsIgnoreCase(offlineCrypto.getClass().getSimpleName()))
+			return offlineCrypto;
+		else
+			throw new CryptoException();
+	}
 
+	private static String getName(String id, String name) {
+		return id + UNDERSCORE + name;
+	}
 
-        } catch (Exception e) {
-            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packet.getPacketInfo().getId(), ExceptionUtils.getStackTrace(e));
-            if (e instanceof BaseCheckedException) {
-                BaseCheckedException ex = (BaseCheckedException) e;
-                throw new PacketKeeperException(ex.getErrorCode(), ex.getMessage());
-            } else if (e instanceof BaseUncheckedException) {
-                BaseUncheckedException ex = (BaseUncheckedException) e;
-                throw new PacketKeeperException(ex.getErrorCode(), ex.getMessage());
-            }
-            throw new PacketKeeperException(PacketUtilityErrorCodes.PACKET_KEEPER_PUT_ERROR.getErrorCode(),
-                    "Failed to persist packet in object store : " + e.getMessage(), e);
-        }
-    }
+	public boolean deletePacket(String id, String source, String process) {
+		return getAdapter().removeContainer(PACKET_MANAGER_ACCOUNT, id, source, process);
+	}
 
-    private ObjectStoreAdapter getAdapter() {
-        if (adapterName.equalsIgnoreCase(swiftAdapter.getClass().getSimpleName()))
-            return swiftAdapter;
-        else if (adapterName.equalsIgnoreCase(posixAdapter.getClass().getSimpleName()))
-            return posixAdapter;
-        else if (adapterName.equalsIgnoreCase(s3Adapter.getClass().getSimpleName()))
-            return s3Adapter;
-        else
-            throw new ObjectStoreAdapterException();
-    }
-
-    private IPacketCryptoService getCryptoService() {
-        if (cryptoName.equalsIgnoreCase(onlineCrypto.getClass().getSimpleName()))
-            return onlineCrypto;
-        else if (cryptoName.equalsIgnoreCase(offlineCrypto.getClass().getSimpleName()))
-            return offlineCrypto;
-        else
-            throw new CryptoException();
-    }
-
-    private static String getName(String id, String name) {
-        return id + UNDERSCORE + name;
-    }
-
-    public boolean deletePacket(String id, String source, String process) {
-        return getAdapter().removeContainer(PACKET_MANAGER_ACCOUNT, id, source, process);
-    }
-
-    public boolean pack(String id, String source, String process) {
-        return getAdapter().pack(PACKET_MANAGER_ACCOUNT, id, source, process);
-    }
+	public boolean pack(String id, String source, String process) {
+		return getAdapter().pack(PACKET_MANAGER_ACCOUNT, id, source, process);
+	}
 }
