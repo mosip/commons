@@ -60,7 +60,7 @@ public enum SingleAnySubtypeType {
 
 	public static SingleAnySubtypeType fromValue(String v) {
 		for (SingleAnySubtypeType c : SingleAnySubtypeType.values()) {
-			if (c.value.equals(v)) {
+			if (c.value.equalsIgnoreCase(v)) {
 				return c;
 			}
 		}
