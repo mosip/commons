@@ -376,6 +376,7 @@
                   </executions>
                   <configuration>
                           <doclint>none</doclint>
+						  <sourcepath>src/main/java</sourcepath>
                   </configuration>
                 </plugin>
                 <plugin>
