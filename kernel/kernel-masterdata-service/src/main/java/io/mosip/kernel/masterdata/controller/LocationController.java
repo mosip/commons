@@ -26,13 +26,11 @@ import io.mosip.kernel.masterdata.dto.getresponse.LocationHierarchyResponseDto;
 import io.mosip.kernel.masterdata.dto.getresponse.LocationResponseDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
 import io.mosip.kernel.masterdata.dto.getresponse.StatusResponseDto;
-import io.mosip.kernel.masterdata.dto.getresponse.extn.BlacklistedWordsExtnDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.LocationExtnDto;
 import io.mosip.kernel.masterdata.dto.postresponse.CodeResponseDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
-import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.LocationPostResponseDto;
 import io.mosip.kernel.masterdata.dto.response.LocationPutResponseDto;
 import io.mosip.kernel.masterdata.dto.response.LocationSearchDto;
@@ -91,7 +89,7 @@ public class LocationController {
 	 * @return ResponseWrapper<LocationPostResponseDto>
 	 */
 
-	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@PostMapping
 	public ResponseWrapper<LocationPostResponseDto> createLocationHierarchyDetails(
@@ -144,7 +142,7 @@ public class LocationController {
 	 */
 	@ResponseFilter
 	@PutMapping
-	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	public ResponseWrapper<LocationPutResponseDto> updateLocationHierarchyDetails(
 			@Valid @RequestBody RequestWrapper<LocationDto> locationRequestDto) {
 		auditUtil.auditRequest(MasterDataConstant.UPDATE_API_IS_CALLED + LocationDto.class.getSimpleName(),
@@ -176,7 +174,7 @@ public class LocationController {
 	 * @param langCode     language code
 	 * @return list of location hierarchies
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','ZONAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping(value = "immediatechildren/{locationcode}/{langcode}")
 	public ResponseWrapper<LocationResponseDto> getImmediateChildrenByLocCodeAndLangCode(
@@ -214,7 +212,7 @@ public class LocationController {
 	 * 
 	 * @return the response i.e. pages containing the locations.
 	 */
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','CENTRAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','CENTRAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping("/all")
 	@ApiOperation(value = "Retrieve all the location with additional metadata", notes = "Retrieve all the location with the additional metadata")
@@ -237,7 +235,7 @@ public class LocationController {
 	 * @param request input from user
 	 * @return location values
 	 */
-	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@PostMapping("/search")
 	public ResponseWrapper<PageResponseDto<LocationSearchDto>> searchLocation(
@@ -261,7 +259,7 @@ public class LocationController {
 	 * @param request input from user
 	 * @return column values corresponding to entered dto
 	 */
-	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@PostMapping("/filtervalues")
 	public ResponseWrapper<FilterResponseCodeDto> locationFilterValues(
