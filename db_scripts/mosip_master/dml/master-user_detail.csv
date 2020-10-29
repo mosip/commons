@@ -130,3 +130,5 @@
 110129,9317596867,Mosip Test,mosip-test1@technoforte.co.in,9876543212,ACT,10001,eng,PWD,TRUE,superadmin,now()
 110130,9317596868,Testuser1,mosip-test2@technoforte.co.in,9876543213,ACT,10001,eng,PWD,TRUE,superadmin,now()
 110131,9317596869,Testuser2,mosip-test3@technoforte.co.in,9876543214,ACT,10002,eng,PWD,TRUE,superadmin,now()
+superadmin,9134536633,Super Admin,superadmin@xyz.com,9134533333,ACT,10002,eng,PWD,TRUE,superadmin,now()
+
