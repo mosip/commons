@@ -985,7 +985,7 @@ public class MasterdataControllerTest {
 
 	// -------------------------------TemplateControllerTest--------------------------
 	@Test
-	@WithUserDetails("individual")
+	@WithUserDetails("global-admin")
 	public void getAllTemplateByTest() throws Exception {
 		TemplateResponseDto templateResponseDto = new TemplateResponseDto();
 		templateResponseDto.setTemplates(templateDtoList);
