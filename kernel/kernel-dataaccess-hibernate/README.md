@@ -18,7 +18,7 @@ This module is used by modules that have to use the DAO layer. There can be mult
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-dataaccess-hibernate</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>1.0.0-rc1</version>
 		</dependency>
 ```
 

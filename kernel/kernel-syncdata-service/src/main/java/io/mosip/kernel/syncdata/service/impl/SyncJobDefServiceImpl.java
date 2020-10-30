@@ -16,7 +16,7 @@ import io.mosip.kernel.syncdata.dto.SyncJobDefDto;
 import io.mosip.kernel.syncdata.entity.SyncJobDef;
 import io.mosip.kernel.syncdata.exception.AdminServiceException;
 import io.mosip.kernel.syncdata.service.SyncJobDefService;
-import io.mosip.kernel.syncdata.syncjob.repository.SyncJobDefRepository;
+import io.mosip.kernel.syncdata.repository.SyncJobDefRepository;
 import io.mosip.kernel.syncdata.utils.MapperUtils;
 
 /**
@@ -134,7 +134,7 @@ public class SyncJobDefServiceImpl implements SyncJobDefService {
 					currentTimeStamp);
 		} catch (DataAccessException | DataAccessLayerException e) {
 			throw new AdminServiceException(AdminServiceErrorCode.SYNC_JOB_DEF_FETCH_EXCEPTION.getErrorCode(),
-					AdminServiceErrorCode.SYNC_JOB_DEF_FETCH_EXCEPTION.getErrorMessage());
+					AdminServiceErrorCode.SYNC_JOB_DEF_FETCH_EXCEPTION.getErrorMessage()+e);
 		}
 		if (syncJobDefs != null && !syncJobDefs.isEmpty()) {
 			syncJobDefDtos = MapperUtils.mapAll(syncJobDefs, SyncJobDefDto.class);

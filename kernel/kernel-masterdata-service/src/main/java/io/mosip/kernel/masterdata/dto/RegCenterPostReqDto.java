@@ -8,8 +8,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Range;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import io.mosip.kernel.masterdata.validator.StringFormatter;
 import io.mosip.kernel.masterdata.validator.ValidLangCode;
 import lombok.Data;
 
@@ -25,12 +28,12 @@ import lombok.Data;
 @Data
 public class RegCenterPostReqDto {
 
-	@NotBlank
-	@Size(min = 0, max = 128)
+	@NotNull
+	@StringFormatter(min = 1, max = 128)
 	private String name;
 
-	@NotBlank
-	@Size(min = 0, max = 256)
+	@NotNull
+	@StringFormatter(min = 1, max = 256)
 	private String addressLine1;
 
 	@Size(min = 0, max = 256)
@@ -50,31 +53,31 @@ public class RegCenterPostReqDto {
 
 	private String id;
 
-	@NotBlank
-	@Size(min = 0, max = 36)
+	@NotNull
+	@StringFormatter(min = 1, max = 36)
 	private String centerTypeCode;
 
-	@NotBlank
-	@Size(min = 0, max = 32)
+	@NotNull
+	@StringFormatter(min = 1, max = 32)
 	private String latitude;
 
-	@NotBlank
-	@Size(min = 0, max = 32)
+	@NotNull
+	@StringFormatter(min = 1, max = 32)
 	private String longitude;
 
-	@NotBlank
-	@Size(min = 0, max = 36)
+	@NotNull
+	@StringFormatter(min = 1, max = 36)
 	private String locationCode;
 
-	@NotBlank
-	@Size(min = 0, max = 36)
+	@NotNull
+	@StringFormatter(min = 1, max = 36)
 	private String holidayLocationCode;
 
 	@Size(min = 0, max = 16)
 	private String contactPhone;
 
-	@NotBlank
-	@Size(min = 0, max = 32)
+	@NotNull
+	@StringFormatter(min = 1, max = 32)
 	private String workingHours;
 
 	@NotNull
@@ -99,7 +102,7 @@ public class RegCenterPostReqDto {
 	private String timeZone;
 
 	@NotNull
-	@Size(min = 0, max = 36)
+	@StringFormatter(min = 1, max = 36)
 	private String zoneCode;
 
 	@Valid

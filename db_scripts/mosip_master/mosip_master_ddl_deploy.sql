@@ -24,8 +24,6 @@
 \ir ddl/master-individual_type.sql
 \ir ddl/master-introducer_type.sql
 \ir ddl/master-language.sql
-\ir ddl/master-licensekey_list.sql
-\ir ddl/master-licensekey_permission.sql
 \ir ddl/master-location.sql
 \ir ddl/master-loc_holiday.sql
 \ir ddl/master-machine_master.sql
@@ -41,17 +39,7 @@
 \ir ddl/master-reason_list.sql
 \ir ddl/master-registration_center.sql
 \ir ddl/master-registration_center_h.sql
-\ir ddl/master-reg_center_device.sql
-\ir ddl/master-reg_center_device_h.sql
-\ir ddl/master-reg_center_machine.sql
-\ir ddl/master-reg_center_machine_device.sql
-\ir ddl/master-reg_center_machine_device_h.sql
-\ir ddl/master-reg_center_machine_h.sql
 \ir ddl/master-reg_center_type.sql
-\ir ddl/master-reg_center_user.sql
-\ir ddl/master-reg_center_user_h.sql
-\ir ddl/master-reg_center_user_machine.sql
-\ir ddl/master-reg_center_user_machine_h.sql
 \ir ddl/master-role_list.sql
 \ir ddl/master-screen_authorization.sql
 \ir ddl/master-screen_detail.sql
@@ -61,29 +49,14 @@
 \ir ddl/master-template_file_format.sql
 \ir ddl/master-template_type.sql
 \ir ddl/master-title.sql
-\ir ddl/master-transaction_type.sql
-\ir ddl/master-tsp_licensekey_map.sql
 \ir ddl/master-tspid_seq.sql
 \ir ddl/master-user_detail.sql
 \ir ddl/master-user_detail_h.sql
-\ir ddl/master-user_pwd.sql
-\ir ddl/master-user_role.sql
 \ir ddl/master-valid_document.sql
 
 \ir ddl/master-zone.sql
 \ir ddl/master-zone_user.sql
 \ir ddl/master-zone_user_h.sql
-
-\ir ddl/master-reg_device_type.sql
-\ir ddl/master-reg_device_sub_type.sql
-\ir ddl/master-mosip_device_service.sql
-\ir ddl/master-mosip_device_service_h.sql
-\ir ddl/master-device_provider.sql
-\ir ddl/master-device_provider_h.sql
-\ir ddl/master-foundational_trust_provider.sql
-\ir ddl/master-foundational_trust_provider_h.sql
-\ir ddl/master-registered_device_master.sql
-\ir ddl/master-registered_device_master_h.sql
 
 \ir ddl/master-daysofweek_list.sql
 \ir ddl/master-reg_working_nonworking.sql
@@ -95,4 +68,15 @@
 \ir ddl/master-dynamic_field.sql
 \ir ddl/master-identity_schema.sql
 
+\ir ddl/master-bulkupload_transaction.sql
+\ir ddl/master-sync_job_def.sql
+
+\ir ddl/master-batch_job_execution.sql
+\ir ddl/master-batch_job_execution_context.sql
+\ir ddl/master-batch_job_execution_param.sql
+\ir ddl/master-batch_job_instance.sql
+\ir ddl/master-batch_step_execution.sql
+\ir ddl/master-batch_step_execution_context.sql
+
 \ir ddl/master-fk.sql
+\ir ddl/master-batch-fk.sql

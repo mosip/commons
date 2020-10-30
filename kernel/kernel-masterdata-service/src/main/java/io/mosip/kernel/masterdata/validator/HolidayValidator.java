@@ -33,12 +33,12 @@ public class HolidayValidator {
 				throw new RequestException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), "holiday_desc size must be between 1 and 128");
 			
 			if(!isValidLanguage(request.getLangCode()))
-				throw new RequestException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), "language code is invalid");
+				throw new RequestException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), "Language Code is Invalid");
 		
 	}
 
 	public void validate(HolidayUpdateDto request) {
-		if(request.getId()==null || EmptyCheckUtils.isNullEmpty(request.getLocationCode()) || 
+		if(request.getHolidayId()==null || EmptyCheckUtils.isNullEmpty(request.getLocationCode()) || 
 			request.getIsActive()==null || request.getHolidayDate()==null || EmptyCheckUtils.isNullEmpty(request.getHolidayName()) 
 			|| EmptyCheckUtils.isNullEmpty(request.getLangCode())) {
 			throw new RequestException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), "One or more input parameter(s) is missing");
@@ -54,7 +54,7 @@ public class HolidayValidator {
 			throw new RequestException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), "holiday_desc size must be between 1 and 128");
 		
 		if(!isValidLanguage(request.getLangCode()))
-			throw new RequestException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), "language code is invalid");
+			throw new RequestException(RequestErrorCode.REQUEST_DATA_NOT_VALID.getErrorCode(), "Language Code is Invalid");
 	}
 	
 	public boolean isValidLanguage(String langCode) {

@@ -11,6 +11,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+import io.mosip.kernel.fsadapter.ceph.impl.CephAdapterImpl;
+import io.mosip.kernel.fsadapter.ceph.util.ConnectionUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +41,7 @@ import io.mosip.kernel.core.fsadapter.spi.FileSystemAdapter;
  * @author Abhishek Kumar
  * @since 1.0.0
  */
-@SpringBootTest
+@SpringBootTest(classes = {CephAdapterImpl.class, ConnectionUtils.class})
 @RunWith(SpringRunner.class)
 public class FileSystemAdapterCephExceptionTest {
 
@@ -49,11 +54,11 @@ public class FileSystemAdapterCephExceptionTest {
 	private AmazonS3 amazonS3;
 
 	@Before
-	public void setup() {
+	public void setup() {	
 		amazonS3 = Mockito.mock(AmazonS3.class);
 		ReflectionTestUtils.setField(fileSystemAdapter, "conn", amazonS3, AmazonS3.class);
 	}
-
+	
 	@Test(expected = FSAdapterException.class)
 	public void testGetpacketNotFoundException() {
 		AmazonS3Exception amzException = new AmazonS3Exception("test");

@@ -4,10 +4,14 @@
 package io.mosip.kernel.biometrics.entities;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import lombok.Data;
 /**
  * @author Ramadurai Pandian
  *
  */
+@Data
+@JsonDeserialize(builder = SBInfo.SBInfoBuilder.class)
 public class SBInfo {
 
 	private RegistryIDType format;

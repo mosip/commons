@@ -11,7 +11,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.junit.Before;
+<<<<<<< HEAD
 import org.junit.Ignore;
+=======
+>>>>>>> 1.1.2
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -32,7 +35,10 @@ import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.masterdata.dto.DigitalIdDto;
 import io.mosip.kernel.masterdata.dto.ValidateDeviceDto;
+<<<<<<< HEAD
 import io.mosip.kernel.masterdata.dto.ValidateDeviceHistoryDto;
+=======
+>>>>>>> 1.1.2
 import io.mosip.kernel.masterdata.entity.DeviceProvider;
 import io.mosip.kernel.masterdata.entity.DeviceProviderHistory;
 import io.mosip.kernel.masterdata.entity.MOSIPDeviceService;
@@ -97,18 +103,30 @@ public class DeviceProviderManagementIntegrationTest {
 
 	private static final String DPM_URL = "/deviceprovidermanagement/validate";
 
+<<<<<<< HEAD
 	private static final String DPM_HISTORY_URL = "/deviceprovidermanagement/validate/history";
 
 	private ValidateDeviceDto validateDeviceDto;
 
 	private ValidateDeviceHistoryDto validateDeviceHistoryDto;
+=======
+
+
+	private ValidateDeviceDto validateDeviceDto;
+
+	private ValidateDeviceDto validateDeviceHistoryDto;
+>>>>>>> 1.1.2
 
 	@Autowired
 	private ObjectMapper objectMapper;
 
 	private RequestWrapper<ValidateDeviceDto> requestWrapper;
 
+<<<<<<< HEAD
 	private RequestWrapper<ValidateDeviceHistoryDto> requestWrapperHistory;
+=======
+	private RequestWrapper<ValidateDeviceDto> requestWrapperHistory;
+>>>>>>> 1.1.2
 
 	@Before
 	public void setUp() {
@@ -151,7 +169,11 @@ public class DeviceProviderManagementIntegrationTest {
 		digitalIdDto.setDeviceSubType("Slab");
 		validateDeviceDto.setDigitalId(digitalIdDto);
 
+<<<<<<< HEAD
 		validateDeviceHistoryDto = new ValidateDeviceHistoryDto();
+=======
+		validateDeviceHistoryDto = new ValidateDeviceDto();
+>>>>>>> 1.1.2
 		validateDeviceHistoryDto.setDeviceCode("10001");
 		validateDeviceHistoryDto.setDeviceServiceVersion("0.1v");
 		validateDeviceHistoryDto.setDigitalId(digitalIdDto);
@@ -254,7 +276,11 @@ public class DeviceProviderManagementIntegrationTest {
 		when(deviceServiceHistoryRepository.findByDeviceDetailHistory(Mockito.anyString(), Mockito.anyString(),
 				Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.any()))
 						.thenReturn(null);
+<<<<<<< HEAD
 		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+=======
+		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+>>>>>>> 1.1.2
 				.andExpect(status().isOk());
 	}
 
@@ -267,8 +293,13 @@ public class DeviceProviderManagementIntegrationTest {
 		when(deviceServiceHistoryRepository.findByDeviceDetailHistory(Mockito.anyString(), Mockito.anyString(),
 				Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.any()))
 						.thenThrow(DataRetrievalFailureException.class);
+<<<<<<< HEAD
 		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req))
 				.andExpect(status().isInternalServerError());
+=======
+		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+				.andExpect(status().isOk());
+>>>>>>> 1.1.2
 	}
 
 	@WithUserDetails("zonal-admin")
@@ -441,7 +472,11 @@ public class DeviceProviderManagementIntegrationTest {
 		mockSuccessTestCases();
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
+<<<<<<< HEAD
 		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+=======
+		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+>>>>>>> 1.1.2
 				.andExpect(status().isOk());
 	}
 
@@ -453,7 +488,11 @@ public class DeviceProviderManagementIntegrationTest {
 				Mockito.any())).thenReturn(new ArrayList<>());
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
+<<<<<<< HEAD
 		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+=======
+		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+>>>>>>> 1.1.2
 				.andExpect(status().isOk());
 	}
 
@@ -465,8 +504,13 @@ public class DeviceProviderManagementIntegrationTest {
 				Mockito.any())).thenThrow(DataRetrievalFailureException.class);
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
+<<<<<<< HEAD
 		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req))
 				.andExpect(status().isInternalServerError());
+=======
+		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+				.andExpect(status().isOk());
+>>>>>>> 1.1.2
 	}
 
 	@Test
@@ -477,7 +521,11 @@ public class DeviceProviderManagementIntegrationTest {
 				.thenReturn(null);
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
+<<<<<<< HEAD
 		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+=======
+		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+>>>>>>> 1.1.2
 				.andExpect(status().isOk());
 	}
 
@@ -489,8 +537,13 @@ public class DeviceProviderManagementIntegrationTest {
 				.thenThrow(DataRetrievalFailureException.class);
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
+<<<<<<< HEAD
 		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req))
 				.andExpect(status().isInternalServerError());
+=======
+		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+				.andExpect(status().isOk());
+>>>>>>> 1.1.2
 	}
 
 	@Test
@@ -501,7 +554,11 @@ public class DeviceProviderManagementIntegrationTest {
 				Mockito.any())).thenReturn(null);
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
+<<<<<<< HEAD
 		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+=======
+		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+>>>>>>> 1.1.2
 				.andExpect(status().isOk());
 	}
 
@@ -513,8 +570,13 @@ public class DeviceProviderManagementIntegrationTest {
 				Mockito.any())).thenThrow(DataRetrievalFailureException.class);
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
+<<<<<<< HEAD
 		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req))
 				.andExpect(status().isInternalServerError());
+=======
+		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+				.andExpect(status().isOk());
+>>>>>>> 1.1.2
 	}
 
 	@Test
@@ -524,7 +586,11 @@ public class DeviceProviderManagementIntegrationTest {
 		registeredDeviceHistory.setStatusCode("Revoked");
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
+<<<<<<< HEAD
 		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+=======
+		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+>>>>>>> 1.1.2
 				.andExpect(status().isOk());
 	}
 
@@ -543,7 +609,14 @@ public class DeviceProviderManagementIntegrationTest {
 		registeredDeviceHistory.setDeviceTypeCode("GV343434");
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
+<<<<<<< HEAD
 		mockBean.perform(post(DPM_HISTORY_URL).contentType(MediaType.APPLICATION_JSON).content(req))
 				.andExpect(status().isOk());
 	}
 }
+=======
+		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
+				.andExpect(status().isOk());
+	}
+}
+>>>>>>> 1.1.2

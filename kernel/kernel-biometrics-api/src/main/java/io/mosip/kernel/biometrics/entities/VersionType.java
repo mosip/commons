@@ -9,9 +9,11 @@ package io.mosip.kernel.biometrics.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class VersionType {
 	
 	private int major;

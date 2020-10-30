@@ -31,15 +31,15 @@ public class MachineDto {
 	/**
 	 * Field for machine id
 	 */
-	@NotBlank
-	@Size(min = 1, max = 10)
+	@NotNull
+	@StringFormatter(min = 1, max = 10)
 	@ApiModelProperty(value = "id", required = true, dataType = "java.lang.String")
 	private String id;
 	/**
 	 * Field for machine name
 	 */
-	@NotBlank
-	@Size(min = 1, max = 64)
+	@NotNull
+	@StringFormatter(min = 1, max = 64)
 	@ApiModelProperty(value = "name", required = true, dataType = "java.lang.String")
 	private String name;
 	/**
@@ -67,16 +67,18 @@ public class MachineDto {
 	/**
 	 * Field for machine specification Id
 	 */
-	@NotBlank
-	@Size(min = 1, max = 36)
+	@NotNull
+	@StringFormatter(min = 1, max = 36)
 	@ApiModelProperty(value = "machineSpecId", required = true, dataType = "java.lang.String")
 	private String machineSpecId;
+	
+	@StringFormatter(min = 0, max = 10)
+	@ApiModelProperty(value = "regCenterId",  dataType = "java.lang.String")
+	private String regCenterId;
 	/**
 	 * Field for language code
 	 */
 	@ValidLangCode(message = "Language Code is Invalid")
-	// @NotBlank
-	// @Size(min = 1, max = 3)
 	@ApiModelProperty(value = "langCode", required = true, dataType = "java.lang.String")
 	private String langCode;
 	/**
@@ -89,5 +91,11 @@ public class MachineDto {
 	 */
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private LocalDateTime validityDateTime;
+
+	@ApiModelProperty(value = "publicKey", required = false, dataType = "java.lang.String")
+	private String publicKey;
+
+	@ApiModelProperty(value = "signPublicKey", required = false, dataType = "java.lang.String")
+	private String signPublicKey;
 
 }

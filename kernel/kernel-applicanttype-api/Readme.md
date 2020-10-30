@@ -17,7 +17,7 @@ To use this api, add this to dependency list:
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-applicanttype-api</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>1.0.0</version>
 		</dependency>
 ```
 

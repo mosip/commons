@@ -13,8 +13,8 @@ public enum PurposeType {
 	VERIFY("Verify"),
 	IDENTIFY("Identify"),
 	ENROLL("Enroll"),
-	ENROLL_VERIFY("EnrollVerify"),
-	ENROLL_IDENTIFY("EnrollIdentify"),
+	ENROLLVERIFY("EnrollVerify"),
+	ENROLLIDENTIFY("EnrollIdentify"),
 	AUDIT("Audit");
 
 	private final String value;

@@ -6,11 +6,15 @@ package io.mosip.kernel.core.cbeffutil.entity;
 import java.time.LocalDateTime;
 
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRInfoType;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Ramadurai Pandian
  *
  */
+@Data
+@NoArgsConstructor
 public class BIRInfo {
 
 	private String creator;

@@ -80,11 +80,9 @@ import io.mosip.kernel.masterdata.repository.GenderTypeRepository;
 import io.mosip.kernel.masterdata.repository.HolidayRepository;
 import io.mosip.kernel.masterdata.repository.LocationRepository;
 import io.mosip.kernel.masterdata.repository.MachineRepository;
-import io.mosip.kernel.masterdata.repository.RegistrationCenterDeviceRepository;
-import io.mosip.kernel.masterdata.repository.RegistrationCenterMachineRepository;
 import io.mosip.kernel.masterdata.repository.RegistrationCenterTypeRepository;
-import io.mosip.kernel.masterdata.repository.RegistrationCenterUserRepository;
 import io.mosip.kernel.masterdata.repository.TemplateRepository;
+import io.mosip.kernel.masterdata.repository.UserDetailsRepository;
 import io.mosip.kernel.masterdata.repository.ZoneRepository;
 import io.mosip.kernel.masterdata.repository.ZoneUserRepository;
 import io.mosip.kernel.masterdata.service.LocationService;
@@ -128,15 +126,8 @@ public class MasterdataSearchIntegrationTest {
 
 	@MockBean
 	private DeviceRepository deviceRepository;
-
 	@MockBean
-	private RegistrationCenterUserRepository registrationCenterUserRepository;
-
-	@MockBean
-	private RegistrationCenterMachineRepository registrationCenterMachineRepository;
-
-	@MockBean
-	private RegistrationCenterDeviceRepository registrationCenterDeviceRepository;
+	private UserDetailsRepository userDetailsRepository;
 
 	@MockBean
 	private RegistrationCenterTypeRepository registrationCenterTypeRepository;
@@ -228,6 +219,8 @@ public class MasterdataSearchIntegrationTest {
 
 	@Value("${mosip.primary-language}")
 	private String primaryLangCode;
+
+	
 
 	@Before
 	public void setup() throws JsonProcessingException {
@@ -443,9 +436,9 @@ public class MasterdataSearchIntegrationTest {
 				.thenReturn(new PageImpl<>(Arrays.asList(template), PageRequest.of(0, 10), 1));
 		when(masterdataSearchHelper.searchMasterdata(Mockito.eq(Title.class), Mockito.any(), Mockito.any()))
 				.thenReturn(new PageImpl<>(Arrays.asList(title), PageRequest.of(0, 10), 1));
-		when(registrationCenterUserRepository.countCenterUsers(Mockito.any())).thenReturn(10l);
-		when(registrationCenterMachineRepository.countCenterMachines(Mockito.any())).thenReturn(10l);
-		when(registrationCenterDeviceRepository.countCenterDevices(Mockito.any())).thenReturn(10l);
+		when(userDetailsRepository.countCenterUsers(Mockito.any())).thenReturn(10l);
+		when(machineRepository.countCenterMachines(Mockito.any())).thenReturn(10l);
+		when(deviceRepository.countCenterDevices(Mockito.any())).thenReturn(10l);
 
 		doReturn(new RegistrationCenterType("10001", "ENG", "Center Name", "Description", null))
 				.when(registrationCenterTypeRepository).findByCodeAndLangCode(Mockito.any(), Mockito.any());
@@ -637,7 +630,7 @@ public class MasterdataSearchIntegrationTest {
 	@Test
 	@WithUserDetails("zonal-admin")
 	public void searchRegCenterUserCountFailure() throws Exception {
-		when(registrationCenterUserRepository.countCenterUsers(Mockito.any()))
+		when(userDetailsRepository.countCenterUsers(Mockito.any()))
 				.thenThrow(DataRetrievalFailureException.class);
 		searchDto.setFilters(Arrays.asList(filter2));
 		String validRequest = objectMapper.writeValueAsString(request);
@@ -649,7 +642,7 @@ public class MasterdataSearchIntegrationTest {
 	@Test
 	@WithUserDetails("zonal-admin")
 	public void searchRegCenterMachineCountFailure() throws Exception {
-		when(registrationCenterMachineRepository.countCenterMachines(Mockito.any()))
+		when(machineRepository.countCenterMachines(Mockito.any()))
 				.thenThrow(DataRetrievalFailureException.class);
 		searchDto.setFilters(Arrays.asList(filter2));
 		String validRequest = objectMapper.writeValueAsString(request);
@@ -661,7 +654,7 @@ public class MasterdataSearchIntegrationTest {
 	@Test
 	@WithUserDetails("zonal-admin")
 	public void searchRegCenterDevicesCountFailure() throws Exception {
-		when(registrationCenterDeviceRepository.countCenterDevices(Mockito.any()))
+		when(deviceRepository.countCenterDevices(Mockito.any()))
 				.thenThrow(DataRetrievalFailureException.class);
 		searchDto.setFilters(Arrays.asList(filter2));
 		String validRequest = objectMapper.writeValueAsString(request);

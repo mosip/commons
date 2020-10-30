@@ -39,6 +39,7 @@ import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.constant.RegistrationCenterDeviceHistoryErrorCode;
 import io.mosip.kernel.masterdata.constant.RegistrationCenterErrorCode;
 import io.mosip.kernel.masterdata.dto.ExceptionalHolidayPutPostDto;
+import io.mosip.kernel.masterdata.dto.FilterData;
 import io.mosip.kernel.masterdata.dto.HolidayDto;
 import io.mosip.kernel.masterdata.dto.PageDto;
 import io.mosip.kernel.masterdata.dto.RegCenterPostReqDto;
@@ -54,40 +55,39 @@ import io.mosip.kernel.masterdata.dto.request.FilterDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
 import io.mosip.kernel.masterdata.dto.request.SearchFilter;
+import io.mosip.kernel.masterdata.dto.response.ColumnCodeValue;
 import io.mosip.kernel.masterdata.dto.response.ColumnValue;
+import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.dto.response.RegistrationCenterSearchDto;
 import io.mosip.kernel.masterdata.entity.DaysOfWeek;
+import io.mosip.kernel.masterdata.entity.Device;
 import io.mosip.kernel.masterdata.entity.Holiday;
 import io.mosip.kernel.masterdata.entity.Location;
+import io.mosip.kernel.masterdata.entity.Machine;
 import io.mosip.kernel.masterdata.entity.RegExceptionalHoliday;
 import io.mosip.kernel.masterdata.entity.RegWorkingNonWorking;
 import io.mosip.kernel.masterdata.entity.RegistrationCenter;
-import io.mosip.kernel.masterdata.entity.RegistrationCenterDevice;
 import io.mosip.kernel.masterdata.entity.RegistrationCenterHistory;
-import io.mosip.kernel.masterdata.entity.RegistrationCenterMachine;
-import io.mosip.kernel.masterdata.entity.RegistrationCenterMachineDevice;
 import io.mosip.kernel.masterdata.entity.RegistrationCenterType;
-import io.mosip.kernel.masterdata.entity.RegistrationCenterUserMachine;
+import io.mosip.kernel.masterdata.entity.UserDetails;
 import io.mosip.kernel.masterdata.entity.Zone;
 import io.mosip.kernel.masterdata.exception.DataNotFoundException;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
 import io.mosip.kernel.masterdata.exception.RequestException;
 import io.mosip.kernel.masterdata.exception.ValidationException;
 import io.mosip.kernel.masterdata.repository.DaysOfWeekListRepo;
+import io.mosip.kernel.masterdata.repository.DeviceRepository;
 import io.mosip.kernel.masterdata.repository.HolidayRepository;
 import io.mosip.kernel.masterdata.repository.LocationRepository;
+import io.mosip.kernel.masterdata.repository.MachineRepository;
 import io.mosip.kernel.masterdata.repository.RegExceptionalHolidayRepository;
 import io.mosip.kernel.masterdata.repository.RegWorkingNonWorkingRepo;
-import io.mosip.kernel.masterdata.repository.RegistrationCenterDeviceRepository;
 import io.mosip.kernel.masterdata.repository.RegistrationCenterHistoryRepository;
-import io.mosip.kernel.masterdata.repository.RegistrationCenterMachineDeviceRepository;
-import io.mosip.kernel.masterdata.repository.RegistrationCenterMachineRepository;
-import io.mosip.kernel.masterdata.repository.RegistrationCenterMachineUserRepository;
 import io.mosip.kernel.masterdata.repository.RegistrationCenterRepository;
 import io.mosip.kernel.masterdata.repository.RegistrationCenterTypeRepository;
-import io.mosip.kernel.masterdata.repository.RegistrationCenterUserRepository;
+import io.mosip.kernel.masterdata.repository.UserDetailsRepository;
 import io.mosip.kernel.masterdata.service.LocationService;
 import io.mosip.kernel.masterdata.service.RegistrationCenterHistoryService;
 import io.mosip.kernel.masterdata.service.RegistrationCenterService;
@@ -139,22 +139,16 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 	private RegistrationCenterHistoryRepository registrationCenterHistoryRepository;
 
 	@Autowired
-	RegistrationCenterMachineRepository registrationCenterMachineRepository;
+	MachineRepository machineRepository;
 
 	@Autowired
-	RegistrationCenterMachineUserRepository registrationCenterMachineUserRepository;
+	UserDetailsRepository userRepository;
 
 	@Autowired
-	RegistrationCenterMachineDeviceRepository registrationCenterMachineDeviceRepository;
+	DeviceRepository deviceRepository;
 
 	@Autowired
 	RegistrationCenterHistoryService registrationCenterHistoryService;
-
-	@Autowired
-	RegistrationCenterDeviceRepository registrationCenterDeviceRepository;
-
-	@Autowired
-	RegistrationCenterUserRepository registrationCenterUserRepository;
 
 	@Autowired
 	RegistrationCenterIdGenerator<String> registrationCenterIdGenerator;
@@ -541,17 +535,16 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 			if (!renRegistrationCenterList.isEmpty()) {
 				for (RegistrationCenter renRegistrationCenter : renRegistrationCenterList) {
 
-					List<RegistrationCenterMachine> registrationCenterMachineList = registrationCenterMachineRepository
-							.findByMachineIdAndIsDeletedFalseOrIsDeletedIsNull(renRegistrationCenter.getId());
-					List<RegistrationCenterUserMachine> registrationCenterMachineUser = registrationCenterMachineUserRepository
-							.findByMachineIdAndIsDeletedFalseOrIsDeletedIsNull(renRegistrationCenter.getId());
-					List<RegistrationCenterMachineDevice> registrationCenterMachineDevice = registrationCenterMachineDeviceRepository
-							.findByMachineIdAndIsDeletedFalseOrIsDeletedIsNull(renRegistrationCenter.getId());
-					List<RegistrationCenterDevice> registrationCenterDeviceList = registrationCenterDeviceRepository
-							.findByDeviceIdAndIsDeletedFalseOrIsDeletedIsNull(renRegistrationCenter.getId());
+					List<Machine> machineList = machineRepository
+							.findByRegIdAndIsDeletedFalseOrIsDeletedIsNull(renRegistrationCenter.getId());
+					List<UserDetails> users = userRepository
+							.findByRegIdAndIsDeletedFalseOrIsDeletedIsNull(renRegistrationCenter.getId());
+					
+					List<Device> deviceList = deviceRepository
+							.findByRegIdAndIsDeletedFalseOrIsDeletedIsNull(renRegistrationCenter.getId());
 
-					if (registrationCenterMachineList.isEmpty() && registrationCenterMachineUser.isEmpty()
-							&& registrationCenterMachineDevice.isEmpty() && registrationCenterDeviceList.isEmpty()) {
+					if (machineList.isEmpty() && users.isEmpty()
+							&& deviceList.isEmpty() ) {
 						MetaDataUtils.setDeleteMetaData(renRegistrationCenter);
 						delRegistrationCenter = registrationCenterRepository.update(renRegistrationCenter);
 
@@ -823,9 +816,9 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 	 * FilterValueDto)
 	 */
 	@Override
-	public FilterResponseDto registrationCenterFilterValues(FilterValueDto filterValueDto) {
-		FilterResponseDto filterResponseDto = new FilterResponseDto();
-		List<ColumnValue> columnValueList = new ArrayList<>();
+	public FilterResponseCodeDto registrationCenterFilterValues(FilterValueDto filterValueDto) {
+		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
+		List<ColumnCodeValue> columnValueList = new ArrayList<>();
 		List<Zone> zones = zoneUtils.getUserZones();
 		List<SearchFilter> zoneFilter = new ArrayList<>();
 		if (zones != null && !zones.isEmpty()) {
@@ -836,12 +829,13 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 		}
 		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), RegistrationCenter.class)) {
 			for (FilterDto filterDto : filterValueDto.getFilters()) {
-				List<?> filterValues = masterDataFilterHelper.filterValues(RegistrationCenter.class, filterDto,
-						filterValueDto);
+				List<FilterData> filterValues = masterDataFilterHelper.filterValuesWithCode(RegistrationCenter.class, filterDto,
+						filterValueDto,"id");
 				filterValues.forEach(filterValue -> {
-					ColumnValue columnValue = new ColumnValue();
+					ColumnCodeValue columnValue = new ColumnCodeValue();
+					columnValue.setFieldCode(filterValue.getFieldCode());
 					columnValue.setFieldID(filterDto.getColumnName());
-					columnValue.setFieldValue(filterValue.toString());
+					columnValue.setFieldValue(filterValue.getFieldValue());
 					columnValueList.add(columnValue);
 				});
 			}
@@ -887,17 +881,17 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 		IdResponseDto idResponseDto = new IdResponseDto();
 		int decommissionedCenters = 0;
 		try {
-			if (!registrationCenterUserRepository.registrationCenterUserMappings(regCenterID).isEmpty()) {
+			if (!userRepository.findByRegIdAndIsDeletedFalseOrIsDeletedIsNull(regCenterID).isEmpty()) {
 				auditException(RegistrationCenterErrorCode.MAPPED_TO_USER.getErrorCode(),
 						RegistrationCenterErrorCode.MAPPED_TO_USER.getErrorMessage());
 				throw new RequestException(RegistrationCenterErrorCode.MAPPED_TO_USER.getErrorCode(),
 						RegistrationCenterErrorCode.MAPPED_TO_USER.getErrorMessage());
-			} else if (!registrationCenterMachineRepository.findRegCenterMachineMappings(regCenterID).isEmpty()) {
+			} else if (!machineRepository.findByRegIdAndIsDeletedFalseOrIsDeletedIsNull(regCenterID).isEmpty()) {
 				auditException(RegistrationCenterErrorCode.MAPPED_TO_MACHINE.getErrorCode(),
 						RegistrationCenterErrorCode.MAPPED_TO_MACHINE.getErrorMessage());
 				throw new RequestException(RegistrationCenterErrorCode.MAPPED_TO_MACHINE.getErrorCode(),
 						RegistrationCenterErrorCode.MAPPED_TO_MACHINE.getErrorMessage());
-			} else if (!registrationCenterDeviceRepository.registrationCenterDeviceMappings(regCenterID).isEmpty()) {
+			} else if (!deviceRepository.findByRegIdAndIsDeletedFalseOrIsDeletedIsNull(regCenterID).isEmpty()) {
 				auditException(RegistrationCenterErrorCode.MAPPED_TO_DEVICE.getErrorCode(),
 						RegistrationCenterErrorCode.MAPPED_TO_DEVICE.getErrorMessage());
 				throw new RequestException(RegistrationCenterErrorCode.MAPPED_TO_DEVICE.getErrorCode(),
@@ -962,34 +956,8 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 		List<ExceptionalHolidayPutPostDto> exceptionalHolidayPutPostDtoList = new ArrayList<>();
 		List<ServiceError> errors = new ArrayList<>();
 
-		// List<RegistrationCenter> registrationCenterList = new ArrayList<>();
-		// List<RegistrationCenterExtnDto> registrationCenterDtoList = null;
-		// List<String> inputLangCodeList = new ArrayList<>();
+
 		String uniqueId = "";
-
-		// List<RegCenterPostReqDto> validateRegistrationCenterDtos = new
-		// ArrayList<>();
-		// List<RegCenterPostReqDto> constraintViolationedSecList = new
-		// ArrayList<>();
-		// List<ServiceError> errors = new ArrayList<>();
-
-		// Method to validate all mandatory fields of both primary and secondary
-		// language input objects
-		// registrationCenterValidator.validatePrimarySencodaryLangMandatoryFields(regCenterPostReqDto,
-		// registrationCenterPostResponseDto, inputLangCodeList,
-		// validateRegistrationCenterDtos,
-		// constraintViolationedSecList, errors);
-
-		// validate to if Records with duplicate language code
-		/*
-		 * if ((new HashSet<String>(inputLangCodeList).size()) !=
-		 * inputLangCodeList.size()) { throw new RequestException(
-		 * RegistrationCenterErrorCode.
-		 * REGISTRATION_CENTER_LANGUAGECODE_EXCEPTION.getErrorCode(),
-		 * RegistrationCenterErrorCode.
-		 * REGISTRATION_CENTER_LANGUAGECODE_EXCEPTION.getErrorMessage()); }
-		 */
-
 		try {
 
 			registrationCenterValidator.validateRegCenterCreate(regCenterPostReqDto, errors);
@@ -1252,7 +1220,14 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 						regExceptionalHoliday.setExceptionHolidayName(expHoliday.getExceptionHolidayName());
 						regExceptionalHoliday.setExceptionHolidayReson(expHoliday.getExceptionHolidayReson());
 						regExceptionalHoliday.setIsActive(true);
+						if(regExceptionalHolidayRepository.findByRegIdAndExpHoliday(
+							regExceptionalHoliday.getRegistrationCenterId(), 
+							regExceptionalHoliday.getExceptionHolidayDate())==null) {
 						regExceptionalHolidayRepository.create(regExceptionalHoliday);
+						}
+						else {
+							regExceptionalHolidayRepository.update(regExceptionalHoliday);
+						}
 					}
 				}
 			}
@@ -1623,9 +1598,9 @@ public class RegistrationCenterServiceImpl implements RegistrationCenterService 
 
 		if (regRegistrationCenter.getZoneCode().equals(regCenterPutReqDto.getZoneCode())) {
 			boolean isTagged = false;
-			List<RegistrationCenterDevice> regDevice = registrationCenterDeviceRepository
-					.findByRegCenterIdAndIsDeletedFalseOrIsDeletedIsNull(regCenterPutReqDto.getId());
-			List<String> deviceZoneIds = regDevice.stream().map(s -> s.getDevice().getZoneCode())
+			List<Device> regDevice = deviceRepository
+					.findByRegIdAndIsDeletedFalseOrIsDeletedIsNull(regCenterPutReqDto.getId());
+			List<String> deviceZoneIds = regDevice.stream().map(s -> s.getZoneCode())
 					.collect(Collectors.toList());
 			List<Zone> zoneHList = zoneUtils.getChildZoneList(deviceZoneIds, regCenterPutReqDto.getZoneCode(),
 					regCenterPutReqDto.getLangCode());

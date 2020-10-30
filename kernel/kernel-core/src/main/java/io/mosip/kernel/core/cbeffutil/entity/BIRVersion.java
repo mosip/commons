@@ -4,11 +4,15 @@
 package io.mosip.kernel.core.cbeffutil.entity;
 
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.VersionType;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Ramadurai Pandian
  *
  */
+@Data
+@NoArgsConstructor
 public class BIRVersion {
 
 	private int minor;

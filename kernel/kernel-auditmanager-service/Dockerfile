@@ -1,7 +1,4 @@
-FROM openjdk:8
-
-#Uncomment below and Comment above line(i.e. FROM openjdk:8) for OS specific (e.g. Alpine OS ) docker base image
-#FROM openjdk:8-jdk-alpine
+FROM openjdk:11
 
 # can be passed during Docker build as build time environment for github branch to pickup configuration from.
 ARG spring_config_label
@@ -32,6 +29,8 @@ ENV is_glowroot_env=${is_glowroot}
 
 # environment variable to pass artifactory url, at docker runtime
 ENV artifactory_url_env=${artifactory_url}
+# environment variable to pass iam_adapter url, at docker runtime
+ENV iam_adapter_url_env=${iam_adapter_url}
 
 COPY ./target/kernel-auditmanager-service-*.jar kernel-auditmanager-service.jar
 
@@ -42,11 +41,12 @@ CMD if [ "$is_glowroot_env" = "present" ]; then \
     apt-get update && apt-get install -y unzip ; \
     unzip glowroot.zip ; \
     rm -rf glowroot.zip ; \
-    
     sed -i 's/<service_name>/kernel-auditmanager-service/g' glowroot/glowroot.properties ; \
-    java -jar  -javaagent:glowroot/glowroot.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" kernel-auditmanager-service.jar ; \
+    wget "${iam_adapter_url_env}" -O kernel-auth-adapter.jar; \
+    java -jar  -javaagent:glowroot/glowroot.jar -Dloader.path=./kernel-auth-adapter.jar -jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}"  -Dspring.cloud.config.uri="${spring_config_url_env}" kernel-auditmanager-service.jar; \
     else \
-    java -jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" kernel-auditmanager-service.jar ; \
+     wget "${iam_adapter_url_env}" -O kernel-auth-adapter.jar; \
+    java -jar -Dloader.path=./kernel-auth-adapter.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" kernel-auditmanager-service.jar ; \
     fi
 
 

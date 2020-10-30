@@ -43,7 +43,7 @@ public class MachinePutReqDto {
 	/**
 	 * Field for machine serial number
 	 */
-	@OptionalStringFormatter( max = 64)
+	@Size(min = 0, max = 64)
 	@ApiModelProperty(value = "serialNum", required = false, dataType = "java.lang.String")
 	private String serialNum;
 	/**
@@ -91,5 +91,15 @@ public class MachinePutReqDto {
 	@StringFormatter(min = 1, max = 36)
 	@ApiModelProperty(value = "zoneCode", required = true, dataType = "java.lang.String")
 	private String zoneCode;
+	
+	@StringFormatter(min = 0, max = 10)
+	@ApiModelProperty(value = "regCenterId",  dataType = "java.lang.String")
+	private String regCenterId;
+
+	@ApiModelProperty(value = "publicKey", required = false, dataType = "java.lang.String")
+	private String publicKey;
+
+	@ApiModelProperty(value = "signPublicKey", required = false, dataType = "java.lang.String")
+	private String signPublicKey;
 
 }

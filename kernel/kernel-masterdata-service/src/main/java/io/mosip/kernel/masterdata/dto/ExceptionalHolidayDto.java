@@ -8,6 +8,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Range;
+
+import io.mosip.kernel.masterdata.validator.StringFormatter;
 import io.mosip.kernel.masterdata.validator.ValidLangCode;
 import lombok.Data;
 
@@ -37,8 +40,8 @@ public class ExceptionalHolidayDto implements Serializable {
 	private String holidayMonth;
 	private String holidayYear;
 
-	@NotBlank
-	@Size(min = 1, max = 64)
+	@NotNull
+	@StringFormatter(min = 1, max = 64)
 	private String holidayName;
 
 	@Size(min = 0, max = 128)

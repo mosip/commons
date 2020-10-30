@@ -2,12 +2,15 @@ package io.mosip.kernel.keymanagerservice.service;
 
 import java.util.Optional;
 
-import io.mosip.kernel.keymanagerservice.dto.PDFSignatureRequestDto;
+import io.mosip.kernel.keymanagerservice.dto.CSRGenerateRequestDto;
+import io.mosip.kernel.keymanagerservice.dto.KeyPairGenerateRequestDto;
+import io.mosip.kernel.keymanagerservice.dto.KeyPairGenerateResponseDto;
 import io.mosip.kernel.keymanagerservice.dto.PublicKeyResponse;
-import io.mosip.kernel.keymanagerservice.dto.SignatureRequestDto;
-import io.mosip.kernel.keymanagerservice.dto.SignatureResponseDto;
+import io.mosip.kernel.keymanagerservice.dto.SignatureCertificate;
 import io.mosip.kernel.keymanagerservice.dto.SymmetricKeyRequestDto;
 import io.mosip.kernel.keymanagerservice.dto.SymmetricKeyResponseDto;
+import io.mosip.kernel.keymanagerservice.dto.UploadCertificateRequestDto;
+import io.mosip.kernel.keymanagerservice.dto.UploadCertificateResponseDto;
 
 /**
  * This interface provides the methods which can be used for Key management
@@ -37,10 +40,50 @@ public interface KeymanagerService {
 	 */
 	public PublicKeyResponse<String> getPublicKey(String applicationId, String timeStamp, Optional<String> referenceId);
 
-	public SignatureResponseDto sign(SignatureRequestDto signatureRequestDto);
-
 	public PublicKeyResponse<String> getSignPublicKey(String applicationId, String timeStamp,
 			Optional<String> referenceId);
 
-	public SignatureResponseDto signPDF(PDFSignatureRequestDto request);
+	public SignatureCertificate getSignatureCertificate(String applicationId, Optional<String> referenceId,
+													String timestamp);
+
+	/**
+	 * Function to generate Master key pair in the HSM specified in config.
+	 * 
+	 * @param KeyPairGenerateRequestDto request
+	 * @return {@link KeyPairGenerateResponseDto} instance
+	 */
+	public KeyPairGenerateResponseDto generateMasterKey(String objectType, KeyPairGenerateRequestDto request);
+
+	/**
+	 * Function to get certificate for the provided appId & refId.
+	 * 
+	 * @param Application ID  appId
+	 * @param Reference ID  refId
+	 * @return {@link KeyPairGenerateResponseDto} instance
+	 */
+	public KeyPairGenerateResponseDto getCertificate(String appId, Optional<String> refId);
+
+	/**
+	 * Function to get CSR for the provided appId & refId.
+	 * 
+	 * @param CSRGenerateRequestDto request
+	 * @return {@link KeyPairGenerateResponseDto} instance
+	 */
+	public KeyPairGenerateResponseDto generateCSR(CSRGenerateRequestDto csrGenRequestDto);
+
+	/**
+	 * Function to upload certificate for the provided appId & refId.
+	 * 
+	 * @param UploadCertificateRequestDto request
+	 * @return {@link UploadCertificateResponseDto} instance
+	 */
+	public UploadCertificateResponseDto uploadCertificate(UploadCertificateRequestDto uploadCertRequestDto);
+
+	/**
+	 * Function to upload other domain certificate for the provided appId & refId.
+	 * 
+	 * @param UploadCertificateRequestDto request
+	 * @return {@link UploadCertificateResponseDto} instance
+	 */
+	public UploadCertificateResponseDto uploadOtherDomainCertificate(UploadCertificateRequestDto uploadCertRequestDto);
 }

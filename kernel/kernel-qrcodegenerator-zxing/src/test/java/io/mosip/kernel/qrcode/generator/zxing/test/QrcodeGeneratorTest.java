@@ -3,6 +3,7 @@ package io.mosip.kernel.qrcode.generator.zxing.test;
 import static org.hamcrest.CoreMatchers.isA;
 import static org.junit.Assert.assertThat;
 
+import io.mosip.kernel.qrcode.generator.zxing.QrcodeGeneratorImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +16,14 @@ import io.mosip.kernel.core.qrcodegenerator.exception.QrcodeGenerationException;
 import io.mosip.kernel.core.qrcodegenerator.spi.QrCodeGenerator;
 import io.mosip.kernel.qrcode.generator.zxing.constant.QrVersion;
 
-@SpringBootTest
+@SpringBootTest(classes = {QrcodeGeneratorImpl.class})
 @RunWith(SpringRunner.class)
 public class QrcodeGeneratorTest {
 
 	@Autowired
 	private QrCodeGenerator<QrVersion> generatorImpl;
+	
+	private static final String binaryData="01001000011000010111000001110000011110010010000001000101011000010111001101110100011001010111001000100001";
 
 	@Test
 	public void testGenerateQrCode() throws Exception {
@@ -40,6 +43,26 @@ public class QrcodeGeneratorTest {
 		assertThat(generatorImpl.generateQrCode("data", QrVersion.V38), isA(byte[].class));
 		assertThat(generatorImpl.generateQrCode("data", QrVersion.V39), isA(byte[].class));
 		assertThat(generatorImpl.generateQrCode("data", QrVersion.V40), isA(byte[].class));
+	}
+	
+	@Test
+	public void testGenerateQrCodeWithBinaryData() throws Exception {
+		assertThat(generatorImpl.generateQrCodeFromBinaryData(binaryData, QrVersion.V25), isA(byte[].class));
+		assertThat(generatorImpl.generateQrCodeFromBinaryData(binaryData, QrVersion.V26), isA(byte[].class));
+		assertThat(generatorImpl.generateQrCodeFromBinaryData(binaryData, QrVersion.V27), isA(byte[].class));
+		assertThat(generatorImpl.generateQrCodeFromBinaryData(binaryData, QrVersion.V28), isA(byte[].class));
+		assertThat(generatorImpl.generateQrCodeFromBinaryData(binaryData, QrVersion.V29), isA(byte[].class));
+		assertThat(generatorImpl.generateQrCodeFromBinaryData(binaryData, QrVersion.V30), isA(byte[].class));
+		assertThat(generatorImpl.generateQrCodeFromBinaryData(binaryData, QrVersion.V31), isA(byte[].class));
+		assertThat(generatorImpl.generateQrCodeFromBinaryData(binaryData, QrVersion.V32), isA(byte[].class));
+		assertThat(generatorImpl.generateQrCodeFromBinaryData(binaryData, QrVersion.V33), isA(byte[].class));
+		assertThat(generatorImpl.generateQrCodeFromBinaryData(binaryData, QrVersion.V34), isA(byte[].class));
+		assertThat(generatorImpl.generateQrCodeFromBinaryData(binaryData, QrVersion.V35), isA(byte[].class));
+		assertThat(generatorImpl.generateQrCodeFromBinaryData(binaryData, QrVersion.V36), isA(byte[].class));
+		assertThat(generatorImpl.generateQrCodeFromBinaryData(binaryData, QrVersion.V37), isA(byte[].class));
+		assertThat(generatorImpl.generateQrCodeFromBinaryData(binaryData, QrVersion.V38), isA(byte[].class));
+		assertThat(generatorImpl.generateQrCodeFromBinaryData(binaryData, QrVersion.V39), isA(byte[].class));
+		assertThat(generatorImpl.generateQrCodeFromBinaryData(binaryData, QrVersion.V40), isA(byte[].class));
 	}
 
 	@Test(expected = InvalidInputException.class)

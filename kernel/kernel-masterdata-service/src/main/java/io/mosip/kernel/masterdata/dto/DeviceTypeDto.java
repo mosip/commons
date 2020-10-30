@@ -4,10 +4,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Range;
+
 import io.mosip.kernel.masterdata.validator.FilterType;
 import io.mosip.kernel.masterdata.validator.FilterTypeEnum;
+import io.mosip.kernel.masterdata.validator.StringFormatter;
 import io.mosip.kernel.masterdata.validator.ValidLangCode;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -20,27 +22,25 @@ import lombok.Data;
  */
 
 @Data
-//@ApiModel(value = "Device Type", description = "Device Type Detail resource")
 public class DeviceTypeDto {
 
-	@NotBlank
-	@Size(min = 1, max = 36)
+
+	@NotNull
+	@StringFormatter(min = 1, max = 36)
 	@ApiModelProperty(value = "code", required = true, dataType = "java.lang.String")
 	private String code;
 
-	@ValidLangCode
-	@NotBlank
-	@Size(min = 1, max = 3)
+	@ValidLangCode(message = "Language Code is Invalid")
 	@ApiModelProperty(value = "langCode", required = true, dataType = "java.lang.String")
 	private String langCode;
 
 	@FilterType(types = { FilterTypeEnum.EQUALS, FilterTypeEnum.STARTSWITH, FilterTypeEnum.CONTAINS })
-	@NotBlank
-	@Size(min = 1, max = 64)
+	@NotNull
+	@StringFormatter(min = 1, max = 64)
 	@ApiModelProperty(value = "name", required = true, dataType = "java.lang.String")
 	private String name;
 
-	@Size(min = 1, max = 128)
+	@Size(min = 0, max = 128)
 	@ApiModelProperty(value = "description", required = true, dataType = "java.lang.String")
 	private String description;
 

@@ -4,8 +4,6 @@ package io.mosip.kernel.cryptomanager.test.integration;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -13,20 +11,20 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import javax.crypto.SecretKey;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -36,15 +34,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import io.mosip.kernel.core.crypto.spi.CryptoCoreSpec;
-import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.keymanager.spi.KeyStore;
@@ -52,15 +44,13 @@ import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.cryptomanager.dto.CryptomanagerRequestDto;
 import io.mosip.kernel.cryptomanager.dto.CryptomanagerResponseDto;
-import io.mosip.kernel.cryptomanager.dto.KeymanagerPublicKeyResponseDto;
+import io.mosip.kernel.keymanagerservice.dto.KeyPairGenerateResponseDto;
 import io.mosip.kernel.keymanagerservice.dto.PublicKeyResponse;
 import io.mosip.kernel.keymanagerservice.service.KeymanagerService;
 import io.mosip.kernel.keymanagerservice.test.KeymanagerTestBootApplication;
 
 @SpringBootTest(classes = KeymanagerTestBootApplication.class)
-
 @RunWith(SpringRunner.class)
-
 @AutoConfigureMockMvc
 public class CryptographicServiceIntegrationExceptionTest {
 
@@ -116,9 +106,8 @@ public class CryptographicServiceIntegrationExceptionTest {
 	@Test
 	public void testInvalidSpecEncrypt() throws Exception {
 
-		PublicKeyResponse<String> publicKeyResponseDto = new PublicKeyResponse<>("alias",
-				CryptoUtil.encodeBase64("badprivatekey".getBytes()), LocalDateTime.now(),
-				LocalDateTime.now().plusDays(100));
+		KeyPairGenerateResponseDto keyPairGenerateResponseDto = new KeyPairGenerateResponseDto("badCertificateData", null, LocalDateTime.now(),
+				LocalDateTime.now().plusDays(100), LocalDateTime.now());
 	
 		String appid = "REGISTRATION";
 		String data = "dXJ2aWw";
@@ -132,8 +121,8 @@ public class CryptographicServiceIntegrationExceptionTest {
 		requestDto.setReferenceId(refid);
 		requestDto.setTimeStamp(DateUtils.parseToLocalDateTime(timeStamp));
 
-		when(keyManagerService.getPublicKey(Mockito.eq(appid), Mockito.eq(timeStamp), Mockito.eq(Optional.of(refid))))
-		.thenReturn(publicKeyResponseDto);
+		when(keyManagerService.getCertificate(Mockito.eq(appid), Mockito.eq(Optional.of(refid))))
+						.thenReturn(keyPairGenerateResponseDto);
 		String requestBody = objectMapper.writeValueAsString(requestWrapper);
 		MvcResult result = mockMvc
 				.perform(post("/encrypt").contentType(MediaType.APPLICATION_JSON).content(requestBody))
@@ -142,7 +131,7 @@ public class CryptographicServiceIntegrationExceptionTest {
 				result.getResponse().getContentAsString(),
 				new TypeReference<ResponseWrapper<CryptomanagerResponseDto>>() {
 				});
-		assertThat(responseWrapper.getErrors().get(0).getErrorCode(), is("KER-CRY-002"));
+		assertThat(responseWrapper.getErrors().get(0).getErrorCode(), is("KER-KMS-013"));
 	}
 
 	@WithUserDetails("reg-processor")

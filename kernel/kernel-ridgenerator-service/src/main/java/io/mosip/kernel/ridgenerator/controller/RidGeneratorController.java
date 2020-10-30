@@ -39,7 +39,7 @@ public class RidGeneratorController {
 	@ResponseFilter
 	@GetMapping("/generate/rid/{centerid}/{machineid}")
 	@ApiOperation(value = "Service to generate RID")
-	@PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
+	@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR','RESIDENT')")
 	public ResponseWrapper<RidGeneratorResponseDto> generateRid(@PathVariable("centerid") String centerId,
 			@PathVariable("machineid") String machineId) {
 		ResponseWrapper<RidGeneratorResponseDto> responseWrapper = new ResponseWrapper<>();

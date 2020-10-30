@@ -32,7 +32,7 @@ public interface RegisteredDeviceRepository extends JpaRepository<RegisteredDevi
 	 * @param currentTimeStamp the current time stamp
 	 * @return List of {@link RegisteredDevice}
 	 */
-	@Query(value = "Select * from master.registered_device_master where code IN(select device_id from master.reg_center_device where regcntr_id=?1) and (cr_dtimes > ?2 AND cr_dtimes <=?3) OR (upd_dtimes > ?2 AND upd_dtimes <=?3)  OR (del_dtimes > ?2 AND del_dtimes <=?3)", nativeQuery = true)
+	@Query(value = "Select * from master.registered_device_master where code IN(select id from master.device_master where regcntr_id=?1) and (cr_dtimes > ?2 AND cr_dtimes <=?3) OR (upd_dtimes > ?2 AND upd_dtimes <=?3)  OR (del_dtimes > ?2 AND del_dtimes <=?3)", nativeQuery = true)
 	List<RegisteredDevice> findAllLatestCreatedUpdateDeleted(String regId, LocalDateTime lastUpdated,
 			LocalDateTime currentTimeStamp);
 }

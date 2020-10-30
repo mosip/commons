@@ -28,6 +28,7 @@ public class GenderExtnDto extends BaseDto {
 	private String code;
 
 	@ApiModelProperty(notes = "Name of the Gender", example = "Male", required = true)
+	@FilterType(types = { FilterTypeEnum.EQUALS })
 	private String genderName;
 
 	@FilterType(types = { FilterTypeEnum.EQUALS })

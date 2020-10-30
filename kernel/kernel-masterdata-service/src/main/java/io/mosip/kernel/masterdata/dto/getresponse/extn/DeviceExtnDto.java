@@ -85,5 +85,7 @@ public class DeviceExtnDto extends BaseDto {
 	private LocalDateTime validityDateTime;
 
 	private String zoneCode;
+	
+	private String regCenterId;
 
 }

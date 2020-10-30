@@ -38,7 +38,6 @@ import io.mosip.kernel.masterdata.dto.response.ColumnValue;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.entity.BlacklistedWords;
-import io.mosip.kernel.masterdata.entity.id.CodeAndLanguageCodeID;
 import io.mosip.kernel.masterdata.entity.id.WordAndLanguageCodeID;
 import io.mosip.kernel.masterdata.exception.DataNotFoundException;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
@@ -175,6 +174,10 @@ public class BlacklistedWordsServiceImpl implements BlacklistedWordsService {
 		BlacklistedWords blacklistedWords;
 		entity.setWord(entity.getWord().toLowerCase());
 		try {
+			if(blacklistedWordsRepository.findByOnlyWordAndLangCode(blackListedWordsRequestDto.getWord(), blackListedWordsRequestDto.getLangCode()) !=null) {
+				throw new RequestException(BlacklistedWordsErrorCode.DUPLICATE_BLACKLISTED_WORDS_FOUND.getErrorCode(),
+						BlacklistedWordsErrorCode.DUPLICATE_BLACKLISTED_WORDS_FOUND.getErrorMessage());
+			}
 			blacklistedWords = blacklistedWordsRepository.create(entity);
 		} catch (DataAccessLayerException | DataAccessException e) {
 			auditUtil.auditRequest(
@@ -210,7 +213,7 @@ public class BlacklistedWordsServiceImpl implements BlacklistedWordsService {
 		int noOfRowAffected = 0;
 		Map<String, Object> params = bindDtoToMap(wordDto);
 		try {
-			if (wordDto.getDescription() != null) {
+			if (wordDto.getDescription() != null && !wordDto.getDescription().isEmpty()) {
 				noOfRowAffected = blacklistedWordsRepository.createQueryUpdateOrDelete(
 						UpdateQueryConstants.BLACKLISTED_WORD_UPDATE_QUERY_WITH_DESCRIPTION.getQuery(), params);
 
@@ -322,9 +325,9 @@ public class BlacklistedWordsServiceImpl implements BlacklistedWordsService {
 	private Map<String, Object> bindDtoToMap(BlackListedWordsUpdateDto dto) {
 		Map<String, Object> params = new HashMap<>();
 		if (dto.getWord() != null && !dto.getWord().isEmpty())
-			params.put("word", dto.getWord());
+			params.put("word", dto.getWord().toLowerCase());
 		if (dto.getOldWord() != null && !dto.getOldWord().isEmpty())
-			params.put("oldWord", dto.getOldWord());
+			params.put("oldWord", dto.getOldWord().toLowerCase());
 		if (dto.getDescription() != null && !dto.getDescription().isEmpty())
 			params.put("description", dto.getDescription());
 		params.put("isActive", dto.getIsActive());

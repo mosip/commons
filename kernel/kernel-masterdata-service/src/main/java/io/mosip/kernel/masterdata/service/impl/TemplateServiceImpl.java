@@ -2,10 +2,13 @@ package io.mosip.kernel.masterdata.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
+import io.mosip.kernel.masterdata.constant.RegistrationCenterErrorCode;
 import io.mosip.kernel.masterdata.constant.TemplateErrorCode;
 import io.mosip.kernel.masterdata.dto.TemplateDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
@@ -28,6 +32,7 @@ import io.mosip.kernel.masterdata.dto.request.SearchDto;
 import io.mosip.kernel.masterdata.dto.response.ColumnValue;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
+import io.mosip.kernel.masterdata.entity.RegistrationCenter;
 import io.mosip.kernel.masterdata.entity.Template;
 import io.mosip.kernel.masterdata.entity.id.IdAndLanguageCodeID;
 import io.mosip.kernel.masterdata.exception.DataNotFoundException;
@@ -39,6 +44,7 @@ import io.mosip.kernel.masterdata.utils.AuditUtil;
 import io.mosip.kernel.masterdata.utils.ExceptionUtils;
 import io.mosip.kernel.masterdata.utils.MapperUtils;
 import io.mosip.kernel.masterdata.utils.MasterDataFilterHelper;
+import io.mosip.kernel.masterdata.utils.MasterdataCreationUtil;
 import io.mosip.kernel.masterdata.utils.MasterdataSearchHelper;
 import io.mosip.kernel.masterdata.utils.MetaDataUtils;
 import io.mosip.kernel.masterdata.utils.PageUtils;
@@ -78,6 +84,16 @@ public class TemplateServiceImpl implements TemplateService {
 
 	@Autowired
 	private AuditUtil auditUtil;
+
+	@Autowired
+	private MasterdataCreationUtil masterdataCreationUtil;
+
+	@Value("${mosip.primary-language:eng}")
+	private String primaryLang;
+
+	@Value("${mosip.secondary-language:ara}")
+	private String secondaryLang;
+
 
 	/*
 	 * (non-Javadoc)
@@ -166,14 +182,22 @@ public class TemplateServiceImpl implements TemplateService {
 	 */
 	@Override
 	public IdAndLanguageCodeID createTemplate(TemplateDto template) {
-		Template entity = MetaDataUtils.setCreateMetaData(template, Template.class);
+
 		Template templateEntity;
+		
 		try {
+			if (StringUtils.isNotEmpty(primaryLang) && primaryLang.equals(template.getLangCode())) {
+				String uniqueId = generateId();
+				template.setId(uniqueId);
+			}
+			template = masterdataCreationUtil.createMasterData(Template.class, template);
+			Template entity = MetaDataUtils.setCreateMetaData(template, Template.class);
 			templateEntity = templateRepository.create(entity);
 
-		} catch (DataAccessLayerException | DataAccessException e) {
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
 			auditUtil.auditRequest(
-					String.format(MasterDataConstant.CREATE_ERROR_AUDIT, TemplateDto.class.getSimpleName()),
+					String.format(MasterDataConstant.CREATE_ERROR_AUDIT, Template.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
 					String.format(MasterDataConstant.FAILURE_DESC,
 							TemplateErrorCode.TEMPLATE_INSERT_EXCEPTION.getErrorCode(),
@@ -186,11 +210,21 @@ public class TemplateServiceImpl implements TemplateService {
 
 		IdAndLanguageCodeID idAndLanguageCodeID = new IdAndLanguageCodeID();
 		MapperUtils.map(templateEntity, idAndLanguageCodeID);
-		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_CREATE, TemplateDto.class.getSimpleName()),
+		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_CREATE, Template.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC,
-						TemplateDto.class.getSimpleName(), idAndLanguageCodeID.getId()),
+						Template.class.getSimpleName(), idAndLanguageCodeID.getId()),
 				"ADM-813");
 		return idAndLanguageCodeID;
+	}
+	
+	private String generateId() throws DataAccessLayerException , DataAccessException{
+		UUID uuid = UUID.randomUUID();
+		String uniqueId = uuid.toString();
+		
+		Template template = templateRepository
+				.findTemplateByIDAndLangCode(uniqueId,primaryLang);
+			
+		return template ==null?uniqueId:generateId();
 	}
 
 	/*
@@ -207,13 +241,14 @@ public class TemplateServiceImpl implements TemplateService {
 			Template entity = templateRepository.findTemplateByIDAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(
 					template.getId(), template.getLangCode());
 			if (!EmptyCheckUtils.isNullEmpty(entity)) {
+				template = masterdataCreationUtil.updateMasterData(Template.class, template);
 				MetaDataUtils.setUpdateMetaData(template, entity, false);
 				templateRepository.update(entity);
 				idAndLanguageCodeID.setId(entity.getId());
 				idAndLanguageCodeID.setLangCode(entity.getLangCode());
 			} else {
 				auditUtil.auditRequest(
-						String.format(MasterDataConstant.FAILURE_UPDATE, TemplateDto.class.getSimpleName()),
+						String.format(MasterDataConstant.FAILURE_UPDATE, Template.class.getSimpleName()),
 						MasterDataConstant.AUDIT_SYSTEM,
 						String.format(MasterDataConstant.FAILURE_DESC,
 								TemplateErrorCode.TEMPLATE_NOT_FOUND.getErrorCode(),
@@ -222,8 +257,9 @@ public class TemplateServiceImpl implements TemplateService {
 				throw new RequestException(TemplateErrorCode.TEMPLATE_NOT_FOUND.getErrorCode(),
 						TemplateErrorCode.TEMPLATE_NOT_FOUND.getErrorMessage());
 			}
-		} catch (DataAccessLayerException | DataAccessException e) {
-			auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_UPDATE, TemplateDto.class.getSimpleName()),
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
+			auditUtil.auditRequest(String.format(MasterDataConstant.FAILURE_UPDATE, Template.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
 					String.format(MasterDataConstant.FAILURE_DESC,
 							TemplateErrorCode.TEMPLATE_UPDATE_EXCEPTION.getErrorCode(),
@@ -233,9 +269,9 @@ public class TemplateServiceImpl implements TemplateService {
 			throw new MasterDataServiceException(TemplateErrorCode.TEMPLATE_UPDATE_EXCEPTION.getErrorCode(),
 					TemplateErrorCode.TEMPLATE_UPDATE_EXCEPTION.getErrorMessage() + ExceptionUtils.parseException(e));
 		}
-		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_UPDATE, TemplateDto.class.getSimpleName()),
+		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_UPDATE, Template.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC,
-						TemplateDto.class.getSimpleName(), idAndLanguageCodeID.getId()),
+						Template.class.getSimpleName(), idAndLanguageCodeID.getId()),
 				"ADM-816");
 		return idAndLanguageCodeID;
 	}

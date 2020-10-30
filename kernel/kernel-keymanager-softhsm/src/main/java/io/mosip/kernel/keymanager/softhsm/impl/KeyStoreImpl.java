@@ -2,8 +2,10 @@ package io.mosip.kernel.keymanager.softhsm.impl;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.security.Key;
 import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.KeyStore;
 import java.security.KeyStore.PasswordProtection;
 import java.security.KeyStore.PrivateKeyEntry;
@@ -15,6 +17,7 @@ import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.ProviderException;
 import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.security.Security;
 import java.security.UnrecoverableEntryException;
 import java.security.UnrecoverableKeyException;
@@ -27,7 +30,9 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
 
+import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.security.auth.x500.X500Principal;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.InitializingBean;
@@ -36,11 +41,14 @@ import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.core.keymanager.exception.KeystoreProcessingException;
 import io.mosip.kernel.core.keymanager.exception.NoSuchSecurityProviderException;
+import io.mosip.kernel.core.keymanager.model.CertificateParameters;
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.kernel.keygenerator.bouncycastle.constant.KeyGeneratorExceptionConstant;
+import io.mosip.kernel.keymanager.softhsm.constant.KeymanagerConstant;
 import io.mosip.kernel.keymanager.softhsm.constant.KeymanagerErrorCode;
 import io.mosip.kernel.keymanager.softhsm.logging.KeymanagerLogger;
 import io.mosip.kernel.keymanager.softhsm.util.CertificateUtility;
-import sun.security.pkcs11.SunPKCS11;
+
 
 /**
  * Softhsm Keymanager implementation based on OpenDNSSEC that handles and stores
@@ -101,6 +109,37 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	private String keystorePass;
 
 	/**
+	 * Symmetric key algorithm Name
+	 */
+	@Value("${mosip.kernel.keygenerator.symmetric-algorithm-name}")
+	private String symmetricKeyAlgorithm;
+
+	/**
+	 * Symmetric key length
+	 */
+	@Value("${mosip.kernel.keygenerator.symmetric-key-length}")
+	private int symmetricKeyLength;
+
+	/**
+	 * Asymmetric key algorithm Name
+	 */
+	@Value("${mosip.kernel.keygenerator.asymmetric-algorithm-name}")
+	private String asymmetricKeyAlgorithm;
+
+	/**
+	 * Asymmetric key length
+	 */
+	@Value("${mosip.kernel.keygenerator.asymmetric-key-length}")
+	private int asymmetricKeyLength;
+
+	/**
+	 * Certificate Signing Algorithm
+	 * 
+	 */
+	@Value("${mosip.kernel.certificate.sign.algorithm:SHA256withRSA}")
+	private String signAlgorithm;
+
+	/**
 	 * The Keystore instance
 	 */
 	private KeyStore keyStore;
@@ -112,6 +151,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		provider = setupProvider(configPath);
+		Security.removeProvider(provider.getName());
 		addProvider(provider);
 		BouncyCastleProvider bouncyCastleProvider = new BouncyCastleProvider();
 		Security.addProvider(bouncyCastleProvider);
@@ -132,17 +172,19 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 		try {
 			switch (keystoreType) {
 			case "PKCS11":
-				provider = new SunPKCS11(configPath);
+				provider = Security.getProvider("SunPKCS11");
+				provider = provider.configure(configPath);				
 				break;
 			case "BouncyCastleProvider":
 				provider = new BouncyCastleProvider();
 				break;
 			default:
-				provider = new SunPKCS11(configPath);
+				provider = Security.getProvider("SunPKCS11");
+				provider = provider.configure(configPath);
 				break;
 
 			}
-		} catch (ProviderException providerException) {
+		} catch (ProviderException | InvalidParameterException providerException ) {
 			throw new NoSuchSecurityProviderException(KeymanagerErrorCode.INVALID_CONFIG_FILE.getErrorCode(),
 					KeymanagerErrorCode.INVALID_CONFIG_FILE.getErrorMessage(), providerException);
 		}
@@ -383,9 +425,12 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	@Override
 	public void storeAsymmetricKey(KeyPair keyPair, String alias, LocalDateTime validityFrom,
 			LocalDateTime validityTo) {
+		
 		X509Certificate[] chain = new X509Certificate[1];
-		chain[0] = CertificateUtility.generateX509Certificate(keyPair, commonName, organizationalUnit, organization,
-				country, validityFrom, validityTo);
+		chain[0] = CertificateUtility.generateX509Certificate(keyPair.getPrivate(), keyPair.getPublic(), commonName, 
+				organizationalUnit, organization, country, validityFrom, validityTo,
+				signAlgorithm == null? KeymanagerConstant.SIGNATURE_ALGORITHM : signAlgorithm, 
+				provider == null ? "BC": provider.getName());
 		storeCertificate(alias, chain, keyPair.getPrivate());
 	}
 
@@ -464,8 +509,8 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 		this.keyStore = keyStore;
 	}
 
-	@Override
-	public void storeCertificate(String alias, Certificate[] chain, PrivateKey privateKey) {
+	
+	private void storeCertificate(String alias, Certificate[] chain, PrivateKey privateKey) {
 		PrivateKeyEntry privateKeyEntry = new PrivateKeyEntry(privateKey, chain);
 		ProtectionParameter password = new PasswordProtection(keystorePass.toCharArray());
 		try {
@@ -476,6 +521,103 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 					KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorMessage() + e.getMessage());
 		}
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.mosip.kernel.core.keymanager.spi.SofthsmKeystore#storeAsymmetricKey(java.
+	 * security.KeyPair, java.lang.String)
+	 */
+	@SuppressWarnings("findsecbugs:HARD_CODE_PASSWORD")
+	@Override
+	public void generateAndStoreAsymmetricKey(String alias, String signKeyAlias, CertificateParameters certParams) {
+		KeyPair keyPair = null;
+		PrivateKey signPrivateKey = null;
+		X500Principal signerPrincipal = null;
+		if (Objects.nonNull(signKeyAlias)) {
+			PrivateKeyEntry signKeyEntry = getAsymmetricKey(signKeyAlias);
+			signPrivateKey = signKeyEntry.getPrivateKey();
+			X509Certificate signCert = (X509Certificate) signKeyEntry.getCertificate();
+			signerPrincipal = signCert.getSubjectX500Principal();
+			keyPair = generateKeyPair(); // To avoid key generation in HSM.
+		} else {
+			keyPair = generateKeyPair();
+			signPrivateKey = keyPair.getPrivate();
+		}
+		X509Certificate x509Cert = CertificateUtility.generateX509Certificate(signPrivateKey, keyPair.getPublic(), certParams, 
+									signerPrincipal, signAlgorithm, provider.getName());
+		X509Certificate[] chain = new X509Certificate[] {x509Cert};
+		storeCertificate(alias, chain, keyPair.getPrivate());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.mosip.kernel.core.keymanager.spi.SofthsmKeystore#storeSymmetricKey(javax.
+	 * crypto.SecretKey, java.lang.String)
+	 */
+	@SuppressWarnings("findsecbugs:HARD_CODE_PASSWORD")
+	@Override
+	public void generateAndStoreSymmetricKey(String alias) {
+		SecretKey secretKey = generateSymmetricKey();
+		SecretKeyEntry secret = new SecretKeyEntry(secretKey);
+		ProtectionParameter password = new PasswordProtection(keystorePass.toCharArray());
+		try {
+			keyStore.setEntry(alias, secret, password);
+			keyStore.store(null, keystorePass.toCharArray());
+		} catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
+			throw new KeystoreProcessingException(KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorCode(),
+					KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorMessage() + e.getMessage(), e);
+		}
+	}
+
+	private KeyPair generateKeyPair() {
+		try {
+			KeyPairGenerator generator = KeyPairGenerator.getInstance(asymmetricKeyAlgorithm, provider);
+			SecureRandom random = new SecureRandom();
+			generator.initialize(asymmetricKeyLength, random);
+			return generator.generateKeyPair();
+		} catch (java.security.NoSuchAlgorithmException e) {
+			throw new io.mosip.kernel.core.exception.NoSuchAlgorithmException(
+					KeyGeneratorExceptionConstant.MOSIP_NO_SUCH_ALGORITHM_EXCEPTION.getErrorCode(),
+					KeyGeneratorExceptionConstant.MOSIP_NO_SUCH_ALGORITHM_EXCEPTION.getErrorMessage(), e);
+		}
+	}
+
+	private SecretKey generateSymmetricKey() {
+		try {
+			KeyGenerator generator = KeyGenerator.getInstance(symmetricKeyAlgorithm, provider);
+			SecureRandom random = new SecureRandom();
+			generator.init(symmetricKeyLength, random);
+			return generator.generateKey();
+		} catch (java.security.NoSuchAlgorithmException e) {
+			throw new io.mosip.kernel.core.exception.NoSuchAlgorithmException(
+					KeyGeneratorExceptionConstant.MOSIP_NO_SUCH_ALGORITHM_EXCEPTION.getErrorCode(),
+					KeyGeneratorExceptionConstant.MOSIP_NO_SUCH_ALGORITHM_EXCEPTION.getErrorMessage(), e);
+		}
+		
+	}
+
+	@Override
+	public void storeCertificate(String alias, PrivateKey privateKey, Certificate certificate) {
+		try {
+			PrivateKeyEntry privateKeyEntry = new PrivateKeyEntry(privateKey, new Certificate[] {certificate});
+			ProtectionParameter password = new PasswordProtection(keystorePass.toCharArray());
+			keyStore.setEntry(alias, privateKeyEntry, password);
+			keyStore.store(null, keystorePass.toCharArray());
+		} catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
+			throw new KeystoreProcessingException(KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorCode(),
+					KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorMessage() + e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public Certificate generateCertificate(PrivateKey signPrivateKey, PublicKey publicKey, CertificateParameters certParams, X500Principal signerPrincipal){
+		// Added this method because provider is not exposed from this class.
+		return CertificateUtility.generateX509Certificate(signPrivateKey, publicKey, certParams, signerPrincipal, signAlgorithm, provider.getName());
 	}
 
 }

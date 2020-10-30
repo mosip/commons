@@ -50,7 +50,16 @@ public enum CryptomanagerErrorCode {
 	 * 
 	 */
 	DATE_TIME_PARSE_EXCEPTION("KER-CRY-007", "timestamp should be in ISO 8601 format yyyy-MM-ddTHH::mm:ss.SZ"),
+	/**
+	 * 
+	 */
+	HEX_DATA_PARSE_EXCEPTION("KER-CRY-009", "Invalid Hex Data"),
+
+	CERTIFICATE_THUMBPRINT_ERROR("KER-CRY-010", "Error in generating Certificate Thumbprint."),
+
 	INTERNAL_SERVER_ERROR("KER-CRY-500", "Internal server error");
+
+
 
 	/**
 	 * The errorCode

@@ -827,7 +827,7 @@ public class MasterDataPaginationIntegrationTest {
 	@WithUserDetails("zonal-admin")
 	public void getAllRegistrationCenterTypesDataAccessExceptionTest() throws Exception {
 		when(registrationCenterTypeRepository
-				.findAll(PageRequest.of(0, 10, Sort.by(Direction.fromString("desc"), "createdDateTime"))))
+				.findAllByIsActive(true,PageRequest.of(0, 10, Sort.by(Direction.fromString("desc"), "createdDateTime"))))
 						.thenThrow(DataRetrievalFailureException.class);
 		mockMvc.perform(get("/registrationcentertypes/all")).andExpect(status().isInternalServerError());
 	}
@@ -836,7 +836,7 @@ public class MasterDataPaginationIntegrationTest {
 	@WithUserDetails("zonal-admin")
 	public void getAllRegistrationCenterTypesNotFoundExceptionTest() throws Exception {
 		when(registrationCenterTypeRepository
-				.findAll(PageRequest.of(0, 10, Sort.by(Direction.fromString("desc"), "createdDateTime"))))
+				.findAllByIsActive(true,PageRequest.of(0, 10, Sort.by(Direction.fromString("desc"), "createdDateTime"))))
 						.thenReturn(null);
 		mockMvc.perform(get("/registrationcentertypes/all")).andExpect(status().isOk());
 	}

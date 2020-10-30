@@ -4,6 +4,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Range;
+
+import io.mosip.kernel.masterdata.validator.StringFormatter;
 import io.mosip.kernel.masterdata.validator.ValidLangCode;
 import lombok.Data;
 
@@ -14,32 +17,31 @@ import lombok.Data;
 @Data
 public class UserDetailsDto {
 
-	@NotBlank
-	@Size(min = 1, max = 36)
+	@NotNull
+	@StringFormatter(min = 1, max = 36)
 	private String id;
 
-	@NotBlank
-	@ValidLangCode
-	@Size(min = 1, max = 3)
+
+	@ValidLangCode(message = "Language Code is Invalid")
 	private String langCode;
 
 	@Size(min = 1, max = 28)
 	private String uin;
 
-	@NotBlank
-	@Size(min = 1, max = 64)
+	@NotNull
+	@StringFormatter(min = 1, max = 64)
 	private String name;
 
-	@NotBlank
-	@Size(min = 0, max = 16)
+	@NotNull
+	@StringFormatter(min = 1, max = 16)
 	private String email;
 
-	@NotBlank
-	@Size(min = 0, max = 16)
+	@NotNull
+	@StringFormatter(min = 1, max = 16)
 	private String mobile;
 
-	@NotBlank
-	@Size(min = 1, max = 16)
+	@NotNull
+	@StringFormatter(min = 1, max = 16)
 	private String statusCode;
 
 	@NotNull

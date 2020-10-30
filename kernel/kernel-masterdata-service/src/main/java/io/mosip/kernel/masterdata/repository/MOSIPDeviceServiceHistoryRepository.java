@@ -27,7 +27,7 @@ public interface MOSIPDeviceServiceHistoryRepository extends BaseRepository<MOSI
 	 * @param effiveTimes the effive times
 	 * @return {@link MOSIPDeviceServiceHistory}
 	 */
-	@Query(value = "(select * from mosip_device_service_h dsh where sw_version = ?1 and eff_dtimes<= ?2 and (is_deleted is null or is_deleted =false) ORDER BY eff_dtimes DESC) LIMIT 1", nativeQuery = true)
+	@Query(value = "(select * from mosip_device_service_h dsh where sw_version = ?1 and eff_dtimes<= ?2 and (is_deleted is null or is_deleted =false) and is_active=true ORDER BY eff_dtimes DESC) LIMIT 1", nativeQuery = true)
 	List<MOSIPDeviceServiceHistory> findByIdAndIsActiveIsTrueAndByEffectiveTimes(String swVersion,
 			LocalDateTime effiveTimes);
 
@@ -54,7 +54,7 @@ public interface MOSIPDeviceServiceHistoryRepository extends BaseRepository<MOSI
 	 * @param effTimes        the eff times
 	 * @return {@link MOSIPDeviceServiceHistory}
 	 */
-	@Query(value = "(select * from mosip_device_service_h where sw_version=?1 and dtype_code=?2 and dstype_code=?3 and make=?4 and model=?5 and dprovider_id=?6 and eff_dtimes<=?7 and (is_deleted is null or is_deleted =false)ORDER BY eff_dtimes DESC) LIMIT 1", nativeQuery = true)
+	@Query(value = "(select * from mosip_device_service_h where sw_version=?1 and dtype_code=?2 and dstype_code=?3 and make=?4 and model=?5 and dprovider_id=?6 and eff_dtimes<=?7 and (is_deleted is null or is_deleted =false) and is_active=true ORDER BY eff_dtimes DESC) LIMIT 1", nativeQuery = true)
 	MOSIPDeviceServiceHistory findByDeviceDetailHistory(String version, String deviceTypeCode, String devicesTypeCode,
 			String make, String model, String dp, LocalDateTime effTimes);
 }

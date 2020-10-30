@@ -4,8 +4,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Range;
+
+import io.mosip.kernel.masterdata.validator.StringFormatter;
 import io.mosip.kernel.masterdata.validator.ValidLangCode;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -25,16 +27,16 @@ public class DocumentCategoryDto {
 	/**
 	 * Document category code.
 	 */
-	@NotBlank
-	@Size(min = 1, max = 36)
+	@NotNull
+	@StringFormatter(min = 1, max = 36)
 	@ApiModelProperty(value = "code", required = true, dataType = "java.lang.String")
 	private String code;
 
 	/**
 	 * Document category name.
 	 */
-	@NotBlank
-	@Size(min = 1, max = 64)
+	@NotNull
+	@StringFormatter(min = 1, max = 64)
 	@ApiModelProperty(value = "name", required = true, dataType = "java.lang.String")
 	private String name;
 
@@ -48,9 +50,7 @@ public class DocumentCategoryDto {
 	/**
 	 * The Language Code.
 	 */
-	@ValidLangCode
-	@NotBlank
-	@Size(min = 1, max = 3)
+	@ValidLangCode(message = "Language Code is Invalid")
 	@ApiModelProperty(value = "Language Code", required = true, dataType = "java.lang.String")
 	private String langCode;
 

@@ -14,7 +14,6 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
-import io.mosip.kernel.masterdata.constant.ApplicationErrorCode;
 import io.mosip.kernel.masterdata.constant.GenderTypeErrorCode;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.dto.GenderTypeDto;
@@ -78,7 +77,7 @@ public class GenderTypeServiceImpl implements GenderTypeService {
 
 	@Autowired
 	private AuditUtil auditUtil;
-	
+
 	@Autowired
 	private MasterdataCreationUtil masterdataCreationUtil;
 
@@ -152,17 +151,20 @@ public class GenderTypeServiceImpl implements GenderTypeService {
 	 */
 	@Override
 	public CodeAndLanguageCodeID saveGenderType(GenderTypeDto genderRequestDto) {
-		Gender entity = MetaDataUtils.setCreateMetaData(genderRequestDto, Gender.class);
+
 		Gender gender;
 		try {
+			genderRequestDto = masterdataCreationUtil.createMasterData(Gender.class, genderRequestDto);
+			Gender entity = MetaDataUtils.setCreateMetaData(genderRequestDto, Gender.class);
 			gender = genderTypeRepository.create(entity);
-		} catch (DataAccessLayerException | DataAccessException e) {
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
 			auditUtil.auditRequest(
-					String.format(MasterDataConstant.FAILURE_CREATE, GenderTypeDto.class.getSimpleName()),
+					String.format(MasterDataConstant.FAILURE_CREATE, Gender.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
 					String.format(MasterDataConstant.FAILURE_DESC,
-							ApplicationErrorCode.APPLICATION_INSERT_EXCEPTION.getErrorCode(),
-							ApplicationErrorCode.APPLICATION_INSERT_EXCEPTION.getErrorMessage()
+							GenderTypeErrorCode.GENDER_TYPE_INSERT_EXCEPTION.getErrorCode(),
+							GenderTypeErrorCode.GENDER_TYPE_INSERT_EXCEPTION.getErrorMessage()
 									+ ExceptionUtils.parseException(e)),
 					"ADM-564");
 			throw new MasterDataServiceException(GenderTypeErrorCode.GENDER_TYPE_INSERT_EXCEPTION.getErrorCode(),
@@ -170,9 +172,9 @@ public class GenderTypeServiceImpl implements GenderTypeService {
 		}
 		CodeAndLanguageCodeID codeLangCodeId = new CodeAndLanguageCodeID();
 		MapperUtils.map(gender, codeLangCodeId);
-		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_CREATE, GenderTypeDto.class.getSimpleName()),
+		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_CREATE, Gender.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_CREATE_DESC,
-						GenderTypeDto.class.getSimpleName(), codeLangCodeId.getCode()),
+						Gender.class.getSimpleName(), codeLangCodeId.getCode()),
 				"ADM-565");
 
 		return codeLangCodeId;
@@ -192,6 +194,8 @@ public class GenderTypeServiceImpl implements GenderTypeService {
 		CodeAndLanguageCodeID genderTypeId = new CodeAndLanguageCodeID();
 		MapperUtils.mapFieldValues(genderTypeDto, genderTypeId);
 		try {
+			genderTypeDto = masterdataCreationUtil.updateMasterData(Gender.class,
+					genderTypeDto);
 			int updatedRows = genderTypeRepository.updateGenderType(genderTypeDto.getCode(),
 					genderTypeDto.getLangCode(), genderTypeDto.getGenderName(), genderTypeDto.getIsActive(),
 					MetaDataUtils.getCurrentDateTime(), MetaDataUtils.getContextUser());
@@ -202,10 +206,11 @@ public class GenderTypeServiceImpl implements GenderTypeService {
 			if(!genderTypeDto.getIsActive()) {
 				masterdataCreationUtil.updateMasterDataDeactivate(Gender.class, genderTypeDto.getCode());
 			}
-			
-		} catch (DataAccessLayerException | DataAccessException e) {
+
+		} catch (DataAccessLayerException | DataAccessException | IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException e) {
 			auditUtil.auditRequest(
-					String.format(MasterDataConstant.FAILURE_UPDATE, GenderTypeDto.class.getSimpleName()),
+					String.format(MasterDataConstant.FAILURE_UPDATE, Gender.class.getSimpleName()),
 					MasterDataConstant.AUDIT_SYSTEM,
 					String.format(MasterDataConstant.FAILURE_DESC,
 							GenderTypeErrorCode.GENDER_TYPE_UPDATE_EXCEPTION.getErrorCode(),
@@ -216,9 +221,9 @@ public class GenderTypeServiceImpl implements GenderTypeService {
 					GenderTypeErrorCode.GENDER_TYPE_UPDATE_EXCEPTION.getErrorMessage()
 							+ ExceptionUtils.parseException(e));
 		}
-		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_UPDATE, GenderTypeDto.class.getSimpleName()),
+		auditUtil.auditRequest(String.format(MasterDataConstant.SUCCESSFUL_UPDATE, Gender.class.getSimpleName()),
 				MasterDataConstant.AUDIT_SYSTEM, String.format(MasterDataConstant.SUCCESSFUL_UPDATE_DESC,
-						GenderTypeDto.class.getSimpleName(), genderTypeId.getCode()),
+						Gender.class.getSimpleName(), genderTypeId.getCode()),
 				"ADM-567");
 
 		return genderTypeId;

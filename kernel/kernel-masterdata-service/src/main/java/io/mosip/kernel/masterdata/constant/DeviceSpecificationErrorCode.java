@@ -16,7 +16,8 @@ public enum DeviceSpecificationErrorCode {
 	DEVICE_SPECIFICATION_UPDATE_EXCEPTION("KER-MSD-081", "Error occured while updating Device Specification"),
 	DEVICE_SPECIFICATION_DELETE_EXCEPTION("KER-MSD-082", "Error occured while deleting Device Specification"),
 	DEVICE_DELETE_DEPENDENCY_EXCEPTION("KER-MSD-121", "Cannot delete dependency found"),
-	PAGE_DATA_NOT_FOUND_EXCEPTION("KER-MSD-347", "No Devices found for the received Device Type");
+	PAGE_DATA_NOT_FOUND_EXCEPTION("KER-MSD-347", "No Devices found for the received Device Type"),
+	INVALID_DEVICE_TYPE_CODE__EXCEPTION("KER-MSD-714", "Invalid dtype_code received");
 
 	private final String errorCode;
 	private final String errorMessage;

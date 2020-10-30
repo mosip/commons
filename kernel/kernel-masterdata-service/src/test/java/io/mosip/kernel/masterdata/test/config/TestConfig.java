@@ -35,7 +35,6 @@ public class TestConfig {
 
 		requestFactory.setHttpClient(httpClient);
 		return new RestTemplate(requestFactory);
-
 	}
 
 }

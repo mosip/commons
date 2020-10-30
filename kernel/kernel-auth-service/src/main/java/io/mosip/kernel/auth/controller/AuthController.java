@@ -12,6 +12,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.web.authentication.www.NonceExpiredException;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -28,40 +29,40 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import io.mosip.kernel.auth.config.MosipEnvironment;
-import io.mosip.kernel.auth.constant.AuthConstant;
-import io.mosip.kernel.auth.constant.AuthErrorCode;
-import io.mosip.kernel.auth.dto.AccessTokenResponseDTO;
-import io.mosip.kernel.auth.dto.AuthNResponse;
-import io.mosip.kernel.auth.dto.AuthNResponseDto;
-import io.mosip.kernel.auth.dto.AuthResponseDto;
-import io.mosip.kernel.auth.dto.AuthZResponseDto;
-import io.mosip.kernel.auth.dto.ClientSecret;
-import io.mosip.kernel.auth.dto.ClientSecretDto;
-import io.mosip.kernel.auth.dto.LoginUser;
-import io.mosip.kernel.auth.dto.MosipUserDto;
-import io.mosip.kernel.auth.dto.MosipUserListDto;
-import io.mosip.kernel.auth.dto.MosipUserSaltListDto;
-import io.mosip.kernel.auth.dto.MosipUserTokenDto;
-import io.mosip.kernel.auth.dto.PasswordDto;
-import io.mosip.kernel.auth.dto.RIdDto;
-import io.mosip.kernel.auth.dto.RefreshTokenRequest;
-import io.mosip.kernel.auth.dto.RefreshTokenResponse;
-import io.mosip.kernel.auth.dto.RolesListDto;
-import io.mosip.kernel.auth.dto.UserDetailsDto;
-import io.mosip.kernel.auth.dto.UserDetailsRequestDto;
-import io.mosip.kernel.auth.dto.UserDetailsResponseDto;
-import io.mosip.kernel.auth.dto.UserNameDto;
-import io.mosip.kernel.auth.dto.UserOtp;
-import io.mosip.kernel.auth.dto.UserPasswordRequestDto;
-import io.mosip.kernel.auth.dto.UserPasswordResponseDto;
-import io.mosip.kernel.auth.dto.UserRegistrationRequestDto;
-import io.mosip.kernel.auth.dto.UserRegistrationResponseDto;
-import io.mosip.kernel.auth.dto.UserRoleDto;
-import io.mosip.kernel.auth.dto.ValidationResponseDto;
-import io.mosip.kernel.auth.dto.otp.OtpUser;
-import io.mosip.kernel.auth.exception.AuthManagerException;
-import io.mosip.kernel.auth.service.AuthService;
+import io.mosip.kernel.auth.defaultimpl.config.MosipEnvironment;
+import io.mosip.kernel.auth.defaultimpl.constant.AuthConstant;
+import io.mosip.kernel.auth.defaultimpl.constant.AuthErrorCode;
+import io.mosip.kernel.auth.defaultimpl.dto.ClientSecretDto;
+import io.mosip.kernel.auth.defaultimpl.dto.UserDetailsRequestDto;
+import io.mosip.kernel.auth.defaultimpl.dto.UserRegistrationResponseDto;
+import io.mosip.kernel.auth.defaultimpl.exception.AuthManagerException;
+import io.mosip.kernel.core.authmanager.model.AccessTokenResponseDTO;
+import io.mosip.kernel.core.authmanager.model.AuthNResponse;
+import io.mosip.kernel.core.authmanager.model.AuthNResponseDto;
+import io.mosip.kernel.core.authmanager.model.AuthResponseDto;
+import io.mosip.kernel.core.authmanager.model.AuthZResponseDto;
+import io.mosip.kernel.core.authmanager.model.ClientSecret;
+import io.mosip.kernel.core.authmanager.model.LoginUser;
+import io.mosip.kernel.core.authmanager.model.MosipUserDto;
+import io.mosip.kernel.core.authmanager.model.MosipUserListDto;
+import io.mosip.kernel.core.authmanager.model.MosipUserSaltListDto;
+import io.mosip.kernel.core.authmanager.model.MosipUserTokenDto;
+import io.mosip.kernel.core.authmanager.model.OtpUser;
+import io.mosip.kernel.core.authmanager.model.PasswordDto;
+import io.mosip.kernel.core.authmanager.model.RIdDto;
+import io.mosip.kernel.core.authmanager.model.RefreshTokenRequest;
+import io.mosip.kernel.core.authmanager.model.RefreshTokenResponse;
+import io.mosip.kernel.core.authmanager.model.RolesListDto;
+import io.mosip.kernel.core.authmanager.model.UserDetailsDto;
+import io.mosip.kernel.core.authmanager.model.UserDetailsResponseDto;
+import io.mosip.kernel.core.authmanager.model.UserNameDto;
+import io.mosip.kernel.core.authmanager.model.UserOtp;
+import io.mosip.kernel.core.authmanager.model.UserPasswordRequestDto;
+import io.mosip.kernel.core.authmanager.model.UserPasswordResponseDto;
+import io.mosip.kernel.core.authmanager.model.UserRegistrationRequestDto;
+import io.mosip.kernel.core.authmanager.model.UserRoleDto;
+import io.mosip.kernel.core.authmanager.model.ValidationResponseDto;
+import io.mosip.kernel.core.authmanager.spi.AuthService;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -81,6 +82,15 @@ import io.swagger.annotations.Api;
 public class AuthController {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
+
+    
+	@Value("${mosip.security.secure-cookie:false}")
+	private boolean isSecureCookie;
+	
+	
+	@Value("${mosip.kernel.auth-code-url-splitter:#URISPLITTER#}")
+	private String urlSplitter;
+
 	/**
 	 * Autowired reference for {@link MosipEnvironment}
 	 */
@@ -131,7 +141,7 @@ public class AuthController {
 		final Cookie cookie = new Cookie(mosipEnvironment.getAuthTokenHeader(), content);
 		cookie.setMaxAge(expirationTimeSeconds);
 		cookie.setHttpOnly(true);
-		cookie.setSecure(false);
+		cookie.setSecure(isSecureCookie);
 		cookie.setPath("/");
 		return cookie;
 	}
@@ -633,13 +643,15 @@ public class AuthController {
 			@CookieValue("state") String stateCookie, HttpServletResponse res) throws IOException {
 		AccessTokenResponseDTO jwtResponseDTO = authService.loginRedirect(state, sessionState, code, stateCookie,
 				redirectURI);
-		String uri = new String(Base64.decodeBase64(redirectURI.getBytes()));
-		LOGGER.info("login-redirect open id login uri " + uri );
+
 		Cookie cookie = createCookie(jwtResponseDTO.getAccessToken(), Integer.parseInt(jwtResponseDTO.getExpiresIn()));
 		res.addCookie(cookie);
 		res.setStatus(302);
-		res.sendRedirect(uri);
-	}
+		String uri = new String(Base64.decodeBase64(redirectURI.getBytes()));
+
+		LOGGER.info("login-redirect open id login uri " + uri );
+		res.sendRedirect(uri);	
+		}
 
 	/**
 	 * Erases Cookie from browser
@@ -651,4 +663,5 @@ public class AuthController {
 		cookie.setPath("/");
 		cookie.setMaxAge(0);
 	}
+
 }
