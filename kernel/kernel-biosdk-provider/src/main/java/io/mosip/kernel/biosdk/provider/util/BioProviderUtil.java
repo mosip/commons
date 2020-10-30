@@ -13,17 +13,11 @@ import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;
 
 public class BioProviderUtil {
-<<<<<<< HEAD
-	
-	private static final Logger LOGGER = BioSDKProviderLoggerFactory.getLogger(BioProviderUtil.class);
-	
-=======
 
 	private static Map<String, Object> sdkInstances = new HashMap<>();
 
 	private static final Logger LOGGER = BioSDKProviderLoggerFactory.getLogger(BioProviderUtil.class);
 
->>>>>>> 1.1.2
 	public static Object getSDKInstance(Map<String, String> modalityParams) throws BiometricException {
 		try {
 			String instanceKey = modalityParams.entrySet().stream().sorted(Map.Entry.comparingByKey())
@@ -44,15 +38,6 @@ public class BioProviderUtil {
 			if (result.isPresent()) {
 				Constructor<?> constructor = result.get();
 				constructor.setAccessible(true);
-<<<<<<< HEAD
-				LOGGER.info(ProviderConstants.LOGGER_SESSIONID, ProviderConstants.LOGGER_IDTYPE, 
-						"GET SDK INSTANCE", "SDK instance created with params >>> " + modalityParams);
-				return constructor.newInstance(args);
-			}
-			else
-				throw new BiometricException(ErrorCode.NO_CONSTRUCTOR_FOUND.getErrorCode(), 
-						String.format(ErrorCode.NO_CONSTRUCTOR_FOUND.getErrorMessage(), 
-=======
 				LOGGER.debug(ProviderConstants.LOGGER_SESSIONID, ProviderConstants.LOGGER_IDTYPE, "GET SDK INSTANCE",
 						"SDK instance created with params >>> " + modalityParams);
 				Object newInstance = constructor.newInstance(args);
@@ -61,7 +46,6 @@ public class BioProviderUtil {
 			} else {
 				throw new BiometricException(ErrorCode.NO_CONSTRUCTOR_FOUND.getErrorCode(),
 						String.format(ErrorCode.NO_CONSTRUCTOR_FOUND.getErrorMessage(),
->>>>>>> 1.1.2
 								modalityParams.get(ProviderConstants.CLASSNAME),
 								modalityParams.get(ProviderConstants.ARGUMENTS)));
 			}

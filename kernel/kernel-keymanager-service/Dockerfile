@@ -18,13 +18,6 @@ ARG is_glowroot
 # can be passed during Docker build as build time environment for artifactory URL
 ARG artifactory_url
 
-<<<<<<< HEAD
-# can be passed during Docker build as build time environment management rmi server hostname
-ARG management_rmi_server_hostname
-
-# can be passed during Docker build as build time environment management rmi server port
-ARG management_jmxremote_rmi_port
-=======
 # can be passed during Docker build as build time environment for hsm client zip file path
 ARG client_zip_path
 
@@ -33,7 +26,6 @@ ARG client_zip_path
 
 # can be passed during Docker build as build time environment management rmi server port
 #ARG management_jmxremote_rmi_port
->>>>>>> 1.1.2
 
 # environment variable to pass active profile such as DEV, QA etc at docker runtime
 ENV active_profile_env=${active_profile}
@@ -85,13 +77,9 @@ CMD if [ "$is_glowroot_env" = "present" ]; then \
     unzip glowroot.zip ; \
     rm -rf glowroot.zip ; \
     sed -i 's/<service_name>/kernel-keymanager-service/g' glowroot/glowroot.properties ; \
-<<<<<<< HEAD
-    java -jar -javaagent:glowroot/glowroot.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port="${management.jmxremote.rmi.port_env}" -Dcom.sun.management.jmxremote.rmi.port="${management.jmxremote.rmi.port_env}" -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname="${management.rmi.server.hostname_env}" -XX:HeapDumpPath=/home/  /kernel-keymanager-service.jar ; \
-=======
     
      wget "${iam_adapter_url_env}" -O kernel-auth-adapter.jar; \
     java -jar -javaagent:glowroot/glowroot.jar -Dloader.path=./kernel-auth-adapter.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -XX:HeapDumpPath=/home/  /kernel-keymanager-service.jar ; \
->>>>>>> 1.1.2
     else \
     
      wget "${iam_adapter_url_env}" -O kernel-auth-adapter.jar; \
