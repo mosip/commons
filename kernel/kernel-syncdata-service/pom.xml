@@ -5,15 +5,6 @@
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-syncdata-service</artifactId>
 	<name>kernel-syncdata-service</name>
-<<<<<<< HEAD
-	<version>1.0.9</version>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<kernel.core.version>1.0.9</kernel.core.version>
-		<kernel.auth.adaptor.version>1.0.6</kernel.auth.adaptor.version>
-		<kernel.logger.version>1.0.6</kernel.logger.version>
-		<kernel.crypto.version>1.0.9</kernel.crypto.version>	
-=======
 	<description>Mosip commons project </description>
         <url>https://github.com/mosip/commons</url>
 	<version>1.1.2</version>
@@ -233,7 +224,6 @@
 		<kernel.auth.adaptor.version>1.1.2</kernel.auth.adaptor.version>
 		<kernel.logger.version>1.1.2</kernel.logger.version>
 		<kernel.crypto.version>1.1.2</kernel.crypto.version>
->>>>>>> 1.1.2
 	</properties>
 	<dependencies>
 		<dependency>

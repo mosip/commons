@@ -5,13 +5,6 @@
 	<modelVersion>4.0.0</modelVersion>
 <groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-idgenerator-tokenid</artifactId>
-<<<<<<< HEAD
-	<version>1.0.7</version>
-	<properties>
-		<kernel.core.version>1.0.6</kernel.core.version>
-		<kernel.dataaccess-hibernate.version>1.0.6</kernel.dataaccess-hibernate.version>
-		<kernel.crypto-jce.version>1.0.6</kernel.crypto-jce.version>
-=======
 	<version>1.1.2</version>
 <properties>		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -227,7 +220,6 @@
 		<kernel.core.version>1.1.2</kernel.core.version>
 		<kernel.dataaccess-hibernate.version>1.1.2</kernel.dataaccess-hibernate.version>
 		<kernel.crypto-jce.version>1.1.2</kernel.crypto-jce.version>
->>>>>>> 1.1.2
 	</properties>
 	<dependencies>
 		<dependency>

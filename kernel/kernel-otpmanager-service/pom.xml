@@ -7,14 +7,6 @@
 	<groupId>io.mosip.kernel</groupId>
 
 	<artifactId>kernel-otpmanager-service</artifactId>
-<<<<<<< HEAD
-	<version>1.0.7</version>
-	<properties>
-		<kernel.core.version>1.0.6</kernel.core.version>
-		<kernel.auth-adapter.version>1.0.9</kernel.auth-adapter.version>
-		<kernel.dataaccess-hibernate.version>1.0.6</kernel.dataaccess-hibernate.version>
-		<kernel.logger.version>1.0.6</kernel.logger.version>
-=======
 	<version>1.1.2</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -231,7 +223,6 @@
 		<kernel.auth-adapter.version>1.1.2</kernel.auth-adapter.version>
 		<kernel.dataaccess-hibernate.version>1.1.2</kernel.dataaccess-hibernate.version>
 		<kernel.logger.version>1.1.2</kernel.logger.version>
->>>>>>> 1.1.2
 	</properties>
 	<name>kernel-otpmanager-service</name>
 	<description>Mosip commons project </description>
