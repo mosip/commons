@@ -42,7 +42,7 @@ public class DeviceProviderController {
 	@Autowired
 	private DeviceProviderService<ResponseDto, ValidateDeviceDto, DeviceProviderDto, DeviceProviderExtnDto, DeviceProviderPutDto> deviceProviderSerice;
 
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@PostMapping
 	@ApiOperation(value = "Service to save Device Provide", notes = "Saves Device Provider Detail and return Device Provider")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When Device Provider successfully created"),
@@ -64,7 +64,7 @@ public class DeviceProviderController {
 		return response;
 	}
 
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@PutMapping
 	@ApiOperation(value = "Service to save Device Provide", notes = "Saves Device Provider Detail and return Device Provider")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When Device Provider successfully created"),

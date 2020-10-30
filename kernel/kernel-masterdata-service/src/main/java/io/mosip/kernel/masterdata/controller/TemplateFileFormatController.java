@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,6 +51,7 @@ public class TemplateFileFormatController {
 	 * 
 	 * @return {@link CodeAndLanguageCodeID}
 	 */
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@PostMapping
 	public ResponseWrapper<CodeAndLanguageCodeID> createTemplateFileFormat(
@@ -71,6 +73,7 @@ public class TemplateFileFormatController {
 	 *         successfully {@link ResponseEntity}
 	 */
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@PutMapping
 	@ApiOperation(value = "Service to update TemplateFileFormat", notes = "Update TemplateFileFormat and return TemplateFileFormat id")
 	@ApiResponses({ @ApiResponse(code = 200, message = "When TemplateFileFormat updated successfully"),
@@ -93,6 +96,7 @@ public class TemplateFileFormatController {
 	 *            the TemplateFileFormat code
 	 * @return the code of templatefileformat
 	 */
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@DeleteMapping("/{code}")
 	@ApiOperation(value = "Service to delete TemplateFileFormat", notes = "Delete TemplateFileFormat and return code")
@@ -120,6 +124,7 @@ public class TemplateFileFormatController {
 	 *         given TemplateFileFormat code and Language code
 	 *         {@link TemplateFileFormatResponseDto}
 	 */
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping(value = "/{code}/{langcode}")
 	@ApiOperation(value = "Retrieve all TemplateFileFormat Details for given Languge Code", notes = "Retrieve all TemplateFileFormat Detail for given Languge Code and code")
@@ -146,6 +151,7 @@ public class TemplateFileFormatController {
 	 *         given TemplateFileFormat code and Language code
 	 *         {@link TemplateFileFormatResponseDto}
 	 */
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping(value = "/{langcode}")
 	@ApiOperation(value = "Retrieve all TemplateFileFormat Details for given Languge Code", notes = "Retrieve all TemplateFileFormat Detail for given Languge Code")

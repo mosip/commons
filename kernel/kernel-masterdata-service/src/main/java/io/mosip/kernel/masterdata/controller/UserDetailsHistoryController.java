@@ -26,9 +26,9 @@ public class UserDetailsHistoryController {
 	@Autowired
 	UserDetailsHistoryService userDetailsHistoryService;
 
+	@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR','GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping(value = "/users/{id}/{eff_dtimes}")
-	@PreAuthorize("hasRole('REGISTRATION_PROCESSOR')")
 	public ResponseWrapper<UserDetailsHistoryResponseDto> getTitlesBylangCode(@PathVariable("id") String userId,
 			@PathVariable("eff_dtimes") String date) {
 		ResponseWrapper<UserDetailsHistoryResponseDto> responseWrapper = new ResponseWrapper<>();

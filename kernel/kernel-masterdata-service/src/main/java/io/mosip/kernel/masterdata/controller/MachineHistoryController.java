@@ -47,7 +47,8 @@ public class MachineHistoryController {
 	 * @return MachineHistoryResponseDto returning machine history detail based on
 	 *         given Machine ID, Language code and effective date time
 	 */
-	@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
+
+	@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR','GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping(value = "/{id}/{langcode}/{effdatetimes}")
 	@ApiOperation(value = "Retrieve all Machine History Details for the given Languge Code, ID and Effective date time", notes = "Retrieve all Machine Detail for given Languge Code and ID")
