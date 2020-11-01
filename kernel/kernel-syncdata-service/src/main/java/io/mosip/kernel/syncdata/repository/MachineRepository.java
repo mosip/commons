@@ -38,7 +38,8 @@ public interface MachineRepository extends JpaRepository<Machine, String> {
 	 * @param machineId id of the machine
 	 * @return {@link Machine} - list of machine
 	 */
-	@Query(value = "SELECT mm.id, mm.name, mm.mac_address, mm.serial_num, mm.ip_address, mm.mspec_id, mm.lang_code, mm.is_active, mm.cr_by, mm.cr_dtimes, mm.upd_by, mm.upd_dtimes, mm.is_deleted, mm.del_dtimes, mm.validity_end_dtimes,mm.zone_code,mm.regcntr_id,mm.sign_public_key,mm.sign_key_index FROM master.machine_master mm where mm.id=?1 ", nativeQuery = true)
+	//@Query(value = "SELECT mm.id, mm.name, mm.mac_address, mm.serial_num, mm.ip_address, mm.mspec_id, mm.lang_code, mm.is_active, mm.cr_by, mm.cr_dtimes, mm.upd_by, mm.upd_dtimes, mm.is_deleted, mm.del_dtimes, mm.validity_end_dtimes,mm.zone_code,mm.regcntr_id,mm.sign_public_key,mm.sign_key_index FROM master.machine_master mm where mm.id=?1 ", nativeQuery = true)
+	@Query("From Machine m WHERE m.id = ?1  and (m.isDeleted is null or m.isDeleted =false) and m.isActive = true")
 	List<Machine> findMachineById(String machineId);
 
 	/**
@@ -46,7 +47,8 @@ public interface MachineRepository extends JpaRepository<Machine, String> {
 	 * @param machineId - machine id
 	 * @return list of {@link Machine} - list of machine
 	 */
-	@Query(value = "SELECT mm.id, mm.name, mm.mac_address, mm.serial_num, mm.ip_address, mm.mspec_id, mm.lang_code, mm.is_active, mm.cr_by, mm.cr_dtimes, mm.upd_by, mm.upd_dtimes, mm.is_deleted, mm.del_dtimes, mm.validity_end_dtimes,mm.zone_code,mm.regcntr_id,mm.sign_public_key,mm.sign_key_index FROM master.machine_master mm where mm.id=?1 and mm.is_active=true ", nativeQuery = true)
+	//@Query(value = "SELECT mm.id, mm.name, mm.mac_address, mm.serial_num, mm.ip_address, mm.mspec_id, mm.lang_code, mm.is_active, mm.cr_by, mm.cr_dtimes, mm.upd_by, mm.upd_dtimes, mm.is_deleted, mm.del_dtimes, mm.validity_end_dtimes,mm.zone_code,mm.regcntr_id,mm.sign_public_key,mm.sign_key_index FROM master.machine_master mm where mm.id=?1 and mm.is_active=true ", nativeQuery = true)
+	@Query("From Machine m WHERE m.id = ?1 and (m.isDeleted is null or m.isDeleted =false) and m.isActive = true")
 	List<Machine> findByMachineIdAndIsActive(String machineId);
 
 	/**
