@@ -46,6 +46,7 @@ import io.mosip.kernel.masterdata.dto.RegCenterPutReqDto;
 import io.mosip.kernel.masterdata.dto.RegistrationCenterMachineDeviceHistoryDto;
 import io.mosip.kernel.masterdata.dto.TemplateFileFormatDto;
 import io.mosip.kernel.masterdata.dto.WeekDaysResponseDto;
+import io.mosip.kernel.masterdata.dto.WorkingDaysResponseDto;
 import io.mosip.kernel.masterdata.dto.getresponse.ApplicationResponseDto;
 import io.mosip.kernel.masterdata.dto.getresponse.BiometricTypeResponseDto;
 import io.mosip.kernel.masterdata.dto.getresponse.BlacklistedWordsResponseDto;
@@ -2350,7 +2351,7 @@ public class MasterDataServiceTest {
 	// -----------------------------WorkingDayControllerTest------------------------
 
 	@Test
-	public void getWeekService() {
+	public void getWorkingDaysService() {
 
 		List<DayNameAndSeqListDto> nameSeqDtoList = new ArrayList<>();
 		DayNameAndSeqListDto nameSeqDto = new DayNameAndSeqListDto();
@@ -2358,30 +2359,30 @@ public class MasterDataServiceTest {
 		nameSeqDto.setName("Monday");
 		nameSeqDtoList.add(nameSeqDto);
 
-		List<WeekDaysDto> weekdayList = new ArrayList<>();
-		WeekDaysResponseDto weekdays = new WeekDaysResponseDto();
-		WeekDaysDto daysDto = new WeekDaysDto();
+		List<WorkingDaysDto> weekdayList = new ArrayList<>();
+		WorkingDaysResponseDto weekdays = new WorkingDaysResponseDto();
+		WorkingDaysDto daysDto = new WorkingDaysDto();
 		daysDto.setLanguageCode("eng");
 		daysDto.setName("Monday");
 		daysDto.setOrder((short) 1);
 		weekdayList.add(daysDto);
-		weekdays.setWeekdays(weekdayList);
+		weekdays.setWorkingdays(weekdayList);
 		RegistrationCenter registCent = new RegistrationCenter();
 		registCent.setId("10001");
 		registCent.setLangCode("eng");
 
-		Mockito.when(regWorkingNonWorkingRepo.findByregistrationCenterIdAndlanguagecodeForWeekDays(Mockito.anyString(),
+		Mockito.when(regWorkingNonWorkingRepo.findByregistrationCenterIdAndlanguagecodeForWorkingDays(Mockito.anyString(),
 				Mockito.anyString())).thenReturn(nameSeqDtoList);
 		Mockito.when(registrationCenterRepository.findByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(registCent);
 		assertEquals("Monday",
-				regWorkingNonWorkingService.getWeekDaysList("10001", "eng").getWeekdays().get(0).getName());
+				regWorkingNonWorkingService.getWorkingDays("10001", "eng").getWorkingdays().get(0).getName());
 	}
 
 	@Test
-	public void getWorkingDaysServiceTest() {
-		List<WorkingDaysDto> workingDaysDtos = new ArrayList<>();
-		WorkingDaysDto workingDaysDto = new WorkingDaysDto();
+	public void getWeekDaysServiceTest() {
+		List<WeekDaysDto> workingDaysDtos = new ArrayList<>();
+		WeekDaysDto workingDaysDto = new WeekDaysDto();
 		workingDaysDto.setDayCode("101");
 		workingDaysDto.setName("Monday");
 		workingDaysDto.setLanguagecode("eng");
@@ -2392,15 +2393,15 @@ public class MasterDataServiceTest {
 		Mockito.when(registrationCenterRepository.findByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(registCent);
 
-		Mockito.when(regWorkingNonWorkingRepo.findByregistrationCenterIdAndlangCodeForWorkingDays("10001", "eng"))
+		Mockito.when(regWorkingNonWorkingRepo.findByregistrationCenterIdAndlangCodeForWeekDays("10001", "eng"))
 				.thenReturn(workingDaysDtos);
-
 		assertEquals("Monday",
-				regWorkingNonWorkingService.getWorkingDays("10001", "eng").getWorkingdays().get(0).getName());
+				regWorkingNonWorkingService.getWeekDaysList("10001", "eng").getWeekdays().get(0).getName());
+		
 	}
 
 	@Test
-	public void getWorkingDaysServiceGlobalTest() {
+	public void getWeekDaysServiceGlobalTest() {
 		List<DaysOfWeek> globalDaysList = new ArrayList<>();
 		DaysOfWeek daysOfWeek = new DaysOfWeek();
 		daysOfWeek.setCode("101");
@@ -2413,57 +2414,58 @@ public class MasterDataServiceTest {
 		registCent.setId("10001");
 		registCent.setLangCode("eng");
 
-		Mockito.when(regWorkingNonWorkingRepo.findByregistrationCenterIdAndlangCodeForWorkingDays("10001", "eng"))
+		Mockito.when(regWorkingNonWorkingRepo.findByregistrationCenterIdAndlangCodeForWeekDays("10001", "eng"))
 				.thenReturn(null);
 		Mockito.when(registrationCenterRepository.findByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(registCent);
 		Mockito.when(daysOfWeekRepo.findByAllGlobalWorkingTrue(Mockito.anyString())).thenReturn(globalDaysList);
 
 		assertEquals("Monday",
-				regWorkingNonWorkingService.getWorkingDays("10001", "eng").getWorkingdays().get(0).getName());
+				regWorkingNonWorkingService.getWeekDaysList("10001", "eng").getWeekdays().get(0).getName());
+		
 	}
 
 	@Test(expected = DataNotFoundException.class)
-	public void getWorkingDaysServiceGlobalFailTest() {
+	public void getWeekDaysServiceGlobalFailTest() {
 
 		RegistrationCenter registCent = new RegistrationCenter();
 		registCent.setId("10001");
 		registCent.setLangCode("eng");
-		Mockito.when(regWorkingNonWorkingRepo.findByregistrationCenterIdAndlangCodeForWorkingDays("10001", "eng"))
+		Mockito.when(regWorkingNonWorkingRepo.findByregistrationCenterIdAndlangCodeForWeekDays("10001", "eng"))
 				.thenReturn(null);
 		Mockito.when(registrationCenterRepository.findByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(registCent);
 		Mockito.when(daysOfWeekRepo.findByAllGlobalWorkingTrue(Mockito.anyString())).thenReturn(null);
 
-		regWorkingNonWorkingService.getWorkingDays("10001", "eng");
+		regWorkingNonWorkingService.getWeekDaysList("10001", "eng");
 	}
 
 	@Test(expected = MasterDataServiceException.class)
-	public void getWorkingDaysServiceFailureTest() {
+	public void getWeekDaysServiceFailureTest() {
 		List<WorkingDaysDto> workingDaysDtos = new ArrayList<>();
 		WorkingDaysDto workingDaysDto = new WorkingDaysDto();
 
 		workingDaysDtos.add(workingDaysDto);
 
-		Mockito.when(regWorkingNonWorkingRepo.findByregistrationCenterIdAndlangCodeForWorkingDays("10001", "eng"))
+		Mockito.when(regWorkingNonWorkingRepo.findByregistrationCenterIdAndlangCodeForWeekDays("10001", "eng"))
 				.thenThrow(DataAccessLayerException.class);
-		regWorkingNonWorkingService.getWorkingDays("10001", "eng");
+		regWorkingNonWorkingService.getWeekDaysList("10001", "eng");
 	}
 
 	@Test(expected = DataNotFoundException.class)
-	public void getWeekServiceFailureTest() {
+	public void getWorkingServiceFailureTest() {
 
-		Mockito.when(regWorkingNonWorkingRepo.findByregistrationCenterIdAndlanguagecodeForWeekDays(Mockito.anyString(),
+		Mockito.when(regWorkingNonWorkingRepo.findByregistrationCenterIdAndlanguagecodeForWorkingDays(Mockito.anyString(),
 				Mockito.anyString())).thenReturn(null);
-		regWorkingNonWorkingService.getWeekDaysList("10001", "eng");
+		regWorkingNonWorkingService.getWorkingDays("10001", "eng");
 	}
 
 	@Test(expected = MasterDataServiceException.class)
-	public void getWeekServiceFailureTest2() {
+	public void getWorkingServiceFailureTest2() {
 
-		Mockito.when(regWorkingNonWorkingRepo.findByregistrationCenterIdAndlanguagecodeForWeekDays(Mockito.anyString(),
+		Mockito.when(regWorkingNonWorkingRepo.findByregistrationCenterIdAndlanguagecodeForWorkingDays(Mockito.anyString(),
 				Mockito.anyString())).thenThrow(new DataAccessLayerException("", "", new Throwable()));
-		regWorkingNonWorkingService.getWeekDaysList("10001", "eng");
+		regWorkingNonWorkingService.getWorkingDays("10001", "eng");
 	}
 	
 	@Test(expected = MasterDataServiceException.class)
