@@ -382,7 +382,7 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
-		<name>MOSIP commons</name>
-		<description>Mosip commons project </description>
+		<name>License key generator misp</name>
+		<description>License key generator for misp</description>
         <url>https://github.com/mosip/commons</url>
 	</project>

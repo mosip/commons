@@ -376,6 +376,6 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
-		<name>MOSIP commons</name>
+		<name>Template manager</name>
         <url>https://github.com/mosip/commons</url>
 	</project>

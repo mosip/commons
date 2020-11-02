@@ -378,7 +378,7 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
-		<name>MOSIP commons</name>
-		<description>Mosip commons project </description>
+		<name>logger logback</name>
+		<description>common logger logback </description>
         <url>https://github.com/mosip/commons</url>
 	</project>
