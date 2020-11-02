@@ -58,7 +58,7 @@ public enum PurposeType {
 
 	public static PurposeType fromValue(String v) {
 		for (PurposeType c : PurposeType.values()) {
-			if (c.value.equals(v)) {
+			if (c.value.equalsIgnoreCase(v)) {
 				return c;
 			}
 		}

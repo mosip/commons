@@ -21,6 +21,7 @@ import io.mosip.kernel.logger.logback.constant.LogExeptionCodeConstant;
 import io.mosip.kernel.logger.logback.constant.LogLevel;
 import io.mosip.kernel.logger.logback.constant.LoggerMethod;
 import io.mosip.kernel.logger.logback.impl.LoggerImpl;
+import io.mosip.kernel.logger.logback.impl.Slf4jLoggerImpl;
 import io.mosip.kernel.logger.logback.util.LoggerUtils;
 
 /**
@@ -492,6 +493,15 @@ public class Logfactory {
 		else
 			throw new ImplementationNotFound(LogExeptionCodeConstant.IMPLEMENTATIONNOTFOUND.getValue(),
 					LogExeptionCodeConstant.IMPLEMENTATIONNOTFOUNDMESSAGE.getValue());
+	}
+
+	/**
+	 *
+	 * @param clazz
+	 * @return
+	 */
+	public static Logger getSlf4jLogger(Class<?> clazz) {
+		return new Slf4jLoggerImpl(clazz);
 	}
 
 	public static void stop(String appendersName) {
