@@ -86,7 +86,7 @@ public class S3Adapter implements ObjectStoreAdapter {
 
     @Override
     public boolean exists(String account, String container, String source, String process, String objectName) {
-        return getObject(account, container, source, process, objectName) != null;
+        return getConnection(container).doesObjectExist(container, ObjectStoreUtil.getName(source, process, objectName));
     }
 
     @Override
