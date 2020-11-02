@@ -383,7 +383,7 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
-		<name>MOSIP commons</name>
-		<description>Mosip commons project </description>
+		<name>cebff util</name>
+		<description>Biometric interface to be compliant with CBEFF standard </description>
         <url>https://github.com/mosip/commons</url>
 	</project>

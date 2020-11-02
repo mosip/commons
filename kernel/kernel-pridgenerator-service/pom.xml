@@ -498,7 +498,7 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
-		<name>MOSIP commons</name>
-		<description>Mosip commons project </description>
+		<name>PRID generator service</name>
+		<description>Service implementation of the PRID generator </description>
         <url>https://github.com/mosip/commons</url>
 	</project>

@@ -8,7 +8,7 @@
 
 	<artifactId>kernel-auth-adapter</artifactId>
 	<packaging>jar</packaging>
-	<description>Mosip commons project </description>
+	<description>auth adapter reference implementation </description>
 	<version>1.2.0-SNAPSHOT</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -446,7 +446,7 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
-		<name>MOSIP commons</name>
+		<name>common auth adapter</name>
 		
         <url>https://github.com/mosip/commons</url>
 	</project>

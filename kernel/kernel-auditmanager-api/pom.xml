@@ -274,7 +274,7 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
-		<name>MOSIP commons</name>
-		<description>Mosip commons project </description>
+		<name>Audit manager api</name>
+		<description>Audit manager api for Mosip</description>
         <url>https://github.com/mosip/commons</url>
 	</project>

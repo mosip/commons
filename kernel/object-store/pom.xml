@@ -383,7 +383,7 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
-		<name>MOSIP commons</name>
-		<description>Mosip commons project </description>
+		<name>Object store</name>
+		<description>Provides the implementation class for the object store </description>
         <url>https://github.com/mosip/commons</url>
 	</project>
