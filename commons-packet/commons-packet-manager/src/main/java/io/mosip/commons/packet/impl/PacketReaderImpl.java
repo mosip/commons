@@ -1,34 +1,22 @@
 package io.mosip.commons.packet.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.mosip.commons.packet.constants.PacketManagerConstants;
-import io.mosip.commons.packet.dto.Document;
-import io.mosip.commons.packet.dto.Packet;
-import io.mosip.commons.packet.dto.PacketInfo;
-import io.mosip.commons.packet.exception.ApiNotAccessibleException;
-import io.mosip.commons.packet.exception.FieldNameNotFoundException;
-import io.mosip.commons.packet.exception.GetAllIdentityException;
-import io.mosip.commons.packet.exception.GetAllMetaInfoException;
-import io.mosip.commons.packet.exception.GetBiometricException;
-import io.mosip.commons.packet.exception.GetDocumentException;
-import io.mosip.commons.packet.exception.PacketDecryptionFailureException;
-import io.mosip.commons.packet.exception.PacketKeeperException;
-import io.mosip.commons.packet.exception.PacketValidationFailureException;
-import io.mosip.commons.packet.facade.PacketWriter;
-import io.mosip.commons.packet.keeper.PacketKeeper;
-import io.mosip.commons.packet.spi.IPacketReader;
-import io.mosip.commons.packet.util.*;
-import io.mosip.kernel.biometrics.constant.BiometricType;
-import io.mosip.kernel.biometrics.entities.BIR;
-import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import io.mosip.kernel.core.cbeffutil.common.CbeffValidator;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
-import io.mosip.kernel.core.exception.BaseCheckedException;
-import io.mosip.kernel.core.exception.BaseUncheckedException;
-import io.mosip.kernel.core.exception.ExceptionUtils;
-import io.mosip.kernel.core.logger.spi.Logger;
-import io.mosip.kernel.core.util.JsonUtils;
-import org.apache.commons.collections4.CollectionUtils;
+import static io.mosip.commons.packet.constants.PacketManagerConstants.FORMAT;
+import static io.mosip.commons.packet.constants.PacketManagerConstants.ID;
+import static io.mosip.commons.packet.constants.PacketManagerConstants.IDENTITY;
+import static io.mosip.commons.packet.constants.PacketManagerConstants.LABEL;
+import static io.mosip.commons.packet.constants.PacketManagerConstants.META_INFO_OPERATIONS_DATA;
+import static io.mosip.commons.packet.constants.PacketManagerConstants.TYPE;
+import static io.mosip.commons.packet.constants.PacketManagerConstants.VALUE;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,21 +27,37 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static io.mosip.commons.packet.constants.PacketManagerConstants.FORMAT;
-import static io.mosip.commons.packet.constants.PacketManagerConstants.ID;
-import static io.mosip.commons.packet.constants.PacketManagerConstants.IDENTITY;
-import static io.mosip.commons.packet.constants.PacketManagerConstants.LABEL;
-import static io.mosip.commons.packet.constants.PacketManagerConstants.META_INFO_OPERATIONS_DATA;
-import static io.mosip.commons.packet.constants.PacketManagerConstants.TYPE;
-import static io.mosip.commons.packet.constants.PacketManagerConstants.VALUE;
+import io.mosip.commons.packet.constants.PacketManagerConstants;
+import io.mosip.commons.packet.dto.Document;
+import io.mosip.commons.packet.dto.Packet;
+import io.mosip.commons.packet.dto.PacketInfo;
+import io.mosip.commons.packet.exception.ApiNotAccessibleException;
+import io.mosip.commons.packet.exception.GetAllIdentityException;
+import io.mosip.commons.packet.exception.GetAllMetaInfoException;
+import io.mosip.commons.packet.exception.GetBiometricException;
+import io.mosip.commons.packet.exception.GetDocumentException;
+import io.mosip.commons.packet.exception.PacketDecryptionFailureException;
+import io.mosip.commons.packet.exception.PacketKeeperException;
+import io.mosip.commons.packet.exception.PacketValidationFailureException;
+import io.mosip.commons.packet.facade.PacketWriter;
+import io.mosip.commons.packet.keeper.PacketKeeper;
+import io.mosip.commons.packet.spi.IPacketReader;
+import io.mosip.commons.packet.util.IdSchemaUtils;
+import io.mosip.commons.packet.util.PacketManagerHelper;
+import io.mosip.commons.packet.util.PacketManagerLogger;
+import io.mosip.commons.packet.util.PacketValidator;
+import io.mosip.commons.packet.util.ZipUtils;
+import io.mosip.kernel.biometrics.entities.BIR;
+import io.mosip.kernel.biometrics.entities.BiometricRecord;
+import io.mosip.kernel.core.cbeffutil.common.CbeffValidator;
+import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
+import io.mosip.kernel.core.exception.BaseCheckedException;
+import io.mosip.kernel.core.exception.BaseUncheckedException;
+import io.mosip.kernel.core.exception.ExceptionUtils;
+import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.kernel.core.util.JsonUtils;
 
 @RefreshScope
 @Component
@@ -211,7 +215,7 @@ public class PacketReaderImpl implements IPacketReader {
     }
 
     @Override
-    public BiometricRecord getBiometric(String id, String biometricFieldName, List<BiometricType> modalities, String source, String process) {
+    public BiometricRecord getBiometric(String id, String biometricFieldName, List<String> modalities, String source, String process) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, "getBiometric :: for - " + biometricFieldName);
         BiometricRecord biometricRecord = null;
         String packetName = null;
@@ -251,7 +255,28 @@ public class PacketReaderImpl implements IPacketReader {
             biometricRecord = new BiometricRecord();
             List<BIR> segments = new ArrayList<>();
             List<io.mosip.kernel.core.cbeffutil.entity.BIR> birList = CbeffValidator.convertBIRTypeToBIR(birType.getBIR());
-            birList.forEach(bir -> segments.add(PacketManagerHelper.convertToBiometricRecordBIR(bir)));
+            if (modalities==null || modalities.isEmpty()) {
+				birList.forEach(bir -> segments.add(PacketManagerHelper.convertToBiometricRecordBIR(bir)));
+			} else {
+				Map<String, BIR> birMap = new HashMap<>();
+
+				for (io.mosip.kernel.core.cbeffutil.entity.BIR bir : birList) {
+					String mapKey = "";
+					for (String subType : bir.getBdbInfo().getSubtype()) {
+						mapKey += subType;
+					}
+					mapKey = bir.getBdbInfo().getType().get(0) + "_" + mapKey;
+					birMap.put(mapKey, PacketManagerHelper.convertToBiometricRecordBIR(bir));
+				}
+
+				for (String modality : modalities) {
+					for (Entry<String, BIR> modalityEntry : birMap.entrySet()) {
+						if (modalityEntry.getKey().toLowerCase().contains(modality.toLowerCase())) {
+							segments.add(modalityEntry.getValue());
+						}
+					}
+				}
+			}
             biometricRecord.setSegments(segments);
         } catch (Exception e) {
             LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, ExceptionUtils.getStackTrace(e));

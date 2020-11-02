@@ -78,7 +78,7 @@ public class PacketReaderController {
     @PostMapping(path = "/biometrics", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseWrapper<BiometricRecord> getBiometrics(@RequestBody(required = true) RequestWrapper<BiometricRequestDto> request) {
         BiometricRequestDto bioRequest = request.getRequest();
-        List<BiometricType> modalities = bioRequest.getModalities() == null ? Lists.newArrayList() : bioRequest.getModalities();
+        List<String> modalities = bioRequest.getModalities() == null ? Lists.newArrayList() : bioRequest.getModalities();
         BiometricRecord responseDto = packetReader.getBiometric(bioRequest.getId(), bioRequest.getPerson(), modalities, bioRequest.getSource(), bioRequest.getProcess(), bioRequest.isBypassCache());
         ResponseWrapper<BiometricRecord> response = getResponseWrapper();
         response.setResponse(responseDto);
