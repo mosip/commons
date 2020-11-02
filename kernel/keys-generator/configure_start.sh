@@ -3,12 +3,24 @@
 #installs the pkcs11 libraries.
 set -e
 
+DEFAULT_ZIP_PATH=artifactory/libs-release-local/hsm/client.zip
+[ -z "$zip_file_path" ] && zip_path="$DEFAULT_ZIP_PATH" || zip_path="$zip_file_path"
+
 echo "Download the client from $artifactory_url_env"
-wget $artifactory_url_env/artifactory/libs-release-local/hsm/client.zip
-echo "Downloaded $artifactory_url_env"
-unzip client.zip
+echo "Zip File Path: $zip_path"
+
+FILE_NAME=${zip_path##*/}
+DIR_NAME=${FILE_NAME%%.*}
+
+echo "File names is: $FILE_NAME \n"
+echo "Directory name is: $DIR_NAME \n"
+
+wget "$artifactory_url_env/$zip_path"
+echo "Downloaded $artifactory_url_env/$zip_path"
+
+unzip $FILE_NAME
 echo "Attempting to install"
-cd ./client && ./install.sh 
+cd ./$DIR_NAME && ./install.sh
 echo "Installation complete"
 
 exec "$@"
