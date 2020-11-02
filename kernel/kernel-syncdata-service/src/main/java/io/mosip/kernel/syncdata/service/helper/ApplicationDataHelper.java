@@ -30,10 +30,12 @@ public class ApplicationDataHelper {
 	
 	private LocalDateTime lastUpdated;
 	private LocalDateTime currentTimestamp;
+	private String publicKey;
 	
-	public ApplicationDataHelper(LocalDateTime lastUpdated, LocalDateTime currentTimestamp) {
+	public ApplicationDataHelper(LocalDateTime lastUpdated, LocalDateTime currentTimestamp, String publicKey) {
 		this.lastUpdated = lastUpdated;
 		this.currentTimestamp = currentTimestamp;
+		this.publicKey = publicKey;
 	}
 
 	public void retrieveData(final SyncMasterDataServiceHelper serviceHelper, final List<CompletableFuture> futures) {
@@ -50,9 +52,9 @@ public class ApplicationDataHelper {
 	
 	public void fillRetrievedData(final SyncMasterDataServiceHelper serviceHelper, final List<SyncDataBaseDto> list) 
 			throws InterruptedException, ExecutionException {
-		list.add(serviceHelper.getSyncDataBaseDto(Application.class, "structured", this.applications.get()));
-		list.add(serviceHelper.getSyncDataBaseDto(AppAuthenticationMethod.class, "structured", this.appAuthenticationMethods.get()));
-		list.add(serviceHelper.getSyncDataBaseDto(AppDetail.class, "structured", this.appDetails.get()));
-		list.add(serviceHelper.getSyncDataBaseDto(AppRolePriority.class, "structured", this.appRolePriorities.get()));
+		list.add(serviceHelper.getSyncDataBaseDto(Application.class, "structured", this.applications.get(), this.publicKey));
+		list.add(serviceHelper.getSyncDataBaseDto(AppAuthenticationMethod.class, "structured", this.appAuthenticationMethods.get(), this.publicKey));
+		list.add(serviceHelper.getSyncDataBaseDto(AppDetail.class, "structured", this.appDetails.get(), this.publicKey));
+		list.add(serviceHelper.getSyncDataBaseDto(AppRolePriority.class, "structured", this.appRolePriorities.get(), this.publicKey));
 	}
 }

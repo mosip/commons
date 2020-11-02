@@ -9,8 +9,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 
-import javax.persistence.PersistenceException;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -20,24 +18,19 @@ import io.mosip.kernel.syncdata.dto.*;
 import io.mosip.kernel.syncdata.dto.response.*;
 import io.mosip.kernel.syncdata.exception.*;
 import io.mosip.kernel.syncdata.service.helper.KeymanagerHelper;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.syncdata.constant.MasterDataErrorCode;
 import io.mosip.kernel.syncdata.entity.Machine;
-import io.mosip.kernel.syncdata.entity.MachineHistory;
-import io.mosip.kernel.syncdata.entity.RegistrationCenter;
-import io.mosip.kernel.syncdata.repository.MachineHistoryRepository;
 import io.mosip.kernel.syncdata.repository.MachineRepository;
-import io.mosip.kernel.syncdata.repository.RegistrationCenterRepository;
 import io.mosip.kernel.syncdata.service.SyncMasterDataService;
 import io.mosip.kernel.syncdata.service.helper.ApplicationDataHelper;
 import io.mosip.kernel.syncdata.service.helper.DeviceDataHelper;
@@ -50,7 +43,6 @@ import io.mosip.kernel.syncdata.service.helper.MiscellaneousDataHelper;
 import io.mosip.kernel.syncdata.service.helper.RegistrationCenterDataHelper;
 import io.mosip.kernel.syncdata.service.helper.TemplateDataHelper;
 import io.mosip.kernel.syncdata.utils.MapperUtils;
-import io.mosip.kernel.syncdata.utils.MetaDataUtils;
 import io.mosip.kernel.syncdata.utils.SyncMasterDataServiceHelper;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -67,10 +59,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Service
 public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 	
-	private Logger logger = LogManager.getLogger(SyncMasterDataServiceImpl.class);
+	private Logger logger = LoggerFactory.getLogger(SyncMasterDataServiceImpl.class);
 
 	@Autowired
-	SyncMasterDataServiceHelper serviceHelper;
+	private SyncMasterDataServiceHelper serviceHelper;
 
 	@Autowired
 	private MachineRepository machineRepo;
@@ -103,37 +95,42 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 		
 		String machineId = regCenterMachineDto.getMachineId();
 		String registrationCenterId = regCenterMachineDto.getRegCenterId();
+
+		List<Machine> machines = machineRepo.findByMachineIdAndIsActive(machineId);
+		if(machines == null || machines.isEmpty())
+			throw new RequestException(MasterDataErrorCode.MACHINE_NOT_FOUND.getErrorCode(),
+					MasterDataErrorCode.MACHINE_NOT_FOUND.getErrorMessage());
 		
 		SyncDataResponseDto response = new SyncDataResponseDto();
 		
 		List<CompletableFuture> futures = new ArrayList<CompletableFuture>();
 		
-		ApplicationDataHelper applicationDataHelper = new ApplicationDataHelper(lastUpdated, currentTimestamp);
+		ApplicationDataHelper applicationDataHelper = new ApplicationDataHelper(lastUpdated, currentTimestamp, machines.get(0).getPublicKey());
 		applicationDataHelper.retrieveData(serviceHelper, futures);		
 		
-		MachineDataHelper machineDataHelper = new MachineDataHelper(registrationCenterId, lastUpdated, currentTimestamp);
+		MachineDataHelper machineDataHelper = new MachineDataHelper(registrationCenterId, lastUpdated, currentTimestamp, machines.get(0).getPublicKey());
 		machineDataHelper.retrieveData(serviceHelper, futures);		
 		
-		DeviceDataHelper deviceDataHelper = new DeviceDataHelper(registrationCenterId, lastUpdated, currentTimestamp);
+		DeviceDataHelper deviceDataHelper = new DeviceDataHelper(registrationCenterId, lastUpdated, currentTimestamp, machines.get(0).getPublicKey());
 		deviceDataHelper.retrieveData(serviceHelper, futures);
 		
-		IndividualDataHelper individualDataHelper = new IndividualDataHelper(lastUpdated, currentTimestamp);
+		IndividualDataHelper individualDataHelper = new IndividualDataHelper(lastUpdated, currentTimestamp, machines.get(0).getPublicKey());
 		individualDataHelper.retrieveData(serviceHelper, futures);
 		
 		RegistrationCenterDataHelper RegistrationCenterDataHelper = new RegistrationCenterDataHelper(registrationCenterId, machineId, 
-				lastUpdated, currentTimestamp);
+				lastUpdated, currentTimestamp, machines.get(0).getPublicKey());
 		RegistrationCenterDataHelper.retrieveData(serviceHelper, futures);
 		
-		TemplateDataHelper templateDataHelper = new TemplateDataHelper(lastUpdated, currentTimestamp);
+		TemplateDataHelper templateDataHelper = new TemplateDataHelper(lastUpdated, currentTimestamp, machines.get(0).getPublicKey());
 		templateDataHelper.retrieveData(serviceHelper, futures);
 		
-		DocumentDataHelper documentDataHelper = new DocumentDataHelper(lastUpdated, currentTimestamp);
+		DocumentDataHelper documentDataHelper = new DocumentDataHelper(lastUpdated, currentTimestamp, machines.get(0).getPublicKey());
 		documentDataHelper.retrieveData(serviceHelper, futures);
 		
-		HistoryDataHelper historyDataHelper = new HistoryDataHelper(registrationCenterId, lastUpdated, currentTimestamp);
+		HistoryDataHelper historyDataHelper = new HistoryDataHelper(registrationCenterId, lastUpdated, currentTimestamp, machines.get(0).getPublicKey());
 		historyDataHelper.retrieveData(serviceHelper, futures);
 		
-		MiscellaneousDataHelper miscellaneousDataHelper = new MiscellaneousDataHelper(machineId, lastUpdated, currentTimestamp);
+		MiscellaneousDataHelper miscellaneousDataHelper = new MiscellaneousDataHelper(machineId, lastUpdated, currentTimestamp, machines.get(0).getPublicKey());
 		miscellaneousDataHelper.retrieveData(serviceHelper, futures);		
 		
 		CompletableFuture array [] = new CompletableFuture[futures.size()];
@@ -161,7 +158,7 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 		miscellaneousDataHelper.fillRetrievedData(serviceHelper, list);
 		
 		//Fills dynamic field data
-		identitySchemaHelper.fillRetrievedData(list);
+		identitySchemaHelper.fillRetrievedData(list, machines.get(0).getPublicKey());
 		
 		response.setDataToSync(list);
 		return response;

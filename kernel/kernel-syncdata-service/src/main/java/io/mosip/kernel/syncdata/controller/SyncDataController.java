@@ -335,4 +335,22 @@ public class SyncDataController {
 		return response;
 	}
 
+	/**
+	 * This API method would fetch all synced global config details from server
+	 *
+	 * @return JSONObject - global config response
+	 */
+	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN','Default')")
+	@ResponseFilter
+	@ApiOperation(value = "API to sync global config details")
+	@GetMapping(value = "/configs/{machineName}")
+	public ResponseWrapper<ConfigDto> getMachineConfigDetails(@PathVariable(value = "machineName") String machineName) {
+		String currentTimeStamp = DateUtils.getUTCCurrentDateTimeString();
+		ConfigDto syncConfigResponse = syncConfigDetailsService.getConfigDetails(machineName);
+		syncConfigResponse.setLastSyncTime(currentTimeStamp);
+		ResponseWrapper<ConfigDto> response = new ResponseWrapper<>();
+		response.setResponse(syncConfigResponse);
+		return response;
+	}
+
 }

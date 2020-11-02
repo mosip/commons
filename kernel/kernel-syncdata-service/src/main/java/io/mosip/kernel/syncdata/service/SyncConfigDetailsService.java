@@ -48,4 +48,12 @@ public interface SyncConfigDetailsService {
 	 * @return {@link PublicKeyResponse} instance
 	 */
 	public PublicKeyResponse<String> getPublicKey(String applicationId, String timeStamp, String referenceId);
+
+	/**
+	 * This service will fetch all Configaration details available from server
+	 * encrypt it based on machine key
+	 *
+	 * @return JSONObject - config synced data
+	 */
+	public ConfigDto getConfigDetails(String machineName);
 }
