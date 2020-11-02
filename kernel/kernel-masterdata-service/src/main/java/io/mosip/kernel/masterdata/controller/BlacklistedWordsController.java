@@ -63,7 +63,7 @@ public class BlacklistedWordsController {
 	 * @param langCode language code
 	 * @return {@link BlacklistedWordsResponseDto}
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION', 'REGISTRATION_SUPERVISOR','PRE_REGISTRATION', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','ZONAL_ADMIN','RESIDENT','GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION', 'REGISTRATION_SUPERVISOR','PRE_REGISTRATION', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','ZONAL_ADMIN','RESIDENT','GLOBAL_ADMIN','PARTNER','AUTH_PARTNER','PARTNER_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER')")
 	@ResponseFilter
 	@GetMapping("/{langcode}")
 	public ResponseWrapper<BlacklistedWordsResponseDto> getAllBlackListedWordByLangCode(

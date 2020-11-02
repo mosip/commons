@@ -121,7 +121,7 @@ public class RegistrationCenterController {
 	 * @param proximityDistance the proximity distance provided by user.
 	 * @return {@link RegistrationCenterResponseDto} RegistrationCenterResponseDto
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','ZONAL_ADMIN','GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','PRE_REGISTRATION','REGISTRATION_PROCESSOR','ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping("/getcoordinatespecificregistrationcenters/{langcode}/{longitude}/{latitude}/{proximitydistance}")
 	public ResponseWrapper<RegistrationCenterResponseDto> getCoordinateSpecificRegistrationCenters(
@@ -175,7 +175,7 @@ public class RegistrationCenterController {
 	 * @param name           input from user
 	 * @return {@link RegistrationCenterResponseDto} RegistrationCenterResponseDto
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','ZONAL_ADMIN','GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','PRE_REGISTRATION','REGISTRATION_PROCESSOR','ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping("/registrationcenters/{langcode}/{hierarchylevel}/{name}")
 	public ResponseWrapper<RegistrationCenterResponseDto> getRegistrationCenterByHierarchyLevelAndTextAndlangCode(
@@ -199,7 +199,7 @@ public class RegistrationCenterController {
 	 * @return {@link ResgistrationCenterStatusResponseDto} -
 	 *         RegistrationCenterStatusResponseDto
 	 */
-	@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR','ZONAL_ADMIN','GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','PRE_REGISTRATION','REGISTRATION_PROCESSOR','ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping("/registrationcenters/validate/{id}/{langCode}/{timestamp}")
 	public ResponseWrapper<ResgistrationCenterStatusResponseDto> validateTimestamp(@PathVariable("id") String regId,
@@ -231,7 +231,7 @@ public class RegistrationCenterController {
 	 * @param names          input from user
 	 * @return {@link RegistrationCenterResponseDto} RegistrationCenterResponseDto
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','ZONAL_ADMIN','GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','PRE_REGISTRATION','REGISTRATION_PROCESSOR','ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping("/registrationcenters/{langcode}/{hierarchylevel}/names")
 	public ResponseWrapper<RegistrationCenterResponseDto> getRegistrationCenterByHierarchyLevelAndListTextAndlangCode(

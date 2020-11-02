@@ -106,7 +106,7 @@ public class ValidDocumentController {
 	 *                 types should be fetch
 	 * @return the valid documents
 	 */
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','PRE_REGISTRATION','RESIDENT','REGISTRATION_PROCESSOR','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','PRE_REGISTRATION','REGISTRATION_SUPERVISOR','RESIDENT','REGISTRATION_PROCESSOR','REGISTRATION_PROCESSOR','REGISTRATION_OFFICER','PARTNER','AUTH_PARTNER','PARTNER_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER')")
 	@ResponseFilter
 	@GetMapping("/validdocuments/{languagecode}")
 	@ApiOperation(value = "Service to fetch all valid document categories and associated document types for a languagecode")
@@ -220,7 +220,7 @@ public class ValidDocumentController {
 	 *                 types should be fetch
 	 * @return the valid documents
 	 */
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','PRE_REGISTRATION','REGISTRATION_SUPERVISOR','RESIDENT','REGISTRATION_PROCESSOR','REGISTRATION_PROCESSOR','REGISTRATION_OFFICER')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','PRE_REGISTRATION','REGISTRATION_SUPERVISOR','RESIDENT','REGISTRATION_PROCESSOR','REGISTRATION_PROCESSOR','REGISTRATION_OFFICER','PARTNER','AUTH_PARTNER','PARTNER_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER')")
 	@ResponseFilter
 	@GetMapping("/validdocuments/{docCategoryCode}/{languagecode}")
 	@ApiOperation(value = "Service to fetch all valid document categories and associated document types for a docCategoryCode")

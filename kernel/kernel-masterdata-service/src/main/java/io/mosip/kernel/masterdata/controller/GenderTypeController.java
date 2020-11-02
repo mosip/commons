@@ -77,7 +77,7 @@ public class GenderTypeController {
 	 * @param langCode the language code whose gender is to be returned
 	 * @return list of all gender types for the given language code
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION','ZONAL_ADMIN','GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION', 'PRE_REGISTRATION', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','ZONAL_ADMIN','RESIDENT','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping(value = "/gendertypes/{langcode}")
 	public ResponseWrapper<GenderTypeResponseDto> getGenderBylangCode(@PathVariable("langcode") String langCode) {
@@ -153,7 +153,7 @@ public class GenderTypeController {
 	 */
 	@ResponseFilter
 	@ApiOperation(value = "validate gender name")
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','REGISTRATION_PROCESSOR')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION', 'PRE_REGISTRATION', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','ZONAL_ADMIN','RESIDENT','GLOBAL_ADMIN')")
 	@GetMapping("/gendertypes/validate/{gendername}")
 	public ResponseWrapper<StatusResponseDto> valdiateGenderName(@PathVariable("gendername") String genderName) {
 		ResponseWrapper<StatusResponseDto> responseWrapper = new ResponseWrapper<>();

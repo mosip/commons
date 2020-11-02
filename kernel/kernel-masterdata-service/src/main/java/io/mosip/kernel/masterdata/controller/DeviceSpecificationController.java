@@ -76,7 +76,7 @@ public class DeviceSpecificationController {
 	 *         on given language code
 	 * 
 	 */
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER','GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER','GLOBAL_ADMIN','PARTNER','AUTH_PARTNER','PARTNER_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER')")
 	@ResponseFilter
 	@GetMapping("/devicespecifications/{langcode}")
 	@ApiOperation(value = "Retrieve all Device Specification for given Languge Code", notes = "Retrieve all DeviceSpecification for the given Languge Code")

@@ -102,7 +102,7 @@ public class HolidayController {
 	 */
 	@ResponseFilter
 	@GetMapping("/{holidayid}/{langcode}")
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','REGISTRATION_PROCESSOR','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','PRE_REGISTRATION','INDIVIDUAL')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','REGISTRATION_PROCESSOR','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','INDIVIDUAL','PRE_REGISTRATION','INDIVIDUAL')")
 	public ResponseWrapper<HolidayResponseDto> getAllHolidayByIdAndLangCode(@PathVariable("holidayid") int holidayId,
 			@PathVariable("langcode") String langCode) {
 		ResponseWrapper<HolidayResponseDto> responseWrapper = new ResponseWrapper<>();

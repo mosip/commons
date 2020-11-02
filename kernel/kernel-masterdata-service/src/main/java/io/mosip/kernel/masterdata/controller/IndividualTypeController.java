@@ -55,7 +55,7 @@ public class IndividualTypeController {
 	/**
 	 * @return the all active individual type.
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','ZONAL_ADMIN','GLOBAL_ADMIN','REGISTRATION_PROCESSOR','PRE_REGISTRATION')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','ZONAL_ADMIN','GLOBAL_ADMIN','REGISTRATION_PROCESSOR','PRE_REGISTRATION','PARTNER','AUTH_PARTNER','PARTNER_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER')")
 	@ResponseFilter
 	@GetMapping
 	@ApiOperation(value = "get value from Caretory for the given id", notes = "get value from Category for the given id")

@@ -63,7 +63,7 @@ public class DocumentCategoryController {
 	 * 
 	 * @return All Document categories
 	 */
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','PRE_REGISTRATION','REGISTRATION_SUPERVISOR','RESIDENT','REGISTRATION_PROCESSOR','REGISTRATION_PROCESSOR','REGISTRATION_OFFICER')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','PRE_REGISTRATION','REGISTRATION_SUPERVISOR','RESIDENT','REGISTRATION_PROCESSOR','REGISTRATION_PROCESSOR','REGISTRATION_OFFICER','PARTNER','AUTH_PARTNER','PARTNER_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER')")
 	@ResponseFilter
 	@GetMapping("/documentcategories")
 	public ResponseWrapper<DocumentCategoryResponseDto> getAllDocumentCategory() {
@@ -87,7 +87,7 @@ public class DocumentCategoryController {
 	 * 
 	 * @return {@link DocumentCategoryResponseDto}
 	 */
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','PRE_REGISTRATION','REGISTRATION_SUPERVISOR','RESIDENT','REGISTRATION_PROCESSOR','REGISTRATION_PROCESSOR','REGISTRATION_OFFICER')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','PRE_REGISTRATION','REGISTRATION_SUPERVISOR','RESIDENT','REGISTRATION_PROCESSOR','REGISTRATION_PROCESSOR','REGISTRATION_OFFICER','PARTNER','AUTH_PARTNER','PARTNER_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER')")
 	@ResponseFilter
 	@GetMapping("/documentcategories/{langcode}")
 	public ResponseWrapper<DocumentCategoryResponseDto> getAllDocumentCategoryByLaguageCode(
@@ -104,7 +104,7 @@ public class DocumentCategoryController {
 	 * @param langCode the language code
 	 * @return {@link DocumentCategoryResponseDto}
 	 */
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','PRE_REGISTRATION','REGISTRATION_SUPERVISOR','RESIDENT','REGISTRATION_PROCESSOR','REGISTRATION_PROCESSOR','REGISTRATION_OFFICER')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','PRE_REGISTRATION','REGISTRATION_SUPERVISOR','RESIDENT','REGISTRATION_PROCESSOR','REGISTRATION_PROCESSOR','REGISTRATION_OFFICER','PARTNER','AUTH_PARTNER','PARTNER_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER')")
 	@ResponseFilter
 	@GetMapping("/documentcategories/{code}/{langcode}")
 	public ResponseWrapper<DocumentCategoryResponseDto> getDocumentCategoryByCodeAndLangCode(

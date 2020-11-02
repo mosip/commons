@@ -73,7 +73,7 @@ public class TemplateTypeController {
 	 */
 	@ResponseFilter
 	@GetMapping(value = "/templatetypes/{code}/{langcode}")
-	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ID_AUTHENTICATION','ZONAL_ADMIN','GLOBAL_ADMIN','PRE_REGISTRATION','RESIDENT','INDIVIDUAL','REGISTRATION_PROCESSOR','PARTNER','AUTH_PARTNER','PARTNER_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER')")
 	@ApiOperation(value = "Retrieve all template type Details for given Languge Code", notes = "Retrieve all template type Detail for given Languge Code and code")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "When template type Details retrieved from database for the given Languge Code and Code"),

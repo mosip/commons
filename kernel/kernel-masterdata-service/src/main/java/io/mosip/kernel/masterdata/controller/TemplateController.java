@@ -62,7 +62,7 @@ public class TemplateController {
 	 * 
 	 * @return All {@link TemplateDto}
 	 */
-	@PreAuthorize("hasAnyRole('PRE_REGISTRATION','REGISTRATION_PROCESSOR','ID_AUTHENTICATION','ZONAL_ADMIN','GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_PROCESSOR','PRE_REGISTRATION','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','AUTH','ZONAL_ADMIN','GLOBAL_ADMIN','PRE_REGISTRATION_ADMIN','RESIDENT','PARTNER','AUTH_PARTNER','PARTNER_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER')")
 	@ResponseFilter
 	@GetMapping
 	public ResponseWrapper<TemplateResponseDto> getAllTemplate() {
@@ -83,7 +83,7 @@ public class TemplateController {
 	 * @param langCode the language code
 	 * @return All {@link TemplateDto}
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_PROCESSOR','ID_AUTHENTICATION','ZONAL_ADMIN','GLOBAL_ADMIN','PRE_REGISTRATION')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_PROCESSOR','PRE_REGISTRATION','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','AUTH','ZONAL_ADMIN','GLOBAL_ADMIN','PRE_REGISTRATION_ADMIN','RESIDENT','PARTNER','AUTH_PARTNER','PARTNER_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER')")
 	@ResponseFilter
 	@GetMapping("/{langcode}")
 	public ResponseWrapper<TemplateResponseDto> getAllTemplateBylangCode(@PathVariable("langcode") String langCode) {
@@ -106,7 +106,7 @@ public class TemplateController {
 	 * @param templateTypeCode the template type code
 	 * @return All {@link TemplateDto}
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_PROCESSOR','PRE_REGISTRATION','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','AUTH','ZONAL_ADMIN','GLOBAL_ADMIN','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_PROCESSOR','PRE_REGISTRATION','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','AUTH','ZONAL_ADMIN','GLOBAL_ADMIN','PRE_REGISTRATION_ADMIN','RESIDENT','PARTNER','AUTH_PARTNER','PARTNER_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER')")
 	@ResponseFilter
 	@GetMapping("/{langcode}/{templatetypecode}")
 	public ResponseWrapper<TemplateResponseDto> getAllTemplateBylangCodeAndTemplateTypeCode(
@@ -193,7 +193,7 @@ public class TemplateController {
 	 */
 	@GetMapping("/templatetypecodes/{code}")
 	@ResponseFilter
-	@PreAuthorize("hasAnyRole('RESIDENT','ID_AUTHENTICATION','GLOBAL_ADMIN','PRE_REGISTRATION','ZONAL_ADMIN','REGISTRATION_PROCESSOR')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_PROCESSOR','PRE_REGISTRATION','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','AUTH','ZONAL_ADMIN','GLOBAL_ADMIN','PRE_REGISTRATION_ADMIN','RESIDENT','PARTNER','AUTH_PARTNER','PARTNER_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER')")
 	public ResponseWrapper<TemplateResponseDto> getAllTemplateByTemplateTypeCode(
 			@PathVariable("code") String templateTypeCode) {
 

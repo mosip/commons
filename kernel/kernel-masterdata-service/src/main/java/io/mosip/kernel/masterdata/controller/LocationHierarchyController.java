@@ -43,7 +43,7 @@ public class LocationHierarchyController {
 
 	@ResponseFilter
 	@GetMapping(value = "/locationHierarchyLevels/{level}/{langcode}")
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','PRE_REGISTRATION','REGISTRATION_PROCESSOR')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','PRE_REGISTRATION','REGISTRATION_PROCESSOR')")
 	@ApiOperation(value = "Retrieve all Module Details for given Languge Code", notes = "Retrieve all Location Hierarchy Level name for given Languge Code and level")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "When Location Hierarchy Level name retrieved from database for the given Languge Code and id"),
@@ -67,7 +67,7 @@ public class LocationHierarchyController {
 	 * @return LocationHierarchyLevelResponseDto Location Hierarchy Levels from DB
 	 *         {@link LocationHierarchyLevelResponseDto}
 	 */
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','PRE_REGISTRATION','REGISTRATION_PROCESSOR')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','PRE_REGISTRATION','REGISTRATION_PROCESSOR')")
 	@ResponseFilter
 	@GetMapping(value = "/locationHierarchyLevels/{langcode}")
 	@ApiOperation(value = "Retrieve all location Hierarchy Level details based on lanuage code ", notes = "Retrieve all location Hierarchy Levels ")
