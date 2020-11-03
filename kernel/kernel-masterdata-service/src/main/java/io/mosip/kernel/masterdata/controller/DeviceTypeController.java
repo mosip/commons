@@ -64,7 +64,7 @@ public class DeviceTypeController {
 	 */
 	@ResponseFilter
 	@PostMapping("/devicetypes")
-	@PreAuthorize("hasRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ApiOperation(value = "Service to save Device Type", notes = "Saves Device Type and return Device Code and Languge Code")
 	@ApiResponses({
 			@ApiResponse(code = 201, message = "When Device Type successfully created", response = CodeAndLanguageCodeID.class),
@@ -95,7 +95,7 @@ public class DeviceTypeController {
 	 */
 	@ResponseFilter
 	@PutMapping("/devicetypes")
-	@PreAuthorize("hasRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ApiOperation(value = "Service to save Device Type", notes = "Saves Device Type and return Device Code and Languge Code")
 	@ApiResponses({
 			@ApiResponse(code = 201, message = "When Device Type successfully created", response = CodeAndLanguageCodeID.class),
@@ -126,7 +126,7 @@ public class DeviceTypeController {
 	 * @param orderBy    the order to be used
 	 * @return the response i.e. pages containing the device types.
 	 */
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','CENTRAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER')")
 	@ResponseFilter
 	@GetMapping("/devicetypes/all")
 	@ApiOperation(value = "Retrieve all the device types with additional metadata", notes = "Retrieve all the device types with additional metadata")
@@ -150,7 +150,7 @@ public class DeviceTypeController {
 	 */
 	@ResponseFilter
 	@PostMapping(value = "/devicetypes/search")
-	@PreAuthorize("hasRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ApiOperation(value = "Retrieve all Device Types for the given Filter parameters", notes = "Retrieve all Device Types for the given Filter parameters")
 	public ResponseWrapper<PageResponseDto<DeviceTypeExtnDto>> deviceTypeSearch(
 			@Valid @RequestBody RequestWrapper<SearchDto> request) {
@@ -175,7 +175,7 @@ public class DeviceTypeController {
 	 */
 	@ResponseFilter
 	@PostMapping("/devicetypes/filtervalues")
-	@PreAuthorize("hasRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	public ResponseWrapper<FilterResponseCodeDto> deviceTypeFilterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
 		auditUtil.auditRequest(MasterDataConstant.FILTER_API_IS_CALLED + DeviceTypeDto.class.getCanonicalName(),

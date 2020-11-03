@@ -19,8 +19,6 @@ import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.constant.OrderEnum;
-import io.mosip.kernel.masterdata.dto.BlackListedWordsUpdateDto;
-import io.mosip.kernel.masterdata.dto.BlacklistedWordListRequestDto;
 import io.mosip.kernel.masterdata.dto.GenderTypeDto;
 import io.mosip.kernel.masterdata.dto.getresponse.GenderTypeResponseDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
@@ -31,7 +29,6 @@ import io.mosip.kernel.masterdata.dto.postresponse.CodeResponseDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
-import io.mosip.kernel.masterdata.dto.response.MachineSearchDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.entity.id.CodeAndLanguageCodeID;
 import io.mosip.kernel.masterdata.service.GenderTypeService;
@@ -65,7 +62,7 @@ public class GenderTypeController {
 	 * 
 	 * @return list of all gender types
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','ZONAL_ADMIN','ZONAL_APPROVER','RESIDENT')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION', 'PRE_REGISTRATION', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','ZONAL_ADMIN','RESIDENT','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping("/gendertypes")
 	public ResponseWrapper<GenderTypeResponseDto> getAllGenderType() {
@@ -80,7 +77,7 @@ public class GenderTypeController {
 	 * @param langCode the language code whose gender is to be returned
 	 * @return list of all gender types for the given language code
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION', 'PRE_REGISTRATION', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','ZONAL_ADMIN','RESIDENT','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping(value = "/gendertypes/{langcode}")
 	public ResponseWrapper<GenderTypeResponseDto> getGenderBylangCode(@PathVariable("langcode") String langCode) {
@@ -97,7 +94,7 @@ public class GenderTypeController {
 	 * @return primary key of entered row of gender
 	 */
 	@ResponseFilter
-	@PreAuthorize("hasRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@PostMapping("/gendertypes")
 	public ResponseWrapper<CodeAndLanguageCodeID> saveGenderType(
 			@Valid @RequestBody RequestWrapper<GenderTypeDto> gender) {
@@ -118,7 +115,7 @@ public class GenderTypeController {
 	 * @return key of updated row
 	 */
 	@ResponseFilter
-	@PreAuthorize("hasRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ApiOperation(value = "Update Gender Type")
 	@PutMapping("/gendertypes")
 	public ResponseWrapper<CodeAndLanguageCodeID> updateGenderType(
@@ -138,7 +135,7 @@ public class GenderTypeController {
 	 * @return code of deleted rows
 	 */
 	@ResponseFilter
-	@PreAuthorize("hasRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ApiOperation(value = "Delete Gender Type")
 	@DeleteMapping("/gendertypes/{code}")
 	public ResponseWrapper<CodeResponseDto> deleteGenderType(
@@ -156,8 +153,8 @@ public class GenderTypeController {
 	 */
 	@ResponseFilter
 	@ApiOperation(value = "validate gender name")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION', 'PRE_REGISTRATION', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','ZONAL_ADMIN','RESIDENT','GLOBAL_ADMIN')")
 	@GetMapping("/gendertypes/validate/{gendername}")
-	@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
 	public ResponseWrapper<StatusResponseDto> valdiateGenderName(@PathVariable("gendername") String genderName) {
 		ResponseWrapper<StatusResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(genderTypeService.validateGender(genderName));
@@ -198,7 +195,7 @@ public class GenderTypeController {
 	 * @return the response i.e. multiple entities based on the search values
 	 *         required.
 	 */
-	@PreAuthorize("hasRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@PostMapping("/gendertypes/search")
 	public ResponseWrapper<PageResponseDto<GenderExtnDto>> searchGenderTypes(
@@ -224,7 +221,7 @@ public class GenderTypeController {
 	 *         name and type.
 	 */
 	@ResponseFilter
-	@PreAuthorize("hasRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@PostMapping("/gendertypes/filtervalues")
 	public ResponseWrapper<FilterResponseDto> genderFilterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> requestWrapper) {

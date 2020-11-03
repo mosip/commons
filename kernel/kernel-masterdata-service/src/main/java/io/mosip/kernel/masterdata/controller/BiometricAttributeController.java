@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,6 +47,7 @@ public class BiometricAttributeController {
 	BiometricAttributeService biometricAttributeService;
 
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN','REGISTRATION_PROCESSOR')")
 	@ApiOperation(value = "Fetch all the biometric attributes avialbale for specific BiometricType")
 	@GetMapping("/getbiometricattributesbyauthtype/{langcode}/{biometrictypecode}")
 	public ResponseWrapper<BiometricAttributeResponseDto> getBiometricAttributesByBiometricType(
@@ -64,6 +66,7 @@ public class BiometricAttributeController {
 	 * @param biometricAttribute Input from user Biometric Attribute DTO
 	 * @return {@link BioTypeCodeAndLangCodeAndAttributeCode}
 	 */
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@PostMapping("/biometricattributes")
 	@ApiOperation(value = "Service to create Biometric Attributes", notes = "create Biometric Attributes  and return  code and LangCode")
