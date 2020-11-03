@@ -45,7 +45,7 @@ public class RegistrationCenterDeviceHistoryController {
 	 *         center device history based on given regCenterId, deviceId and
 	 *         effective date time
 	 */
-	@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
+	@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR','GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping(value = "/{regcenterid}/{deviceid}/{effdatetimes}")
 	@ApiOperation(value = "Retrieve Registration Center Device History Details for the given Registration Center Id, Device Id and Effective date time")

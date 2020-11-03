@@ -2,7 +2,6 @@ package io.mosip.kernel.masterdata.controller;
 
 import java.util.List;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +42,7 @@ public class ZoneController {
 	 * @param langCode input language code
 	 * @return {@link List} of {@link ZoneExtnDto}
 	 */
-	@PreAuthorize("hasRole('ZONAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@GetMapping("/hierarchy/{langCode}")
 	public ResponseWrapper<List<ZoneExtnDto>> getZoneHierarchy(
 			@PathVariable("langCode") @ValidLangCode(message = "Language Code is Invalid") String langCode) {
@@ -58,7 +57,7 @@ public class ZoneController {
 	 * @param langCode input language code
 	 * @return {@link List} of {@link ZoneExtnDto}
 	 */
-	@PreAuthorize("hasRole('ZONAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_PROCESSOR','ZONAL_ADMIN','PRE_REGISTRATION','RESIDENT')")
 	@GetMapping("/leafs/{langCode}")
 	public ResponseWrapper<List<ZoneExtnDto>> getLeafZones(
 			@PathVariable("langCode") @ValidLangCode(message = "Language Code is Invalid") String langCode) {
@@ -67,6 +66,7 @@ public class ZoneController {
 		return response;
 	}
 
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_PROCESSOR','ZONAL_ADMIN','PRE_REGISTRATION','RESIDENT')")
 	@GetMapping("/zonename")
 	public ResponseWrapper<ZoneNameResponseDto> getZoneNameBasedOnUserIDAndLangCode(
 			@RequestParam("userID") String userID,
@@ -77,7 +77,7 @@ public class ZoneController {
 	}
 
 	@GetMapping("/authorize")
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','REGISTRATION_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	public ResponseWrapper<Boolean> authorizeZone(@NotBlank @RequestParam("rid") String rId) {
 		ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();

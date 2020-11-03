@@ -43,7 +43,7 @@ public class BiometricTypeController {
 	 */
 	@ResponseFilter
 	@GetMapping
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','ZONAL_APPROVER')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	public ResponseWrapper<BiometricTypeResponseDto> getAllBiometricTypes() {
 
 		ResponseWrapper<BiometricTypeResponseDto> responseWrapper = new ResponseWrapper<>();
@@ -58,6 +58,7 @@ public class BiometricTypeController {
 	 * 
 	 * @return All Biometric type details
 	 */
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_PROCESSOR','REGISTRATION_OFFICER')")
 	@ResponseFilter
 	@GetMapping("/{langcode}")
 	public ResponseWrapper<BiometricTypeResponseDto> getAllBiometricTypesByLanguageCode(
@@ -75,6 +76,7 @@ public class BiometricTypeController {
 	 * @param langCode the language code
 	 * @return Biometric type
 	 */
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_PROCESSOR','REGISTRATION_OFFICER')")
 	@ResponseFilter
 	@GetMapping("/{code}/{langcode}")
 	public ResponseWrapper<BiometricTypeResponseDto> getBiometricTypeByCodeAndLangCode(
@@ -92,6 +94,7 @@ public class BiometricTypeController {
 	 * 
 	 * @return {@link CodeAndLanguageCodeID}
 	 */
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@PostMapping
 	public ResponseWrapper<CodeAndLanguageCodeID> createBiometricType(
