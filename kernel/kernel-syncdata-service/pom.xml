@@ -224,6 +224,7 @@
 		<kernel.auth.adaptor.version>1.2.0-SNAPSHOT</kernel.auth.adaptor.version>
 		<kernel.logger.version>1.2.0-SNAPSHOT</kernel.logger.version>
 		<kernel.crypto.version>1.2.0-SNAPSHOT</kernel.crypto.version>
+		<kernel.keymanager.version>1.2.0-SNAPSHOT</kernel.keymanager.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -281,6 +282,19 @@
 			<artifactId>h2</artifactId>
 			<version>${h2.version}</version>
 			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>io.mosip.kernel</groupId>
+			<artifactId>kernel-keymanager-service</artifactId>
+			<version>${kernel.keymanager.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.security</groupId>
+					<artifactId>spring-security-config</artifactId>
+				</exclusion>
+			</exclusions>
+			<classifier>lib</classifier>
 		</dependency>
 
 	</dependencies>

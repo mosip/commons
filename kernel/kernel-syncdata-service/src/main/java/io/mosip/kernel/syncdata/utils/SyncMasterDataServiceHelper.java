@@ -8,9 +8,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import io.mosip.kernel.clientcrypto.dto.TpmCryptoRequestDto;
+import io.mosip.kernel.clientcrypto.dto.TpmCryptoResponseDto;
+import io.mosip.kernel.clientcrypto.service.spi.ClientCryptoManagerService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -171,7 +176,7 @@ import io.mosip.kernel.syncdata.service.SyncJobDefService;
 @Component
 public class SyncMasterDataServiceHelper {
 	
-	private Logger logger = LogManager.getLogger(SyncMasterDataServiceHelper.class);
+	private Logger logger = LoggerFactory.getLogger(SyncMasterDataServiceHelper.class);
 
 	@Autowired
 	private MapperUtils mapper;
@@ -265,6 +270,12 @@ public class SyncMasterDataServiceHelper {
 	private MachineHistoryRepository machineHistoryRepository;
 	@Autowired
 	private DeviceHistoryRepository deviceHistoryRepository;
+
+	@Autowired
+	private ClientCryptoManagerService clientCryptoManagerService;
+
+	@Value("${mosip.syncdata.tpm.required:false}")
+	private boolean isTPMRequired;
 
 	/**
 	 * Method to fetch machine details by regCenter id
@@ -1885,30 +1896,32 @@ public class SyncMasterDataServiceHelper {
 		}
 		return CompletableFuture.completedFuture(deviceSubTypeDPMDtos);
 	}
-	
-	
-	@SuppressWarnings("unchecked")
-	public SyncDataBaseDto getSyncDataBaseDto(Class entityClass, String entityType, List entities) {
-		return getSyncDataBaseDto(entityClass.getSimpleName(), entityType, entities);			
+
+	public SyncDataBaseDto getSyncDataBaseDto(Class entityClass, String entityType, List entities, String publicKey) {
+		return getSyncDataBaseDto(entityClass.getSimpleName(), entityType, entities, publicKey);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public SyncDataBaseDto getSyncDataBaseDto(String entityName, String entityType, List entities) {
-		
+	public SyncDataBaseDto getSyncDataBaseDto(String entityName, String entityType, List entities, String publicKey) {
 		List<String> list = Collections.synchronizedList(new ArrayList<String>());
-		
 		if(null != entities) {
 			entities.parallelStream().filter(Objects::nonNull).forEach(obj -> {
 				try {
 					String json = mapper.getObjectAsJsonString(obj);
-					if(json != null) { list.add(json); }
+					if(json != null) {
+						TpmCryptoRequestDto tpmCryptoRequestDto = new TpmCryptoRequestDto();
+						tpmCryptoRequestDto.setValue(CryptoUtil.encodeBase64(json.getBytes()));
+						tpmCryptoRequestDto.setPublicKey(publicKey);
+						tpmCryptoRequestDto.setTpm(this.isTPMRequired);
+						TpmCryptoResponseDto tpmCryptoResponseDto = clientCryptoManagerService.csEncrypt(tpmCryptoRequestDto);
+						list.add(tpmCryptoResponseDto.getValue());
+					}
 				} catch (Exception e) {
-					logger.error("Failed to map "+ entityName +" to json", e);
+					logger.error("Failed to map and encrypt "+ entityName +" data to json", e);
 				}
 			});
-		}		
-		
-		return new SyncDataBaseDto(entityName, entityType, list);		
+		}
+		return new SyncDataBaseDto(entityName, entityType, list);
 	}
 
 }

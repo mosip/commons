@@ -43,10 +43,13 @@ public class IndividualDataHelper {
 	CompletableFuture<List<IndividualTypeDto>> individualTypeList = null;
 	CompletableFuture<List<BiometricTypeDto>> biometricTypes = null;
 	CompletableFuture<List<BiometricAttributeDto>> biometricAttributes = null;
+
+	private String publicKey;
 	
-	public IndividualDataHelper( LocalDateTime lastUpdated, LocalDateTime currentTimestamp) {		
+	public IndividualDataHelper( LocalDateTime lastUpdated, LocalDateTime currentTimestamp, String publicKey) {
 		this.lastUpdated = lastUpdated;
 		this.currentTimestamp = currentTimestamp;
+		this.publicKey = publicKey;
 	}
 	
 	public void retrieveData(final SyncMasterDataServiceHelper serviceHelper, final List<CompletableFuture> futures) {
@@ -75,15 +78,15 @@ public class IndividualDataHelper {
 	
 	public void fillRetrievedData(final SyncMasterDataServiceHelper serviceHelper, final List<SyncDataBaseDto> list) 
 			throws InterruptedException, ExecutionException {
-		list.add(serviceHelper.getSyncDataBaseDto(Title.class, "structured", this.titles.get()));
-		list.add(serviceHelper.getSyncDataBaseDto(Language.class, "structured", this.languages.get()));
-		list.add(serviceHelper.getSyncDataBaseDto(Gender.class, "structured", this.genders.get()));
-		list.add(serviceHelper.getSyncDataBaseDto(IdType.class, "structured", this.idTypes.get()));
-		list.add(serviceHelper.getSyncDataBaseDto(Location.class, "structured", this.locationHierarchy.get()));
-		list.add(serviceHelper.getSyncDataBaseDto(ReasonCategory.class, "structured", this.reasonCategory.get()));
-		list.add(serviceHelper.getSyncDataBaseDto(ReasonList.class, "structured",this.reasonList.get()));
-		list.add(serviceHelper.getSyncDataBaseDto(IndividualType.class, "structured", this.individualTypeList.get()));
-		list.add(serviceHelper.getSyncDataBaseDto(BiometricType.class, "structured", this.biometricTypes.get()));
-		list.add(serviceHelper.getSyncDataBaseDto(BiometricAttribute.class, "structured", this.biometricAttributes.get()));
+		list.add(serviceHelper.getSyncDataBaseDto(Title.class, "structured", this.titles.get(), this.publicKey));
+		list.add(serviceHelper.getSyncDataBaseDto(Language.class, "structured", this.languages.get(), this.publicKey));
+		list.add(serviceHelper.getSyncDataBaseDto(Gender.class, "structured", this.genders.get(), this.publicKey));
+		list.add(serviceHelper.getSyncDataBaseDto(IdType.class, "structured", this.idTypes.get(), this.publicKey));
+		list.add(serviceHelper.getSyncDataBaseDto(Location.class, "structured", this.locationHierarchy.get(), this.publicKey));
+		list.add(serviceHelper.getSyncDataBaseDto(ReasonCategory.class, "structured", this.reasonCategory.get(), this.publicKey));
+		list.add(serviceHelper.getSyncDataBaseDto(ReasonList.class, "structured",this.reasonList.get(), this.publicKey));
+		list.add(serviceHelper.getSyncDataBaseDto(IndividualType.class, "structured", this.individualTypeList.get(), this.publicKey));
+		list.add(serviceHelper.getSyncDataBaseDto(BiometricType.class, "structured", this.biometricTypes.get(), this.publicKey));
+		list.add(serviceHelper.getSyncDataBaseDto(BiometricAttribute.class, "structured", this.biometricAttributes.get(), this.publicKey));
 	}
 }

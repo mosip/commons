@@ -1,6 +1,7 @@
 package io.mosip.kernel.masterdata.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +39,7 @@ public class WorkingDayController {
 	 * @return WeekDaysResponseDto week days based on given Registration center ID
 	 *         and Language code {@link WeekDaysResponseDto}
 	 */
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN','PRE_REGISTRATION','REGISTRATION_SUPERVISOR','REGISTRATION_PROCESSOR','REGISTRATION_OFFICER','INDIVIDUAL')")
 	@ResponseFilter
 	@GetMapping(value = "/weekdays/{registrationCenterId}/{langCode}")
 	@ApiOperation(value = "Retrieve all Week Days for given Registration center ID and Languge Code", notes = "Retrieve all Week Days for given Registration center ID and Languge Code")
@@ -62,6 +64,7 @@ public class WorkingDayController {
 	 * @return WorkingDaysResponseDto working days based on given Registration
 	 *         center ID and Day code {@link WorkingDaysResponseDto}
 	 */
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN','PRE_REGISTRATION','REGISTRATION_SUPERVISOR','REGISTRATION_PROCESSOR','REGISTRATION_OFFICER','INDIVIDUAL')")
 	@ResponseFilter
 	@GetMapping(value = "/workingdays/{registrationCenterID}/{langCode}")
 	@ApiOperation(value = "Retrieve all working Days for given Registration center ID and Lang Code", notes = "Retrieve all working Days for given Registration center ID and Languge Code")

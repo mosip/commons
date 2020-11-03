@@ -6,7 +6,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.List;
 
+import io.mosip.kernel.syncdata.entity.Machine;
+import io.mosip.kernel.syncdata.repository.MachineRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -44,6 +48,9 @@ public class UserConfigIntegrationTest {
 
 	private SignatureResponse signResponse;
 
+	@MockBean
+	private MachineRepository machineRepository;
+
 	// ###########################CONFIG START#########################
 	private static final String JSON_CONFIG_RESPONSE = "{\r\n" + "\"registrationConfiguration\":\r\n"
 			+ "							{\"keyValidityPeriodPreRegPack\":\"3\",\"smsNotificationTemplateRegCorrection\":\"OTP for your request is $otp\",\"defaultDOB\":\"1-Jan\",\"smsNotificationTemplateOtp\":\"OTP for your request is $otp\",\"supervisorVerificationRequiredForExceptions\":\"true\",\"keyValidityPeriodRegPack\":\"3\",\"irisRetryAttempts\":\"10\",\"fingerprintQualityThreshold\":\"120\",\"multifactorauthentication\":\"true\",\"smsNotificationTemplateUpdateUIN\":\"OTP for your request is $otp\",\"supervisorAuthType\":\"password\",\"maxDurationRegPermittedWithoutMasterdataSyncInDays\":\"10\",\"modeOfNotifyingIndividual\":\"mobile\",\"emailNotificationTemplateUpdateUIN\":\"Hello $user the OTP is $otp\",\"maxDocSizeInMB\":\"150\",\"emailNotificationTemplateOtp\":\"Hello $user the OTP is $otp\",\"emailNotificationTemplateRegCorrection\":\"Hello $user the OTP is $otp\",\"faceRetry\":\"12\",\"noOfFingerprintAuthToOnboardUser\":\"10\",\"smsNotificationTemplateLostUIN\":\"OTP for your request is $otp\",\"supervisorAuthMode\":\"IRIS\",\"operatorRegSubmissionMode\":\"fingerprint\",\"officerAuthType\":\"password\",\"faceQualityThreshold\":\"25\",\"gpsDistanceRadiusInMeters\":\"3\",\"automaticSyncFreqServerToClient\":\"25\",\"maxDurationWithoutMasterdataSyncInDays\":\"7\",\"loginMode\":\"bootable dongle\",\"irisQualityThreshold\":\"25\",\"retentionPeriodAudit\":\"3\",\"fingerprintRetryAttempts\":\"234\",\"emailNotificationTemplateNewReg\":\"Hello $user the OTP is $otp\",\"passwordExpiryDurationInDays\":\"3\",\"emailNotificationTemplateLostUIN\":\"Hello $user the OTP is $otp\",\"blockRegistrationIfNotSynced\":\"10\",\"noOfIrisAuthToOnboardUser\":\"10\",\"smsNotificationTemplateNewReg\":\"OTP for your request is $otp\"},\r\n"
@@ -68,6 +75,30 @@ public class UserConfigIntegrationTest {
 				.thenReturn(JSON_REGISTRATION_CONFIG_RESPONSE);
 		when(restTemplate.getForObject(Mockito.anyString(), Mockito.any())).thenReturn(JSON_GLOBAL_CONFIG_RESPONSE);
 		mockMvc.perform(get("/configs")).andExpect(status().isOk());
+	}
+
+	@WithUserDetails(value = "reg-officer")
+	@Test
+	public void testGetConfigWithMachineName() throws Exception {
+		signResponse = new SignatureResponse();
+		signResponse.setData("asdasdsadf4e");
+		signResponse.setTimestamp(LocalDateTime.now(ZoneOffset.UTC));
+
+		List<Machine> machines = new ArrayList<>();
+		Machine machine = new Machine();
+		machine.setId("10001");
+		machine.setName("testmachine");
+		machine.setPublicKey("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAosTqynNYQj4mMZKcqcglyc2wLqHxNpnikcqhyt0sYF5To+X+gF1lZM5xKrOK25BuRILE3W0VmZSDcE5/XEposJ7CUdPLpKEVOqMsrjX7FC92YCd5wNWsn9sQeZHEZCLB0CTcjDfEjqf6+0Oi/cv1+ojMCUJ5NXddhMYiCseaYGgVED2lXYxqL5bqDH2j37sy7ckHGOPXDIvhs0YEbg+VEWXmAjQ4McVxQ/8sTYc+9E+zbEZngDW9w8SG7x60dGAjs7MCH63X3Lp0MwUl3QyQ8ysYuOMfvIO5NW2sU5SoMjUU5/WsJ8Vri61zyLLuuL/80T4ygPkorP34Gh+dTP0m7wIDAQAB");
+		machines.add(machine);
+		when(machineRepository.findByMachineNameAndIsActive(Mockito.anyString())).thenReturn(machines);
+
+		when(signingUtil.sign(Mockito.anyString())).thenReturn(signResponse);
+		ReflectionTestUtils.setField(syncConfigDetailsService, "globalConfigFileName",
+				"mosip.kernel.syncdata.global-config-file");
+		when(restTemplate.getForObject(Mockito.anyString(), Mockito.any()))
+				.thenReturn(JSON_REGISTRATION_CONFIG_RESPONSE);
+		when(restTemplate.getForObject(Mockito.anyString(), Mockito.any())).thenReturn(JSON_GLOBAL_CONFIG_RESPONSE);
+		mockMvc.perform(get("/configs/testmachine")).andExpect(status().isOk());
 	}
 
 	@WithUserDetails(value = "reg-officer")

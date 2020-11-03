@@ -17,15 +17,10 @@ import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.masterdata.constant.OrderEnum;
-import io.mosip.kernel.masterdata.dto.DynamicFieldDto;
-import io.mosip.kernel.masterdata.dto.DynamicFieldValueDto;
 import io.mosip.kernel.masterdata.dto.IdSchemaPublishDto;
 import io.mosip.kernel.masterdata.dto.IdentitySchemaDto;
-import io.mosip.kernel.masterdata.dto.getresponse.DynamicFieldResponseDto;
 import io.mosip.kernel.masterdata.dto.getresponse.IdSchemaResponseDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
-import io.mosip.kernel.masterdata.entity.id.CodeAndLanguageCodeID;
-import io.mosip.kernel.masterdata.service.DynamicFieldService;
 import io.mosip.kernel.masterdata.service.IdentitySchemaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -47,7 +42,7 @@ public class SchemaController {
 	
 	@ResponseFilter
 	@PostMapping
-	@PreAuthorize("hasRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ApiOperation(value = "Service to create identity schema")
 	public ResponseWrapper<IdSchemaResponseDto> createSchema(@Valid @RequestBody RequestWrapper<IdentitySchemaDto> schema) {
 		ResponseWrapper<IdSchemaResponseDto> responseWrapper = new ResponseWrapper<>();
@@ -57,7 +52,7 @@ public class SchemaController {
 	
 	@ResponseFilter
 	@PutMapping
-	@PreAuthorize("hasRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ApiOperation(value = "Service to update identity schema in draft status")
 	public ResponseWrapper<IdSchemaResponseDto> updateSchema(@RequestParam(name = "id") @ApiParam(value = "schema id") String id,
 			@Valid @RequestBody RequestWrapper<IdentitySchemaDto> schema) {
@@ -68,7 +63,7 @@ public class SchemaController {
 	
 	@ResponseFilter
 	@PutMapping("/publish")
-	@PreAuthorize("hasRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ApiOperation(value = "Service to publish identity schema in draft status")
 	public ResponseWrapper<String> publishSchema(@Valid @RequestBody RequestWrapper<IdSchemaPublishDto> idSchemaPublishDto) {
 		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
@@ -78,7 +73,7 @@ public class SchemaController {
 	
 	@ResponseFilter
 	@DeleteMapping
-	@PreAuthorize("hasRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ApiOperation(value = "Service to delete identity schema in draft status")
 	public ResponseWrapper<String> deleteSchema(
 			@RequestParam(name = "id") @ApiParam(value = "schema id") String id) {
@@ -89,7 +84,7 @@ public class SchemaController {
 	
 	@ResponseFilter
 	@GetMapping("/all")
-	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ApiOperation(value = "Service to fetch all identity schema")
 	public ResponseWrapper<PageDto<IdSchemaResponseDto>> getAllSchema(
 			@RequestParam(name = "pageNumber", defaultValue = "0") @ApiParam(value = "page number", defaultValue = "0") int pageNumber,
@@ -103,7 +98,7 @@ public class SchemaController {
 	
 	@ResponseFilter
 	@GetMapping("/latest")
-	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN','REGISTRATION_PROCESSOR','RESIDENT')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN','REGISTRATION_CLIENT')")
 	@ApiOperation(value = "Service to fetch latest published identity schema")
 	public ResponseWrapper<IdSchemaResponseDto> getLatestPublishedSchema(
 			@RequestParam(name = "schemaVersion", defaultValue = "0", required = false) @ApiParam(value = "schema version", defaultValue = "0") double schemaVersion) {
