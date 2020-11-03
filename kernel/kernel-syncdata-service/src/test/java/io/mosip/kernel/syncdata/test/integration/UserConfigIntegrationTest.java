@@ -88,7 +88,7 @@ public class UserConfigIntegrationTest {
 		Machine machine = new Machine();
 		machine.setId("10001");
 		machine.setName("testmachine");
-		machine.setPublicKey("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn4A-U6V4SpSeJmjl0xtBDgyFaHn1CvglvnpbczxiDakH6ks8tPvIYT4jDOU-9XaUYKuMFhLxS7G8qwJhv7GKpDQXphSXjgwv_l8A--KV6C1UVaHoAs4XuJPFdXneSd9uMH94GO6lWucyOyfaZLrf5F_--2Rr4ba4rBWw20OrAl1c7FrzjIQjzYXgnBMrvETXptxKKrMELwOOsuyc1Ju4wzPJHYjI0Em4q2BOcQLXqYjhsZhcYeTqBFxXjCOM3WQKLCIsh9RN8Hz-s8yJbQId6MKIS7HQNCTbhbjl1jdfwqRwmBaZz0Gt73I4_8SVCcCQzJWVsakLC1oJAFcmi3l_mQIDAQAB");
+		machine.setPublicKey("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAosTqynNYQj4mMZKcqcglyc2wLqHxNpnikcqhyt0sYF5To+X+gF1lZM5xKrOK25BuRILE3W0VmZSDcE5/XEposJ7CUdPLpKEVOqMsrjX7FC92YCd5wNWsn9sQeZHEZCLB0CTcjDfEjqf6+0Oi/cv1+ojMCUJ5NXddhMYiCseaYGgVED2lXYxqL5bqDH2j37sy7ckHGOPXDIvhs0YEbg+VEWXmAjQ4McVxQ/8sTYc+9E+zbEZngDW9w8SG7x60dGAjs7MCH63X3Lp0MwUl3QyQ8ysYuOMfvIO5NW2sU5SoMjUU5/WsJ8Vri61zyLLuuL/80T4ygPkorP34Gh+dTP0m7wIDAQAB");
 		machines.add(machine);
 		when(machineRepository.findByMachineNameAndIsActive(Mockito.anyString())).thenReturn(machines);
 
