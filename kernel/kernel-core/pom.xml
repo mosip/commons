@@ -438,7 +438,7 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
-		<name>MOSIP commons</name>
-		<description>Mosip commons project </description>
+		<name>Kernel Core</name>
+		<description>Kernel Core contains all the important java level API, definitions and security configurations that are used across Mosip </description>
         <url>https://github.com/mosip/commons</url>
 	</project>

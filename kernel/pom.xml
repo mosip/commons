@@ -145,25 +145,20 @@
 		<module>kernel-virusscanner-clamav</module>
 		<module>kernel-keygenerator-bouncycastle</module>
 		<module>kernel-crypto-jce</module>
-		<!-- <module>kernel-keymanager-softhsm</module>  -->
 		<module>kernel-templatemanager-velocity</module>
 		<module>kernel-pdfgenerator-itext</module>
 		<module>kernel-datamapper-orika</module>
 		<module>kernel-qrcodegenerator-zxing</module>
 		<module>kernel-cbeffutil-api</module>
-		<module>kernel-fsadapter-ceph</module>
-		<module>kernel-fsadapter-hdfs</module>
 		<module>kernel-transliteration-icu4j</module>
 		<module>kernel-applicanttype-api</module>
 		<module>kernel-crypto-signature</module>
 		<module>kernel-idobjectvalidator</module>
 		<module>kernel-bioapi-provider</module>
 		<module>kernel-smsserviceprovider-msg91</module>
-        <module>kernel-fsadapter-proxy</module>
 		<module>kernel-registration-packet-manager</module>
 		<module>kernel-authcodeflowproxy-api</module>
 		<module>kernel-websubclient-api</module>
-
 		<module>kernel-masterdata-service</module>
 		<module>kernel-auditmanager-service</module>
 		<module>kernel-otpmanager-service</module>
@@ -171,7 +166,6 @@
 		<module>kernel-syncdata-service</module>
 		<module>kernel-auth-service</module>
 		<module>kernel-ridgenerator-service</module>
-		<module>kernel-config-server</module>
 		<module>kernel-keymanager-service</module>
 		<module>kernel-idgenerator-service</module>
 		<module>kernel-pridgenerator-service</module>

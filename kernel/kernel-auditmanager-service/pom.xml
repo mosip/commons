@@ -423,7 +423,7 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
-		<name>MOSIP commons</name>
-		<description>Mosip commons project </description>
+		<name>Auditmanager service</name>
+		<description>Independant Audit manager service </description>
         <url>https://github.com/mosip/commons</url>
 	</project>

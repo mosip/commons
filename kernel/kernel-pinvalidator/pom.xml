@@ -375,6 +375,6 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
-		<name>MOSIP commons</name>
-		<description>Mosip commons project </description>
+		<name>Pin validator</name>
+		<description>common pin validator</description>
         </project>
