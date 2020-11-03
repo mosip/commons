@@ -21,9 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -35,10 +33,8 @@ import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.masterdata.dto.LocationCreateDto;
 import io.mosip.kernel.masterdata.dto.LocationDto;
-import io.mosip.kernel.masterdata.dto.getresponse.LocationHierarchyDto;
 import io.mosip.kernel.masterdata.entity.Location;
 import io.mosip.kernel.masterdata.entity.LocationHierarchy;
-import io.mosip.kernel.masterdata.entity.Machine;
 import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
 import io.mosip.kernel.masterdata.repository.LocationHierarchyRepository;
 import io.mosip.kernel.masterdata.repository.LocationRepository;
@@ -493,7 +489,7 @@ public class LocationControllerIntegrationTest {
 	}
 	
 	@Test
-	@WithUserDetails("individual")
+	@WithUserDetails("global-admin")
 	public void deleteLocationDetialsSuccess() throws Exception {
 		Location location4 = new Location("BDR", "LOCATION NAME", (short) 3, "City", "MDDR", "eng", null);
 		when(repo.findByCode(Mockito.any())).thenReturn(Arrays.asList(location4));
@@ -503,7 +499,7 @@ public class LocationControllerIntegrationTest {
 	}
 	
 	@Test
-	@WithUserDetails("individual")
+	@WithUserDetails("global-admin")
 	public void deleteLocationDetialsLocationNotFound() throws Exception {
 		
 		when(repo.findByCode(Mockito.any())).thenReturn(Arrays.asList());

@@ -78,6 +78,7 @@ public class RegistrationCenterController {
 	 *                     be searched.
 	 * @return {@link RegistrationCenterResponseDto} RegistrationCenterResponseDto
 	 */
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','PRE_REGISTRATION','REGISTRATION_PROCESSOR','ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping("/getlocspecificregistrationcenters/{langcode}/{locationcode}")
 	public ResponseWrapper<RegistrationCenterResponseDto> getRegistrationCenterDetailsByLocationCode(
@@ -98,7 +99,7 @@ public class RegistrationCenterController {
 	 * @param year                 the year provided by user.
 	 * @return {@link RegistrationCenterHolidayDto} RegistrationCenterHolidayDto
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','PRE_REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','PRE_REGISTRATION','REGISTRATION_PROCESSOR','ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping("/getregistrationcenterholidays/{langcode}/{registrationcenterid}/{year}")
 	public ResponseWrapper<RegistrationCenterHolidayDto> getRegistrationCenterHolidays(
@@ -120,7 +121,7 @@ public class RegistrationCenterController {
 	 * @param proximityDistance the proximity distance provided by user.
 	 * @return {@link RegistrationCenterResponseDto} RegistrationCenterResponseDto
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','PRE_REGISTRATION','REGISTRATION_PROCESSOR','ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping("/getcoordinatespecificregistrationcenters/{langcode}/{longitude}/{latitude}/{proximitydistance}")
 	public ResponseWrapper<RegistrationCenterResponseDto> getCoordinateSpecificRegistrationCenters(
@@ -141,6 +142,7 @@ public class RegistrationCenterController {
 	 * @return {@link RegistrationCenterResponseDto} RegistrationCenterResponseDto
 	 */
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','PRE_REGISTRATION','REGISTRATION_PROCESSOR','ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@GetMapping("/registrationcenters/{id}/{langcode}")
 	public ResponseWrapper<RegistrationCenterResponseDto> getSpecificRegistrationCenterById(
 			@PathVariable("id") String registrationCenterId, @PathVariable("langcode") String langCode) {
@@ -157,7 +159,7 @@ public class RegistrationCenterController {
 	 */
 	@ResponseFilter
 	@GetMapping("/registrationcenters")
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','ZONAL_APPROVER','INDIVIDUAL','PRE_REGISTRATION_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	public ResponseWrapper<RegistrationCenterResponseDto> getAllRegistrationCentersDetails() {
 		ResponseWrapper<RegistrationCenterResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(registrationCenterService.getAllRegistrationCenters());
@@ -173,7 +175,7 @@ public class RegistrationCenterController {
 	 * @param name           input from user
 	 * @return {@link RegistrationCenterResponseDto} RegistrationCenterResponseDto
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','PRE_REGISTRATION','REGISTRATION_PROCESSOR','ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping("/registrationcenters/{langcode}/{hierarchylevel}/{name}")
 	public ResponseWrapper<RegistrationCenterResponseDto> getRegistrationCenterByHierarchyLevelAndTextAndlangCode(
@@ -197,7 +199,7 @@ public class RegistrationCenterController {
 	 * @return {@link ResgistrationCenterStatusResponseDto} -
 	 *         RegistrationCenterStatusResponseDto
 	 */
-	@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','PRE_REGISTRATION','REGISTRATION_PROCESSOR','ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping("/registrationcenters/validate/{id}/{langCode}/{timestamp}")
 	public ResponseWrapper<ResgistrationCenterStatusResponseDto> validateTimestamp(@PathVariable("id") String regId,
@@ -209,6 +211,7 @@ public class RegistrationCenterController {
 		return responseWrapper;
 	}
 
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@DeleteMapping("/registrationcenters/{registrationCenterId}")
 	public ResponseWrapper<IdResponseDto> deleteRegistrationCenter(
@@ -228,7 +231,7 @@ public class RegistrationCenterController {
 	 * @param names          input from user
 	 * @return {@link RegistrationCenterResponseDto} RegistrationCenterResponseDto
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','PRE_REGISTRATION','REGISTRATION_PROCESSOR','ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping("/registrationcenters/{langcode}/{hierarchylevel}/names")
 	public ResponseWrapper<RegistrationCenterResponseDto> getRegistrationCenterByHierarchyLevelAndListTextAndlangCode(
@@ -248,7 +251,7 @@ public class RegistrationCenterController {
 	 */
 	@ResponseFilter
 	@GetMapping("/registrationcenters/all")
-	@PreAuthorize("hasRole('ZONAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	public ResponseWrapper<PageDto<RegistrationCenterExtnDto>> getAllExistingRegistrationCentersDetails(
 			@RequestParam(name = "pageNumber", defaultValue = "0") @ApiParam(value = "page no for the requested data", defaultValue = "0") int pageNumber,
 			@RequestParam(name = "pageSize", defaultValue = "10") @ApiParam(value = "page size for the requested data", defaultValue = "10") int pageSize,
@@ -293,7 +296,7 @@ public class RegistrationCenterController {
 	 * @param request the request DTO.
 	 * @return the {@link FilterResponseDto}.
 	 */
-	//@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@PostMapping("/registrationcenters/filtervalues")
 	public ResponseWrapper<FilterResponseCodeDto> registrationCenterFilterValues(

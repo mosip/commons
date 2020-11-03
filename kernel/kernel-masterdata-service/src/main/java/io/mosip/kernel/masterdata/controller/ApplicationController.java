@@ -41,7 +41,7 @@ public class ApplicationController {
 	 * 
 	 * @return All Application details
 	 */
-	//@PreAuthorize("hasAnyRole('ZONAL_ADMIN','ZONAL_APPROVER')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping
 	public ResponseWrapper<ApplicationResponseDto> getAllApplication() {
@@ -57,6 +57,7 @@ public class ApplicationController {
 	 * 
 	 * @return All Application details
 	 */
+	@PreAuthorize("hasAnyRole('RESIDENT','GLOBAL_ADMIN','ZONAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','PRE_REGISTRATION','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','PARTNER','AUTH_PARTNER','PARTNER_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER')")
 	@ResponseFilter
 	@GetMapping("/{langcode}")
 	public ResponseWrapper<ApplicationResponseDto> getAllApplicationByLanguageCode(
@@ -75,6 +76,7 @@ public class ApplicationController {
 	 * 
 	 * @return Application detail
 	 */
+	@PreAuthorize("hasAnyRole('RESIDENT','GLOBAL_ADMIN','ZONAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','PRE_REGISTRATION','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','PARTNER','AUTH_PARTNER','PARTNER_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER')")
 	@ResponseFilter
 	@GetMapping("/{code}/{langcode}")
 	public ResponseWrapper<ApplicationResponseDto> getApplicationByCodeAndLanguageCode(
@@ -92,6 +94,7 @@ public class ApplicationController {
 	 * @return {@linkplain CodeAndLanguageCodeID}
 	 */
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@PostMapping
 	public ResponseWrapper<CodeAndLanguageCodeID> createApplication(
 			@Valid @RequestBody RequestWrapper<ApplicationDto> application) {
