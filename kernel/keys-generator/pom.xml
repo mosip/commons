@@ -335,7 +335,7 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
-		<name>MOSIP commons</name>
-		<description>Mosip commons project </description>
+		<name>Key generator</name>
+		<description>Key generator service to initialize and setup keys </description>
         <url>https://github.com/mosip/commons</url>
 	</project>

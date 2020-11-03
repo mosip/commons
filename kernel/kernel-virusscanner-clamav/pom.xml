@@ -379,7 +379,7 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
-		<name>MOSIP commons</name>
-		<description>Mosip commons project </description>
+		<name>Virus scanner</name>
+		<description>Clamav reference implementation </description>
         <url>https://github.com/mosip/commons</url>
 	</project>

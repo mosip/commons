@@ -368,7 +368,7 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
-		<name>MOSIP commons</name>
-		<description>Mosip commons project </description>
+		<name>MISP validator</name>
+		<description>MISP validator</description>
         <url>https://github.com/mosip/commons</url>
 	</project>

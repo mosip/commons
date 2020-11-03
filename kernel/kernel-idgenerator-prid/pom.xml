@@ -401,7 +401,7 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
-		<name>MOSIP commons</name>
-		<description>Mosip commons project </description>
+		<name>prid generator</name>
+		<description>prid generator </description>
         <url>https://github.com/mosip/commons</url>
 	</project>

@@ -396,7 +396,7 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
-		<name>MOSIP commons</name>
-		<description>Mosip commons project </description>
+		<name>Data access layer</name>
+		<description>Mosip compliant data access layer </description>
         <url>https://github.com/mosip/commons</url>
 	</project>
