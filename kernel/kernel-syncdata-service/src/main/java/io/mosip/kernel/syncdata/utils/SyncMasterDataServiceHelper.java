@@ -1908,14 +1908,16 @@ public class SyncMasterDataServiceHelper {
 			entities.parallelStream().filter(Objects::nonNull).forEach(obj -> {
 				try {
 					String json = mapper.getObjectAsJsonString(obj);
-					TpmCryptoRequestDto tpmCryptoRequestDto = new TpmCryptoRequestDto();
-					tpmCryptoRequestDto.setValue(CryptoUtil.encodeBase64(json.getBytes()));
-					tpmCryptoRequestDto.setPublicKey(publicKey);
-					tpmCryptoRequestDto.setTpm(this.isTPMRequired);
-					TpmCryptoResponseDto tpmCryptoResponseDto = clientCryptoManagerService.csEncrypt(tpmCryptoRequestDto);
-					if(json != null) { list.add(tpmCryptoResponseDto.getValue()); }
+					if(json != null) {
+						TpmCryptoRequestDto tpmCryptoRequestDto = new TpmCryptoRequestDto();
+						tpmCryptoRequestDto.setValue(CryptoUtil.encodeBase64(json.getBytes()));
+						tpmCryptoRequestDto.setPublicKey(publicKey);
+						tpmCryptoRequestDto.setTpm(this.isTPMRequired);
+						TpmCryptoResponseDto tpmCryptoResponseDto = clientCryptoManagerService.csEncrypt(tpmCryptoRequestDto);
+						list.add(tpmCryptoResponseDto.getValue());
+					}
 				} catch (Exception e) {
-					logger.error("Failed to map "+ entityName +" to json", e);
+					logger.error("Failed to map and encrypt "+ entityName +" data to json", e);
 				}
 			});
 		}
