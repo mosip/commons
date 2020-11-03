@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutionException;
 import io.mosip.kernel.syncdata.dto.IdSchemaDto;
 import io.mosip.kernel.syncdata.dto.UploadPublicKeyRequestDto;
 import io.mosip.kernel.syncdata.dto.UploadPublicKeyResponseDto;
+import io.mosip.kernel.syncdata.dto.response.ClientPublicKeyResponseDto;
 import io.mosip.kernel.syncdata.dto.response.KeyPairGenerateResponseDto;
 import io.mosip.kernel.syncdata.dto.response.MasterDataResponseDto;
 import io.mosip.kernel.syncdata.dto.response.SyncDataResponseDto;
@@ -22,23 +23,6 @@ import io.mosip.kernel.syncdata.dto.response.SyncDataResponseDto;
 public interface SyncMasterDataService {
 
 	/**
-	 * 
-	 * @param regCenterId      - registration center id
-	 * @param macAddress       - MAC address of the machine
-	 * @param serialNumber     - serial number for either desktop or dongle
-	 * @param lastUpdated      - last updated time stamp
-	 * @param currentTimestamp - current time stamp
-	 * @return {@link MasterDataResponseDto}
-	 * @throws InterruptedException - this method will throw execution exception
-	 * @throws ExecutionException   -this method will throw interrupted exception
-	 */	
-	@Deprecated
-	MasterDataResponseDto syncData(String regCenterId, String macAddress, String serialNumber,
-			LocalDateTime lastUpdated, LocalDateTime currentTimestamp, String keyIndex)
-			throws InterruptedException, ExecutionException;
-	
-	
-	/**
 	 * @param regCenterId      - registration center id
 	 * @param keyIndex         - registration client TPM EK public key SHA256 
 	 * @param lastUpdated      - last updated time stamp
@@ -51,14 +35,7 @@ public interface SyncMasterDataService {
 			LocalDateTime lastUpdated, LocalDateTime currentTimestamp)
 			throws InterruptedException, ExecutionException;
 
-	/**
-	 * Upload a public key to identify a machine
-	 * 
-	 * @param uploadPublicKeyRequestDto {@link UploadPublicKeyRequestDto} inatance
-	 * @return {@link UploadPublicKeyResponseDto} instance
-	 */
-	@Deprecated
-	UploadPublicKeyResponseDto uploadpublickey(UploadPublicKeyRequestDto uploadPublicKeyRequestDto);
+
 	
 	/**
 	 * Verifies machine name and public key mapping in machine_master table
@@ -75,4 +52,11 @@ public interface SyncMasterDataService {
 	IdSchemaDto getLatestPublishedIdSchema(LocalDateTime lastUpdated, double schemaVersion);
 
 	KeyPairGenerateResponseDto getCertificate(String applicationId, Optional<String> referenceId);
+
+	/**
+	 * Fetches both signing and encryption public key
+	 * @param machineId
+	 * @return
+	 */
+	ClientPublicKeyResponseDto getClientPublicKey(String machineId);
 }

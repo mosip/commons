@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutionException;
 
 import javax.validation.Valid;
 
-import io.mosip.kernel.syncdata.dto.response.KeyPairGenerateResponseDto;
+import io.mosip.kernel.syncdata.dto.response.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,9 +28,6 @@ import io.mosip.kernel.syncdata.dto.SyncUserDetailDto;
 import io.mosip.kernel.syncdata.dto.SyncUserSaltDto;
 import io.mosip.kernel.syncdata.dto.UploadPublicKeyRequestDto;
 import io.mosip.kernel.syncdata.dto.UploadPublicKeyResponseDto;
-import io.mosip.kernel.syncdata.dto.response.MasterDataResponseDto;
-import io.mosip.kernel.syncdata.dto.response.RolesResponseDto;
-import io.mosip.kernel.syncdata.dto.response.SyncDataResponseDto;
 import io.mosip.kernel.syncdata.service.SyncConfigDetailsService;
 import io.mosip.kernel.syncdata.service.SyncMasterDataService;
 import io.mosip.kernel.syncdata.service.SyncRolesService;
@@ -139,73 +136,6 @@ public class SyncDataController {
 			@PathVariable("registrationCenterId") String registrationCenterId) {
 		ResponseWrapper<ConfigDto> response = new ResponseWrapper<>();
 		response.setResponse(syncConfigDetailsService.getConfiguration(registrationCenterId));
-		return response;
-	}
-
-	/**
-	 * 
-	 * @param macId        - MAC address of the machine
-	 * @param serialNumber - Serial number of the machine
-	 * @param lastUpdated  - last updated time stamp
-	 * @return {@link MasterDataResponseDto}
-	 * @throws InterruptedException - this method will throw interrupted Exception
-	 * @throws ExecutionException   - this method will throw exeution exception
-	 */
-	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN','Default')")
-	@ResponseFilter
-	@GetMapping("/masterdata")
-	@Deprecated
-	public ResponseWrapper<MasterDataResponseDto> syncMasterData(
-			@RequestParam(value = "macaddress", required = false) String macId,
-			@RequestParam(value = "serialnumber", required = false) String serialNumber,
-			@RequestParam(value = "lastupdated", required = false) String lastUpdated,
-			@RequestParam(value = "keyindex", required = false) String keyIndex)
-			throws InterruptedException, ExecutionException {
-
-		LocalDateTime currentTimeStamp = LocalDateTime.now(ZoneOffset.UTC);
-		LocalDateTime timestamp = localDateTimeUtil.getLocalDateTimeFromTimeStamp(currentTimeStamp, lastUpdated);
-		String regCenterId = null;
-		MasterDataResponseDto masterDataResponseDto = masterDataService.syncData(regCenterId, macId, serialNumber,
-				timestamp, currentTimeStamp, keyIndex);
-
-		masterDataResponseDto.setLastSyncTime(DateUtils.formatToISOString(currentTimeStamp));
-
-		ResponseWrapper<MasterDataResponseDto> response = new ResponseWrapper<>();
-		response.setResponse(masterDataResponseDto);
-		return response;
-	}
-
-	/**
-	 * 
-	 * @param macId        - MAC address of the machine
-	 * @param serialNumber - Serial number of the machine
-	 * @param regCenterId  - reg Center Id
-	 * @param lastUpdated  - last updated time stamp
-	 * @return {@link MasterDataResponseDto}
-	 * @throws InterruptedException - this method will throw interrupted Exception
-	 * @throws ExecutionException   - this method will throw exeution exception
-	 */
-	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN','Default')")
-	@ResponseFilter
-	@GetMapping("/masterdata/{regcenterId}")
-	@Deprecated
-	public ResponseWrapper<MasterDataResponseDto> syncMasterDataWithRegCenterId(
-			@PathVariable("regcenterId") String regCenterId,
-			@RequestParam(value = "macaddress", required = false) String macId,
-			@RequestParam(value = "serialnumber", required = false) String serialNumber,
-			@RequestParam(value = "lastupdated", required = false) String lastUpdated,
-			@RequestParam(value = "keyindex", required = false) String keyIndex)
-			throws InterruptedException, ExecutionException {
-
-		LocalDateTime currentTimeStamp = LocalDateTime.now(ZoneOffset.UTC);
-		LocalDateTime timestamp = localDateTimeUtil.getLocalDateTimeFromTimeStamp(currentTimeStamp, lastUpdated);
-		MasterDataResponseDto masterDataResponseDto = masterDataService.syncData(regCenterId, macId, serialNumber,
-				timestamp, currentTimeStamp, keyIndex);
-
-		masterDataResponseDto.setLastSyncTime(DateUtils.formatToISOString(currentTimeStamp));
-
-		ResponseWrapper<MasterDataResponseDto> response = new ResponseWrapper<>();
-		response.setResponse(masterDataResponseDto);
 		return response;
 	}
 	
@@ -351,16 +281,7 @@ public class SyncDataController {
 		return response;
 	}
 
-	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN','Default')")
-	@ResponseFilter
-	@PostMapping(value = "/tpm/publickey", produces = "application/json")
-	public ResponseWrapper<UploadPublicKeyResponseDto> uploadpublickey(
-			@ApiParam("public key in BASE64 encoded") @RequestBody @Valid RequestWrapper<UploadPublicKeyRequestDto> uploadPublicKeyRequestDto) {
-		ResponseWrapper<UploadPublicKeyResponseDto> response = new ResponseWrapper<>();
-		response.setResponse(masterDataService.uploadpublickey(uploadPublicKeyRequestDto.getRequest()));
-		return response;
-	}
-	
+
 	/**
 	 * Verifies mapping of input public key with any machine.
 	 * if valid returns corresponding keyIndex.
@@ -401,6 +322,34 @@ public class SyncDataController {
 
 		ResponseWrapper<KeyPairGenerateResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(masterDataService.getCertificate(applicationId, referenceId));
+		return response;
+	}
+
+	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN','REGISTRATION_PROCESSOR')")
+	@ResponseFilter
+	@GetMapping(value = "/tpm/publickey/{machineId}", produces = "application/json")
+	public ResponseWrapper<ClientPublicKeyResponseDto> getClientPublicKey(
+			@ApiParam("Machine id") @PathVariable("machineId") String machineId) {
+		ResponseWrapper<ClientPublicKeyResponseDto> response = new ResponseWrapper<>();
+		response.setResponse(masterDataService.getClientPublicKey(machineId));
+		return response;
+	}
+
+	/**
+	 * This API method would fetch all synced global config details from server
+	 *
+	 * @return JSONObject - global config response
+	 */
+	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN','Default')")
+	@ResponseFilter
+	@ApiOperation(value = "API to sync global config details")
+	@GetMapping(value = "/configs/{machineName}")
+	public ResponseWrapper<ConfigDto> getMachineConfigDetails(@PathVariable(value = "machineName") String machineName) {
+		String currentTimeStamp = DateUtils.getUTCCurrentDateTimeString();
+		ConfigDto syncConfigResponse = syncConfigDetailsService.getConfigDetails(machineName);
+		syncConfigResponse.setLastSyncTime(currentTimeStamp);
+		ResponseWrapper<ConfigDto> response = new ResponseWrapper<>();
+		response.setResponse(syncConfigResponse);
 		return response;
 	}
 
