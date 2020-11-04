@@ -183,7 +183,17 @@
 </dependency>
   </dependencies>
   
-<build>
+<distributionManagement>
+		<snapshotRepository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository> 
+                 <repository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository> 
+        </distributionManagement> 
+        <build>
 <plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -335,7 +345,7 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
-		<name>MOSIP commons</name>
-		<description>Mosip commons project </description>
+		<name>Key generator</name>
+		<description>Key generator service to initialize and setup keys </description>
         <url>https://github.com/mosip/commons</url>
 	</project>

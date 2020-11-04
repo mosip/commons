@@ -19,11 +19,15 @@ public class WeekDaysDto implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -3763349609534307197L;
-
+	
 	private String name;
 
-	private short order;
+	private boolean isGlobalWorking;
 
-	private String languageCode;
+	private String dayCode;
+
+	private String languagecode;
+
+	private boolean isWorking;
 
 }

@@ -28,7 +28,7 @@ public interface MachineRepository extends JpaRepository<Machine, String> {
 	 * @param currentTimeStamp - currentTimestamp
 	 * @return list of {@link Machine} - list of machine
 	 */
-	@Query(value = "SELECT mm.id, mm.name, mm.mac_address, mm.serial_num, mm.ip_address, mm.mspec_id, mm.lang_code, mm.is_active, mm.cr_by, mm.cr_dtimes, mm.upd_by, mm.upd_dtimes, mm.is_deleted, mm.del_dtimes, mm.validity_end_dtimes,mm.key_index,mm.public_key,mm.zone_code,mm.regcntr_id,mm.sign_public_key,mm.sign_key_index from master.machine_master mm  where mm.regcntr_id = ?1 and ((mm.cr_dtimes >?2 AND mm.cr_dtimes <=?3) or (mm.upd_dtimes >?2 AND mm.upd_dtimes<=?3) or (mm.del_dtimes >?2 AND mm.del_dtimes<=?3))", nativeQuery = true)
+	@Query(value = "SELECT mm.id, mm.name, mm.mac_address, mm.serial_num, mm.ip_address, mm.mspec_id, mm.lang_code, mm.is_active, mm.cr_by, mm.cr_dtimes, mm.upd_by, mm.upd_dtimes, mm.is_deleted, mm.del_dtimes, mm.validity_end_dtimes,mm.key_index,mm.public_key,mm.zone_code,mm.regcntr_id,mm.sign_public_key,mm.sign_key_index,mm.public_key,mm.key_index from master.machine_master mm  where mm.regcntr_id = ?1 and ((mm.cr_dtimes >?2 AND mm.cr_dtimes <=?3) or (mm.upd_dtimes >?2 AND mm.upd_dtimes<=?3) or (mm.del_dtimes >?2 AND mm.del_dtimes<=?3))", nativeQuery = true)
 	List<Machine> findAllLatestCreatedUpdateDeleted(String regCenterId, LocalDateTime lastUpdated,
 			LocalDateTime currentTimeStamp);
 
@@ -38,7 +38,8 @@ public interface MachineRepository extends JpaRepository<Machine, String> {
 	 * @param machineId id of the machine
 	 * @return {@link Machine} - list of machine
 	 */
-	@Query(value = "SELECT mm.id, mm.name, mm.mac_address, mm.serial_num, mm.ip_address, mm.mspec_id, mm.lang_code, mm.is_active, mm.cr_by, mm.cr_dtimes, mm.upd_by, mm.upd_dtimes, mm.is_deleted, mm.del_dtimes, mm.validity_end_dtimes,mm.zone_code,mm.regcntr_id,mm.sign_public_key,mm.sign_key_index FROM master.machine_master mm where mm.id=?1 ", nativeQuery = true)
+	//@Query(value = "SELECT mm.id, mm.name, mm.mac_address, mm.serial_num, mm.ip_address, mm.mspec_id, mm.lang_code, mm.is_active, mm.cr_by, mm.cr_dtimes, mm.upd_by, mm.upd_dtimes, mm.is_deleted, mm.del_dtimes, mm.validity_end_dtimes,mm.zone_code,mm.regcntr_id,mm.sign_public_key,mm.sign_key_index FROM master.machine_master mm where mm.id=?1 ", nativeQuery = true)
+	@Query("From Machine m WHERE m.id = ?1  and (m.isDeleted is null or m.isDeleted =false) and m.isActive = true")
 	List<Machine> findMachineById(String machineId);
 
 	/**
@@ -46,7 +47,8 @@ public interface MachineRepository extends JpaRepository<Machine, String> {
 	 * @param machineId - machine id
 	 * @return list of {@link Machine} - list of machine
 	 */
-	@Query(value = "SELECT mm.id, mm.name, mm.mac_address, mm.serial_num, mm.ip_address, mm.mspec_id, mm.lang_code, mm.is_active, mm.cr_by, mm.cr_dtimes, mm.upd_by, mm.upd_dtimes, mm.is_deleted, mm.del_dtimes, mm.validity_end_dtimes,mm.zone_code,mm.regcntr_id,mm.sign_public_key,mm.sign_key_index FROM master.machine_master mm where mm.id=?1 and mm.is_active=true ", nativeQuery = true)
+	//@Query(value = "SELECT mm.id, mm.name, mm.mac_address, mm.serial_num, mm.ip_address, mm.mspec_id, mm.lang_code, mm.is_active, mm.cr_by, mm.cr_dtimes, mm.upd_by, mm.upd_dtimes, mm.is_deleted, mm.del_dtimes, mm.validity_end_dtimes,mm.zone_code,mm.regcntr_id,mm.sign_public_key,mm.sign_key_index FROM master.machine_master mm where mm.id=?1 and mm.is_active=true ", nativeQuery = true)
+	@Query("From Machine m WHERE m.id = ?1 and (m.isDeleted is null or m.isDeleted =false) and m.isActive = true")
 	List<Machine> findByMachineIdAndIsActive(String machineId);
 
 	/**

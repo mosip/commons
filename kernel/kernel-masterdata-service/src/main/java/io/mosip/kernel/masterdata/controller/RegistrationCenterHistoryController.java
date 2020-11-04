@@ -38,7 +38,7 @@ public class RegistrationCenterHistoryController {
 	 * @param effectiveDate        The effective date
 	 * @return {@link RegistrationCenterResponseDto} instance
 	 */
-	@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','REGISTRATION_PROCESSOR')")
 	@ResponseFilter
 	@GetMapping("/registrationcentershistory/{registrationCenterId}/{langcode}/{effectiveDate}")
 	public ResponseWrapper<RegistrationCenterHistoryResponseDto> getRegistrationCentersHistory(

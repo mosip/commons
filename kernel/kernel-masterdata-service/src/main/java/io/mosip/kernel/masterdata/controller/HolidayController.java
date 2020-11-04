@@ -4,7 +4,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -70,7 +69,7 @@ public class HolidayController {
 	 */
 	@ResponseFilter
 	@GetMapping
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','ZONAL_APPROVER')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	public ResponseWrapper<HolidayResponseDto> getAllHolidays() {
 		ResponseWrapper<HolidayResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(holidayService.getAllHolidays());
@@ -85,6 +84,7 @@ public class HolidayController {
 	 */
 	@ResponseFilter
 	@GetMapping("/{holidayid}")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	public ResponseWrapper<HolidayResponseDto> getAllHolidayById(@PathVariable("holidayid") int holidayId) {
 
 		ResponseWrapper<HolidayResponseDto> responseWrapper = new ResponseWrapper<>();
@@ -102,6 +102,7 @@ public class HolidayController {
 	 */
 	@ResponseFilter
 	@GetMapping("/{holidayid}/{langcode}")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','REGISTRATION_PROCESSOR','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','INDIVIDUAL','PRE_REGISTRATION','INDIVIDUAL')")
 	public ResponseWrapper<HolidayResponseDto> getAllHolidayByIdAndLangCode(@PathVariable("holidayid") int holidayId,
 			@PathVariable("langcode") String langCode) {
 		ResponseWrapper<HolidayResponseDto> responseWrapper = new ResponseWrapper<>();
@@ -117,7 +118,7 @@ public class HolidayController {
 	 */
 	@ResponseFilter
 	@PostMapping
-	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	public ResponseWrapper<HolidayIDDto> saveHoliday(@Valid @RequestBody RequestWrapper<HolidayDto> holiday) {
 		holidayValidator.validate(holiday.getRequest());
 		auditUtil.auditRequest(MasterDataConstant.CREATE_API_IS_CALLED + HolidayDto.class.getSimpleName(),
@@ -137,7 +138,7 @@ public class HolidayController {
 	 */
 	@ResponseFilter
 	@PutMapping
-	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ApiOperation(value = "to update a holiday", response = HolidayIDDto.class)
 	public ResponseWrapper<HolidayIDDto> updateHoliday(@Valid @RequestBody RequestWrapper<HolidayUpdateDto> holiday) {
 		holidayValidator.validate(holiday.getRequest());
@@ -157,6 +158,7 @@ public class HolidayController {
 	 */
 	@ResponseFilter
 	@DeleteMapping
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ApiOperation(value = "to delete a holiday", response = HolidayIdDeleteDto.class)
 	public ResponseWrapper<HolidayIdDeleteDto> deleteHoliday(
 			@Valid @RequestBody RequestWrapper<HolidayIdDeleteDto> request) {
@@ -175,7 +177,7 @@ public class HolidayController {
 	 * 
 	 * @return the response i.e. pages containing the holidays.
 	 */
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','CENTRAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping("/all")
 	@ApiOperation(value = "Retrieve all the holidays with additional metadata", notes = "Retrieve all the holidays with the additional metadata")
@@ -199,7 +201,7 @@ public class HolidayController {
 	 */
 	@ResponseFilter
 	@PostMapping("/search")
-	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	public ResponseWrapper<PageResponseDto<HolidaySearchDto>> searchMachine(
 
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
@@ -226,7 +228,7 @@ public class HolidayController {
 	 */
 	@ResponseFilter
 	@PostMapping("/filtervalues")
-	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	public ResponseWrapper<FilterResponseDto> holidayFilterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
 		ResponseWrapper<FilterResponseDto> responseWrapper = new ResponseWrapper<>();

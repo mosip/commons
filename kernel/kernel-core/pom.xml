@@ -304,7 +304,17 @@
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
-<build>
+<distributionManagement>
+		<snapshotRepository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository> 
+                 <repository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository> 
+        </distributionManagement> 
+        <build>
           <plugins>
             <plugin>
               <artifactId>maven-deploy-plugin</artifactId>
@@ -438,7 +448,7 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
-		<name>MOSIP commons</name>
-		<description>Mosip commons project </description>
+		<name>Kernel Core</name>
+		<description>Kernel Core contains all the important java level API, definitions and security configurations that are used across Mosip </description>
         <url>https://github.com/mosip/commons</url>
 	</project>
