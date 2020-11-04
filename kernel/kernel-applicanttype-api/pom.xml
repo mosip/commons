@@ -17,7 +17,17 @@
 			<version>1.2.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
-<build>
+<distributionManagement>
+		<snapshotRepository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository> 
+                 <repository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository> 
+        </distributionManagement> 
+        <build>
           <plugins>
             <plugin>
               <artifactId>maven-deploy-plugin</artifactId>
