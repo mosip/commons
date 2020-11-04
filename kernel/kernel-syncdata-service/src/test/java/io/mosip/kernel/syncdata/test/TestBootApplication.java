@@ -17,7 +17,8 @@ import io.mosip.kernel.syncdata.test.config.TestSecurityConfig;
  * @author Abhishek Kumar
  * @since 1.0.0
  */
-@SpringBootApplication(scanBasePackages = "io.mosip.kernel.syncdata.*")
+@SpringBootApplication(scanBasePackages = {"io.mosip.kernel.syncdata.*",
+		"io.mosip.kernel.core", "io.mosip.kernel.crypto", "io.mosip.kernel.clientcrypto.service.impl"})
 @EnableAsync
 @Import(TestSecurityConfig.class)
 public class TestBootApplication {

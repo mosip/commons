@@ -101,6 +101,8 @@ public class ClientCryptoFacade {
         byte[] aad = generateRandomBytes(AAD_LENGTH);
         byte[] cipher = cryptoCore.symmetricEncrypt(secretKey, dataToEncrypt, iv, aad);
 
+        LocalClientCryptoServiceImpl.cryptoCore = this.cryptoCore;
+
         byte[] encryptedSecretKey = isTPM ? TPMClientCryptoServiceImpl.asymmetricEncrypt(publicKey, secretKey.getEncoded()) :
                 LocalClientCryptoServiceImpl.asymmetricEncrypt(publicKey, secretKey.getEncoded());
 

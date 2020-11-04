@@ -56,7 +56,7 @@ public class IdentitySchemaHelper {
 	@Autowired
 	private SyncMasterDataServiceHelper serviceHelper;
 	
-	public void fillRetrievedData(final List<SyncDataBaseDto> list) 
+	public void fillRetrievedData(final List<SyncDataBaseDto> list, String publicKey)
 			throws InterruptedException, ExecutionException {
 		List<DynamicFieldDto> fields = getAllDynamicFields();
 				
@@ -72,7 +72,7 @@ public class IdentitySchemaHelper {
 		}	
 		
 		for(String key : data.keySet()) {			
-			list.add(serviceHelper.getSyncDataBaseDto(key, "dynamic", data.get(key)));
+			list.add(serviceHelper.getSyncDataBaseDto(key, "dynamic", data.get(key), publicKey));
 		}
 	}
 	

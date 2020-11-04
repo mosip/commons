@@ -30,12 +30,13 @@ public class HistoryDataHelper {
 	CompletableFuture<List<RegistrationCenterDeviceHistoryDto>> registrationCenterDeviceHistoryList = null;
 	CompletableFuture<List<RegistrationCenterMachineHistoryDto>> registrationCenterMachineHistoryList = null;
 
+	private String publicKey;
 	
-	
-	public HistoryDataHelper(String regCenterId, LocalDateTime lastUpdated, LocalDateTime currentTimestamp) {
+	public HistoryDataHelper(String regCenterId, LocalDateTime lastUpdated, LocalDateTime currentTimestamp, String publicKey) {
 		this.regCenterId = regCenterId;
 		this.lastUpdated = lastUpdated;
 		this.currentTimestamp = currentTimestamp;
+		this.publicKey = publicKey;
 	}
 	
 	public void retrieveData(final SyncMasterDataServiceHelper serviceHelper, final List<CompletableFuture> futures) {
@@ -55,10 +56,10 @@ public class HistoryDataHelper {
 	
 	public void fillRetrievedData(final SyncMasterDataServiceHelper serviceHelper, final List<SyncDataBaseDto> list) 
 			throws InterruptedException, ExecutionException {
-		list.add(serviceHelper.getSyncDataBaseDto(RegistrationCenterUserHistory.class, "structured", this.registrationCenterUserHistoryList.get()));
-		list.add(serviceHelper.getSyncDataBaseDto(RegistrationCenterUserMachineHistory.class, "structured", this.registrationCenterUserMachineMappingHistoryList.get()));		
-		list.add(serviceHelper.getSyncDataBaseDto(RegistrationCenterMachineDeviceHistory.class, "structured", this.registrationCenterMachineDeviceHistoryList.get()));
-		list.add(serviceHelper.getSyncDataBaseDto(RegistrationCenterDeviceHistory.class, "structured", this.registrationCenterDeviceHistoryList.get()));
-		list.add(serviceHelper.getSyncDataBaseDto(RegistrationCenterMachineHistory.class, "structured", this.registrationCenterMachineHistoryList.get()));	
+		list.add(serviceHelper.getSyncDataBaseDto(RegistrationCenterUserHistory.class, "structured", this.registrationCenterUserHistoryList.get(), this.publicKey));
+		list.add(serviceHelper.getSyncDataBaseDto(RegistrationCenterUserMachineHistory.class, "structured", this.registrationCenterUserMachineMappingHistoryList.get(), this.publicKey));
+		list.add(serviceHelper.getSyncDataBaseDto(RegistrationCenterMachineDeviceHistory.class, "structured", this.registrationCenterMachineDeviceHistoryList.get(), this.publicKey));
+		list.add(serviceHelper.getSyncDataBaseDto(RegistrationCenterDeviceHistory.class, "structured", this.registrationCenterDeviceHistoryList.get(), this.publicKey));
+		list.add(serviceHelper.getSyncDataBaseDto(RegistrationCenterMachineHistory.class, "structured", this.registrationCenterMachineHistoryList.get(), this.publicKey));
 	}
 }

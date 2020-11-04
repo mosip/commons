@@ -8,6 +8,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
+import io.mosip.kernel.clientcrypto.dto.TpmCryptoRequestDto;
+import io.mosip.kernel.clientcrypto.dto.TpmCryptoResponseDto;
+import io.mosip.kernel.clientcrypto.service.spi.ClientCryptoManagerService;
+import io.mosip.kernel.core.util.CryptoUtil;
+import io.mosip.kernel.syncdata.constant.MasterDataErrorCode;
+import io.mosip.kernel.syncdata.entity.Machine;
+import io.mosip.kernel.syncdata.exception.RequestException;
+import io.mosip.kernel.syncdata.repository.MachineRepository;
+import io.mosip.kernel.syncdata.utils.MapperUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +87,18 @@ public class SyncConfigDetailsServiceImpl implements SyncConfigDetailsService {
 	 */
 	@Value("${mosip.kernel.keymanager-service-publickey-url}")
 	private String publicKeyUrl;
+
+	@Autowired
+	private ClientCryptoManagerService clientCryptoManagerService;
+
+	@Value("${mosip.syncdata.tpm.required:false}")
+	private boolean isTPMRequired;
+
+	@Autowired
+	private MapperUtils mapper;
+
+	@Autowired
+	private MachineRepository machineRepo;
 
 	/*
 	 * (non-Javadoc)
@@ -235,4 +256,41 @@ public class SyncConfigDetailsServiceImpl implements SyncConfigDetailsService {
 
 	}
 
+	@Override
+	public ConfigDto getConfigDetails(String machineName) {
+		LOGGER.info("getConfigDetails() started for machine id >>> {}", machineName);
+
+		//TODO - need to invoke masterdata API ?
+		List<Machine> machines = machineRepo.findByMachineNameAndIsActive(machineName);
+		if(machines == null || machines.isEmpty())
+			throw new RequestException(MasterDataErrorCode.MACHINE_NOT_FOUND.getErrorCode(),
+					MasterDataErrorCode.MACHINE_NOT_FOUND.getErrorMessage());
+
+		JSONObject config = new JSONObject();
+		JSONObject globalConfig = getConfigDetailsResponse(globalConfigFileName);
+		JSONObject regConfig = getConfigDetailsResponse(regCenterfileName);
+		config.put("globalConfiguration", getEncryptedData(globalConfig, machines.get(0).getPublicKey()));
+		config.put("registrationConfiguration", getEncryptedData(regConfig, machines.get(0).getPublicKey()));
+		ConfigDto configDto = new ConfigDto();
+		configDto.setConfigDetail(config);
+		LOGGER.info("getConfigDetails() completed");
+		return configDto;
+	}
+
+
+	private String getEncryptedData(JSONObject config, String publicKey) {
+		try {
+			String json = mapper.getObjectAsJsonString(config);
+			TpmCryptoRequestDto tpmCryptoRequestDto = new TpmCryptoRequestDto();
+			tpmCryptoRequestDto.setValue(CryptoUtil.encodeBase64(json.getBytes()));
+			tpmCryptoRequestDto.setPublicKey(publicKey);
+			tpmCryptoRequestDto.setTpm(this.isTPMRequired);
+			TpmCryptoResponseDto tpmCryptoResponseDto = clientCryptoManagerService.csEncrypt(tpmCryptoRequestDto);
+			return tpmCryptoResponseDto.getValue();
+		} catch (Exception e) {
+			LOGGER.error("Failed to convert json to string", e);
+		}
+		throw new SyncDataServiceException(SyncConfigDetailsErrorCode.SYNC_SERIALIZATION_ERROR.getErrorCode(),
+				SyncConfigDetailsErrorCode.SYNC_SERIALIZATION_ERROR.getErrorMessage());
+	}
 }

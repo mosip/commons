@@ -762,6 +762,8 @@ public class SyncClientSettingsIntegrationTest {
 				Mockito.any())) .thenReturn(Arrays.asList(deviceSubTypeDPM));
 		
 		when(signatureUtil.sign(Mockito.anyString())).thenReturn(signResponse);
+
+		when(machineRepository.findByMachineIdAndIsActive(Mockito.anyString())).thenReturn(machines);
 	}
 	
 		
