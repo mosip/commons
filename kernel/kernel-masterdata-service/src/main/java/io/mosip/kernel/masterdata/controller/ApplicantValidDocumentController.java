@@ -25,7 +25,7 @@ public class ApplicantValidDocumentController {
 	@Autowired
 	private ApplicantValidDocumentService applicantValidDocumentService;
 
-	@PreAuthorize("hasAnyRole('INDIVIDUAL')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_PROCESSOR','ZONAL_ADMIN','GLOBAL_ADMIN','PRE_REGISTRATION','RESIDENT','PARTNER','AUTH_PARTNER','PARTNER_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER')")
 	@ResponseFilter
 	@GetMapping(value = "/{applicantId}/languages")
 	@ApiOperation(value = "get value from Category for the given id", notes = "get value from Category for the given id")

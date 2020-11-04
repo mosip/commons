@@ -55,7 +55,7 @@ public class IndividualTypeController {
 	/**
 	 * @return the all active individual type.
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','ZONAL_ADMIN','ZONAL_APPROVER','REGISTRATION_PROCESSOR')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','ZONAL_ADMIN','GLOBAL_ADMIN','REGISTRATION_PROCESSOR','PRE_REGISTRATION','PARTNER','AUTH_PARTNER','PARTNER_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER')")
 	@ResponseFilter
 	@GetMapping
 	@ApiOperation(value = "get value from Caretory for the given id", notes = "get value from Category for the given id")
@@ -75,7 +75,7 @@ public class IndividualTypeController {
 	 * 
 	 * @return the response i.e. pages containing the individual types.
 	 */
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','CENTRAL_ADMIN','REGISTRATION_PROCESSOR')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','CENTRAL_ADMIN','REGISTRATION_PROCESSOR')")
 	@ResponseFilter
 	@GetMapping("/all")
 	@ApiOperation(value = "Retrieve all the individual types with additional metadata", notes = "Retrieve all the individual types with the additional metadata")
@@ -100,7 +100,7 @@ public class IndividualTypeController {
 	 * @return the response i.e. multiple entities based on the search values
 	 *         required.
 	 */
-	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@PostMapping("/search")
 	public ResponseWrapper<PageResponseDto<IndividualTypeExtnDto>> searchIndividuals(
@@ -128,7 +128,7 @@ public class IndividualTypeController {
 	 * @return the response i.e. the list of values for the specific filter column
 	 *         name and type.
 	 */
-	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@PostMapping("/filtervalues")
 	public ResponseWrapper<FilterResponseDto> individualsFilterValues(
@@ -155,7 +155,7 @@ public class IndividualTypeController {
 	 * @param individualType
 	 * @return
 	 */
-	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@PostMapping
 	@ApiOperation(value = "Service to create Individual Type", notes = "create Individual Type  and return  code and LangCode")
@@ -176,7 +176,7 @@ public class IndividualTypeController {
 	 * @param individualTypeDto the request DTO for updating machine.
 	 * @return the response i.e. the updated machine.
 	 */
-	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@PutMapping()
 	@ApiOperation(value = "Service to upadte IndividualType", notes = "Update IndividualType Detail and return updated IndividualType")

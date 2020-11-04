@@ -202,7 +202,17 @@
     </dependencies>
 
 
-<build>
+<distributionManagement>
+		<snapshotRepository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository> 
+                 <repository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository> 
+        </distributionManagement> 
+        <build>
 <plugins>
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -383,7 +393,7 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
-		<name>MOSIP commons</name>
-		<description>Mosip commons project </description>
+		<name>Object store</name>
+		<description>Provides the implementation class for the object store </description>
         <url>https://github.com/mosip/commons</url>
 	</project>

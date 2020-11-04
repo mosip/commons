@@ -1,6 +1,7 @@
 package io.mosip.kernel.masterdata.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,6 +39,7 @@ public class ModuleController {
 	 * @return ModuleResponseDto Module detail based on given module id and Language
 	 *         code {@link ModuleResponseDto}
 	 */
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping(value = "/modules/{id}/{langcode}")
 	@ApiOperation(value = "Retrieve all Module Details for given Languge Code", notes = "Retrieve all Module Detail for given Languge Code and id")
@@ -62,6 +64,7 @@ public class ModuleController {
 	 * @return ModuleResponseDto Module detail based on given Language code
 	 *         {@link ModuleResponseDto}
 	 */
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping(value = "/modules/{langcode}")
 	@ApiOperation(value = "Retrieve all Module Details for given Languge Code", notes = "Retrieve all Module Detail for given Languge Code")

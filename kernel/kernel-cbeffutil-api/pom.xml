@@ -241,7 +241,17 @@
 		</dependency>
 	</dependencies>
 	
-<build>
+<distributionManagement>
+		<snapshotRepository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository> 
+                 <repository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository> 
+        </distributionManagement> 
+        <build>
 <resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -383,7 +393,7 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
-		<name>MOSIP commons</name>
-		<description>Mosip commons project </description>
+		<name>cebff util</name>
+		<description>Biometric interface to be compliant with CBEFF standard </description>
         <url>https://github.com/mosip/commons</url>
 	</project>

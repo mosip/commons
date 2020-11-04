@@ -47,7 +47,7 @@ public class RegWorkingNonWorkingServiceImpl implements RegWorkingNonWorkingServ
 	public WeekDaysResponseDto getWeekDaysList(String regCenterId, String langCode) {
 
 		List<WeekDaysDto> weekdayList = null;
-		List<DayNameAndSeqListDto> nameSeqList = null;
+		
 		WeekDaysResponseDto weekdays = new WeekDaysResponseDto();
 		RegistrationCenter registrationCenter = null;
 
@@ -55,7 +55,7 @@ public class RegWorkingNonWorkingServiceImpl implements RegWorkingNonWorkingServ
 		Objects.requireNonNull(langCode);
 
 		try {
-			nameSeqList = workingDaysRepo.findByregistrationCenterIdAndlanguagecodeForWeekDays(regCenterId, langCode);
+			weekdayList = workingDaysRepo.findByregistrationCenterIdAndlangCodeForWeekDays(regCenterId, langCode);
 			registrationCenter = registrationCenterRepository.findByIdAndLangCode(regCenterId, langCode);
 		} catch (DataAccessException | DataAccessLayerException e) {
 			throw new MasterDataServiceException(
@@ -67,24 +67,30 @@ public class RegWorkingNonWorkingServiceImpl implements RegWorkingNonWorkingServ
 			throw new DataNotFoundException(WorkingNonWorkingDayErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorCode(),
 					WorkingNonWorkingDayErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorMessage());
 		} else {
-			if (nameSeqList != null && !nameSeqList.isEmpty()) {
-
-				nameSeqList.sort((d1, d2) -> d1.getDaySeq() - d2.getDaySeq());
-				weekdayList = nameSeqList.stream().map(nameSeq -> {
-					WeekDaysDto dto = new WeekDaysDto();
-					dto.setLanguageCode(langCode);
-					dto.setName(nameSeq.getName());
-					dto.setOrder(nameSeq.getDaySeq());
-					return dto;
-				}).collect(Collectors.toList());
+			if (weekdayList != null && !weekdayList.isEmpty()) {
 				weekdays.setWeekdays(weekdayList);
+			}
+			// Fetch from global level .
+			else {
+				List<DaysOfWeek> globalDaysList = daysOfWeekRepo.findByAllGlobalWorkingTrue(langCode);
+				if (globalDaysList != null && !globalDaysList.isEmpty()) {
+					weekdayList = globalDaysList.stream().map(day -> {
+						WeekDaysDto globalWorkingDay = new WeekDaysDto();
+						globalWorkingDay.setDayCode(day.getCode());
+						globalWorkingDay.setGlobalWorking(day.isGlobalWorking());
+						globalWorkingDay.setLanguagecode(day.getLangCode());
+						globalWorkingDay.setName(day.getName());
+						return globalWorkingDay;
+					}).collect(Collectors.toList());
 
-			} else {
+					weekdays.setWeekdays(weekdayList);
+				} else {
 				throw new DataNotFoundException(
 						WorkingNonWorkingDayErrorCode.WEEK_DAY_DATA_FOUND_EXCEPTION.getErrorCode(),
 						WorkingNonWorkingDayErrorCode.WEEK_DAY_DATA_FOUND_EXCEPTION.getErrorMessage());
 			}
 
+		}
 		}
 
 		return weekdays;
@@ -94,12 +100,13 @@ public class RegWorkingNonWorkingServiceImpl implements RegWorkingNonWorkingServ
 	public WorkingDaysResponseDto getWorkingDays(String regCenterId, String langCode) {
 
 		List<WorkingDaysDto> workingDayList = null;
+		List<DayNameAndSeqListDto> nameSeqList = null;
 		WorkingDaysResponseDto responseDto = new WorkingDaysResponseDto();
 		Objects.requireNonNull(regCenterId);
 		Objects.requireNonNull(langCode);
 		RegistrationCenter registrationCenter = null;
 		try {
-			workingDayList = workingDaysRepo.findByregistrationCenterIdAndlangCodeForWorkingDays(regCenterId, langCode);
+			nameSeqList = workingDaysRepo.findByregistrationCenterIdAndlanguagecodeForWorkingDays(regCenterId, langCode);
 			registrationCenter = registrationCenterRepository.findByIdAndLangCode(regCenterId, langCode);
 		} catch (DataAccessException | DataAccessLayerException e) {
 			throw new MasterDataServiceException(
@@ -112,30 +119,26 @@ public class RegWorkingNonWorkingServiceImpl implements RegWorkingNonWorkingServ
 					WorkingNonWorkingDayErrorCode.REGISTRATION_CENTER_NOT_FOUND.getErrorMessage());
 		} else {
 			// Fetch from DB.
-			if (workingDayList != null && !workingDayList.isEmpty()) {
-				responseDto.setWorkingdays(workingDayList);
-			}
-			// Fetch from global level .
-			else {
-				List<DaysOfWeek> globalDaysList = daysOfWeekRepo.findByAllGlobalWorkingTrue(langCode);
-				if (globalDaysList != null && !globalDaysList.isEmpty()) {
-					workingDayList = globalDaysList.stream().map(day -> {
-						WorkingDaysDto globalWorkingDay = new WorkingDaysDto();
-						globalWorkingDay.setDayCode(day.getCode());
-						globalWorkingDay.setGlobalWorking(day.isGlobalWorking());
-						globalWorkingDay.setLanguagecode(day.getLangCode());
-						globalWorkingDay.setName(day.getName());
-						return globalWorkingDay;
-					}).collect(Collectors.toList());
+			if (nameSeqList != null && !nameSeqList.isEmpty()) {
 
-					responseDto.setWorkingdays(workingDayList);
-				} else {
+				nameSeqList.sort((d1, d2) -> d1.getDaySeq() - d2.getDaySeq());
+				workingDayList = nameSeqList.stream().map(nameSeq -> {
+					WorkingDaysDto dto = new WorkingDaysDto();
+					dto.setLanguageCode(langCode);
+					dto.setName(nameSeq.getName());
+					dto.setOrder(nameSeq.getDaySeq());
+					return dto;
+				}).collect(Collectors.toList());
+				responseDto.setWorkingdays(workingDayList);
+
+			}
+			 else {
 					throw new DataNotFoundException(
 							WorkingNonWorkingDayErrorCode.WORKING_DAY_DATA_FOUND_EXCEPTION.getErrorCode(),
 							WorkingNonWorkingDayErrorCode.WORKING_DAY_DATA_FOUND_EXCEPTION.getErrorMessage());
 				}
 
-			}
+			
 		}
 
 		return responseDto;

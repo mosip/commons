@@ -18,8 +18,6 @@ import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.masterdata.constant.MasterDataConstant;
 import io.mosip.kernel.masterdata.constant.OrderEnum;
-import io.mosip.kernel.masterdata.dto.HolidayDto;
-import io.mosip.kernel.masterdata.dto.TemplateDto;
 import io.mosip.kernel.masterdata.dto.TitleDto;
 import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
 import io.mosip.kernel.masterdata.dto.getresponse.TitleResponseDto;
@@ -28,9 +26,7 @@ import io.mosip.kernel.masterdata.dto.postresponse.CodeResponseDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
-import io.mosip.kernel.masterdata.dto.response.HolidaySearchDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
-import io.mosip.kernel.masterdata.dto.response.RegistrationCenterSearchDto;
 import io.mosip.kernel.masterdata.entity.id.CodeAndLanguageCodeID;
 import io.mosip.kernel.masterdata.service.TitleService;
 import io.mosip.kernel.masterdata.utils.AuditUtil;
@@ -63,7 +59,7 @@ public class TitleController {
 	 * 
 	 * @return list of all titles present in master DB
 	 */
-	@PreAuthorize("hasAnyRole('ID_AUTHENTICATION','ZONAL_ADMIN','ZONAL_APPROVER','RESIDENT')")
+	@PreAuthorize("hasAnyRole('ID_AUTHENTICATION','ZONAL_ADMIN','GLOBAL_ADMIN','PRE_REGISTRATION','INDIVIDUAL','RESIDENT','REGISTRATION_PROCESSOR','REGISTRATION_CLIENT','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','PARTNER','AUTH_PARTNER','PARTNER_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER')")
 	@ResponseFilter
 	@GetMapping(value = "/title")
 	public ResponseWrapper<TitleResponseDto> getAllTitles() {
@@ -86,6 +82,7 @@ public class TitleController {
 	 * @return list of all titles for the particular language code
 	 */
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole('ID_AUTHENTICATION','ZONAL_ADMIN','GLOBAL_ADMIN','PRE_REGISTRATION','RESIDENT','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_CLIENT','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER')")
 	@GetMapping(value = "/title/{langcode}")
 	public ResponseWrapper<TitleResponseDto> getTitlesBylangCode(@PathVariable("langcode") String langCode) {
 
@@ -102,7 +99,7 @@ public class TitleController {
 	 */
 	@ResponseFilter
 	@PostMapping("/title")
-	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	public ResponseWrapper<CodeAndLanguageCodeID> saveTitle(@Valid @RequestBody RequestWrapper<TitleDto> title) {
 		auditUtil.auditRequest(MasterDataConstant.CREATE_API_IS_CALLED + TitleDto.class.getSimpleName(),
 				MasterDataConstant.AUDIT_SYSTEM,
@@ -120,6 +117,7 @@ public class TitleController {
 	 */
 	@ResponseFilter
 	@PutMapping("/title")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ApiOperation(value = "Service to update title", notes = "Update title and return composite id")
 	@ApiResponses({ @ApiResponse(code = 200, message = "When title successfully updated"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
@@ -143,6 +141,7 @@ public class TitleController {
 	 */
 	@ResponseFilter
 	@DeleteMapping("/title/{code}")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ApiOperation(value = "Service to delete title", notes = "Delete title and return composite id")
 	@ApiResponses({ @ApiResponse(code = 200, message = "When title successfully deleted"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
@@ -165,7 +164,7 @@ public class TitleController {
 	 * 
 	 * @return the response i.e. pages containing the titles.
 	 */
-	//@PreAuthorize("hasAnyRole('ZONAL_ADMIN','CENTRAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping("/title/all")
 	@ApiOperation(value = "Retrieve all the title with additional metadata", notes = "Retrieve all the title with the additional metadata")
@@ -192,7 +191,7 @@ public class TitleController {
 
 	@ResponseFilter
 	@PostMapping("title/search")
-	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ApiOperation(value = "Search title details")
 	@ApiResponses({ @ApiResponse(code = 200, message = "list of titles"),
 			@ApiResponse(code = 500, message = "Error occured while searching title") })
@@ -217,7 +216,7 @@ public class TitleController {
 	 */
 	@ResponseFilter
 	@PostMapping("title/filtervalues")
-	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ApiOperation(value = "filter title details")
 	@ApiResponses({ @ApiResponse(code = 200, message = "list of title"),
 			@ApiResponse(code = 500, message = "Error occured while retrieving templates") })

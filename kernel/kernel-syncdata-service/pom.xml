@@ -224,6 +224,7 @@
 		<kernel.auth.adaptor.version>1.2.0-SNAPSHOT</kernel.auth.adaptor.version>
 		<kernel.logger.version>1.2.0-SNAPSHOT</kernel.logger.version>
 		<kernel.crypto.version>1.2.0-SNAPSHOT</kernel.crypto.version>
+		<kernel.keymanager.version>1.2.0-SNAPSHOT</kernel.keymanager.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -283,9 +284,32 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>io.mosip.kernel</groupId>
+			<artifactId>kernel-keymanager-service</artifactId>
+			<version>${kernel.keymanager.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.security</groupId>
+					<artifactId>spring-security-config</artifactId>
+				</exclusion>
+			</exclusions>
+			<classifier>lib</classifier>
+		</dependency>
+
 	</dependencies>
 	
-<build>
+<distributionManagement>
+		<snapshotRepository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository> 
+                 <repository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository> 
+        </distributionManagement> 
+        <build>
 <plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

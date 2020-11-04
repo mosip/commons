@@ -722,7 +722,7 @@ public class MasterdataIntegrationTest {
 	private ApplicantValidDocumentRepository applicantValidRepository;
 
 	@Test
-	@WithUserDetails("individual")
+	@WithUserDetails("global-admin")
 	public void getValidApplicantTypeTest() throws Exception {
 
 		List<Object[]> list = new ArrayList<>();
@@ -741,7 +741,7 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("individual")
+	@WithUserDetails("global-admin")
 	public void getValidApplicantTypeMasterDataServiceExceptionTest() throws Exception {
 		when(applicantValidRepository.getDocumentCategoryAndTypesForApplicantCode(Mockito.anyString(),
 				Mockito.anyList())).thenThrow(new DataAccessLayerException("errorCode", "errorMessage", null));
@@ -751,7 +751,7 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("individual")
+	@WithUserDetails("global-admin")
 	public void getValidApplicantTypeNoTypeFoundTest() throws Exception {
 		when(applicantValidRepository.getDocumentCategoryAndTypesForApplicantCode(Mockito.anyString(),
 				Mockito.anyList())).thenReturn(null);

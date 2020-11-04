@@ -49,7 +49,7 @@ class LocalClientCryptoServiceImpl implements ClientCryptoService {
     private static final String README = "readme.txt";
 
     private static SecureRandom secureRandom = null;
-    private static CryptoCoreSpec<byte[], byte[], SecretKey, PublicKey, PrivateKey, String> cryptoCore;
+    protected static CryptoCoreSpec<byte[], byte[], SecretKey, PublicKey, PrivateKey, String> cryptoCore;
 
 
     /**

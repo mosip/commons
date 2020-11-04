@@ -68,7 +68,7 @@ public class DocumentTypeController {
 	 * @param documentCategoryCode input from user
 	 * @return {@link ValidDocumentTypeResponseDto}}
 	 */
-
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_PROCESSOR','ZONAL_ADMIN','PRE_REGISTRATION','RESIDENT','PARTNER','AUTH_PARTNER','PARTNER_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER')")
 	@ResponseFilter
 	@ApiOperation(value = "Fetch all the  valid doucment type avialbale for specific document category code ")
 	@GetMapping("/documenttypes/{documentcategorycode}/{langcode}")
@@ -91,7 +91,7 @@ public class DocumentTypeController {
 	 * 
 	 * @return {@link CodeAndLanguageCodeID }
 	 */
-	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@PostMapping("/documenttypes")
 	@ApiOperation(value = "Service to create document type")
@@ -116,7 +116,7 @@ public class DocumentTypeController {
 	 * @param types the DTO of document type.
 	 * @return {@link CodeAndLanguageCodeID}.
 	 */
-	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@PutMapping("/documenttypes")
 	@ApiOperation(value = "Service to update document type")
@@ -143,6 +143,7 @@ public class DocumentTypeController {
 	 * @param code the document type code.
 	 * @return the code.
 	 */
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@DeleteMapping("/documenttypes/{code}")
 	@ApiOperation(value = "Service to delete document type")
@@ -162,7 +163,7 @@ public class DocumentTypeController {
 	 * 
 	 * @return the response i.e. pages containing the document types.
 	 */
-	//@PreAuthorize("hasAnyRole('ZONAL_ADMIN','CENTRAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping("/documenttypes/all")
 	@ApiOperation(value = "Retrieve all the document types with additional metadata", notes = "Retrieve all the document types with additional metadata")
@@ -189,7 +190,7 @@ public class DocumentTypeController {
 	 */
 	@ResponseFilter
 	@PostMapping("/documenttypes/filtervalues")
-	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	public ResponseWrapper<FilterResponseDto> documentTypeFilterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
 		auditUtil.auditRequest(MasterDataConstant.FILTER_API_IS_CALLED + DocumentTypeDto.class.getCanonicalName(),
@@ -212,7 +213,7 @@ public class DocumentTypeController {
 	 */
 	@ResponseFilter
 	@PostMapping("/documenttypes/search")
-	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	public ResponseWrapper<PageResponseDto<DocumentTypeExtnDto>> searchDocumentType(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
 		auditUtil.auditRequest(MasterDataConstant.SEARCH_API_IS_CALLED + DocumentTypeDto.class.getCanonicalName(),
@@ -236,7 +237,7 @@ public class DocumentTypeController {
 	 */
 	@ResponseFilter
 	@GetMapping("/documenttypes/{langcode}")
-	@PreAuthorize("hasRole('ZONAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_PROCESSOR','ZONAL_ADMIN','PRE_REGISTRATION','RESIDENT','PARTNER','AUTH_PARTNER','PARTNER_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER')")
 	public ResponseWrapper<DocumentTypeResponseDto> getAllDocumentTypeByLaguageCode(
 			@PathVariable("langcode") String langCode) {
 		ResponseWrapper<DocumentTypeResponseDto> responseWrapper = new ResponseWrapper<>();

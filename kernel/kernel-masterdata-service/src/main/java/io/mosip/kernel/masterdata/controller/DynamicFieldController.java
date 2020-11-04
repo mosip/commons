@@ -35,7 +35,7 @@ public class DynamicFieldController {
 	
 	@ResponseFilter
 	@GetMapping
-	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN','INDIVIDUAL')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ApiOperation(value = "Service to fetch all dynamic fields")
 	public ResponseWrapper<PageDto<DynamicFieldResponseDto>> getAllDynamicFields(
 			@RequestParam(name = "pageNumber", defaultValue = "0") @ApiParam(value = "page number", defaultValue = "0") int pageNumber,
@@ -50,7 +50,7 @@ public class DynamicFieldController {
 	
 	@ResponseFilter
 	@PostMapping
-	@PreAuthorize("hasRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ApiOperation(value = "Service to create dynamic field")
 	public ResponseWrapper<DynamicFieldResponseDto> createDynamicField (@Valid @RequestBody RequestWrapper<DynamicFieldDto> dynamicFieldDto) {
 		ResponseWrapper<DynamicFieldResponseDto> responseWrapper = new ResponseWrapper<>();
@@ -60,7 +60,7 @@ public class DynamicFieldController {
 	
 	@ResponseFilter
 	@PutMapping
-	@PreAuthorize("hasRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ApiOperation(value = "Service to update dynamic field")
 	public ResponseWrapper<DynamicFieldResponseDto> updateDynamicField (
 			@RequestParam(name = "id") @ApiParam(value = "field id") String id,
@@ -72,7 +72,7 @@ public class DynamicFieldController {
 	
 	@ResponseFilter
 	@PutMapping("values")
-	@PreAuthorize("hasRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ApiOperation(value = "Service to update dynamic field")
 	public ResponseWrapper<String> updateFieldValue (
 			@RequestParam(name = "id") @ApiParam(value = "field name") String fieldName,

@@ -25,10 +25,13 @@ public class DocumentDataHelper {
 	CompletableFuture<List<DocumentTypeDto>> documentTypes = null;
 	CompletableFuture<List<ValidDocumentDto>> validDocumentsMapping = null;
 	CompletableFuture<List<ApplicantValidDocumentDto>> applicantValidDocumentList = null;
+
+	private String publicKey;
 	
-	public DocumentDataHelper( LocalDateTime lastUpdated, LocalDateTime currentTimestamp) {		
+	public DocumentDataHelper( LocalDateTime lastUpdated, LocalDateTime currentTimestamp, String publicKey) {
 		this.lastUpdated = lastUpdated;
 		this.currentTimestamp = currentTimestamp;
+		this.publicKey = publicKey;
 	}
 	
 	public void retrieveData(final SyncMasterDataServiceHelper serviceHelper, final List<CompletableFuture> futures) {
@@ -45,9 +48,9 @@ public class DocumentDataHelper {
 	
 	public void fillRetrievedData(final SyncMasterDataServiceHelper serviceHelper, final List<SyncDataBaseDto> list) 
 			throws InterruptedException, ExecutionException {
-		list.add(serviceHelper.getSyncDataBaseDto(DocumentCategory.class, "structured", this.documentCategories.get()));
-		list.add(serviceHelper.getSyncDataBaseDto(DocumentType.class, "structured", this.documentTypes.get()));		
-		list.add(serviceHelper.getSyncDataBaseDto(ValidDocument.class, "structured", this.validDocumentsMapping.get()));
-		list.add(serviceHelper.getSyncDataBaseDto(ApplicantValidDocument.class, "structured", this.applicantValidDocumentList.get()));		
+		list.add(serviceHelper.getSyncDataBaseDto(DocumentCategory.class, "structured", this.documentCategories.get(), this.publicKey));
+		list.add(serviceHelper.getSyncDataBaseDto(DocumentType.class, "structured", this.documentTypes.get(), this.publicKey));
+		list.add(serviceHelper.getSyncDataBaseDto(ValidDocument.class, "structured", this.validDocumentsMapping.get(), this.publicKey));
+		list.add(serviceHelper.getSyncDataBaseDto(ApplicantValidDocument.class, "structured", this.applicantValidDocumentList.get(), this.publicKey));
 	}
 }

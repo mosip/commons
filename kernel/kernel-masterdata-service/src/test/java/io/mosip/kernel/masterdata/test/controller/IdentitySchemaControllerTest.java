@@ -31,7 +31,7 @@ import io.mosip.kernel.masterdata.entity.DynamicField;
 import io.mosip.kernel.masterdata.entity.IdentitySchema;
 import io.mosip.kernel.masterdata.repository.DynamicFieldRepository;
 import io.mosip.kernel.masterdata.repository.IdentitySchemaRepository;
-import io.mosip.kernel.masterdata.service.DynamicFieldService; 
+import io.mosip.kernel.masterdata.service.DynamicFieldService;
 import io.mosip.kernel.masterdata.service.IdentitySchemaService;
 import io.mosip.kernel.masterdata.test.TestBootApplication;
 
@@ -129,14 +129,14 @@ public class IdentitySchemaControllerTest {
 	}
 	
 	@Test
-	@WithUserDetails("reg-officer")
+	@WithUserDetails("global-admin")
 	public void fetchAllDynamicFields() throws Exception {		
 		Mockito.when(dynamicFieldRepository.findAllDynamicFields(pageRequest)).thenReturn(fieldPagedResult);		
 		mockMvc.perform(MockMvcRequestBuilders.get("/dynamicfields")).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	@Test
-	@WithUserDetails("reg-officer")
+	@WithUserDetails("global-admin")
 	public void fetchAllDynamicFieldsByLangCode() throws Exception {		
 		Mockito.when(dynamicFieldRepository.findAllDynamicFieldsByLangCode("eng", pageRequest)).thenReturn(fieldPagedResult);		
 		mockMvc.perform(MockMvcRequestBuilders.get("/dynamicfields")
@@ -182,14 +182,14 @@ public class IdentitySchemaControllerTest {
 	}
 	
 	@Test
-	@WithUserDetails("reg-officer")
+	@WithUserDetails("global-admin")
 	public void fetchAllIdentitySchema() throws Exception {		
 		Mockito.when(identitySchemaRepository.findAllIdentitySchema(true, pageRequest)).thenReturn(schemaPagedResult);		
 		mockMvc.perform(MockMvcRequestBuilders.get("/idschema/all")).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	@Test
-	@WithUserDetails("reg-officer")
+	@WithUserDetails("global-admin")
 	public void fetchLatestIdentitySchema() throws Exception {		
 		Mockito.when(identitySchemaRepository.findLatestPublishedIdentitySchema()).thenReturn(publishedSchema);		
 		mockMvc.perform(MockMvcRequestBuilders.get("/idschema/latest")).andExpect(MockMvcResultMatchers.status().isOk());
