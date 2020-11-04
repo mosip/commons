@@ -12,6 +12,11 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.mosip.kernel.syncdata.dto.*;
+import io.mosip.kernel.syncdata.dto.response.ClientPublicKeyResponseDto;
+import io.mosip.kernel.syncdata.entity.Machine;
+import io.mosip.kernel.syncdata.repository.MachineRepository;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +29,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.client.match.MockRestRequestMatchers;
 import org.springframework.test.web.servlet.MockMvc;
@@ -38,15 +44,6 @@ import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.signatureutil.model.SignatureResponse;
 import io.mosip.kernel.core.signatureutil.spi.SignatureUtil;
 import io.mosip.kernel.syncdata.constant.MasterDataErrorCode;
-import io.mosip.kernel.syncdata.dto.ApplicationDto;
-import io.mosip.kernel.syncdata.dto.HolidayDto;
-import io.mosip.kernel.syncdata.dto.MachineDto;
-import io.mosip.kernel.syncdata.dto.MachineSpecificationDto;
-import io.mosip.kernel.syncdata.dto.MachineTypeDto;
-import io.mosip.kernel.syncdata.dto.PublicKeyResponse;
-import io.mosip.kernel.syncdata.dto.SyncUserDetailDto;
-import io.mosip.kernel.syncdata.dto.UploadPublicKeyResponseDto;
-import io.mosip.kernel.syncdata.dto.UserDetailMapDto;
 import io.mosip.kernel.syncdata.dto.response.MasterDataResponseDto;
 import io.mosip.kernel.syncdata.dto.response.RolesResponseDto;
 import io.mosip.kernel.syncdata.exception.RequestException;
@@ -100,6 +97,9 @@ public class SyncDataControllerTest {
 	RestTemplate restTemplate;
 	
 	private MockRestServiceServer mockRestServer;
+
+	@Value("${mosip.kernel.syncdata-service-machine-url}")
+	private String machineUrl;
 
 	@Before
 	public void setup() {
@@ -177,7 +177,7 @@ public class SyncDataControllerTest {
 		masterDataResponseDto.setHolidays(holidays);
 		List<MachineDto> machines = new ArrayList<>();
 		machines.add(new MachineDto("1001", "Laptop", "QWE23456", "1223:23:31:23", "172.12.128.1", "1",
-				LocalDateTime.parse("2018-01-01T01:01:01"), null, null));
+				LocalDateTime.parse("2018-01-01T01:01:01"), null, "test", "test"));
 		masterDataResponseDto.setMachineDetails(machines);
 		List<MachineSpecificationDto> machineSpecifications = new ArrayList<>();
 		machineSpecifications
@@ -187,33 +187,6 @@ public class SyncDataControllerTest {
 		machineTypes.add(new MachineTypeDto("1", "ENG", "Laptop"));
 		masterDataResponseDto.setMachineType(machineTypes);
 	}
-
-	/*
-	 * @Test
-	 * 
-	 * @WithUserDetails(value = "reg-officer") public void syncMasterDataSuccess()
-	 * throws Exception { when(masterDataService.syncData(Mockito.anyString(),
-	 * Mockito.isNull(), Mockito.any())) .thenReturn(masterDataResponseDto);
-	 * mockMvc.perform(get("/v1.0/masterdata/{machineId}",
-	 * "1001")).andExpect(status().isOk()); }
-	 * 
-	 * @Test
-	 * 
-	 * @WithUserDetails(value = "reg-officer") public void
-	 * syncMasterDataWithlastUpdatedTimestampSuccess() throws Exception {
-	 * when(masterDataService.syncData(Mockito.anyString(), Mockito.any(),
-	 * Mockito.any())) .thenReturn(masterDataResponseDto); mockMvc.perform(get(
-	 * "/v1.0/masterdata/{machineId}?lastUpdated=2018-01-01T01:01:01.021Z", "1001"))
-	 * .andExpect(status().isOk()); }
-	 * 
-	 * @Test
-	 * 
-	 * @WithUserDetails(value = "reg-officer") public void
-	 * syncMasterDataWithlastUpdatedTimestampfailure() throws Exception {
-	 * mockMvc.perform(get(
-	 * "/v1.0/masterdata/{machineId}?lastUpdated=2018-01-016501:01:01", "1001"))
-	 * .andExpect(status().isOk()); }
-	 */
 
 	@Test
 	@WithUserDetails(value = "reg-officer")
@@ -324,6 +297,49 @@ public class SyncDataControllerTest {
 	public void validateLatestSchemaSync() throws Exception {
 		when(signingUtil.sign(Mockito.anyString())).thenReturn(signResponse);
 		mockMvc.perform(get("/latestidschema").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+	}
+
+	@WithUserDetails(value = "reg-officer")
+	public void fetchClientPublicKey() throws Exception {
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(String.format(machineUrl, "12121"));
+		mockRestServer.expect(MockRestRequestMatchers.requestTo(builder.build().toString()))
+				.andRespond(withSuccess().body(
+						"{ \"id\": null, \"version\": null, \"responsetime\": \"2019-04-24T09:07:42.017Z\", \"metadata\": null, "
+								+ "\"response\": null, \"errors\": null }"));
+		when(masterDataService.getClientPublicKey(Mockito.any())).thenReturn(null);
+		MvcResult result = mockMvc.perform(get("/tpm/publickey/12121").contentType(MediaType.APPLICATION_JSON))
+				.andReturn();
+		ResponseWrapper<ClientPublicKeyResponseDto> responseWrapper = objectMapper.readValue(result.getResponse().getContentAsString(),
+				new TypeReference<ResponseWrapper<ClientPublicKeyResponseDto>>() {});
+		Assert.assertNull(responseWrapper.getResponse());
+	}
+
+	@WithUserDetails(value = "reg-officer")
+	@Test
+	public void fetchValidClientPublicKey() throws Exception {
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(String.format(machineUrl, "10001"));
+		mockRestServer.expect(MockRestRequestMatchers.requestTo(builder.build().toString()))
+				.andRespond(withSuccess().body(
+						"{ \"id\": null, \"version\": null, \"responsetime\": \"2019-04-24T09:07:42.017Z\", \"metadata\": null, "
+								+ "\"response\": { \"machines\" : [ { \"id\": \"10001\", "
+								+ "\"publicKey\": \"test\", \"signPublicKey\": \"test\"}]}, \"errors\": null }"));
+		//ClientPublicKeyResponseDto clientPublicKeyResponseDto = new ClientPublicKeyResponseDto("test","test");
+		//when(masterDataService.getClientPublicKey(Mockito.any())).thenReturn(clientPublicKeyResponseDto);
+		MvcResult result = mockMvc.perform(get("/tpm/publickey/12121").contentType(MediaType.APPLICATION_JSON))
+				.andReturn();
+	}
+
+	@Test
+	@WithUserDetails(value = "reg-officer")
+	public void syncClientConfigDetailsSuccess() throws Exception {
+		when(signingUtil.sign(Mockito.anyString())).thenReturn(signResponse);
+		JSONObject config = new JSONObject();
+		config.put("globalConfiguration", "tttttttttttttttttttttt");
+		config.put("registrationConfiguration", "tttttttttttttttttttttt");
+		ConfigDto configDto = new ConfigDto();
+		configDto.setConfigDetail(config);
+		when(syncConfigDetailsService.getConfigDetails("testmachine")).thenReturn(configDto);
+		mockMvc.perform(get("/configs/testmachine")).andExpect(status().isOk());
 	}
 	
 }

@@ -1,4 +1,7 @@
 FROM openjdk:11
+RUN apt-get update \
+    && apt-get -y upgrade \
+    && apt-get -y install unzip
 
 # can be passed during Docker build as build time environment for github branch to pickup configuration from.
 ARG spring_config_label
@@ -15,6 +18,9 @@ ARG artifactory_url
 # can be passed during Docker build as build time environment for config server URL 
 ARG spring_config_name
 
+# can be passed during Docker build as build time environment for hsm client zip file path
+ARG client_zip_path
+
 # environment variable to pass active profile such as DEV, QA etc at docker runtime
 ENV active_profile_env=${active_profile}
 
@@ -29,6 +35,9 @@ ENV spring_config_name_env=${spring_config_name}
 
 # environment variable to pass artifactory url, at docker runtime
 ENV artifactory_url_env=${artifactory_url}
+
+# environment variable to pass hsm client zip file path, at docker runtime
+ENV zip_file_path=${client_zip_path}
 
 ADD configure_start.sh configure_start.sh
 

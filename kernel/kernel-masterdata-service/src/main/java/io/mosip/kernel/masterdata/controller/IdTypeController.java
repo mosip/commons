@@ -45,7 +45,7 @@ public class IdTypeController {
 	 * @param langCode the language code against which id types are to be fetched.
 	 * @return the list of id types.
 	 */
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','ZONAL_APPROVER')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_PROCESSOR','ZONAL_ADMIN','PRE_REGISTRATION','RESIDENT','PARTNER','AUTH_PARTNER','PARTNER_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER')")
 	@ResponseFilter
 	@GetMapping("/idtypes/{langcode}")
 	@ApiOperation(value = "Service to fetch id types based on language code.", notes = "Fetch IdTypes based on Language Code.")
@@ -66,6 +66,7 @@ public class IdTypeController {
 	 * @param idTypeRequestDto the request of idtype to be added.
 	 * @return the response.
 	 */
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@PostMapping("/idtypes")
 	@ApiOperation(value = "Service to create id type.", notes = "Create Id Type.")

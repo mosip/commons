@@ -3,6 +3,7 @@ package io.mosip.kernel.masterdata.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,6 +45,7 @@ public class TemplateTypeController {
 	 */
 	@ResponseFilter
 	@PostMapping("/templatetypes")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ApiOperation(value = "Service to create template type", notes = "create TemplateType  and return  code and LangCode")
 	@ApiResponses({ @ApiResponse(code = 201, message = " successfully created"),
 			@ApiResponse(code = 400, message = " Request body passed  is null or invalid"),
@@ -71,6 +73,7 @@ public class TemplateTypeController {
 	 */
 	@ResponseFilter
 	@GetMapping(value = "/templatetypes/{code}/{langcode}")
+	@PreAuthorize("hasAnyRole('ID_AUTHENTICATION','ZONAL_ADMIN','GLOBAL_ADMIN','PRE_REGISTRATION','RESIDENT','INDIVIDUAL','REGISTRATION_PROCESSOR','PARTNER','AUTH_PARTNER','PARTNER_ADMIN','DEVICE_PROVIDER','DEVICE_MANAGER')")
 	@ApiOperation(value = "Retrieve all template type Details for given Languge Code", notes = "Retrieve all template type Detail for given Languge Code and code")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "When template type Details retrieved from database for the given Languge Code and Code"),
@@ -95,6 +98,7 @@ public class TemplateTypeController {
 	 */
 	@ResponseFilter
 	@GetMapping(value = "/templatetypes/{langcode}")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ApiOperation(value = "Retrieve all template type Details for given Languge Code", notes = "Retrieve all template type Detail for given Languge Code")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "When template type Details retrieved from database for the given Languge Code"),

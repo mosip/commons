@@ -46,6 +46,7 @@ public class PacketRejectionReasonController {
 	 * @param requestDto- reasoncategoryObject
 	 * @return CodeAndLanguageCodeId
 	 */
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@PostMapping("/reasoncategory")
 	public ResponseWrapper<CodeAndLanguageCodeID> createReasonCategories(
@@ -62,6 +63,7 @@ public class PacketRejectionReasonController {
 	 * @param requestDto -reasonListObject
 	 * @return CodeLangCodeAndRsnCatCodeId
 	 */
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@PostMapping("/reasonlist")
 	public ResponseWrapper<CodeLangCodeAndRsnCatCodeID> createReasonLists(
@@ -79,7 +81,7 @@ public class PacketRejectionReasonController {
 	 */
 	@ResponseFilter
 	@GetMapping
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','ZONAL_APPROVER')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN','REGISTRATION_PROCESSOR')")
 	public ResponseWrapper<PacketRejectionReasonResponseDto> getAllReasons() {
 
 		ResponseWrapper<PacketRejectionReasonResponseDto> responseWrapper = new ResponseWrapper<>();
@@ -95,6 +97,7 @@ public class PacketRejectionReasonController {
 	 */
 	@ResponseFilter
 	@GetMapping(value = "/{reasoncategorycode}/{langcode}")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN','REGISTRATION_PROCESSOR')")
 	public ResponseWrapper<PacketRejectionReasonResponseDto> getReasonsBasedOnReasonCatgCodeAndlangCode(
 			@PathVariable("reasoncategorycode") String reasonCategoryCode, @PathVariable("langcode") String langCode) {
 

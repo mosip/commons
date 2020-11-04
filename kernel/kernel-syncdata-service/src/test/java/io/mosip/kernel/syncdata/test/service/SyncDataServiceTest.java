@@ -15,7 +15,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.mosip.kernel.syncdata.dto.response.ClientPublicKeyResponseDto;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -133,7 +136,11 @@ public class SyncDataServiceTest {
 	
 	@Autowired
 	private SyncMasterDataService masterDataService;
-	
+
+	@Value("${mosip.kernel.syncdata-service-machine-url}")
+	private String machineUrl;
+
+
 	private String encodedTPMPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn4A-U6V4SpSeJmjl0xtBDgyFaHn1CvglvnpbczxiDakH6ks8tPvIYT4jDOU-9XaUYKuMFhLxS7G8qwJhv7GKpDQXphSXjgwv_l8A--KV6C1UVaHoAs4XuJPFdXneSd9uMH94GO6lWucyOyfaZLrf5F_--2Rr4ba4rBWw20OrAl1c7FrzjIQjzYXgnBMrvETXptxKKrMELwOOsuyc1Ju4wzPJHYjI0Em4q2BOcQLXqYjhsZhcYeTqBFxXjCOM3WQKLCIsh9RN8Hz-s8yJbQId6MKIS7HQNCTbhbjl1jdfwqRwmBaZz0Gt73I4_8SVCcCQzJWVsakLC1oJAFcmi3l_mQIDAQAB";
 	private byte[] tpmPublicKey = CryptoUtil.decodeBase64(encodedTPMPublicKey);
 	private String keyIndex = CryptoUtil.computeFingerPrint(tpmPublicKey, null);
@@ -157,7 +164,7 @@ public class SyncDataServiceTest {
 		masterDataResponseDto.setHolidays(holidays);
 		machines = new ArrayList<>();
 		machines.add(new MachineDto("1001", "Laptop", "QWE23456", "1223:23:31:23", "172.12.128.1", "1",
-				LocalDateTime.parse("2018-01-01T01:01:01"), null, null));
+				LocalDateTime.parse("2018-01-01T01:01:01"), null, null, null));
 		masterDataResponseDto.setMachineDetails(machines);
 		machineSpecifications = new ArrayList<>();
 		machineSpecifications
@@ -211,16 +218,16 @@ public class SyncDataServiceTest {
 	 * }
 	 */
 
-	// @Test
+	@Ignore
+	@Test
 	public void globalConfigsyncSuccess() {
-
 		MockRestServiceServer server = MockRestServiceServer.bindTo(restTemplate).build();
 		server.expect(requestTo(uriBuilder.append(globalConfigFileName).toString())).andRespond(withSuccess());
 		syncConfigDetailsService.getGlobalConfigDetails();
-
 	}
 
-	// @Test
+	@Ignore
+	@Test
 	public void registrationConfigsyncSuccess() {
 		MockRestServiceServer server = MockRestServiceServer.bindTo(restTemplate).build();
 		server.expect(requestTo(uriBuilder.append(regCenterfileName).toString())).andRespond(withSuccess());
@@ -228,7 +235,7 @@ public class SyncDataServiceTest {
 		// Assert.assertEquals(120, jsonObject.get("fingerprintQualityThreshold"));
 	}
 
-	// @Test(expected = SyncDataServiceException.class)
+	@Test(expected = SyncDataServiceException.class)
 	public void registrationConfigsyncFailure() {
 
 		MockRestServiceServer server = MockRestServiceServer.bindTo(restTemplate).build();
@@ -236,7 +243,7 @@ public class SyncDataServiceTest {
 		syncConfigDetailsService.getRegistrationCenterConfigDetails("1");
 	}
 
-	// @Test(expected = SyncDataServiceException.class)
+	@Test(expected = SyncDataServiceException.class)
 	public void globalConfigsyncFailure() {
 
 		MockRestServiceServer server = MockRestServiceServer.bindTo(restTemplate).build();
@@ -244,7 +251,7 @@ public class SyncDataServiceTest {
 		syncConfigDetailsService.getGlobalConfigDetails();
 	}
 
-	// @Test(expected = SyncDataServiceException.class)
+	@Test(expected = SyncDataServiceException.class)
 	public void globalConfigsyncFileNameNullFailure() {
 
 		MockRestServiceServer server = MockRestServiceServer.bindTo(restTemplate).build();
@@ -252,7 +259,8 @@ public class SyncDataServiceTest {
 		syncConfigDetailsService.getGlobalConfigDetails();
 	}
 
-	// @Test
+	@Ignore
+	@Test
 	public void getConfigurationSuccess() {
 		MockRestServiceServer server = MockRestServiceServer.bindTo(restTemplate).build();
 		server.expect(requestTo(uriBuilder.append(globalConfigFileName).toString())).andRespond(withSuccess());
@@ -340,7 +348,8 @@ public class SyncDataServiceTest {
 
 	// ------------------------------------------AllRolesSync--------------------------//
 
-	// @Test
+	@Ignore
+	@Test
 	public void getAllRoles() {
 
 		MockRestServiceServer mockRestServer = MockRestServiceServer.bindTo(restTemplate).build();
@@ -349,7 +358,7 @@ public class SyncDataServiceTest {
 		syncRolesService.getAllRoles();
 	}
 
-	// @Test(expected = SyncDataServiceException.class)
+	@Test(expected = SyncDataServiceException.class)
 	public void getAllRolesException() {
 
 		MockRestServiceServer mockRestServer = MockRestServiceServer.bindTo(restTemplate).build();
@@ -485,4 +494,26 @@ public class SyncDataServiceTest {
 		masterDataService.validateKeyMachineMapping(dto);
 	}
 
+	 @Test
+	 public void fetchClientPublicKey() {
+		Machine machine = new Machine();
+		machine.setId("10001");
+		machine.setLangCode("eng");
+		machine.setPublicKey("test");
+		machine.setSignPublicKey("test");
+		List<Machine> machines = new ArrayList<>();
+		machines.add(machine);
+
+		 MockRestServiceServer mockRestServer = MockRestServiceServer.bindTo(restTemplate).build();
+		 UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(String.format(machineUrl, "10001"));
+		 mockRestServer.expect(MockRestRequestMatchers.requestTo(builder.build().toString()))
+				 .andRespond(withSuccess().body(
+						 "{ \"id\": null, \"version\": null, \"responsetime\": \"2019-04-24T09:07:42.017Z\", \"metadata\": null, "
+								 + "\"response\": { \"machines\" : [ { \"id\": \"10001\", "
+								 + "\"publicKey\": \"test\", \"signPublicKey\": \"test\"}]}, \"errors\": null }"));
+		ClientPublicKeyResponseDto clientPublicKeyResponseDto = masterDataService.getClientPublicKey("10001");
+		Assert.assertNotNull(clientPublicKeyResponseDto);
+		Assert.assertNotNull(clientPublicKeyResponseDto.getSigningPublicKey());
+		Assert.assertNotNull(clientPublicKeyResponseDto.getEncryptionPublicKey());
+	 }
 }

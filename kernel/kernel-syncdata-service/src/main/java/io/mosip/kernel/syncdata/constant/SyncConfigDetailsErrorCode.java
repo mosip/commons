@@ -4,7 +4,8 @@ public enum SyncConfigDetailsErrorCode {
 
 	SYNC_CONFIG_DETAIL_REST_CLIENT_EXCEPTION("KER-SNC-001", "Error occured in service"),
 	SYNC_CONFIG_DETAIL_INPUT_PARAMETER_EXCEPTION("KER-SNC-002", "Input parameter is missing"),
-	SYNC_IO_EXCEPTION("KER-SNC-003", " Input output error occur while fetching public key ");
+	SYNC_IO_EXCEPTION("KER-SNC-003", " Input output error occur while fetching public key "),
+	SYNC_SERIALIZATION_ERROR("KER-SNC-004", "Failed to serialize config data");
 
 	private final String errorCode;
 	private final String errorMessage;
