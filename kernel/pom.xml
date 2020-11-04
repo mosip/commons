@@ -154,7 +154,6 @@
 		<module>kernel-crypto-signature</module>
 		<module>kernel-idobjectvalidator</module>
 		<module>kernel-bioapi-provider</module>
-		<module>kernel-smsserviceprovider-msg91</module>
 		<module>kernel-registration-packet-manager</module>
 		<module>kernel-authcodeflowproxy-api</module>
 		<module>kernel-websubclient-api</module>
