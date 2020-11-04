@@ -153,7 +153,7 @@ public class DeviceProviderManagementIntegrationTest {
 		validateDeviceHistoryDto.setDeviceCode("10001");
 		validateDeviceHistoryDto.setDeviceServiceVersion("0.1v");
 		validateDeviceHistoryDto.setDigitalId(digitalIdDto);
-		validateDeviceHistoryDto.setTimeStamp(DateUtils.getUTCCurrentDateTimeString());
+		validateDeviceHistoryDto.setTimeStamp(DateUtils.formatToISOString(LocalDateTime.now()));
 
 		requestWrapper = new RequestWrapper<>();
 		requestWrapper.setId("1.0");
@@ -266,7 +266,7 @@ public class DeviceProviderManagementIntegrationTest {
 				Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.any()))
 						.thenThrow(DataRetrievalFailureException.class);
 		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
-				.andExpect(status().isOk());
+				.andExpect(status().isInternalServerError());
 	}
 
 	@WithUserDetails("zonal-admin")
@@ -464,7 +464,7 @@ public class DeviceProviderManagementIntegrationTest {
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
 		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
-				.andExpect(status().isOk());
+				.andExpect(status().isInternalServerError());
 	}
 
 	@Test
@@ -488,7 +488,7 @@ public class DeviceProviderManagementIntegrationTest {
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
 		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
-				.andExpect(status().isOk());
+				.andExpect(status().isInternalServerError());
 	}
 
 	@Test
@@ -512,7 +512,7 @@ public class DeviceProviderManagementIntegrationTest {
 		requestWrapperHistory.setRequest(validateDeviceHistoryDto);
 		String req = objectMapper.writeValueAsString(requestWrapperHistory);
 		mockBean.perform(post(DPM_URL).contentType(MediaType.APPLICATION_JSON).content(req))
-				.andExpect(status().isOk());
+				.andExpect(status().isInternalServerError());
 	}
 
 	@Test
