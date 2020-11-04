@@ -18,6 +18,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +46,9 @@ import io.mosip.kernel.masterdata.exception.MasterDataServiceException;
 public class MasterDataFilterHelper {
 
 	private static List<Class<?>> classes = null;
+	
+	@Autowired
+	private MasterdataSearchHelper masterdataSearchHelper;
 
 	@PostConstruct
 	private static void init() {
@@ -224,7 +228,7 @@ public class MasterDataFilterHelper {
 	private <E> void buildOptionalFilter(CriteriaBuilder builder, Root<E> root,
 			final List<SearchFilter> optionalFilters, List<Predicate> predicates) {
 		if (optionalFilters != null && !optionalFilters.isEmpty()) {
-			List<Predicate> optionalPredicates = optionalFilters.stream().map(i -> buildFilters(builder, root, i))
+			List<Predicate> optionalPredicates = optionalFilters.stream().map(i -> masterdataSearchHelper.buildFilters(builder, root, i))
 					.filter(Objects::nonNull).collect(Collectors.toList());
 			if (!optionalPredicates.isEmpty()) {
 				Predicate orPredicate = builder
@@ -234,11 +238,5 @@ public class MasterDataFilterHelper {
 		}
 	}
 
-	private <E> Predicate buildFilters(CriteriaBuilder builder, Root<E> root, SearchFilter filter) {
-		String columnName = filter.getColumnName();
-		String value = filter.getValue();
-
-		return builder.equal(root.get(columnName), value);
-
-	}
+	
 }

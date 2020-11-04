@@ -205,7 +205,7 @@ public class MasterdataSearchHelper {
 	 * @param filter  search filter
 	 * @return {@link Predicate}
 	 */
-	private <E> Predicate buildFilters(CriteriaBuilder builder, Root<E> root, SearchFilter filter) {
+	protected <E> Predicate buildFilters(CriteriaBuilder builder, Root<E> root, SearchFilter filter) {
 		String columnName = filter.getColumnName();
 		String value = filter.getValue();
 		String filterType = filter.getType();
