@@ -9,7 +9,6 @@ import io.mosip.commons.packet.dto.packet.FieldValueArray;
 import io.mosip.commons.packet.exception.GetAllMetaInfoException;
 import io.mosip.commons.packet.exception.PacketKeeperException;
 import io.mosip.commons.packet.keeper.PacketKeeper;
-import io.mosip.kernel.core.cbeffutil.spi.CbeffUtil;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectIOException;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectValidationFailedException;
 import io.mosip.kernel.core.idobjectvalidator.exception.InvalidIdSchemaException;
@@ -67,9 +66,6 @@ public class PacketValidator {
 
     @Autowired
     private IdSchemaUtils idSchemaUtils;
-
-    @Autowired
-    private CbeffUtil cbeffUtil;
 
     @Autowired
     private AuditLogEntry auditLogEntry;
