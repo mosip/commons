@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import io.mosip.kernel.core.notification.model.SMSResponseDto;
 import io.mosip.kernel.core.notification.spi.SMSServiceProvider;
 import io.mosip.kernel.emailnotification.service.SmsNotification;
-import io.mosip.kernel.smsserviceprovider.msg91.constant.SmsPropertyConstant;
 
 /**
  * This service class send SMS on the contact number provided.
@@ -30,6 +29,8 @@ public class SmsNotificationServiceImpl implements SmsNotification {
 	@Value("${mosip.kernel.sms.proxy-sms:false}")
 	private boolean isProxytrue;
 
+	@Value("${mosip.kernel.sms.success-message:SMS request sent")
+	private String sucessMessage;
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -41,7 +42,7 @@ public class SmsNotificationServiceImpl implements SmsNotification {
 	public SMSResponseDto sendSmsNotification(String contactNumber, String contentMessage) {
 		if (activeProfile.equalsIgnoreCase("local") || isProxytrue) {
 			SMSResponseDto smsResponseDTO = new SMSResponseDto();
-			smsResponseDTO.setMessage(SmsPropertyConstant.SUCCESS_RESPONSE.getProperty());
+			smsResponseDTO.setMessage(sucessMessage);
 			smsResponseDTO.setStatus("success");
 			return smsResponseDTO;
 		}
