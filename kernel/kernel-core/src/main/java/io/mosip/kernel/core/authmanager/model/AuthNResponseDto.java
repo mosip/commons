@@ -28,4 +28,6 @@ public class AuthNResponseDto {
 
 	private String status;
 
+	private long refreshExpiryTime;
+
 }

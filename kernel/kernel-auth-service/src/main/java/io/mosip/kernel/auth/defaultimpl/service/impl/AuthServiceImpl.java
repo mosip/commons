@@ -270,6 +270,7 @@ public class AuthServiceImpl implements AuthService {
 		authNResponseDto.setExpiryTime(Long.parseLong(accessTokenResponse.getExpires_in()));
 		authNResponseDto.setStatus(AuthConstant.SUCCESS_STATUS);
 		authNResponseDto.setMessage(AuthConstant.USERPWD_SUCCESS_MESSAGE);
+		authNResponseDto.setRefreshExpiryTime(Long.parseLong(accessTokenResponse.getRefresh_expires_in()));
 		return authNResponseDto;
 	}
 
@@ -411,8 +412,8 @@ public class AuthServiceImpl implements AuthService {
 	/**
 	 * Method used for generating refresh token
 	 * 
-	 * @param existingToken
-	 *            existing token
+	 * @param refreshToken
+	 *            existing refresh token
 	 * 
 	 * @return mosipUserDtoToken is of type {@link MosipUserTokenDto}
 	 * 
