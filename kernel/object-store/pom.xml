@@ -103,7 +103,7 @@
 		<google.zxing.version>3.3.3</google.zxing.version>
 		<hadoop-client>3.1.0</hadoop-client>
 		<htrace-core4>4.1.0-incubating</htrace-core4>
-		<aws.javasdk.version>1.11.368</aws.javasdk.version>
+		<aws.javasdk.version>1.11.892</aws.javasdk.version>
 		<s3mock.version>0.2.4</s3mock.version>
 		<ignite.version>2.3.0</ignite.version>
 		<findbugs.version>3.0.1</findbugs.version>
