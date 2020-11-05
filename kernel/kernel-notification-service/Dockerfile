@@ -34,6 +34,8 @@ ENV iam_adapter_url_env=${iam_adapter_url}
 
 COPY ./target/kernel-notification-service-*.jar kernel-notification-service.jar
 
+RUN mkdir /mosip-lib/
+
 EXPOSE 8083
 
 CMD if [ "$is_glowroot_env" = "present" ]; then \
@@ -42,12 +44,12 @@ CMD if [ "$is_glowroot_env" = "present" ]; then \
     unzip glowroot.zip ; \
     rm -rf glowroot.zip ; \
     sed -i 's/<service_name>/kernel-notification-service/g' glowroot/glowroot.properties ; \
-    
-     wget "${iam_adapter_url_env}" -O kernel-auth-adapter.jar; \
-    java -jar -javaagent:glowroot/glowroot.jar -Dloader.path=./kernel-auth-adapter.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" kernel-notification-service.jar ; \
+     wget "${runtime_dep_url_env}/kernel-auth-adapter.jar" -O ./mosip-lib/kernel-auth-adapter.jar; \
+     wget "${runtime_dep_url_env}/kernel-smsserviceprovider-msg91.jar" -O ./mosip-lib/kernel-smsserviceprovider-msg91.jar; \
+    java -jar -javaagent:glowroot/glowroot.jar -Dloader.path=./mosip-lib/ -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" kernel-notification-service.jar ; \
     else \
-    
-     wget "${iam_adapter_url_env}" -O kernel-auth-adapter.jar; \
-    java -jar -Dloader.path=./kernel-auth-adapter.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" kernel-notification-service.jar ; \
+     wget "${runtime_dep_url_env}/kernel-auth-adapter.jar" -O ./mosip-lib/kernel-auth-adapter.jar; \
+     wget "${runtime_dep_url_env}/kernel-smsserviceprovider-msg91.jar" -O ./mosip-lib/kernel-smsserviceprovider-msg91.jar; \
+    java -jar -Dloader.path=./mosip-lib/ -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" kernel-notification-service.jar ; \
     fi
 
