@@ -273,7 +273,7 @@ public class SyncConfigDetailsServiceImpl implements SyncConfigDetailsService {
 		config.put("registrationConfiguration", getEncryptedData(regConfig, machines.get(0).getPublicKey()));
 		ConfigDto configDto = new ConfigDto();
 		configDto.setConfigDetail(config);
-		LOGGER.info("getConfigDetails() completed");
+		LOGGER.info("getConfigDetails() {} completed", machineName);
 		return configDto;
 	}
 
