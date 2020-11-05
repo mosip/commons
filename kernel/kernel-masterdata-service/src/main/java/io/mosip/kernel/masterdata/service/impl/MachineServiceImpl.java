@@ -418,9 +418,10 @@ public class MachineServiceImpl implements MachineService {
 				if (filterValidator.validate(MachineTypeDto.class, Arrays.asList(filter))) {
 					List<Object[]> machineSpecs = machineRepository
 							.findMachineSpecByMachineTypeNameAndLangCode(typeName, langCode);
-					removeList.add(filter);
+					
 					addList.addAll(buildMachineSpecificationSearchFilter(machineSpecs));
 				}
+				removeList.add(filter);
 			}
 
 		}
@@ -452,8 +453,12 @@ public class MachineServiceImpl implements MachineService {
 			OptionalFilter optionalFilter = new OptionalFilter(addList);
 			OptionalFilter zoneOptionalFilter = new OptionalFilter(zoneFilter);
 			Page<Machine> page = null;
-			if (mapStatusList.isEmpty() || addList.isEmpty()) {
+			if(typeName!=null &&!typeName.isEmpty() && addList.isEmpty()) {
+				page = masterdataSearchHelper.nativeMachineQuerySearch(dto, typeName, zones, isAssigned);
+			}
+			else if (mapStatusList.isEmpty() || addList.isEmpty()) {
 				addList.addAll(mapStatusList);
+				optionalFilter = new OptionalFilter(addList);
 				page = masterdataSearchHelper.searchMasterdata(Machine.class, dto,
 						new OptionalFilter[] { optionalFilter, zoneOptionalFilter });
 			} else {
