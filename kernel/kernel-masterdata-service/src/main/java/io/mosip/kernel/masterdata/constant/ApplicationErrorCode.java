@@ -10,7 +10,9 @@ public enum ApplicationErrorCode {
 	APPLICATION_FETCH_EXCEPTION("KER-MSD-001", "Error occurred while fetching Applications"),
 	APPLICATION_INSERT_EXCEPTION("KER-MSD-101", "Error occurred while inserting application details"),
 	APPLICATION_NOT_FOUND_EXCEPTION("KER-MSD-002", "Application not found"),
-	APPLICATION_REQUEST_EXCEPTION("KER-MSD-201", "Bad Request Found");
+	APPLICATION_REQUEST_EXCEPTION("KER-MSD-201", "Bad Request Found"),
+	APPLICATION_CONFIG_FETCH_EXCEPTION("KER-MSD-001", "Error occurred while fetching Application config");
+
 
 	private final String errorCode;
 	private final String errorMessage;
