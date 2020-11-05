@@ -33,7 +33,7 @@
         <kernel.keygenerator.bouncycastle.version>1.2.0-SNAPSHOT</kernel.keygenerator.bouncycastle.version>
         <swagger.version>2.9.2</swagger.version>
         <powermock.beta.version>2.0.7</powermock.beta.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
 
         <kernel-keymanager-service.version>1.2.0-SNAPSHOT</kernel-keymanager-service.version>
         <kernel.core.version>1.2.0-SNAPSHOT</kernel.core.version>
