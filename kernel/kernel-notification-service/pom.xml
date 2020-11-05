@@ -226,7 +226,6 @@
 		<kernel.applicant-type.version>1.2.0-SNAPSHOT</kernel.applicant-type.version>
 		<kernel.dataaccess-hibernate.version>1.2.0-SNAPSHOT</kernel.dataaccess-hibernate.version>
 		<kernel.logger.version>1.2.0-SNAPSHOT</kernel.logger.version>
-		<kernel.smsserviceprovider.msg91.version>1.2.0-SNAPSHOT</kernel.smsserviceprovider.msg91.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -250,6 +249,11 @@
 			<version>${spring.boot.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<version>${spring.boot.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<version>${spring.security.test.version}</version>
@@ -258,11 +262,6 @@
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-logger-logback</artifactId>
 			<version>${kernel.logger.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-smsserviceprovider-msg91</artifactId>
-			<version>${kernel.smsserviceprovider.msg91.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
