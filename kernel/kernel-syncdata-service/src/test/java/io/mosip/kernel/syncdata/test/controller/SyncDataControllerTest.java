@@ -341,5 +341,5 @@ public class SyncDataControllerTest {
 		when(syncConfigDetailsService.getConfigDetails("testmachine")).thenReturn(configDto);
 		mockMvc.perform(get("/configs/testmachine")).andExpect(status().isOk());
 	}
-	
+
 }

@@ -324,8 +324,9 @@ public class ProxyAuthServiceImpl implements AuthService {
 		logger.debug("token craeted for subject {} to expire at {}", subject, exp);
 		AuthNResponseDto authNResponseDto = new AuthNResponseDto();
 		authNResponseDto.setToken(token);
-		authNResponseDto.setRefreshToken(null);
+		authNResponseDto.setRefreshToken(token);
 		authNResponseDto.setExpiryTime(exp);
+		authNResponseDto.setRefreshExpiryTime(exp);
 		authNResponseDto.setStatus(status);
 		authNResponseDto.setMessage(message);
 		return authNResponseDto;

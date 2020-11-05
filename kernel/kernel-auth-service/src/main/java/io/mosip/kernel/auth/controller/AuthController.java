@@ -664,4 +664,17 @@ public class AuthController {
 		cookie.setMaxAge(0);
 	}
 
+
+	@ResponseFilter
+	@PostMapping(value = "/authenticate/internal/useridPwd")
+	public ResponseWrapper<AuthNResponseDto> getAllAuthTokens(@RequestBody @Valid RequestWrapper<LoginUser> request,
+																HttpServletResponse res) throws Exception {
+		LOGGER.info("getAllAuthTokens >>>> {}", request.getRequest());
+		ResponseWrapper<AuthNResponseDto> responseWrapper = new ResponseWrapper<>();
+		AuthNResponseDto authResponseDto = authService.authenticateUser(request.getRequest());
+		responseWrapper.setResponse(authResponseDto);
+		LOGGER.info("getAllAuthTokens responseWrapper >>>> {}", responseWrapper);
+		return responseWrapper;
+	}
+
 }
