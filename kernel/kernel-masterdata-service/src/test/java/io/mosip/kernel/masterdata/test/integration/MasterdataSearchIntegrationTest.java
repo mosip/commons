@@ -828,7 +828,7 @@ public class MasterdataSearchIntegrationTest {
 		Page<Machine> pageContentSpecificationData = new PageImpl<>(Arrays.asList(machine));
 		when(masterdataSearchHelper.searchMasterdata(Mockito.eq(MachineType.class), Mockito.any(), Mockito.any()))
 				.thenReturn(pageContentData);
-		when(masterdataSearchHelper.searchMasterdata(Mockito.eq(Machine.class), Mockito.any(), Mockito.any()))
+		when(masterdataSearchHelper.nativeMachineQuerySearch(Mockito.any(SearchDto.class), Mockito.anyString(), Mockito.anyList(),Mockito.any(boolean.class)))
 				.thenReturn(pageContentSpecificationData);
 		mockMvc.perform(post("/machines/search").contentType(MediaType.APPLICATION_JSON).content(json))
 				.andExpect(status().isOk());
