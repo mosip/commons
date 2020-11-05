@@ -1,5 +1,6 @@
 package io.mosip.commons.khazana.impl;
 
+import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -51,8 +53,11 @@ public class S3Adapter implements ObjectStoreAdapter {
     @Value("${object.store.s3.readlimit:10000000}")
     private int readlimit;
 
-    @Value("${object.store.connection.max.retry:5}")
+    @Value("${object.store.connection.max.retry:20}")
     private int maxRetry;
+
+    @Value("${object.store.max.connection:200}")
+    private int maxConnection;
 
     private int retry = 0;
 
@@ -65,8 +70,9 @@ public class S3Adapter implements ObjectStoreAdapter {
         try {
             s3Object = getConnection(container).getObject(container, finalObjectName);
             if (s3Object != null) {
-                ByteArrayInputStream bis = new ByteArrayInputStream(IOUtils.toByteArray(s3Object.getObjectContent()));
-                s3Object.close();
+                ByteArrayOutputStream temp = new ByteArrayOutputStream();
+                IOUtils.copy(s3Object.getObjectContent(), temp);
+                ByteArrayInputStream bis = new ByteArrayInputStream(temp.toByteArray());
                 return bis;
             }
         } catch (Exception e) {
@@ -225,7 +231,9 @@ public class S3Adapter implements ObjectStoreAdapter {
         }
         try {
             AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
-            connection = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCredentials)).enablePathStyleAccess()
+            connection = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
+                    .enablePathStyleAccess().withClientConfiguration(new ClientConfiguration().withMaxConnections(maxConnection)
+                            .withMaxErrorRetry(maxRetry))
                     .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(url, region)).build();
             // test connection once before returning it
             connection.doesBucketExistV2(container);

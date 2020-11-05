@@ -98,7 +98,7 @@ public class SchemaController {
 	
 	@ResponseFilter
 	@GetMapping("/latest")
-	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN','REGISTRATION_CLIENT')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN','REGISTRATION_CLIENT','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_PROCESSOR','RESIDENT')")
 	@ApiOperation(value = "Service to fetch latest published identity schema")
 	public ResponseWrapper<IdSchemaResponseDto> getLatestPublishedSchema(
 			@RequestParam(name = "schemaVersion", defaultValue = "0", required = false) @ApiParam(value = "schema version", defaultValue = "0") double schemaVersion) {
