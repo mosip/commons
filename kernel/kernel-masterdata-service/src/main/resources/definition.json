@@ -23,6 +23,11 @@
 		},
 		"documentType": {
 			"type": "object",
+			"required": [
+				"format",
+				"type",
+				"value"
+			],
 			"additionalProperties": false,
 			"properties": {
 				"format": {
@@ -33,6 +38,9 @@
 				},
 				"value": {
 					"type": "string"
+				},
+				"refNumber" : {
+					"type" : "string"
 				}
 			}
 		},
