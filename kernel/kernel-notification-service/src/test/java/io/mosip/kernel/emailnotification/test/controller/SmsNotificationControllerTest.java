@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.notification.model.SMSResponseDto;
+import io.mosip.kernel.core.notification.spi.SMSServiceProvider;
 import io.mosip.kernel.emailnotification.dto.SmsRequestDto;
 import io.mosip.kernel.emailnotification.service.impl.SmsNotificationServiceImpl;
 import io.mosip.kernel.emailnotification.test.NotificationTestBootApplication;
@@ -42,6 +43,9 @@ public class SmsNotificationControllerTest {
 
 	@MockBean
 	SmsNotificationServiceImpl service;
+	
+	@MockBean
+	private SMSServiceProvider sMSServiceProvider;
 
 	@WithUserDetails("individual")
 	@Test
