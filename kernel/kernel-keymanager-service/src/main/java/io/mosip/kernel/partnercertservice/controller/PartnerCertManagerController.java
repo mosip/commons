@@ -15,6 +15,8 @@ import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.partnercertservice.dto.CACertificateResponseDto;
+import io.mosip.kernel.partnercertservice.dto.CertificateTrustRequestDto;
+import io.mosip.kernel.partnercertservice.dto.CertificateTrustResponeDto;
 import io.mosip.kernel.partnercertservice.dto.CACertificateRequestDto;
 import io.mosip.kernel.partnercertservice.dto.PartnerCertDownloadRequestDto;
 import io.mosip.kernel.partnercertservice.dto.PartnerCertDownloadResponeDto;
@@ -38,7 +40,7 @@ import io.swagger.annotations.ApiParam;
 public class PartnerCertManagerController {
 	
 	/**
-	 * Instance for KeymanagerService
+	 * Instance for PartnerCertificateManagerService
 	 */
 	@Autowired
 	PartnerCertificateManagerService partnerCertManagerService;
@@ -93,6 +95,23 @@ public class PartnerCertManagerController {
 		ResponseWrapper<PartnerCertDownloadResponeDto> response = new ResponseWrapper<>();
 		response.setResponse(partnerCertManagerService.getPartnerCertificate(certDownloadRequestDto));
 		return response;
-    }
+	}
+	
+	/**
+	 * To Upload Partner Certificate.
+	 * 
+	 * @param certificateTrustRequestDto {@CertificateTrustRequestDto CertificateTrustDto} request
+	 * @return {@link CertificateTrustResponeDto} certificate verify response
+	 */
+	//@PreAuthorize("hasAnyRole('INDIVIDUAL', 'ID_AUTHENTICATION', 'PMS_USER')")
+	@ResponseFilter
+	@PostMapping(value = "/verifyCertificateTrust", produces = "application/json")
+	public ResponseWrapper<CertificateTrustResponeDto> verifyCertificateTrust(
+			@ApiParam("Upload Partner Certificates.") @RequestBody @Valid RequestWrapper<CertificateTrustRequestDto> certificateTrustRequestDto) {
+
+		ResponseWrapper<CertificateTrustResponeDto> response = new ResponseWrapper<>();
+		response.setResponse(partnerCertManagerService.verifyCertificateTrust(certificateTrustRequestDto.getRequest()));
+		return response;
+	}
     
 }

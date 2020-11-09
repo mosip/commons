@@ -38,7 +38,7 @@ public interface KeymanagerService {
 	 * @param referenceId   referenceId
 	 * @return {@link PublicKeyResponse} instance
 	 */
-	public PublicKeyResponse<String> getPublicKey(String applicationId, String timeStamp, Optional<String> referenceId);
+	//public PublicKeyResponse<String> getPublicKey(String applicationId, String timeStamp, Optional<String> referenceId);
 
 	public PublicKeyResponse<String> getSignPublicKey(String applicationId, String timeStamp,
 			Optional<String> referenceId);

@@ -380,9 +380,9 @@ public class ZKCryptoManagerServiceImpl implements ZKCryptoManagerService, Initi
 		X509Certificate x509Cert = (X509Certificate) keymanagerUtil.convertToCertificate(certificateData);
 		PublicKey publicKey = x509Cert.getPublicKey();
 		byte[] encryptedRandomKey = cryptoCore.asymmetricEncrypt(publicKey, secretRandomKey.getEncoded());
-		//byte[] certThumbprint = cryptomanagerUtil.getCertificateThumbprint(x509Cert);
-		//byte[] concatedData = cryptomanagerUtil.concatCertThumbprint(certThumbprint, encryptedRandomKey);
-		return CryptoUtil.encodeBase64(encryptedRandomKey);
+		byte[] certThumbprint = cryptomanagerUtil.getCertificateThumbprint(x509Cert);
+		byte[] concatedData = cryptomanagerUtil.concatCertThumbprint(certThumbprint, encryptedRandomKey);
+		return CryptoUtil.encodeBase64(concatedData);
 	}
 
 	@Override
@@ -397,7 +397,7 @@ public class ZKCryptoManagerServiceImpl implements ZKCryptoManagerService, Initi
 		}
 		LocalDateTime localDateTimeStamp = DateUtils.getUTCCurrentDateTime();
 		SymmetricKeyRequestDto symmetricKeyRequestDto = new SymmetricKeyRequestDto(
-									pubKeyApplicationId, localDateTimeStamp, pubKeyReferenceId, encryptedKey);
+									pubKeyApplicationId, localDateTimeStamp, pubKeyReferenceId, encryptedKey, true);
 		String randomKey = keyManagerService.decryptSymmetricKey(symmetricKeyRequestDto).getSymmetricKey();
 		String encryptedRandomKey = getEncryptedRandomKey(Base64.getEncoder().encodeToString(CryptoUtil.decodeBase64(randomKey)));
 		ReEncryptRandomKeyResponseDto responseDto = new ReEncryptRandomKeyResponseDto();
