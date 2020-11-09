@@ -160,7 +160,7 @@
 		<module>kernel-masterdata-service</module>
 		<module>kernel-auditmanager-service</module>
 		<module>kernel-otpmanager-service</module>
-		<!--<module>kernel-notification-service</module> -->
+		<module>kernel-notification-service</module>
 		<module>kernel-syncdata-service</module>
 		<module>kernel-auth-service</module>
 		<module>kernel-ridgenerator-service</module>
