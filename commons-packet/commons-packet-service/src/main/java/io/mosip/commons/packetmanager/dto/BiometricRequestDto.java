@@ -12,7 +12,7 @@ public class BiometricRequestDto {
 
     private String id;
     private String person;
-    private List<BiometricType> modalities;
+    private List<String> modalities;
     private String source;
     private String process;
     private boolean bypassCache;
