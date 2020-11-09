@@ -212,7 +212,7 @@ public class HolidayServiceImpl implements HolidayService {
 				List<Location> locations =locationRepository.findByCode(holidayDto.getLocationCode());
 				if(locations==null || locations.isEmpty()) {
 					auditUtil.auditRequest(
-							String.format(MasterDataConstant.FAILURE_UPDATE, Holiday.class.getSimpleName()),
+							String.format(MasterDataConstant.FAILURE_CREATE, Holiday.class.getSimpleName()),
 							MasterDataConstant.AUDIT_SYSTEM,
 							String.format(MasterDataConstant.FAILURE_DESC,
 									HolidayErrorCode.HOLIDAY_LOCATION_INVALID.getErrorCode(),
@@ -221,10 +221,22 @@ public class HolidayServiceImpl implements HolidayService {
 					throw new RequestException(HolidayErrorCode.HOLIDAY_LOCATION_INVALID.getErrorCode(),
 							HolidayErrorCode.HOLIDAY_LOCATION_INVALID.getErrorMessage());
 				}
-				holidayDto.setIsActive(getisActive(holidayDto.getHolidayDate(),holidayDto.getLangCode(),
+				if(holidayRepository.findHolidayByHolidayNameHolidayDateLocationCodeLangCode(holidayDto.getHolidayName(),holidayDto.getHolidayDate(),
+						holidayDto.getLocationCode(),holidayDto.getLangCode()) != null){
+					auditUtil.auditRequest(
+							String.format(MasterDataConstant.FAILURE_CREATE, Holiday.class.getSimpleName()),
+							MasterDataConstant.AUDIT_SYSTEM,
+							String.format(MasterDataConstant.FAILURE_DESC,
+									HolidayErrorCode.DUPLICATE_REQUEST.getErrorCode(),
+									HolidayErrorCode.DUPLICATE_REQUEST.getErrorMessage()),
+							"ADM-2164");
+					throw new RequestException(HolidayErrorCode.DUPLICATE_REQUEST.getErrorCode(),
+							HolidayErrorCode.DUPLICATE_REQUEST.getErrorMessage());
+				}
+				holidayDto.setIsActive(getisActive(holidayDto.getHolidayName(),holidayDto.getHolidayDate(),holidayDto.getLangCode(),
 						holidayDto.getLocationCode(),holidayDto.getIsActive()));
 				entity = MetaDataUtils.setCreateMetaData(holidayDto, Holiday.class);
-				List<Holiday> hols=holidayRepository.findHolidayByHolidayDate(holidayDto.getHolidayDate());
+				List<Holiday> hols=holidayRepository.findHolidayByHolidayDateHolidayName(holidayDto.getHolidayDate(),holidayDto.getHolidayName());
 				List<Holiday> holidays=holidayRepository.findAll();
 			
 				if(holidays==null || holidays.isEmpty() ) {
@@ -244,7 +256,7 @@ public class HolidayServiceImpl implements HolidayService {
 			
 			holiday = holidayRepository.create(entity);
 			if(holiday.getIsActive()==true && holiday.getLangCode().equalsIgnoreCase(secondaryLang)) {
-				Holiday primholiday=holidayRepository.findHolidayByHolidayDateLocationCodeLangCode(holiday.getHolidayDate(),
+				Holiday primholiday=holidayRepository.findHolidayByHolidayNameHolidayDateLocationCodeLangCode(holiday.getHolidayName(),holiday.getHolidayDate(),
 						holiday.getLocationCode(),primaryLang);
 				primholiday.setIsActive(true);
 				holidayRepository.update(primholiday);
@@ -268,16 +280,16 @@ public class HolidayServiceImpl implements HolidayService {
 		return holidayId;
 	}
 
-	private boolean getisActive(LocalDate holidayDate,String langCode,String locationCode,boolean isActive) {
+	private boolean getisActive(String holidayName,LocalDate holidayDate,String langCode,String locationCode,boolean isActive) {
 		if(langCode.equalsIgnoreCase(primaryLang)) {
-			Holiday holiday=holidayRepository.findHolidayByHolidayDateLocationCodeLangCode(holidayDate,
+			Holiday holiday=holidayRepository.findHolidayByHolidayNameHolidayDateLocationCodeLangCode(holidayName,holidayDate,
 					locationCode,secondaryLang);
 			if(holiday==null) {
 				return false;
 			}
 		}
 		if(langCode.equalsIgnoreCase(secondaryLang)) {
-			Holiday holiday=holidayRepository.findHolidayByHolidayDateLocationCodeLangCode(holidayDate,
+			Holiday holiday=holidayRepository.findHolidayByHolidayNameHolidayDateLocationCodeLangCode(holidayName,holidayDate,
 					locationCode,primaryLang);
 			if(holiday==null) {
 				throw new MasterDataServiceException(RequestErrorCode.REQUEST_INVALID_SEC_LANG_ID.getErrorCode(),
@@ -309,7 +321,7 @@ public class HolidayServiceImpl implements HolidayService {
 				throw new RequestException(HolidayErrorCode.UPDATE_HOLIDAY_LOCATION_INVALID.getErrorCode(),
 						HolidayErrorCode.UPDATE_HOLIDAY_LOCATION_INVALID.getErrorMessage());
 			}
-			holidayDto.setIsActive(getisActive(holidayDto.getHolidayDate(),holidayDto.getLangCode(),
+			holidayDto.setIsActive(getisActive(holidayDto.getHolidayName(),holidayDto.getHolidayDate(),holidayDto.getLangCode(),
 					holidayDto.getLocationCode(),holidayDto.getIsActive()));
 			Map<String, Object> params = bindDtoToMap(holidayDto);
 			int noOfRowAffected = holidayRepository.createQueryUpdateOrDelete(UPDATE_HOLIDAY_QUERY, params);			
