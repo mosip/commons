@@ -61,19 +61,25 @@ public class CryptomanagerRequestDto {
 	 * Salt to be passed as IV
 	 */
 	@Pattern(regexp = CryptomanagerConstant.EMPTY_REGEX, message = CryptomanagerConstant.EMPTY_ATTRIBUTE)
-	@ApiModelProperty(notes = " Base64 Encoded Salt to be send as IV", example = "LA7YcvP9DdLIVI5CwFt1SQ")
+	@ApiModelProperty(notes = " Base64 Encoded Salt to be send as IV", example = "YiGFRjiV7WMFIscV")
 	private String salt;
 
 	/**
 	 * AAD to be passed
 	 */
 	@Pattern(regexp = CryptomanagerConstant.EMPTY_REGEX, message = CryptomanagerConstant.EMPTY_ATTRIBUTE)
-	@ApiModelProperty(notes = " Base64 Encoded AAD(Advance Authentication Data)", example = "VGhpcyBpcyBzYW1wbGUgYWFk")
+	@ApiModelProperty(notes = " Base64 Encoded AAD(Advance Authentication Data)", example = "pfxeERQk57XJBJ9JF0oBAtrTzofhAPw54HnJtwW36l4=")
 	private String aad;
+
+	/**
+	* flag to prepend certificate thumbprint, default to true. 
+	*/
+	@ApiModelProperty(notes = "flag to prepend certificate thumbprint to encrypted data.", example = "false", required = false)
+	private Boolean prependThumbprint;
 
 	@Override
 	public String toString() {
 		return "CryptomanagerRequestDto [applicationId=" + applicationId + ", referenceId=" + referenceId
-				+ ", timeStamp=" + timeStamp + ", data=" + data + ", salt=" + salt + "]";
+				+ ", timeStamp=" + timeStamp + ", salt=" + salt + "]";
 	}
 }

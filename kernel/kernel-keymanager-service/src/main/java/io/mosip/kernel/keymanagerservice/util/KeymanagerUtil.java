@@ -313,6 +313,16 @@ public class KeymanagerUtil {
 		}
 	}
 
+	public Certificate convertToCertificate(byte[] certDataBytes) {
+		try {
+			CertificateFactory certFactory = CertificateFactory.getInstance(KeymanagerConstant.CERTIFICATE_TYPE);
+			return certFactory.generateCertificate(new ByteArrayInputStream(certDataBytes));
+		} catch(CertificateException e) {
+			throw new KeymanagerServiceException(KeymanagerErrorConstant.CERTIFICATE_PARSING_ERROR.getErrorCode(),
+					KeymanagerErrorConstant.CERTIFICATE_PARSING_ERROR.getErrorMessage() + e.getMessage());
+		}
+	}
+
 	public String getPEMFormatedData(Object anyObject){
 		
 		StringWriter stringWriter = new StringWriter();
