@@ -1,6 +1,7 @@
 ﻿id,name,descr,lang_code,is_active,cr_by,cr_dtimes
 10001,Pre-Registration,Web portal for pre-registrations,eng,TRUE,superadmin,now()
 10001,ما قبل التسجيل,بوابة الويب للتسجيلات المسبقة,ara,TRUE,superadmin,now()
+10002,Partner Management,Application for partner management process,eng,TRUE,superadmin,now()
 10003,Registration Client,Desktop application for Registrations,eng,TRUE,superadmin,now()
 10003,عميل التسجيل,تطبيق سطح المكتب للتسجيلات,ara,TRUE,superadmin,now()
 10005,Registration Processor,Application for post-registration process,eng,TRUE,superadmin,now()
