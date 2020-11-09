@@ -30,6 +30,11 @@ public class HolidaySearchDto extends BaseDto {
 	@Size(min = 1, max = 36)
 	@NotBlank
 	private String name;
+	
+	@Size(min = 1, max = 36)
+	@NotBlank
+	@FilterType(types = {  FilterTypeEnum.EQUALS })
+	private String locationCode;
 
 	@NotNull
 	@FilterType(types = { FilterTypeEnum.BETWEEN, FilterTypeEnum.EQUALS })

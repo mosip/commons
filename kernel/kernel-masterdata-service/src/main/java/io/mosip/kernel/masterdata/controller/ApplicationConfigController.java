@@ -12,7 +12,7 @@ import io.mosip.kernel.masterdata.dto.getresponse.ApplicationConfigResponseDto;
 import io.mosip.kernel.masterdata.service.ApplicationConfigService;
 import io.swagger.annotations.Api;
 
-@Api(tags = { "Application" })
+@Api(tags = { "Application Configs" })
 @RestController
 @RequestMapping("/applicationconfigs")
 public class ApplicationConfigController {

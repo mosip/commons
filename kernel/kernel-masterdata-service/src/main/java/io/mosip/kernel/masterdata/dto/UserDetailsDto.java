@@ -43,6 +43,10 @@ public class UserDetailsDto {
 	@NotNull
 	@StringFormatter(min = 1, max = 16)
 	private String statusCode;
+	
+	@NotNull
+	@StringFormatter(min = 1, max = 10)
+	private String regCenterId;
 
 	@NotNull
 	private Boolean isActive;
