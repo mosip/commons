@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -110,7 +111,6 @@ public class SyncAuthTokenServiceImpl {
                 MachineAuthDto machineAuthDto = objectMapper.readValue(payload, MachineAuthDto.class);
                 ResponseWrapper<TokenResponseDto> responseWrapper = getTokenResponseDTO(machineAuthDto);
                 String token = objectMapper.writeValueAsString(responseWrapper.getResponse());
-                logger.info("token >>>> {}", token);
                 byte[] cipher = clientCryptoFacade.encrypt(CryptoUtil.decodeBase64(machine.getPublicKey()),
                         token.getBytes(), this.isTPMRequired);
                 return CryptoUtil.encodeBase64(cipher);
@@ -180,10 +180,9 @@ public class SyncAuthTokenServiceImpl {
                 RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest();
                 refreshTokenRequest.setClientID(clientId);
                 refreshTokenRequest.setClientSecret(secretKey);
-                RequestWrapper<RefreshTokenRequest> refreshRequestWrapper = new RequestWrapper();
-                refreshRequestWrapper.setRequest(refreshTokenRequest);
-                HttpEntity<RequestWrapper<RefreshTokenRequest>> httpEntity = new HttpEntity<>(refreshRequestWrapper);
-                httpEntity.getHeaders().set("Cookie", String.format("refresh_token=%s", machineAuthDto.getRefreshToken()));
+                HttpHeaders httpHeaders = new HttpHeaders();
+                httpHeaders.set("Cookie", String.format("refresh_token=%s", machineAuthDto.getRefreshToken()));
+                HttpEntity<RefreshTokenRequest> httpEntity = new HttpEntity<>(refreshTokenRequest, httpHeaders);
                 UriComponentsBuilder refreshRequestBuilder = UriComponentsBuilder.fromUriString(refreshAuthTokenInternalUrl);
                 responseEntity = restTemplate.postForEntity(refreshRequestBuilder.build().toUri(), httpEntity, String.class);
                 break;
