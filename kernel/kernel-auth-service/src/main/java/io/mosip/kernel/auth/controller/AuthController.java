@@ -665,15 +665,70 @@ public class AuthController {
 	}
 
 
+	/**
+	 * Internal API used by syncdata delegate API
+	 * @param request
+	 * @param res
+	 * @return
+	 * @throws Exception
+	 */
 	@ResponseFilter
 	@PostMapping(value = "/authenticate/internal/useridPwd")
 	public ResponseWrapper<AuthNResponseDto> getAllAuthTokens(@RequestBody @Valid RequestWrapper<LoginUser> request,
 																HttpServletResponse res) throws Exception {
-		LOGGER.info("getAllAuthTokens >>>> {}", request.getRequest());
 		ResponseWrapper<AuthNResponseDto> responseWrapper = new ResponseWrapper<>();
 		AuthNResponseDto authResponseDto = authService.authenticateUser(request.getRequest());
 		responseWrapper.setResponse(authResponseDto);
-		LOGGER.info("getAllAuthTokens responseWrapper >>>> {}", responseWrapper);
+		return responseWrapper;
+	}
+
+	/**
+	 * Internal API used by syncdata delegate API
+	 * @param request
+	 * @param res
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseFilter
+	@PostMapping(value = "/authenticate/internal/userotp")
+	public ResponseWrapper<AuthNResponseDto> getAllAuthTokensForOTP(@RequestBody @Valid RequestWrapper<UserOtp> request,
+															  HttpServletResponse res) throws Exception {
+		ResponseWrapper<AuthNResponseDto> responseWrapper = new ResponseWrapper<>();
+		AuthNResponseDto authResponseDto = authService.authenticateUserWithOtp(request.getRequest());
+		responseWrapper.setResponse(authResponseDto);
+		return responseWrapper;
+	}
+
+	/**
+	 * Internal API used by syncdata delegate API
+	 * @param appId
+	 * @param refreshTokenRequest
+	 * @param request
+	 * @param res
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseFilter
+	@PostMapping(value = "/authorize/internal/refreshToken/{appid}")
+	public ResponseWrapper<AuthNResponseDto> refreshAuthToken(@PathVariable("appid") String appId,@RequestBody RefreshTokenRequest refreshTokenRequest,
+													   HttpServletRequest request, HttpServletResponse res) throws Exception {
+		ResponseWrapper<AuthNResponseDto> responseWrapper = new ResponseWrapper<>();
+		String refreshToken = null;
+		Cookie[] cookies = request.getCookies();
+		for (Cookie cookie : cookies) {
+			if (cookie.getName().contains(AuthConstant.REFRESH_TOKEN)) {
+				refreshToken = cookie.getValue();
+				LOGGER.info("refresh token for app " + appId + " from cookie " + cookie.getName());
+			}
+		}
+		Objects.requireNonNull(refreshToken, "No refresh token cookie found");
+		RefreshTokenResponse mosipUserDtoToken = authService.refreshToken(appId,refreshToken, refreshTokenRequest);
+		AuthNResponseDto authNResponseDto = new AuthNResponseDto();
+		authNResponseDto.setToken(mosipUserDtoToken.getAccesstoken());
+		authNResponseDto.setRefreshToken(mosipUserDtoToken.getRefreshToken());
+		authNResponseDto.setExpiryTime(Long.parseLong(mosipUserDtoToken.getAccessTokenExpTime()));
+		authNResponseDto.setRefreshExpiryTime(Long.parseLong(mosipUserDtoToken.getRefreshTokenExpTime()));
+		responseWrapper.setResponse(authNResponseDto);
 		return responseWrapper;
 	}
 

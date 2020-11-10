@@ -292,6 +292,7 @@ public class ProxyAuthServiceImpl implements AuthService {
 			authNResponseDto.setExpiryTime(mosipToken.getExpTime());
 			authNResponseDto.setRefreshToken(mosipToken.getRefreshToken());
 			authNResponseDto.setUserId(mosipToken.getMosipUserDto().getUserId());
+			authNResponseDto.setRefreshExpiryTime(mosipToken.getExpTime());
 		} else {
 			authNResponseDto.setMessage(mosipToken.getMessage());
 			authNResponseDto.setStatus(mosipToken.getStatus());
@@ -334,17 +335,12 @@ public class ProxyAuthServiceImpl implements AuthService {
 
 	/**
 	 * Method used for generating refresh token
-	 * 
-	 * @param existingToken
-	 *            existing token
-	 * 
-	 * @return mosipUserDtoToken is of type {@link MosipUserTokenDto}
-	 * 
+	 * @param appID
+	 * @param refereshToken
+	 * @param refreshTokenRequest
+	 * @return
 	 * @throws Exception
-	 *             exception
-	 * 
 	 */
-
 	@Override
 	public RefreshTokenResponse refreshToken(String appID, String refereshToken,
 			RefreshTokenRequest refreshTokenRequest) throws Exception {

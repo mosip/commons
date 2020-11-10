@@ -252,6 +252,7 @@ public class AuthServiceImpl implements AuthService {
 			response = authRestTemplate.postForEntity(uriComponentsBuilder.buildAndExpand(pathParams).toUriString(),
 					request, AccessTokenResponse.class);
 		} catch (HttpClientErrorException | HttpServerErrorException ex) {
+			LOGGER.error("Exception >>>>>>>>>>>> ", ex);
 			if (ex.getRawStatusCode() == 401) {
 				throw new AuthManagerException(AuthErrorCode.INVALID_CREDENTIALS.getErrorCode(),
 						AuthErrorCode.INVALID_CREDENTIALS.getErrorMessage());
@@ -363,6 +364,7 @@ public class AuthServiceImpl implements AuthService {
 			authNResponseDto.setExpiryTime(mosipToken.getExpTime());
 			authNResponseDto.setRefreshToken(mosipToken.getRefreshToken());
 			authNResponseDto.setUserId(mosipToken.getMosipUserDto().getUserId());
+			authNResponseDto.setRefreshExpiryTime(mosipToken.getRefreshExpTime());
 		} else {
 			authNResponseDto.setMessage(mosipToken.getMessage());
 			authNResponseDto.setStatus(mosipToken.getStatus());
