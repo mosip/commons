@@ -63,20 +63,20 @@ public interface MachineRepository extends JpaRepository<Machine, String> {
 	@Query("From Machine m WHERE lower(m.name) = lower(?1)  and (m.isDeleted is null or m.isDeleted =false) and m.isActive = true")
 	List<Machine> findByMachineNameAndIsActive(String machineName);
 
-	@Query(value = "select distinct mm.regcntr_id , mm.id from  master.machine_master mm where mm.mac_address=?1 and mm.serial_num=?2 and mm.key_index=?3 and mm.is_active=true", nativeQuery = true)
+	@Query(value = "select distinct mm.regcntr_id , mm.id from  master.machine_master mm where mm.mac_address=?1 and mm.serial_num=?2 and lower(mm.key_index) = lower(?3) and mm.is_active=true", nativeQuery = true)
 	List<Object[]> getRegistrationCenterMachineWithMacAddressAndSerialNumAndKeyIndex(String macId, String serialNum,
 			String keyIndex);
 
-	@Query(value = "select distinct mm.regcntr_id , mm.id from  master.machine_master mm where mm.mac_address=?1  and mm.key_index=?2 and mm.is_active=true", nativeQuery = true)
+	@Query(value = "select distinct mm.regcntr_id , mm.id from  master.machine_master mm where mm.mac_address=?1  and lower(mm.key_index) = lower(?2) and mm.is_active=true", nativeQuery = true)
 	List<Object[]> getRegistrationCenterMachineWithMacAddressAndKeyIndex(String macId, String keyIndex);
 
-	@Query(value = "select distinct mm.regcntr_id , mm.id from  master.machine_master mm where mm.serial_num=?1  and mm.key_index=?2 and mm.is_active=true", nativeQuery = true)
+	@Query(value = "select distinct mm.regcntr_id , mm.id from  master.machine_master mm where mm.serial_num=?1  and lower(mm.key_index) = lower(?2) and mm.is_active=true", nativeQuery = true)
 	List<Object[]> getRegistrationCenterMachineWithSerialNumberAndKeyIndex(String serialNum, String keyIndex);
 
 	@Query(value = "select distinct mm.regcntr_id , mm.id from  master.machine_master mm where mm.mac_address=?1  and mm.serial_num=?2 and mm.is_active=true", nativeQuery = true)
 	List<Object[]> getRegistrationCenterMachineWithMacAddressAndSerialNum(String macId, String serialNum);
 
-	@Query(value = "select distinct mm.regcntr_id , mm.id from  master.machine_master mm where mm.key_index=?1 and mm.is_active=true", nativeQuery = true)
+	@Query(value = "select distinct mm.regcntr_id , mm.id from  master.machine_master mm where lower(mm.key_index) = lower(?1) and mm.is_active=true", nativeQuery = true)
 	List<Object[]> getRegistrationCenterMachineWithKeyIndex(String keyIndex);
 	
 	@Query(value = "select distinct mm.regcntr_id , mm.id from  master.machine_master mm where mm.mac_address=?1 and mm.is_active=true", nativeQuery = true)
@@ -92,6 +92,6 @@ public interface MachineRepository extends JpaRepository<Machine, String> {
 	List<Machine> findAllLatestCreatedUpdatedDeleted(String regCenterId, LocalDateTime lastUpdated,
 			LocalDateTime currentTimeStamp);
 
-	@Query("From Machine m WHERE m.signKeyIndex = ?1 and (m.isDeleted is null or m.isDeleted =false) and m.isActive = true")
+	@Query("From Machine m WHERE lower(m.signKeyIndex) = lower(?1) and (m.isDeleted is null or m.isDeleted =false) and m.isActive = true")
 	List<Machine> findBySignKeyIndexAndIsActive(String signKeyIndex);
 }
