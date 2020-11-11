@@ -431,7 +431,7 @@ public class AuthServiceImpl implements AuthService {
 		tokenRequestBody.add(AuthConstant.GRANT_TYPE, AuthConstant.REFRESH_TOKEN);
 		tokenRequestBody.add(AuthConstant.REFRESH_TOKEN, refreshToken);
 		tokenRequestBody.add(AuthConstant.CLIENT_ID, refreshTokenRequest.getClientID());
-		tokenRequestBody.add(AuthConstant.CLIENT_SECRET, refreshTokenRequest.getClientID());
+		tokenRequestBody.add(AuthConstant.CLIENT_SECRET, refreshTokenRequest.getClientSecret());
 		String realmId = authUtil.getRealmIdFromAppId(appID);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
