@@ -142,7 +142,7 @@ public class RegistrationCenterController {
 	 * @return {@link RegistrationCenterResponseDto} RegistrationCenterResponseDto
 	 */
 	@ResponseFilter
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','PRE_REGISTRATION','REGISTRATION_PROCESSOR','ZONAL_ADMIN','GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','PRE_REGISTRATION','REGISTRATION_PROCESSOR','ZONAL_ADMIN','GLOBAL_ADMIN','RESIDENT')")
 	@GetMapping("/registrationcenters/{id}/{langcode}")
 	public ResponseWrapper<RegistrationCenterResponseDto> getSpecificRegistrationCenterById(
 			@PathVariable("id") String registrationCenterId, @PathVariable("langcode") String langCode) {
