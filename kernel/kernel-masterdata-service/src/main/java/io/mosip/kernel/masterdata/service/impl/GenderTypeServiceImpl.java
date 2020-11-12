@@ -1,6 +1,7 @@
 package io.mosip.kernel.masterdata.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -24,7 +25,9 @@ import io.mosip.kernel.masterdata.dto.getresponse.extn.GenderExtnDto;
 import io.mosip.kernel.masterdata.dto.postresponse.CodeResponseDto;
 import io.mosip.kernel.masterdata.dto.request.FilterDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
+import io.mosip.kernel.masterdata.dto.request.Pagination;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
+import io.mosip.kernel.masterdata.dto.request.SearchSort;
 import io.mosip.kernel.masterdata.dto.response.ColumnValue;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
@@ -317,12 +320,15 @@ public class GenderTypeServiceImpl implements GenderTypeService {
 		PageResponseDto<GenderExtnDto> pageDto = new PageResponseDto<>();
 		List<GenderExtnDto> genderTypeExtns = null;
 		if (filterTypeValidator.validate(GenderExtnDto.class, request.getFilters())) {
-			pageUtils.validateSortField(Gender.class, request.getSort());
+			Pagination pagination = request.getPagination();
+			List<SearchSort> sort = request.getSort();
+			pageUtils.validateSortField(GenderExtnDto.class, Gender.class, sort);
+			request.setPagination(new Pagination(0, Integer.MAX_VALUE));
+			request.setSort(Collections.emptyList());
 			Page<Gender> page = masterDataSearchHelper.searchMasterdata(Gender.class, request, null);
 			if (page.getContent() != null && !page.getContent().isEmpty()) {
-				pageDto = PageUtils.pageResponse(page);
 				genderTypeExtns = MapperUtils.mapAll(page.getContent(), GenderExtnDto.class);
-				pageDto.setData(genderTypeExtns);
+				pageDto = pageUtils.sortPage(genderTypeExtns, sort, pagination);
 			}
 		}
 		return pageDto;

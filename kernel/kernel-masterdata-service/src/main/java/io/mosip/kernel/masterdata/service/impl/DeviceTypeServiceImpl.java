@@ -1,6 +1,7 @@
 package io.mosip.kernel.masterdata.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,9 @@ import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.DeviceTypeExtnDto;
 import io.mosip.kernel.masterdata.dto.request.FilterDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
+import io.mosip.kernel.masterdata.dto.request.Pagination;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
+import io.mosip.kernel.masterdata.dto.request.SearchSort;
 import io.mosip.kernel.masterdata.dto.response.ColumnCodeValue;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
@@ -204,12 +207,15 @@ public class DeviceTypeServiceImpl implements DeviceTypeService {
 
 		List<DeviceTypeExtnDto> deviceTypeList = null;
 		if (filterValidator.validate(DeviceTypeExtnDto.class, searchRequestDto.getFilters())) {
-			pageUtils.validateSortField(DeviceType.class, searchRequestDto.getSort());
+			Pagination pagination = searchRequestDto.getPagination();
+			List<SearchSort> sort = searchRequestDto.getSort();
+			pageUtils.validateSortField(DeviceTypeExtnDto.class, DeviceType.class, sort);
+			searchRequestDto.setPagination(new Pagination(0, Integer.MAX_VALUE));
+			searchRequestDto.setSort(Collections.emptyList());
 			Page<DeviceType> page = masterdataSearchHelper.searchMasterdata(DeviceType.class, searchRequestDto, null);
 			if (page.getContent() != null && !page.getContent().isEmpty()) {
-				pageDto = PageUtils.pageResponse(page);
 				deviceTypeList = MapperUtils.mapAll(page.getContent(), DeviceTypeExtnDto.class);
-				pageDto.setData(deviceTypeList);
+				pageDto = pageUtils.sortPage(deviceTypeList, sort, pagination);
 			}
 		}
 		return pageDto;

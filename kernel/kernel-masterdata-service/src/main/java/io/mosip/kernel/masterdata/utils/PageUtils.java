@@ -3,6 +3,7 @@ package io.mosip.kernel.masterdata.utils;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +27,9 @@ import io.mosip.kernel.masterdata.exception.RequestException;
  */
 @Component
 public class PageUtils {
+	
+	@Value("${master.search.maximum.rows}")
+	private int maximumRows;
 
 	private SortUtils sortUtils;
 
@@ -69,6 +73,7 @@ public class PageUtils {
 
 	public <D> PageResponseDto<D> sortPage(List<D> content, List<SearchSort> sort, Pagination page) {
 		PageResponseDto<D> pageResponse = new PageResponseDto<>();
+		page.setPageFetch(page.getPageFetch()>maximumRows?maximumRows:page.getPageFetch());
 		List<D> sortedList = sortUtils.sort(content, sort);
 		List<D> pageList = Collections.emptyList();
 		if (validate(page)) {

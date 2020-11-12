@@ -1,6 +1,7 @@
 package io.mosip.kernel.masterdata.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,9 @@ import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.IndividualTypeExtnDto;
 import io.mosip.kernel.masterdata.dto.request.FilterDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
+import io.mosip.kernel.masterdata.dto.request.Pagination;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
+import io.mosip.kernel.masterdata.dto.request.SearchSort;
 import io.mosip.kernel.masterdata.dto.response.ColumnValue;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
@@ -146,12 +149,15 @@ public class IndividualTypeServiceImpl implements IndividualTypeService {
 		PageResponseDto<IndividualTypeExtnDto> pageDto = new PageResponseDto<>();
 		List<IndividualTypeExtnDto> individuals = null;
 		if (filterTypeValidator.validate(IndividualTypeExtnDto.class, dto.getFilters())) {
-			pageUtils.validateSortField(IndividualType.class, dto.getSort());
+			Pagination pagination = dto.getPagination();
+			List<SearchSort> sort = dto.getSort();
+			pageUtils.validateSortField(IndividualTypeExtnDto.class, IndividualType.class, sort);
+			dto.setPagination(new Pagination(0, Integer.MAX_VALUE));
+			dto.setSort(Collections.emptyList());
 			Page<IndividualType> page = masterDataSearchHelper.searchMasterdata(IndividualType.class, dto, null);
 			if (page.getContent() != null && !page.getContent().isEmpty()) {
-				pageDto = PageUtils.pageResponse(page);
 				individuals = MapperUtils.mapAll(page.getContent(), IndividualTypeExtnDto.class);
-				pageDto.setData(individuals);
+				pageDto = pageUtils.sortPage(individuals,sort, pagination);
 			}
 		}
 		return pageDto;

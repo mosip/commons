@@ -1,6 +1,7 @@
 package io.mosip.kernel.masterdata.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -23,7 +24,9 @@ import io.mosip.kernel.masterdata.dto.getresponse.extn.TitleExtnDto;
 import io.mosip.kernel.masterdata.dto.postresponse.CodeResponseDto;
 import io.mosip.kernel.masterdata.dto.request.FilterDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
+import io.mosip.kernel.masterdata.dto.request.Pagination;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
+import io.mosip.kernel.masterdata.dto.request.SearchSort;
 import io.mosip.kernel.masterdata.dto.response.ColumnValue;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
@@ -296,12 +299,15 @@ public class TitleServiceImpl implements TitleService {
 		PageResponseDto<TitleExtnDto> pageDto = new PageResponseDto<>();
 		List<TitleExtnDto> titles = null;
 		if (filterTypeValidator.validate(TitleExtnDto.class, searchDto.getFilters())) {
-			pageUtils.validateSortField(Title.class, searchDto.getSort());
+			Pagination pagination = searchDto.getPagination();
+			List<SearchSort> sort = searchDto.getSort();
+			searchDto.setPagination(new Pagination(0, Integer.MAX_VALUE));
+			searchDto.setSort(Collections.emptyList());
+			pageUtils.validateSortField(Title.class, sort);
 			Page<Title> page = masterDataSearchHelper.searchMasterdata(Title.class, searchDto, null);
 			if (page.getContent() != null && !page.getContent().isEmpty()) {
-				pageDto = PageUtils.pageResponse(page);
 				titles = MapperUtils.mapAll(page.getContent(), TitleExtnDto.class);
-				pageDto.setData(titles);
+				pageDto = pageUtils.sortPage(titles, sort, pagination);
 			}
 		}
 		return pageDto;

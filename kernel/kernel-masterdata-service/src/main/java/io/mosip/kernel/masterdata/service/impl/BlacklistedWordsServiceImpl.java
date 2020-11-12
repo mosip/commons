@@ -3,6 +3,7 @@ package io.mosip.kernel.masterdata.service.impl;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,9 @@ import io.mosip.kernel.masterdata.dto.getresponse.PageDto;
 import io.mosip.kernel.masterdata.dto.getresponse.extn.BlacklistedWordsExtnDto;
 import io.mosip.kernel.masterdata.dto.request.FilterDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
+import io.mosip.kernel.masterdata.dto.request.Pagination;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
+import io.mosip.kernel.masterdata.dto.request.SearchSort;
 import io.mosip.kernel.masterdata.dto.response.ColumnValue;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
@@ -394,12 +397,15 @@ public class BlacklistedWordsServiceImpl implements BlacklistedWordsService {
 		List<BlacklistedWordsExtnDto> blackListedWords = null;
 
 		if (filterTypeValidator.validate(BlacklistedWordsExtnDto.class, dto.getFilters())) {
-			pageUtils.validateSortField(BlacklistedWords.class, dto.getSort());
+			Pagination pagination = dto.getPagination();
+			List<SearchSort> sort = dto.getSort();
+			pageUtils.validateSortField(BlacklistedWordsExtnDto.class, BlacklistedWords.class, sort);
+			dto.setPagination(new Pagination(0, Integer.MAX_VALUE));
+			dto.setSort(Collections.emptyList());
 			Page<BlacklistedWords> page = masterDataSearchHelper.searchMasterdata(BlacklistedWords.class, dto, null);
 			if (page.getContent() != null && !page.getContent().isEmpty()) {
-				pageDto = PageUtils.pageResponse(page);
 				blackListedWords = MapperUtils.mapAll(page.getContent(), BlacklistedWordsExtnDto.class);
-				pageDto.setData(blackListedWords);
+				pageDto = pageUtils.sortPage(blackListedWords, sort, pagination);
 			}
 		}
 		return pageDto;
