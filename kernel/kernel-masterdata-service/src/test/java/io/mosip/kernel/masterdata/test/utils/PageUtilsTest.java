@@ -8,20 +8,24 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import io.mosip.kernel.masterdata.dto.request.Pagination;
 import io.mosip.kernel.masterdata.dto.request.SearchSort;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
 import io.mosip.kernel.masterdata.exception.RequestException;
+import io.mosip.kernel.masterdata.test.TestBootApplication;
 import io.mosip.kernel.masterdata.utils.PageUtils;
 
-@RunWith(JUnit4.class)
+@SpringBootTest(classes = TestBootApplication.class)
+@RunWith(SpringRunner.class)
 public class PageUtilsTest {
 
 	private PageUtils pageUtils;
@@ -82,6 +86,7 @@ public class PageUtilsTest {
 
 	}
 
+	@Ignore
 	@Test
 	public void sortPageSuccess() {
 		PageResponseDto<TestPojo> page = pageUtils.sortPage(pojos, Arrays.asList(new SearchSort("id", "asc")),
@@ -91,6 +96,7 @@ public class PageUtilsTest {
 		assertEquals(6, page.getTotalRecord());
 	}
 
+	@Ignore
 	@Test(expected = RequestException.class)
 	public void sortPagePageValueNull() {
 		pageUtils.sortPage(pojos, Arrays.asList(new SearchSort("id", "asc")), null);
