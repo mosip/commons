@@ -1,7 +1,4 @@
 FROM openjdk:11
-RUN apt-get update \
-    && apt-get -y upgrade \
-    && apt-get -y install unzip
 
 # can be passed during Docker build as build time environment for github branch to pickup configuration from.
 ARG spring_config_label
@@ -39,11 +36,38 @@ ENV artifactory_url_env=${artifactory_url}
 # environment variable to pass hsm client zip file path, at docker runtime
 ENV zip_file_path=${client_zip_path}
 
+# can be passed during Docker build as build time environment for github branch to pickup configuration from.
+ARG container_user=mosip
+
+# can be passed during Docker build as build time environment for github branch to pickup configuration from.
+ARG container_user_group=mosip
+
+# can be passed during Docker build as build time environment for github branch to pickup configuration from.
+ARG container_user_uid=1001
+
+# can be passed during Docker build as build time environment for github branch to pickup configuration from.
+ARG container_user_gid=1001
+
+# install packages and create user
+RUN apt-get -y update \
+&& apt-get install -y unzip \
+&& groupadd -g ${container_user_gid} ${container_user_group} \
+&& useradd -u ${container_user_uid} -g ${container_user_group} -s /bin/sh -m ${container_user}
+
+# set working directory for the user
+WORKDIR /home/${container_user}
+
 ADD configure_start.sh configure_start.sh
 
 RUN chmod +x configure_start.sh
 
 ADD target/keys-generator-*.jar keys-generator.jar
+
+# change permissions of file inside working dir
+RUN chown -R ${container_user}:${container_user} /home/${container_user}
+
+# select container user for all tasks
+USER ${container_user_uid}:${container_user_gid}
 
 ENTRYPOINT [ "/configure_start.sh" ]
 
