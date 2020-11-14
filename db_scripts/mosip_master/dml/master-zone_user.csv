@@ -1,4 +1,5 @@
 ﻿zone_code,usr_id,lang_code,is_active,cr_by,cr_dtimes
+MOR,superadmin,eng,TRUE,superadmin,now()
 NTH,110001,eng,TRUE,superadmin,now()
 NTH,110002,eng,TRUE,superadmin,now()
 NTH,110003,eng,TRUE,superadmin,now()
