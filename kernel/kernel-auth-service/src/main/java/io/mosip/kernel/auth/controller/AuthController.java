@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import io.mosip.kernel.core.authmanager.model.*;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,32 +37,6 @@ import io.mosip.kernel.auth.defaultimpl.dto.ClientSecretDto;
 import io.mosip.kernel.auth.defaultimpl.dto.UserDetailsRequestDto;
 import io.mosip.kernel.auth.defaultimpl.dto.UserRegistrationResponseDto;
 import io.mosip.kernel.auth.defaultimpl.exception.AuthManagerException;
-import io.mosip.kernel.core.authmanager.model.AccessTokenResponseDTO;
-import io.mosip.kernel.core.authmanager.model.AuthNResponse;
-import io.mosip.kernel.core.authmanager.model.AuthNResponseDto;
-import io.mosip.kernel.core.authmanager.model.AuthResponseDto;
-import io.mosip.kernel.core.authmanager.model.AuthZResponseDto;
-import io.mosip.kernel.core.authmanager.model.ClientSecret;
-import io.mosip.kernel.core.authmanager.model.LoginUser;
-import io.mosip.kernel.core.authmanager.model.MosipUserDto;
-import io.mosip.kernel.core.authmanager.model.MosipUserListDto;
-import io.mosip.kernel.core.authmanager.model.MosipUserSaltListDto;
-import io.mosip.kernel.core.authmanager.model.MosipUserTokenDto;
-import io.mosip.kernel.core.authmanager.model.OtpUser;
-import io.mosip.kernel.core.authmanager.model.PasswordDto;
-import io.mosip.kernel.core.authmanager.model.RIdDto;
-import io.mosip.kernel.core.authmanager.model.RefreshTokenRequest;
-import io.mosip.kernel.core.authmanager.model.RefreshTokenResponse;
-import io.mosip.kernel.core.authmanager.model.RolesListDto;
-import io.mosip.kernel.core.authmanager.model.UserDetailsDto;
-import io.mosip.kernel.core.authmanager.model.UserDetailsResponseDto;
-import io.mosip.kernel.core.authmanager.model.UserNameDto;
-import io.mosip.kernel.core.authmanager.model.UserOtp;
-import io.mosip.kernel.core.authmanager.model.UserPasswordRequestDto;
-import io.mosip.kernel.core.authmanager.model.UserPasswordResponseDto;
-import io.mosip.kernel.core.authmanager.model.UserRegistrationRequestDto;
-import io.mosip.kernel.core.authmanager.model.UserRoleDto;
-import io.mosip.kernel.core.authmanager.model.ValidationResponseDto;
 import io.mosip.kernel.core.authmanager.spi.AuthService;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
@@ -112,7 +87,7 @@ public class AuthController {
 	 * 
 	 * @return ResponseEntity Cookie value with Auth token
 	 */
-
+	@Deprecated
 	@ResponseFilter
 	@PostMapping(value = "/authenticate/useridPwd")
 	public ResponseWrapper<AuthNResponse> authenticateUseridPwd(@RequestBody @Valid RequestWrapper<LoginUser> request,
@@ -674,7 +649,7 @@ public class AuthController {
 	 */
 	@ResponseFilter
 	@PostMapping(value = "/authenticate/internal/useridPwd")
-	public ResponseWrapper<AuthNResponseDto> getAllAuthTokens(@RequestBody @Valid RequestWrapper<LoginUser> request,
+	public ResponseWrapper<AuthNResponseDto> getAllAuthTokens(@RequestBody @Valid RequestWrapper<LoginUserWithClientId> request,
 																HttpServletResponse res) throws Exception {
 		ResponseWrapper<AuthNResponseDto> responseWrapper = new ResponseWrapper<>();
 		AuthNResponseDto authResponseDto = authService.authenticateUser(request.getRequest());
@@ -731,5 +706,4 @@ public class AuthController {
 		responseWrapper.setResponse(authNResponseDto);
 		return responseWrapper;
 	}
-
 }
