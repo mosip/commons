@@ -6,9 +6,11 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.List;
 
+import io.mosip.kernel.core.util.CryptoUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +27,7 @@ import io.mosip.kernel.masterdata.exception.RequestException;
 import io.mosip.kernel.masterdata.repository.MachineSpecificationRepository;
 import io.mosip.kernel.masterdata.repository.MachineTypeRepository;
 import io.mosip.kernel.masterdata.repository.RegistrationCenterRepository;
+import tss.tpm.TPMT_PUBLIC;
 
 @Component
 public class MachineUtil {
@@ -38,6 +41,9 @@ public class MachineUtil {
 
 	@Autowired
 	private MachineSpecificationRepository machineSpecificationRepository;
+
+	@Value("${mosip.syncdata.tpm.required}")
+	private boolean isTPMRequired;
 
 
 	@Autowired
@@ -75,11 +81,16 @@ public class MachineUtil {
 	}
 	
 	public String getX509EncodedPublicKey(String encodedKey) {		
-		try {			
-			X509EncodedKeySpec keySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(encodedKey));
+		try {
+			if(isTPMRequired) {
+				TPMT_PUBLIC tpmPublic = TPMT_PUBLIC.fromTpm(CryptoUtil.decodeBase64(encodedKey));
+				return CryptoUtil.encodeBase64(tpmPublic.toTpm());
+			}
+
+			X509EncodedKeySpec keySpec = new X509EncodedKeySpec(CryptoUtil.decodeBase64(encodedKey));
 			KeyFactory kf = KeyFactory.getInstance(ALGORITHM);
 			PublicKey publicKey = kf.generatePublic(keySpec);
-			return Base64.getEncoder().encodeToString(publicKey.getEncoded());			
+			return CryptoUtil.encodeBase64(publicKey.getEncoded());
 		} catch (Exception e) {
 			logger.error("Invalid public key provided", e);
 		}
