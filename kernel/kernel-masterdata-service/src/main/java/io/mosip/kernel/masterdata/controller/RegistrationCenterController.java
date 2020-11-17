@@ -159,7 +159,7 @@ public class RegistrationCenterController {
 	 */
 	@ResponseFilter
 	@GetMapping("/registrationcenters")
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','PRE_REGISTRATION')")
 	public ResponseWrapper<RegistrationCenterResponseDto> getAllRegistrationCentersDetails() {
 		ResponseWrapper<RegistrationCenterResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(registrationCenterService.getAllRegistrationCenters());
