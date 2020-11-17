@@ -40,9 +40,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -109,6 +113,7 @@ public class SyncAuthTokenServiceImpl {
             Machine machine = validateRequestData(header, payload, signature);
             try {
                 MachineAuthDto machineAuthDto = objectMapper.readValue(payload, MachineAuthDto.class);
+                validateRequestTimestamp(machineAuthDto);
                 ResponseWrapper<TokenResponseDto> responseWrapper = getTokenResponseDTO(machineAuthDto);
                 String token = objectMapper.writeValueAsString(responseWrapper.getResponse());
                 byte[] cipher = clientCryptoFacade.encrypt(CryptoUtil.decodeBase64(machine.getPublicKey()),
@@ -149,15 +154,27 @@ public class SyncAuthTokenServiceImpl {
                 SyncAuthErrorCode.INVALID_REQUEST.getErrorMessage());
     }
 
+    private void validateRequestTimestamp(MachineAuthDto machineAuthDto) {
+        Objects.requireNonNull(machineAuthDto.getTimestamp());
+        long value = machineAuthDto.getTimestamp().until(LocalDateTime.now(ZoneOffset.UTC), ChronoUnit.MINUTES);
+        if(value <= 5) { return; }
+
+        logger.warn("Request timestamp validation failed : {}", machineAuthDto.getTimestamp());
+        throw new RequestException(SyncAuthErrorCode.INVALID_REQUEST.getErrorCode(),
+                SyncAuthErrorCode.INVALID_REQUEST.getErrorMessage());
+    }
+
     private ResponseWrapper<TokenResponseDto> getTokenResponseDTO(MachineAuthDto machineAuthDto) throws IOException {
         ResponseEntity<String> responseEntity = null;
         switch (machineAuthDto.getAuthType().toUpperCase()) {
             case "NEW" :
-                LoginUser authLoginUser = new LoginUser();
+                LoginUserWithClientId authLoginUser = new LoginUserWithClientId();
                 authLoginUser.setUserName(machineAuthDto.getUserId());
                 authLoginUser.setPassword(machineAuthDto.getPassword());
+                authLoginUser.setClientId(clientId);
+                authLoginUser.setClientSecret(secretKey);
                 authLoginUser.setAppId(authTokenInternalAppId);
-                RequestWrapper<LoginUser> requestWrapper = new RequestWrapper();
+                RequestWrapper<LoginUserWithClientId> requestWrapper = new RequestWrapper();
                 requestWrapper.setRequest(authLoginUser);
                 UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(newAuthTokenInternalUrl);
                 responseEntity = restTemplate.postForEntity(builder.build().toUri(),
