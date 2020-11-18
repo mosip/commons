@@ -71,7 +71,7 @@ public class RegistrationCenterDeviceHistoryServiceImpl implements RegistrationC
 		if (deviceHistorys != null && !deviceHistorys.isEmpty()) {
 			for(DeviceHistory deviceHistory:deviceHistorys) {
 				if(deviceHistory != null && deviceHistory.getId() != null && !deviceHistory.getId().isEmpty() && deviceHistory.getEffectDateTime()!=null
-					&&	deviceHistory.getRegCenterId()==null	&& !deviceHistory.getRegCenterId().isEmpty()) {
+					&&	deviceHistory.getRegCenterId()!=null	&& !deviceHistory.getRegCenterId().isEmpty()) {
 			
 			registrationCenterDeviceHistoryDto.setDeviceId(deviceHistory.getId());
 			registrationCenterDeviceHistoryDto.setEffectivetimes(deviceHistory.getEffectDateTime());
