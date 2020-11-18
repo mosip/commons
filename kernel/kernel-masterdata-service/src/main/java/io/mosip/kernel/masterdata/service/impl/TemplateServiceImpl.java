@@ -1,6 +1,7 @@
 package io.mosip.kernel.masterdata.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,7 +29,9 @@ import io.mosip.kernel.masterdata.dto.getresponse.extn.TemplateExtnDto;
 import io.mosip.kernel.masterdata.dto.postresponse.IdResponseDto;
 import io.mosip.kernel.masterdata.dto.request.FilterDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
+import io.mosip.kernel.masterdata.dto.request.Pagination;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
+import io.mosip.kernel.masterdata.dto.request.SearchSort;
 import io.mosip.kernel.masterdata.dto.response.ColumnValue;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
@@ -84,6 +87,9 @@ public class TemplateServiceImpl implements TemplateService {
 
 	@Autowired
 	private AuditUtil auditUtil;
+	
+	@Autowired
+	private PageUtils pageUtils;
 
 	@Autowired
 	private MasterdataCreationUtil masterdataCreationUtil;
@@ -373,11 +379,15 @@ public class TemplateServiceImpl implements TemplateService {
 		PageResponseDto<TemplateExtnDto> pageDto = new PageResponseDto<>();
 		List<TemplateExtnDto> templates = null;
 		if (filterTypeValidator.validate(TemplateExtnDto.class, searchDto.getFilters())) {
+			Pagination pagination = searchDto.getPagination();
+			List<SearchSort> sort = searchDto.getSort();
+			searchDto.setPagination(new Pagination(0, Integer.MAX_VALUE));
+			searchDto.setSort(Collections.emptyList());
+			pageUtils.validateSortField(Template.class, sort);
 			Page<Template> page = masterDataSearchHelper.searchMasterdata(Template.class, searchDto, null);
 			if (page.getContent() != null && !page.getContent().isEmpty()) {
-				pageDto = PageUtils.pageResponse(page);
 				templates = MapperUtils.mapAll(page.getContent(), TemplateExtnDto.class);
-				pageDto.setData(templates);
+				pageDto = pageUtils.sortPage(templates, sort, pagination);
 			}
 		}
 		return pageDto;

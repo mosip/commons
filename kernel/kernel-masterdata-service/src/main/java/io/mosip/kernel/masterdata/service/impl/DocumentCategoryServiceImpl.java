@@ -3,6 +3,7 @@ package io.mosip.kernel.masterdata.service.impl;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -25,7 +26,9 @@ import io.mosip.kernel.masterdata.dto.getresponse.extn.DocumentCategoryExtnDto;
 import io.mosip.kernel.masterdata.dto.postresponse.CodeResponseDto;
 import io.mosip.kernel.masterdata.dto.request.FilterDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
+import io.mosip.kernel.masterdata.dto.request.Pagination;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
+import io.mosip.kernel.masterdata.dto.request.SearchSort;
 import io.mosip.kernel.masterdata.dto.response.ColumnValue;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
@@ -375,12 +378,15 @@ public class DocumentCategoryServiceImpl implements DocumentCategoryService {
 		List<DocumentCategoryExtnDto> documentCategories = null;
 		pageUtils.validateSortField(DocumentCategory.class, dto.getSort());
 		if (filterTypeValidator.validate(DocumentCategoryExtnDto.class, dto.getFilters())) {
-			pageUtils.validateSortField(DocumentCategory.class, dto.getSort());
+			Pagination pagination = dto.getPagination();
+			List<SearchSort> sort = dto.getSort();
+			pageUtils.validateSortField(DocumentCategoryExtnDto.class, DocumentCategory.class, sort);
+			dto.setPagination(new Pagination(0, Integer.MAX_VALUE));
+			dto.setSort(Collections.emptyList());
 			Page<DocumentCategory> page = masterDataSearchHelper.searchMasterdata(DocumentCategory.class, dto, null);
 			if (page.getContent() != null && !page.getContent().isEmpty()) {
-				pageDto = PageUtils.pageResponse(page);
 				documentCategories = MapperUtils.mapAll(page.getContent(), DocumentCategoryExtnDto.class);
-				pageDto.setData(documentCategories);
+				pageDto = pageUtils.sortPage(documentCategories, sort, pagination);
 			}
 		}
 		return pageDto;

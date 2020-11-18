@@ -3,6 +3,7 @@ package io.mosip.kernel.masterdata.service.impl;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -26,7 +27,9 @@ import io.mosip.kernel.masterdata.dto.getresponse.extn.RegistrationCenterTypeExt
 import io.mosip.kernel.masterdata.dto.postresponse.CodeResponseDto;
 import io.mosip.kernel.masterdata.dto.request.FilterDto;
 import io.mosip.kernel.masterdata.dto.request.FilterValueDto;
+import io.mosip.kernel.masterdata.dto.request.Pagination;
 import io.mosip.kernel.masterdata.dto.request.SearchDto;
+import io.mosip.kernel.masterdata.dto.request.SearchSort;
 import io.mosip.kernel.masterdata.dto.response.ColumnCodeValue;
 import io.mosip.kernel.masterdata.dto.response.FilterResponseCodeDto;
 import io.mosip.kernel.masterdata.dto.response.PageResponseDto;
@@ -309,13 +312,17 @@ public class RegistrationCenterTypeServiceImpl implements RegistrationCenterType
 		PageResponseDto<RegistrationCenterTypeExtnDto> pageDto = new PageResponseDto<>();
 		List<RegistrationCenterTypeExtnDto> registrationCenterTypes = null;
 		if (filterTypeValidator.validate(RegistrationCenterTypeExtnDto.class, dto.getFilters())) {
-			pageUtils.validateSortField(RegistrationCenterType.class, dto.getSort());
+			Pagination pagination = dto.getPagination();
+			List<SearchSort> sort = dto.getSort();
+			dto.setPagination(new Pagination(0, Integer.MAX_VALUE));
+			dto.setSort(Collections.emptyList());
+
+			pageUtils.validateSortField(RegistrationCenterType.class, sort);
 			Page<RegistrationCenterType> page = masterdataSearchHelper.searchMasterdata(RegistrationCenterType.class,
 					dto, null);
 			if (page.getContent() != null && !page.getContent().isEmpty()) {
-				pageDto = PageUtils.pageResponse(page);
 				registrationCenterTypes = MapperUtils.mapAll(page.getContent(), RegistrationCenterTypeExtnDto.class);
-				pageDto.setData(registrationCenterTypes);
+				pageDto = pageUtils.sortPage(registrationCenterTypes, sort, pagination);
 			}
 		}
 		return pageDto;
