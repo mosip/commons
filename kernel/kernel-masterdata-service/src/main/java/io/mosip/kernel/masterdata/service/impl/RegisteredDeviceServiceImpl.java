@@ -439,7 +439,7 @@ public class RegisteredDeviceServiceImpl implements RegisteredDeviceService {
 		}else if(device.getDeviceCode().length()>36) {
 			throw new RequestException(DeviceRegisterErrorCode.INVALID_DEVICE_CODE_LENGTH.getErrorCode(),
 					DeviceRegisterErrorCode.INVALID_DEVICE_CODE_LENGTH.getErrorMessage());
-		}else if(!device.getEnv().equals(envStage)) {
+		}else if(!device.getEnv().equalsIgnoreCase(envStage)) {
 			throw new RequestException(DeviceRegisterErrorCode.INVALID_ENVIRONMENT.getErrorCode(),
 					DeviceRegisterErrorCode.INVALID_ENVIRONMENT.getErrorMessage());
 		}
