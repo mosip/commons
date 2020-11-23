@@ -184,7 +184,7 @@ public class CryptographicServiceIntegrationTest {
 		requestDto.setTimeStamp(timeStamp);
 		SymmetricKeyRequestDto symmetricKeyRequestDto = new SymmetricKeyRequestDto(
 				appid, timeStamp,
-				refid, data);
+				refid, data, true);
 		when(keyManagerService.decryptSymmetricKey(Mockito.any())).thenReturn(symmetricKeyResponseDto);
 		String requestBody = objectMapper.writeValueAsString(requestWrapper);
 		MvcResult result = mockMvc

@@ -23,12 +23,19 @@ jobs:
         server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
 
+    
+    - name: Setup branch and env 
+      run: |
+        # Strip git ref prefix from version
+        echo "BRANCH_NAME=$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')" >> $GITHUB_ENV
+        echo "GPG_TTY=$(tty)" >> $GITHUB_ENV    
+
     - name: Setup branch and GPG public key 
       run: |
         # Strip git ref prefix from version
-        echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+      
         echo ${{ env.BRANCH_NAME }}
-        echo "::set-env name=GPG_TTY::$(tty)"
+       
         echo ${{ env.GPG_TTY }}
         sudo apt-get --yes install gnupg2
         gpg2 --import ./.github/keys/mosipgpgkey_pub.gpg 
@@ -74,12 +81,18 @@ jobs:
         server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
 
+    - name: Setup branch and env 
+      run: |
+        # Strip git ref prefix from version
+        echo "BRANCH_NAME=$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')" >> $GITHUB_ENV
+        echo "GPG_TTY=$(tty)" >> $GITHUB_ENV
+
     - name: Setup branch and GPG public key 
       run: |
         # Strip git ref prefix from version
-        echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+        
         echo ${{ env.BRANCH_NAME }}
-        echo "::set-env name=GPG_TTY::$(tty)"
+        
         echo ${{ env.GPG_TTY }}
         sudo apt-get --yes install gnupg2
         gpg2 --import ./.github/keys/mosipgpgkey_pub.gpg 
@@ -101,11 +114,11 @@ jobs:
       run: echo "<settings> <activeProfiles> <activeProfile>ossrh</activeProfile> </activeProfiles>  <servers>  <server>  <id>ossrh</id>    <username>${{secrets.RELEASE_USER}}</username> <password>${{secrets.RELEASE_TOKEN}}</password> </server> </servers> <profiles> <profile>     <id>ossrh</id> <activation> <activeByDefault>true</activeByDefault> </activation>  <properties> <gpg.executable>gpg2</gpg.executable> <gpg.passphrase>${{secrets.gpg_secret}}</gpg.passphrase> </properties> </profile> <profile> <id>allow-snapshots</id>       <activation><activeByDefault>true</activeByDefault></activation> <repositories> <repository>        <id>snapshots-repo</id> <url>https://oss.sonatype.org/content/repositories/snapshots</url> <releases><enabled>false</enabled></releases> <snapshots><enabled>true</enabled></snapshots> </repository>  <repository>         <id>releases-repo</id>  <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>         <releases><enabled>true</enabled></releases>         <snapshots><enabled>false</enabled></snapshots> </repository> </repositories>  </profile> <profile> <id>sonar</id> <properties>  <sonar.sources>.</sonar.sources> <sonar.host.url>https://sonarcloud.io</sonar.host.url>  </properties> <activation> <activeByDefault>false</activeByDefault> </activation> </profile> </profiles> </settings>" > $GITHUB_WORKSPACE/settings.xml
       
     - name: Build with Maven
-      run: mvn -B clean install --file pom.xml -s $GITHUB_WORKSPACE/settings.xml
+      run: mvn -B package --file pom.xml -s $GITHUB_WORKSPACE/settings.xml
         
     - name: Publish the maven package
       run: |
-        mvn deploy -DskipTests -DaltDeploymentRepository=ossrh::default::${{ secrets.RELEASE_URL }} -s $GITHUB_WORKSPACE/settings.xml -f pom.xml
+        mvn -B deploy -DskipTests -DaltDeploymentRepository=ossrh::default::${{ secrets.RELEASE_URL }} -s $GITHUB_WORKSPACE/settings.xml -f pom.xml
       env:
         GITHUB_TOKEN: ${{secrets.RELEASE_TOKEN}}
         GPG_TTY: $(tty)
@@ -134,7 +147,7 @@ jobs:
       - name: Setup branch name 
         run: |
           # Strip git ref prefix from version
-          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo "BRANCH_NAME=$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')" >> $GITHUB_ENV
           echo ${{ env.BRANCH_NAME }}
 
       - name: Get version info from pom
@@ -187,7 +200,7 @@ jobs:
       - name: Setup branch name 
         run: |
           # Strip git ref prefix from version
-          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo "BRANCH_NAME=$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')" >> $GITHUB_ENV
           echo ${{ env.BRANCH_NAME }}
 
       - name: Get version info from pom
@@ -240,7 +253,7 @@ jobs:
       - name: Setup branch name 
         run: |
           # Strip git ref prefix from version
-          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo "BRANCH_NAME=$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')" >> $GITHUB_ENV
           echo ${{ env.BRANCH_NAME }}
 
       - name: Get version info from pom
@@ -293,7 +306,7 @@ jobs:
       - name: Setup branch name 
         run: |
           # Strip git ref prefix from version
-          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo "BRANCH_NAME=$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')" >> $GITHUB_ENV
           echo ${{ env.BRANCH_NAME }}
 
       - name: Get version info from pom
@@ -346,7 +359,7 @@ jobs:
       - name: Setup branch name 
         run: |
           # Strip git ref prefix from version
-          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo "BRANCH_NAME=$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')" >> $GITHUB_ENV
           echo ${{ env.BRANCH_NAME }}
 
       - name: Get version info from pom
@@ -399,7 +412,7 @@ jobs:
       - name: Setup branch name 
         run: |
           # Strip git ref prefix from version
-          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo "BRANCH_NAME=$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')" >> $GITHUB_ENV
           echo ${{ env.BRANCH_NAME }}
 
       - name: Get version info from pom
@@ -452,7 +465,7 @@ jobs:
       - name: Setup branch name 
         run: |
           # Strip git ref prefix from version
-          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo "BRANCH_NAME=$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')" >> $GITHUB_ENV
           echo ${{ env.BRANCH_NAME }}
 
       - name: Get version info from pom
@@ -505,7 +518,7 @@ jobs:
       - name: Setup branch name 
         run: |
           # Strip git ref prefix from version
-          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo "BRANCH_NAME=$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')" >> $GITHUB_ENV
           echo ${{ env.BRANCH_NAME }}
 
       - name: Get version info from pom
@@ -558,7 +571,7 @@ jobs:
       - name: Setup branch name 
         run: |
           # Strip git ref prefix from version
-          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo "BRANCH_NAME=$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')" >> $GITHUB_ENV
           echo ${{ env.BRANCH_NAME }}
 
       - name: Get version info from pom
@@ -611,7 +624,7 @@ jobs:
       - name: Setup branch name 
         run: |
           # Strip git ref prefix from version
-          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo "BRANCH_NAME=$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')" >> $GITHUB_ENV
           echo ${{ env.BRANCH_NAME }}
 
       - name: Get version info from pom
@@ -664,7 +677,7 @@ jobs:
       - name: Setup branch name 
         run: |
           # Strip git ref prefix from version
-          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo "BRANCH_NAME=$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')" >> $GITHUB_ENV
           echo ${{ env.BRANCH_NAME }}
 
       - name: Get version info from pom
@@ -717,7 +730,7 @@ jobs:
       - name: Setup branch name 
         run: |
           # Strip git ref prefix from version
-          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo "BRANCH_NAME=$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')" >> $GITHUB_ENV
           echo ${{ env.BRANCH_NAME }}
 
       - name: Get version info from pom
@@ -769,7 +782,7 @@ jobs:
       - name: Setup branch name 
         run: |
           # Strip git ref prefix from version
-          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')"
+          echo "BRANCH_NAME=$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')" >> $GITHUB_ENV
           echo ${{ env.BRANCH_NAME }}
       - name: Get version info from pom
         id: getPomVersion

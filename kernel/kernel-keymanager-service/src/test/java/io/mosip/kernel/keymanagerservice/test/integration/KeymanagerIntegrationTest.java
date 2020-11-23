@@ -191,154 +191,10 @@ public class KeymanagerIntegrationTest {
 
 	@WithUserDetails("reg-processor")
 	@Test
-	public void getPublicKeyFromHSMMultipleAlias() throws Exception {
-		setupMultipleKeyAlias();
-		when(keyAliasRepository.findByApplicationIdAndReferenceId(Mockito.any(), Mockito.any())).thenReturn(keyalias);
-
-		MvcResult result = mockMvc.perform(get("/publickey/applicationId?timeStamp=2010-01-01T12:00:00.000Z"))
-				.andExpect(status().is(200)).andReturn();
-		// System.out.println(result.getResponse().getContentAsString());
-	}
-
-	@WithUserDetails("reg-processor")
-	@Test
-	public void getPublicKeyFromHSMMultipleAliasReference() throws Exception {
-		setupMultipleKeyAlias();
-		when(keyAliasRepository.findByApplicationIdAndReferenceId(Mockito.any(), Mockito.any())).thenReturn(keyalias);
-		
-		MvcResult result = mockMvc.perform(get("/publickey/applicationId?referenceId= &timeStamp=2010-01-01T12:00:00.000Z"))
-				.andExpect(status().is(200)).andReturn();
-
-		// System.out.println(result.getResponse().getContentAsString());
-	}
-
-	@WithUserDetails("reg-processor")
-	@Test
-	public void getPublicKeyFromHSMSingleAlias() throws Exception {
-		setupSingleKeyAlias();
-		setupKey();
-		when(keyStore.getCertificate(Mockito.any())).thenReturn(x509Cert);
-		when(keyAliasRepository.findByApplicationIdAndReferenceId(Mockito.any(), Mockito.any())).thenReturn(keyalias);
-		MvcResult result = mockMvc.perform(get("/publickey/applicationId?timeStamp=2011-01-01T12:00:00.000Z"))
-				.andExpect(status().is(200)).andReturn();
-		// System.out.println(result.getResponse().getContentAsString());
-	}
-
-	@WithUserDetails("reg-processor")
-	@Test
-	public void getPublicKeyFromHSMEmptyAliasException() throws Exception {
-		setupKey();
-		setupSingleKeyAlias();
-		when(keyStore.getCertificate(Mockito.any())).thenReturn(x509Cert);
-		when(keyAliasRepository.findByApplicationIdAndReferenceId(Mockito.any(), Mockito.any())).thenReturn(keyalias);
-		when(keyPolicyRepository.findByApplicationId(Mockito.any())).thenReturn(keyPolicy);
-		MvcResult result = mockMvc.perform(get("/publickey/applicationId?timeStamp=2010-05-01T10:00:00.000Z"))
-				.andExpect(status().is(200)).andReturn();
-
-	}
-
-	@WithUserDetails("reg-processor")
-	@Test
-	public void getPublicKeyFromHSMEmptyAlias() throws Exception {
-		setupExpiryPolicy();
-		setupKey();
-		setupSingleKeyAlias();
-		when(keyStore.getCertificate(Mockito.any())).thenReturn(x509Cert);
-		when(keyAliasRepository.findByApplicationIdAndReferenceId(Mockito.any(), Mockito.any())).thenReturn(keyalias);
-		when(keyPolicyRepository.findByApplicationId(Mockito.any())).thenReturn(keyPolicy);
-
-		MvcResult result = mockMvc.perform(get("/publickey/applicationId?timeStamp=2009-05-01T10:00:00.000Z"))
-				.andExpect(status().is(200)).andReturn();
-		// System.out.println(result.getResponse().getContentAsString());
-	}
-
-	@WithUserDetails("reg-processor")
-	@Test
-	public void getPublicKeyFromHSMEmptyAliasNotOverlapping() throws Exception {
-		setupExpiryPolicy();
-		setupKey();
-		setupSingleKeyAlias();
-		when(keyStore.getCertificate(Mockito.any())).thenReturn(x509Cert);
-		when(keyAliasRepository.findByApplicationIdAndReferenceId(Mockito.any(), Mockito.any())).thenReturn(keyalias);
-		when(keyPolicyRepository.findByApplicationId(Mockito.any())).thenReturn(keyPolicy);
-
-		MvcResult result = mockMvc.perform(get("/publickey/applicationId?timeStamp=2001-05-01T10:00:00.000Z"))
-				.andExpect(status().is(200)).andReturn();
-		// System.out.println(result.getResponse().getContentAsString());
-	}
-
-	@WithUserDetails("reg-processor")
-	@Test
-	public void getPublicKeyFromDBMultipleAlias() throws Exception {
-		setupMultipleKeyAlias();
-		when(keyAliasRepository.findByApplicationIdAndReferenceId(Mockito.any(), Mockito.any())).thenReturn(keyalias);
-		MvcResult result = mockMvc
-				.perform(get("/publickey/REGISTRATION?referenceId=1&timeStamp=2010-05-01T10:00:00.000Z"))
-				.andExpect(status().is(200)).andReturn();
-		// System.out.println(result.getResponse().getContentAsString());
-	}
-
-	@WithUserDetails("reg-processor")
-	@Test
-	public void getPublicKeyFromDBSingleAliasException() throws Exception {
-		setupSingleKeyAlias();
-		when(keyAliasRepository.findByApplicationIdAndReferenceId(Mockito.any(), Mockito.any())).thenReturn(keyalias);
-		when(keyStoreRepository.findByAlias(Mockito.any())).thenReturn(dbKeyStore);
-		MvcResult result = mockMvc
-				.perform(get("/publickey/REGISTRATION?referenceId=1&timeStamp=2010-01-01T12:00:00.000Z"))
-				.andExpect(status().is(200)).andReturn();
-		// System.out.println(result.getResponse().getContentAsString());
-	}
-
-	@WithUserDetails("reg-processor")
-	@Test
-	public void getPublicKeyFromDBSingleAlias() throws Exception {
-		setupSingleKeyAlias();
-		setupKey();
-		setupDBKeyStoreWithCertificiate();
-		when(keyAliasRepository.findByApplicationIdAndReferenceId(Mockito.any(), Mockito.any())).thenReturn(keyalias);
-		when(keyStoreRepository.findByAlias(Mockito.any())).thenReturn(dbKeyStore);
-		
-		MvcResult result = mockMvc
-				.perform(get("/publickey/REGISTRATION?referenceId=1&timeStamp=2010-05-01T10:00:00.000Z"))
-				.andExpect(status().is(200)).andReturn();
-		// System.out.println(result.getResponse().getContentAsString());
-	}
-
-	@WithUserDetails("reg-processor")
-	@Test
-	public void getPublicKeyFromDBEmptyAliasKeymanagerServiceException() throws Exception {
-		setupExpiryPolicy();
-		when(keyAliasRepository.findByApplicationIdAndReferenceId(Mockito.any(), Mockito.any())).thenReturn(keyalias);
-		when(keyStoreRepository.findByAlias(Mockito.any())).thenReturn(dbKeyStore);
-		when(keyPolicyRepository.findByApplicationId(Mockito.any())).thenReturn(keyPolicy);
-		MvcResult result = mockMvc
-				.perform(get("/publickey/REGISTRATION?referenceId=1&timeStamp=2010-05-01T10:00:00.000Z"))
-				.andExpect(status().is(200)).andReturn();
-		System.out.println(result.getResponse().getContentAsString());
-	}
-
-	@WithUserDetails("reg-processor")
-	@Test
-	public void getPublicKeyFromDBEmptyAlias() throws Exception {
-		setupExpiryPolicy();
-		setupKey();
-		doReturn(key.getPrivate().getEncoded()).when(keymanagerUtil).encryptKey(Mockito.any(), Mockito.any());
-		when(keyAliasRepository.findByApplicationIdAndReferenceId(Mockito.any(), Mockito.any())).thenReturn(keyalias);
-		when(keyStoreRepository.findByAlias(Mockito.any())).thenReturn(dbKeyStore);
-		when(keyPolicyRepository.findByApplicationId(Mockito.any())).thenReturn(keyPolicy);
-		MvcResult result = mockMvc
-				.perform(get("/publickey/REGISTRATION?referenceId=1&timeStamp=2010-05-01T10:00:00.000Z"))
-				.andExpect(status().is(200)).andReturn();
-		// System.out.println(result.getResponse().getContentAsString());
-	}
-
-	@WithUserDetails("reg-processor")
-	@Test
 	public void decryptSymmetricKeyException() throws Exception {
 		when(keyAliasRepository.findByApplicationIdAndReferenceId(Mockito.any(), Mockito.any())).thenReturn(keyalias);
 		SymmetricKeyRequestDto symmetricKeyRequestDto = new SymmetricKeyRequestDto("applicationId",
-				LocalDateTime.parse("2010-05-01 12:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "", "");
+				LocalDateTime.parse("2010-05-01 12:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "", "", true);
 		requestWrapper.setRequest(symmetricKeyRequestDto);
 		String content = mapper.writeValueAsString(requestWrapper);
 		MvcResult result = mockMvc.perform(post("/decrypt").contentType(MediaType.APPLICATION_JSON).content(content))
@@ -354,7 +210,7 @@ public class KeymanagerIntegrationTest {
 		when(keyAliasRepository.findByApplicationIdAndReferenceId(Mockito.any(), Mockito.any())).thenReturn(keyalias);
 		when(cryptoCore.asymmetricDecrypt(Mockito.any(), Mockito.any())).thenReturn("".getBytes());
 		SymmetricKeyRequestDto symmetricKeyRequestDto = new SymmetricKeyRequestDto("applicationId",
-				LocalDateTime.parse("2010-05-01 12:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), null, "");
+				LocalDateTime.parse("2010-05-01 12:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), null, "", true);
 		requestWrapper.setRequest(symmetricKeyRequestDto);
 		String content = mapper.writeValueAsString(requestWrapper);
 		MvcResult result = mockMvc.perform(post("/decrypt").contentType(MediaType.APPLICATION_JSON).content(content))
@@ -369,7 +225,7 @@ public class KeymanagerIntegrationTest {
 		when(cryptoCore.asymmetricDecrypt(Mockito.any(), Mockito.any())).thenReturn("".getBytes());
 		SymmetricKeyRequestDto symmetricKeyRequestDto = new SymmetricKeyRequestDto("applicationId",
 				LocalDateTime.parse("2010-05-01 12:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "referenceId",
-				"");
+				"", true);
 		requestWrapper.setRequest(symmetricKeyRequestDto);
 		String content = mapper.writeValueAsString(requestWrapper);
 		MvcResult result = mockMvc.perform(post("/decrypt").contentType(MediaType.APPLICATION_JSON).content(content))
@@ -386,7 +242,7 @@ public class KeymanagerIntegrationTest {
 		when(cryptoCore.asymmetricDecrypt(Mockito.any(), Mockito.any())).thenReturn("".getBytes());
 		SymmetricKeyRequestDto symmetricKeyRequestDto = new SymmetricKeyRequestDto("applicationId",
 				LocalDateTime.parse("2010-05-01 12:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "referenceId",
-				"");
+				"", true);
 		requestWrapper.setRequest(symmetricKeyRequestDto);
 		String content = mapper.writeValueAsString(requestWrapper);
 		MvcResult result = mockMvc.perform(post("/decrypt").contentType(MediaType.APPLICATION_JSON).content(content))
@@ -402,7 +258,7 @@ public class KeymanagerIntegrationTest {
 		when(cryptoCore.asymmetricDecrypt(Mockito.any(), Mockito.any())).thenReturn("".getBytes());
 		SymmetricKeyRequestDto symmetricKeyRequestDto = new SymmetricKeyRequestDto("applicationId",
 				LocalDateTime.parse("2010-05-01 12:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "referenceId",
-				"");
+				"", true);
 		requestWrapper.setRequest(symmetricKeyRequestDto);
 		String content = mapper.writeValueAsString(requestWrapper);
 		MvcResult result = mockMvc.perform(post("/decrypt").contentType(MediaType.APPLICATION_JSON).content(content))
@@ -421,7 +277,7 @@ public class KeymanagerIntegrationTest {
 		doReturn("".getBytes()).when(keymanagerUtil).decryptKey(Mockito.any(), Mockito.any(), Mockito.any());
 		SymmetricKeyRequestDto symmetricKeyRequestDto = new SymmetricKeyRequestDto("applicationId",
 				LocalDateTime.parse("2010-05-01 12:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "referenceId",
-				"");
+				"", true);
 		requestWrapper.setRequest(symmetricKeyRequestDto);
 		String content = mapper.writeValueAsString(requestWrapper);
 		MvcResult result = mockMvc.perform(post("/decrypt").contentType(MediaType.APPLICATION_JSON).content(content))
@@ -441,33 +297,12 @@ public class KeymanagerIntegrationTest {
 		doReturn(key.getPrivate().getEncoded()).when(keymanagerUtil).decryptKey(Mockito.any(), Mockito.any(), Mockito.any());
 		SymmetricKeyRequestDto symmetricKeyRequestDto = new SymmetricKeyRequestDto("applicationId",
 				LocalDateTime.parse("2010-05-01 12:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "referenceId",
-				"");
+				"", true);
 		requestWrapper.setRequest(symmetricKeyRequestDto);
 		String content = mapper.writeValueAsString(requestWrapper);
 		MvcResult result = mockMvc.perform(post("/decrypt").contentType(MediaType.APPLICATION_JSON).content(content))
 				.andExpect(status().is(200)).andReturn();
 		// System.out.println(result.getResponse().getContentAsString());
-	}
-
-	@WithUserDetails("reg-processor")
-	@Test
-	public void getSignPublicKeyFromHSMMultipleAliasReference() throws Exception {
-		setupSingleKeyAlias();
-		setupKey();
-		when(keyAliasRepository.findByApplicationIdAndReferenceId(Mockito.any(), Mockito.any())).thenReturn(keyalias);
-		when(cryptoCore.sign(Mockito.any(), Mockito.any())).thenReturn("");
-		when(keyStore.getAsymmetricKey(Mockito.any())).thenReturn(privateKeyEntry);
-		MvcResult result = mockMvc.perform(get("/publickey/KERNEL?referenceId=SIGN&timeStamp=2010-01-01T12:00:00.000Z"))
-				.andExpect(status().is(200)).andReturn();
-
-		ResponseWrapper<?> responseWrapper = objectMapper.readValue(result.getResponse().getContentAsString(),
-				ResponseWrapper.class);
-		PublicKeyResponse<String> publicKeyResponse = objectMapper.readValue(
-				objectMapper.writeValueAsString(responseWrapper.getResponse()),
-				new TypeReference<PublicKeyResponse<String>>() {
-				});
-
-		assertThat(publicKeyResponse.getPublicKey(), isA(String.class));
 	}
 
 	@WithUserDetails("reg-processor")

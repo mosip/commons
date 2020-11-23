@@ -30,7 +30,7 @@ public class ApplicantTypeController {
 	@Autowired
 	private ApplicantTypeService applicantTypeService;
 
-	@PreAuthorize("hasRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_SUPERVISOR','PRE_REGISTRATION','REGISTRATION_OFFICER')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_SUPERVISOR','PRE_REGISTRATION','REGISTRATION_OFFICER')")
 	@ResponseFilter
 	@PostMapping(value = "/getApplicantType")
 	public ResponseWrapper<ResponseDTO> getApplicantType(@Valid @RequestBody RequestWrapper<RequestDTO> dto) {

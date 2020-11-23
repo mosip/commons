@@ -77,7 +77,7 @@ public class MachineController {
 	 */
 	@ResponseFilter
 	@GetMapping(value = "/machines/{id}/{langcode}")
-	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN','REGISTRATION_CLIENT','REGISTRATION_PROCESSOR')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN','REGISTRATION_CLIENT','REGISTRATION_PROCESSOR','RESIDENT')")
 	@ApiOperation(value = "Retrieve all Machine Details for given Languge Code", notes = "Retrieve all Machine Detail for given Languge Code and ID")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "When Machine Details retrieved from database for the given Languge Code and ID"),

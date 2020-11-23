@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import io.mosip.kernel.core.authmanager.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,31 +54,6 @@ import io.mosip.kernel.auth.defaultimpl.service.UinService;
 import io.mosip.kernel.auth.defaultimpl.util.AuthUtil;
 import io.mosip.kernel.auth.defaultimpl.util.TokenGenerator;
 import io.mosip.kernel.auth.defaultimpl.util.TokenValidator;
-import io.mosip.kernel.core.authmanager.model.AccessTokenResponseDTO;
-import io.mosip.kernel.core.authmanager.model.AuthNResponse;
-import io.mosip.kernel.core.authmanager.model.AuthNResponseDto;
-import io.mosip.kernel.core.authmanager.model.AuthResponseDto;
-import io.mosip.kernel.core.authmanager.model.AuthZResponseDto;
-import io.mosip.kernel.core.authmanager.model.ClientSecret;
-import io.mosip.kernel.core.authmanager.model.LoginUser;
-import io.mosip.kernel.core.authmanager.model.MosipUserDto;
-import io.mosip.kernel.core.authmanager.model.MosipUserListDto;
-import io.mosip.kernel.core.authmanager.model.MosipUserSaltListDto;
-import io.mosip.kernel.core.authmanager.model.MosipUserTokenDto;
-import io.mosip.kernel.core.authmanager.model.OtpUser;
-import io.mosip.kernel.core.authmanager.model.PasswordDto;
-import io.mosip.kernel.core.authmanager.model.RIdDto;
-import io.mosip.kernel.core.authmanager.model.RefreshTokenRequest;
-import io.mosip.kernel.core.authmanager.model.RefreshTokenResponse;
-import io.mosip.kernel.core.authmanager.model.RolesListDto;
-import io.mosip.kernel.core.authmanager.model.UserDetailsResponseDto;
-import io.mosip.kernel.core.authmanager.model.UserNameDto;
-import io.mosip.kernel.core.authmanager.model.UserOtp;
-import io.mosip.kernel.core.authmanager.model.UserPasswordRequestDto;
-import io.mosip.kernel.core.authmanager.model.UserPasswordResponseDto;
-import io.mosip.kernel.core.authmanager.model.UserRegistrationRequestDto;
-import io.mosip.kernel.core.authmanager.model.UserRoleDto;
-import io.mosip.kernel.core.authmanager.model.ValidationResponseDto;
 import io.mosip.kernel.core.authmanager.spi.AuthService;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 
@@ -252,6 +228,7 @@ public class AuthServiceImpl implements AuthService {
 			response = authRestTemplate.postForEntity(uriComponentsBuilder.buildAndExpand(pathParams).toUriString(),
 					request, AccessTokenResponse.class);
 		} catch (HttpClientErrorException | HttpServerErrorException ex) {
+			LOGGER.error("Exception >>>>>>>>>>>> ", ex);
 			if (ex.getRawStatusCode() == 401) {
 				throw new AuthManagerException(AuthErrorCode.INVALID_CREDENTIALS.getErrorCode(),
 						AuthErrorCode.INVALID_CREDENTIALS.getErrorMessage());
@@ -363,6 +340,7 @@ public class AuthServiceImpl implements AuthService {
 			authNResponseDto.setExpiryTime(mosipToken.getExpTime());
 			authNResponseDto.setRefreshToken(mosipToken.getRefreshToken());
 			authNResponseDto.setUserId(mosipToken.getMosipUserDto().getUserId());
+			authNResponseDto.setRefreshExpiryTime(mosipToken.getRefreshExpTime());
 		} else {
 			authNResponseDto.setMessage(mosipToken.getMessage());
 			authNResponseDto.setStatus(mosipToken.getStatus());
@@ -409,6 +387,7 @@ public class AuthServiceImpl implements AuthService {
 		return authNResponseDto;
 	}
 
+
 	/**
 	 * Method used for generating refresh token
 	 * 
@@ -429,7 +408,7 @@ public class AuthServiceImpl implements AuthService {
 		tokenRequestBody.add(AuthConstant.GRANT_TYPE, AuthConstant.REFRESH_TOKEN);
 		tokenRequestBody.add(AuthConstant.REFRESH_TOKEN, refreshToken);
 		tokenRequestBody.add(AuthConstant.CLIENT_ID, refreshTokenRequest.getClientID());
-		tokenRequestBody.add(AuthConstant.CLIENT_SECRET, refreshTokenRequest.getClientID());
+		tokenRequestBody.add(AuthConstant.CLIENT_SECRET, refreshTokenRequest.getClientSecret());
 		String realmId = authUtil.getRealmIdFromAppId(appID);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -773,6 +752,49 @@ public class AuthServiceImpl implements AuthService {
 		map.add(AuthConstant.CLIENT_ID, clientID);
 		map.add(AuthConstant.CLIENT_SECRET, clientSecret);
 		return map;
+	}
+
+	@Override
+	public AuthNResponseDto authenticateUser(LoginUserWithClientId loginUser) throws Exception {
+		AuthNResponseDto authNResponseDto = null;
+		HttpHeaders headers = new HttpHeaders();
+		String realmId = authUtil.getRealmIdFromAppId(loginUser.getAppId());
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		MultiValueMap<String, String> tokenRequestBody = null;
+		ResponseEntity<AccessTokenResponse> response = null;
+		Map<String, String> pathParams = new HashMap<>();
+		pathParams.put(AuthConstant.REALM_ID, realmId);
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(keycloakOpenIdUrl + "/token");
+		LOGGER.debug("invoke " + uriComponentsBuilder.toUriString() + " realm " + realmId + " username " + loginUser.getUserName() + "clientId " +
+				loginUser.getClientId());
+		tokenRequestBody = getPasswordValueMap(loginUser.getClientId(), loginUser.getClientSecret(), loginUser.getUserName(),
+				loginUser.getPassword());
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(tokenRequestBody, headers);
+		try {
+			response = authRestTemplate.postForEntity(uriComponentsBuilder.buildAndExpand(pathParams).toUriString(),
+					request, AccessTokenResponse.class);
+		} catch (HttpClientErrorException | HttpServerErrorException ex) {
+			LOGGER.error("Exception >>>>>>>>>>>> ", ex);
+			if (ex.getRawStatusCode() == 401) {
+				throw new AuthManagerException(AuthErrorCode.INVALID_CREDENTIALS.getErrorCode(),
+						AuthErrorCode.INVALID_CREDENTIALS.getErrorMessage());
+			} else if (ex.getRawStatusCode() == 400) {
+				throw new AuthManagerException(AuthErrorCode.REQUEST_VALIDATION_ERROR.getErrorCode(),
+						AuthErrorCode.REQUEST_VALIDATION_ERROR.getErrorMessage());
+			}
+
+			throw new AuthManagerException(AuthErrorCode.SERVER_ERROR.getErrorCode(),
+					AuthErrorCode.SERVER_ERROR.getErrorCode());
+		}
+		AccessTokenResponse accessTokenResponse = response.getBody();
+		authNResponseDto = new AuthNResponseDto();
+		authNResponseDto.setToken(accessTokenResponse.getAccess_token());
+		authNResponseDto.setRefreshToken(accessTokenResponse.getRefresh_token());
+		authNResponseDto.setExpiryTime(Long.parseLong(accessTokenResponse.getExpires_in()));
+		authNResponseDto.setStatus(AuthConstant.SUCCESS_STATUS);
+		authNResponseDto.setMessage(AuthConstant.USERPWD_SUCCESS_MESSAGE);
+		authNResponseDto.setRefreshExpiryTime(Long.parseLong(accessTokenResponse.getRefresh_expires_in()));
+		return authNResponseDto;
 	}
 
 }
