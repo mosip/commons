@@ -224,6 +224,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<kernel.applicant-type.version>1.2.0-SNAPSHOT</kernel.applicant-type.version>
 		<kernel.logger.logback.version>1.2.0-SNAPSHOT</kernel.logger.logback.version>
+		<tss.version>0.3.0</tss.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -302,6 +303,11 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-collections4</artifactId>
 			<version>${commons-collections4.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.microsoft</groupId>
+			<artifactId>TSS.Java</artifactId>
+			<version>${tss.version}</version>
 		</dependency>
 	</dependencies>
 	

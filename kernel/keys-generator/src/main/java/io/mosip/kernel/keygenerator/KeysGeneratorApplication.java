@@ -11,7 +11,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import io.mosip.kernel.keygenerator.generator.KeysGenerator;
 
 @SpringBootApplication(scanBasePackages = {"io.mosip.kernel.keygenerator.*", "io.mosip.kernel.keymanagerservice.*", 
-										   "io.mosip.kernel.keymanager.*", "io.mosip.kernel.crypto.*" })
+										   "io.mosip.kernel.keymanager.*", "io.mosip.kernel.crypto.*", "io.mosip.kernel.cryptomanager.*" })
 public class KeysGeneratorApplication implements CommandLineRunner {
 
 	private static final Logger LOGGER = Logger.getLogger(KeysGeneratorApplication.class.getName());

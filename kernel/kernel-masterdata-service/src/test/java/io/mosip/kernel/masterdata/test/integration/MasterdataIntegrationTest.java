@@ -1849,7 +1849,7 @@ public class MasterdataIntegrationTest {
 		when(holidayRepository.create(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot execute ", null));
 		when(locationRepository.findByCode(anyString())).thenReturn(locationHierarchies);
-		when(holidayRepository.findHolidayByHolidayDate(Mockito.any()))
+		when(holidayRepository.findHolidayByHolidayDateHolidayName(Mockito.any(),Mockito.any()))
 		.thenReturn(holidays);
 		when(holidayRepository.findAll()).thenReturn(holidays);
 		HolidayDto holidayDto =new HolidayDto();
@@ -1859,7 +1859,7 @@ public class MasterdataIntegrationTest {
 		holidayDto.setIsActive(true);
 		holidayDto.setLangCode("eng");
 		holidayDto.setLocationCode("BLR");
-		when(holidayRepository.findHolidayByHolidayDateLocationCodeLangCode(any(), any(),any())).thenReturn(null);
+		when(holidayRepository.findHolidayByHolidayNameHolidayDateLocationCodeLangCode(any(),any(), any(),any())).thenReturn(null);
 		
 		mockMvc.perform(post("/holidays").contentType(MediaType.APPLICATION_JSON).content(json))
 				.andExpect(status().isInternalServerError());

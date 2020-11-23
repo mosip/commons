@@ -24,7 +24,7 @@ public interface IPacketReader {
 
     public Document getDocument(String id, String documentName, String source, String process);
 
-    public BiometricRecord getBiometric(String id, String biometricSchemaField, List<BiometricType> modalities, String source, String process);
+    public BiometricRecord getBiometric(String id, String biometricSchemaField, List<String> modalities, String source, String process);
 
     public Map<String, String> getMetaInfo(String id, String source, String process);
 

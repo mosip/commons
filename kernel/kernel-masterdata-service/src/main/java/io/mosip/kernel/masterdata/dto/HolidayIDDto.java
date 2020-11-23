@@ -16,6 +16,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HolidayIDDto {
+	
+	private int holidayId;
 
 	private String locationCode;
 

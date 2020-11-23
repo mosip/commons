@@ -88,7 +88,7 @@ public class RegistrationCenterMachineUserServiceHistoryImpl implements Registra
 			List<RegistrationCenterUserMachineMappingHistoryDto> registrationCenters = new ArrayList<>();
 			for(MachineHistory machinesHistory: machinesHistories) {
 				for(UserDetailsHistory userHistory: usersHistories) {
-					if(userHistory.getLangCode().equals(machinesHistory.getLangCode())) {
+					
 					RegistrationCenterUserMachineMappingHistoryDto dto=new RegistrationCenterUserMachineMappingHistoryDto();
 					dto.setCntrId(userHistory.getRegCenterId());
 					if(userHistory.getIsActive() == null)dto.setIsActive(machinesHistory.getIsActive());
@@ -102,13 +102,13 @@ public class RegistrationCenterMachineUserServiceHistoryImpl implements Registra
 					if(userHistory.getEffDTimes() != null && machinesHistory.getEffectDateTime()!= null) {
 						dto.setEffectivetimes(machinesHistory.getEffectDateTime().isAfter( userHistory.getEffDTimes())? machinesHistory.getEffectDateTime() : userHistory.getEffDTimes() );
 					}
-					dto.setLangCode(userHistory.getLangCode());
+					dto.setLangCode(machinesHistory.getLangCode());
 					dto.setMachineId(machinesHistory.getId());
 					dto.setUsrId(userHistory.getId());
 					dto.setEffectivetimes(userHistory.getEffDTimes().isBefore(machinesHistory.getEffectDateTime()) ? userHistory.getEffDTimes() :machinesHistory.getEffectDateTime());
 					registrationCenters.add(dto);
 				}
-				}
+				
 			}
 			centerUserMachineMappingResponseDto.setRegistrationCenters(registrationCenters);
 		}

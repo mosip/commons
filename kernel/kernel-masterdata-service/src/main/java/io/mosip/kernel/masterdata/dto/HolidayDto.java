@@ -22,4 +22,7 @@ public class HolidayDto {
 	private String langCode;
 
 	private Boolean isActive;
+	
+	private int holidayId;
+
 }

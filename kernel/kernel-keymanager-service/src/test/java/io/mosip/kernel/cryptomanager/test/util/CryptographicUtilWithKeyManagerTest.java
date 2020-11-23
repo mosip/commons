@@ -80,7 +80,7 @@ public class CryptographicUtilWithKeyManagerTest {
 	public void testEncrypt() throws Exception {
 		cryptomanagerUtil.getCertificate(
 				new CryptomanagerRequestDto("REGISTRATION", "ref123", LocalDateTime.parse("2018-12-06T12:07:44.403"),
-						"dXJ2aWw", "ykrkpgjjtChlVdvDNJJEnQ", "VGhpcyBpcyBzYW1wbGUgYWFk"));
+						"dXJ2aWw", "ykrkpgjjtChlVdvDNJJEnQ", "VGhpcyBpcyBzYW1wbGUgYWFk", false));
 	}
 
 	@Test
@@ -88,7 +88,7 @@ public class CryptographicUtilWithKeyManagerTest {
 		when(cryptoCore.symmetricDecrypt(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn("dXJ2aWw".getBytes());
 		cryptomanagerUtil.getDecryptedSymmetricKey(
 				new CryptomanagerRequestDto("REGISTRATION", "ref123", LocalDateTime.parse("2018-12-06T12:07:44.403"),
-						"dXJ2aWwjS0VZX1NQTElUVEVSI3Vydmls", "ykrkpgjjtChlVdvDNJJEnQ", "VGhpcyBpcyBzYW1wbGUgYWFk"));
+						"dXJ2aWwjS0VZX1NQTElUVEVSI3Vydmls", "ykrkpgjjtChlVdvDNJJEnQ", "VGhpcyBpcyBzYW1wbGUgYWFk", false));
 	}
 
 }
