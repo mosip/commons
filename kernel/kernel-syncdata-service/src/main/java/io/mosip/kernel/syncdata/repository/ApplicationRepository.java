@@ -26,6 +26,6 @@ public interface ApplicationRepository extends JpaRepository<Application, String
 	 * @param currentTimeStamp - currentTimestamp
 	 * @return list of {@link Application} - list of applications
 	 */
-	@Query("FROM Application WHERE (createdDateTime > ?1 and createdDateTime <=?2) OR (updatedDateTime > ?1 and updatedDateTime <=?2)  OR (deletedDateTime > ?1 and deletedDateTime <=?2)")
+	@Query("FROM Application WHERE (createdDateTime BETWEEN ?1 AND ?2) OR (updatedDateTime BETWEEN ?1 AND ?2)  OR (deletedDateTime BETWEEN ?1 AND ?2)")
 	List<Application> findAllLatestCreatedUpdateDeleted(LocalDateTime lastUpdated, LocalDateTime currentTimeStamp);
 }

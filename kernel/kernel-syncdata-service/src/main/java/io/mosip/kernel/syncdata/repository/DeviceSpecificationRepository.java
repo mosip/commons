@@ -38,7 +38,7 @@ public interface DeviceSpecificationRepository extends JpaRepository<DeviceSpeci
 	 * @param currentTimeStamp - currentTimestamp
 	 * @return list of {@link DeviceSpecification} - list of device specification
 	 */
-	@Query(value = "SELECT ds.id, ds.name, ds.brand, ds.model, ds.dtyp_code, ds.min_driver_ver, ds.descr, ds.lang_code, ds.is_active, ds.cr_by, ds.cr_dtimes, ds.upd_by, ds.upd_dtimes, ds.is_deleted, ds.del_dtimes from master.device_spec ds where ds.id in (select distinct md.dspec_id from master.device_master md where md.regcntr_id =?1) and ((ds.cr_dtimes > ?2 and ds.cr_dtimes <=?3) or (ds.upd_dtimes > ?2 and ds.upd_dtimes<=?3) or (ds.del_dtimes > ?2 and ds.del_dtimes <=?3))", nativeQuery = true)
+	@Query(value = "SELECT ds.id, ds.name, ds.brand, ds.model, ds.dtyp_code, ds.min_driver_ver, ds.descr, ds.lang_code, ds.is_active, ds.cr_by, ds.cr_dtimes, ds.upd_by, ds.upd_dtimes, ds.is_deleted, ds.del_dtimes from master.device_spec ds where ds.id in (select distinct md.dspec_id from master.device_master md where md.regcntr_id =?1) and ((ds.cr_dtimes BETWEEN ?2 AND ?3) or (ds.upd_dtimes BETWEEN ?2 AND ?3) or (ds.del_dtimes BETWEEN ?2 AND ?3))", nativeQuery = true)
 	List<DeviceSpecification> findLatestDeviceTypeByRegCenterId(String regCenterId, LocalDateTime lastUpdated,
 			LocalDateTime currentTimeStamp);
 }

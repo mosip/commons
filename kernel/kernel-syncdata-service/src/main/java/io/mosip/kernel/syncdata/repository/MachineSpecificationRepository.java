@@ -30,7 +30,7 @@ public interface MachineSpecificationRepository extends JpaRepository<MachineSpe
 	 * @param currentTimeStamp - currentTimestamp
 	 * @return {@link MachineSpecification} -list of machine specification
 	 */
-	@Query(value = "SELECT ms.id, ms.name, ms.brand, ms.model, ms.mtyp_code, ms.min_driver_ver, ms.descr, ms.lang_code, ms.is_active, ms.cr_by, ms.cr_dtimes, ms.upd_by, ms.upd_dtimes, ms.is_deleted, ms.del_dtimes from master.machine_spec ms where	ms.id in( select distinct mm.mspec_id from master.machine_master mm where mm.regcntr_id=?1 and (ms.cr_dtimes > ?2 and ms.cr_dtimes <=?3) or (ms.upd_dtimes >?2 and ms.upd_dtimes <=?3) or (ms.del_dtimes > ?2 and ms.del_dtimes <=?3))", nativeQuery = true)
+	@Query(value = "SELECT ms.id, ms.name, ms.brand, ms.model, ms.mtyp_code, ms.min_driver_ver, ms.descr, ms.lang_code, ms.is_active, ms.cr_by, ms.cr_dtimes, ms.upd_by, ms.upd_dtimes, ms.is_deleted, ms.del_dtimes from master.machine_spec ms where	ms.id in( select distinct mm.mspec_id from master.machine_master mm where mm.regcntr_id=?1 and (ms.cr_dtimes BETWEEN ?2 AND ?3) or (ms.upd_dtimes BETWEEN ?2 AND ?3) or (ms.del_dtimes BETWEEN ?2 AND ?3))", nativeQuery = true)
 	List<MachineSpecification> findLatestByRegCenterId(String regCenterId, LocalDateTime lastUpdated,
 			LocalDateTime currentTimeStamp);
 }
