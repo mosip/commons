@@ -26,6 +26,6 @@ public interface TitleRepository extends JpaRepository<Title, String> {
 	 * @param currentTimeStamp - current time stamp
 	 * @return list of {@link Title} - list of title
 	 */
-	@Query("FROM Title WHERE (createdDateTime > ?1  AND createdDateTime <=?2) OR (updatedDateTime > ?1 AND updatedDateTime <=?2)  OR (deletedDateTime > ?1 AND deletedDateTime<=?2)")
+	@Query("FROM Title WHERE (createdDateTime BETWEEN ?1 AND ?2) OR (updatedDateTime BETWEEN ?1 AND ?2)  OR (deletedDateTime BETWEEN ?1 AND ?2)")
 	List<Title> findAllLatestCreatedUpdateDeleted(LocalDateTime lastUpdated, LocalDateTime currentTimeStamp);
 }

@@ -28,7 +28,7 @@ public interface MachineRepository extends JpaRepository<Machine, String> {
 	 * @param currentTimeStamp - currentTimestamp
 	 * @return list of {@link Machine} - list of machine
 	 */
-	@Query(value = "SELECT mm.id, mm.name, mm.mac_address, mm.serial_num, mm.ip_address, mm.mspec_id, mm.lang_code, mm.is_active, mm.cr_by, mm.cr_dtimes, mm.upd_by, mm.upd_dtimes, mm.is_deleted, mm.del_dtimes, mm.validity_end_dtimes,mm.key_index,mm.public_key,mm.zone_code,mm.regcntr_id,mm.sign_public_key,mm.sign_key_index,mm.public_key,mm.key_index from master.machine_master mm  where mm.regcntr_id = ?1 and ((mm.cr_dtimes >?2 AND mm.cr_dtimes <=?3) or (mm.upd_dtimes >?2 AND mm.upd_dtimes<=?3) or (mm.del_dtimes >?2 AND mm.del_dtimes<=?3))", nativeQuery = true)
+	@Query(value = "SELECT mm.id, mm.name, mm.mac_address, mm.serial_num, mm.ip_address, mm.mspec_id, mm.lang_code, mm.is_active, mm.cr_by, mm.cr_dtimes, mm.upd_by, mm.upd_dtimes, mm.is_deleted, mm.del_dtimes, mm.validity_end_dtimes,mm.key_index,mm.public_key,mm.zone_code,mm.regcntr_id,mm.sign_public_key,mm.sign_key_index,mm.public_key,mm.key_index from master.machine_master mm  where mm.regcntr_id = ?1 and ((mm.cr_dtimes BETWEEN ?2 AND ?3) or (mm.upd_dtimes BETWEEN ?2 AND ?3) or (mm.del_dtimes BETWEEN ?2 AND ?3))", nativeQuery = true)
 	List<Machine> findAllLatestCreatedUpdateDeleted(String regCenterId, LocalDateTime lastUpdated,
 			LocalDateTime currentTimeStamp);
 
@@ -88,7 +88,7 @@ public interface MachineRepository extends JpaRepository<Machine, String> {
 	@Query(value = "select *  from  master.machine_master mm where mm.regcntr_id=?1 and mm.id=?2 and mm.is_active=true", nativeQuery = true)
 	List<Machine> getRegCenterIdWithRegIdAndMachineId(String regCenterId, String machineId);
 
-	@Query("From Machine mm WHERE mm.regCenterId =?1 AND ((mm.createdDateTime > ?2 AND mm.createdDateTime<=?3) OR (mm.updatedDateTime > ?2 AND mm.updatedDateTime<=?3) OR (mm.deletedDateTime > ?2 AND mm.deletedDateTime<=?3))")
+	@Query("From Machine mm WHERE mm.regCenterId =?1 AND ((mm.createdDateTime BETWEEN ?2 AND ?3) OR (mm.updatedDateTime BETWEEN ?2 AND ?3) OR (mm.deletedDateTime BETWEEN ?2 AND ?3))")
 	List<Machine> findAllLatestCreatedUpdatedDeleted(String regCenterId, LocalDateTime lastUpdated,
 			LocalDateTime currentTimeStamp);
 

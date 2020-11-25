@@ -27,7 +27,7 @@ public interface HolidayRepository extends JpaRepository<Holiday, Integer> {
 	 * @param currentTimeStamp - currentTimestamp
 	 * @return list of {@link Holiday} - list of holiday
 	 */
-	@Query(value = "select lh.id, lh.location_code, lh.holiday_date, lh.holiday_name, lh.holiday_desc, lh.lang_code, lh.is_active, lh.cr_by, lh.cr_dtimes, lh.upd_by, lh.upd_dtimes, lh.is_deleted, lh.del_dtimes from master.loc_holiday lh join master.registration_center rc  on lh.location_code = rc.holiday_loc_code join master.machine_master rcm on rcm.regcntr_id = rc.id and rc.lang_code = rcm.lang_code where rcm.id=?1  and ((lh.cr_dtimes > ?2 and lh.cr_dtimes <=?3) or (lh.upd_dtimes > ?2 and lh.upd_dtimes <=?3) or (lh.del_dtimes > ?2 and lh.del_dtimes <=?3))", nativeQuery = true)
+	@Query(value = "select lh.id, lh.location_code, lh.holiday_date, lh.holiday_name, lh.holiday_desc, lh.lang_code, lh.is_active, lh.cr_by, lh.cr_dtimes, lh.upd_by, lh.upd_dtimes, lh.is_deleted, lh.del_dtimes from master.loc_holiday lh join master.registration_center rc  on lh.location_code = rc.holiday_loc_code join master.machine_master rcm on rcm.regcntr_id = rc.id and rc.lang_code = rcm.lang_code where rcm.id=?1  and ((lh.cr_dtimes BETWEEN ?2 AND ?3) or (lh.upd_dtimes BETWEEN ?2 AND ?3) or (lh.del_dtimes BETWEEN ?2 AND ?3))", nativeQuery = true)
 	List<Holiday> findAllLatestCreatedUpdateDeletedByMachineId(String machineId, LocalDateTime lastUpdated,
 			LocalDateTime currentTimeStamp);
 
