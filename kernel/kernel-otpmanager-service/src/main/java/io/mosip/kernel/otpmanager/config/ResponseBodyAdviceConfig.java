@@ -3,6 +3,8 @@ package io.mosip.kernel.otpmanager.config;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import io.mosip.kernel.core.exception.ExceptionUtils;
+import io.mosip.kernel.core.logger.spi.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -20,7 +22,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
-import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 
 /**
@@ -33,6 +34,8 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
  */
 @RestControllerAdvice
 public class ResponseBodyAdviceConfig implements ResponseBodyAdvice<ResponseWrapper<?>> {
+
+	private static final Logger mosipLogger = LoggerConfiguration.logConfig(ResponseBodyAdviceConfig.class);
 
 	/**
 	 * Autowired reference for {@link ObjectMapper}.
@@ -90,8 +93,7 @@ public class ResponseBodyAdviceConfig implements ResponseBodyAdvice<ResponseWrap
 			body.setErrors(null);
 			return body;
 		} catch (Exception e) {
-			Logger mosipLogger = LoggerConfiguration.logConfig(ResponseBodyAdviceConfig.class);
-			mosipLogger.error("", "", "", e.getMessage());
+			mosipLogger.error("", "", "", ExceptionUtils.getStackTrace(e));
 		}
 		return body;
 	}

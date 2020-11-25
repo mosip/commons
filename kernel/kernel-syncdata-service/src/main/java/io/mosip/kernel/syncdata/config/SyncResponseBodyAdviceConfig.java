@@ -32,6 +32,8 @@ import io.mosip.kernel.cryptosignature.constant.SigningDataErrorCode;
 @RestControllerAdvice
 public class SyncResponseBodyAdviceConfig implements ResponseBodyAdvice<ResponseWrapper<?>> {
 
+	private static final Logger mosipLogger = LoggerConfiguration.logConfig(SyncResponseBodyAdviceConfig.class);
+
 	@Autowired
 	private ObjectMapper objectMapper;
 
@@ -73,7 +75,6 @@ public class SyncResponseBodyAdviceConfig implements ResponseBodyAdvice<Response
 			body.setErrors(null);
 
 		} catch (Exception e) {
-			Logger mosipLogger = LoggerConfiguration.logConfig(SyncResponseBodyAdviceConfig.class);
 			mosipLogger.error("", "", "", e.getMessage());
 		}
 		if (body != null) {
