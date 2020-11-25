@@ -26,8 +26,6 @@ public class LoggerConfiguration {
 	 * @return the appender.
 	 */
 	public static Logger logConfig(Class<?> clazz) {
-		ConsoleAppender appender = new ConsoleAppender();
-		appender.setTarget(AuthAdapterConstant.LOGGER_TARGET);
-		return Logfactory.getDefaultConsoleLogger(appender, clazz);
+		return Logfactory.getSlf4jLogger(clazz);
 	}
 }
