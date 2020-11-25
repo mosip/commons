@@ -587,9 +587,7 @@ public class KeycloakImpl implements DataStore {
 			if (userDetails.stream().anyMatch(user -> user.equals(userName))) {
 				String email = jsonNode.get("email").textValue();
 				JsonNode attributeNodes = jsonNode.get("attributes");
-				String userPassword = attributeNodes.get("userPassword").get(0).asText();
-				PasswordDetails password = PasswordUtil.splitCredentials(CryptoUtil.decodeBase64(userPassword));
-				userPassword = DatatypeConverter.printHexBinary(password.getPassword());
+
 				String mobile = null;
 				String rid = null;
 				String name = jsonNode.get("firstName").asText() + " " + jsonNode.get("lastName").asText();
@@ -615,7 +613,7 @@ public class KeycloakImpl implements DataStore {
 				mosipUserDto.setRId(rid);
 				mosipUserDto.setUserId(userName);
 				mosipUserDto.setName(name);
-				mosipUserDto.setUserPassword(userPassword);
+				mosipUserDto.setUserPassword(null);
 				mosipUserDto.setRole(roles);
 				mosipUserDtos.add(mosipUserDto);
 			}

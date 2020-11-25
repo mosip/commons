@@ -502,6 +502,7 @@ public class AuthController {
 	 */
 	@ResponseFilter
 	@PostMapping(value = "/user/addpassword")
+	@Deprecated(forRemoval = true, since = "1.1.4")
 	public ResponseWrapper<UserPasswordResponseDto> addPassword(
 			@RequestBody @Valid RequestWrapper<UserPasswordRequestDto> userPasswordRequestDto) {
 		ResponseWrapper<UserPasswordResponseDto> responseWrapper = new ResponseWrapper<>();

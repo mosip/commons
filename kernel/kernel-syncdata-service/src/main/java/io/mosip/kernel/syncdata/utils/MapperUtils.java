@@ -366,7 +366,7 @@ public class MapperUtils {
 			userDetailMapDto.setMobile(userDetail.getMobile());
 			userDetailMapDto.setLangCode(userDetail.getLangCode());
 			userDetailMapDto.setName(userDetail.getName());
-			userDetailMapDto.setUserPassword(userDetail.getUserPassword());
+			userDetailMapDto.setUserPassword(null);
 			List<String> roles = Arrays.asList(userDetail.getRole().split(","));
 			userDetailMapDto.setRoles(roles);
 			userDetailMapDtoList.add(userDetailMapDto);
