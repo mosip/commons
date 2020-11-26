@@ -160,7 +160,7 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 		miscellaneousDataHelper.fillRetrievedData(serviceHelper, list);
 		
 		//Fills dynamic field data
-		//identitySchemaHelper.fillRetrievedData(list, machines.get(0).getPublicKey());
+		identitySchemaHelper.fillRetrievedData(list, machines.get(0).getPublicKey());
 		
 		response.setDataToSync(list);
 		return response;
