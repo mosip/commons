@@ -4,15 +4,16 @@ import static io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorE
 import static io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorErrorConstant.INVALID_INPUT_PARAMETER;
 import static io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorErrorConstant.MISSING_INPUT_PARAMETER;
 import static io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorErrorConstant.SCHEMA_IO_EXCEPTION;
-import static io.mosip.kernel.idobjectvalidator.constant.IdObjectValidatorConstant.KEYWORD;
 import static io.mosip.kernel.idobjectvalidator.constant.IdObjectValidatorConstant.ERROR;
 import static io.mosip.kernel.idobjectvalidator.constant.IdObjectValidatorConstant.INSTANCE;
+import static io.mosip.kernel.idobjectvalidator.constant.IdObjectValidatorConstant.KEYWORD;
 import static io.mosip.kernel.idobjectvalidator.constant.IdObjectValidatorConstant.PATH_SEPERATOR;
 import static io.mosip.kernel.idobjectvalidator.constant.IdObjectValidatorConstant.POINTER;
 import static io.mosip.kernel.idobjectvalidator.constant.IdObjectValidatorConstant.VALIDATORS;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.StreamSupport;
@@ -69,8 +70,14 @@ public class IdObjectSchemaValidator implements IdObjectValidator {
 	/** The Constant UNWANTED. */
 	private static final String UNWANTED = "unwanted";
 
-	/* (non-Javadoc)
-	 * @see io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator#validateIdObject(java.lang.String, java.lang.Object, java.util.List)
+	private static final String TYPE = "type";
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator#validateIdObject
+	 * (java.lang.String, java.lang.Object, java.util.List)
 	 */
 	@Override
 	public boolean validateIdObject(String identitySchema, Object identityObject, List<String> requiredFields)
@@ -115,7 +122,7 @@ public class IdObjectSchemaValidator implements IdObjectValidator {
 			JsonNode jsonIdSchemaNode = JsonLoader.fromString(schema.toString());
 
 			if (jsonIdSchemaNode.size() <= 0
-					|| !(jsonIdSchemaNode.hasNonNull("$schema") && jsonIdSchemaNode.hasNonNull("type"))) {
+					|| !(jsonIdSchemaNode.hasNonNull("$schema") && jsonIdSchemaNode.hasNonNull(TYPE))) {
 				throw new InvalidIdSchemaException(IdObjectValidatorErrorConstant.SCHEMA_IO_EXCEPTION.getErrorCode(),
 						IdObjectValidatorErrorConstant.SCHEMA_IO_EXCEPTION.getMessage());
 			}
@@ -131,7 +138,7 @@ public class IdObjectSchemaValidator implements IdObjectValidator {
 	/**
 	 * Gets the error list.
 	 *
-	 * @param report the report
+	 * @param report         the report
 	 * @param requiredFields the required fields
 	 * @return the error list
 	 */
@@ -144,12 +151,17 @@ public class IdObjectSchemaValidator implements IdObjectValidator {
 					if (processingMessageAsJson.hasNonNull(INSTANCE)
 							&& processingMessageAsJson.get(INSTANCE).hasNonNull(POINTER)) {
 						if (processingMessageAsJson.has(MISSING) && !processingMessageAsJson.get(MISSING).isNull()) {
-							buildErrorMessages(errorList, processingMessageAsJson, MISSING_INPUT_PARAMETER, MISSING, requiredFields);
+							buildErrorMessages(errorList, processingMessageAsJson, MISSING_INPUT_PARAMETER, MISSING,
+									requiredFields);
 						} else {
-							buildErrorMessages(errorList, processingMessageAsJson, INVALID_INPUT_PARAMETER, UNWANTED, null);
+							buildErrorMessages(errorList, processingMessageAsJson, INVALID_INPUT_PARAMETER, UNWANTED,
+									null);
 						}
-						if (processingMessageAsJson.hasNonNull(KEYWORD) && processingMessageAsJson.get(KEYWORD).asText().contentEquals(VALIDATORS)) {
-							buildErrorMessages(errorList, processingMessageAsJson, INVALID_INPUT_PARAMETER, KEYWORD, null);
+						if (processingMessageAsJson.hasNonNull(KEYWORD)
+								&& (processingMessageAsJson.get(KEYWORD).asText().contentEquals(VALIDATORS)
+										|| processingMessageAsJson.get(KEYWORD).asText().contentEquals(TYPE))) {
+							buildErrorMessages(errorList, processingMessageAsJson, INVALID_INPUT_PARAMETER, KEYWORD,
+									null);
 						}
 					}
 				}
@@ -161,28 +173,31 @@ public class IdObjectSchemaValidator implements IdObjectValidator {
 	/**
 	 * Builds the error message.
 	 *
-	 * @param errorList the error list
-	 * @param processingMessageAsJson            the processing message as json
-	 * @param errorConstant the error constant
-	 * @param field            the field
-	 * @param requiredFields the required fields
+	 * @param errorList               the error list
+	 * @param processingMessageAsJson the processing message as json
+	 * @param errorConstant           the error constant
+	 * @param field                   the field
+	 * @param requiredFields          the required fields
 	 * @return the string
 	 */
 	private void buildErrorMessages(List<ServiceError> errorList, JsonNode processingMessageAsJson,
 			IdObjectValidatorErrorConstant errorConstant, String field, List<String> requiredFields) {
-		if (processingMessageAsJson.hasNonNull(field)) {
+		logger.debug("ID SCHEMA ERROR : " + processingMessageAsJson.toString());
+		if (Objects.nonNull(field) && processingMessageAsJson.hasNonNull(field)) {
 			if (field.contentEquals(KEYWORD)) {
 				errorList.add(new ServiceError(errorConstant.getErrorCode(), String.format(errorConstant.getMessage(),
 						StringUtils.strip(processingMessageAsJson.get(INSTANCE).get(POINTER).asText(), "/"))));
 			} else {
-				StreamSupport.stream(((ArrayNode) processingMessageAsJson.get(field)).spliterator(), false)
-						.filter(element -> {
-							if (Objects.isNull(requiredFields)) {
-								return true;
-							} else {
-								return requiredFields.contains(element.asText());
-							}
-						}).forEach(
+				JsonNode elements = Objects.nonNull(processingMessageAsJson.get(UNWANTED))
+						? processingMessageAsJson.get(UNWANTED)
+						: processingMessageAsJson.get(MISSING);
+				StreamSupport
+						.stream(((ArrayNode) (Objects.nonNull(elements) ? elements : mapper.createArrayNode()))
+								.spliterator(), false)
+						.filter(element -> Objects.isNull(requiredFields) ? true
+								: requiredFields.parallelStream().map(reqField -> Arrays.asList(reqField.split("\\|")))
+										.anyMatch(fields -> fields.contains(element.asText())))
+						.forEach(
 								element -> errorList
 										.add(new ServiceError(errorConstant.getErrorCode(),
 												String.format(errorConstant.getMessage(),
