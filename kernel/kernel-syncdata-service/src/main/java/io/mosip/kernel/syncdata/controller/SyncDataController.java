@@ -226,8 +226,8 @@ public class SyncDataController {
 	 */
 	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN','Default')")
 	@ResponseFilter
-	@GetMapping("/userdetails/{regid}")
-	public ResponseWrapper<SyncUserDetailDto> getUserDetails(@PathVariable("regid") String regId) {
+	@GetMapping("/userdetails/{regcenterid}")
+	public ResponseWrapper<SyncUserDetailDto> getUserDetails(@PathVariable("regcenterid") String regId) {
 		String currentTimeStamp = DateUtils.getUTCCurrentDateTimeString();
 		SyncUserDetailDto syncUserDetailDto = syncUserDetailsService.getAllUserDetail(regId);
 		syncUserDetailDto.setLastSyncTime(currentTimeStamp);
@@ -246,6 +246,7 @@ public class SyncDataController {
 	@PreAuthorize("hasAnyRole('REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','REGISTRATION_ADMIN','Default')")
 	@ResponseFilter
 	@GetMapping("/usersalt/{regid}")
+	@Deprecated
 	public ResponseWrapper<SyncUserSaltDto> getUserSalts(@PathVariable("regid") String regId) {
 		String currentTimeStamp = DateUtils.getUTCCurrentDateTimeString();
 		SyncUserSaltDto syncUserDetailDto = syncUserDetailsService.getUserSalts(regId);

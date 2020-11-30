@@ -38,7 +38,7 @@ public interface DeviceHistoryRepository extends JpaRepository<DeviceHistory, St
 	DeviceHistory findByFirstByRegCenterIdAndDeviceIdAndEffectDtimesLessThanEqualAndIsDeletedFalseOrIsDeletedIsNull(
 			String regCenterId, String deviceId, LocalDateTime effectDtimes);
 	
-	@Query("From DeviceHistory mm WHERE mm.regCenterId =?1 AND ((mm.createdDateTime > ?2 AND mm.createdDateTime<=?3) OR (mm.updatedDateTime > ?2 AND mm.updatedDateTime<=?3) OR (mm.deletedDateTime > ?2 AND mm.deletedDateTime<=?3))")
+	@Query("From DeviceHistory mm WHERE mm.regCenterId =?1 AND ((mm.createdDateTime BETWEEN ?2 AND ?3) OR (mm.updatedDateTime BETWEEN ?2 AND ?3) OR (mm.deletedDateTime BETWEEN ?2 AND ?3))")
 	List<DeviceHistory> findLatestRegistrationCenterDeviceHistory(String regId, LocalDateTime lastUpdated,
 			LocalDateTime currentTimeStamp);
 }

@@ -30,7 +30,7 @@ public interface UserDetailsHistoryRepository extends JpaRepository<UserDetailsH
 	@Query(value = "select * from (SELECT * FROM master.user_detail_h m WHERE id = ?1 AND eff_dtimes<= ?2 and (is_deleted is null or is_deleted =false) ORDER BY eff_dtimes DESC) a LIMIT 1", nativeQuery = true)
 	List<UserDetailsHistory> getByUserIdAndTimestamp(String userId, LocalDateTime effDTimes);
 	// (?2 BETWEEN effDTimes AND CURRENT_TIMESTAMP)
-	@Query("From UserDetailsHistory mm WHERE mm.regCenterId =?1 AND ((mm.createdDateTime > ?2 AND mm.createdDateTime<=?3) OR (mm.updatedDateTime > ?2 AND mm.updatedDateTime<=?3) OR (mm.deletedDateTime > ?2 AND mm.deletedDateTime<=?3))")
+	@Query("From UserDetailsHistory mm WHERE mm.regCenterId =?1 AND ((mm.createdDateTime BETWEEN ?2 AND ?3) OR (mm.updatedDateTime BETWEEN ?2 AND ?3) OR (mm.deletedDateTime BETWEEN ?2 AND ?3))")
 	List<UserDetailsHistory> findLatestRegistrationCenterUserHistory(String regId, LocalDateTime lastUpdated,
 			LocalDateTime currentTimeStamp);
 

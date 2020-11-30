@@ -26,6 +26,6 @@ public interface BiometricTypeRepository extends JpaRepository<BiometricType, St
 	 * @param currentTimeStamp - currentTimestamp
 	 * @return list of {@link BiometricType} - list of biometric type
 	 */
-	@Query("FROM BiometricType WHERE (createdDateTime > ?1 and createdDateTime <=?2) OR (updatedDateTime > ?1 and updatedDateTime <=?2)  OR (deletedDateTime > ?1 and deletedDateTime <=?2)")
+	@Query("FROM BiometricType WHERE (createdDateTime BETWEEN ?1 AND ?2) OR (updatedDateTime BETWEEN ?1 AND ?2)  OR (deletedDateTime BETWEEN ?1 AND ?2)")
 	List<BiometricType> findAllLatestCreatedUpdateDeleted(LocalDateTime lastUpdated, LocalDateTime currentTimeStamp);
 }

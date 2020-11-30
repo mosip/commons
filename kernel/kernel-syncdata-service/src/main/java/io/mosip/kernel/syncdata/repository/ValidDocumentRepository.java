@@ -20,6 +20,6 @@ public interface ValidDocumentRepository extends JpaRepository<ValidDocument, Va
 	 * @param currentTimeStamp - current time stamp
 	 * @return list of {@link ValidDocument} - list of validDocument
 	 */
-	@Query("FROM ValidDocument WHERE (createdDateTime > ?1 AND createdDateTime <=?2) OR (updatedDateTime > ?1 AND updatedDateTime<=?2)  OR  (deletedDateTime > ?1 AND deletedDateTime <=?2)")
+	@Query("FROM ValidDocument WHERE (createdDateTime BETWEEN ?1 AND ?2) OR (updatedDateTime BETWEEN ?1 AND ?2)  OR  (deletedDateTime BETWEEN ?1 AND ?2)")
 	List<ValidDocument> findAllLatestCreatedUpdateDeleted(LocalDateTime lastUpdated, LocalDateTime currentTimeStamp);
 }
