@@ -90,6 +90,8 @@ public class SyncMasterDataServiceImpl implements SyncMasterDataService {
 	public SyncDataResponseDto syncClientSettings(String regCenterId, String keyIndex,
 			LocalDateTime lastUpdated, LocalDateTime currentTimestamp) 
 					throws InterruptedException, ExecutionException {
+
+		logger.info("syncClientSettings invoked for timespan from {} to {}", lastUpdated, currentTimestamp);
 				
 		RegistrationCenterMachineDto regCenterMachineDto = getRegistrationCenterMachine(regCenterId, keyIndex);
 		

@@ -407,8 +407,7 @@ public class PacketWriterImpl implements IPacketWriter {
                 String fileName = operationType + PacketManagerConstants.CBEFF_EXT;
                 addEntryToZip(fileName, xmlBytes, zipOutputStream);
                 this.registrationPacket.getMetaData().put(String.format("%sBiometricFileName", operationType), fileName);
-                addHashSequenceWithSource(PacketManagerConstants.OPERATIONS_SEQ, String.format(PacketManagerConstants.CBEFF_FILENAME,
-                        operationType), xmlBytes, hashSequences);
+                addHashSequenceWithSource(PacketManagerConstants.OPERATIONS_SEQ, operationType, xmlBytes, hashSequences);
             }
         }
     }

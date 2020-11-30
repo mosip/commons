@@ -13,6 +13,6 @@ public class SyncDataBaseDto {
 	
 	private String entityName;
 	private String entityType;
-	private List<String> data;
+	private String data;
 
 }

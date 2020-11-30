@@ -1745,6 +1745,7 @@ public class SyncMasterDataServiceHelper {
 			}
 			screenDetails = screenDetailRepository.findByLastUpdatedAndCurrentTimeStamp(lastUpdatedTime,
 					currentTimeStamp);
+
 		} catch (DataAccessException ex) {
 			throw new SyncDataServiceException(MasterDataErrorCode.SCREEN_DETAIL_FETCH_EXCEPTION.getErrorCode(),
 					MasterDataErrorCode.SCREEN_DETAIL_FETCH_EXCEPTION.getErrorMessage());
@@ -1755,83 +1756,6 @@ public class SyncMasterDataServiceHelper {
 		return CompletableFuture.completedFuture(screenDetailDtos);
 	}
 
-	@Async
-	public CompletableFuture<List<DeviceProviderDto>> getDeviceProviderDetails(LocalDateTime lastUpdatedTime,
-			LocalDateTime currentTimeStamp) {
-		List<DeviceProvider> deviceProviders = null;
-		List<DeviceProviderDto> deviceProviderDtos = null;
-		try {
-			if (lastUpdatedTime == null) {
-				lastUpdatedTime = LocalDateTime.ofEpochSecond(0, 0, ZoneOffset.UTC);
-			}
-			deviceProviders = deviceProviderRepository.findAllLatestCreatedUpdateDeleted(lastUpdatedTime,
-					currentTimeStamp);
-		} catch (DataAccessException ex) {
-			throw new SyncDataServiceException(MasterDataErrorCode.DEVICE_PROVIDER_FETCH_EXCEPTION.getErrorCode(),
-					MasterDataErrorCode.DEVICE_PROVIDER_FETCH_EXCEPTION.getErrorMessage());
-		}
-		if (deviceProviders != null && !deviceProviders.isEmpty()) {
-			deviceProviderDtos = MapperUtils.mapAll(deviceProviders, DeviceProviderDto.class);
-		}
-		return CompletableFuture.completedFuture(deviceProviderDtos);
-	}
-
-	@Async
-	public CompletableFuture<List<DeviceServiceDto>> getDeviceServiceDetails(LocalDateTime lastUpdatedTime,
-			LocalDateTime currentTimeStamp) {
-		List<DeviceService> deviceServices = null;
-		List<DeviceServiceDto> deviceServiceDtos = new ArrayList<>();
-		try {
-			if (lastUpdatedTime == null) {
-				lastUpdatedTime = LocalDateTime.ofEpochSecond(0, 0, ZoneOffset.UTC);
-			}
-			deviceServices = deviceServiceRepository.findAllLatestCreatedUpdateDeleted(lastUpdatedTime,
-					currentTimeStamp);
-		} catch (DataAccessException ex) {
-			throw new SyncDataServiceException(MasterDataErrorCode.DEVICE_SERVICE_FETCH_EXCEPTION.getErrorCode(),
-					MasterDataErrorCode.DEVICE_SERVICE_FETCH_EXCEPTION.getErrorMessage());
-		}
-		if (deviceServices != null && !deviceServices.isEmpty()) {
-			deviceServices.stream().forEach(deviceService -> {
-				DeviceServiceDto deviceServiceDto = new DeviceServiceDto();
-				deviceServiceDto.setSwBinaryHash(CryptoUtil.encodeBase64(deviceService.getSwBinaryHash()));
-				MapperUtils.map(deviceService, deviceServiceDto);
-				deviceServiceDtos.add(deviceServiceDto);
-			});
-			// deviceServiceDtos = MapperUtils.mapAll(deviceServices,
-			// DeviceServiceDto.class);
-		}
-		return CompletableFuture.completedFuture(deviceServiceDtos);
-	}
-
-	@Async
-	public CompletableFuture<List<RegisteredDeviceDto>> getRegisteredDeviceDetails(String regId,
-			LocalDateTime lastUpdatedTime, LocalDateTime currentTimeStamp) {
-		List<RegisteredDevice> registeredDevices = null;
-		List<RegisteredDeviceDto> registeredDeviceDtos = new ArrayList<>();
-		try {
-			if (lastUpdatedTime == null) {
-				lastUpdatedTime = LocalDateTime.ofEpochSecond(0, 0, ZoneOffset.UTC);
-			}
-			registeredDevices = registeredDeviceRepository.findAllLatestCreatedUpdateDeleted(regId, lastUpdatedTime,
-					currentTimeStamp);
-		} catch (DataAccessException ex) {
-			throw new SyncDataServiceException(MasterDataErrorCode.REGISTERED_DEVICE_FETCH_EXCEPTION.getErrorCode(),
-					MasterDataErrorCode.REGISTERED_DEVICE_FETCH_EXCEPTION.getErrorMessage());
-		}
-		if (registeredDevices != null && !registeredDevices.isEmpty()) {
-			registeredDevices.stream().forEach(regDevice -> {
-				RegisteredDeviceDto registeredDeviceDto = new RegisteredDeviceDto();
-				registeredDeviceDto.setExpiryDate(DateUtils.toISOString(regDevice.getExpiryDate()));
-				MapperUtils.map(regDevice, registeredDeviceDto);
-				registeredDeviceDtos.add(registeredDeviceDto);
-			});
-
-			// registeredDeviceDtos = MapperUtils.mapAll(registeredDevices,
-			// RegisteredDeviceDto.class);
-		}
-		return CompletableFuture.completedFuture(registeredDeviceDtos);
-	}
 
 	@Async
 	public CompletableFuture<List<FoundationalTrustProviderDto>> getFPDetails(LocalDateTime lastUpdatedTime,
@@ -1903,25 +1827,34 @@ public class SyncMasterDataServiceHelper {
 
 	@SuppressWarnings("unchecked")
 	public SyncDataBaseDto getSyncDataBaseDto(String entityName, String entityType, List entities, String publicKey) {
-		List<String> list = Collections.synchronizedList(new ArrayList<String>());
+		String data = null;
 		if(null != entities) {
+			List<String> list = Collections.synchronizedList(new ArrayList<String>());
 			entities.parallelStream().filter(Objects::nonNull).forEach(obj -> {
 				try {
 					String json = mapper.getObjectAsJsonString(obj);
 					if(json != null) {
-						TpmCryptoRequestDto tpmCryptoRequestDto = new TpmCryptoRequestDto();
-						tpmCryptoRequestDto.setValue(CryptoUtil.encodeBase64(json.getBytes()));
-						tpmCryptoRequestDto.setPublicKey(publicKey);
-						tpmCryptoRequestDto.setTpm(this.isTPMRequired);
-						TpmCryptoResponseDto tpmCryptoResponseDto = clientCryptoManagerService.csEncrypt(tpmCryptoRequestDto);
-						list.add(tpmCryptoResponseDto.getValue());
+						list.add(json);
 					}
 				} catch (Exception e) {
-					logger.error("Failed to map and encrypt "+ entityName +" data to json", e);
+					logger.error("Failed to map "+ entityName +" data to json", e);
 				}
 			});
+
+			try {
+				if(list.size() > 0) {
+					TpmCryptoRequestDto tpmCryptoRequestDto = new TpmCryptoRequestDto();
+					tpmCryptoRequestDto.setValue(CryptoUtil.encodeBase64(mapper.getObjectAsJsonString(list).getBytes()));
+					tpmCryptoRequestDto.setPublicKey(publicKey);
+					tpmCryptoRequestDto.setTpm(this.isTPMRequired);
+					TpmCryptoResponseDto tpmCryptoResponseDto = clientCryptoManagerService.csEncrypt(tpmCryptoRequestDto);
+					data = tpmCryptoResponseDto.getValue();
+				}
+			} catch (Exception e) {
+				logger.error("Failed to encrypt "+ entityName +" data to json", e);
+			}
 		}
-		return new SyncDataBaseDto(entityName, entityType, list);
+		return new SyncDataBaseDto(entityName, entityType, data);
 	}
 
 }
