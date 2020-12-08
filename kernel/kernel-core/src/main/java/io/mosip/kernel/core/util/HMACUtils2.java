@@ -3,6 +3,8 @@
  */
 package io.mosip.kernel.core.util;
 
+import static org.mockito.ArgumentMatchers.nullable;
+
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -11,6 +13,8 @@ import java.security.spec.KeySpec;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.xml.bind.DatatypeConverter;
+
+import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties.Env;
 
 import java.util.Base64;
 
@@ -30,6 +34,7 @@ public final class HMACUtils2 {
 	 * SHA-256 Algorithm
 	 */
 	private static final String HASH_ALGORITHM_NAME = "SHA-256";
+	
 
 	/**
 	 * Performs a digest using the specified array of bytes.
@@ -70,32 +75,12 @@ public final class HMACUtils2 {
 	}
 
 	/**
-	 * Creates a message digest with the specified algorithm name.
-	 *
-	 * @param algorithm the standard name of the digest algorithm.
-	 * 
-	 * @throws NoSuchAlgorithmException if specified algorithm went wrong
-	 * @description loaded messageDigest with specified algorithm
-	 */
-	/* static {
-		try {
-			messageDigest = messageDigest != null ? messageDigest : MessageDigest.getInstance(HMAC_ALGORITHM_NAME);
-		} catch (java.security.NoSuchAlgorithmException exception) {
-			throw new NoSuchAlgorithmException(HMACUtilConstants.MOSIP_NO_SUCH_ALGORITHM_ERROR_CODE.getErrorCode(),
-					HMACUtilConstants.MOSIP_NO_SUCH_ALGORITHM_ERROR_CODE.getErrorMessage(), exception.getCause());
-		}
-	} */
-
-	/**
 	 * Generate Random Salt (with default 16 bytes of length).
 	 * 
 	 * @return Random Salt
 	 */
 	public static byte[] generateSalt() {
-		SecureRandom random = new SecureRandom();
-		byte[] randomBytes = new byte[16];
-		random.nextBytes(randomBytes);
-		return randomBytes;
+		return generateSalt(16);
 	}
 
 	/**
@@ -138,7 +123,14 @@ public final class HMACUtils2 {
 	}
 
 	private static String encode(String password, byte[] salt) {
-		KeySpec spec = new PBEKeySpec(password.toCharArray(), Base64.getDecoder().decode(salt), 27500, 512);
+		int iterationCount= 27500; //default it has to be higher than this if you want to override
+		if ( System.getenv("iter") != null){
+			String envCount = System.getenv("iter");
+			if(Integer.parseInt(envCount) > iterationCount) {
+				iterationCount = Integer.parseInt(envCount);
+			}
+		}
+		KeySpec spec = new PBEKeySpec(password.toCharArray(), Base64.getDecoder().decode(salt), iterationCount, 512);
 
 		try {
 			byte[] key = getSecretKeyFactory().generateSecret(spec).getEncoded();

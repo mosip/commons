@@ -1,45 +1,36 @@
 package io.mosip.kernel.core.test.util;
 
-import static org.hamcrest.CoreMatchers.isA;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+
+import java.security.NoSuchAlgorithmException;
 
 import org.junit.Test;
 
-import io.mosip.kernel.core.util.HMACUtils;
+import io.mosip.kernel.core.util.HMACUtils2;
 
 public class HMACUtilsTest {
 
 	@Test
-	public void testGenerateHash() {
+	public void testGenerateHash() throws NoSuchAlgorithmException{
 		String name = "Bal Vikash Sharma";
-		assertNotNull(HMACUtils.generateHash(name.getBytes()));
+		assertNotNull(HMACUtils2.generateHash(name.getBytes()));
 	}
 
-	@Test
-	public void testUpdate() {
-		String name = "Bal Vikash Sharma";
-		HMACUtils.update(name.getBytes());
-	}
 
 	@Test
-	public void testUpdatedHash() {
-		assertNotNull(HMACUtils.generateHash(HMACUtils.updatedHash()));
-	}
-
-	@Test
-	public void testDigestAsPlainText() {
-		assertNotNull(HMACUtils.digestAsPlainText("Bal Vikash Sharma".getBytes()));
+	public void testDigestAsPlainText() throws NoSuchAlgorithmException{
+		assertNotNull(HMACUtils2.digestAsPlainText("Bal Vikash Sharma".getBytes()));
 	}
 
 	@Test
 	public void testGenerateRandomIV() {
-		assertThat(HMACUtils.generateSalt(), isA(byte[].class));
+		assertNotEquals(HMACUtils2.generateSalt(), HMACUtils2.generateSalt());
 	}
 
 	@Test
 	public void testGenerateRandomIVInputBytes() {
-		assertThat(HMACUtils.generateSalt(16), isA(byte[].class));
+		assertNotEquals(HMACUtils2.generateSalt(16), HMACUtils2.generateSalt(16));
 	}
 
 }
