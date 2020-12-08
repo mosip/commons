@@ -94,10 +94,8 @@ CMD if [ "$is_glowroot_env" = "present" ]; then \
     unzip glowroot.zip ; \
     rm -rf glowroot.zip ; \
     sed -i 's/<service_name>/salt-generator-service/g' glowroot/glowroot.properties ; \
-
     java -jar -javaagent:glowroot/glowroot.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.cloud.config.name="${spring_config_name_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -Dserver.port="${spring_server_port}" -Dmosip.kernel.salt-generator.db.key-alias="${db_alias}" -Dmosip.kernel.salt-generator.schemaName="${schema_name}" -Dmosip.kernel.salt-generator.tableName="${table_name}" kernel-salt-generator.jar ; \
     else \
-
     java -jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.cloud.config.name="${spring_config_name_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -Dserver.port="${spring_server_port}" -Dmosip.kernel.salt-generator.db.key-alias="${db_alias}" -Dmosip.kernel.salt-generator.schemaName="${schema_name}" -Dmosip.kernel.salt-generator.tableName="${table_name}" kernel-salt-generator.jar ; \
     fi
 
