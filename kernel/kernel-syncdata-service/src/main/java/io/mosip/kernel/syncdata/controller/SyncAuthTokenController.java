@@ -14,7 +14,7 @@ import javax.validation.Valid;
 
 
 /**
- * @since 1.1.3
+ * @since 1.2.0-SNAPSHOT
  */
 @RestController
 public class SyncAuthTokenController {
