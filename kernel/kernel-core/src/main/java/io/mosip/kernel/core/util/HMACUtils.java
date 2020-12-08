@@ -21,12 +21,14 @@ import io.mosip.kernel.core.util.constant.HMACUtilConstants;
  * This class defines the HMAC Util to be used in MOSIP Project. The HMAC Util
  * is implemented using desired methods of MessageDigest class of java security
  * package
+ * @deprecated This class is not thread safe and could result in creating wrong digest. Please move the HMACUtils2 class for thread safe implementation.
  * 
  * @author Omsaieswar Mulaklauri
  * @author Urvil Joshi
  * 
  * @since 1.0.0
  */
+@Deprecated
 public final class HMACUtils {
 	/**
 	 * SHA-256 Algorithm
