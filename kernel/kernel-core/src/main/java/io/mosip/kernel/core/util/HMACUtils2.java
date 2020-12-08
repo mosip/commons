@@ -42,7 +42,7 @@ public final class HMACUtils2 {
 	 * @param bytes bytes to be hash generation
 	 * @return byte[] generated hash bytes
 	 */
-	public static synchronized byte[] generateHash(final byte[] bytes) throws NoSuchAlgorithmException{
+	public static byte[] generateHash(final byte[] bytes) throws NoSuchAlgorithmException{
 		MessageDigest messageDigest = MessageDigest.getInstance(HASH_ALGORITHM_NAME);
 		return messageDigest.digest(bytes);
 	}
@@ -55,7 +55,7 @@ public final class HMACUtils2 {
 	 * @return String converted digest as plain text
 	 * @throws java.security.NoSuchAlgorithmException
 	 */
-	public static synchronized String digestAsPlainTextWithSalt(final byte[] password, final byte[] salt)
+	public static String digestAsPlainTextWithSalt(final byte[] password, final byte[] salt)
 			throws NoSuchAlgorithmException {
 		MessageDigest messageDigest = MessageDigest.getInstance(HASH_ALGORITHM_NAME);
 		messageDigest.update(password);
@@ -70,7 +70,7 @@ public final class HMACUtils2 {
 	 * @return String converted digest as plain text
 	 * @throws NoSuchAlgorithmException
 	 */
-	public static synchronized String digestAsPlainText(final byte[] bytes) throws NoSuchAlgorithmException {
+	public static String digestAsPlainText(final byte[] bytes) throws NoSuchAlgorithmException {
 		return DatatypeConverter.printHexBinary(generateHash(bytes)).toUpperCase();
 	}
 
@@ -124,8 +124,8 @@ public final class HMACUtils2 {
 
 	private static String encode(String password, byte[] salt) {
 		int iterationCount= 27500; //default it has to be higher than this if you want to override
-		if ( System.getenv("iter") != null){
-			String envCount = System.getenv("iter");
+		if ( System.getenv("hashiteration") != null){
+			String envCount = System.getenv("hashiteration");
 			if(Integer.parseInt(envCount) > iterationCount) {
 				iterationCount = Integer.parseInt(envCount);
 			}
