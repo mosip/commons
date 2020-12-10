@@ -25,6 +25,8 @@ import io.mosip.kernel.core.logger.spi.Logger;
  */
 public class ReqResFilter implements Filter {
 
+	private static final Logger mosipLogger = LoggerConfiguration.logConfig(ReqResFilter.class);
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -60,7 +62,6 @@ public class ReqResFilter implements Filter {
 			responseWrapper.copyBodyToResponse();
 
 		} catch (Exception e) {
-			Logger mosipLogger = LoggerConfiguration.logConfig(ReqResFilter.class);
 			mosipLogger.error("", "", "", e.getMessage());
 		}
 	}
