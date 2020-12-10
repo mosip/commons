@@ -26,7 +26,6 @@ import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
 import io.mosip.kernel.core.exception.BaseCheckedException;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 import io.mosip.kernel.core.exception.ExceptionUtils;
-import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.JsonUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
@@ -55,11 +54,14 @@ import static io.mosip.commons.packet.constants.PacketManagerConstants.META_INFO
 import static io.mosip.commons.packet.constants.PacketManagerConstants.TYPE;
 import static io.mosip.commons.packet.constants.PacketManagerConstants.VALUE;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RefreshScope
 @Component
 public class PacketReaderImpl implements IPacketReader {
 
-    private static final Logger LOGGER = PacketManagerLogger.getLogger(PacketReaderImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PacketReaderImpl.class);
 
     @Autowired
     private PacketWriter packetWriter;
