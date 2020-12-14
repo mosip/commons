@@ -52,4 +52,6 @@ public class CryptomanagerRequestDto {
 
 	@NotBlank(message = "should not be null or empty")
 	private String aad;
+
+	private Boolean prependThumbprint;
 }

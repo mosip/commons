@@ -43,6 +43,9 @@ public class OfflineEncryptionUtil {
     @Value("${mosip.kernel.machineid.length:5}")
     private int machineIdLength;
 
+    @Value("${crypto.PrependThumbprint.enable:true}")
+    private boolean isPrependThumbprintEnabled;
+
     public byte[] encrypt(String id, byte[] packet) {
         String centerId = id.substring(0, centerIdLength);
         String machineId = id.substring(centerIdLength, centerIdLength + machineIdLength);
@@ -51,6 +54,7 @@ public class OfflineEncryptionUtil {
         CryptomanagerRequestDto cryptomanagerRequestDto = new CryptomanagerRequestDto();
         cryptomanagerRequestDto.setApplicationId(APPLICATION_ID);
         cryptomanagerRequestDto.setData(packetString);
+        cryptomanagerRequestDto.setPrependThumbprint(isPrependThumbprintEnabled);
         cryptomanagerRequestDto.setReferenceId(refId);
 
         SecureRandom sRandom = new SecureRandom();
