@@ -2,10 +2,11 @@ package io.mosip.commons.packet.audit;
 
 import io.mosip.commons.packet.constants.LoggerFileConstant;
 import io.mosip.commons.packet.dto.packet.AuditRequestDto;
+import io.mosip.commons.packet.util.PacketManagerLogger;
+import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.http.RequestWrapper;
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -23,7 +24,7 @@ import java.time.format.DateTimeFormatter;
 public class AuditLogEntry {
 
 	/** The logger. */
-	private final Logger LOGGER = LoggerFactory.getLogger(AuditLogEntry.class);
+	private final Logger LOGGER = PacketManagerLogger.getLogger(AuditLogEntry.class);
 
 	@Autowired
 	@Lazy
@@ -81,7 +82,8 @@ public class AuditLogEntry {
 					String.class);
 
 		} catch (Exception arae) {
-			LOGGER.error(arae.getMessage());
+		    LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
+		    		null, ExceptionUtils.getStackTrace(arae));  
 		}
 		LOGGER.debug(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.ID.toString(),
 				id,

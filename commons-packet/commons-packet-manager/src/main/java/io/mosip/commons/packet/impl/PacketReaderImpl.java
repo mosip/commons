@@ -59,6 +59,7 @@ import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.JsonUtils;
 
+
 @RefreshScope
 @Component
 public class PacketReaderImpl implements IPacketReader {

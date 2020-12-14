@@ -18,14 +18,13 @@ import io.mosip.commons.packet.util.PacketManagerHelper;
 import io.mosip.commons.packet.util.PacketManagerLogger;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.core.exception.ExceptionUtils;
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.core.util.JsonUtils;
 import io.mosip.kernel.core.util.exception.JsonProcessingException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -48,7 +47,7 @@ public class PacketWriterImpl implements IPacketWriter {
     private String uniqueTagsEnabled;
     private static SecureRandom random = new SecureRandom(String.valueOf(5000).getBytes());*/
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PacketWriterImpl.class);
+    private static final Logger LOGGER = PacketManagerLogger.getLogger(PacketWriterImpl.class);
     private static Map<String, String> categorySubpacketMapping = new HashMap<>();
     private static final String UNDERSCORE = "_";
     private static final String HASHSEQUENCE1 = "hashSequence1";
