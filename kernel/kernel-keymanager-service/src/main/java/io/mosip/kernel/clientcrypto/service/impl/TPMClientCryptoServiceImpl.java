@@ -10,9 +10,7 @@ import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.keymanagerservice.logger.KeymanagerLogger;
 import org.junit.Assert;
-import tss.Helpers;
-import tss.Tpm;
-import tss.TpmFactory;
+import tss.*;
 import tss.tpm.CreatePrimaryResponse;
 import tss.tpm.*;
 
@@ -78,8 +76,7 @@ class TPMClientCryptoServiceImpl implements ClientCryptoService {
     private static CreatePrimaryResponse signingPrimaryResponse;
     private static CreatePrimaryResponse encPrimaryResponse;
 
-    TPMClientCryptoServiceImpl()
-            throws Throwable {
+    TPMClientCryptoServiceImpl() throws Throwable {
         LOGGER.debug(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.TPM,
                 ClientCryptoManagerConstant.EMPTY, "TPMClientCryptoServiceImpl constructor invoked");
 
@@ -88,6 +85,11 @@ class TPMClientCryptoServiceImpl implements ClientCryptoService {
                     ClientCryptoManagerConstant.EMPTY, "Instantiating Platform TPM");
 
             tpm = TpmFactory.platformTpm();
+            if( !isKernelModeTRM() ) { //checks if its not connected to software TPM
+                LOGGER.warn(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.TPM,
+                        ClientCryptoManagerConstant.EMPTY, "UNABLE TO CONNECT TO KERNEL/SYSTEM TPM RESOURCE MANAGER");
+                tpm = null;
+            }
 
             LOGGER.info(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.TPM,
                     ClientCryptoManagerConstant.EMPTY, "Completed getting the instance of Platform TPM");
@@ -290,5 +292,17 @@ class TPMClientCryptoServiceImpl implements ClientCryptoService {
                     ClientCryptoManagerConstant.EMPTY, "Failed to generate secret key " + ExceptionUtils.getStackTrace(e));
         }
         return null;
+    }
+
+    /**
+     * check if connected to kernel/system mode TPM resource manager
+     * @return
+     */
+    private boolean isKernelModeTRM() {
+        if(tpm != null && tpm._getDevice() != null &&
+                tpm._getDevice() instanceof TpmDeviceTbs && tpm._getDevice() instanceof TpmDeviceLinux) {
+            return true;
+        }
+        return false;
     }
 }
