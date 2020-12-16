@@ -67,7 +67,6 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 
 	private static final Logger LOGGER = KeymanagerLogger.getLogger(KeyStoreImpl.class);
 
-	private static final String KEYSTORE_TYPE_PKCS12 = "PKCS12";
 	/**
 	 * Common name for generating certificate
 	 */
@@ -108,7 +107,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	/**
 	 * The passkey for Keystore
 	 */
-	@Value("${mosip.kernel.keymanager.softhsm.keystore-pass}")
+	@Value("${mosip.kernel.keymanager.softhsm.keystore-pass:\"\"}")
 	private String keystorePass;
 
 	/**
@@ -151,6 +150,8 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 
 	private static final int NO_OF_RETRIES = 3;
 
+	private char[] keystorePwdCharArr = null;
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		if (!isConfigFileValid()) {
@@ -158,10 +159,11 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 						+ "So, Loading keystore as offline encryption.");
 			BouncyCastleProvider bouncyCastleProvider = new BouncyCastleProvider();
 			Security.addProvider(bouncyCastleProvider);
-			this.keyStore = getKeystoreInstance(KEYSTORE_TYPE_PKCS12, bouncyCastleProvider);
+			this.keyStore = getKeystoreInstance(KeymanagerConstant.KEYSTORE_TYPE_PKCS12, bouncyCastleProvider);
 			loadKeystore();
 			return;
 		}
+		keystorePwdCharArr = getKeystorePwd();
 		provider = setupProvider(configPath);
 		Security.removeProvider(provider.getName());
 		addProvider(provider);
@@ -182,6 +184,13 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 			LOGGER.error("sessionId", "KeyStoreImpl", "configFile", "Error reading pkcs11 config file.");
 		}
 		return true;
+	}
+
+	private char[] getKeystorePwd() {
+		if (keystorePass.trim().length() == 0){
+			return null;
+		}
+		return keystorePass.toCharArray();
 	}
 
 	/**
@@ -282,16 +291,16 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 		try {
 			switch (keystoreType) {
 			case "PKCS11":
-				keyStore.load(null, keystorePass.toCharArray());
+				keyStore.load(null, keystorePwdCharArr);
 				break;
 			case "BouncyCastleProvider":
 				// added try with res for sonar bug fix
 				try (FileInputStream fis = new FileInputStream(configPath)) {
-					keyStore.load(fis, keystorePass.toCharArray());
+					keyStore.load(fis, keystorePwdCharArr);
 				}
 				break;
 			default:
-				keyStore.load(null, keystorePass.toCharArray());
+				keyStore.load(null, keystorePwdCharArr);
 				break;
 			}
 
@@ -329,7 +338,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	public Key getKey(String alias) {
 		Key key = null;
 		try {
-			key = keyStore.getKey(alias, keystorePass.toCharArray());
+			key = keyStore.getKey(alias, keystorePwdCharArr);
 		} catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException e) {
 			throw new KeystoreProcessingException(KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorCode(),
 					KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorMessage() + e.getMessage(), e);
@@ -357,7 +366,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 			try {
 				if (keyStore.entryInstanceOf(alias, PrivateKeyEntry.class)) {
 					LOGGER.debug("sessionId", "KeyStoreImpl", "getAsymmetricKey", "alias is instanceof keystore");
-					ProtectionParameter password = new PasswordProtection(keystorePass.toCharArray());
+					ProtectionParameter password = getPasswordProtection();
 					privateKeyEntry = (PrivateKeyEntry) keyStore.getEntry(alias, password);
 					if (privateKeyEntry != null) {
 						LOGGER.debug("sessionId", "KeyStoreImpl", "getAsymmetricKey", "privateKeyEntry is not null");
@@ -401,7 +410,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	}
 
 	private void validatePKCS11KeyStore() {
-		if(KEYSTORE_TYPE_PKCS12.equals(keyStore.getType())){
+		if(KeymanagerConstant.KEYSTORE_TYPE_PKCS12.equals(keyStore.getType())){
 			throw new KeystoreProcessingException(KeymanagerErrorCode.NOT_VALID_PKCS11_STORE_TYPE.getErrorCode(),
 						KeymanagerErrorCode.NOT_VALID_PKCS11_STORE_TYPE.getErrorMessage() );
 		}
@@ -486,7 +495,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 		do {
 			try {
 				if (keyStore.entryInstanceOf(alias, SecretKeyEntry.class)) {
-					ProtectionParameter password = new PasswordProtection(keystorePass.toCharArray());
+					ProtectionParameter password = getPasswordProtection();
 					SecretKeyEntry retrivedSecret = (SecretKeyEntry) keyStore.getEntry(alias, password);
 					secretKey = retrivedSecret.getSecretKey();
 					if (secretKey != null) {
@@ -531,10 +540,10 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	public void storeSymmetricKey(SecretKey secretKey, String alias) {
 
 		SecretKeyEntry secret = new SecretKeyEntry(secretKey);
-		ProtectionParameter password = new PasswordProtection(keystorePass.toCharArray());
+		ProtectionParameter password = getPasswordProtection();
 		try {
 			keyStore.setEntry(alias, secret, password);
-			keyStore.store(null, keystorePass.toCharArray());
+			keyStore.store(null, keystorePwdCharArr);
 		} catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
 			throw new KeystoreProcessingException(KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorCode(),
 					KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorMessage() + e.getMessage(), e);
@@ -571,10 +580,10 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	
 	private void storeCertificate(String alias, Certificate[] chain, PrivateKey privateKey) {
 		PrivateKeyEntry privateKeyEntry = new PrivateKeyEntry(privateKey, chain);
-		ProtectionParameter password = new PasswordProtection(keystorePass.toCharArray());
+		ProtectionParameter password = getPasswordProtection();
 		try {
 			keyStore.setEntry(alias, privateKeyEntry, password);
-			keyStore.store(null, keystorePass.toCharArray());
+			keyStore.store(null, keystorePwdCharArr);
 		} catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
 			throw new KeystoreProcessingException(KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorCode(),
 					KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorMessage() + e.getMessage());
@@ -625,10 +634,10 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 		validatePKCS11KeyStore();
 		SecretKey secretKey = generateSymmetricKey();
 		SecretKeyEntry secret = new SecretKeyEntry(secretKey);
-		ProtectionParameter password = new PasswordProtection(keystorePass.toCharArray());
+		ProtectionParameter password = getPasswordProtection();
 		try {
 			keyStore.setEntry(alias, secret, password);
-			keyStore.store(null, keystorePass.toCharArray());
+			keyStore.store(null, keystorePwdCharArr);
 		} catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
 			throw new KeystoreProcessingException(KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorCode(),
 					KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorMessage() + e.getMessage(), e);
@@ -666,9 +675,9 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	public void storeCertificate(String alias, PrivateKey privateKey, Certificate certificate) {
 		try {
 			PrivateKeyEntry privateKeyEntry = new PrivateKeyEntry(privateKey, new Certificate[] {certificate});
-			ProtectionParameter password = new PasswordProtection(keystorePass.toCharArray());
+			ProtectionParameter password = getPasswordProtection();
 			keyStore.setEntry(alias, privateKeyEntry, password);
-			keyStore.store(null, keystorePass.toCharArray());
+			keyStore.store(null, keystorePwdCharArr);
 		} catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
 			throw new KeystoreProcessingException(KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorCode(),
 					KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorMessage() + e.getMessage(), e);
@@ -688,5 +697,12 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 		}
 		throw new KeystoreProcessingException(KeymanagerErrorCode.KEYSTORE_NOT_INSTANTIATED.getErrorCode(),
 					KeymanagerErrorCode.KEYSTORE_NOT_INSTANTIATED.getErrorMessage());
+	}
+
+	private PasswordProtection getPasswordProtection() {
+		if (keystorePwdCharArr == null) {
+			return null;
+		}
+		return new PasswordProtection(keystorePwdCharArr);
 	}
 }

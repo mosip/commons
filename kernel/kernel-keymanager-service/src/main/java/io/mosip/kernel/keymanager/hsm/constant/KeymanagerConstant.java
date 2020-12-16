@@ -24,4 +24,8 @@ public final class KeymanagerConstant {
 	 */
 	public static final String SIGNATURE_ALGORITHM = "SHA256withRSA";
 
+
+	public static final String 	KEYSTORE_TYPE_PKCS11 = "PKCS11";
+
+	public static final String KEYSTORE_TYPE_PKCS12 = "PKCS12";
 }
