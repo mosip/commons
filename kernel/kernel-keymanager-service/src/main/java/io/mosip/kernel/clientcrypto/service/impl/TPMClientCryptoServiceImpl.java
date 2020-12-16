@@ -300,7 +300,7 @@ class TPMClientCryptoServiceImpl implements ClientCryptoService {
      */
     private boolean isKernelModeTRM() {
         if(tpm != null && tpm._getDevice() != null &&
-                tpm._getDevice() instanceof TpmDeviceTbs && tpm._getDevice() instanceof TpmDeviceLinux) {
+                (tpm._getDevice() instanceof TpmDeviceTbs || tpm._getDevice() instanceof TpmDeviceLinux)) {
             return true;
         }
         return false;
