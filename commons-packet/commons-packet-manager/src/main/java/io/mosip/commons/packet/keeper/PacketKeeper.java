@@ -18,7 +18,7 @@ import io.mosip.kernel.core.exception.BaseUncheckedException;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.CryptoUtil;
-import io.mosip.kernel.core.util.HMACUtils;
+import io.mosip.kernel.core.util.HMACUtils2;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,6 +27,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 /**
@@ -97,8 +98,8 @@ public class PacketKeeper {
      * @param packetInfo : the packet information
      * @return : boolean
      */
-    public boolean checkIntegrity(PacketInfo packetInfo, byte[] encryptedSubPacket) {
-        String hash = CryptoUtil.encodeBase64(HMACUtils.generateHash(encryptedSubPacket));
+    public boolean checkIntegrity(PacketInfo packetInfo, byte[] encryptedSubPacket) throws NoSuchAlgorithmException {
+        String hash = CryptoUtil.encodeBase64(HMACUtils2.generateHash(encryptedSubPacket));
         boolean result = hash.equals(packetInfo.getEncryptedHash());
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
                 getName(packetInfo.getId(), packetInfo.getPacketName()), "Integrity check : " + result);
@@ -113,7 +114,7 @@ public class PacketKeeper {
      * @param encryptedSubPacket
      * @return
      */
-    public boolean checkSignature(Packet packet, byte[] encryptedSubPacket) {
+    public boolean checkSignature(Packet packet, byte[] encryptedSubPacket) throws NoSuchAlgorithmException {
         // TODO : disabling signature verification temporarily
         boolean result = true;//getCryptoService().verify(packet.getPacket(), CryptoUtil.decodeBase64(packet.getPacketInfo().getSignature()));
         if (result)
@@ -172,7 +173,7 @@ public class PacketKeeper {
                 throw new PacketKeeperException(ex.getErrorCode(), ex.getMessage());
             } else
                 throw new PacketKeeperException(PacketUtilityErrorCodes.PACKET_KEEPER_GET_ERROR.getErrorCode(),
-                    "Failed to get packet from object store : " + e.getMessage(), e);
+                    "Exception occured reading packet : " + e.getMessage(), e);
         }
     }
 
@@ -197,7 +198,7 @@ public class PacketKeeper {
                 // sign encrypted packet
                 packetInfo.setSignature(CryptoUtil.encodeBase64(getCryptoService().sign(packet.getPacket())));
                 // generate encrypted packet hash
-                packetInfo.setEncryptedHash(CryptoUtil.encodeBase64(HMACUtils.generateHash(encryptedSubPacket)));
+                packetInfo.setEncryptedHash(CryptoUtil.encodeBase64(HMACUtils2.generateHash(encryptedSubPacket)));
                 Map<String, Object> metaMap = PacketManagerHelper.getMetaMap(packetInfo);
                 metaMap = getAdapter().addObjectMetaData(PACKET_MANAGER_ACCOUNT,
                         packet.getPacketInfo().getId(), packet.getPacketInfo().getSource(), packet.getPacketInfo().getProcess(), packet.getPacketInfo().getPacketName(), metaMap);
