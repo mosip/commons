@@ -57,7 +57,7 @@ public class S3Adapter implements ObjectStoreAdapter {
     @Value("${object.store.connection.max.retry:20}")
     private int maxRetry;
 
-    @Value("${object.store.max.connection:10}")
+    @Value("${object.store.max.connection:200}")
     private int maxConnection;
 
     private int retry = 0;
