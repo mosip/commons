@@ -10,6 +10,7 @@ import static io.mosip.commons.packet.constants.PacketManagerConstants.VALUE;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -98,7 +99,7 @@ public class PacketReaderImpl implements IPacketReader {
 	public boolean validatePacket(String id, String source, String process) {
 		try {
 			return packetValidator.validate(id, source, process, getAll(id, source, process));
-		} catch (BaseCheckedException | IOException e) {
+		} catch (BaseCheckedException | IOException | NoSuchAlgorithmException e) {
 			LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
 					"Packet Validation exception : " + ExceptionUtils.getStackTrace(e));
 			if (e instanceof BaseCheckedException)

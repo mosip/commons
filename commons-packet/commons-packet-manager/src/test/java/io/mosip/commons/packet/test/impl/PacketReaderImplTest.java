@@ -49,6 +49,7 @@ import org.springframework.util.CollectionUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 import static io.mosip.commons.packet.constants.PacketManagerConstants.*;
@@ -208,7 +209,7 @@ public class PacketReaderImplTest {
     }
 
     @Test
-    public void validatePacketTest() throws JsonProcessingException, PacketKeeperException, InvalidIdSchemaException, IdObjectValidationFailedException, IdObjectIOException, IOException {
+    public void validatePacketTest() throws JsonProcessingException, PacketKeeperException, InvalidIdSchemaException, IdObjectValidationFailedException, IdObjectIOException, IOException, NoSuchAlgorithmException {
         when(packetValidator.validate(anyString(), anyString(), anyString(), anyMap())).thenReturn(true);
         boolean result = iPacketReader.validatePacket("id", "source", "process");
 
@@ -216,7 +217,7 @@ public class PacketReaderImplTest {
     }
 
     @Test(expected = PacketValidationFailureException.class)
-    public void validatePacketExceptionTest() throws JsonProcessingException, PacketKeeperException, InvalidIdSchemaException, IdObjectValidationFailedException, IdObjectIOException, IOException {
+    public void validatePacketExceptionTest() throws JsonProcessingException, PacketKeeperException, InvalidIdSchemaException, IdObjectValidationFailedException, IdObjectIOException, IOException, NoSuchAlgorithmException {
         when(packetValidator.validate(anyString(), anyString(), anyString(), anyMap())).thenThrow(new IOException("exception"));
         boolean result = iPacketReader.validatePacket("id",  "source","process");
 
