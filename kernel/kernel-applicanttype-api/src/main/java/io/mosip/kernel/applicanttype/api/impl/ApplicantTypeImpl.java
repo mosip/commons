@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.actuate.metrics.web.client.RestTemplateExchangeTags;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -44,7 +45,7 @@ public class ApplicantTypeImpl implements ApplicantType {
 
 	@Autowired
 	private RestTemplate restTemplate;
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -54,46 +55,37 @@ public class ApplicantTypeImpl implements ApplicantType {
 	 */
 	public String getApplicantType(Map<String, Object> m) throws InvalidApplicantArgumentException {
 		LOGGER.info("Getting code for applicant type");
-		
-	/*	Path p = Paths.get(
-				"C:/Users/M1053288/Project/update/commons/kernel/kernel-applicanttype-api/src/main/resources/applicanttype.mvel");
-		StringBuilder sb = new StringBuilder();
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(p.toFile()));
+			LOGGER.info("Getting data from MVEL file->"+configServerFileStorageURL + mvelFile);
+			String mvelExpression = restTemplate.getForObject(configServerFileStorageURL + mvelFile, String.class);
+			Map<String, Object> context = new HashMap();
 
-			String line = br.readLine();
-			while (null != line) {
-				sb.append(line);
-				line = br.readLine();
+			context.put("map", m);
+			context.put("agelimit", ageLimit == null ? "18" : ageLimit);
+
+			VariableResolverFactory functionFactory = new MapVariableResolverFactory();
+			MVEL.eval(mvelExpression, context, functionFactory);
+
+			VariableResolverFactory myVarFactory = new MapVariableResolverFactory();
+			myVarFactory.setNextFactory(functionFactory);
+
+			Serializable s = MVEL.compileExpression("getApplicantType(map,agelimit);", context);
+
+			String code = (String) MVEL.executeExpression(s, m, myVarFactory);
+
+			if (code.equalsIgnoreCase("KER-MSD-147")) {
+				LOGGER.error("Error while fetching applicant code");
+				throw new InvalidApplicantArgumentException(
+						ApplicantTypeErrorCode.INVALID_QUERY_EXCEPTION.getErrorCode(),
+						ApplicantTypeErrorCode.INVALID_QUERY_EXCEPTION.getErrorMessage());
 			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}*/
-		String mvelExpression = restTemplate.getForObject(configServerFileStorageURL + mvelFile, String.class);
-		Map<String, Object> context = new HashMap();
-
-		context.put("map", m);
-		context.put("agelimit", ageLimit == null ? "18" : ageLimit);
-
-		VariableResolverFactory functionFactory = new MapVariableResolverFactory();
-		MVEL.eval(mvelExpression, context, functionFactory);
-
-		VariableResolverFactory myVarFactory = new MapVariableResolverFactory();
-		myVarFactory.setNextFactory(functionFactory);
-
-		Serializable s = MVEL.compileExpression("getApplicantType(map,agelimit);", context);
-
-		String code = (String) MVEL.executeExpression(s, m, myVarFactory);
-		System.out.println(code);
-
-		if (code.equalsIgnoreCase("KER-MSD-147")) {
-			LOGGER.error("Error while fetching applicant code");
-			throw new InvalidApplicantArgumentException(ApplicantTypeErrorCode.INVALID_QUERY_EXCEPTION.getErrorCode(),
-					ApplicantTypeErrorCode.INVALID_QUERY_EXCEPTION.getErrorMessage());
+			LOGGER.info("Code for applicant type  is " + code);
+			return code;
+		} catch (Exception ex) {
+			LOGGER.error("Error while loading mvel file" + ex.getMessage());
+			throw ex;
 		}
-		LOGGER.info("Code for applicant type  is " + code);
-		return code;
+		
 	}
 
 }
