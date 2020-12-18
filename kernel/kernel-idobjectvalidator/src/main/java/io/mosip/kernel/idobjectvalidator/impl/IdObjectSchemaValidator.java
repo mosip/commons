@@ -186,7 +186,7 @@ public class IdObjectSchemaValidator implements IdObjectValidator {
 	private void buildErrorMessages(JsonNode identityJson, List<ServiceError> errorList,
 			JsonNode processingMessageAsJson, IdObjectValidatorErrorConstant errorConstant, String field,
 			List<String> requiredFields) {
-		log.debug("ID SCHEMA ERROR : " + processingMessageAsJson.toString());
+		log.error("ID SCHEMA ERROR : " + processingMessageAsJson.toString());
 		if (Objects.nonNull(field) && processingMessageAsJson.hasNonNull(field)) {
 			if (field.contentEquals(KEYWORD)) {
 				errorList.add(new ServiceError(errorConstant.getErrorCode(), String.format(errorConstant.getMessage(),
