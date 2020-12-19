@@ -44,6 +44,8 @@ public class CryptomanagerRequestDto {
 	@NotBlank(message = "should not be null or empty")
 	private String data;
 
+	private Boolean prependThumbprint;
+
 	/**
 	 * salt in BASE64 encoding for encrypt/decrypt
 	 */

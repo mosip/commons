@@ -49,6 +49,9 @@ public class OnlineCryptoUtil {
     @Value("${CRYPTOMANAGER_ENCRYPT:null}")
     private String cryptomanagerEncryptUrl;
 
+    @Value("${crypto.PrependThumbprint.enable:true}")
+    private boolean isPrependThumbprintEnabled;
+
     @Autowired
     private ObjectMapper mapper;
 
@@ -70,6 +73,7 @@ public class OnlineCryptoUtil {
             cryptomanagerRequestDto.setApplicationId(APPLICATION_ID);
             cryptomanagerRequestDto.setData(packetString);
             cryptomanagerRequestDto.setReferenceId(refId);
+            cryptomanagerRequestDto.setPrependThumbprint(isPrependThumbprintEnabled);
 
             SecureRandom sRandom = new SecureRandom();
             byte[] nonce = new byte[KhazanaConstant.GCM_NONCE_LENGTH];
@@ -149,6 +153,7 @@ public class OnlineCryptoUtil {
             cryptomanagerRequestDto.setAad(CryptoUtil.encodeBase64String(aad));
             cryptomanagerRequestDto.setSalt(CryptoUtil.encodeBase64String(nonce));
             cryptomanagerRequestDto.setData(CryptoUtil.encodeBase64String(encryptedData));
+            cryptomanagerRequestDto.setPrependThumbprint(isPrependThumbprintEnabled);
             // setLocal Date Time
             if (id.length() > 14) {
                 String packetCreatedDateTime = id.substring(id.length() - 14);

@@ -150,17 +150,25 @@ public class S3Adapter implements ObjectStoreAdapter {
     @Override
     public Map<String, Object> getMetaData(String account, String container, String source, String process,
                                            String objectName) {
-
+        S3Object s3Object = null;
         try {
             Map<String, Object> metaData = new HashMap<>();
             String finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
-            ObjectMetadata objectMetadata = getConnection(container).getObject(container, finalObjectName).getObjectMetadata();
+            s3Object = getConnection(container).getObject(container, finalObjectName);
+            ObjectMetadata objectMetadata = s3Object.getObjectMetadata();
             if (objectMetadata != null && objectMetadata.getUserMetadata() != null)
                 objectMetadata.getUserMetadata().entrySet().forEach(entry -> metaData.put(entry.getKey(), entry.getValue()));
             return metaData;
         } catch (Exception e) {
             LOGGER.error(SESSIONID, REGISTRATIONID,"Exception occured to getMetaData for : " + container, ExceptionUtils.getStackTrace(e));
             throw new ObjectStoreAdapterException(OBJECT_STORE_NOT_ACCESSIBLE.getErrorCode(), OBJECT_STORE_NOT_ACCESSIBLE.getErrorMessage(), e);
+        } finally {
+            try {
+                if (s3Object != null)
+                    s3Object.close();
+            } catch (IOException e) {
+                LOGGER.error(SESSIONID, REGISTRATIONID,"IO occured : " + container, ExceptionUtils.getStackTrace(e));
+            }
         }
     }
 

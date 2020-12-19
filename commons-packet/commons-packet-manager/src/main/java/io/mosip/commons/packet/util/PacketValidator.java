@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.mosip.kernel.core.util.HMACUtils2;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,6 @@ import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectValidationFailed
 import io.mosip.kernel.core.idobjectvalidator.exception.InvalidIdSchemaException;
 import io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator;
 import io.mosip.kernel.core.logger.spi.Logger;
-import io.mosip.kernel.core.util.HMACUtils;
 import io.mosip.kernel.core.util.JsonUtils;
 import io.mosip.kernel.core.util.exception.JsonProcessingException;
 
@@ -73,7 +74,7 @@ public class PacketValidator {
     private AuditLogEntry auditLogEntry;
 
 
-    public boolean validate(String id, String source, String process, Map<String, Object> allMap) throws IdObjectIOException, IdObjectValidationFailedException, InvalidIdSchemaException, IOException, JsonProcessingException, PacketKeeperException {
+    public boolean validate(String id, String source, String process, Map<String, Object> allMap) throws IdObjectIOException, IdObjectValidationFailedException, InvalidIdSchemaException, IOException, JsonProcessingException, PacketKeeperException, NoSuchAlgorithmException {
         boolean result = validateSchema(id, process, allMap);
         if(result) {
             LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, "Id object validation successful for process name : " + process);
@@ -113,7 +114,7 @@ public class PacketValidator {
      * @return true, if successful
      * @throws IOException
      */
-    public boolean fileAndChecksumValidation(String id, String source, String process) throws IOException, JsonProcessingException, PacketKeeperException {
+    public boolean fileAndChecksumValidation(String id, String source, String process) throws IOException, JsonProcessingException, PacketKeeperException, NoSuchAlgorithmException {
         boolean isValid = false;
         // perform file and checksum validation for each source
         for (String packetName : packetNames.split(",")) {
@@ -163,7 +164,7 @@ public class PacketValidator {
         return packetInfo;
     }
 
-    private byte[] generateHash(List<FieldValueArray> hashSequence, Map<String, InputStream> checksumMap) {
+    private byte[] generateHash(List<FieldValueArray> hashSequence, Map<String, InputStream> checksumMap) throws NoSuchAlgorithmException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         for (FieldValueArray fieldValueArray : hashSequence) {
             List<String> hashValues = fieldValueArray.getValue();
@@ -178,9 +179,8 @@ public class PacketValidator {
                 }
             });
         }
-        byte[] hashByte = HMACUtils.generateHash(outputStream.toByteArray());
 
-        return HMACUtils.digestAsPlainText(hashByte).getBytes();
+        return HMACUtils2.digestAsPlainText(outputStream.toByteArray()).getBytes();
 
     }
 
@@ -231,7 +231,7 @@ public class PacketValidator {
         return (notFoundFiles.size() == 0);
     }
 
-    private boolean checksumValidation(List hashseq1List, List hashseq2List, Map<String, InputStream> checksumMap, Packet packet) throws JsonProcessingException, IOException {
+    private boolean checksumValidation(List hashseq1List, List hashseq2List, Map<String, InputStream> checksumMap, Packet packet) throws JsonProcessingException, IOException, NoSuchAlgorithmException {
         List<FieldValueArray> hashSequence1 = new ArrayList<>();
         List<FieldValueArray> hashSequence2 = new ArrayList<>();
         boolean isdataCheckSumEqual = false;

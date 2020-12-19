@@ -69,6 +69,9 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
     @Value("${mosip.kernel.machineid.length:5}")
     private int machineIdLength;
 
+    @Value("${crypto.PrependThumbprint.enable:true}")
+    private boolean isPrependThumbprintEnabled;
+
     @Autowired
     private RestTemplate restTemplate;
 
@@ -126,6 +129,7 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
             cryptomanagerRequestDto.setApplicationId(APPLICATION_ID);
             cryptomanagerRequestDto.setData(packetString);
             cryptomanagerRequestDto.setReferenceId(refId);
+            cryptomanagerRequestDto.setPrependThumbprint(isPrependThumbprintEnabled);
 
             SecureRandom sRandom = new SecureRandom();
             byte[] nonce = new byte[CryptomanagerConstant.GCM_NONCE_LENGTH];
@@ -217,6 +221,7 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
             cryptomanagerRequestDto.setAad(CryptoUtil.encodeBase64String(aad));
             cryptomanagerRequestDto.setSalt(CryptoUtil.encodeBase64String(nonce));
             cryptomanagerRequestDto.setData(CryptoUtil.encodeBase64String(encryptedData));
+            cryptomanagerRequestDto.setPrependThumbprint(isPrependThumbprintEnabled);
             // setLocal Date Time
             if (id.length() > 14) {
                 String packetCreatedDateTime = id.substring(id.length() - 14);
