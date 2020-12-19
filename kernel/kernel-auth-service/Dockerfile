@@ -51,16 +51,18 @@ RUN apt-get -y update \
 && groupadd -g ${container_user_gid} ${container_user_group} \
 && useradd -u ${container_user_uid} -g ${container_user_group} -s /bin/sh -m ${container_user}
 
-# set working directory for the user
-WORKDIR /home/${container_user}
 
 # change volume to whichever storage directory you want to use for this container.
 VOLUME /tmp
 
 ADD ./target/*.jar /target/
-RUN find /target -name '*.jar' -executable -type f "-print0" | xargs "-0" cp -t / \
+
+# set working directory for the user
+WORKDIR /home/${container_user}
+
+RUN find /target -name '*.jar' -executable -type f "-print0" | xargs "-0" cp -t ~/ \
     && rm -rf /target \
-    && mv *.jar kernel-auth-service.jar 
+    && mv *.jar ~/kernel-auth-service.jar
 
 # change permissions of file inside working dir
 RUN chown -R ${container_user}:${container_user} /home/${container_user}
