@@ -60,9 +60,9 @@ ADD ./target/*.jar /target/
 # set working directory for the user
 WORKDIR /home/${container_user}
 
-RUN find /target -name '*.jar' -executable -type f "-print0" | xargs "-0" cp -t ~/ \
+RUN find /target -name '*.jar' -executable -type f "-print0" | xargs "-0" cp -t / \
     && rm -rf /target \
-    && mv *.jar ~/kernel-auth-service.jar
+    && mv /*.jar /home/${container_user}/kernel-auth-service.jar
 
 # change permissions of file inside working dir
 RUN chown -R ${container_user}:${container_user} /home/${container_user}
