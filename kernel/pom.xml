@@ -8,7 +8,7 @@
 	<packaging>pom</packaging>
 	<name>kernel</name>
 	<description>Parent project of MOSIP Kernel</description>
-
+	<url>https://github.com/mosip/commons</url>
 <properties>		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -117,7 +117,7 @@
  -->
 
 
-		<sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/dto/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/security/**,**/*Config.java,**/*BootApplication.java,**/*VertxApplication.java,**/cbeffutil/**,**/*Utils.java,**/*Validator.java,**/*Helper.java,**/verticle/**,**/VidWriter.java/**,**/masterdata/utils/**,**/spi/**,**/core/http/**,"**/LocationServiceImpl.java","**/RegistrationCenterMachineServiceImpl.java","**/RegistrationCenterServiceImpl.java","**/pridgenerator/**","**/idgenerator/prid","**/proxy/**","**/cryptosignature/**"</sonar.coverage.exclusions>
+		<sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/dto/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/security/**,**/*Config.java,**/*BootApplication.java,**/*VertxApplication.java,**/cbeffutil/**,**/*Utils.java,**/*Validator.java,**/*Helper.java,**/verticle/**,**/VidWriter.java/**,**/spi/**,**/core/http/**,"**/LocationServiceImpl.java","**/RegistrationCenterMachineServiceImpl.java","**/RegistrationCenterServiceImpl.java","**/pridgenerator/**","**/idgenerator/prid","**/proxy/**","**/cryptosignature/**"</sonar.coverage.exclusions>
 		<sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**</sonar.cpd.exclusions>
 	</properties>
 
@@ -142,36 +142,26 @@
 		<module>kernel-idvalidator-vid</module>
 		<module>kernel-idvalidator-mispid</module>
 		<module>kernel-pinvalidator</module>
-		<module>kernel-virusscanner-clamav</module>
-		<!-- <module>kernel-keygenerator-bouncycastle</module>
+		<module>kernel-keygenerator-bouncycastle</module>
 		<module>kernel-crypto-jce</module>
-		<module>kernel-keymanager-softhsm</module>  -->
 		<module>kernel-templatemanager-velocity</module>
 		<module>kernel-pdfgenerator-itext</module>
 		<module>kernel-datamapper-orika</module>
 		<module>kernel-qrcodegenerator-zxing</module>
 		<module>kernel-cbeffutil-api</module>
-		<module>kernel-fsadapter-ceph</module>
-		<module>kernel-fsadapter-hdfs</module>
 		<module>kernel-transliteration-icu4j</module>
 		<module>kernel-applicanttype-api</module>
 		<module>kernel-crypto-signature</module>
 		<module>kernel-idobjectvalidator</module>
 		<module>kernel-bioapi-provider</module>
-		<module>kernel-smsserviceprovider-msg91</module>
-        <module>kernel-fsadapter-proxy</module>
 		<module>kernel-registration-packet-manager</module>
 		<module>kernel-authcodeflowproxy-api</module>
 		<module>kernel-websubclient-api</module>
-
-		<module>kernel-masterdata-service</module>
 		<module>kernel-auditmanager-service</module>
 		<module>kernel-otpmanager-service</module>
 		<module>kernel-notification-service</module>
-		<module>kernel-syncdata-service</module>
 		<module>kernel-auth-service</module>
 		<module>kernel-ridgenerator-service</module>
-		<module>kernel-config-server</module>
 		<module>kernel-keymanager-service</module>
 		<module>kernel-idgenerator-service</module>
 		<module>kernel-pridgenerator-service</module>
@@ -182,8 +172,18 @@
 		<module>keys-generator</module>
 	</modules>
 
-	<build>
-		<pluginManagement>
+	
+<distributionManagement>
+		<snapshotRepository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository> 
+                 <repository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository> 
+        </distributionManagement> 
+        <build>
 			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -257,9 +257,6 @@
 						</archive>
 					</configuration>
 				</plugin>
-			</plugins>
-		</pluginManagement>
-		<plugins>
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
@@ -306,6 +303,136 @@
 					<target>${maven.compiler.target}</target>
 				</configuration>
 			</plugin>
-		</plugins>
-	</build>
-</project>
+            <plugin>
+              <artifactId>maven-deploy-plugin</artifactId>
+              <version>2.8.1</version>
+              <executions>
+                 <execution>
+                    <id>default-deploy</id>
+                    <phase>deploy</phase>
+                    <goals>
+                       <goal>deploy</goal>
+                    </goals>
+                 </execution>
+              </executions>
+           </plugin>
+               <plugin>
+                  <groupId>org.sonatype.plugins</groupId>
+                  <artifactId>nexus-staging-maven-plugin</artifactId>
+                  <version>1.6.7</version>
+                  <extensions>true</extensions>
+                  <executions>
+                    <execution>
+                      <id>default-deploy</id>
+                      <phase>deploy</phase>
+                      <goals>
+                        <goal>deploy</goal>
+                      </goals>
+                    </execution>
+                  </executions>
+                  <configuration>
+                        <serverId>ossrh</serverId>
+                        <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                        <autoReleaseAfterClose>false</autoReleaseAfterClose>
+                  </configuration>
+                </plugin> 
+
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-source-plugin</artifactId>
+                  <inherited>true</inherited>
+                  <version>2.2.1</version>
+                  <executions>
+                        <execution>
+                          <id>attach-sources</id>
+                          <goals>
+                                <goal>jar-no-fork</goal>
+                          </goals>
+                        </execution>
+                  </executions>
+                </plugin>
+
+              <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-javadoc-plugin</artifactId>
+                  <version>3.2.0</version>
+                  <executions>
+                        <execution>
+                          <id>attach-javadocs</id>
+                          <goals>
+                                <goal>jar</goal>
+                          </goals>
+                        </execution>
+                  </executions>
+                  <configuration>
+                          <doclint>none</doclint>
+                  </configuration>
+                </plugin>
+                <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-gpg-plugin</artifactId>
+                  <version>1.5</version>
+                  <executions>
+                        <execution>
+                          <id>sign-artifacts</id>
+                          <phase>verify</phase>
+                          <goals>
+                                <goal>sign</goal>
+                          </goals>
+		          <configuration>
+                		<gpgArguments>
+                    			<arg>--pinentry-mode</arg>
+                    			<arg>loopback</arg>
+                		</gpgArguments>
+            		 </configuration>
+                        </execution>
+                  </executions>
+                </plugin>
+		<plugin>
+    			<groupId>pl.project13.maven</groupId>
+			<artifactId>git-commit-id-plugin</artifactId>
+			<version>3.0.1</version>
+			<executions>
+        			<execution>
+			        	<id>get-the-git-infos</id>
+					<goals>
+						<goal>revision</goal>
+            				</goals>
+            				<phase>validate</phase>
+ 				</execution>
+ 			</executions>
+ 			<configuration>
+				<generateGitPropertiesFile>true</generateGitPropertiesFile>
+				<generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+                    		<includeOnlyProperties>
+                        		<includeOnlyProperty>^git.build.(time|version)$</includeOnlyProperty>
+                        		<includeOnlyProperty>^git.commit.id.(abbrev|full)$</includeOnlyProperty>
+                    		</includeOnlyProperties>
+                    		<commitIdGenerationMode>full</commitIdGenerationMode>
+ 				<dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+				<!-- <format>json</format> -->
+			</configuration>
+		</plugin>
+          </plugins>
+        </build>
+		<scm>
+                <connection>scm:git:git://github.com/mosip/commons.git</connection>
+                <developerConnection>scm:git:ssh://github.com:mosip/commons.git</developerConnection>
+                <url>https://github.com/mosip/commons</url>
+                <tag>HEAD</tag>
+        </scm>
+		<licenses>
+          <license>
+                <name>MPL 2.0</name>
+                <url>https://www.mozilla.org/en-US/MPL/2.0/</url>
+          </license>
+        </licenses>
+		<developers>
+                <developer>
+                  <name>Mosip</name>
+                  <email>mosip.emailnotifier@gmail.com</email>
+                  <organization>io.mosip</organization>
+                  <organizationUrl>https://github.com/mosip/commons</organizationUrl>
+                </developer>
+        </developers>
+	</project>

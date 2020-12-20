@@ -14,6 +14,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import io.mosip.kernel.core.notification.spi.SMSServiceProvider;
 import io.mosip.kernel.emailnotification.service.impl.SmsNotificationServiceImpl;
 import io.mosip.kernel.emailnotification.test.NotificationTestBootApplication;
 
@@ -27,6 +28,9 @@ public class ExceptionHandlerTest {
 
 	@MockBean
 	SmsNotificationServiceImpl service;
+	
+	@MockBean
+	private SMSServiceProvider sMSServiceProvider;
 
 	@WithUserDetails("individual")
 	@Test

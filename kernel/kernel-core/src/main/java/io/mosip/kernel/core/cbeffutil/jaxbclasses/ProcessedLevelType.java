@@ -52,7 +52,7 @@ public enum ProcessedLevelType {
 
 	public static ProcessedLevelType fromValue(String v) {
 		for (ProcessedLevelType c : ProcessedLevelType.values()) {
-			if (c.value.equals(v)) {
+			if (c.value.equalsIgnoreCase(v)) {
 				return c;
 			}
 		}

@@ -18,7 +18,7 @@ public class KeymanagerLoggerTest {
 	@Test
 	public void test() {
 		Logger logger = KeymanagerLogger.getLogger(KeymanagerLoggerTest.class);
-		assertThat(logger.getClass().getName(), is("io.mosip.kernel.logger.logback.impl.LoggerImpl"));
+		assertThat(logger.getClass().getName(), is("io.mosip.kernel.logger.logback.impl.Slf4jLoggerImpl"));
 	}
 
 }

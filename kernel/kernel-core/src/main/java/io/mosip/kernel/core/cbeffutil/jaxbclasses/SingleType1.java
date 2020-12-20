@@ -74,7 +74,7 @@ public enum SingleType1 {
 
 	public static SingleType1 fromValue(String v) {
 		for (SingleType1 c : SingleType1.values()) {
-			if (c.value.equals(v)) {
+			if (c.value.equalsIgnoreCase(v)) {
 				return c;
 			}
 		}

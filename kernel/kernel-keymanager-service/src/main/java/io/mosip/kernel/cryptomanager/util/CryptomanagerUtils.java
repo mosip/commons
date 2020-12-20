@@ -6,11 +6,9 @@
  */
 package io.mosip.kernel.cryptomanager.util;
 
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateEncodingException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -18,19 +16,23 @@ import java.util.Optional;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import io.mosip.kernel.core.exception.ParseException;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
-import io.mosip.kernel.core.crypto.exception.InvalidKeyException;
+import io.mosip.kernel.core.exception.ParseException;
 import io.mosip.kernel.core.util.CryptoUtil;
-import io.mosip.kernel.core.util.DateUtils;
+import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.kernel.cryptomanager.constant.CryptomanagerConstant;
 import io.mosip.kernel.cryptomanager.constant.CryptomanagerErrorCode;
 import io.mosip.kernel.cryptomanager.dto.CryptomanagerRequestDto;
+import io.mosip.kernel.cryptomanager.exception.CryptoManagerSerivceException;
 import io.mosip.kernel.keymanagerservice.dto.SymmetricKeyRequestDto;
 import io.mosip.kernel.keymanagerservice.service.KeymanagerService;
+import io.mosip.kernel.keymanagerservice.util.KeymanagerUtil;
+import io.mosip.kernel.keymanagerservice.logger.KeymanagerLogger;
 
 /**
  * Util class for this project.
@@ -42,6 +44,8 @@ import io.mosip.kernel.keymanagerservice.service.KeymanagerService;
 @RefreshScope
 @Component
 public class CryptomanagerUtils {
+
+	private static final Logger LOGGER = KeymanagerLogger.getLogger(CryptomanagerUtils.class);
 
 	/** The Constant UTC_DATETIME_PATTERN. */
 	private static final String UTC_DATETIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
@@ -63,39 +67,31 @@ public class CryptomanagerUtils {
 	@Autowired
 	private KeymanagerService keyManager;
 
+	@Autowired
+	private KeymanagerUtil keymanagerUtil;
+
 	/**
 	 * Calls Key-Manager-Service to get public key of an application.
 	 *
 	 * @param cryptomanagerRequestDto            {@link CryptomanagerRequestDto} instance
-	 * @return {@link PublicKey} returned by Key Manager Service
+	 * @return {@link Certificate} returned by Key Manager Service
 	 */
-	public PublicKey getPublicKey(CryptomanagerRequestDto cryptomanagerRequestDto) {
-		try {
-			String 	publicKey = getPublicKeyFromKeyManager(cryptomanagerRequestDto.getApplicationId(),
-						DateUtils.formatToISOString(cryptomanagerRequestDto.getTimeStamp()),
-						cryptomanagerRequestDto.getReferenceId());
-			return KeyFactory.getInstance(asymmetricAlgorithmName)
-					.generatePublic(new X509EncodedKeySpec(CryptoUtil.decodeBase64(publicKey)));
-		} catch (InvalidKeySpecException e) {
-			throw new InvalidKeyException(CryptomanagerErrorCode.INVALID_SPEC_PUBLIC_KEY.getErrorCode(),
-					CryptomanagerErrorCode.INVALID_SPEC_PUBLIC_KEY.getErrorMessage());
-		} catch (NoSuchAlgorithmException e) {
-			throw new io.mosip.kernel.core.exception.NoSuchAlgorithmException(
-					CryptomanagerErrorCode.NO_SUCH_ALGORITHM_EXCEPTION.getErrorCode(),
-					CryptomanagerErrorCode.NO_SUCH_ALGORITHM_EXCEPTION.getErrorMessage());
-		}
+	public Certificate getCertificate(CryptomanagerRequestDto cryptomanagerRequestDto) {
+		String certData = getCertificateFromKeyManager(cryptomanagerRequestDto.getApplicationId(),
+										cryptomanagerRequestDto.getReferenceId());
+
+		return keymanagerUtil.convertToCertificate(certData);
 	}
 
 	/**
-	 * Gets the public key from key manager.
+	 * Gets the certificate from key manager.
 	 *
 	 * @param appId the app id
-	 * @param timestamp the timestamp
 	 * @param refId the ref id
-	 * @return the public key from key manager
+	 * @return the certificate data from key manager
 	 */
-	private String getPublicKeyFromKeyManager(String appId, String timestamp, String refId) {
-		return keyManager.getPublicKey(appId, timestamp, Optional.ofNullable(refId)).getPublicKey();
+	private String getCertificateFromKeyManager(String appId, String refId) {
+		return keyManager.getCertificate(appId, Optional.ofNullable(refId)).getCertificate();
 	}
 
 
@@ -119,7 +115,7 @@ public class CryptomanagerUtils {
 	private String decryptSymmetricKeyUsingKeyManager(CryptomanagerRequestDto cryptomanagerRequestDto) {
 		SymmetricKeyRequestDto symmetricKeyRequestDto = new SymmetricKeyRequestDto(
 				cryptomanagerRequestDto.getApplicationId(), cryptomanagerRequestDto.getTimeStamp(),
-				cryptomanagerRequestDto.getReferenceId(), cryptomanagerRequestDto.getData());
+				cryptomanagerRequestDto.getReferenceId(), cryptomanagerRequestDto.getData(), cryptomanagerRequestDto.getPrependThumbprint());
 		return keyManager.decryptSymmetricKey(symmetricKeyRequestDto).getSymmetricKey();
 	}
 
@@ -180,5 +176,23 @@ public class CryptomanagerUtils {
             decodedBytes[i] = (byte) (f & 0xFF);
         }
         return decodedBytes;
+	}
+
+	public byte[] getCertificateThumbprint(Certificate cert) {
+		try {
+            return DigestUtils.sha256(cert.getEncoded());
+		} catch (CertificateEncodingException e) {
+			LOGGER.error(CryptomanagerConstant.SESSIONID, CryptomanagerConstant.ENCRYPT, "", 
+									"Error generating certificate thumbprint.");
+            throw new CryptoManagerSerivceException(CryptomanagerErrorCode.CERTIFICATE_THUMBPRINT_ERROR.getErrorCode(),
+						CryptomanagerErrorCode.CERTIFICATE_THUMBPRINT_ERROR.getErrorMessage());
+		}
+	}
+
+	public byte[] concatCertThumbprint(byte[] certThumbprint, byte[] encryptedKey){
+		byte[] finalData = new byte[CryptomanagerConstant.THUMBPRINT_LENGTH + encryptedKey.length];
+		System.arraycopy(certThumbprint, 0, finalData, 0, certThumbprint.length);
+		System.arraycopy(encryptedKey, 0, finalData, certThumbprint.length, encryptedKey.length);
+		return finalData;
 	}
 }

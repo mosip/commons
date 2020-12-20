@@ -1,6 +1,6 @@
 -- ---------------------------------------------------------------------------------------------------------
 -- Database Name: mosip_master
--- Release Version 	: 1.1.2
+-- Release Version 	: 1.2.0-SNAPSHOT
 -- Purpose    		: Database Alter scripts for the release for Master DB.       
 -- Create By   		: Sadanandegowda DM
 -- Created Date		: Sep-2020
@@ -46,6 +46,17 @@ ALTER TABLE master.user_detail ADD COLUMN IF NOT EXISTS regcntr_id character var
 ALTER TABLE master.device_master_h ADD COLUMN IF NOT EXISTS regcntr_id character varying(10);
 ALTER TABLE master.machine_master_h ADD COLUMN IF NOT EXISTS regcntr_id character varying(10);
 ALTER TABLE master.user_detail_h ADD COLUMN IF NOT EXISTS regcntr_id character varying(10);
+
+ALTER TABLE master.machine_master ADD COLUMN IF NOT EXISTS sign_public_key character varying(1024);
+ALTER TABLE master.machine_master ADD COLUMN IF NOT EXISTS sign_key_index character varying(128);
+ALTER TABLE master.machine_master ALTER COLUMN public_key DROP NOT NULL;
+ALTER TABLE master.machine_master ALTER COLUMN key_index DROP NOT NULL;
+
+ALTER TABLE master.machine_master_h ADD COLUMN IF NOT EXISTS sign_public_key character varying(1024);
+ALTER TABLE master.machine_master_h ADD COLUMN IF NOT EXISTS sign_key_index character varying(128);
+ALTER TABLE master.machine_master_h ALTER COLUMN public_key DROP NOT NULL;
+ALTER TABLE master.machine_master_h ALTER COLUMN key_index DROP NOT NULL;
+
 
 -- object: fk_machm_center | type: CONSTRAINT --
 ALTER TABLE master.machine_master DROP CONSTRAINT IF EXISTS fk_machm_center CASCADE;

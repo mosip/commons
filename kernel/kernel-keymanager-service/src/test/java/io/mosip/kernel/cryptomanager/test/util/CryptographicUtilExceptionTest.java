@@ -42,7 +42,9 @@ import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.cryptomanager.dto.CryptomanagerRequestDto;
 import io.mosip.kernel.cryptomanager.dto.KeymanagerPublicKeyResponseDto;
 import io.mosip.kernel.cryptomanager.util.CryptomanagerUtils;
+import io.mosip.kernel.keymanagerservice.dto.KeyPairGenerateResponseDto;
 import io.mosip.kernel.keymanagerservice.dto.PublicKeyResponse;
+import io.mosip.kernel.keymanagerservice.exception.KeymanagerServiceException;
 import io.mosip.kernel.keymanagerservice.service.KeymanagerService;
 import io.mosip.kernel.keymanagerservice.test.KeymanagerTestBootApplication;
 
@@ -72,20 +74,18 @@ public class CryptographicUtilExceptionTest {
 	
 	}
 
-	@Test(expected = NoSuchAlgorithmException.class)
+	@Test(expected = KeymanagerServiceException.class)
 	public void testNoSuchAlgorithmEncrypt() throws Exception {
-		PublicKeyResponse<String> publicKeyResponseDto = new PublicKeyResponse<>("alias",
-				CryptoUtil.encodeBase64("badprivatekey".getBytes()), LocalDateTime.now(),
-				LocalDateTime.now().plusDays(100));
+		KeyPairGenerateResponseDto keyPairGenerateResponseDto = new KeyPairGenerateResponseDto("badCertificateData", null, LocalDateTime.now(),
+				LocalDateTime.now().plusDays(100), LocalDateTime.now());
 		String appid = "REGISTRATION";
 		String refid = "ref123";
-		String timeStamp = "2018-12-06T12:07:44.403Z";
 
-		when(keyManagerService.getPublicKey(Mockito.eq(appid), Mockito.eq(timeStamp), Mockito.eq(Optional.of(refid))))
-				.thenReturn(publicKeyResponseDto);
+		when(keyManagerService.getCertificate(Mockito.eq(appid), Mockito.eq(Optional.of(refid))))
+				.thenReturn(keyPairGenerateResponseDto);
 		CryptomanagerRequestDto cryptomanagerRequestDto = new CryptomanagerRequestDto("REGISTRATION", "ref123",
 				LocalDateTime.parse("2018-12-06T12:07:44.403Z", DateTimeFormatter.ISO_DATE_TIME), "test",
-				"ykrkpgjjtChlVdvDNJJEnQ", "VGhpcyBpcyBzYW1wbGUgYWFk");
-		cryptomanagerUtil.getPublicKey(cryptomanagerRequestDto);
+				"ykrkpgjjtChlVdvDNJJEnQ", "VGhpcyBpcyBzYW1wbGUgYWFk", false);
+		cryptomanagerUtil.getCertificate(cryptomanagerRequestDto);
 	}
 }

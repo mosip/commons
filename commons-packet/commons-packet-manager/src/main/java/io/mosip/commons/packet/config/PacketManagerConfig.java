@@ -5,23 +5,21 @@ import io.mosip.commons.packet.spi.IPacketReader;
 import io.mosip.commons.packet.spi.IPacketWriter;
 import io.mosip.commons.packet.util.PacketHelper;
 import io.mosip.commons.packet.util.PacketManagerLogger;
-import io.mosip.kernel.auth.defaultadapter.config.RestTemplateInterceptor;
 import io.mosip.kernel.core.logger.spi.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +27,10 @@ import java.util.Set;
 
 @Configuration
 @EnableCaching
-@ComponentScan(basePackages = "io.mosip.*")
+@ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = {
+		"io.mosip.kernel.cbeffutil.impl.CbeffImpl"}), basePackages = {"io.mosip.commons.packet.*", "io.mosip.commons.khazana.*",
+        "io.mosip.kernel.cbeffutil.*", "io.mosip.kernel.auth.*"})
+@Import({OfflineConfig.class})
 public class PacketManagerConfig {
 
     private static final Logger logger = PacketManagerLogger.getLogger(PacketManagerConfig.class);
@@ -47,14 +48,6 @@ public class PacketManagerConfig {
     @ConfigurationProperties(prefix = "provider.packetwriter")
     public Map<String, String> writerConfiguration() {
         return new HashMap<>();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public RestTemplate restTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setInterceptors(Collections.singletonList(new RestTemplateInterceptor()));
-        return restTemplate;
     }
 
     /**

@@ -4,7 +4,7 @@ import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
  * @author Anusha Sunkada
- * @since 1.2.0
+ * @since 1.1.2
  *
  */
 public class ClientCryptoException extends BaseUncheckedException  {

@@ -62,10 +62,8 @@ public class ClientCryptoControllerTest {
     @Test
     @Ignore
     public void getEncryptDecryptWithTpm() throws Exception {
-        byte[] cipher = clientCryptoFacade.encrypt(CryptoUtil.decodeBase64(public_key), dataToEncrypt.getBytes(),
-                true);
+        byte[] cipher = clientCryptoFacade.encrypt(CryptoUtil.decodeBase64(public_key), dataToEncrypt.getBytes());
 
-        ClientCryptoFacade.setIsTPMRequired(true);
         ClientCryptoService clientCryptoService = clientCryptoFacade.getClientSecurity();
         Assert.assertNotNull(clientCryptoService);
 
@@ -77,7 +75,6 @@ public class ClientCryptoControllerTest {
     @Test
     @Ignore
     public void getSignVerifyWithTPM() throws Exception {
-        ClientCryptoFacade.setIsTPMRequired(true);
         ClientCryptoService clientCryptoService = clientCryptoFacade.getClientSecurity();
         Assert.assertNotNull(clientCryptoService);
 
@@ -86,21 +83,19 @@ public class ClientCryptoControllerTest {
         byte[] sigBytes = clientCryptoFacade.getClientSecurity().signData(dataToEncrypt.getBytes());
         Assert.assertNotNull(sigBytes);
 
-        boolean valid = clientCryptoFacade.validateSignature(localPubKey, sigBytes, dataToEncrypt.getBytes(), true);
+        boolean valid = clientCryptoFacade.validateSignature(localPubKey, sigBytes, dataToEncrypt.getBytes());
         Assert.assertTrue(valid);
     }
 
     @Test
     @Ignore
     public void getEncryptDecryptWithLocal() throws Exception {
-        ClientCryptoFacade.setIsTPMRequired(false);
         ClientCryptoService clientCryptoService = clientCryptoFacade.getClientSecurity();
         Assert.assertNotNull(clientCryptoService);
 
         byte[] localPubKey = clientCryptoService.getEncryptionPublicPart();
 
-        byte[] cipher = clientCryptoFacade.encrypt(localPubKey, dataToEncrypt.getBytes(),
-                false);
+        byte[] cipher = clientCryptoFacade.encrypt(localPubKey, dataToEncrypt.getBytes());
 
         byte[] plain = clientCryptoFacade.decrypt(cipher);
         Assert.assertNotNull(plain);
@@ -110,7 +105,6 @@ public class ClientCryptoControllerTest {
     @Test
     @Ignore
     public void getSignVerifyWithLocal() throws Exception {
-        ClientCryptoFacade.setIsTPMRequired(false);
         ClientCryptoService clientCryptoService = clientCryptoFacade.getClientSecurity();
         Assert.assertNotNull(clientCryptoService);
 
@@ -119,7 +113,7 @@ public class ClientCryptoControllerTest {
         byte[] sigBytes = clientCryptoFacade.getClientSecurity().signData(dataToEncrypt.getBytes());
         Assert.assertNotNull(sigBytes);
 
-        boolean valid = clientCryptoFacade.validateSignature(localPubKey, sigBytes, dataToEncrypt.getBytes(), false);
+        boolean valid = clientCryptoFacade.validateSignature(localPubKey, sigBytes, dataToEncrypt.getBytes());
         Assert.assertTrue(valid);
     }
     

@@ -424,7 +424,7 @@ public class ProxyOTPServiceImpl implements OTPService {
 			if (otpResponse.getStatus() != null && otpResponse.getStatus().equals("success")) {
 				String expTime = accessTokenResponse.getExpires_in();
 				mosipUserDtoToken = new MosipUserTokenDto(mosipUser, responseAccessTokenResponse.getAccess_token(),
-						responseAccessTokenResponse.getRefresh_token(), Long.parseLong(expTime), null, null);
+						responseAccessTokenResponse.getRefresh_token(), Long.parseLong(expTime), null, null, Long.parseLong(expTime));
 				mosipUserDtoToken.setMessage(otpResponse.getMessage());
 				mosipUserDtoToken.setStatus(otpResponse.getStatus());
 			} else {

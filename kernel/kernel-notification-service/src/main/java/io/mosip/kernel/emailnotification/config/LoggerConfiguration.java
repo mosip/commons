@@ -26,8 +26,6 @@ public class LoggerConfiguration {
 	 * @return the appender.
 	 */
 	public static Logger logConfig(Class<?> clazz) {
-		ConsoleAppender appender = new ConsoleAppender();
-		appender.setTarget(MailNotifierConstants.LOGGER_TARGET.getValue());
-		return Logfactory.getDefaultConsoleLogger(appender, clazz);
+		return Logfactory.getSlf4jLogger(clazz);
 	}
 }

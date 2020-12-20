@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.cert.Certificate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
@@ -44,11 +45,14 @@ import io.mosip.kernel.cryptomanager.dto.CryptomanagerRequestDto;
 import io.mosip.kernel.cryptomanager.dto.CryptomanagerResponseDto;
 import io.mosip.kernel.cryptomanager.util.CryptomanagerUtils;
 import io.mosip.kernel.keygenerator.bouncycastle.KeyGenerator;
+import io.mosip.kernel.keymanager.hsm.util.CertificateUtility;
+import io.mosip.kernel.keymanagerservice.dto.KeyPairGenerateResponseDto;
 import io.mosip.kernel.keymanagerservice.dto.PublicKeyResponse;
 import io.mosip.kernel.keymanagerservice.dto.SymmetricKeyRequestDto;
 import io.mosip.kernel.keymanagerservice.dto.SymmetricKeyResponseDto;
 import io.mosip.kernel.keymanagerservice.service.KeymanagerService;
 import io.mosip.kernel.keymanagerservice.test.KeymanagerTestBootApplication;
+import io.mosip.kernel.keymanagerservice.util.KeymanagerUtil;
 
 @SpringBootTest(classes = KeymanagerTestBootApplication.class)
 @RunWith(SpringRunner.class)
@@ -80,7 +84,14 @@ public class CryptographicServiceIntegrationTest {
 	@MockBean
 	private KeymanagerService keyManagerService;
 
+	@MockBean
+	private KeymanagerUtil keymanagerUtil;
+
 	private KeyPair keyPair;
+
+	private Certificate cert;
+
+	private String certData;
 
 	private CryptomanagerRequestDto requestDto;
 
@@ -99,6 +110,10 @@ public class CryptographicServiceIntegrationTest {
 		objectMapper.registerModule(new JavaTimeModule());
 
 		keyPair = generator.getAsymmetricKey();
+		cert = CertificateUtility.generateX509Certificate(keyPair.getPrivate(), keyPair.getPublic(), 
+				"mosip", "mosip", "mosip",
+			"india", LocalDateTime.of(2010, 1, 1, 12, 00), LocalDateTime.of(2011, 1, 1, 12, 00), "SHA256withRSA", "BC");
+		certData = keymanagerUtil.getPEMFormatedData(cert);
 		requestWrapper = new RequestWrapper<>();
 		requestWrapper.setId(ID);
 		requestWrapper.setVersion(VERSION);
@@ -113,9 +128,8 @@ public class CryptographicServiceIntegrationTest {
 	@WithUserDetails("reg-processor")
 	@Test
 	public void testEncrypt() throws Exception {
-		PublicKeyResponse<String> publicKeyResponseDto = new PublicKeyResponse<>("alias",
-				CryptoUtil.encodeBase64(keyPair.getPublic().getEncoded()), LocalDateTime.now(),
-				LocalDateTime.now().plusDays(100));
+		KeyPairGenerateResponseDto responseDto = new KeyPairGenerateResponseDto(certData, null, LocalDateTime.now(), 
+					LocalDateTime.now(), LocalDateTime.now());
 		when(cryptoCore.symmetricEncrypt(Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenReturn("MOCKENCRYPTEDDATA".getBytes());
 		when(cryptoCore.asymmetricEncrypt(Mockito.any(), Mockito.any()))
@@ -132,8 +146,11 @@ public class CryptographicServiceIntegrationTest {
 		requestDto.setData(data);
 		requestDto.setReferenceId(refid);
 		requestDto.setTimeStamp(DateUtils.parseToLocalDateTime(timeStamp));
-		when(keyManagerService.getPublicKey(Mockito.eq(appid), Mockito.eq(timeStamp), Mockito.eq(Optional.of(refid))))
-				.thenReturn(publicKeyResponseDto);
+		when(keyManagerService.getCertificate(Mockito.eq(appid), Mockito.eq(Optional.of(refid))))
+				.thenReturn(responseDto);
+		when(cryptomanagerUtil.getCertificate(Mockito.any())).thenReturn(cert);
+		when(cryptomanagerUtil.getCertificateThumbprint(Mockito.any())).thenReturn("CERTTHUMBPRINT".getBytes());
+		when(cryptomanagerUtil.concatCertThumbprint(Mockito.any(), Mockito.any())).thenReturn("CONCATEDENCRYPTEDSESSIONKEY".getBytes());
 		String requestBody = objectMapper.writeValueAsString(requestWrapper);
 
 		MvcResult result = mockMvc
@@ -167,7 +184,7 @@ public class CryptographicServiceIntegrationTest {
 		requestDto.setTimeStamp(timeStamp);
 		SymmetricKeyRequestDto symmetricKeyRequestDto = new SymmetricKeyRequestDto(
 				appid, timeStamp,
-				refid, data);
+				refid, data, true);
 		when(keyManagerService.decryptSymmetricKey(Mockito.any())).thenReturn(symmetricKeyResponseDto);
 		String requestBody = objectMapper.writeValueAsString(requestWrapper);
 		MvcResult result = mockMvc

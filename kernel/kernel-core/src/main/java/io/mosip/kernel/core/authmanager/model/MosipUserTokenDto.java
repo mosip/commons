@@ -18,4 +18,5 @@ public class MosipUserTokenDto {
 	private long expTime;
 	private String message;
 	private String status;
+	private long refreshExpTime;
 }

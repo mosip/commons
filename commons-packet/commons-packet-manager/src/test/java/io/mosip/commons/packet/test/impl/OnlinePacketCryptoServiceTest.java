@@ -13,7 +13,6 @@ import io.mosip.kernel.core.util.JsonUtils;
 import org.apache.commons.io.IOUtils;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -34,6 +33,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 
@@ -62,6 +62,7 @@ public class OnlinePacketCryptoServiceTest {
         ReflectionTestUtils.setField(onlinePacketCryptoService, "cryptomanagerDecryptUrl", "http://localhost");
         ReflectionTestUtils.setField(onlinePacketCryptoService, "machineIdLength", 5);
         ReflectionTestUtils.setField(onlinePacketCryptoService, "cryptomanagerEncryptUrl", "http://localhost");
+        ReflectionTestUtils.setField(onlinePacketCryptoService, "DATETIME_PATTERN", "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
     }
 
@@ -101,9 +102,8 @@ public class OnlinePacketCryptoServiceTest {
     }
 
     @Test
-    @Ignore
     public void encryptTest() throws IOException {
-        byte[] packet = "packet".getBytes();
+        byte[] packet = "10001100770000320200720092256_packetwithsignatureandaad".getBytes();
         CryptomanagerResponseDto cryptomanagerResponseDto = new CryptomanagerResponseDto();
         cryptomanagerResponseDto.setErrors(null);
         DecryptResponseDto decryptResponseDto = new DecryptResponseDto("packet");
@@ -115,9 +115,9 @@ public class OnlinePacketCryptoServiceTest {
 
         Mockito.when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class), any(Class.class))).thenReturn(response);
         Mockito.when(mapper.readValue(anyString(), any(Class.class))).thenReturn(cryptomanagerResponseDto);
-        
+
         byte[] result = onlinePacketCryptoService.encrypt(ID, packet);
-        assertTrue(Arrays.equals(packet, result));
+        assertNotNull(result);
     }
 
     @Test(expected = PacketDecryptionFailureException.class)
@@ -134,9 +134,8 @@ public class OnlinePacketCryptoServiceTest {
     }
 
     @Test
-    @Ignore
     public void decryptTest() throws IOException {
-        byte[] packet = "packet".getBytes();
+        byte[] packet = "10001100770000320200720092256_packetwithsignatureandaad".getBytes();
         CryptomanagerResponseDto cryptomanagerResponseDto = new CryptomanagerResponseDto();
         cryptomanagerResponseDto.setErrors(null);
         DecryptResponseDto decryptResponseDto = new DecryptResponseDto(CryptoUtil.encodeBase64("packet".getBytes()));
@@ -150,7 +149,7 @@ public class OnlinePacketCryptoServiceTest {
         Mockito.when(mapper.readValue(anyString(), any(Class.class))).thenReturn(cryptomanagerResponseDto);
 
         byte[] result = onlinePacketCryptoService.decrypt(ID, packet);
-        assertTrue(Arrays.equals(packet, result));
+        assertNotNull(result);
     }
 
     @Test(expected = PacketDecryptionFailureException.class)

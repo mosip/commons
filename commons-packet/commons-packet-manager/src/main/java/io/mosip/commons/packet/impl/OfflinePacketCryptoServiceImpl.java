@@ -1,26 +1,29 @@
 package io.mosip.commons.packet.impl;
 
+import io.mosip.commons.khazana.util.EncryptionUtil;
+import io.mosip.commons.packet.constants.CryptomanagerConstant;
+import io.mosip.commons.packet.exception.PacketDecryptionFailureException;
+import io.mosip.commons.packet.spi.IPacketCryptoService;
+import io.mosip.kernel.clientcrypto.dto.TpmSignRequestDto;
+import io.mosip.kernel.clientcrypto.service.spi.ClientCryptoManagerService;
+import io.mosip.kernel.core.util.CryptoUtil;
+import io.mosip.kernel.core.util.DateUtils;
+import io.mosip.kernel.cryptomanager.dto.CryptomanagerRequestDto;
+import io.mosip.kernel.cryptomanager.service.CryptomanagerService;
+import io.mosip.kernel.cryptomanager.service.impl.CryptomanagerServiceImpl;
+import io.mosip.kernel.signature.dto.TimestampRequestDto;
+import io.mosip.kernel.signature.service.SignatureService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
+
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import io.mosip.commons.packet.constants.CryptomanagerConstant;
-import io.mosip.commons.packet.exception.PacketDecryptionFailureException;
-import io.mosip.commons.packet.spi.IPacketCryptoService;
-import io.mosip.kernel.core.util.CryptoUtil;
-import io.mosip.kernel.core.util.DateUtils;
-import io.mosip.kernel.cryptomanager.dto.CryptomanagerRequestDto;
-import io.mosip.kernel.cryptomanager.service.CryptomanagerService;
-import io.mosip.kernel.signature.dto.SignRequestDto;
-import io.mosip.kernel.signature.dto.TimestampRequestDto;
-import io.mosip.kernel.signature.service.SignatureService;
 
 @Component
 @Qualifier("OfflinePacketCryptoServiceImpl")
@@ -28,37 +31,54 @@ public class OfflinePacketCryptoServiceImpl implements IPacketCryptoService {
 
     public static final String APPLICATION_ID = "REGISTRATION";
 
+    @Autowired
+    private ApplicationContext applicationContext;
+
     @Value("${mosip.utc-datetime-pattern:yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}")
     private String DATETIME_PATTERN;
 
-    /** The cryptomanager service. */
-	@Autowired
-	private CryptomanagerService cryptomanagerService;
+    /**
+     * The cryptomanager service.
+     */
+    private CryptomanagerService cryptomanagerService = null;
 
-	/** The key manager. */
-	@Autowired
-	private SignatureService signatureService;
+    /**
+     * The key manager.
+     */
+    private SignatureService signatureService = null;
 
-	/** The sign applicationid. */
-	@Value("${mosip.sign.applicationid:KERNEL}")
-	private String signApplicationid;
+    /**
+     * The key manager.
+     */
+    private ClientCryptoManagerService tpmCryptoService = null;
 
-	/** The sign refid. */
-	@Value("${mosip.sign.refid:SIGN}")
+    /**
+     * The sign applicationid.
+     */
+    @Value("${mosip.sign.applicationid:KERNEL}")
+    private String signApplicationid;
+
+    /**
+     * The sign refid.
+     */
+    @Value("${mosip.sign.refid:SIGN}")
     private String signRefid;
-    
+
     @Value("${mosip.kernel.registrationcenterid.length:5}")
     private int centerIdLength;
 
     @Value("${mosip.kernel.machineid.length:5}")
     private int machineIdLength;
 
+    @Value("${crypto.PrependThumbprint.enable:true}")
+    private boolean isPrependThumbprintEnabled;
+
     @Override
     public byte[] sign(byte[] packet) {
         String packetData = new String(packet, StandardCharsets.UTF_8);
-        SignRequestDto signRequest = new SignRequestDto();
+        TpmSignRequestDto signRequest = new TpmSignRequestDto();
         signRequest.setData(packetData);
-        return signatureService.sign(signRequest).getData().getBytes(StandardCharsets.UTF_8);
+        return getTpmCryptoService().csSign(signRequest).getData().getBytes(StandardCharsets.UTF_8);
     }
 
     @Override
@@ -71,7 +91,8 @@ public class OfflinePacketCryptoServiceImpl implements IPacketCryptoService {
         cryptomanagerRequestDto.setApplicationId(APPLICATION_ID);
         cryptomanagerRequestDto.setData(packetString);
         cryptomanagerRequestDto.setReferenceId(refId);
-        
+        cryptomanagerRequestDto.setPrependThumbprint(isPrependThumbprintEnabled);
+
         SecureRandom sRandom = new SecureRandom();
         byte[] nonce = new byte[CryptomanagerConstant.GCM_NONCE_LENGTH];
         byte[] aad = new byte[CryptomanagerConstant.GCM_AAD_LENGTH];
@@ -89,29 +110,21 @@ public class OfflinePacketCryptoServiceImpl implements IPacketCryptoService {
         } else {
             throw new PacketDecryptionFailureException("Packet Encryption Failed-Invalid Packet format");
         }
-        byte[] encryptedData = CryptoUtil.decodeBase64(cryptomanagerService.encrypt(cryptomanagerRequestDto).getData());
-        return mergeEncryptedData(encryptedData, nonce, aad);
+        byte[] encryptedData = CryptoUtil.decodeBase64(getCryptomanagerService().encrypt(cryptomanagerRequestDto).getData());
+        return EncryptionUtil.mergeEncryptedData(encryptedData, nonce, aad);
     }
-
-    private byte[] mergeEncryptedData(byte[] encryptedData, byte[] nonce, byte[] aad) {
-		byte[] finalEncData = new byte[encryptedData.length + CryptomanagerConstant.GCM_AAD_LENGTH + CryptomanagerConstant.GCM_NONCE_LENGTH];
-		System.arraycopy(nonce, 0, finalEncData, 0, nonce.length);
-		System.arraycopy(aad, 0, finalEncData, nonce.length, aad.length);
-		System.arraycopy(encryptedData, 0, finalEncData, nonce.length + aad.length,	encryptedData.length);
-		return encryptedData;
-	}
 
     @Override
     public byte[] decrypt(String id, byte[] packet) {
         String centerId = id.substring(0, centerIdLength);
         String machineId = id.substring(centerIdLength, centerIdLength + machineIdLength);
         String refId = centerId + "_" + machineId;
-        
+
         byte[] nonce = Arrays.copyOfRange(packet, 0, CryptomanagerConstant.GCM_NONCE_LENGTH);
-        byte[] aad = Arrays.copyOfRange(packet, CryptomanagerConstant.GCM_NONCE_LENGTH, 
-                                            CryptomanagerConstant.GCM_NONCE_LENGTH + CryptomanagerConstant.GCM_AAD_LENGTH);
+        byte[] aad = Arrays.copyOfRange(packet, CryptomanagerConstant.GCM_NONCE_LENGTH,
+                CryptomanagerConstant.GCM_NONCE_LENGTH + CryptomanagerConstant.GCM_AAD_LENGTH);
         byte[] encryptedData = Arrays.copyOfRange(packet, CryptomanagerConstant.GCM_NONCE_LENGTH + CryptomanagerConstant.GCM_AAD_LENGTH,
-                                        packet.length);
+                packet.length);
 
         CryptomanagerRequestDto cryptomanagerRequestDto = new CryptomanagerRequestDto();
         cryptomanagerRequestDto.setApplicationId(APPLICATION_ID);
@@ -119,6 +132,7 @@ public class OfflinePacketCryptoServiceImpl implements IPacketCryptoService {
         cryptomanagerRequestDto.setAad(CryptoUtil.encodeBase64String(aad));
         cryptomanagerRequestDto.setSalt(CryptoUtil.encodeBase64String(nonce));
         cryptomanagerRequestDto.setData(CryptoUtil.encodeBase64String(encryptedData));
+        cryptomanagerRequestDto.setPrependThumbprint(isPrependThumbprintEnabled);
         // setLocal Date Time
         if (id.length() > 14) {
             String packetCreatedDateTime = id.substring(id.length() - 14);
@@ -130,7 +144,7 @@ public class OfflinePacketCryptoServiceImpl implements IPacketCryptoService {
         } else {
             throw new PacketDecryptionFailureException("Packet DecryptionFailed-Invalid Packet format");
         }
-        return CryptoUtil.decodeBase64(cryptomanagerService.decrypt(cryptomanagerRequestDto).getData());
+        return CryptoUtil.decodeBase64(getCryptomanagerService().decrypt(cryptomanagerRequestDto).getData());
     }
 
     @Override
@@ -143,6 +157,24 @@ public class OfflinePacketCryptoServiceImpl implements IPacketCryptoService {
         requestDto.setTimestamp(localdatetime);
         requestDto.setData(packetData);
         requestDto.setSignature(signatureData);
-        return signatureService.validate(requestDto).getStatus().equalsIgnoreCase(CryptomanagerConstant.SIGNATURES_SUCCESS);
+        return getSignatureService().validate(requestDto).getStatus().equalsIgnoreCase(CryptomanagerConstant.SIGNATURES_SUCCESS);
+    }
+
+    private CryptomanagerService getCryptomanagerService() {
+        if (cryptomanagerService == null)
+            cryptomanagerService = applicationContext.getBean(CryptomanagerServiceImpl.class);
+        return cryptomanagerService;
+    }
+
+    private SignatureService getSignatureService() {
+        if (signatureService == null)
+            signatureService = applicationContext.getBean(SignatureService.class);
+        return signatureService;
+    }
+
+    private ClientCryptoManagerService getTpmCryptoService() {
+        if (tpmCryptoService == null)
+            tpmCryptoService = applicationContext.getBean(ClientCryptoManagerService.class);
+        return tpmCryptoService;
     }
 }

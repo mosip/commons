@@ -9,6 +9,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import io.mosip.kernel.auth.defaultadapter.handler.AuthHandler;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.vidgenerator.constant.VIDGeneratorConstant;
 import io.mosip.kernel.vidgenerator.constant.VIDGeneratorErrorCode;
@@ -36,6 +37,9 @@ public class VidServiceImpl implements VidService {
 
 	@Autowired
 	private VIDMetaDataUtil metaDataUtil;
+	
+	@Autowired
+	private AuthHandler authHandler;
 
 	@Override
 	@Transactional
@@ -59,7 +63,7 @@ public class VidServiceImpl implements VidService {
 			}
 			vidFetchResponseDto.setVid(vidEntity.getVid());
 			try {
-				vidRepository.updateVid(VidLifecycleStatus.ASSIGNED, VIDGeneratorConstant.DEFAULTADMIN_MOSIP_IO,
+				vidRepository.updateVid(VidLifecycleStatus.ASSIGNED, authHandler.getContextUser(),
 						DateUtils.getUTCCurrentDateTime(), vidEntity.getVid());
 			} catch (DataAccessException exception) {
 				LOGGER.error(ExceptionUtils.parseException(exception));

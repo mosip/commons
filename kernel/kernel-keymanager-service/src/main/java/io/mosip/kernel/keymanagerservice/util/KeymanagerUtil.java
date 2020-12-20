@@ -22,6 +22,8 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
@@ -57,6 +59,7 @@ import io.mosip.kernel.core.keymanager.exception.KeystoreProcessingException;
 import io.mosip.kernel.core.keymanager.model.CertificateEntry;
 import io.mosip.kernel.core.keymanager.model.CertificateParameters;
 import io.mosip.kernel.core.util.CryptoUtil;
+import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.keygenerator.bouncycastle.KeyGenerator;
 import io.mosip.kernel.keymanager.hsm.constant.KeymanagerErrorCode;
 import io.mosip.kernel.keymanagerservice.constant.KeymanagerConstant;
@@ -310,6 +313,16 @@ public class KeymanagerUtil {
 		}
 	}
 
+	public Certificate convertToCertificate(byte[] certDataBytes) {
+		try {
+			CertificateFactory certFactory = CertificateFactory.getInstance(KeymanagerConstant.CERTIFICATE_TYPE);
+			return certFactory.generateCertificate(new ByteArrayInputStream(certDataBytes));
+		} catch(CertificateException e) {
+			throw new KeymanagerServiceException(KeymanagerErrorConstant.CERTIFICATE_PARSING_ERROR.getErrorCode(),
+					KeymanagerErrorConstant.CERTIFICATE_PARSING_ERROR.getErrorMessage() + e.getMessage());
+		}
+	}
+
 	public String getPEMFormatedData(Object anyObject){
 		
 		StringWriter stringWriter = new StringWriter();
@@ -416,5 +429,12 @@ public class KeymanagerUtil {
 					"Error while destorying Private Key Object.");
 		}
 		secretKey = null;
+	}
+
+	public LocalDateTime convertToUTC(Date anyDate) {
+		LocalDateTime ldTime = DateUtils.parseDateToLocalDateTime(anyDate);
+		ZonedDateTime zonedtime = ldTime.atZone(ZoneId.systemDefault());
+        ZonedDateTime converted = zonedtime.withZoneSameInstant(ZoneOffset.UTC);
+        return converted.toLocalDateTime();
 	}
 }

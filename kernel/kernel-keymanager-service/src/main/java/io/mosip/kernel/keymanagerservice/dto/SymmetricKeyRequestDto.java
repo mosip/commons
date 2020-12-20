@@ -49,4 +49,10 @@ public class SymmetricKeyRequestDto {
 	@ApiModelProperty(notes = "Encrypted Data in BASE64 encoding to decrypt", required = true)
 	private String encryptedSymmetricKey;
 
+	/**
+	* flag to prepend certificate thumbprint, default to false. 
+	*/
+	@ApiModelProperty(notes = "flag to prepend certificate thumbprint to encrypted/decrypted data.", example = "false", required = false)
+	private Boolean prependThumbprint;
+
 }

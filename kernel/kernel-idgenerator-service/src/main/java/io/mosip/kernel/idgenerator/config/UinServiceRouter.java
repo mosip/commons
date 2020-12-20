@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import io.mosip.kernel.auth.defaultadapter.handler.AuthHandler;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
@@ -35,6 +36,7 @@ import io.mosip.kernel.uingenerator.service.UinService;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.WorkerExecutor;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
@@ -64,9 +66,8 @@ public class UinServiceRouter {
 	@Autowired
 	ObjectMapper objectMapper;
 
-	/*
-	 * @Autowired private AuthHandler authHandler;
-	 */
+	@Autowired
+	private AuthHandler authHandler;
 
 	@Autowired
 	private SignatureUtil signatureUtil;
@@ -98,9 +99,11 @@ public class UinServiceRouter {
 			routingContext.response().headers().add(CONTENT_TYPE, UinGeneratorConstant.APPLICATION_JSON);
 			routingContext.next();
 		});
+		authHandler.addAuthFilter(router, "/", HttpMethod.GET, "REGISTRATION_PROCESSOR");
 		router.get().handler(routingContext -> {
 			getRouter(vertx, routingContext, isSignEnable, profile, router, workerExecutorPool);
 		});
+		authHandler.addAuthFilter(router, "/", HttpMethod.PUT, "REGISTRATION_PROCESSOR");
 		router.route().handler(BodyHandler.create());
 		router.put().consumes(UinGeneratorConstant.APPLICATION_JSON).handler(this::updateRouter);
 
@@ -123,7 +126,7 @@ public class UinServiceRouter {
 	}
 
 	private void getRouter(Vertx vertx, RoutingContext routingContext, boolean isSignEnable, String profile,
-			Router router,  int workerExecutorPool) {
+			Router router, int workerExecutorPool) {
 		ResponseWrapper<UinResponseDto> reswrp = new ResponseWrapper<>();
 		String timestamp = DateUtils.getUTCCurrentDateTimeString();
 		WorkerExecutor executor = vertx.createSharedWorkerExecutor("get-uin", workerExecutorPool);

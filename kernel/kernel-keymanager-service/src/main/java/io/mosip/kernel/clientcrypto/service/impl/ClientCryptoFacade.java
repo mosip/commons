@@ -13,6 +13,7 @@ import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import tss.tpm.TPMT_PUBLIC;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -22,6 +23,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.util.Arrays;
+import java.util.Objects;
 
 @Component
 public class ClientCryptoFacade {
@@ -31,9 +33,8 @@ public class ClientCryptoFacade {
     private static final int IV_LENGTH = 16;
     private static final int AAD_LENGTH = 12;
     private static final Logger LOGGER = KeymanagerLogger.getLogger(ClientCryptoFacade.class);
-    private static ClientCryptoService clientCryptoService = null;
-    private static Boolean isTPMRequired = null;
     private static SecureRandom secureRandom = null;
+    private static ClientCryptoService clientCryptoService = null;
 
     @Autowired
     private CryptoCoreSpec<byte[], byte[], SecretKey, PublicKey, PrivateKey, String> cryptoCore;
@@ -41,24 +42,26 @@ public class ClientCryptoFacade {
     @Autowired
     private Environment environment;
 
+    @Deprecated
     public static void setIsTPMRequired(boolean flag) {
-        if(isTPMRequired == null) { isTPMRequired = flag; }
+        //nothing to do @since 1.1.4
     }
 
     private void initializeClientSecurity() {
         LOGGER.debug(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.INITIALIZATION,
                 ClientCryptoManagerConstant.EMPTY, "initializeClientSecurity >>> started");
 
-        if(isTPMRequired) {
-            try {
-                clientCryptoService = new TPMClientCryptoServiceImpl();
-            } catch(Throwable e) {
-                LOGGER.debug(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.INITIALIZATION,
-                        ClientCryptoManagerConstant.EMPTY, ExceptionUtils.getStackTrace(e));
-            }
+        try {
+            clientCryptoService = new TPMClientCryptoServiceImpl();
+        } catch(Throwable e) {
+            LOGGER.debug(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.INITIALIZATION,
+                    ClientCryptoManagerConstant.EMPTY, ExceptionUtils.getStackTrace(e));
         }
-        else {
+
+        if(clientCryptoService == null) {
             try {
+                LOGGER.warn(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.INITIALIZATION, ClientCryptoManagerConstant.EMPTY,
+                        "USING LOCAL CLIENT SECURITY INITIALIZED, IGNORE IF THIS IS NON-PROD ENV");
                 clientCryptoService = new LocalClientCryptoServiceImpl(cryptoCore);
             } catch (Throwable ex) {
                 LOGGER.error(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.INITIALIZATION,
@@ -78,32 +81,38 @@ public class ClientCryptoFacade {
     }
 
     public ClientCryptoService getClientSecurity() {
-        if(isTPMRequired == null)
-            throw new ClientCryptoException(ClientCryptoErrorConstants.TPM_REQUIRED_FLAG_NOT_SET.getErrorCode(),
-                    ClientCryptoErrorConstants.TPM_REQUIRED_FLAG_NOT_SET.getErrorMessage());
-
         if(clientCryptoService == null) {
             initializeClientSecurity();
         }
         return clientCryptoService;
     }
 
-    public boolean validateSignature(byte[] publicKey, byte[] signature, byte[] actualData, boolean isTPM) {
-        if(!isTPM) {
+    public boolean validateSignature(byte[] publicKey, byte[] signature, byte[] actualData) {
+        if(!isTPMKey(publicKey)) {
+            LOGGER.warn(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.INITIALIZATION, ClientCryptoManagerConstant.EMPTY,
+                    "USING LOCAL CLIENT SECURITY USED TO SIGN DATA, IGNORE IF THIS IS NON-PROD ENV");
             return LocalClientCryptoServiceImpl.validateSignature(publicKey, signature, actualData);
         }
         return TPMClientCryptoServiceImpl.validateSignature(publicKey, signature, actualData);
     }
 
-    public byte[] encrypt(byte[] publicKey, byte[] dataToEncrypt, boolean isTPM) {
+    public byte[] encrypt(byte[] publicKey, byte[] dataToEncrypt) {
         SecretKey secretKey = getSecretKey();
         byte[] iv = generateRandomBytes(IV_LENGTH);
         byte[] aad = generateRandomBytes(AAD_LENGTH);
         byte[] cipher = cryptoCore.symmetricEncrypt(secretKey, dataToEncrypt, iv, aad);
 
-        byte[] encryptedSecretKey = isTPM ? TPMClientCryptoServiceImpl.asymmetricEncrypt(publicKey, secretKey.getEncoded()) :
-                LocalClientCryptoServiceImpl.asymmetricEncrypt(publicKey, secretKey.getEncoded());
-
+        byte[] encryptedSecretKey = null;
+        if(!isTPMKey(publicKey)) {
+            LOGGER.warn(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.INITIALIZATION, ClientCryptoManagerConstant.EMPTY,
+                    "USING LOCAL CLIENT SECURITY USED TO ENCRYPT DATA, IGNORE IF THIS IS NON-PROD ENV");
+            LocalClientCryptoServiceImpl.cryptoCore = this.cryptoCore;
+            encryptedSecretKey = LocalClientCryptoServiceImpl.asymmetricEncrypt(publicKey, secretKey.getEncoded());
+        }
+        else {
+            encryptedSecretKey = TPMClientCryptoServiceImpl.asymmetricEncrypt(publicKey, secretKey.getEncoded());
+        }
+        Objects.requireNonNull(encryptedSecretKey);
         byte[] processedData = new byte[cipher.length+encryptedSecretKey.length+iv.length+aad.length];
         System.arraycopy(encryptedSecretKey,0,processedData, 0, encryptedSecretKey.length);
         System.arraycopy(iv, 0, processedData, encryptedSecretKey.length, iv.length);
@@ -144,5 +153,17 @@ public class ClientCryptoFacade {
                     ClientCryptoManagerConstant.EMPTY, "Failed to generate secret key " + ExceptionUtils.getStackTrace(e));
         }
         return null;
+    }
+
+    private boolean isTPMKey(byte[] publicKey) {
+        try {
+            TPMT_PUBLIC tpmPublic = TPMT_PUBLIC.fromTpm(publicKey);
+            Objects.requireNonNull(tpmPublic);
+            return true;
+        } catch (Throwable t) {
+            LOGGER.info(ClientCryptoManagerConstant.SESSIONID, "Client Security FACADE",
+                    ClientCryptoManagerConstant.EMPTY, "*** INVALID TPM KEY **** " + ExceptionUtils.getStackTrace(t));
+        }
+        return false;
     }
 }

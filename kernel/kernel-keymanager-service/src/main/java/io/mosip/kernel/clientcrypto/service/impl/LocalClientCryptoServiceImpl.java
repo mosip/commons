@@ -33,7 +33,7 @@ import java.util.Objects;
  * Note: This implementation must not be supported in PROD environments.
  *
  * @author Anusha Sunkada
- * @since 1.2.0
+ * @since 1.1.2
  *
  */
 class LocalClientCryptoServiceImpl implements ClientCryptoService {
@@ -49,7 +49,7 @@ class LocalClientCryptoServiceImpl implements ClientCryptoService {
     private static final String README = "readme.txt";
 
     private static SecureRandom secureRandom = null;
-    private static CryptoCoreSpec<byte[], byte[], SecretKey, PublicKey, PrivateKey, String> cryptoCore;
+    protected static CryptoCoreSpec<byte[], byte[], SecretKey, PublicKey, PrivateKey, String> cryptoCore;
 
 
     /**

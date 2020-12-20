@@ -11,6 +11,7 @@ import static java.util.Arrays.copyOfRange;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.cert.Certificate;
 import java.util.Arrays;
 
 import javax.crypto.SecretKey;
@@ -90,11 +91,21 @@ public class CryptomanagerServiceImpl implements CryptomanagerService {
 			encryptedData = cryptoCore.symmetricEncrypt(secretKey, CryptoUtil.decodeBase64(cryptoRequestDto.getData()),
 					CryptoUtil.decodeBase64(CryptomanagerUtils.nullOrTrim(cryptoRequestDto.getAad())));
 		}
-		PublicKey publicKey = cryptomanagerUtil.getPublicKey(cryptoRequestDto);
+
+		Certificate certificate = cryptomanagerUtil.getCertificate(cryptoRequestDto);
+		PublicKey publicKey = certificate.getPublicKey();
 		final byte[] encryptedSymmetricKey = cryptoCore.asymmetricEncrypt(publicKey, secretKey.getEncoded());
+
+		Boolean prependThumbprint = cryptoRequestDto.getPrependThumbprint() == null ? false : cryptoRequestDto.getPrependThumbprint();
 		CryptomanagerResponseDto cryptoResponseDto = new CryptomanagerResponseDto();
-		cryptoResponseDto.setData(CryptoUtil
-				.encodeBase64(CryptoUtil.combineByteArray(encryptedData, encryptedSymmetricKey, keySplitter)));
+		if (prependThumbprint) {
+			byte[] certThumbprint = cryptomanagerUtil.getCertificateThumbprint(certificate);
+			byte[] concatedData = cryptomanagerUtil.concatCertThumbprint(certThumbprint, encryptedSymmetricKey);
+			cryptoResponseDto.setData(CryptoUtil.encodeBase64(CryptoUtil.combineByteArray(encryptedData, concatedData, keySplitter)));
+			return cryptoResponseDto;
+		} 
+
+		cryptoResponseDto.setData(CryptoUtil.encodeBase64(CryptoUtil.combineByteArray(encryptedData, encryptedSymmetricKey, keySplitter)));
 		return cryptoResponseDto;
 	}
 

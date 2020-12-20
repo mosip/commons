@@ -1,9 +1,6 @@
 package io.mosip.kernel.clientcrypto.service.impl;
 
-import io.mosip.kernel.clientcrypto.constant.ClientCryptoErrorConstants;
-import io.mosip.kernel.clientcrypto.constant.ClientCryptoManagerConstant;
 import io.mosip.kernel.clientcrypto.dto.*;
-import io.mosip.kernel.clientcrypto.exception.ClientCryptoException;
 import io.mosip.kernel.clientcrypto.service.spi.ClientCryptoManagerService;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.CryptoUtil;
@@ -14,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * @author Anusha Sunkada
- * @since 1.2.0
+ * @since 1.1.2
  */
 @Service
 public class ClientCryptoManagerServiceImpl implements ClientCryptoManagerService {
@@ -38,8 +35,7 @@ public class ClientCryptoManagerServiceImpl implements ClientCryptoManagerServic
         boolean result = clientCryptoFacade.validateSignature(
                 CryptoUtil.decodeBase64(tpmSignVerifyRequestDto.getPublicKey()),
                 CryptoUtil.decodeBase64(tpmSignVerifyRequestDto.getSignature()),
-                CryptoUtil.decodeBase64(tpmSignVerifyRequestDto.getData()),
-                tpmSignVerifyRequestDto.isTpm());
+                CryptoUtil.decodeBase64(tpmSignVerifyRequestDto.getData()));
         TpmSignVerifyResponseDto tpmSignVerifyResponseDto = new TpmSignVerifyResponseDto();
         tpmSignVerifyResponseDto.setVerified(result);
         return tpmSignVerifyResponseDto;
@@ -49,8 +45,7 @@ public class ClientCryptoManagerServiceImpl implements ClientCryptoManagerServic
     public TpmCryptoResponseDto csEncrypt(TpmCryptoRequestDto tpmCryptoRequestDto) {
         byte[] cipher = clientCryptoFacade.encrypt(
                 CryptoUtil.decodeBase64(tpmCryptoRequestDto.getPublicKey()),
-                CryptoUtil.decodeBase64(tpmCryptoRequestDto.getValue()),
-                tpmCryptoRequestDto.isTpm());
+                CryptoUtil.decodeBase64(tpmCryptoRequestDto.getValue()));
         TpmCryptoResponseDto tpmCryptoResponseDto = new TpmCryptoResponseDto();
         tpmCryptoResponseDto.setValue(CryptoUtil.encodeBase64(cipher));
         return tpmCryptoResponseDto;

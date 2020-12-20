@@ -5,7 +5,6 @@ import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.dto.packet.PacketDto;
 import io.mosip.commons.packet.facade.PacketReader;
 import io.mosip.commons.packet.facade.PacketWriter;
-import io.mosip.commons.packetmanager.PacketServiceApp;
 import io.mosip.commons.packetmanager.dto.BiometricRequestDto;
 import io.mosip.commons.packetmanager.dto.DocumentDto;
 import io.mosip.commons.packetmanager.dto.FieldDto;
@@ -13,7 +12,6 @@ import io.mosip.commons.packetmanager.dto.FieldDtos;
 import io.mosip.commons.packetmanager.dto.InfoDto;
 import io.mosip.commons.packetmanager.test.TestBootApplication;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import io.mosip.kernel.cbeffutil.impl.CbeffImpl;
 import io.mosip.kernel.core.exception.BaseCheckedException;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 import io.mosip.kernel.core.http.RequestWrapper;
@@ -60,9 +58,6 @@ public class PacketManagerControllerTest {
 
     @MockBean
     private PacketWriter packetWriter;
-
-    @MockBean
-    private CbeffImpl cbeff;
 
 
     private RequestWrapper<Object> request = new RequestWrapper<>();

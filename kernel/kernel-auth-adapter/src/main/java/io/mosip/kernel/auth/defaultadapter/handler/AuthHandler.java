@@ -44,8 +44,8 @@ import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterConstant;
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterErrorCode;
 import io.mosip.kernel.auth.defaultadapter.exception.AuthManagerException;
 import io.mosip.kernel.auth.defaultadapter.model.AuthToken;
-import io.mosip.kernel.auth.defaultadapter.model.AuthUserDetails;
-import io.mosip.kernel.auth.defaultadapter.model.MosipUserDto;
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.kernel.core.authmanager.authadapter.model.MosipUserDto;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -95,6 +95,8 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 	
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	private static final String DEFAULTADMIN_MOSIP_IO = "defaultadmin@mosip.io";
 
 	@Override
 	protected void additionalAuthenticationChecks(UserDetails userDetails,
@@ -120,7 +122,7 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 			ResponseWrapper<?> responseObject = objectMapper.readValue(response.getBody(), ResponseWrapper.class);
 			mosipUserDto = objectMapper.readValue(objectMapper.writeValueAsString(responseObject.getResponse()),
 					MosipUserDto.class);
-			LOGGER.info("user " +mosipUserDto.getUserId() );
+			LOGGER.info("user " + mosipUserDto.getUserId() );
 		} catch (Exception e) {
 			throw new AuthManagerException(String.valueOf(HttpStatus.UNAUTHORIZED.value()), e.getMessage(), e);
 		}
@@ -358,5 +360,10 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 		} catch (JsonProcessingException exception) {
 			LOGGER.error(exception.getMessage());
 		}
+	}
+	
+	public String getContextUser() {
+		Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
+		return authentication==null?DEFAULTADMIN_MOSIP_IO:authentication.getName();
 	}
 }

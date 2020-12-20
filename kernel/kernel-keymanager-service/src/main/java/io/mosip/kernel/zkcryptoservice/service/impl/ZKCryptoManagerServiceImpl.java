@@ -30,6 +30,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,7 @@ import io.mosip.kernel.core.keymanager.spi.KeyStore;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.DateUtils;
+import io.mosip.kernel.cryptomanager.util.CryptomanagerUtils;
 import io.mosip.kernel.keymanagerservice.constant.KeymanagerConstant;
 import io.mosip.kernel.keymanagerservice.dto.SymmetricKeyRequestDto;
 import io.mosip.kernel.keymanagerservice.entity.KeyAlias;
@@ -67,11 +69,11 @@ import io.mosip.kernel.zkcryptoservice.service.spi.ZKCryptoManagerService;
  * 
  * @author Mahammed Taheer
  *
- * @since 1.2.0
+ * @since 1.1.2
  */
 @Service
 @Transactional
-public class ZKCryptoManagerServiceImpl implements ZKCryptoManagerService {
+public class ZKCryptoManagerServiceImpl implements ZKCryptoManagerService, InitializingBean {
 
 	private static final Logger LOGGER = KeymanagerLogger.getLogger(ZKCryptoManagerServiceImpl.class);
 	
@@ -124,8 +126,29 @@ public class ZKCryptoManagerServiceImpl implements ZKCryptoManagerService {
 	@Autowired
 	private KeymanagerService keyManagerService;
 
+	/**
+	 * {@link CryptomanagerUtils} instance
+	 */
+	@Autowired
+	CryptomanagerUtils cryptomanagerUtil;
+
+
 	@Autowired
 	private CryptoCoreSpec<byte[], byte[], SecretKey, PublicKey, PrivateKey, String> cryptoCore;
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		// temporary fix to resolve issue occurring for first time(softhsm)/third time(real hsm) symmetric key retrival from HSM.
+		for (int i = 0; i < 3; i++) {
+			try {
+				LOGGER.info(ZKCryptoManagerConstants.SESSIONID, ZKCryptoManagerConstants.ZK_ENCRYPT, 
+						ZKCryptoManagerConstants.EMPTY, "Temporary solution to handle the first time decryption failure.");
+				getDecryptedRandomKey("Tk8tU0VDRVJULUFWQUlMQUJMRS1URU1QLUZJWElORy0=");
+			} catch(Throwable e) {
+				// ignore
+			}
+		}
+	}
     
     @Override
     public ZKCryptoResponseDto zkEncrypt(ZKCryptoRequestDto cryptoRequestDto) {
@@ -357,7 +380,9 @@ public class ZKCryptoManagerServiceImpl implements ZKCryptoManagerService {
 		X509Certificate x509Cert = (X509Certificate) keymanagerUtil.convertToCertificate(certificateData);
 		PublicKey publicKey = x509Cert.getPublicKey();
 		byte[] encryptedRandomKey = cryptoCore.asymmetricEncrypt(publicKey, secretRandomKey.getEncoded());
-		return CryptoUtil.encodeBase64(encryptedRandomKey);
+		byte[] certThumbprint = cryptomanagerUtil.getCertificateThumbprint(x509Cert);
+		byte[] concatedData = cryptomanagerUtil.concatCertThumbprint(certThumbprint, encryptedRandomKey);
+		return CryptoUtil.encodeBase64(concatedData);
 	}
 
 	@Override
@@ -372,7 +397,7 @@ public class ZKCryptoManagerServiceImpl implements ZKCryptoManagerService {
 		}
 		LocalDateTime localDateTimeStamp = DateUtils.getUTCCurrentDateTime();
 		SymmetricKeyRequestDto symmetricKeyRequestDto = new SymmetricKeyRequestDto(
-									pubKeyApplicationId, localDateTimeStamp, pubKeyReferenceId, encryptedKey);
+									pubKeyApplicationId, localDateTimeStamp, pubKeyReferenceId, encryptedKey, true);
 		String randomKey = keyManagerService.decryptSymmetricKey(symmetricKeyRequestDto).getSymmetricKey();
 		String encryptedRandomKey = getEncryptedRandomKey(Base64.getEncoder().encodeToString(CryptoUtil.decodeBase64(randomKey)));
 		ReEncryptRandomKeyResponseDto responseDto = new ReEncryptRandomKeyResponseDto();
