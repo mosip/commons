@@ -1,10 +1,8 @@
 package io.mosip.kernel.applicanttype.api.impl;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+
 import java.io.Serializable;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,6 +56,7 @@ public class ApplicantTypeImpl implements ApplicantType {
 		try {
 			LOGGER.info("Getting data from MVEL file->"+configServerFileStorageURL + mvelFile);
 			String mvelExpression = restTemplate.getForObject(configServerFileStorageURL + mvelFile, String.class);
+
 			Map<String, Object> context = new HashMap();
 
 			context.put("map", m);
@@ -82,7 +81,7 @@ public class ApplicantTypeImpl implements ApplicantType {
 			LOGGER.info("Code for applicant type  is " + code);
 			return code;
 		} catch (Exception ex) {
-			LOGGER.error("Error while loading mvel file" + ex.getMessage());
+			LOGGER.error("Error while executing mvel file" + ex.getMessage());
 			throw ex;
 		}
 		
