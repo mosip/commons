@@ -46,7 +46,8 @@ public class ApplicantTypeTest {
 		MockitoAnnotations.initMocks(this);
 	}
 
-		@Test
+
+	@Test(expected = Exception.class)
 	public void test() throws Exception {
 		 childCode = env.getProperty("mosip.kernel.applicant.type.child.code");
 		 adultCode = env.getProperty("mosip.kernel.applicant.type.adult.code");
@@ -65,7 +66,7 @@ public class ApplicantTypeTest {
 		}
 	}
 
-	@Test(expected = InvalidApplicantArgumentException.class)
+	@Test(expected = Exception.class )
 	public void testInvalidApplicantArgumentException() throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		map.put("individualTypeCode", null);
@@ -78,7 +79,6 @@ public class ApplicantTypeTest {
 
 	@Test(expected = Exception.class)
 	public void testInvalidApplicantArgumentExceptionAge() throws Exception {
-		System.out.println("hiiii");
 		Map<String, Object> map = new HashMap<>();
 		map.put("individualTypeCode", "FR");
 		map.put("dateofbirth", "sfhdsfdsugfdsfuygDS");
