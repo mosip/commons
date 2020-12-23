@@ -202,8 +202,8 @@ public class PacketReaderImpl implements IPacketReader {
 				: null;
 		String documentString = (String) idobjectMap.get(documentName);
 		try {
-			JSONObject documentMap = new JSONObject(documentString);
-			if (documentMap != null && schemaVersion != null) {
+			if (documentString != null && schemaVersion != null) {
+				JSONObject documentMap = new JSONObject(documentString);
 				String packetName = idSchemaUtils.getSource(documentName, schemaVersion);
 				Packet packet = packetKeeper.getPacket(getPacketInfo(id, packetName, source, process));
 				String value = documentMap.has(VALUE) ? documentMap.get(VALUE).toString() : null;
@@ -265,6 +265,8 @@ public class PacketReaderImpl implements IPacketReader {
 
 			Packet packet = packetKeeper.getPacket(getPacketInfo(id, packetName, source, process));
 			InputStream biometrics = ZipUtils.unzipAndGetFile(packet.getPacket(), fileName);
+			if (biometrics == null)
+				return null;
 			BIRType birType = CbeffValidator.getBIRFromXML(IOUtils.toByteArray(biometrics));
 			biometricRecord = new BiometricRecord();
 			List<io.mosip.kernel.core.cbeffutil.entity.BIR> birList = CbeffValidator
