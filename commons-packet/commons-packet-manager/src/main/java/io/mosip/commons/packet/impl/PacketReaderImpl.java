@@ -265,6 +265,8 @@ public class PacketReaderImpl implements IPacketReader {
 
 			Packet packet = packetKeeper.getPacket(getPacketInfo(id, packetName, source, process));
 			InputStream biometrics = ZipUtils.unzipAndGetFile(packet.getPacket(), fileName);
+			if (biometrics == null)
+				return null;
 			BIRType birType = CbeffValidator.getBIRFromXML(IOUtils.toByteArray(biometrics));
 			biometricRecord = new BiometricRecord();
 			List<io.mosip.kernel.core.cbeffutil.entity.BIR> birList = CbeffValidator
