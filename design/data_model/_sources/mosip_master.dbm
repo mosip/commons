@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="0,850" last-zoom="0.5"
+<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="1122,534" last-zoom="0.5"
 	 default-schema="public" default-owner="postgres">
 <role name="sysadmin"
       superuser="true"
@@ -2855,7 +2855,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<comment><![CDATA[Template Model : velocity, free maker, jasper report....etc]]></comment>
 	</column>
 	<column name="file_txt">
-		<type name="character varying" length="10240"/>
+		<type name="character varying" length="0"/>
 		<comment><![CDATA[File Text: Contents of the template]]></comment>
 	</column>
 	<column name="module_id">
