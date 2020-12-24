@@ -1,7 +1,4 @@
 FROM openjdk:11
-RUN apt-get update \
-    && apt-get -y upgrade \
-    && apt-get -y install unzip
 
 # can be passed during Docker build as build time environment for github branch to pickup configuration from.
 ARG spring_config_label
@@ -80,7 +77,7 @@ RUN chmod +x configure_start.sh
 ADD ./target/*.jar /target/
 RUN find /target -name '*.jar' -executable -type f "-print0" | xargs "-0" cp -t / \
     && rm -rf /target \
-    && mv *.jar kernel-keymanager-service.jar 
+    && mv /*.jar /home/${container_user}/kernel-keymanager-service.jar
 
 # change permissions of file inside working dir
 RUN chown -R ${container_user}:${container_user} /home/${container_user}
@@ -98,9 +95,9 @@ CMD if [ "$is_glowroot_env" = "present" ]; then \
     rm -rf glowroot.zip ; \
     sed -i 's/<service_name>/kernel-keymanager-service/g' glowroot/glowroot.properties ; \
     wget "${iam_adapter_url_env}" -O kernel-auth-adapter.jar; \
-    java -jar -javaagent:glowroot/glowroot.jar -Dloader.path=./kernel-auth-adapter.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -XX:HeapDumpPath=/home/  /kernel-keymanager-service.jar ; \
+    java -jar -javaagent:glowroot/glowroot.jar -Dloader.path=./kernel-auth-adapter.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -XX:HeapDumpPath=/home/  /home/${container_user}/kernel-keymanager-service.jar ; \
     else \
     wget "${iam_adapter_url_env}" -O kernel-auth-adapter.jar; \
-    java -jar -Dloader.path=./kernel-auth-adapter.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" /kernel-keymanager-service.jar ; \
+    java -jar -Dloader.path=./kernel-auth-adapter.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" /home/${container_user}/kernel-keymanager-service.jar ; \
     fi
 
