@@ -19,7 +19,7 @@ CREATE TABLE master.template(
 	descr character varying(256),
 	file_format_code character varying(36) NOT NULL,
 	model character varying(128),
-	file_txt character varying(10240),
+	file_txt character varying,
 	module_id character varying(36),
 	module_name character varying(128),
 	template_typ_code character varying(36) NOT NULL,
