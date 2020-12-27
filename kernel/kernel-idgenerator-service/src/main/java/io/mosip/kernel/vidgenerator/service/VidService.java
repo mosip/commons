@@ -15,4 +15,6 @@ public interface VidService {
 
 	boolean saveVID(VidEntity vid);
 
+	void isolateAssignedVids();
+
 }
