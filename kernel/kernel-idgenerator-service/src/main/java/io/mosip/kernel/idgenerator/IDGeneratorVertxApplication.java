@@ -29,6 +29,7 @@ import io.mosip.kernel.uingenerator.verticle.UinTransferVerticle;
 import io.mosip.kernel.vidgenerator.constant.EventType;
 import io.mosip.kernel.vidgenerator.constant.VIDGeneratorConstant;
 import io.mosip.kernel.vidgenerator.verticle.VidExpiryVerticle;
+import io.mosip.kernel.vidgenerator.verticle.VidIsolatorVerticle;
 import io.mosip.kernel.vidgenerator.verticle.VidPoolCheckerVerticle;
 import io.mosip.kernel.vidgenerator.verticle.VidPopulatorVerticle;
 import io.vertx.config.ConfigRetriever;
@@ -170,7 +171,7 @@ public class IDGeneratorVertxApplication {
 		DeploymentOptions workerOptions = new DeploymentOptions().setWorker(true);
 		vertx = Vertx.vertx(options);
 		Verticle[] workerVerticles = { new VidPoolCheckerVerticle(context), new VidPopulatorVerticle(context),
-				new VidExpiryVerticle(context) };
+				new VidExpiryVerticle(context), new VidIsolatorVerticle(context) };
 		Stream.of(workerVerticles).forEach(verticle -> deploy(verticle, workerOptions, vertx));
 		vertx.setTimer(1000, handler -> initVIDPool());
 		Verticle[] uinVerticles = { new UinGeneratorVerticle(context),new UinTransferVerticle(context)};
