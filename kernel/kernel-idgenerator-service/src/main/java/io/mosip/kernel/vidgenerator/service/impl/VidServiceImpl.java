@@ -33,8 +33,8 @@ public class VidServiceImpl implements VidService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(VidServiceImpl.class);
 
-	@Value("${mosip.kernel.vid.time-to-renew-after-expiry}")
-	private long timeToRenewAfterExpiry;
+	@Value("${mosip.kernel.vid.time-to-release-after-expiry}")
+	private long timeToRelaseAfterExpiry;
 
 	@Autowired
 	private VidRepository vidRepository;
@@ -107,35 +107,37 @@ public class VidServiceImpl implements VidService {
 	}
 
 	@Override
-	public void expireAndRenew() {
+	public void expireAndRelease() {
 		try {
-			List<VidAssignedEntity> vidAssignedEntities = vidAssignedRepository
-					.findByStatusAndIsDeletedFalse(VidLifecycleStatus.ASSIGNED);
-			vidAssignedEntities.forEach(this::expireIfEligible);
-			vidAssignedRepository.saveAll(vidAssignedEntities);
-			List<VidAssignedEntity> vidExpiredEntities = vidAssignedRepository
-					.findByStatusAndIsDeletedFalse(VidLifecycleStatus.EXPIRED);
-			List<VidAssignedEntity> renewableVidAssigenedEntities = new ArrayList<VidAssignedEntity>();
-			vidExpiredEntities.forEach(entity -> {
-				if(isRenewable(entity)) {
-					entity.setVidExpiry(null);
-					metaDataUtil.setUpdateMetaData(entity);
-					entity.setStatus(VidLifecycleStatus.AVAILABLE);
-					renewableVidAssigenedEntities.add(entity);
-				}
-			});
-			if(renewableVidAssigenedEntities.size() > 0) {
-				List<VidEntity> renewableVidEntities = modelMapper.map(renewableVidAssigenedEntities, 
-						new TypeToken<List<VidEntity>>() {}.getType());
-				vidRepository.saveAll(renewableVidEntities);
-				vidAssignedRepository.deleteAll(renewableVidAssigenedEntities);
-			}
+			expireEligibleVids();
+			releaseEligibleVids();
 		} catch (DataAccessException exception) {
 			LOGGER.error(ExceptionUtils.parseException(exception));
 		} catch (Exception exception) {
 			LOGGER.error(ExceptionUtils.parseException(exception));
 		}
 
+	}
+
+	private void expireEligibleVids() {
+		List<VidAssignedEntity> vidAssignedEntities = vidAssignedRepository
+			.findByStatusAndIsDeletedFalse(VidLifecycleStatus.ASSIGNED);
+		vidAssignedEntities.forEach(this::expireIfEligible);
+		vidAssignedRepository.saveAll(vidAssignedEntities);
+	}
+
+	private void releaseEligibleVids() {
+		List<VidAssignedEntity> vidExpiredEntities = vidAssignedRepository
+			.findByStatusAndIsDeletedFalse(VidLifecycleStatus.EXPIRED);
+		List<VidAssignedEntity> releasableVidAssignedEntities = new ArrayList<VidAssignedEntity>();
+		vidExpiredEntities.forEach(entity -> {
+			if(isEligibleToRelease(entity)) {
+				releasableVidAssignedEntities.add(entity);
+			}
+		});
+		if(releasableVidAssignedEntities.size() > 0) {
+			vidAssignedRepository.deleteAll(releasableVidAssignedEntities);
+		}
 	}
 
 	private void expireIfEligible(VidAssignedEntity entity) {
@@ -148,11 +150,11 @@ public class VidServiceImpl implements VidService {
 		}
 	}
 
-	private boolean isRenewable(VidAssignedEntity entity) {
+	private boolean isEligibleToRelease(VidAssignedEntity entity) {
 		LocalDateTime currentTime = DateUtils.getUTCCurrentDateTime();
-		LocalDateTime renewElegibleTime = entity.getVidExpiry().plusDays(timeToRenewAfterExpiry);
-		LOGGER.debug("currenttime {} for checking entity with renew elegible time {}", currentTime, renewElegibleTime);
-		if ((renewElegibleTime.isBefore(currentTime) || renewElegibleTime.isEqual(currentTime))
+		LocalDateTime releaseElegibleTime = entity.getVidExpiry().plusDays(timeToRelaseAfterExpiry);
+		LOGGER.debug("currenttime {} for checking entity with release elegible time {}", currentTime, releaseElegibleTime);
+		if ((releaseElegibleTime.isBefore(currentTime) || releaseElegibleTime.isEqual(currentTime))
 				&& entity.getStatus().equals(VidLifecycleStatus.EXPIRED)) {
 			return true;
 		}

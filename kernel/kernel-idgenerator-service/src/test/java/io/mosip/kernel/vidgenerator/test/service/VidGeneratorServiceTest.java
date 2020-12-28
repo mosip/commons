@@ -62,9 +62,9 @@ public class VidGeneratorServiceTest {
 
 	private List<VidAssignedEntity> notExpiredButAssignedStatusVAEntities;
 
-	private List<VidAssignedEntity> renewableButExpiredStatusVAEntities;
+	private List<VidAssignedEntity> releasableButExpiredStatusVAEntities;
 
-	private List<VidAssignedEntity> notRenewableButExpiredStatusVAEntities;
+	private List<VidAssignedEntity> nonReleasableButExpiredStatusVAEntities;
 
 	private List<VidEntity> nonExpiredButAssignedStatusEntities;
 
@@ -107,23 +107,23 @@ public class VidGeneratorServiceTest {
 		notExpiredButAssignedStatusVAEntities = new ArrayList<>();
 		notExpiredButAssignedStatusVAEntities.add(notExpiredButAssignedStatusVAEntity);
 
-		VidAssignedEntity renewableButExpiredStatusVAEntity = new VidAssignedEntity("3690694284580733", 
+		VidAssignedEntity releasableButExpiredStatusVAEntity = new VidAssignedEntity("3690694284580733", 
 			VidLifecycleStatus.EXPIRED, DateUtils.getUTCCurrentDateTime().minusMonths(7));
-		renewableButExpiredStatusVAEntity.setCreatedBy("MOSIP_ADMIN");
-		renewableButExpiredStatusVAEntity.setCreatedtimes(DateUtils.getUTCCurrentDateTime().minusMonths(10));
-		renewableButExpiredStatusVAEntity.setUpdatedBy("MOSIP_ADMIN");
-		renewableButExpiredStatusVAEntity.setUpdatedtimes(DateUtils.getUTCCurrentDateTime().minusDays(10));
-		renewableButExpiredStatusVAEntities = new ArrayList<>();
-		renewableButExpiredStatusVAEntities.add(renewableButExpiredStatusVAEntity);
+		releasableButExpiredStatusVAEntity.setCreatedBy("MOSIP_ADMIN");
+		releasableButExpiredStatusVAEntity.setCreatedtimes(DateUtils.getUTCCurrentDateTime().minusMonths(10));
+		releasableButExpiredStatusVAEntity.setUpdatedBy("MOSIP_ADMIN");
+		releasableButExpiredStatusVAEntity.setUpdatedtimes(DateUtils.getUTCCurrentDateTime().minusDays(10));
+		releasableButExpiredStatusVAEntities = new ArrayList<>();
+		releasableButExpiredStatusVAEntities.add(releasableButExpiredStatusVAEntity);
 
-		VidAssignedEntity notRenewableButExpiredStatusVAEntity = new VidAssignedEntity("3690694284580734", 
+		VidAssignedEntity nonReleasableButExpiredStatusVAEntity = new VidAssignedEntity("3690694284580734", 
 			VidLifecycleStatus.EXPIRED, DateUtils.getUTCCurrentDateTime().minusMinutes(30));
-		notRenewableButExpiredStatusVAEntity.setCreatedBy("MOSIP_ADMIN");
-		notRenewableButExpiredStatusVAEntity.setCreatedtimes(DateUtils.getUTCCurrentDateTime().minusMonths(10));
-		notRenewableButExpiredStatusVAEntity.setUpdatedBy("MOSIP_ADMIN");
-		notRenewableButExpiredStatusVAEntity.setUpdatedtimes(DateUtils.getUTCCurrentDateTime().minusDays(10));
-		notRenewableButExpiredStatusVAEntities = new ArrayList<>();
-		notRenewableButExpiredStatusVAEntities.add(notRenewableButExpiredStatusVAEntity);
+		nonReleasableButExpiredStatusVAEntity.setCreatedBy("MOSIP_ADMIN");
+		nonReleasableButExpiredStatusVAEntity.setCreatedtimes(DateUtils.getUTCCurrentDateTime().minusMonths(10));
+		nonReleasableButExpiredStatusVAEntity.setUpdatedBy("MOSIP_ADMIN");
+		nonReleasableButExpiredStatusVAEntity.setUpdatedtimes(DateUtils.getUTCCurrentDateTime().minusDays(10));
+		nonReleasableButExpiredStatusVAEntities = new ArrayList<>();
+		nonReleasableButExpiredStatusVAEntities.add(nonReleasableButExpiredStatusVAEntity);
 
 		VidEntity nonExpiredButAssignedStatusEntity = new VidEntity("3690694284580735", 
 			VidLifecycleStatus.ASSIGNED, DateUtils.getUTCCurrentDateTime().plusMinutes(30));
@@ -212,21 +212,21 @@ public class VidGeneratorServiceTest {
 	}
 
 	@Test
-	public void expireOrRenewDataAccessExceptionTest() {
+	public void expireOrReleaseDataAccessExceptionTest() {
 		Mockito.when(vidRepository.findByStatusAndIsDeletedFalse(VidLifecycleStatus.ASSIGNED))
 				.thenThrow(new DataRetrievalFailureException("DataBase error occur"));
-		vidService.expireAndRenew();
+		vidService.expireAndRelease();
 	}
 
 	@Test
-	public void expireOrRenewExceptionTest() {
+	public void expireOrReleaseExceptionTest() {
 		Mockito.when(vidRepository.findByStatusAndIsDeletedFalse(VidLifecycleStatus.ASSIGNED))
 				.thenThrow(new RuntimeException("DataBase error occur"));
-		vidService.expireAndRenew();
+		vidService.expireAndRelease();
 	}
 
 	@Test
-	public void expireOrRenewTest() {
+	public void expireOrReleaseTest() {
 		Mockito.when(vidAssignedRepository.findByStatusAndIsDeletedFalse(VidLifecycleStatus.ASSIGNED))
 			.thenReturn(Stream.of(expiredButAssignedStatusVAEntities, notExpiredButAssignedStatusVAEntities)
 				.flatMap(Collection::stream)
@@ -237,14 +237,11 @@ public class VidGeneratorServiceTest {
 				.collect(Collectors.toList()));
 		
 		Mockito.when(vidAssignedRepository.findByStatusAndIsDeletedFalse(VidLifecycleStatus.EXPIRED))
-			.thenReturn(Stream.of(renewableButExpiredStatusVAEntities, notRenewableButExpiredStatusVAEntities)
+			.thenReturn(Stream.of(releasableButExpiredStatusVAEntities, nonReleasableButExpiredStatusVAEntities)
 				.flatMap(Collection::stream)
 				.collect(Collectors.toList()));
-		Mockito.when(vidRepository.saveAll(vidEntityListCaptor.capture()))
-			.thenAnswer(i -> StreamSupport.stream((
-				(List<VidEntity>) i.getArguments()[0]).spliterator(), false)
-				.collect(Collectors.toList()));
-		vidService.expireAndRenew();
+
+		vidService.expireAndRelease();
 		Mockito.verify(vidAssignedRepository).deleteAll(vidAssignedEntityListCaptor2.capture());
 
 		List<String> expiredButAssignedStatusVids = expiredButAssignedStatusVAEntities.stream()
@@ -256,18 +253,13 @@ public class VidGeneratorServiceTest {
 			.collect(Collectors.toList());
 		assertEquals(expiredButAssignedStatusVids, expiredStatusVids);
 
-		List<String> renewableButExpiredStatusVids = renewableButExpiredStatusVAEntities.stream()
+		List<String> releasableButExpiredStatusVids = releasableButExpiredStatusVAEntities.stream()
 			.flatMap(item -> Stream.of(item.getVid()))
 			.collect(Collectors.toList());
 		List<String> deletedVids = vidAssignedEntityListCaptor2.getValue().stream()
 			.flatMap(item -> Stream.of(item.getVid()))
 			.collect(Collectors.toList());
-		List<String> renewedVids = vidEntityListCaptor.getValue().stream()
-			.filter(item -> item.getStatus().equals(VidLifecycleStatus.AVAILABLE))
-			.flatMap(item -> Stream.of(item.getVid()))
-			.collect(Collectors.toList());
-		assertEquals(renewableButExpiredStatusVids, deletedVids);
-		assertEquals(renewableButExpiredStatusVids, renewedVids);
+		assertEquals(releasableButExpiredStatusVids, deletedVids);
 	}
 
 	@Test
