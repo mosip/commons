@@ -45,6 +45,7 @@ import io.mosip.kernel.core.keymanager.exception.KeystoreProcessingException;
 import io.mosip.kernel.core.keymanager.exception.NoSuchSecurityProviderException;
 import io.mosip.kernel.core.keymanager.model.CertificateParameters;
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.keygenerator.bouncycastle.constant.KeyGeneratorExceptionConstant;
 import io.mosip.kernel.keymanager.hsm.constant.KeymanagerConstant;
 import io.mosip.kernel.keymanager.hsm.constant.KeymanagerErrorCode;
@@ -148,6 +149,10 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 
 	private Provider provider = null;
 
+	private LocalDateTime lastProviderLoadedTime;
+
+	private static final int PROVIDER_ALLOWED_RELOAD_INTERVEL_IN_SECONDS = 60;
+
 	private static final int NO_OF_RETRIES = 3;
 
 	private char[] keystorePwdCharArr = null;
@@ -161,6 +166,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 			Security.addProvider(bouncyCastleProvider);
 			this.keyStore = getKeystoreInstance(KeymanagerConstant.KEYSTORE_TYPE_PKCS12, bouncyCastleProvider);
 			loadKeystore();
+			lastProviderLoadedTime = DateUtils.getUTCCurrentDateTime();
 			return;
 		}
 		keystorePwdCharArr = getKeystorePwd();
@@ -171,6 +177,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 		Security.addProvider(bouncyCastleProvider);
 		this.keyStore = getKeystoreInstance(keystoreType, provider);
 		loadKeystore();
+		lastProviderLoadedTime = DateUtils.getUTCCurrentDateTime();
 		// loadCertificate();
 	}
 
@@ -405,6 +412,14 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 
 	private synchronized void reloadProvider() {
 		LOGGER.info("sessionId", "KeyStoreImpl", "KeyStoreImpl", "reloading provider");
+		if(DateUtils.getUTCCurrentDateTime().isBefore(
+				lastProviderLoadedTime.plusSeconds(PROVIDER_ALLOWED_RELOAD_INTERVEL_IN_SECONDS))) {
+			LOGGER.warn("sessionId", "KeyStoreImpl", "reloadProvider", 
+				"Last time successful reload done on " + lastProviderLoadedTime.toString() + 
+					", so reloading not done before interval of " + 
+					PROVIDER_ALLOWED_RELOAD_INTERVEL_IN_SECONDS + " sec");
+			return;
+		}
 		if (Objects.nonNull(provider)) {
 			Security.removeProvider(provider.getName());
 		}
@@ -412,6 +427,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 		addProvider(provider);
 		this.keyStore = getKeystoreInstance(keystoreType, provider);
 		loadKeystore();
+		lastProviderLoadedTime = DateUtils.getUTCCurrentDateTime();
 	}
 
 	private void validatePKCS11KeyStore() {
