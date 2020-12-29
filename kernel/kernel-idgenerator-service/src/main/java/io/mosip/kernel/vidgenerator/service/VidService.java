@@ -11,7 +11,7 @@ public interface VidService {
 
 	long fetchVidCount(String status);
 
-	void expireAndRenew();
+	void expireAndRelease();
 
 	boolean saveVID(VidEntity vid);
 
