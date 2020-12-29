@@ -201,19 +201,24 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	 *            provider
 	 * @return Provider
 	 */
-	private Provider setupProvider(String configPath) {
+	private synchronized Provider setupProvider(String configPath) {
+		Provider configuredProvider;
 		try {
 			switch (keystoreType) {
 			case "PKCS11":
-				provider = Security.getProvider("SunPKCS11");
-				provider = provider.configure(configPath);				
+				Provider sunPKCS11Provider = Security.getProvider("SunPKCS11");
+				if(sunPKCS11Provider == null)
+					throw new ProviderException("SunPKCS11 provider not found");
+				configuredProvider = sunPKCS11Provider.configure(configPath);
 				break;
 			case "BouncyCastleProvider":
-				provider = new BouncyCastleProvider();
+				configuredProvider = new BouncyCastleProvider();
 				break;
 			default:
-				provider = Security.getProvider("SunPKCS11");
-				provider = provider.configure(configPath);
+				Provider sunPKCS11ProviderDefault = Security.getProvider("SunPKCS11");
+				if(sunPKCS11ProviderDefault == null)
+					throw new ProviderException("SunPKCS11 provider not found");
+				configuredProvider = sunPKCS11ProviderDefault.configure(configPath);
 				break;
 
 			}
@@ -221,7 +226,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 			throw new NoSuchSecurityProviderException(KeymanagerErrorCode.INVALID_CONFIG_FILE.getErrorCode(),
 					KeymanagerErrorCode.INVALID_CONFIG_FILE.getErrorMessage(), providerException);
 		}
-		return provider;
+		return configuredProvider;
 	}
 
 	/**
@@ -398,12 +403,12 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 		return privateKeyEntry;
 	}
 
-	private void reloadProvider() {
+	private synchronized void reloadProvider() {
 		LOGGER.info("sessionId", "KeyStoreImpl", "KeyStoreImpl", "reloading provider");
 		if (Objects.nonNull(provider)) {
 			Security.removeProvider(provider.getName());
 		}
-		Provider provider = setupProvider(configPath);
+		provider = setupProvider(configPath);
 		addProvider(provider);
 		this.keyStore = getKeystoreInstance(keystoreType, provider);
 		loadKeystore();
