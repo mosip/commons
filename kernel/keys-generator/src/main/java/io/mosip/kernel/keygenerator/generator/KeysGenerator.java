@@ -27,7 +27,7 @@ import io.mosip.kernel.keymanagerservice.service.KeymanagerService;
 @SuppressWarnings("restriction")
 @Component
 public class KeysGenerator {
-    
+
     private static final String ROOT_APP_ID = "ROOT";
 
     private static final String BLANK_REF_ID = "";
@@ -37,44 +37,43 @@ public class KeysGenerator {
     private static final String DUMMY_RESP_TYPE = "CSR";
 
     private static final String IDENTITY_CACHE_REF_ID = "IDENTITY_CACHE";
-    
+
     @Value("${mosip.kernel.keymanager.autogen.appids.list}")
     private String appIdsList;
-    
+
     /**
-	 * Organizational Unit for generating certificate
-	 */
-	@Value("${mosip.kernel.keymanager.certificate.default.organizational-unit}")
-	private String organizationUnit;
+     * Organizational Unit for generating certificate
+     */
+    @Value("${mosip.kernel.keymanager.certificate.default.organizational-unit}")
+    private String organizationUnit;
 
-	/**
-	 * Organization for generating certificate
-	 */
-	@Value("${mosip.kernel.keymanager.certificate.default.organization}")
-	private String organization;
+    /**
+     * Organization for generating certificate
+     */
+    @Value("${mosip.kernel.keymanager.certificate.default.organization}")
+    private String organization;
 
-	/**
-	 * Location for generating certificate
-	 */
-	@Value("${mosip.kernel.keymanager.certificate.default.location}")
-	private String location;
+    /**
+     * Location for generating certificate
+     */
+    @Value("${mosip.kernel.keymanager.certificate.default.location}")
+    private String location;
 
-	/**
-	 * State for generating certificate
-	 */
-	@Value("${mosip.kernel.keymanager.certificate.default.state}")
-	private String state;
+    /**
+     * State for generating certificate
+     */
+    @Value("${mosip.kernel.keymanager.certificate.default.state}")
+    private String state;
 
-	/**
-	 * Country for generating certificate
-	 */
-	@Value("${mosip.kernel.keymanager.certificate.default.country}")
+    /**
+     * Country for generating certificate
+     */
+    @Value("${mosip.kernel.keymanager.certificate.default.country}")
     private String country;
-    
 
-	@Value("${mosip.kernel.zkcrypto.generate.ida.publickey:false}")
+    @Value("${mosip.kernel.zkcrypto.generate.ida.publickey:false}")
     private boolean genPubKeyFlag;
-    
+
     @Value("${mosip.kernel.zkcrypto.publickey.application.id}")
     private String idaAppId;
 
@@ -84,23 +83,22 @@ public class KeysGenerator {
     @Value("${mosip.kernel.keymanager.autogen.basekeys.list}")
     private String baseKeys;
 
-    
-	@Autowired
-	private KeyAliasRepository keyAliasRepository;
-    
     @Autowired
-	KeymanagerService keymanagerService;
+    private KeyAliasRepository keyAliasRepository;
+
+    @Autowired
+    KeymanagerService keymanagerService;
 
     @Autowired
     RandomKeysGenerator randomKeysGenerator;
 
     @Autowired
     private KeymanagerDBHelper dbHelper;
-    
+
     public void generateKeys() throws Exception {
-        
+
         String rootKeyAlias = getKeyAlias(ROOT_APP_ID, BLANK_REF_ID);
-        if(Objects.isNull(rootKeyAlias)) {
+        if (Objects.isNull(rootKeyAlias)) {
             generateMasterKey(ROOT_APP_ID, BLANK_REF_ID, MOSIP_CN + ROOT_APP_ID);
             System.out.println("Generated ROOT Key.");
         }
