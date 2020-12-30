@@ -420,10 +420,12 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 					PROVIDER_ALLOWED_RELOAD_INTERVEL_IN_SECONDS + " sec");
 			return;
 		}
-		if (Objects.nonNull(provider)) {
-			Security.removeProvider(provider.getName());
-		}
+		String existingProviderName = null;
+		if (Objects.nonNull(provider))
+			existingProviderName = provider.getName();
 		provider = setupProvider(configPath);
+		if(existingProviderName != null)
+			Security.removeProvider(existingProviderName);
 		addProvider(provider);
 		this.keyStore = getKeystoreInstance(keystoreType, provider);
 		loadKeystore();
