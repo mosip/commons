@@ -26,6 +26,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import io.mosip.kernel.core.keymanager.exception.KeystoreProcessingException;
 import io.mosip.kernel.core.keymanager.exception.NoSuchSecurityProviderException;
+import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.keymanager.hsm.impl.KeyStoreImpl;
 
 @RunWith(SpringRunner.class)
@@ -52,6 +53,8 @@ public class KeyStoreImplExceptionTest {
 		ReflectionTestUtils.setField(keyStoreImpl, "organizationalUnit", "organizationalUnit");
 		ReflectionTestUtils.setField(keyStoreImpl, "organization", "organization");
 		ReflectionTestUtils.setField(keyStoreImpl, "country", "country");
+		ReflectionTestUtils.setField(keyStoreImpl, "lastProviderLoadedTime", 
+			DateUtils.getUTCCurrentDateTime().minusMinutes(10));
 		keyStore.load(null);
 		provider = new BouncyCastleProvider();
 		Security.addProvider(provider);
