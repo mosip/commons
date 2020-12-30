@@ -48,7 +48,6 @@ ARG container_user_uid=1001
 # can be passed during Docker build as build time environment for github branch to pickup configuration from.
 ARG container_user_gid=1001
 
-
 # install packages and create user
 RUN apt-get -y update \
 && apt-get install -y unzip \
@@ -72,7 +71,7 @@ USER ${container_user_uid}:${container_user_gid}
 EXPOSE 8080
 
 CMD if [ "$is_glowroot_env" = "present" ]; then \
-    wget "${artifactory_url_env}"/artifactory/libs-release-local/io/mosip/testing/glowroot.zip ; \
+    wget -q --show-progress "${artifactory_url_env}"/artifactory/libs-release-local/io/mosip/testing/glowroot.zip ; \
     unzip glowroot.zip ; \
     rm -rf glowroot.zip ; \
     sed -i 's/<service_name>/kernel-idgenerator-service/g' glowroot/glowroot.properties ; \
