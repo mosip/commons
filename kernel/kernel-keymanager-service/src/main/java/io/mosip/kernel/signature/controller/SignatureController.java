@@ -13,17 +13,17 @@ import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.signatureutil.model.SignatureResponse;
-import io.mosip.kernel.signature.dto.SignRequestDto;
-import io.mosip.kernel.signature.dto.SignResponseDto;
-import io.mosip.kernel.signature.dto.TimestampRequestDto;
-import io.mosip.kernel.signature.dto.ValidatorResponseDto;
-import io.mosip.kernel.signature.service.SignatureService;
 import io.mosip.kernel.signature.dto.JWTSignatureRequestDto;
 import io.mosip.kernel.signature.dto.JWTSignatureResponseDto;
 import io.mosip.kernel.signature.dto.JWTSignatureVerifyRequestDto;
 import io.mosip.kernel.signature.dto.JWTSignatureVerifyResponseDto;
 import io.mosip.kernel.signature.dto.PDFSignatureRequestDto;
+import io.mosip.kernel.signature.dto.SignRequestDto;
+import io.mosip.kernel.signature.dto.SignResponseDto;
 import io.mosip.kernel.signature.dto.SignatureResponseDto;
+import io.mosip.kernel.signature.dto.TimestampRequestDto;
+import io.mosip.kernel.signature.dto.ValidatorResponseDto;
+import io.mosip.kernel.signature.service.SignatureService;
 
 /**
  * 
@@ -46,7 +46,7 @@ public class SignatureController {
 	 * @param requestDto {@link SignRequestDto} having required fields.
 	 * @return The {@link SignatureResponse}
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','ID_AUTHENTICATION', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@PostMapping(value = "/sign")
 	@Deprecated
@@ -60,7 +60,7 @@ public class SignatureController {
 		return response;
 	}
 
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','ID_AUTHENTICATION', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN')")
 	@ResponseFilter
 	@PostMapping(value = "/validate")
 	@Deprecated
@@ -71,7 +71,7 @@ public class SignatureController {
 		return response;
 	}
 
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','ID_AUTHENTICATION', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@PostMapping("/pdf/sign")
 	public ResponseWrapper<SignatureResponseDto> signPDF(
@@ -87,7 +87,7 @@ public class SignatureController {
 	 * @param requestDto {@link JWTSignatureRequestDto} having required fields.
 	 * @return The {@link JWTSignatureResponseDto}
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','ID_AUTHENTICATION', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@PostMapping(value = "/jwtSign")
 	public ResponseWrapper<JWTSignatureResponseDto> jwtSign(@RequestBody @Valid RequestWrapper<JWTSignatureRequestDto> requestDto) {
@@ -103,7 +103,7 @@ public class SignatureController {
 	 * @param requestDto {@link JWTSignatureVerifyRequestDto} having required fields.
 	 * @return The {@link JWTSignatureVerifyResponseDto}
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','ID_AUTHENTICATION', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@PostMapping(value = "/jwtVerify")
 	public ResponseWrapper<JWTSignatureVerifyResponseDto> jwtVerify(@RequestBody @Valid RequestWrapper<JWTSignatureVerifyRequestDto> requestDto) {
