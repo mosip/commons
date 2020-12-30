@@ -55,7 +55,7 @@ WORKDIR /home/${container_user}
 
 COPY ./target/kernel-notification-service-*.jar kernel-notification-service.jar
 
-RUN mkdir /mosip-lib/
+RUN mkdir ./mosip-lib/
 
 # change permissions of file inside working dir
 RUN chown -R ${container_user}:${container_user} /home/${container_user}
