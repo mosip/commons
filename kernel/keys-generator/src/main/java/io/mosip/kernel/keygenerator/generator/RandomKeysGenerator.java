@@ -1,22 +1,16 @@
 package io.mosip.kernel.keygenerator.generator;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.Key;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.Base64;
 
-import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.Cipher;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +25,7 @@ import io.mosip.kernel.keymanagerservice.helper.KeymanagerDBHelper;
 import io.mosip.kernel.keymanagerservice.repository.DataEncryptKeystoreRepository;
 
 /**
- * The Class RandomKeysGenerator.
+ * The Class MasterKeysGenerator.
  *
  * @author Mahammed Taheer
  */
@@ -43,25 +37,9 @@ public class RandomKeysGenerator {
 
     private static final String WRAPPING_TRANSFORMATION = "AES/ECB/NoPadding";
 
-    // Temperory fix to generate the Master AES key in nCipher because not able to generate key using SunPKCS11.
-    private static final String NCIPHER_KEY_GEN_UTILITY = "/opt/nfast/bin/generatekey";
-
-    private static final String GENERATION_SUCCESS_MESSAGE = "Key successfully generated.";
-
     @Value("${zkcrypto.random.key.generate.count}")
     private long noOfKeysRequire;
 
-    private static final int TEN_YEARS_VALIDITY = 365 * 10;
-
-    @Value("${mosip.kernel.keygenerator.symmetric-algorithm-name:AES}")
-    private String symmetricKeyAlgo;
-
-    @Value("${mosip.kernel.keygenerator.symmetric-key-length:256}")
-    private int symmetricKeySize;
-
-    @Value("${mosip.kernel.utility.keygenerate.allow:true}")
-    private boolean utilityKeyGenerateAllow;
-    
     /**
      * Keystore instance to handles and store cryptographic keys.
      */
@@ -70,7 +48,6 @@ public class RandomKeysGenerator {
 
     @Autowired
     private KeymanagerDBHelper dbHelper;
-    
 
     @Autowired
     DataEncryptKeystoreRepository dataEncryptKeystoreRepository;
@@ -83,13 +60,8 @@ public class RandomKeysGenerator {
         String alias = null;
         if (currentKeyAlias.isEmpty()) {
             System.out.println("Cache Master key not available, generating new key.");
-            try {
-                alias = UUID.randomUUID().toString();
-                generateAndStore(appId, referenceId, alias, localDateTimeStamp);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new RuntimeException("ZK Encryption Master key generat failed.");
-            }
+            alias = UUID.randomUUID().toString();
+            generateAndStore(appId, referenceId, alias, localDateTimeStamp);
         } else {
             alias = currentKeyAlias.get(0).getAlias();
         }
@@ -101,14 +73,9 @@ public class RandomKeysGenerator {
         }
     }
 
-    private void generateAndStore(String appId, String referenceId, String keyAlias, LocalDateTime localDateTimeStamp) throws Exception {
-        boolean isNCipherHSMProv = isNCipherHSMProvider();
-        if (isNCipherHSMProv && utilityKeyGenerateAllow) {
-            generateKeyUsingNCipherUtility(keyAlias);
-        } else {
-            keyStore.generateAndStoreSymmetricKey(keyAlias);
-        }
-        dbHelper.storeKeyInAlias(appId, localDateTimeStamp, referenceId, keyAlias, localDateTimeStamp.plusDays(TEN_YEARS_VALIDITY));
+    private void generateAndStore(String appId, String referenceId, String keyAlias, LocalDateTime localDateTimeStamp) {
+		keyStore.generateAndStoreSymmetricKey(keyAlias);
+        dbHelper.storeKeyInAlias(appId, localDateTimeStamp, referenceId, keyAlias, localDateTimeStamp.plusDays(1825));
     }
     
     private void generate10KKeysAndStoreInDB(String cacheMasterKeyAlias) throws Exception {
@@ -149,57 +116,5 @@ public class RandomKeysGenerator {
 		data.setCrBy(CREATED_BY);
 		data.setCrDTimes(LocalDateTime.now());
 		dataEncryptKeystoreRepository.save(data);
-    }
-    
-    private boolean isNCipherHSMProvider(){
-
-        Path genKeyUtilityPath  = Paths.get(NCIPHER_KEY_GEN_UTILITY);
-        if (Files.exists(genKeyUtilityPath) && Files.isExecutable(genKeyUtilityPath)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private void generateKeyUsingNCipherUtility(String alias) throws Exception {
-        List<String> commands = new ArrayList<String>();
-        commands.add(NCIPHER_KEY_GEN_UTILITY);
-        commands.add("--generate");
-        commands.add("pkcs11");
-        commands.add("type=" + symmetricKeyAlgo);
-        commands.add("size=" + symmetricKeySize);
-        commands.add("plainname=" + alias);
-        commands.add("nvram=no");
-
-        System.out.println("commands:: " + commands);
-        try {
-            Process process = new ProcessBuilder(commands).redirectErrorStream(true).start();
-
-            List<String> cmdOutput = new ArrayList<String>();
-            BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = null;
-            boolean successMessageFound = false;
-            while ((line = br.readLine()) != null ) {
-                cmdOutput.add(line);
-                if(line.equalsIgnoreCase(GENERATION_SUCCESS_MESSAGE)){
-                    successMessageFound = true;
-                }
-            }
-           
-            if (0 != process.waitFor()) {
-                System.err.println("Error Stream: " + cmdOutput);
-                throw new Exception("Process waitFor - Error generating AES Key.");
-            }
-
-            if(!successMessageFound) {
-                System.err.println("Error Stream: " + cmdOutput);
-                throw new Exception("Process output - ZK encryption Master key generation failed.");
-            }
-
-        } catch (Exception e) {
-            System.err.println("Error generating AES Key.");
-            e.printStackTrace();
-            throw new Exception("Exception Block - ZK encryption Master key generation failed.");
-        }
-    }
+	}
 }
