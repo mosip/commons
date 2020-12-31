@@ -51,7 +51,7 @@ public class CryptomanagerController {
 	 * @param cryptomanagerRequestDto {@link CryptomanagerRequestDto} request
 	 * @return {@link CryptomanagerResponseDto} encrypted Data
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION','TEST', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','ID_AUTHENTICATION','TEST', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@PostMapping(value = "/encrypt", produces = "application/json")
 	public ResponseWrapper<CryptomanagerResponseDto> encrypt(
@@ -67,7 +67,7 @@ public class CryptomanagerController {
 	 * @param cryptomanagerRequestDto {@link CryptomanagerRequestDto} request
 	 * @return {@link CryptomanagerResponseDto} decrypted Data
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION', 'TEST', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','ID_AUTHENTICATION', 'TEST', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@PostMapping(value = "/decrypt", produces = "application/json")
 	public ResponseWrapper<CryptomanagerResponseDto> decrypt(
@@ -83,7 +83,7 @@ public class CryptomanagerController {
 	 * @param requestDto {@link CryptoWithPinRequestDto} request
 	 * @return {@link CryptoWithPinResponseDto} encrypted Data
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION','TEST', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','ID_AUTHENTICATION','TEST', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@PostMapping(value = "/encryptWithPin", produces = "application/json")
 	public ResponseWrapper<CryptoWithPinResponseDto> encryptWithPin(
@@ -99,7 +99,7 @@ public class CryptomanagerController {
 	 * @param requestDto {@link CryptoWithPinRequestDto} request
 	 * @return {@link CryptoWithPinResponseDto} decrypted Data
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION', 'TEST', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','ID_AUTHENTICATION', 'TEST', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@PostMapping(value = "/decryptWithPin", produces = "application/json")
 	public ResponseWrapper<CryptoWithPinResponseDto> decryptWithPin(

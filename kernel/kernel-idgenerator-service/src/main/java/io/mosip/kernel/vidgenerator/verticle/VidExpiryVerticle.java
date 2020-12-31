@@ -55,7 +55,7 @@ public class VidExpiryVerticle extends AbstractVerticle {
 		MessageConsumer<JsonObject> consumer = eventBus.consumer(VidSchedulerConstants.NAME_VALUE);
 
 		// handle chime event
-		consumer.handler(message -> vidService.expireAndRenew());
+		consumer.handler(message -> vidService.expireAndRelease());
 
 		JsonObject timer = new JsonObject()
 				.put(VidSchedulerConstants.TYPE, environment.getProperty(VidSchedulerConstants.TYPE_VALUE))

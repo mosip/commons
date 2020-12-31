@@ -86,6 +86,7 @@ public class VidFetcherRouter {
 								VIDGeneratorErrorCode.VID_EXPIRY_DATE_EMPTY.getErrorCode(),
 								VIDGeneratorErrorCode.VID_EXPIRY_DATE_EMPTY.getErrorMessage());
 						setError(routingContext, error, blockingCodeHandler);
+						return;
 					}
 					DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(UTC_DATETIME_PATTERN);
 					try {
@@ -95,12 +96,14 @@ public class VidFetcherRouter {
 								VIDGeneratorErrorCode.VID_EXPIRY_DATE_PATTERN_INVALID.getErrorCode(),
 								VIDGeneratorErrorCode.VID_EXPIRY_DATE_PATTERN_INVALID.getErrorMessage());
 						setError(routingContext, error, blockingCodeHandler);
+						return;
 					}
 					if (expiryTime.isBefore(DateUtils.getUTCCurrentDateTime())) {
 						ServiceError error = new ServiceError(
 								VIDGeneratorErrorCode.VID_EXPIRY_DATE_INVALID.getErrorCode(),
 								VIDGeneratorErrorCode.VID_EXPIRY_DATE_INVALID.getErrorMessage());
 						setError(routingContext, error, blockingCodeHandler);
+						return;
 					}
 				}
 				VidFetchResponseDto vidFetchResponseDto = null;
@@ -109,6 +112,7 @@ public class VidFetcherRouter {
 				} catch (VidGeneratorServiceException exception) {
 					ServiceError error = new ServiceError(exception.getErrorCode(), exception.getMessage());
 					setError(routingContext, error, blockingCodeHandler);
+					return;
 				}
 				String timestamp = DateUtils.getUTCCurrentDateTimeString();
 				reswrp.setResponsetime(DateUtils.convertUTCToLocalDateTime(timestamp));

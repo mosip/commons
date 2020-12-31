@@ -45,6 +45,7 @@ import io.mosip.kernel.core.keymanager.exception.KeystoreProcessingException;
 import io.mosip.kernel.core.keymanager.exception.NoSuchSecurityProviderException;
 import io.mosip.kernel.core.keymanager.model.CertificateParameters;
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.keygenerator.bouncycastle.constant.KeyGeneratorExceptionConstant;
 import io.mosip.kernel.keymanager.hsm.constant.KeymanagerConstant;
 import io.mosip.kernel.keymanager.hsm.constant.KeymanagerErrorCode;
@@ -148,6 +149,10 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 
 	private Provider provider = null;
 
+	private LocalDateTime lastProviderLoadedTime;
+
+	private static final int PROVIDER_ALLOWED_RELOAD_INTERVEL_IN_SECONDS = 60;
+
 	private static final int NO_OF_RETRIES = 3;
 
 	private char[] keystorePwdCharArr = null;
@@ -161,6 +166,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 			Security.addProvider(bouncyCastleProvider);
 			this.keyStore = getKeystoreInstance(KeymanagerConstant.KEYSTORE_TYPE_PKCS12, bouncyCastleProvider);
 			loadKeystore();
+			lastProviderLoadedTime = DateUtils.getUTCCurrentDateTime();
 			return;
 		}
 		keystorePwdCharArr = getKeystorePwd();
@@ -171,6 +177,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 		Security.addProvider(bouncyCastleProvider);
 		this.keyStore = getKeystoreInstance(keystoreType, provider);
 		loadKeystore();
+		lastProviderLoadedTime = DateUtils.getUTCCurrentDateTime();
 		// loadCertificate();
 	}
 
@@ -201,19 +208,24 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	 *            provider
 	 * @return Provider
 	 */
-	private Provider setupProvider(String configPath) {
+	private synchronized Provider setupProvider(String configPath) {
+		Provider configuredProvider;
 		try {
 			switch (keystoreType) {
 			case "PKCS11":
-				provider = Security.getProvider("SunPKCS11");
-				provider = provider.configure(configPath);				
+				Provider sunPKCS11Provider = Security.getProvider("SunPKCS11");
+				if(sunPKCS11Provider == null)
+					throw new ProviderException("SunPKCS11 provider not found");
+				configuredProvider = sunPKCS11Provider.configure(configPath);
 				break;
 			case "BouncyCastleProvider":
-				provider = new BouncyCastleProvider();
+				configuredProvider = new BouncyCastleProvider();
 				break;
 			default:
-				provider = Security.getProvider("SunPKCS11");
-				provider = provider.configure(configPath);
+				Provider sunPKCS11ProviderDefault = Security.getProvider("SunPKCS11");
+				if(sunPKCS11ProviderDefault == null)
+					throw new ProviderException("SunPKCS11 provider not found");
+				configuredProvider = sunPKCS11ProviderDefault.configure(configPath);
 				break;
 
 			}
@@ -221,7 +233,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 			throw new NoSuchSecurityProviderException(KeymanagerErrorCode.INVALID_CONFIG_FILE.getErrorCode(),
 					KeymanagerErrorCode.INVALID_CONFIG_FILE.getErrorMessage(), providerException);
 		}
-		return provider;
+		return configuredProvider;
 	}
 
 	/**
@@ -398,15 +410,26 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 		return privateKeyEntry;
 	}
 
-	private void reloadProvider() {
+	private synchronized void reloadProvider() {
 		LOGGER.info("sessionId", "KeyStoreImpl", "KeyStoreImpl", "reloading provider");
-		if (Objects.nonNull(provider)) {
-			Security.removeProvider(provider.getName());
+		if(DateUtils.getUTCCurrentDateTime().isBefore(
+				lastProviderLoadedTime.plusSeconds(PROVIDER_ALLOWED_RELOAD_INTERVEL_IN_SECONDS))) {
+			LOGGER.warn("sessionId", "KeyStoreImpl", "reloadProvider", 
+				"Last time successful reload done on " + lastProviderLoadedTime.toString() + 
+					", so reloading not done before interval of " + 
+					PROVIDER_ALLOWED_RELOAD_INTERVEL_IN_SECONDS + " sec");
+			return;
 		}
-		Provider provider = setupProvider(configPath);
+		String existingProviderName = null;
+		if (Objects.nonNull(provider))
+			existingProviderName = provider.getName();
+		provider = setupProvider(configPath);
+		if(existingProviderName != null)
+			Security.removeProvider(existingProviderName);
 		addProvider(provider);
 		this.keyStore = getKeystoreInstance(keystoreType, provider);
 		loadKeystore();
+		lastProviderLoadedTime = DateUtils.getUTCCurrentDateTime();
 	}
 
 	private void validatePKCS11KeyStore() {
