@@ -208,12 +208,14 @@ public class PacketReaderImpl implements IPacketReader {
 				Packet packet = packetKeeper.getPacket(getPacketInfo(id, packetName, source, process));
 				String value = documentMap.has(VALUE) ? documentMap.get(VALUE).toString() : null;
 				InputStream documentStream = ZipUtils.unzipAndGetFile(packet.getPacket(), value);
-				Document document = new Document();
-				document.setDocument(IOUtils.toByteArray(documentStream));
-				document.setValue(value);
-				document.setType(documentMap.get(TYPE) != null ? documentMap.get(TYPE).toString() : null);
-				document.setFormat(documentMap.get(FORMAT) != null ? documentMap.get(FORMAT).toString() : null);
-				return document;
+				if (documentStream != null) {
+					Document document = new Document();
+					document.setDocument(IOUtils.toByteArray(documentStream));
+					document.setValue(value);
+					document.setType(documentMap.get(TYPE) != null ? documentMap.get(TYPE).toString() : null);
+					document.setFormat(documentMap.get(FORMAT) != null ? documentMap.get(FORMAT).toString() : null);
+					return document;
+				}
 			}
 		} catch (IOException | ApiNotAccessibleException | PacketDecryptionFailureException | JSONException
 				| PacketKeeperException e) {
