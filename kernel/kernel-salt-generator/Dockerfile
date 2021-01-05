@@ -90,7 +90,7 @@ USER ${container_user_uid}:${container_user_gid}
 #EXPOSE 8092
 
 CMD if [ "$is_glowroot_env" = "present" ]; then \
-    wget "${artifactory_url_env}"/artifactory/libs-release-local/io/mosip/testing/glowroot.zip ; \
+    wget -q --show-progress "${artifactory_url_env}"/artifactory/libs-release-local/io/mosip/testing/glowroot.zip ; \
     unzip glowroot.zip ; \
     rm -rf glowroot.zip ; \
     sed -i 's/<service_name>/salt-generator-service/g' glowroot/glowroot.properties ; \

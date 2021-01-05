@@ -66,16 +66,16 @@ USER ${container_user_uid}:${container_user_gid}
 EXPOSE 8083
 
 CMD if [ "$is_glowroot_env" = "present" ]; then \
-    wget "${artifactory_url_env}"/artifactory/libs-release-local/io/mosip/testing/glowroot.zip ; \
+    wget -q --show-progress "${artifactory_url_env}"/artifactory/libs-release-local/io/mosip/testing/glowroot.zip ; \
     unzip glowroot.zip ; \
     rm -rf glowroot.zip ; \
     sed -i 's/<service_name>/kernel-notification-service/g' glowroot/glowroot.properties ; \
-     wget "${runtime_dep_url_env}/kernel-auth-adapter.jar" -O ./mosip-lib/kernel-auth-adapter.jar; \
-     wget "${runtime_dep_url_env}/kernel-smsserviceprovider-msg91.jar" -O ./mosip-lib/kernel-smsserviceprovider-msg91.jar; \
+    wget -q --show-progress "${runtime_dep_url_env}/kernel-auth-adapter.jar" -O ./mosip-lib/kernel-auth-adapter.jar; \
+    wget -q --show-progress "${runtime_dep_url_env}/kernel-smsserviceprovider-msg91.jar" -O ./mosip-lib/kernel-smsserviceprovider-msg91.jar; \
     java -jar -javaagent:glowroot/glowroot.jar -Dloader.path=./mosip-lib/ -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" kernel-notification-service.jar ; \
     else \
-     wget "${runtime_dep_url_env}/kernel-auth-adapter.jar" -O ./mosip-lib/kernel-auth-adapter.jar; \
-     wget "${runtime_dep_url_env}/kernel-smsserviceprovider-msg91.jar" -O ./mosip-lib/kernel-smsserviceprovider-msg91.jar; \
+    wget -q --show-progress "${runtime_dep_url_env}/kernel-auth-adapter.jar" -O ./mosip-lib/kernel-auth-adapter.jar; \
+    wget -q --show-progress "${runtime_dep_url_env}/kernel-smsserviceprovider-msg91.jar" -O ./mosip-lib/kernel-smsserviceprovider-msg91.jar; \
     java -jar -Dloader.path=./mosip-lib/ -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" kernel-notification-service.jar ; \
     fi
 
