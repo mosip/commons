@@ -30,7 +30,9 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -143,6 +145,17 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	private String signAlgorithm;
 
 	/**
+	 * Key Reference Cache Enable flag
+	 * 
+	 */
+	@Value("${mosip.kernel.keymanager.keystore.keyreference.enable.cache:true}")
+	private boolean enableKeyReferenceCache;
+
+	private Map<String, PrivateKeyEntry> privateKeyReferenceCache;
+
+	private Map<String, SecretKey> secretKeyReferenceCache;
+
+	/**
 	 * The Keystore instance
 	 */
 	private KeyStore keyStore;
@@ -159,6 +172,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
+		initKeyReferenceCache();
 		if (!isConfigFileValid()) {
 			LOGGER.info("sessionId", "KeyStoreImpl", "Creation", "Config File path is not valid or contents invalid entries. " 
 						+ "So, Loading keystore as offline encryption.");
@@ -368,8 +382,10 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	@SuppressWarnings("findsecbugs:HARD_CODE_PASSWORD")
 	@Override
 	public PrivateKeyEntry getAsymmetricKey(String alias) {
+		PrivateKeyEntry privateKeyEntry = getPrivateKeyEntryFromCache(alias);
+		if(privateKeyEntry != null)
+			return privateKeyEntry;
 		validatePKCS11KeyStore();
-		PrivateKeyEntry privateKeyEntry = null;
 		int i = 0;
 		boolean isException = false;
 		String expMessage = "";
@@ -407,6 +423,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 			throw new KeystoreProcessingException(KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorCode(),
 					KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorMessage() + expMessage, exp);
 		}
+		addPrivateKeyEntryToCache(alias, privateKeyEntry);
 		return privateKeyEntry;
 	}
 
@@ -427,9 +444,11 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 		if(existingProviderName != null)
 			Security.removeProvider(existingProviderName);
 		addProvider(provider);
+		initKeyReferenceCache();
 		this.keyStore = getKeystoreInstance(keystoreType, provider);
 		loadKeystore();
 		lastProviderLoadedTime = DateUtils.getUTCCurrentDateTime();
+		LOGGER.info("sessionId", "KeyStoreImpl", "KeyStoreImpl", "reloading provider successfully completed");
 	}
 
 	private void validatePKCS11KeyStore() {
@@ -509,8 +528,10 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 	@SuppressWarnings("findsecbugs:HARD_CODE_PASSWORD")
 	@Override
 	public SecretKey getSymmetricKey(String alias) {
+		SecretKey secretKey = getSecretKeyFromCache(alias);
+		if(secretKey != null)
+			return secretKey;
 		validatePKCS11KeyStore();
-		SecretKey secretKey = null;
 		int i = 0;
 		boolean isException = false;
 		String expMessage = "";
@@ -548,6 +569,7 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 			throw new KeystoreProcessingException(KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorCode(),
 					KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorMessage() + expMessage, exp);
 		}
+		addSecretKeyToCache(alias, secretKey);
 		return secretKey;
 	}
 
@@ -727,5 +749,40 @@ public class KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.KeyStor
 			return null;
 		}
 		return new PasswordProtection(keystorePwdCharArr);
+	}
+
+	private void initKeyReferenceCache() {
+		if(!enableKeyReferenceCache)
+			return;
+		this.privateKeyReferenceCache = new ConcurrentHashMap<>();
+		this.secretKeyReferenceCache = new ConcurrentHashMap<>();
+	}
+
+	private void addPrivateKeyEntryToCache(String alias, PrivateKeyEntry privateKeyEntry) {
+		if(!enableKeyReferenceCache)
+			return;
+		LOGGER.debug("sessionId", "KeyStoreImpl", "addPrivateKeyEntryToCache", 
+			"Adding private key reference to map for alias " + alias);
+		this.privateKeyReferenceCache.put(alias, privateKeyEntry);
+	}
+
+	private PrivateKeyEntry getPrivateKeyEntryFromCache(String alias) {
+		if(!enableKeyReferenceCache)
+			return null;
+		return this.privateKeyReferenceCache.get(alias);
+	}
+
+	private void addSecretKeyToCache(String alias, SecretKey secretKey) {
+		if(!enableKeyReferenceCache)
+			return;
+		LOGGER.debug("sessionId", "KeyStoreImpl", "addSecretKeyToCache", 
+			"Adding secretKey reference to map for alias " + alias);
+		this.secretKeyReferenceCache.put(alias, secretKey);
+	}
+
+	private SecretKey getSecretKeyFromCache(String alias) {
+		if(!enableKeyReferenceCache)
+			return null;
+		return this.secretKeyReferenceCache.get(alias);
 	}
 }
