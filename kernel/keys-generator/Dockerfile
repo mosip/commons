@@ -19,7 +19,11 @@ ARG artifactory_url
 ARG spring_config_name
 
 # can be passed during Docker build as build time environment for hsm client zip file path
-ARG client_zip_path
+ARG hsm_client_zip_path
+
+ARG hsm_local_dir=hsm-client
+
+ENV hsm_local_dir_name=${hsm_local_dir}
 
 # environment variable to pass active profile such as DEV, QA etc at docker runtime
 ENV active_profile_env=${active_profile}
@@ -37,7 +41,7 @@ ENV spring_config_name_env=${spring_config_name}
 ENV artifactory_url_env=${artifactory_url}
 
 # environment variable to pass hsm client zip file path, at docker runtime
-ENV zip_file_path=${client_zip_path}
+ENV hsm_zip_file_path=${hsm_client_zip_path}
 
 ADD configure_start.sh configure_start.sh
 

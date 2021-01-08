@@ -44,13 +44,11 @@ ARG container_user_uid=1001
 # can be passed during Docker build as build time environment for github branch to pickup configuration from.
 ARG container_user_gid=1001
 
-
 # install packages and create user
 RUN apt-get -y update \
 && apt-get install -y unzip \
 && groupadd -g ${container_user_gid} ${container_user_group} \
 && useradd -u ${container_user_uid} -g ${container_user_group} -s /bin/sh -m ${container_user}
-
 
 # change volume to whichever storage directory you want to use for this container.
 VOLUME /tmp
