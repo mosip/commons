@@ -69,7 +69,7 @@ public class VidFetcherRouter {
 	public Router createRouter(Vertx vertx) {
 		LOGGER.info("worker executor pool {}", workerExecutorPool);
 		Router router = Router.router(vertx);
-		authHandler.addAuthFilter(router, "/", HttpMethod.GET, "ID_AUTHENTICATION,REGISTRATION_PROCESSOR");
+		authHandler.addAuthFilter(router, "/", HttpMethod.GET, "RESIDENT,REGISTRATION_PROCESSOR");
 		router.get().handler(routingContext -> {
 			LOGGER.info("publishing event to CHECKPOOL");
 			// send a publish event to vid pool checker
