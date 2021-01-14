@@ -1,6 +1,9 @@
 package io.mosip.commons.khazana.impl;
 
-import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.javaswift.joss.client.factory.AccountConfig;
 import org.javaswift.joss.client.factory.AccountFactory;
 import org.javaswift.joss.client.factory.AuthenticationMethod;
@@ -13,9 +16,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
+import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 
 @Service
 @Qualifier("SwiftAdapter")
@@ -157,4 +158,31 @@ public class SwiftAdapter implements ObjectStoreAdapter {
     public boolean pack(String account, String container, String source, String process) {
         return false;
     }
+
+	@Override
+	public Map<String, String> addTags(String account, String containerName, Map<String, String> tags) {
+		Map<String, Object> tagMap = new HashMap<>();
+		Container container = getConnection(account).getContainer(containerName);
+		if (!container.exists())
+			return null;
+		Map<String, String> existingTags = getTags(account, containerName);
+		existingTags.entrySet().forEach(m -> tagMap.put(m.getKey(), m.getValue()));
+		tags.entrySet().stream().forEach(m -> tagMap.put(m.getKey(), m.getValue()));
+		container.setMetadata(tagMap);
+		container.saveMetadata();
+		return tags;
+	}
+
+	@Override
+	public Map<String, String> getTags(String account, String containerName) {
+		Map<String, String> metaData = new HashMap<>();
+		Container container = getConnection(account).getContainer(containerName);
+		if (container.getMetadata() != null) {
+			container.getMetadata().entrySet().stream().forEach(m -> metaData.put(m.getKey(), m.getValue().toString()));
+
+		}
+
+		return metaData;
+
+	}
 }
