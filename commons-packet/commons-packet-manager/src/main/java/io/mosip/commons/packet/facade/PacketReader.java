@@ -1,27 +1,35 @@
 package io.mosip.commons.packet.facade;
 
-import com.google.common.collect.Lists;
-import io.mosip.commons.packet.dto.Document;
-import io.mosip.commons.packet.exception.NoAvailableProviderException;
-import io.mosip.commons.packet.spi.IPacketReader;
-import io.mosip.commons.packet.util.PacketHelper;
-import io.mosip.commons.packet.util.PacketManagerLogger;
-import io.mosip.kernel.biometrics.constant.BiometricType;
-import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import io.mosip.kernel.core.cbeffutil.entity.BIR;
-import io.mosip.kernel.core.logger.spi.Logger;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
+import io.mosip.commons.packet.constants.PacketUtilityErrorCodes;
+import io.mosip.commons.packet.dto.Document;
+import io.mosip.commons.packet.dto.TagResponseDto;
+import io.mosip.commons.packet.exception.GetTagException;
+import io.mosip.commons.packet.exception.NoAvailableProviderException;
+import io.mosip.commons.packet.exception.ObjectStoreAdapterException;
+import io.mosip.commons.packet.spi.IPacketReader;
+import io.mosip.commons.packet.util.PacketHelper;
+import io.mosip.commons.packet.util.PacketManagerLogger;
+import io.mosip.kernel.biometrics.entities.BiometricRecord;
+import io.mosip.kernel.core.exception.BaseCheckedException;
+import io.mosip.kernel.core.exception.BaseUncheckedException;
+import io.mosip.kernel.core.exception.ExceptionUtils;
+import io.mosip.kernel.core.logger.spi.Logger;
 
 /**
  * The packet Reader facade
@@ -31,6 +39,24 @@ import java.util.stream.Collectors;
 public class PacketReader {
 
     private static final Logger LOGGER = PacketManagerLogger.getLogger(PacketReader.class);
+
+	@Value("${packet.manager.account.name}")
+	private String PACKET_MANAGER_ACCOUNT;
+
+	@Autowired
+	@Qualifier("SwiftAdapter")
+	private ObjectStoreAdapter swiftAdapter;
+
+	@Autowired
+	@Qualifier("S3Adapter")
+	private ObjectStoreAdapter s3Adapter;
+
+	@Autowired
+	@Qualifier("PosixAdapter")
+	private ObjectStoreAdapter posixAdapter;
+
+	@Value("${objectstore.adapter.name}")
+	private String adapterName;
 
     @Autowired(required = false)
     @Qualifier("referenceReaderProviders")
@@ -187,4 +213,52 @@ public class PacketReader {
         return provider;
     }
 
+	@Cacheable(value = "tags", key = "{#id}", condition = "#tagNames == null")
+	public TagResponseDto getTags(String id, List<String> tagNames) {
+		TagResponseDto tagResponseDto = new TagResponseDto();
+		try {
+			Map<String, String> tags = new HashMap<String, String>();
+			Map<String, String> existingTags = getAdapter().getTags(PACKET_MANAGER_ACCOUNT, id);
+			if (tagNames != null && !tagNames.isEmpty()) {
+				for (String tag : tagNames) {
+					if (existingTags.containsKey(tag)) {
+						tags.put(tag, existingTags.get(tag));
+					} else {
+						throw new GetTagException(PacketUtilityErrorCodes.TAG_NOT_FOUND.getErrorCode(),
+								PacketUtilityErrorCodes.TAG_NOT_FOUND.getErrorMessage() + tag);
+					}
+				}
+				tagResponseDto.setTags(tags);
+			} else {
+				tagResponseDto.setTags(existingTags);
+			}
+
+		} catch (Exception e) {
+			LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
+					ExceptionUtils.getStackTrace(e));
+			if (e instanceof BaseCheckedException) {
+				BaseCheckedException ex = (BaseCheckedException) e;
+				throw new GetTagException(ex.getErrorCode(), ex.getMessage());
+			} else if (e instanceof BaseUncheckedException) {
+				BaseUncheckedException ex = (BaseUncheckedException) e;
+				throw new GetTagException(ex.getErrorCode(), ex.getMessage());
+			}
+			throw new GetTagException(e.getMessage());
+
+		}
+
+		return tagResponseDto;
+
+	}
+
+	private ObjectStoreAdapter getAdapter() {
+		if (adapterName.equalsIgnoreCase(swiftAdapter.getClass().getSimpleName()))
+			return swiftAdapter;
+		else if (adapterName.equalsIgnoreCase(posixAdapter.getClass().getSimpleName()))
+			return posixAdapter;
+		else if (adapterName.equalsIgnoreCase(s3Adapter.getClass().getSimpleName()))
+			return s3Adapter;
+		else
+			throw new ObjectStoreAdapterException();
+	}
 }

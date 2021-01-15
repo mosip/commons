@@ -289,6 +289,7 @@ public class S3Adapter implements ObjectStoreAdapter {
 
 	@Override
 	public Map<String, String> getTags(String account, String container) {
+		AmazonS3 connection = getConnection(container);
 		Map<String, String> bucketTags = new HashMap<String, String>();
 		BucketTaggingConfiguration bucketTaggingConfiguration = connection.getBucketTaggingConfiguration(container);
 		TagSet tagSet = bucketTaggingConfiguration.getTagSet();
