@@ -270,6 +270,8 @@ public class S3Adapter implements ObjectStoreAdapter {
 		try {
 
 			AmazonS3 connection = getConnection(container);
+			if (!connection.doesBucketExistV2(container))
+	            connection.createBucket(container);
 			Map<String, String> existingMetadata = getTags(account, container);
 			tags.entrySet().stream()
 					.forEach(m -> existingMetadata.put(m.getKey(), m.getValue() != null ? m.getValue() : null));
@@ -292,12 +294,15 @@ public class S3Adapter implements ObjectStoreAdapter {
 		AmazonS3 connection = getConnection(container);
 		Map<String, String> bucketTags = new HashMap<String, String>();
 		BucketTaggingConfiguration bucketTaggingConfiguration = connection.getBucketTaggingConfiguration(container);
-		TagSet tagSet = bucketTaggingConfiguration.getTagSet();
-		if (tagSet != null) {
-			if (tagSet.getAllTags() != null) {
-				bucketTags.putAll(tagSet.getAllTags());
+		if(bucketTaggingConfiguration!=null) {
+			TagSet tagSet = bucketTaggingConfiguration.getTagSet();
+			if (tagSet != null) {
+				if (tagSet.getAllTags() != null) {
+					bucketTags.putAll(tagSet.getAllTags());
+				}
 			}
 		}
+
 		return bucketTags;
 
 	}
