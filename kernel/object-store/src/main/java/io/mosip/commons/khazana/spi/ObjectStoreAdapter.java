@@ -26,4 +26,8 @@ public interface ObjectStoreAdapter {
     public boolean removeContainer(String account, String container, String source, String process);
 
     public boolean pack(String account, String container, String source, String process);
+
+	public Map<String, String> addTags(String account, String container, Map<String, String> tags);
+
+	public Map<String, String> getTags(String account, String container);
 }

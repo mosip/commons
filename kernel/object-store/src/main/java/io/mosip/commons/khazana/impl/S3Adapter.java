@@ -24,9 +24,11 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.BucketTaggingConfiguration;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.TagSet;
 
 import io.mosip.commons.khazana.config.LoggerConfiguration;
 import io.mosip.commons.khazana.exception.ObjectStoreAdapterException;
@@ -263,5 +265,41 @@ public class S3Adapter implements ObjectStoreAdapter {
         return null;
     }
 
+	@Override
+	public Map<String, String> addTags(String account, String container, Map<String, String> tags) {
+		try {
+
+			AmazonS3 connection = getConnection(container);
+			Map<String, String> existingMetadata = getTags(account, container);
+			tags.entrySet().stream()
+					.forEach(m -> existingMetadata.put(m.getKey(), m.getValue() != null ? m.getValue() : null));
+			TagSet tagSet = new TagSet(existingMetadata);
+			BucketTaggingConfiguration bucketTaggingConfiguration = new BucketTaggingConfiguration();
+			bucketTaggingConfiguration.withTagSets(tagSet);
+			connection.setBucketTaggingConfiguration(container, bucketTaggingConfiguration);
+
+		} catch (Exception e) {
+			LOGGER.error(SESSIONID, REGISTRATIONID, "Exception occured while addTags for : " + container,
+					ExceptionUtils.getStackTrace(e));
+			throw new ObjectStoreAdapterException(OBJECT_STORE_NOT_ACCESSIBLE.getErrorCode(),
+					OBJECT_STORE_NOT_ACCESSIBLE.getErrorMessage(), e);
+		}
+		return tags;
+	}
+
+	@Override
+	public Map<String, String> getTags(String account, String container) {
+		AmazonS3 connection = getConnection(container);
+		Map<String, String> bucketTags = new HashMap<String, String>();
+		BucketTaggingConfiguration bucketTaggingConfiguration = connection.getBucketTaggingConfiguration(container);
+		TagSet tagSet = bucketTaggingConfiguration.getTagSet();
+		if (tagSet != null) {
+			if (tagSet.getAllTags() != null) {
+				bucketTags.putAll(tagSet.getAllTags());
+			}
+		}
+		return bucketTags;
+
+	}
 
 }
