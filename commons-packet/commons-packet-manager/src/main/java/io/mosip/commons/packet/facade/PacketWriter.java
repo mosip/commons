@@ -1,34 +1,26 @@
 package io.mosip.commons.packet.facade;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
-import io.mosip.commons.packet.constants.PacketUtilityErrorCodes;
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.dto.PacketInfo;
 import io.mosip.commons.packet.dto.TagDto;
 import io.mosip.commons.packet.dto.TagResponseDto;
 import io.mosip.commons.packet.dto.packet.PacketDto;
 import io.mosip.commons.packet.exception.NoAvailableProviderException;
-import io.mosip.commons.packet.exception.ObjectStoreAdapterException;
-import io.mosip.commons.packet.exception.TagCreationException;
+import io.mosip.commons.packet.keeper.PacketKeeper;
 import io.mosip.commons.packet.spi.IPacketWriter;
 import io.mosip.commons.packet.util.PacketHelper;
 import io.mosip.commons.packet.util.PacketManagerLogger;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import io.mosip.kernel.core.exception.BaseCheckedException;
-import io.mosip.kernel.core.exception.BaseUncheckedException;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;
 
@@ -40,28 +32,13 @@ public class PacketWriter {
 
     private static final Logger LOGGER = PacketManagerLogger.getLogger(PacketWriter.class);
 
-	@Value("${packet.manager.account.name}")
-	private String PACKET_MANAGER_ACCOUNT;
-
-	@Autowired
-	@Qualifier("SwiftAdapter")
-	private ObjectStoreAdapter swiftAdapter;
-
-	@Autowired
-	@Qualifier("S3Adapter")
-	private ObjectStoreAdapter s3Adapter;
-
-	@Autowired
-	@Qualifier("PosixAdapter")
-	private ObjectStoreAdapter posixAdapter;
-
-	@Value("${objectstore.adapter.name}")
-	private String adapterName;
-
     @Autowired(required = false)
     @Qualifier("referenceWriterProviders")
     @Lazy
     private List<IPacketWriter> referenceWriterProviders;
+
+	@Autowired
+	private PacketKeeper packetKeeper;
 
     /**
      * Set field in identity object
@@ -237,78 +214,18 @@ public class PacketWriter {
 	@CacheEvict(value = "tags", key = "#tagDto.id")
 	public TagResponseDto addTags(TagDto tagDto) {
 		TagResponseDto tagResponseDto = new TagResponseDto();
-		try {
-			Map<String, String> newTags = new HashMap<String, String>();
-			Map<String, String> existingTags = getAdapter().getTags(PACKET_MANAGER_ACCOUNT, tagDto.getId());
-			if (existingTags.isEmpty()) {
-				newTags.putAll(tagDto.getTags());
-			} else {
-				for (Entry<String, String> entry : existingTags.entrySet()) {
-					if (existingTags.containsKey(entry.getKey())) {
-
-						throw new TagCreationException(PacketUtilityErrorCodes.TAG_ALREADY_EXIST.getErrorCode(),
-								PacketUtilityErrorCodes.TAG_ALREADY_EXIST.getErrorMessage());
-
-					} else {
-						newTags.put(entry.getKey(), entry.getValue());
-					}
-				}
-			}
-			Map<String, String> tags = getAdapter().addTags(PACKET_MANAGER_ACCOUNT, tagDto.getId(), newTags);
-			tagResponseDto.setTags(tags);
-
-		}
-		catch (Exception e) {
-			LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, tagDto.getId(),
-					ExceptionUtils.getStackTrace(e));
-			if (e instanceof BaseCheckedException) {
-				BaseCheckedException ex = (BaseCheckedException) e;
-				throw new TagCreationException(ex.getErrorCode(), ex.getMessage());
-			} else if (e instanceof BaseUncheckedException) {
-				BaseUncheckedException ex = (BaseUncheckedException) e;
-				throw new TagCreationException(ex.getErrorCode(), ex.getMessage());
-			}
-			throw new TagCreationException(e.getMessage());
-
-		}
+		Map<String, String> tags = packetKeeper.updateTags(tagDto);
+		tagResponseDto.setTags(tags);
 
 		return tagResponseDto;
 
 	}
 
-	private ObjectStoreAdapter getAdapter() {
-		if (adapterName.equalsIgnoreCase(swiftAdapter.getClass().getSimpleName()))
-			return swiftAdapter;
-		else if (adapterName.equalsIgnoreCase(posixAdapter.getClass().getSimpleName()))
-			return posixAdapter;
-		else if (adapterName.equalsIgnoreCase(s3Adapter.getClass().getSimpleName()))
-			return s3Adapter;
-		else
-			throw new ObjectStoreAdapterException();
-	}
-
 	@CacheEvict(value = "tags", key = "#tagDto.id")
 	public TagResponseDto updateTags(TagDto tagDto) {
 		TagResponseDto tagResponseDto = new TagResponseDto();
-		try {
-
-			Map<String, String> tags = getAdapter().addTags(PACKET_MANAGER_ACCOUNT, tagDto.getId(), tagDto.getTags());
-			tagResponseDto.setTags(tags);
-
-		} catch (Exception e) {
-			LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, tagDto.getId(),
-					ExceptionUtils.getStackTrace(e));
-			if (e instanceof BaseCheckedException) {
-				BaseCheckedException ex = (BaseCheckedException) e;
-				throw new TagCreationException(ex.getErrorCode(), ex.getMessage());
-			} else if (e instanceof BaseUncheckedException) {
-				BaseUncheckedException ex = (BaseUncheckedException) e;
-				throw new TagCreationException(ex.getErrorCode(), ex.getMessage());
-			}
-			throw new TagCreationException(e.getMessage());
-
-		}
-
+		Map<String, String> tags = packetKeeper.updateTags(tagDto);
+		tagResponseDto.setTags(tags);
 		return tagResponseDto;
 
 	}
