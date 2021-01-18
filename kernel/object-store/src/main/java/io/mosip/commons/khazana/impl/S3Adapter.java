@@ -302,7 +302,7 @@ public class S3Adapter implements ObjectStoreAdapter {
 				}
 			}
 		}
-		
+
 		return bucketTags;
 
 	}
