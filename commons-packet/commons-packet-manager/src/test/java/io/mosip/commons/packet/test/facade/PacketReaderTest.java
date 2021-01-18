@@ -2,9 +2,11 @@ package io.mosip.commons.packet.test.facade;
 
 import com.google.common.collect.Lists;
 import io.mosip.commons.packet.dto.Document;
+import io.mosip.commons.packet.dto.TagResponseDto;
 import io.mosip.commons.packet.exception.NoAvailableProviderException;
 import io.mosip.commons.packet.facade.PacketReader;
 import io.mosip.commons.packet.impl.PacketReaderImpl;
+import io.mosip.commons.packet.keeper.PacketKeeper;
 import io.mosip.commons.packet.spi.IPacketReader;
 import io.mosip.commons.packet.util.PacketHelper;
 import io.mosip.kernel.biometrics.constant.BiometricType;
@@ -24,6 +26,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
@@ -32,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -53,6 +57,9 @@ public class PacketReaderTest {
     private static final String source = "reg-client";
     private static final String process = "NEW";
     private static final String id = "110111101120191111121111";
+    
+    @Mock
+	private PacketKeeper packetKeeper;
 
     @Before
     public void setup() {
@@ -201,5 +208,17 @@ public class PacketReaderTest {
         PowerMockito.when(PacketHelper.isSourceAndProcessPresent(anyString(),anyString(),anyString(),any())).thenReturn(false);
 
         packetReader.validatePacket(id, source, process);
+    }
+    
+    @Test
+    public void testGetTags() {
+        Map<String, String> tags = new HashMap<>();
+        tags.put("test", "testValue");
+      
+        Mockito.when(packetKeeper.getTags(any(), any())).thenReturn(tags);
+
+    	TagResponseDto tagResponseDto= packetReader.getTags("id",new ArrayList());
+
+        assertEquals(tagResponseDto.getTags(),tags); 
     }
 }

@@ -267,7 +267,7 @@ public class PacketKeeper {
 			if (existingTags.isEmpty()) {
 				newTags.putAll(tagDto.getTags());
 			} else {
-				for (Entry<String, String> entry : existingTags.entrySet()) {
+				for (Entry<String, String> entry : tagDto.getTags().entrySet()) {
 					if (existingTags.containsKey(entry.getKey())) {
 
 						throw new TagCreationException(PacketUtilityErrorCodes.TAG_ALREADY_EXIST.getErrorCode(),

@@ -2,6 +2,9 @@ package io.mosip.commons.packetmanager.test.controller;
 
 import com.google.common.collect.Lists;
 import io.mosip.commons.packet.dto.Document;
+import io.mosip.commons.packet.dto.TagDto;
+import io.mosip.commons.packet.dto.TagRequestDto;
+import io.mosip.commons.packet.dto.TagResponseDto;
 import io.mosip.commons.packet.dto.packet.PacketDto;
 import io.mosip.commons.packet.facade.PacketReader;
 import io.mosip.commons.packet.facade.PacketWriter;
@@ -252,6 +255,51 @@ public class PacketManagerControllerTest {
         request.setRequest(infoDto);
 
         this.mockMvc.perform(post("/audits").contentType(MediaType.APPLICATION_JSON).content(JsonUtils.javaObjectToJsonString(request)))
+                .andExpect(status().isOk());
+    }
+    @Test
+    @WithUserDetails("reg-processor")
+    public void testAddTag() throws Exception {
+    	TagDto tagDto = new TagDto();
+    	tagDto.setId("id");
+      
+
+        Mockito.when(
+                packetWriter.addTags(any())).thenReturn(new TagResponseDto());
+
+        request.setRequest(tagDto);
+
+        this.mockMvc.perform(post("/addTag").contentType(MediaType.APPLICATION_JSON).content(JsonUtils.javaObjectToJsonString(request)))
+                .andExpect(status().isOk());
+    }
+    @Test
+    @WithUserDetails("reg-processor")
+    public void testUpdateTags() throws Exception {
+    	TagDto tagDto = new TagDto();
+    	tagDto.setId("id");
+      
+
+        Mockito.when(
+                packetWriter.updateTags(any())).thenReturn(new TagResponseDto());
+
+        request.setRequest(tagDto);
+
+        this.mockMvc.perform(post("/addOrUpdateTag").contentType(MediaType.APPLICATION_JSON).content(JsonUtils.javaObjectToJsonString(request)))
+                .andExpect(status().isOk());
+    }
+    @Test
+    @WithUserDetails("reg-processor")
+    public void testGetTags() throws Exception {
+    	TagRequestDto tagDto = new TagRequestDto();
+    	tagDto.setId("id");
+      
+
+        Mockito.when(
+                packetReader.getTags(any(), any())).thenReturn(new TagResponseDto());
+
+        request.setRequest(tagDto);
+
+        this.mockMvc.perform(post("/getTags").contentType(MediaType.APPLICATION_JSON).content(JsonUtils.javaObjectToJsonString(request)))
                 .andExpect(status().isOk());
     }
 }

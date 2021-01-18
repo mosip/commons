@@ -4,7 +4,10 @@ import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.commons.packet.constants.PacketManagerConstants;
 import io.mosip.commons.packet.dto.Packet;
 import io.mosip.commons.packet.dto.PacketInfo;
+import io.mosip.commons.packet.dto.TagDto;
+import io.mosip.commons.packet.exception.GetTagException;
 import io.mosip.commons.packet.exception.PacketKeeperException;
+import io.mosip.commons.packet.exception.TagCreationException;
 import io.mosip.commons.packet.keeper.PacketKeeper;
 import io.mosip.commons.packet.spi.IPacketCryptoService;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
@@ -20,11 +23,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
+
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 
@@ -97,6 +105,10 @@ public class PacketKeeperTest {
         Mockito.when(onlineCrypto.decrypt(any(), any())).thenReturn("decryptedpacket".getBytes());
         Mockito.when(swiftAdapter.getMetaData(any(), any(),any(), any(), any())).thenReturn(metaMap);
         Mockito.when(onlineCrypto.verify(any(), any())).thenReturn(true);
+        Map<String, String> tagsMap = new HashMap<>();
+        tagsMap.put("osivalidation", "pass");
+        Mockito.when(swiftAdapter.getTags(any(), any())).thenReturn(tagsMap);
+     
     }
 
     @Test
@@ -151,6 +163,91 @@ public class PacketKeeperTest {
         Mockito.when(onlineCrypto.verify(any(), any())).thenReturn(false);
 
         packetKeeper.getPacket(packetInfo);
+    }
+    @Test
+    public void testAddTags() {
+    	TagDto tagDto=new TagDto();
+    	tagDto.setId(id);
+    	Map<String, String> tags = new HashMap<>();
+    	tags.put("test", "testValue");
+    	tagDto.setTags(tags);
+    	Mockito.when(swiftAdapter.addTags(any(), any(),any())).thenReturn(tags);
+        Map<String,String> map = packetKeeper.addTags(tagDto);
+        assertEquals(tags, map);
+
+    }
+    @Test(expected = TagCreationException.class)
+    public void testTagAlreadyExists() {
+    	TagDto tagDto=new TagDto();
+    	tagDto.setId(id);
+    	Map<String, String> tags = new HashMap<>();
+        tags.put("osivalidation", "pass");
+    	tagDto.setTags(tags);
+    	Mockito.when(swiftAdapter.addTags(any(), any(),any())).thenReturn(tags);
+        packetKeeper.addTags(tagDto);
+      
+
+    }
+    @Test(expected = TagCreationException.class)
+    public void testAddTagsException() {
+    	TagDto tagDto=new TagDto();
+    	tagDto.setId(id);
+    	Map<String, String> tags = new HashMap<>();
+    	tags.put("test", "testValue");
+    	tagDto.setTags(tags);
+    	Mockito.when(swiftAdapter.addTags(any(), any(),any())).thenThrow(new BaseUncheckedException("code","message"));
+        Map<String,String> map = packetKeeper.addTags(tagDto);
+        assertEquals(tags, map);
+
+    }
+    @Test
+    public void testUpdateTags() {
+    	TagDto tagDto=new TagDto();
+    	tagDto.setId(id);
+    	Map<String, String> tags = new HashMap<>();
+    	tags.put("test", "testValue");
+    	tagDto.setTags(tags);
+    	Mockito.when(swiftAdapter.addTags(any(), any(),any())).thenReturn(tags);
+        Map<String,String> map = packetKeeper.updateTags(tagDto);
+        assertEquals(tags, map);
+
+    }
+    @Test(expected = TagCreationException.class)
+    public void testUpdateTagsException() {
+    	TagDto tagDto=new TagDto();
+    	tagDto.setId(id);
+    	Map<String, String> tags = new HashMap<>();
+    	tags.put("test", "testValue");
+    	tagDto.setTags(tags);
+    	Mockito.when(swiftAdapter.addTags(any(), any(),any())).thenThrow(new BaseUncheckedException("code","message"));
+        Map<String,String> map = packetKeeper.updateTags(tagDto);
+        assertEquals(tags, map);
+
+    }
+    @Test
+    public void testGetTags() {
+        List<String> tagNames=new ArrayList<>();
+        tagNames.add("osivalidation");
+    	
+        Map<String,String> map = packetKeeper.getTags(id,tagNames);
+        assertEquals(map.get("osivalidation"), "pass");
+
+    }
+    @Test(expected = GetTagException.class)
+    public void testGetTagNotFound() {
+        List<String> tagNames=new ArrayList<>();
+        tagNames.add("test");
+        packetKeeper.getTags(id,tagNames);
+
+    }
+    @Test(expected = GetTagException.class)
+    public void testGetTagsException() {
+        List<String> tagNames=new ArrayList<>();
+        tagNames.add("osivalidation");
+        Mockito.when(swiftAdapter.getTags(any(), any())).thenThrow(new BaseUncheckedException("code","message"));
+        packetKeeper.getTags(id,tagNames);
+
+
     }
 }
 
