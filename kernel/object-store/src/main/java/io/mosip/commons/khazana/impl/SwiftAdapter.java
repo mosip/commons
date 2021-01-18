@@ -163,8 +163,8 @@ public class SwiftAdapter implements ObjectStoreAdapter {
 	public Map<String, String> addTags(String account, String containerName, Map<String, String> tags) {
 		Map<String, Object> tagMap = new HashMap<>();
 		Container container = getConnection(account).getContainer(containerName);
-		if (!container.exists())
-			return null;
+		 if (!container.exists())
+	            container = getConnection(account).getContainer(containerName).create();
 		Map<String, String> existingTags = getTags(account, containerName);
 		existingTags.entrySet().forEach(m -> tagMap.put(m.getKey(), m.getValue()));
 		tags.entrySet().stream().forEach(m -> tagMap.put(m.getKey(), m.getValue()));
@@ -177,6 +177,8 @@ public class SwiftAdapter implements ObjectStoreAdapter {
 	public Map<String, String> getTags(String account, String containerName) {
 		Map<String, String> metaData = new HashMap<>();
 		Container container = getConnection(account).getContainer(containerName);
+		 if (!container.exists())
+	            container = getConnection(account).getContainer(containerName).create();
 		if (container.getMetadata() != null) {
 			container.getMetadata().entrySet().stream().forEach(m -> metaData.put(m.getKey(), m.getValue().toString()));
 
