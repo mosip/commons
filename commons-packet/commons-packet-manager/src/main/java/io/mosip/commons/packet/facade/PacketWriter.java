@@ -214,7 +214,7 @@ public class PacketWriter {
 	@CacheEvict(value = "tags", key = "#tagDto.id")
 	public TagResponseDto addTags(TagDto tagDto) {
 		TagResponseDto tagResponseDto = new TagResponseDto();
-		Map<String, String> tags = packetKeeper.updateTags(tagDto);
+		Map<String, String> tags = packetKeeper.addTags(tagDto);
 		tagResponseDto.setTags(tags);
 
 		return tagResponseDto;
