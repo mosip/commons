@@ -1,6 +1,7 @@
 package io.mosip.commons.khazana.impl;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -8,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -311,12 +313,16 @@ public class PosixAdapter implements ObjectStoreAdapter {
 		if (tagFile.createNewFile()) {
 			LOGGER.info(" tags file not yet present for  id - " + container);
 		} else {
-			InputStream existingStream = new FileInputStream(tagFile);
-			byte[] buffer = new byte[existingStream.available()];
-			existingStream.read(buffer);
-			existingStream.close();
+			InputStream inputstream = new FileInputStream(tagFile);
+			BufferedReader inputStreamReader = new BufferedReader(new InputStreamReader(inputstream, "UTF-8")); 
+			StringBuilder responseStrBuilder = new StringBuilder();
 
-			JSONObject jsonObject = objectMapper.readValue(objectMapper.writeValueAsString(buffer.toString()),
+			String inputTags;
+			while ((inputTags = inputStreamReader.readLine()) != null)
+			    responseStrBuilder.append(inputTags);
+			
+			inputStreamReader.close();
+			JSONObject jsonObject = objectMapper.readValue(objectMapper.writeValueAsString(responseStrBuilder.toString()),
 					JSONObject.class);
 			metaMap = objectMapper.readValue(jsonObject.toString(), HashMap.class);
 			}
