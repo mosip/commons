@@ -5,22 +5,30 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.dto.TagResponseDto;
+import io.mosip.commons.packet.exception.GetAllIdentityException;
 import io.mosip.commons.packet.exception.NoAvailableProviderException;
 import io.mosip.commons.packet.keeper.PacketKeeper;
 import io.mosip.commons.packet.spi.IPacketReader;
 import io.mosip.commons.packet.util.PacketHelper;
 import io.mosip.commons.packet.util.PacketManagerLogger;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
+import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;
 
 /**
@@ -39,6 +47,9 @@ public class PacketReader {
 
 	@Autowired
 	private PacketKeeper packetKeeper;
+	
+	@Value("${registration.processor.identityjson}")
+	private String identityJsonStringUrl;
 
     /**
      * Get a field from identity file
@@ -53,12 +64,56 @@ public class PacketReader {
     public String getField(String id, String field, String source, String process, boolean bypassCache) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "getFields for fields : " + field + " source : " + source + " process : " + process);
-        String value;
+        String value=null;;
+        if(source==null ||process==null||source.isEmpty() || process.isEmpty()) {
+    		JSONArray fieldJson=getSourceandProcess( field,  source,  process);
+    		if(fieldJson != null) {
+    			for(int i=0;i<fieldJson.length();i++) {
+    				try {
+    					if(source==null || source.isBlank()==true)
+						source=fieldJson.getString(i).split(",")[0].replace("source:", "");
+    					if(process==null || process.isBlank()==true)
+						process=fieldJson.getString(i).split(",")[1].replace("process:", "");
+						if(process.contains("|")) {
+							String[] processes=process.split("\\|");
+							for(String proc:processes) {
+								 if (bypassCache) {
+							            value = getProvider(source, proc).getField(id, field, source, proc);
+								 		break;
+								 }
+							      else {
+							            Optional<Object> optionalValue = getAllFields(id, source, proc).entrySet().stream().filter(m-> m.getKey().equalsIgnoreCase(field)).map(m -> m.getValue()).findAny();
+							            value = optionalValue.isPresent() ? optionalValue.get().toString() : null;
+							            break;
+							     }
+							}
+						}
+						else {
+							 if (bypassCache) {
+						            value = getProvider(source, process).getField(id, field, source, process);
+						            break;
+							 }
+						        else {
+						            Optional<Object> optionalValue = getAllFields(id, source, process).entrySet().stream().filter(m-> m.getKey().equalsIgnoreCase(field)).map(m -> m.getValue()).findAny();
+						            value = optionalValue.isPresent() ? optionalValue.get().toString() : null;
+						            break;
+						        }
+						}
+    				}catch(JSONException e) {
+    					LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, "",
+    							ExceptionUtils.getStackTrace(e));
+    					throw new GetAllIdentityException(e.getMessage());
+    				}
+    			}
+    		}
+        }else {
+    					
         if (bypassCache)
             value = getProvider(source, process).getField(id, field, source, process);
         else {
             Optional<Object> optionalValue = getAllFields(id, source, process).entrySet().stream().filter(m-> m.getKey().equalsIgnoreCase(field)).map(m -> m.getValue()).findAny();
             value = optionalValue.isPresent() ? optionalValue.get().toString() : null;
+        }
         }
         return value;
     }
@@ -199,5 +254,35 @@ public class PacketReader {
 		return tagResponseDto;
 
 	}
+	private JSONArray getSourceandProcess(String field,String source,String Process)  {
+		try {
+		
+		RestTemplate template=new RestTemplate();
+		
+		String idjson=template.exchange(identityJsonStringUrl, HttpMethod.GET, null, String.class).getBody();
+		JSONObject identityobj=new JSONObject(idjson);
+		JSONObject identity=(JSONObject) identityobj.get("identity");
+		JSONObject metaInfo= (JSONObject) identityobj.get("metaInfo");
+		JSONObject audits= (JSONObject) identityobj.get("audits");
+		JSONObject documents= (JSONObject) identityobj.get("documents");
+		JSONArray fieldJson=null;
+		if(identity.has(field)) 
+		 fieldJson=(JSONArray) ((JSONObject)identity.get(field)).getJSONArray("provider");
+		if(metaInfo.has(field))
+			 fieldJson=(JSONArray) ((JSONObject)metaInfo.get(field)).getJSONArray("provider");
+		if(audits.has(field))
+			fieldJson=(JSONArray) ((JSONObject)audits.get(field)).getJSONArray("provider");
+		if(documents.has(field))
+			 fieldJson=(JSONArray) ((JSONObject)documents.get(field)).getJSONArray("provider");
+		
+		
+		return fieldJson;
+		}catch( JSONException  e) {
+			LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, "",
+					ExceptionUtils.getStackTrace(e));
+			throw new GetAllIdentityException(e.getMessage());
+		}
+	}
+
 
 }
