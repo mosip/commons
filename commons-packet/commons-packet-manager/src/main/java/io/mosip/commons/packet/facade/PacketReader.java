@@ -65,7 +65,7 @@ public class PacketReader {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "getFields for fields : " + field + " source : " + source + " process : " + process);
         String value=null;;
-        if(source==null ||process==null||source.isEmpty() || process.isEmpty()) {
+        if(source==null ||process==null||source.isBlank() || process.isBlank()) {
     		JSONArray fieldJson=getSourceandProcess( field,  source,  process);
     		if(fieldJson != null) {
     			for(int i=0;i<fieldJson.length();i++) {
