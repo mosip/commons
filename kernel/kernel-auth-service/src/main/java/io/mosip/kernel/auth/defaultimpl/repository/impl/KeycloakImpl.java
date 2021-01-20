@@ -3,11 +3,7 @@ package io.mosip.kernel.auth.defaultimpl.repository.impl;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import javax.annotation.PostConstruct;
 import javax.xml.bind.DatatypeConverter;
@@ -215,6 +211,7 @@ public class KeycloakImpl implements DataStore {
 			JsonNode node = objectMapper.readTree(response);
 			mosipUserDtos = mapUsersToUserDetailDto(node, userDetails,realmId);
 		} catch (IOException e) {
+			LOGGER.error("Error in getListOfUsersDetails", e);
 			throw new AuthManagerException(AuthErrorCode.IO_EXCEPTION.getErrorCode(),
 					AuthErrorCode.IO_EXCEPTION.getErrorMessage());
 		}
@@ -578,49 +575,48 @@ public class KeycloakImpl implements DataStore {
 	 * @return the list
 	 */
 	private List<MosipUserDto> mapUsersToUserDetailDto(JsonNode node, List<String> userDetails,String realmId) {
-		MosipUserDto mosipUserDto = null;
 		List<MosipUserDto> mosipUserDtos = new ArrayList<>();
-		String roles = null;
-		for (JsonNode jsonNode : node) {
-			mosipUserDto = new MosipUserDto();
-			String userName = jsonNode.get("username").textValue();
-			if (userDetails.stream().anyMatch(user -> user.equals(userName))) {
-				String email = jsonNode.get("email").textValue();
-				JsonNode attributeNodes = jsonNode.get("attributes");
+		if(node == null) {
+			LOGGER.error("response from openid is null >>");
+			return mosipUserDtos;
+		}
 
-				String mobile = null;
-				String rid = null;
-				String name = jsonNode.get("firstName").asText() + " " + jsonNode.get("lastName").asText();
+		for(JsonNode jsonNode : node) {
+			MosipUserDto mosipUserDto = new MosipUserDto();
+			String username = jsonNode.get("username").textValue();
+			if (userDetails.stream().anyMatch(user -> user.equals(username))) {
+				mosipUserDto.setUserId(username);
+				mosipUserDto.setMail(jsonNode.hasNonNull("email") ?
+						jsonNode.get("email").textValue() : null);
+				mosipUserDto.setName(String.format("%s %s", (jsonNode.hasNonNull("firstName") ?
+						jsonNode.get("firstName").textValue() : ""), (jsonNode.hasNonNull("lastName") ?
+						jsonNode.get("lastName").textValue() : "")));
 				try {
-					roles = getRolesAsString(jsonNode.get("id").textValue(),realmId);
+					String roles = getRolesAsString(jsonNode.get("id").textValue(),realmId);
+					mosipUserDto.setRole(roles);
 				} catch (IOException e) {
+					LOGGER.error("getRolesAsString >>", e);
 					throw new AuthManagerException(AuthErrorCode.IO_EXCEPTION.getErrorCode(),
 							AuthErrorCode.IO_EXCEPTION.getErrorMessage());
 				}
-				// userPassword = getPasswordFromDatabase(userName);
-				if (attributeNodes.get("mobile") != null) {
-					mobile = attributeNodes.get("mobile").get(0).textValue();
-				}
-				if (attributeNodes.get("name") != null) {
-					name = jsonNode.get("firstName").asText() + " " + jsonNode.get("lastName").asText();
-				}
-				if (attributeNodes.get("rid") != null) {
-					rid = attributeNodes.get("rid").get(0).textValue();
-				}
 
-				mosipUserDto.setMail(email);
-				mosipUserDto.setMobile(mobile);
-				mosipUserDto.setRId(rid);
-				mosipUserDto.setUserId(userName);
-				mosipUserDto.setName(name);
+				if(jsonNode.hasNonNull("attributes")) {
+					JsonNode attributeNodes = jsonNode.get("attributes");
+					if(attributeNodes.hasNonNull("mobile") && attributeNodes.get("mobile").hasNonNull(0)) {
+						mosipUserDto.setMobile(attributeNodes.get("mobile").get(0).textValue());
+					}
+					if(attributeNodes.hasNonNull("rid") && attributeNodes.get("rid").hasNonNull(0)) {
+						mosipUserDto.setRId(attributeNodes.get("rid").get(0).textValue());
+					}
+					if(attributeNodes.hasNonNull("name") && attributeNodes.get("name").hasNonNull(0)) {
+						mosipUserDto.setName(attributeNodes.get("name").get(0).textValue());
+					}
+				}
 				mosipUserDto.setUserPassword(null);
-				mosipUserDto.setRole(roles);
 				mosipUserDtos.add(mosipUserDto);
 			}
 		}
-
 		return mosipUserDtos;
-
 	}
 
 	private String getPasswordFromDatabase(String userName) {
