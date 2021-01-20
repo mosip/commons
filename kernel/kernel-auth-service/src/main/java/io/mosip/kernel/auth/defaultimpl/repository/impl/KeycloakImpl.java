@@ -576,41 +576,44 @@ public class KeycloakImpl implements DataStore {
 	 */
 	private List<MosipUserDto> mapUsersToUserDetailDto(JsonNode node, List<String> userDetails,String realmId) {
 		List<MosipUserDto> mosipUserDtos = new ArrayList<>();
-		if(node != null) {
-			for(JsonNode jsonNode : node) {
-				MosipUserDto mosipUserDto = new MosipUserDto();
-				String username = jsonNode.get("username").textValue();
-				if (userDetails.stream().anyMatch(user -> user.equals(username))) {
-					mosipUserDto.setUserId(username);
-					mosipUserDto.setMail(jsonNode.hasNonNull("email") ?
-							jsonNode.get("email").textValue() : null);
-					mosipUserDto.setName(String.format("%s %s", (jsonNode.hasNonNull("firstName") ?
-							jsonNode.get("firstName").textValue() : ""), (jsonNode.hasNonNull("lastName") ?
-							jsonNode.get("lastName").textValue() : "")));
-					try {
-						String roles = getRolesAsString(jsonNode.get("id").textValue(),realmId);
-						mosipUserDto.setRole(roles);
-					} catch (IOException e) {
-						LOGGER.error("getRolesAsString >>", e);
-						throw new AuthManagerException(AuthErrorCode.IO_EXCEPTION.getErrorCode(),
-								AuthErrorCode.IO_EXCEPTION.getErrorMessage());
-					}
+		if(node == null) {
+			LOGGER.error("response from keycloak is null >>");
+			return mosipUserDtos;
+		}
 
-					if(jsonNode.hasNonNull("attributes")) {
-						JsonNode attributeNodes = jsonNode.get("attributes");
-						if(attributeNodes.hasNonNull("mobile") && attributeNodes.get("mobile").hasNonNull(0)) {
-							mosipUserDto.setMobile(attributeNodes.get("mobile").get(0).textValue());
-						}
-						if(attributeNodes.hasNonNull("rid") && attributeNodes.get("rid").hasNonNull(0)) {
-							mosipUserDto.setRId(attributeNodes.get("rid").get(0).textValue());
-						}
-						if(attributeNodes.hasNonNull("name") && attributeNodes.get("name").hasNonNull(0)) {
-							mosipUserDto.setName(attributeNodes.get("name").get(0).textValue());
-						}
-					}
-					mosipUserDto.setUserPassword(null);
-					mosipUserDtos.add(mosipUserDto);
+		for(JsonNode jsonNode : node) {
+			MosipUserDto mosipUserDto = new MosipUserDto();
+			String username = jsonNode.get("username").textValue();
+			if (userDetails.stream().anyMatch(user -> user.equals(username))) {
+				mosipUserDto.setUserId(username);
+				mosipUserDto.setMail(jsonNode.hasNonNull("email") ?
+						jsonNode.get("email").textValue() : null);
+				mosipUserDto.setName(String.format("%s %s", (jsonNode.hasNonNull("firstName") ?
+						jsonNode.get("firstName").textValue() : ""), (jsonNode.hasNonNull("lastName") ?
+						jsonNode.get("lastName").textValue() : "")));
+				try {
+					String roles = getRolesAsString(jsonNode.get("id").textValue(),realmId);
+					mosipUserDto.setRole(roles);
+				} catch (IOException e) {
+					LOGGER.error("getRolesAsString >>", e);
+					throw new AuthManagerException(AuthErrorCode.IO_EXCEPTION.getErrorCode(),
+							AuthErrorCode.IO_EXCEPTION.getErrorMessage());
 				}
+
+				if(jsonNode.hasNonNull("attributes")) {
+					JsonNode attributeNodes = jsonNode.get("attributes");
+					if(attributeNodes.hasNonNull("mobile") && attributeNodes.get("mobile").hasNonNull(0)) {
+						mosipUserDto.setMobile(attributeNodes.get("mobile").get(0).textValue());
+					}
+					if(attributeNodes.hasNonNull("rid") && attributeNodes.get("rid").hasNonNull(0)) {
+						mosipUserDto.setRId(attributeNodes.get("rid").get(0).textValue());
+					}
+					if(attributeNodes.hasNonNull("name") && attributeNodes.get("name").hasNonNull(0)) {
+						mosipUserDto.setName(attributeNodes.get("name").get(0).textValue());
+					}
+				}
+				mosipUserDto.setUserPassword(null);
+				mosipUserDtos.add(mosipUserDto);
 			}
 		}
 		return mosipUserDtos;
