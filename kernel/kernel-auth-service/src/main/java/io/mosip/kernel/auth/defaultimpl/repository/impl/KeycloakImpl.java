@@ -577,7 +577,7 @@ public class KeycloakImpl implements DataStore {
 	private List<MosipUserDto> mapUsersToUserDetailDto(JsonNode node, List<String> userDetails,String realmId) {
 		List<MosipUserDto> mosipUserDtos = new ArrayList<>();
 		if(node == null) {
-			LOGGER.error("response from keycloak is null >>");
+			LOGGER.error("response from openid is null >>");
 			return mosipUserDtos;
 		}
 
