@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.mosip.commons.khazana.dto.ObjectDto;
+import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import org.javaswift.joss.client.factory.AccountConfig;
 import org.javaswift.joss.client.factory.AccountFactory;
 import org.javaswift.joss.client.factory.AuthenticationMethod;
@@ -16,8 +18,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
+import java.util.List;
 
+/**
+ * Swift adapter has not been tested.
+ */
 @Service
 @Qualifier("SwiftAdapter")
 public class SwiftAdapter implements ObjectStoreAdapter {
@@ -187,4 +192,15 @@ public class SwiftAdapter implements ObjectStoreAdapter {
 		return metaData;
 
 	}
+
+    /**
+     * Not supported in swift adapter
+     *
+     * @param account
+     * @param container
+     * @return
+     */
+    public List<ObjectDto> getAllObjects(String account, String container) {
+        return null;
+    }
 }

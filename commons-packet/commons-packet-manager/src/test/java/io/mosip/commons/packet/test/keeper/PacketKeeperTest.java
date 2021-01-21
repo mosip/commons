@@ -1,5 +1,7 @@
 package io.mosip.commons.packet.test.keeper;
 
+import com.google.common.collect.Lists;
+import io.mosip.commons.khazana.dto.ObjectDto;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.commons.packet.constants.PacketManagerConstants;
 import io.mosip.commons.packet.dto.Packet;
@@ -28,6 +30,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +38,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 
 @RunWith(SpringRunner.class)
 public class PacketKeeperTest {
@@ -247,6 +251,20 @@ public class PacketKeeperTest {
         Mockito.when(swiftAdapter.getTags(any(), any())).thenThrow(new BaseUncheckedException("code","message"));
         packetKeeper.getTags(id,tagNames);
 
+
+    }
+
+    @Test
+    public void testgetAll() {
+        ObjectDto objectDto = new ObjectDto("source1", "process1", "object1", new Date());
+        ObjectDto objectDto2 = new ObjectDto("source2", "process2", "object2", new Date());
+        ObjectDto objectDto3 = new ObjectDto("source3", "process3", "object3", new Date());
+        List<ObjectDto> objectDtos = Lists.newArrayList(objectDto, objectDto2, objectDto3);
+
+        Mockito.when(swiftAdapter.getAllObjects(anyString(), anyString())).thenReturn(objectDtos);
+
+        List<ObjectDto> result = packetKeeper.getAll(id);
+        assertEquals(objectDtos.size(), result.size());
 
     }
 }

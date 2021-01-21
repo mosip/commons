@@ -1,18 +1,6 @@
 package io.mosip.commons.packet.facade;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
-
+import io.mosip.commons.khazana.dto.ObjectDto;
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.dto.TagResponseDto;
 import io.mosip.commons.packet.exception.NoAvailableProviderException;
@@ -22,6 +10,19 @@ import io.mosip.commons.packet.util.PacketHelper;
 import io.mosip.commons.packet.util.PacketManagerLogger;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.core.logger.spi.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * The packet Reader facade
@@ -138,6 +139,36 @@ public class PacketReader {
     }
 
     /**
+     * Get all field names from identity object
+     *
+     * @param id
+     * @param source
+     * @param process
+     * @return
+     */
+    @PreAuthorize("hasRole('DATA_READ')")
+    public List<ObjectDto> info(String id) {
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
+                "info called");
+        return packetKeeper.getAll(id);
+    }
+
+    /**
+     * Get all field names from identity object
+     *
+     * @param id
+     * @param source
+     * @param process
+     * @return
+     */
+    @PreAuthorize("hasRole('DATA_READ')")
+    public Set<String> getAllKeys(String id, String source, String process) {
+        LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
+                "getAllKeys for source : " + source + " process : " + process);
+        return getProvider(source, process).getAll(id, source, process).keySet();
+    }
+
+    /**
      * Get all fields from packet by id, source and process
      *
      * @param id      : the registration id
@@ -166,6 +197,15 @@ public class PacketReader {
         return getProvider(source, process).getAuditInfo(id, source, process);
     }
 
+    @Cacheable(value = "tags", key = "{#id}", condition = "#tagNames == null")
+    public TagResponseDto getTags(String id, List<String> tagNames) {
+
+        TagResponseDto tagResponseDto = new TagResponseDto();
+        Map<String, String> tags = packetKeeper.getTags(id, tagNames);
+        tagResponseDto.setTags(tags);
+        return tagResponseDto;
+    }
+
     public boolean validatePacket(String id, String source, String process) {
         return getProvider(source, process).validatePacket(id, source, process);
     }
@@ -189,15 +229,5 @@ public class PacketReader {
 
         return provider;
     }
-
-	@Cacheable(value = "tags", key = "{#id}", condition = "#tagNames == null")
-	public TagResponseDto getTags(String id, List<String> tagNames) {
-
-		TagResponseDto tagResponseDto = new TagResponseDto();
-		Map<String, String> tags = packetKeeper.getTags(id, tagNames);
-		tagResponseDto.setTags(tags);
-		return tagResponseDto;
-
-	}
 
 }

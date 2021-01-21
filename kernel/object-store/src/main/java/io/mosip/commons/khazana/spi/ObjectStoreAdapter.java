@@ -1,6 +1,9 @@
 package io.mosip.commons.khazana.spi;
 
+import io.mosip.commons.khazana.dto.ObjectDto;
+
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 
 public interface ObjectStoreAdapter {
@@ -26,6 +29,8 @@ public interface ObjectStoreAdapter {
     public boolean removeContainer(String account, String container, String source, String process);
 
     public boolean pack(String account, String container, String source, String process);
+
+    public List<ObjectDto> getAllObjects(String account, String container);
 
 	public Map<String, String> addTags(String account, String container, Map<String, String> tags);
 

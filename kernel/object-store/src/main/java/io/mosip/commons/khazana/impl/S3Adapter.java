@@ -9,9 +9,13 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.amazonaws.services.s3.model.S3ObjectSummary;
+import io.mosip.commons.khazana.dto.ObjectDto;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -262,6 +266,33 @@ public class S3Adapter implements ObjectStoreAdapter {
                 getConnection(container);
             }
         }
+        return null;
+    }
+
+    public List<ObjectDto> getAllObjects(String account, String container) {
+        List<S3ObjectSummary> os = getConnection(container).listObjects(container).getObjectSummaries();
+
+        if (os != null && os.size() > 0) {
+            List<ObjectDto> objectDtos = new ArrayList<>();
+            os.forEach(o -> {
+                String[] keys = o.getKey().split("/");
+                if (keys != null && keys.length > 0) {
+                    ObjectDto objectDto = null;
+                    switch (keys.length) {
+                        case 1:
+                            objectDto = new ObjectDto(null, null, keys[0], o.getLastModified());
+                        case 2:
+                            objectDto = new ObjectDto(keys[0], null, keys[1], o.getLastModified());
+                        case 3:
+                            objectDto = new ObjectDto(keys[0], keys[1], keys[2], o.getLastModified());
+                    }
+                    if (objectDto != null)
+                        objectDtos.add(objectDto);
+                }
+            });
+            return objectDtos;
+        }
+
         return null;
     }
 
