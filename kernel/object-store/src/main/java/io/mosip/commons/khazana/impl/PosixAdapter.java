@@ -12,12 +12,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import io.mosip.commons.khazana.dto.ObjectDto;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -314,13 +316,13 @@ public class PosixAdapter implements ObjectStoreAdapter {
 			LOGGER.info(" tags file not yet present for  id - " + container);
 		} else {
 			InputStream inputstream = new FileInputStream(tagFile);
-			BufferedReader inputStreamReader = new BufferedReader(new InputStreamReader(inputstream, "UTF-8")); 
+			BufferedReader inputStreamReader = new BufferedReader(new InputStreamReader(inputstream, "UTF-8"));
 			StringBuilder responseStrBuilder = new StringBuilder();
 
 			String inputTags;
 			while ((inputTags = inputStreamReader.readLine()) != null)
 			    responseStrBuilder.append(inputTags);
-			
+
 			inputStreamReader.close();
 			JSONObject jsonObject = objectMapper.readValue(objectMapper.writeValueAsString(responseStrBuilder.toString()),
 					JSONObject.class);
@@ -358,4 +360,7 @@ public class PosixAdapter implements ObjectStoreAdapter {
 
 	}
 
+    public List<ObjectDto> getAllObjects(String account, String container) {
+        return null;
+    }
 }

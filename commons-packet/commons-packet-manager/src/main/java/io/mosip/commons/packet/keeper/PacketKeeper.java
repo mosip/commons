@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import io.mosip.commons.khazana.dto.ObjectDto;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.commons.packet.constants.ErrorCode;
 import io.mosip.commons.packet.constants.PacketUtilityErrorCodes;
@@ -348,4 +349,9 @@ public class PacketKeeper {
 
 		}
 	}
+
+    public List<ObjectDto> getAll(String id) {
+        List<ObjectDto> allObjects = getAdapter().getAllObjects(PACKET_MANAGER_ACCOUNT, id);
+        return allObjects;
+    }
 }

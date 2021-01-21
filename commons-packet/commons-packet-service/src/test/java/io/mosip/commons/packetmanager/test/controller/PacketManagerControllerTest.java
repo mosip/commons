@@ -13,6 +13,9 @@ import io.mosip.commons.packetmanager.dto.DocumentDto;
 import io.mosip.commons.packetmanager.dto.FieldDto;
 import io.mosip.commons.packetmanager.dto.FieldDtos;
 import io.mosip.commons.packetmanager.dto.InfoDto;
+import io.mosip.commons.packetmanager.dto.InfoRequestDto;
+import io.mosip.commons.packetmanager.dto.InfoResponseDto;
+import io.mosip.commons.packetmanager.service.PacketReaderService;
 import io.mosip.commons.packetmanager.test.TestBootApplication;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.core.exception.BaseCheckedException;
@@ -61,6 +64,9 @@ public class PacketManagerControllerTest {
 
     @MockBean
     private PacketWriter packetWriter;
+
+    @MockBean
+    private PacketReaderService packetReaderService;
 
 
     private RequestWrapper<Object> request = new RequestWrapper<>();
@@ -300,6 +306,25 @@ public class PacketManagerControllerTest {
         request.setRequest(tagDto);
 
         this.mockMvc.perform(post("/getTags").contentType(MediaType.APPLICATION_JSON).content(JsonUtils.javaObjectToJsonString(request)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithUserDetails("reg-processor")
+    public void testInfo() throws Exception {
+        InfoRequestDto infoDto = new InfoRequestDto();
+        infoDto.setId("id");
+
+        InfoResponseDto infoResponseDto = new InfoResponseDto();
+        infoResponseDto.setPacketId(infoDto.getId());
+        infoResponseDto.setApplicationId(infoDto.getId());
+
+        Mockito.when(
+                packetReaderService.info(anyString())).thenReturn(infoResponseDto);
+
+        request.setRequest(infoDto);
+
+        this.mockMvc.perform(post("/validatePacket").contentType(MediaType.APPLICATION_JSON).content(JsonUtils.javaObjectToJsonString(request)))
                 .andExpect(status().isOk());
     }
 }

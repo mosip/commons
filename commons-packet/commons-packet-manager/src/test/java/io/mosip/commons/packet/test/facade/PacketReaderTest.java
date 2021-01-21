@@ -1,6 +1,7 @@
 package io.mosip.commons.packet.test.facade;
 
 import com.google.common.collect.Lists;
+import io.mosip.commons.khazana.dto.ObjectDto;
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.dto.TagResponseDto;
 import io.mosip.commons.packet.exception.NoAvailableProviderException;
@@ -31,6 +32,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -220,5 +222,20 @@ public class PacketReaderTest {
     	TagResponseDto tagResponseDto= packetReader.getTags("id",new ArrayList());
 
         assertEquals(tagResponseDto.getTags(),tags); 
+    }
+
+    @Test
+    public void testInfo() {
+        ObjectDto objectDto = new ObjectDto("source1", "process1", "object1", new Date());
+        ObjectDto objectDto2 = new ObjectDto("source2", "process2", "object2", new Date());
+        ObjectDto objectDto3 = new ObjectDto("source3", "process3", "object3", new Date());
+        List<ObjectDto> objectDtos = Lists.newArrayList(objectDto, objectDto2, objectDto3);
+
+
+        Mockito.when(packetKeeper.getAll(any())).thenReturn(objectDtos);
+
+        List<ObjectDto> result = packetReader.info("id");
+
+        assertEquals(objectDtos.size(), result.size());
     }
 }

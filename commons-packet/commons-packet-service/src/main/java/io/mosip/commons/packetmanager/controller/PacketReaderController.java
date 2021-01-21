@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.mosip.commons.packetmanager.dto.InfoRequestDto;
+import io.mosip.commons.packetmanager.dto.InfoResponseDto;
+import io.mosip.commons.packetmanager.service.PacketReaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Lists;
-
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.dto.TagRequestDto;
 import io.mosip.commons.packet.dto.TagResponseDto;
@@ -36,6 +38,9 @@ public class PacketReaderController {
 
     @Autowired
     private PacketReader packetReader;
+
+    @Autowired
+    private PacketReaderService packetReaderService;
 
     @PreAuthorize("hasAnyRole('DATA_READ')")
     @ResponseFilter
@@ -141,6 +146,19 @@ public class PacketReaderController {
 		response.setResponse(tagResponseDto);
 		return response;
 	}
+
+    @PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
+    @ResponseFilter
+    @PostMapping(path = "/info", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseWrapper<InfoResponseDto> info(@RequestBody(required = true) RequestWrapper<InfoRequestDto> request) {
+        String id = request.getRequest().getId();
+        InfoResponseDto resultFields = null;
+        if (id != null && !id.isEmpty())
+            resultFields = packetReaderService.info(id);
+        ResponseWrapper<InfoResponseDto> response = getResponseWrapper();
+        response.setResponse(resultFields);
+        return response;
+    }
 
     private ResponseWrapper getResponseWrapper() {
         ResponseWrapper<Object> response = new ResponseWrapper<>();
