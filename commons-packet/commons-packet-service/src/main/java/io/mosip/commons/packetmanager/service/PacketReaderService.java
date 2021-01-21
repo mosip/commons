@@ -2,7 +2,6 @@ package io.mosip.commons.packetmanager.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
-import io.jsonwebtoken.lang.Collections;
 import io.mosip.commons.khazana.dto.ObjectDto;
 import io.mosip.commons.packet.dto.TagResponseDto;
 import io.mosip.commons.packet.facade.PacketReader;
@@ -20,6 +19,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -71,7 +71,7 @@ public class PacketReaderService {
                     // get biometrics
                     List<BiometricsDto> biometrics = null;
                     BiometricRecord br = packetReader.getBiometric(id, getKey(), Lists.newArrayList(), o.getSource(), o.getProcess(), false);
-                    if (br != null && !Collections.isEmpty(br.getSegments())) {
+                    if (br != null && !CollectionUtils.isEmpty(br.getSegments())) {
                         Map<String, List<String>> biomap = new HashMap<>();
                         for (BIR b : br.getSegments()) {
                             String key = b.getBdbInfo().getType().iterator().next().value();
