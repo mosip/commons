@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.StringUtils;
@@ -198,35 +197,21 @@ public class IdObjectSchemaValidator implements IdObjectValidator {
 				StreamSupport
 						.stream(((ArrayNode) (Objects.nonNull(elements) ? elements : mapper.createArrayNode()))
 								.spliterator(), false)
-						.filter(element -> Objects.isNull(requiredFields) ? true
+						.filter(element -> Objects.isNull(requiredFields) || requiredFields.isEmpty() ? true
 								: requiredFields.parallelStream().map(reqField -> Arrays.asList(reqField.split("\\|")))
 										.anyMatch(fields -> fields.contains(element.asText())))
 						.forEach(element -> buildErrorMessage(identityJson, errorList, processingMessageAsJson,
-								errorConstant, element.asText(), Objects.nonNull(requiredFields)));
+								errorConstant, element.asText()));
 			}
 		}
 	}
 
 	private void buildErrorMessage(JsonNode identityJson, List<ServiceError> errorList,
-			JsonNode processingMessageAsJson, IdObjectValidatorErrorConstant errorConstant, String element,
-			boolean isRequiredField) {
-		if (!isRequiredField) {
-			String fieldName = StringUtils
-					.substringAfterLast(processingMessageAsJson.get(INSTANCE).get(POINTER).asText(), "/");
-			List<JsonNode> elements = identityJson.findValues(fieldName);
-			IntStream.range(0, elements.size()).filter(index -> Objects.isNull(elements.get(index).get(element)))
-					.forEach(
-							index -> errorList.add(new ServiceError(errorConstant.getErrorCode(),
-									String.format(errorConstant.getMessage(),
-											StringUtils.strip(
-													processingMessageAsJson.get(INSTANCE).get(POINTER).asText()
-															+ PATH_SEPERATOR + index + PATH_SEPERATOR + element,
-													"/")))));
-		} else {
-			errorList.add(new ServiceError(errorConstant.getErrorCode(),
-					String.format(errorConstant.getMessage(), StringUtils.strip(
-							processingMessageAsJson.get(INSTANCE).get(POINTER).asText() + PATH_SEPERATOR + element,
-							"/"))));
-		}
+			JsonNode processingMessageAsJson, IdObjectValidatorErrorConstant errorConstant, String element) {
+		errorList
+				.add(new ServiceError(errorConstant.getErrorCode(),
+						String.format(errorConstant.getMessage(), StringUtils.strip(
+								processingMessageAsJson.get(INSTANCE).get(POINTER).asText() + PATH_SEPERATOR + element,
+								"/"))));
 	}
 }
