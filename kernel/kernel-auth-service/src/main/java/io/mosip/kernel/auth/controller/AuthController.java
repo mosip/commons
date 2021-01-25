@@ -291,7 +291,7 @@ public class AuthController {
 			}
 
 			mosipUserDto = authService.valdiateToken(authToken);
-			LOGGER.info("validate admin token successful " + " token payload: " + mosipUserDto.getToken().split("\\.")[1]);
+			LOGGER.debug("validate admin token successful " + " token payload: " + mosipUserDto.getToken().split("\\.")[1]);
 			Cookie cookie = createCookie(mosipUserDto.getToken(), mosipEnvironment.getTokenExpiry());
 			res.addCookie(cookie);
 		} catch (NonceExpiredException exp) {

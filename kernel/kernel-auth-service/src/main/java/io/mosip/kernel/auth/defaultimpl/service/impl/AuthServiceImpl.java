@@ -575,6 +575,7 @@ public class AuthServiceImpl implements AuthService {
 			response = restTemplate.exchange(uriComponentsBuilder.buildAndExpand(pathparams).toUriString(),
 					HttpMethod.GET, httpRequest, String.class);
 		} catch (HttpClientErrorException | HttpServerErrorException e) {
+			LOGGER.error("Token validation failed for accessToken {}", accessToken);
 			KeycloakErrorResponseDto keycloakErrorResponseDto = parseKeyClockErrorResponse(e);
 			if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
 				throw new AuthenticationServiceException(AuthErrorCode.INVALID_TOKEN.getErrorMessage()

@@ -105,8 +105,8 @@ mosip.kernel.crypto.sign-algorithm-name=RS256
 mosip.kernel.vid.min-unused-threshold=100000
 #number of vids to generate
 mosip.kernel.vid.vids-to-generate=200000
-#time to renew after expiry(in days)
-mosip.kernel.vid.time-to-renew-after-expiry=5
+#time to release after expiry(in days)
+mosip.kernel.vid.time-to-release-after-expiry=5
 #for genaration on init vids timeout 
 mosip.kernel.vid.pool-population-timeout=10000000
 
