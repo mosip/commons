@@ -58,7 +58,7 @@ public class KeymanagerConstant {
 	/**
 	 * The constant Request received to getPublicKey
 	 */
-	public static final String GETPUBLICKEY = "Request received to getPublicKey";
+	public static final String GET_CERTIFICATE = "Request received to getCertificate";
 
 	/**
 	 * The constant Getting public key from DB Store
@@ -68,7 +68,7 @@ public class KeymanagerConstant {
 	/**
 	 * The constant Getting public key from SoftHSM
 	 */
-	public static final String GETPUBLICKEYHSM = "Getting public key from SoftHSM";
+	public static final String GETPUBLICKEYHSM = "Getting Certificate from KeyStore.";
 
 	/**
 	 * The constant Getting key alias
@@ -160,4 +160,14 @@ public class KeymanagerConstant {
 	 * The constant KeyStore PrivateKey NotAvailable
 	 */
 	public static final String KS_PK_NA = "NA";
+
+	public static final String ROOT = "ROOT";
+
+	public static final String REQ_SYM_KEY_GEN = "Request for Symmetric Key Generation.";
+
+	public static final int SYMMETRIC_KEY_VALIDITY = 365 * 10;
+
+	public static final String GENERATE_SUCCESS = "Generation Success";
+
+	public static final String SYMM_KEY_EXISTS = "Key Exists.";
 }

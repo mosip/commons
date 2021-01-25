@@ -20,7 +20,9 @@ import java.security.Security;
 import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Before;
@@ -30,14 +32,21 @@ import org.mockito.Mockito;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import io.mosip.kernel.keymanager.hsm.impl.KeyStoreImpl;
+import io.mosip.kernel.keymanager.hsm.impl.pkcs.PKCS12KeyStoreImpl;
 import io.mosip.kernel.keymanager.hsm.util.CertificateUtility;
+import io.mosip.kernel.core.keymanager.model.CertificateParameters;
 
 @RunWith(SpringRunner.class)
 public class KeyStoreImplTest {
 
 	private java.security.KeyStore keyStore;
 
+	private PKCS12KeyStoreImpl pkcs12Impl;
+
 	private KeyStoreImpl keyStoreImpl;
+
+	private CertificateParameters certParams;
+
 	BouncyCastleProvider provider;
 	SecureRandom random;
 
@@ -47,18 +56,25 @@ public class KeyStoreImplTest {
 		keyStore = new java.security.KeyStore(keyStoreSpiMock, null, "test") {
 		};
 		keyStoreImpl = new KeyStoreImpl();
-		keyStoreImpl.setKeyStore(keyStore);
-		ReflectionTestUtils.setField(keyStoreImpl, "configPath", "configPath");
-		ReflectionTestUtils.setField(keyStoreImpl, "keystoreType", "keystoreType");
-		ReflectionTestUtils.setField(keyStoreImpl, "keystorePass", "keystorePass");
-		ReflectionTestUtils.setField(keyStoreImpl, "commonName", "commonName");
-		ReflectionTestUtils.setField(keyStoreImpl, "organizationalUnit", "organizationalUnit");
-		ReflectionTestUtils.setField(keyStoreImpl, "organization", "organization");
-		ReflectionTestUtils.setField(keyStoreImpl, "country", "country");
+		
+		Map<String, String> map = new HashMap<>();
+		map.put("CONFIG_FILE_PATH", "configPath");
+		map.put("PKCS11_KEYSTORE_PASSWORD", "keystorePass");
+		map.put("SYM_KEY_ALGORITHM", "AES");
+		map.put("SYM_KEY_SIZE", "256");
+		map.put("ASYM_KEY_ALGORITHM", "RSA");
+		map.put("ASYM_KEY_SIZE", "2048");
+		map.put("CERT_SIGN_ALGORITHM", "SHA256withRSA");
+		pkcs12Impl = new PKCS12KeyStoreImpl(map);
+		//ReflectionTestUtils.setField(pkcs12Impl, "keyStore", keyStore);
 		keyStore.load(null);
+		pkcs12Impl.setKeyStore(keyStore);
+		ReflectionTestUtils.setField(keyStoreImpl, "keyStore", pkcs12Impl);
 		provider = new BouncyCastleProvider();
 		Security.addProvider(provider);
 		random = new SecureRandom();
+		certParams = new CertificateParameters("commonName", "organizationalUnit",
+				"organization", "location", "state", "country", LocalDateTime.now(), LocalDateTime.now().plusDays(100));
 	}
 
 	@Test
@@ -66,7 +82,7 @@ public class KeyStoreImplTest {
 		KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance("RSA", provider);
 		keyGenerator.initialize(2048, random);
 		KeyPair keyPair = keyGenerator.generateKeyPair();
-		keyStoreImpl.storeAsymmetricKey(keyPair, "alias", LocalDateTime.now(), LocalDateTime.now().plusDays(100));
+		keyStoreImpl.generateAndStoreAsymmetricKey("alias", null, certParams);
 		X509Certificate[] chain = new X509Certificate[1];
 		chain[0] = CertificateUtility.generateX509Certificate(keyPair.getPrivate(), keyPair.getPublic(), "commonName", "organizationalUnit",
 				"organization", "country", LocalDateTime.now(), LocalDateTime.now().plusDays(100), "SHA256withRSA", "BC");
@@ -78,10 +94,10 @@ public class KeyStoreImplTest {
 
 	@Test
 	public void testStoreSymmetricKey() throws Exception {
-		javax.crypto.KeyGenerator keyGenerator = javax.crypto.KeyGenerator.getInstance("AES", provider);
+		javax.crypto.KeyGenerator keyGenerator = javax.crypto.KeyGenerator.getInstance("AES");
 		keyGenerator.init(256, random);
 		SecretKeyEntry secretKeyEntry = new SecretKeyEntry(keyGenerator.generateKey());
-		keyStoreImpl.storeSymmetricKey(keyGenerator.generateKey(), "alias");
+		keyStoreImpl.generateAndStoreSymmetricKey("alias");
 		when(keyStore.entryInstanceOf("alias", SecretKeyEntry.class)).thenReturn(true);
 		when(keyStore.getEntry(Mockito.anyString(), Mockito.any())).thenReturn(secretKeyEntry);
 		assertThat(keyStoreImpl.getSymmetricKey("alias"), isA(Key.class));

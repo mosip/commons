@@ -80,6 +80,8 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 	// will use in HSM
 	private static final String RSA_ECB_NO_PADDING = "RSA/ECB/NoPadding";
 
+	private static final String PKCS11_STORE_TYPE = "PKCS11";
+
 	@Value("${mosip.kernel.keygenerator.asymmetric-key-length:2048}")
 	private int asymmetricKeyLength;
 
@@ -109,6 +111,9 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 
 	@Value("${mosip.kernel.crypto.hash-iteration:100000}")
 	private int iterations;
+
+	@Value("${mosip.kernel.keymanager.hsm.keystore-type:PKCS11}")
+	private String keystoreType;
 
 	private SecureRandom secureRandom;
 
@@ -285,15 +290,21 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 	
 	@Override
 	public byte[] asymmetricDecrypt(PrivateKey privateKey, byte[] data) {
-		BigInteger keyModulus = ((RSAPrivateKey) privateKey).getModulus();
-		return asymmetricDecrypt(privateKey, keyModulus, data);
+		if (PKCS11_STORE_TYPE.equalsIgnoreCase(keystoreType)) {
+			BigInteger keyModulus = ((RSAPrivateKey) privateKey).getModulus();
+			return asymmetricDecrypt(privateKey, keyModulus, data);
+		}
+		return jceAsymmetricDecrypt(privateKey, data);
 	}
 
 	@Override
 	public byte[] asymmetricDecrypt(PrivateKey privateKey, PublicKey publicKey, byte[] data) {
-		BigInteger keyModulus = Objects.nonNull(publicKey) ? ((RSAPublicKey) publicKey).getModulus() : 
-									((RSAPrivateKey) privateKey).getModulus();
-		return asymmetricDecrypt(privateKey, keyModulus, data);
+		if (PKCS11_STORE_TYPE.equalsIgnoreCase(keystoreType)) {
+			BigInteger keyModulus = Objects.nonNull(publicKey) ? ((RSAPublicKey) publicKey).getModulus() : 
+										((RSAPrivateKey) privateKey).getModulus();
+			return asymmetricDecrypt(privateKey, keyModulus, data);
+		}
+		return jceAsymmetricDecrypt(privateKey, data);
 	}
 
 	private byte[] asymmetricDecrypt(PrivateKey privateKey, BigInteger keyModulus, byte[] data) {
@@ -351,6 +362,30 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 		}	    
 	}
 	 
+	private byte[] jceAsymmetricDecrypt(PrivateKey privateKey, byte[] data){
+		Objects.requireNonNull(privateKey, SecurityExceptionCodeConstant.MOSIP_INVALID_KEY_EXCEPTION.getErrorMessage());
+		CryptoUtils.verifyData(data);
+		Cipher cipher;
+		try {
+			cipher = Cipher.getInstance(asymmetricAlgorithm);
+			OAEPParameterSpec oaepParams = new OAEPParameterSpec(HASH_ALGO, MGF1, MGF1ParameterSpec.SHA256,
+				PSpecified.DEFAULT);
+			cipher.init(Cipher.DECRYPT_MODE, privateKey, oaepParams);
+			return doFinal(data, cipher);
+		} catch (java.security.NoSuchAlgorithmException | NoSuchPaddingException e) {
+			throw new NoSuchAlgorithmException(
+					SecurityExceptionCodeConstant.MOSIP_NO_SUCH_ALGORITHM_EXCEPTION.getErrorCode(),
+					SecurityExceptionCodeConstant.MOSIP_NO_SUCH_ALGORITHM_EXCEPTION.getErrorMessage(), e);
+		} catch (java.security.InvalidKeyException e) {
+			throw new InvalidKeyException(SecurityExceptionCodeConstant.MOSIP_INVALID_KEY_EXCEPTION.getErrorCode(),
+					e.getMessage(), e);
+		} catch (InvalidAlgorithmParameterException e) {
+			throw new InvalidParamSpecException(
+					SecurityExceptionCodeConstant.MOSIP_INVALID_PARAM_SPEC_EXCEPTION.getErrorCode(),
+					SecurityExceptionCodeConstant.MOSIP_INVALID_PARAM_SPEC_EXCEPTION.getErrorMessage(), e);
+		}
+	}
+
 
 	@Override
 	public String hash(byte[] data, byte[] salt) {

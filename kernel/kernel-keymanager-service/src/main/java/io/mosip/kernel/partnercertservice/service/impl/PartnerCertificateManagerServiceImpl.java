@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.DateUtils;
+import io.mosip.kernel.keymanager.hsm.util.CertificateUtility;
 import io.mosip.kernel.keymanagerservice.constant.KeymanagerConstant;
 import io.mosip.kernel.keymanagerservice.entity.KeyAlias;
 import io.mosip.kernel.keymanagerservice.entity.PartnerCertificateStore;
@@ -74,6 +75,9 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
     @Value("${mosip.kernel.partner.allowed.domains}")
     private String partnerAllowedDomains;
 
+    @Value("${mosip.kernel.certificate.sign.algorithm:SHA256withRSA}")
+    private String signAlgorithm;
+        
     /**
      * Utility to generate Metadata
      */
@@ -362,8 +366,8 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
         LocalDateTime notAfterDate = DateUtils.parseDateToLocalDateTime(reqX509Cert.getNotAfter());
         CertificateParameters certParams = PartnerCertificateManagerUtil.getCertificateParameters(subjectPrincipal,
                 notBeforeDate, notAfterDate);
-        return (X509Certificate) keyStore.generateCertificate(signPrivateKey, partnerPublicKey, certParams,
-                signerPrincipal);
+        return (X509Certificate) CertificateUtility.generateX509Certificate(signPrivateKey, partnerPublicKey, certParams,
+                signerPrincipal, signAlgorithm, keyStore.getKeystoreProviderName());
     }
 
     @Override
