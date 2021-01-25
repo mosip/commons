@@ -1,10 +1,12 @@
 package io.mosip.kernel.auth.defaultadapter.config;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.http.HttpHeaders;
@@ -50,6 +52,12 @@ public class RestTemplateInterceptor implements ClientHttpRequestInterceptor {
 	@Autowired(required = false)
 	private LoadBalancerClient loadBalancerClient;
 
+	// This config is introduced as a patch to fix the use of expired token from security context 
+	// rather than taking token from actual request. Later proper default behaviour to be 
+	// coded and this config to be removed
+	@Value("${auth.adapter.rest.template.skip.context.token.reuse:false}")
+	private boolean skipContextTokenReuse;
+
 	@Override
 	public ClientHttpResponse intercept(HttpRequest httpRequest, byte[] bytes,
 			ClientHttpRequestExecution clientHttpRequestExecution) throws IOException {
@@ -62,10 +70,12 @@ public class RestTemplateInterceptor implements ClientHttpRequestInterceptor {
 
 	private void addHeadersToRequest(HttpRequest httpRequest, byte[] bytes) {
 		HttpHeaders headers = httpRequest.getHeaders();
-		AuthUserDetails authUserDetails = getAuthUserDetails();
-		if (authUserDetails != null)
-			headers.set(AuthAdapterConstant.AUTH_HEADER_COOKIE,
-					AuthAdapterConstant.AUTH_COOOKIE_HEADER + authUserDetails.getToken());
+		if(!skipContextTokenReuse) {
+			AuthUserDetails authUserDetails = getAuthUserDetails();
+			if (authUserDetails != null)
+				headers.set(AuthAdapterConstant.AUTH_HEADER_COOKIE,
+						AuthAdapterConstant.AUTH_COOOKIE_HEADER + authUserDetails.getToken());
+		}
 	}
 
 	private AuthUserDetails getAuthUserDetails() {

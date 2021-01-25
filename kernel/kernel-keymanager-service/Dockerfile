@@ -101,10 +101,10 @@ CMD if [ "$is_glowroot_env" = "present" ]; then \
     unzip glowroot.zip ; \
     rm -rf glowroot.zip ; \
     sed -i 's/<service_name>/kernel-keymanager-service/g' glowroot/glowroot.properties ; \
-    wget -q --show-progress "${iam_adapter_url_env}" -O kernel-auth-adapter.jar; \
-    java -jar -javaagent:glowroot/glowroot.jar -Dloader.path=./kernel-auth-adapter.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -XX:HeapDumpPath=/home/${container_user}  kernel-keymanager-service.jar ; \
+    wget "${iam_adapter_url_env}" -O kernel-auth-adapter.jar; \
+    java -jar -javaagent:glowroot/glowroot.jar -Dloader.path=./kernel-auth-adapter.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -XX:HeapDumpPath=/home/  /home/${container_user}/kernel-keymanager-service.jar ; \
     else \
-    wget -q --show-progress "${iam_adapter_url_env}" -O kernel-auth-adapter.jar; \
-    java -jar -Dloader.path=./kernel-auth-adapter.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" kernel-keymanager-service.jar ; \
+    wget "${iam_adapter_url_env}" -O kernel-auth-adapter.jar; \
+    java -jar -Dloader.path=./kernel-auth-adapter.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" /home/${container_user}/kernel-keymanager-service.jar ; \
     fi
 
