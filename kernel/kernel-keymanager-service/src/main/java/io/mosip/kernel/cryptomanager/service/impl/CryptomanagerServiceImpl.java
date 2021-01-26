@@ -21,8 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.crypto.spi.CryptoCoreSpec;
 import io.mosip.kernel.core.util.CryptoUtil;
+import io.mosip.kernel.cryptomanager.constant.CryptomanagerConstant;
 import io.mosip.kernel.cryptomanager.dto.CryptoWithPinRequestDto;
 import io.mosip.kernel.cryptomanager.dto.CryptoWithPinResponseDto;
 import io.mosip.kernel.cryptomanager.dto.CryptomanagerRequestDto;
@@ -30,6 +32,7 @@ import io.mosip.kernel.cryptomanager.dto.CryptomanagerResponseDto;
 import io.mosip.kernel.cryptomanager.service.CryptomanagerService;
 import io.mosip.kernel.cryptomanager.util.CryptomanagerUtils;
 import io.mosip.kernel.keygenerator.bouncycastle.KeyGenerator;
+import io.mosip.kernel.keymanagerservice.logger.KeymanagerLogger;
 
 /**
  * Service Implementation for {@link CryptomanagerService} interface
@@ -47,6 +50,8 @@ public class CryptomanagerServiceImpl implements CryptomanagerService {
 	private static final int PBE_SALT_LENGTH = 32;
 
 	private static final String AES_KEY_TYPE = "AES";
+
+	private static final Logger LOGGER = KeymanagerLogger.getLogger(CryptomanagerServiceImpl.class);
 
 	/**
 	 * KeySplitter for splitting key and data
@@ -81,6 +86,8 @@ public class CryptomanagerServiceImpl implements CryptomanagerService {
 	 */
 	@Override
 	public CryptomanagerResponseDto encrypt(CryptomanagerRequestDto cryptoRequestDto) {
+		LOGGER.info(CryptomanagerConstant.SESSIONID, CryptomanagerConstant.ENCRYPT, CryptomanagerConstant.ENCRYPT, 
+						"Request for data encryption.");
 		SecretKey secretKey = keyGenerator.getSymmetricKey();
 		final byte[] encryptedData;
 		if (cryptomanagerUtil.isValidSalt(CryptomanagerUtils.nullOrTrim(cryptoRequestDto.getSalt()))) {
@@ -93,18 +100,24 @@ public class CryptomanagerServiceImpl implements CryptomanagerService {
 		}
 
 		Certificate certificate = cryptomanagerUtil.getCertificate(cryptoRequestDto);
+		LOGGER.info(CryptomanagerConstant.SESSIONID, CryptomanagerConstant.ENCRYPT, CryptomanagerConstant.ENCRYPT, 
+						"Found the cerificate, proceeding with session key.");
 		PublicKey publicKey = certificate.getPublicKey();
 		final byte[] encryptedSymmetricKey = cryptoCore.asymmetricEncrypt(publicKey, secretKey.getEncoded());
-
+		LOGGER.info(CryptomanagerConstant.SESSIONID, CryptomanagerConstant.ENCRYPT, CryptomanagerConstant.ENCRYPT, 
+						"Session key encryption completed.");
 		Boolean prependThumbprint = cryptoRequestDto.getPrependThumbprint() == null ? false : cryptoRequestDto.getPrependThumbprint();
 		CryptomanagerResponseDto cryptoResponseDto = new CryptomanagerResponseDto();
 		if (prependThumbprint) {
+			LOGGER.info(CryptomanagerConstant.SESSIONID, CryptomanagerConstant.ENCRYPT, CryptomanagerConstant.ENCRYPT, 
+						"Prepending certificate thumbprint to encrypted data.");
 			byte[] certThumbprint = cryptomanagerUtil.getCertificateThumbprint(certificate);
 			byte[] concatedData = cryptomanagerUtil.concatCertThumbprint(certThumbprint, encryptedSymmetricKey);
 			cryptoResponseDto.setData(CryptoUtil.encodeBase64(CryptoUtil.combineByteArray(encryptedData, concatedData, keySplitter)));
 			return cryptoResponseDto;
 		} 
-
+		LOGGER.info(CryptomanagerConstant.SESSIONID, CryptomanagerConstant.ENCRYPT, CryptomanagerConstant.ENCRYPT, 
+						"Thumbprint not prepended to the encrypted data.");
 		cryptoResponseDto.setData(CryptoUtil.encodeBase64(CryptoUtil.combineByteArray(encryptedData, encryptedSymmetricKey, keySplitter)));
 		return cryptoResponseDto;
 	}
@@ -118,6 +131,9 @@ public class CryptomanagerServiceImpl implements CryptomanagerService {
 	 */
 	@Override
 	public CryptomanagerResponseDto decrypt(CryptomanagerRequestDto cryptoRequestDto) {
+		LOGGER.info(CryptomanagerConstant.SESSIONID, CryptomanagerConstant.DECRYPT, CryptomanagerConstant.DECRYPT, 
+						"Request for data decryption.");
+
 		int keyDemiliterIndex = 0;
 		byte[] encryptedHybridData = CryptoUtil.decodeBase64(cryptoRequestDto.getData());
 		keyDemiliterIndex = CryptoUtil.getSplitterIndex(encryptedHybridData, keyDemiliterIndex, keySplitter);
@@ -126,6 +142,8 @@ public class CryptomanagerServiceImpl implements CryptomanagerService {
 				encryptedHybridData.length);
 		cryptoRequestDto.setData(CryptoUtil.encodeBase64(encryptedKey));
 		SecretKey decryptedSymmetricKey = cryptomanagerUtil.getDecryptedSymmetricKey(cryptoRequestDto);
+		LOGGER.info(CryptomanagerConstant.SESSIONID, CryptomanagerConstant.DECRYPT, CryptomanagerConstant.DECRYPT, 
+						"Session Decryption completed.");
 		final byte[] decryptedData;
 		if (cryptomanagerUtil.isValidSalt(CryptomanagerUtils.nullOrTrim(cryptoRequestDto.getSalt()))) {
 			decryptedData = cryptoCore.symmetricDecrypt(decryptedSymmetricKey, encryptedData,
@@ -135,6 +153,8 @@ public class CryptomanagerServiceImpl implements CryptomanagerService {
 			decryptedData = cryptoCore.symmetricDecrypt(decryptedSymmetricKey, encryptedData,
 					CryptoUtil.decodeBase64(CryptomanagerUtils.nullOrTrim(cryptoRequestDto.getAad())));
 		}
+		LOGGER.info(CryptomanagerConstant.SESSIONID, CryptomanagerConstant.DECRYPT, CryptomanagerConstant.DECRYPT, 
+						"Data decryption completed.");
 		CryptomanagerResponseDto cryptoResponseDto = new CryptomanagerResponseDto();
 		cryptoResponseDto.setData(CryptoUtil.encodeBase64(decryptedData));
 		return cryptoResponseDto;

@@ -5,17 +5,17 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 /**
- * DTO class for upload certificate response.
+ * DTO class for Symmetric Key Generate response.
  * 
  * @author Mahammed Taheer
- * @since 1.0.10
+ * @since 1.1.4
  *
  */
 @Data
-public class UploadCertificateResponseDto {
+public class SymmetricKeyGenerateResponseDto {
     
     /**
-	 * Status of upload certificate.
+	 * Status of Key Generation.
 	 */
 	private String status;
 

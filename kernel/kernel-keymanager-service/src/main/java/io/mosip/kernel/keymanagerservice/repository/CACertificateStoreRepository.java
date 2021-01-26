@@ -71,7 +71,6 @@ public interface CACertificateStoreRepository extends JpaRepository<CACertificat
 	 */
 	CACertificateStore findByCertThumbprintAndPartnerDomain(String certThumbprint, String partnerDomain);
 
-
 	/**
 	 * Function to find all CACertificate created , updated or deleted time is within the lastUpdated and current time
 	 * @param lastUpdated

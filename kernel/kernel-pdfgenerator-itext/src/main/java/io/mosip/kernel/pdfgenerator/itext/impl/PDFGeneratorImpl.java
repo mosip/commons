@@ -80,7 +80,7 @@ public class PDFGeneratorImpl implements PDFGenerator {
 
 	private static final String OUTPUT_FILE_EXTENSION = ".pdf";
 
-	@Value("${mosip.kernel.pdf_owner_password}")
+	@Value("${mosip.kernel.pdf_owner_password:\"\"}")
 	private String pdfOwnerPassword;
 
 	/*

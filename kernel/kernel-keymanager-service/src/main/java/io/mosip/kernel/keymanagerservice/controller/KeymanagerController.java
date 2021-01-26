@@ -5,7 +5,6 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +20,8 @@ import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.keymanagerservice.dto.CSRGenerateRequestDto;
 import io.mosip.kernel.keymanagerservice.dto.KeyPairGenerateRequestDto;
 import io.mosip.kernel.keymanagerservice.dto.KeyPairGenerateResponseDto;
+import io.mosip.kernel.keymanagerservice.dto.SymmetricKeyGenerateRequestDto;
+import io.mosip.kernel.keymanagerservice.dto.SymmetricKeyGenerateResponseDto;
 import io.mosip.kernel.keymanagerservice.dto.UploadCertificateRequestDto;
 import io.mosip.kernel.keymanagerservice.dto.UploadCertificateResponseDto;
 import io.mosip.kernel.keymanagerservice.service.KeymanagerService;
@@ -39,13 +40,6 @@ import io.swagger.annotations.ApiParam;
 @RestController
 @Api(tags = { "keymanager" }, value = "Operation related to Keymanagement")
 public class KeymanagerController {
-
-	@Value("${mosip.sign.refid:SIGN}")
-	private String certificateSignRefID;
-
-	/** The sign applicationid. */
-	@Value("${mosip.sign.applicationid:KERNEL}")
-	private String signApplicationid;
 
 	/**
 	 * Instance for KeymanagerService
@@ -139,6 +133,23 @@ public class KeymanagerController {
 
 		ResponseWrapper<UploadCertificateResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(keymanagerService.uploadOtherDomainCertificate(uploadCertRequestDto.getRequest()));
+		return response;
+	}
+
+	/**
+	 * Request to Generate Symmetric key for the provided APP ID & REF ID.
+	 * 
+	 * @param symGenRequestDto     {@link SymmetricKeyGenerateRequestDto} request
+	 * @return {@link SymmetricKeyGenerateResponseDto} instance
+	*/
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@ResponseFilter
+	@PostMapping(value = "/generateSymmetricKey")
+	public ResponseWrapper<SymmetricKeyGenerateResponseDto> generateSymmetricKey(
+		@RequestBody @Valid RequestWrapper<SymmetricKeyGenerateRequestDto> symGenRequestDto) {
+
+		ResponseWrapper<SymmetricKeyGenerateResponseDto> response = new ResponseWrapper<>();
+		response.setResponse(keymanagerService.generateSymmetricKey(symGenRequestDto.getRequest()));
 		return response;
 	}
 }

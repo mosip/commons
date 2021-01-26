@@ -32,7 +32,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
 
 	private static final Logger logger = LoggerFactory.getLogger(SwaggerConfig.class);
-
+	
 	/**
 	 * Master service Version
 	 */

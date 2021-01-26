@@ -7,6 +7,8 @@ import io.mosip.kernel.keymanagerservice.dto.KeyPairGenerateRequestDto;
 import io.mosip.kernel.keymanagerservice.dto.KeyPairGenerateResponseDto;
 import io.mosip.kernel.keymanagerservice.dto.PublicKeyResponse;
 import io.mosip.kernel.keymanagerservice.dto.SignatureCertificate;
+import io.mosip.kernel.keymanagerservice.dto.SymmetricKeyGenerateRequestDto;
+import io.mosip.kernel.keymanagerservice.dto.SymmetricKeyGenerateResponseDto;
 import io.mosip.kernel.keymanagerservice.dto.SymmetricKeyRequestDto;
 import io.mosip.kernel.keymanagerservice.dto.SymmetricKeyResponseDto;
 import io.mosip.kernel.keymanagerservice.dto.UploadCertificateRequestDto;
@@ -64,10 +66,10 @@ public interface KeymanagerService {
 	public KeyPairGenerateResponseDto getCertificate(String appId, Optional<String> refId);
 
 	/**
-	 * Function to get CSR for the provided appId & refId.
+	 * Function to generate CSR for the provided appId & refId.
 	 * 
 	 * @param CSRGenerateRequestDto request
-	 * @return {@link KeyPairGenerateResponseDto} instance
+	 * @return {@link CSRGenerateRequestDto} instance
 	 */
 	public KeyPairGenerateResponseDto generateCSR(CSRGenerateRequestDto csrGenRequestDto);
 
@@ -86,4 +88,23 @@ public interface KeymanagerService {
 	 * @return {@link UploadCertificateResponseDto} instance
 	 */
 	public UploadCertificateResponseDto uploadOtherDomainCertificate(UploadCertificateRequestDto uploadCertRequestDto);
+
+
+	/**
+	 * Function to generate Symmetric key for the provided appId & refId.
+	 * 
+	 * @param SymmetricKeyGenerateRequestDto symGenRequestDto
+	 * @return {@link SymmetricKeyGenerateRequestDto} instance
+	 */
+	public SymmetricKeyGenerateResponseDto generateSymmetricKey(SymmetricKeyGenerateRequestDto symGenRequestDto);
+
+	/**
+	 * Check certificate exists for the provided appId & refId.
+	 * 
+	 * @param UploadCertificateRequestDto uploadCertRequestDto
+	 * @return {@link UploadCertificateResponseDto} instance
+	 */
+	//public UploadCertificateResponseDto isCertificateExists(UploadCertificateRequestDto uploadCertRequestDto);
+
 }
+

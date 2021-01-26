@@ -97,6 +97,12 @@ public class KeymanagerUtil {
 	private String keySplitter;
 
 	/**
+	 * Common Name for generating certificate
+	 */
+	@Value("${mosip.kernel.keymanager.certificate.default.common-name}")
+	private String commonName;
+
+	/**
 	 * Organizational Unit for generating certificate
 	 */
 	@Value("${mosip.kernel.keymanager.certificate.default.organizational-unit}")
@@ -363,7 +369,7 @@ public class KeymanagerUtil {
 	public CertificateParameters getCertificateParameters(KeyPairGenerateRequestDto request, LocalDateTime notBefore, LocalDateTime notAfter) {
 
 		CertificateParameters certParams = new CertificateParameters();
-		certParams.setCommonName(request.getCommonName());
+		certParams.setCommonName(getParamValue(request.getCommonName(), commonName));
 		certParams.setOrganizationUnit(getParamValue(request.getOrganizationUnit(), organizationUnit));
 		certParams.setOrganization(getParamValue(request.getOrganization(), organization));
 		certParams.setLocation(getParamValue(request.getLocation(), location));
@@ -377,7 +383,7 @@ public class KeymanagerUtil {
 	public CertificateParameters getCertificateParameters(CSRGenerateRequestDto request, LocalDateTime notBefore, LocalDateTime notAfter) {
 
 		CertificateParameters certParams = new CertificateParameters();
-		certParams.setCommonName(request.getCommonName());
+		certParams.setCommonName(getParamValue(request.getCommonName(), commonName));
 		certParams.setOrganizationUnit(getParamValue(request.getOrganizationUnit(), organizationUnit));
 		certParams.setOrganization(getParamValue(request.getOrganization(), organization));
 		certParams.setLocation(getParamValue(request.getLocation(), location));
@@ -415,8 +421,8 @@ public class KeymanagerUtil {
 		try {
 			privateKey.destroy();
 		} catch (DestroyFailedException e) {
-			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.EMPTY, KeymanagerConstant.EMPTY,
-					"Error while destorying Private Key Object.");
+			LOGGER.warn(KeymanagerConstant.SESSIONID, KeymanagerConstant.EMPTY, KeymanagerConstant.EMPTY,
+					"Warning - while destorying Private Key Object.");
 		}
 		privateKey = null;
 	}
@@ -425,8 +431,8 @@ public class KeymanagerUtil {
 		try {
 			secretKey.destroy();
 		} catch (DestroyFailedException e) {
-			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.EMPTY, KeymanagerConstant.EMPTY,
-					"Error while destorying Private Key Object.");
+			LOGGER.warn(KeymanagerConstant.SESSIONID, KeymanagerConstant.EMPTY, KeymanagerConstant.EMPTY,
+					"Warning - while destorying Secret Key Object.");
 		}
 		secretKey = null;
 	}
