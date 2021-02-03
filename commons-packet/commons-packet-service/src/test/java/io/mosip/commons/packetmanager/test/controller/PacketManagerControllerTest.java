@@ -15,6 +15,7 @@ import io.mosip.commons.packetmanager.dto.FieldDtos;
 import io.mosip.commons.packetmanager.dto.InfoDto;
 import io.mosip.commons.packetmanager.dto.InfoRequestDto;
 import io.mosip.commons.packetmanager.dto.InfoResponseDto;
+import io.mosip.commons.packetmanager.dto.SourceAndProcess;
 import io.mosip.commons.packetmanager.service.PacketReaderService;
 import io.mosip.commons.packetmanager.test.TestBootApplication;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
@@ -76,6 +77,13 @@ public class PacketManagerControllerTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        SourceAndProcess sp=new SourceAndProcess();
+        sp.setProcess("NEW");
+        sp.setSource("REGISTRATION_CLIENT");
+        Mockito.when(
+                packetReaderService.getSourceAndProcess(anyString())).thenReturn(sp);
+        Mockito.when(
+                packetReaderService.getSourceAndProcess(anyString(),anyString())).thenReturn(sp);
     }
 
 
@@ -314,7 +322,7 @@ public class PacketManagerControllerTest {
     public void testInfo() throws Exception {
         InfoRequestDto infoDto = new InfoRequestDto();
         infoDto.setId("id");
-
+        
         InfoResponseDto infoResponseDto = new InfoResponseDto();
         infoResponseDto.setPacketId(infoDto.getId());
         infoResponseDto.setApplicationId(infoDto.getId());
@@ -324,7 +332,109 @@ public class PacketManagerControllerTest {
 
         request.setRequest(infoDto);
 
+        this.mockMvc.perform(post("/info").contentType(MediaType.APPLICATION_JSON).content(JsonUtils.javaObjectToJsonString(request)))
+                .andExpect(status().isOk());
+    }
+    
+    @Test
+    @WithUserDetails("reg-processor")
+    public void testAuditsNullsource() throws Exception {
+        InfoDto infoDto = new InfoDto();
+        infoDto.setBypassCache(false);
+        infoDto.setId("id");
+        
+        Mockito.when(
+                packetReader.getAudits(anyString(), anyString(), anyString(), anyBoolean())).thenReturn(new ArrayList<>());
+
+        request.setRequest(infoDto);
+
+        this.mockMvc.perform(post("/audits").contentType(MediaType.APPLICATION_JSON).content(JsonUtils.javaObjectToJsonString(request)))
+                .andExpect(status().isOk());
+    }
+    
+    @Test
+    @WithUserDetails("reg-processor")
+    public void testSearchFieldNullSP() throws Exception {
+        String value = "value";
+        FieldDto fieldDto = new FieldDto();
+        fieldDto.setField("name");
+        fieldDto.setBypassCache(false);
+        fieldDto.setId("id");
+        
+
+        Mockito.when(
+                packetReader.getField(anyString(), anyString(), anyString(), anyString(), anyBoolean())).thenReturn(value);
+
+        request.setRequest(fieldDto);
+
+        this.mockMvc.perform(post("/searchField").contentType(MediaType.APPLICATION_JSON).content(JsonUtils.javaObjectToJsonString(request)))
+                .andExpect(status().isOk());
+    }
+    
+    @Test
+    @WithUserDetails("reg-processor")
+    public void testDocumentNULLSP() throws Exception {
+        String value = "value";
+        DocumentDto documentDto = new DocumentDto();
+        documentDto.setDocumentName("document");
+        documentDto.setId("id");
+
+        Mockito.when(
+                packetReader.getDocument(anyString(), anyString(), anyString(), anyString())).thenReturn(new Document());
+
+        request.setRequest(documentDto);
+
+        this.mockMvc.perform(post("/document").contentType(MediaType.APPLICATION_JSON).content(JsonUtils.javaObjectToJsonString(request)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithUserDetails("reg-processor")
+    public void testBiometricsNULLSP() throws Exception {
+        BiometricRequestDto biometricRequestDto = new BiometricRequestDto();
+        biometricRequestDto.setPerson("applicant");
+        biometricRequestDto.setId("id");
+
+        Mockito.when(
+                packetReader.getBiometric(anyString(), anyString(), any(), anyString(), anyString(), anyBoolean())).thenReturn(new BiometricRecord());
+
+        request.setRequest(biometricRequestDto);
+
+        this.mockMvc.perform(post("/biometrics").contentType(MediaType.APPLICATION_JSON).content(JsonUtils.javaObjectToJsonString(request)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithUserDetails("reg-processor")
+    public void testMetaInfoNULLSP() throws Exception {
+        InfoDto infoDto = new InfoDto();
+        infoDto.setBypassCache(false);
+        infoDto.setId("id");
+        
+
+        Mockito.when(
+                packetReader.getMetaInfo(anyString(), anyString(), anyString(), anyBoolean())).thenReturn(new HashMap<>());
+
+        request.setRequest(infoDto);
+
+        this.mockMvc.perform(post("/metaInfo").contentType(MediaType.APPLICATION_JSON).content(JsonUtils.javaObjectToJsonString(request)))
+                .andExpect(status().isOk());
+    }
+    @Test
+    @WithUserDetails("reg-processor")
+    public void testValidatePacketNULLSP() throws Exception {
+        InfoDto infoDto = new InfoDto();
+        infoDto.setBypassCache(false);
+        infoDto.setId("id");
+        
+
+        Mockito.when(
+                packetReader.validatePacket(anyString(), anyString(), anyString())).thenReturn(true);
+
+        request.setRequest(infoDto);
+
         this.mockMvc.perform(post("/validatePacket").contentType(MediaType.APPLICATION_JSON).content(JsonUtils.javaObjectToJsonString(request)))
                 .andExpect(status().isOk());
     }
+    
 }

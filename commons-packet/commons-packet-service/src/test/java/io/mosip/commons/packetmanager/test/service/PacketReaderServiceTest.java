@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import io.mosip.commons.khazana.dto.ObjectDto;
 import io.mosip.commons.packet.facade.PacketReader;
 import io.mosip.commons.packetmanager.dto.InfoResponseDto;
+import io.mosip.commons.packetmanager.dto.SourceAndProcess;
 import io.mosip.commons.packetmanager.service.PacketReaderService;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.constant.QualityType;
@@ -29,10 +30,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -57,8 +62,13 @@ public class PacketReaderServiceTest {
 
     @Before
     public void setup() throws IOException {
+    	Map<String,String> sourceProps=new HashMap<>();
+    	sourceProps.put("cnie","CNIE");
+    	sourceProps.put("default","REGISTRATION_CLIENT");
+    	sourceProps.put("resident","RESIDENT");
         ReflectionTestUtils.setField(packetReaderService, "configServerUrl", "localhost");
         ReflectionTestUtils.setField(packetReaderService, "mappingjsonFileName", "reg-proc.json");
+        ReflectionTestUtils.setField(packetReaderService, "sourceProps", sourceProps);
 
         List<BIR> birTypeList = new ArrayList<>();
         BIR birType1 = new BIR.BIRBuilder().build();
@@ -115,5 +125,33 @@ public class PacketReaderServiceTest {
         Mockito.when(objectMapper.readValue(anyString(), any(Class.class))).thenThrow(new IOException("IO Exception"));
 
         packetReaderService.info(id);
+    }
+    
+    @Test
+    public void testGetSourceAndProcessSuccess() {
+    	SourceAndProcess sp = packetReaderService.getSourceAndProcess(id);
+
+    	assertEquals("REGISTRATION_CLIENT", sp.getSource());
+        
+    }
+    
+    @Test
+    public void testGetSourceAndProcesswithFieldSuccess() {
+    	SourceAndProcess sp = packetReaderService.getSourceAndProcess(id,"individualBiometrics");
+
+    	assertEquals("REGISTRATION_CLIENT", sp.getSource());
+    }
+    
+    @Test
+    public void testGetSourceAndProcesswithFieldsSuccess() {
+    	List<String> list=new ArrayList<>();
+    	list.add("individualBiometrics");
+        Map<SourceAndProcess, List<String>> sp = packetReaderService.getSourcesAndProcesses(id,list);
+        for(Entry<SourceAndProcess, List<String>> entry: sp.entrySet()) {
+        	if(entry.getValue().contains("individualBiometrics")) {
+        		assertEquals("REGISTRATION_CLIENT", entry.getKey().getSource());
+        	}
+        }
+    	
     }
 }

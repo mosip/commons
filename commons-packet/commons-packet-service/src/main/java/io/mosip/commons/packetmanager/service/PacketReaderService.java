@@ -1,20 +1,15 @@
 package io.mosip.commons.packetmanager.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
-import io.mosip.commons.khazana.dto.ObjectDto;
-import io.mosip.commons.packet.dto.TagResponseDto;
-import io.mosip.commons.packet.facade.PacketReader;
-import io.mosip.commons.packet.util.PacketManagerLogger;
-import io.mosip.commons.packetmanager.dto.BiometricsDto;
-import io.mosip.commons.packetmanager.dto.ContainerInfoDto;
-import io.mosip.commons.packetmanager.dto.InfoResponseDto;
-import io.mosip.kernel.biometrics.entities.BIR;
-import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import io.mosip.kernel.core.exception.BaseUncheckedException;
-import io.mosip.kernel.core.exception.ExceptionUtils;
-import io.mosip.kernel.core.logger.spi.Logger;
-import io.mosip.kernel.core.util.StringUtils;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,14 +17,23 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
+
+import io.mosip.commons.khazana.dto.ObjectDto;
+import io.mosip.commons.packet.dto.TagResponseDto;
+import io.mosip.commons.packet.facade.PacketReader;
+import io.mosip.commons.packet.util.PacketManagerLogger;
+import io.mosip.commons.packetmanager.dto.BiometricsDto;
+import io.mosip.commons.packetmanager.dto.ContainerInfoDto;
+import io.mosip.commons.packetmanager.dto.InfoResponseDto;
+import io.mosip.commons.packetmanager.dto.SourceAndProcess;
+import io.mosip.kernel.biometrics.entities.BIR;
+import io.mosip.kernel.biometrics.entities.BiometricRecord;
+import io.mosip.kernel.core.exception.BaseUncheckedException;
+import io.mosip.kernel.core.exception.ExceptionUtils;
+import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.kernel.core.util.StringUtils;
 
 @Component
 public class PacketReaderService {
@@ -45,6 +49,9 @@ public class PacketReaderService {
 
     @Value("${registration.processor.identityjson}")
     private String mappingjsonFileName;
+    
+    @Value("#{${packetmanager.name.source}}")  
+    private Map<String,String> sourceProps;
 
     @Autowired
     private PacketReader packetReader;
@@ -126,4 +133,58 @@ public class PacketReaderService {
         return key;
     }
 
+    public SourceAndProcess getSourceAndProcess(String id){
+    	InfoResponseDto infoResponseDto=info(id);
+    	SourceAndProcess map=new SourceAndProcess();
+    	for(Entry<String,String> entry:sourceProps.entrySet()) {
+    		for(ContainerInfoDto containerInfoDto:infoResponseDto.getInfo()) {
+    		if(entry.getValue().equalsIgnoreCase(containerInfoDto.getSource())) {
+    			map.setSource(containerInfoDto.getSource());
+    			map.setProcess(containerInfoDto.getProcess());
+    			return map;
+    		}
+    		}
+    	}
+		return map;
+    	
+    }
+    public SourceAndProcess getSourceAndProcess(String id,String field){
+    	InfoResponseDto infoResponseDto=info(id);
+    	SourceAndProcess map=new SourceAndProcess();
+    	for(Entry<String,String> entry:sourceProps.entrySet()) {
+    	for(ContainerInfoDto containerInfoDto:infoResponseDto.getInfo()) {
+    		if(entry.getValue().equalsIgnoreCase(containerInfoDto.getSource())) {
+    		if(containerInfoDto.getDemographics().contains(field)) {
+    			map.setSource(containerInfoDto.getSource());
+    			map.setProcess(containerInfoDto.getProcess());
+    			return map;
+    		}
+    		}
+    	}
+    	}
+		return map;
+    }
+    
+	public Map<SourceAndProcess,List<String>> getSourcesAndProcesses(String id,List<String> fields) {
+    	InfoResponseDto infoResponseDto=info(id);
+		Map<SourceAndProcess,List<String>> map=new HashMap<SourceAndProcess,List<String>>();
+    	for(Entry<String,String> entry:sourceProps.entrySet()) {
+    	for(ContainerInfoDto containerInfoDto:infoResponseDto.getInfo()) {
+    		if(entry.getValue().equalsIgnoreCase(containerInfoDto.getSource())) {
+    			SourceAndProcess sp=new SourceAndProcess();
+    			sp.setSource(containerInfoDto.getSource());
+    			sp.setProcess(containerInfoDto.getProcess());
+    			List<String> list=new ArrayList<>();
+    			for(String field:fields) {
+    				if(containerInfoDto.getDemographics().contains(field)) {
+    					list.add(field);
+    				}
+    			}
+    			map.put(sp, list);
+    			fields.removeAll(list);
+    		}
+    	}
+    	}
+		return map;
+    }
 }
