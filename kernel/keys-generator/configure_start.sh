@@ -35,6 +35,6 @@ fi
 echo "Attempting to install"
 cd ./$DIR_NAME && chmod +x install.sh && ./install.sh
 echo "Installation complete"
-cd ..
+cd $work_dir
 
 exec "$@"

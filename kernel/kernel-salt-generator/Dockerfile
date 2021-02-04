@@ -80,6 +80,14 @@ RUN apt-get -y update \
 # set working directory for the user
 WORKDIR /home/${container_user}
 
+ENV work_dir=/home/${container_user}
+
+ARG loader_path=${work_dir}/additional_jars/
+
+RUN mkdir -p ${loader_path}
+
+ENV loader_path_env=${loader_path}
+
 COPY ./target/kernel-salt-generator-*.jar kernel-salt-generator.jar
 
 # change permissions of file inside working dir
