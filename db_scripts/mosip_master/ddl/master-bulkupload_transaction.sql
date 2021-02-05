@@ -21,7 +21,7 @@ CREATE TABLE master.bulkupload_transaction(
 	uploaded_by character varying(256) NOT NULL,
 	upload_category character varying(36),
 	uploaded_dtimes timestamp NOT NULL,
-	upload_description character varying(256),
+	upload_description character varying(1024),
 	lang_code character varying(3) NOT NULL,
 	is_active boolean NOT NULL,
 	cr_by character varying(256) NOT NULL,
