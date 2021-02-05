@@ -13,7 +13,7 @@
 
 ALTER TABLE master.template ALTER COLUMN file_txt TYPE character varying;
 
-ALTER TABLE master.bulkupload_transaction ALTER COLUMN upload_description TYPE character varying(1024);
+ALTER TABLE master.bulkupload_transaction ALTER COLUMN upload_description TYPE character varying(2048);
 
 insert into master.template_type values('reg-preview-template-part', 'Registration Preview Template', 'eng', 'true', 'superadmin', current_timestamp, null, null, null, null);
 insert into master.template_type values('reg-ack-template-part', 'Registration Acknowledgement Template', 'eng', 'true', 'superadmin', current_timestamp, null, null, null, null); 
