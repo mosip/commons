@@ -62,7 +62,7 @@ public class RetryConfig {
 	 * @return the retry policy
 	 */
 	@Bean
-	public RetryPolicy retryPolicy(@Value("${" + KERNEL_RETRY_ATTEMPTS_LIMIT + ":3}") int retryLimit,
+	public RetryPolicy retryPolicy(@Value("${" + KERNEL_RETRY_ATTEMPTS_LIMIT + ":5}") int retryLimit,
 			@Value("${" + KERNEL_RETRY_TRAVERSE_ROOT_CAUSE_ENABLED + ":true}") boolean traverseRootCause) {
 		int maxAttempts = retryLimit + 1;
 		Map<Class<? extends Throwable>, Boolean> retryableExceptions = getRetryableExceptionsFromConfig();
@@ -137,9 +137,9 @@ public class RetryConfig {
 	@Bean
 	public BackOffPolicy backOffPolicy(
 			@Value("${" + KERNEL_RETRY_EXPONENTIAL_BACKOFF_INITIAL_INTERVAL_MILLISECS
-					+ ":100}") long initialIntervalMilliSecs,
+					+ ":200}") long initialIntervalMilliSecs,
 			@Value("${" + KERNEL_RETRY_EXPONENTIAL_BACKOFF_MULTIPLIER + ":1.0}") double multiplier,
-			@Value("${" + KERNEL_RETRY_EXPONENTIAL_BACKOFF_MAX_INTERVAL_MILLISECS + ":10000}") long maxIntervalMilliSecs) {
+			@Value("${" + KERNEL_RETRY_EXPONENTIAL_BACKOFF_MAX_INTERVAL_MILLISECS + ":5000}") long maxIntervalMilliSecs) {
 		ExponentialBackOffPolicy exponentialBackOffPolicy = new ExponentialBackOffPolicy();
 		exponentialBackOffPolicy.setInitialInterval(initialIntervalMilliSecs);
 		exponentialBackOffPolicy.setMultiplier(multiplier);
