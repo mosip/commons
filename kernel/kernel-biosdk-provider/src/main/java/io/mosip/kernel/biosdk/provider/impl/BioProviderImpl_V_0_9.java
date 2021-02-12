@@ -1,4 +1,5 @@
 package io.mosip.kernel.biosdk.provider.impl;
+import static io.mosip.kernel.biosdk.provider.util.BioProviderUtil.getKey;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,8 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import io.mosip.kernel.biosdk.provider.util.BIRConverter;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.biometrics.constant.BiometricFunction;
@@ -23,6 +24,7 @@ import io.mosip.kernel.biometrics.model.Response;
 import io.mosip.kernel.biometrics.model.SDKInfo;
 import io.mosip.kernel.biometrics.spi.IBioApi;
 import io.mosip.kernel.biosdk.provider.spi.iBioProviderApi;
+import io.mosip.kernel.biosdk.provider.util.BIRConverter;
 import io.mosip.kernel.biosdk.provider.util.BioProviderUtil;
 import io.mosip.kernel.biosdk.provider.util.ErrorCode;
 import io.mosip.kernel.biosdk.provider.util.ProviderConstants;
@@ -31,14 +33,19 @@ import io.mosip.kernel.core.cbeffutil.entity.BIR;
 
 @Component
 public class BioProviderImpl_V_0_9 implements iBioProviderApi {
+	
+	private static final String FORMAT_URL_PREFIX = "format.url.";
 
 	private static final String API_VERSION = "0.9";
-	private Map<BiometricType, Map<BiometricFunction, IBioApi>> sdkRegistry = new HashMap<>();
+
+	private static final String FORMAT = "format";
+	
+	private Map<String, Map<BiometricFunction, IBioApi>> sdkRegistry = new HashMap<>();
 
 	@Override
-	public Map<BiometricType, List<BiometricFunction>> init(Map<BiometricType, Map<String, String>> params)
+	public Map<String, List<BiometricFunction>> init(Map<String, Map<String, String>> params)
 			throws BiometricException {
-		for (BiometricType modality : params.keySet()) {
+		for (String modality : params.keySet()) {
 			Map<String, String> modalityParams = params.get(modality);
 
 			// check if version matches supported API version of this provider
@@ -53,7 +60,7 @@ public class BioProviderImpl_V_0_9 implements iBioProviderApi {
 					throw new BiometricException(ErrorCode.INVALID_SDK_VERSION.getErrorCode(),
 							ErrorCode.INVALID_SDK_VERSION.getErrorCode());
 
-				addToRegistry(sdkInfo, iBioApi, modality);
+				addToRegistry(sdkInfo, iBioApi, modality, params.get(modality));
 			}
 		}
 		return getSupportedModalities();
@@ -62,7 +69,7 @@ public class BioProviderImpl_V_0_9 implements iBioProviderApi {
 	@Override
 	public boolean verify(List<BIR> sample, List<BIR> record, BiometricType modality, Map<String, String> flags) {
 		BiometricRecord galleryRecord = getBiometricRecord(record.toArray(new BIR[record.size()]));
-		Response<MatchDecision[]> response = sdkRegistry.get(modality).get(BiometricFunction.MATCH).match(
+		Response<MatchDecision[]> response = sdkRegistry.get(getKey(modality, flags)).get(BiometricFunction.MATCH).match(
 				getBiometricRecord(sample.toArray(new BIR[sample.size()])), new BiometricRecord[] { galleryRecord },
 				Arrays.asList(modality), flags);
 
@@ -89,7 +96,7 @@ public class BioProviderImpl_V_0_9 implements iBioProviderApi {
 			galleryRecords[i++] = getBiometricRecord(gallery.get(key).toArray(new BIR[gallery.get(key).size()]));
 		}
 
-		Response<MatchDecision[]> response = sdkRegistry.get(modality).get(BiometricFunction.MATCH).match(
+		Response<MatchDecision[]> response = sdkRegistry.get(getKey(modality, flags)).get(BiometricFunction.MATCH).match(
 				getBiometricRecord(sample.toArray(new BIR[sample.size()])), galleryRecords, Arrays.asList(modality),
 				flags);
 
@@ -112,7 +119,7 @@ public class BioProviderImpl_V_0_9 implements iBioProviderApi {
 		float scores[] = new float[sample.length];
 		for (int i = 0; i < sample.length; i++) {
 			BiometricType modality = BiometricType.fromValue(sample[i].getBdbInfo().getType().get(0).value());
-			Response<QualityCheck> response = sdkRegistry.get(modality).get(BiometricFunction.QUALITY_CHECK)
+			Response<QualityCheck> response = sdkRegistry.get(getKey(modality, flags)).get(BiometricFunction.QUALITY_CHECK)
 					.checkQuality(getBiometricRecord(sample[i]), Arrays.asList(modality), flags);
 
 			if (isSuccessResponse(response) && response.getResponse().getScores() != null) {
@@ -135,7 +142,7 @@ public class BioProviderImpl_V_0_9 implements iBioProviderApi {
 
 		Map<BiometricType, Float> scoreMap = new HashMap<>();
 		for (BiometricType modality : modalitites) {
-			Response<QualityCheck> response = sdkRegistry.get(modality).get(BiometricFunction.QUALITY_CHECK)
+			Response<QualityCheck> response = sdkRegistry.get(getKey(modality, flags)).get(BiometricFunction.QUALITY_CHECK)
 					.checkQuality(getBiometricRecord(sample), Arrays.asList(modality), flags);
 
 			if (isSuccessResponse(response) && response.getResponse().getScores() != null)
@@ -162,7 +169,7 @@ public class BioProviderImpl_V_0_9 implements iBioProviderApi {
 		List<BIR> templates = new LinkedList<>();
 		for (BIR bir : sample) {
 			Response<BiometricRecord> response = sdkRegistry
-					.get(BiometricType.fromValue(bir.getBdbInfo().getType().get(0).value()))
+					.get(getKey(BiometricType.fromValue(bir.getBdbInfo().getType().get(0).value()), flags))
 					.get(BiometricFunction.EXTRACT).extractTemplate(getBiometricRecord(bir), null, flags);
 
 			templates.add(isSuccessResponse(response) ? BIRConverter.convertToBIR(response.getResponse().getSegments().get(0)) : null);
@@ -177,19 +184,43 @@ public class BioProviderImpl_V_0_9 implements iBioProviderApi {
 		return false;
 	}
 
-	private void addToRegistry(SDKInfo sdkInfo, IBioApi iBioApi, BiometricType modality) {
+	private void addToRegistry(SDKInfo sdkInfo, IBioApi iBioApi, String modality, Map<String, String> params) {
 		for (BiometricFunction biometricFunction : sdkInfo.getSupportedMethods().keySet()) {
-			if (sdkInfo.getSupportedMethods().get(biometricFunction).contains(modality)) {
-				if (sdkRegistry.get(modality) == null)
-					sdkRegistry.put(modality, new HashMap<>());
-
-				sdkRegistry.get(modality).put(biometricFunction, iBioApi);
-			}
+			addToRegistry(sdkInfo, iBioApi, biometricFunction, modality, modality);
+			List<String> formats = getFormats(params);
+			formats.forEach(format -> {
+				String key = modality + "." + FORMAT;
+				addToRegistry(sdkInfo, iBioApi, biometricFunction, modality, key);
+			});
 		}
 	}
 
-	private Map<BiometricType, List<BiometricFunction>> getSupportedModalities() {
-		Map<BiometricType, List<BiometricFunction>> result = new HashMap<>();
+	private void addToRegistry(SDKInfo sdkInfo, IBioApi iBioApi, BiometricFunction biometricFunction, String modality, String key) {
+		boolean isFunctionSupportsModality = sdkInfo.getSupportedMethods()
+													.get(biometricFunction)
+													.stream()
+													.filter(type -> type.name().equalsIgnoreCase(modality))
+													.findAny()
+													.isPresent();
+		if (isFunctionSupportsModality) {
+			if (sdkRegistry.get(key) == null)
+				sdkRegistry.put(key, new HashMap<>());
+
+			sdkRegistry.get(key).put(biometricFunction, iBioApi);
+		}
+	}
+
+	private List<String> getFormats(Map<String, String> params) {
+		return params.entrySet()
+				.stream()
+				.filter(entry -> entry.getKey().contains(FORMAT_URL_PREFIX))
+				.map(entry -> entry.getKey()
+						.substring(FORMAT_URL_PREFIX.length()))
+				.collect(Collectors.toList());
+	}
+
+	private Map<String, List<BiometricFunction>> getSupportedModalities() {
+		Map<String, List<BiometricFunction>> result = new HashMap<>();
 		sdkRegistry.forEach((modality, map) -> {
 			if (result.get(modality) == null)
 				result.put(modality, new ArrayList<BiometricFunction>());

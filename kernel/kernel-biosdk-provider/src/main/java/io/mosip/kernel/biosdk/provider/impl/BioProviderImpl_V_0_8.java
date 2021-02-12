@@ -1,4 +1,5 @@
 package io.mosip.kernel.biosdk.provider.impl;
+import static io.mosip.kernel.biosdk.provider.util.BioProviderUtil.getKey;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,13 +28,13 @@ import io.mosip.kernel.core.cbeffutil.entity.BIR;
 public class BioProviderImpl_V_0_8 implements iBioProviderApi {
 	
 	private static final String API_VERSION = "0.8";
-	private Map<BiometricType, Map<BiometricFunction, IBioApi>> sdkRegistry = new HashMap<>();
+	private Map<String, Map<BiometricFunction, IBioApi>> sdkRegistry = new HashMap<>();
 	//TODO - as sdk instance is heavy (around 2GB), rethink on the way of reusing the instances
 
 	@Override
-	public Map<BiometricType, List<BiometricFunction>> init(Map<BiometricType, Map<String, String>> params) 
+	public Map<String, List<BiometricFunction>> init(Map<String, Map<String, String>> params) 
 			throws BiometricException {
-		for(BiometricType modality : params.keySet()) {
+		for(String modality : params.keySet()) {
 			Map<String, String> modalityParams = params.get(modality);
 			
 			//check if version matches supported API version of this provider
@@ -71,7 +72,7 @@ public class BioProviderImpl_V_0_8 implements iBioProviderApi {
 	public float[] getSegmentQuality(BIR[] sample, Map<String, String> flags) {
 		float score[] = new float[sample.length];
 		for(int i=0; i< sample.length; i++) {
-			Response<QualityScore> response = sdkRegistry.get(BiometricType.fromValue(sample[i].getBdbInfo().getType().get(0).value())).
+			Response<QualityScore> response = sdkRegistry.get(getKey(BiometricType.fromValue(sample[i].getBdbInfo().getType().get(0).value()), flags)).
 					get(BiometricFunction.QUALITY_CHECK).checkQuality(sample[i], getKeyValuePairs(flags));
 			
 			score[i] = isSuccessResponse(response) ? response.getResponse().getScore() : 0;
@@ -85,7 +86,7 @@ public class BioProviderImpl_V_0_8 implements iBioProviderApi {
 		Map<BiometricType, List<Float>> scoresByModality = new HashMap<>();
 		for(int i=0; i< sample.length; i++) {
 			BiometricType modality = BiometricType.fromValue(sample[i].getBdbInfo().getType().get(0).value());
-			Response<QualityScore> response = sdkRegistry.get(modality).get(BiometricFunction.QUALITY_CHECK)
+			Response<QualityScore> response = sdkRegistry.get(getKey(modality, flags)).get(BiometricFunction.QUALITY_CHECK)
 					.checkQuality(sample[i], getKeyValuePairs(flags));
 			
 			if(!scoresByModality.containsKey(modality))
@@ -106,7 +107,7 @@ public class BioProviderImpl_V_0_8 implements iBioProviderApi {
 	public List<BIR> extractTemplate(List<BIR> sample, Map<String, String> flags) {
 		List<BIR> templates = new LinkedList<>();
 		for(BIR bir : sample) {
-			Response<BIR> response = sdkRegistry.get(BiometricType.fromValue(bir.getBdbInfo().getType().get(0).value())).
+			Response<BIR> response = sdkRegistry.get(getKey(BiometricType.fromValue(bir.getBdbInfo().getType().get(0).value()), flags)).
 				get(BiometricFunction.EXTRACT).extractTemplate(bir, getKeyValuePairs(flags));
 			templates.add(isSuccessResponse(response) ? response.getResponse() : null);
 		}
@@ -117,7 +118,7 @@ public class BioProviderImpl_V_0_8 implements iBioProviderApi {
 	private boolean match(String operation, List<BIR> sample, BIR[] record, BiometricType modality, Map<String, String> flags) {
 		List<MatchDecision[]> result = new LinkedList<>();
 		for(int i=0; i< sample.size(); i++) {
-			Response<MatchDecision[]> response = sdkRegistry.get(modality).
+			Response<MatchDecision[]> response = sdkRegistry.get(getKey(modality, flags)).
 					get(BiometricFunction.MATCH).match(sample.get(i), record, getKeyValuePairs(flags));
 			
 			result.add(isSuccessResponse(response) ? response.getResponse() : null);
@@ -126,15 +127,15 @@ public class BioProviderImpl_V_0_8 implements iBioProviderApi {
 		return evaluateMatchDecision(operation, sample, result);
 	}
 
-	private void addToRegistry(IBioApi iBioApi, BiometricType modality) {
+	private void addToRegistry(IBioApi iBioApi, String modality) {
 		sdkRegistry.computeIfAbsent(modality, k -> new HashMap<>()).put(BiometricFunction.EXTRACT, iBioApi);
 		sdkRegistry.computeIfAbsent(modality, k -> new HashMap<>()).put(BiometricFunction.QUALITY_CHECK, iBioApi);
 		sdkRegistry.computeIfAbsent(modality, k -> new HashMap<>()).put(BiometricFunction.MATCH, iBioApi);
 		sdkRegistry.computeIfAbsent(modality, k -> new HashMap<>()).put(BiometricFunction.SEGMENT, iBioApi);
 	}
 	
-	private Map<BiometricType, List<BiometricFunction>> getSupportedModalities() {
-		Map<BiometricType, List<BiometricFunction>> result = new HashMap<>();
+	private Map<String, List<BiometricFunction>> getSupportedModalities() {
+		Map<String, List<BiometricFunction>> result = new HashMap<>();
 		sdkRegistry.forEach((modality, map) -> {
 			if(result.get(modality) == null)
 				result.put(modality, new ArrayList<BiometricFunction>());
