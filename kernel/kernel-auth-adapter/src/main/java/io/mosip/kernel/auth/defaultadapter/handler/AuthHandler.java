@@ -5,10 +5,20 @@ import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.annotation.PostConstruct;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +28,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -92,11 +103,33 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 
 	@Autowired
 	private ObjectMapper objectMapper;
-	
-	@Autowired
-	private RestTemplate restTemplate;
-	
+
+	private RestTemplate restTemplate = null;
+
 	private static final String DEFAULTADMIN_MOSIP_IO = "defaultadmin@mosip.io";
+	
+	@Value("${mosip.kernel.auth.adapter.ssl-bypass:true}")
+	private boolean sslBypass;
+
+
+	@PostConstruct
+	void init() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
+		HttpClientBuilder httpClientBuilder = HttpClients.custom().disableCookieManagement();
+		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+		if (sslBypass) {
+			TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
+			SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom()
+					.loadTrustMaterial(null, acceptingTrustStrategy).build();
+			SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext, new HostnameVerifier() {
+				public boolean verify(String arg0, SSLSession arg1) {
+					return true;
+				}
+			});
+			httpClientBuilder.setSSLSocketFactory(csf);			
+		}
+		requestFactory.setHttpClient(httpClientBuilder.build());
+		restTemplate = new RestTemplate(requestFactory);
+	}
 
 	@Override
 	protected void additionalAuthenticationChecks(UserDetails userDetails,
@@ -122,7 +155,7 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 			ResponseWrapper<?> responseObject = objectMapper.readValue(response.getBody(), ResponseWrapper.class);
 			mosipUserDto = objectMapper.readValue(objectMapper.writeValueAsString(responseObject.getResponse()),
 					MosipUserDto.class);
-			LOGGER.info("user " + mosipUserDto.getUserId() );
+			LOGGER.info("user " + mosipUserDto.getUserId());
 		} catch (Exception e) {
 			throw new AuthManagerException(String.valueOf(HttpStatus.UNAUTHORIZED.value()), e.getMessage(), e);
 		}
@@ -178,7 +211,8 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 		headers.set(AuthAdapterConstant.AUTH_HEADER_COOKIE, AuthAdapterConstant.AUTH_COOOKIE_HEADER + token);
 		HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 		try {
-			//return getRestTemplate().exchange(validateUrl, HttpMethod.POST, entity, String.class);
+			// return getRestTemplate().exchange(validateUrl, HttpMethod.POST, entity,
+			// String.class);
 			return restTemplate.exchange(validateUrl, HttpMethod.POST, entity, String.class);
 		} catch (RestClientException /* | KeyManagementException | NoSuchAlgorithmException | KeyStoreException */ e) {
 			throw new AuthManagerException(AuthAdapterErrorCode.UNAUTHORIZED.getErrorCode(), e.getMessage(), e);
@@ -189,27 +223,31 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 		HttpHeaders headers = new HttpHeaders();
 		headers.set(AuthAdapterConstant.AUTH_HEADER_COOKIE, AuthAdapterConstant.AUTH_COOOKIE_HEADER + token);
 		HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
-		try {			
-			//return getRestTemplate().exchange(adminValidateUrl, HttpMethod.GET, entity, String.class);
-			return restTemplate.exchange(adminValidateUrl, HttpMethod.GET, entity, String.class);
+		try {
+			// return getRestTemplate().exchange(adminValidateUrl, HttpMethod.GET, entity,
+			// String.class);
+		   return restTemplate.exchange(adminValidateUrl, HttpMethod.GET, entity,String.class);
 		} catch (RestClientException /* | KeyManagementException | NoSuchAlgorithmException | KeyStoreException */ e) {
 			throw new AuthManagerException(AuthAdapterErrorCode.UNAUTHORIZED.getErrorCode(), e.getMessage(), e);
 		}
 	}
 
-	/*public RestTemplate getRestTemplate() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
-//        TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
-//        SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom().loadTrustMaterial(null, acceptingTrustStrategy)
-//                     .build();
-//        SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
-//        CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(csf).build();
-//        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-//        requestFactory.setHttpClient(httpClient);            
-//        RestTemplate restTemplate = new RestTemplate(requestFactory);
-		RestTemplate restTemplate = new RestTemplate();
-		restTemplate.setInterceptors(Collections.singletonList(new RestTemplateInterceptor()));
-		return restTemplate;
-	}*/
+	/*
+	 * public RestTemplate getRestTemplate() throws NoSuchAlgorithmException,
+	 * KeyStoreException, KeyManagementException { // TrustStrategy
+	 * acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
+	 * // SSLContext sslContext =
+	 * org.apache.http.ssl.SSLContexts.custom().loadTrustMaterial(null,
+	 * acceptingTrustStrategy) // .build(); // SSLConnectionSocketFactory csf = new
+	 * SSLConnectionSocketFactory(sslContext); // CloseableHttpClient httpClient =
+	 * HttpClients.custom().setSSLSocketFactory(csf).build(); //
+	 * HttpComponentsClientHttpRequestFactory requestFactory = new
+	 * HttpComponentsClientHttpRequestFactory(); //
+	 * requestFactory.setHttpClient(httpClient); // RestTemplate restTemplate = new
+	 * RestTemplate(requestFactory); RestTemplate restTemplate = new RestTemplate();
+	 * restTemplate.setInterceptors(Collections.singletonList(new
+	 * RestTemplateInterceptor())); return restTemplate; }
+	 */
 
 	public void addCorsFilter(HttpServer httpServer, Vertx vertx) {
 		Router router = Router.router(vertx);
@@ -361,9 +399,9 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 			LOGGER.error(exception.getMessage());
 		}
 	}
-	
+
 	public String getContextUser() {
-		Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
-		return authentication==null?DEFAULTADMIN_MOSIP_IO:authentication.getName();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		return authentication == null ? DEFAULTADMIN_MOSIP_IO : authentication.getName();
 	}
 }
