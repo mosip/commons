@@ -167,12 +167,20 @@ public class BioProviderImpl_V_0_9 implements iBioProviderApi {
 	@Override
 	public List<BIR> extractTemplate(List<BIR> sample, Map<String, String> flags) {
 		List<BIR> templates = new LinkedList<>();
-		for (BIR bir : sample) {
-			Response<BiometricRecord> response = sdkRegistry
-					.get(getKey(BiometricType.fromValue(bir.getBdbInfo().getType().get(0).value()), flags))
-					.get(BiometricFunction.EXTRACT).extractTemplate(getBiometricRecord(bir), null, flags);
+		BiometricRecord sampleRecord = getBiometricRecord(sample.toArray(new BIR[sample.size()]));
 
-			templates.add(isSuccessResponse(response) ? BIRConverter.convertToBIR(response.getResponse().getSegments().get(0)) : null);
+		Response<BiometricRecord> response = sdkRegistry
+				.get(getKey(BiometricType.fromValue(sample.get(0)
+						.getBdbInfo()
+						.getType()
+						.get(0)
+						.value()), flags))
+				.get(BiometricFunction.EXTRACT).extractTemplate(sampleRecord, null, flags);
+
+		if(isSuccessResponse(response)) {
+			templates.addAll(response.getResponse().getSegments().stream()
+					.map(BIRConverter::convertToBIR)
+					.collect(Collectors.toList()));
 		}
 		return templates;
 	}
