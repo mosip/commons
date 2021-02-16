@@ -28,6 +28,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
@@ -51,6 +52,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.mosip.kernel.auth.defaultadapter.config.RestTemplateInterceptor;
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterConstant;
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterErrorCode;
 import io.mosip.kernel.auth.defaultadapter.exception.AuthManagerException;
@@ -105,6 +107,9 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 	private ObjectMapper objectMapper;
 
 	private RestTemplate restTemplate = null;
+	
+	@Autowired
+	private RestTemplateInterceptor restInterceptor;
 
 	private static final String DEFAULTADMIN_MOSIP_IO = "defaultadmin@mosip.io";
 	
@@ -128,7 +133,10 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 			httpClientBuilder.setSSLSocketFactory(csf);			
 		}
 		requestFactory.setHttpClient(httpClientBuilder.build());
+		List<ClientHttpRequestInterceptor> list = new ArrayList<>();
+		list.add(restInterceptor);
 		restTemplate = new RestTemplate(requestFactory);
+		restTemplate.setInterceptors(list);
 	}
 
 	@Override
