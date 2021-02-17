@@ -8,8 +8,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import io.mosip.kernel.biosdk.provider.util.BIRConverter;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.biometrics.constant.BiometricFunction;
@@ -23,6 +24,7 @@ import io.mosip.kernel.biometrics.model.Response;
 import io.mosip.kernel.biometrics.model.SDKInfo;
 import io.mosip.kernel.biometrics.spi.IBioApi;
 import io.mosip.kernel.biosdk.provider.spi.iBioProviderApi;
+import io.mosip.kernel.biosdk.provider.util.BIRConverter;
 import io.mosip.kernel.biosdk.provider.util.BioProviderUtil;
 import io.mosip.kernel.biosdk.provider.util.ErrorCode;
 import io.mosip.kernel.biosdk.provider.util.ProviderConstants;
@@ -159,14 +161,31 @@ public class BioProviderImpl_V_1_2 implements iBioProviderApi {
 
 	@Override
 	public List<BIR> extractTemplate(List<BIR> sample, Map<String, String> flags) {
-		List<BIR> templates = new LinkedList<>();
-		for (BIR bir : sample) {
-			Response<BiometricRecord> response = sdkRegistry
-					.get(BiometricType.fromValue(bir.getBdbInfo().getType().get(0).value()))
-					.get(BiometricFunction.EXTRACT).extractTemplate(getBiometricRecord(bir), null, flags);
+		Map<BiometricType, List<BIR>> birsByModality = sample.stream().collect(Collectors.groupingBy(bir -> BiometricType.fromValue(bir
+						.getBdbInfo()
+						.getType()
+						.get(0).value())));
+		
+		List<BIR> templates = birsByModality.entrySet().stream()
+			  .<BIR>flatMap(entry -> {
+				  BiometricType modality = entry.getKey();
+				  List<BIR> birsForModality = entry.getValue();
+				  
+				  BiometricRecord sampleRecord = getBiometricRecord(birsForModality.toArray(new BIR[birsForModality.size()]));
 
-			templates.add(isSuccessResponse(response) ? BIRConverter.convertToBIR(response.getResponse().getSegments().get(0)) : null);
-		}
+					Response<BiometricRecord> response = sdkRegistry
+							.get(modality)
+							.get(BiometricFunction.EXTRACT).extractTemplate(sampleRecord, null, flags);
+
+					if(isSuccessResponse(response)) {
+						return response.getResponse().getSegments().stream()
+								.map(BIRConverter::convertToBIR);
+					}
+				  
+				  return Stream.empty();
+			  })
+			  .collect(Collectors.toList());
+		
 		return templates;
 	}
 

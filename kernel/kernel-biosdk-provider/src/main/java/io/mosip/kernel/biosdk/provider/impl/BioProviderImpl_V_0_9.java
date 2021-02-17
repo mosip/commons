@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Component;
 
@@ -160,22 +161,31 @@ public class BioProviderImpl_V_0_9 implements iBioProviderApi {
 
 	@Override
 	public List<BIR> extractTemplate(List<BIR> sample, Map<String, String> flags) {
-		List<BIR> templates = new LinkedList<>();
-		BiometricRecord sampleRecord = getBiometricRecord(sample.toArray(new BIR[sample.size()]));
-
-		Response<BiometricRecord> response = sdkRegistry
-				.get(BiometricType.fromValue(sample.get(0)
+		Map<BiometricType, List<BIR>> birsByModality = sample.stream().collect(Collectors.groupingBy(bir -> BiometricType.fromValue(bir
 						.getBdbInfo()
 						.getType()
-						.get(0)
-						.value()))
-				.get(BiometricFunction.EXTRACT).extractTemplate(sampleRecord, null, flags);
+						.get(0).value())));
+		
+		List<BIR> templates = birsByModality.entrySet().stream()
+			  .<BIR>flatMap(entry -> {
+				  BiometricType modality = entry.getKey();
+				  List<BIR> birsForModality = entry.getValue();
+				  
+				  BiometricRecord sampleRecord = getBiometricRecord(birsForModality.toArray(new BIR[birsForModality.size()]));
 
-		if(isSuccessResponse(response)) {
-			templates.addAll(response.getResponse().getSegments().stream()
-					.map(BIRConverter::convertToBIR)
-					.collect(Collectors.toList()));
-		}
+					Response<BiometricRecord> response = sdkRegistry
+							.get(modality)
+							.get(BiometricFunction.EXTRACT).extractTemplate(sampleRecord, null, flags);
+
+					if(isSuccessResponse(response)) {
+						return response.getResponse().getSegments().stream()
+								.map(BIRConverter::convertToBIR);
+					}
+				  
+				  return Stream.empty();
+			  })
+			  .collect(Collectors.toList());
+		
 		return templates;
 	}
 
