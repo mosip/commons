@@ -1,5 +1,4 @@
 package io.mosip.kernel.biosdk.provider.impl;
-import static io.mosip.kernel.biosdk.provider.util.BioProviderUtil.getKey;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -42,14 +41,14 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 	private static final String THRESHOLD_KEY = "_THRESHOLD";	
 	private static final String API_VERSION = "0.7";
 	
-	private Map<String, Object> sdkRegistry = new HashMap<>();
-	private Map<String, String> thresholds = new HashMap<>();
+	private Map<BiometricType, Object> sdkRegistry = new HashMap<>();
+	private Map<BiometricType, String> thresholds = new HashMap<>();
 	
 
 	@Override
-	public Map<String, List<BiometricFunction>> init(Map<String, Map<String, String>> params)
+	public Map<BiometricType, List<BiometricFunction>> init(Map<BiometricType, Map<String, String>> params)
 			throws BiometricException {
-		for(String modality : params.keySet()) {
+		for(BiometricType modality : params.keySet()) {
 			Map<String, String> modalityParams = params.get(modality);
 			
 			//check if version matches supported API version of this provider
@@ -138,13 +137,13 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 		float[] scores = new float[sample.length];		
 		for(int i =0; i< sample.length; i++) {			
 			BiometricType modality = BiometricType.valueOf(sample[i].getBdbInfo().getType().get(0).value());
-			Method method = ReflectionUtils.findRequiredMethod(this.sdkRegistry.get(getKey(modality, flags)).getClass(), 
+			Method method = ReflectionUtils.findRequiredMethod(this.sdkRegistry.get(modality).getClass(), 
 					"checkQuality", BIR.class, KeyValuePair[].class);
 			method.setAccessible(true);
 
 			if(Objects.nonNull(method)) {
 				try {
-					Object response =  method.invoke(this.sdkRegistry.get(getKey(modality, flags)), sample[i], getKeyValuePairs(flags));
+					Object response =  method.invoke(this.sdkRegistry.get(modality), sample[i], getKeyValuePairs(flags));
 					if(Objects.nonNull(response)) {
 						QualityScore  qualityScore = (QualityScore) response;
 						scores[i] = qualityScore.getInternalScore();
@@ -167,13 +166,13 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 		Map<BiometricType, LongStream.Builder> result = new HashMap<>();
 		for(BIR bir : sample) {
 			BiometricType modality = BiometricType.valueOf(bir.getBdbInfo().getType().get(0).value());
-			Method method = ReflectionUtils.findRequiredMethod(this.sdkRegistry.get(getKey(modality, flags)).getClass(), 
+			Method method = ReflectionUtils.findRequiredMethod(this.sdkRegistry.get(modality).getClass(), 
 					"checkQuality", BIR.class, KeyValuePair[].class);
 			method.setAccessible(true);
 			
 			if(Objects.nonNull(method)) {
 				try {
-					Object response =  method.invoke(this.sdkRegistry.get(getKey(modality, flags)), bir, getKeyValuePairs(flags));
+					Object response =  method.invoke(this.sdkRegistry.get(modality), bir, getKeyValuePairs(flags));
 					if(Objects.nonNull(response)) {
 						QualityScore  qualityScore = (QualityScore) response;
 						result.computeIfAbsent(modality, k -> LongStream.builder()).add(qualityScore.getInternalScore());
@@ -200,13 +199,13 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 		List<BIR> extracts = new ArrayList<>();
 		for(BIR bir : sample) {
 			BiometricType modality = BiometricType.valueOf(bir.getBdbInfo().getType().get(0).value());
-			Method method = ReflectionUtils.findRequiredMethod(this.sdkRegistry.get(getKey(modality, flags)).getClass(), 
+			Method method = ReflectionUtils.findRequiredMethod(this.sdkRegistry.get(modality).getClass(), 
 					"extractTemplate", BIR.class, KeyValuePair[].class);
 			method.setAccessible(true);
 			
 			if(Objects.nonNull(method)) {
 				try {
-					Object response =  method.invoke(this.sdkRegistry.get(getKey(modality, flags)), bir, getKeyValuePairs(flags));
+					Object response =  method.invoke(this.sdkRegistry.get(modality), bir, getKeyValuePairs(flags));
 					extracts.add(Objects.nonNull(response) ? (BIR) response : null);
 					
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
@@ -222,7 +221,7 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 	private boolean getSDKMatchResult(List<BIR> sample, BIR[] record, BiometricType modality, Map<String, String> flags, 
 			String threshold) {
 			
-		Method method = ReflectionUtils.findRequiredMethod(this.sdkRegistry.get(getKey(modality, flags)).getClass(), "match", 
+		Method method = ReflectionUtils.findRequiredMethod(this.sdkRegistry.get(modality).getClass(), "match", 
 				BIR.class, BIR[].class, KeyValuePair[].class);
 		method.setAccessible(true);
 		
@@ -235,7 +234,7 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 			LongStream.Builder scaleScores = LongStream.builder();
 			for(int i=0;i<sample.size();i++) {					
 				try {
-					Object[] response = (Object[]) method.invoke(this.sdkRegistry.get(getKey(modality, flags)), sample.get(i), 
+					Object[] response = (Object[]) method.invoke(this.sdkRegistry.get(modality), sample.get(i), 
 							record, getKeyValuePairs(flags));
 					
 					if( Objects.nonNull(response) ) {
@@ -260,7 +259,7 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 	//CompositeScore compositeMatch(BIR[] sampleList, BIR[] recordList, KeyValuePair[] flags)
 	private boolean getSDKCompositeMatchResult(List<BIR> sample, BIR[] record, BiometricType modality, Map<String, String> flags, 
 			String threshold) {
-		Method method = ReflectionUtils.findRequiredMethod(this.sdkRegistry.get(getKey(modality, flags)).getClass(), "compositeMatch", 
+		Method method = ReflectionUtils.findRequiredMethod(this.sdkRegistry.get(modality).getClass(), "compositeMatch", 
 				BIR[].class, BIR[].class, KeyValuePair[].class);
 		method.setAccessible(true);
 		
@@ -269,7 +268,7 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 			LOGGER.debug(ProviderConstants.LOGGER_SESSIONID, ProviderConstants.LOGGER_IDTYPE, "verify invoked", "CompositeMatch method found");
 			
 			try {
-				Object response = method.invoke(this.sdkRegistry.get(getKey(modality, flags)), sample.toArray(new BIR[sample.size()]), 
+				Object response = method.invoke(this.sdkRegistry.get(modality), sample.toArray(new BIR[sample.size()]), 
 						record, getKeyValuePairs(flags));
 				
 				if( Objects.nonNull(response) ) {
@@ -288,15 +287,15 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 	
 	
 	
-	private Map<String, List<BiometricFunction>> getSupportedModalities() {
-		Map<String, List<BiometricFunction>> result = new HashMap<>();
+	private Map<BiometricType, List<BiometricFunction>> getSupportedModalities() {
+		Map<BiometricType, List<BiometricFunction>> result = new HashMap<>();
 		sdkRegistry.forEach((modality, map) -> {
 			result.put(modality, Arrays.asList(BiometricFunction.values()));
 		});
 		return result;
 	}
 	
-	private void addToRegistry(Object sdkInstance, String modality) {
+	private void addToRegistry(Object sdkInstance, BiometricType modality) {
 		sdkRegistry.put(modality, sdkInstance);
 	}
 	

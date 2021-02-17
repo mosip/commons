@@ -15,7 +15,7 @@ public interface iBioProviderApi {
 	 * and other initialization stuff
 	 * @param params
 	 */
-	Map<String, List<BiometricFunction>> init(Map<String, Map<String, String>> params) throws BiometricException;
+	Map<BiometricType, List<BiometricFunction>> init(Map<BiometricType, Map<String, String>> params) throws BiometricException;
 	
 	/**
 	 * 1:1 match

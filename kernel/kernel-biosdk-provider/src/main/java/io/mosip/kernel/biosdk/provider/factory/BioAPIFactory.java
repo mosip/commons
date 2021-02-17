@@ -1,7 +1,5 @@
 package io.mosip.kernel.biosdk.provider.factory;
 
-import static io.mosip.kernel.biosdk.provider.util.BioProviderUtil.getKey;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +8,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.biometrics.constant.BiometricFunction;
@@ -34,9 +33,12 @@ public class BioAPIFactory {
 	private Map<String, String> face;
 	
 	@Autowired
+	private Environment environment;
+	
+	@Autowired
 	private List<iBioProviderApi> providerApis;
 
-	private Map<String, Map<BiometricFunction, iBioProviderApi>> providerRegistry = new HashMap<>();
+	private Map<BiometricType, Map<BiometricFunction, iBioProviderApi>> providerRegistry = new HashMap<>();
 	
 	/**
 	 * 
@@ -48,16 +50,10 @@ public class BioAPIFactory {
 			throw new BiometricException(ErrorCode.NO_PROVIDERS.getErrorCode(), ErrorCode.NO_PROVIDERS.getErrorMessage());
 		}		
 		
-		Map<String, Map<String, String>> params = new HashMap<>();
-		if(finger != null && !finger.isEmpty()) {
-			params.put(BiometricType.FINGER.name(), finger);
-		}
-		if(iris != null && !iris.isEmpty()) {
-			params.put(BiometricType.IRIS.name(), iris);
-		}
-		if(face != null && !face.isEmpty()) {
-			params.put(BiometricType.FACE.name(), face);
-		}
+		Map<BiometricType, Map<String, String>> params = new HashMap<>();
+		params.put(BiometricType.FINGER, finger);
+		params.put(BiometricType.IRIS, iris);
+		params.put(BiometricType.FACE, face);
 		
 		LOGGER.info(ProviderConstants.LOGGER_SESSIONID, ProviderConstants.LOGGER_IDTYPE, "initializeBioAPIProviders invoked", 
 				"With params >> " + params);
@@ -67,7 +63,7 @@ public class BioAPIFactory {
 		
 		//pass params per modality to each provider, each providers will initialize supported SDK's
 		for(iBioProviderApi provider : providerApis) {
-			Map<String, List<BiometricFunction>> supportedModalities = provider.init(params);
+			Map<BiometricType, List<BiometricFunction>> supportedModalities = provider.init(params);
 			if(supportedModalities != null && !supportedModalities.isEmpty()) {
 				supportedModalities.forEach((modality, functions) -> {
 					functions.forEach(function -> {
@@ -86,23 +82,13 @@ public class BioAPIFactory {
 	 * @throws BiometricException
 	 */
 	public iBioProviderApi getBioProvider(BiometricType modality, BiometricFunction biometricFunction) throws BiometricException {
-		return doGetBioProvider(modality, biometricFunction, null);
-	}
-
-	private iBioProviderApi doGetBioProvider(BiometricType modality, BiometricFunction biometricFunction, Map<String, String> params)
-			throws BiometricException {
-		String key = getKey(modality, params);
-		if(providerRegistry.get(key) != null && providerRegistry.get(key).get(biometricFunction) != null)
-			return providerRegistry.get(key).get(biometricFunction);
+		if(providerRegistry.get(modality) != null && providerRegistry.get(modality).get(biometricFunction) != null)
+			return providerRegistry.get(modality).get(biometricFunction);
 		
 		throw new BiometricException(ErrorCode.NO_PROVIDERS.getErrorCode(), ErrorCode.NO_PROVIDERS.getErrorMessage());
 	}
 	
-	public iBioProviderApi getBioProvider(BiometricType modality, BiometricFunction biometricFunction, Map<String, String> params) throws BiometricException {
-		return doGetBioProvider(modality, biometricFunction, params);
-	}
-	
-	private void addToRegistry(String modality, BiometricFunction function, iBioProviderApi provider) {
+	private void addToRegistry(BiometricType modality, BiometricFunction function, iBioProviderApi provider) {
 		if(providerRegistry.get(modality) == null)
 			providerRegistry.put(modality, new HashMap<>());
 		

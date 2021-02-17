@@ -8,14 +8,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.util.ReflectionUtils;
 
-import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.core.bioapi.exception.BiometricException;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;
 
 public class BioProviderUtil {
-
-	private static final String FORMAT = "format";
 
 	private static Map<String, Object> sdkInstances = new HashMap<>();
 
@@ -57,19 +54,6 @@ public class BioProviderUtil {
 					String.format(ErrorCode.SDK_INITIALIZATION_FAILED.getErrorMessage(),
 							modalityParams.get(ProviderConstants.CLASSNAME), ExceptionUtils.getStackTrace(e)));
 		}
-	}
-
-	public static String getKey(BiometricType modality, Map<String, String> params) {
-		String modalityStr = modality.name();
-		return getKey(modalityStr, params);
-	}
-
-	public static String getKey(String modality, Map<String, String> params) {
-		String formatKey = modality + FORMAT;
-		if(params != null && params.containsKey(formatKey)) {
-			return modality + "." + params.get(formatKey);
-		}
-		return modality;
 	}
 
 }
