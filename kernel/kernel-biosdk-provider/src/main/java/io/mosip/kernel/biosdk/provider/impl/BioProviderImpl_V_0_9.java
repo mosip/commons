@@ -8,8 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import io.mosip.kernel.biosdk.provider.util.BIRConverter;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.biometrics.constant.BiometricFunction;
@@ -23,6 +23,7 @@ import io.mosip.kernel.biometrics.model.Response;
 import io.mosip.kernel.biometrics.model.SDKInfo;
 import io.mosip.kernel.biometrics.spi.IBioApi;
 import io.mosip.kernel.biosdk.provider.spi.iBioProviderApi;
+import io.mosip.kernel.biosdk.provider.util.BIRConverter;
 import io.mosip.kernel.biosdk.provider.util.BioProviderUtil;
 import io.mosip.kernel.biosdk.provider.util.ErrorCode;
 import io.mosip.kernel.biosdk.provider.util.ProviderConstants;
@@ -160,12 +161,20 @@ public class BioProviderImpl_V_0_9 implements iBioProviderApi {
 	@Override
 	public List<BIR> extractTemplate(List<BIR> sample, Map<String, String> flags) {
 		List<BIR> templates = new LinkedList<>();
-		for (BIR bir : sample) {
-			Response<BiometricRecord> response = sdkRegistry
-					.get(BiometricType.fromValue(bir.getBdbInfo().getType().get(0).value()))
-					.get(BiometricFunction.EXTRACT).extractTemplate(getBiometricRecord(bir), null, flags);
+		BiometricRecord sampleRecord = getBiometricRecord(sample.toArray(new BIR[sample.size()]));
 
-			templates.add(isSuccessResponse(response) ? BIRConverter.convertToBIR(response.getResponse().getSegments().get(0)) : null);
+		Response<BiometricRecord> response = sdkRegistry
+				.get(BiometricType.fromValue(sample.get(0)
+						.getBdbInfo()
+						.getType()
+						.get(0)
+						.value()))
+				.get(BiometricFunction.EXTRACT).extractTemplate(sampleRecord, null, flags);
+
+		if(isSuccessResponse(response)) {
+			templates.addAll(response.getResponse().getSegments().stream()
+					.map(BIRConverter::convertToBIR)
+					.collect(Collectors.toList()));
 		}
 		return templates;
 	}
