@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="0,0" last-zoom="0.6"
+<dbmodel pgmodeler-ver="0.9.3" use-changelog="false" last-position="0,0" last-zoom="0.6" max-obj-count="12"
 	 default-owner="postgres">
 <role name="sysadmin"
       superuser="true"
@@ -46,14 +46,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<comment><![CDATA[Kernel database maintains common / system configurations, data related to kernel services like sync process, OTP, etc.]]></comment>
 </database>
 
-<schema name="public" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
+<schema name="public" layer="0" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
 </schema>
 
-<schema name="keymgr" rect-visible="true" fill-color="#83af1f">
+<schema name="keymgr" layer="0" rect-visible="true" fill-color="#83af1f">
 	<role name="sysadmin"/>
 </schema>
 
-<table name="key_alias">
+<table name="key_alias" layer="0" collapse-mode="2" max-obj-count="15" z-value="0">
 	<schema name="keymgr"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Key Alias: To maintain a system generated key as alias for the encryption key that will be stored in key-store devices like HSM.]]></comment>
@@ -102,7 +102,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -115,11 +115,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="key_policy_def">
+<table name="key_policy_def" layer="0" collapse-mode="2" max-obj-count="10" z-value="0">
 	<schema name="keymgr"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Key Policy Defination: Policy related to encryption key management is defined here. For eg. Expiry duration of a key generated.]]></comment>
-	<position x="600" y="80"/>
+	<position x="620" y="340"/>
 	<column name="app_id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Application ID: Application id for which the key policy is defined]]></comment>
@@ -148,7 +148,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -161,11 +161,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="key_policy_def_h">
+<table name="key_policy_def_h" layer="0" collapse-mode="2" max-obj-count="12" z-value="0">
 	<schema name="keymgr"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Key Policy Definition History : This to track changes to master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ), Effective DateTimestamp is used for identifying latest or point in time information. Refer kernel.key_policy_def table description for details.   ]]></comment>
-	<position x="900" y="60"/>
+	<position x="1120" y="40"/>
 	<column name="app_id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Application ID: Application id for which the key policy is defined]]></comment>
@@ -198,7 +198,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -211,11 +211,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="key_store">
+<table name="key_store" layer="0" collapse-mode="2" max-obj-count="12" z-value="0">
 	<schema name="keymgr"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Key Store: In MOSIP, data related to an individual in stored in encrypted form. This table is to manage all the keys(private and public keys) used. ]]></comment>
-	<position x="340" y="80"/>
+	<position x="620" y="40"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[ID: ID is a unique identifier (UUID) used for managing encryption keys]]></comment>
@@ -248,7 +248,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -275,11 +275,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		</idxelement>
 </index>
 
-<table name="data_encrypt_keystore">
+<table name="data_encrypt_keystore" layer="0" collapse-mode="2" max-obj-count="8" z-value="0">
 	<schema name="keymgr"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Data Encrypt Keystore: Table is used to store the encryption key aliases which is used encrypt the data stored in identity cache table store.]]></comment>
-	<position x="60" y="340"/>
+	<position x="60" y="460"/>
 	<column name="id" not-null="true">
 		<type name="bigint" length="36"/>
 		<comment><![CDATA[Id: Id of an encryption key alias]]></comment>
@@ -313,11 +313,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="ca_cert_store" alias="cacs">
+<table name="ca_cert_store" layer="0" alias="cacs" collapse-mode="2" max-obj-count="20" z-value="0">
 	<schema name="keymgr"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Certificate Authority Certificate Store: Store details of all the certificate provided by certificate authority which will be used by MOSIP]]></comment>
-	<position x="360" y="300"/>
+	<position x="620" y="660"/>
 	<column name="cert_id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Certificate ID: Unique ID (UUID) will be generated and assigned to the uploaded CA/Sub-CA certificate]]></comment>
@@ -378,7 +378,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -391,11 +391,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="partner_cert_store" alias="parcs">
+<table name="partner_cert_store" layer="0" alias="parcs" collapse-mode="2" max-obj-count="22" z-value="0">
 	<schema name="keymgr"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Partner Certificate Store: Store details of all the certificate provided by partners which will be used by MOSIP]]></comment>
-	<position x="700" y="280"/>
+	<position x="1140" y="320"/>
 	<column name="cert_id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Unique ID (UUID) will be generated and assigned to the uploaded Partner/DP/FTM certificate.]]></comment>
@@ -464,7 +464,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -477,11 +477,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="licensekey_list">
+<table name="licensekey_list" layer="0" collapse-mode="2" max-obj-count="12" z-value="0">
 	<schema name="keymgr"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[License Key : Holds list of license keys which will be used by TSPs]]></comment>
-	<position x="180" y="640"/>
+	<position x="60" y="720"/>
 	<column name="license_key" not-null="true">
 		<type name="character varying" length="255"/>
 		<comment><![CDATA[License Key : License key which is created to map partners, license key will have information related to authentication type access.]]></comment>
@@ -514,7 +514,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -527,11 +527,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="tsp_licensekey_map" alias="tsplkeym">
+<table name="tsp_licensekey_map" layer="0" alias="tsplkeym" collapse-mode="2" max-obj-count="10" z-value="0">
 	<schema name="keymgr"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[TSP License keys : TSP and License key mapping]]></comment>
-	<position x="540" y="780"/>
+	<position x="640" y="1120"/>
 	<column name="tsp_id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[TSP ID: ID of the thirdparty service provider]]></comment>
@@ -560,7 +560,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -573,11 +573,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="licensekey_permission" alias="lkeyper">
+<table name="licensekey_permission" layer="0" alias="lkeyper" collapse-mode="2" max-obj-count="10" z-value="0">
 	<schema name="keymgr"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Permissions: List of permissions associated with license key]]></comment>
-	<position x="840" y="620"/>
+	<position x="1140" y="760"/>
 	<column name="license_key" not-null="true">
 		<type name="character varying" length="255"/>
 		<comment><![CDATA[License Key : License key which is mapped to TSP, This will refer to master.licensekey_list.license_key]]></comment>
@@ -606,7 +606,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -631,12 +631,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="license_key" ref-type="dst-columns"/>
 </constraint>
 
-<relationship name="rel_licensekey_permission_licensekey_list" type="relfk"
+<relationship name="rel_licensekey_permission_licensekey_list" type="relfk" layer="0"
 	 src-table="keymgr.licensekey_permission"
 	 dst-table="keymgr.licensekey_list" reference-fk="fk_lkeyper"
 	 src-required="false" dst-required="false"/>
 
-<relationship name="rel_tsp_licensekey_map_licensekey_list" type="relfk"
+<relationship name="rel_tsp_licensekey_map_licensekey_list" type="relfk" layer="0"
 	 src-table="keymgr.tsp_licensekey_map"
 	 dst-table="keymgr.licensekey_list" reference-fk="fk_tsplkeym"
 	 src-required="false" dst-required="false"/>
