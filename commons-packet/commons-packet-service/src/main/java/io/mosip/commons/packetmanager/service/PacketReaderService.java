@@ -93,19 +93,19 @@ public class PacketReaderService {
                         }
                     }
 
-                    // get tags
-                    TagResponseDto tagResponse = packetReader.getTags(id, null);
-
                     containerInfo.setDemographics(demographics);
                     containerInfo.setBiometrics(biometrics);
-                    containerInfo.setTags(tagResponse != null && tagResponse.getTags() != null ? tagResponse.getTags() : null);
                     containerInfoDtos.add(containerInfo);
                 }
             }
+            // get tags
+            TagResponseDto tagResponse = packetReader.getTags(id, null);
+
             InfoResponseDto infoResponseDto = new InfoResponseDto();
             infoResponseDto.setApplicationId(id);
             infoResponseDto.setPacketId(id);
             infoResponseDto.setInfo(containerInfoDtos);
+            infoResponseDto.setTags(tagResponse != null && tagResponse.getTags() != null ? tagResponse.getTags() : null);
             return infoResponseDto;
         } catch (Exception e) {
             LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, ExceptionUtils.getStackTrace(e));
