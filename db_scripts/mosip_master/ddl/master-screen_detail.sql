@@ -8,7 +8,7 @@
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
--- 
+-- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
 -- ------------------------------------------------------------------------------------------
 
 -- object: master.screen_detail | type: TABLE --
@@ -24,7 +24,7 @@ CREATE TABLE master.screen_detail(
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
 	upd_dtimes timestamp,
-	is_deleted boolean,
+	is_deleted boolean NOT NULL DEFAULT FALSE,
 	del_dtimes timestamp,
 	CONSTRAINT pk_scrdtl_id PRIMARY KEY (id,lang_code)
 

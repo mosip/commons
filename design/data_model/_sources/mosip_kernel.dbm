@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="0,0" last-zoom="0.7"
+<dbmodel pgmodeler-ver="0.9.3" use-changelog="false" last-position="157,23" last-zoom="0.75" max-obj-count="12"
 	 default-schema="public" default-owner="postgres">
 <role name="sysadmin"
       superuser="true"
@@ -46,18 +46,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<comment><![CDATA[Kernel database maintains common / system configurations, data related to kernel services like sync process, OTP, etc.]]></comment>
 </database>
 
-<schema name="public" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
+<schema name="public" layer="0" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
 </schema>
 
-<schema name="kernel" rect-visible="true" fill-color="#83af1f">
+<schema name="kernel" layer="0" rect-visible="true" fill-color="#83af1f">
 	<role name="sysadmin"/>
 </schema>
 
-<table name="otp_transaction">
+<table name="otp_transaction" layer="0" collapse-mode="2" max-obj-count="18" z-value="0">
 	<schema name="kernel"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[OTP Transaction: All OTP related data and validation details are maintained here. ]]></comment>
-	<position x="240" y="340"/>
+	<position x="240" y="400"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="64"/>
 		<comment><![CDATA[ID: Unique transaction id for each otp transaction request]]></comment>
@@ -110,7 +110,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -123,7 +123,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="uin">
+<table name="uin" layer="0" collapse-mode="2" max-obj-count="9" z-value="0">
 	<schema name="kernel"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[UIN: Stores pre-generated UINs that are assigned to an individual as part of registration process.]]></comment>
@@ -152,7 +152,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -165,11 +165,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="vid">
+<table name="vid" layer="0" collapse-mode="2" max-obj-count="10" z-value="0">
 	<schema name="kernel"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[VID: Stores pre-generated VIDs that are assigned to an individual as part of mosip process.]]></comment>
-	<position x="780" y="140"/>
+	<position x="1060" y="120"/>
 	<column name="vid" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[VID: Pre-generated VIDs (Vertual Identification Number), which will be used to assign to an individual]]></comment>
@@ -198,7 +198,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -211,11 +211,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="prid">
+<table name="prid" layer="0" collapse-mode="2" max-obj-count="9" z-value="0">
 	<schema name="kernel"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[PRID: Stores pre-generated PRIDs that are assigned to an individual as part of mosip preregistration process]]></comment>
-	<position x="540" y="460"/>
+	<position x="740" y="380"/>
 	<column name="prid" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[PRID: Pre-generated PRIDs (Pre registration IDs), which will be used to assign to an individual]]></comment>
@@ -240,7 +240,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -253,11 +253,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="uin_assigned" alias="uinass">
+<table name="uin_assigned" layer="0" alias="uinass" collapse-mode="2" max-obj-count="9" z-value="0">
 	<schema name="kernel"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[UIN: Stores pre-generated UINs that are assigned to an individual as part of registration process.]]></comment>
-	<position x="520" y="140"/>
+	<position x="620" y="140"/>
 	<column name="uin" not-null="true">
 		<type name="character varying" length="28"/>
 		<comment><![CDATA[UIN: Pre-generated UINs (Unique Identification Number), which will be used to assign to an individual]]></comment>
@@ -282,7 +282,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -295,11 +295,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="vid_assigned" alias="vida">
+<table name="vid_assigned" layer="0" alias="vida" collapse-mode="2" max-obj-count="10" z-value="0">
 	<schema name="kernel"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[VID Assigned: Stores pre-generated VIDs that are assigned /expired to an individual as part of mosip process.]]></comment>
-	<position x="780" y="360"/>
+	<position x="1180" y="440"/>
 	<column name="vid" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[VID: Pre-generated VIDs (Vertual Identification Number), which will be used to assign to an individual]]></comment>
@@ -328,7 +328,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>

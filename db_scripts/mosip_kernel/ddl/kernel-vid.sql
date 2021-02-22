@@ -8,7 +8,7 @@
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
--- 
+-- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
 -- ------------------------------------------------------------------------------------------
 -- object: kernel.vid | type: TABLE --
 -- DROP TABLE IF EXISTS kernel.vid CASCADE;
@@ -20,7 +20,7 @@ CREATE TABLE kernel.vid(
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
 	upd_dtimes timestamp,
-	is_deleted boolean,
+	is_deleted boolean NOT NULL DEFAULT FALSE,
 	del_dtimes timestamp,
 	CONSTRAINT pk_vid_id PRIMARY KEY (vid)
 

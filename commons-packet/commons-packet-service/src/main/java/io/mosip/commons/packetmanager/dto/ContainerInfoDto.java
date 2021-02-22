@@ -16,6 +16,5 @@ public class ContainerInfoDto {
     private Set<String> demographics;
     private List<BiometricsDto> biometrics;
     private Map<String, String> documents;
-    private Map<String, String> tags;
 
 }

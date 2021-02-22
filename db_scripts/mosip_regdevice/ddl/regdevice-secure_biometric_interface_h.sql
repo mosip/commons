@@ -8,7 +8,7 @@
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
--- 
+-- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
 -- ------------------------------------------------------------------------------------------
 
 -- object: regdevice.secure_biometric_interface_h | type: TABLE --
@@ -26,7 +26,7 @@ CREATE TABLE regdevice.secure_biometric_interface_h(
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
 	upd_dtimes timestamp,
-	is_deleted boolean,
+	is_deleted boolean NOT NULL DEFAULT FALSE,
 	del_dtimes timestamp,
 	eff_dtimes timestamp NOT NULL,
 	CONSTRAINT pk_mdsh_id PRIMARY KEY (id,eff_dtimes)
