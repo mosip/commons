@@ -141,7 +141,8 @@ public class PacketReaderController {
     @PostMapping(path = "/validatePacket", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseWrapper<ValidatePacketResponse> validatePacket(@RequestBody(required = true) RequestWrapper<InfoDto> request) {
         InfoDto metaDto = request.getRequest();
-        boolean resultFields = packetReader.validatePacket(metaDto.getId(), metaDto.getSource(), metaDto.getProcess());
+        boolean resultFields = packetReader.validatePacket(metaDto.getId(), packetReaderService.getSource(
+                null, metaDto.getSource(), metaDto.getProcess()), metaDto.getProcess());
         ResponseWrapper<ValidatePacketResponse> response = getResponseWrapper();
         response.setResponse(new ValidatePacketResponse(resultFields));
         return response;

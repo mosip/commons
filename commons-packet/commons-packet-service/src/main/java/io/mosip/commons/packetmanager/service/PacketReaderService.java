@@ -170,7 +170,7 @@ public class PacketReaderService {
                     if (str != null && str.length > 0 && str[0].startsWith(sourceInitial)) {
                         String sourceStr = str[0].substring(sourceInitial.length());
                         String processStr = str[1].substring(processInitial.length());
-                        String[] processes = processStr.split("|");
+                        String[] processes = processStr.split("\\|");
                         if (Arrays.stream(processes).filter(p -> p.equalsIgnoreCase(process)).findAny().isPresent())
                             return sourceStr;
                     }
@@ -194,18 +194,20 @@ public class PacketReaderService {
     }
 
     public String searchInMappingJson(String idField, String process) throws IOException {
-        JSONObject jsonObject = getMappingJsonFile();
-        for (Object key : jsonObject.keySet()) {
-            LinkedHashMap hMap = (LinkedHashMap) jsonObject.get(key);
-            String value = (String) hMap.get(VALUE);
-            if (value != null && value.contains(idField)) {
-                return getSource(jsonObject, process, key.toString());
+        if (idField != null) {
+            JSONObject jsonObject = getMappingJsonFile();
+            for (Object key : jsonObject.keySet()) {
+                LinkedHashMap hMap = (LinkedHashMap) jsonObject.get(key);
+                String value = (String) hMap.get(VALUE);
+                if (value != null && value.contains(idField)) {
+                    return getSource(jsonObject, process, key.toString());
+                }
             }
         }
         return null;
     }
 
-    public String getSource(JSONObject jsonObject, String process, String field) {
+    private String getSource(JSONObject jsonObject, String process, String field) {
         String source = null;
         Object obj = field == null ? jsonObject.get(PROVIDER) : getField(jsonObject, field);
         if (obj != null && obj instanceof ArrayList) {
