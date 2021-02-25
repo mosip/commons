@@ -1,6 +1,6 @@
 -- -------------------------------------------------------------------------------------------------
 -- Database Name: mosip_audit
--- Release Version 	: 1.1.5
+-- Release Version 	: 1.1.5-SNAPSHOT
 -- Purpose    		: Database Alter scripts for the release for Audit DB.       
 -- Create By   		: Sadanandegowda DM
 -- Created Date		: Sep-2020
