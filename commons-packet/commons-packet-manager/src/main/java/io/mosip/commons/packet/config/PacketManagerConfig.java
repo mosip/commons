@@ -29,7 +29,7 @@ import java.util.Set;
 @EnableCaching
 @ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = {
 		"io.mosip.kernel.cbeffutil.impl.CbeffImpl"}), basePackages = {"io.mosip.commons.packet.*", "io.mosip.commons.khazana.*",
-        "io.mosip.kernel.cbeffutil.*", "io.mosip.kernel.auth.*"})
+        "io.mosip.kernel.cbeffutil.*", "io.mosip.kernel.auth.*","io.mosip.kernel.idobjectvalidator.*"})
 @Import({OfflineConfig.class})
 public class PacketManagerConfig {
 
