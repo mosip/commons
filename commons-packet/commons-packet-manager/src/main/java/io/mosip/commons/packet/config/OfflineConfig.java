@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ConditionalOnProperty(value = "objectstore.crypto.name", havingValue = "OfflinePacketCryptoServiceImpl")
 @ComponentScan(basePackages = {"io.mosip.kernel.cryptomanager.*", "io.mosip.kernel.signature.*",
         "io.mosip.kernel.keymanagerservice.*", "io.mosip.kernel.keymanager.*", "io.mosip.kernel.core.*",
-        "io.mosip.kernel.keygenerator.*", "io.mosip.kernel.crypto.*", "io.mosip.kernel.clientcrypto.*"})
+        "io.mosip.kernel.keygenerator.*", "io.mosip.kernel.crypto.*", "io.mosip.kernel.clientcrypto.*","io.mosip.kernel.idobjectvalidator.*"})
 @EnableJpaRepositories(basePackages = {"io.mosip.kernel.keymanagerservice.repository.*"})
 public class OfflineConfig {
 
