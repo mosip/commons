@@ -90,6 +90,9 @@ public class PacketReaderServiceTest {
         val.put("value", "individualBiometrics");
         tempMap.put("individualBiometrics", val);
         jsonObject.put("identity", tempMap);
+        jsonObject.put("documents", tempMap);
+        jsonObject.put("metaInfo", tempMap);
+        jsonObject.put("audits", tempMap);
         Mockito.when(objectMapper.readValue(anyString(), any(Class.class))).thenReturn(jsonObject);
 
         ObjectDto objectDto = new ObjectDto("REGISTRATION_CLIENT", "NEW", id + "_id", new Date());

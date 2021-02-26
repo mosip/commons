@@ -8,7 +8,7 @@
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
--- 
+-- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
 -- ------------------------------------------------------------------------------------------
 -- object: regdevice.reg_device_type | type: TABLE --
 -- DROP TABLE IF EXISTS regdevice.reg_device_type CASCADE;
@@ -21,7 +21,7 @@ CREATE TABLE regdevice.reg_device_type(
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
 	upd_dtimes timestamp,
-	is_deleted boolean,
+	is_deleted boolean NOT NULL DEFAULT FALSE,
 	del_dtimes timestamp,
 	CONSTRAINT pk_rdtyp_code PRIMARY KEY (code)
 
