@@ -18,4 +18,9 @@ public class WebSubClientConstants {
 	public static final String HUB_LEASE_SECONDS = "hub.lease_seconds";
 	public static final String HUB_CHALLENGE = "hub.challenge";
 	public static final String HUB_AUTHENTICATED_CONTENT_HEADER = "x-hub-signature";
+	public static final String SUBSCRIBER_SIGNATURE_HEADER = "X-Subscriber-Signature";
+	public static final String TOPIC = "topic";
+	public static final String CALLBACK = "callback";
+	public static final String TIMESTAMP = "timestamp";
+	public static final String MESSAGECOUNT = "messageCount";
 }
