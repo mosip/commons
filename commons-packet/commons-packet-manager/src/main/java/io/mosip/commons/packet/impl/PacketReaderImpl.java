@@ -98,7 +98,7 @@ public class PacketReaderImpl implements IPacketReader {
 	@Override
 	public boolean validatePacket(String id, String source, String process) {
 		try {
-			return packetValidator.validate(id, source, process, getAll(id, source, process));
+			return packetValidator.validate(id, source, process);
 		} catch (BaseCheckedException | IOException | NoSuchAlgorithmException e) {
 			LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
 					"Packet Validation exception : " + ExceptionUtils.getStackTrace(e));
