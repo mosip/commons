@@ -211,7 +211,7 @@ public class PacketWriter {
         return provider;
     }
 
-	@CacheEvict(value = "tags", key = "#tagDto.id")
+	@CacheEvict(value = "tags", key = "{#tagDto.id}")
 	public TagResponseDto addTags(TagDto tagDto) {
 		TagResponseDto tagResponseDto = new TagResponseDto();
 		Map<String, String> tags = packetKeeper.addTags(tagDto);
@@ -221,7 +221,7 @@ public class PacketWriter {
 
 	}
 
-	@CacheEvict(value = "tags", key = "#tagDto.id")
+	@CacheEvict(value = "tags", key = "{#tagDto.id}")
 	public TagResponseDto updateTags(TagDto tagDto) {
 		TagResponseDto tagResponseDto = new TagResponseDto();
 		Map<String, String> tags = packetKeeper.updateTags(tagDto);
