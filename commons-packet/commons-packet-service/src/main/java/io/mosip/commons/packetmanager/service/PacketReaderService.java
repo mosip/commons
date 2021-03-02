@@ -6,9 +6,11 @@ import io.mosip.commons.khazana.dto.ObjectDto;
 import io.mosip.commons.packet.dto.TagResponseDto;
 import io.mosip.commons.packet.facade.PacketReader;
 import io.mosip.commons.packet.util.PacketManagerLogger;
+import io.mosip.commons.packetmanager.constant.DefaultStrategy;
 import io.mosip.commons.packetmanager.dto.BiometricsDto;
 import io.mosip.commons.packetmanager.dto.ContainerInfoDto;
 import io.mosip.commons.packetmanager.dto.InfoResponseDto;
+import io.mosip.commons.packetmanager.exception.SourceNotPresentException;
 import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
@@ -24,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -38,13 +41,28 @@ public class PacketReaderService {
     private static final String VALUE = "value";
     private static final String INDIVIDUAL_BIOMETRICS = "individualBiometrics";
     private static final String IDENTITY = "identity";
+    private static final String DOCUMENTS = "documents";
+    public static final String META_INFO = "metaInfo";
+    public static final String AUDITS = "audits";
+    private static final String SOURCE = "source";
+    private static final String PROCESS = "process";
+    private static final String PROVIDER = "provider";
     private String key = null;
+    private static final String sourceInitial = "source:";
+    private static final String processInitial = "process:";
+    private JSONObject mappingJson = null;
 
     @Value("${config.server.file.storage.uri}")
     private String configServerUrl;
 
     @Value("${registration.processor.identityjson}")
     private String mappingjsonFileName;
+
+    @Value("${packetmanager.default.read.strategy}")
+    private String defaultStrategy;
+
+    @Value("${packetmanager.default.priority}")
+    private String defaultPriority;
 
     @Autowired
     private PacketReader packetReader;
@@ -93,19 +111,19 @@ public class PacketReaderService {
                         }
                     }
 
-                    // get tags
-                    TagResponseDto tagResponse = packetReader.getTags(id, null);
-
                     containerInfo.setDemographics(demographics);
                     containerInfo.setBiometrics(biometrics);
-                    containerInfo.setTags(tagResponse != null && tagResponse.getTags() != null ? tagResponse.getTags() : null);
                     containerInfoDtos.add(containerInfo);
                 }
             }
+            // get tags
+            TagResponseDto tagResponse = packetReader.getTags(id, null);
+
             InfoResponseDto infoResponseDto = new InfoResponseDto();
             infoResponseDto.setApplicationId(id);
             infoResponseDto.setPacketId(id);
             infoResponseDto.setInfo(containerInfoDtos);
+            infoResponseDto.setTags(tagResponse != null && tagResponse.getTags() != null ? tagResponse.getTags() : null);
             return infoResponseDto;
         } catch (Exception e) {
             LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, ExceptionUtils.getStackTrace(e));
@@ -116,14 +134,128 @@ public class PacketReaderService {
     private String getKey() throws IOException {
         if (key != null)
             return key;
-        String mappingJsonString = restTemplate.getForObject(configServerUrl + "/" + mappingjsonFileName, String.class);
-        JSONObject jsonObject = objectMapper.readValue(mappingJsonString, JSONObject.class);
+        JSONObject jsonObject = getMappingJsonFile();
         if(jsonObject == null)
             return null;
-        LinkedHashMap<String, Object> identity = (LinkedHashMap) jsonObject.get(IDENTITY);
-        LinkedHashMap<String, String> individualBio = (LinkedHashMap) identity.get(INDIVIDUAL_BIOMETRICS);
+        LinkedHashMap<String, String> individualBio = (LinkedHashMap) jsonObject.get(INDIVIDUAL_BIOMETRICS);
         key = individualBio.get(VALUE);
         return key;
+    }
+
+
+    public String getSource(String id, String source, String process) {
+        if (StringUtils.isEmpty(source)) {
+            try {
+                if (defaultStrategy.equalsIgnoreCase(DefaultStrategy.DEFAULT_PRIORITY.getValue())) {
+                    source = searchInMappingJson(id, process);
+                    if (source == null)
+                        source = getDefaultSource(process);
+                } else {
+                    throw new SourceNotPresentException();
+                }
+            } catch (Exception e) {
+                throw new SourceNotPresentException(e);
+            }
+
+        }
+        return source;
+    }
+
+    private String getDefaultSource(String process) {
+        if (org.apache.commons.lang.StringUtils.isNotEmpty(defaultPriority)) {
+            String[] val = defaultPriority.split(",");
+            if (val != null && val.length > 0) {
+                for (String value : val) {
+                    String[] str = value.split("/");
+                    if (str != null && str.length > 0 && str[0].startsWith(sourceInitial)) {
+                        String sourceStr = str[0].substring(sourceInitial.length());
+                        String processStr = str[1].substring(processInitial.length());
+                        String[] processes = processStr.split("\\|");
+                        if (Arrays.stream(processes).filter(p -> p.equalsIgnoreCase(process)).findAny().isPresent())
+                            return sourceStr;
+                    }
+                }
+            }
+        } else
+            throw new SourceNotPresentException();
+        return null;
+    }
+
+    public String getSourceFromIdField(String process, String idField) throws IOException {
+        JSONObject jsonObject = getMappingJsonFile();
+        for (Object key : jsonObject.keySet()) {
+            LinkedHashMap hMap = (LinkedHashMap) jsonObject.get(key);
+            String value = (String) hMap.get(VALUE);
+            if (value != null && value.contains(idField)) {
+                return getSource(jsonObject, process, key.toString());
+            }
+        }
+        return null;
+    }
+
+    public String searchInMappingJson(String idField, String process) throws IOException {
+        if (idField != null) {
+            JSONObject jsonObject = getMappingJsonFile();
+            for (Object key : jsonObject.keySet()) {
+                LinkedHashMap hMap = (LinkedHashMap) jsonObject.get(key);
+                String value = (String) hMap.get(VALUE);
+                if (value != null && value.contains(idField)) {
+                    return getSource(jsonObject, process, key.toString());
+                }
+            }
+        }
+        return null;
+    }
+
+    private String getSource(JSONObject jsonObject, String process, String field) {
+        String source = null;
+        Object obj = field == null ? jsonObject.get(PROVIDER) : getField(jsonObject, field);
+        if (obj != null && obj instanceof ArrayList) {
+            List<String> providerList = (List) obj;
+            for (String value : providerList) {
+                String[] values = value.split(",");
+                for (String provider : values) {
+                    if (provider != null) {
+                        if (provider.startsWith(PROCESS) && provider.contains(process)) {
+                            for (String val : values) {
+                                if (val.startsWith(SOURCE)) {
+                                    return val.replace(SOURCE + ":", "").trim();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return source;
+    }
+
+    private Object getField(JSONObject jsonObject, String field) {
+        LinkedHashMap lm = (LinkedHashMap) jsonObject.get(field);
+        return lm.get(PROVIDER);
+    }
+
+    private static JSONObject getJSONObject(JSONObject jsonObject, Object key) {
+        if(jsonObject == null)
+            return null;
+        LinkedHashMap identity = (LinkedHashMap) jsonObject.get(key);
+        return identity != null ? new JSONObject(identity) : null;
+    }
+
+    private JSONObject getMappingJsonFile() throws IOException {
+        if (mappingJson != null)
+            return mappingJson;
+
+        String mappingJsonString = restTemplate.getForObject(configServerUrl + "/" + mappingjsonFileName, String.class);
+        JSONObject jsonObject = objectMapper.readValue(mappingJsonString, JSONObject.class);
+        LinkedHashMap combinedMap = new LinkedHashMap();
+        combinedMap.putAll((Map) jsonObject.get(IDENTITY));
+        combinedMap.putAll((Map) jsonObject.get(DOCUMENTS));
+        combinedMap.put(META_INFO, jsonObject.get(META_INFO));
+        combinedMap.put(AUDITS, jsonObject.get(AUDITS));
+        mappingJson = new JSONObject(combinedMap);
+        return mappingJson;
     }
 
 }

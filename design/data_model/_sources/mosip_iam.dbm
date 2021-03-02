@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="0,0" last-zoom="1"
+<dbmodel pgmodeler-ver="0.9.3" use-changelog="false" last-position="0,0" last-zoom="1" max-obj-count="28"
 	 default-schema="public" default-owner="postgres">
 <role name="sysadmin"
       superuser="true"
@@ -46,14 +46,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<comment><![CDATA[Database to store all Identity and Access management data, look-up data, configuration data, metadata...etc.]]></comment>
 </database>
 
-<schema name="public" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
+<schema name="public" layer="0" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
 </schema>
 
-<schema name="iam" rect-visible="true" fill-color="#83af1f">
+<schema name="iam" layer="0" rect-visible="true" fill-color="#83af1f">
 	<role name="sysadmin"/>
 </schema>
 
-<table name="role_list">
+<table name="role_list" layer="0" collapse-mode="2" max-obj-count="12" z-value="0">
 	<schema name="iam"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Role List : List of roles defined within the system. These roles are used for various processes like data access, authentication methods, authorization, etc.]]></comment>
@@ -90,7 +90,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -103,7 +103,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="user_detail">
+<table name="user_detail" layer="0" collapse-mode="2" max-obj-count="20" z-value="0">
 	<schema name="iam"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[User Detail : List of applicatgion users in the system, who can perform UIN registration functions as per roles assigned.]]></comment>
@@ -168,7 +168,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -181,11 +181,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="user_detail_h">
+<table name="user_detail_h" layer="0" collapse-mode="2" max-obj-count="21" z-value="0">
 	<schema name="iam"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[User Detail History : This to track changes to iam record whenever there is an INSERT/UPDATE/DELETE ( soft delete ), Effective DateTimestamp is used for identifying latest or point in time information. Refer iam.user_detail table description for details.]]></comment>
-	<position x="400" y="420"/>
+	<position x="400" y="580"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="256"/>
 		<comment><![CDATA[User ID : Unique ID generated / assigned for a user]]></comment>
@@ -250,7 +250,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -263,7 +263,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="user_pwd">
+<table name="user_pwd" layer="0" collapse-mode="2" max-obj-count="14" z-value="0">
 	<schema name="iam"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[User Password : Stores encripted password of users in iam.user_details table. ]]></comment>
@@ -308,7 +308,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -321,11 +321,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="user_role">
+<table name="user_role" layer="0" collapse-mode="2" max-obj-count="12" z-value="0">
 	<schema name="iam"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[User Role : List of user roles as per the security and access rights, that will be assigned to specific users.]]></comment>
-	<position x="820" y="80"/>
+	<position x="820" y="40"/>
 	<column name="usr_id" not-null="true">
 		<type name="character varying" length="256"/>
 		<comment><![CDATA[User ID : registration center id refers to iam.user_detail.id]]></comment>
@@ -358,7 +358,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -371,11 +371,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="oauth_access_token">
+<table name="oauth_access_token" layer="0" collapse-mode="2" max-obj-count="13" z-value="0">
 	<schema name="iam"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Authentication Access Token : This table is used to store the auth token, refresh token and expiration time for JWT token based validation.]]></comment>
-	<position x="60" y="400"/>
+	<position x="20" y="500"/>
 	<column name="auth_token">
 		<type name="character varying" length="1024"/>
 		<comment><![CDATA[Authentication Token : JWT Token for user logged in]]></comment>
@@ -412,7 +412,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -443,19 +443,19 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
-<relationship name="rel_user_pwd_user_detail" type="relfk"
+<relationship name="rel_user_pwd_user_detail" type="relfk" layer="0"
 	 custom-color="#5aa578"
 	 src-table="iam.user_pwd"
 	 dst-table="iam.user_detail" reference-fk="fk_usrpwd_usrdtl"
 	 src-required="false" dst-required="false"/>
 
-<relationship name="rel_user_role_role_list" type="relfk"
+<relationship name="rel_user_role_role_list" type="relfk" layer="0"
 	 custom-color="#4b3e56"
 	 src-table="iam.user_role"
 	 dst-table="iam.role_list" reference-fk="fk_usrrol_rolelst"
 	 src-required="false" dst-required="false"/>
 
-<relationship name="rel_user_role_user_detail" type="relfk"
+<relationship name="rel_user_role_user_detail" type="relfk" layer="0"
 	 custom-color="#9ac721"
 	 src-table="iam.user_role"
 	 dst-table="iam.user_detail" reference-fk="fk_usrrol_usrdtl"
