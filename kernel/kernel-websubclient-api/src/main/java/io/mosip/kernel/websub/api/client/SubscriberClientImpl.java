@@ -172,11 +172,14 @@ public class SubscriberClientImpl implements SubscriptionClient<SubscriptionChan
 	public FailedContentResponse getFailedContent(FailedContentRequest failedContentRequest) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set(WebSubClientConstants.SUBSCRIBER_SIGNATURE_HEADER, getHmac256(failedContentRequest.getTopic()+failedContentRequest.getCallbackURL()+failedContentRequest.getTimestamp(),failedContentRequest.getSecret())); 
-
+		if(failedContentRequest.getMessageCount()>0) {
+		headers.set(WebSubClientConstants.SUBSCRIBER_SIGNATURE_HEADER, getHmac256(failedContentRequest.getTopic()+failedContentRequest.getCallbackURL()+failedContentRequest.getTimestamp()+String.valueOf(failedContentRequest.getMessageCount()),failedContentRequest.getSecret())); 
+		}else {
+			headers.set(WebSubClientConstants.SUBSCRIBER_SIGNATURE_HEADER, getHmac256(failedContentRequest.getTopic()+failedContentRequest.getCallbackURL()+failedContentRequest.getTimestamp(),failedContentRequest.getSecret()));  	
+		}
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(failedContentRequest.getHubURL())
 		        .queryParam("topic", failedContentRequest.getTopic())
-		        .queryParam("callback", failedContentRequest.getCallbackURL())
+		        .queryParam("callback", Base64.encodeBase64URLSafeString(failedContentRequest.getCallbackURL().getBytes()))
 		        .queryParam("timestamp", failedContentRequest.getTimestamp())
 		        .queryParam("messageCount", failedContentRequest.getMessageCount()==0?null:failedContentRequest.getMessageCount());
 
