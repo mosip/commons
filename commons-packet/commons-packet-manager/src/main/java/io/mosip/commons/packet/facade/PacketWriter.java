@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.dto.PacketInfo;
+import io.mosip.commons.packet.dto.TagDeleteResponseDto;
 import io.mosip.commons.packet.dto.TagDto;
 import io.mosip.commons.packet.dto.TagResponseDto;
 import io.mosip.commons.packet.dto.packet.PacketDto;
@@ -226,6 +227,15 @@ public class PacketWriter {
 		TagResponseDto tagResponseDto = new TagResponseDto();
 		Map<String, String> tags = packetKeeper.updateTags(tagDto);
 		tagResponseDto.setTags(tags);
+		return tagResponseDto;
+
+	}
+	
+	@CacheEvict(value = "tags", key = "{#tagDto.id}")
+	public TagDeleteResponseDto deleteTags(TagDto tagDto) {
+		TagDeleteResponseDto tagResponseDto = new TagDeleteResponseDto();
+		boolean isDeleted = packetKeeper.deleteTags(tagDto);
+		tagResponseDto.setDeleted(isDeleted);
 		return tagResponseDto;
 
 	}

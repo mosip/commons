@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.commons.packet.dto.PacketInfo;
+import io.mosip.commons.packet.dto.TagDeleteResponseDto;
 import io.mosip.commons.packet.dto.TagDto;
 import io.mosip.commons.packet.dto.TagResponseDto;
 import io.mosip.commons.packet.dto.packet.PacketDto;
@@ -66,6 +67,16 @@ public class PacketWriterController {
 
 		TagResponseDto tagResponse = packetWriter.updateTags(tagRequest.getRequest());
 		ResponseWrapper<TagResponseDto> response = getResponseWrapper();
+		response.setResponse(tagResponse);
+		return response;
+	}
+	@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
+	@ResponseFilter
+	@PostMapping(path = "/deleteTag", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseWrapper<TagDeleteResponseDto> deleteTags(@RequestBody(required = true) RequestWrapper<TagDto> tagRequest) {
+
+		TagDeleteResponseDto tagResponse = packetWriter.deleteTags(tagRequest.getRequest());
+		ResponseWrapper<TagDeleteResponseDto> response = getResponseWrapper();
 		response.setResponse(tagResponse);
 		return response;
 	}

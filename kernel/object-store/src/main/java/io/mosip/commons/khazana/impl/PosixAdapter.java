@@ -363,4 +363,25 @@ public class PosixAdapter implements ObjectStoreAdapter {
     public List<ObjectDto> getAllObjects(String account, String container) {
         return null;
     }
+
+	@Override
+	public boolean deleteTags(String account, String container, Map<String, String> tags) {
+		try {
+			JSONObject jsonObject = containterRemoveTagging(account, container, tags);
+			createContainerWithTagging(account, container, new ByteArrayInputStream(jsonObject.toString().getBytes()));
+			} catch (Exception e) {
+				LOGGER.error("exception occured to delete tags for id - " + container, e);
+			}
+		
+		return true;
+	}
+
+	private JSONObject containterRemoveTagging(String account, String container, Map<String, String> tags) {
+	
+		Map<String, String> existingTags = getTags(account, container);
+		tags.entrySet().stream()
+		.forEach(m -> existingTags.remove(m.getKey()));
+		JSONObject jsonObject = new JSONObject(existingTags);
+		return jsonObject;
+	}
 }
