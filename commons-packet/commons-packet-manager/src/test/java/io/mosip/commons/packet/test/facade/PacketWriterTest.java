@@ -2,7 +2,9 @@ package io.mosip.commons.packet.test.facade;
 
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.dto.PacketInfo;
+import io.mosip.commons.packet.dto.TagDeleteResponseDto;
 import io.mosip.commons.packet.dto.TagDto;
+import io.mosip.commons.packet.dto.TagRequestDto;
 import io.mosip.commons.packet.dto.TagResponseDto;
 import io.mosip.commons.packet.dto.packet.PacketDto;
 import io.mosip.commons.packet.exception.NoAvailableProviderException;
@@ -282,4 +284,18 @@ public class PacketWriterTest {
 
         assertEquals(tagResponseDto.getTags(),tags); 
     }
+    @Test
+    public void testDeleteTags() {
+    	TagRequestDto tagDto=new TagRequestDto();
+    	tagDto.setId(id);
+    	List<String> tags = new ArrayList<>();
+    	tags.add("test");
+    	tagDto.setTagNames(tags);
+    	Mockito.when(packetKeeper.deleteTags(any())).thenReturn(true);
+
+    	TagDeleteResponseDto tagResponseDto= packetWriter.deleteTags(tagDto);
+
+        assertTrue(tagResponseDto.isDeleted()); 
+    }
+    
 }

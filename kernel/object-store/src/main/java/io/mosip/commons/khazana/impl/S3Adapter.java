@@ -338,4 +338,28 @@ public class S3Adapter implements ObjectStoreAdapter {
 
 	}
 
+	@Override
+	public boolean deleteTags(String account, String container, List<String> tags) {
+		try {
+
+			AmazonS3 connection = getConnection(container);
+			if (!connection.doesBucketExistV2(container))
+	            connection.createBucket(container);
+			Map<String, String> existingMetadata = getTags(account, container);
+			tags.stream()
+					.forEach(m -> existingMetadata.remove(m));
+			TagSet tagSet = new TagSet(existingMetadata);
+			BucketTaggingConfiguration bucketTaggingConfiguration = new BucketTaggingConfiguration();
+			bucketTaggingConfiguration.withTagSets(tagSet);
+			connection.setBucketTaggingConfiguration(container, bucketTaggingConfiguration);
+
+		} catch (Exception e) {
+			LOGGER.error(SESSIONID, REGISTRATIONID, "Exception occured while deleteTags for : " + container,
+					ExceptionUtils.getStackTrace(e));
+			throw new ObjectStoreAdapterException(OBJECT_STORE_NOT_ACCESSIBLE.getErrorCode(),
+					OBJECT_STORE_NOT_ACCESSIBLE.getErrorMessage(), e);
+		}
+		return true;
+	}
+
 }

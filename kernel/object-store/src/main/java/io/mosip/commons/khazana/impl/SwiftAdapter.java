@@ -203,4 +203,19 @@ public class SwiftAdapter implements ObjectStoreAdapter {
     public List<ObjectDto> getAllObjects(String account, String container) {
         return null;
     }
+
+	@Override
+	public boolean deleteTags(String account, String containerName, List<String> tags) {
+		Map<String, Object> tagMap = new HashMap<>();
+		Container container = getConnection(account).getContainer(containerName);
+		 if (!container.exists())
+	            container = getConnection(account).getContainer(containerName).create();
+		Map<String, String> existingTags = getTags(account, containerName);
+		tags.forEach(m -> existingTags.remove(m));
+		existingTags.entrySet().forEach(m -> tagMap.put(m.getKey(), m.getValue()));
+		container.setMetadata(tagMap);
+		container.saveMetadata();
+
+		return true;
+	}
 }
