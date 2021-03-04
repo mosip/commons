@@ -339,15 +339,15 @@ public class S3Adapter implements ObjectStoreAdapter {
 	}
 
 	@Override
-	public boolean deleteTags(String account, String container, Map<String, String> tags) {
+	public boolean deleteTags(String account, String container, List<String> tags) {
 		try {
 
 			AmazonS3 connection = getConnection(container);
 			if (!connection.doesBucketExistV2(container))
 	            connection.createBucket(container);
 			Map<String, String> existingMetadata = getTags(account, container);
-			tags.entrySet().stream()
-					.forEach(m -> existingMetadata.remove(m.getKey()));
+			tags.stream()
+					.forEach(m -> existingMetadata.remove(m));
 			TagSet tagSet = new TagSet(existingMetadata);
 			BucketTaggingConfiguration bucketTaggingConfiguration = new BucketTaggingConfiguration();
 			bucketTaggingConfiguration.withTagSets(tagSet);

@@ -205,13 +205,13 @@ public class SwiftAdapter implements ObjectStoreAdapter {
     }
 
 	@Override
-	public boolean deleteTags(String account, String containerName, Map<String, String> tags) {
+	public boolean deleteTags(String account, String containerName, List<String> tags) {
 		Map<String, Object> tagMap = new HashMap<>();
 		Container container = getConnection(account).getContainer(containerName);
 		 if (!container.exists())
 	            container = getConnection(account).getContainer(containerName).create();
 		Map<String, String> existingTags = getTags(account, containerName);
-		tags.entrySet().forEach(m -> existingTags.remove(m.getKey()));
+		tags.forEach(m -> existingTags.remove(m));
 		existingTags.entrySet().forEach(m -> tagMap.put(m.getKey(), m.getValue()));
 		container.setMetadata(tagMap);
 		container.saveMetadata();

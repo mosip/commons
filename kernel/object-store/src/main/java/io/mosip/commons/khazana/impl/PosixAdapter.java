@@ -365,7 +365,7 @@ public class PosixAdapter implements ObjectStoreAdapter {
     }
 
 	@Override
-	public boolean deleteTags(String account, String container, Map<String, String> tags) {
+	public boolean deleteTags(String account, String container, List<String> tags) {
 		try {
 			JSONObject jsonObject = containterRemoveTagging(account, container, tags);
 			createContainerWithTagging(account, container, new ByteArrayInputStream(jsonObject.toString().getBytes()));
@@ -376,11 +376,11 @@ public class PosixAdapter implements ObjectStoreAdapter {
 		return true;
 	}
 
-	private JSONObject containterRemoveTagging(String account, String container, Map<String, String> tags) {
+	private JSONObject containterRemoveTagging(String account, String container,List<String> tags) {
 	
 		Map<String, String> existingTags = getTags(account, container);
-		tags.entrySet().stream()
-		.forEach(m -> existingTags.remove(m.getKey()));
+		tags.stream()
+		.forEach(m -> existingTags.remove(m));
 		JSONObject jsonObject = new JSONObject(existingTags);
 		return jsonObject;
 	}

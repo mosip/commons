@@ -21,6 +21,7 @@ import io.mosip.commons.packet.constants.PacketUtilityErrorCodes;
 import io.mosip.commons.packet.dto.Packet;
 import io.mosip.commons.packet.dto.PacketInfo;
 import io.mosip.commons.packet.dto.TagDto;
+import io.mosip.commons.packet.dto.TagRequestDto;
 import io.mosip.commons.packet.exception.CryptoException;
 import io.mosip.commons.packet.exception.GetTagException;
 import io.mosip.commons.packet.exception.ObjectStoreAdapterException;
@@ -355,14 +356,14 @@ public class PacketKeeper {
         List<ObjectDto> allObjects = getAdapter().getAllObjects(PACKET_MANAGER_ACCOUNT, id);
         return allObjects;
     }
-    public boolean deleteTags(TagDto tagDto) {
+    public boolean deleteTags(TagRequestDto tagRequestDto) {
 		try {
 
-			boolean isDeleted = getAdapter().deleteTags(PACKET_MANAGER_ACCOUNT, tagDto.getId(), tagDto.getTags());
+			boolean isDeleted = getAdapter().deleteTags(PACKET_MANAGER_ACCOUNT, tagRequestDto.getId(), tagRequestDto.getTagNames());
 			return isDeleted;
 
 		} catch (Exception e) {
-			LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, tagDto.getId(),
+			LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, tagRequestDto.getId(),
 					ExceptionUtils.getStackTrace(e));
 			if (e instanceof BaseCheckedException) {
 				BaseCheckedException ex = (BaseCheckedException) e;

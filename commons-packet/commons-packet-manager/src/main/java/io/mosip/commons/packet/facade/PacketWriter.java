@@ -14,6 +14,7 @@ import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.dto.PacketInfo;
 import io.mosip.commons.packet.dto.TagDeleteResponseDto;
 import io.mosip.commons.packet.dto.TagDto;
+import io.mosip.commons.packet.dto.TagRequestDto;
 import io.mosip.commons.packet.dto.TagResponseDto;
 import io.mosip.commons.packet.dto.packet.PacketDto;
 import io.mosip.commons.packet.exception.NoAvailableProviderException;
@@ -232,7 +233,7 @@ public class PacketWriter {
 	}
 	
 	@CacheEvict(value = "tags", key = "{#tagDto.id}")
-	public TagDeleteResponseDto deleteTags(TagDto tagDto) {
+	public TagDeleteResponseDto deleteTags(TagRequestDto tagDto) {
 		TagDeleteResponseDto tagResponseDto = new TagDeleteResponseDto();
 		boolean isDeleted = packetKeeper.deleteTags(tagDto);
 		tagResponseDto.setDeleted(isDeleted);
