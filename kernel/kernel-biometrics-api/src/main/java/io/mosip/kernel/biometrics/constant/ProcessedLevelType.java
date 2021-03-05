@@ -8,7 +8,9 @@
 package io.mosip.kernel.biometrics.constant;
 
 
-public enum ProcessedLevelType {
+import java.io.Serializable;
+
+public enum ProcessedLevelType implements Serializable {
 
 	RAW("Raw"),
 	INTERMEDIATE("Intermediate"),

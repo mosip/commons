@@ -6,13 +6,16 @@ package io.mosip.kernel.biometrics.entities;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
+
+import java.io.Serializable;
+
 /**
  * @author Ramadurai Pandian
  *
  */
 @Data
 @JsonDeserialize(builder = SBInfo.SBInfoBuilder.class)
-public class SBInfo {
+public class SBInfo implements Serializable {
 
 	private RegistryIDType format;
 

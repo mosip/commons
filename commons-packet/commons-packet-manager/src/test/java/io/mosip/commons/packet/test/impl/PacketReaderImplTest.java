@@ -210,7 +210,7 @@ public class PacketReaderImplTest {
 
     @Test
     public void validatePacketTest() throws JsonProcessingException, PacketKeeperException, InvalidIdSchemaException, IdObjectValidationFailedException, IdObjectIOException, IOException, NoSuchAlgorithmException {
-        when(packetValidator.validate(anyString(), anyString(), anyString(), anyMap())).thenReturn(true);
+        when(packetValidator.validate(anyString(), anyString(), anyString())).thenReturn(true);
         boolean result = iPacketReader.validatePacket("id", "source", "process");
 
         assertTrue("Should be true", result);
@@ -218,7 +218,7 @@ public class PacketReaderImplTest {
 
     @Test(expected = PacketValidationFailureException.class)
     public void validatePacketExceptionTest() throws JsonProcessingException, PacketKeeperException, InvalidIdSchemaException, IdObjectValidationFailedException, IdObjectIOException, IOException, NoSuchAlgorithmException {
-        when(packetValidator.validate(anyString(), anyString(), anyString(), anyMap())).thenThrow(new IOException("exception"));
+        when(packetValidator.validate(anyString(), anyString(), anyString())).thenThrow(new IOException("exception"));
         boolean result = iPacketReader.validatePacket("id",  "source","process");
 
     }
