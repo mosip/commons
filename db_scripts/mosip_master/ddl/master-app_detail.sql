@@ -24,7 +24,7 @@ CREATE TABLE master.app_detail(
 	upd_by character varying(256),
 	upd_dtimes timestamp,
 	is_deleted boolean NOT NULL DEFAULT FALSE,
-	del_dtimes timestamp NOT NULL DEFAULT FALSE,
+	del_dtimes timestamp,
 	CONSTRAINT pk_appdtl_id PRIMARY KEY (id,lang_code)
 
 );
