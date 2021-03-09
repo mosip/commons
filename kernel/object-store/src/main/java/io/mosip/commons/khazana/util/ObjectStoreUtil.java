@@ -17,4 +17,17 @@ public class ObjectStoreUtil {
 
         return finalObjectName;
     }
+    public static String getName(String Container,String source, String process, String objectName) {
+        String finalObjectName = "";
+        if (StringUtils.isNotEmpty(Container))
+            finalObjectName = Container + SEPARATOR;
+        if (StringUtils.isNotEmpty(source))
+            finalObjectName = finalObjectName + source + SEPARATOR;
+        if (StringUtils.isNotEmpty(process))
+            finalObjectName = finalObjectName + process + SEPARATOR;
+
+        finalObjectName = finalObjectName + objectName;
+
+        return finalObjectName;
+    }
 }
