@@ -134,10 +134,8 @@ ALTER TABLE master.machine_type ALTER COLUMN is_deleted SET DEFAULT FALSE;
 ALTER TABLE master.valid_document ALTER COLUMN is_deleted SET DEFAULT FALSE;
 ALTER TABLE master.app_authentication_method ALTER COLUMN is_deleted SET DEFAULT FALSE;
 ALTER TABLE master.registration_center ALTER COLUMN is_deleted SET DEFAULT FALSE;
-ALTER TABLE master.user_pwd ALTER COLUMN is_deleted SET DEFAULT FALSE;
 ALTER TABLE master.authentication_method ALTER COLUMN is_deleted SET DEFAULT FALSE;
 ALTER TABLE master.reg_center_type ALTER COLUMN is_deleted SET DEFAULT FALSE;
 ALTER TABLE master.user_detail ALTER COLUMN is_deleted SET DEFAULT FALSE;
-ALTER TABLE master.user_role ALTER COLUMN is_deleted SET DEFAULT FALSE;
 
 
