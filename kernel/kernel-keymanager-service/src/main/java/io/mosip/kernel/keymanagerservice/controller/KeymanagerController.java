@@ -195,7 +195,6 @@ import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.keymanagerservice.dto.CSRGenerateRequestDto;
 import io.mosip.kernel.keymanagerservice.dto.KeyPairGenerateRequestDto;
 import io.mosip.kernel.keymanagerservice.dto.KeyPairGenerateResponseDto;
-import io.mosip.kernel.keymanagerservice.dto.PublicKeyResponse;
 import io.mosip.kernel.keymanagerservice.dto.UploadCertificateRequestDto;
 import io.mosip.kernel.keymanagerservice.dto.UploadCertificateResponseDto;
 import io.mosip.kernel.keymanagerservice.service.KeymanagerService;
@@ -235,7 +234,7 @@ public class KeymanagerController {
 	 * @param keyPairGenRequestDto     {@link KeyPairGenerateRequestDto} request
 	 * @return {@link KeyPairGenerateResponseDto} instance
 	*/
-	@PreAuthorize("hasAnyRole('KEY_MAKER', 'INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','KEY_MAKER', 'INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@PostMapping(value = "/generateMasterKey/{objectType}")
 	public ResponseWrapper<KeyPairGenerateResponseDto> generateMasterKey(
@@ -254,7 +253,7 @@ public class KeymanagerController {
 	 * @param referenceId   Reference id of the application requesting Certificate. Blank in case of Master Key.
 	 * @return {@link KeyPairGenerateResponseDto} instance
 	*/
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@GetMapping(value = "/getCertificate")
 	public ResponseWrapper<KeyPairGenerateResponseDto> getCertificate(
@@ -272,7 +271,7 @@ public class KeymanagerController {
 	 * @param csrGenRequestDto     {@link CSRGenerateRequestDto} request
 	 * @return {@link KeyPairGenerateResponseDto} instance
 	*/
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@PostMapping(value = "/generateCSR")
 	public ResponseWrapper<KeyPairGenerateResponseDto> generateCSR(
@@ -289,7 +288,7 @@ public class KeymanagerController {
 	 * @param uploadCertRequestDto     {@link UploadCertificateRequestDto} request
 	 * @return {@link UploadCertificateResponseDto} instance
 	*/
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@PostMapping(value = "/uploadCertificate")
 	public ResponseWrapper<UploadCertificateResponseDto> uploadCertificate(
@@ -306,7 +305,7 @@ public class KeymanagerController {
 	 * @param uploadCertRequestDto     {@link UploadCertificateRequestDto} request
 	 * @return {@link UploadCertificateResponseDto} instance
 	*/
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@PostMapping(value = "/uploadOtherDomainCertificate")
 	public ResponseWrapper<UploadCertificateResponseDto> uploadOtherDomainCertificate(

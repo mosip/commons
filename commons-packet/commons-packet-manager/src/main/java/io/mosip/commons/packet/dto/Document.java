@@ -11,4 +11,5 @@ public class Document {
     private String value;
     private String type;
     private String format;
+    private String refNumber;
 }

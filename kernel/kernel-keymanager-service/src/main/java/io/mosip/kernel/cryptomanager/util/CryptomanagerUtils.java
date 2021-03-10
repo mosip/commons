@@ -180,11 +180,7 @@ public class CryptomanagerUtils {
 
 	public byte[] getCertificateThumbprint(Certificate cert) {
 		try {
-<<<<<<< HEAD
-            return DigestUtils.sha1(cert.getEncoded());
-=======
             return DigestUtils.sha256(cert.getEncoded());
->>>>>>> origin/1.1.3
 		} catch (CertificateEncodingException e) {
 			LOGGER.error(CryptomanagerConstant.SESSIONID, CryptomanagerConstant.ENCRYPT, "", 
 									"Error generating certificate thumbprint.");

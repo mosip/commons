@@ -30,17 +30,42 @@ ENV is_glowroot_env=${is_glowroot}
 # environment variable to pass artifactory url, at docker runtime
 ENV artifactory_url_env=${artifactory_url}
 
+# can be passed during Docker build as build time environment for github branch to pickup configuration from.
+ARG container_user=mosip
+
+# can be passed during Docker build as build time environment for github branch to pickup configuration from.
+ARG container_user_group=mosip
+
+# can be passed during Docker build as build time environment for github branch to pickup configuration from.
+ARG container_user_uid=1001
+
+# can be passed during Docker build as build time environment for github branch to pickup configuration from.
+ARG container_user_gid=1001
+
+# install packages and create user
+RUN apt-get -y update \
+&& apt-get install -y unzip \
+&& groupadd -g ${container_user_gid} ${container_user_group} \
+&& useradd -u ${container_user_uid} -g ${container_user_group} -s /bin/sh -m ${container_user}
+
+# set working directory for the user
+WORKDIR /home/${container_user}
+
 ADD ./target/*.jar /target/
 RUN find /target -name '*.jar' -executable -type f "-print0" | xargs "-0" cp -t / \
     && rm -rf /target \
-    && mv *.jar kernel-pridgenerator-service.jar 
+    && mv /*.jar /home/${container_user}/kernel-pridgenerator-service.jar
 
+# change permissions of file inside working dir
+RUN chown -R ${container_user}:${container_user} /home/${container_user}
+
+# select container user for all tasks
+USER ${container_user_uid}:${container_user_gid}
 
 EXPOSE 8100
 
 CMD if [ "$is_glowroot_env" = "present" ]; then \
     wget "${artifactory_url_env}"/artifactory/libs-release-local/io/mosip/testing/glowroot.zip ; \
-    apt-get update && apt-get install -y unzip ; \
     unzip glowroot.zip ; \
     rm -rf glowroot.zip ; \
     sed -i 's/<service_name>/kernel-pridgenerator-service/g' glowroot/glowroot.properties ; \

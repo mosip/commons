@@ -4,11 +4,7 @@
 	
 	<artifactId>kernel-biosdk-provider</artifactId>
 	<groupId>io.mosip.kernel</groupId>
-<<<<<<< HEAD
-	<version>1.1.2</version>
-=======
-	<version>1.1.3</version>
->>>>>>> origin/1.1.3
+	<version>1.1.4</version>
 	<name>kernel-biosdk-provider</name>
 	<description>Implementation of biosdk provider</description>
         <url>https://github.com/mosip/commons</url>
@@ -121,15 +117,9 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-<<<<<<< HEAD
-		<kernel.core.version>1.1.2</kernel.core.version>
-		<kernel.biometricsdk.version>1.1.2</kernel.biometricsdk.version>
-		<kernel.logger.logback.version>1.1.2</kernel.logger.logback.version>
-=======
-		<kernel.core.version>1.1.3</kernel.core.version>
-		<kernel.biometricsdk.version>1.1.3</kernel.biometricsdk.version>
-		<kernel.logger.logback.version>1.1.3</kernel.logger.logback.version>
->>>>>>> origin/1.1.3
+		<kernel.core.version>1.1.4</kernel.core.version>
+		<kernel.biometricsdk.version>1.1.4</kernel.biometricsdk.version>
+		<kernel.logger.logback.version>1.1.4</kernel.logger.logback.version>
 	</properties>
 	
 	<dependencies>
@@ -168,9 +158,6 @@
 		</dependency>
 		
 	</dependencies>
-<<<<<<< HEAD
-<build>
-=======
 <distributionManagement>
 		<snapshotRepository>
                         <id>ossrh</id>
@@ -182,7 +169,6 @@
                 </repository> 
         </distributionManagement> 
         <build>
->>>>>>> origin/1.1.3
           <plugins>
             <plugin>
               <artifactId>maven-deploy-plugin</artifactId>

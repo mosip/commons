@@ -91,20 +91,12 @@ public class CryptomanagerServiceImpl implements CryptomanagerService {
 			encryptedData = cryptoCore.symmetricEncrypt(secretKey, CryptoUtil.decodeBase64(cryptoRequestDto.getData()),
 					CryptoUtil.decodeBase64(CryptomanagerUtils.nullOrTrim(cryptoRequestDto.getAad())));
 		}
-<<<<<<< HEAD
-		Certificate certificate = cryptomanagerUtil.getCertificate(cryptoRequestDto);
-		PublicKey publicKey = certificate.getPublicKey();
-		final byte[] encryptedSymmetricKey = cryptoCore.asymmetricEncrypt(publicKey, secretKey.getEncoded());
-		//byte[] certThumbprint = cryptomanagerUtil.getCertificateThumbprint(certificate);
-		//byte[] concatedData = cryptomanagerUtil.concatCertThumbprint(certThumbprint, encryptedSymmetricKey);
-=======
 
 		Certificate certificate = cryptomanagerUtil.getCertificate(cryptoRequestDto);
 		PublicKey publicKey = certificate.getPublicKey();
 		final byte[] encryptedSymmetricKey = cryptoCore.asymmetricEncrypt(publicKey, secretKey.getEncoded());
 
 		Boolean prependThumbprint = cryptoRequestDto.getPrependThumbprint() == null ? false : cryptoRequestDto.getPrependThumbprint();
->>>>>>> origin/1.1.3
 		CryptomanagerResponseDto cryptoResponseDto = new CryptomanagerResponseDto();
 		if (prependThumbprint) {
 			byte[] certThumbprint = cryptomanagerUtil.getCertificateThumbprint(certificate);

@@ -18,14 +18,13 @@ import io.mosip.commons.packet.util.PacketManagerHelper;
 import io.mosip.commons.packet.util.PacketManagerLogger;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.core.exception.ExceptionUtils;
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.core.util.JsonUtils;
 import io.mosip.kernel.core.util.exception.JsonProcessingException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -33,6 +32,7 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -44,11 +44,7 @@ import java.util.zip.ZipOutputStream;
 @Component
 public class PacketWriterImpl implements IPacketWriter {
 
-    /*@Value("${mosip.kernel.packetmanager.cbeff_only_unique_tags:Y}")
-    private String uniqueTagsEnabled;
-    private static SecureRandom random = new SecureRandom(String.valueOf(5000).getBytes());*/
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(PacketWriterImpl.class);
+    private static final Logger LOGGER = PacketManagerLogger.getLogger(PacketWriterImpl.class);
     private static Map<String, String> categorySubpacketMapping = new HashMap<>();
     private static final String UNDERSCORE = "_";
     private static final String HASHSEQUENCE1 = "hashSequence1";
@@ -229,7 +225,7 @@ public class PacketWriterImpl implements IPacketWriter {
         } catch (JsonProcessingException e) {
             throw new PacketCreatorException(ErrorCode.OBJECT_TO_JSON_ERROR.getErrorCode(),
                     ErrorCode.BIR_TO_XML_ERROR.getErrorMessage().concat(ExceptionUtils.getStackTrace(e)));
-        } catch (IOException e) {
+        } catch (IOException | NoSuchAlgorithmException e) {
             throw new PacketCreatorException(ErrorCode.PKT_ZIP_ERROR.getErrorCode(),
                     ErrorCode.PKT_ZIP_ERROR.getErrorMessage().concat(ExceptionUtils.getStackTrace(e)));
         }
@@ -278,9 +274,8 @@ public class PacketWriterImpl implements IPacketWriter {
         hashSequences.get(sequenceType).addHashSource(name, bytes);
     }
 
-    //TODO - check if ACK files need to added ? if yes then add it in packet and also in hash sequence
     private void addOtherFilesToZip(boolean isDefault, ZipOutputStream zipOutputStream,
-                                    Map<String, HashSequenceMetaInfo> hashSequences, boolean offlineMode) throws JsonProcessingException, PacketCreatorException {
+                                    Map<String, HashSequenceMetaInfo> hashSequences, boolean offlineMode) throws JsonProcessingException, PacketCreatorException, IOException, NoSuchAlgorithmException {
 
         if (isDefault) {
             addOperationsBiometricsToZip(PacketManagerConstants.OFFICER,
@@ -309,7 +304,7 @@ public class PacketWriterImpl implements IPacketWriter {
     }
 
     private void addPacketDataHash(Map<String, HashSequenceMetaInfo> hashSequences,
-                                   ZipOutputStream zipOutputStream) throws PacketCreatorException {
+                                   ZipOutputStream zipOutputStream) throws PacketCreatorException, IOException, NoSuchAlgorithmException {
 
         LinkedList<String> sequence = new LinkedList<String>();
         List<HashSequenceMetaInfo> hashSequenceMetaInfos = new ArrayList<>();

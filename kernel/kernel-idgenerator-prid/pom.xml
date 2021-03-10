@@ -217,25 +217,14 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-<<<<<<< HEAD
-		<kernel.core.version>1.1.2</kernel.core.version>
-		<kernel.dataaccess-hibernate.version>1.1.2</kernel.dataaccess-hibernate.version>
-		<kernel.logger.version>1.1.2</kernel.logger.version>
-		<kernel.idvalidator-prid.version>1.1.2</kernel.idvalidator-prid.version>
-		<kernel.crypto-jce.version>1.1.2</kernel.crypto-jce.version>
+		<kernel.core.version>1.1.4</kernel.core.version>
+		<kernel.dataaccess-hibernate.version>1.1.4</kernel.dataaccess-hibernate.version>
+		<kernel.logger.version>1.1.4</kernel.logger.version>
+		<kernel.idvalidator-prid.version>1.1.4</kernel.idvalidator-prid.version>
+		<kernel.crypto-jce.version>1.1.4</kernel.crypto-jce.version>
 	</properties>
 	<artifactId>kernel-idgenerator-prid</artifactId>
-	<version>1.1.2</version>
-=======
-		<kernel.core.version>1.1.3</kernel.core.version>
-		<kernel.dataaccess-hibernate.version>1.1.3</kernel.dataaccess-hibernate.version>
-		<kernel.logger.version>1.1.3</kernel.logger.version>
-		<kernel.idvalidator-prid.version>1.1.3</kernel.idvalidator-prid.version>
-		<kernel.crypto-jce.version>1.1.3</kernel.crypto-jce.version>
-	</properties>
-	<artifactId>kernel-idgenerator-prid</artifactId>
-	<version>1.1.3</version>
->>>>>>> origin/1.1.3
+	<version>1.1.4</version>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
@@ -270,9 +259,6 @@
 		</dependency>
 	</dependencies>
 	
-<<<<<<< HEAD
-<build>
-=======
 <distributionManagement>
 		<snapshotRepository>
                         <id>ossrh</id>
@@ -284,7 +270,6 @@
                 </repository> 
         </distributionManagement> 
         <build>
->>>>>>> origin/1.1.3
 <resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -426,12 +411,7 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
-<<<<<<< HEAD
-		<name>MOSIP commons</name>
-		<description>Mosip commons project </description>
-=======
 		<name>prid generator</name>
 		<description>prid generator </description>
->>>>>>> origin/1.1.3
         <url>https://github.com/mosip/commons</url>
 	</project>

@@ -85,11 +85,7 @@ public class CryptographicUtilExceptionTest {
 				.thenReturn(keyPairGenerateResponseDto);
 		CryptomanagerRequestDto cryptomanagerRequestDto = new CryptomanagerRequestDto("REGISTRATION", "ref123",
 				LocalDateTime.parse("2018-12-06T12:07:44.403Z", DateTimeFormatter.ISO_DATE_TIME), "test",
-<<<<<<< HEAD
-				"ykrkpgjjtChlVdvDNJJEnQ", "VGhpcyBpcyBzYW1wbGUgYWFk");
-=======
 				"ykrkpgjjtChlVdvDNJJEnQ", "VGhpcyBpcyBzYW1wbGUgYWFk", false);
->>>>>>> origin/1.1.3
 		cryptomanagerUtil.getCertificate(cryptomanagerRequestDto);
 	}
 }

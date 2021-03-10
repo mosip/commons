@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import io.mosip.kernel.auth.defaultadapter.handler.AuthHandler;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -27,6 +28,7 @@ import io.mosip.kernel.vidgenerator.service.VidService;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.WorkerExecutor;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
@@ -54,7 +56,10 @@ public class VidFetcherRouter {
 
 	@Autowired
 	private ObjectMapper objectMapper;
-
+	
+	@Autowired
+    private AuthHandler authHandler;
+	
 	/**
 	 * Creates router for vertx server
 	 * 
@@ -64,6 +69,7 @@ public class VidFetcherRouter {
 	public Router createRouter(Vertx vertx) {
 		LOGGER.info("worker executor pool {}", workerExecutorPool);
 		Router router = Router.router(vertx);
+		authHandler.addAuthFilter(router, "/", HttpMethod.GET, "RESIDENT,REGISTRATION_PROCESSOR");
 		router.get().handler(routingContext -> {
 			LOGGER.info("publishing event to CHECKPOOL");
 			// send a publish event to vid pool checker
@@ -80,6 +86,7 @@ public class VidFetcherRouter {
 								VIDGeneratorErrorCode.VID_EXPIRY_DATE_EMPTY.getErrorCode(),
 								VIDGeneratorErrorCode.VID_EXPIRY_DATE_EMPTY.getErrorMessage());
 						setError(routingContext, error, blockingCodeHandler);
+						return;
 					}
 					DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(UTC_DATETIME_PATTERN);
 					try {
@@ -89,12 +96,14 @@ public class VidFetcherRouter {
 								VIDGeneratorErrorCode.VID_EXPIRY_DATE_PATTERN_INVALID.getErrorCode(),
 								VIDGeneratorErrorCode.VID_EXPIRY_DATE_PATTERN_INVALID.getErrorMessage());
 						setError(routingContext, error, blockingCodeHandler);
+						return;
 					}
 					if (expiryTime.isBefore(DateUtils.getUTCCurrentDateTime())) {
 						ServiceError error = new ServiceError(
 								VIDGeneratorErrorCode.VID_EXPIRY_DATE_INVALID.getErrorCode(),
 								VIDGeneratorErrorCode.VID_EXPIRY_DATE_INVALID.getErrorMessage());
 						setError(routingContext, error, blockingCodeHandler);
+						return;
 					}
 				}
 				VidFetchResponseDto vidFetchResponseDto = null;
@@ -103,6 +112,7 @@ public class VidFetcherRouter {
 				} catch (VidGeneratorServiceException exception) {
 					ServiceError error = new ServiceError(exception.getErrorCode(), exception.getMessage());
 					setError(routingContext, error, blockingCodeHandler);
+					return;
 				}
 				String timestamp = DateUtils.getUTCCurrentDateTimeString();
 				reswrp.setResponsetime(DateUtils.convertUTCToLocalDateTime(timestamp));

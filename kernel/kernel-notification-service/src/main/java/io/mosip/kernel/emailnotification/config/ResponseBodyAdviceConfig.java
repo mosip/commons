@@ -34,6 +34,9 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
 @RestControllerAdvice
 public class ResponseBodyAdviceConfig implements ResponseBodyAdvice<ResponseWrapper<?>> {
 
+	private static final Logger mosipLogger = LoggerConfiguration.logConfig(ResponseBodyAdviceConfig.class);
+
+
 	/**
 	 * Autowired reference for {@link ObjectMapper}.
 	 */
@@ -88,7 +91,6 @@ public class ResponseBodyAdviceConfig implements ResponseBodyAdvice<ResponseWrap
 			body.setErrors(null);
 			return body;
 		} catch (Exception e) {
-			Logger mosipLogger = LoggerConfiguration.logConfig(ResponseBodyAdviceConfig.class);
 			mosipLogger.error("", "", "", e.getMessage());
 		}
 		return body;

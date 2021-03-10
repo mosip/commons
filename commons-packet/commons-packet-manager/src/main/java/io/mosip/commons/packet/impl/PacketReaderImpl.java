@@ -10,6 +10,7 @@ import static io.mosip.commons.packet.constants.PacketManagerConstants.VALUE;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -59,6 +60,7 @@ import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.JsonUtils;
 
+
 @RefreshScope
 @Component
 public class PacketReaderImpl implements IPacketReader {
@@ -97,7 +99,7 @@ public class PacketReaderImpl implements IPacketReader {
 	public boolean validatePacket(String id, String source, String process) {
 		try {
 			return packetValidator.validate(id, source, process, getAll(id, source, process));
-		} catch (BaseCheckedException | IOException e) {
+		} catch (BaseCheckedException | IOException | NoSuchAlgorithmException e) {
 			LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
 					"Packet Validation exception : " + ExceptionUtils.getStackTrace(e));
 			if (e instanceof BaseCheckedException)
@@ -200,18 +202,20 @@ public class PacketReaderImpl implements IPacketReader {
 				: null;
 		String documentString = (String) idobjectMap.get(documentName);
 		try {
-			JSONObject documentMap = new JSONObject(documentString);
-			if (documentMap != null && schemaVersion != null) {
+			if (documentString != null && schemaVersion != null) {
+				JSONObject documentMap = new JSONObject(documentString);
 				String packetName = idSchemaUtils.getSource(documentName, schemaVersion);
 				Packet packet = packetKeeper.getPacket(getPacketInfo(id, packetName, source, process));
 				String value = documentMap.has(VALUE) ? documentMap.get(VALUE).toString() : null;
 				InputStream documentStream = ZipUtils.unzipAndGetFile(packet.getPacket(), value);
-				Document document = new Document();
-				document.setDocument(IOUtils.toByteArray(documentStream));
-				document.setValue(value);
-				document.setType(documentMap.get(TYPE) != null ? documentMap.get(TYPE).toString() : null);
-				document.setFormat(documentMap.get(FORMAT) != null ? documentMap.get(FORMAT).toString() : null);
-				return document;
+				if (documentStream != null) {
+					Document document = new Document();
+					document.setDocument(IOUtils.toByteArray(documentStream));
+					document.setValue(value);
+					document.setType(documentMap.get(TYPE) != null ? documentMap.get(TYPE).toString() : null);
+					document.setFormat(documentMap.get(FORMAT) != null ? documentMap.get(FORMAT).toString() : null);
+					return document;
+				}
 			}
 		} catch (IOException | ApiNotAccessibleException | PacketDecryptionFailureException | JSONException
 				| PacketKeeperException e) {
@@ -263,6 +267,8 @@ public class PacketReaderImpl implements IPacketReader {
 
 			Packet packet = packetKeeper.getPacket(getPacketInfo(id, packetName, source, process));
 			InputStream biometrics = ZipUtils.unzipAndGetFile(packet.getPacket(), fileName);
+			if (biometrics == null)
+				return null;
 			BIRType birType = CbeffValidator.getBIRFromXML(IOUtils.toByteArray(biometrics));
 			biometricRecord = new BiometricRecord();
 			List<io.mosip.kernel.core.cbeffutil.entity.BIR> birList = CbeffValidator

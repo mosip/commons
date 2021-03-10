@@ -5,30 +5,21 @@ import io.mosip.kernel.clientcrypto.constant.ClientCryptoManagerConstant;
 import io.mosip.kernel.clientcrypto.exception.ClientCryptoException;
 import io.mosip.kernel.clientcrypto.service.spi.ClientCryptoService;
 
-import io.mosip.kernel.core.crypto.spi.CryptoCoreSpec;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.keymanagerservice.logger.KeymanagerLogger;
 import org.junit.Assert;
-import tss.Helpers;
-import tss.Tpm;
-import tss.TpmFactory;
+import tss.*;
 import tss.tpm.CreatePrimaryResponse;
 import tss.tpm.*;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 
 
 /**
@@ -78,8 +69,7 @@ class TPMClientCryptoServiceImpl implements ClientCryptoService {
     private static CreatePrimaryResponse signingPrimaryResponse;
     private static CreatePrimaryResponse encPrimaryResponse;
 
-    TPMClientCryptoServiceImpl()
-            throws Throwable {
+    TPMClientCryptoServiceImpl() throws Throwable {
         LOGGER.debug(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.TPM,
                 ClientCryptoManagerConstant.EMPTY, "TPMClientCryptoServiceImpl constructor invoked");
 
@@ -88,6 +78,11 @@ class TPMClientCryptoServiceImpl implements ClientCryptoService {
                     ClientCryptoManagerConstant.EMPTY, "Instantiating Platform TPM");
 
             tpm = TpmFactory.platformTpm();
+            if( !isKernelModeTRM() ) { //checks if its not connected to software TPM
+                LOGGER.warn(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.TPM,
+                        ClientCryptoManagerConstant.EMPTY, "UNABLE TO CONNECT TO KERNEL/SYSTEM TPM RESOURCE MANAGER");
+                tpm = null;
+            }
 
             LOGGER.info(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.TPM,
                     ClientCryptoManagerConstant.EMPTY, "Completed getting the instance of Platform TPM");
@@ -97,11 +92,15 @@ class TPMClientCryptoServiceImpl implements ClientCryptoService {
     @Override
     public byte[] signData(byte[] dataToSign) throws ClientCryptoException {
         try {
+            Assert.assertNotNull(tpm);
             CreatePrimaryResponse signingKey = createSigningKey();
-            TPMU_SIGNATURE signedData = tpm.Sign(signingKey.handle,
-                    TPMT_HA.fromHashOf(TPM_ALG_ID.SHA256, dataToSign).digest, new TPMS_NULL_SIG_SCHEME(),
-                    TPMT_TK_HASHCHECK.nullTicket());
-            //tpm.FlushContext(signingKey.handle);
+            TPMU_SIGNATURE signedData = null;
+            synchronized(tpm) {
+                signedData = tpm.Sign(signingKey.handle,
+                        TPMT_HA.fromHashOf(TPM_ALG_ID.SHA256, dataToSign).digest, new TPMS_NULL_SIG_SCHEME(),
+                        TPMT_TK_HASHCHECK.nullTicket());
+            }
+            Assert.assertNotNull(signedData);
             LOGGER.info(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.TPM,
                     ClientCryptoManagerConstant.EMPTY, "Completed Signing data using TPM");
             return ((TPMS_SIGNATURE_RSASSA) signedData).sig;
@@ -132,8 +131,11 @@ class TPMClientCryptoServiceImpl implements ClientCryptoService {
         try {
             Assert.assertNotNull(tpm);
             CreatePrimaryResponse primaryResponse = createRSAKey();
-            return tpm.RSA_Decrypt(primaryResponse.handle, dataToDecrypt, new TPMS_NULL_ASYM_SCHEME(),
-                    label);
+
+            synchronized (tpm) {
+                return tpm.RSA_Decrypt(primaryResponse.handle, dataToDecrypt, new TPMS_NULL_ASYM_SCHEME(),
+                        label);
+            }
         } catch (Exception ex) {
             throw new ClientCryptoException(ClientCryptoErrorConstants.CRYPTO_FAILED.getErrorCode(),
                     ClientCryptoErrorConstants.CRYPTO_FAILED.getErrorMessage(), ex);
@@ -151,7 +153,7 @@ class TPMClientCryptoServiceImpl implements ClientCryptoService {
     }
 
     @Override
-    public void closeSecurityInstance() {
+    public synchronized void closeSecurityInstance() {
         try {
             if (tpm != null)
                 tpm.close();
@@ -168,7 +170,7 @@ class TPMClientCryptoServiceImpl implements ClientCryptoService {
      * @param length
      * @return
      */
-    public static byte[] generateRandomBytes(int length) {
+    public synchronized static byte[] generateRandomBytes(int length) {
         return tpm.GetRandom(length);
     }
 
@@ -225,17 +227,17 @@ class TPMClientCryptoServiceImpl implements ClientCryptoService {
                 new TPMS_RSA_PARMS(new TPMT_SYM_DEF_OBJECT(TPM_ALG_ID.NULL, 0, TPM_ALG_ID.NULL),
                         new TPMS_SIG_SCHEME_RSASSA(TPM_ALG_ID.SHA256), 2048, 65537),
                 new TPM2B_PUBLIC_KEY_RSA());
-
         TPM_HANDLE primaryHandle = TPM_HANDLE.from(TPM_RH.ENDORSEMENT);
-
         TPMS_SENSITIVE_CREATE dataToBeSealedWithAuth = new TPMS_SENSITIVE_CREATE(NULL_VECTOR, NULL_VECTOR);
+
+        synchronized (tpm) {
+            //everytime this is called key never changes until unless either seed / template change.
+            signingPrimaryResponse = tpm.CreatePrimary(primaryHandle, dataToBeSealedWithAuth, template,
+                    NULL_VECTOR, new TPMS_PCR_SELECTION[0]);
+        }
 
         LOGGER.info(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.TPM,
                 ClientCryptoManagerConstant.EMPTY, "Completed creating the Signing Key from Platform TPM");
-
-        //everytime this is called key never changes until unless either seed / template change.
-        signingPrimaryResponse = tpm.CreatePrimary(primaryHandle, dataToBeSealedWithAuth, template,
-                NULL_VECTOR, new TPMS_PCR_SELECTION[0]);
         return signingPrimaryResponse;
     }
 
@@ -265,18 +267,19 @@ class TPMClientCryptoServiceImpl implements ClientCryptoService {
                 new TPMS_RSA_PARMS(new TPMT_SYM_DEF_OBJECT(TPM_ALG_ID.NULL, 0, TPM_ALG_ID.NULL),
                         new TPMS_ENC_SCHEME_OAEP(TPM_ALG_ID.SHA256), 2048, 65537),
                 new TPM2B_PUBLIC_KEY_RSA());
-
         TPMS_SENSITIVE_CREATE dataToBeSealedWithAuth = new TPMS_SENSITIVE_CREATE(NULL_VECTOR, NULL_VECTOR);
         TPM_HANDLE primaryHandle = TPM_HANDLE.from(TPM_RH.ENDORSEMENT);
-        encPrimaryResponse = tpm.CreatePrimary(primaryHandle, dataToBeSealedWithAuth, template,
-                null, null);
+
+        synchronized (tpm) {
+            encPrimaryResponse = tpm.CreatePrimary(primaryHandle, dataToBeSealedWithAuth, template,
+                    null, null);
+        }
 
         long secondsTaken = localDateTime.until(LocalDateTime.now(), ChronoUnit.SECONDS);
         LOGGER.info(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.TPM,
                 ClientCryptoManagerConstant.EMPTY,
                 String.format("Completed Asymmetric Key Creation using tpm. Time taken is %s seconds",
                         String.valueOf(secondsTaken)));
-
         return encPrimaryResponse;
     }
 
@@ -290,5 +293,19 @@ class TPMClientCryptoServiceImpl implements ClientCryptoService {
                     ClientCryptoManagerConstant.EMPTY, "Failed to generate secret key " + ExceptionUtils.getStackTrace(e));
         }
         return null;
+    }
+
+    /**
+     * check if connected to kernel/system mode TPM resource manager
+     * @return
+     */
+    private boolean isKernelModeTRM() {
+        synchronized (tpm) {
+            if(tpm != null && tpm._getDevice() != null &&
+                    (tpm._getDevice() instanceof TpmDeviceTbs || tpm._getDevice() instanceof TpmDeviceLinux)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

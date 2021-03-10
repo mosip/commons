@@ -8,11 +8,7 @@
 
 	<artifactId>kernel-auth-service</artifactId>
 	<packaging>jar</packaging>
-<<<<<<< HEAD
-	<version>1.1.2</version>
-=======
-	<version>1.1.3</version>
->>>>>>> origin/1.1.3
+	<version>1.1.4</version>
 <properties>		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -230,11 +226,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-<<<<<<< HEAD
-			<version>1.1.2</version>
-=======
-			<version>1.1.3</version>
->>>>>>> origin/1.1.3
+			<version>1.1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -294,11 +286,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-templatemanager-velocity</artifactId>
-<<<<<<< HEAD
-			<version>1.1.2</version>
-=======
-			<version>1.1.3</version>
->>>>>>> origin/1.1.3
+			<version>1.1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -319,11 +307,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-logger-logback</artifactId>
-<<<<<<< HEAD
-			<version>1.1.2</version>
-=======
-			<version>1.1.3</version>
->>>>>>> origin/1.1.3
+			<version>1.1.4</version>
 		</dependency>
 
 	</dependencies>
@@ -339,9 +323,6 @@
 		</dependencies>
 	</dependencyManagement>
 
-<<<<<<< HEAD
-<build>
-=======
 <distributionManagement>
 		<snapshotRepository>
                         <id>ossrh</id>
@@ -353,7 +334,6 @@
                 </repository> 
         </distributionManagement> 
         <build>
->>>>>>> origin/1.1.3
 			<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -504,12 +484,7 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
-<<<<<<< HEAD
-		<name>MOSIP commons</name>
-		<description>Mosip commons project </description>
-=======
 		<name>Auth service</name>
 		<description>Auth service acts as intermediatory between open id and mosip services </description>
->>>>>>> origin/1.1.3
         <url>https://github.com/mosip/commons</url>
 	</project>

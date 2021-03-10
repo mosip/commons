@@ -21,7 +21,7 @@ CREATE TABLE keymgr.ca_cert_store(
 	cert_not_before timestamp,
 	cert_not_after timestamp,
 	crl_uri character varying(120),
-	cert_data character varying(2500),
+	cert_data character varying,
 	cert_thumbprint character varying(100),
 	cert_serial_no character varying(50),
 	partner_domain character varying(36),

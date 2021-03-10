@@ -1,21 +1,26 @@
 package io.mosip.kernel.vidgenerator.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import io.mosip.kernel.auth.defaultadapter.handler.AuthHandler;
 import io.mosip.kernel.core.util.DateUtils;
-import io.mosip.kernel.vidgenerator.constant.VIDGeneratorConstant;
 import io.mosip.kernel.vidgenerator.constant.VIDGeneratorErrorCode;
 import io.mosip.kernel.vidgenerator.constant.VidLifecycleStatus;
 import io.mosip.kernel.vidgenerator.dto.VidFetchResponseDto;
+import io.mosip.kernel.vidgenerator.entity.VidAssignedEntity;
 import io.mosip.kernel.vidgenerator.entity.VidEntity;
 import io.mosip.kernel.vidgenerator.exception.VidGeneratorServiceException;
+import io.mosip.kernel.vidgenerator.repository.VidAssignedRepository;
 import io.mosip.kernel.vidgenerator.repository.VidRepository;
 import io.mosip.kernel.vidgenerator.service.VidService;
 import io.mosip.kernel.vidgenerator.utils.ExceptionUtils;
@@ -28,14 +33,23 @@ public class VidServiceImpl implements VidService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(VidServiceImpl.class);
 
-	@Value("${mosip.kernel.vid.time-to-renew-after-expiry}")
-	private long timeToRenewAfterExpiry;
+	@Value("${mosip.kernel.vid.time-to-release-after-expiry}")
+	private long timeToRelaseAfterExpiry;
 
 	@Autowired
 	private VidRepository vidRepository;
 
 	@Autowired
+	private VidAssignedRepository vidAssignedRepository;
+
+	@Autowired
+	private ModelMapper modelMapper;
+
+	@Autowired
 	private VIDMetaDataUtil metaDataUtil;
+	
+	@Autowired
+	private AuthHandler authHandler;
 
 	@Override
 	@Transactional
@@ -59,7 +73,7 @@ public class VidServiceImpl implements VidService {
 			}
 			vidFetchResponseDto.setVid(vidEntity.getVid());
 			try {
-				vidRepository.updateVid(VidLifecycleStatus.ASSIGNED, VIDGeneratorConstant.DEFAULTADMIN_MOSIP_IO,
+				vidRepository.updateVid(VidLifecycleStatus.ASSIGNED, authHandler.getContextUser(),
 						DateUtils.getUTCCurrentDateTime(), vidEntity.getVid());
 			} catch (DataAccessException exception) {
 				LOGGER.error(ExceptionUtils.parseException(exception));
@@ -93,16 +107,10 @@ public class VidServiceImpl implements VidService {
 	}
 
 	@Override
-	public void expireAndRenew() {
+	public void expireAndRelease() {
 		try {
-			List<VidEntity> vidAssignedEntities = vidRepository
-					.findByStatusAndIsDeletedFalse(VidLifecycleStatus.ASSIGNED);
-			vidAssignedEntities.forEach(this::expireIfEligible);
-			vidRepository.saveAll(vidAssignedEntities);
-			List<VidEntity> vidExpiredEntities = vidRepository
-					.findByStatusAndIsDeletedFalse(VidLifecycleStatus.EXPIRED);
-			vidExpiredEntities.forEach(this::renewIfEligible);
-			vidRepository.saveAll(vidExpiredEntities);
+			expireEligibleVids();
+			releaseEligibleVids();
 		} catch (DataAccessException exception) {
 			LOGGER.error(ExceptionUtils.parseException(exception));
 		} catch (Exception exception) {
@@ -111,32 +119,53 @@ public class VidServiceImpl implements VidService {
 
 	}
 
-	private void expireIfEligible(VidEntity entity) {
+	private void expireEligibleVids() {
+		List<VidAssignedEntity> vidAssignedEntities = vidAssignedRepository
+			.findByStatusAndIsDeletedFalse(VidLifecycleStatus.ASSIGNED);
+		vidAssignedEntities.forEach(this::expireIfEligible);
+		vidAssignedRepository.saveAll(vidAssignedEntities);
+	}
+
+	private void releaseEligibleVids() {
+		List<VidAssignedEntity> vidExpiredEntities = vidAssignedRepository
+			.findByStatusAndIsDeletedFalse(VidLifecycleStatus.EXPIRED);
+		List<VidAssignedEntity> releasableVidAssignedEntities = new ArrayList<VidAssignedEntity>();
+		vidExpiredEntities.forEach(entity -> {
+			if(isEligibleToRelease(entity)) {
+				releasableVidAssignedEntities.add(entity);
+			}
+		});
+		if(releasableVidAssignedEntities.size() > 0) {
+			vidAssignedRepository.deleteAll(releasableVidAssignedEntities);
+		}
+	}
+
+	private void expireIfEligible(VidAssignedEntity entity) {
 		LocalDateTime currentTime = DateUtils.getUTCCurrentDateTime();
 		LOGGER.debug("currenttime {} for checking entity with expiry time {}", currentTime, entity.getVidExpiry());
-		if ((entity.getVidExpiry().isBefore(currentTime) || entity.getVidExpiry().isEqual(currentTime))
+		if (entity.getVidExpiry() != null && (entity.getVidExpiry().isBefore(currentTime) || entity.getVidExpiry().isEqual(currentTime))
 				&& entity.getStatus().equals(VidLifecycleStatus.ASSIGNED)) {
 			metaDataUtil.setUpdateMetaData(entity);
 			entity.setStatus(VidLifecycleStatus.EXPIRED);
 		}
 	}
 
-	private void renewIfEligible(VidEntity entity) {
+	private boolean isEligibleToRelease(VidAssignedEntity entity) {
 		LocalDateTime currentTime = DateUtils.getUTCCurrentDateTime();
-		LocalDateTime renewElegibleTime = entity.getVidExpiry().plusDays(timeToRenewAfterExpiry);
-		LOGGER.debug("currenttime {} for checking entity with renew elegible time {}", currentTime, renewElegibleTime);
-		if ((renewElegibleTime.isBefore(currentTime) || renewElegibleTime.isEqual(currentTime))
+		LocalDateTime releaseElegibleTime = entity.getVidExpiry().plusDays(timeToRelaseAfterExpiry);
+		LOGGER.debug("currenttime {} for checking entity with release elegible time {}", currentTime, releaseElegibleTime);
+		if ((releaseElegibleTime.isBefore(currentTime) || releaseElegibleTime.isEqual(currentTime))
 				&& entity.getStatus().equals(VidLifecycleStatus.EXPIRED)) {
-			entity.setVidExpiry(null);
-			metaDataUtil.setUpdateMetaData(entity);
-			entity.setStatus(VidLifecycleStatus.AVAILABLE);
+			return true;
 		}
+		return false;
 	}
 
 	@Override
 	public boolean saveVID(VidEntity vid) {
 
-		if (!this.vidRepository.existsById(vid.getVid())) {
+		if (!(this.vidRepository.existsById(vid.getVid()) || 
+				this.vidAssignedRepository.existsById(vid.getVid()))) {
 			try {
 				this.vidRepository.saveAndFlush(vid);
 			} catch (DataAccessException exception) {
@@ -151,5 +180,16 @@ public class VidServiceImpl implements VidService {
 			return false;
 		}
 
+	}
+
+	@Transactional(transactionManager = "transactionManager")
+	@Override
+	public void isolateAssignedVids() {
+		List<VidEntity> vidEntities = vidRepository.findByStatusAndIsDeletedFalse(VidLifecycleStatus.ASSIGNED);
+		LOGGER.info("isolateAssignedVids called for entity count {} ", vidEntities.size());
+		List<VidAssignedEntity> vidEntitiesAssined = modelMapper.map(vidEntities, 
+			new TypeToken<List<VidAssignedEntity>>() {}.getType());
+		vidAssignedRepository.saveAll(vidEntitiesAssined);
+	    vidRepository.deleteAll(vidEntities);
 	}
 }

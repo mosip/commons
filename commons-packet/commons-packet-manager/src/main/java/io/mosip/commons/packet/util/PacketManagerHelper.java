@@ -11,13 +11,16 @@ import io.mosip.kernel.core.cbeffutil.entity.BIR;
 import io.mosip.kernel.core.cbeffutil.entity.BIRInfo;
 import io.mosip.kernel.core.cbeffutil.entity.BIRVersion;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.*;
-import io.mosip.kernel.core.util.HMACUtils;
+import io.mosip.kernel.core.util.HMACUtils2;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 import static io.mosip.commons.packet.constants.PacketManagerConstants.CREATION_DATE;
@@ -73,12 +76,13 @@ public class PacketManagerHelper {
         return xmlBytes;
     }
 
-    public static byte[] generateHash(List<String> order, Map<String, byte[]> data) {
+    public static byte[] generateHash(List<String> order, Map<String, byte[]> data) throws IOException, NoSuchAlgorithmException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         if (order != null && !order.isEmpty()) {
             for (String name : order) {
-                HMACUtils.update(data.get(name));
+                outputStream.write(data.get(name));
             }
-            return HMACUtils.digestAsPlainText(HMACUtils.updatedHash()).getBytes();
+            return HMACUtils2.digestAsPlainText(outputStream.toByteArray()).getBytes();
         }
         return null;
     }
