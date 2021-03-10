@@ -11,12 +11,9 @@ public class WorkingDaysDto {
 
 	private String name;
 
-	private boolean isGlobalWorking;
+	private short order;
 
-	private String dayCode;
+	private String languageCode;
 
-	private String languagecode;
-
-	private boolean isWorking;
 
 }

@@ -165,7 +165,7 @@ public class TokenValidator {
 	public MosipUserTokenDto validateToken(String token) throws Exception {
 		Claims claims = getClaims(token);
 		MosipUserDto mosipUserDto = buildDto(claims);
-		return new MosipUserTokenDto(mosipUserDto, token, null, 0, null, null);
+		return new MosipUserTokenDto(mosipUserDto, token, null, 0, null, null, 0);
 	}
 
 	private MosipUserDto buildDto(Claims claims) {
@@ -184,7 +184,7 @@ public class TokenValidator {
 		Boolean isOtpRequired = (Boolean) claims.get("isOtpRequired");
 		if (isOtpRequired) {
 			MosipUserDto mosipUserDto = buildDto(claims);
-			return new MosipUserTokenDto(mosipUserDto, otp, null, 0, null, null);
+			return new MosipUserTokenDto(mosipUserDto, otp, null, 0, null, null, 0);
 		} else {
 			throw new AuthManagerException(AuthErrorCode.UNAUTHORIZED.getErrorCode(),
 					AuthErrorCode.UNAUTHORIZED.getErrorMessage());

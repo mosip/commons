@@ -8,8 +8,13 @@
 
 	<artifactId>kernel-auth-adapter</artifactId>
 	<packaging>jar</packaging>
+<<<<<<< HEAD
 	<description>Mosip commons project </description>
 	<version>1.1.2</version>
+=======
+	<description>auth adapter reference implementation </description>
+	<version>1.1.3</version>
+>>>>>>> origin/1.1.3
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -229,7 +234,11 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
+<<<<<<< HEAD
 			<version>1.1.2</version>
+=======
+			<version>1.1.3</version>
+>>>>>>> origin/1.1.3
 		</dependency>
 
 		<dependency>
@@ -270,7 +279,11 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-logger-logback</artifactId>
+<<<<<<< HEAD
 			<version>1.1.2</version>
+=======
+			<version>1.1.3</version>
+>>>>>>> origin/1.1.3
 		</dependency>
 		<dependency>
 			<groupId>io.vertx</groupId>
@@ -290,7 +303,21 @@
 
 	</dependencies>
 
+<<<<<<< HEAD
 <build>
+=======
+<distributionManagement>
+		<snapshotRepository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository> 
+                 <repository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository> 
+        </distributionManagement> 
+        <build>
+>>>>>>> origin/1.1.3
 <plugins>
 			<!-- assembly-plugin -->
 			 <plugin>
@@ -446,7 +473,11 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
+<<<<<<< HEAD
 		<name>MOSIP commons</name>
+=======
+		<name>common auth adapter</name>
+>>>>>>> origin/1.1.3
 		
         <url>https://github.com/mosip/commons</url>
 	</project>

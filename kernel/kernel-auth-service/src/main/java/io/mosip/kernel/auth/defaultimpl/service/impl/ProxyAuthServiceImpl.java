@@ -2,6 +2,7 @@ package io.mosip.kernel.auth.defaultimpl.service.impl;
 
 import java.util.List;
 
+import io.mosip.kernel.core.authmanager.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,31 +30,6 @@ import io.mosip.kernel.auth.defaultimpl.service.UinService;
 import io.mosip.kernel.auth.defaultimpl.util.ProxyTokenGenerator;
 import io.mosip.kernel.auth.defaultimpl.util.TokenGenerator;
 import io.mosip.kernel.auth.defaultimpl.util.TokenValidator;
-import io.mosip.kernel.core.authmanager.model.AccessTokenResponseDTO;
-import io.mosip.kernel.core.authmanager.model.AuthNResponse;
-import io.mosip.kernel.core.authmanager.model.AuthNResponseDto;
-import io.mosip.kernel.core.authmanager.model.AuthResponseDto;
-import io.mosip.kernel.core.authmanager.model.AuthZResponseDto;
-import io.mosip.kernel.core.authmanager.model.ClientSecret;
-import io.mosip.kernel.core.authmanager.model.LoginUser;
-import io.mosip.kernel.core.authmanager.model.MosipUserDto;
-import io.mosip.kernel.core.authmanager.model.MosipUserListDto;
-import io.mosip.kernel.core.authmanager.model.MosipUserSaltListDto;
-import io.mosip.kernel.core.authmanager.model.MosipUserTokenDto;
-import io.mosip.kernel.core.authmanager.model.OtpUser;
-import io.mosip.kernel.core.authmanager.model.PasswordDto;
-import io.mosip.kernel.core.authmanager.model.RIdDto;
-import io.mosip.kernel.core.authmanager.model.RefreshTokenRequest;
-import io.mosip.kernel.core.authmanager.model.RefreshTokenResponse;
-import io.mosip.kernel.core.authmanager.model.RolesListDto;
-import io.mosip.kernel.core.authmanager.model.UserDetailsResponseDto;
-import io.mosip.kernel.core.authmanager.model.UserNameDto;
-import io.mosip.kernel.core.authmanager.model.UserOtp;
-import io.mosip.kernel.core.authmanager.model.UserPasswordRequestDto;
-import io.mosip.kernel.core.authmanager.model.UserPasswordResponseDto;
-import io.mosip.kernel.core.authmanager.model.UserRegistrationRequestDto;
-import io.mosip.kernel.core.authmanager.model.UserRoleDto;
-import io.mosip.kernel.core.authmanager.model.ValidationResponseDto;
 import io.mosip.kernel.core.authmanager.spi.AuthService;
 
 /**
@@ -292,6 +268,7 @@ public class ProxyAuthServiceImpl implements AuthService {
 			authNResponseDto.setExpiryTime(mosipToken.getExpTime());
 			authNResponseDto.setRefreshToken(mosipToken.getRefreshToken());
 			authNResponseDto.setUserId(mosipToken.getMosipUserDto().getUserId());
+			authNResponseDto.setRefreshExpiryTime(mosipToken.getExpTime());
 		} else {
 			authNResponseDto.setMessage(mosipToken.getMessage());
 			authNResponseDto.setStatus(mosipToken.getStatus());
@@ -324,8 +301,9 @@ public class ProxyAuthServiceImpl implements AuthService {
 		logger.debug("token craeted for subject {} to expire at {}", subject, exp);
 		AuthNResponseDto authNResponseDto = new AuthNResponseDto();
 		authNResponseDto.setToken(token);
-		authNResponseDto.setRefreshToken(null);
+		authNResponseDto.setRefreshToken(token);
 		authNResponseDto.setExpiryTime(exp);
+		authNResponseDto.setRefreshExpiryTime(exp);
 		authNResponseDto.setStatus(status);
 		authNResponseDto.setMessage(message);
 		return authNResponseDto;
@@ -333,17 +311,12 @@ public class ProxyAuthServiceImpl implements AuthService {
 
 	/**
 	 * Method used for generating refresh token
-	 * 
-	 * @param existingToken
-	 *            existing token
-	 * 
-	 * @return mosipUserDtoToken is of type {@link MosipUserTokenDto}
-	 * 
+	 * @param appID
+	 * @param refereshToken
+	 * @param refreshTokenRequest
+	 * @return
 	 * @throws Exception
-	 *             exception
-	 * 
 	 */
-
 	@Override
 	public RefreshTokenResponse refreshToken(String appID, String refereshToken,
 			RefreshTokenRequest refreshTokenRequest) throws Exception {
@@ -473,6 +446,12 @@ public class ProxyAuthServiceImpl implements AuthService {
 	@Override
 	public String getKeycloakURI(String redirectURI, String state) {
 		throw new UnsupportedOperationException("This openeration is not supported in local profile for now");
+	}
+
+	@Override
+	public AuthNResponseDto authenticateUser(LoginUserWithClientId loginUser) throws Exception {
+		return proxyTokenForLocalEnv(loginUser.getUserName(), AuthConstant.SUCCESS_STATUS,
+				AuthConstant.USERPWD_SUCCESS_MESSAGE);
 	}
 
 }

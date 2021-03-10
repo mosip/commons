@@ -7,7 +7,11 @@
 
     <groupId>io.mosip.commons</groupId>
     <artifactId>commons-packet</artifactId>
+<<<<<<< HEAD
     <version>1.1.2</version>
+=======
+    <version>1.1.3</version>
+>>>>>>> origin/1.1.3
     <name>common-packet</name>
     <description>Common packet manager for MOSIP</description>
     <url>https://github.com/mosip/commons</url>
@@ -34,6 +38,7 @@
         <spring-cloud-config.version>2.0.0.RELEASE</spring-cloud-config.version>
         <h2.version>1.4.197</h2.version>
         <jackson.datatype.version>2.9.8</jackson.datatype.version>
+<<<<<<< HEAD
         <kernel.keygenerator.bouncycastle.version>1.1.2</kernel.keygenerator.bouncycastle.version>
         <swagger.version>2.9.2</swagger.version>
         <powermock.beta.version>2.0.7</powermock.beta.version>
@@ -46,6 +51,20 @@
         <kernel.logger.logback.version>1.1.2</kernel.logger.logback.version>
         <spring.boot.co>2.0.2.RELEASE</spring.boot.co>
         <khazana.version>1.1.2</khazana.version>
+=======
+        <kernel.keygenerator.bouncycastle.version>1.1.3</kernel.keygenerator.bouncycastle.version>
+        <swagger.version>2.9.2</swagger.version>
+        <powermock.beta.version>2.0.7</powermock.beta.version>
+
+        <kernel.core.version>1.1.3</kernel.core.version>
+        <kernel.biometrics.api.version>1.1.3</kernel.biometrics.api.version>
+        <kernel.crypto-jce.version>1.1.3</kernel.crypto-jce.version>
+        <kernel.auth.adaptor.version>1.1.3</kernel.auth.adaptor.version>
+        <kernel-dataaccess-hibernate.version>1.1.3</kernel-dataaccess-hibernate.version>
+        <kernel.logger.logback.version>1.1.3</kernel.logger.logback.version>
+        <spring.boot.co>2.0.2.RELEASE</spring.boot.co>
+        <khazana.version>1.1.3</khazana.version>
+>>>>>>> origin/1.1.3
         <sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/dto/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/security/**,**/*Config.java,**/*BootApplication.java,**/*VertxApplication.java,**/cbeffutil/**,**/*Utils.java,**/*Validator.java,**/*Helper.java,**/verticle/**,**/VidWriter.java/**,**/masterdata/utils/**,**/spi/**,**/core/http/**,"**/LocationServiceImpl.java","**/RegistrationCenterMachineServiceImpl.java","**/RegistrationCenterServiceImpl.java","**/pridgenerator/**","**/idgenerator/prid","**/proxy/**","**/cryptosignature/**"</sonar.coverage.exclusions>
         <sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**</sonar.cpd.exclusions>
     </properties>
@@ -55,7 +74,21 @@
         <module>commons-packet-service</module>
     </modules>
 
+<<<<<<< HEAD
 <build>
+=======
+<distributionManagement>
+		<snapshotRepository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository> 
+                 <repository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository> 
+        </distributionManagement> 
+        <build>
+>>>>>>> origin/1.1.3
           
             <plugins>
                 <plugin>

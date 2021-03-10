@@ -39,7 +39,7 @@ public class KeyPairGenerateRequestDto {
     /**
 	 * Force Flag
 	 */
-	@ApiModelProperty(notes = "Force flag to generate KeyPair", example = "false", required = false)
+	@ApiModelProperty(notes = "Flag to force new generation of KeyPair by invalidating existing keys.", example = "false", required = false)
 	private Boolean force;
 
 	/**

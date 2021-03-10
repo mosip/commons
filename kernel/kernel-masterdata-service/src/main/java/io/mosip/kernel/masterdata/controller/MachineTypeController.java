@@ -65,7 +65,7 @@ public class MachineTypeController {
 	 */
 	@ResponseFilter
 	@PostMapping("/machinetypes")
-	@PreAuthorize("hasRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ApiOperation(value = "Service to save Machine Type", notes = "Saves MachineType and return  code and Languge Code")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When Machine Type successfully created"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
@@ -95,7 +95,7 @@ public class MachineTypeController {
 	 */
 	@ResponseFilter
 	@PutMapping("/machinetypes")
-	@PreAuthorize("hasRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ApiOperation(value = "Service to save Machine Type", notes = "Saves MachineType and return  code and Languge Code")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When Machine Type successfully created"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
@@ -124,7 +124,7 @@ public class MachineTypeController {
 	 * @param orderBy    the order to be used
 	 * @return the response i.e. pages containing the machine types.
 	 */
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','CENTRAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	@ResponseFilter
 	@GetMapping("/machinetypes/all")
 	@ApiOperation(value = "Retrieve all the machine types with additional metadata", notes = "Retrieve all the machine types with the additional metadata")
@@ -150,7 +150,7 @@ public class MachineTypeController {
 	@ResponseFilter
 	@PostMapping("/machinetypes/search")
 	@ApiOperation(value = "Api to search Machine Types")
-	@PreAuthorize("hasRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	public ResponseWrapper<PageResponseDto<MachineTypeExtnDto>> searchMachineType(
 			@ApiParam(value = "Request DTO to search Machine Types") @RequestBody @Valid RequestWrapper<SearchDto> request) {
 		auditUtil.auditRequest(MasterDataConstant.SEARCH_API_IS_CALLED + MachineTypeDto.class.getCanonicalName(),
@@ -174,7 +174,7 @@ public class MachineTypeController {
 	 */
 	@ResponseFilter
 	@PostMapping("/machinetypes/filtervalues")
-	@PreAuthorize("hasRole('GLOBAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('GLOBAL_ADMIN','ZONAL_ADMIN')")
 	public ResponseWrapper<FilterResponseCodeDto> machineTypesFilterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
 		auditUtil.auditRequest(MasterDataConstant.FILTER_API_IS_CALLED + MachineTypeDto.class.getCanonicalName(),

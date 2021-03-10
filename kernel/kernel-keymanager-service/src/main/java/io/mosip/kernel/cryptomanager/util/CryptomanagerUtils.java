@@ -115,7 +115,7 @@ public class CryptomanagerUtils {
 	private String decryptSymmetricKeyUsingKeyManager(CryptomanagerRequestDto cryptomanagerRequestDto) {
 		SymmetricKeyRequestDto symmetricKeyRequestDto = new SymmetricKeyRequestDto(
 				cryptomanagerRequestDto.getApplicationId(), cryptomanagerRequestDto.getTimeStamp(),
-				cryptomanagerRequestDto.getReferenceId(), cryptomanagerRequestDto.getData());
+				cryptomanagerRequestDto.getReferenceId(), cryptomanagerRequestDto.getData(), cryptomanagerRequestDto.getPrependThumbprint());
 		return keyManager.decryptSymmetricKey(symmetricKeyRequestDto).getSymmetricKey();
 	}
 
@@ -180,7 +180,11 @@ public class CryptomanagerUtils {
 
 	public byte[] getCertificateThumbprint(Certificate cert) {
 		try {
+<<<<<<< HEAD
             return DigestUtils.sha1(cert.getEncoded());
+=======
+            return DigestUtils.sha256(cert.getEncoded());
+>>>>>>> origin/1.1.3
 		} catch (CertificateEncodingException e) {
 			LOGGER.error(CryptomanagerConstant.SESSIONID, CryptomanagerConstant.ENCRYPT, "", 
 									"Error generating certificate thumbprint.");

@@ -26,6 +26,6 @@ public interface DocumentTypeRepository extends JpaRepository<DocumentType, Stri
 	 * @param currentTimeStamp - currentTimestamp
 	 * @return list of {@link DocumentType} - list of document type
 	 */
-	@Query("FROM DocumentType WHERE (createdDateTime > ?1 AND createdDateTime <=?2) OR (updatedDateTime > ?1 AND updatedDateTime <=?2)  OR (deletedDateTime > ?1 AND deletedDateTime<=?2)")
+	@Query("FROM DocumentType WHERE (createdDateTime BETWEEN ?1 AND ?2) OR (updatedDateTime BETWEEN ?1 AND ?2)  OR (deletedDateTime BETWEEN ?1 AND ?2)")
 	List<DocumentType> findAllLatestCreatedUpdateDeleted(LocalDateTime lastUpdated, LocalDateTime currentTimeStamp);
 }

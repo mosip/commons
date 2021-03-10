@@ -4,7 +4,11 @@
 <groupId>io.mosip.kernel</groupId>
 
 	<artifactId>kernel-bioapi-provider</artifactId>
+<<<<<<< HEAD
 	<version>1.1.2</version>
+=======
+	<version>1.1.3</version>
+>>>>>>> origin/1.1.3
 	<name>kernel-bioapi-provider</name>
 	<description>bioapi provider</description>
 	<url>https://github.com/mosip/commons</url>
@@ -220,8 +224,13 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
+<<<<<<< HEAD
 		<kernel.core.version>1.1.2</kernel.core.version>
 		<kernel.cbeff.version>1.1.2</kernel.cbeff.version>
+=======
+		<kernel.core.version>1.1.3</kernel.core.version>
+		<kernel.cbeff.version>1.1.3</kernel.cbeff.version>
+>>>>>>> origin/1.1.3
 	</properties>	
 	<dependencies>
 		<dependency>
@@ -235,7 +244,21 @@
 			<version>${kernel.cbeff.version}</version>
 		</dependency>
 	</dependencies>
+<<<<<<< HEAD
 <build>
+=======
+<distributionManagement>
+		<snapshotRepository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository> 
+                 <repository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository> 
+        </distributionManagement> 
+        <build>
+>>>>>>> origin/1.1.3
           <plugins>
             <plugin>
               <artifactId>maven-deploy-plugin</artifactId>

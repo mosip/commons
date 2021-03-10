@@ -60,7 +60,7 @@ public enum SingleVeinOnlySubtypeType {
 
 	public static SingleVeinOnlySubtypeType fromValue(String v) {
 		for (SingleVeinOnlySubtypeType c : SingleVeinOnlySubtypeType.values()) {
-			if (c.value.equals(v)) {
+			if (c.value.equalsIgnoreCase(v)) {
 				return c;
 			}
 		}

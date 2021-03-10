@@ -1,29 +1,7 @@
 package io.mosip.commons.packet.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.mosip.commons.packet.audit.AuditLogEntry;
-import io.mosip.commons.packet.constants.PacketManagerConstants;
-import io.mosip.commons.packet.dto.Packet;
-import io.mosip.commons.packet.dto.PacketInfo;
-import io.mosip.commons.packet.dto.packet.FieldValueArray;
-import io.mosip.commons.packet.exception.GetAllMetaInfoException;
-import io.mosip.commons.packet.exception.PacketKeeperException;
-import io.mosip.commons.packet.keeper.PacketKeeper;
-import io.mosip.kernel.core.cbeffutil.spi.CbeffUtil;
-import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectIOException;
-import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectValidationFailedException;
-import io.mosip.kernel.core.idobjectvalidator.exception.InvalidIdSchemaException;
-import io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator;
-import io.mosip.kernel.core.logger.spi.Logger;
-import io.mosip.kernel.core.util.HMACUtils;
-import io.mosip.kernel.core.util.JsonUtils;
-import io.mosip.kernel.core.util.exception.JsonProcessingException;
-import org.apache.commons.io.IOUtils;
-import org.json.simple.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
+import static io.mosip.commons.packet.constants.PacketManagerConstants.IDENTITY;
+import static io.mosip.commons.packet.constants.PacketManagerConstants.IDSCHEMA_VERSION;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -36,8 +14,31 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.mosip.commons.packet.constants.PacketManagerConstants.IDENTITY;
-import static io.mosip.commons.packet.constants.PacketManagerConstants.IDSCHEMA_VERSION;
+import org.apache.commons.io.IOUtils;
+import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.mosip.commons.packet.audit.AuditLogEntry;
+import io.mosip.commons.packet.constants.PacketManagerConstants;
+import io.mosip.commons.packet.dto.Packet;
+import io.mosip.commons.packet.dto.PacketInfo;
+import io.mosip.commons.packet.dto.packet.FieldValueArray;
+import io.mosip.commons.packet.exception.GetAllMetaInfoException;
+import io.mosip.commons.packet.exception.PacketKeeperException;
+import io.mosip.commons.packet.keeper.PacketKeeper;
+import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectIOException;
+import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectValidationFailedException;
+import io.mosip.kernel.core.idobjectvalidator.exception.InvalidIdSchemaException;
+import io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator;
+import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.kernel.core.util.HMACUtils;
+import io.mosip.kernel.core.util.JsonUtils;
+import io.mosip.kernel.core.util.exception.JsonProcessingException;
 
 @Component
 public class PacketValidator {
@@ -67,9 +68,6 @@ public class PacketValidator {
 
     @Autowired
     private IdSchemaUtils idSchemaUtils;
-
-    @Autowired
-    private CbeffUtil cbeffUtil;
 
     @Autowired
     private AuditLogEntry auditLogEntry;

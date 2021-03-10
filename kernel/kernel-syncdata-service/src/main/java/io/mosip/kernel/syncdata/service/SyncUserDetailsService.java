@@ -26,5 +26,6 @@ public interface SyncUserDetailsService {
 	 * @param regId the reg id
 	 * @return the user salts
 	 */
+	@Deprecated
 	SyncUserSaltDto getUserSalts(String regId);
 }

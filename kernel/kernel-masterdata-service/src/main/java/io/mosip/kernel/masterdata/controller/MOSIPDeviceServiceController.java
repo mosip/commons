@@ -53,7 +53,7 @@ public class MOSIPDeviceServiceController {
 	 * @return ResponseEntity MOSIPDeviceService which is inserted successfully
 	 *         {@link ResponseEntity}
 	 */
-	@PreAuthorize("hasRole('ZONAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@PostMapping
 	@ApiOperation(value = "Service to save MOSIPDeviceService", notes = "Saves MOSIPDeviceService and return MOSIPDeviceService id")
@@ -85,7 +85,7 @@ public class MOSIPDeviceServiceController {
 	 * @return ResponseEntity MOSIPDeviceService which is updated successfully
 	 *         {@link ResponseEntity}
 	 */
-	@PreAuthorize("hasRole('ZONAL_ADMIN')")
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN')")
 	@ResponseFilter
 	@PutMapping
 	@ApiOperation(value = "Service to update MOSIPDeviceService", notes = "Updates MOSIPDeviceService and returns success message")

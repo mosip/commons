@@ -5,7 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.mosip.commons</groupId>
     <artifactId>khazana</artifactId>
+<<<<<<< HEAD
     <version>1.1.2</version>
+=======
+    <version>1.1.3</version>
+>>>>>>> origin/1.1.3
 
     <properties>		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -103,7 +107,7 @@
 		<google.zxing.version>3.3.3</google.zxing.version>
 		<hadoop-client>3.1.0</hadoop-client>
 		<htrace-core4>4.1.0-incubating</htrace-core4>
-		<aws.javasdk.version>1.11.368</aws.javasdk.version>
+		<aws.javasdk.version>1.11.892</aws.javasdk.version>
 		<s3mock.version>0.2.4</s3mock.version>
 		<ignite.version>2.3.0</ignite.version>
 		<findbugs.version>3.0.1</findbugs.version>
@@ -114,8 +118,13 @@
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+<<<<<<< HEAD
         <kernel.core.version>1.1.2</kernel.core.version>
         <kernel-keymanager-service.version>1.1.2</kernel-keymanager-service.version>
+=======
+        <kernel.core.version>1.1.3</kernel.core.version>
+        <kernel-keymanager-service.version>1.1.3</kernel-keymanager-service.version>
+>>>>>>> origin/1.1.3
 
         <!-- maven -->
         <maven.compiler.source>11</maven.compiler.source>
@@ -202,7 +211,21 @@
     </dependencies>
 
 
+<<<<<<< HEAD
 <build>
+=======
+<distributionManagement>
+		<snapshotRepository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository> 
+                 <repository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository> 
+        </distributionManagement> 
+        <build>
+>>>>>>> origin/1.1.3
 <plugins>
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -383,7 +406,14 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
+<<<<<<< HEAD
 		<name>MOSIP commons</name>
 		<description>Mosip commons project </description>
         <url>https://github.com/mosip/commons</url>
 	</project>
+=======
+		<name>Object store</name>
+		<description>Provides the implementation class for the object store </description>
+        <url>https://github.com/mosip/commons</url>
+	</project>
+>>>>>>> origin/1.1.3

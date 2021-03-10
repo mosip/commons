@@ -33,13 +33,15 @@ public class MiscellaneousDataHelper {
 	CompletableFuture<List<ScreenAuthorizationDto>> screenAuthorizations = null;
 	CompletableFuture<List<ScreenDetailDto>> screenDetails = null;
 	CompletableFuture<List<ProcessListDto>> processList = null;
-	//CompletableFuture<List<FoundationalTrustProviderDto>> ftps = null;
 	CompletableFuture<List<SyncJobDefDto>> syncJobDefDtos = null;
+
+	private String publicKey;
 	
-	public MiscellaneousDataHelper(String machineId, LocalDateTime lastUpdated, LocalDateTime currentTimestamp) {
+	public MiscellaneousDataHelper(String machineId, LocalDateTime lastUpdated, LocalDateTime currentTimestamp, String publicKey) {
 		this.machineId = machineId;
 		this.lastUpdated = lastUpdated;
 		this.currentTimestamp = currentTimestamp;
+		this.publicKey = publicKey;
 	}
 	
 	public void retrieveData(final SyncMasterDataServiceHelper serviceHelper, final List<CompletableFuture> futures) {
@@ -50,7 +52,6 @@ public class MiscellaneousDataHelper {
 		this.screenDetails = serviceHelper.getScreenDetails(this.lastUpdated, this.currentTimestamp);
 		
 		this.processList = serviceHelper.getProcessList(this.lastUpdated, this.currentTimestamp);		
-		//this.ftps = serviceHelper.getFPDetails(this.lastUpdated, this.currentTimestamp);
 
 		this.syncJobDefDtos = serviceHelper.getSyncJobDefDetails(this.lastUpdated, this.currentTimestamp);
 		
@@ -61,22 +62,20 @@ public class MiscellaneousDataHelper {
 		futures.add(this.screenDetails);
 		
 		futures.add(this.processList);
-		//futures.add(this.ftps);
-		
+
 		futures.add(this.syncJobDefDtos);
 	}
 	
 	public void fillRetrievedData(final SyncMasterDataServiceHelper serviceHelper, final List<SyncDataBaseDto> list) 
 			throws InterruptedException, ExecutionException {
-		list.add(serviceHelper.getSyncDataBaseDto(Holiday.class, "structured", this.holidays.get()));
-		list.add(serviceHelper.getSyncDataBaseDto(BlacklistedWords.class, "structured", this.blacklistedWords.get()));
+		list.add(serviceHelper.getSyncDataBaseDto(Holiday.class, "structured", this.holidays.get(), this.publicKey));
+		list.add(serviceHelper.getSyncDataBaseDto(BlacklistedWords.class, "structured", this.blacklistedWords.get(), this.publicKey));
 		
-		list.add(serviceHelper.getSyncDataBaseDto(ScreenAuthorization.class, "structured", this.screenAuthorizations.get()));
-		list.add(serviceHelper.getSyncDataBaseDto(ScreenDetail.class, "structured", this.screenDetails.get()));
+		list.add(serviceHelper.getSyncDataBaseDto(ScreenAuthorization.class, "structured", this.screenAuthorizations.get(), this.publicKey));
+		list.add(serviceHelper.getSyncDataBaseDto(ScreenDetail.class, "structured", this.screenDetails.get(), this.publicKey));
 		
-		list.add(serviceHelper.getSyncDataBaseDto(ProcessList.class, "structured", this.processList.get()));
-		//list.add(serviceHelper.getSyncDataBaseDto(FoundationalTrustProvider.class, "structured", this.ftps.get()));
-		
-		list.add(serviceHelper.getSyncDataBaseDto(SyncJobDef.class, "structured", this.syncJobDefDtos.get()));
+		list.add(serviceHelper.getSyncDataBaseDto(ProcessList.class, "structured", this.processList.get(), this.publicKey));
+
+		list.add(serviceHelper.getSyncDataBaseDto(SyncJobDef.class, "structured", this.syncJobDefDtos.get(), this.publicKey));
 	}
 }

@@ -26,7 +26,7 @@ public interface ProcessListRepository extends JpaRepository<ProcessList, IdAndL
 	 * @param currentTimeStamp the current time stamp
 	 * @return {@link ProcessList} list of ProcessList
 	 */
-	@Query("FROM ProcessList WHERE (createdDateTime > ?1 AND createdDateTime <=?2) OR (updatedDateTime > ?1 AND updatedDateTime<=?2)  OR (deletedDateTime > ?1 AND deletedDateTime <=?2) ")
+	@Query("FROM ProcessList WHERE (createdDateTime BETWEEN ?1 AND ?2) OR (updatedDateTime BETWEEN ?1 AND ?2)  OR (deletedDateTime BETWEEN ?1 AND ?2) ")
 	List<ProcessList> findByLastUpdatedTimeAndCurrentTimeStamp(LocalDateTime lastUpdatedTime,
 			LocalDateTime currentTimeStamp);
 }

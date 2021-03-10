@@ -722,7 +722,7 @@ public class MasterdataIntegrationTest {
 	private ApplicantValidDocumentRepository applicantValidRepository;
 
 	@Test
-	@WithUserDetails("individual")
+	@WithUserDetails("global-admin")
 	public void getValidApplicantTypeTest() throws Exception {
 
 		List<Object[]> list = new ArrayList<>();
@@ -741,7 +741,7 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("individual")
+	@WithUserDetails("global-admin")
 	public void getValidApplicantTypeMasterDataServiceExceptionTest() throws Exception {
 		when(applicantValidRepository.getDocumentCategoryAndTypesForApplicantCode(Mockito.anyString(),
 				Mockito.anyList())).thenThrow(new DataAccessLayerException("errorCode", "errorMessage", null));
@@ -751,7 +751,7 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("individual")
+	@WithUserDetails("global-admin")
 	public void getValidApplicantTypeNoTypeFoundTest() throws Exception {
 		when(applicantValidRepository.getDocumentCategoryAndTypesForApplicantCode(Mockito.anyString(),
 				Mockito.anyList())).thenReturn(null);
@@ -1849,7 +1849,7 @@ public class MasterdataIntegrationTest {
 		when(holidayRepository.create(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot execute ", null));
 		when(locationRepository.findByCode(anyString())).thenReturn(locationHierarchies);
-		when(holidayRepository.findHolidayByHolidayDate(Mockito.any()))
+		when(holidayRepository.findHolidayByHolidayDateHolidayName(Mockito.any(),Mockito.any()))
 		.thenReturn(holidays);
 		when(holidayRepository.findAll()).thenReturn(holidays);
 		HolidayDto holidayDto =new HolidayDto();
@@ -1859,7 +1859,7 @@ public class MasterdataIntegrationTest {
 		holidayDto.setIsActive(true);
 		holidayDto.setLangCode("eng");
 		holidayDto.setLocationCode("BLR");
-		when(holidayRepository.findHolidayByHolidayDateLocationCodeLangCode(any(), any(),any())).thenReturn(null);
+		when(holidayRepository.findHolidayByHolidayNameHolidayDateLocationCodeLangCode(any(),any(), any(),any())).thenReturn(null);
 		
 		mockMvc.perform(post("/holidays").contentType(MediaType.APPLICATION_JSON).content(json))
 				.andExpect(status().isInternalServerError());

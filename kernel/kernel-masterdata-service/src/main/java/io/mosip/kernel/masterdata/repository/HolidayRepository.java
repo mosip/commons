@@ -123,10 +123,11 @@ public interface HolidayRepository extends BaseRepository<Holiday, Integer> {
 	@Query(value = "SELECT * FROM loc_holiday where lang_code=?2 and location_code IN (SELECT code  FROM location where hierarchy_level <=?1 and lang_code=?2)", nativeQuery = true)
 	List<Holiday> findHoildayByLocationCodeAndLangCode(int level, String langCode);
 	
-	@Query(value = "FROM Holiday where holidayDate = ?1 and (isDeleted = false or isDeleted is null) ")
-	List<Holiday> findHolidayByHolidayDate(LocalDate holidayDate);
+	@Query(value = "FROM Holiday where holidayDate = ?1 and holidayName=?2 and(isDeleted = false or isDeleted is null) ")
+	List<Holiday> findHolidayByHolidayDateHolidayName(LocalDate holidayDate,String holidayName);
 	
-	@Query(value = "FROM Holiday where holidayDate = ?1 and location_code = ?2 and lang_code=?3 and (isDeleted = false or isDeleted is null) ")
-	Holiday findHolidayByHolidayDateLocationCodeLangCode(LocalDate holidayDate,String locationCode,String langCode);
+	@Query(value = "FROM Holiday where holidayName=?1 and holidayDate = ?2 and location_code = ?3 and lang_code=?4 and (isDeleted = false or isDeleted is null) ")
+	Holiday findHolidayByHolidayNameHolidayDateLocationCodeLangCode(String holidayName, LocalDate holidayDate,
+			String locationCode, String langCode);
 
 }

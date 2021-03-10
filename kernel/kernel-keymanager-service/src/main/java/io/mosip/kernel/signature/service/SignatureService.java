@@ -1,9 +1,10 @@
 package io.mosip.kernel.signature.service;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-
 import io.mosip.kernel.core.signatureutil.model.SignatureResponse;
+import io.mosip.kernel.signature.dto.JWTSignatureRequestDto;
+import io.mosip.kernel.signature.dto.JWTSignatureResponseDto;
+import io.mosip.kernel.signature.dto.JWTSignatureVerifyRequestDto;
+import io.mosip.kernel.signature.dto.JWTSignatureVerifyResponseDto;
 import io.mosip.kernel.signature.dto.PDFSignatureRequestDto;
 import io.mosip.kernel.signature.dto.SignRequestDto;
 import io.mosip.kernel.signature.dto.SignatureResponseDto;
@@ -30,5 +31,21 @@ public interface SignatureService {
 
 
 	public SignatureResponseDto signPDF(PDFSignatureRequestDto request);
+
+	/**
+	 * JWT Signature.
+	 *
+	 * @param jwtSignRequestDto the jwtSignRequestDto
+	 * @return the JWTSignatureResponseDto
+	 */
+	public JWTSignatureResponseDto jwtSign(JWTSignatureRequestDto jwtSignRequestDto);
+
+	/**
+	 * JWT Signature verification.
+	 *
+	 * @param jwtSignatureVerifyRequestDto the jwtSignatureVerifyRequestDto
+	 * @return the JWTSignatureVerifyResponseDto
+	 */
+	public JWTSignatureVerifyResponseDto jwtVerify(JWTSignatureVerifyRequestDto jwtSignatureVerifyRequestDto);
 
 }

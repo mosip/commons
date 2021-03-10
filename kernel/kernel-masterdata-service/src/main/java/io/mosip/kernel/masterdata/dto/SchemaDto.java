@@ -48,6 +48,9 @@ public class SchemaDto {
 	private String subType;
 	private String contactType;
 	private String group;
+
+	private String alignmentGroup;
+	private RequiredOnDto visible;
 	
 	@EqualsAndHashCode.Include
 	public String caseIgnoredId() {

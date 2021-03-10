@@ -205,7 +205,7 @@ public class MasterdataSearchHelper {
 	 * @param filter  search filter
 	 * @return {@link Predicate}
 	 */
-	private <E> Predicate buildFilters(CriteriaBuilder builder, Root<E> root, SearchFilter filter) {
+	protected <E> Predicate buildFilters(CriteriaBuilder builder, Root<E> root, SearchFilter filter) {
 		String columnName = filter.getColumnName();
 		String value = filter.getValue();
 		String filterType = filter.getType();
@@ -529,19 +529,19 @@ public class MasterdataSearchHelper {
 		});
 		StringBuilder nativeQuery = null;
 		if (isAssigned) {
-			nativeQuery = new StringBuilder().append("SELECT * FROM master.machine_master m where m.id IN");
+			nativeQuery = new StringBuilder().append("SELECT * FROM master.machine_master m where m.regcntr_id is not null  and");
 		} else {
-			nativeQuery = new StringBuilder().append("SELECT * FROM master.machine_master m where m.id NOT IN");
+			nativeQuery = new StringBuilder().append("SELECT * FROM master.machine_master m where m.regcntr_id is null and");
 
 		}
 
 		if (searchDto.getLanguageCode().equals("all")) {
 
 			nativeQuery.append(
-					"(select  rcm.machine_id from master.reg_center_machine rcm ) and m.mspec_id in(select id from master.machine_spec ms , master.machine_type mt where ms.mtyp_code= mt.code and mt.name=:typeName) AND m.zone_code in (:zoneCode)");
+					" m.mspec_id in(select id from master.machine_spec ms , master.machine_type mt where ms.mtyp_code= mt.code and mt.name=:typeName) AND m.zone_code in (:zoneCode)");
 		} else {
 			nativeQuery.append(
-					"(select  rcm.machine_id from master.reg_center_machine rcm ) and m.lang_code=:langCode and m.mspec_id in(select id from master.machine_spec ms , master.machine_type mt where ms.mtyp_code= mt.code and mt.name=:typeName and ms.lang_code=:langCode and ms.lang_code=mt.lang_code) AND m.zone_code in (:zoneCode)");
+					" m.lang_code=:langCode and m.mspec_id in(select id from master.machine_spec ms , master.machine_type mt where ms.mtyp_code= mt.code and mt.name=:typeName and ms.lang_code=:langCode and ms.lang_code=mt.lang_code) AND m.zone_code in (:zoneCode)");
 		}
 
 		Iterator<SearchFilter> searchIterator = searchDto.getFilters().iterator();
@@ -574,18 +574,18 @@ public class MasterdataSearchHelper {
 		});
 		StringBuilder nativeQuery = null;
 		if (isAssigned) {
-			nativeQuery = new StringBuilder().append("SELECT * FROM master.device_master m where m.id IN");
+			nativeQuery = new StringBuilder().append("SELECT * FROM master.device_master m where m.regcntr_id is not null  and");
 		} else {
-			nativeQuery = new StringBuilder().append("SELECT * FROM master.device_master m where m.id NOT IN");
+			nativeQuery = new StringBuilder().append("SELECT * FROM master.device_master m where m.regcntr_id is null and");
 
 		}
 
 		if (searchDto.getLanguageCode().equals("all")) {
 			nativeQuery.append(
-					"(select  distinct rcm.device_id from master.reg_center_device rcm ) and  m.dspec_id in(select id from master.device_spec ms , master.device_type mt where ms.dtyp_code= mt.code and mt.name=:typeName) AND m.zone_code in (:zoneCode)");
+					"  m.dspec_id in(select id from master.device_spec ms , master.device_type mt where ms.dtyp_code= mt.code and mt.name=:typeName) AND m.zone_code in (:zoneCode)");
 		} else {
 			nativeQuery.append(
-					"(select  distinct rcm.device_id from master.reg_center_device rcm ) and m.lang_code=:langCode and m.dspec_id in(select id from master.device_spec ms , master.device_type mt where ms.dtyp_code= mt.code and mt.name=:typeName and ms.lang_code=:langCode and ms.lang_code=mt.lang_code) AND m.zone_code in (:zoneCode)");
+					" m.lang_code=:langCode and m.dspec_id in(select id from master.device_spec ms , master.device_type mt where ms.dtyp_code= mt.code and mt.name=:typeName and ms.lang_code=:langCode and ms.lang_code=mt.lang_code) AND m.zone_code in (:zoneCode)");
 		}
 		Iterator<SearchFilter> searchIterator = searchDto.getFilters().iterator();
 		while (searchIterator.hasNext()) {

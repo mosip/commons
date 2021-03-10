@@ -54,6 +54,14 @@ public class MachineDto extends BaseDto {
 
 	private String keyIndex;
 
+	/**
+	 * Field for encryption public key
+	 */
 	private String publicKey;
+
+	/**
+	 * Field for signature verification public key
+	 */
+	private String signPublicKey;
 
 }

@@ -1,5 +1,23 @@
 package io.mosip.commons.khazana.impl;
 
+
+import static io.mosip.commons.khazana.config.LoggerConfiguration.REGISTRATIONID;
+import static io.mosip.commons.khazana.config.LoggerConfiguration.SESSIONID;
+import static io.mosip.commons.khazana.constant.KhazanaErrorCodes.OBJECT_STORE_NOT_ACCESSIBLE;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -9,12 +27,17 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/1.1.3
 import io.mosip.commons.khazana.config.LoggerConfiguration;
 import io.mosip.commons.khazana.exception.ObjectStoreAdapterException;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.commons.khazana.util.ObjectStoreUtil;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;
+<<<<<<< HEAD
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +48,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+=======
+>>>>>>> origin/1.1.3
 
 import static io.mosip.commons.khazana.config.LoggerConfiguration.REGISTRATIONID;
 import static io.mosip.commons.khazana.config.LoggerConfiguration.SESSIONID;
@@ -38,10 +63,8 @@ public class S3Adapter implements ObjectStoreAdapter {
 
     @Value("${object.store.s3.accesskey:accesskey:accesskey}")
     private String accessKey;
-
     @Value("${object.store.s3.secretkey:secretkey:secretkey}")
     private String secretKey;
-
     @Value("${object.store.s3.url:null}")
     private String url;
 
@@ -51,9 +74,18 @@ public class S3Adapter implements ObjectStoreAdapter {
     @Value("${object.store.s3.readlimit:10000000}")
     private int readlimit;
 
+<<<<<<< HEAD
     @Value("${object.store.connection.max.retry:5}")
     private int maxRetry;
 
+=======
+    @Value("${object.store.connection.max.retry:20}")
+    private int maxRetry;
+
+    @Value("${object.store.max.connection:200}")
+    private int maxConnection;
+
+>>>>>>> origin/1.1.3
     private int retry = 0;
 
     private AmazonS3 connection = null;
@@ -65,8 +97,9 @@ public class S3Adapter implements ObjectStoreAdapter {
         try {
             s3Object = getConnection(container).getObject(container, finalObjectName);
             if (s3Object != null) {
-                ByteArrayInputStream bis = new ByteArrayInputStream(IOUtils.toByteArray(s3Object.getObjectContent()));
-                s3Object.close();
+                ByteArrayOutputStream temp = new ByteArrayOutputStream();
+                IOUtils.copy(s3Object.getObjectContent(), temp);
+                ByteArrayInputStream bis = new ByteArrayInputStream(temp.toByteArray());
                 return bis;
             }
         } catch (Exception e) {
@@ -86,7 +119,7 @@ public class S3Adapter implements ObjectStoreAdapter {
 
     @Override
     public boolean exists(String account, String container, String source, String process, String objectName) {
-        return getObject(account, container, source, process, objectName) != null;
+        return getConnection(container).doesObjectExist(container, ObjectStoreUtil.getName(source, process, objectName));
     }
 
     @Override
@@ -106,12 +139,17 @@ public class S3Adapter implements ObjectStoreAdapter {
         S3Object s3Object = null;
         try {
             ObjectMetadata objectMetadata = new ObjectMetadata();
+<<<<<<< HEAD
             metadata.entrySet().stream().forEach(m -> objectMetadata.addUserMetadata(m.getKey(), m.getValue() != null ? m.getValue().toString() : null));
+=======
+            //changed usermetadata getting  overrided
+            //metadata.entrySet().stream().forEach(m -> objectMetadata.addUserMetadata(m.getKey(), m.getValue() != null ? m.getValue().toString() : null));
+>>>>>>> origin/1.1.3
             String finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
             s3Object = getConnection(container).getObject(container, finalObjectName);
             if (s3Object.getObjectMetadata() != null && s3Object.getObjectMetadata().getUserMetadata() != null)
                 s3Object.getObjectMetadata().getUserMetadata().entrySet().forEach(m -> objectMetadata.addUserMetadata(m.getKey(), m.getValue()));
-
+            metadata.entrySet().stream().forEach(m -> objectMetadata.addUserMetadata(m.getKey(), m.getValue() != null ? m.getValue().toString() : null));
             PutObjectRequest putObjectRequest = new PutObjectRequest(container, finalObjectName, s3Object.getObjectContent(), objectMetadata);
             putObjectRequest.getRequestClientOptions().setReadLimit(readlimit);
             getConnection(container).putObject(putObjectRequest);
@@ -160,8 +198,8 @@ public class S3Adapter implements ObjectStoreAdapter {
     public Integer incMetadata(String account, String container, String source, String process, String objectName, String metaDataKey) {
         Map<String, Object> metadata = getMetaData(account, container, source, process, objectName);
         if (metadata.get(metaDataKey) != null) {
-            addObjectMetaData(account, container, source, process, objectName, metadata);
             metadata.put(metaDataKey, Integer.valueOf(metadata.get(metaDataKey).toString()) + 1);
+            addObjectMetaData(account, container, source, process, objectName, metadata);
             return Integer.valueOf(metadata.get(metaDataKey).toString());
         }
         return null;
@@ -171,7 +209,7 @@ public class S3Adapter implements ObjectStoreAdapter {
     public Integer decMetadata(String account, String container, String source, String process, String objectName, String metaDataKey) {
         Map<String, Object> metadata = getMetaData(account, container, source, process, objectName);
         if (metadata.get(metaDataKey) != null) {
-            metadata.put(metaDataKey, Integer.valueOf(metadata.get(metaDataKey).toString()) - 1);
+        	metadata.put(metaDataKey, Integer.valueOf(metadata.get(metaDataKey).toString()) - 1);
             addObjectMetaData(account, container, source, process, objectName, metadata);
             return Integer.valueOf(metadata.get(metaDataKey).toString());
         }
@@ -225,7 +263,13 @@ public class S3Adapter implements ObjectStoreAdapter {
         }
         try {
             AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
+<<<<<<< HEAD
             connection = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCredentials)).enablePathStyleAccess()
+=======
+            connection = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
+                    .enablePathStyleAccess().withClientConfiguration(new ClientConfiguration().withMaxConnections(maxConnection)
+                            .withMaxErrorRetry(maxRetry))
+>>>>>>> origin/1.1.3
                     .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(url, region)).build();
             // test connection once before returning it
             connection.doesBucketExistV2(container);

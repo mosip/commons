@@ -18,6 +18,10 @@ import io.mosip.kernel.signature.dto.SignResponseDto;
 import io.mosip.kernel.signature.dto.TimestampRequestDto;
 import io.mosip.kernel.signature.dto.ValidatorResponseDto;
 import io.mosip.kernel.signature.service.SignatureService;
+import io.mosip.kernel.signature.dto.JWTSignatureRequestDto;
+import io.mosip.kernel.signature.dto.JWTSignatureResponseDto;
+import io.mosip.kernel.signature.dto.JWTSignatureVerifyRequestDto;
+import io.mosip.kernel.signature.dto.JWTSignatureVerifyResponseDto;
 import io.mosip.kernel.signature.dto.PDFSignatureRequestDto;
 import io.mosip.kernel.signature.dto.SignatureResponseDto;
 
@@ -45,6 +49,7 @@ public class SignatureController {
 	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@PostMapping(value = "/sign")
+	@Deprecated
 	public ResponseWrapper<SignResponseDto> sign(@RequestBody @Valid RequestWrapper<SignRequestDto> requestDto) {
 		SignatureResponse signatureResponse = service.sign(requestDto.getRequest());
 		SignResponseDto signResponse = new SignResponseDto();
@@ -58,6 +63,7 @@ public class SignatureController {
 	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN')")
 	@ResponseFilter
 	@PostMapping(value = "/validate")
+	@Deprecated
 	public ResponseWrapper<ValidatorResponseDto> validate(
 			@RequestBody @Valid RequestWrapper<TimestampRequestDto> timestampRequestDto) {
 		ResponseWrapper<ValidatorResponseDto> response = new ResponseWrapper<>();
@@ -75,4 +81,35 @@ public class SignatureController {
 		return response;
 	}
 
+	/**
+	 * Function to JWT sign data
+	 * 
+	 * @param requestDto {@link JWTSignatureRequestDto} having required fields.
+	 * @return The {@link JWTSignatureResponseDto}
+	 */
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@ResponseFilter
+	@PostMapping(value = "/jwtSign")
+	public ResponseWrapper<JWTSignatureResponseDto> jwtSign(@RequestBody @Valid RequestWrapper<JWTSignatureRequestDto> requestDto) {
+		JWTSignatureResponseDto signatureResponse = service.jwtSign(requestDto.getRequest());
+		ResponseWrapper<JWTSignatureResponseDto> response = new ResponseWrapper<>();
+		response.setResponse(signatureResponse);
+		return response;
+	}
+
+	/**
+	 * Function to JWT Signature verification
+	 * 
+	 * @param requestDto {@link JWTSignatureVerifyRequestDto} having required fields.
+	 * @return The {@link JWTSignatureVerifyResponseDto}
+	 */
+	@PreAuthorize("hasAnyRole('INDIVIDUAL','ID_AUTHENTICATION', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@ResponseFilter
+	@PostMapping(value = "/jwtVerify")
+	public ResponseWrapper<JWTSignatureVerifyResponseDto> jwtVerify(@RequestBody @Valid RequestWrapper<JWTSignatureVerifyRequestDto> requestDto) {
+		JWTSignatureVerifyResponseDto signatureResponse = service.jwtVerify(requestDto.getRequest());
+		ResponseWrapper<JWTSignatureVerifyResponseDto> response = new ResponseWrapper<>();
+		response.setResponse(signatureResponse);
+		return response;
+	}
 }

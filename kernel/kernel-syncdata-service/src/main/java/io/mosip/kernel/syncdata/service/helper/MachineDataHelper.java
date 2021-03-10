@@ -23,11 +23,14 @@ public class MachineDataHelper {
 	private CompletableFuture<List<MachineDto>> machineDetails = null;
 	private CompletableFuture<List<MachineSpecificationDto>> machineSpecification = null;
 	private CompletableFuture<List<MachineTypeDto>> machineType = null;
+
+	private String publicKey;
 	
-	public MachineDataHelper(String regCenterId, LocalDateTime lastUpdated, LocalDateTime currentTimestamp) {
+	public MachineDataHelper(String regCenterId, LocalDateTime lastUpdated, LocalDateTime currentTimestamp, String publicKey) {
 		this.regCenterId = regCenterId;
 		this.lastUpdated = lastUpdated;
 		this.currentTimestamp = currentTimestamp;
+		this.publicKey = publicKey;
 	}
 	
 	public void retrieveData(final SyncMasterDataServiceHelper serviceHelper, final List<CompletableFuture> futures) {
@@ -42,9 +45,9 @@ public class MachineDataHelper {
 	
 	public void fillRetrievedData(final SyncMasterDataServiceHelper serviceHelper, final List<SyncDataBaseDto> list) 
 			throws InterruptedException, ExecutionException {
-		list.add(serviceHelper.getSyncDataBaseDto(Machine.class, "structured", this.machineDetails.get()));
-		list.add(serviceHelper.getSyncDataBaseDto(MachineSpecification.class, "structured", this.machineSpecification.get()));
-		list.add(serviceHelper.getSyncDataBaseDto(MachineType.class, "structured", this.machineType.get()));		
+		list.add(serviceHelper.getSyncDataBaseDto(Machine.class, "structured", this.machineDetails.get(), this.publicKey));
+		list.add(serviceHelper.getSyncDataBaseDto(MachineSpecification.class, "structured", this.machineSpecification.get(), this.publicKey));
+		list.add(serviceHelper.getSyncDataBaseDto(MachineType.class, "structured", this.machineType.get(), this.publicKey));
 	}
 
 }

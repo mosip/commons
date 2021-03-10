@@ -29,7 +29,7 @@ public interface UserDetailsHistoryRepository extends BaseRepository<UserDetails
 	List<UserDetailsHistory> getByUserIdAndTimestamp(String userId, LocalDateTime effDTimes);
 	// (?2 BETWEEN effDTimes AND CURRENT_TIMESTAMP)
 
-	@Query(value = "Select 	* from master.user_detail_h m where m.regcntr_id = ?1 and m.id = ?2 and m.eff_dtimes <= ?3 and ( m.is_deleted = false or m.is_deleted is null) order by m.eff_dtimes desc limit 1", nativeQuery = true)
+	@Query(value = "Select 	* from master.user_detail_h m where m.regcntr_id = ?1 and m.id = ?2 and m.eff_dtimes <= ?3 and ( m.is_deleted = false or m.is_deleted is null) order by m.eff_dtimes desc ", nativeQuery = true)
 	List<UserDetailsHistory> findByCntrIdAndUsrIdAndEffectivetimesLessThanEqualAndIsDeletedFalseOrIsDeletedIsNull(
 			String registrationCenterId, String userId, LocalDateTime lDateAndTime);
 

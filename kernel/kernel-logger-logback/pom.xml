@@ -2,11 +2,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
-<groupId>io.mosip.kernel</groupId>
-
+	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-logger-logback</artifactId>
+<<<<<<< HEAD
 	<version>1.1.2</version>
+=======
+	<version>1.1.3</version>
+>>>>>>> origin/1.1.3
 <properties>		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -218,7 +220,11 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
+<<<<<<< HEAD
 	<kernel.core.version>1.1.2</kernel.core.version>
+=======
+	<kernel.core.version>1.1.3</kernel.core.version>
+>>>>>>> origin/1.1.3
 	</properties>
 	<dependencies>
 		<dependency>
@@ -246,7 +252,21 @@
 		</dependency>
 
 	</dependencies>
+<<<<<<< HEAD
 <build>
+=======
+<distributionManagement>
+		<snapshotRepository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository> 
+                 <repository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository> 
+        </distributionManagement> 
+        <build>
+>>>>>>> origin/1.1.3
           <plugins>
             <plugin>
               <artifactId>maven-deploy-plugin</artifactId>
@@ -380,7 +400,12 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
+<<<<<<< HEAD
 		<name>MOSIP commons</name>
 		<description>Mosip commons project </description>
+=======
+		<name>logger logback</name>
+		<description>common logger logback </description>
+>>>>>>> origin/1.1.3
         <url>https://github.com/mosip/commons</url>
 	</project>

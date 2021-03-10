@@ -26,5 +26,9 @@ public class CryptomanagerConstant {
 
 	public static final String DECRYPT = "CryptoManagerDecrypt";
 
+<<<<<<< HEAD
 	public static final int THUMBPRINT_LENGTH = 20;
+=======
+	public static final int THUMBPRINT_LENGTH = 32;
+>>>>>>> origin/1.1.3
 }

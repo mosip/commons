@@ -24,6 +24,6 @@ public interface BlacklistedWordsRepository extends JpaRepository<BlacklistedWor
 	 * @param currentTimeStamp - currentTimestamp
 	 * @return list of {@link BlacklistedWords} - list of blacklisted words
 	 */
-	@Query("FROM BlacklistedWords WHERE (createdDateTime > ?1 AND createdDateTime <=?2) OR (updatedDateTime > ?1 AND updatedDateTime <=?2)  OR (deletedDateTime > ?1 AND deletedDateTime <=?2)")
+	@Query("FROM BlacklistedWords WHERE (createdDateTime BETWEEN ?1 AND ?2) OR (updatedDateTime BETWEEN ?1 AND ?2)  OR (deletedDateTime BETWEEN ?1 AND ?2)")
 	List<BlacklistedWords> findAllLatestCreatedUpdateDeleted(LocalDateTime lastUpdated, LocalDateTime currentTimeStamp);
 }
