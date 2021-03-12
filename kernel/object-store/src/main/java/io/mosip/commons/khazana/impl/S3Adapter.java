@@ -15,10 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.amazonaws.services.s3.model.SetObjectTaggingRequest;
-
-import io.mosip.commons.khazana.dto.ObjectDto;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,18 +27,18 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.AmazonS3Exception;
-import com.amazonaws.services.s3.model.BucketTaggingConfiguration;
 import com.amazonaws.services.s3.model.GetObjectTaggingRequest;
 import com.amazonaws.services.s3.model.GetObjectTaggingResult;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.ObjectTagging;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.TagSet;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.amazonaws.services.s3.model.SetObjectTaggingRequest;
 import com.amazonaws.services.s3.model.Tag;
 
 import io.mosip.commons.khazana.config.LoggerConfiguration;
+import io.mosip.commons.khazana.dto.ObjectDto;
 import io.mosip.commons.khazana.exception.ObjectStoreAdapterException;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.commons.khazana.util.ObjectStoreUtil;
@@ -452,14 +448,15 @@ public class S3Adapter implements ObjectStoreAdapter {
 			}
 		  }
 		}
+		return objectTags;
+
 		}catch(Exception e){
 			LOGGER.error(SESSIONID, REGISTRATIONID, "Exception occured while getTags for : " + container,
 					ExceptionUtils.getStackTrace(e));
 			throw new ObjectStoreAdapterException(OBJECT_STORE_NOT_ACCESSIBLE.getErrorCode(),
 					OBJECT_STORE_NOT_ACCESSIBLE.getErrorMessage(), e);
 		}
-		return objectTags;
-
+	
 	}
 
 }
