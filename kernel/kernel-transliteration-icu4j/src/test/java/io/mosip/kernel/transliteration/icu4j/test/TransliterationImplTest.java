@@ -27,15 +27,13 @@ public class TransliterationImplTest {
 	/**
 	 * 
 	 * Key for arabic language.
-	 */
-	@Value("${mosip.kernel.transliteration.arabic-language-code}")
-	private String arabicLanguageCode;
+	 */	
+	private String arabicLanguageCode="ara";
 
 	/**
 	 * Key for french language.
-	 */
-	@Value("${mosip.kernel.transliteration.franch-language-code}")
-	private String frenchLanguageCode;
+	 */	
+	private String frenchLanguageCode ="fra";
 
 	/**
 	 * Reference to {@link Transliteration}.
