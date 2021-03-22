@@ -48,6 +48,9 @@ public class PacketValidator {
     @Value("${mosip.commons.packetnames:id}")
     private String packetNames;
 
+    @Value("${mosip.commons.packet.manager.schema.validator.convertIdSchemaToDouble:true}")
+    private boolean convertIdschemaToDouble;
+
     private static final Logger LOGGER = PacketManagerLogger.getLogger(PacketValidator.class);
     private static final String FIELD_LIST = "mosip.kernel.idobjectvalidator.mandatory-attributes.reg-processor.%s";
 
@@ -100,7 +103,7 @@ public class PacketValidator {
                     String jsonString = new String(bytearray);
                     LinkedHashMap<String, Object> currentIdMap = (LinkedHashMap<String, Object>) mapper
                             .readValue(jsonString, LinkedHashMap.class).get(IDENTITY);
-                    if (currentIdMap.get(IDSCHEMA_VERSION) != null)
+                    if (convertIdschemaToDouble && currentIdMap.get(IDSCHEMA_VERSION) != null)
                         currentIdMap.put(IDSCHEMA_VERSION, Double.valueOf(currentIdMap.get(IDSCHEMA_VERSION).toString()));
                     currentIdMap.entrySet().forEach(e -> objectMap.putIfAbsent(e.getKey(), e.getValue()));
 
