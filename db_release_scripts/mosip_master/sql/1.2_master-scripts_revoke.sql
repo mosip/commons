@@ -13,4 +13,5 @@
 
 DROP TABLE master.ui_spec;
 
+ALTER TABLE master.identity_schema ADD COLUMN id_attr_json character varying;
 --------------------------------------------------------------------------------------------------------------
