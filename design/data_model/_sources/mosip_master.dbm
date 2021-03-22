@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.3" use-changelog="false" last-position="959,0" last-zoom="0.5" max-obj-count="139"
+<dbmodel pgmodeler-ver="0.9.3" use-changelog="false" last-position="0,1334" last-zoom="0.5" max-obj-count="139"
 	 default-schema="public" default-owner="postgres">
 <role name="sysadmin"
       superuser="true"
@@ -3813,7 +3813,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="identity_schema" layer="0" alias="idsch" collapse-mode="2" max-obj-count="20" z-value="0">
+<table name="identity_schema" layer="0" alias="idsch" collapse-mode="2" max-obj-count="19" z-value="0">
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Identity Schema: To store id schema which is used in MOSIP platform. All MOSIP modules will use this schema for fields representation and validation. ID schema will contain the key pair of the fields and values used and other meta information of schema in table. ]]></comment>
@@ -3833,10 +3833,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="description">
 		<type name="character varying" length="256"/>
 		<comment><![CDATA[Description: Description of the id schema which will give more details about id schema.]]></comment>
-	</column>
-	<column name="id_attr_json">
-		<type name="character varying" length="0"/>
-		<comment><![CDATA[ID Attribute JSON: Field includes both UI related attributes as well as actual ID-Schema related attributes. It is acutal representation of POJO used by UI.]]></comment>
 	</column>
 	<column name="schema_json">
 		<type name="character varying" length="0"/>
