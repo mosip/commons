@@ -145,7 +145,7 @@ public class PacketReaderImpl implements IPacketReader {
 								finalMap.putIfAbsent(key,
 										value != null ? JsonUtils.javaObjectToJsonString(currentIdMap.get(key)) : null);
 							} catch (io.mosip.kernel.core.util.exception.JsonProcessingException e) {
-								e.printStackTrace();
+								LOGGER.error(ExceptionUtils.getStackTrace(e));
 								throw new GetAllIdentityException(e.getMessage());
 							}
 						}

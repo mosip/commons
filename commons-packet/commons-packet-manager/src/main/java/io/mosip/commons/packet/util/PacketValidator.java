@@ -48,6 +48,9 @@ public class PacketValidator {
     @Value("${mosip.commons.packetnames:id}")
     private String packetNames;
 
+    @Value("${mosip.commons.packet.manager.schema.validator.convertIdSchemaToDouble:true}")
+    private boolean convertIdschemaToDouble;
+
     private static final Logger LOGGER = PacketManagerLogger.getLogger(PacketValidator.class);
     private static final String FIELD_LIST = "mosip.kernel.idobjectvalidator.mandatory-attributes.reg-processor.%s";
 
@@ -90,7 +93,7 @@ public class PacketValidator {
     }
 
     private boolean validateSchema(String id, String source, String process) throws IOException, InvalidIdSchemaException, IdObjectIOException {
-        LinkedHashMap objectMap=new LinkedHashMap<>();
+        LinkedHashMap<String, Object> objectMap = new LinkedHashMap<>();
         try {
             for (String packetName : packetNames.split(",")) {
                 Packet packet = packetKeeper.getPacket(getPacketInfo(id, packetName, source, process));
@@ -100,13 +103,16 @@ public class PacketValidator {
                     String jsonString = new String(bytearray);
                     LinkedHashMap<String, Object> currentIdMap = (LinkedHashMap<String, Object>) mapper
                             .readValue(jsonString, LinkedHashMap.class).get(IDENTITY);
+                    if (convertIdschemaToDouble && currentIdMap.get(IDSCHEMA_VERSION) != null)
+                        currentIdMap.put(IDSCHEMA_VERSION, Double.valueOf(currentIdMap.get(IDSCHEMA_VERSION).toString()));
                     currentIdMap.entrySet().forEach(e -> objectMap.putIfAbsent(e.getKey(), e.getValue()));
 
                 }
             }
             String fields = env.getProperty(String.format(FIELD_LIST, IdObjectsSchemaValidationOperationMapper.getOperation(id, process).getOperation()));
-
-            JSONObject finalIdObject = new JSONObject(objectMap);
+            LinkedHashMap finalMap = new LinkedHashMap();
+            finalMap.put(IDENTITY, objectMap);
+            JSONObject finalIdObject = new JSONObject(finalMap);
 
             return idObjectValidator.validateIdObject(idSchemaUtils.getIdSchema(Double.valueOf(objectMap.get(
                     PacketManagerConstants.IDSCHEMA_VERSION).toString())), finalIdObject, Arrays.asList(fields.split(",")));
