@@ -7,6 +7,8 @@
 ### -- 
 ### -- Modified Date        Modified By         Comments / Remarks
 ### -- -----------------------------------------------------------------------------------------------------------
+### -- Mar-2021		    Ram Bhatt           Added python xlsx to csv converter
+### -- -----------------------------------------------------------------------------------------------------------
 
 #########Properties file #############
 set -e
@@ -93,6 +95,7 @@ PGPASSWORD=$SYSADMIN_PWD psql --username=$SYSADMIN_USER --host=$DB_SERVERIP --po
 if [ ${DML_FLAG} == 1 ]
 then
     echo `date "+%m/%d/%Y %H:%M:%S"` ": Converting Excel to CSV for ${MOSIP_DB_NAME} database" | tee -a $LOG 2>&1
+    pip3 install xlrd==1.2.0
     python3 xlsx_to_csv.py
 
     echo `date "+%m/%d/%Y %H:%M:%S"` ": Deploying DML for ${MOSIP_DB_NAME} database" | tee -a $LOG 2>&1
