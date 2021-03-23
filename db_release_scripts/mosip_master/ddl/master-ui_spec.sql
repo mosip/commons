@@ -19,7 +19,7 @@ CREATE TABLE master.ui_spec (
 	upd_dtimes timestamp,
 	is_deleted boolean,
 	del_dtimes timestamp,
-	CONSTRAINT unq_dmn_ttl_vrsn_ischmid UNIQUE (domain,title,version,identity_schema_id),
+	CONSTRAINT unq_dmn_ttl_vrsn_ischmid UNIQUE (domain,type,version,identity_schema_id),
 	CONSTRAINT ui_spec_pk PRIMARY KEY (id)
 
 );
