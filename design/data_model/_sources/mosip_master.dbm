@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.3" use-changelog="false" last-position="844,1371" last-zoom="0.5" max-obj-count="139"
+<dbmodel pgmodeler-ver="0.9.3" use-changelog="false" last-position="0,1334" last-zoom="0.5" max-obj-count="139"
 	 default-schema="public" default-owner="postgres">
 <role name="sysadmin"
       superuser="true"
@@ -34,6 +34,17 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </role>
 
 <role name="masteruser"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="sysadmin_cp"
+      superuser="true"
+      createdb="true"
+      replication="true"
+      createrole="true"
       inherit="true"
       login="true"
       encrypted="true"
@@ -1907,7 +1918,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Message List : List of message texts that will be displayed or sent as alerts / notifications.]]></comment>
-	<position x="3680" y="640"/>
+	<position x="3680" y="800"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : unique code for various standard messages used for display , alerts, etc.]]></comment>
@@ -2107,7 +2118,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Registration Center ID Sequence : Maintains latest sequence number available for registration center ID generation]]></comment>
-	<position x="3680" y="420"/>
+	<position x="3640" y="360"/>
 	<column name="curr_seq_no" not-null="true">
 		<type name="integer" length="0"/>
 		<comment><![CDATA[Current Sequence Number : Latest sequence number available for Registration Center ID generation]]></comment>
@@ -3802,7 +3813,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="identity_schema" layer="0" alias="idsch" collapse-mode="2" max-obj-count="20" z-value="0">
+<table name="identity_schema" layer="0" alias="idsch" collapse-mode="2" max-obj-count="19" z-value="0">
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Identity Schema: To store id schema which is used in MOSIP platform. All MOSIP modules will use this schema for fields representation and validation. ID schema will contain the key pair of the fields and values used and other meta information of schema in table. ]]></comment>
@@ -3822,10 +3833,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="description">
 		<type name="character varying" length="256"/>
 		<comment><![CDATA[Description: Description of the id schema which will give more details about id schema.]]></comment>
-	</column>
-	<column name="id_attr_json">
-		<type name="character varying" length="0"/>
-		<comment><![CDATA[ID Attribute JSON: Field includes both UI related attributes as well as actual ID-Schema related attributes. It is acutal representation of POJO used by UI.]]></comment>
 	</column>
 	<column name="schema_json">
 		<type name="character varying" length="0"/>
@@ -4143,6 +4150,79 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<comment><![CDATA[Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE]]></comment>
 	</column>
 	<constraint name="pk_syncjob_id" type="pk-constr" table="master.sync_job_def">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<schema name="master_cp" layer="0" rect-visible="true" fill-color="#83af1f">
+	<role name="sysadmin_cp"/>
+</schema>
+
+<table name="ui_spec" layer="0" collapse-mode="2" max-obj-count="21" z-value="0">
+	<schema name="master"/>
+	<role name="sysadmin"/>
+	<comment><![CDATA[UI Specifications :  Stores UI Specifications with values used in application modules.]]></comment>
+	<position x="3640" y="360"/>
+	<column name="id" not-null="true">
+		<type name="character varying" length="36"/>
+	</column>
+	<column name="version" not-null="true">
+		<type name="numeric" length="3"/>
+	</column>
+	<column name="domain" not-null="true">
+		<type name="character varying" length="36"/>
+	</column>
+	<column name="title" not-null="true">
+		<type name="character varying" length="64"/>
+	</column>
+	<column name="description" not-null="true">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="type" not-null="true">
+		<type name="character varying" length="36"/>
+	</column>
+	<column name="json_spec" not-null="true">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="identity_schema_id" not-null="true">
+		<type name="character varying" length="36"/>
+	</column>
+	<column name="identity_schema_version" not-null="true">
+		<type name="numeric" length="3"/>
+	</column>
+	<column name="effective_from">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="status_code" not-null="true">
+		<type name="character varying" length="36"/>
+	</column>
+	<column name="add_props" not-null="true">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="is_active" not-null="true">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="cr_by" not-null="true">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="cr_dtimes" not-null="true">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="upd_by">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="is_deleted">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="del_dtimes">
+		<type name="timestamp" length="0"/>
+	</column>
+	<constraint name="unq_dmn_ttl_vrsn_ischmid" type="uq-constr" table="master.ui_spec">
+		<columns names="domain,title,version,identity_schema_id" ref-type="src-columns"/>
+		<comment><![CDATA[Unique Constraint on domain,title,version,identity_schema_id
+]]></comment>
+	</constraint>
+	<constraint name="ui_spec_pk" type="pk-constr" table="master.ui_spec">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
