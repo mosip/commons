@@ -1,5 +1,6 @@
 package io.mosip.commons.packet.dto;
 
+import java.io.Serializable;
 import java.util.Map;
 
 
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
-public class TagResponseDto {
+public class TagResponseDto implements Serializable {
 	
 	Map<String, String> tags;
 }
