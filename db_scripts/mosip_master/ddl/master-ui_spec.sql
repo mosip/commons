@@ -25,7 +25,6 @@ CREATE TABLE master.ui_spec (
 	identity_schema_version numeric(3) NOT NULL,
 	effective_from timestamp,
 	status_code character varying(36) NOT NULL,
-	add_props boolean NOT NULL,
 	is_active boolean NOT NULL,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
@@ -33,7 +32,7 @@ CREATE TABLE master.ui_spec (
 	upd_dtimes timestamp,
 	is_deleted boolean,
 	del_dtimes timestamp,
-	CONSTRAINT unq_dmn_ttl_vrsn_ischmid UNIQUE (domain,title,version,identity_schema_id),
+	CONSTRAINT unq_dmn_type_vrsn_ischmid UNIQUE (domain,type,version,identity_schema_id),
 	CONSTRAINT ui_spec_pk PRIMARY KEY (id)
 
 );
