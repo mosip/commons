@@ -3,9 +3,11 @@ package io.mosip.commons.packet.dto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
+
 @Data
 @EqualsAndHashCode
-public class PacketInfo {
+public class PacketInfo implements Serializable {
 
     private String id;
     private String packetName;
