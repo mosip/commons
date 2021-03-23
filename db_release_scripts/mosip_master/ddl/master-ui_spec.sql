@@ -12,7 +12,6 @@ CREATE TABLE master.ui_spec (
 	identity_schema_version numeric(3) NOT NULL,
 	effective_from timestamp,
 	status_code character varying(36) NOT NULL,
-	add_props boolean NOT NULL,
 	is_active boolean NOT NULL,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
