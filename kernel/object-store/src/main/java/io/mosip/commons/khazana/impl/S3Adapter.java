@@ -341,15 +341,13 @@ public class S3Adapter implements ObjectStoreAdapter {
         return null;
     }
 
-    public List<ObjectDto> getAllObjects(String account, String container) {
+    public List<ObjectDto> getAllObjects(String account, String id) {
 
-   	    String bucketName=null;
-   	   if(useAccountAsBucketname) {
-   		 bucketName=account;
-   	   }else {
-   	  	 bucketName=container;
-   	   }
-        List<S3ObjectSummary> os = getConnection(bucketName).listObjects(bucketName).getObjectSummaries();
+        List<S3ObjectSummary> os = null;
+   	   if(useAccountAsBucketname)
+           os = getConnection(account).listObjects(account, id).getObjectSummaries();
+   	   else
+           os = getConnection(id).listObjects(id).getObjectSummaries();
 
         if (os != null && os.size() > 0) {
             List<ObjectDto> objectDtos = new ArrayList<>();
@@ -364,6 +362,9 @@ public class S3Adapter implements ObjectStoreAdapter {
                             objectDto = new ObjectDto(keys[0], null, keys[1], o.getLastModified());
                         case 3:
                             objectDto = new ObjectDto(keys[0], keys[1], keys[2], o.getLastModified());
+                        case 4:
+                            if (id.equalsIgnoreCase(keys[0]))
+                                objectDto = new ObjectDto(keys[1], keys[2], keys[3], o.getLastModified());
                     }
                     if (objectDto != null)
                         objectDtos.add(objectDto);
