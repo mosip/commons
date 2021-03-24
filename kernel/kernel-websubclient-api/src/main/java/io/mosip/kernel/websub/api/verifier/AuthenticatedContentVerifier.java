@@ -72,16 +72,16 @@ public class AuthenticatedContentVerifier {
 			String signature = signatureSplit[1];
 			HMac hMac = null;
 			switch (method) {
-			case "sha1":
+			case "SHA1":
 				hMac = new HMac(new SHA1Digest());
 				break;
-			case "sha256":
+			case "SHA256":
 				hMac = new HMac(new SHA256Digest());
 				break;
-			case "sha384":
+			case "SHA384":
 				hMac = new HMac(new SHA384Digest());
 				break;
-			case "sha512":
+			case "SHA512":
 				hMac = new HMac(new SHA512Digest());
 				break;
 			default:
