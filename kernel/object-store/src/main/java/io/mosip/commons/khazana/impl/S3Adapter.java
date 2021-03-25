@@ -3,6 +3,7 @@ package io.mosip.commons.khazana.impl;
 
 import static io.mosip.commons.khazana.config.LoggerConfiguration.REGISTRATIONID;
 import static io.mosip.commons.khazana.config.LoggerConfiguration.SESSIONID;
+import static io.mosip.commons.khazana.constant.KhazanaConstant.TAGS_FILENAME;
 import static io.mosip.commons.khazana.constant.KhazanaErrorCodes.OBJECT_STORE_NOT_ACCESSIBLE;
 
 import java.io.ByteArrayInputStream;
@@ -74,8 +75,6 @@ public class S3Adapter implements ObjectStoreAdapter {
     private boolean useAccountAsBucketname;
 
     private int retry = 0;
-
-    public static String TAGS_FILENAME="Tags";
     
     private AmazonS3 connection = null;
 
