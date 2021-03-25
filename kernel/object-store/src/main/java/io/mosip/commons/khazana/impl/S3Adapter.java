@@ -358,13 +358,17 @@ public class S3Adapter implements ObjectStoreAdapter {
                     switch (keys.length) {
                         case 1:
                             objectDto = new ObjectDto(null, null, keys[0], o.getLastModified());
+                            break;
                         case 2:
                             objectDto = new ObjectDto(keys[0], null, keys[1], o.getLastModified());
+                            break;
                         case 3:
                             objectDto = new ObjectDto(keys[0], keys[1], keys[2], o.getLastModified());
+                            break;
                         case 4:
                             if (id.equalsIgnoreCase(keys[0]))
                                 objectDto = new ObjectDto(keys[1], keys[2], keys[3], o.getLastModified());
+                            break;
                     }
                     if (objectDto != null)
                         objectDtos.add(objectDto);
