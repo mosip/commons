@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.3" use-changelog="false" last-position="844,1371" last-zoom="0.5" max-obj-count="139"
+<dbmodel pgmodeler-ver="0.9.3" use-changelog="false" last-position="556,0" last-zoom="0.4" max-obj-count="139"
 	 default-schema="public" default-owner="postgres">
 <role name="sysadmin"
       superuser="true"
@@ -34,6 +34,17 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </role>
 
 <role name="masteruser"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="sysadmin_cp"
+      superuser="true"
+      createdb="true"
+      replication="true"
+      createrole="true"
       inherit="true"
       login="true"
       encrypted="true"
@@ -776,7 +787,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Device Master History : This to track changes to master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ), Effective DateTimestamp is used for identifying latest or point in time information. Refer master.device_master table description for details.   ]]></comment>
-	<position x="3220" y="700"/>
+	<position x="3160" y="740"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Device ID : Unique ID generated / assigned for device]]></comment>
@@ -4146,6 +4157,78 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
+
+<schema name="master_cp" layer="0" rect-visible="true" fill-color="#83af1f">
+	<role name="sysadmin_cp"/>
+</schema>
+
+<table name="ca_cert_store" layer="0" collapse-mode="2" max-obj-count="20" z-value="0">
+	<schema name="master"/>
+	<role name="sysadmin"/>
+	<position x="3660" y="1000"/>
+	<column name="cert_id" not-null="true">
+		<type name="character varying" length="36"/>
+	</column>
+	<column name="cert_subject" not-null="true">
+		<type name="character varying" length="500"/>
+	</column>
+	<column name="cert_issuer" not-null="true">
+		<type name="character varying" length="500"/>
+	</column>
+	<column name="issuer_id" not-null="true">
+		<type name="character varying" length="36"/>
+	</column>
+	<column name="cert_not_before">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="cert_not_after">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="crl_uri">
+		<type name="character varying" length="120"/>
+	</column>
+	<column name="cert_data">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="cert_thumbprint">
+		<type name="character varying" length="100"/>
+	</column>
+	<column name="cert_serial_no">
+		<type name="character varying" length="50"/>
+	</column>
+	<column name="partner_domain">
+		<type name="character varying" length="36"/>
+	</column>
+	<column name="cr_by" not-null="true">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="cr_dtimes" not-null="true">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="upd_by">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="upd_dtimes">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="is_deleted">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="del_dtimes">
+		<type name="timestamp" length="0"/>
+	</column>
+	<constraint name="ca_cert_store_pk" type="pk-constr" table="master.ca_cert_store">
+		<columns names="cert_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<index name="pk_cacs_id" table="master.ca_cert_store"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="cert_id"/>
+		</idxelement>
+</index>
 
 <constraint name="fk_appauthm_appdtl" type="fk-constr" comparison-type="MATCH SIMPLE"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="master.app_detail" table="master.app_authentication_method">
