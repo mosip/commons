@@ -2,7 +2,6 @@ package io.mosip.commons.packetmanager.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
-import io.mosip.commons.khazana.constant.KhazanaConstant;
 import io.mosip.commons.khazana.dto.ObjectDto;
 import io.mosip.commons.packet.dto.TagResponseDto;
 import io.mosip.commons.packet.facade.PacketReader;
@@ -79,9 +78,7 @@ public class PacketReaderService {
             List<ObjectDto> allObjects = packetReader.info(id);
             List<ContainerInfoDto> containerInfoDtos = new ArrayList<>();
             for (ObjectDto o : allObjects) {
-                if (!o.getObjectName().contains(KhazanaConstant.TAGS_FILENAME) &&
-                        !containerInfoDtos.stream().anyMatch(info -> info.getSource().equalsIgnoreCase(o.getSource()) &&
-                                info.getProcess().equalsIgnoreCase(o.getProcess()))) {
+                if (!containerInfoDtos.stream().anyMatch(info -> info.getSource().equalsIgnoreCase(o.getSource()) && info.getProcess().equalsIgnoreCase(o.getProcess()))) {
                     ContainerInfoDto containerInfo = new ContainerInfoDto();
                     containerInfo.setSource(o.getSource());
                     containerInfo.setProcess(o.getProcess());
