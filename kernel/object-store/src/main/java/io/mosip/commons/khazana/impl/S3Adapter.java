@@ -59,6 +59,11 @@ public class S3Adapter implements ObjectStoreAdapter {
 
     @Value("${object.store.max.connection:200}")
     private int maxConnection;
+    
+    @Value("${object.store.s3.use.account.as.bucketname:false}")
+    private boolean useAccountAsBucketname;
+    
+    public static String TAGS_FILENAME="Tags";
 
     private int retry = 0;
 
@@ -66,10 +71,18 @@ public class S3Adapter implements ObjectStoreAdapter {
 
     @Override
     public InputStream getObject(String account, String container, String source, String process, String objectName) {
-        String finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
+    	 String finalObjectName=null;
+    	 String bucketName=null;
+    	if(useAccountAsBucketname) {
+    		 finalObjectName = ObjectStoreUtil.getName(container,source, process, objectName);
+    		 bucketName=account;
+    	}else {
+    		 finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
+    		 bucketName=container;
+    	}
         S3Object s3Object = null;
         try {
-            s3Object = getConnection(container).getObject(container, finalObjectName);
+            s3Object = getConnection(bucketName).getObject(bucketName, finalObjectName);
             if (s3Object != null) {
                 ByteArrayOutputStream temp = new ByteArrayOutputStream();
                 IOUtils.copy(s3Object.getObjectContent(), temp);
@@ -93,17 +106,35 @@ public class S3Adapter implements ObjectStoreAdapter {
 
     @Override
     public boolean exists(String account, String container, String source, String process, String objectName) {
-        return getConnection(container).doesObjectExist(container, ObjectStoreUtil.getName(source, process, objectName));
+    	
+    	 String finalObjectName=null;
+    	 String bucketName=null;
+    	if(useAccountAsBucketname) {
+    		 finalObjectName = ObjectStoreUtil.getName(container,source, process, objectName);
+    		 bucketName=account;
+    	}else {
+    		 finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
+    		 bucketName=container;
+    	}
+        return getConnection(bucketName).doesObjectExist(bucketName, ObjectStoreUtil.getName(source, process, finalObjectName));
     }
 
     @Override
     public boolean putObject(String account, final String container, String source, String process, String objectName, InputStream data) {
-        AmazonS3 connection = getConnection(container);
-        if (!connection.doesBucketExistV2(container))
-            connection.createBucket(container);
+    	 String finalObjectName=null;
+    	 String bucketName=null;
+    	if(useAccountAsBucketname) {
+    		 finalObjectName = ObjectStoreUtil.getName(container,source, process, objectName);
+    		 bucketName=account;
+    	}else {
+    		 finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
+    		 bucketName=container;
+    	}
+    	AmazonS3 connection = getConnection(bucketName);
+        if (!connection.doesBucketExistV2(bucketName))
+            connection.createBucket(bucketName);
 
-        String finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
-        connection.putObject(container, finalObjectName, data, null);
+        connection.putObject(bucketName, finalObjectName, data, null);
         return true;
     }
 
@@ -112,17 +143,26 @@ public class S3Adapter implements ObjectStoreAdapter {
                                                  String objectName, Map<String, Object> metadata) {
         S3Object s3Object = null;
         try {
+        	 String finalObjectName=null;
+        	 String bucketName=null;
+        	if(useAccountAsBucketname) {
+        		 finalObjectName = ObjectStoreUtil.getName(container,source, process, objectName);
+        		 bucketName=account;
+        	}else {
+        		 finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
+        		 bucketName=container;
+        	}
             ObjectMetadata objectMetadata = new ObjectMetadata();
             //changed usermetadata getting  overrided
             //metadata.entrySet().stream().forEach(m -> objectMetadata.addUserMetadata(m.getKey(), m.getValue() != null ? m.getValue().toString() : null));
-            String finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
-            s3Object = getConnection(container).getObject(container, finalObjectName);
+          
+            s3Object = getConnection(bucketName).getObject(bucketName, finalObjectName);
             if (s3Object.getObjectMetadata() != null && s3Object.getObjectMetadata().getUserMetadata() != null)
                 s3Object.getObjectMetadata().getUserMetadata().entrySet().forEach(m -> objectMetadata.addUserMetadata(m.getKey(), m.getValue()));
             metadata.entrySet().stream().forEach(m -> objectMetadata.addUserMetadata(m.getKey(), m.getValue() != null ? m.getValue().toString() : null));
-            PutObjectRequest putObjectRequest = new PutObjectRequest(container, finalObjectName, s3Object.getObjectContent(), objectMetadata);
+            PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, finalObjectName, s3Object.getObjectContent(), objectMetadata);
             putObjectRequest.getRequestClientOptions().setReadLimit(readlimit);
-            getConnection(container).putObject(putObjectRequest);
+            getConnection(bucketName).putObject(putObjectRequest);
             return metadata;
         } catch (Exception e) {
             LOGGER.error(SESSIONID, REGISTRATIONID,"Exception occured to addObjectMetaData for : " + container, ExceptionUtils.getStackTrace(e));
@@ -143,7 +183,15 @@ public class S3Adapter implements ObjectStoreAdapter {
                                                  String objectName, String key, String value) {
         Map<String, Object> meta = new HashMap<>();
         meta.put(key, value);
-        String finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
+        String finalObjectName=null;
+   	    
+    	   if(useAccountAsBucketname) {
+    		  finalObjectName = ObjectStoreUtil.getName(container,source, process, objectName);
+    		
+    	   }else {
+    		 finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
+    		}
+       
         return addObjectMetaData(account, container, source, process, finalObjectName, meta);
     }
 
@@ -152,9 +200,18 @@ public class S3Adapter implements ObjectStoreAdapter {
                                            String objectName) {
         S3Object s3Object = null;
         try {
+        	 String finalObjectName=null;
+        	 String bucketName=null;
+        	if(useAccountAsBucketname) {
+        		 finalObjectName = ObjectStoreUtil.getName(container,source, process, objectName);
+        		 bucketName=account;
+        	}else {
+        		 finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
+        		 bucketName=container;
+        	}
             Map<String, Object> metaData = new HashMap<>();
-            String finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
-            s3Object = getConnection(container).getObject(container, finalObjectName);
+         
+            s3Object = getConnection(bucketName).getObject(bucketName, finalObjectName);
             ObjectMetadata objectMetadata = s3Object.getObjectMetadata();
             if (objectMetadata != null && objectMetadata.getUserMetadata() != null)
                 objectMetadata.getUserMetadata().entrySet().forEach(entry -> metaData.put(entry.getKey(), entry.getValue()));
@@ -196,8 +253,18 @@ public class S3Adapter implements ObjectStoreAdapter {
 
     @Override
     public boolean deleteObject(String account, String container, String source, String process, String objectName) {
-        String finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
-        getConnection(container).deleteObject(container, finalObjectName);
+    	
+    	String finalObjectName=null;
+   	    String bucketName=null;
+   	   if(useAccountAsBucketname) {
+   		 finalObjectName = ObjectStoreUtil.getName(container,source, process, objectName);
+   		 bucketName=account;
+   	   }else {
+   		 finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
+   	  	 bucketName=container;
+   	   }
+        
+        getConnection(bucketName).deleteObject(bucketName, finalObjectName);
         return true;
     }
 
@@ -229,15 +296,15 @@ public class S3Adapter implements ObjectStoreAdapter {
         return false;
     }
 
-    private AmazonS3 getConnection(String container) {
+    private AmazonS3 getConnection(String bucketName) {
         try {
             if (connection != null) {
                 // test connection once before returning it
-                connection.doesBucketExistV2(container);
+                connection.doesBucketExistV2(bucketName);
                 return connection;
             }
         } catch (Exception e) {
-            LOGGER.error(SESSIONID, REGISTRATIONID,"Exception occured while using existing connection for " + container +". Will try to create new. Retry count : " + retry, ExceptionUtils.getStackTrace(e));
+            LOGGER.error(SESSIONID, REGISTRATIONID,"Exception occured while using existing connection for " + bucketName +". Will try to create new. Retry count : " + retry, ExceptionUtils.getStackTrace(e));
         }
         try {
             AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
@@ -246,18 +313,18 @@ public class S3Adapter implements ObjectStoreAdapter {
                             .withMaxErrorRetry(maxRetry))
                     .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(url, region)).build();
             // test connection once before returning it
-            connection.doesBucketExistV2(container);
+            connection.doesBucketExistV2(bucketName);
             retry = 0;
             return connection;
 
         } catch (Exception e) {
             if (retry >= maxRetry) {
-                LOGGER.error(SESSIONID, REGISTRATIONID,"Maximum retry limit exceeded. Could not obtain connection for "+ container +". Retry count :" + retry, ExceptionUtils.getStackTrace(e));
+                LOGGER.error(SESSIONID, REGISTRATIONID,"Maximum retry limit exceeded. Could not obtain connection for "+ bucketName +". Retry count :" + retry, ExceptionUtils.getStackTrace(e));
                 throw new ObjectStoreAdapterException(OBJECT_STORE_NOT_ACCESSIBLE.getErrorCode(), OBJECT_STORE_NOT_ACCESSIBLE.getErrorMessage(), e);
             } else {
                 retry = retry + 1;
-                LOGGER.error(SESSIONID, REGISTRATIONID,"Exception occured while obtaining connection for "+ container +". Will try again. Retry count : " + retry, ExceptionUtils.getStackTrace(e));
-                getConnection(container);
+                LOGGER.error(SESSIONID, REGISTRATIONID,"Exception occured while obtaining connection for "+ bucketName +". Will try again. Retry count : " + retry, ExceptionUtils.getStackTrace(e));
+                getConnection(bucketName);
             }
         }
         return null;
