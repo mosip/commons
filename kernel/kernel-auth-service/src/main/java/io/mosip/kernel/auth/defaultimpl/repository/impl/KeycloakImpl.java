@@ -67,6 +67,7 @@ import io.mosip.kernel.core.authmanager.model.UserPasswordRequestDto;
 import io.mosip.kernel.core.authmanager.model.UserPasswordResponseDto;
 import io.mosip.kernel.core.authmanager.model.UserRegistrationRequestDto;
 import io.mosip.kernel.core.authmanager.model.ValidationResponseDto;
+import io.mosip.kernel.core.authmanager.model.VidDto;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.util.CryptoUtil;
@@ -688,6 +689,44 @@ public class KeycloakImpl implements DataStore {
 		String roleId = jsonNode.get("id").asText();
 		return roleId;
 		
+	}
+
+	@Override
+	public VidDto getVidFromUserId(String userId, String realmID) {
+		VidDto vIDDto = new VidDto();
+		Map<String, String> pathParams = new HashMap<>();
+		pathParams.put(AuthConstant.REALM_ID, realmID);
+		HttpHeaders httpHeaders = new HttpHeaders();
+		HttpEntity<String> httpEntity = new HttpEntity<>(null, httpHeaders);
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
+				.fromUriString(keycloakAdminUrl + users + "?username=" + userId);
+		String response = callKeycloakService(uriComponentsBuilder.buildAndExpand(pathParams).toString(),
+				HttpMethod.GET, httpEntity);
+		if (response == null || response.isEmpty()) {
+			throw new AuthManagerException(AuthErrorCode.USER_NOT_FOUND.getErrorCode(),
+					AuthErrorCode.USER_NOT_FOUND.getErrorMessage());
+		}
+		try {
+			JsonNode node = objectMapper.readTree(response);
+			for (JsonNode jsonNode : node) {
+				if (jsonNode.get(AuthConstant.USER_NAME).textValue().equals(userId)) {
+					JsonNode attriNode = jsonNode.get("attributes");
+					String vid = attriNode.get(AuthConstant.VID).get(0).textValue();
+					vIDDto.setVid(vid);
+ 					break;
+				}
+			}
+			if (vIDDto.getVid() == null) {
+				throw new AuthManagerException(AuthErrorCode.USER_NOT_FOUND.getErrorCode(),
+						AuthErrorCode.USER_NOT_FOUND.getErrorMessage());
+			}
+
+		} catch (IOException e) {
+			throw new AuthManagerException(AuthErrorCode.IO_EXCEPTION.getErrorCode(),
+					AuthErrorCode.IO_EXCEPTION.getErrorMessage());
+		}
+
+		return vIDDto;
 	}
 
 }
