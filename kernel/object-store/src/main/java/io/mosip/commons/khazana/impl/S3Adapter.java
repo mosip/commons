@@ -29,6 +29,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.BucketTaggingConfiguration;
 import com.amazonaws.services.s3.model.GetObjectTaggingRequest;
 import com.amazonaws.services.s3.model.GetObjectTaggingResult;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -38,6 +39,7 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.s3.model.SetObjectTaggingRequest;
 import com.amazonaws.services.s3.model.Tag;
+import com.amazonaws.services.s3.model.TagSet;
 
 import io.mosip.commons.khazana.config.LoggerConfiguration;
 import io.mosip.commons.khazana.dto.ObjectDto;
@@ -472,6 +474,28 @@ public class S3Adapter implements ObjectStoreAdapter {
 					OBJECT_STORE_NOT_ACCESSIBLE.getErrorMessage(), e);
 		}
 	
+	}@Override
+	public boolean deleteTags(String account, String container, List<String> tags) {
+		try {
+
+			AmazonS3 connection = getConnection(container);
+			if (!connection.doesBucketExistV2(container))
+	            connection.createBucket(container);
+			Map<String, String> existingMetadata = getTags(account, container);
+			tags.stream()
+					.forEach(m -> existingMetadata.remove(m));
+			TagSet tagSet = new TagSet(existingMetadata);
+			BucketTaggingConfiguration bucketTaggingConfiguration = new BucketTaggingConfiguration();
+			bucketTaggingConfiguration.withTagSets(tagSet);
+			connection.setBucketTaggingConfiguration(container, bucketTaggingConfiguration);
+
+		} catch (Exception e) {
+			LOGGER.error(SESSIONID, REGISTRATIONID, "Exception occured while deleteTags for : " + container,
+					ExceptionUtils.getStackTrace(e));
+			throw new ObjectStoreAdapterException(OBJECT_STORE_NOT_ACCESSIBLE.getErrorCode(),
+					OBJECT_STORE_NOT_ACCESSIBLE.getErrorMessage(), e);
+		}
+		return true;
 	}
 
 }
