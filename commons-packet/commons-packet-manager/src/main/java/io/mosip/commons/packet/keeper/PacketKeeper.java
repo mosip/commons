@@ -21,12 +21,14 @@ import io.mosip.commons.packet.constants.PacketUtilityErrorCodes;
 import io.mosip.commons.packet.dto.Packet;
 import io.mosip.commons.packet.dto.PacketInfo;
 import io.mosip.commons.packet.dto.TagDto;
+import io.mosip.commons.packet.dto.TagRequestDto;
 import io.mosip.commons.packet.exception.CryptoException;
 import io.mosip.commons.packet.exception.GetTagException;
 import io.mosip.commons.packet.exception.ObjectStoreAdapterException;
 import io.mosip.commons.packet.exception.PacketIntegrityFailureException;
 import io.mosip.commons.packet.exception.PacketKeeperException;
 import io.mosip.commons.packet.exception.TagCreationException;
+import io.mosip.commons.packet.exception.TagDeletionException;
 import io.mosip.commons.packet.spi.IPacketCryptoService;
 import io.mosip.commons.packet.util.PacketManagerHelper;
 import io.mosip.commons.packet.util.PacketManagerLogger;
@@ -354,4 +356,24 @@ public class PacketKeeper {
         List<ObjectDto> allObjects = getAdapter().getAllObjects(PACKET_MANAGER_ACCOUNT, id);
         return allObjects;
     }
+    public boolean deleteTags(TagRequestDto tagRequestDto) {
+		try {
+
+			boolean isDeleted = getAdapter().deleteTags(PACKET_MANAGER_ACCOUNT, tagRequestDto.getId(), tagRequestDto.getTagNames());
+			return isDeleted;
+
+		} catch (Exception e) {
+			LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, tagRequestDto.getId(),
+					ExceptionUtils.getStackTrace(e));
+			if (e instanceof BaseCheckedException) {
+				BaseCheckedException ex = (BaseCheckedException) e;
+				throw new TagDeletionException(ex.getErrorCode(), ex.getMessage());
+			} else if (e instanceof BaseUncheckedException) {
+				BaseUncheckedException ex = (BaseUncheckedException) e;
+				throw new TagDeletionException(ex.getErrorCode(), ex.getMessage());
+			}
+			throw new TagDeletionException(e.getMessage());
+
+		}
+	}
 }

@@ -1918,7 +1918,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Message List : List of message texts that will be displayed or sent as alerts / notifications.]]></comment>
-	<position x="3680" y="640"/>
+	<position x="3680" y="800"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : unique code for various standard messages used for display , alerts, etc.]]></comment>
@@ -2118,7 +2118,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Registration Center ID Sequence : Maintains latest sequence number available for registration center ID generation]]></comment>
-	<position x="3680" y="420"/>
+	<position x="3640" y="360"/>
 	<column name="curr_seq_no" not-null="true">
 		<type name="integer" length="0"/>
 		<comment><![CDATA[Current Sequence Number : Latest sequence number available for Registration Center ID generation]]></comment>
@@ -3813,7 +3813,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="identity_schema" layer="0" alias="idsch" collapse-mode="2" max-obj-count="20" z-value="0">
+<table name="identity_schema" layer="0" alias="idsch" collapse-mode="2" max-obj-count="19" z-value="0">
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Identity Schema: To store id schema which is used in MOSIP platform. All MOSIP modules will use this schema for fields representation and validation. ID schema will contain the key pair of the fields and values used and other meta information of schema in table. ]]></comment>
@@ -3833,10 +3833,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="description">
 		<type name="character varying" length="256"/>
 		<comment><![CDATA[Description: Description of the id schema which will give more details about id schema.]]></comment>
-	</column>
-	<column name="id_attr_json">
-		<type name="character varying" length="0"/>
-		<comment><![CDATA[ID Attribute JSON: Field includes both UI related attributes as well as actual ID-Schema related attributes. It is acutal representation of POJO used by UI.]]></comment>
 	</column>
 	<column name="schema_json">
 		<type name="character varying" length="0"/>

@@ -7,9 +7,11 @@ import io.mosip.commons.packet.constants.PacketManagerConstants;
 import io.mosip.commons.packet.dto.Packet;
 import io.mosip.commons.packet.dto.PacketInfo;
 import io.mosip.commons.packet.dto.TagDto;
+import io.mosip.commons.packet.dto.TagRequestDto;
 import io.mosip.commons.packet.exception.GetTagException;
 import io.mosip.commons.packet.exception.PacketKeeperException;
 import io.mosip.commons.packet.exception.TagCreationException;
+import io.mosip.commons.packet.exception.TagDeletionException;
 import io.mosip.commons.packet.keeper.PacketKeeper;
 import io.mosip.commons.packet.spi.IPacketCryptoService;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
@@ -112,6 +114,7 @@ public class PacketKeeperTest {
         Map<String, String> tagsMap = new HashMap<>();
         tagsMap.put("osivalidation", "pass");
         Mockito.when(swiftAdapter.getTags(any(), any())).thenReturn(tagsMap);
+        Mockito.when(swiftAdapter.deleteTags(any(), any(),any())).thenReturn(true);
      
     }
 
@@ -265,6 +268,30 @@ public class PacketKeeperTest {
 
         List<ObjectDto> result = packetKeeper.getAll(id);
         assertEquals(objectDtos.size(), result.size());
+
+    }
+    @Test
+    public void testdeleteTags() {
+    	TagRequestDto tagRequestDto=new TagRequestDto();
+    	tagRequestDto.setId(id);
+        List<String> tagNames=new ArrayList<>();
+        tagNames.add("osivalidation");
+        tagRequestDto.setTagNames(tagNames);
+    	
+        boolean isDeleted = packetKeeper.deleteTags(tagRequestDto);
+        assertTrue(isDeleted);
+
+    }
+   
+    @Test(expected = TagDeletionException.class)
+    public void testdeleteTagsException() {
+    	TagRequestDto tagRequestDto=new TagRequestDto();
+    	tagRequestDto.setId(id);
+        List<String> tagNames=new ArrayList<>();
+        tagNames.add("osivalidation");
+        tagRequestDto.setTagNames(tagNames);
+        Mockito.when(swiftAdapter.deleteTags(any(), any(),any())).thenThrow(new BaseUncheckedException("code","message"));
+        packetKeeper.deleteTags(tagRequestDto);
 
     }
 }

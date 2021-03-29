@@ -2,6 +2,7 @@ package io.mosip.commons.packetmanager.test.controller;
 
 import com.google.common.collect.Lists;
 import io.mosip.commons.packet.dto.Document;
+import io.mosip.commons.packet.dto.TagDeleteResponseDto;
 import io.mosip.commons.packet.dto.TagDto;
 import io.mosip.commons.packet.dto.TagRequestDto;
 import io.mosip.commons.packet.dto.TagResponseDto;
@@ -40,6 +41,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -325,6 +327,24 @@ public class PacketManagerControllerTest {
         request.setRequest(infoDto);
 
         this.mockMvc.perform(post("/validatePacket").contentType(MediaType.APPLICATION_JSON).content(JsonUtils.javaObjectToJsonString(request)))
+                .andExpect(status().isOk());
+    }
+    @Test
+    @WithUserDetails("reg-processor")
+    public void testDeleteTags() throws Exception {
+    	TagRequestDto tagRequestDto = new TagRequestDto();
+    	tagRequestDto.setId("id");
+    	  List<String> tagNames=new ArrayList<>();
+          tagNames.add("osivalidation");
+          tagRequestDto.setTagNames(tagNames);
+          TagDeleteResponseDto tagResponse=new TagDeleteResponseDto();
+          tagResponse.setDeleted(true);
+          Mockito.when(
+                packetWriter.deleteTags(any())).thenReturn(tagResponse);
+
+        request.setRequest(tagRequestDto);
+
+        this.mockMvc.perform(post("/deleteTag").contentType(MediaType.APPLICATION_JSON).content(JsonUtils.javaObjectToJsonString(request)))
                 .andExpect(status().isOk());
     }
 }
