@@ -24,7 +24,6 @@ import io.mosip.kernel.core.authmanager.model.UserPasswordResponseDto;
 import io.mosip.kernel.core.authmanager.model.UserRegistrationRequestDto;
 import io.mosip.kernel.core.authmanager.model.UserRoleDto;
 import io.mosip.kernel.core.authmanager.model.ValidationResponseDto;
-import io.mosip.kernel.core.authmanager.model.VidDto;
 
 /**
  * @author Ramadurai Pandian
@@ -73,7 +72,5 @@ public interface AuthService extends AuthZService, AuthNService {
 			String redirectURI);
 
 	public String getKeycloakURI(String redirectURI, String state);
-	
-	public VidDto getVidBasedOnUserID(String userId, String appId) ;
 
 }

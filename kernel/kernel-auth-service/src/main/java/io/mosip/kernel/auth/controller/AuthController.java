@@ -707,22 +707,4 @@ public class AuthController {
 		responseWrapper.setResponse(authNResponseDto);
 		return responseWrapper;
 	}
-	
-	/**
-	 * This API will fetch RID based on appId and userId.
-	 * 
-	 * @param appId  - application Id
-	 * @param userId - user Id
-	 * @return {@link VidDto}
-	 * @throws Exception
-	 */
-	@ResponseFilter
-	@GetMapping(value = "vid/{appid}/{userid}")
-	public ResponseWrapper<VidDto> getVid(@PathVariable("appid") String appId, @PathVariable("userid") String userId)
-		 {
-		ResponseWrapper<VidDto> responseWrapper = new ResponseWrapper<>();
-		VidDto vidDto = authService.getVidBasedOnUserID(userId, appId);
-		responseWrapper.setResponse(vidDto);
-		return responseWrapper;
-	}
 }

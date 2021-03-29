@@ -39,7 +39,6 @@ import io.mosip.kernel.core.authmanager.model.UserPasswordRequestDto;
 import io.mosip.kernel.core.authmanager.model.UserPasswordResponseDto;
 import io.mosip.kernel.core.authmanager.model.UserRegistrationRequestDto;
 import io.mosip.kernel.core.authmanager.model.ValidationResponseDto;
-import io.mosip.kernel.core.authmanager.model.VidDto;
 
 /**
  * @author Ramadurai Pandian
@@ -256,19 +255,19 @@ public class DBDataStore implements DataStore {
 	}
 
 	@Override
-	public MosipUserListDto getListOfUsersDetails(List<String> userDetails, String appId) {
+	public MosipUserListDto getListOfUsersDetails(List<String> userDetails,String appId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public MosipUserSaltListDto getAllUserDetailsWithSalt(List<String> userDetails, String appId) throws Exception {
+	public MosipUserSaltListDto getAllUserDetailsWithSalt(List<String> userDetails,String appId) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public RIdDto getRidFromUserId(String userId, String appId) throws Exception {
+	public RIdDto getRidFromUserId(String userId,String appId) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -331,12 +330,6 @@ public class DBDataStore implements DataStore {
 	public UserDetailsResponseDto getUserDetailBasedOnUid(List<String> userId) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public VidDto getVidFromUserId(String userId, String realmID) {
-		// TODO code cleaup
-		throw new UnsupportedOperationException("This openeration is not supported in local profile for now");
 	}
 
 }

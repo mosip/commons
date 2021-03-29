@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import io.mosip.kernel.core.authmanager.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,33 +54,6 @@ import io.mosip.kernel.auth.defaultimpl.service.UinService;
 import io.mosip.kernel.auth.defaultimpl.util.AuthUtil;
 import io.mosip.kernel.auth.defaultimpl.util.TokenGenerator;
 import io.mosip.kernel.auth.defaultimpl.util.TokenValidator;
-import io.mosip.kernel.core.authmanager.model.AccessTokenResponseDTO;
-import io.mosip.kernel.core.authmanager.model.AuthNResponse;
-import io.mosip.kernel.core.authmanager.model.AuthNResponseDto;
-import io.mosip.kernel.core.authmanager.model.AuthResponseDto;
-import io.mosip.kernel.core.authmanager.model.AuthZResponseDto;
-import io.mosip.kernel.core.authmanager.model.ClientSecret;
-import io.mosip.kernel.core.authmanager.model.LoginUser;
-import io.mosip.kernel.core.authmanager.model.LoginUserWithClientId;
-import io.mosip.kernel.core.authmanager.model.MosipUserDto;
-import io.mosip.kernel.core.authmanager.model.MosipUserListDto;
-import io.mosip.kernel.core.authmanager.model.MosipUserSaltListDto;
-import io.mosip.kernel.core.authmanager.model.MosipUserTokenDto;
-import io.mosip.kernel.core.authmanager.model.OtpUser;
-import io.mosip.kernel.core.authmanager.model.PasswordDto;
-import io.mosip.kernel.core.authmanager.model.RIdDto;
-import io.mosip.kernel.core.authmanager.model.RefreshTokenRequest;
-import io.mosip.kernel.core.authmanager.model.RefreshTokenResponse;
-import io.mosip.kernel.core.authmanager.model.RolesListDto;
-import io.mosip.kernel.core.authmanager.model.UserDetailsResponseDto;
-import io.mosip.kernel.core.authmanager.model.UserNameDto;
-import io.mosip.kernel.core.authmanager.model.UserOtp;
-import io.mosip.kernel.core.authmanager.model.UserPasswordRequestDto;
-import io.mosip.kernel.core.authmanager.model.UserPasswordResponseDto;
-import io.mosip.kernel.core.authmanager.model.UserRegistrationRequestDto;
-import io.mosip.kernel.core.authmanager.model.UserRoleDto;
-import io.mosip.kernel.core.authmanager.model.ValidationResponseDto;
-import io.mosip.kernel.core.authmanager.model.VidDto;
 import io.mosip.kernel.core.authmanager.spi.AuthService;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 
@@ -822,11 +796,6 @@ public class AuthServiceImpl implements AuthService {
 		authNResponseDto.setMessage(AuthConstant.USERPWD_SUCCESS_MESSAGE);
 		authNResponseDto.setRefreshExpiryTime(Long.parseLong(accessTokenResponse.getRefresh_expires_in()));
 		return authNResponseDto;
-	}
-
-	@Override
-	public VidDto getVidBasedOnUserID(String userId, String appId) {
-		return keycloakImpl.getVidFromUserId(userId,authUtil.getRealmIdFromAppId(appId));
 	}
 
 }
