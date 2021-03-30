@@ -3,9 +3,11 @@ package io.mosip.commons.packet.dto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
+
 @Data
 @EqualsAndHashCode
-public class Document {
+public class Document implements Serializable {
 
     private byte[] document;
     private String value;

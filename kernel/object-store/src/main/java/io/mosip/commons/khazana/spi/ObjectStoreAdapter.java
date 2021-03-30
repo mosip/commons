@@ -35,4 +35,6 @@ public interface ObjectStoreAdapter {
 	public Map<String, String> addTags(String account, String container, Map<String, String> tags);
 
 	public Map<String, String> getTags(String account, String container);
+	
+	public boolean deleteTags(String account, String container,List<String> tags);
 }

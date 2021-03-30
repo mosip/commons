@@ -134,7 +134,7 @@ TRUNCATE TABLE master.identity_schema cascade ;
 ----- TRUNCATE master.sync_job_def TABLE Data and It's reference Data and COPY Data from CSV file -----
 TRUNCATE TABLE master.sync_job_def  cascade ;
 
-\COPY master.sync_job_def (ID,NAME,API_NAME,PARENT_SYNCJOB_ID,SYNC_FREQ,LOCK_DURATION,LANG_CODE,IS_ACTIVE,CR_BY,CR_DTIMES,UPD_BY,UPD_DTIMES,IS_DELETED,DEL_DTIMES) FROM './dml/master-sync_job_def.csv' delimiter ',' HEADER  csv;
+\COPY master.sync_job_def (ID,NAME,API_NAME,PARENT_SYNCJOB_ID,SYNC_FREQ,LOCK_DURATION,LANG_CODE,IS_ACTIVE,CR_BY,CR_DTIMES,UPD_BY,UPD_DTIMES,IS_DELETED,DEL_DTIMES,JOB_TYPE) FROM './dml/master-sync_job_def.csv' delimiter ',' HEADER  csv;
 
 ----- TRUNCATE master.dynamic_field TABLE Data and It's reference Data and COPY Data from CSV file -----
 TRUNCATE TABLE master.dynamic_field cascade ;

@@ -1,7 +1,7 @@
 ### -- ---------------------------------------------------------------------------------------------------------
-### -- Script Name		: Authdevice Revoke DB deploy
-### -- Deploy Module 	: MOSIP Authdevice
-### -- Purpose    		: To revoke Authdevice Database alter scripts for the release.       
+### -- Script Name		: IAM Revoke DB deploy
+### -- Deploy Module 	: MOSIP Iam
+### -- Purpose    		: To revoke Iam Database alter scripts for the release.       
 ### -- Create By   		: Ram Bhatt
 ### -- Created Date		: Jan-2021
 ### -- 
