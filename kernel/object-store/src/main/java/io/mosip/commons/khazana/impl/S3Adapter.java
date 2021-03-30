@@ -477,18 +477,29 @@ public class S3Adapter implements ObjectStoreAdapter {
 	}@Override
 	public boolean deleteTags(String account, String container, List<String> tags) {
 		try {
-
+			 String bucketName=null;
+			 String finalObjectName=null;
+	     	if(useAccountAsBucketname) {
+	     		 bucketName=account;
+	     		 finalObjectName = ObjectStoreUtil.getName(container,null,TAGS_FILENAME);
+	     	}else {
+	     		 bucketName=container;
+	     		 finalObjectName = TAGS_FILENAME;
+	     	}
 			AmazonS3 connection = getConnection(container);
 			if (!connection.doesBucketExistV2(container))
 	            connection.createBucket(container);
-			Map<String, String> existingMetadata = getTags(account, container);
+			Map<String, String> existingTags = getTags(account, container);
 			tags.stream()
-					.forEach(m -> existingMetadata.remove(m));
-			TagSet tagSet = new TagSet(existingMetadata);
-			BucketTaggingConfiguration bucketTaggingConfiguration = new BucketTaggingConfiguration();
-			bucketTaggingConfiguration.withTagSets(tagSet);
-			connection.setBucketTaggingConfiguration(container, bucketTaggingConfiguration);
-
+					.forEach(m -> existingTags.remove(m));
+			List<Tag> tagSet=new ArrayList<Tag>();
+			for(Entry<String, String> entry:existingTags.entrySet()) {
+				tagSet.add(new Tag(entry.getKey(), entry.getValue()));
+			}
+            ObjectTagging objectTagging=new ObjectTagging(tagSet);
+			
+			SetObjectTaggingRequest setObjectTaggingRequest=new SetObjectTaggingRequest(bucketName,finalObjectName,objectTagging);
+			connection.setObjectTagging(setObjectTaggingRequest);
 		} catch (Exception e) {
 			LOGGER.error(SESSIONID, REGISTRATIONID, "Exception occured while deleteTags for : " + container,
 					ExceptionUtils.getStackTrace(e));
