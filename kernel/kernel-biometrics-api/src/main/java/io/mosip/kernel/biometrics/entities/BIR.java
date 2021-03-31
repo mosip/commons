@@ -1,6 +1,5 @@
 package io.mosip.kernel.biometrics.entities;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -18,7 +17,7 @@ import lombok.Data;
  */
 @Data
 @JsonDeserialize(builder = BIR.BIRBuilder.class)
-public class BIR implements Serializable {
+public class BIR {
 
 	private VersionType version;
 	private VersionType cbeffversion;

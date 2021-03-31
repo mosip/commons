@@ -3,7 +3,6 @@
  */
 package io.mosip.kernel.biometrics.entities;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,7 +20,7 @@ import lombok.Data;
  */
 @Data
 @JsonDeserialize(builder = BDBInfo.BDBInfoBuilder.class)
-public class BDBInfo implements Serializable {
+public class BDBInfo {
 
 	private byte[] challengeResponse;
 	private String index;
