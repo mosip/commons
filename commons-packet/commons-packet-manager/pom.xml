@@ -34,7 +34,7 @@
         <swagger.version>2.9.2</swagger.version>
         <powermock.beta.version>2.0.7</powermock.beta.version>
         <junit.version>4.13.1</junit.version>
-        <hazelcast.kubernetes.version>1.0.0</hazelcast.kubernetes.version>
+        <hazelcast.kubernetes.version>2.2.1</hazelcast.kubernetes.version>
 
         <kernel-keymanager-service.version>1.1.4</kernel-keymanager-service.version>
         <kernel.core.version>1.1.4</kernel.core.version>
@@ -98,11 +98,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
             <version>${spring.boot.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.hazelcast</groupId>
-            <artifactId>hazelcast-all</artifactId>
-            <version>4.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
