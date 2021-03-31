@@ -37,7 +37,7 @@
 
         <kernel-keymanager-service.version>1.1.4</kernel-keymanager-service.version>
         <kernel.core.version>1.1.4</kernel.core.version>
-        <kernel.biometrics.api.version>1.1.4.3-SNAPSHOT</kernel.biometrics.api.version>
+        <kernel.biometrics.api.version>1.1.4</kernel.biometrics.api.version>
         <kernel.crypto-jce.version>1.1.4</kernel.crypto-jce.version>
         <kernel.auth.adaptor.version>1.1.4</kernel.auth.adaptor.version>
         <kernel-dataaccess-hibernate.version>1.1.4</kernel-dataaccess-hibernate.version>
