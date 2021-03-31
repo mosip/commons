@@ -488,9 +488,7 @@ public class S3Adapter implements ObjectStoreAdapter {
 			for(String tag:tags) {
 				String tagName=null;
                 tagName=ObjectStoreUtil.getName(finalObjectName, tag);
-				if(connection.doesObjectExist(bucketName, tagName)) {
-					connection.deleteObject(bucketName, tagName);
-				}
+				connection.deleteObject(bucketName, tagName);
 			}
 
 		} catch (Exception e) {

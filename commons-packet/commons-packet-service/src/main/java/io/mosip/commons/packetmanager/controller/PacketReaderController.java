@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.mosip.commons.packetmanager.dto.InfoRequestDto;
-import io.mosip.commons.packetmanager.dto.InfoResponseDto;
-import io.mosip.commons.packetmanager.service.PacketReaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Lists;
+
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.dto.TagRequestDto;
 import io.mosip.commons.packet.dto.TagResponseDto;
@@ -26,7 +24,10 @@ import io.mosip.commons.packetmanager.dto.FieldDto;
 import io.mosip.commons.packetmanager.dto.FieldDtos;
 import io.mosip.commons.packetmanager.dto.FieldResponseDto;
 import io.mosip.commons.packetmanager.dto.InfoDto;
+import io.mosip.commons.packetmanager.dto.InfoRequestDto;
+import io.mosip.commons.packetmanager.dto.InfoResponseDto;
 import io.mosip.commons.packetmanager.dto.ValidatePacketResponse;
+import io.mosip.commons.packetmanager.service.PacketReaderService;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
@@ -154,8 +155,7 @@ public class PacketReaderController {
 	public ResponseWrapper<TagResponseDto> getTags(
 			@RequestBody(required = true) RequestWrapper<TagRequestDto> request) {
 
-		TagResponseDto tagResponseDto = packetReader.getTags(request.getRequest().getId(),
-				request.getRequest().getTagNames());
+		TagResponseDto tagResponseDto = packetReaderService.getTags(request.getRequest());
 		ResponseWrapper<TagResponseDto> response = getResponseWrapper();
 		response.setResponse(tagResponseDto);
 		return response;

@@ -1,28 +1,16 @@
 package io.mosip.commons.packetmanager.test.controller;
 
-import com.google.common.collect.Lists;
-import io.mosip.commons.packet.dto.Document;
-import io.mosip.commons.packet.dto.TagDeleteResponseDto;
-import io.mosip.commons.packet.dto.TagDto;
-import io.mosip.commons.packet.dto.TagRequestDto;
-import io.mosip.commons.packet.dto.TagResponseDto;
-import io.mosip.commons.packet.dto.packet.PacketDto;
-import io.mosip.commons.packet.facade.PacketReader;
-import io.mosip.commons.packet.facade.PacketWriter;
-import io.mosip.commons.packetmanager.dto.BiometricRequestDto;
-import io.mosip.commons.packetmanager.dto.DocumentDto;
-import io.mosip.commons.packetmanager.dto.FieldDto;
-import io.mosip.commons.packetmanager.dto.FieldDtos;
-import io.mosip.commons.packetmanager.dto.InfoDto;
-import io.mosip.commons.packetmanager.dto.InfoRequestDto;
-import io.mosip.commons.packetmanager.dto.InfoResponseDto;
-import io.mosip.commons.packetmanager.service.PacketReaderService;
-import io.mosip.commons.packetmanager.test.TestBootApplication;
-import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import io.mosip.kernel.core.exception.BaseCheckedException;
-import io.mosip.kernel.core.exception.BaseUncheckedException;
-import io.mosip.kernel.core.http.RequestWrapper;
-import io.mosip.kernel.core.util.JsonUtils;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -39,16 +27,31 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import com.google.common.collect.Lists;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import io.mosip.commons.packet.dto.Document;
+import io.mosip.commons.packet.dto.TagDeleteResponseDto;
+import io.mosip.commons.packet.dto.TagDto;
+import io.mosip.commons.packet.dto.TagRequestDto;
+import io.mosip.commons.packet.dto.TagResponseDto;
+import io.mosip.commons.packet.dto.packet.PacketDto;
+import io.mosip.commons.packet.facade.PacketReader;
+import io.mosip.commons.packet.facade.PacketWriter;
+import io.mosip.commons.packetmanager.dto.BiometricRequestDto;
+import io.mosip.commons.packetmanager.dto.DocumentDto;
+import io.mosip.commons.packetmanager.dto.FieldDto;
+import io.mosip.commons.packetmanager.dto.FieldDtos;
+import io.mosip.commons.packetmanager.dto.InfoDto;
+import io.mosip.commons.packetmanager.dto.InfoRequestDto;
+import io.mosip.commons.packetmanager.dto.InfoResponseDto;
+import io.mosip.commons.packetmanager.service.PacketReaderService;
+import io.mosip.commons.packetmanager.service.PacketWriterService;
+import io.mosip.commons.packetmanager.test.TestBootApplication;
+import io.mosip.kernel.biometrics.entities.BiometricRecord;
+import io.mosip.kernel.core.exception.BaseCheckedException;
+import io.mosip.kernel.core.exception.BaseUncheckedException;
+import io.mosip.kernel.core.http.RequestWrapper;
+import io.mosip.kernel.core.util.JsonUtils;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TestBootApplication.class)
@@ -69,6 +72,9 @@ public class PacketManagerControllerTest {
 
     @MockBean
     private PacketReaderService packetReaderService;
+    
+    @MockBean
+    private PacketWriterService packetWriterService;
 
 
     private RequestWrapper<Object> request = new RequestWrapper<>();
@@ -273,7 +279,7 @@ public class PacketManagerControllerTest {
       
 
         Mockito.when(
-                packetWriter.addTags(any())).thenReturn(new TagResponseDto());
+        		packetWriterService.addTags(any())).thenReturn(new TagResponseDto());
 
         request.setRequest(tagDto);
 
@@ -288,7 +294,7 @@ public class PacketManagerControllerTest {
       
 
         Mockito.when(
-                packetWriter.updateTags(any())).thenReturn(new TagResponseDto());
+        		packetWriterService.updateTags(any())).thenReturn(new TagResponseDto());
 
         request.setRequest(tagDto);
 
@@ -303,7 +309,7 @@ public class PacketManagerControllerTest {
       
 
         Mockito.when(
-                packetReader.getTags(any(), any())).thenReturn(new TagResponseDto());
+        		packetReaderService.getTags(any())).thenReturn(new TagResponseDto());
 
         request.setRequest(tagDto);
 
@@ -340,7 +346,7 @@ public class PacketManagerControllerTest {
           TagDeleteResponseDto tagResponse=new TagDeleteResponseDto();
           tagResponse.setDeleted(true);
           Mockito.when(
-                packetWriter.deleteTags(any())).thenReturn(tagResponse);
+        		  packetWriterService.deleteTags(any())).thenReturn(tagResponse);
 
         request.setRequest(tagRequestDto);
 

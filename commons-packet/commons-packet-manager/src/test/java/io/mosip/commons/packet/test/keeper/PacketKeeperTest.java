@@ -1,21 +1,18 @@
 package io.mosip.commons.packet.test.keeper;
 
-import com.google.common.collect.Lists;
-import io.mosip.commons.khazana.dto.ObjectDto;
-import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
-import io.mosip.commons.packet.constants.PacketManagerConstants;
-import io.mosip.commons.packet.dto.Packet;
-import io.mosip.commons.packet.dto.PacketInfo;
-import io.mosip.commons.packet.dto.TagDto;
-import io.mosip.commons.packet.dto.TagRequestDto;
-import io.mosip.commons.packet.exception.GetTagException;
-import io.mosip.commons.packet.exception.PacketKeeperException;
-import io.mosip.commons.packet.exception.TagCreationException;
-import io.mosip.commons.packet.exception.TagDeletionException;
-import io.mosip.commons.packet.keeper.PacketKeeper;
-import io.mosip.commons.packet.spi.IPacketCryptoService;
-import io.mosip.kernel.core.exception.BaseUncheckedException;
-import io.mosip.kernel.core.util.DateUtils;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -27,20 +24,22 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import com.google.common.collect.Lists;
 
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import io.mosip.commons.khazana.dto.ObjectDto;
+import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
+import io.mosip.commons.packet.constants.PacketManagerConstants;
+import io.mosip.commons.packet.dto.Packet;
+import io.mosip.commons.packet.dto.PacketInfo;
+import io.mosip.commons.packet.dto.TagDto;
+import io.mosip.commons.packet.dto.TagRequestDto;
+import io.mosip.commons.packet.exception.PacketKeeperException;
+import io.mosip.commons.packet.exception.TagCreationException;
+import io.mosip.commons.packet.exception.TagDeletionException;
+import io.mosip.commons.packet.keeper.PacketKeeper;
+import io.mosip.commons.packet.spi.IPacketCryptoService;
+import io.mosip.kernel.core.exception.BaseUncheckedException;
+import io.mosip.kernel.core.util.DateUtils;
 
 @RunWith(SpringRunner.class)
 public class PacketKeeperTest {
@@ -183,30 +182,7 @@ public class PacketKeeperTest {
         assertEquals(tags, map);
 
     }
-    @Test(expected = TagCreationException.class)
-    public void testTagAlreadyExists() {
-    	TagDto tagDto=new TagDto();
-    	tagDto.setId(id);
-    	Map<String, String> tags = new HashMap<>();
-        tags.put("osivalidation", "pass");
-    	tagDto.setTags(tags);
-    	Mockito.when(swiftAdapter.addTags(any(), any(),any())).thenReturn(tags);
-        packetKeeper.addTags(tagDto);
-      
-
-    }
-    @Test(expected = TagCreationException.class)
-    public void testAddTagsException() {
-    	TagDto tagDto=new TagDto();
-    	tagDto.setId(id);
-    	Map<String, String> tags = new HashMap<>();
-    	tags.put("test", "testValue");
-    	tagDto.setTags(tags);
-    	Mockito.when(swiftAdapter.addTags(any(), any(),any())).thenThrow(new BaseUncheckedException("code","message"));
-        Map<String,String> map = packetKeeper.addTags(tagDto);
-        assertEquals(tags, map);
-
-    }
+    
     @Test
     public void testUpdateTags() {
     	TagDto tagDto=new TagDto();
@@ -219,43 +195,17 @@ public class PacketKeeperTest {
         assertEquals(tags, map);
 
     }
-    @Test(expected = TagCreationException.class)
-    public void testUpdateTagsException() {
-    	TagDto tagDto=new TagDto();
-    	tagDto.setId(id);
-    	Map<String, String> tags = new HashMap<>();
-    	tags.put("test", "testValue");
-    	tagDto.setTags(tags);
-    	Mockito.when(swiftAdapter.addTags(any(), any(),any())).thenThrow(new BaseUncheckedException("code","message"));
-        Map<String,String> map = packetKeeper.updateTags(tagDto);
-        assertEquals(tags, map);
-
-    }
+    
     @Test
     public void testGetTags() {
         List<String> tagNames=new ArrayList<>();
         tagNames.add("osivalidation");
     	
-        Map<String,String> map = packetKeeper.getTags(id,tagNames);
+        Map<String,String> map = packetKeeper.getTags(id);
         assertEquals(map.get("osivalidation"), "pass");
 
     }
-    @Test(expected = GetTagException.class)
-    public void testGetTagNotFound() {
-        List<String> tagNames=new ArrayList<>();
-        tagNames.add("test");
-        packetKeeper.getTags(id,tagNames);
-
-    }
-    @Test(expected = GetTagException.class)
-    public void testGetTagsException() {
-        List<String> tagNames=new ArrayList<>();
-        tagNames.add("osivalidation");
-        Mockito.when(swiftAdapter.getTags(any(), any())).thenThrow(new BaseUncheckedException("code","message"));
-        packetKeeper.getTags(id,tagNames);
-
-
-    }
+ 
 
     @Test
     public void testgetAll() {
@@ -283,17 +233,7 @@ public class PacketKeeperTest {
 
     }
    
-    @Test(expected = TagDeletionException.class)
-    public void testdeleteTagsException() {
-    	TagRequestDto tagRequestDto=new TagRequestDto();
-    	tagRequestDto.setId(id);
-        List<String> tagNames=new ArrayList<>();
-        tagNames.add("osivalidation");
-        tagRequestDto.setTagNames(tagNames);
-        Mockito.when(swiftAdapter.deleteTags(any(), any(),any())).thenThrow(new BaseUncheckedException("code","message"));
-        packetKeeper.deleteTags(tagRequestDto);
-
-    }
+  
 }
 
 

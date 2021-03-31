@@ -1,11 +1,35 @@
 package io.mosip.commons.packet.test.facade;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.anyString;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.test.util.ReflectionTestUtils;
+
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.dto.PacketInfo;
-import io.mosip.commons.packet.dto.TagDeleteResponseDto;
 import io.mosip.commons.packet.dto.TagDto;
 import io.mosip.commons.packet.dto.TagRequestDto;
-import io.mosip.commons.packet.dto.TagResponseDto;
 import io.mosip.commons.packet.dto.packet.PacketDto;
 import io.mosip.commons.packet.exception.NoAvailableProviderException;
 import io.mosip.commons.packet.exception.PacketCreatorException;
@@ -20,34 +44,6 @@ import io.mosip.kernel.biometrics.entities.BDBInfo;
 import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.biometrics.entities.RegistryIDType;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.SingleType;
-import org.junit.Before;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.util.ReflectionTestUtils;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.ArgumentMatchers.anyString;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({PacketHelper.class})
@@ -267,9 +263,9 @@ public class PacketWriterTest {
     	tagDto.setTags(tags);
     	Mockito.when(packetKeeper.addTags(any())).thenReturn(tags);
 
-       	TagResponseDto tagResponseDto= packetWriter.addTags(tagDto);
+       	Map<String, String> expectedTags= packetWriter.addTags(tagDto);
 
-        assertEquals(tagResponseDto.getTags(),tags); 
+        assertEquals(expectedTags,tags); 
     }
     @Test
     public void testUpdateTags() {
@@ -280,9 +276,10 @@ public class PacketWriterTest {
     	tagDto.setTags(tags);
     	Mockito.when(packetKeeper.updateTags(any())).thenReturn(tags);
 
-       	TagResponseDto tagResponseDto= packetWriter.updateTags(tagDto);
 
-        assertEquals(tagResponseDto.getTags(),tags); 
+       	Map<String, String> expectedTags= packetWriter.updateTags(tagDto);
+
+        assertEquals(expectedTags,tags); 
     }
     @Test
     public void testDeleteTags() {
@@ -293,9 +290,9 @@ public class PacketWriterTest {
     	tagDto.setTagNames(tags);
     	Mockito.when(packetKeeper.deleteTags(any())).thenReturn(true);
 
-    	TagDeleteResponseDto tagResponseDto= packetWriter.deleteTags(tagDto);
+    	boolean isDeleted= packetWriter.deleteTags(tagDto);
 
-        assertTrue(tagResponseDto.isDeleted()); 
+        assertTrue(isDeleted); 
     }
     
 }

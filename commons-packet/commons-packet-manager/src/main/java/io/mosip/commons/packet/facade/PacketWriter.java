@@ -12,10 +12,8 @@ import org.springframework.stereotype.Component;
 
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.dto.PacketInfo;
-import io.mosip.commons.packet.dto.TagDeleteResponseDto;
 import io.mosip.commons.packet.dto.TagDto;
 import io.mosip.commons.packet.dto.TagRequestDto;
-import io.mosip.commons.packet.dto.TagResponseDto;
 import io.mosip.commons.packet.dto.packet.PacketDto;
 import io.mosip.commons.packet.exception.NoAvailableProviderException;
 import io.mosip.commons.packet.keeper.PacketKeeper;
@@ -214,30 +212,23 @@ public class PacketWriter {
     }
 
 	@CacheEvict(value = "tags", key = "{#tagDto.id}")
-	public TagResponseDto addTags(TagDto tagDto) {
-		TagResponseDto tagResponseDto = new TagResponseDto();
+	public Map<String, String> addTags(TagDto tagDto) {
 		Map<String, String> tags = packetKeeper.addTags(tagDto);
-		tagResponseDto.setTags(tags);
-
-		return tagResponseDto;
+		return tags;
 
 	}
 
 	@CacheEvict(value = "tags", key = "{#tagDto.id}")
-	public TagResponseDto updateTags(TagDto tagDto) {
-		TagResponseDto tagResponseDto = new TagResponseDto();
+	public Map<String, String> updateTags(TagDto tagDto) {
 		Map<String, String> tags = packetKeeper.updateTags(tagDto);
-		tagResponseDto.setTags(tags);
-		return tagResponseDto;
+		return tags;
 
 	}
 	
 	@CacheEvict(value = "tags", key = "{#tagDto.id}")
-	public TagDeleteResponseDto deleteTags(TagRequestDto tagDto) {
-		TagDeleteResponseDto tagResponseDto = new TagDeleteResponseDto();
+	public boolean  deleteTags(TagRequestDto tagDto) {
 		boolean isDeleted = packetKeeper.deleteTags(tagDto);
-		tagResponseDto.setDeleted(isDeleted);
-		return tagResponseDto;
+		return isDeleted;
 
 	}
 }

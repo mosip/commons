@@ -1,18 +1,21 @@
 package io.mosip.commons.packetmanager.test.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Sets;
-import io.mosip.commons.khazana.dto.ObjectDto;
-import io.mosip.commons.packet.facade.PacketReader;
-import io.mosip.commons.packetmanager.dto.InfoResponseDto;
-import io.mosip.commons.packetmanager.service.PacketReaderService;
-import io.mosip.kernel.biometrics.constant.BiometricType;
-import io.mosip.kernel.biometrics.constant.QualityType;
-import io.mosip.kernel.biometrics.entities.BDBInfo;
-import io.mosip.kernel.biometrics.entities.BIR;
-import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import io.mosip.kernel.biometrics.entities.RegistryIDType;
-import io.mosip.kernel.core.exception.BaseUncheckedException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyString;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.assertj.core.util.Lists;
 import org.json.simple.JSONObject;
 import org.junit.Before;
@@ -25,18 +28,23 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Set;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Sets;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyString;
+import io.mosip.commons.khazana.dto.ObjectDto;
+import io.mosip.commons.packet.dto.TagRequestDto;
+import io.mosip.commons.packet.dto.TagResponseDto;
+import io.mosip.commons.packet.exception.GetTagException;
+import io.mosip.commons.packet.facade.PacketReader;
+import io.mosip.commons.packetmanager.dto.InfoResponseDto;
+import io.mosip.commons.packetmanager.service.PacketReaderService;
+import io.mosip.kernel.biometrics.constant.BiometricType;
+import io.mosip.kernel.biometrics.constant.QualityType;
+import io.mosip.kernel.biometrics.entities.BDBInfo;
+import io.mosip.kernel.biometrics.entities.BIR;
+import io.mosip.kernel.biometrics.entities.BiometricRecord;
+import io.mosip.kernel.biometrics.entities.RegistryIDType;
+import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 @RunWith(SpringRunner.class)
 public class PacketReaderServiceTest {
@@ -119,4 +127,40 @@ public class PacketReaderServiceTest {
 
         packetReaderService.info(id);
     }
+    @Test
+    public void testGetTagsSuccess() {
+        Map<String, String> tags = new HashMap<>();
+        tags.put("test", "testValue");
+    	 Mockito.when(packetReader.getTags(anyString())).thenReturn(tags);
+    	 TagRequestDto tagRequestDto=new TagRequestDto();
+    	 tagRequestDto.setId("id");
+    	 List<String> tagNames=new ArrayList<String>();
+    	 tagNames.add("test");
+    	 tagRequestDto.setTagNames(tagNames);
+    	 TagResponseDto tagResponseDto=packetReaderService.getTags(tagRequestDto);
+    	 assertEquals(tagResponseDto.getTags(), tags);
+    }
+	@Test(expected = GetTagException.class)
+    public void testGetTagNotFound() {
+		 Map<String, String> tags = new HashMap<>();
+	        tags.put("test", "testValue");
+	    	 Mockito.when(packetReader.getTags(anyString())).thenReturn(tags);
+	    	 TagRequestDto tagRequestDto=new TagRequestDto();
+	    	 tagRequestDto.setId("id");
+	    	 List<String> tagNames=new ArrayList<String>();
+	    	 tagNames.add("testtag");
+	    	 tagRequestDto.setTagNames(tagNames);
+	    	 packetReaderService.getTags(tagRequestDto);
+
+    }
+	 @Test(expected = GetTagException.class)
+	    public void testGetTagsException() {
+		 Mockito.when(packetReader.getTags(anyString())).thenThrow(new BaseUncheckedException("code","message"));
+		 TagRequestDto tagRequestDto=new TagRequestDto();
+    	 tagRequestDto.setId("id");
+    	 List<String> tagNames=new ArrayList<String>();
+    	 tagNames.add("testtag");
+    	 tagRequestDto.setTagNames(tagNames);
+    	 packetReaderService.getTags(tagRequestDto);  
+	    }
 }

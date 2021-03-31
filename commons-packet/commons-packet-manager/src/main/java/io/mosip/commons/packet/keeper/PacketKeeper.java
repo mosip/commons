@@ -3,10 +3,8 @@ package io.mosip.commons.packet.keeper;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +21,9 @@ import io.mosip.commons.packet.dto.PacketInfo;
 import io.mosip.commons.packet.dto.TagDto;
 import io.mosip.commons.packet.dto.TagRequestDto;
 import io.mosip.commons.packet.exception.CryptoException;
-import io.mosip.commons.packet.exception.GetTagException;
 import io.mosip.commons.packet.exception.ObjectStoreAdapterException;
 import io.mosip.commons.packet.exception.PacketIntegrityFailureException;
 import io.mosip.commons.packet.exception.PacketKeeperException;
-import io.mosip.commons.packet.exception.TagCreationException;
-import io.mosip.commons.packet.exception.TagDeletionException;
 import io.mosip.commons.packet.spi.IPacketCryptoService;
 import io.mosip.commons.packet.util.PacketManagerHelper;
 import io.mosip.commons.packet.util.PacketManagerLogger;
@@ -264,92 +259,18 @@ public class PacketKeeper {
     }
 
 	public Map<String, String> addTags(TagDto tagDto) {
-		try {
-			Map<String, String> newTags = new HashMap<String, String>();
-			Map<String, String> existingTags = getAdapter().getTags(PACKET_MANAGER_ACCOUNT, tagDto.getId());
-			if (existingTags.isEmpty()) {
-				newTags.putAll(tagDto.getTags());
-			} else {
-				for (Entry<String, String> entry : tagDto.getTags().entrySet()) {
-					if (existingTags.containsKey(entry.getKey())) {
-
-						throw new TagCreationException(PacketUtilityErrorCodes.TAG_ALREADY_EXIST.getErrorCode(),
-								PacketUtilityErrorCodes.TAG_ALREADY_EXIST.getErrorMessage());
-
-					} else {
-						newTags.put(entry.getKey(), entry.getValue());
-					}
-				}
-			}
-			Map<String, String> tags = getAdapter().addTags(PACKET_MANAGER_ACCOUNT, tagDto.getId(), newTags);
-			return tags;
-		} catch (Exception e) {
-				LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, tagDto.getId(),
-						ExceptionUtils.getStackTrace(e));
-				if (e instanceof BaseCheckedException) {
-					BaseCheckedException ex = (BaseCheckedException) e;
-					throw new TagCreationException(ex.getErrorCode(), ex.getMessage());
-				} else if (e instanceof BaseUncheckedException) {
-					BaseUncheckedException ex = (BaseUncheckedException) e;
-					throw new TagCreationException(ex.getErrorCode(), ex.getMessage());
-				}
-				throw new TagCreationException(e.getMessage());
-
-			}
+			Map<String, String> tags = getAdapter().addTags(PACKET_MANAGER_ACCOUNT, tagDto.getId(), tagDto.getTags());
+		return tags;
 	}
 
 	public Map<String, String> updateTags(TagDto tagDto) {
-		try {
-
 			Map<String, String> tags = getAdapter().addTags(PACKET_MANAGER_ACCOUNT, tagDto.getId(), tagDto.getTags());
 			return tags;
-
-		} catch (Exception e) {
-			LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, tagDto.getId(),
-					ExceptionUtils.getStackTrace(e));
-			if (e instanceof BaseCheckedException) {
-				BaseCheckedException ex = (BaseCheckedException) e;
-				throw new TagCreationException(ex.getErrorCode(), ex.getMessage());
-			} else if (e instanceof BaseUncheckedException) {
-				BaseUncheckedException ex = (BaseUncheckedException) e;
-				throw new TagCreationException(ex.getErrorCode(), ex.getMessage());
-			}
-			throw new TagCreationException(e.getMessage());
-
-		}
 	}
 
-	public Map<String, String> getTags(String id, List<String> tagNames) {
-		try {
-			Map<String, String> tags = new HashMap<String, String>();
+	public Map<String, String> getTags(String id) {
 			Map<String, String> existingTags = getAdapter().getTags(PACKET_MANAGER_ACCOUNT, id);
-			if (tagNames != null && !tagNames.isEmpty()) {
-				for (String tag : tagNames) {
-					if (existingTags.containsKey(tag)) {
-						tags.put(tag, existingTags.get(tag));
-					} else {
-						throw new GetTagException(PacketUtilityErrorCodes.TAG_NOT_FOUND.getErrorCode(),
-								PacketUtilityErrorCodes.TAG_NOT_FOUND.getErrorMessage() + tag);
-					}
-				}
-				return tags;
-			} else {
-				return existingTags;
-			}
-
-		} catch (Exception e) {
-			LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
-					ExceptionUtils.getStackTrace(e));
-			if (e instanceof BaseCheckedException) {
-				BaseCheckedException ex = (BaseCheckedException) e;
-				throw new GetTagException(ex.getErrorCode(), ex.getMessage());
-			} else if (e instanceof BaseUncheckedException) {
-				BaseUncheckedException ex = (BaseUncheckedException) e;
-				throw new GetTagException(ex.getErrorCode(), ex.getMessage());
-			}
-			throw new GetTagException(e.getMessage());
-
-		}
+         return existingTags;
 	}
 
     public List<ObjectDto> getAll(String id) {
@@ -357,23 +278,7 @@ public class PacketKeeper {
         return allObjects;
     }
     public boolean deleteTags(TagRequestDto tagRequestDto) {
-		try {
-
 			boolean isDeleted = getAdapter().deleteTags(PACKET_MANAGER_ACCOUNT, tagRequestDto.getId(), tagRequestDto.getTagNames());
 			return isDeleted;
-
-		} catch (Exception e) {
-			LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, tagRequestDto.getId(),
-					ExceptionUtils.getStackTrace(e));
-			if (e instanceof BaseCheckedException) {
-				BaseCheckedException ex = (BaseCheckedException) e;
-				throw new TagDeletionException(ex.getErrorCode(), ex.getMessage());
-			} else if (e instanceof BaseUncheckedException) {
-				BaseUncheckedException ex = (BaseUncheckedException) e;
-				throw new TagDeletionException(ex.getErrorCode(), ex.getMessage());
-			}
-			throw new TagDeletionException(e.getMessage());
-
-		}
 	}
 }

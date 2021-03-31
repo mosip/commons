@@ -17,6 +17,7 @@ import io.mosip.commons.packet.dto.TagRequestDto;
 import io.mosip.commons.packet.dto.TagResponseDto;
 import io.mosip.commons.packet.dto.packet.PacketDto;
 import io.mosip.commons.packet.facade.PacketWriter;
+import io.mosip.commons.packetmanager.service.PacketWriterService;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -28,7 +29,8 @@ public class PacketWriterController {
     @Autowired
     private PacketWriter packetWriter;
 
-
+    @Autowired
+    private PacketWriterService packetWriterService;
 
     @PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
     @ResponseFilter
@@ -55,7 +57,7 @@ public class PacketWriterController {
 	public ResponseWrapper<TagResponseDto> setTags(
 			@RequestBody(required = true) RequestWrapper<TagDto> tagRequest) {
 
-		TagResponseDto tagResponse = packetWriter.addTags(tagRequest.getRequest());
+		TagResponseDto tagResponse = packetWriterService.addTags(tagRequest.getRequest());
 		ResponseWrapper<TagResponseDto> response = getResponseWrapper();
 		response.setResponse(tagResponse);
 		return response;
@@ -66,7 +68,7 @@ public class PacketWriterController {
 	@PostMapping(path = "/addOrUpdateTag", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseWrapper<TagResponseDto> updateTags(@RequestBody(required = true) RequestWrapper<TagDto> tagRequest) {
 
-		TagResponseDto tagResponse = packetWriter.updateTags(tagRequest.getRequest());
+		TagResponseDto tagResponse = packetWriterService.updateTags(tagRequest.getRequest());
 		ResponseWrapper<TagResponseDto> response = getResponseWrapper();
 		response.setResponse(tagResponse);
 		return response;
@@ -76,7 +78,7 @@ public class PacketWriterController {
 	@PostMapping(path = "/deleteTag", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseWrapper<TagDeleteResponseDto> deleteTags(@RequestBody(required = true) RequestWrapper<TagRequestDto> tagRequest) {
 
-		TagDeleteResponseDto tagResponse = packetWriter.deleteTags(tagRequest.getRequest());
+		TagDeleteResponseDto tagResponse = packetWriterService.deleteTags(tagRequest.getRequest());
 		ResponseWrapper<TagDeleteResponseDto> response = getResponseWrapper();
 		response.setResponse(tagResponse);
 		return response;
