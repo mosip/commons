@@ -7,9 +7,7 @@
 
 package io.mosip.kernel.biometrics.constant;
 
-import java.io.Serializable;
-
-public enum PurposeType implements Serializable {
+public enum PurposeType {
 
 	
 	VERIFY("Verify"),

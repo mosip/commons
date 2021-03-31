@@ -1,8 +1,6 @@
 package io.mosip.kernel.biometrics.constant;
 
-import java.io.Serializable;
-
-public enum Match implements Serializable {
+public enum Match {
 	
 	MATCHED,
 	NOT_MATCHED,

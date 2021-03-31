@@ -11,12 +11,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegistryIDType implements Serializable {
+public class RegistryIDType {
 
 	
 	protected String organization;
