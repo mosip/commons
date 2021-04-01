@@ -717,8 +717,8 @@ public class KeycloakImpl implements DataStore {
 				}
 			}
 			if (vIDDto.getVid() == null) {
-				throw new AuthManagerException(AuthErrorCode.USER_NOT_FOUND.getErrorCode(),
-						AuthErrorCode.USER_NOT_FOUND.getErrorMessage());
+				throw new AuthManagerException(AuthErrorCode.VID_NOT_FOUND.getErrorCode(),
+						AuthErrorCode.VID_NOT_FOUND.getErrorMessage());
 			}
 
 		} catch (IOException e) {
