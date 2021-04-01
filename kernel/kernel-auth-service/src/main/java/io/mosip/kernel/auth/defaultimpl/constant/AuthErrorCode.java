@@ -112,7 +112,8 @@ public enum AuthErrorCode {
 	KEYCLOAK_ACESSTOKEN_EXCEPTION("KER-ATH-021", "Error Occured while getting access token from keycloak"),
 	KEYCLOAK_STATE_EXCEPTION("KER-ATH-022", "state is not maching"),
 	INVALID_CREDENTIALS("KER-ATH-023","Invalid Credentials"),
-	REALM_NOT_FOUND("KER-ATH-026","Realm not found:: %s");
+	REALM_NOT_FOUND("KER-ATH-026","Realm not found:: %s"),
+	VID_NOT_FOUND("KER-ATH-027", "Vid not found for user");
 
 	/**
 	 * The error code
