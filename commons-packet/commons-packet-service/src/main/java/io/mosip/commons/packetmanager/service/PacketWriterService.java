@@ -89,10 +89,16 @@ public class PacketWriterService {
 					}
 				}
 			}
-			tagDto.setTags(newTags);
-			Map<String, String> tags = packetWriter.addTags(tagDto);
 			TagResponseDto tagResponseDto = new TagResponseDto();
-			tagResponseDto.setTags(tags);
+
+			if (newTags.isEmpty()) {
+				tagResponseDto.setTags(tagDto.getTags());
+			} else {
+				tagDto.setTags(newTags);
+				Map<String, String> tags = packetWriter.addTags(tagDto);
+				tagResponseDto.setTags(tags);
+			}
+
 			return tagResponseDto;
 		} catch (Exception e) {
 				LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, tagDto.getId(),
@@ -120,12 +126,17 @@ public class PacketWriterService {
 						deleteTags.add(tagName);
 					} 
 				}
-			
+			TagDeleteResponseDto tagDeleteResponseDto = new TagDeleteResponseDto();
+			boolean isDeleted;
+			if (deleteTags.isEmpty()) {
+					isDeleted=true;
+			} else {
 				tagRequestDto.setTagNames(deleteTags);
-				boolean isDeleted = packetWriter.deleteTags(tagRequestDto);
-				TagDeleteResponseDto tagDeleteResponseDto=new TagDeleteResponseDto();
-				tagDeleteResponseDto.setDeleted(isDeleted);
-				return tagDeleteResponseDto;
+				isDeleted = packetWriter.deleteTags(tagRequestDto);
+			}
+
+			tagDeleteResponseDto.setDeleted(isDeleted);
+			return tagDeleteResponseDto;
 
 		} catch (Exception e) {
 			LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, tagRequestDto.getId(),
