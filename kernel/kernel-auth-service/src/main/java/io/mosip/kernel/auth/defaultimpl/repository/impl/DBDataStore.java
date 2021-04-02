@@ -339,4 +339,9 @@ public class DBDataStore implements DataStore {
 		throw new UnsupportedOperationException("This openeration is not supported in local profile for now");
 	}
 
+	@Override
+	public MosipUserListDto getListOfUsersDetails(String realmId, String roleName) {
+		throw new UnsupportedOperationException("This openeration is not supported");
+	}
+
 }

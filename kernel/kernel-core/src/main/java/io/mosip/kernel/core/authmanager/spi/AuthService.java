@@ -75,5 +75,6 @@ public interface AuthService extends AuthZService, AuthNService {
 	public String getKeycloakURI(String redirectURI, String state);
 	
 	public VidDto getVidBasedOnUserID(String userId, String appId) ;
-
+	
+	public MosipUserListDto getListOfUsersDetails(String realmId,String roleName);
 }

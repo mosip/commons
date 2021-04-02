@@ -67,5 +67,7 @@ public interface DataStore {
 	public UserDetailsResponseDto getUserDetailBasedOnUid(List<String> userIds);
 	
 	public VidDto getVidFromUserId(String userId,String realmID);
+	
+	public MosipUserListDto getListOfUsersDetails(String realmId,String roleName);
 
 }

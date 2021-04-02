@@ -123,6 +123,9 @@ public class KeycloakImpl implements DataStore {
 
 	@Value("${mosip.iam.pre-reg_user_password}")
 	private String preRegUserPassword;
+	
+	@Value("${mosip.iam.role-based-user-url}")
+	private String roleBasedUsersurl;
 
 	@Value("${hikari.maximumPoolSize:25}")
 	private int maximumPoolSize;
@@ -729,4 +732,82 @@ public class KeycloakImpl implements DataStore {
 		return vIDDto;
 	}
 
+	@Override
+	public MosipUserListDto getListOfUsersDetails(String realmId, String roleName) {		
+		Map<String, String> pathParams = new HashMap<>();		
+		UriComponentsBuilder uriComponentsBuilder = null;
+		boolean isRoleBasedSearch = false;
+		HttpEntity<String> httpEntity = new HttpEntity<>(null, new HttpHeaders());
+		if (roleName != null && !roleName.isBlank() && !roleName.isEmpty()) {			
+			pathParams.put(AuthConstant.ROLE_NAME, roleName);
+			pathParams.put(AuthConstant.REALM, realmId);
+			uriComponentsBuilder = UriComponentsBuilder.fromUriString(keycloakAdminUrl + roleBasedUsersurl);
+			isRoleBasedSearch = true;
+		} else {
+			pathParams.put(AuthConstant.REALM_ID, realmId);
+			uriComponentsBuilder = UriComponentsBuilder.fromUriString(keycloakAdminUrl + users);
+		}
+		uriComponentsBuilder.queryParam("max", maxUsers);
+		String response = callKeycloakService(uriComponentsBuilder.buildAndExpand(pathParams).toString(),
+				HttpMethod.GET, httpEntity);
+		List<MosipUserDto> mosipUserDtos = null;
+		try {
+			JsonNode node = objectMapper.readTree(response);
+			mosipUserDtos = mapUsersToUserDetailDto(node, realmId,isRoleBasedSearch,roleName);
+		} catch (IOException e) {
+			LOGGER.error("Error in getListOfUsersDetails", e);
+			throw new AuthManagerException(AuthErrorCode.IO_EXCEPTION.getErrorCode(),
+					AuthErrorCode.IO_EXCEPTION.getErrorMessage());
+		}
+		MosipUserListDto mosipUserListDto = new MosipUserListDto();
+		mosipUserListDto.setMosipUserDtoList(mosipUserDtos);
+		return mosipUserListDto;
+	}
+	
+	private List<MosipUserDto> mapUsersToUserDetailDto(JsonNode node, String realmId, boolean isRoleBasedSearch,
+			String roleName) {
+		List<MosipUserDto> mosipUserDtos = new ArrayList<>();
+		if (node == null) {
+			LOGGER.error("response from openid is null >>");
+			return mosipUserDtos;
+		}
+
+		for (JsonNode jsonNode : node) {
+			MosipUserDto mosipUserDto = new MosipUserDto();
+			String username = jsonNode.get("username").textValue();
+			mosipUserDto.setUserId(username);
+			mosipUserDto.setMail(jsonNode.hasNonNull("email") ? jsonNode.get("email").textValue() : null);
+			mosipUserDto.setName(String.format("%s %s",
+					(jsonNode.hasNonNull("firstName") ? jsonNode.get("firstName").textValue() : ""),
+					(jsonNode.hasNonNull("lastName") ? jsonNode.get("lastName").textValue() : "")));
+			mosipUserDto.setRole(roleName);
+			if (!isRoleBasedSearch) {
+				try {
+					String roles = getRolesAsString(jsonNode.get("id").textValue(), realmId);
+					mosipUserDto.setRole(roles);
+				} catch (IOException e) {
+					LOGGER.error("getRolesAsString >>", e);
+					throw new AuthManagerException(AuthErrorCode.IO_EXCEPTION.getErrorCode(),
+							AuthErrorCode.IO_EXCEPTION.getErrorMessage());
+				}
+			}
+
+			if (jsonNode.hasNonNull("attributes")) {
+				JsonNode attributeNodes = jsonNode.get("attributes");
+				if (attributeNodes.hasNonNull("mobile") && attributeNodes.get("mobile").hasNonNull(0)) {
+					mosipUserDto.setMobile(attributeNodes.get("mobile").get(0).textValue());
+				}
+				if (attributeNodes.hasNonNull("rid") && attributeNodes.get("rid").hasNonNull(0)) {
+					mosipUserDto.setRId(attributeNodes.get("rid").get(0).textValue());
+				}
+				if (attributeNodes.hasNonNull("name") && attributeNodes.get("name").hasNonNull(0)) {
+					mosipUserDto.setName(attributeNodes.get("name").get(0).textValue());
+				}
+			}
+			mosipUserDto.setUserPassword(null);
+			mosipUserDtos.add(mosipUserDto);
+		}
+
+		return mosipUserDtos;
+	}
 }
