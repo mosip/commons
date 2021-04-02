@@ -34,6 +34,7 @@
         <swagger.version>2.9.2</swagger.version>
         <powermock.beta.version>2.0.7</powermock.beta.version>
         <junit.version>4.13.1</junit.version>
+        <hazelcast.kubernetes.version>2.2.1</hazelcast.kubernetes.version>
 
         <kernel-keymanager-service.version>1.1.6-SNAPSHOT</kernel-keymanager-service.version>
         <kernel.core.version>1.1.6-SNAPSHOT</kernel.core.version>
@@ -67,6 +68,11 @@
             <groupId>io.mosip.kernel</groupId>
             <artifactId>kernel-core</artifactId>
             <version>${kernel.core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast-kubernetes</artifactId>
+            <version>${hazelcast.kubernetes.version}</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
