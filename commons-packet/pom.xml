@@ -7,7 +7,7 @@
 
     <groupId>io.mosip.commons</groupId>
     <artifactId>commons-packet</artifactId>
-    <version>1.1.4.3-SNAPSHOT</version>
+    <version>1.1.4.3-rc1</version>
     <name>common-packet</name>
     <description>Common packet manager for MOSIP</description>
     <url>https://github.com/mosip/commons</url>
