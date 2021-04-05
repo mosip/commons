@@ -351,7 +351,7 @@ public class S3Adapter implements ObjectStoreAdapter {
             List<ObjectDto> objectDtos = new ArrayList<>();
             os.forEach(o -> {
                 // ignore the Tag file
-                String[] tempKeys = o.getKey().endsWith(TAGS_FILENAME) ? null : o.getKey().split("/");
+				String[] tempKeys = o.getKey().contains(TAGS_FILENAME) ? null : o.getKey().split("/");
                 String[] keys = removeIdFromObjectPath(useAccountAsBucketname, tempKeys);
                 if (ArrayUtils.isNotEmpty(keys)) {
                     ObjectDto objectDto = null;
