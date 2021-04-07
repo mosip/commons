@@ -3,6 +3,7 @@ package io.mosip.commons.khazana.impl;
 
 import static io.mosip.commons.khazana.config.LoggerConfiguration.REGISTRATIONID;
 import static io.mosip.commons.khazana.config.LoggerConfiguration.SESSIONID;
+import static io.mosip.commons.khazana.constant.KhazanaConstant.TAGS_FILENAME;
 import static io.mosip.commons.khazana.constant.KhazanaErrorCodes.OBJECT_STORE_NOT_ACCESSIBLE;
 
 import java.io.ByteArrayInputStream;
@@ -16,6 +17,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -74,8 +76,6 @@ public class S3Adapter implements ObjectStoreAdapter {
     private boolean useAccountAsBucketname;
 
     private int retry = 0;
-
-    public static String TAGS_FILENAME="Tags";
     
     private AmazonS3 connection = null;
 
@@ -341,29 +341,32 @@ public class S3Adapter implements ObjectStoreAdapter {
         return null;
     }
 
-    public List<ObjectDto> getAllObjects(String account, String container) {
+    public List<ObjectDto> getAllObjects(String account, String id) {
 
-   	    String bucketName=null;
-   	   if(useAccountAsBucketname) {
-   		 bucketName=account;
-   	   }else {
-   	  	 bucketName=container;
-   	   }
-        List<S3ObjectSummary> os = getConnection(bucketName).listObjects(bucketName).getObjectSummaries();
+        List<S3ObjectSummary> os = null;
+   	   if(useAccountAsBucketname)
+           os = getConnection(account).listObjects(account, id).getObjectSummaries();
+   	   else
+           os = getConnection(id).listObjects(id).getObjectSummaries();
 
         if (os != null && os.size() > 0) {
             List<ObjectDto> objectDtos = new ArrayList<>();
             os.forEach(o -> {
-                String[] keys = o.getKey().split("/");
-                if (keys != null && keys.length > 0) {
+                // ignore the Tag file
+                String[] tempKeys = o.getKey().endsWith(TAGS_FILENAME) ? null : o.getKey().split("/");
+                String[] keys = removeIdFromObjectPath(useAccountAsBucketname, tempKeys);
+                if (ArrayUtils.isNotEmpty(keys)) {
                     ObjectDto objectDto = null;
                     switch (keys.length) {
                         case 1:
                             objectDto = new ObjectDto(null, null, keys[0], o.getLastModified());
+                            break;
                         case 2:
                             objectDto = new ObjectDto(keys[0], null, keys[1], o.getLastModified());
+                            break;
                         case 3:
                             objectDto = new ObjectDto(keys[0], keys[1], keys[2], o.getLastModified());
+                            break;
                     }
                     if (objectDto != null)
                         objectDtos.add(objectDto);
@@ -373,6 +376,18 @@ public class S3Adapter implements ObjectStoreAdapter {
         }
 
         return null;
+    }
+
+    /**
+     * If account is used as bucket name then first element of array is the packet id.
+     * This method removes packet id from array so that path is same irrespective of useAccountAsBucketname is true or false
+     *
+     * @param useAccountAsBucketname
+     * @param keys
+     */
+    private String[] removeIdFromObjectPath(boolean useAccountAsBucketname, String[] keys) {
+        return (useAccountAsBucketname && ArrayUtils.isNotEmpty(keys)) ?
+                (String[]) ArrayUtils.remove(keys, 0) : keys;
     }
 
 	@Override

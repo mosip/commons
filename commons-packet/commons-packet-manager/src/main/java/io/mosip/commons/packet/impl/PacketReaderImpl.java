@@ -145,7 +145,7 @@ public class PacketReaderImpl implements IPacketReader {
 								finalMap.putIfAbsent(key,
 										value != null ? JsonUtils.javaObjectToJsonString(currentIdMap.get(key)) : null);
 							} catch (io.mosip.kernel.core.util.exception.JsonProcessingException e) {
-								e.printStackTrace();
+								LOGGER.error(ExceptionUtils.getStackTrace(e));
 								throw new GetAllIdentityException(e.getMessage());
 							}
 						}
@@ -244,15 +244,18 @@ public class PacketReaderImpl implements IPacketReader {
 				// biometric file not present in idobject. Search in meta data.
 				Map<String, String> metadataMap = getMetaInfo(id, source, process);
 				String operationsData = metadataMap.get(META_INFO_OPERATIONS_DATA);
-				JSONArray jsonArray = new JSONArray(operationsData);
-				for (int i = 0; i < jsonArray.length(); i++) {
-					JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-					if (jsonObject.has(LABEL)
-							&& jsonObject.get(LABEL).toString().equalsIgnoreCase(biometricFieldName)) {
-						packetName = ID;
-						fileName = jsonObject.isNull(VALUE) ? null : jsonObject.get(VALUE).toString();
-						break;
+				if(operationsData!=null) {
+					JSONArray jsonArray = new JSONArray(operationsData);
+					for (int i = 0; i < jsonArray.length(); i++) {
+						JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+						if (jsonObject.has(LABEL)
+								&& jsonObject.get(LABEL).toString().equalsIgnoreCase(biometricFieldName)) {
+							packetName = ID;
+							fileName = jsonObject.isNull(VALUE) ? null : jsonObject.get(VALUE).toString();
+							break;
+						}
 					}
+
 				}
 			} else {
 				Double schemaVersion = idobjectMap.get(PacketManagerConstants.IDSCHEMA_VERSION) != null
