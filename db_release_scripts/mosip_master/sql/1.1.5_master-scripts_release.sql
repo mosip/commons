@@ -7,7 +7,8 @@
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- -----------------------------------------------------------------------------------------------------------
--- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes for 1.1.5
+
+-- Mar-2021		Ram Bhatt           Reverting is_deleted not null changes for 1.1.5
 -- Mar-2021		Ram Bhatt           Creation of master.ca_cert_store table
 -- ------------------------------------------------------------------------------------------------------------
 \c mosip_master sysadmin
