@@ -1,10 +1,10 @@
 package io.mosip.commons.khazana.spi;
 
-import io.mosip.commons.khazana.dto.ObjectDto;
-
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+
+import io.mosip.commons.khazana.dto.ObjectDto;
 
 public interface ObjectStoreAdapter {
 
@@ -36,5 +36,5 @@ public interface ObjectStoreAdapter {
 
 	public Map<String, String> getTags(String account, String container);
 	
-	public boolean deleteTags(String account, String container,List<String> tags);
+	public void deleteTags(String account, String container, List<String> tags);
 }

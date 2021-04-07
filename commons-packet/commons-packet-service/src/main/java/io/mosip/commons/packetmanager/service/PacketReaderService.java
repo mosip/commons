@@ -1,29 +1,5 @@
 package io.mosip.commons.packetmanager.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
-import io.mosip.commons.khazana.dto.ObjectDto;
-import io.mosip.commons.packet.dto.TagResponseDto;
-import io.mosip.commons.packet.facade.PacketReader;
-import io.mosip.commons.packet.util.PacketManagerLogger;
-import io.mosip.commons.packetmanager.constant.DefaultStrategy;
-import io.mosip.commons.packetmanager.dto.BiometricsDto;
-import io.mosip.commons.packetmanager.dto.ContainerInfoDto;
-import io.mosip.commons.packetmanager.dto.InfoResponseDto;
-import io.mosip.commons.packetmanager.exception.SourceNotPresentException;
-import io.mosip.kernel.biometrics.entities.BIR;
-import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import io.mosip.kernel.core.exception.BaseUncheckedException;
-import io.mosip.kernel.core.exception.ExceptionUtils;
-import io.mosip.kernel.core.logger.spi.Logger;
-import io.mosip.kernel.core.util.StringUtils;
-import org.json.simple.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.client.RestTemplate;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,6 +9,36 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
+
+import io.mosip.commons.khazana.dto.ObjectDto;
+import io.mosip.commons.packet.constants.PacketUtilityErrorCodes;
+import io.mosip.commons.packet.dto.TagRequestDto;
+import io.mosip.commons.packet.dto.TagResponseDto;
+import io.mosip.commons.packet.exception.GetTagException;
+import io.mosip.commons.packet.facade.PacketReader;
+import io.mosip.commons.packet.util.PacketManagerLogger;
+import io.mosip.commons.packetmanager.constant.DefaultStrategy;
+import io.mosip.commons.packetmanager.dto.BiometricsDto;
+import io.mosip.commons.packetmanager.dto.ContainerInfoDto;
+import io.mosip.commons.packetmanager.dto.InfoResponseDto;
+import io.mosip.commons.packetmanager.exception.SourceNotPresentException;
+import io.mosip.kernel.biometrics.entities.BIR;
+import io.mosip.kernel.biometrics.entities.BiometricRecord;
+import io.mosip.kernel.core.exception.BaseCheckedException;
+import io.mosip.kernel.core.exception.BaseUncheckedException;
+import io.mosip.kernel.core.exception.ExceptionUtils;
+import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.kernel.core.util.StringUtils;
 
 @Component
 public class PacketReaderService {
@@ -117,13 +123,13 @@ public class PacketReaderService {
                 }
             }
             // get tags
-            TagResponseDto tagResponse = packetReader.getTags(id, null);
+            Map<String, String> tags = packetReader.getTags(id);
 
             InfoResponseDto infoResponseDto = new InfoResponseDto();
             infoResponseDto.setApplicationId(id);
             infoResponseDto.setPacketId(id);
             infoResponseDto.setInfo(containerInfoDtos);
-            infoResponseDto.setTags(tagResponse != null && tagResponse.getTags() != null ? tagResponse.getTags() : null);
+			infoResponseDto.setTags(tags);
             return infoResponseDto;
         } catch (Exception e) {
             LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, ExceptionUtils.getStackTrace(e));
@@ -257,5 +263,39 @@ public class PacketReaderService {
         mappingJson = new JSONObject(combinedMap);
         return mappingJson;
     }
+    public TagResponseDto getTags(TagRequestDto tagRequestDto) {
+    	try {
+			Map<String, String> tags = new HashMap<String, String>();
+			Map<String, String> existingTags = packetReader.getTags(tagRequestDto.getId());
+			List<String> tagNames=tagRequestDto.getTagNames();
+		    TagResponseDto tagResponseDto = new TagResponseDto();
+			if (tagNames != null && !tagNames.isEmpty()) {
+				for (String tag : tagNames) {
+					if (existingTags.containsKey(tag)) {
+						tags.put(tag, existingTags.get(tag));
+					} else {
+						throw new GetTagException(PacketUtilityErrorCodes.TAG_NOT_FOUND.getErrorCode(),
+								PacketUtilityErrorCodes.TAG_NOT_FOUND.getErrorMessage() + tag);
+					}
+				}
+				tagResponseDto.setTags(tags);
+			} else {
+				tagResponseDto.setTags(existingTags);
+			}
+           return tagResponseDto;
+		} catch (Exception e) {
+			LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, tagRequestDto.getId(),
+					ExceptionUtils.getStackTrace(e));
+			if (e instanceof BaseCheckedException) {
+				BaseCheckedException ex = (BaseCheckedException) e;
+				throw new GetTagException(ex.getErrorCode(), ex.getMessage());
+			} else if (e instanceof BaseUncheckedException) {
+				BaseUncheckedException ex = (BaseUncheckedException) e;
+				throw new GetTagException(ex.getErrorCode(), ex.getMessage());
+			}
+			throw new GetTagException(e.getMessage());
 
+		}
+    	
+    }
 }
