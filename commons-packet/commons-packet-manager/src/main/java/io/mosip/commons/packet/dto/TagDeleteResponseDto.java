@@ -13,5 +13,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TagDeleteResponseDto {
 	
-	private boolean isDeleted;
+	private String status;
 }

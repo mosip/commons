@@ -34,8 +34,6 @@ import io.mosip.commons.packet.dto.PacketInfo;
 import io.mosip.commons.packet.dto.TagDto;
 import io.mosip.commons.packet.dto.TagRequestDto;
 import io.mosip.commons.packet.exception.PacketKeeperException;
-import io.mosip.commons.packet.exception.TagCreationException;
-import io.mosip.commons.packet.exception.TagDeletionException;
 import io.mosip.commons.packet.keeper.PacketKeeper;
 import io.mosip.commons.packet.spi.IPacketCryptoService;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
@@ -113,7 +111,7 @@ public class PacketKeeperTest {
         Map<String, String> tagsMap = new HashMap<>();
         tagsMap.put("osivalidation", "pass");
         Mockito.when(swiftAdapter.getTags(any(), any())).thenReturn(tagsMap);
-        Mockito.when(swiftAdapter.deleteTags(any(), any(),any())).thenReturn(true);
+
      
     }
 
@@ -191,7 +189,7 @@ public class PacketKeeperTest {
     	tags.put("test", "testValue");
     	tagDto.setTags(tags);
     	Mockito.when(swiftAdapter.addTags(any(), any(),any())).thenReturn(tags);
-        Map<String,String> map = packetKeeper.updateTags(tagDto);
+        Map<String,String> map = packetKeeper.addorUpdate(tagDto);
         assertEquals(tags, map);
 
     }
@@ -227,9 +225,7 @@ public class PacketKeeperTest {
         List<String> tagNames=new ArrayList<>();
         tagNames.add("osivalidation");
         tagRequestDto.setTagNames(tagNames);
-    	
-        boolean isDeleted = packetKeeper.deleteTags(tagRequestDto);
-        assertTrue(isDeleted);
+		packetKeeper.deleteTags(tagRequestDto);
 
     }
    

@@ -344,7 +344,7 @@ public class PacketManagerControllerTest {
           tagNames.add("osivalidation");
           tagRequestDto.setTagNames(tagNames);
           TagDeleteResponseDto tagResponse=new TagDeleteResponseDto();
-          tagResponse.setDeleted(true);
+		tagResponse.setStatus("Deleted Successfully");
           Mockito.when(
         		  packetWriterService.deleteTags(any())).thenReturn(tagResponse);
 

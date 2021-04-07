@@ -274,10 +274,10 @@ public class PacketWriterTest {
     	Map<String, String> tags = new HashMap<>();
         tags.put("test", "testValue");
     	tagDto.setTags(tags);
-    	Mockito.when(packetKeeper.updateTags(any())).thenReturn(tags);
+    	Mockito.when(packetKeeper.addorUpdate(any())).thenReturn(tags);
 
 
-       	Map<String, String> expectedTags= packetWriter.updateTags(tagDto);
+       	Map<String, String> expectedTags= packetWriter.addorUpdate(tagDto);
 
         assertEquals(expectedTags,tags); 
     }
@@ -288,11 +288,8 @@ public class PacketWriterTest {
     	List<String> tags = new ArrayList<>();
     	tags.add("test");
     	tagDto.setTagNames(tags);
-    	Mockito.when(packetKeeper.deleteTags(any())).thenReturn(true);
+		packetWriter.deleteTags(tagDto);
 
-    	boolean isDeleted= packetWriter.deleteTags(tagDto);
-
-        assertTrue(isDeleted); 
     }
     
 }

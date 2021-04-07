@@ -19,7 +19,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import io.mosip.commons.khazana.dto.ObjectDto;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,6 +33,7 @@ import org.springframework.util.CollectionUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.commons.khazana.constant.KhazanaErrorCodes;
+import io.mosip.commons.khazana.dto.ObjectDto;
 import io.mosip.commons.khazana.exception.FileNotFoundInDestinationException;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.commons.khazana.util.EncryptionHelper;
@@ -365,7 +365,7 @@ public class PosixAdapter implements ObjectStoreAdapter {
     }
 
 	@Override
-	public boolean deleteTags(String account, String container, List<String> tags) {
+	public void deleteTags(String account, String container, List<String> tags) {
 		try {
 			JSONObject jsonObject = containterRemoveTagging(account, container, tags);
 			createContainerWithTagging(account, container, new ByteArrayInputStream(jsonObject.toString().getBytes()));
@@ -373,7 +373,7 @@ public class PosixAdapter implements ObjectStoreAdapter {
 				LOGGER.error("exception occured to delete tags for id - " + container, e);
 			}
 		
-		return true;
+
 	}
 
 	private JSONObject containterRemoveTagging(String account, String container,List<String> tags) {

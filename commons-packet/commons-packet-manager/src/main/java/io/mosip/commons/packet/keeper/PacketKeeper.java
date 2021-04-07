@@ -159,7 +159,7 @@ public class PacketKeeper {
             }
 
 
-            if (!checkSignature(packet, encryptedSubPacket)) {
+			if (!checkSignature(packet, encryptedSubPacket)) {
                 LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
                         getName(packet.getPacketInfo().getId(), packetInfo.getPacketName()), "Packet Integrity and Signature check failed");
                 throw new PacketIntegrityFailureException();
@@ -263,7 +263,7 @@ public class PacketKeeper {
 		return tags;
 	}
 
-	public Map<String, String> updateTags(TagDto tagDto) {
+	public Map<String, String> addorUpdate(TagDto tagDto) {
 			Map<String, String> tags = getAdapter().addTags(PACKET_MANAGER_ACCOUNT, tagDto.getId(), tagDto.getTags());
 			return tags;
 	}
@@ -277,8 +277,9 @@ public class PacketKeeper {
         List<ObjectDto> allObjects = getAdapter().getAllObjects(PACKET_MANAGER_ACCOUNT, id);
         return allObjects;
     }
-    public boolean deleteTags(TagRequestDto tagRequestDto) {
-			boolean isDeleted = getAdapter().deleteTags(PACKET_MANAGER_ACCOUNT, tagRequestDto.getId(), tagRequestDto.getTagNames());
-			return isDeleted;
+
+	public void deleteTags(TagRequestDto tagRequestDto) {
+		getAdapter().deleteTags(PACKET_MANAGER_ACCOUNT, tagRequestDto.getId(), tagRequestDto.getTagNames());
+
 	}
 }

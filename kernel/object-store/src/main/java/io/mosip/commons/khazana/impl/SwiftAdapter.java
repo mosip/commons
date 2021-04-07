@@ -2,10 +2,9 @@ package io.mosip.commons.khazana.impl;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import io.mosip.commons.khazana.dto.ObjectDto;
-import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import org.javaswift.joss.client.factory.AccountConfig;
 import org.javaswift.joss.client.factory.AccountFactory;
 import org.javaswift.joss.client.factory.AuthenticationMethod;
@@ -18,7 +17,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import io.mosip.commons.khazana.dto.ObjectDto;
+import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 
 /**
  * Swift adapter has not been tested.
@@ -205,7 +205,7 @@ public class SwiftAdapter implements ObjectStoreAdapter {
     }
 
 	@Override
-	public boolean deleteTags(String account, String containerName, List<String> tags) {
+	public void deleteTags(String account, String containerName, List<String> tags) {
 		Map<String, Object> tagMap = new HashMap<>();
 		Container container = getConnection(account).getContainer(containerName);
 		 if (!container.exists())
@@ -216,6 +216,5 @@ public class SwiftAdapter implements ObjectStoreAdapter {
 		container.setMetadata(tagMap);
 		container.saveMetadata();
 
-		return true;
 	}
 }

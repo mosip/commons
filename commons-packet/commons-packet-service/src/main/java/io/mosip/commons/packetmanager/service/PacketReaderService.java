@@ -129,7 +129,7 @@ public class PacketReaderService {
             infoResponseDto.setApplicationId(id);
             infoResponseDto.setPacketId(id);
             infoResponseDto.setInfo(containerInfoDtos);
-            infoResponseDto.setTags(tags != null ? tags : null);
+			infoResponseDto.setTags(tags);
             return infoResponseDto;
         } catch (Exception e) {
             LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, ExceptionUtils.getStackTrace(e));

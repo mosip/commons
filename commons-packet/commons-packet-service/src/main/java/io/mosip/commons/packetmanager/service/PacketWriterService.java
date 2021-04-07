@@ -37,23 +37,17 @@ public class PacketWriterService {
     
     public TagResponseDto addTags(TagDto tagDto) {
     	try {
-			Map<String, String> newTags = new HashMap<String, String>();
+
 			Map<String, String> existingTags = packetReader.getTags(tagDto.getId());
-			if (existingTags.isEmpty()) {
-				newTags.putAll(tagDto.getTags());
-			} else {
 				for (Entry<String, String> entry : tagDto.getTags().entrySet()) {
 					if (existingTags.containsKey(entry.getKey())) {
 
 						throw new TagCreationException(PacketUtilityErrorCodes.TAG_ALREADY_EXIST.getErrorCode(),
 								PacketUtilityErrorCodes.TAG_ALREADY_EXIST.getErrorMessage());
-
-					} else {
-						newTags.put(entry.getKey(), entry.getValue());
-					}
 				}
-			}
-			tagDto.setTags(newTags);
+				}
+
+			tagDto.setTags(tagDto.getTags());
 			Map<String, String> tags = packetWriter.addTags(tagDto);
 			TagResponseDto tagResponseDto = new TagResponseDto();
 			tagResponseDto.setTags(tags);
@@ -127,15 +121,12 @@ public class PacketWriterService {
 					} 
 				}
 			TagDeleteResponseDto tagDeleteResponseDto = new TagDeleteResponseDto();
-			boolean isDeleted;
-			if (deleteTags.isEmpty()) {
-					isDeleted=true;
-			} else {
+			if (!deleteTags.isEmpty()) {
 				tagRequestDto.setTagNames(deleteTags);
-				isDeleted = packetWriter.deleteTags(tagRequestDto);
+				packetWriter.deleteTags(tagRequestDto);
 			}
 
-			tagDeleteResponseDto.setDeleted(isDeleted);
+			tagDeleteResponseDto.setStatus("Deleted Successfully");
 			return tagDeleteResponseDto;
 
 		} catch (Exception e) {

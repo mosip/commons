@@ -350,8 +350,10 @@ public class S3Adapter implements ObjectStoreAdapter {
         if (os != null && os.size() > 0) {
             List<ObjectDto> objectDtos = new ArrayList<>();
             os.forEach(o -> {
-                // ignore the Tag file
-				String[] tempKeys = o.getKey().contains(TAGS_FILENAME) ? null : o.getKey().split("/");
+				// ignore the Tag file
+				String[] tempKeys = o.getKey().split("/");
+				if (tempKeys[1] != null && tempKeys[1].endsWith(TAGS_FILENAME))
+					tempKeys = null;
                 String[] keys = removeIdFromObjectPath(useAccountAsBucketname, tempKeys);
                 if (ArrayUtils.isNotEmpty(keys)) {
                     ObjectDto objectDto = null;
@@ -437,16 +439,16 @@ public class S3Adapter implements ObjectStoreAdapter {
      	}
 		AmazonS3 connection = getConnection(bucketName);
 		
-		List<S3ObjectSummary> os = null;
+			List<S3ObjectSummary> objectSummary = null;
 	   	   if(useAccountAsBucketname)
-	           os = connection.listObjects(bucketName, finalObjectName).getObjectSummaries();
+				objectSummary = connection.listObjects(bucketName, finalObjectName).getObjectSummaries();
 	   	   else
-	           os = connection.listObjects(bucketName).getObjectSummaries();
+				objectSummary = connection.listObjects(bucketName).getObjectSummaries();
 
 	   	   List<String> tagNames=new ArrayList<String>();	   
-	   	if (os != null && os.size() > 0) {
+			if (objectSummary != null && objectSummary.size() > 0) {
         
-            os.forEach(o -> {
+				objectSummary.forEach(o -> {
                 String[] keys = o.getKey().split("/");
                 if (ArrayUtils.isNotEmpty(keys)) {
                 	tagNames.add(keys[2]);
@@ -471,7 +473,7 @@ public class S3Adapter implements ObjectStoreAdapter {
 	}
 	
 	@Override
-	public boolean deleteTags(String account, String container, List<String> tags) {
+	public void deleteTags(String account, String container, List<String> tags) {
 		try {
 			 String bucketName=null;
 			 String finalObjectName=null;
@@ -497,7 +499,7 @@ public class S3Adapter implements ObjectStoreAdapter {
 			throw new ObjectStoreAdapterException(OBJECT_STORE_NOT_ACCESSIBLE.getErrorCode(),
 					OBJECT_STORE_NOT_ACCESSIBLE.getErrorMessage(), e);
 		}
-		return true;
+
 	}
 
 }

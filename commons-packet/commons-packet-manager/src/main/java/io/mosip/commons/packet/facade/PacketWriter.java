@@ -219,16 +219,14 @@ public class PacketWriter {
 	}
 
 	@CacheEvict(value = "tags", key = "{#tagDto.id}")
-	public Map<String, String> updateTags(TagDto tagDto) {
-		Map<String, String> tags = packetKeeper.updateTags(tagDto);
+	public Map<String, String> addorUpdate(TagDto tagDto) {
+		Map<String, String> tags = packetKeeper.addorUpdate(tagDto);
 		return tags;
 
 	}
 	
 	@CacheEvict(value = "tags", key = "{#tagDto.id}")
-	public boolean  deleteTags(TagRequestDto tagDto) {
-		boolean isDeleted = packetKeeper.deleteTags(tagDto);
-		return isDeleted;
-
+	public void deleteTags(TagRequestDto tagDto) {
+		packetKeeper.deleteTags(tagDto);
 	}
 }

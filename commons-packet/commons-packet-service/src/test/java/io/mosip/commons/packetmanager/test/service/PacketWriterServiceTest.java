@@ -1,7 +1,6 @@
 package io.mosip.commons.packetmanager.test.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 
@@ -18,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import io.mosip.commons.packet.dto.TagDeleteResponseDto;
 import io.mosip.commons.packet.dto.TagDto;
 import io.mosip.commons.packet.dto.TagRequestDto;
 import io.mosip.commons.packet.dto.TagResponseDto;
@@ -111,9 +109,8 @@ public class PacketWriterServiceTest {
 		List<String> tagNames = new ArrayList<String>();
 		tagNames.add("test");
 		tagRequestDto.setTagNames(tagNames);
-		Mockito.when(packetWriter.deleteTags(any())).thenReturn(true);
-		TagDeleteResponseDto tagDeleteResponseDto = packetWriterService.deleteTags(tagRequestDto);
-		assertTrue(tagDeleteResponseDto.isDeleted());
+		packetWriterService.deleteTags(tagRequestDto);
+
 	}
 
 	@Test(expected = TagDeletionException.class)
@@ -123,7 +120,8 @@ public class PacketWriterServiceTest {
 		List<String> tagNames = new ArrayList<String>();
 		tagNames.add("test");
 		tagRequestDto.setTagNames(tagNames);
-		Mockito.when(packetWriter.deleteTags(any())).thenThrow(new BaseUncheckedException("code", "message"));
+		Mockito.doThrow(new BaseUncheckedException("code", "message")).when(packetWriter).deleteTags(any());
+
 		packetWriterService.deleteTags(tagRequestDto);
 
 	}
