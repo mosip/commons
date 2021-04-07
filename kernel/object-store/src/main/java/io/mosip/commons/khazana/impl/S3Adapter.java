@@ -352,8 +352,14 @@ public class S3Adapter implements ObjectStoreAdapter {
             os.forEach(o -> {
 				// ignore the Tag file
 				String[] tempKeys = o.getKey().split("/");
-				if (tempKeys[1] != null && tempKeys[1].endsWith(TAGS_FILENAME))
-					tempKeys = null;
+				if (useAccountAsBucketname) {
+					if (tempKeys[1] != null && tempKeys[1].endsWith(TAGS_FILENAME))
+						tempKeys = null;
+				} else {
+					if (tempKeys[0] != null && tempKeys[0].endsWith(TAGS_FILENAME))
+						tempKeys = null;
+				}
+
                 String[] keys = removeIdFromObjectPath(useAccountAsBucketname, tempKeys);
                 if (ArrayUtils.isNotEmpty(keys)) {
                     ObjectDto objectDto = null;
@@ -427,15 +433,15 @@ public class S3Adapter implements ObjectStoreAdapter {
 	public Map<String, String> getTags(String account, String container) {
 		Map<String, String> objectTags = new HashMap<String, String>();
 		try {
-	
+
 		 String bucketName=null;
 		 String finalObjectName=null;
-     	if(useAccountAsBucketname) {
+			if (useAccountAsBucketname) {
      		 bucketName=account;
-     		 finalObjectName = ObjectStoreUtil.getName(container,null,TAGS_FILENAME)+SEPARATOR;
+				finalObjectName = ObjectStoreUtil.getName(container, null, TAGS_FILENAME) + SEPARATOR;
      	}else {
      		 bucketName=container;
-     		 finalObjectName = TAGS_FILENAME+SEPARATOR;
+				finalObjectName = TAGS_FILENAME + SEPARATOR;
      	}
 		AmazonS3 connection = getConnection(bucketName);
 		
@@ -451,7 +457,14 @@ public class S3Adapter implements ObjectStoreAdapter {
 				objectSummary.forEach(o -> {
                 String[] keys = o.getKey().split("/");
                 if (ArrayUtils.isNotEmpty(keys)) {
-                	tagNames.add(keys[2]);
+						if (useAccountAsBucketname) {
+							if (keys[1] != null && keys[1].endsWith(TAGS_FILENAME))
+								tagNames.add(keys[2]);
+						} else {
+							if (keys[0] != null && keys[0].endsWith(TAGS_FILENAME))
+								tagNames.add(keys[1]);
+						}
+
                 }
             });
             

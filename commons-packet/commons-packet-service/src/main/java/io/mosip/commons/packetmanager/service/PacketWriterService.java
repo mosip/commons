@@ -47,7 +47,6 @@ public class PacketWriterService {
 				}
 				}
 
-			tagDto.setTags(tagDto.getTags());
 			Map<String, String> tags = packetWriter.addTags(tagDto);
 			TagResponseDto tagResponseDto = new TagResponseDto();
 			tagResponseDto.setTags(tags);
