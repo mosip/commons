@@ -725,4 +725,24 @@ public class AuthController {
 		responseWrapper.setResponse(vidDto);
 		return responseWrapper;
 	}
+	
+	/**
+	 * This API will fetch all users based on appId and roles
+	 * 
+	 * @param appId
+	 * @param roleName
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseFilter
+	@GetMapping(value = "/userdetails/{appid}")
+	public ResponseWrapper<MosipUserListDto> getUsersDetails(@PathVariable("appid") String appId,
+			@RequestParam(required = false,name ="roleName") String roleName)
+			throws Exception {
+		ResponseWrapper<MosipUserListDto> responseWrapper = new ResponseWrapper<>();		
+		MosipUserListDto mosipUsers = authService.getListOfUsersDetails(appId,roleName);
+		LOGGER.info("Get userdetails for " + appId + ". Total users:  " + mosipUsers.getMosipUserDtoList().size() );
+		responseWrapper.setResponse(mosipUsers);
+		return responseWrapper;
+	}
 }

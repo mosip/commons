@@ -829,4 +829,9 @@ public class AuthServiceImpl implements AuthService {
 		return keycloakImpl.getVidFromUserId(userId,authUtil.getRealmIdFromAppId(appId));
 	}
 
+	@Override
+	public MosipUserListDto getListOfUsersDetails(String realmId, String roleName) {
+		return keycloakImpl.getListOfUsersDetails(authUtil.getRealmIdFromAppId(realmId),roleName);
+	}
+
 }
