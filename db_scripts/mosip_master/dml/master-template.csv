@@ -1,16 +1,16 @@
 ﻿id,name,descr,file_format_code,model,file_txt,module_id,module_name,template_typ_code,lang_code,is_active,cr_by,cr_dtimes
 1101,Template for authorization content,Template for authorization content,txt,,"Dear $name
-Your Authentication of $idvidType $idvid using $authType on $date at $time Hrs $status at a device deployed by MOSIP Services",10004,ID Authentication,auth-email-content,eng,TRUE,superadmin,now()
-1102,Template for authorization subject,Template for authorization subject,txt,,$idvidType $idvid Authentication $status,10004,ID Authentication,auth-email-subject,eng,TRUE,superadmin,now()
-1103,Template for authorization SMS,Template for authorization SMS,txt,,Your Authentication of $idvidType $idvid using $authType on $date at $time Hrs $status at a device deployed by MOSIP Services.,10004,ID Authentication,auth-sms,eng,TRUE,superadmin,now()
+Your Authentication of UIN $uin using $authType on $date at $time Hrs $status at a device deployed by MOSIP Services",10004,ID Authentication,auth-email-content,eng,TRUE,superadmin,now()
+1102,Template for authorization subject,Template for authorization subject,txt,,UIN $uin Authentication $status,10004,ID Authentication,auth-email-subject,eng,TRUE,superadmin,now()
+1103,Template for authorization SMS,Template for authorization SMS,txt,,Your Authentication of UIN $uin using $authType on $date at $time Hrs $status at a device deployed by MOSIP Services.,10004,ID Authentication,auth-sms,eng,TRUE,superadmin,now()
 1101,قالب لمحتوى التخويل,قالب لمحتوى التخويل,txt,velocity,"عزيزي $name ،
-مصاٿقة $idvidType $idvid باستخدام $authType على $date في $time Hrs $status على جهاز تم نشره بواسطة ""خٿمات MOSIP"".",10004,مصادقة الهوية,auth-email-content,ara,TRUE,superadmin,now()
-1102,قالب لموضوع التخويل,قالب لموضوع التخويل,txt,velocity,$idvidType $idvid: مصادقة $status,10004,مصادقة الهوية,auth-email-subject,ara,TRUE,superadmin,now()
-1103,قالب لرسالة التفويض,قالب لرسالة التفويض,txt,velocity,"مصاٿقتك على $idvidType $idvid باستخدام $authType في $date في $time Hrs $status على جهاز تم نشره بواسطة ""خدمات MOSIP"".",10004,مصادقة الهوية,auth-sms,ara,TRUE,superadmin,now()
+مصادقة UIN $uin باستخدام $authType على $date في $time Hrs $status على جهاز تم نشره بواسطة ""خدمات MOSIP.",10004,مصادقة الهوية,auth-email-content,ara,TRUE,superadmin,now()
+1102,قالب لموضوع التخويل,قالب لموضوع التخويل,txt,velocity,UIN $uin: مصادقة $status,10004,مصادقة الهوية,auth-email-subject,ara,TRUE,superadmin,now()
+1103,قالب لرسالة التفويض,قالب لرسالة التفويض,txt,velocity,مصادقتك على UIN $uin باستخدام $authType في $date في $time Hrs $status في جهاز تم نشره بواسطة خدمات MOSIP.,10004,مصادقة الهوية,auth-sms,ara,TRUE,superadmin,now()
 1101,Modèle de contenu dautorisation,Modèle de contenu dautorisation,txt,velocity,"Cher $name,
-Votre authentification $idvidType $idvid utilisant $authType le $date à $time Hrs $status sur un périphérique déployé par ""MOSIP Services""",10004,Authentification ID,auth-email-content,fra,TRUE,superadmin,now()
-1102,Modèle pour sujet dautorisation,Modèle pour sujet dautorisation,txt,velocity,$idvidType $idvid: $status dauthentification,10004,Authentification ID,auth-email-subject,fra,TRUE,superadmin,now()
-1103,Modèle de SMS dautorisation,Modèle de SMS dautorisation,txt,velocity,"Votre authentification $idvidType $idvid utilisant $authType le $date à $time Hrs $status sur un périphérique déployé par ""MOSIP Services"".",10004,Authentification ID,auth-sms,fra,TRUE,superadmin,now()
+Votre authentification UIN $uin utilisant $authType le $date à $time Hrs $status sur un périphérique déployé par ""MOSIP Services""",10004,Authentification ID,auth-email-content,fra,TRUE,superadmin,now()
+1102,Modèle pour sujet dautorisation,Modèle pour sujet dautorisation,txt,velocity,UIN $uin: $status dauthentification,10004,Authentification ID,auth-email-subject,fra,TRUE,superadmin,now()
+1103,Modèle de SMS dautorisation,Modèle de SMS dautorisation,txt,velocity,Votre authentification de UIN $uin à l'aide de $authType le $date à $time Hrs $status sur un appareil déployé par les services MOSIP.,10004,Authentification ID,auth-sms,fra,TRUE,superadmin,now()
 1107,Template for duplicate UIN Email,Template for duplicate UIN Email,txt,velocity,"Dear $!name_eng,
 
 Your request for UIN for Registration ID: $!RID has failed because a duplicate UIN has been found against your details. Please visit your nearest Registration office or visit https://mosip.io/grievances
@@ -852,18 +852,15 @@ registrationclient,otp service,OTP Send Service,txt,velocity,Please find the OTP
 1150,auth otp email service subject,auth otp email service subject,txt,velocity,يرجى الاطلاع على otp $otp,10004,مصادقة الهوية,auth-otp-email-content-template,ara,TRUE,superadmin,now()
 1150,auth otp email service subject,auth otp email service subject,txt,velocity,Please find the otp $otp,10004,ID Authentication,auth-otp-email-content-template,eng,TRUE,superadmin,now()
 1150,auth otp email service subject,auth otp email service subject,txt,velocity,Sil vous plaît trouver le otp $otp,10004,Authentification ID,auth-otp-email-content-template,fra,TRUE,superadmin,now()
-1151,Template for Email Content,Template for Email Content,txt,velocity,"Dear $name
-OTP for $idvidType  $idvid is $otp and is valid for $validTime minutes. (Generated on $date at $time Hrs)",10004,ID Authentication,ida-auth-otp-email-content-template,eng,TRUE,superadmin,now()
-1151,قالب لمحتوى البريد الإلكتروني,قالب لمحتوى البريد الإلكتروني,txt,velocity,"عزيزي $name 
- OTP لـ $idvidType $idvid هو $otp وهو صالح لمدة $validTime دقيقة. (تم إنشاؤه في $date في $time Hrs)",10004,مصادقة الهوية,ida-auth-otp-email-content-template,ara,TRUE,superadmin,now()
-1151,Modèle de contenu de courrier électronique,Modèle de contenu de courrier électronique,txt,velocity,"Cher $name,
-OTP pour $idvidType $idvid est $otp et est valide pour $validTime minutes. (Généré le $date à $time Hrs)",10004,Authentification ID,ida-auth-otp-email-content-template,fra,TRUE,superadmin,now()
-1152,Template for Email Subject,Template for Email Subject,txt,velocity,$idvidType $idvid: OTP Request,10004,ID Authentication,ida-auth-otp-email-subject-template,eng,TRUE,superadmin,now()
-1152,قالب لموضوع البريد الإلكتروني,قالب لموضوع البريد الإلكتروني,txt,velocity,$idvidType $idvid: طلب OTP,10004,مصادقة الهوية,ida-auth-otp-email-subject-template,ara,TRUE,superadmin,now()
-1152,Modèle pour sujet demail,Modèle pour sujet demail,txt,velocity,$idvidType $idvid: Requête OTP,10004,Authentification ID,ida-auth-otp-email-subject-template,fra,TRUE,superadmin,now()
-1153,Template for OTP in SMS ,Template for OTP in SMS ,txt,velocity,OTP for $idvidType  $idvid is $otp and is valid for $validTime minutes. (Generated on $date at $time Hrs),10004,ID Authentication,ida-auth-otp-sms-template,eng,TRUE,superadmin,now()
-1153,قالب كلمة المرور لمرة واحدة في الرسالة,قالب كلمة المرور لمرة واحدة في الرسالة,txt,velocity,OTP لـ $idvidType $idvid هو $otp وهو صالح لمدة $validTime دقيقة. (التي تم إنشاؤها على $date في $time ساعات),10004,مصادقة الهوية,ida-auth-otp-sms-template,ara,TRUE,superadmin,now()
-1153,Modèle pour OTP dans SMS,Modèle pour OTP dans SMS,txt,velocity,OTP pour $idvidType $idvid est $otp et est valide pour $validTime minutes. (Généré le $date à $time Hrs),10004,Authentification ID,ida-auth-otp-sms-template,fra,TRUE,superadmin,now()
+1151,Template for Email Content,Template for Email Content,txt,velocity,Dear $name\nOTP for UIN  $uin is $otp and is valid for $validTime minutes. (Generated on $date at $time Hrs),10004,ID Authentication,ida-auth-otp-email-content-template,eng,TRUE,superadmin,now()
+1151,قالب لمحتوى البريد الإلكتروني,قالب لمحتوى البريد الإلكتروني,txt,velocity,عزيزي $name \ nOTP لـ UIN $uin هو $otp وهو صالح لمدة $validTime دقيقة. (تم إنشاؤه في $date في $time Hrs),10004,مصادقة الهوية,ida-auth-otp-email-content-template,ara,TRUE,superadmin,now()
+1151,Modèle de contenu de courrier électronique,Modèle de contenu de courrier électronique,txt,velocity,"Cher $name,OTP pour UIN $uin est $otp et est valide pour $validTime minutes. (Généré le $date à $time Hrs)",10004,Authentification ID,ida-auth-otp-email-content-template,fra,TRUE,superadmin,now()
+1152,Template for Email Subject,Template for Email Subject,txt,velocity,UIN $uin: OTP Request,10004,ID Authentication,ida-auth-otp-email-subject-template,eng,TRUE,superadmin,now()
+1152,قالب لموضوع البريد الإلكتروني,قالب لموضوع البريد الإلكتروني,txt,velocity,UIN $uin: طلب OTP,10004,مصادقة الهوية,ida-auth-otp-email-subject-template,ara,TRUE,superadmin,now()
+1152,Modèle pour sujet demail,Modèle pour sujet demail,txt,velocity,UIN $uin: Requête OTP,10004,Authentification ID,ida-auth-otp-email-subject-template,fra,TRUE,superadmin,now()
+1153,Template for OTP in SMS ,Template for OTP in SMS ,txt,velocity,OTP for UIN  $uin is $otp and is valid for $validTime minutes. (Generated on $date at $time Hrs),10004,ID Authentication,ida-auth-otp-sms-template,eng,TRUE,superadmin,now()
+1153,قالب كلمة المرور لمرة واحدة في الرسالة,قالب كلمة المرور لمرة واحدة في الرسالة,txt,velocity,OTP لـ UIN $uin هو $otp وهو صالح لمدة $validTime دقيقة. (التي تم إنشاؤها على $date في $time ساعات),10004,مصادقة الهوية,ida-auth-otp-sms-template,ara,TRUE,superadmin,now()
+1153,Modèle pour OTP dans SMS,Modèle pour OTP dans SMS,txt,velocity,OTP pour UIN $uin est $otp et est valide pour $validTime minutes. (Généré le $date à $time Hrs),10004,Authentification ID,ida-auth-otp-sms-template,fra,TRUE,superadmin,now()
 1154,Consent,Consent,txt,velocity,"I understand that the data collected about me during pre-registration by the said authority includes my -  
 •                     Name
 •                     Date of birth

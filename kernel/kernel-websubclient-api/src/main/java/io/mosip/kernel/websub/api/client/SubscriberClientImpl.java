@@ -1,5 +1,10 @@
 package io.mosip.kernel.websub.api.client;
 
+import java.io.IOException;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.digest.HmacAlgorithms;
+import org.apache.commons.codec.digest.HmacUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +20,19 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.kernel.core.websub.spi.SubscriptionClient;
+import io.mosip.kernel.core.websub.spi.SubscriptionExtendedClient;
 import io.mosip.kernel.websub.api.constants.HubMode;
 import io.mosip.kernel.websub.api.constants.WebSubClientConstants;
 import io.mosip.kernel.websub.api.constants.WebSubClientErrorCode;
 import io.mosip.kernel.websub.api.exception.WebSubClientException;
+import io.mosip.kernel.websub.api.model.FailedContentRequest;
+import io.mosip.kernel.websub.api.model.FailedContentResponse;
 import io.mosip.kernel.websub.api.model.SubscriptionChangeRequest;
 import io.mosip.kernel.websub.api.model.SubscriptionChangeResponse;
 import io.mosip.kernel.websub.api.model.UnsubscriptionRequest;
@@ -34,18 +45,23 @@ import io.mosip.kernel.websub.api.model.UnsubscriptionRequest;
  *
  */
 @Component
-public class SubscriberClientImpl implements SubscriptionClient<SubscriptionChangeRequest,UnsubscriptionRequest, SubscriptionChangeResponse> {
+public class SubscriberClientImpl
+		implements SubscriptionClient<SubscriptionChangeRequest, UnsubscriptionRequest, SubscriptionChangeResponse>,
+		SubscriptionExtendedClient<FailedContentResponse, FailedContentRequest> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SubscriberClientImpl.class);
 
 	@Autowired
 	private RestTemplate restTemplate;
 
+	@Autowired
+	private ObjectMapper objectMapper;
+
 	@Override
 	public SubscriptionChangeResponse subscribe(SubscriptionChangeRequest subscriptionRequest) {
-		//TODO code duplicacy remove
+		// TODO code duplicacy remove
 		// TODO retries on redirect
-        verifySubscribeModel(subscriptionRequest);
+		verifySubscribeModel(subscriptionRequest);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -80,46 +96,44 @@ public class SubscriberClientImpl implements SubscriptionClient<SubscriptionChan
 		}
 	}
 
-	
-	
-
 	private void verifySubscribeModel(SubscriptionChangeRequest subscriptionRequest) {
-		if(EmptyCheckUtils.isNullEmpty(subscriptionRequest.getCallbackURL())){
+		if (EmptyCheckUtils.isNullEmpty(subscriptionRequest.getCallbackURL())) {
 			throw new WebSubClientException(WebSubClientErrorCode.INPUT_VERIFICATION_ERROR.getErrorCode(),
-					WebSubClientErrorCode.INPUT_VERIFICATION_ERROR.getErrorMessage().concat("callback url is null or empty"));
-		}else if(EmptyCheckUtils.isNullEmpty(subscriptionRequest.getHubURL())){
+					WebSubClientErrorCode.INPUT_VERIFICATION_ERROR.getErrorMessage()
+							.concat("callback url is null or empty"));
+		} else if (EmptyCheckUtils.isNullEmpty(subscriptionRequest.getHubURL())) {
 			throw new WebSubClientException(WebSubClientErrorCode.INPUT_VERIFICATION_ERROR.getErrorCode(),
-					WebSubClientErrorCode.INPUT_VERIFICATION_ERROR.getErrorMessage().concat("HUB url is null or empty"));
-		}else if(EmptyCheckUtils.isNullEmpty(subscriptionRequest.getSecret())){
+					WebSubClientErrorCode.INPUT_VERIFICATION_ERROR.getErrorMessage()
+							.concat("HUB url is null or empty"));
+		} else if (EmptyCheckUtils.isNullEmpty(subscriptionRequest.getSecret())) {
 			throw new WebSubClientException(WebSubClientErrorCode.INPUT_VERIFICATION_ERROR.getErrorCode(),
 					WebSubClientErrorCode.INPUT_VERIFICATION_ERROR.getErrorMessage().concat("secret is null or empty"));
-		}else if(EmptyCheckUtils.isNullEmpty(subscriptionRequest.getTopic())){
+		} else if (EmptyCheckUtils.isNullEmpty(subscriptionRequest.getTopic())) {
 			throw new WebSubClientException(WebSubClientErrorCode.INPUT_VERIFICATION_ERROR.getErrorCode(),
 					WebSubClientErrorCode.INPUT_VERIFICATION_ERROR.getErrorMessage().concat("topic is null or empty"));
 		}
-		
+
 	}
 
-	
 	private void verifyUnsubscribeModel(UnsubscriptionRequest unsubscriptionRequest) {
-		if(EmptyCheckUtils.isNullEmpty(unsubscriptionRequest.getCallbackURL())){
+		if (EmptyCheckUtils.isNullEmpty(unsubscriptionRequest.getCallbackURL())) {
 			throw new WebSubClientException(WebSubClientErrorCode.INPUT_VERIFICATION_ERROR.getErrorCode(),
-					WebSubClientErrorCode.INPUT_VERIFICATION_ERROR.getErrorMessage().concat("callback url is null or empty"));
-		}else if(EmptyCheckUtils.isNullEmpty(unsubscriptionRequest.getHubURL())){
+					WebSubClientErrorCode.INPUT_VERIFICATION_ERROR.getErrorMessage()
+							.concat("callback url is null or empty"));
+		} else if (EmptyCheckUtils.isNullEmpty(unsubscriptionRequest.getHubURL())) {
 			throw new WebSubClientException(WebSubClientErrorCode.INPUT_VERIFICATION_ERROR.getErrorCode(),
-					WebSubClientErrorCode.INPUT_VERIFICATION_ERROR.getErrorMessage().concat("HUB url is null or empty"));
-		}else if(EmptyCheckUtils.isNullEmpty(unsubscriptionRequest.getTopic())){
+					WebSubClientErrorCode.INPUT_VERIFICATION_ERROR.getErrorMessage()
+							.concat("HUB url is null or empty"));
+		} else if (EmptyCheckUtils.isNullEmpty(unsubscriptionRequest.getTopic())) {
 			throw new WebSubClientException(WebSubClientErrorCode.INPUT_VERIFICATION_ERROR.getErrorCode(),
 					WebSubClientErrorCode.INPUT_VERIFICATION_ERROR.getErrorMessage().concat("topic is null or empty"));
 		}
-		
+
 	}
-
-
 
 	@Override
 	public SubscriptionChangeResponse unSubscribe(UnsubscriptionRequest unsubscriptionRequest) {
-		//TODO code duplicacy remove
+		// TODO code duplicacy remove
 		// TODO retries on redirect
 		verifyUnsubscribeModel(unsubscriptionRequest);
 		HttpHeaders headers = new HttpHeaders();
@@ -149,6 +163,45 @@ public class SubscriberClientImpl implements SubscriptionClient<SubscriptionChan
 			throw new WebSubClientException(WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorCode(),
 					WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorMessage() + response.getBody());
 		}
+	}
+
+	@Override
+	public FailedContentResponse getFailedContent(FailedContentRequest failedContentRequest) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		if (failedContentRequest.getMessageCount() > 0) {
+			headers.set(WebSubClientConstants.SUBSCRIBER_SIGNATURE_HEADER,
+					getHmac256(failedContentRequest.getTopic() + failedContentRequest.getCallbackURL()+ failedContentRequest.getTimestamp()+ String.valueOf(failedContentRequest.getMessageCount()),
+							failedContentRequest.getSecret()));
+		} else {
+			headers.set(WebSubClientConstants.SUBSCRIBER_SIGNATURE_HEADER,
+					getHmac256(failedContentRequest.getTopic() + failedContentRequest.getCallbackURL()
+							+ failedContentRequest.getTimestamp(), failedContentRequest.getSecret()));
+		}
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(failedContentRequest.getHubURL())
+				.queryParam("topic", failedContentRequest.getTopic())
+				.queryParam("callback",
+						Base64.encodeBase64URLSafeString(failedContentRequest.getCallbackURL().getBytes()))
+				.queryParam("timestamp", failedContentRequest.getTimestamp()).queryParam("messageCount",
+						failedContentRequest.getMessageCount() == 0 ? null : failedContentRequest.getMessageCount());
+
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+		HttpEntity<String> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity,
+				String.class);
+		FailedContentResponse failedContentResponse = null;
+		try {
+			failedContentResponse = objectMapper.readValue(response.getBody(), FailedContentResponse.class);
+		} catch (IOException e) {
+			LOGGER.error(WebSubClientErrorCode.IO_ERROR.getErrorMessage() + e.getMessage());
+		}
+		return failedContentResponse;
+	}
+
+	private String getHmac256(String value, String secret) {
+		HmacUtils hmacUtils = new HmacUtils(HmacAlgorithms.HMAC_SHA_256, secret);
+		return Base64.encodeBase64String(hmacUtils.hmac(value));
+
 	}
 
 }

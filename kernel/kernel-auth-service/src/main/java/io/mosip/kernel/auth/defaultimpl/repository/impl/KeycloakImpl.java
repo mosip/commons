@@ -67,6 +67,7 @@ import io.mosip.kernel.core.authmanager.model.UserPasswordRequestDto;
 import io.mosip.kernel.core.authmanager.model.UserPasswordResponseDto;
 import io.mosip.kernel.core.authmanager.model.UserRegistrationRequestDto;
 import io.mosip.kernel.core.authmanager.model.ValidationResponseDto;
+import io.mosip.kernel.core.authmanager.model.VidDto;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.util.CryptoUtil;
@@ -122,6 +123,9 @@ public class KeycloakImpl implements DataStore {
 
 	@Value("${mosip.iam.pre-reg_user_password}")
 	private String preRegUserPassword;
+	
+	@Value("${mosip.iam.role-based-user-url}")
+	private String roleBasedUsersurl;
 
 	@Value("${hikari.maximumPoolSize:25}")
 	private int maximumPoolSize;
@@ -690,4 +694,120 @@ public class KeycloakImpl implements DataStore {
 		
 	}
 
+	@Override
+	public VidDto getVidFromUserId(String userId, String realmID) {
+		VidDto vIDDto = new VidDto();
+		Map<String, String> pathParams = new HashMap<>();
+		pathParams.put(AuthConstant.REALM_ID, realmID);
+		HttpHeaders httpHeaders = new HttpHeaders();
+		HttpEntity<String> httpEntity = new HttpEntity<>(null, httpHeaders);
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
+				.fromUriString(keycloakAdminUrl + users + "?username=" + userId);
+		String response = callKeycloakService(uriComponentsBuilder.buildAndExpand(pathParams).toString(),
+				HttpMethod.GET, httpEntity);
+		if (response == null || response.isEmpty()) {
+			throw new AuthManagerException(AuthErrorCode.USER_NOT_FOUND.getErrorCode(),
+					AuthErrorCode.USER_NOT_FOUND.getErrorMessage());
+		}
+		try {
+			JsonNode node = objectMapper.readTree(response);
+			for (JsonNode jsonNode : node) {
+				if (jsonNode.get(AuthConstant.USER_NAME).textValue().equals(userId)) {
+					JsonNode attriNode = jsonNode.get("attributes");
+					String vid = attriNode.get(AuthConstant.VID).get(0).textValue();
+					vIDDto.setVid(vid);
+ 					break;
+				}
+			}
+			if (vIDDto.getVid() == null) {
+				throw new AuthManagerException(AuthErrorCode.VID_NOT_FOUND.getErrorCode(),
+						AuthErrorCode.VID_NOT_FOUND.getErrorMessage());
+			}
+
+		} catch (IOException e) {
+			throw new AuthManagerException(AuthErrorCode.IO_EXCEPTION.getErrorCode(),
+					AuthErrorCode.IO_EXCEPTION.getErrorMessage());
+		}
+
+		return vIDDto;
+	}
+
+	@Override
+	public MosipUserListDto getListOfUsersDetails(String realmId, String roleName) {		
+		Map<String, String> pathParams = new HashMap<>();		
+		UriComponentsBuilder uriComponentsBuilder = null;
+		boolean isRoleBasedSearch = false;
+		HttpEntity<String> httpEntity = new HttpEntity<>(null, new HttpHeaders());
+		if (roleName != null && !roleName.isBlank() && !roleName.isEmpty()) {			
+			pathParams.put(AuthConstant.ROLE_NAME, roleName);
+			pathParams.put(AuthConstant.REALM, realmId);
+			uriComponentsBuilder = UriComponentsBuilder.fromUriString(keycloakAdminUrl + roleBasedUsersurl);
+			isRoleBasedSearch = true;
+		} else {
+			pathParams.put(AuthConstant.REALM_ID, realmId);
+			uriComponentsBuilder = UriComponentsBuilder.fromUriString(keycloakAdminUrl + users);
+		}
+		uriComponentsBuilder.queryParam("max", maxUsers);
+		String response = callKeycloakService(uriComponentsBuilder.buildAndExpand(pathParams).toString(),
+				HttpMethod.GET, httpEntity);
+		List<MosipUserDto> mosipUserDtos = null;
+		try {
+			JsonNode node = objectMapper.readTree(response);
+			mosipUserDtos = mapUsersToUserDetailDto(node, realmId,isRoleBasedSearch,roleName);
+		} catch (IOException e) {
+			LOGGER.error("Error in getListOfUsersDetails", e);
+			throw new AuthManagerException(AuthErrorCode.IO_EXCEPTION.getErrorCode(),
+					AuthErrorCode.IO_EXCEPTION.getErrorMessage());
+		}
+		MosipUserListDto mosipUserListDto = new MosipUserListDto();
+		mosipUserListDto.setMosipUserDtoList(mosipUserDtos);
+		return mosipUserListDto;
+	}
+	
+	private List<MosipUserDto> mapUsersToUserDetailDto(JsonNode node, String realmId, boolean isRoleBasedSearch,
+			String roleName) {
+		List<MosipUserDto> mosipUserDtos = new ArrayList<>();
+		if (node == null) {
+			LOGGER.error("response from openid is null >>");
+			return mosipUserDtos;
+		}
+
+		for (JsonNode jsonNode : node) {
+			MosipUserDto mosipUserDto = new MosipUserDto();
+			String username = jsonNode.get("username").textValue();
+			mosipUserDto.setUserId(username);
+			mosipUserDto.setMail(jsonNode.hasNonNull("email") ? jsonNode.get("email").textValue() : null);
+			mosipUserDto.setName(String.format("%s %s",
+					(jsonNode.hasNonNull("firstName") ? jsonNode.get("firstName").textValue() : ""),
+					(jsonNode.hasNonNull("lastName") ? jsonNode.get("lastName").textValue() : "")));
+			mosipUserDto.setRole(roleName);
+			if (!isRoleBasedSearch) {
+				try {
+					String roles = getRolesAsString(jsonNode.get("id").textValue(), realmId);
+					mosipUserDto.setRole(roles);
+				} catch (IOException e) {
+					LOGGER.error("getRolesAsString >>", e);
+					throw new AuthManagerException(AuthErrorCode.IO_EXCEPTION.getErrorCode(),
+							AuthErrorCode.IO_EXCEPTION.getErrorMessage());
+				}
+			}
+
+			if (jsonNode.hasNonNull("attributes")) {
+				JsonNode attributeNodes = jsonNode.get("attributes");
+				if (attributeNodes.hasNonNull("mobile") && attributeNodes.get("mobile").hasNonNull(0)) {
+					mosipUserDto.setMobile(attributeNodes.get("mobile").get(0).textValue());
+				}
+				if (attributeNodes.hasNonNull("rid") && attributeNodes.get("rid").hasNonNull(0)) {
+					mosipUserDto.setRId(attributeNodes.get("rid").get(0).textValue());
+				}
+				if (attributeNodes.hasNonNull("name") && attributeNodes.get("name").hasNonNull(0)) {
+					mosipUserDto.setName(attributeNodes.get("name").get(0).textValue());
+				}
+			}
+			mosipUserDto.setUserPassword(null);
+			mosipUserDtos.add(mosipUserDto);
+		}
+
+		return mosipUserDtos;
+	}
 }

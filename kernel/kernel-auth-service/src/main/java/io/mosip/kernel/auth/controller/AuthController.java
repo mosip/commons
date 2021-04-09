@@ -707,4 +707,42 @@ public class AuthController {
 		responseWrapper.setResponse(authNResponseDto);
 		return responseWrapper;
 	}
+	
+	/**
+	 * This API will fetch RID based on appId and userId.
+	 * 
+	 * @param appId  - application Id
+	 * @param userId - user Id
+	 * @return {@link VidDto}
+	 * @throws Exception
+	 */
+	@ResponseFilter
+	@GetMapping(value = "vid/{appid}/{userid}")
+	public ResponseWrapper<VidDto> getVid(@PathVariable("appid") String appId, @PathVariable("userid") String userId)
+		 {
+		ResponseWrapper<VidDto> responseWrapper = new ResponseWrapper<>();
+		VidDto vidDto = authService.getVidBasedOnUserID(userId, appId);
+		responseWrapper.setResponse(vidDto);
+		return responseWrapper;
+	}
+	
+	/**
+	 * This API will fetch all users based on appId and roles
+	 * 
+	 * @param appId
+	 * @param roleName
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseFilter
+	@GetMapping(value = "/userdetails/{appid}")
+	public ResponseWrapper<MosipUserListDto> getUsersDetails(@PathVariable("appid") String appId,
+			@RequestParam(required = false,name ="roleName") String roleName)
+			throws Exception {
+		ResponseWrapper<MosipUserListDto> responseWrapper = new ResponseWrapper<>();		
+		MosipUserListDto mosipUsers = authService.getListOfUsersDetails(appId,roleName);
+		LOGGER.info("Get userdetails for " + appId + ". Total users:  " + mosipUsers.getMosipUserDtoList().size() );
+		responseWrapper.setResponse(mosipUsers);
+		return responseWrapper;
+	}
 }

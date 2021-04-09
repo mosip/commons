@@ -1,9 +1,34 @@
 package io.mosip.commons.packet.test.facade;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.test.util.ReflectionTestUtils;
+
 import com.google.common.collect.Lists;
+
 import io.mosip.commons.khazana.dto.ObjectDto;
 import io.mosip.commons.packet.dto.Document;
-import io.mosip.commons.packet.dto.TagResponseDto;
 import io.mosip.commons.packet.exception.NoAvailableProviderException;
 import io.mosip.commons.packet.facade.PacketReader;
 import io.mosip.commons.packet.impl.PacketReaderImpl;
@@ -16,32 +41,6 @@ import io.mosip.kernel.biometrics.entities.BDBInfo;
 import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.biometrics.entities.RegistryIDType;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.SingleType;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.util.ReflectionTestUtils;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyString;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({PacketHelper.class})
@@ -217,11 +216,11 @@ public class PacketReaderTest {
         Map<String, String> tags = new HashMap<>();
         tags.put("test", "testValue");
       
-        Mockito.when(packetKeeper.getTags(any(), any())).thenReturn(tags);
+        Mockito.when(packetKeeper.getTags(any())).thenReturn(tags);
 
-    	TagResponseDto tagResponseDto= packetReader.getTags("id",new ArrayList());
+        Map<String, String> expectedTags= packetReader.getTags("id");
 
-        assertEquals(tagResponseDto.getTags(),tags); 
+        assertEquals(expectedTags,tags); 
     }
 
     @Test

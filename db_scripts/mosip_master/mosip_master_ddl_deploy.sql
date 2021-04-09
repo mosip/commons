@@ -80,3 +80,7 @@
 
 \ir ddl/master-fk.sql
 \ir ddl/master-batch-fk.sql
+
+\ir ddl/master-ui_spec.sql
+
+\ir ddl/master-ca_cert_store.sql

@@ -1,15 +1,11 @@
 package io.mosip.commons.packet.facade;
 
-import io.mosip.commons.khazana.dto.ObjectDto;
-import io.mosip.commons.packet.dto.Document;
-import io.mosip.commons.packet.dto.TagResponseDto;
-import io.mosip.commons.packet.exception.NoAvailableProviderException;
-import io.mosip.commons.packet.keeper.PacketKeeper;
-import io.mosip.commons.packet.spi.IPacketReader;
-import io.mosip.commons.packet.util.PacketHelper;
-import io.mosip.commons.packet.util.PacketManagerLogger;
-import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import io.mosip.kernel.core.logger.spi.Logger;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
@@ -18,11 +14,15 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+import io.mosip.commons.khazana.dto.ObjectDto;
+import io.mosip.commons.packet.dto.Document;
+import io.mosip.commons.packet.exception.NoAvailableProviderException;
+import io.mosip.commons.packet.keeper.PacketKeeper;
+import io.mosip.commons.packet.spi.IPacketReader;
+import io.mosip.commons.packet.util.PacketHelper;
+import io.mosip.commons.packet.util.PacketManagerLogger;
+import io.mosip.kernel.biometrics.entities.BiometricRecord;
+import io.mosip.kernel.core.logger.spi.Logger;
 
 /**
  * The packet Reader facade
@@ -197,13 +197,10 @@ public class PacketReader {
         return getProvider(source, process).getAuditInfo(id, source, process);
     }
 
-    @Cacheable(value = "tags", key = "{#id}", condition = "#tagNames == null")
-    public TagResponseDto getTags(String id, List<String> tagNames) {
-
-        TagResponseDto tagResponseDto = new TagResponseDto();
-        Map<String, String> tags = packetKeeper.getTags(id, tagNames);
-        tagResponseDto.setTags(tags);
-        return tagResponseDto;
+    @Cacheable(value = "tags", key = "{#id}")
+    public  Map<String, String>  getTags(String id) {
+        Map<String, String> tags = packetKeeper.getTags(id);
+        return tags;
     }
 
     public boolean validatePacket(String id, String source, String process) {

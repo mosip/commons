@@ -1,6 +1,6 @@
 ### -- ---------------------------------------------------------------------------------------------------------
-### -- Script Name		: Authdevice Release DB deploy
-### -- Deploy Module 	: MOSIP Kernel
+### -- Script Name		: Iam Release DB deploy
+### -- Deploy Module 	: MOSIP Iam
 ### -- Purpose    		: To deploy Iam Database alter scripts for the release.       
 ### -- Created By   		: Ram Bhatt
 ### -- Created Date		: Jan-2021
