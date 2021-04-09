@@ -23,8 +23,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import io.mosip.kernel.biometrics.commons.CbeffValidator;
+import io.mosip.kernel.biometrics.constant.QualityType;
+import io.mosip.kernel.biometrics.entities.BIR;
+import io.mosip.kernel.biometrics.entities.RegistryIDType;
+import io.mosip.kernel.biometrics.spi.CbeffUtil;
 import io.mosip.kernel.cbeffutil.impl.CbeffImpl;
-import io.mosip.kernel.core.cbeffutil.common.CbeffValidator;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,16 +45,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import io.mosip.kernel.core.cbeffutil.common.CbeffISOReader;
-import io.mosip.kernel.core.cbeffutil.entity.BDBInfo;
-import io.mosip.kernel.core.cbeffutil.entity.BIR;
-import io.mosip.kernel.core.cbeffutil.entity.BIRInfo;
-import io.mosip.kernel.core.cbeffutil.entity.BIRVersion;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.ProcessedLevelType;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.PurposeType;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.QualityType;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.RegistryIDType;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.SingleType;
-import io.mosip.kernel.core.cbeffutil.spi.CbeffUtil;
+
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({URL.class, CbeffValidator.class})
@@ -325,8 +321,7 @@ public class CbeffImplTest {
 
 	// @Test
 	public void testGetBDBBasedOnType() throws IOException, Exception {
-		Map<String, String> testMap = cbeffUtilImpl.getBDBBasedOnType(readCreatedXML("createCbeffLatest2"), "Finger",
-				"Right");
+		Map<String, String> testMap = cbeffUtilImpl.getBDBBasedOnType(readCreatedXML("createCbeffLatest2"), "Finger");
 		Set<String> testSet1 = new HashSet<>();
 		testSet1.add("FINGER_Right");
 		assertEquals(testMap.keySet(), testSet1);

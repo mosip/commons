@@ -9,14 +9,24 @@ package io.mosip.kernel.biometrics.constant;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
+import javax.xml.bind.annotation.XmlType;
+@XmlType(name = "PurposeType")
+@XmlEnum
 public enum PurposeType implements Serializable {
 
-	
+	@XmlEnumValue("Verify")
 	VERIFY("Verify"),
+	@XmlEnumValue("Identify")
 	IDENTIFY("Identify"),
+	@XmlEnumValue("Enroll")
 	ENROLL("Enroll"),
+	@XmlEnumValue("EnrollVerify")
 	ENROLLVERIFY("EnrollVerify"),
+	@XmlEnumValue("EnrollIdentify")
 	ENROLLIDENTIFY("EnrollIdentify"),
+	@XmlEnumValue("Audit")
 	AUDIT("Audit");
 
 	private final String value;

@@ -15,6 +15,7 @@ import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
  *         Interface for Cbeff Interface
  *
  */
+@Deprecated(since = "1.1.7")
 public interface CbeffUtil {
 
 	public byte[] createXML(List<BIR> cbeffPack) throws Exception;

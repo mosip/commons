@@ -7,39 +7,86 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlList;
+import javax.xml.bind.annotation.XmlSchemaType;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.constant.ProcessedLevelType;
 import io.mosip.kernel.biometrics.constant.PurposeType;
 import io.mosip.kernel.biometrics.constant.QualityType;
+import io.mosip.kernel.core.cbeffutil.common.DateAdapter;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 /**
  * @author Ramadurai Pandian
  *
  */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "BDBInfoType", propOrder = { "challengeResponse", "index", "format", "encryption", "creationDate",
+		"notValidBefore", "notValidAfter", "type", "subtype", "level", "product", "captureDevice",
+		"featureExtractionAlgorithm", "comparisonAlgorithm", "compressionAlgorithm", "purpose", "quality" })
 @Data
+@NoArgsConstructor
 @JsonDeserialize(builder = BDBInfo.BDBInfoBuilder.class)
 public class BDBInfo implements Serializable {
 
+	@XmlElement(name = "ChallengeResponse")
 	private byte[] challengeResponse;
+	@XmlElement(name = "Index")
 	private String index;
-	private Boolean encryption;
-	private LocalDateTime creationDate;
-	private LocalDateTime notValidBefore;
-	private LocalDateTime notValidAfter;
-	private List<BiometricType> type;
-	private List<String> subtype;
-	private ProcessedLevelType level;
-	private RegistryIDType product;
-	private PurposeType purpose;
-	private QualityType quality;
+	@XmlElement(name = "Format")
 	private RegistryIDType format;
+	@XmlElement(name = "Encryption")
+	private Boolean encryption;
+	@XmlElement(name = "CreationDate")
+	@XmlSchemaType(name = "dateTime")
+	@XmlJavaTypeAdapter(DateAdapter.class)
+	private LocalDateTime creationDate;
+	@XmlElement(name = "NotValidBefore")
+	@XmlSchemaType(name = "dateTime")
+	@XmlJavaTypeAdapter(DateAdapter.class)
+	private LocalDateTime notValidBefore;
+	@XmlElement(name = "NotValidAfter")
+	@XmlSchemaType(name = "dateTime")
+	@XmlJavaTypeAdapter(DateAdapter.class)
+	private LocalDateTime notValidAfter;
+	@XmlList
+	@XmlElement(name = "Type")
+	private List<BiometricType> type;
+	@XmlList
+	@XmlElement(name = "Subtype")
+	private List<String> subtype;
+	@XmlElement(name = "Level")
+	@XmlSchemaType(name = "string")
+	private ProcessedLevelType level;
+	@XmlElement(name = "Product")
+	private RegistryIDType product;
+	@XmlElement(name = "CaptureDevice")
 	private RegistryIDType captureDevice;
+	@XmlElement(name = "FeatureExtractionAlgorithm")
 	private RegistryIDType featureExtractionAlgorithm;
+	@XmlElement(name = "ComparisonAlgorithm")
 	private RegistryIDType comparisonAlgorithm;
+	@XmlElement(name = "CompressionAlgorithm")
 	private RegistryIDType compressionAlgorithm;
+	@XmlElement(name = "Purpose")
+	@XmlSchemaType(name = "string")
+	private PurposeType purpose;
+	@XmlElement(name = "Quality")
+	private QualityType quality;
+	
+	
+	
+
 
 	public BDBInfo(BDBInfoBuilder bDBInfoBuilder) {
 		this.challengeResponse = bDBInfoBuilder.challengeResponse;

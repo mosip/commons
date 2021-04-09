@@ -13,12 +13,23 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlSchemaType;
+import javax.xml.bind.annotation.XmlType;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "VersionType", propOrder = { "major", "minor" })
 public class VersionType implements Serializable {
-	
+	@XmlElement(name = "Major")
+	@XmlSchemaType(name = "unsignedInt")
 	private int major;
+	@XmlElement(name = "Minor")
+	@XmlSchemaType(name = "unsignedInt")
 	private int minor;
 	
 

@@ -7,74 +7,32 @@
 
 package io.mosip.kernel.biometrics.constant;
 
-import io.mosip.kernel.biometrics.entities.RegistryIDType;
-
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlSchemaType;
+import javax.xml.bind.annotation.XmlType;
+
+import io.mosip.kernel.biometrics.entities.RegistryIDType;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "QualityType", propOrder = { "algorithm", "score", "qualityCalculationFailed" })
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class QualityType implements Serializable {
 
+	@XmlElement(name = "Algorithm", required = true)
 	protected RegistryIDType algorithm;
+	@XmlElement(name = "Score")
+	@XmlSchemaType(name = "unsignedInt")
 	protected Long score;
+	@XmlElement(name = "QualityCalculationFailed")
 	protected String qualityCalculationFailed;
-
-	/**
-	 * Gets the value of the algorithm property.
-	 * 
-	 * @return possible object is {@link RegistryIDType }
-	 * 
-	 */
-	public RegistryIDType getAlgorithm() {
-		return algorithm;
-	}
-
-	/**
-	 * Sets the value of the algorithm property.
-	 * 
-	 * @param value allowed object is {@link RegistryIDType }
-	 * 
-	 */
-	public void setAlgorithm(RegistryIDType value) {
-		this.algorithm = value;
-	}
-
-	/**
-	 * Gets the value of the score property.
-	 * 
-	 * @return possible object is {@link Long }
-	 * 
-	 */
-	public Long getScore() {
-		return score;
-	}
-
-	/**
-	 * Sets the value of the score property.
-	 * 
-	 * @param value allowed object is {@link Long }
-	 * 
-	 */
-	public void setScore(Long value) {
-		this.score = value;
-	}
-
-	/**
-	 * Gets the value of the qualityCalculationFailed property.
-	 * 
-	 * @return possible object is {@link String }
-	 * 
-	 */
-	public String getQualityCalculationFailed() {
-		return qualityCalculationFailed;
-	}
-
-	/**
-	 * Sets the value of the qualityCalculationFailed property.
-	 * 
-	 * @param value allowed object is {@link String }
-	 * 
-	 */
-	public void setQualityCalculationFailed(String value) {
-		this.qualityCalculationFailed = value;
-	}
 
 }
