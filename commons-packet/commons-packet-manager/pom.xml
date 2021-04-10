@@ -69,16 +69,11 @@
             <artifactId>kernel-core</artifactId>
             <version>${kernel.core.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.hazelcast</groupId>
-            <artifactId>hazelcast-kubernetes</artifactId>
-            <version>${hazelcast.kubernetes.version}</version>
-        </dependency>
         <!-- added for testing. Will be removed later  -->
         <dependency>
             <groupId>com.hazelcast</groupId>
-            <artifactId>hazelcast</artifactId>
-            <version>3.9.4</version>
+            <artifactId>hazelcast-all</artifactId>
+            <version>4.2</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
