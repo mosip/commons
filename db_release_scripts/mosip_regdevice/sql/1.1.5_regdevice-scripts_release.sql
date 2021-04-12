@@ -1,6 +1,6 @@
 -- -------------------------------------------------------------------------------------------------
 -- Database Name	: mosip_regdevice
--- Release Version 	: 1.1.5-SNAPSHOT
+-- Release Version 	: 1.1.5-rc1
 -- Purpose    		: Database Alter scripts for the release for Regdevice DB.       
 -- Create By   		: Ram Bhatt
 -- Created Date		: Jan-2021

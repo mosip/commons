@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 /**
  * 
  * @author Mahammed Taheer
- * @since 1.1.5-SNAPSHOT
+ * @since 1.1.5-rc1
  *
  */
 @Data
