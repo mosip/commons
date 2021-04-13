@@ -1,5 +1,6 @@
 package io.mosip.kernel.cbeffutil.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -18,6 +19,7 @@ import io.mosip.kernel.biometrics.commons.CbeffValidator;
 import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.spi.CbeffUtil;
 import io.mosip.kernel.cbeffutil.container.impl.CbeffContainerImpl;
+import io.mosip.kernel.core.util.FileUtils;
 
 /**
  * This class is used to create,update, validate and search Cbeff data.
@@ -181,15 +183,17 @@ public class CbeffImpl implements CbeffUtil {
 		return CbeffValidator.getBIRDataFromXMLType(xmlBytes, type);
 	}
 
-	// TODO for testing, will be removed later
+	
 
 	public static void main(String arg[]) throws Exception {
 		byte[] xsd = Files.readAllBytes(Paths.get("C:\\Users\\M1044287\\Desktop\\cbeff.xsd"));
 		CbeffImpl cbeffImpl = new CbeffImpl();
 		List<BIR> birs = cbeffImpl.getBIRDataFromXML(readCreatedXML());
 		
-		byte[] test = new CbeffImpl().createXML(birs, xsd);
-		Files.write(Paths.get("C:\\Users\\M1044287\\Desktop\\a.xml"), test, null);
+		
+		  byte[] ac = new CbeffImpl().createXML(birs, xsd);
+		  FileUtils.writeByteArrayToFile(new File("C:\\Users\\M1044287\\Desktop\\a.xml"), ac);
+		 
 	}
 
 	private static byte[] readCreatedXML() throws IOException {
