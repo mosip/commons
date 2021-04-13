@@ -8,8 +8,8 @@ package io.mosip.kernel.core.hotlist.constant;
 public class HotlistStatus {
 
 	/** The blocked. */
-	public static String BLOCKED = "BLOCKED";
+	public static final String BLOCKED = "BLOCKED";
 
 	/** The unblocked. */
-	public static String UNBLOCKED = "UNBLOCKED";
+	public static final String UNBLOCKED = "UNBLOCKED";
 }
