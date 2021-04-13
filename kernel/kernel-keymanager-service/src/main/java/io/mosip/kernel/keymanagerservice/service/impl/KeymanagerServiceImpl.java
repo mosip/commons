@@ -525,8 +525,6 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 	/**
 	 * get private key base
 	 * 
-	 * @param encryptDataRequestDto
-	 * @return {@link PrivateKey}
 	 */
 	private Object[] getPrivateKeyNoKeyIdentifier(List<KeyAlias> keyAlias, List<KeyAlias>  currentKeyAlias, 
 							LocalDateTime timeStamp, String referenceId,  

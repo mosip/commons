@@ -110,7 +110,7 @@ public class CryptomanagerServiceImpl implements CryptomanagerService {
 		final byte[] encryptedSymmetricKey = cryptoCore.asymmetricEncrypt(publicKey, secretKey.getEncoded());
 		LOGGER.info(CryptomanagerConstant.SESSIONID, CryptomanagerConstant.ENCRYPT, CryptomanagerConstant.ENCRYPT, 
 						"Session key encryption completed.");
-		Boolean prependThumbprint = cryptoRequestDto.getPrependThumbprint() == null ? false : cryptoRequestDto.getPrependThumbprint();
+		boolean prependThumbprint = cryptoRequestDto.getPrependThumbprint() == null ? false : cryptoRequestDto.getPrependThumbprint();
 		CryptomanagerResponseDto cryptoResponseDto = new CryptomanagerResponseDto();
 		// support of 1.1.3 no thumbprint is configured as true & encryption request with no thumbprint
 		// request thumbprint flag will not be considered if support no thumbprint is set to false. 
