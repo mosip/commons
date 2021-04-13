@@ -104,6 +104,10 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 	@Value("${mosip.kernel.certificate.sign.algorithm:SHA256withRSA}")
 	private String signAlgorithm;
 
+	/** The 1.1.3 no thumbprint support flag. */
+	@Value("${mosip.kernel.keymanager.113nothumbprint.support:false}")
+	private boolean noThumbprint;
+
 	/**
 	 * Keystore instance to handles and store cryptographic keys.
 	 */
@@ -179,33 +183,29 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 					currentKeyAlias.get(0).getAlias(), "CurrentKeyAlias size is one fetching keypair using this alias");
 			KeyAlias fetchedKeyAlias = currentKeyAlias.get(0);
 			alias = fetchedKeyAlias.getAlias();
-			generationDateTime = fetchedKeyAlias.getKeyGenerationTime();
-			expiryDateTime = fetchedKeyAlias.getKeyExpiryTime();
 		} else if (currentKeyAlias.isEmpty()) {
 			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.CURRENTKEYALIAS,
 					String.valueOf(currentKeyAlias.size()),
 					"CurrentKeyAlias size is zero. Will create new Keypair for this applicationId and timestamp");
 			alias = UUID.randomUUID().toString();
-			generationDateTime = timeStamp;
-			expiryDateTime = dbHelper.getExpiryPolicy(applicationId, generationDateTime, keyAlias);
-			String rootKeyAlias = getRootKeyAlias(applicationId, timeStamp);
-			X500Principal latestCertPrincipal = getLatestCertPrincipal(keyAlias);
-			CertificateParameters certParams = keymanagerUtil.getCertificateParameters(latestCertPrincipal,
-					generationDateTime, expiryDateTime);
-			keyStore.generateAndStoreAsymmetricKey(alias, rootKeyAlias, certParams);
-			dbHelper.storeKeyInAlias(applicationId, generationDateTime, KeymanagerConstant.EMPTY, alias, expiryDateTime);
+			generateKeyPairInHSM(alias, applicationId, referenceId, timeStamp, keyAlias);
 		}
-		// Added below try catch block the handle the session timeout exception from HSM.
-		try {
-			X509Certificate x509Cert = (X509Certificate) keyStore.getCertificate(alias);
-			return new CertificateInfo<>(alias, x509Cert);
-		} catch(Exception ex) {
-			LOGGER.error(KeymanagerConstant.SESSIONID, applicationId,
-				KeymanagerConstant.CURRENTKEYALIAS, "Error Message: " + ex + ", StackTrace: " + ExceptionUtils.getStackTrace(ex));
-			throw new KeymanagerServiceException(KeymanagerErrorConstant.INTERNAL_SERVER_ERROR.getErrorCode(),
-				KeymanagerErrorConstant.INTERNAL_SERVER_ERROR.getErrorMessage(), ex);
-		}
+		X509Certificate x509Cert = (X509Certificate) keyStore.getCertificate(alias);
+		return new CertificateInfo<>(alias, x509Cert);
 	}
+
+	private void generateKeyPairInHSM(String alias, String applicationId, String referenceId, 
+							LocalDateTime timeStamp, List<KeyAlias> keyAlias) {
+		LocalDateTime generationDateTime = timeStamp;
+		LocalDateTime expiryDateTime = dbHelper.getExpiryPolicy(applicationId, generationDateTime, keyAlias);
+		String rootKeyAlias = getRootKeyAlias(applicationId, timeStamp);
+		X500Principal latestCertPrincipal = getLatestCertPrincipal(keyAlias);
+		CertificateParameters certParams = keymanagerUtil.getCertificateParameters(latestCertPrincipal,
+				generationDateTime, expiryDateTime);
+		keyStore.generateAndStoreAsymmetricKey(alias, rootKeyAlias, certParams);
+		dbHelper.storeKeyInAlias(applicationId, generationDateTime, referenceId, alias, expiryDateTime);
+	}
+
 
 	private X500Principal getLatestCertPrincipal(List<KeyAlias> keyAlias) {
 		KeyAlias latestKeyAlias = keyAlias.get(0);
@@ -344,65 +344,193 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 	 */
 	@Override
 	public SymmetricKeyResponseDto decryptSymmetricKey(SymmetricKeyRequestDto symmetricKeyRequestDto) {
-		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.SYMMETRICKEYREQUEST,
-				symmetricKeyRequestDto.getApplicationId(), KeymanagerConstant.DECRYPTKEY);
-
 		LocalDateTime localDateTimeStamp = DateUtils.getUTCCurrentDateTime();
-		SymmetricKeyResponseDto keyResponseDto = new SymmetricKeyResponseDto();
-		Boolean prependThumbprint = symmetricKeyRequestDto.getPrependThumbprint() == null? false : symmetricKeyRequestDto.getPrependThumbprint();
-		byte[] certThumbprint = null;
-		byte[] encryptedSymmetricKey = null;
+		String applicationId = symmetricKeyRequestDto.getApplicationId();
+		String referenceId = symmetricKeyRequestDto.getReferenceId();
+		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.SYMMETRICKEYREQUEST,
+				symmetricKeyRequestDto.getApplicationId(), "Request Application Id: " + applicationId);
+		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.SYMMETRICKEYREQUEST,
+				symmetricKeyRequestDto.getApplicationId(), "Request Reference Id: " + referenceId);
+
+		Boolean reqPrependThumbprint = symmetricKeyRequestDto.getPrependThumbprint(); 
+		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.SYMMETRICKEYREQUEST,
+				symmetricKeyRequestDto.getApplicationId(), "prependThumbprint Value(Request): " + reqPrependThumbprint);
+		Boolean prependThumbprint = reqPrependThumbprint == null? false : symmetricKeyRequestDto.getPrependThumbprint();
 		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.SYMMETRICKEYREQUEST,
 				symmetricKeyRequestDto.getApplicationId(), "prependThumbprint Value: " + prependThumbprint);
+		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.SYMMETRICKEYREQUEST,
+				symmetricKeyRequestDto.getApplicationId(), "1.1.3 Thumbprint support property flag: " + noThumbprint);
+				
+		byte[] encryptedData = CryptoUtil.decodeBase64(symmetricKeyRequestDto.getEncryptedSymmetricKey());
 
-		// Thumbprint flag is false in both encryption & decryption, then consider the latest 
-		// current key for decryption instead of taking the first generated key.
-		boolean packetTPFlag = false;
-		if (prependThumbprint) {
-			// to Support packet encryption done in 1.1.3(flag: flase) and packet decryption is performed in 1.1.4 (flag: true).
-			byte[] concatedData = CryptoUtil.decodeBase64(symmetricKeyRequestDto.getEncryptedSymmetricKey());
-			if(concatedData.length == (CryptomanagerConstant.ENCRYPTED_SESSION_KEY_LENGTH 
-									+ CryptomanagerConstant.THUMBPRINT_LENGTH)) {
-				certThumbprint = Arrays.copyOfRange(concatedData, 0, CryptomanagerConstant.THUMBPRINT_LENGTH);
-				encryptedSymmetricKey = Arrays.copyOfRange(concatedData, CryptomanagerConstant.THUMBPRINT_LENGTH, 
-									concatedData.length);
-			} else {
-				encryptedSymmetricKey = concatedData;
-			}
-		} else {
-			packetTPFlag = true;
-			encryptedSymmetricKey = CryptoUtil.decodeBase64(symmetricKeyRequestDto.getEncryptedSymmetricKey());
+		if (noThumbprint) {
+			return decryptSymmetricKeyNoKeyIdentifier(applicationId, referenceId, encryptedData, localDateTimeStamp);
 		}
+		return decryptSymmetricKeyWithKeyIdentifier(applicationId, referenceId, encryptedData, localDateTimeStamp);
+	}
+
+	/*
+	 * To Support only with thumbprint.
+	 * 
+	 * @see
+	 * io.mosip.kernel.keymanager.service.KeymanagerService#decryptSymmetricKey(java
+	 * .lang.String, java.time.LocalDateTime, java.util.Optional, byte[])
+	 */
+	private SymmetricKeyResponseDto decryptSymmetricKeyWithKeyIdentifier(String applicationId, String referenceId, 
+							byte[] encryptedData, LocalDateTime localDateTimeStamp) {
 		
-		byte[] decryptedSymmetricKey = decryptSessionKey(symmetricKeyRequestDto, localDateTimeStamp, 
-							encryptedSymmetricKey, certThumbprint, packetTPFlag);
+		byte[] certThumbprint = Arrays.copyOfRange(encryptedData, 0, CryptomanagerConstant.THUMBPRINT_LENGTH);
+		byte[] encryptedSymmetricKey = Arrays.copyOfRange(encryptedData, CryptomanagerConstant.THUMBPRINT_LENGTH, 
+									encryptedData.length);
+		SymmetricKeyResponseDto keyResponseDto = new SymmetricKeyResponseDto();
+		byte[] decryptedSymmetricKey = decryptSessionKey(applicationId, referenceId, localDateTimeStamp, 
+										encryptedSymmetricKey, certThumbprint);
 		keyResponseDto.setSymmetricKey(CryptoUtil.encodeBase64(decryptedSymmetricKey));
 		return keyResponseDto;
 
 	}
-	
+
+	private byte[] decryptSessionKey(String applicationId, String referenceId, LocalDateTime localDateTimeStamp, 
+						byte[] encryptedSymmetricKey, byte[] certThumbprint) {
+		
+		Map<String, List<KeyAlias>> keyAliasMap;
+		if (!keymanagerUtil.isValidReferenceId(referenceId)) {
+			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.EMPTY, KeymanagerConstant.EMPTY,
+					NOT_A_VALID_REFERENCE_ID_GETTING_KEY_ALIAS_WITHOUT_REFERENCE_ID);
+			keyAliasMap = dbHelper.getKeyAliases(applicationId, KeymanagerConstant.EMPTY, localDateTimeStamp);
+		} else {
+			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.EMPTY, KeymanagerConstant.EMPTY,
+					VALID_REFERENCE_ID_GETTING_KEY_ALIAS_WITH_REFERENCE_ID);
+			keyAliasMap = dbHelper.getKeyAliases(applicationId, referenceId, localDateTimeStamp);
+		}
+
+		List<KeyAlias> keyAlias = keyAliasMap.get(KeymanagerConstant.KEYALIAS);
+		List<KeyAlias> currentKeyAlias = keyAliasMap.get(KeymanagerConstant.CURRENTKEYALIAS);
+		Object[] keys = getKeyObjects(keyAlias, currentKeyAlias, localDateTimeStamp, referenceId, 
+									certThumbprint);
+		PrivateKey privateKey = (PrivateKey) keys[0];
+		PublicKey publicKey = ((Certificate) keys[1]).getPublicKey();
+		try {
+			byte[] decryptedSessionKey = cryptoCore.asymmetricDecrypt(privateKey, publicKey, encryptedSymmetricKey);
+			keymanagerUtil.destoryKey(privateKey);
+			return decryptedSessionKey;
+		} catch(InvalidKeyException keyExp) {
+			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, KeymanagerConstant.REFERENCEID,
+						"Error occurred because of mismatch with keys. Try with keys for decryption.");
+			throw new CryptoException(KeymanagerErrorConstant.SYMMETRIC_KEY_DECRYPTION_FAILED.getErrorCode(),
+						KeymanagerErrorConstant.SYMMETRIC_KEY_DECRYPTION_FAILED.getErrorMessage() + keyExp.getMessage(), keyExp);
+		}
+	}
+
+	/*
+	 * To Support 1.1.3 decryption & after thumbprint addition.
+	 * 
+	 * @see
+	 * io.mosip.kernel.keymanager.service.KeymanagerService#decryptSymmetricKey(java
+	 * .lang.String, java.time.LocalDateTime, java.util.Optional, byte[])
+	 */
+	private SymmetricKeyResponseDto decryptSymmetricKeyNoKeyIdentifier(String applicationId, String referenceId,
+			byte[] encryptedData, LocalDateTime localDateTimeStamp) {
+		
+		byte[] certThumbprint = null;
+		byte[] encryptedSymmetricKey = null;
+		boolean prependThumbprint = false;
+		// Thumbprint flag is false in both encryption & decryption, then consider the latest 
+		// current key for decryption instead of taking the first generated key.
+		// to Support packet encryption done in 1.1.3(flag: flase) and packet decryption is performed in 1.1.4 (flag: true).
+		if(encryptedData.length == (CryptomanagerConstant.ENCRYPTED_SESSION_KEY_LENGTH 
+											+ CryptomanagerConstant.THUMBPRINT_LENGTH)) {
+			certThumbprint = Arrays.copyOfRange(encryptedData, 0, CryptomanagerConstant.THUMBPRINT_LENGTH);
+			encryptedSymmetricKey = Arrays.copyOfRange(encryptedData, CryptomanagerConstant.THUMBPRINT_LENGTH, 
+							encryptedData.length);
+			prependThumbprint = true;
+		} else {
+			encryptedSymmetricKey = encryptedData;
+		}
+		SymmetricKeyResponseDto keyResponseDto = new SymmetricKeyResponseDto();
+		byte[] decryptedSymmetricKey = decryptSessionKey(applicationId, referenceId, localDateTimeStamp, 
+							encryptedSymmetricKey, certThumbprint, prependThumbprint);
+		keyResponseDto.setSymmetricKey(CryptoUtil.encodeBase64(decryptedSymmetricKey));
+		return keyResponseDto;
+
+	}
+
+	private byte[] decryptSessionKey(String applicationId, String referenceId, LocalDateTime localDateTimeStamp, 
+						byte[] encryptedSymmetricKey, byte[] certThumbprint, boolean packetTPFlag) {
+		
+		Map<String, List<KeyAlias>> keyAliasMap;
+		if (!keymanagerUtil.isValidReferenceId(referenceId)) {
+			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.EMPTY, KeymanagerConstant.EMPTY,
+					NOT_A_VALID_REFERENCE_ID_GETTING_KEY_ALIAS_WITHOUT_REFERENCE_ID);
+			keyAliasMap = dbHelper.getKeyAliases(applicationId, KeymanagerConstant.EMPTY, localDateTimeStamp);
+		} else {
+			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.EMPTY, KeymanagerConstant.EMPTY,
+					VALID_REFERENCE_ID_GETTING_KEY_ALIAS_WITH_REFERENCE_ID);
+			keyAliasMap = dbHelper.getKeyAliases(applicationId, referenceId, localDateTimeStamp);
+		}
+
+		List<KeyAlias> keyAlias = keyAliasMap.get(KeymanagerConstant.KEYALIAS);
+		List<KeyAlias> currentKeyAlias = keyAliasMap.get(KeymanagerConstant.CURRENTKEYALIAS);
+		InvalidKeyException keyException = null;
+		InvalidDataException dataException = null;
+		Object[] keys = getPrivateKeyNoKeyIdentifier(keyAlias, currentKeyAlias, localDateTimeStamp, referenceId, 
+								certThumbprint, packetTPFlag);
+		PrivateKey privateKey = (PrivateKey) keys[0];
+		PublicKey publicKey = ((Certificate) keys[1]).getPublicKey();
+		try {
+			byte[] decryptedSessionKey = cryptoCore.asymmetricDecrypt(privateKey, publicKey, encryptedSymmetricKey);
+			keymanagerUtil.destoryKey(privateKey);
+			return decryptedSessionKey;
+		} catch(InvalidKeyException keyExp) {
+			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, KeymanagerConstant.REFERENCEID,
+						"Error occurred because of mismatch with keys. Try with keys for decryption.");
+			keyException = keyExp;
+		} catch (InvalidDataException dataExp) {
+			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, KeymanagerConstant.REFERENCEID,
+					"Error occurred because of mismatch with keys. Try with other current key for decryption.");
+			dataException = dataExp;
+		}
+		// Taking the all DB keys for decryption to handle scenario - 
+		// Current key got rotated and there are more than 1 keys in DB. Packet encrypted with thumbprint flag as false 
+		// and used the latest key for encryption. Finally trying with all keys for decryption. 
+		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, KeymanagerConstant.REFERENCEID, 
+									"Unable to decrypt session with all the other validations, " +
+									"trying the keys available for provided AppId & RefId.");
+		for (KeyAlias alias : keyAlias){
+			Object[] dbKeys = getPrivateKey(referenceId, alias);
+			PrivateKey dbPrivateKey = (PrivateKey) dbKeys[0];
+			PublicKey dbPublicKey = ((Certificate) dbKeys[1]).getPublicKey();
+			if (Arrays.equals(publicKey.getEncoded(), dbPublicKey.getEncoded()))
+				continue;
+			try {
+				byte[] decryptedSessionKey = cryptoCore.asymmetricDecrypt(dbPrivateKey, dbPublicKey, encryptedSymmetricKey);
+				keymanagerUtil.destoryKey(dbPrivateKey);
+				return decryptedSessionKey;
+			} catch (InvalidKeyException keyExp) {
+				LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, KeymanagerConstant.REFERENCEID,
+						"Error occurred because of mismatch with keys. Try with other current key for decryption. key Alias: " + alias);
+				keyException = keyExp;
+			} catch (InvalidDataException dataExp) {
+				LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, KeymanagerConstant.REFERENCEID,
+						"Error occurred because of mismatch with keys. Try with other current key for decryption. key Alias: " + alias);
+				dataException = dataExp;
+			}
+		}
+		if(keyException == null) 
+			throw dataException;
+			 
+		throw keyException;
+	}
+
 	/**
 	 * get private key base
 	 * 
 	 * @param encryptDataRequestDto
 	 * @return {@link PrivateKey}
 	 */
-	private Object[] getPrivateKeyFromRequestData(String applicationId, String referenceId, LocalDateTime timeStamp, 
+	private Object[] getPrivateKeyNoKeyIdentifier(List<KeyAlias> keyAlias, List<KeyAlias>  currentKeyAlias, 
+							LocalDateTime timeStamp, String referenceId,  
 							byte[] reqCertThumbprint, boolean packetTPFlag) {
-		
-		Map<String, List<KeyAlias>> keyAliasMap;
-		if (!keymanagerUtil.isValidReferenceId(referenceId)) {
-			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.EMPTY, KeymanagerConstant.EMPTY,
-					NOT_A_VALID_REFERENCE_ID_GETTING_KEY_ALIAS_WITHOUT_REFERENCE_ID);
-			keyAliasMap = dbHelper.getKeyAliases(applicationId, KeymanagerConstant.EMPTY, timeStamp);
-		} else {
-			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.EMPTY, KeymanagerConstant.EMPTY,
-					VALID_REFERENCE_ID_GETTING_KEY_ALIAS_WITH_REFERENCE_ID);
-			keyAliasMap = dbHelper.getKeyAliases(applicationId, referenceId, timeStamp);
-		}
-
-		List<KeyAlias> currentKeyAlias = keyAliasMap.get(KeymanagerConstant.CURRENTKEYALIAS);
-		List<KeyAlias> keyAlias = keyAliasMap.get(KeymanagerConstant.KEYALIAS);
 
 		// to Support packet encryption done in 1.1.3(flag: flase) and packet decryption is performed in 1.1.4 (flag: true).
 		// Considering always the first key generated for the application id & reference id
@@ -412,7 +540,11 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 			KeyAlias fetchedKeyAlias = keyAlias.get(0);
 			return getPrivateKey(referenceId, fetchedKeyAlias);
 		}
+		return getKeyObjects(keyAlias, currentKeyAlias, timeStamp, referenceId, reqCertThumbprint);
+	}
 
+	private Object[] getKeyObjects(List<KeyAlias> keyAlias, List<KeyAlias>  currentKeyAlias, LocalDateTime timeStamp, 
+				String referenceId,  byte[] reqCertThumbprint) {
 		if (currentKeyAlias.size() == 1) {
 			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.CURRENTKEYALIAS, currentKeyAlias.get(0).getAlias(),
 							"CurrentKeyAlias size is one. Will decrypt symmetric key with this alias after thumbprint matches.");
@@ -436,7 +568,8 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 		}
 
 		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.KEYALIAS, "",
-							"CurrentKeyAlias size is zero but checking other expired key aliases to compare thumbprint.");
+							"CurrentKeyAlias size is zero or thumbprint not matched now checking " +
+							"other expired key aliases to compare thumbprint.");
 		for (KeyAlias otherAlias : keyAlias) {
 			Object[] keys = getPrivateKey(referenceId, otherAlias);
 			Certificate certificate = (Certificate) keys[1];
@@ -496,7 +629,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 			PublicKey masterPublicKey = masterKeyEntry.getCertificate().getPublicKey();
 			/**
 			 * If the private key is in dbstore, then it will be first decrypted with
-			 * application's master private key from softhsm's keystore
+			 * application's master private key from softhsm's/HSM's keystore
 			 */
 			try {
 				byte[] decryptedPrivateKey = keymanagerUtil.decryptKey(CryptoUtil.decodeBase64(dbKeyStore.get().getPrivateKey()), 
@@ -508,62 +641,11 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 			} catch (InvalidDataException | InvalidKeyException | NullDataException | NullKeyException
 					| NullMethodException | InvalidKeySpecException | NoSuchAlgorithmException e) {
 				throw new CryptoException(KeymanagerErrorConstant.CRYPTO_EXCEPTION.getErrorCode(),
-						KeymanagerErrorConstant.CRYPTO_EXCEPTION.getErrorMessage() + e.getMessage());
+						KeymanagerErrorConstant.CRYPTO_EXCEPTION.getErrorMessage() + e.getMessage(), e);
 			}
 		}
 	}
 
-	private byte[] decryptSessionKey(SymmetricKeyRequestDto symmetricKeyRequestDto, LocalDateTime localDateTimeStamp, 
-						byte[] encryptedSymmetricKey, byte[] certThumbprint, boolean packetTPFlag) {
-		
-		String applicationId = symmetricKeyRequestDto.getApplicationId();
-		String referenceId = symmetricKeyRequestDto.getReferenceId();
-		Object[] keys = getPrivateKeyFromRequestData(applicationId, referenceId, localDateTimeStamp, certThumbprint, packetTPFlag);
-		PrivateKey privateKey = (PrivateKey) keys[0];
-		PublicKey publicKey = ((Certificate) keys[1]).getPublicKey();
-		try {
-			byte[] decryptedSessionKey = cryptoCore.asymmetricDecrypt(privateKey, publicKey, encryptedSymmetricKey);
-			keymanagerUtil.destoryKey(privateKey);
-			return decryptedSessionKey;
-		} catch(InvalidKeyException keyExp) {
-			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, KeymanagerConstant.REFERENCEID,
-						"Error occurred because of mismatch with keys. Try with keys for decryption.");
-		}
-		// Taking the all DB keys for decryption to handle scenario - 
-		// Current key got rotated and there are more than 1 keys in DB. Packet encrypted with thumbprint flag as false 
-		// and used the latest key for encryption. Finally trying with all keys for decryption. 
-		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, KeymanagerConstant.REFERENCEID, 
-									"Unable to decrypt session with all the other validations, " +
-									"trying the keys available for provided AppId & RefId.");
-		Map<String, List<KeyAlias>> keyAliasMap;
-		if (!keymanagerUtil.isValidReferenceId(referenceId)) {
-			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.EMPTY, KeymanagerConstant.EMPTY,
-					NOT_A_VALID_REFERENCE_ID_GETTING_KEY_ALIAS_WITHOUT_REFERENCE_ID);
-			keyAliasMap = dbHelper.getKeyAliases(applicationId, KeymanagerConstant.EMPTY, localDateTimeStamp);
-		} else {
-			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.EMPTY, KeymanagerConstant.EMPTY,
-					VALID_REFERENCE_ID_GETTING_KEY_ALIAS_WITH_REFERENCE_ID);
-			keyAliasMap = dbHelper.getKeyAliases(applicationId, referenceId, localDateTimeStamp);
-		}
-
-		InvalidKeyException keyException = null;
-		List<KeyAlias> keyAlias = keyAliasMap.get(KeymanagerConstant.KEYALIAS);
-		for (KeyAlias alias : keyAlias){
-			Object[] dbKeys = getPrivateKey(referenceId, alias);
-			PrivateKey dbPrivateKey = (PrivateKey) dbKeys[0];
-			PublicKey dbPublicKey = ((Certificate) dbKeys[1]).getPublicKey();
-			try {
-				byte[] decryptedSessionKey = cryptoCore.asymmetricDecrypt(dbPrivateKey, dbPublicKey, encryptedSymmetricKey);
-				keymanagerUtil.destoryKey(dbPrivateKey);
-				return decryptedSessionKey;
-			} catch (InvalidKeyException keyExp) {
-				LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, KeymanagerConstant.REFERENCEID,
-						"Error occurred because of mismatch with keys. Try with other current key for decryption. key Alias: " + alias);
-				keyException = keyExp;
-			}
-		}
-		throw keyException;
-	}
 	
 	@Override
 	public SignatureCertificate getSignatureCertificate(String applicationId, Optional<String> referenceId,
@@ -580,16 +662,27 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 		LocalDateTime expiryDateTime = null;
 		CertificateEntry<X509Certificate, PrivateKey> certificateEntry = null;
 		LocalDateTime localDateTimeStamp = DateUtils.getUTCCurrentDateTime();
+		String refId = null;
 		if (!referenceId.isPresent() || referenceId.get().trim().isEmpty()) {
 			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.EMPTY, KeymanagerConstant.EMPTY,
 					NOT_A_VALID_REFERENCE_ID_GETTING_KEY_ALIAS_WITHOUT_REFERENCE_ID);
 			keyAliasMap = dbHelper.getKeyAliases(applicationId, KeymanagerConstant.EMPTY, localDateTimeStamp);
-		} else {
-			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.EMPTY, KeymanagerConstant.EMPTY,
+			refId = KeymanagerConstant.EMPTY;
+		} else if (applicationId.equalsIgnoreCase(signApplicationid) && referenceId.isPresent()
+							&& referenceId.get().equals(certificateSignRefID)){
+			LOGGER.info(KeymanagerConstant.SESSIONID, applicationId, referenceId.get(),
 					VALID_REFERENCE_ID_GETTING_KEY_ALIAS_WITH_REFERENCE_ID);
 			keyAliasMap = dbHelper.getKeyAliases(applicationId, referenceId.get(), localDateTimeStamp);
+			refId = referenceId.get();
+		} else {
+			LOGGER.error(KeymanagerConstant.SESSIONID, applicationId, referenceId.get(),
+									"Signing operation not allowed for the provided application Id & reference Id.");
+			throw new KeymanagerServiceException(KeymanagerErrorConstant.NOT_VALID_SIGNATURE_KEY.getErrorCode(),
+					KeymanagerErrorConstant.NOT_VALID_SIGNATURE_KEY.getErrorMessage());
 		}
+		List<KeyAlias> keyAlias = keyAliasMap.get(KeymanagerConstant.KEYALIAS);
 		currentKeyAlias = keyAliasMap.get(KeymanagerConstant.CURRENTKEYALIAS);
+		
 		if (currentKeyAlias.size() > 1) {
 			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.CURRENTKEYALIAS,
 					String.valueOf(currentKeyAlias.size()), "CurrentKeyAlias size more than one. Throwing exception");
@@ -602,12 +695,25 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 			KeyAlias fetchedKeyAlias = currentKeyAlias.get(0);
 			alias = fetchedKeyAlias.getAlias();
 			// @TODO Not Sure why always check the existing HSM only. We need to get more details from team. 
+			// Expecting the signature key to be always in HSM.
 			certificateEntry = getCertificateEntry(alias, isPrivateRequired);
 			generationDateTime = fetchedKeyAlias.getKeyGenerationTime();
 			expiryDateTime = fetchedKeyAlias.getKeyExpiryTime();
-		} else if (currentKeyAlias.isEmpty()) {
-			throw new NoUniqueAliasException(KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorCode(),
-					KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorMessage());
+		} else if (currentKeyAlias.isEmpty() && keyAlias.size() > 0) {
+			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.KEYALIAS,
+						keyAlias.get(0).getAlias(),
+					"CurrentKeyAlias size is zero. Key got expired, generating new keypair using this App Id & Ref Id");
+			// This will generate the new key in HSM.
+			alias = UUID.randomUUID().toString();
+			generateKeyPairInHSM(alias, applicationId, refId, localDateTimeStamp, keyAlias);
+			certificateEntry = getCertificateEntry(alias, isPrivateRequired);
+			generationDateTime = localDateTimeStamp;
+			expiryDateTime = dbHelper.getExpiryPolicy(applicationId, generationDateTime, keyAlias);
+		} else {
+			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.KEYALIAS, String.valueOf(keyAlias.size()),
+					"Initial Key generation process not completed.");
+			throw new KeymanagerServiceException(KeymanagerErrorConstant.KEY_GENERATION_NOT_DONE.getErrorCode(),
+					KeymanagerErrorConstant.KEY_GENERATION_NOT_DONE.getErrorMessage());
 		}
 		String providerName = keyStore.getKeystoreProviderName();
 		return new SignatureCertificate(alias, certificateEntry, generationDateTime, expiryDateTime, providerName);
@@ -991,6 +1097,13 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 					"Invalid Data provided to upload other domain certificate.");
 			throw new KeymanagerServiceException(KeymanagerErrorConstant.INVALID_REQUEST.getErrorCode(),
 					KeymanagerErrorConstant.INVALID_REQUEST.getErrorMessage());
+		}
+
+		if (appId.equalsIgnoreCase(signApplicationid) && refId.equalsIgnoreCase(certificateSignRefID)) {
+			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, null,
+					"Not allowed to uploaded AppId: KERNEL & RefId: SIGN.");
+			throw new KeymanagerServiceException(KeymanagerErrorConstant.UPLOAD_NOT_ALLOWED.getErrorCode(),
+					KeymanagerErrorConstant.UPLOAD_NOT_ALLOWED.getErrorMessage());
 		}
 		
 		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, appId,

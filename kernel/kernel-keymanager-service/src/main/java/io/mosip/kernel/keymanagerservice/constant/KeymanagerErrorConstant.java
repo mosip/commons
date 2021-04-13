@@ -45,6 +45,10 @@ public enum KeymanagerErrorConstant {
 
 	DECRYPTION_NOT_ALLOWED("KER-KMS-018", "Not Allowed to perform decryption with other domain key."),
 
+	SYMMETRIC_KEY_DECRYPTION_FAILED("KER-KMS-019", "Not able to decrypt Symmetric Key using the Private Key."),
+
+	NOT_VALID_SIGNATURE_KEY("KER-KMS-020", "Signing operation for allowed for the provided application id & reference id."),
+
 	INTERNAL_SERVER_ERROR("KER-KMS-500", "Internal server error");
 
 	/**

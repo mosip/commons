@@ -59,6 +59,10 @@ public class CryptomanagerServiceImpl implements CryptomanagerService {
 	@Value("${mosip.kernel.data-key-splitter}")
 	private String keySplitter;
 
+	/** The 1.1.3 no thumbprint support flag. */
+	@Value("${mosip.kernel.keymanager.113nothumbprint.support:false}")
+	private boolean noThumbprint;
+
 	/**
 	 * {@link KeyGenerator} instance
 	 */
@@ -108,17 +112,16 @@ public class CryptomanagerServiceImpl implements CryptomanagerService {
 						"Session key encryption completed.");
 		Boolean prependThumbprint = cryptoRequestDto.getPrependThumbprint() == null ? false : cryptoRequestDto.getPrependThumbprint();
 		CryptomanagerResponseDto cryptoResponseDto = new CryptomanagerResponseDto();
-		if (prependThumbprint) {
-			LOGGER.info(CryptomanagerConstant.SESSIONID, CryptomanagerConstant.ENCRYPT, CryptomanagerConstant.ENCRYPT, 
-						"Prepending certificate thumbprint to encrypted data.");
-			byte[] certThumbprint = cryptomanagerUtil.getCertificateThumbprint(certificate);
-			byte[] concatedData = cryptomanagerUtil.concatCertThumbprint(certThumbprint, encryptedSymmetricKey);
-			cryptoResponseDto.setData(CryptoUtil.encodeBase64(CryptoUtil.combineByteArray(encryptedData, concatedData, keySplitter)));
+		// support of 1.1.3 no thumbprint is configured as true & encryption request with no thumbprint
+		// request thumbprint flag will not be considered if support no thumbprint is set to false. 
+		if (noThumbprint && !prependThumbprint) {
+			cryptoResponseDto.setData(CryptoUtil.encodeBase64(CryptoUtil.combineByteArray(encryptedData, encryptedSymmetricKey, keySplitter)));
 			return cryptoResponseDto;
 		} 
-		LOGGER.info(CryptomanagerConstant.SESSIONID, CryptomanagerConstant.ENCRYPT, CryptomanagerConstant.ENCRYPT, 
-						"Thumbprint not prepended to the encrypted data.");
-		cryptoResponseDto.setData(CryptoUtil.encodeBase64(CryptoUtil.combineByteArray(encryptedData, encryptedSymmetricKey, keySplitter)));
+		byte[] certThumbprint = cryptomanagerUtil.getCertificateThumbprint(certificate);
+		byte[] concatedData = cryptomanagerUtil.concatCertThumbprint(certThumbprint, encryptedSymmetricKey);
+		cryptoResponseDto.setData(CryptoUtil.encodeBase64(CryptoUtil.combineByteArray(encryptedData, concatedData, keySplitter)));
+		
 		return cryptoResponseDto;
 	}
 
