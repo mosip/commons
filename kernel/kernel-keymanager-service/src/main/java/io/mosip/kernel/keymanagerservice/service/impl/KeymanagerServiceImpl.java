@@ -355,7 +355,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 		Boolean reqPrependThumbprint = symmetricKeyRequestDto.getPrependThumbprint(); 
 		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.SYMMETRICKEYREQUEST,
 				symmetricKeyRequestDto.getApplicationId(), "prependThumbprint Value(Request): " + reqPrependThumbprint);
-		Boolean prependThumbprint = reqPrependThumbprint == null? false : symmetricKeyRequestDto.getPrependThumbprint();
+		boolean prependThumbprint = reqPrependThumbprint == null? false : symmetricKeyRequestDto.getPrependThumbprint();
 		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.SYMMETRICKEYREQUEST,
 				symmetricKeyRequestDto.getApplicationId(), "prependThumbprint Value: " + prependThumbprint);
 		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.SYMMETRICKEYREQUEST,
