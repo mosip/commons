@@ -115,13 +115,13 @@ public class KeyStoreImpl implements KeyStore, InitializingBean {
 	 * JCE Implementation Clazz Name and other required information.
 	 * 
 	 */
-	private Map<String, String> jceParams;
+	private Map<String, String> jceParams = new HashMap<String, String>();
 	
 	/**
 	 * Algorithms names & Key Size Information.
 	 * 
 	 */
-	private Map<String, String> keystoreParams = new HashMap<String, String>();;
+	private Map<String, String> keystoreParams = new HashMap<String, String>();
 
 	/**
 	 * Delegate Object.
