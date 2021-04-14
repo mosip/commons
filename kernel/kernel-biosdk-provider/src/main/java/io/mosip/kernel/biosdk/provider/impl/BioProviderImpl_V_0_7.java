@@ -19,16 +19,16 @@ import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.biometrics.constant.BiometricFunction;
 import io.mosip.kernel.biometrics.constant.BiometricType;
+import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biosdk.provider.spi.iBioProviderApi;
 import io.mosip.kernel.biosdk.provider.util.BioProviderUtil;
 import io.mosip.kernel.biosdk.provider.util.BioSDKProviderLoggerFactory;
 import io.mosip.kernel.biosdk.provider.util.ProviderConstants;
 import io.mosip.kernel.core.bioapi.exception.BiometricException;
+import io.mosip.kernel.core.bioapi.model.CompositeScore;
 import io.mosip.kernel.core.bioapi.model.KeyValuePair;
 import io.mosip.kernel.core.bioapi.model.QualityScore;
 import io.mosip.kernel.core.bioapi.model.Score;
-import io.mosip.kernel.core.bioapi.model.CompositeScore;
-import io.mosip.kernel.core.cbeffutil.entity.BIR;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;
 

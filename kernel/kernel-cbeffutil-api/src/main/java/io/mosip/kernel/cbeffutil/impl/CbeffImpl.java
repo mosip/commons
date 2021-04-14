@@ -185,20 +185,23 @@ public class CbeffImpl implements CbeffUtil {
 
 	
 
-	public static void main(String arg[]) throws Exception {
-		byte[] xsd = Files.readAllBytes(Paths.get("C:\\Users\\M1044287\\Desktop\\cbeff.xsd"));
-		CbeffImpl cbeffImpl = new CbeffImpl();
-		List<BIR> birs = cbeffImpl.getBIRDataFromXML(readCreatedXML());
-		
-		
-		  byte[] ac = new CbeffImpl().createXML(birs, xsd);
-		  FileUtils.writeByteArrayToFile(new File("C:\\Users\\M1044287\\Desktop\\a.xml"), ac);
-		 
-	}
-
-	private static byte[] readCreatedXML() throws IOException {
-		byte[] fileContent = Files.readAllBytes(Paths.get("C:\\Users\\M1044287\\Desktop\\cbeff-dev.xml"));
-		return fileContent;
-	}
+	/*
+	 * public static void main(String arg[]) throws Exception { byte[] xsd =
+	 * Files.readAllBytes(Paths.get("C:\\Users\\M1044287\\Desktop\\cbeff.xsd"));
+	 * CbeffImpl cbeffImpl = new CbeffImpl(); List<BIR> birs =
+	 * cbeffImpl.getBIRDataFromXML(readCreatedXML());
+	 * 
+	 * 
+	 * byte[] ac = new CbeffImpl().createXML(birs, xsd);
+	 * FileUtils.writeByteArrayToFile(new
+	 * File("C:\\Users\\M1044287\\Desktop\\a.xml"), ac);
+	 * 
+	 * }
+	 * 
+	 * private static byte[] readCreatedXML() throws IOException { byte[]
+	 * fileContent =
+	 * Files.readAllBytes(Paths.get("C:\\Users\\M1044287\\Desktop\\cbeff-dev.xml"));
+	 * return fileContent; }
+	 */
 
 }

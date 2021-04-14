@@ -6,6 +6,8 @@ import io.mosip.kernel.core.bioapi.model.QualityScore;
 import io.mosip.kernel.core.bioapi.model.Response;
 import io.mosip.kernel.core.cbeffutil.entity.BIR;
 
+
+
 /**
  * The Interface IBioApi.
  * 

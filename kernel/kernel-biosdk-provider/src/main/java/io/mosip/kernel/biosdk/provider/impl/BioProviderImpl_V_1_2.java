@@ -1,5 +1,7 @@
 package io.mosip.kernel.biosdk.provider.impl;
 
+import static org.assertj.core.api.Assertions.entry;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Component;
 import io.mosip.kernel.biometrics.constant.BiometricFunction;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.constant.Match;
+import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.biometrics.model.Decision;
 import io.mosip.kernel.biometrics.model.MatchDecision;
@@ -29,7 +32,7 @@ import io.mosip.kernel.biosdk.provider.util.BioProviderUtil;
 import io.mosip.kernel.biosdk.provider.util.ErrorCode;
 import io.mosip.kernel.biosdk.provider.util.ProviderConstants;
 import io.mosip.kernel.core.bioapi.exception.BiometricException;
-import io.mosip.kernel.core.cbeffutil.entity.BIR;
+
 
 @Component
 public class BioProviderImpl_V_1_2 implements iBioProviderApi {
@@ -178,8 +181,7 @@ public class BioProviderImpl_V_1_2 implements iBioProviderApi {
 							.get(BiometricFunction.EXTRACT).extractTemplate(sampleRecord, null, flags);
 
 					if(isSuccessResponse(response)) {
-						return response.getResponse().getSegments().stream()
-								.map(BIRConverter::convertToBIR);
+						return response.getResponse().getSegments().stream();
 					}
 				  
 				  return Stream.empty();
@@ -221,17 +223,15 @@ public class BioProviderImpl_V_1_2 implements iBioProviderApi {
 	// TODO - set cebffversion and version in biometricRecord
 	private BiometricRecord getBiometricRecord(BIR[] birs) {
 		BiometricRecord biometricRecord = new BiometricRecord();
-		biometricRecord.setSegments(new LinkedList<>());
-		for (int i = 0; i < birs.length; i++) {
-			biometricRecord.getSegments().add(BIRConverter.convertToBiometricRecordBIR(birs[i]));
-		}
+		biometricRecord.setSegments(Arrays.asList(birs));
+		
 		return biometricRecord;
 	}
 
 	// TODO - set cebffversion and version in biometricRecord
 	private BiometricRecord getBiometricRecord(BIR bir) {
 		BiometricRecord biometricRecord = new BiometricRecord();
-		biometricRecord.getSegments().add(BIRConverter.convertToBiometricRecordBIR(bir));
+		biometricRecord.getSegments().add(bir);
 		return biometricRecord;
 	}
 

@@ -24,9 +24,15 @@ import java.util.Map;
 import java.util.Set;
 
 import io.mosip.kernel.biometrics.commons.CbeffValidator;
+import io.mosip.kernel.biometrics.constant.BiometricType;
+import io.mosip.kernel.biometrics.constant.ProcessedLevelType;
+import io.mosip.kernel.biometrics.constant.PurposeType;
 import io.mosip.kernel.biometrics.constant.QualityType;
+import io.mosip.kernel.biometrics.entities.BDBInfo;
 import io.mosip.kernel.biometrics.entities.BIR;
+import io.mosip.kernel.biometrics.entities.BIRInfo;
 import io.mosip.kernel.biometrics.entities.RegistryIDType;
+import io.mosip.kernel.biometrics.entities.VersionType;
 import io.mosip.kernel.biometrics.spi.CbeffUtil;
 import io.mosip.kernel.cbeffutil.impl.CbeffImpl;
 
@@ -45,6 +51,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import io.mosip.kernel.core.cbeffutil.common.CbeffISOReader;
+import io.mosip.kernel.core.cbeffutil.entity.BIRVersion;
 
 
 @RunWith(PowerMockRunner.class)
@@ -105,11 +112,11 @@ public class CbeffImplTest {
 		Qtype.setAlgorithm(algorithm);
 		createList = new ArrayList<>();
 		BIR rIndexFinger = new BIR.BIRBuilder().withBdb(rindexFinger)
-				.withVersion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
-				.withCbeffversion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
+				.withVersion(new VersionType(1, 1))
+				.withCbeffversion(new VersionType(1, 1))
 				.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(false).build())
 				.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format).withQuality(Qtype)
-						.withType(Arrays.asList(SingleType.FINGER)).withSubtype(Arrays.asList("Right IndexFinger"))
+						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("Right IndexFinger"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
 				.build();
@@ -117,11 +124,11 @@ public class CbeffImplTest {
 		createList.add(rIndexFinger);
 
 		BIR rMiddleFinger = new BIR.BIRBuilder().withBdb(rmiddleFinger)
-				.withVersion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
-				.withCbeffversion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
+				.withVersion(new VersionType(1, 1))
+				.withCbeffversion(new VersionType(1, 1))
 				.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(false).build())
 				.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format).withQuality(Qtype)
-						.withType(Arrays.asList(SingleType.FINGER)).withSubtype(Arrays.asList("Right MiddleFinger"))
+						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("Right MiddleFinger"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
 				.build();
@@ -129,11 +136,11 @@ public class CbeffImplTest {
 		createList.add(rMiddleFinger);
 
 		BIR rRingFinger = new BIR.BIRBuilder().withBdb(rringFinger)
-				.withVersion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
-				.withCbeffversion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
+				.withVersion(new VersionType(1, 1))
+				.withCbeffversion(new VersionType(1, 1))
 				.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(false).build())
 				.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format).withQuality(Qtype)
-						.withType(Arrays.asList(SingleType.FINGER)).withSubtype(Arrays.asList("Right RingFinger"))
+						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("Right RingFinger"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
 				.build();
@@ -141,11 +148,11 @@ public class CbeffImplTest {
 		createList.add(rRingFinger);
 
 		BIR rLittleFinger = new BIR.BIRBuilder().withBdb(rlittleFinger)
-				.withVersion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
-				.withCbeffversion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
+				.withVersion(new VersionType(1, 1))
+				.withCbeffversion(new VersionType(1, 1))
 				.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(false).build())
 				.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format).withQuality(Qtype)
-						.withType(Arrays.asList(SingleType.FINGER)).withSubtype(Arrays.asList("Right LittleFinger"))
+						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("Right LittleFinger"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
 				.build();
@@ -153,11 +160,11 @@ public class CbeffImplTest {
 		createList.add(rLittleFinger);
 
 		BIR lIndexFinger = new BIR.BIRBuilder().withBdb(lindexFinger)
-				.withVersion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
-				.withCbeffversion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
+				.withVersion(new VersionType(1, 1))
+				.withCbeffversion(new VersionType(1, 1))
 				.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(false).build())
 				.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format).withQuality(Qtype)
-						.withType(Arrays.asList(SingleType.FINGER)).withSubtype(Arrays.asList("Left IndexFinger"))
+						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("Left IndexFinger"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
 				.build();
@@ -165,11 +172,11 @@ public class CbeffImplTest {
 		createList.add(lIndexFinger);
 
 		BIR lMiddleFinger = new BIR.BIRBuilder().withBdb(lmiddleFinger)
-				.withVersion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
-				.withCbeffversion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
+				.withVersion(new VersionType(1, 1))
+				.withCbeffversion(new VersionType(1, 1))
 				.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(false).build())
 				.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format).withQuality(Qtype)
-						.withType(Arrays.asList(SingleType.FINGER)).withSubtype(Arrays.asList("Left MiddleFinger"))
+						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("Left MiddleFinger"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
 				.build();
@@ -177,11 +184,11 @@ public class CbeffImplTest {
 		createList.add(lMiddleFinger);
 
 		BIR lRightFinger = new BIR.BIRBuilder().withBdb(lringFinger)
-				.withVersion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
-				.withCbeffversion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
+				.withVersion(new VersionType(1, 1))
+				.withCbeffversion(new VersionType(1, 1))
 				.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(false).build())
 				.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format).withQuality(Qtype)
-						.withType(Arrays.asList(SingleType.FINGER)).withSubtype(Arrays.asList("Left RingFinger"))
+						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("Left RingFinger"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
 				.build();
@@ -189,11 +196,11 @@ public class CbeffImplTest {
 		createList.add(lRightFinger);
 
 		BIR lLittleFinger = new BIR.BIRBuilder().withBdb(llittleFinger)
-				.withVersion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
-				.withCbeffversion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
+				.withVersion(new VersionType(1, 1))
+				.withCbeffversion(new VersionType(1, 1))
 				.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(false).build())
 				.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format).withQuality(Qtype)
-						.withType(Arrays.asList(SingleType.FINGER)).withSubtype(Arrays.asList("Left LittleFinger"))
+						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("Left LittleFinger"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
 				.build();
@@ -201,11 +208,11 @@ public class CbeffImplTest {
 		createList.add(lLittleFinger);
 
 		BIR rightThumb = new BIR.BIRBuilder().withBdb(rightthumb)
-				.withVersion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
-				.withCbeffversion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
+				.withVersion(new VersionType(1, 1))
+				.withCbeffversion(new VersionType(1, 1))
 				.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(false).build())
 				.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format).withQuality(Qtype)
-						.withType(Arrays.asList(SingleType.FINGER)).withSubtype(Arrays.asList("Right Thumb"))
+						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("Right Thumb"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
 				.build();
@@ -213,11 +220,11 @@ public class CbeffImplTest {
 		createList.add(rightThumb);
 
 		BIR leftThumb = new BIR.BIRBuilder().withBdb(leftthumb)
-				.withVersion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
-				.withCbeffversion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
+				.withVersion(new VersionType(1, 1))
+				.withCbeffversion(new VersionType(1, 1))
 				.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(false).build())
 				.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format).withQuality(Qtype)
-						.withType(Arrays.asList(SingleType.FINGER)).withSubtype(Arrays.asList("Left Thumb"))
+						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("Left Thumb"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
 				.build();
@@ -225,11 +232,11 @@ public class CbeffImplTest {
 		createList.add(leftThumb);
 
 //		BIR face = new BIR.BIRBuilder().withBdb(faceImg)
-//				.withVersion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
-//				.withCbeffversion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
+//				.withVersion(new VersionType(1, 1))
+//				.withCbeffversion(new VersionType(1, 1))
 //				.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(false).build())
 //				.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format)
-//						.withQuality(Qtype).withType(Arrays.asList(SingleType.FACE)).withPurpose(PurposeType.ENROLL)
+//						.withQuality(Qtype).withType(Arrays.asList(BiometricType.FACE)).withPurpose(PurposeType.ENROLL)
 //						.withLevel(ProcessedLevelType.RAW).withCreationDate(LocalDateTime.now(ZoneId.of("UTC")))
 //						.build())
 //				.build();
@@ -237,11 +244,11 @@ public class CbeffImplTest {
 //		createList.add(face);
 //
 //		BIR leftIris = new BIR.BIRBuilder().withBdb(irisImg1)
-//				.withVersion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
-//				.withCbeffversion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
+//				.withVersion(new VersionType(1, 1))
+//				.withCbeffversion(new VersionType(1, 1))
 //				.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(false).build())
 //				.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format)
-//						.withQuality(Qtype).withType(Arrays.asList(SingleType.IRIS)).withSubtype(Arrays.asList("Right"))
+//						.withQuality(Qtype).withType(Arrays.asList(BiometricType.IRIS)).withSubtype(Arrays.asList("Right"))
 //						.withPurpose(PurposeType.ENROLL).withCreationDate(LocalDateTime.now(ZoneId.of("UTC")))
 //						.withLevel(ProcessedLevelType.RAW).build())
 //				.build();
@@ -249,11 +256,11 @@ public class CbeffImplTest {
 //		createList.add(leftIris);
 //
 //		BIR rightIris = new BIR.BIRBuilder().withBdb(irisImg2)
-//				.withVersion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
-//				.withCbeffversion(new BIRVersion.BIRVersionBuilder().withMinor(1).withMajor(1).build())
+//				.withVersion(new VersionType(1, 1))
+//				.withCbeffversion(new VersionType(1, 1))
 //				.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(false).build())
 //				.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format)
-//						.withQuality(Qtype).withType(Arrays.asList(SingleType.IRIS)).withSubtype(Arrays.asList("Left"))
+//						.withQuality(Qtype).withType(Arrays.asList(BiometricType.IRIS)).withSubtype(Arrays.asList("Left"))
 //						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 //						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
 //				.build();
@@ -319,23 +326,5 @@ public class CbeffImplTest {
 
 	}
 
-	// @Test
-	public void testGetBDBBasedOnType() throws IOException, Exception {
-		Map<String, String> testMap = cbeffUtilImpl.getBDBBasedOnType(readCreatedXML("createCbeffLatest2"), "Finger");
-		Set<String> testSet1 = new HashSet<>();
-		testSet1.add("FINGER_Right");
-		assertEquals(testMap.keySet(), testSet1);
-//		Map<String, String> testMap1 = cbeffUtilImpl.getBDBBasedOnType(readCreatedXML("updateCbeff"), "FMR", null);
-//		Set<String> testSet2 = new HashSet<>();
-//		testSet2.add("FINGER_Right IndexFinger MiddleFinger RingFinger LittleFinger_2");
-//		assertEquals(testMap1.keySet(), testSet2);
-//		Map<String, String> testMap2 = cbeffUtilImpl.getBDBBasedOnType(readCreatedXML("updateCbeff"), null, "Right");
-//		Set<String> testSet3 = new HashSet<>();
-//		testSet3.add("FINGER_Right IndexFinger MiddleFinger RingFinger LittleFinger_7");
-//		testSet3.add("IRIS_Right_9");
-//		testSet3.add("FINGER_Right IndexFinger MiddleFinger RingFinger LittleFinger_2");
-//		testSet3.add("FINGER_Left Right Thumb_7");
-//		assertEquals(testMap2.keySet(), testSet3);
-	}
 
 }
