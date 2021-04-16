@@ -728,20 +728,27 @@ public class AuthController {
 	
 	/**
 	 * This API will fetch all users based on appId and roles
-	 * 
+	 *  for role bases search only pagination will work.
+	 *  with out role can be searched by all. email,firstName,lastName and userName
 	 * @param appId
 	 * @param roleName
 	 * @return
 	 * @throws Exception
 	 */
 	@ResponseFilter
-	@GetMapping(value = "/userdetails/{appid}")
+	@GetMapping(value = "/userdetails/{appid}")	
 	public ResponseWrapper<MosipUserListDto> getUsersDetails(@PathVariable("appid") String appId,
-			@RequestParam(required = false,name ="roleName") String roleName)
-			throws Exception {
-		ResponseWrapper<MosipUserListDto> responseWrapper = new ResponseWrapper<>();		
-		MosipUserListDto mosipUsers = authService.getListOfUsersDetails(appId,roleName);
-		LOGGER.info("Get userdetails for " + appId + ". Total users:  " + mosipUsers.getMosipUserDtoList().size() );
+			@RequestParam(required = false, name = "roleName") String roleName,
+			@RequestParam(defaultValue = "0", required = false, name = "pageStart") int pageStart,
+			@RequestParam(defaultValue = "0", required = false, name = "pageFetch") int pageFetch,
+			@RequestParam(required = false, name = "email") String email,
+			@RequestParam(required = false, name = "firstName") String firstName,
+			@RequestParam(required = false, name = "lastName") String lastName,
+			@RequestParam(required = false, name = "userName") String userName) throws Exception {
+		ResponseWrapper<MosipUserListDto> responseWrapper = new ResponseWrapper<>();
+		MosipUserListDto mosipUsers = authService.getListOfUsersDetails(appId, roleName, pageStart, pageFetch, email,
+				firstName, lastName, userName);
+		LOGGER.info("Get userdetails for " + appId + ". Total users:  " + mosipUsers.getMosipUserDtoList().size());
 		responseWrapper.setResponse(mosipUsers);
 		return responseWrapper;
 	}

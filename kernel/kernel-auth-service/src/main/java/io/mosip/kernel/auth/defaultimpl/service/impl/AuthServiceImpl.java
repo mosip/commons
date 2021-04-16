@@ -830,8 +830,9 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
-	public MosipUserListDto getListOfUsersDetails(String realmId, String roleName) {
-		return keycloakImpl.getListOfUsersDetails(authUtil.getRealmIdFromAppId(realmId),roleName);
+	public MosipUserListDto getListOfUsersDetails(String realmId, String roleName, int pageStart, int pageFetch,
+			String email, String firstName, String lastName, String username) {
+		return keycloakImpl.getListOfUsersDetails(authUtil.getRealmIdFromAppId(realmId), roleName, pageStart, pageFetch,
+				email, firstName, lastName, username);
 	}
-
 }

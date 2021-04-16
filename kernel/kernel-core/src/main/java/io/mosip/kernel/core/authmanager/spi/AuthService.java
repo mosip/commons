@@ -76,5 +76,5 @@ public interface AuthService extends AuthZService, AuthNService {
 	
 	public VidDto getVidBasedOnUserID(String userId, String appId) ;
 	
-	public MosipUserListDto getListOfUsersDetails(String realmId,String roleName);
+	public MosipUserListDto getListOfUsersDetails(String realmId,String roleName, int pageStart, int pageFetch, String email,String firstName, String lastName, String username);
 }

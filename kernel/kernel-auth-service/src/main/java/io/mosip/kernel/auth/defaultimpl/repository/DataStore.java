@@ -68,6 +68,5 @@ public interface DataStore {
 	
 	public VidDto getVidFromUserId(String userId,String realmID);
 	
-	public MosipUserListDto getListOfUsersDetails(String realmId,String roleName);
-
+	public MosipUserListDto getListOfUsersDetails(String realmId,String roleName,int pageStart, int pageFetch, String email, String firstName, String lastName, String username);
 }
