@@ -9,6 +9,7 @@
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
 -- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
+-- Apr-2021		Dhanendra Sahu	    Set lang_code to be null and change the primary key
 -- ------------------------------------------------------------------------------------------
 
 -- object: master.device_master | type: TABLE --
@@ -23,7 +24,7 @@ CREATE TABLE master.device_master(
 	dspec_id 	character varying(36) NOT NULL,
 	zone_code 	character varying(36) NOT NULL,
 	regcntr_id  character varying(10),
-	lang_code 	character varying(3) NOT NULL,
+	lang_code 	character varying(3),
 	is_active 	boolean NOT NULL,
 	cr_by 		character varying(256) NOT NULL,
 	cr_dtimes 	timestamp NOT NULL,
@@ -31,7 +32,7 @@ CREATE TABLE master.device_master(
 	upd_dtimes 	timestamp,
 	is_deleted 	boolean NOT NULL DEFAULT FALSE,
 	del_dtimes 	timestamp,
-	CONSTRAINT pk_devicem_id PRIMARY KEY (id,lang_code)
+	CONSTRAINT pk_devicem_id PRIMARY KEY (id)
 
 );
 -- ddl-end --

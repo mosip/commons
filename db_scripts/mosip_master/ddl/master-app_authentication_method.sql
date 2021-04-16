@@ -9,6 +9,7 @@
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
 -- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
+-- Apr-2021		Dhanendra Sahu	    Set lang_code to be null 
 -- ------------------------------------------------------------------------------------------
 
 -- object: master.app_authentication_method | type: TABLE --
@@ -19,7 +20,7 @@ CREATE TABLE master.app_authentication_method(
 	role_code character varying(36) NOT NULL,
 	auth_method_code character varying(36) NOT NULL,
 	method_seq smallint,
-	lang_code character varying(3) NOT NULL,
+	lang_code character varying(3),
 	is_active boolean NOT NULL,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,

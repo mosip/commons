@@ -10,6 +10,7 @@
 -- ------------------------------------------------------------------------------------------
 -- 06-Apr-2020          Sadanandegowda      Nullable constraints and Datatype change
 -- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
+-- Apr-2021		Dhanendra Sahu	    Set lang_code to be null and change the primary key
 -- ------------------------------------------------------------------------------------------
 
 -- object: master.machine_master | type: TABLE --
@@ -28,7 +29,7 @@ CREATE TABLE master.machine_master(
 	sign_key_index character varying(128),
 	zone_code character varying(36) NOT NULL,
 	regcntr_id character varying(10),
-	lang_code character varying(3) NOT NULL,
+	lang_code character varying(3),
 	is_active boolean NOT NULL,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
@@ -36,7 +37,7 @@ CREATE TABLE master.machine_master(
 	upd_dtimes timestamp,
 	is_deleted boolean NOT NULL DEFAULT FALSE,
 	del_dtimes timestamp,
-	CONSTRAINT pk_machm_id PRIMARY KEY (id,lang_code)
+	CONSTRAINT pk_machm_id PRIMARY KEY (id)
 
 );
 -- ddl-end --
