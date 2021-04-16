@@ -10,7 +10,7 @@
 
 -- Mar-2021		Ram Bhatt           Reverting is_deleted not null changes for 1.1.5
 -- Mar-2021		Ram Bhatt           Creation of master.ca_cert_store table
--- Apr-2021		Ram Bhatt	    Dynamic Field 
+-- Apr-2021		Ram Bhatt	    Dynamic Field changes added.
 -- ------------------------------------------------------------------------------------------------------------
 \c mosip_master sysadmin
 
