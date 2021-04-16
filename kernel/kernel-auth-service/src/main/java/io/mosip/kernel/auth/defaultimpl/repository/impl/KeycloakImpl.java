@@ -71,6 +71,7 @@ import io.mosip.kernel.core.authmanager.model.VidDto;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.util.CryptoUtil;
+import io.mosip.kernel.core.util.StringUtils;
 
 
 @Component
@@ -733,7 +734,8 @@ public class KeycloakImpl implements DataStore {
 	}
 
 	@Override
-	public MosipUserListDto getListOfUsersDetails(String realmId, String roleName) {		
+	public MosipUserListDto getListOfUsersDetails(String realmId, String roleName, int pageStart, int pageFetch,
+			String email, String firstName, String lastName, String username) {		
 		Map<String, String> pathParams = new HashMap<>();		
 		UriComponentsBuilder uriComponentsBuilder = null;
 		boolean isRoleBasedSearch = false;
@@ -746,8 +748,21 @@ public class KeycloakImpl implements DataStore {
 		} else {
 			pathParams.put(AuthConstant.REALM_ID, realmId);
 			uriComponentsBuilder = UriComponentsBuilder.fromUriString(keycloakAdminUrl + users);
+			if(StringUtils.isNotBlank(email)) {
+				uriComponentsBuilder.queryParam("email", email);
+			}
+			if(StringUtils.isNotBlank(firstName)) {
+				uriComponentsBuilder.queryParam("firstName", firstName);
+			}
+			if(StringUtils.isNotBlank(lastName)) {
+				uriComponentsBuilder.queryParam("lastName", lastName);
+			}
+			if(StringUtils.isNotBlank(username)) {
+				uriComponentsBuilder.queryParam("username", username);
+			}
 		}
-		uriComponentsBuilder.queryParam("max", maxUsers);
+		uriComponentsBuilder.queryParam("first", pageStart);
+		uriComponentsBuilder.queryParam("max", pageFetch == 0 ? maxUsers:pageFetch);
 		String response = callKeycloakService(uriComponentsBuilder.buildAndExpand(pathParams).toString(),
 				HttpMethod.GET, httpEntity);
 		List<MosipUserDto> mosipUserDtos = null;
@@ -809,5 +824,5 @@ public class KeycloakImpl implements DataStore {
 		}
 
 		return mosipUserDtos;
-	}
+	}	
 }
