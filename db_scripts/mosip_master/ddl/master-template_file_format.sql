@@ -9,6 +9,7 @@
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
 -- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
+-- Apr-2021		Dhanendra Sahu	    Set lang_code to be null and change the primary key
 -- ------------------------------------------------------------------------------------------
 
 -- object: master.template_file_format | type: TABLE --
@@ -16,7 +17,7 @@
 CREATE TABLE master.template_file_format(
 	code character varying(36) NOT NULL,
 	descr character varying(256) NOT NULL,
-	lang_code character varying(3) NOT NULL,
+	lang_code character varying(3),
 	is_active boolean NOT NULL,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
@@ -24,7 +25,7 @@ CREATE TABLE master.template_file_format(
 	upd_dtimes timestamp,
 	is_deleted boolean NOT NULL DEFAULT FALSE,
 	del_dtimes timestamp,
-	CONSTRAINT pk_tffmt_code PRIMARY KEY (code,lang_code)
+	CONSTRAINT pk_tffmt_code PRIMARY KEY (code)
 
 );
 -- ddl-end --

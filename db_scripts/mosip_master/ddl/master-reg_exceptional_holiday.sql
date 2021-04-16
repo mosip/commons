@@ -9,6 +9,7 @@
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
 -- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
+-- Apr-2021		Dhanendra Sahu	    Set lang_code to be null 
 -- ------------------------------------------------------------------------------------------
 -- object: master.reg_exceptional_holiday | type: TABLE --
 -- DROP TABLE IF EXISTS master.reg_exceptional_holiday CASCADE;
@@ -17,7 +18,7 @@ CREATE TABLE master.reg_exceptional_holiday(
 	hol_date date NOT NULL,
 	hol_name character varying(128),
 	hol_reason character varying(256),
-	lang_code character varying(3) NOT NULL,
+	lang_code character varying(3),
 	is_active boolean NOT NULL,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,

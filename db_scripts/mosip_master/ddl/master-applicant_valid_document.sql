@@ -9,6 +9,7 @@
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
 -- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
+-- Apr-2021		Dhanendra Sahu	    Set lang_code to be null 
 -- ------------------------------------------------------------------------------------------
 
 -- object: master.applicant_valid_document | type: TABLE --
@@ -17,7 +18,7 @@ CREATE TABLE master.applicant_valid_document(
 	apptyp_code character varying(36) NOT NULL,
 	doccat_code character varying(36) NOT NULL,
 	doctyp_code character varying(36) NOT NULL,
-	lang_code character varying(3) NOT NULL,
+	lang_code character varying(3),
 	is_active boolean NOT NULL,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
