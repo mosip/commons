@@ -10,6 +10,7 @@
 
 -- Mar-2021		Ram Bhatt           Reverting is_deleted not null changes for 1.1.5
 -- Mar-2021		Ram Bhatt           Creation of master.ca_cert_store table
+-- Apr-2021		Ram Bhatt	    Dynamic Field changes added.
 -- ------------------------------------------------------------------------------------------------------------
 \c mosip_master sysadmin
 
@@ -139,3 +140,8 @@
 --ALTER TABLE master.user_detail ALTER COLUMN is_deleted SET DEFAULT FALSE;
 
 \ir ../ddl/master-ca_cert_store.sql
+
+TRUNCATE TABLE master.dynamic_field cascade ;
+
+\COPY master.dynamic_field (id,name,description,data_type,value_json,lang_code,is_active,cr_by,cr_dtimes) FROM '../dml/master-dynamic_field.csv' delimiter ',' HEADER  csv;
+
