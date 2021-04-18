@@ -45,13 +45,13 @@ public class BioProviderImpl_V_0_9 implements iBioProviderApi {
 
 			// check if version matches supported API version of this provider
 			if (modalityParams != null && !modalityParams.isEmpty()
-					&& API_VERSION.equals(modalityParams.get(ProviderConstants.VERSION))) {
+					&& getApiVersion().equals(modalityParams.get(ProviderConstants.VERSION))) {
 
 				IBioApi iBioApi = (IBioApi) BioProviderUtil.getSDKInstance(modalityParams);
 				SDKInfo sdkInfo = iBioApi.init(modalityParams);
 
 				// cross check loaded SDK version and configured SDK version
-				if (!API_VERSION.equals(sdkInfo.getApiVersion()))
+				if (!getApiVersion().equals(sdkInfo.getApiVersion()))
 					throw new BiometricException(ErrorCode.INVALID_SDK_VERSION.getErrorCode(),
 							ErrorCode.INVALID_SDK_VERSION.getErrorCode());
 
@@ -59,6 +59,10 @@ public class BioProviderImpl_V_0_9 implements iBioProviderApi {
 			}
 		}
 		return getSupportedModalities();
+	}
+
+	protected String getApiVersion() {
+		return API_VERSION;
 	}
 
 	@Override
@@ -190,8 +194,8 @@ public class BioProviderImpl_V_0_9 implements iBioProviderApi {
 	}
 
 	private boolean isSuccessResponse(Response<?> response) {
-		if (response != null && response.getStatusCode() >= 200 && response.getStatusCode() <= 299
-				&& response.getResponse() != null)
+		if (response != null && response.getStatusCode() != null && response.getStatusCode() >= 200
+				&& response.getStatusCode() <= 299 && response.getResponse() != null)
 			return true;
 		return false;
 	}
