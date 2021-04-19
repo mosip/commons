@@ -6,26 +6,23 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.biometrics.constant.BiometricFunction;
 import io.mosip.kernel.biometrics.constant.BiometricType;
-import io.mosip.kernel.biometrics.constant.Match;
 import io.mosip.kernel.biometrics.entities.BIR;
-import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import io.mosip.kernel.biometrics.model.Decision;
-import io.mosip.kernel.biometrics.model.MatchDecision;
-import io.mosip.kernel.biometrics.model.QualityCheck;
-import io.mosip.kernel.biometrics.model.Response;
-import io.mosip.kernel.biometrics.spi.IBioApi;
 import io.mosip.kernel.biosdk.provider.spi.iBioProviderApi;
+import io.mosip.kernel.biosdk.provider.util.BIRConverter;
 import io.mosip.kernel.biosdk.provider.util.BioProviderUtil;
 import io.mosip.kernel.biosdk.provider.util.ProviderConstants;
 import io.mosip.kernel.core.bioapi.exception.BiometricException;
 import io.mosip.kernel.core.bioapi.model.KeyValuePair;
-
-
+import io.mosip.kernel.core.bioapi.model.MatchDecision;
+import io.mosip.kernel.core.bioapi.model.QualityScore;
+import io.mosip.kernel.core.bioapi.model.Response;
+import io.mosip.kernel.core.bioapi.spi.IBioApi;
 
 
 @Component
@@ -53,72 +50,35 @@ public class BioProviderImpl_V_0_8 implements iBioProviderApi {
 
 	@Override
 	public boolean verify(List<BIR> sample, List<BIR> record, BiometricType modality, Map<String, String> flags) {		
-		BiometricRecord galleryRecord = getBiometricRecord(record.toArray(new BIR[record.size()]));
-		Response<MatchDecision[]> response = sdkRegistry.get(modality).get(BiometricFunction.MATCH).match(
-				getBiometricRecord(sample.toArray(new BIR[sample.size()])), new BiometricRecord[] { galleryRecord },
-				Arrays.asList(modality), flags);	
-		if (isSuccessResponse(response)) {
-			Map<BiometricType, Decision> decisions = response.getResponse()[0].getDecisions();
-			if (decisions.containsKey(modality)) {
-				Match matchResult = decisions.get(modality).getMatch();
-				// TODO log analyticsinfo and errors
-				return Match.MATCHED.equals(matchResult);
-			}
-		}
-
-		return false;
+		sample = sample.stream().filter(obj -> modality == BiometricType.fromValue(obj.getBdbInfo().getType().get(0).value()))
+			.collect(Collectors.toList());		
+		return match("AUTH", sample, record.toArray(new BIR[record.size()]), modality, flags);
 	}
 
 	@Override
 	public Map<String, Boolean> identify(List<BIR> sample, Map<String, List<BIR>> gallery, BiometricType modality,
 			Map<String, String> flags) {
-		Map<String, Integer> keyIndexMapping = new HashMap<>();
-		BiometricRecord galleryRecords[] = new BiometricRecord[gallery.size()];
-		int i = 0;
-		for (String key : gallery.keySet()) {
-			keyIndexMapping.put(key, i);
-			galleryRecords[i++] = getBiometricRecord(gallery.get(key).toArray(new BIR[gallery.get(key).size()]));
-		}
-
-		Response<MatchDecision[]> response = sdkRegistry.get(modality).get(BiometricFunction.MATCH).match(
-				getBiometricRecord(sample.toArray(new BIR[sample.size()])), galleryRecords, Arrays.asList(modality),
-				flags);
-
-		Map<String, Boolean> result = new HashMap<>();
-		if (isSuccessResponse(response)) {
-			keyIndexMapping.forEach((key, index) -> {
-				if (response.getResponse()[index].getDecisions().containsKey(modality)) {
-					result.put(key, Match.MATCHED
-							.equals(response.getResponse()[index].getDecisions().get(modality).getMatch()));
-					// TODO log analyticsinfo and errors
-				} else
-					result.put(key, false);
-			});
-		}
+		Map<String, Boolean>  result = new HashMap<>();	
+		
+		sample = sample.stream().filter(obj -> modality == BiometricType.fromValue(obj.getBdbInfo().getType().get(0).value()))
+				.collect(Collectors.toList());
+		
+		for(String key : gallery.keySet()) {			
+			result.put(key, match("DEDUPE", sample, gallery.get(key).toArray(new BIR[gallery.get(key).size()]), modality, flags));
+		}		
 		return result;
-
 	}
 
 	@Override
 	public float[] getSegmentQuality(BIR[] sample, Map<String, String> flags) {
-		
-		
 		float score[] = new float[sample.length];
-		for (int i = 0; i < sample.length; i++) {
-			BiometricType modality = BiometricType.fromValue(sample[i].getBdbInfo().getType().get(0).value());
-			Response<QualityCheck> response = sdkRegistry.get(modality).get(BiometricFunction.QUALITY_CHECK)
-					.checkQuality(getBiometricRecord(sample[i]), Arrays.asList(modality), flags);
-	
+		for(int i=0; i< sample.length; i++) {
+			Response<QualityScore> response = sdkRegistry.get(BiometricType.fromValue(sample[i].getBdbInfo().getType().get(0).value())).
+					get(BiometricFunction.QUALITY_CHECK).checkQuality(BIRConverter.convertToBIR(sample[i]), getKeyValuePairs(flags));
 			
-			if (isSuccessResponse(response) && response.getResponse().getScores() != null) {
-				score[i] = isSuccessResponse(response) ? response.getResponse().getScores().get(modality).getScore() : 0;
-				
-				// TODO log analyticsInfo && errors
-			} else
-				score[i] = 0;
-		}
+			score[i] = isSuccessResponse(response) ? response.getResponse().getScore() : 0;
 			//TODO log the analytics info
-			
+		}		
 		return score;
 	}
 	
@@ -127,13 +87,13 @@ public class BioProviderImpl_V_0_8 implements iBioProviderApi {
 		Map<BiometricType, List<Float>> scoresByModality = new HashMap<>();
 		for(int i=0; i< sample.length; i++) {
 			BiometricType modality = BiometricType.fromValue(sample[i].getBdbInfo().getType().get(0).value());
-			Response<QualityCheck> response = sdkRegistry.get(modality).get(BiometricFunction.QUALITY_CHECK)
-					.checkQuality(getBiometricRecord(sample[i]),Arrays.asList(modality), flags);
+			Response<QualityScore> response = sdkRegistry.get(modality).get(BiometricFunction.QUALITY_CHECK)
+					.checkQuality(BIRConverter.convertToBIR(sample[i]), getKeyValuePairs(flags));
 			
 			if(!scoresByModality.containsKey(modality))
 				scoresByModality.put(modality, new ArrayList<>());
 			
-			scoresByModality.get(modality).add(isSuccessResponse(response) ? response.getResponse().getScores().get(modality).getScore() : 0);
+			scoresByModality.get(modality).add(isSuccessResponse(response) ? response.getResponse().getScore() : 0);
 			//TODO log the analytics info
 		}
 		
@@ -148,27 +108,31 @@ public class BioProviderImpl_V_0_8 implements iBioProviderApi {
 	public List<BIR> extractTemplate(List<BIR> sample, Map<String, String> flags) {
 		List<BIR> templates = new LinkedList<>();
 		for(BIR bir : sample) {
-			Response<BiometricRecord> response = sdkRegistry.get(BiometricType.fromValue(bir.getBdbInfo().getType().get(0).value())).
-				get(BiometricFunction.EXTRACT).extractTemplate(getBiometricRecord(sample.toArray(new BIR[sample.size()])),null, flags);
-			templates.addAll(isSuccessResponse(response) ? response.getResponse().getSegments() : null);
+			Response<io.mosip.kernel.core.cbeffutil.entity.BIR> response = sdkRegistry.get(BiometricType.fromValue(bir.getBdbInfo().getType().get(0).value())).
+				get(BiometricFunction.EXTRACT).extractTemplate(BIRConverter.convertToBIR(bir), getKeyValuePairs(flags));
+			templates.add(isSuccessResponse(response) ? BIRConverter.convertToBiometricRecordBIR(response.getResponse()) : null);
 		}
 		return templates;
 	}
 	
 	
-	/*
-	 * private boolean match(String operation, List<BIR> sample, BIR[] record,
-	 * BiometricType modality, Map<String, String> flags) { BiometricRecord
-	 * galleryRecord = getBiometricRecord(record); List<MatchDecision[]> result =
-	 * new LinkedList<>(); for(int i=0; i< sample.size(); i++) {
-	 * Response<MatchDecision[]> response = sdkRegistry.get(modality).
-	 * get(BiometricFunction.MATCH).match(getBiometricRecord(sample.get(i)), new
-	 * BiometricRecord[] { galleryRecord },Arrays.asList(modality), flags);
-	 * 
-	 * result.add(isSuccessResponse(response) ? response.getResponse() : null); }
-	 * 
-	 * return evaluateMatchDecision(operation, sample, result); }
-	 */
+	private boolean match(String operation, List<BIR> sample, BIR[] record, BiometricType modality, Map<String, String> flags) {
+		List<MatchDecision[]> result = new LinkedList<>();
+		io.mosip.kernel.core.cbeffutil.entity.BIR[] recordBIR= new io.mosip.kernel.core.cbeffutil.entity.BIR[record.length];
+		for (int i = 0; i < record.length; i++) {
+			recordBIR[i] = BIRConverter.convertToBIR(record[i]);
+			
+		}
+		for(int i=0; i< sample.size(); i++) {
+			Response<MatchDecision[]> response = sdkRegistry.get(modality).
+					get(BiometricFunction.MATCH).match(BIRConverter.convertToBIR(sample.get(i)), recordBIR, getKeyValuePairs(flags));
+			
+			result.add(isSuccessResponse(response) ? response.getResponse() : null);
+		}
+		
+		return evaluateMatchDecision(operation, sample, result);
+	}
+
 	private void addToRegistry(IBioApi iBioApi, BiometricType modality) {
 		sdkRegistry.computeIfAbsent(modality, k -> new HashMap<>()).put(BiometricFunction.EXTRACT, iBioApi);
 		sdkRegistry.computeIfAbsent(modality, k -> new HashMap<>()).put(BiometricFunction.QUALITY_CHECK, iBioApi);
@@ -193,26 +157,26 @@ public class BioProviderImpl_V_0_8 implements iBioProviderApi {
 			return true;
 		return false;
 	}
-	/*
-	 * //TODO matching strategy based on caller (auth / dedupe) private boolean
-	 * evaluateMatchDecision(String operation, List<BIR> sample,
-	 * List<MatchDecision[]> result) { int segmentCount = sample.size(); result =
-	 * result.stream().filter(decision -> decision !=
-	 * null).collect(Collectors.toList());
-	 * 
-	 * switch (operation) { case "AUTH": if(result.size() < segmentCount) return
-	 * false;
-	 * 
-	 * return result.stream().allMatch(decision ->
-	 * Arrays.stream(decision).anyMatch(d -> d.isMatch()));
-	 * 
-	 * case "DEDUPE":
-	 * 
-	 * return result.stream().anyMatch(decision ->
-	 * Arrays.stream(decision).anyMatch(d -> d.isMatch()));
-	 * 
-	 * } return false; }
-	 */
+	
+	//TODO matching strategy based on caller (auth / dedupe)
+	private boolean evaluateMatchDecision(String operation, List<BIR> sample, List<MatchDecision[]> result) {
+		int segmentCount = sample.size();
+		result = result.stream().filter(decision -> decision != null).collect(Collectors.toList());
+		
+		switch (operation) {
+		case "AUTH":
+			if(result.size() < segmentCount)
+				return false;
+			
+			return result.stream().allMatch(decision -> Arrays.stream(decision).anyMatch(d -> d.isMatch()));
+			
+		case "DEDUPE":
+			
+			return result.stream().anyMatch(decision -> Arrays.stream(decision).anyMatch(d -> d.isMatch()));
+
+		}		
+		return false;
+	}
 	
 	private KeyValuePair[] getKeyValuePairs(Map<String, String> flags) {
 		if(flags == null)
@@ -229,17 +193,7 @@ public class BioProviderImpl_V_0_8 implements iBioProviderApi {
 		return kvp;
 	}
 	
-	// TODO - set cebffversion and version in biometricRecord
-	private BiometricRecord getBiometricRecord(BIR[] birs) {
-		BiometricRecord biometricRecord = new BiometricRecord();
-		biometricRecord.setSegments(Arrays.asList(birs));
-		
-		return biometricRecord;
-	}
+
+
 	
-	private BiometricRecord getBiometricRecord(BIR bir) {
-		BiometricRecord biometricRecord = new BiometricRecord();
-		biometricRecord.getSegments().add(bir);
-		return biometricRecord;
-	}
 }

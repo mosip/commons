@@ -40,7 +40,7 @@ public class BIR implements Serializable {
 	@XmlElement(name = "Version")
 	private VersionType version;
 	@XmlElement(name = "CBEFFVersion")
-	private VersionType cbeffVersion;
+	private VersionType cbeffversion;
 	@XmlElement(name = "BIRInfo", required = true)
 	private BIRInfo birInfo;
 	@XmlElement(name = "BDBInfo")
@@ -59,7 +59,7 @@ public class BIR implements Serializable {
 
 	public BIR(BIRBuilder birBuilder) {
 		this.version = birBuilder.version;
-		this.cbeffVersion = birBuilder.cbeffversion;
+		this.cbeffversion = birBuilder.cbeffversion;
 		this.birInfo = birBuilder.birInfo;
 		this.bdbInfo = birBuilder.bdbInfo;
 		this.bdb = birBuilder.bdb;

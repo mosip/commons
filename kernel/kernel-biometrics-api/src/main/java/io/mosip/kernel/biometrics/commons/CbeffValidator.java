@@ -421,7 +421,7 @@ public class CbeffValidator {
 				birBuilder.withVersion(versionType);
 			}
 			
-			VersionType cbeffversionType = bir.getCbeffVersion();
+			VersionType cbeffversionType = bir.getCbeffversion();
 			if(cbeffversionType != null) {
 				birBuilder.withCbeffversion(cbeffversionType);
 			}
