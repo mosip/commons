@@ -3,15 +3,16 @@
  */
 package io.mosip.kernel.cbeffutil.container.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import io.mosip.kernel.biometrics.commons.CbeffValidator;
+import io.mosip.kernel.biometrics.entities.BIR;
+import io.mosip.kernel.biometrics.entities.BIRInfo;
+import io.mosip.kernel.biometrics.entities.BIRInfo.BIRInfoBuilder;
 import io.mosip.kernel.cbeffutil.container.CbeffContainerI;
-import io.mosip.kernel.core.cbeffutil.common.CbeffValidator;
 import io.mosip.kernel.core.cbeffutil.common.CbeffXSDValidator;
-import io.mosip.kernel.core.cbeffutil.entity.BIR;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRInfoType;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
+
+
 
 /**
  * @author Ramadurai Pandian
@@ -19,32 +20,26 @@ import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
  *         A Container Class where the BIR is created and updated
  *
  */
-public class CbeffContainerImpl extends CbeffContainerI<BIR, BIRType> {
+public class CbeffContainerImpl extends CbeffContainerI<BIR, BIR> {
 
-	private BIRType birType;
+	private BIR bir;
 
 	/**
 	 * Method where the initialization of BIR happens
 	 * 
 	 * @param birList List of BIR data
-	 * @return BIRType data with all images
+	 * @return BIR data with all images
 	 */
 	@Override
-	public BIRType createBIRType(List<BIR> birList) {
+	public BIR createBIRType(List<BIR> birList) {
 		load();
-		List<BIRType> birTypeList = new ArrayList<>();
-		if (birList != null && birList.size() > 0) {
-			for (BIR bir : birList) {
-				birTypeList.add(bir.toBIRType(bir));
-			}
-		}
-		birType.setBir(birTypeList);
-		return birType;
+		bir.setBirs(birList);
+		return bir;
 	}
 
 	private void load() {
 		// Creating first version of Cbeff
-		birType = new BIRType();
+		bir = new BIR();
 		// Initial Version
 //		VersionType versionType = new VersionType();
 //		versionType.setMajor(1);
@@ -52,11 +47,12 @@ public class CbeffContainerImpl extends CbeffContainerI<BIR, BIRType> {
 //		VersionType cbeffVersion = new VersionType();
 //		cbeffVersion.setMajor(1);
 //		cbeffVersion.setMinor(1);
-//		birType.setVersion(versionType);
-//		birType.setCBEFFVersion(cbeffVersion);
-		BIRInfoType birInfo = new BIRInfoType();
-		birInfo.setIntegrity(false);
-		birType.setBIRInfo(birInfo);
+//		BIR.setVersion(versionType);
+//		BIR.setCBEFFVersion(cbeffVersion);
+		
+		BIRInfoBuilder infoBuilder = new BIRInfoBuilder().withIntegrity(false);
+		BIRInfo birInfo = new BIRInfo(infoBuilder);
+		bir.setBirInfo(birInfo);
 	}
 
 	/**
@@ -66,17 +62,17 @@ public class CbeffContainerImpl extends CbeffContainerI<BIR, BIRType> {
 	 * 
 	 * @param fileBytes Cbeff XML data as bytes
 	 * 
-	 * @return birType BIR data with all images
+	 * @return BIR BIR data with all images
 	 */
 	@Override
-	public BIRType updateBIRType(List<BIR> birList, byte[] fileBytes) throws Exception {
-		BIRType birType = CbeffValidator.getBIRFromXML(fileBytes);
-		// birType.getVersion().setMajor(birType.getVersion().getMajor() + 1);
-		// birType.getCBEFFVersion().setMajor(birType.getCBEFFVersion().getMajor());
+	public BIR updateBIRType(List<BIR> birList, byte[] fileBytes) throws Exception {
+		BIR biometricRecord = CbeffValidator.getBIRFromXML(fileBytes);
+		// BIR.getVersion().setMajor(BIR.getVersion().getMajor() + 1);
+		// BIR.getCBEFFVersion().setMajor(BIR.getCBEFFVersion().getMajor());
 		for (BIR bir : birList) {
-			birType.getBIR().add(bir.toBIRType(bir));
+			biometricRecord.getBirs().add(bir);
 		}
-		return birType;
+		return biometricRecord;
 	}
 
 	/**

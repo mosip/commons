@@ -10,10 +10,18 @@ package io.mosip.kernel.biometrics.constant;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
+import javax.xml.bind.annotation.XmlType;
+@XmlType(name = "ProcessedLevelType")
+@XmlEnum
 public enum ProcessedLevelType implements Serializable {
 
+	@XmlEnumValue("Raw")
 	RAW("Raw"),
+	@XmlEnumValue("Intermediate")
 	INTERMEDIATE("Intermediate"),
+	@XmlEnumValue("Processed")
 	PROCESSED("Processed");
 
 	private final String value;

@@ -2,11 +2,23 @@ package io.mosip.kernel.biometrics.entities;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import io.mosip.kernel.core.cbeffutil.common.Base64Adapter;
+import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 /**
@@ -16,17 +28,33 @@ import lombok.Data;
  * @author Ramadurai Pandian
  *
  */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "BIRType", propOrder = { "version", "cbeffVersion", "birInfo", "bdbInfo",  "bdb",
+		"sb" ,"birs","sbInfo","others"})
+@XmlRootElement(name = "BIR")
 @Data
+@NoArgsConstructor
 @JsonDeserialize(builder = BIR.BIRBuilder.class)
 public class BIR implements Serializable {
 
+	@XmlElement(name = "Version")
 	private VersionType version;
+	@XmlElement(name = "CBEFFVersion")
 	private VersionType cbeffversion;
+	@XmlElement(name = "BIRInfo", required = true)
 	private BIRInfo birInfo;
+	@XmlElement(name = "BDBInfo")
 	private BDBInfo bdbInfo;
+	@XmlElement(name = "BDB")
+	@XmlJavaTypeAdapter(Base64Adapter.class)
 	private byte[] bdb;
+	@XmlElement(name = "SB")
 	private byte[] sb;
+	@XmlElement(name = "BIR")
+	protected List<BIR> birs;
+	@XmlElement(name = "SBInfo")
 	private SBInfo sbInfo;
+	@XmlElement(name = "Others")
 	private Map<String, Object> others;
 
 	public BIR(BIRBuilder birBuilder) {
@@ -55,6 +83,14 @@ public class BIR implements Serializable {
 				this.others = new HashMap<>();
 			
 			this.others.put(key, value);
+			return this;
+		}
+		
+		public BIRBuilder withOthers(Map<String, Object> others) {
+			if(Objects.isNull(others))
+				this.others = new HashMap<>();
+			
+			this.others.putAll(others);
 			return this;
 		}
 

@@ -5,8 +5,9 @@ import java.util.Map;
 
 import io.mosip.kernel.biometrics.constant.BiometricFunction;
 import io.mosip.kernel.biometrics.constant.BiometricType;
+import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.core.bioapi.exception.BiometricException;
-import io.mosip.kernel.core.cbeffutil.entity.BIR;
+
 
 public interface iBioProviderApi {
 	

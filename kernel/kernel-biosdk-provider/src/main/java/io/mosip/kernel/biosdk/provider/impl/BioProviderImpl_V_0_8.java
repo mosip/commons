@@ -12,7 +12,9 @@ import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.biometrics.constant.BiometricFunction;
 import io.mosip.kernel.biometrics.constant.BiometricType;
+import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biosdk.provider.spi.iBioProviderApi;
+import io.mosip.kernel.biosdk.provider.util.BIRConverter;
 import io.mosip.kernel.biosdk.provider.util.BioProviderUtil;
 import io.mosip.kernel.biosdk.provider.util.ProviderConstants;
 import io.mosip.kernel.core.bioapi.exception.BiometricException;
@@ -21,7 +23,7 @@ import io.mosip.kernel.core.bioapi.model.MatchDecision;
 import io.mosip.kernel.core.bioapi.model.QualityScore;
 import io.mosip.kernel.core.bioapi.model.Response;
 import io.mosip.kernel.core.bioapi.spi.IBioApi;
-import io.mosip.kernel.core.cbeffutil.entity.BIR;
+
 
 @Component
 public class BioProviderImpl_V_0_8 implements iBioProviderApi {
@@ -72,7 +74,7 @@ public class BioProviderImpl_V_0_8 implements iBioProviderApi {
 		float score[] = new float[sample.length];
 		for(int i=0; i< sample.length; i++) {
 			Response<QualityScore> response = sdkRegistry.get(BiometricType.fromValue(sample[i].getBdbInfo().getType().get(0).value())).
-					get(BiometricFunction.QUALITY_CHECK).checkQuality(sample[i], getKeyValuePairs(flags));
+					get(BiometricFunction.QUALITY_CHECK).checkQuality(BIRConverter.convertToBIR(sample[i]), getKeyValuePairs(flags));
 			
 			score[i] = isSuccessResponse(response) ? response.getResponse().getScore() : 0;
 			//TODO log the analytics info
@@ -86,7 +88,7 @@ public class BioProviderImpl_V_0_8 implements iBioProviderApi {
 		for(int i=0; i< sample.length; i++) {
 			BiometricType modality = BiometricType.fromValue(sample[i].getBdbInfo().getType().get(0).value());
 			Response<QualityScore> response = sdkRegistry.get(modality).get(BiometricFunction.QUALITY_CHECK)
-					.checkQuality(sample[i], getKeyValuePairs(flags));
+					.checkQuality(BIRConverter.convertToBIR(sample[i]), getKeyValuePairs(flags));
 			
 			if(!scoresByModality.containsKey(modality))
 				scoresByModality.put(modality, new ArrayList<>());
@@ -106,9 +108,9 @@ public class BioProviderImpl_V_0_8 implements iBioProviderApi {
 	public List<BIR> extractTemplate(List<BIR> sample, Map<String, String> flags) {
 		List<BIR> templates = new LinkedList<>();
 		for(BIR bir : sample) {
-			Response<BIR> response = sdkRegistry.get(BiometricType.fromValue(bir.getBdbInfo().getType().get(0).value())).
-				get(BiometricFunction.EXTRACT).extractTemplate(bir, getKeyValuePairs(flags));
-			templates.add(isSuccessResponse(response) ? response.getResponse() : null);
+			Response<io.mosip.kernel.core.cbeffutil.entity.BIR> response = sdkRegistry.get(BiometricType.fromValue(bir.getBdbInfo().getType().get(0).value())).
+				get(BiometricFunction.EXTRACT).extractTemplate(BIRConverter.convertToBIR(bir), getKeyValuePairs(flags));
+			templates.add(isSuccessResponse(response) ? BIRConverter.convertToBiometricRecordBIR(response.getResponse()) : null);
 		}
 		return templates;
 	}
@@ -116,9 +118,14 @@ public class BioProviderImpl_V_0_8 implements iBioProviderApi {
 	
 	private boolean match(String operation, List<BIR> sample, BIR[] record, BiometricType modality, Map<String, String> flags) {
 		List<MatchDecision[]> result = new LinkedList<>();
+		io.mosip.kernel.core.cbeffutil.entity.BIR[] recordBIR= new io.mosip.kernel.core.cbeffutil.entity.BIR[record.length];
+		for (int i = 0; i < record.length; i++) {
+			recordBIR[i] = BIRConverter.convertToBIR(record[i]);
+			
+		}
 		for(int i=0; i< sample.size(); i++) {
 			Response<MatchDecision[]> response = sdkRegistry.get(modality).
-					get(BiometricFunction.MATCH).match(sample.get(i), record, getKeyValuePairs(flags));
+					get(BiometricFunction.MATCH).match(BIRConverter.convertToBIR(sample.get(i)), recordBIR, getKeyValuePairs(flags));
 			
 			result.add(isSuccessResponse(response) ? response.getResponse() : null);
 		}
@@ -185,4 +192,8 @@ public class BioProviderImpl_V_0_8 implements iBioProviderApi {
 		}
 		return kvp;
 	}
+	
+
+
+	
 }
