@@ -1,6 +1,6 @@
 -- -------------------------------------------------------------------------------------------------
 -- Database Name	: mosip_keymgr
--- Release Version 	: 1.1.5-rc1
+-- Release Version 	: 1.1.5
 -- Purpose    		: Database Alter scripts for the release for Key Manager DB.       
 -- Create By   		: Ram Bhatt
 -- Created Date		: Jan-2021
