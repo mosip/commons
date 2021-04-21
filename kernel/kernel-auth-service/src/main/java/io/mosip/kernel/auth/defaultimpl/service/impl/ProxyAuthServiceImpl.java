@@ -55,7 +55,7 @@ import io.mosip.kernel.core.authmanager.model.UserPasswordResponseDto;
 import io.mosip.kernel.core.authmanager.model.UserRegistrationRequestDto;
 import io.mosip.kernel.core.authmanager.model.UserRoleDto;
 import io.mosip.kernel.core.authmanager.model.ValidationResponseDto;
-import io.mosip.kernel.core.authmanager.model.VidDto;
+import io.mosip.kernel.core.authmanager.model.IndividualIdDto;
 import io.mosip.kernel.core.authmanager.spi.AuthService;
 
 /**
@@ -481,7 +481,7 @@ public class ProxyAuthServiceImpl implements AuthService {
 	}
 
 	@Override
-	public VidDto getVidBasedOnUserID(String userId, String appId){
+	public IndividualIdDto getIndividualIdBasedOnUserID(String userId, String appId){
 		throw new UnsupportedOperationException("This openeration is not supported in local profile for now");
 	}
 

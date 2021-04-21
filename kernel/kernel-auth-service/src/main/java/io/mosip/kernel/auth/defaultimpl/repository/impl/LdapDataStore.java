@@ -83,7 +83,7 @@ import io.mosip.kernel.core.authmanager.model.UserPasswordRequestDto;
 import io.mosip.kernel.core.authmanager.model.UserPasswordResponseDto;
 import io.mosip.kernel.core.authmanager.model.UserRegistrationRequestDto;
 import io.mosip.kernel.core.authmanager.model.ValidationResponseDto;
-import io.mosip.kernel.core.authmanager.model.VidDto;
+import io.mosip.kernel.core.authmanager.model.IndividualIdDto;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.HMACUtils;
 
@@ -1148,7 +1148,7 @@ public class LdapDataStore implements DataStore {
 	}
 
 	@Override
-	public VidDto getVidFromUserId(String userId, String realmID) {
+	public IndividualIdDto getIndividualIdFromUserId(String userId, String realmID) {
 		// TODO code cleaup
 		throw new UnsupportedOperationException("This openeration is not supported in local profile for now");
 	}

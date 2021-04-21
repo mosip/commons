@@ -18,8 +18,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class VidDto {
+public class IndividualIdDto {
 
 	/** The virtual ID. */
-	private String vid;
+	private String individualId;
 }

@@ -713,16 +713,16 @@ public class AuthController {
 	 * 
 	 * @param appId  - application Id
 	 * @param userId - user Id
-	 * @return {@link VidDto}
+	 * @return {@link IndividualIdDto}
 	 * @throws Exception
 	 */
 	@ResponseFilter
-	@GetMapping(value = "vid/{appid}/{userid}")
-	public ResponseWrapper<VidDto> getVid(@PathVariable("appid") String appId, @PathVariable("userid") String userId)
+	@GetMapping(value = "individualId/{appid}/{userid}")
+	public ResponseWrapper<IndividualIdDto> getIndividualId(@PathVariable("appid") String appId, @PathVariable("userid") String userId)
 		 {
-		ResponseWrapper<VidDto> responseWrapper = new ResponseWrapper<>();
-		VidDto vidDto = authService.getVidBasedOnUserID(userId, appId);
-		responseWrapper.setResponse(vidDto);
+		ResponseWrapper<IndividualIdDto> responseWrapper = new ResponseWrapper<>();
+		IndividualIdDto individualIdDto = authService.getIndividualIdBasedOnUserID(userId, appId);
+		responseWrapper.setResponse(individualIdDto);
 		return responseWrapper;
 	}
 	

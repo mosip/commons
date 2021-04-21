@@ -113,7 +113,7 @@ public enum AuthErrorCode {
 	KEYCLOAK_STATE_EXCEPTION("KER-ATH-022", "state is not maching"),
 	INVALID_CREDENTIALS("KER-ATH-023","Invalid Credentials"),
 	REALM_NOT_FOUND("KER-ATH-026","Realm not found:: %s"),
-	VID_NOT_FOUND("KER-ATH-027", "Vid not found for user");
+	INDIVIDUAL_ID_NOT_FOUND("KER-ATH-027", "Individual Id not found for user");
 
 	/**
 	 * The error code
