@@ -67,7 +67,7 @@ import io.mosip.kernel.core.authmanager.model.UserPasswordRequestDto;
 import io.mosip.kernel.core.authmanager.model.UserPasswordResponseDto;
 import io.mosip.kernel.core.authmanager.model.UserRegistrationRequestDto;
 import io.mosip.kernel.core.authmanager.model.ValidationResponseDto;
-import io.mosip.kernel.core.authmanager.model.VidDto;
+import io.mosip.kernel.core.authmanager.model.IndividualIdDto;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.util.CryptoUtil;
@@ -696,8 +696,8 @@ public class KeycloakImpl implements DataStore {
 	}
 
 	@Override
-	public VidDto getVidFromUserId(String userId, String realmID) {
-		VidDto vIDDto = new VidDto();
+	public IndividualIdDto getIndividualIdFromUserId(String userId, String realmID) {
+		IndividualIdDto individualIdDto = new IndividualIdDto();
 		Map<String, String> pathParams = new HashMap<>();
 		pathParams.put(AuthConstant.REALM_ID, realmID);
 		HttpHeaders httpHeaders = new HttpHeaders();
@@ -715,14 +715,14 @@ public class KeycloakImpl implements DataStore {
 			for (JsonNode jsonNode : node) {
 				if (jsonNode.get(AuthConstant.USER_NAME).textValue().equals(userId)) {
 					JsonNode attriNode = jsonNode.get("attributes");
-					String vid = attriNode.get(AuthConstant.VID).get(0).textValue();
-					vIDDto.setVid(vid);
+					String individualId = attriNode.get(AuthConstant.INDIVIDUAL_ID).get(0).textValue();
+					individualIdDto.setIndividualId(individualId);
  					break;
 				}
 			}
-			if (vIDDto.getVid() == null) {
-				throw new AuthManagerException(AuthErrorCode.VID_NOT_FOUND.getErrorCode(),
-						AuthErrorCode.VID_NOT_FOUND.getErrorMessage());
+			if (individualIdDto.getIndividualId() == null) {
+				throw new AuthManagerException(AuthErrorCode.INDIVIDUAL_ID_NOT_FOUND.getErrorCode(),
+						AuthErrorCode.INDIVIDUAL_ID_NOT_FOUND.getErrorMessage());
 			}
 
 		} catch (IOException e) {
@@ -730,7 +730,7 @@ public class KeycloakImpl implements DataStore {
 					AuthErrorCode.IO_EXCEPTION.getErrorMessage());
 		}
 
-		return vIDDto;
+		return individualIdDto;
 	}
 
 	@Override

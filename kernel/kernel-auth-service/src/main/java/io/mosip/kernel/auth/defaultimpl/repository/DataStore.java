@@ -22,7 +22,7 @@ import io.mosip.kernel.core.authmanager.model.UserPasswordRequestDto;
 import io.mosip.kernel.core.authmanager.model.UserPasswordResponseDto;
 import io.mosip.kernel.core.authmanager.model.UserRegistrationRequestDto;
 import io.mosip.kernel.core.authmanager.model.ValidationResponseDto;
-import io.mosip.kernel.core.authmanager.model.VidDto;
+import io.mosip.kernel.core.authmanager.model.IndividualIdDto;
 
 /**
  * @author Ramadurai Pandian
@@ -66,7 +66,7 @@ public interface DataStore {
 
 	public UserDetailsResponseDto getUserDetailBasedOnUid(List<String> userIds);
 	
-	public VidDto getVidFromUserId(String userId,String realmID);
+	public IndividualIdDto getIndividualIdFromUserId(String userId,String realmID);
 	
 	public MosipUserListDto getListOfUsersDetails(String realmId,String roleName,int pageStart, int pageFetch, String email, String firstName, String lastName, String username);
 }

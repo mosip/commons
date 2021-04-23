@@ -79,7 +79,7 @@ import io.mosip.kernel.core.authmanager.model.UserPasswordResponseDto;
 import io.mosip.kernel.core.authmanager.model.UserRegistrationRequestDto;
 import io.mosip.kernel.core.authmanager.model.UserRoleDto;
 import io.mosip.kernel.core.authmanager.model.ValidationResponseDto;
-import io.mosip.kernel.core.authmanager.model.VidDto;
+import io.mosip.kernel.core.authmanager.model.IndividualIdDto;
 import io.mosip.kernel.core.authmanager.spi.AuthService;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 
@@ -825,8 +825,8 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
-	public VidDto getVidBasedOnUserID(String userId, String appId) {
-		return keycloakImpl.getVidFromUserId(userId,authUtil.getRealmIdFromAppId(appId));
+	public IndividualIdDto getIndividualIdBasedOnUserID(String userId, String appId) {
+		return keycloakImpl.getIndividualIdFromUserId(userId,authUtil.getRealmIdFromAppId(appId));
 	}
 
 	@Override
