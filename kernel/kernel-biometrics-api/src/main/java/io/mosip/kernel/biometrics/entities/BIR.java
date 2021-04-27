@@ -29,7 +29,7 @@ import lombok.NoArgsConstructor;
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "BIRType", propOrder = { "version", "cbeffVersion", "birInfo", "bdbInfo",  "bdb",
+@XmlType(name = "BIRType", propOrder = { "version", "cbeffversion", "birInfo", "bdbInfo",  "bdb",
 		"sb" ,"birs","sbInfo","others"})
 @XmlRootElement(name = "BIR")
 @Data
