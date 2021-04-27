@@ -42,7 +42,6 @@ import io.mosip.commons.packet.exception.GetDocumentException;
 import io.mosip.commons.packet.exception.PacketDecryptionFailureException;
 import io.mosip.commons.packet.exception.PacketKeeperException;
 import io.mosip.commons.packet.exception.PacketValidationFailureException;
-import io.mosip.commons.packet.facade.PacketWriter;
 import io.mosip.commons.packet.keeper.PacketKeeper;
 import io.mosip.commons.packet.spi.IPacketReader;
 import io.mosip.commons.packet.util.IdSchemaUtils;
@@ -50,10 +49,9 @@ import io.mosip.commons.packet.util.PacketManagerHelper;
 import io.mosip.commons.packet.util.PacketManagerLogger;
 import io.mosip.commons.packet.util.PacketValidator;
 import io.mosip.commons.packet.util.ZipUtils;
+import io.mosip.kernel.biometrics.commons.CbeffValidator;
 import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import io.mosip.kernel.core.cbeffutil.common.CbeffValidator;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
 import io.mosip.kernel.core.exception.BaseCheckedException;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 import io.mosip.kernel.core.exception.ExceptionUtils;
@@ -66,9 +64,6 @@ import io.mosip.kernel.core.util.JsonUtils;
 public class PacketReaderImpl implements IPacketReader {
 
 	private static final Logger LOGGER = PacketManagerLogger.getLogger(PacketReaderImpl.class);
-
-	@Autowired
-	private PacketWriter packetWriter;
 
 	@Value("${mosip.commons.packetnames}")
 	private String packetNames;
@@ -269,11 +264,9 @@ public class PacketReaderImpl implements IPacketReader {
 			InputStream biometrics = ZipUtils.unzipAndGetFile(packet.getPacket(), fileName);
 			if (biometrics == null)
 				return null;
-			BIRType birType = CbeffValidator.getBIRFromXML(IOUtils.toByteArray(biometrics));
+			BIR bir = CbeffValidator.getBIRFromXML(IOUtils.toByteArray(biometrics));
 			biometricRecord = new BiometricRecord();
-			List<io.mosip.kernel.core.cbeffutil.entity.BIR> birList = CbeffValidator
-					.convertBIRTypeToBIR(birType.getBIR());
-			biometricRecord.setSegments(filterByModalities(modalities, birList));
+			biometricRecord.setSegments(filterByModalities(modalities, bir.getBirs()));
 		} catch (Exception e) {
 			LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
 					ExceptionUtils.getStackTrace(e));
@@ -372,13 +365,13 @@ public class PacketReaderImpl implements IPacketReader {
 	}
 
 	public List<BIR> filterByModalities(List<String> modalities,
-			List<io.mosip.kernel.core.cbeffutil.entity.BIR> birList) {
+			List<BIR> birList) {
 		List<BIR> segments = new ArrayList<>();
 		if (modalities == null || modalities.isEmpty()) {
 			birList.forEach(bir -> segments.add(PacketManagerHelper.convertToBiometricRecordBIR(bir)));
 		} else {
 			Map<String, BIR> birMap = new HashMap<>();
-			for (io.mosip.kernel.core.cbeffutil.entity.BIR bir : birList) {
+			for (BIR bir : birList) {
 				String mapKey = "";
 				if (bir.getBdbInfo().getSubtype() != null || !bir.getBdbInfo().getSubtype().isEmpty()) {
 					for (String subType : bir.getBdbInfo().getSubtype()) {

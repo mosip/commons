@@ -1,13 +1,13 @@
 package io.mosip.commons.packet.spi;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.dto.PacketInfo;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import org.json.JSONException;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * The packet Writer interface

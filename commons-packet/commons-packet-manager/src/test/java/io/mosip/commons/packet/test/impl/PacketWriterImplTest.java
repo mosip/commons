@@ -1,24 +1,16 @@
 package io.mosip.commons.packet.test.impl;
 
-import com.amazonaws.services.dynamodbv2.xspec.M;
-import io.mosip.commons.packet.dto.Document;
-import io.mosip.commons.packet.dto.PacketInfo;
-import io.mosip.commons.packet.exception.PacketKeeperException;
-import io.mosip.commons.packet.impl.PacketReaderImpl;
-import io.mosip.commons.packet.impl.PacketWriterImpl;
-import io.mosip.commons.packet.keeper.PacketKeeper;
-import io.mosip.commons.packet.spi.IPacketReader;
-import io.mosip.commons.packet.spi.IPacketWriter;
-import io.mosip.commons.packet.util.PacketManagerHelper;
-import io.mosip.commons.packet.util.ZipUtils;
-import io.mosip.kernel.biometrics.constant.BiometricType;
-import io.mosip.kernel.biometrics.constant.QualityType;
-import io.mosip.kernel.biometrics.entities.BDBInfo;
-import io.mosip.kernel.biometrics.entities.BIR;
-import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import io.mosip.kernel.biometrics.entities.RegistryIDType;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.SingleType;
-import io.mosip.kernel.core.util.JsonUtils;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,16 +23,20 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.Mockito.when;
+import io.mosip.commons.packet.dto.Document;
+import io.mosip.commons.packet.dto.PacketInfo;
+import io.mosip.commons.packet.impl.PacketWriterImpl;
+import io.mosip.commons.packet.keeper.PacketKeeper;
+import io.mosip.commons.packet.spi.IPacketWriter;
+import io.mosip.commons.packet.util.PacketManagerHelper;
+import io.mosip.commons.packet.util.ZipUtils;
+import io.mosip.kernel.biometrics.constant.BiometricType;
+import io.mosip.kernel.biometrics.constant.QualityType;
+import io.mosip.kernel.biometrics.entities.BDBInfo;
+import io.mosip.kernel.biometrics.entities.BIR;
+import io.mosip.kernel.biometrics.entities.BiometricRecord;
+import io.mosip.kernel.biometrics.entities.RegistryIDType;
+import io.mosip.kernel.core.util.JsonUtils;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ZipUtils.class, IOUtils.class, JsonUtils.class})
