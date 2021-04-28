@@ -17,7 +17,7 @@ import org.springframework.web.client.RestTemplate;
  * to automatically handle client-side load balancing
  *
  * @author Anusha
- * @since  1.1.5-rc1
+ * @since  1.1.5.1-SNAPSHOT
  */
 @Configuration
 public class RestTemplatePostProcessor implements BeanPostProcessor {
