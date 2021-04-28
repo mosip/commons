@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.3" use-changelog="false" last-position="556,0" last-zoom="0.4" max-obj-count="139"
+<dbmodel pgmodeler-ver="0.9.3" use-changelog="false" last-position="555,0" last-zoom="0.4" max-obj-count="139"
 	 default-schema="public" default-owner="postgres">
 <role name="sysadmin"
       superuser="true"
@@ -41,6 +41,17 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </role>
 
 <role name="sysadmin_cp"
+      superuser="true"
+      createdb="true"
+      replication="true"
+      createrole="true"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="sysadmin_cp1"
       superuser="true"
       createdb="true"
       replication="true"
@@ -659,7 +670,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Black Listed Words : List of words that are black listed.]]></comment>
-	<position x="1740" y="40"/>
+	<position x="1780" y="40"/>
 	<column name="word" not-null="true">
 		<type name="character varying" length="128"/>
 		<comment><![CDATA[Word: Word that is blacklisted by the system]]></comment>
@@ -4161,7 +4172,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="ca_cert_store" layer="0" collapse-mode="2" max-obj-count="20" z-value="0">
 	<schema name="master"/>
 	<role name="sysadmin"/>
-	<position x="3660" y="1000"/>
+	<position x="3640" y="1780"/>
 	<column name="cert_id" not-null="true">
 		<type name="character varying" length="36"/>
 	</column>
@@ -4225,6 +4236,49 @@ CAUTION: Do not modify this file unless you know what you are doing.
 			<column name="cert_id"/>
 		</idxelement>
 </index>
+
+<schema name="master_cp1" layer="0" rect-visible="true" fill-color="#83af1f">
+	<role name="sysadmin_cp1"/>
+</schema>
+
+<table name="permitted_local_config" layer="0" collapse-mode="2" max-obj-count="12" z-value="0">
+	<schema name="master"/>
+	<role name="sysadmin"/>
+	<position x="1840" y="420"/>
+	<column name="code" not-null="true">
+		<type name="character varying" length="128"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="character varying" length="128"/>
+	</column>
+	<column name="config_type" not-null="true">
+		<type name="character varying" length="128"/>
+	</column>
+	<column name="is_active" not-null="true">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="cr_by" not-null="true">
+		<type name="character varying" length="32"/>
+	</column>
+	<column name="cr_dtimes" not-null="true">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="upd_by">
+		<type name="character varying" length="32"/>
+	</column>
+	<column name="upd_dtimes">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="is_deleted">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="del_dtimes">
+		<type name="timestamp" length="0"/>
+	</column>
+	<constraint name="permitted_local_config_pk" type="pk-constr" table="master.permitted_local_config">
+		<columns names="code" ref-type="src-columns"/>
+	</constraint>
+</table>
 
 <constraint name="fk_appauthm_appdtl" type="fk-constr" comparison-type="MATCH SIMPLE"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="master.app_detail" table="master.app_authentication_method">

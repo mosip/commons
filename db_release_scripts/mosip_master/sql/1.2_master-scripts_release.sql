@@ -8,6 +8,7 @@
 -- Modified Date        Modified By         Comments / Remarks
 -- -----------------------------------------------------------------------------------------------------------
 -- Apr-2021		Ram Bhatt	   Added new rows in template,template_type and module_detail csv
+-- Apr-2021		Ram Bhatt	   Creation of master.permitted_local_config
 -- ------------------------------------------------------------------------------------------------------------
 --------------------------------------------UI SPEC TABLE CREATION-----------------------------------------------
 \c mosip_master sysadmin
@@ -39,6 +40,10 @@ TRUNCATE TABLE master.template_type cascade ;
 TRUNCATE TABLE master.module_detail cascade ;
 
 \COPY master.module_detail (id,name,descr,lang_code,is_active,cr_by,cr_dtimes) FROM '../dml/master-module_detail.csv' delimiter ',' HEADER  csv;
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+\ir ../ddl/master-permitted_local_config.sql
 
 -------------------------------------------------------------------------------------------------------------------------------------------
 

@@ -84,3 +84,5 @@
 \ir ddl/master-ui_spec.sql
 
 \ir ddl/master-ca_cert_store.sql
+
+\ir ddl/master-permitted_local_config.sql
