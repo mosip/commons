@@ -7,7 +7,7 @@
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- -----------------------------------------------------------------------------------------------------------
-
+-- Apr-2021		Ram Bhatt  	   Removed bulk upload transaction size limit
 -- ------------------------------------------------------------------------------------------------------------
 --------------------------------------------UI SPEC TABLE CREATION-----------------------------------------------
 \c mosip_master sysadmin
@@ -25,4 +25,8 @@ INSERT into master.ui_spec (id,version,domain,title,description,type,json_spec,i
 
 ALTER TABLE master.identity_schema DROP COLUMN id_attr_json;
 --------------------------------------------------------------------------------------------------------------------------------------
+
+ALTER TABLE master.bulkupload_transaction ALTER COLUMN upload_description character varying;
+
+---------------------------------------------------------------------------------------------------------------------------------------
 
