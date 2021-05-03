@@ -29,9 +29,6 @@ CREATE TABLE master.dynamic_field(
 	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
 	CONSTRAINT pk_schfld_id PRIMARY KEY (id)
---,
-	--CONSTRAINT uk_schfld_name UNIQUE (name,lang_code)
-
 );
 -- ddl-end --
 COMMENT ON TABLE master.dynamic_field IS 'Schema Dynamic Fields: Table to store the fields which are used dynamically in MOSIP applications. These fields are also part of identity schema.';
