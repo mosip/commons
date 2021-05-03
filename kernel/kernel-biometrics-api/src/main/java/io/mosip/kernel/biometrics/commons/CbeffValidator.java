@@ -9,6 +9,7 @@ import java.io.OutputStreamWriter;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -20,6 +21,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
+import org.assertj.core.util.Arrays;
 import org.xml.sax.SAXException;
 
 import io.mosip.kernel.biometrics.constant.BiometricType;
@@ -60,9 +62,13 @@ public class CbeffValidator {
 		List<BIR> birList = birRoot.getBirs();
 		for (BIR bir : birList) {
 			if (bir != null) {
-				if (bir.getBdb().length < 1) {
+				if ((bir.getBdb()==null || bir.getBdb().length < 1)
+						&& (bir.getOthers()==null || bir.getOthers().get("EXCEPTION").equals(false))) {
+					
 					throw new CbeffException("BDB value can't be empty");
-				}
+					
+				 }
+				
 				if (bir.getBdbInfo() != null) {
 					BDBInfo bdbInfo = bir.getBdbInfo();
 //					if (!Long.valueOf(bdbInfo.getFormat().getOrganization()).equals(CbeffConstant.FORMAT_OWNER)) {
@@ -147,7 +153,33 @@ public class CbeffValidator {
 	 * 
 	 */
 	public static byte[] createXMLBytes(BIR bir, byte[] xsd) throws Exception {
+		
 		CbeffValidator.validateXML(bir);
+		
+		return createXMLBytes(bir, xsd);
+	}
+	
+	/**
+	 * Method used for creating XML bytes using JAXB
+	 * 
+	 * @param birs list of bir's need to be added in xsd
+	 * @param xsd xml schema definition
+	 * @return byte[] byte array of XML data
+	 * 
+	 * @exception Exception exception
+	 * 
+	 */
+	public static byte[] createXMLBytes(List<BIR> birs, byte[] xsd) throws Exception {
+		for(BIR bir : birs) {
+			CbeffValidator.validateXML(bir);
+		}
+		
+		BIR bir = new BIR();
+		bir.setBirs(birs);
+		return getSavedData(bir, xsd);
+	}
+
+	private static byte[] getSavedData(BIR bir, byte[] xsd) throws Exception {
 		JAXBContext jaxbContext = JAXBContext.newInstance(BIR.class);
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // To
@@ -165,7 +197,7 @@ public class CbeffValidator {
 		}
 		return savedData;
 	}
-
+	
 	/*
 	 * private static byte[] readXSD(String name) throws IOException { byte[]
 	 * fileContent = Files.readAllBytes(Paths.get(tempPath + "/schema/" + name +
