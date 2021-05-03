@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -67,7 +69,6 @@ public class PacketManagerHelper {
 //                 BIRType bir = cbeffContainer.createBIRType(birList);
 //                 xmlBytes = CbeffValidator.createXMLBytes(bir, IOUtils.toByteArray(xsd));
 
-             
              return io.mosip.kernel.biometrics.commons.CbeffValidator.createXMLBytes(biometricRecord.getSegments(), IOUtils.toByteArray(xsd));
            }
     }

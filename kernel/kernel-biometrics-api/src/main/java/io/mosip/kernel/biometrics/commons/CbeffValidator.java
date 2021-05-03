@@ -9,7 +9,6 @@ import java.io.OutputStreamWriter;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -21,7 +20,6 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
-import org.assertj.core.util.Arrays;
 import org.xml.sax.SAXException;
 
 import io.mosip.kernel.biometrics.constant.BiometricType;
@@ -156,7 +154,7 @@ public class CbeffValidator {
 		
 		CbeffValidator.validateXML(bir);
 		
-		return createXMLBytes(bir, xsd);
+		return getSavedData(bir, xsd);
 	}
 	
 	/**
@@ -170,13 +168,16 @@ public class CbeffValidator {
 	 * 
 	 */
 	public static byte[] createXMLBytes(List<BIR> birs, byte[] xsd) throws Exception {
-		for(BIR bir : birs) {
-			CbeffValidator.validateXML(bir);
-		}
 		
-		BIR bir = new BIR();
-		bir.setBirs(birs);
-		return getSavedData(bir, xsd);
+		BIR capturedBIR = birs.get(0);
+		
+		BIR parentBIR = new BIR.BIRBuilder().withBirInfo(capturedBIR.getBirInfo())
+		.withVersion(capturedBIR.getVersion())
+		.withCbeffversion(capturedBIR.getCbeffversion())
+		.build();
+		
+		parentBIR.setBirs(birs);
+		return createXMLBytes(parentBIR, xsd);
 	}
 
 	private static byte[] getSavedData(BIR bir, byte[] xsd) throws Exception {
