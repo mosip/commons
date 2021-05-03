@@ -22,7 +22,7 @@ CREATE TABLE keymgr.key_policy_def_h(
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
 	upd_dtimes timestamp,
-	is_deleted boolean NOT NULL DEFAULT FALSE,
+	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
 	CONSTRAINT pk_keypdefh_id PRIMARY KEY (app_id,eff_dtimes)
 
