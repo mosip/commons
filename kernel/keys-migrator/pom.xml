@@ -91,7 +91,7 @@
           </plugins>
         </build>
 		
-		<name>Certificate Corrections</name>
+		<name>Keys Migrator</name>
 		<description>Temporary to correct the certificates</description>
         
 	</project>
