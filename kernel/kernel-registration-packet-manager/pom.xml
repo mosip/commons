@@ -5,24 +5,12 @@
     <parent>
         <artifactId>kernel-parent</artifactId>
         <groupId>io.mosip.kernel</groupId>
-<<<<<<< HEAD
-<<<<<<< HEAD
-        <version>1.1.2</version>
-    </parent>
-    <modelVersion>4.0.0</modelVersion>
-    <version>1.1.2</version>
-=======
-        <version>1.1.3</version>
-    </parent>
-    <modelVersion>4.0.0</modelVersion>
-    <version>1.1.3</version>
->>>>>>> origin/1.1.3
-=======
+
         <version>1.1.4</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <version>1.1.4</version>
->>>>>>> origin/1.1.4
+
 
     <artifactId>kernel-registration-packet-manager</artifactId>
 
@@ -133,24 +121,12 @@
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
         <sonar.skip>true</sonar.skip>
-<<<<<<< HEAD
-<<<<<<< HEAD
-        <kernel.core.version>1.1.2</kernel.core.version>
-        <kernel.crypto-jce.version>1.1.2</kernel.crypto-jce.version>
-        <kernel.keygenerator.bouncycastle.version>1.1.2</kernel.keygenerator.bouncycastle.version>
-        <kernel.logger.logback.version>1.1.2</kernel.logger.logback.version>
-=======
-        <kernel.core.version>1.1.3</kernel.core.version>
-        <kernel.crypto-jce.version>1.1.3</kernel.crypto-jce.version>
-        <kernel.keygenerator.bouncycastle.version>1.1.3</kernel.keygenerator.bouncycastle.version>
-        <kernel.logger.logback.version>1.1.3</kernel.logger.logback.version>
->>>>>>> origin/1.1.3
-=======
+
         <kernel.core.version>1.1.4</kernel.core.version>
         <kernel.crypto-jce.version>1.1.4</kernel.crypto-jce.version>
         <kernel.keygenerator.bouncycastle.version>1.1.4</kernel.keygenerator.bouncycastle.version>
         <kernel.logger.logback.version>1.1.4</kernel.logger.logback.version>
->>>>>>> origin/1.1.4
+
         <gson.version>2.8.4</gson.version>
         <json.version>20180813</json.version>
     </properties>
@@ -183,15 +159,9 @@
         <dependency>
             <groupId>io.mosip.kernel</groupId>
             <artifactId>kernel-cbeffutil-api</artifactId>
-<<<<<<< HEAD
-<<<<<<< HEAD
-            <version>1.1.2</version>
-=======
-            <version>1.1.3</version>
->>>>>>> origin/1.1.3
-=======
+
             <version>1.1.4</version>
->>>>>>> origin/1.1.4
+
         </dependency>
         <dependency>
             <groupId>io.mosip.kernel</groupId>
@@ -232,9 +202,6 @@
     </dependencies>
 
     
-<<<<<<< HEAD
-<build>
-=======
 <distributionManagement>
 		<snapshotRepository>
                         <id>ossrh</id>
@@ -246,7 +213,6 @@
                 </repository> 
         </distributionManagement> 
         <build>
->>>>>>> origin/1.1.3
 <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -388,12 +354,7 @@
                   <organizationUrl>https://github.com/mosip/commons</organizationUrl>
                 </developer>
         </developers>
-<<<<<<< HEAD
-		<name>MOSIP commons</name>
-		<description>Mosip commons project </description>
-=======
 		<name>Registration packet manager</name>
 		<description>Core registration packet manager </description>
->>>>>>> origin/1.1.3
         <url>https://github.com/mosip/commons</url>
 	</project>

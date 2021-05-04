@@ -25,10 +25,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterConstant;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/1.1.3
 @Configuration
 public class BeanConfig {
 

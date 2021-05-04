@@ -27,29 +27,12 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/1.1.3
 import io.mosip.commons.khazana.config.LoggerConfiguration;
 import io.mosip.commons.khazana.exception.ObjectStoreAdapterException;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.commons.khazana.util.ObjectStoreUtil;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;
-<<<<<<< HEAD
-import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-=======
->>>>>>> origin/1.1.3
 
 import static io.mosip.commons.khazana.config.LoggerConfiguration.REGISTRATIONID;
 import static io.mosip.commons.khazana.config.LoggerConfiguration.SESSIONID;
@@ -74,18 +57,12 @@ public class S3Adapter implements ObjectStoreAdapter {
     @Value("${object.store.s3.readlimit:10000000}")
     private int readlimit;
 
-<<<<<<< HEAD
-    @Value("${object.store.connection.max.retry:5}")
-    private int maxRetry;
-
-=======
     @Value("${object.store.connection.max.retry:20}")
     private int maxRetry;
 
     @Value("${object.store.max.connection:200}")
     private int maxConnection;
 
->>>>>>> origin/1.1.3
     private int retry = 0;
 
     private AmazonS3 connection = null;
@@ -139,12 +116,8 @@ public class S3Adapter implements ObjectStoreAdapter {
         S3Object s3Object = null;
         try {
             ObjectMetadata objectMetadata = new ObjectMetadata();
-<<<<<<< HEAD
-            metadata.entrySet().stream().forEach(m -> objectMetadata.addUserMetadata(m.getKey(), m.getValue() != null ? m.getValue().toString() : null));
-=======
             //changed usermetadata getting  overrided
             //metadata.entrySet().stream().forEach(m -> objectMetadata.addUserMetadata(m.getKey(), m.getValue() != null ? m.getValue().toString() : null));
->>>>>>> origin/1.1.3
             String finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
             s3Object = getConnection(container).getObject(container, finalObjectName);
             if (s3Object.getObjectMetadata() != null && s3Object.getObjectMetadata().getUserMetadata() != null)
@@ -271,13 +244,9 @@ public class S3Adapter implements ObjectStoreAdapter {
         }
         try {
             AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
-<<<<<<< HEAD
-            connection = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCredentials)).enablePathStyleAccess()
-=======
             connection = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
                     .enablePathStyleAccess().withClientConfiguration(new ClientConfiguration().withMaxConnections(maxConnection)
                             .withMaxErrorRetry(maxRetry))
->>>>>>> origin/1.1.3
                     .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(url, region)).build();
             // test connection once before returning it
             connection.doesBucketExistV2(container);
