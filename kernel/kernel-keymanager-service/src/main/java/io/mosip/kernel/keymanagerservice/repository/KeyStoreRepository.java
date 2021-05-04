@@ -1,5 +1,6 @@
 package io.mosip.kernel.keymanagerservice.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,4 +27,12 @@ public interface KeyStoreRepository extends JpaRepository<KeyStore, String> {
 	 */
 	Optional<KeyStore> findByAlias(String alias);
 
+
+	/**
+	 * Function to find all KeyStore objects by masterAlias
+	 * 
+	 * @param masterAlias master Alias
+	 * @return List of KeyStore
+	 */
+	List<KeyStore> findByMasterAlias(String masterAlias);
 }

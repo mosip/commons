@@ -159,8 +159,6 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 				KeymanagerConstant.GETPUBLICKEYHSM);
 
 		String alias = null;
-		LocalDateTime generationDateTime = null;
-		LocalDateTime expiryDateTime = null;
 		Optional<KeyPolicy> keyPolicy = dbHelper.getKeyPolicy(applicationId);
 		Map<String, List<KeyAlias>> keyAliasMap = dbHelper.getKeyAliases(applicationId, referenceId, timeStamp);
 		List<KeyAlias> currentKeyAlias = keyAliasMap.get(KeymanagerConstant.CURRENTKEYALIAS);
@@ -406,6 +404,13 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 
 		List<KeyAlias> keyAlias = keyAliasMap.get(KeymanagerConstant.KEYALIAS);
 		List<KeyAlias> currentKeyAlias = keyAliasMap.get(KeymanagerConstant.CURRENTKEYALIAS);
+		if (keyAlias.isEmpty()) {
+			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.KEYALIAS,
+					String.valueOf(keyAlias.size()), "KeyAlias is empty(with Key Identifier) Throwing exception");
+			throw new NoUniqueAliasException(KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorCode(),
+					KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorMessage());
+		}
+
 		Object[] keys = getKeyObjects(keyAlias, currentKeyAlias, localDateTimeStamp, referenceId, 
 									certThumbprint);
 		PrivateKey privateKey = (PrivateKey) keys[0];
@@ -529,6 +534,13 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 	private Object[] getPrivateKeyNoKeyIdentifier(List<KeyAlias> keyAlias, List<KeyAlias>  currentKeyAlias, 
 							LocalDateTime timeStamp, String referenceId,  
 							byte[] reqCertThumbprint, boolean packetTPFlag) {
+		
+		if (keyAlias.isEmpty()) {
+			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.KEYALIAS,
+					String.valueOf(keyAlias.size()), "KeyAlias is empty(no Key Identifier) Throwing exception");
+			throw new NoUniqueAliasException(KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorCode(),
+					KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorMessage());
+		}
 
 		// to Support packet encryption done in 1.1.3(flag: flase) and packet decryption is performed in 1.1.4 (flag: true).
 		// Considering always the first key generated for the application id & reference id
@@ -631,7 +643,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 			 */
 			try {
 				byte[] decryptedPrivateKey = keymanagerUtil.decryptKey(CryptoUtil.decodeBase64(dbKeyStore.get().getPrivateKey()), 
-													masterPrivateKey, masterPublicKey);
+													masterPrivateKey, masterPublicKey, keyStore.getKeystoreProviderName());
 				KeyFactory keyFactory = KeyFactory.getInstance(KeymanagerConstant.RSA);
 				PrivateKey privateKey = keyFactory.generatePrivate(new PKCS8EncodedKeySpec(decryptedPrivateKey));
 				Certificate certificate = keymanagerUtil.convertToCertificate(dbKeyStore.get().getCertificateData());
@@ -759,7 +771,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 	public KeyPairGenerateResponseDto generateMasterKey(String responseObjectType, KeyPairGenerateRequestDto request) {
 
 		String applicationId = request.getApplicationId();
-		String refId = request.getReferenceId();
+		String refId = request.getReferenceId() == null ? KeymanagerConstant.EMPTY : request.getReferenceId();
 		Boolean forceFlag = request.getForce();
 		
 		Optional<KeyPolicy> keyPolicy = dbHelper.getKeyPolicy(applicationId);
@@ -1027,7 +1039,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 		PublicKey masterPublicKey = masterKeyEntry.getCertificate().getPublicKey();
 		try {
 			byte[] decryptedPrivateKey = keymanagerUtil.decryptKey(CryptoUtil.decodeBase64(keyFromDBStore.get().getPrivateKey()), 
-													masterPrivateKey, masterPublicKey);
+													masterPrivateKey, masterPublicKey, keyStore.getKeystoreProviderName());
 			PrivateKey signPrivateKey = KeyFactory.getInstance(KeymanagerConstant.RSA).generatePrivate(new PKCS8EncodedKeySpec(decryptedPrivateKey));
 			X509Certificate x509Cert = (X509Certificate) keymanagerUtil.convertToCertificate(keyFromDBStore.get().getCertificateData());
 			return new Object[] {signPrivateKey, x509Cert};
