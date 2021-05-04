@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.3" use-changelog="false" last-position="556,0" last-zoom="0.4" max-obj-count="139"
+<dbmodel pgmodeler-ver="0.9.3" use-changelog="false" last-position="27,928" last-zoom="0.4" max-obj-count="139"
 	 default-schema="public" default-owner="postgres">
 <role name="sysadmin"
       superuser="true"
@@ -4048,7 +4048,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<comment><![CDATA[Uploaded Date and Time: Date and time of the master data and packets are uploaded]]></comment>
 	</column>
 	<column name="upload_description">
-		<type name="character varying" length="256"/>
+		<type name="character varying" length="0"/>
 		<comment><![CDATA[Upload Description: Bulk data upload description, This will have all details about the transaction including upload failure or success messages.]]></comment>
 	</column>
 	<column name="lang_code" not-null="true">

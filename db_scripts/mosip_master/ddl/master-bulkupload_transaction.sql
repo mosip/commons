@@ -9,6 +9,8 @@
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
 -- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
+-- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
+-- Apr-2021		Ram Bhatt	    Removed bulk upload transaction size limit
 -- ------------------------------------------------------------------------------------------
 -- object: master.bulkupload_transaction | type: TABLE --
 -- DROP TABLE IF EXISTS master.bulkupload_transaction CASCADE;
@@ -21,14 +23,14 @@ CREATE TABLE master.bulkupload_transaction(
 	uploaded_by character varying(256) NOT NULL,
 	upload_category character varying(36),
 	uploaded_dtimes timestamp NOT NULL,
-	upload_description character varying(256),
+	upload_description character varying,
 	lang_code character varying(3) NOT NULL,
 	is_active boolean NOT NULL,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
 	upd_dtimes timestamp,
-	is_deleted boolean NOT NULL DEFAULT FALSE,
+	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
 	CONSTRAINT pk_butrn_id PRIMARY KEY (id)
 
