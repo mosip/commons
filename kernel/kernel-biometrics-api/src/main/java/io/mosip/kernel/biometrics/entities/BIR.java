@@ -87,10 +87,10 @@ public class BIR implements Serializable {
 		}
 		
 		public BIRBuilder withOthers(Map<String, Object> others) {
-			if(Objects.isNull(others))
+			if(Objects.isNull(this.others))
 				this.others = new HashMap<>();
-			
-			this.others.putAll(others);
+			if(!Objects.isNull(others))
+				this.others.putAll(others);
 			return this;
 		}
 
