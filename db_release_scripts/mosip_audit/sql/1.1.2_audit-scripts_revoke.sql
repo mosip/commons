@@ -1,6 +1,6 @@
 -- -------------------------------------------------------------------------------------------------
 -- Database Name: mosip_audit
--- Release Version 	: 1.1.5.1-SNAPSHOT
+-- Release Version 	: 1.1.5.1
 -- Purpose    		: Revoking Database Alter deployement done for release in Audit DB.       
 -- Create By   		: Sadanandegowda DM
 -- Created Date		: Sep-2020
