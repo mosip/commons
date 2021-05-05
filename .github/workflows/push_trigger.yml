@@ -70,7 +70,6 @@ jobs:
 
     - name: Analyze with SonarCloud
       run: |
-        cd pre-registration
         mvn -B -Dgpg.skip verify sonar:sonar -Dsonar.projectKey=${{ secrets.PROJECT_KEY }} -Dsonar.organization=${{ secrets.ORG_KEY }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
