@@ -8,10 +8,12 @@ package io.mosip.kernel.cryptomanager.service.impl;
 
 import static java.util.Arrays.copyOfRange;
 
+import java.math.BigInteger;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.cert.Certificate;
+import java.security.interfaces.RSAPublicKey;
 import java.util.Arrays;
 
 import javax.crypto.SecretKey;
@@ -54,6 +56,10 @@ public class CryptomanagerServiceImpl implements CryptomanagerService {
 	@Value("${mosip.kernel.data-key-splitter}")
 	private String keySplitter;
 
+	/** The 1.1.3 no thumbprint support flag. */
+	@Value("${mosip.kernel.keymanager.113nothumbprint.support:false}")
+	private boolean noThumbprint;
+
 	/**
 	 * {@link KeyGenerator} instance
 	 */
@@ -95,17 +101,19 @@ public class CryptomanagerServiceImpl implements CryptomanagerService {
 		Certificate certificate = cryptomanagerUtil.getCertificate(cryptoRequestDto);
 		PublicKey publicKey = certificate.getPublicKey();
 		final byte[] encryptedSymmetricKey = cryptoCore.asymmetricEncrypt(publicKey, secretKey.getEncoded());
-
+		
 		Boolean prependThumbprint = cryptoRequestDto.getPrependThumbprint() == null ? false : cryptoRequestDto.getPrependThumbprint();
 		CryptomanagerResponseDto cryptoResponseDto = new CryptomanagerResponseDto();
-		if (prependThumbprint) {
-			byte[] certThumbprint = cryptomanagerUtil.getCertificateThumbprint(certificate);
-			byte[] concatedData = cryptomanagerUtil.concatCertThumbprint(certThumbprint, encryptedSymmetricKey);
-			cryptoResponseDto.setData(CryptoUtil.encodeBase64(CryptoUtil.combineByteArray(encryptedData, concatedData, keySplitter)));
+		// support of 1.1.3 no thumbprint is configured as true & encryption request with no thumbprint
+		// request thumbprint flag will not be considered if support no thumbprint is set to false. 
+		if (noThumbprint && !prependThumbprint) {
+			cryptoResponseDto.setData(CryptoUtil.encodeBase64(CryptoUtil.combineByteArray(encryptedData, encryptedSymmetricKey, keySplitter)));
 			return cryptoResponseDto;
 		} 
-
-		cryptoResponseDto.setData(CryptoUtil.encodeBase64(CryptoUtil.combineByteArray(encryptedData, encryptedSymmetricKey, keySplitter)));
+		byte[] certThumbprint = cryptomanagerUtil.getCertificateThumbprint(certificate);
+		byte[] concatedData = cryptomanagerUtil.concatCertThumbprint(certThumbprint, encryptedSymmetricKey);
+		cryptoResponseDto.setData(CryptoUtil.encodeBase64(CryptoUtil.combineByteArray(encryptedData, concatedData, keySplitter)));
+		
 		return cryptoResponseDto;
 	}
 

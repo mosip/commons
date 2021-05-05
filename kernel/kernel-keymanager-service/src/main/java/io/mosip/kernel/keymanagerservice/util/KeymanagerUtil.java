@@ -415,8 +415,8 @@ public class KeymanagerUtil {
 		try {
 			privateKey.destroy();
 		} catch (DestroyFailedException e) {
-			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.EMPTY, KeymanagerConstant.EMPTY,
-					"Error while destorying Private Key Object.");
+			LOGGER.warn(KeymanagerConstant.SESSIONID, KeymanagerConstant.EMPTY, KeymanagerConstant.EMPTY,
+					"WARN: while destorying Private Key Object.");
 		}
 		privateKey = null;
 	}
@@ -425,8 +425,8 @@ public class KeymanagerUtil {
 		try {
 			secretKey.destroy();
 		} catch (DestroyFailedException e) {
-			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.EMPTY, KeymanagerConstant.EMPTY,
-					"Error while destorying Private Key Object.");
+			LOGGER.warn(KeymanagerConstant.SESSIONID, KeymanagerConstant.EMPTY, KeymanagerConstant.EMPTY,
+					"WARN: while destorying Private Key Object.");
 		}
 		secretKey = null;
 	}
