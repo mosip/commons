@@ -193,7 +193,8 @@
 						<skipTests>${skipTests}</skipTests>
 						<skip>false</skip>
 						<argLine>
-                            --illegal-access=permit
+                            ${surefireArgLine}
+                            <!--							&#45;&#45;illegal-access=permit-->
 						</argLine>
 					</configuration>
 				</plugin>
@@ -267,6 +268,9 @@
                             <goals>
                                 <goal>prepare-agent</goal>
                             </goals>
+                            <configuration>
+                                <propertyName>surefireArgLine</propertyName>
+                            </configuration>
                         </execution>
                         <execution>
                             <id>post-unit-test</id>
