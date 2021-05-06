@@ -7,10 +7,6 @@
 
 package io.mosip.kernel.biometrics.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -20,6 +16,10 @@ import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @JsonDeserialize(builder = VersionType.VersionTypeBuilder.class)
@@ -47,16 +47,6 @@ public class VersionType implements Serializable {
 			this.minor = minor;
 			return this;
 		}
-
-		public VersionTypeBuilder withMajor(int major) {
-			this.major = major;
-			return this;
-		}
-
-		public VersionType build() {
-			return new VersionType(this);
-		}
-	}
 
 		public VersionTypeBuilder withMajor(int major) {
 			this.major = major;
