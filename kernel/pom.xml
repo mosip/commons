@@ -279,6 +279,9 @@
 					<execution>
 						<id>jacoco-site</id>
 						<phase>verify</phase>
+					</execution>
+					<execution>
+						<id>default-report</id>
 						<goals>
 							<goal>report</goal>
 						</goals>
