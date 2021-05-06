@@ -20,3 +20,5 @@ UPDATE TABLE master.identity_schema SET id_attr_json ='[{"id":"IDSchemaVersion",
 
 
 --------------------------------------------------------------------------------------------------------------
+ALTER TABLE master.bulkupload_transaction ALTER COLUMN upload_description character varying(256);
+

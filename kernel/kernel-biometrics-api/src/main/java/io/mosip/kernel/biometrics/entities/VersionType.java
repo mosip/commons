@@ -21,8 +21,6 @@ import javax.xml.bind.annotation.XmlType;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import io.mosip.kernel.biometrics.entities.SBInfo.SBInfoBuilder;
-
 @Data
 @JsonDeserialize(builder = VersionType.VersionTypeBuilder.class)
 @AllArgsConstructor
@@ -54,7 +52,17 @@ public class VersionType implements Serializable {
 			this.major = major;
 			return this;
 		}
-		
+
+		public VersionType build() {
+			return new VersionType(this);
+		}
+	}
+
+		public VersionTypeBuilder withMajor(int major) {
+			this.major = major;
+			return this;
+		}
+
 		public VersionType build() {
 			return new VersionType(this);
 		}

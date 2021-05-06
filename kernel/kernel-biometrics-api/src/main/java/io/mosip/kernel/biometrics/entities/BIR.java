@@ -91,7 +91,6 @@ public class BIR implements Serializable {
 				this.others = new HashMap<>();
 			if(!Objects.isNull(others))
 				this.others.putAll(others);
-			
 			return this;
 		}
 

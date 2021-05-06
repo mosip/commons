@@ -9,7 +9,8 @@
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
 -- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Apr-2021		Dhanendra Sahu	    Set lang_code to be null and change the primary key
+-- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
+-- Apr-2021		Ram Bhatt	    Lang_code nullable and/or removed from pk constraint
 -- ------------------------------------------------------------------------------------------
 
 -- object: master.device_spec | type: TABLE --
@@ -28,7 +29,7 @@ CREATE TABLE master.device_spec(
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
 	upd_dtimes timestamp,
-	is_deleted boolean NOT NULL DEFAULT FALSE,
+	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
 	CONSTRAINT pk_dspec_code PRIMARY KEY (id)
 
