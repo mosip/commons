@@ -10,6 +10,7 @@
 -- Apr-2021		Ram Bhatt  	   Removed bulk upload transaction size limit
 -- Apr-2021		Ram Bhatt	   Lang_code nullable, removed from pk constraints and multiple FK constraint changes	
 -- Apr-2021 		Ram Bhatt          Added new rows in template,template_type and module_detail csv
+-- Apr-2021 		Ram Bhatt  	   Creation of master.permitted_local_config
 -- ------------------------------------------------------------------------------------------------------------
 --------------------------------------------UI SPEC TABLE CREATION-----------------------------------------------
 \c mosip_master sysadmin
@@ -238,6 +239,8 @@ TRUNCATE TABLE master.module_detail cascade ;
 
 \COPY master.module_detail (id,name,descr,lang_code,is_active,cr_by,cr_dtimes) FROM '../dml/master-module_detail.csv' delimiter ',' HEADER  csv;
 
--------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------CREATION OF PERMITTED LOCAL CONFIG -------------------------------------------------------------
 
+\ir ../ddl/master-permitted_local_config.sql
 
+--------------------------------------------------------------------------------------------------------------------------------------------
