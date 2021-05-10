@@ -154,7 +154,7 @@ Merci de mettre à jour vos coordonnées avec la plateforme d’identité numér
 1124,Template for Email Acknowledgement,Template for Email Acknowledgement,txt,velocity,"Dear $name,
 Your Pre-Registration for UIN is Completed Successfully
 on $Date at $Time. Your ID is #$PRID.
-Appointment is scheduled for $Appointmentdate at $Appointmenttime.
+Appointment is scheduled for $Appointmentdate at $Appointmenttime. In Registration Center Name $RegistrationCenterName at Registration Address $RegistrationCenterAddress
 you will also receive the details on your registered Mobile Number",10001,Pre-Registration,Email-Acknowledgement,eng,TRUE,superadmin,now()
 1125,Template for Onscreen Acknowledgment,Template for Onscreen Acknowledgment,txt,velocity,"1. Guideline 1
 2. Guideline 2
