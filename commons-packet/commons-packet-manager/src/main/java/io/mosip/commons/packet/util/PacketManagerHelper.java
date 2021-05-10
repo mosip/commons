@@ -1,28 +1,5 @@
 package io.mosip.commons.packet.util;
 
-import io.mosip.commons.packet.constants.PacketManagerConstants;
-import io.mosip.commons.packet.dto.PacketInfo;
-import io.mosip.kernel.biometrics.constant.BiometricType;
-import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import io.mosip.kernel.cbeffutil.container.impl.CbeffContainerImpl;
-import io.mosip.kernel.core.cbeffutil.common.CbeffValidator;
-import io.mosip.kernel.core.cbeffutil.entity.BDBInfo;
-import io.mosip.kernel.core.cbeffutil.entity.BIR;
-import io.mosip.kernel.core.cbeffutil.entity.BIRInfo;
-import io.mosip.kernel.core.cbeffutil.entity.BIRVersion;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.*;
-import io.mosip.kernel.core.util.HMACUtils2;
-import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.security.NoSuchAlgorithmException;
-import java.util.*;
-
 import static io.mosip.commons.packet.constants.PacketManagerConstants.CREATION_DATE;
 import static io.mosip.commons.packet.constants.PacketManagerConstants.ENCRYPTED_HASH;
 import static io.mosip.commons.packet.constants.PacketManagerConstants.ID;
@@ -33,6 +10,37 @@ import static io.mosip.commons.packet.constants.PacketManagerConstants.PROVIDER_
 import static io.mosip.commons.packet.constants.PacketManagerConstants.SCHEMA_VERSION;
 import static io.mosip.commons.packet.constants.PacketManagerConstants.SIGNATURE;
 import static io.mosip.commons.packet.constants.PacketManagerConstants.SOURCE;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import io.mosip.commons.packet.constants.PacketManagerConstants;
+import io.mosip.commons.packet.dto.PacketInfo;
+import io.mosip.kernel.biometrics.commons.CbeffValidator;
+import io.mosip.kernel.biometrics.constant.BiometricType;
+import io.mosip.kernel.biometrics.constant.ProcessedLevelType;
+import io.mosip.kernel.biometrics.constant.PurposeType;
+import io.mosip.kernel.biometrics.constant.QualityType;
+import io.mosip.kernel.biometrics.entities.BDBInfo;
+import io.mosip.kernel.biometrics.entities.BIR;
+import io.mosip.kernel.biometrics.entities.BIRInfo;
+import io.mosip.kernel.biometrics.entities.BiometricRecord;
+import io.mosip.kernel.biometrics.entities.RegistryIDType;
+import io.mosip.kernel.biometrics.entities.VersionType;
+import io.mosip.kernel.cbeffutil.container.impl.CbeffContainerImpl;
+import io.mosip.kernel.core.util.HMACUtils2;
 
 @Component
 public class PacketManagerHelper {
@@ -61,7 +69,7 @@ public class PacketManagerHelper {
                 CbeffContainerImpl cbeffContainer = new CbeffContainerImpl();
                 List<BIR> birList = new ArrayList<>();
                 biometricRecord.getSegments().forEach(s -> birList.add(convertToBIR(s)));
-                BIRType bir = cbeffContainer.createBIRType(birList);
+				BIR bir = cbeffContainer.createBIRType(birList);
                 xmlBytes = CbeffValidator.createXMLBytes(bir, IOUtils.toByteArray(xsd));
             }
         } else {
@@ -69,7 +77,7 @@ public class PacketManagerHelper {
                 CbeffContainerImpl cbeffContainer = new CbeffContainerImpl();
                 List<BIR> birList = new ArrayList<>();
                 biometricRecord.getSegments().forEach(s -> birList.add(convertToBIR(s)));
-                BIRType bir = cbeffContainer.createBIRType(birList);
+				BIR bir = cbeffContainer.createBIRType(birList);
                 xmlBytes = CbeffValidator.createXMLBytes(bir, IOUtils.toByteArray(xsd));
             }
         }
@@ -117,9 +125,9 @@ public class PacketManagerHelper {
         return packetInfo;
     }
 
-    public static io.mosip.kernel.biometrics.entities.BIR convertToBiometricRecordBIR(BIR bir) {
+	public static BIR convertToBiometricRecordBIR(BIR bir) {
         List<BiometricType> bioTypes = new ArrayList<>();
-        for(SingleType type : bir.getBdbInfo().getType()) {
+		for (BiometricType type : bir.getBdbInfo().getType()) {
             bioTypes.add(BiometricType.fromValue(type.value()));
         }
 
@@ -191,9 +199,9 @@ public class PacketManagerHelper {
     }
 
     public static BIR convertToBIR(io.mosip.kernel.biometrics.entities.BIR bir) {
-        List<SingleType> bioTypes = new ArrayList<>();
+        List<BiometricType > bioTypes = new ArrayList<>();
         for(BiometricType type : bir.getBdbInfo().getType()) {
-            bioTypes.add(SingleType.fromValue(type.value()));
+            bioTypes.add(BiometricType .fromValue(type.value()));
         }
 
         RegistryIDType format = null;
@@ -222,10 +230,11 @@ public class PacketManagerHelper {
 
         return new BIR.BIRBuilder()
                 .withBdb(bir.getBdb())
-                .withVersion(bir.getVersion() == null ? null : new BIRVersion.BIRVersionBuilder()
-                        .withMinor(bir.getVersion().getMinor())
-                        .withMajor(bir.getVersion().getMajor()).build())
-                .withCbeffversion(bir.getCbeffversion() == null ? null : new BIRVersion.BIRVersionBuilder()
+				.withVersion(bir.getVersion() == null ? null
+						: new VersionType.VersionTypeBuilder().withMinor(bir.getVersion().getMinor())
+								.withMajor(bir.getVersion().getMajor()).build())
+				.withCbeffversion(bir.getCbeffversion() == null ? null
+						: new VersionType.VersionTypeBuilder()
                         .withMinor(bir.getCbeffversion().getMinor())
                         .withMajor(bir.getCbeffversion().getMajor()).build())
                 .withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(true).build())
