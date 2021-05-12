@@ -88,6 +88,7 @@ EXPOSE 8086
 
 CMD if [ "$is_glowroot_env" = "present" ]; then \
     wget -q --show-progress "${artifactory_url_env}"/artifactory/libs-release-local/io/mosip/testing/glowroot.zip ; \
+	wget -q --show-progress "${artifactory_url_env}"/artifactory/libs-snapshot-local/io/mosip/kernel/kernel-ref-idobjectvalidator/kernel-ref-idobjectvalidator.jar -O "${loader_path_env}"/kernel-ref-idobjectvalidator.jar ; \
     wget -q --show-progress "${iam_adapter_url_env}" -O "${loader_path_env}"/kernel-auth-adapter.jar; \
     wget -q --show-progress "${cache_provider_url_env}" -O "${loader_path_env}"/cache-provider.jar; \
     wget -q --show-progress "${cache_config_url_env}" -O "${loader_path_env}"/hazelcast.xml; \
@@ -96,6 +97,7 @@ CMD if [ "$is_glowroot_env" = "present" ]; then \
     sed -i 's/<service_name>/commons-packet-service/g' glowroot/glowroot.properties ; \
     java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 -XX:+HeapDumpOnOutOfMemoryError -XX:+UseG1GC -XX:+UseStringDeduplication -Dloader.path="${loader_path_env}" -jar -javaagent:glowroot/glowroot.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" commons-packet-service.jar ; \
     else \
+	wget -q --show-progress "${artifactory_url_env}"/artifactory/libs-snapshot-local/io/mosip/kernel/kernel-ref-idobjectvalidator/kernel-ref-idobjectvalidator.jar -O "${loader_path_env}"/kernel-ref-idobjectvalidator.jar ; \
     wget -q --show-progress "${iam_adapter_url_env}" -O "${loader_path_env}"/kernel-auth-adapter.jar; \
     wget -q --show-progress "${cache_provider_url_env}" -O "${loader_path_env}"/cache-provider.jar; \
     wget -q --show-progress "${cache_config_url_env}" -O "${loader_path_env}"/hazelcast.xml; \
