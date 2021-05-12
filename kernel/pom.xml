@@ -123,7 +123,7 @@
 
 	<modules>
 	        <module>kernel-core</module>
-		<module>kernel-logger-logback</module>
+		<!--module>kernel-logger-logback</module>
 		<module>kernel-auth-adapter</module>
 		<module>kernel-dataaccess-hibernate</module>
 		<module>kernel-auditmanager-api</module>
@@ -169,7 +169,7 @@
 		<module>kernel-biometrics-api</module>
 		<module>kernel-biosdk-provider</module>
 		<module>object-store</module>
-		<module>keys-generator</module>
+		<module>keys-generator</module-->
 	</modules>
 
 	
