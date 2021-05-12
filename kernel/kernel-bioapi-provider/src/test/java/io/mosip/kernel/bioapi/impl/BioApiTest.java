@@ -1,68 +1,107 @@
-/*
- * package io.mosip.kernel.bioapi.impl;
+package io.mosip.kernel.bioapi.impl;
+
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Optional;
+
+import org.springframework.stereotype.Component;
+
+import io.mosip.kernel.core.bioapi.model.KeyValuePair;
+import io.mosip.kernel.core.bioapi.model.MatchDecision;
+import io.mosip.kernel.core.bioapi.model.QualityScore;
+import io.mosip.kernel.core.bioapi.model.Response;
+import io.mosip.kernel.core.bioapi.spi.IBioApi;
+import io.mosip.kernel.core.cbeffutil.entity.BDBInfo;
+import io.mosip.kernel.core.cbeffutil.entity.BIR;
+import io.mosip.kernel.core.cbeffutil.jaxbclasses.QualityType;
+
+/**
+ * The Class BioApiImpl.
  * 
- * import static org.junit.Assert.assertEquals; import static
- * org.junit.Assert.assertTrue;
+ * @author Sanjay Murali
+ * @author Manoj SP
  * 
- * import java.io.File; import java.io.FileInputStream; import java.util.Arrays;
- * import java.util.List;
- * 
- * import org.apache.commons.io.IOUtils; import org.junit.Before; import
- * org.junit.Test;
- * 
- * import io.mosip.kernel.cbeffutil.impl.CbeffImpl; import
- * io.mosip.kernel.core.bioapi.model.MatchDecision; import
- * io.mosip.kernel.core.bioapi.model.QualityScore; import
- * io.mosip.kernel.core.cbeffutil.entity.BIR;
- * 
- *//**
-	 * The Class BioApiTest.
+ */
+@Component
+public class BioApiImpl implements IBioApi {
+
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @author Sanjay Murali
-	 * @author Manoj SP
-	 *//*
-		 * public class BioApiTest {
-		 * 
-		 * CbeffImpl cbeffUtil = new CbeffImpl();
-		 * 
-		 * BioApiImpl bioApiImpl = new BioApiImpl();
-		 * 
-		 * List<BIR> birDataFromXML;
-		 * 
-		 * List<BIR> birDataFromXML2;
-		 * 
-		 * @Before public void setUp() throws Exception { ClassLoader classLoader =
-		 * getClass().getClassLoader(); File fXmlFile = new
-		 * File(classLoader.getResource("applicant_bio_CBEFF.xml").getFile()); File
-		 * fXmlFile2 = new
-		 * File(classLoader.getResource("applicant_bio_CBEFF2.xml").getFile()); byte[]
-		 * byteArray = IOUtils.toByteArray(new
-		 * FileInputStream(fXmlFile.getAbsolutePath())); byte[] byteArray2 =
-		 * IOUtils.toByteArray(new FileInputStream(fXmlFile2.getAbsolutePath()));
-		 * birDataFromXML =
-		 * cbeffUtil.convertBIRTypeToBIR(cbeffUtil.getBIRDataFromXML(byteArray));
-		 * birDataFromXML2 =
-		 * cbeffUtil.convertBIRTypeToBIR(cbeffUtil.getBIRDataFromXML(byteArray2)); }
-		 * 
-		 * @Test public void arrayEqualsTest() { int count = 0; for (BIR BIR :
-		 * birDataFromXML) { for (BIR BIR2 : birDataFromXML2) { if
-		 * (Arrays.equals(BIR.getBdb(), BIR2.getBdb())) { count++; } } }
-		 * assertTrue(count > 0); }
-		 * 
-		 * @Test public void checkQualityTest() { BIR BIR = birDataFromXML.get(0);
-		 * QualityScore checkQuality = bioApiImpl.checkQuality(BIR, null).getResponse();
-		 * assertEquals(60, checkQuality.getScore(), 0); }
-		 * 
-		 * @Test public void matchTest() { BIR BIR = birDataFromXML.get(0);
-		 * MatchDecision[] match = bioApiImpl.match(BIR,
-		 * birDataFromXML.stream().toArray(BIR[]::new), null).getResponse();
-		 * assertTrue(Arrays.stream(match).anyMatch(MatchDecision::isMatch)); }
-		 * 
-		 * @Test public void extractTemplateTest() { BIR BIR = birDataFromXML.get(0);
-		 * assertEquals(bioApiImpl.extractTemplate(BIR, null).getResponse(), BIR); }
-		 * 
-		 * @Test public void segmentTest() { BIR BIR = birDataFromXML.get(0); BIR[] bir
-		 * = new BIR[1]; bir[0] = BIR; BIR[] segment = bioApiImpl.segment(BIR,
-		 * null).getResponse(); assertTrue(segment.length == 1);
-		 * assertEquals(segment[0], bir[0]); } }
-		 */
+	 * @see
+	 * io.mosip.kernel.core.bioapi.spi.IBioApi#checkQuality(io.mosip.kernel.core.
+	 * bioapi.model.BIR, io.mosip.kernel.core.bioapi.model.KeyValuePair[])
+	 */
+	@Override
+	public Response<QualityScore> checkQuality(BIR sample, KeyValuePair[] flags) {
+		QualityScore qualityScore = new QualityScore();
+		int major = Optional.ofNullable(sample.getBdbInfo()).map(BDBInfo::getQuality).map(QualityType::getScore)
+				.orElse(0L).intValue();
+		qualityScore.setScore(major);
+		Response<QualityScore> response = new Response<>();
+		response.setStatusCode(200);
+		response.setResponse(qualityScore);
+		return response;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.mosip.kernel.core.bioapi.spi.IBioApi#match(io.mosip.kernel.core.bioapi.
+	 * model.BIR, io.mosip.kernel.core.bioapi.model.BIR[],
+	 * io.mosip.kernel.core.bioapi.model.KeyValuePair[])
+	 */
+	@Override
+	public Response<MatchDecision[]> match(BIR sample, BIR[] gallery, KeyValuePair[] flags) {
+		MatchDecision matchingScore[] = new MatchDecision[gallery.length];
+		int count = 0;
+		for (BIR recordedValue : gallery) {
+			matchingScore[count] = new MatchDecision();
+			if (Objects.nonNull(recordedValue) && Objects.nonNull(recordedValue.getBdb())
+					&& recordedValue.getBdb().length != 0 && Arrays.equals(recordedValue.getBdb(), sample.getBdb())) {
+				matchingScore[count].setMatch(true);
+			} else {
+				matchingScore[count].setMatch(false);
+			}
+			count++;
+		}
+		Response<MatchDecision[]> response = new Response<>();
+		response.setStatusCode(200);
+		response.setResponse(matchingScore);
+		return response;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.mosip.kernel.core.bioapi.spi.IBioApi#extractTemplate(io.mosip.kernel.core.
+	 * bioapi.model.BIR, io.mosip.kernel.core.bioapi.model.KeyValuePair[])
+	 */
+	@Override
+	public Response<BIR> extractTemplate(BIR sample, KeyValuePair[] flags) {
+		Response<BIR> response = new Response<>();
+		response.setStatusCode(200);
+		response.setResponse(sample);
+		return response;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.mosip.kernel.core.bioapi.spi.IBioApi#segment(io.mosip.kernel.core.bioapi.
+	 * model.BIR, io.mosip.kernel.core.bioapi.model.KeyValuePair[])
+	 */
+	@Override
+	public Response<BIR[]> segment(BIR sample, KeyValuePair[] flags) {
+		BIR[] bir = new BIR[1];
+		bir[0] = sample;
+		Response<BIR[]> response = new Response<>();
+		response.setStatusCode(200);
+		response.setResponse(bir);
+		return response;
+	}
+
+}
