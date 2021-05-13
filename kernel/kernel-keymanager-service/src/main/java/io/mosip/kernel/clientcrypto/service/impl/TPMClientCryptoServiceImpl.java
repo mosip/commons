@@ -8,7 +8,7 @@ import io.mosip.kernel.clientcrypto.service.spi.ClientCryptoService;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.keymanagerservice.logger.KeymanagerLogger;
-import org.junit.Assert;
+
 import tss.*;
 import tss.tpm.CreatePrimaryResponse;
 import tss.tpm.*;
@@ -92,7 +92,6 @@ class TPMClientCryptoServiceImpl implements ClientCryptoService {
     @Override
     public byte[] signData(byte[] dataToSign) throws ClientCryptoException {
         try {
-            Assert.assertNotNull(tpm);
             CreatePrimaryResponse signingKey = createSigningKey();
             TPMU_SIGNATURE signedData = null;
             synchronized(tpm) {
@@ -100,7 +99,6 @@ class TPMClientCryptoServiceImpl implements ClientCryptoService {
                         TPMT_HA.fromHashOf(TPM_ALG_ID.SHA256, dataToSign).digest, new TPMS_NULL_SIG_SCHEME(),
                         TPMT_TK_HASHCHECK.nullTicket());
             }
-            Assert.assertNotNull(signedData);
             LOGGER.info(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.TPM,
                     ClientCryptoManagerConstant.EMPTY, "Completed Signing data using TPM");
             return ((TPMS_SIGNATURE_RSASSA) signedData).sig;
@@ -129,7 +127,6 @@ class TPMClientCryptoServiceImpl implements ClientCryptoService {
     @Override
     public byte[] asymmetricDecrypt(byte[] dataToDecrypt)  throws ClientCryptoException{
         try {
-            Assert.assertNotNull(tpm);
             CreatePrimaryResponse primaryResponse = createRSAKey();
 
             synchronized (tpm) {
