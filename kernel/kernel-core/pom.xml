@@ -116,7 +116,7 @@
 		<mockito.core.version>2.22.0</mockito.core.version>
 	</properties>
 	<artifactId>kernel-core</artifactId>
-	<version>1.1.5.1</version>
+	<version>1.1.5.2</version>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -249,7 +249,7 @@
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
-			<version>2.3.0</version>
+			<version>2.3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.activation</groupId>
@@ -259,7 +259,7 @@
 		<dependency>
 			<groupId>org.glassfish.jaxb</groupId>
 			<artifactId>jaxb-runtime</artifactId>
-			<version>2.3.0-b170127.1453</version>
+			<version>2.3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.javassist</groupId>
