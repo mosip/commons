@@ -1,6 +1,6 @@
 -- -------------------------------------------------------------------------------------------------
 -- Database Name	: mosip_iam
--- Release Version 	: 1.1.5.1
+-- Release Version 	: 1.1.5.2
 -- Purpose    		: Database Alter scripts for the release for IAM DB.       
 -- Create By   		: Ram Bhatt
 -- Created Date		: Jan-2021
