@@ -3,6 +3,7 @@ package io.mosip.kernel.websub.api.client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -22,8 +23,11 @@ import io.mosip.kernel.websub.api.constants.HubMode;
 import io.mosip.kernel.websub.api.constants.WebSubClientConstants;
 import io.mosip.kernel.websub.api.constants.WebSubClientErrorCode;
 import io.mosip.kernel.websub.api.exception.WebSubClientException;
+import io.mosip.kernel.websub.api.utils.ParameterValidationUtil;
 
-/** This class is responsible for all the specification stated in {@link PublisherClient} interface.
+/**
+ * This class is responsible for all the specification stated in
+ * {@link PublisherClient} interface.
  * 
  * @author Urvil Joshi
  *
@@ -34,12 +38,17 @@ public class PublisherClientImpl<P> implements PublisherClient<String, P, HttpHe
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PublisherClientImpl.class);
 
+	@Value("${mosip.auth.filter_disable:false}")
+	private boolean isAuthFilterDisable;
+
 	@Autowired
 	private RestTemplate restTemplate;
 
 	@Override
-	public void registerTopic(String topic,String hubURL) {
+	public void registerTopic(String topic, String hubURL, String authToken) {
+
 		HttpHeaders headers = new HttpHeaders();
+		ParameterValidationUtil.checkMissingToken(isAuthFilterDisable, authToken, headers);
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
@@ -64,8 +73,9 @@ public class PublisherClientImpl<P> implements PublisherClient<String, P, HttpHe
 	}
 
 	@Override
-	public void unregisterTopic(String topic,String hubURL) {
+	public void unregisterTopic(String topic, String hubURL, String authToken) {
 		HttpHeaders headers = new HttpHeaders();
+		ParameterValidationUtil.checkMissingToken(isAuthFilterDisable, authToken, headers);
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
@@ -91,21 +101,22 @@ public class PublisherClientImpl<P> implements PublisherClient<String, P, HttpHe
 	}
 
 	@Override
-	public void publishUpdate(String topic, P payload, String contentType, HttpHeaders headers,String hubURL) {
+	public void publishUpdate(String topic, P payload, String contentType, HttpHeaders headers, String hubURL,
+			String authToken) {
 		if (headers == null) {
 			headers = new HttpHeaders();
 		}
+		ParameterValidationUtil.checkMissingToken(isAuthFilterDisable, authToken, headers);
 		headers.setContentType(MediaType.parseMediaType(contentType));
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(hubURL)
 				.queryParam(WebSubClientConstants.HUB_MODE, HubMode.PUBLISH.gethubModeValue())
 				.queryParam(WebSubClientConstants.HUB_TOPIC, topic);
 
-		HttpEntity<P> entity = new HttpEntity<>(payload,headers);
+		HttpEntity<P> entity = new HttpEntity<>(payload, headers);
 		ResponseEntity<String> response = null;
 		try {
-			response= restTemplate.exchange(builder.toUriString(), HttpMethod.POST, entity,
-				String.class);
+			response = restTemplate.exchange(builder.toUriString(), HttpMethod.POST, entity, String.class);
 		} catch (HttpClientErrorException | HttpServerErrorException exception) {
 			throw new WebSubClientException(WebSubClientErrorCode.PUBLISH_ERROR.getErrorCode(),
 					WebSubClientErrorCode.PUBLISH_ERROR.getErrorMessage() + exception.getResponseBodyAsString());
@@ -119,7 +130,11 @@ public class PublisherClientImpl<P> implements PublisherClient<String, P, HttpHe
 	}
 
 	@Override
-	public void notifyUpdate(String topic, HttpHeaders headers,String hubURL) {
+	public void notifyUpdate(String topic, HttpHeaders headers, String hubURL, String authToken) {
+		if (headers == null) {
+			headers = new HttpHeaders();
+		}
+		ParameterValidationUtil.checkMissingToken(isAuthFilterDisable, authToken, headers);
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(hubURL)
 				.queryParam(WebSubClientConstants.HUB_MODE, HubMode.PUBLISH.gethubModeValue())
@@ -128,8 +143,7 @@ public class PublisherClientImpl<P> implements PublisherClient<String, P, HttpHe
 		HttpEntity<P> entity = new HttpEntity<>(headers);
 		ResponseEntity<String> response = null;
 		try {
-			response= restTemplate.exchange(builder.toUriString(), HttpMethod.POST, entity,
-				String.class);
+			response = restTemplate.exchange(builder.toUriString(), HttpMethod.POST, entity, String.class);
 		} catch (HttpClientErrorException | HttpServerErrorException exception) {
 			throw new WebSubClientException(WebSubClientErrorCode.NOTIFY_UPDATE_ERROR.getErrorCode(),
 					WebSubClientErrorCode.NOTIFY_UPDATE_ERROR.getErrorMessage() + exception.getResponseBodyAsString());

@@ -18,7 +18,9 @@ public interface SubscriptionClient<S,U,R> {
 	 * @param subscriptionRequest metadata required for request to subscribe.
 	 * @return response for subscribe request.
 	 */
-	R subscribe(S subscriptionRequest);
+	default R subscribe(S subscriptionRequest) {
+		return subscribe(subscriptionRequest, null);
+	}
 
 	/**
 	 * This method sends a unsubscription request to a WebSub Hub according to
@@ -27,5 +29,25 @@ public interface SubscriptionClient<S,U,R> {
 	 * @param unSubscriptionRequest metadata required for request to unsubscribe.
 	 * @return response for unsubscribe request.
 	 */
-	R unSubscribe(U unSubscriptionRequest);
+	default R unSubscribe(U unSubscriptionRequest) {
+		return unSubscribe(unSubscriptionRequest, null);
+	}
+	
+	/**
+	 * This method sends a subscription request to a WebSub Hub according to
+	 * <a href= "https://www.w3.org/TR/websub/">websub specifications</a>.
+	 * 
+	 * @param subscriptionRequest metadata required for request to subscribe.
+	 * @return response for subscribe request.
+	 */
+	R subscribe(S subscriptionRequest,String authToken);
+
+	/**
+	 * This method sends a unsubscription request to a WebSub Hub according to
+	 * <a href= "https://www.w3.org/TR/websub/">websub specifications</a>.
+	 * 
+	 * @param unSubscriptionRequest metadata required for request to unsubscribe.
+	 * @return response for unsubscribe request.
+	 */
+	R unSubscribe(U unSubscriptionRequest,String authToken);
 }

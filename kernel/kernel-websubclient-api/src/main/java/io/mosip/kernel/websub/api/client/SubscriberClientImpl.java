@@ -8,6 +8,7 @@ import org.apache.commons.codec.digest.HmacUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -36,6 +37,7 @@ import io.mosip.kernel.websub.api.model.FailedContentResponse;
 import io.mosip.kernel.websub.api.model.SubscriptionChangeRequest;
 import io.mosip.kernel.websub.api.model.SubscriptionChangeResponse;
 import io.mosip.kernel.websub.api.model.UnsubscriptionRequest;
+import io.mosip.kernel.websub.api.utils.ParameterValidationUtil;
 
 /**
  * This class is responsible for all the specification stated in
@@ -50,6 +52,9 @@ public class SubscriberClientImpl
 		SubscriptionExtendedClient<FailedContentResponse, FailedContentRequest> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SubscriberClientImpl.class);
+	
+	@Value("${mosip.auth.filter_disable:false}")
+	private boolean isAuthFilterDisable;
 
 	@Autowired
 	private RestTemplate restTemplate;
@@ -58,11 +63,12 @@ public class SubscriberClientImpl
 	private ObjectMapper objectMapper;
 
 	@Override
-	public SubscriptionChangeResponse subscribe(SubscriptionChangeRequest subscriptionRequest) {
+	public SubscriptionChangeResponse subscribe(SubscriptionChangeRequest subscriptionRequest,String authToken) {
 		// TODO code duplicacy remove
 		// TODO retries on redirect
 		verifySubscribeModel(subscriptionRequest);
 		HttpHeaders headers = new HttpHeaders();
+		ParameterValidationUtil.checkMissingToken(isAuthFilterDisable, authToken, headers);
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
@@ -132,11 +138,12 @@ public class SubscriberClientImpl
 	}
 
 	@Override
-	public SubscriptionChangeResponse unSubscribe(UnsubscriptionRequest unsubscriptionRequest) {
+	public SubscriptionChangeResponse unSubscribe(UnsubscriptionRequest unsubscriptionRequest,String authToken) {
 		// TODO code duplicacy remove
 		// TODO retries on redirect
 		verifyUnsubscribeModel(unsubscriptionRequest);
 		HttpHeaders headers = new HttpHeaders();
+		ParameterValidationUtil.checkMissingToken(isAuthFilterDisable, authToken, headers);
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
@@ -166,8 +173,9 @@ public class SubscriberClientImpl
 	}
 
 	@Override
-	public FailedContentResponse getFailedContent(FailedContentRequest failedContentRequest) {
+	public FailedContentResponse getFailedContent(FailedContentRequest failedContentRequest,String authToken) {
 		HttpHeaders headers = new HttpHeaders();
+		ParameterValidationUtil.checkMissingToken(isAuthFilterDisable, authToken, headers);
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		if (failedContentRequest.getMessageCount() > 0) {
 			headers.set(WebSubClientConstants.SUBSCRIBER_SIGNATURE_HEADER,

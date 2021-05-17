@@ -16,5 +16,5 @@ public interface SubscriptionExtendedClient<T,W> {
 	 * @param failedContentRequest metadata required for getting failed content.
 	 * @return response for failed content get request.
 	 */
-	T getFailedContent(W failedContentRequest);
+	T getFailedContent(W failedContentRequest,String authToken);
 }
