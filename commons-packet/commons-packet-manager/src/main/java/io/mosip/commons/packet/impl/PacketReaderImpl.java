@@ -373,7 +373,7 @@ public class PacketReaderImpl implements IPacketReader {
 			Map<String, BIR> birMap = new HashMap<>();
 			for (BIR bir : birList) {
 				String mapKey = "";
-				if (bir.getBdbInfo().getSubtype() != null || !bir.getBdbInfo().getSubtype().isEmpty()) {
+				if (bir.getBdbInfo().getSubtype() != null && !bir.getBdbInfo().getSubtype().isEmpty()) {
 					for (String subType : bir.getBdbInfo().getSubtype()) {
 						mapKey += subType;
 					}
