@@ -20,6 +20,7 @@ public interface PublisherClient<T, P, H> {
 	 * @param topic  the topic to register by publisher.
 	 * @param hubURL url for register endpoint of hub.
 	 */
+	@Deprecated
 	public default void registerTopic(T topic, String hubURL) {
 		registerTopic(topic, hubURL,null);
 	}
@@ -31,6 +32,7 @@ public interface PublisherClient<T, P, H> {
 	 * @param topic  the topic to unregister by publisher.
 	 * @param hubURL url for unregister endpoint of hub.
 	 */
+	@Deprecated
 	public default void unregisterTopic(T topic, String hubURL) {
 		unregisterTopic(topic, hubURL,null);
 	}
@@ -46,6 +48,7 @@ public interface PublisherClient<T, P, H> {
 	 * @param headers     additional headers to be sent with update.
 	 * @param hubURL      url for publish endpoint of hub.
 	 */
+	@Deprecated
 	public default void publishUpdate(T topic, P payload, String contentType, H headers, String hubURL) {
 		publishUpdate(topic, payload, contentType, headers, hubURL,null);
 	}
@@ -58,6 +61,7 @@ public interface PublisherClient<T, P, H> {
 	 * @param headers additional headers to be sent with notify.
 	 * @param hubURL  url for notify endpoint of hub.
 	 */
+	@Deprecated
 	public default void notifyUpdate(T topic, H headers, String hubURL) {
 		notifyUpdate(topic, headers, hubURL, null);
 	}

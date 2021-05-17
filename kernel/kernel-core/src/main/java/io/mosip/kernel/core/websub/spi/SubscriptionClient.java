@@ -18,6 +18,7 @@ public interface SubscriptionClient<S,U,R> {
 	 * @param subscriptionRequest metadata required for request to subscribe.
 	 * @return response for subscribe request.
 	 */
+	@Deprecated
 	default R subscribe(S subscriptionRequest) {
 		return subscribe(subscriptionRequest, null);
 	}
@@ -29,6 +30,7 @@ public interface SubscriptionClient<S,U,R> {
 	 * @param unSubscriptionRequest metadata required for request to unsubscribe.
 	 * @return response for unsubscribe request.
 	 */
+	@Deprecated
 	default R unSubscribe(U unSubscriptionRequest) {
 		return unSubscribe(unSubscriptionRequest, null);
 	}
