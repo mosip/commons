@@ -213,9 +213,9 @@ ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- object: fk_tmplt_tmpltyp | type: CONSTRAINT --
 -- ALTER TABLE master.template DROP CONSTRAINT IF EXISTS fk_tmplt_tmpltyp CASCADE;
-ALTER TABLE master.template ADD CONSTRAINT fk_tmplt_tmpltyp FOREIGN KEY (template_typ_code)
-REFERENCES master.template_type (code) MATCH SIMPLE
-ON DELETE NO ACTION ON UPDATE NO ACTION;
+--ALTER TABLE master.template ADD CONSTRAINT fk_tmplt_tmpltyp FOREIGN KEY (template_typ_code)
+--REFERENCES master.template_type (code) MATCH SIMPLE
+--ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 -- object: fk_tmplt_tffmt | type: CONSTRAINT --

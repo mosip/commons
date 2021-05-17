@@ -1,35 +1,22 @@
 package io.mosip.commons.packet.test.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
-import io.mosip.commons.packet.dto.Document;
-import io.mosip.commons.packet.dto.Packet;
-import io.mosip.commons.packet.exception.GetAllIdentityException;
-import io.mosip.commons.packet.exception.GetAllMetaInfoException;
-import io.mosip.commons.packet.exception.GetDocumentException;
-import io.mosip.commons.packet.exception.PacketKeeperException;
-import io.mosip.commons.packet.exception.PacketValidationFailureException;
-import io.mosip.commons.packet.impl.PacketReaderImpl;
-import io.mosip.commons.packet.keeper.PacketKeeper;
-import io.mosip.commons.packet.spi.IPacketReader;
-import io.mosip.commons.packet.util.IdSchemaUtils;
-import io.mosip.commons.packet.util.PacketValidator;
-import io.mosip.commons.packet.util.ZipUtils;
-import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import io.mosip.kernel.core.cbeffutil.common.CbeffValidator;
-import io.mosip.kernel.core.cbeffutil.entity.BDBInfo;
-import io.mosip.kernel.core.cbeffutil.entity.BIR;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.QualityType;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.RegistryIDType;
-import io.mosip.kernel.core.cbeffutil.jaxbclasses.SingleType;
-import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectIOException;
-import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectValidationFailedException;
-import io.mosip.kernel.core.idobjectvalidator.exception.InvalidIdSchemaException;
-import io.mosip.kernel.core.util.JsonUtils;
-import io.mosip.kernel.core.util.exception.JsonProcessingException;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyObject;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.io.IOUtils;
-import org.json.JSONArray;
 import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -44,23 +31,35 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.util.CollectionUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 
-import static io.mosip.commons.packet.constants.PacketManagerConstants.*;
-import static io.mosip.commons.packet.constants.PacketManagerConstants.VALUE;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.ArgumentMatchers.anyObject;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import io.mosip.commons.packet.dto.Document;
+import io.mosip.commons.packet.dto.Packet;
+import io.mosip.commons.packet.exception.GetAllIdentityException;
+import io.mosip.commons.packet.exception.GetAllMetaInfoException;
+import io.mosip.commons.packet.exception.GetDocumentException;
+import io.mosip.commons.packet.exception.PacketKeeperException;
+import io.mosip.commons.packet.exception.PacketValidationFailureException;
+import io.mosip.commons.packet.impl.PacketReaderImpl;
+import io.mosip.commons.packet.keeper.PacketKeeper;
+import io.mosip.commons.packet.spi.IPacketReader;
+import io.mosip.commons.packet.util.IdSchemaUtils;
+import io.mosip.commons.packet.util.PacketValidator;
+import io.mosip.commons.packet.util.ZipUtils;
+import io.mosip.kernel.biometrics.commons.CbeffValidator;
+import io.mosip.kernel.biometrics.constant.BiometricType;
+import io.mosip.kernel.biometrics.constant.QualityType;
+import io.mosip.kernel.biometrics.entities.BDBInfo;
+import io.mosip.kernel.biometrics.entities.BIR;
+import io.mosip.kernel.biometrics.entities.BiometricRecord;
+import io.mosip.kernel.biometrics.entities.RegistryIDType;
+import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectIOException;
+import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectValidationFailedException;
+import io.mosip.kernel.core.idobjectvalidator.exception.InvalidIdSchemaException;
+import io.mosip.kernel.core.util.JsonUtils;
+import io.mosip.kernel.core.util.exception.JsonProcessingException;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ZipUtils.class, IOUtils.class, JsonUtils.class, CbeffValidator.class})
@@ -287,10 +286,7 @@ public class PacketReaderImplTest {
 
     @Test
     public void getBiometricsTest() throws Exception {
-        BIRType birType = new BIRType();
-        BIRType birType1 = new BIRType();
-        BIRType birType2 = new BIRType();
-        birType.setBir(Lists.newArrayList(birType1, birType2));
+		BIR birType = new BIR();
         BIR bir1 = new BIR();
         BDBInfo bdbInfoType1 = new BDBInfo();
         RegistryIDType registryIDType = new RegistryIDType();
@@ -300,8 +296,8 @@ public class PacketReaderImplTest {
         quality.setAlgorithm(registryIDType);
         quality.setScore(90l);
         bdbInfoType1.setQuality(quality);
-        SingleType singleType1 = SingleType.FINGER;
-        List<SingleType> singleTypeList1 = new ArrayList<>();
+        BiometricType  singleType1 = BiometricType .FINGER;
+		List<BiometricType> singleTypeList1 = new ArrayList<>();
         singleTypeList1.add(singleType1);
         List<String> subtype1 = new ArrayList<>(Arrays.asList("Left", "RingFinger"));
         bdbInfoType1.setSubtype(subtype1);
@@ -312,8 +308,8 @@ public class PacketReaderImplTest {
         bir2.setBdbInfo(bdbInfoType1);
 
         PowerMockito.mockStatic(CbeffValidator.class);
+        birType.setBirs(Lists.newArrayList(bir1, bir2));
         when(CbeffValidator.getBIRFromXML(any())).thenReturn(birType);
-        when(CbeffValidator.convertBIRTypeToBIR(any())).thenReturn(Lists.newArrayList(bir1, bir2));
 
         BiometricRecord result = iPacketReader.getBiometric("id", biometricFieldName, null, "source", "process");
 
@@ -324,10 +320,8 @@ public class PacketReaderImplTest {
     @Ignore
     public void getBiometricsExceptionTest() throws Exception {
         List<String> list = Lists.newArrayList("phone", "email");
-        BIRType birType = new BIRType();
-        BIRType birType1 = new BIRType();
-        BIRType birType2 = new BIRType();
-        birType.setBir(Lists.newArrayList(birType1, birType2));
+		BIR birType = new BIR();
+
         BIR bir1 = new BIR();
         BDBInfo bdbInfoType1 = new BDBInfo();
         RegistryIDType registryIDType = new RegistryIDType();
@@ -337,8 +331,8 @@ public class PacketReaderImplTest {
         quality.setAlgorithm(registryIDType);
         quality.setScore(90l);
         bdbInfoType1.setQuality(quality);
-        SingleType singleType1 = SingleType.FINGER;
-        List<SingleType> singleTypeList1 = new ArrayList<>();
+		BiometricType singleType1 = BiometricType.FINGER;
+		List<BiometricType> singleTypeList1 = new ArrayList<>();
         singleTypeList1.add(singleType1);
         List<String> subtype1 = new ArrayList<>(Arrays.asList("Left", "RingFinger"));
         bdbInfoType1.setSubtype(subtype1);
@@ -347,6 +341,7 @@ public class PacketReaderImplTest {
         bir1.setBdbInfo(bdbInfoType1);
         BIR bir2 = new BIR();
         bir2.setBdbInfo(bdbInfoType1);
+		birType.setBirs(Lists.newArrayList(bir1, bir2));
 
         Map<String, Object> keyValueMap = new LinkedHashMap<>();
         keyValueMap.put("operationsData", "[{\n  \"label\\\" : \\\"officerId\\\",\n  \\\"value\\\" : \\\"110012\\\"\n}, {\n  \\\"label\\\" : \\\"officerBiometricFileName\\\",\n  \\\"value\\\" : \\\"officer_bio_cbeff\\\"\n}, {\n  \\\"label\\\" : \\\"supervisorId\\\",\n  \\\"value\\\" : null\n}, {\n  \\\"label\\\" : \\\"supervisorBiometricFileName\\\",\n  \\\"value\\\" : null\n}, {\n  \\\"label\\\" : \\\"supervisorPassword\\\",\n  \\\"value\\\" : \\\"false\\\"\n}, {\n  \\\"label\\\" : \\\"officerPassword\\\",\n  \\\"value\\\" : \\\"true\\\"\n}, {\n  \\\"label\\\" : \\\"supervisorPIN\\\",\n  \\\"value\\\" : null\n}, {\n  \\\"label\\\" : \\\"officerPIN\\\",\n  \\\"value\\\" : null\n}]");
@@ -358,7 +353,6 @@ public class PacketReaderImplTest {
 
         PowerMockito.mockStatic(CbeffValidator.class);
         when(CbeffValidator.getBIRFromXML(any())).thenReturn(birType);
-        when(CbeffValidator.convertBIRTypeToBIR(any())).thenReturn(Lists.newArrayList(bir1, bir2));
 
         BiometricRecord result = iPacketReader.getBiometric("id", "officerBiometric", null, "source", "process");
 
