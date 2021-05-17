@@ -173,9 +173,8 @@ public class SubscriberClientImpl
 	}
 
 	@Override
-	public FailedContentResponse getFailedContent(FailedContentRequest failedContentRequest,String authToken) {
+	public FailedContentResponse getFailedContent(FailedContentRequest failedContentRequest) {
 		HttpHeaders headers = new HttpHeaders();
-		ParameterValidationUtil.checkMissingToken(isAuthFilterDisable, authToken, headers);
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		if (failedContentRequest.getMessageCount() > 0) {
 			headers.set(WebSubClientConstants.SUBSCRIBER_SIGNATURE_HEADER,
