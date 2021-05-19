@@ -129,6 +129,20 @@ ALTER TABLE master.reg_exceptional_holiday ADD CONSTRAINT fk_regeh_regcntr FOREI
 REFERENCES master.registration_center (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+
+ALTER TABLE master.device_master_h DROP CONSTRAINT IF EXISTS pk_devicem_h_id CASCADE;
+ALTER TABLE master.device_master_h ALTER COLUMN lang_code DROP NOT NULL;
+ALTER TABLE master.device_master_h ADD CONSTRAINT pk_devicem_h_id PRIMARY KEY (id,eff_dtimes);
+
+ALTER TABLE master.machine_master_h DROP CONSTRAINT IF EXISTS pk_machm_h_id CASCADE;
+ALTER TABLE master.machine_master_h ALTER COLUMN lang_code DROP NOT NULL;
+ALTER TABLE master.machine_master_h ADD CONSTRAINT pk_machm_h_id PRIMARY KEY (id,eff_dtimes);
+
+ALTER TABLE master.user_detail_h DROP CONSTRAINT IF EXISTS pk_usrdtl_h_id CASCADE;
+ALTER TABLE master.user_detail_h ALTER COLUMN lang_code DROP NOT NULL;
+ALTER TABLE master.user_detail_h ADD CONSTRAINT pk_usrdtl_h_id PRIMARY KEY (id,eff_dtimes);
+
+
 --------------------------------------------------------------DROP CONSTRAINTS-------------------------------------------
 
 ALTER TABLE master.dynamic_field DROP CONSTRAINT IF EXISTS uk_schfld_name;
