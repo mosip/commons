@@ -27,7 +27,7 @@ import java.security.NoSuchAlgorithmException;
  * 
  * @author Sasikumar Ganesan
  * 
- * @since 1.1.4
+ * @since 1.1.4.4
  */
 public final class HMACUtils2 {
 	/**

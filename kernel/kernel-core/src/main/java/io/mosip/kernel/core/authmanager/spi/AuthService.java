@@ -53,7 +53,7 @@ public interface AuthService extends AuthZService, AuthNService {
 
 	MosipUserDto registerUser(UserRegistrationRequestDto userCreationRequestDto);
 
-	@Deprecated(forRemoval = true, since = "1.1.4")
+	@Deprecated(forRemoval = true, since = "1.1.4.4")
 	UserPasswordResponseDto addUserPassword(UserPasswordRequestDto userPasswordRequestDto);
 
 	public UserRoleDto getUserRole(String appId, String userId) throws Exception;
