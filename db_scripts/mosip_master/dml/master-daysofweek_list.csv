@@ -1,15 +1,15 @@
-code,name,day_seq,is_global_working,lang_code,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes
-101,SUN,1,f,eng,t,superadmin,2020-12-23 14:36:50.849956,,,,
-102,MON,2,t,eng,t,superadmin,2020-12-23 14:36:50.849956,,,,
-103,TUE,3,t,eng,t,superadmin,2020-12-23 14:36:50.849956,,,,
-104,WED,4,t,eng,t,superadmin,2020-12-23 14:36:50.849956,,,,
-105,THU,5,t,eng,t,superadmin,2020-12-23 14:36:50.849956,,,,
-106,FRI,6,t,eng,t,superadmin,2020-12-23 14:36:50.849956,,,,
-107,SAT,7,f,eng,t,superadmin,2020-12-23 14:36:50.849956,,,,
-101,እሑድ,1,f,amh,t,superadmin,2020-12-23 14:36:50.849956,,,,
-102,ሰኞ,2,t,amh,t,superadmin,2020-12-23 14:36:50.849956,,,,
-103,ማክሰኞ,3,t,amh,t,superadmin,2020-12-23 14:36:50.849956,,,,
-104,ረቡዕ,4,t,amh,t,superadmin,2020-12-23 14:36:50.849956,,,,
-105,ሓሙስ,5,t,amh,t,superadmin,2020-12-23 14:36:50.849956,,,,
-106,ዓርብ,6,t,amh,t,superadmin,2020-12-23 14:36:50.849956,,,,
-107,ቅዳሜ,7,f,amh,t,superadmin,2020-12-23 14:36:50.849956,,,,
+code,name,day_seq,is_global_working,lang_code,is_active,cr_by,cr_dtimes
+101,SUN,1,f,eng,t,superadmin,2020-12-23 14:36:50.849956
+102,MON,2,t,eng,t,superadmin,2020-12-23 14:36:50.849956
+103,TUE,3,t,eng,t,superadmin,2020-12-23 14:36:50.849956
+104,WED,4,t,eng,t,superadmin,2020-12-23 14:36:50.849956
+105,THU,5,t,eng,t,superadmin,2020-12-23 14:36:50.849956
+106,FRI,6,t,eng,t,superadmin,2020-12-23 14:36:50.849956
+107,SAT,7,f,eng,t,superadmin,2020-12-23 14:36:50.849956
+101,እሑድ,1,f,amh,t,superadmin,2020-12-23 14:36:50.849956
+102,ሰኞ,2,t,amh,t,superadmin,2020-12-23 14:36:50.849956
+103,ማክሰኞ,3,t,amh,t,superadmin,2020-12-23 14:36:50.849956
+104,ረቡዕ,4,t,amh,t,superadmin,2020-12-23 14:36:50.849956
+105,ሓሙስ,5,t,amh,t,superadmin,2020-12-23 14:36:50.849956
+106,ዓርብ,6,t,amh,t,superadmin,2020-12-23 14:36:50.849956
+107,ቅዳሜ,7,f,amh,t,superadmin,2020-12-23 14:36:50.849956

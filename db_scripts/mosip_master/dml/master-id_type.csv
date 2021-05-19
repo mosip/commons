@@ -1,11 +1,11 @@
-code,name,descr,lang_code,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes
-UIN,Unique Identification Number,National ID given to the applicant,eng,t,superadmin,2020-12-23 14:36:47.380513,,,,
-PRID,Pre-registration ID,ID assigned after Pre-registration,eng,t,superadmin,2020-12-23 14:36:47.380513,,,,
-RID,Registration ID,ID assigned after registration,eng,t,superadmin,2020-12-23 14:36:47.380513,,,,
-VID,Virtual ID,ID used in replacement of UIN,eng,t,superadmin,2020-12-23 14:36:47.380513,,,,
-Token ID,Token ID,ID used by a vendor for an applicant,eng,t,superadmin,2020-12-23 14:36:47.380513,,,,
-UIN,ልዩ መለያ ቁጥር,ለተመዝጋቢ የሚሰጥ ሀገራዊ መለያ ቁጥር,amh,t,superadmin,2020-12-23 14:36:47.380513,,,,
-PRID,ቅድመ ምዝገባ መለያ ቁጥር,በቅድመ ምዝገባ ወቅት የሚሰጥ መለያ ቁጥር,amh,t,superadmin,2020-12-23 14:36:47.380513,,,,
-RID,የምዝገባ መለያ ቁጥር,ከምዝገባ ወቅት የሚሰጥ መለያ ቁጥር,amh,t,superadmin,2020-12-23 14:36:47.380513,,,,
-VID,ቨርቱኣል መለያ ቁጥር,ሃጋራዊ መለያ ቁጥርን በመተካት የሚያገለግል,amh,t,superadmin,2020-12-23 14:36:47.380513,,,,
-Token ID,ቶክን መለያ ቁጥር,በአገልግ ሎት ሰጪዎች  ጥቅም ላይ የሚውል መለያ ቁጥር,amh,t,superadmin,2020-12-23 14:36:47.380513,,,,
+code,name,descr,lang_code,is_active,cr_by,cr_dtimes
+UIN,Unique Identification Number,National ID given to the applicant,eng,t,superadmin,2020-12-23 14:36:47.380513
+PRID,Pre-registration ID,ID assigned after Pre-registration,eng,t,superadmin,2020-12-23 14:36:47.380513
+RID,Registration ID,ID assigned after registration,eng,t,superadmin,2020-12-23 14:36:47.380513
+VID,Virtual ID,ID used in replacement of UIN,eng,t,superadmin,2020-12-23 14:36:47.380513
+Token ID,Token ID,ID used by a vendor for an applicant,eng,t,superadmin,2020-12-23 14:36:47.380513
+UIN,ልዩ መለያ ቁጥር,ለተመዝጋቢ የሚሰጥ ሀገራዊ መለያ ቁጥር,amh,t,superadmin,2020-12-23 14:36:47.380513
+PRID,ቅድመ ምዝገባ መለያ ቁጥር,በቅድመ ምዝገባ ወቅት የሚሰጥ መለያ ቁጥር,amh,t,superadmin,2020-12-23 14:36:47.380513
+RID,የምዝገባ መለያ ቁጥር,ከምዝገባ ወቅት የሚሰጥ መለያ ቁጥር,amh,t,superadmin,2020-12-23 14:36:47.380513
+VID,ቨርቱኣል መለያ ቁጥር,ሃጋራዊ መለያ ቁጥርን በመተካት የሚያገለግል,amh,t,superadmin,2020-12-23 14:36:47.380513
+Token ID,ቶክን መለያ ቁጥር,በአገልግ ሎት ሰጪዎች  ጥቅም ላይ የሚውል መለያ ቁጥር,amh,t,superadmin,2020-12-23 14:36:47.380513

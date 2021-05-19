@@ -1,13 +1,13 @@
-id,location_code,holiday_date,holiday_name,holiday_desc,lang_code,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes
-2000006,W01,2021-01-10,Sunday Weekend,Weekend,amh,t,superadmin,2020-12-24 15:36:32.289141,,,,
-2000006,W01,2021-01-10,Sunday Weekend,Weekend,eng,t,superadmin,2020-12-24 15:36:32.289141,,,,
-2000001,W01,2020-12-26,Saturday Weekend,Weekend,amh,t,superadmin,2020-12-24 15:36:32.289141,,,,
-2000001,W01,2020-12-26,Saturday Weekend,Weekend,eng,t,superadmin,2020-12-24 15:36:32.289141,,,,
-2000002,W01,2020-12-27,Sunday Weekend,Weekend,amh,t,superadmin,2020-12-24 15:36:32.289141,,,,
-2000002,W01,2020-12-27,Sunday Weekend,Weekend,eng,t,superadmin,2020-12-24 15:36:32.289141,,,,
-2000003,W01,2021-01-02,Saturday Weekend,Weekend,amh,t,superadmin,2020-12-24 15:36:32.289141,,,,
-2000003,W01,2021-01-02,Saturday Weekend,Weekend,eng,t,superadmin,2020-12-24 15:36:32.289141,,,,
-2000004,W01,2021-01-03,Sunday Weekend,Weekend,amh,t,superadmin,2020-12-24 15:36:32.289141,,,,
-2000004,W01,2021-01-03,Sunday Weekend,Weekend,eng,t,superadmin,2020-12-24 15:36:32.289141,,,,
-2000005,W01,2021-01-09,Saturday Weekend,Weekend,amh,t,superadmin,2020-12-24 15:36:32.289141,,,,
-2000005,W01,2021-01-09,Saturday Weekend,Weekend,eng,t,superadmin,2020-12-24 15:36:32.289141,,,,
+id,location_code,holiday_date,holiday_name,holiday_desc,lang_code,is_active,cr_by,cr_dtimes
+2000006,W01,2021-01-10,Sunday Weekend,Weekend,amh,t,superadmin,2020-12-24 15:36:32.289141
+2000006,W01,2021-01-10,Sunday Weekend,Weekend,eng,t,superadmin,2020-12-24 15:36:32.289141
+2000001,W01,2020-12-26,Saturday Weekend,Weekend,amh,t,superadmin,2020-12-24 15:36:32.289141
+2000001,W01,2020-12-26,Saturday Weekend,Weekend,eng,t,superadmin,2020-12-24 15:36:32.289141
+2000002,W01,2020-12-27,Sunday Weekend,Weekend,amh,t,superadmin,2020-12-24 15:36:32.289141
+2000002,W01,2020-12-27,Sunday Weekend,Weekend,eng,t,superadmin,2020-12-24 15:36:32.289141
+2000003,W01,2021-01-02,Saturday Weekend,Weekend,amh,t,superadmin,2020-12-24 15:36:32.289141
+2000003,W01,2021-01-02,Saturday Weekend,Weekend,eng,t,superadmin,2020-12-24 15:36:32.289141
+2000004,W01,2021-01-03,Sunday Weekend,Weekend,amh,t,superadmin,2020-12-24 15:36:32.289141
+2000004,W01,2021-01-03,Sunday Weekend,Weekend,eng,t,superadmin,2020-12-24 15:36:32.289141
+2000005,W01,2021-01-09,Saturday Weekend,Weekend,amh,t,superadmin,2020-12-24 15:36:32.289141
+2000005,W01,2021-01-09,Saturday Weekend,Weekend,eng,t,superadmin,2020-12-24 15:36:32.289141

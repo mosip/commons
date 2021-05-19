@@ -1,11 +1,11 @@
-id,name,descr,lang_code,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes
-login_auth,Login authentication,Login authentication,eng,t,superadmin,2020-12-23 14:36:48.201214,,,,
-eod_auth,Eod authentication,Eod authentication,eng,t,superadmin,2020-12-23 14:36:48.201214,,,,
-packet_auth,Packet authentication,Packet authentication,eng,t,superadmin,2020-12-23 14:36:48.201214,,,,
-exception_auth,Exception authentication,Exception authentication,eng,t,superadmin,2020-12-23 14:36:48.201214,,,,
-onboard_auth,Onboard authentication,Onboard authentication,eng,t,superadmin,2020-12-23 14:36:48.201214,,,,
-login_auth,የይለፍ ማረጋገጫ,የይለፍ ማረጋገጫ,amh,t,superadmin,2020-12-23 14:36:48.201214,,,,
-eod_auth,ኢኦዲ ማረጋገጫ,ኢኦዲ ማረጋገጫ,amh,t,superadmin,2020-12-23 14:36:48.201214,,,,
-packet_auth,ፓኬት ማረጋገጫ,ፓኬት ማረጋገጫ,amh,t,superadmin,2020-12-23 14:36:48.201214,,,,
-exception_auth,ልዩ ሁኔታዎች ማረጋገጫ,ልዩ ሁኔታዎች ማረጋገጫ,amh,t,superadmin,2020-12-23 14:36:48.201214,,,,
-onboard_auth,የአዲስ ተመዝጋቢ ማረጋገጫ ,የአዲስ ተመዝጋቢ ማረጋገጫ ,amh,t,superadmin,2020-12-23 14:36:48.201214,,,,
+id,name,descr,lang_code,is_active,cr_by,cr_dtimes
+login_auth,Login authentication,Login authentication,eng,t,superadmin,2020-12-23 14:36:48.201214
+eod_auth,Eod authentication,Eod authentication,eng,t,superadmin,2020-12-23 14:36:48.201214
+packet_auth,Packet authentication,Packet authentication,eng,t,superadmin,2020-12-23 14:36:48.201214
+exception_auth,Exception authentication,Exception authentication,eng,t,superadmin,2020-12-23 14:36:48.201214
+onboard_auth,Onboard authentication,Onboard authentication,eng,t,superadmin,2020-12-23 14:36:48.201214
+login_auth,የይለፍ ማረጋገጫ,የይለፍ ማረጋገጫ,amh,t,superadmin,2020-12-23 14:36:48.201214
+eod_auth,ኢኦዲ ማረጋገጫ,ኢኦዲ ማረጋገጫ,amh,t,superadmin,2020-12-23 14:36:48.201214
+packet_auth,ፓኬት ማረጋገጫ,ፓኬት ማረጋገጫ,amh,t,superadmin,2020-12-23 14:36:48.201214
+exception_auth,ልዩ ሁኔታዎች ማረጋገጫ,ልዩ ሁኔታዎች ማረጋገጫ,amh,t,superadmin,2020-12-23 14:36:48.201214
+onboard_auth,የአዲስ ተመዝጋቢ ማረጋገጫ ,የአዲስ ተመዝጋቢ ማረጋገጫ ,amh,t,superadmin,2020-12-23 14:36:48.201214

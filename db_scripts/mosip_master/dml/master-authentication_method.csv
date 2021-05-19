@@ -1,16 +1,16 @@
-code,method_seq,lang_code,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes
-PWD,1,eng,t,superadmin,2020-12-23 14:36:46.166412,,,,
-OTP,2,eng,t,superadmin,2020-12-23 14:36:46.166412,,,,
-FINGERPRINT,3,eng,t,superadmin,2020-12-23 14:36:46.166412,,,,
-IRIS,4,eng,t,superadmin,2020-12-23 14:36:46.166412,,,,
-FACE,5,eng,t,superadmin,2020-12-23 14:36:46.166412,,,,
-PWD,1,fra,t,superadmin,2020-12-23 14:36:46.166412,,,,
-OTP,2,fra,t,superadmin,2020-12-23 14:36:46.166412,,,,
-FINGERPRINT,3,fra,t,superadmin,2020-12-23 14:36:46.166412,,,,
-IRIS,4,fra,t,superadmin,2020-12-23 14:36:46.166412,,,,
-FACE,5,fra,t,superadmin,2020-12-23 14:36:46.166412,,,,
-PWD,1,ara,t,superadmin,2020-12-23 14:36:46.166412,,,,
-OTP,2,ara,t,superadmin,2020-12-23 14:36:46.166412,,,,
-FINGERPRINT,3,ara,t,superadmin,2020-12-23 14:36:46.166412,,,,
-IRIS,4,ara,t,superadmin,2020-12-23 14:36:46.166412,,,,
-FACE,5,ara,t,superadmin,2020-12-23 14:36:46.166412,,,,
+code,method_seq,lang_code,is_active,cr_by,cr_dtimes
+PWD,1,eng,t,superadmin,2020-12-23 14:36:46.166412
+OTP,2,eng,t,superadmin,2020-12-23 14:36:46.166412
+FINGERPRINT,3,eng,t,superadmin,2020-12-23 14:36:46.166412
+IRIS,4,eng,t,superadmin,2020-12-23 14:36:46.166412
+FACE,5,eng,t,superadmin,2020-12-23 14:36:46.166412
+PWD,1,fra,t,superadmin,2020-12-23 14:36:46.166412
+OTP,2,fra,t,superadmin,2020-12-23 14:36:46.166412
+FINGERPRINT,3,fra,t,superadmin,2020-12-23 14:36:46.166412
+IRIS,4,fra,t,superadmin,2020-12-23 14:36:46.166412
+FACE,5,fra,t,superadmin,2020-12-23 14:36:46.166412
+PWD,1,ara,t,superadmin,2020-12-23 14:36:46.166412
+OTP,2,ara,t,superadmin,2020-12-23 14:36:46.166412
+FINGERPRINT,3,ara,t,superadmin,2020-12-23 14:36:46.166412
+IRIS,4,ara,t,superadmin,2020-12-23 14:36:46.166412
+FACE,5,ara,t,superadmin,2020-12-23 14:36:46.166412

@@ -1,17 +1,17 @@
-id,app_id,name,descr,lang_code,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes
-approveRegistrationRoot,10003,approveRegistrationRoot,approveRegistrationRoot,eng,t,superadmin,2020-12-23 14:36:54.260278,,,,
-loginRoot,10003,loginRoot,loginRoot,eng,t,superadmin,2020-12-23 14:36:54.260278,,,,
-lostUINRoot,10003,lostUINRoot,lostUINRoot,eng,t,superadmin,2020-12-23 14:36:54.260278,,,,
-newRegistrationRoot,10003,newRegistrationRoot,newRegistrationRoot,eng,t,superadmin,2020-12-23 14:36:54.260278,,,,
-onBoardRoot,10003,onBoardRoot,onBoardRoot,eng,t,superadmin,2020-12-23 14:36:54.260278,,,,
-registrationCorrectionRoot,10003,registrationCorrectionRoot,registrationCorrectionRoot,eng,t,superadmin,2020-12-23 14:36:54.260278,,,,
-sendPacketServerRoot,10003,sendPacketServerRoot,sendPacketServerRoot,eng,t,superadmin,2020-12-23 14:36:54.260278,,,,
-syncServerClientRoot,10003,syncServerClientRoot,syncServerClientRoot,eng,t,superadmin,2020-12-23 14:36:54.260278,,,,
-uinActivationRoot,10003,uinActivationRoot,uinActivationRoot,eng,t,superadmin,2020-12-23 14:36:54.260278,,,,
-uinUpdateRoot,10003,uinUpdateRoot,uinUpdateRoot,eng,t,superadmin,2020-12-23 14:36:54.260278,,,,
-updateClientSoftwareRoot,10003,updateClientSoftwareRoot,updateClientSoftwareRoot,eng,t,superadmin,2020-12-23 14:36:54.260278,,,,
-reportRoot,10003,reportRoot,reportRoot,eng,t,superadmin,2020-12-23 14:36:54.260278,,,,
-syncClientServerRoot,10003,syncClientServerRoot,syncClientServerRoot,eng,t,superadmin,2020-12-23 14:36:54.260278,,,,
-eodRoot,10003,eodroot,eodroot,eng,t,superadmin,2020-12-23 14:36:54.260278,,,,
-reRegisterRoot,10003,reRegisterRoot,reRegisterRoot,eng,t,superadmin,2020-12-23 14:36:54.260278,,,,
-uploadPacketRoot,10003,uploadPacketRoot,uploadPacketRoot,eng,t,superadmin,2020-12-23 14:36:54.260278,,,,
+id,app_id,name,descr,lang_code,is_active,cr_by,cr_dtimes
+approveRegistrationRoot,10003,approveRegistrationRoot,approveRegistrationRoot,eng,t,superadmin,2020-12-23 14:36:54.260278
+loginRoot,10003,loginRoot,loginRoot,eng,t,superadmin,2020-12-23 14:36:54.260278
+lostUINRoot,10003,lostUINRoot,lostUINRoot,eng,t,superadmin,2020-12-23 14:36:54.260278
+newRegistrationRoot,10003,newRegistrationRoot,newRegistrationRoot,eng,t,superadmin,2020-12-23 14:36:54.260278
+onBoardRoot,10003,onBoardRoot,onBoardRoot,eng,t,superadmin,2020-12-23 14:36:54.260278
+registrationCorrectionRoot,10003,registrationCorrectionRoot,registrationCorrectionRoot,eng,t,superadmin,2020-12-23 14:36:54.260278
+sendPacketServerRoot,10003,sendPacketServerRoot,sendPacketServerRoot,eng,t,superadmin,2020-12-23 14:36:54.260278
+syncServerClientRoot,10003,syncServerClientRoot,syncServerClientRoot,eng,t,superadmin,2020-12-23 14:36:54.260278
+uinActivationRoot,10003,uinActivationRoot,uinActivationRoot,eng,t,superadmin,2020-12-23 14:36:54.260278
+uinUpdateRoot,10003,uinUpdateRoot,uinUpdateRoot,eng,t,superadmin,2020-12-23 14:36:54.260278
+updateClientSoftwareRoot,10003,updateClientSoftwareRoot,updateClientSoftwareRoot,eng,t,superadmin,2020-12-23 14:36:54.260278
+reportRoot,10003,reportRoot,reportRoot,eng,t,superadmin,2020-12-23 14:36:54.260278
+syncClientServerRoot,10003,syncClientServerRoot,syncClientServerRoot,eng,t,superadmin,2020-12-23 14:36:54.260278
+eodRoot,10003,eodroot,eodroot,eng,t,superadmin,2020-12-23 14:36:54.260278
+reRegisterRoot,10003,reRegisterRoot,reRegisterRoot,eng,t,superadmin,2020-12-23 14:36:54.260278
+uploadPacketRoot,10003,uploadPacketRoot,uploadPacketRoot,eng,t,superadmin,2020-12-23 14:36:54.260278

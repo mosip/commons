@@ -1,67 +1,67 @@
-code,name,descr,lang_code,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes
-CIN,Reference Identity Card,Reference Identity Card,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-CIN,የማጣቀሻ መታወቂያ,የማጣቀሻ መታወቂያ,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-COB,Certificate of Birth,Proof birth and age of a person,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-COB,የልደት ምስክር ወረቀት,የልደት እና ዕድሜ ማረጋገጫ,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-COE,Certification of Exception,Certificate of Exception,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-COE,የልዩነት ማረጋገጫ,የልዩነት ማረጋገጫ,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-COR,Certificate of residence,Proof of Resident,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-COR,የመኖሪያ ምስክር ወረቀት,የነዋሪነት ማረጋገጫ,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-CRN,Certificate of Relationship,Proof relationship of a person,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-CRN,የዝምድና ምስክር ወረቀት,የዝምድና ማረጋገጫ,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC001,Passport,Proof of Idendity,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC001,ፓስፖርት,የማንነት ማረጋገጫ,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC002,PAN card,PAN card,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC002,PAN ካርድ,PAN ካርድ,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC003,Either Ration or PDS Photo card,Either Ration or PDS Photo card,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC003,የድልድል ወይም የፒ.ዲ.ኤስ. ፎቶ ካርድ,የድልድል ወይም የፒ.ዲ.ኤስ. ፎቶ ካርድ,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC004,Voter Identification card,Voter Identification card,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC004,የመራጮች መታወቂያ ካርድ,የመራጮች መታወቂያ ካርድ,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC005,Driving licence of the applicant,Driving licence of the applicant,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC005,የአመልካቹ መንጃ ፈቃድ,የአመልካቹ መንጃ ፈቃድ,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC006,Photo identification cards issued by the Government,Photo identification cards issued by the Government,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC006,በመንግስት የተሰጡ የፎቶ መታወቂያ ካርዶች,በመንግስት የተሰጡ የፎቶ መታወቂያ ካርዶች,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC007,Service photo ID cards that is issued by a PSU,Service photo ID cards that is issued by a PSU,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC007,በ PSU የሚሰጠው የአገልግሎት ፎቶ መታወቂያ ካርዶች,በ PSU የሚሰጠው የአገልግሎት ፎቶ መታወቂያ ካርዶች,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC008,Licence of Arms,Licence of Arms,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC008,የጦር መሳሪያዎች ፈቃድ,የጦር መሳሪያዎች ፈቃድ,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC009,Photo Bank ATM card,Photo Bank ATM card,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC009,የባንክ ኤቲኤም ካርድ ፎቶ ,የባንክ ኤቲኤም ካርድ ፎቶ ,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC010,Photo Credit card,Photo Credit card,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC010,ፎቶ ክሬዲት ካርድ,ፎቶ ክሬዲት ካርድ,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC011,Photo card of the Freedom Fighter,Photo card of the Freedom Fighter,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC011,የነፃነት ታጋዩ የፎቶ ካርድ,የነፃነት ታጋዩ የፎቶ ካርድ,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC012,Certificate of Marriage,Certificate of Marriage,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC012,የጋብቻ የምስክር ወረቀት,የጋብቻ የምስክር ወረቀት,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC013,Passbook or Bank Statement,Passbook or Bank Statement,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC013,የፓስፖርት ወይም የባንክ መግለጫ,የፓስፖርት ወይም የባንክ መግለጫ,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC014,Account statement or passbook of the Post Office,Account statement or passbook of the Post Office,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC014,የሂሳብ መግለጫ ወይም የፖስታ ቤት ፓስፖርት,የሂሳብ መግለጫ ወይም የፖስታ ቤት ፓስፖርት,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC015,Ration Card,Ration Card,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC015,የጨረታ ካርድ,የጨረታ ካርድ,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC016,PSU issued Service photo ID card with address,PSU issued Service photo ID card with address,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC016,PSU ከአድራሻ ጋር የአገልግሎት ፎቶ መታወቂያ ካርድ ሰጠ,PSU ከአድራሻ ጋር የአገልግሎት ፎቶ መታወቂያ ካርድ ሰጠ,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC017,Previous 3 months’ electricity bill,Previous 3 months’ electricity bill,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC017,ያለፉት 3 ወራት የኤሌክትሪክ ክፍያ,ያለፉት 3 ወራት የኤሌክትሪክ ክፍያ,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC018,Water bill as long as it is not more than 3 months’ old,Water bill as long as it is not more than 3 months’ old,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC018,የውሃ ክፍያ ከ 3 ወር ያልበለጠ እስከሆነ ድረስ,የውሃ ክፍያ ከ 3 ወር ያልበለጠ እስከሆነ ድረስ,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC024,PDS Card,PDS Card,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC024,የፒ.ዲ.ኤስ. ካርድ,የፒ.ዲ.ኤስ. ካርድ,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC025,"Medical card issued by the State Govt, CGHS, ECHS and ESIC","Medical card issued by the State Government, CGHS, ECHS and also ESIC",eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC025,በክልሉ መንግስት ፣ በ CGHS ፣ ECHS እና እንዲሁም በ ESIC የተሰጠ የህክምና ካርድ,በክልሉ መንግስት ፣ በ CGHS ፣ ECHS እና እንዲሁም በ ESIC የተሰጠ የህክምና ካርድ,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC026,Canteen card of the Army,Canteen card of the Army,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC026,የሠራዊቱ ካንቴን ካርድ,የሠራዊቱ ካንቴን ካርድ,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC027,Family entitlement document,Any family entitlement document issued by any Central or State Government,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC027,የቤተሰብ መብት ሰነድ,በማንኛውም የማዕከላዊ ወይም የክልል መንግሥት የተሰጠ ማንኛውም የቤተሰብ መብት ሰነድ,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC028,Birth Certificate,Registrar of Birth/municipal Corporation or any local government Birth Certificate,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-DOC028,የልደት ምስክር ወረቀት,የትውልድ መዝገብ ቤት / የማዘጋጃ ቤት ኮርፖሬሽን ወይም ማንኛውም የአከባቢ መስተዳድር የልደት የምስክር ወረቀት,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-EOP,Expetion Photo,Expetion Photo,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-EOP,የጉዞ ፎቶ,የጉዞ ፎቶየጉዞ ፎቶ,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-RNC,Rental contract,Rental Agreement of address,eng,t,superadmin,2020-12-23 14:36:47.174418,,,,
-RNC,የኪራይ ውል,የአድራሻ ኪራይ ስምምነት,amh,t,superadmin,2020-12-23 14:36:47.174418,,,,
-KID,Kebele ID,Kebele Identification Number,eng,t,110012,2021-02-10 13:30:18.537638,,,,
-KID,Kebele ID,Kebele Identification Number,amh,t,110012,2021-02-10 13:30:18.651159,,,,
-DL,Driving Licnese,Driving Licnese Identification Number,eng,t,110012,2021-02-10 13:31:32.893093,,,,
-DL,Driving Licnese,Driving Licnese Identification Number,amh,t,110012,2021-02-10 13:31:32.985197,,,,
-CON,Consent,Consent,eng,t,110011,2021-02-16 07:11:55.18281,,,,
-CON,Consent,Consent,amh,t,110011,2021-02-16 07:11:55.275545,,,,
+code,name,descr,lang_code,is_active,cr_by,cr_dtimes
+CIN,Reference Identity Card,Reference Identity Card,eng,t,superadmin,2020-12-23 14:36:47.174418
+CIN,የማጣቀሻ መታወቂያ,የማጣቀሻ መታወቂያ,amh,t,superadmin,2020-12-23 14:36:47.174418
+COB,Certificate of Birth,Proof birth and age of a person,eng,t,superadmin,2020-12-23 14:36:47.174418
+COB,የልደት ምስክር ወረቀት,የልደት እና ዕድሜ ማረጋገጫ,amh,t,superadmin,2020-12-23 14:36:47.174418
+COE,Certification of Exception,Certificate of Exception,eng,t,superadmin,2020-12-23 14:36:47.174418
+COE,የልዩነት ማረጋገጫ,የልዩነት ማረጋገጫ,amh,t,superadmin,2020-12-23 14:36:47.174418
+COR,Certificate of residence,Proof of Resident,eng,t,superadmin,2020-12-23 14:36:47.174418
+COR,የመኖሪያ ምስክር ወረቀት,የነዋሪነት ማረጋገጫ,amh,t,superadmin,2020-12-23 14:36:47.174418
+CRN,Certificate of Relationship,Proof relationship of a person,eng,t,superadmin,2020-12-23 14:36:47.174418
+CRN,የዝምድና ምስክር ወረቀት,የዝምድና ማረጋገጫ,amh,t,superadmin,2020-12-23 14:36:47.174418
+DOC001,Passport,Proof of Idendity,eng,t,superadmin,2020-12-23 14:36:47.174418
+DOC001,ፓስፖርት,የማንነት ማረጋገጫ,amh,t,superadmin,2020-12-23 14:36:47.174418
+DOC002,PAN card,PAN card,eng,t,superadmin,2020-12-23 14:36:47.174418
+DOC002,PAN ካርድ,PAN ካርድ,amh,t,superadmin,2020-12-23 14:36:47.174418
+DOC003,Either Ration or PDS Photo card,Either Ration or PDS Photo card,eng,t,superadmin,2020-12-23 14:36:47.174418
+DOC003,የድልድል ወይም የፒ.ዲ.ኤስ. ፎቶ ካርድ,የድልድል ወይም የፒ.ዲ.ኤስ. ፎቶ ካርድ,amh,t,superadmin,2020-12-23 14:36:47.174418
+DOC004,Voter Identification card,Voter Identification card,eng,t,superadmin,2020-12-23 14:36:47.174418
+DOC004,የመራጮች መታወቂያ ካርድ,የመራጮች መታወቂያ ካርድ,amh,t,superadmin,2020-12-23 14:36:47.174418
+DOC005,Driving licence of the applicant,Driving licence of the applicant,eng,t,superadmin,2020-12-23 14:36:47.174418
+DOC005,የአመልካቹ መንጃ ፈቃድ,የአመልካቹ መንጃ ፈቃድ,amh,t,superadmin,2020-12-23 14:36:47.174418
+DOC006,Photo identification cards issued by the Government,Photo identification cards issued by the Government,eng,t,superadmin,2020-12-23 14:36:47.174418
+DOC006,በመንግስት የተሰጡ የፎቶ መታወቂያ ካርዶች,በመንግስት የተሰጡ የፎቶ መታወቂያ ካርዶች,amh,t,superadmin,2020-12-23 14:36:47.174418
+DOC007,Service photo ID cards that is issued by a PSU,Service photo ID cards that is issued by a PSU,eng,t,superadmin,2020-12-23 14:36:47.174418
+DOC007,በ PSU የሚሰጠው የአገልግሎት ፎቶ መታወቂያ ካርዶች,በ PSU የሚሰጠው የአገልግሎት ፎቶ መታወቂያ ካርዶች,amh,t,superadmin,2020-12-23 14:36:47.174418
+DOC008,Licence of Arms,Licence of Arms,eng,t,superadmin,2020-12-23 14:36:47.174418
+DOC008,የጦር መሳሪያዎች ፈቃድ,የጦር መሳሪያዎች ፈቃድ,amh,t,superadmin,2020-12-23 14:36:47.174418
+DOC009,Photo Bank ATM card,Photo Bank ATM card,eng,t,superadmin,2020-12-23 14:36:47.174418
+DOC009,የባንክ ኤቲኤም ካርድ ፎቶ ,የባንክ ኤቲኤም ካርድ ፎቶ ,amh,t,superadmin,2020-12-23 14:36:47.174418
+DOC010,Photo Credit card,Photo Credit card,eng,t,superadmin,2020-12-23 14:36:47.174418
+DOC010,ፎቶ ክሬዲት ካርድ,ፎቶ ክሬዲት ካርድ,amh,t,superadmin,2020-12-23 14:36:47.174418
+DOC011,Photo card of the Freedom Fighter,Photo card of the Freedom Fighter,eng,t,superadmin,2020-12-23 14:36:47.174418
+DOC011,የነፃነት ታጋዩ የፎቶ ካርድ,የነፃነት ታጋዩ የፎቶ ካርድ,amh,t,superadmin,2020-12-23 14:36:47.174418
+DOC012,Certificate of Marriage,Certificate of Marriage,eng,t,superadmin,2020-12-23 14:36:47.174418
+DOC012,የጋብቻ የምስክር ወረቀት,የጋብቻ የምስክር ወረቀት,amh,t,superadmin,2020-12-23 14:36:47.174418
+DOC013,Passbook or Bank Statement,Passbook or Bank Statement,eng,t,superadmin,2020-12-23 14:36:47.174418
+DOC013,የፓስፖርት ወይም የባንክ መግለጫ,የፓስፖርት ወይም የባንክ መግለጫ,amh,t,superadmin,2020-12-23 14:36:47.174418
+DOC014,Account statement or passbook of the Post Office,Account statement or passbook of the Post Office,eng,t,superadmin,2020-12-23 14:36:47.174418
+DOC014,የሂሳብ መግለጫ ወይም የፖስታ ቤት ፓስፖርት,የሂሳብ መግለጫ ወይም የፖስታ ቤት ፓስፖርት,amh,t,superadmin,2020-12-23 14:36:47.174418
+DOC015,Ration Card,Ration Card,eng,t,superadmin,2020-12-23 14:36:47.174418
+DOC015,የጨረታ ካርድ,የጨረታ ካርድ,amh,t,superadmin,2020-12-23 14:36:47.174418
+DOC016,PSU issued Service photo ID card with address,PSU issued Service photo ID card with address,eng,t,superadmin,2020-12-23 14:36:47.174418
+DOC016,PSU ከአድራሻ ጋር የአገልግሎት ፎቶ መታወቂያ ካርድ ሰጠ,PSU ከአድራሻ ጋር የአገልግሎት ፎቶ መታወቂያ ካርድ ሰጠ,amh,t,superadmin,2020-12-23 14:36:47.174418
+DOC017,Previous 3 months’ electricity bill,Previous 3 months’ electricity bill,eng,t,superadmin,2020-12-23 14:36:47.174418
+DOC017,ያለፉት 3 ወራት የኤሌክትሪክ ክፍያ,ያለፉት 3 ወራት የኤሌክትሪክ ክፍያ,amh,t,superadmin,2020-12-23 14:36:47.174418
+DOC018,Water bill as long as it is not more than 3 months’ old,Water bill as long as it is not more than 3 months’ old,eng,t,superadmin,2020-12-23 14:36:47.174418
+DOC018,የውሃ ክፍያ ከ 3 ወር ያልበለጠ እስከሆነ ድረስ,የውሃ ክፍያ ከ 3 ወር ያልበለጠ እስከሆነ ድረስ,amh,t,superadmin,2020-12-23 14:36:47.174418
+DOC024,PDS Card,PDS Card,eng,t,superadmin,2020-12-23 14:36:47.174418
+DOC024,የፒ.ዲ.ኤስ. ካርድ,የፒ.ዲ.ኤስ. ካርድ,amh,t,superadmin,2020-12-23 14:36:47.174418
+DOC025,"Medical card issued by the State Govt, CGHS, ECHS and ESIC","Medical card issued by the State Government, CGHS, ECHS and also ESIC",eng,t,superadmin,2020-12-23 14:36:47.174418
+DOC025,በክልሉ መንግስት ፣ በ CGHS ፣ ECHS እና እንዲሁም በ ESIC የተሰጠ የህክምና ካርድ,በክልሉ መንግስት ፣ በ CGHS ፣ ECHS እና እንዲሁም በ ESIC የተሰጠ የህክምና ካርድ,amh,t,superadmin,2020-12-23 14:36:47.174418
+DOC026,Canteen card of the Army,Canteen card of the Army,eng,t,superadmin,2020-12-23 14:36:47.174418
+DOC026,የሠራዊቱ ካንቴን ካርድ,የሠራዊቱ ካንቴን ካርድ,amh,t,superadmin,2020-12-23 14:36:47.174418
+DOC027,Family entitlement document,Any family entitlement document issued by any Central or State Government,eng,t,superadmin,2020-12-23 14:36:47.174418
+DOC027,የቤተሰብ መብት ሰነድ,በማንኛውም የማዕከላዊ ወይም የክልል መንግሥት የተሰጠ ማንኛውም የቤተሰብ መብት ሰነድ,amh,t,superadmin,2020-12-23 14:36:47.174418
+DOC028,Birth Certificate,Registrar of Birth/municipal Corporation or any local government Birth Certificate,eng,t,superadmin,2020-12-23 14:36:47.174418
+DOC028,የልደት ምስክር ወረቀት,የትውልድ መዝገብ ቤት / የማዘጋጃ ቤት ኮርፖሬሽን ወይም ማንኛውም የአከባቢ መስተዳድር የልደት የምስክር ወረቀት,amh,t,superadmin,2020-12-23 14:36:47.174418
+EOP,Expetion Photo,Expetion Photo,eng,t,superadmin,2020-12-23 14:36:47.174418
+EOP,የጉዞ ፎቶ,የጉዞ ፎቶየጉዞ ፎቶ,amh,t,superadmin,2020-12-23 14:36:47.174418
+RNC,Rental contract,Rental Agreement of address,eng,t,superadmin,2020-12-23 14:36:47.174418
+RNC,የኪራይ ውል,የአድራሻ ኪራይ ስምምነት,amh,t,superadmin,2020-12-23 14:36:47.174418
+KID,Kebele ID,Kebele Identification Number,eng,t,110012,2021-02-10 13:30:18.537638
+KID,Kebele ID,Kebele Identification Number,amh,t,110012,2021-02-10 13:30:18.651159
+DL,Driving Licnese,Driving Licnese Identification Number,eng,t,110012,2021-02-10 13:31:32.893093
+DL,Driving Licnese,Driving Licnese Identification Number,amh,t,110012,2021-02-10 13:31:32.985197
+CON,Consent,Consent,eng,t,110011,2021-02-16 07:11:55.18281
+CON,Consent,Consent,amh,t,110011,2021-02-16 07:11:55.275545

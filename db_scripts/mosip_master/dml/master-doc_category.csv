@@ -1,11 +1,11 @@
-code,name,descr,lang_code,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes
-POA,Proof of Address,Address Proof,eng,t,superadmin,2020-12-23 14:36:46.911293,,,,
-POA,የአድራሻ ማረጋገጫ,የአድራሻ ማረጋገጫ ሰነድ,amh,t,superadmin,2020-12-23 14:36:46.911293,,,,
-POI,Proof of Identity,Identity Proof,eng,t,superadmin,2020-12-23 14:36:46.911293,,,,
-POI,የማንነት ማረጋገጫ,የማንነት (የስም፣ የፆታ እና የእድሜ) ማረጋገጫ ,amh,t,superadmin,2020-12-23 14:36:46.911293,,,,
-POR,Proof of Relationship,Proof Relationship of the person,eng,t,superadmin,2020-12-23 14:36:46.911293,,,,
-POR,የዝምድና ማረጋገጫ,የዝምድና ማረጋገጫ,amh,t,superadmin,2020-12-23 14:36:46.911293,,,,
-POB,Proof of Birth,Proof date of birth of the person,eng,t,superadmin,2020-12-23 14:36:46.911293,,,,
-POB,የልደት ማረጋገጫ,የልደት ማረጋገጫ ሰነድ,amh,t,superadmin,2020-12-23 14:36:46.911293,,,,
-POE,Proof of Biometric Exception,Proof of Biometric Exception,eng,t,superadmin,2020-12-23 14:36:46.911293,,,,
-POE,የባዮሜትሪክ አለመኖሩ ማረጋገጫ,ባዮሜትሪክ አለመኖሩ ማረጋገጫ,amh,t,superadmin,2020-12-23 14:36:46.911293,,,,
+code,name,descr,lang_code,is_active,cr_by,cr_dtimes
+POA,Proof of Address,Address Proof,eng,t,superadmin,2020-12-23 14:36:46.911293
+POA,የአድራሻ ማረጋገጫ,የአድራሻ ማረጋገጫ ሰነድ,amh,t,superadmin,2020-12-23 14:36:46.911293
+POI,Proof of Identity,Identity Proof,eng,t,superadmin,2020-12-23 14:36:46.911293
+POI,የማንነት ማረጋገጫ,የማንነት (የስም፣ የፆታ እና የእድሜ) ማረጋገጫ ,amh,t,superadmin,2020-12-23 14:36:46.911293
+POR,Proof of Relationship,Proof Relationship of the person,eng,t,superadmin,2020-12-23 14:36:46.911293
+POR,የዝምድና ማረጋገጫ,የዝምድና ማረጋገጫ,amh,t,superadmin,2020-12-23 14:36:46.911293
+POB,Proof of Birth,Proof date of birth of the person,eng,t,superadmin,2020-12-23 14:36:46.911293
+POB,የልደት ማረጋገጫ,የልደት ማረጋገጫ ሰነድ,amh,t,superadmin,2020-12-23 14:36:46.911293
+POE,Proof of Biometric Exception,Proof of Biometric Exception,eng,t,superadmin,2020-12-23 14:36:46.911293
+POE,የባዮሜትሪክ አለመኖሩ ማረጋገጫ,ባዮሜትሪክ አለመኖሩ ማረጋገጫ,amh,t,superadmin,2020-12-23 14:36:46.911293

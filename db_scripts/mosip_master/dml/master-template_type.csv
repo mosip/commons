@@ -1,203 +1,203 @@
-code,descr,lang_code,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes
-Acknowledgement-email-subject,Template for email subject of Acknowledgement,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-Acknowledgement-email-subject,Template for email subject of Acknowledgement,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-auth-email-content,Template for authorization content,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-auth-email-content,Template for authorization content,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-auth-email-subject,Template for authorization subject,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-auth-email-subject,Template for authorization subject,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-auth-otp-email-content-template,Auth OTP Email Content Template,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-auth-otp-email-content-template,Auth OTP Email Content Template,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-auth-otp-email-subject-template,Auth OTP Email Subject Template,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-auth-otp-email-subject-template,Auth OTP Email Subject Template,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-auth-otp-sms-template,Auth OTP SMS Template,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-auth-otp-sms-template,Auth OTP SMS Template,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-auth-sms,Template for authorization SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-auth-sms,Template for authorization SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-cancel-appointment,Template for Cancel Appointment,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-cancel-appointment,Template for Cancel Appointment,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-consent,Consent,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-consent,Consent,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-Email-Acknowledgement,Template for Email Acknowledgement,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-Email-Acknowledgement,Template for Email Acknowledgement,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-ida-auth-otp-email-content-template,Template for Email Content,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-ida-auth-otp-email-content-template,Template for Email Content,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-ida-auth-otp-email-subject-template,Template for Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-ida-auth-otp-email-subject-template,Template for Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-ida-auth-otp-sms-template,Template for OTP in SMS ,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-ida-auth-otp-sms-template,Template for OTP in SMS ,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-lostUIN-email-notification,Lost UIN Acknowledgement Template,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-lostUIN-email-notification,Lost UIN Acknowledgement Template,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-lostUIN-sms-notification,Lost UIN Acknowledgement Template,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-lostUIN-sms-notification,Lost UIN Acknowledgement Template,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-NewReg-email-content-template,Template for new registration Email Content,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-NewReg-email-content-template,Template for new registration Email Content,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-NewReg-email-subject-template,Template for new registration Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-NewReg-email-subject-template,Template for new registration Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-NewReg-sms-template,Template for new registration SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-NewReg-sms-template,Template for new registration SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-Onscreen-Acknowledgement,Template for Onscreen Acknowledgment,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-Onscreen-Acknowledgement,Template for Onscreen Acknowledgment,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-OTP-email-content-template,Template for OTP generation Email Content,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-otp-email-content-template,Template for OTP Email Content,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-OTP-email-content-template,Template for OTP generation Email Content,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-otp-email-content-template,Template for OTP Email Content,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-OTP-email-subject-template,Template for OTP generation Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-otp-email-subject-template,Template for OTP Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-OTP-email-subject-template,Template for OTP generation Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-otp-email-subject-template,Template for OTP Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-OTP-sms-template,Template for OTP SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-otp-sms-template,Template for OTP SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-OTP-sms-template,Template for OTP SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-otp-sms-template,Template for OTP SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-reg-ack-template-part1,Registration Acknowledgement Template - Part 1,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-reg-ack-template-part1,Registration Acknowledgement Template - Part 2,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-reg-ack-template-part2,Registration Acknowledgement Template - Part 2,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-reg-ack-template-part2,Registration Acknowledgement Template - Part 3,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-reg-ack-template-part3,Registration Acknowledgement Template - Part 3,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-reg-ack-template-part3,Registration Acknowledgement Template - Part 4,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-reg-ack-template-part4,Registration Acknowledgement Template - Part 4,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-reg-ack-template-part4,Registration Acknowledgement Template - Part 5,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-reg-email-notification,Registration Acknowledgement Template,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-reg-email-notification,Registration Acknowledgement Template,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-reg-sms-notification,Registration Acknowledgement Template,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-reg-sms-notification,Registration Acknowledgement Template,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_DUP_UIN_EMAIL,Template for duplicate UIN Email,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_DUP_UIN_EMAIL,Template for duplicate UIN Email,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_DUP_UIN_SMS,Template for duplicate UIN SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_DUP_UIN_SMS,Template for duplicate UIN SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_LOST_UIN_EMAIL,Lost UIN Notification Email,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_LOST_UIN_EMAIL,Lost UIN Notification Email,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_LOST_UIN_SMS,Lost UIN Notification SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_LOST_UIN_SMS,Lost UIN Notification SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_MASKED_UIN_CARD_TEMPLATE,Masked UIN card template,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_MASKED_UIN_CARD_TEMPLATE,Masked UIN card template,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_TEC_ISSUE_EMAIL,Template for Technical Issue Email,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_TEC_ISSUE_EMAIL,Template for Technical Issue Email,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_TEC_ISSUE_SMS,Template for Technical Issue SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_TEC_ISSUE_SMS,Template for Technical Issue SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_UIN_CARD_TEMPLATE,UIN card template,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_UIN_CARD_TEMPLATE,UIN card template,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_UIN_DEAC_EMAIL,Template for UIN Deactivation Email,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_UIN_DEAC_EMAIL,Template for UIN Deactivation Email,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_UIN_DEAC_SMS,Template for UIN Deactivation SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_UIN_DEAC_SMS,Template for UIN Deactivation SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_UIN_GEN_EMAIL,Template for UIN generation Email,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_UIN_GEN_EMAIL,Template for UIN generation Email,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_UIN_GEN_SMS,Template for UIN generation SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_UIN_GEN_SMS,Template for UIN generation SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_UIN_REAC_EMAIL,Template for UIN Reactivate Email,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_UIN_REAC_EMAIL,Template for UIN Reactivate Email,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_UIN_REAC_SMS,Template for UIN Reactivate SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_UIN_REAC_SMS,Template for UIN Reactivate SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_UIN_UPD_EMAIL,Template for update details Email,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_UIN_UPD_EMAIL,Template for update details Email,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_UIN_UPD_SMS,Template for update Details SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RPR_UIN_UPD_SMS,Template for update Details SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_AUTH_HIST_FAILURE_EMAIL,Authentication History Request Failure Email,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_AUTH_HIST_FAILURE_EMAIL,Authentication History Request Failure Email,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_AUTH_HIST_FAILURE_EMAIL_SUB,Authentication History Request Failure Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_AUTH_HIST_FAILURE_EMAIL_SUB,Authentication History Request Failure Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_AUTH_HIST_FAILURE_SMS,Authentication History Request Failure SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_AUTH_HIST_FAILURE_SMS,Authentication History Request Failure SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_AUTH_HIST_SUCCESS_EMAIL,Authentication History Request Success Email,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_AUTH_HIST_SUCCESS_EMAIL,Authentication History Request Success Email,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_AUTH_HIST_SUCCESS_EMAIL_SUB,Authentication History Request Success EMAIL Subject,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_AUTH_HIST_SUCCESS_EMAIL_SUB,Authentication History Request Success EMAIL Subject,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_AUTH_HIST_SUCCESS_SMS,Authentication History Request Success SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_AUTH_HIST_SUCCESS_SMS,Authentication History Request Success SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_DOW_UIN_FAILURE_EMAIL,Download e-UIN Failure Email,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_DOW_UIN_FAILURE_EMAIL,Download e-UIN Failure Email,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_DOW_UIN_FAILURE_EMAIL_SUB,Download e-UIN Failure Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_DOW_UIN_FAILURE_EMAIL_SUB,Download e-UIN Failure Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_DOW_UIN_FAILURE_SMS,Download e-UIN Failure SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_DOW_UIN_FAILURE_SMS,Download e-UIN Failure SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_DOW_UIN_SUCCESS_EMAIL,Successful Download of e-UIN Email,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_DOW_UIN_SUCCESS_EMAIL,Successful Download of e-UIN Email,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_DOW_UIN_SUCCESS_EMAIL_SUB,Successful Download of e-UIN Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_DOW_UIN_SUCCESS_EMAIL_SUB,Successful Download of e-UIN Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_DOW_UIN_SUCCESS_SMS,Successful Download of e-UIN SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_DOW_UIN_SUCCESS_SMS,Successful Download of e-UIN SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_LOCK_AUTH_FAILURE_EMAIL,Failure in Locking of Auth Types Email,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_LOCK_AUTH_FAILURE_EMAIL,Failure in Locking of Auth Types Email,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_LOCK_AUTH_FAILURE_EMAIL_SUB,Failure in Locking of Auth Types Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_LOCK_AUTH_FAILURE_EMAIL_SUB,Failure in Locking of Auth Types Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_LOCK_AUTH_FAILURE_SMS,Failure in Locking of Auth Types SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_LOCK_AUTH_FAILURE_SMS,Failure in Locking of Auth Types SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_LOCK_AUTH_SUCCESS_EMAIL,Successful Locking of Auth Types Email,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_LOCK_AUTH_SUCCESS_EMAIL,Successful Locking of Auth Types Email,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_LOCK_AUTH_SUCCESS_EMAIL_SUB,Successful Locking of Auth Types Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_LOCK_AUTH_SUCCESS_EMAIL_SUB,Successful Locking of Auth Types Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_LOCK_AUTH_SUCCESS_SMS,Successful Locking of Auth Types SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_LOCK_AUTH_SUCCESS_SMS,Successful Locking of Auth Types SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UIN_RPR_FAILURE_EMAIL,Reprint Request Failure Email,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UIN_RPR_FAILURE_EMAIL,Reprint Request Failure Email,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UIN_RPR_FAILURE_EMAIL_SUB,Reprint Request Failure Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UIN_RPR_FAILURE_EMAIL_SUB,Reprint Request Failure Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UIN_RPR_FAILURE_SMS,Reprint Request Failure SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UIN_RPR_FAILURE_SMS,Reprint Request Failure SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UIN_RPR_SUCCESS_EMAIL,Reprint Request Success Email,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UIN_RPR_SUCCESS_EMAIL,Reprint Request Success Email,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UIN_RPR_SUCCESS_EMAIL_SUB,Reprint Request Success Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UIN_RPR_SUCCESS_EMAIL_SUB,Reprint Request Success Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UIN_RPR_SUCCESS_SMS,Reprint Request Success SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UIN_RPR_SUCCESS_SMS,Reprint Request Success SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UIN_UPDATE_FAILURE_EMAIL,UIN Update Request Failed Email,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UIN_UPDATE_FAILURE_EMAIL,UIN Update Request Failed Email,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UIN_UPDATE_FAILURE_EMAIL_SUB,UIN Update Request Failed Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UIN_UPDATE_FAILURE_EMAIL_SUB,UIN Update Request Failed Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UIN_UPDATE_FAILURE_SMS,UIN Update Request Failed SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UIN_UPDATE_FAILURE_SMS,UIN Update Request Failed SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UIN_UPDATE_SUCCESS_EMAIL,UIN Update Request Placed Successfully Email,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UIN_UPDATE_SUCCESS_EMAIL,UIN Update Request Placed Successfully Email,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UIN_UPDATE_SUCCESS_EMAIL_SUB,UIN Update Request Placed Successfully Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UIN_UPDATE_SUCCESS_EMAIL_SUB,UIN Update Request Placed Successfully Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UIN_UPDATE_SUCCESS_SMS,UIN Update Request Placed Successfully SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UIN_UPDATE_SUCCESS_SMS,UIN Update Request Placed Successfully SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UNLOCK_AUTH_FAILURE_EMAIL,Failure in Unlocking of Auth Types Email,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UNLOCK_AUTH_FAILURE_EMAIL,Failure in Unlocking of Auth Types Email,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UNLOCK_AUTH_FAILURE_EMAIL_SUB,Failure in Unlocking of Auth Types Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UNLOCK_AUTH_FAILURE_EMAIL_SUB,Failure in Unlocking of Auth Types Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UNLOCK_AUTH_FAILURE_SMS,Failure in Unlocking of Auth Types SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UNLOCK_AUTH_FAILURE_SMS,Failure in Unlocking of Auth Types SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UNLOCK_AUTH_SUCCESS_EMAIL,Successful Unlocking of Auth Types Email,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UNLOCK_AUTH_SUCCESS_EMAIL,Successful Unlocking of Auth Types Email,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UNLOCK_AUTH_SUCCESS_EMAIL_SUB,Successful Unlocking of Auth Types Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UNLOCK_AUTH_SUCCESS_EMAIL_SUB,Successful Unlocking of Auth Types Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UNLOCK_AUTH_SUCCESS_SMS,Successful Unlocking of Auth Types SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_UNLOCK_AUTH_SUCCESS_SMS,Successful Unlocking of Auth Types SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_VIN_GEN_FAILURE_EMAIL,VID Generation Failure Email,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_VIN_GEN_FAILURE_EMAIL,VID Generation Failure Email,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_VIN_GEN_FAILURE_EMAIL_SUB,VID Generation Failure Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_VIN_GEN_FAILURE_EMAIL_SUB,VID Generation Failure Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_VIN_GEN_FAILURE_SMS,VID Generation Failure SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_VIN_GEN_FAILURE_SMS,VID Generation Failure SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_VIN_GEN_SUCCESS_EMAIL,VID Generation Success Email,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_VIN_GEN_SUCCESS_EMAIL,VID Generation Success Email,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_VIN_GEN_SUCCESS_EMAIL_SUB,VID Generation Success Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_VIN_GEN_SUCCESS_EMAIL_SUB,VID Generation Success Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_VIN_GEN_SUCCESS_SMS,VID Generation Success SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_VIN_GEN_SUCCESS_SMS,VID Generation Success SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_VIN_REV_FAILURE_EMAIL,VID Revocation Failure Email,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_VIN_REV_FAILURE_EMAIL,VID Revocation Failure Email,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_VIN_REV_FAILURE_EMAIL_SUB,VID Revocation Failure Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_VIN_REV_FAILURE_EMAIL_SUB,VID Revocation Failure Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_VIN_REV_FAILURE_SMS,VID Revocation Failure SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_VIN_REV_FAILURE_SMS,VID Revocation Failure SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_VIN_REV_SUCCESS_EMAIL,VID Revocation Success Email,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_VIN_REV_SUCCESS_EMAIL,VID Revocation Success Email,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_VIN_REV_SUCCESS_EMAIL_SUB,VID Revocation Success Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_VIN_REV_SUCCESS_EMAIL_SUB,VID Revocation Success Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_VIN_REV_SUCCESS_SMS,VID Revocation Success SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-RS_VIN_REV_SUCCESS_SMS,VID Revocation Success SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-SMS-Acknowledgement,Template for SMS Acknowledgement,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-SMS-Acknowledgement,Template for SMS Acknowledgement,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-Update-email-content-template,Template for update registration Email Content,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-Update-email-content-template,Template for update registration Email Content,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-Update-email-subject-template,Template for update registration Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-Update-email-subject-template,Template for update registration Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-Update-sms-template,Template for update registration SMS,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-Update-sms-template,Template for update registration SMS,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-updateUIN-email-notification,Updtae UIN Acknowledgement Template,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-updateUIN-email-notification,Updtae UIN Acknowledgement Template,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
-updateUIN-sms-notification,Updtae UIN Acknowledgement Template,eng,t,superadmin,2020-12-23 14:36:49.78241,,,,
-updateUIN-sms-notification,Updtae UIN Acknowledgement Template,amh,t,superadmin,2020-12-23 14:36:49.78241,,,,
+code,descr,lang_code,is_active,cr_by,cr_dtimes
+Acknowledgement-email-subject,Template for email subject of Acknowledgement,eng,t,superadmin,2020-12-23 14:36:49.78241
+Acknowledgement-email-subject,Template for email subject of Acknowledgement,amh,t,superadmin,2020-12-23 14:36:49.78241
+auth-email-content,Template for authorization content,eng,t,superadmin,2020-12-23 14:36:49.78241
+auth-email-content,Template for authorization content,amh,t,superadmin,2020-12-23 14:36:49.78241
+auth-email-subject,Template for authorization subject,eng,t,superadmin,2020-12-23 14:36:49.78241
+auth-email-subject,Template for authorization subject,amh,t,superadmin,2020-12-23 14:36:49.78241
+auth-otp-email-content-template,Auth OTP Email Content Template,eng,t,superadmin,2020-12-23 14:36:49.78241
+auth-otp-email-content-template,Auth OTP Email Content Template,amh,t,superadmin,2020-12-23 14:36:49.78241
+auth-otp-email-subject-template,Auth OTP Email Subject Template,eng,t,superadmin,2020-12-23 14:36:49.78241
+auth-otp-email-subject-template,Auth OTP Email Subject Template,amh,t,superadmin,2020-12-23 14:36:49.78241
+auth-otp-sms-template,Auth OTP SMS Template,eng,t,superadmin,2020-12-23 14:36:49.78241
+auth-otp-sms-template,Auth OTP SMS Template,amh,t,superadmin,2020-12-23 14:36:49.78241
+auth-sms,Template for authorization SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+auth-sms,Template for authorization SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+cancel-appointment,Template for Cancel Appointment,eng,t,superadmin,2020-12-23 14:36:49.78241
+cancel-appointment,Template for Cancel Appointment,amh,t,superadmin,2020-12-23 14:36:49.78241
+consent,Consent,eng,t,superadmin,2020-12-23 14:36:49.78241
+consent,Consent,amh,t,superadmin,2020-12-23 14:36:49.78241
+Email-Acknowledgement,Template for Email Acknowledgement,eng,t,superadmin,2020-12-23 14:36:49.78241
+Email-Acknowledgement,Template for Email Acknowledgement,amh,t,superadmin,2020-12-23 14:36:49.78241
+ida-auth-otp-email-content-template,Template for Email Content,eng,t,superadmin,2020-12-23 14:36:49.78241
+ida-auth-otp-email-content-template,Template for Email Content,amh,t,superadmin,2020-12-23 14:36:49.78241
+ida-auth-otp-email-subject-template,Template for Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241
+ida-auth-otp-email-subject-template,Template for Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241
+ida-auth-otp-sms-template,Template for OTP in SMS ,eng,t,superadmin,2020-12-23 14:36:49.78241
+ida-auth-otp-sms-template,Template for OTP in SMS ,amh,t,superadmin,2020-12-23 14:36:49.78241
+lostUIN-email-notification,Lost UIN Acknowledgement Template,eng,t,superadmin,2020-12-23 14:36:49.78241
+lostUIN-email-notification,Lost UIN Acknowledgement Template,amh,t,superadmin,2020-12-23 14:36:49.78241
+lostUIN-sms-notification,Lost UIN Acknowledgement Template,eng,t,superadmin,2020-12-23 14:36:49.78241
+lostUIN-sms-notification,Lost UIN Acknowledgement Template,amh,t,superadmin,2020-12-23 14:36:49.78241
+NewReg-email-content-template,Template for new registration Email Content,eng,t,superadmin,2020-12-23 14:36:49.78241
+NewReg-email-content-template,Template for new registration Email Content,amh,t,superadmin,2020-12-23 14:36:49.78241
+NewReg-email-subject-template,Template for new registration Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241
+NewReg-email-subject-template,Template for new registration Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241
+NewReg-sms-template,Template for new registration SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+NewReg-sms-template,Template for new registration SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+Onscreen-Acknowledgement,Template for Onscreen Acknowledgment,eng,t,superadmin,2020-12-23 14:36:49.78241
+Onscreen-Acknowledgement,Template for Onscreen Acknowledgment,amh,t,superadmin,2020-12-23 14:36:49.78241
+OTP-email-content-template,Template for OTP generation Email Content,eng,t,superadmin,2020-12-23 14:36:49.78241
+otp-email-content-template,Template for OTP Email Content,eng,t,superadmin,2020-12-23 14:36:49.78241
+OTP-email-content-template,Template for OTP generation Email Content,amh,t,superadmin,2020-12-23 14:36:49.78241
+otp-email-content-template,Template for OTP Email Content,amh,t,superadmin,2020-12-23 14:36:49.78241
+OTP-email-subject-template,Template for OTP generation Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241
+otp-email-subject-template,Template for OTP Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241
+OTP-email-subject-template,Template for OTP generation Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241
+otp-email-subject-template,Template for OTP Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241
+OTP-sms-template,Template for OTP SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+otp-sms-template,Template for OTP SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+OTP-sms-template,Template for OTP SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+otp-sms-template,Template for OTP SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+reg-ack-template-part1,Registration Acknowledgement Template - Part 1,eng,t,superadmin,2020-12-23 14:36:49.78241
+reg-ack-template-part1,Registration Acknowledgement Template - Part 2,amh,t,superadmin,2020-12-23 14:36:49.78241
+reg-ack-template-part2,Registration Acknowledgement Template - Part 2,eng,t,superadmin,2020-12-23 14:36:49.78241
+reg-ack-template-part2,Registration Acknowledgement Template - Part 3,amh,t,superadmin,2020-12-23 14:36:49.78241
+reg-ack-template-part3,Registration Acknowledgement Template - Part 3,eng,t,superadmin,2020-12-23 14:36:49.78241
+reg-ack-template-part3,Registration Acknowledgement Template - Part 4,amh,t,superadmin,2020-12-23 14:36:49.78241
+reg-ack-template-part4,Registration Acknowledgement Template - Part 4,eng,t,superadmin,2020-12-23 14:36:49.78241
+reg-ack-template-part4,Registration Acknowledgement Template - Part 5,amh,t,superadmin,2020-12-23 14:36:49.78241
+reg-email-notification,Registration Acknowledgement Template,eng,t,superadmin,2020-12-23 14:36:49.78241
+reg-email-notification,Registration Acknowledgement Template,amh,t,superadmin,2020-12-23 14:36:49.78241
+reg-sms-notification,Registration Acknowledgement Template,eng,t,superadmin,2020-12-23 14:36:49.78241
+reg-sms-notification,Registration Acknowledgement Template,amh,t,superadmin,2020-12-23 14:36:49.78241
+RPR_DUP_UIN_EMAIL,Template for duplicate UIN Email,eng,t,superadmin,2020-12-23 14:36:49.78241
+RPR_DUP_UIN_EMAIL,Template for duplicate UIN Email,amh,t,superadmin,2020-12-23 14:36:49.78241
+RPR_DUP_UIN_SMS,Template for duplicate UIN SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+RPR_DUP_UIN_SMS,Template for duplicate UIN SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+RPR_LOST_UIN_EMAIL,Lost UIN Notification Email,eng,t,superadmin,2020-12-23 14:36:49.78241
+RPR_LOST_UIN_EMAIL,Lost UIN Notification Email,amh,t,superadmin,2020-12-23 14:36:49.78241
+RPR_LOST_UIN_SMS,Lost UIN Notification SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+RPR_LOST_UIN_SMS,Lost UIN Notification SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+RPR_MASKED_UIN_CARD_TEMPLATE,Masked UIN card template,eng,t,superadmin,2020-12-23 14:36:49.78241
+RPR_MASKED_UIN_CARD_TEMPLATE,Masked UIN card template,amh,t,superadmin,2020-12-23 14:36:49.78241
+RPR_TEC_ISSUE_EMAIL,Template for Technical Issue Email,eng,t,superadmin,2020-12-23 14:36:49.78241
+RPR_TEC_ISSUE_EMAIL,Template for Technical Issue Email,amh,t,superadmin,2020-12-23 14:36:49.78241
+RPR_TEC_ISSUE_SMS,Template for Technical Issue SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+RPR_TEC_ISSUE_SMS,Template for Technical Issue SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+RPR_UIN_CARD_TEMPLATE,UIN card template,eng,t,superadmin,2020-12-23 14:36:49.78241
+RPR_UIN_CARD_TEMPLATE,UIN card template,amh,t,superadmin,2020-12-23 14:36:49.78241
+RPR_UIN_DEAC_EMAIL,Template for UIN Deactivation Email,eng,t,superadmin,2020-12-23 14:36:49.78241
+RPR_UIN_DEAC_EMAIL,Template for UIN Deactivation Email,amh,t,superadmin,2020-12-23 14:36:49.78241
+RPR_UIN_DEAC_SMS,Template for UIN Deactivation SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+RPR_UIN_DEAC_SMS,Template for UIN Deactivation SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+RPR_UIN_GEN_EMAIL,Template for UIN generation Email,eng,t,superadmin,2020-12-23 14:36:49.78241
+RPR_UIN_GEN_EMAIL,Template for UIN generation Email,amh,t,superadmin,2020-12-23 14:36:49.78241
+RPR_UIN_GEN_SMS,Template for UIN generation SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+RPR_UIN_GEN_SMS,Template for UIN generation SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+RPR_UIN_REAC_EMAIL,Template for UIN Reactivate Email,eng,t,superadmin,2020-12-23 14:36:49.78241
+RPR_UIN_REAC_EMAIL,Template for UIN Reactivate Email,amh,t,superadmin,2020-12-23 14:36:49.78241
+RPR_UIN_REAC_SMS,Template for UIN Reactivate SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+RPR_UIN_REAC_SMS,Template for UIN Reactivate SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+RPR_UIN_UPD_EMAIL,Template for update details Email,eng,t,superadmin,2020-12-23 14:36:49.78241
+RPR_UIN_UPD_EMAIL,Template for update details Email,amh,t,superadmin,2020-12-23 14:36:49.78241
+RPR_UIN_UPD_SMS,Template for update Details SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+RPR_UIN_UPD_SMS,Template for update Details SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_AUTH_HIST_FAILURE_EMAIL,Authentication History Request Failure Email,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_AUTH_HIST_FAILURE_EMAIL,Authentication History Request Failure Email,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_AUTH_HIST_FAILURE_EMAIL_SUB,Authentication History Request Failure Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_AUTH_HIST_FAILURE_EMAIL_SUB,Authentication History Request Failure Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_AUTH_HIST_FAILURE_SMS,Authentication History Request Failure SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_AUTH_HIST_FAILURE_SMS,Authentication History Request Failure SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_AUTH_HIST_SUCCESS_EMAIL,Authentication History Request Success Email,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_AUTH_HIST_SUCCESS_EMAIL,Authentication History Request Success Email,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_AUTH_HIST_SUCCESS_EMAIL_SUB,Authentication History Request Success EMAIL Subject,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_AUTH_HIST_SUCCESS_EMAIL_SUB,Authentication History Request Success EMAIL Subject,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_AUTH_HIST_SUCCESS_SMS,Authentication History Request Success SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_AUTH_HIST_SUCCESS_SMS,Authentication History Request Success SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_DOW_UIN_FAILURE_EMAIL,Download e-UIN Failure Email,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_DOW_UIN_FAILURE_EMAIL,Download e-UIN Failure Email,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_DOW_UIN_FAILURE_EMAIL_SUB,Download e-UIN Failure Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_DOW_UIN_FAILURE_EMAIL_SUB,Download e-UIN Failure Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_DOW_UIN_FAILURE_SMS,Download e-UIN Failure SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_DOW_UIN_FAILURE_SMS,Download e-UIN Failure SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_DOW_UIN_SUCCESS_EMAIL,Successful Download of e-UIN Email,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_DOW_UIN_SUCCESS_EMAIL,Successful Download of e-UIN Email,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_DOW_UIN_SUCCESS_EMAIL_SUB,Successful Download of e-UIN Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_DOW_UIN_SUCCESS_EMAIL_SUB,Successful Download of e-UIN Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_DOW_UIN_SUCCESS_SMS,Successful Download of e-UIN SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_DOW_UIN_SUCCESS_SMS,Successful Download of e-UIN SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_LOCK_AUTH_FAILURE_EMAIL,Failure in Locking of Auth Types Email,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_LOCK_AUTH_FAILURE_EMAIL,Failure in Locking of Auth Types Email,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_LOCK_AUTH_FAILURE_EMAIL_SUB,Failure in Locking of Auth Types Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_LOCK_AUTH_FAILURE_EMAIL_SUB,Failure in Locking of Auth Types Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_LOCK_AUTH_FAILURE_SMS,Failure in Locking of Auth Types SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_LOCK_AUTH_FAILURE_SMS,Failure in Locking of Auth Types SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_LOCK_AUTH_SUCCESS_EMAIL,Successful Locking of Auth Types Email,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_LOCK_AUTH_SUCCESS_EMAIL,Successful Locking of Auth Types Email,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_LOCK_AUTH_SUCCESS_EMAIL_SUB,Successful Locking of Auth Types Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_LOCK_AUTH_SUCCESS_EMAIL_SUB,Successful Locking of Auth Types Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_LOCK_AUTH_SUCCESS_SMS,Successful Locking of Auth Types SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_LOCK_AUTH_SUCCESS_SMS,Successful Locking of Auth Types SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_UIN_RPR_FAILURE_EMAIL,Reprint Request Failure Email,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_UIN_RPR_FAILURE_EMAIL,Reprint Request Failure Email,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_UIN_RPR_FAILURE_EMAIL_SUB,Reprint Request Failure Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_UIN_RPR_FAILURE_EMAIL_SUB,Reprint Request Failure Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_UIN_RPR_FAILURE_SMS,Reprint Request Failure SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_UIN_RPR_FAILURE_SMS,Reprint Request Failure SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_UIN_RPR_SUCCESS_EMAIL,Reprint Request Success Email,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_UIN_RPR_SUCCESS_EMAIL,Reprint Request Success Email,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_UIN_RPR_SUCCESS_EMAIL_SUB,Reprint Request Success Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_UIN_RPR_SUCCESS_EMAIL_SUB,Reprint Request Success Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_UIN_RPR_SUCCESS_SMS,Reprint Request Success SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_UIN_RPR_SUCCESS_SMS,Reprint Request Success SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_UIN_UPDATE_FAILURE_EMAIL,UIN Update Request Failed Email,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_UIN_UPDATE_FAILURE_EMAIL,UIN Update Request Failed Email,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_UIN_UPDATE_FAILURE_EMAIL_SUB,UIN Update Request Failed Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_UIN_UPDATE_FAILURE_EMAIL_SUB,UIN Update Request Failed Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_UIN_UPDATE_FAILURE_SMS,UIN Update Request Failed SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_UIN_UPDATE_FAILURE_SMS,UIN Update Request Failed SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_UIN_UPDATE_SUCCESS_EMAIL,UIN Update Request Placed Successfully Email,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_UIN_UPDATE_SUCCESS_EMAIL,UIN Update Request Placed Successfully Email,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_UIN_UPDATE_SUCCESS_EMAIL_SUB,UIN Update Request Placed Successfully Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_UIN_UPDATE_SUCCESS_EMAIL_SUB,UIN Update Request Placed Successfully Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_UIN_UPDATE_SUCCESS_SMS,UIN Update Request Placed Successfully SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_UIN_UPDATE_SUCCESS_SMS,UIN Update Request Placed Successfully SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_UNLOCK_AUTH_FAILURE_EMAIL,Failure in Unlocking of Auth Types Email,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_UNLOCK_AUTH_FAILURE_EMAIL,Failure in Unlocking of Auth Types Email,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_UNLOCK_AUTH_FAILURE_EMAIL_SUB,Failure in Unlocking of Auth Types Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_UNLOCK_AUTH_FAILURE_EMAIL_SUB,Failure in Unlocking of Auth Types Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_UNLOCK_AUTH_FAILURE_SMS,Failure in Unlocking of Auth Types SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_UNLOCK_AUTH_FAILURE_SMS,Failure in Unlocking of Auth Types SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_UNLOCK_AUTH_SUCCESS_EMAIL,Successful Unlocking of Auth Types Email,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_UNLOCK_AUTH_SUCCESS_EMAIL,Successful Unlocking of Auth Types Email,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_UNLOCK_AUTH_SUCCESS_EMAIL_SUB,Successful Unlocking of Auth Types Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_UNLOCK_AUTH_SUCCESS_EMAIL_SUB,Successful Unlocking of Auth Types Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_UNLOCK_AUTH_SUCCESS_SMS,Successful Unlocking of Auth Types SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_UNLOCK_AUTH_SUCCESS_SMS,Successful Unlocking of Auth Types SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_VIN_GEN_FAILURE_EMAIL,VID Generation Failure Email,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_VIN_GEN_FAILURE_EMAIL,VID Generation Failure Email,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_VIN_GEN_FAILURE_EMAIL_SUB,VID Generation Failure Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_VIN_GEN_FAILURE_EMAIL_SUB,VID Generation Failure Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_VIN_GEN_FAILURE_SMS,VID Generation Failure SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_VIN_GEN_FAILURE_SMS,VID Generation Failure SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_VIN_GEN_SUCCESS_EMAIL,VID Generation Success Email,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_VIN_GEN_SUCCESS_EMAIL,VID Generation Success Email,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_VIN_GEN_SUCCESS_EMAIL_SUB,VID Generation Success Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_VIN_GEN_SUCCESS_EMAIL_SUB,VID Generation Success Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_VIN_GEN_SUCCESS_SMS,VID Generation Success SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_VIN_GEN_SUCCESS_SMS,VID Generation Success SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_VIN_REV_FAILURE_EMAIL,VID Revocation Failure Email,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_VIN_REV_FAILURE_EMAIL,VID Revocation Failure Email,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_VIN_REV_FAILURE_EMAIL_SUB,VID Revocation Failure Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_VIN_REV_FAILURE_EMAIL_SUB,VID Revocation Failure Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_VIN_REV_FAILURE_SMS,VID Revocation Failure SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_VIN_REV_FAILURE_SMS,VID Revocation Failure SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_VIN_REV_SUCCESS_EMAIL,VID Revocation Success Email,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_VIN_REV_SUCCESS_EMAIL,VID Revocation Success Email,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_VIN_REV_SUCCESS_EMAIL_SUB,VID Revocation Success Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_VIN_REV_SUCCESS_EMAIL_SUB,VID Revocation Success Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241
+RS_VIN_REV_SUCCESS_SMS,VID Revocation Success SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+RS_VIN_REV_SUCCESS_SMS,VID Revocation Success SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+SMS-Acknowledgement,Template for SMS Acknowledgement,eng,t,superadmin,2020-12-23 14:36:49.78241
+SMS-Acknowledgement,Template for SMS Acknowledgement,amh,t,superadmin,2020-12-23 14:36:49.78241
+Update-email-content-template,Template for update registration Email Content,eng,t,superadmin,2020-12-23 14:36:49.78241
+Update-email-content-template,Template for update registration Email Content,amh,t,superadmin,2020-12-23 14:36:49.78241
+Update-email-subject-template,Template for update registration Email Subject,eng,t,superadmin,2020-12-23 14:36:49.78241
+Update-email-subject-template,Template for update registration Email Subject,amh,t,superadmin,2020-12-23 14:36:49.78241
+Update-sms-template,Template for update registration SMS,eng,t,superadmin,2020-12-23 14:36:49.78241
+Update-sms-template,Template for update registration SMS,amh,t,superadmin,2020-12-23 14:36:49.78241
+updateUIN-email-notification,Updtae UIN Acknowledgement Template,eng,t,superadmin,2020-12-23 14:36:49.78241
+updateUIN-email-notification,Updtae UIN Acknowledgement Template,amh,t,superadmin,2020-12-23 14:36:49.78241
+updateUIN-sms-notification,Updtae UIN Acknowledgement Template,eng,t,superadmin,2020-12-23 14:36:49.78241
+updateUIN-sms-notification,Updtae UIN Acknowledgement Template,amh,t,superadmin,2020-12-23 14:36:49.78241

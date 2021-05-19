@@ -1,19 +1,19 @@
-code,name,descr,rsncat_code,lang_code,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes
-APM,Age-Photo Mismatch,Mismatch between the Age and Photo,CLR,eng,t,superadmin,2020-12-23 14:36:53.636512,,,,
-GPM,Gender-Photo Mismatch,Gender-Photo Mismatch between Gender and Photo,CLR,eng,t,superadmin,2020-12-23 14:36:53.636512,,,,
-IAD,Invalid Address,Invalid Address found,CLR,eng,t,superadmin,2020-12-23 14:36:53.636512,,,,
-DPG,Duplicate Registration,Duplicate Registration found,CLR,eng,t,superadmin,2020-12-23 14:36:53.636512,,,,
-OTH,Others,Others,CLR,eng,t,superadmin,2020-12-23 14:36:53.636512,,,,
-ADM,All the Details are matching,All the Details are matching,MNA,eng,t,superadmin,2020-12-23 14:36:53.636512,,,,
-ADD,All the Demographic Details are Matching,All the Demographic Details are Matching,MNA,eng,t,superadmin,2020-12-23 14:36:53.636512,,,,
-OPM,Only the Photograph is Matching,Only the Photograph is Matching,MNA,eng,t,superadmin,2020-12-23 14:36:53.636512,,,,
-SDM,Some of the Demographic Details are Matching,Some of the Demographic Details are Matching,MNA,eng,t,superadmin,2020-12-23 14:36:53.636512,,,,
-APM,እድሜና ፎቶ ያለመጣጣም,እድሜና ፎቶ ያለመጣጣም,CLR,amh,t,superadmin,2020-12-23 14:36:53.636512,,,,
-GPM,ጾታና ፎቶ ያለመጣጣም ,ጾታና ፎቶ ያለመጣጣም ,CLR,amh,t,superadmin,2020-12-23 14:36:53.636512,,,,
-IAD, ትክክል ያልሆነ አድራሻ, ትክክል ያልሆነ አድራሻ,CLR,amh,t,superadmin,2020-12-23 14:36:53.636512,,,,
-DPG,የተደገመ ምዝገባ,የተደገመ ምዝገባ,CLR,amh,t,superadmin,2020-12-23 14:36:53.636512,,,,
-OTH,ሌሎች,ሌሎች,CLR,amh,t,superadmin,2020-12-23 14:36:53.636512,,,,
-ADM,ሁሉም መረጃዎች ትክክል ናችው,ሁሉም መረጃዎች ትክክል ናችው,MNA,amh,t,superadmin,2020-12-23 14:36:53.636512,,,,
-ADD,ሁሉም የስነሕዝብ መረጃ  ትክክል ናቸው,ሁሉም የስነሕዝብ መረጃ  ትክክል ናቸው,MNA,amh,t,superadmin,2020-12-23 14:36:53.636512,,,,
-OPM,ፎቶው ብቻ ትክክል ነው,ፎቶው ብቻ ትክክል ነው,MNA,amh,t,superadmin,2020-12-23 14:36:53.636512,,,,
-SDM, የስነሕዝብ መረጃ   በከፊል ትክክል ናቸው በከፊል, የስነሕዝብ መረጃ   በከፊል ትክክል ናቸው በከፊል,MNA,amh,t,superadmin,2020-12-23 14:36:53.636512,,,,
+code,name,descr,rsncat_code,lang_code,is_active,cr_by,cr_dtimes
+APM,Age-Photo Mismatch,Mismatch between the Age and Photo,CLR,eng,t,superadmin,2020-12-23 14:36:53.636512
+GPM,Gender-Photo Mismatch,Gender-Photo Mismatch between Gender and Photo,CLR,eng,t,superadmin,2020-12-23 14:36:53.636512
+IAD,Invalid Address,Invalid Address found,CLR,eng,t,superadmin,2020-12-23 14:36:53.636512
+DPG,Duplicate Registration,Duplicate Registration found,CLR,eng,t,superadmin,2020-12-23 14:36:53.636512
+OTH,Others,Others,CLR,eng,t,superadmin,2020-12-23 14:36:53.636512
+ADM,All the Details are matching,All the Details are matching,MNA,eng,t,superadmin,2020-12-23 14:36:53.636512
+ADD,All the Demographic Details are Matching,All the Demographic Details are Matching,MNA,eng,t,superadmin,2020-12-23 14:36:53.636512
+OPM,Only the Photograph is Matching,Only the Photograph is Matching,MNA,eng,t,superadmin,2020-12-23 14:36:53.636512
+SDM,Some of the Demographic Details are Matching,Some of the Demographic Details are Matching,MNA,eng,t,superadmin,2020-12-23 14:36:53.636512
+APM,እድሜና ፎቶ ያለመጣጣም,እድሜና ፎቶ ያለመጣጣም,CLR,amh,t,superadmin,2020-12-23 14:36:53.636512
+GPM,ጾታና ፎቶ ያለመጣጣም ,ጾታና ፎቶ ያለመጣጣም ,CLR,amh,t,superadmin,2020-12-23 14:36:53.636512
+IAD, ትክክል ያልሆነ አድራሻ, ትክክል ያልሆነ አድራሻ,CLR,amh,t,superadmin,2020-12-23 14:36:53.636512
+DPG,የተደገመ ምዝገባ,የተደገመ ምዝገባ,CLR,amh,t,superadmin,2020-12-23 14:36:53.636512
+OTH,ሌሎች,ሌሎች,CLR,amh,t,superadmin,2020-12-23 14:36:53.636512
+ADM,ሁሉም መረጃዎች ትክክል ናችው,ሁሉም መረጃዎች ትክክል ናችው,MNA,amh,t,superadmin,2020-12-23 14:36:53.636512
+ADD,ሁሉም የስነሕዝብ መረጃ  ትክክል ናቸው,ሁሉም የስነሕዝብ መረጃ  ትክክል ናቸው,MNA,amh,t,superadmin,2020-12-23 14:36:53.636512
+OPM,ፎቶው ብቻ ትክክል ነው,ፎቶው ብቻ ትክክል ነው,MNA,amh,t,superadmin,2020-12-23 14:36:53.636512
+SDM, የስነሕዝብ መረጃ   በከፊል ትክክል ናቸው በከፊል, የስነሕዝብ መረጃ   በከፊል ትክክል ናቸው በከፊል,MNA,amh,t,superadmin,2020-12-23 14:36:53.636512
