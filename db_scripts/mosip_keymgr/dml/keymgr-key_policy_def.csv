@@ -1,12 +1,13 @@
-﻿app_id,key_validity_duration,is_active,cr_by,cr_dtimes
-PRE_REGISTRATION,1095,TRUE,mosipadmin,now()
-REGISTRATION,1095,TRUE,mosipadmin,now()
-REGISTRATION_PROCESSOR,1095,TRUE,mosipadmin,now()
-IDA,1095,TRUE,mosipadmin,now()
-ID_REPO,1095,TRUE,mosipadmin,now()
-KERNEL,1095,TRUE,mosipadmin,now()
-ROOT,1826,TRUE,mosipadmin,now()
-BASE,730,TRUE,mosipadmin,now()
-PMS,1095,TRUE,mosipadmin,now()
-DATASHARE,1095,TRUE,mosipadmin,now()
-CREDENTIAL_SERVICE,1095,TRUE,mosipadmin,now()
+app_id,key_validity_duration,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes
+PRE_REGISTRATION,1095,t,mosipadmin,2020-12-23 14:36:34.733857,,,,
+REGISTRATION,1095,t,mosipadmin,2020-12-23 14:36:34.733857,,,,
+REGISTRATION_PROCESSOR,1095,t,mosipadmin,2020-12-23 14:36:34.733857,,,,
+IDA,1095,t,mosipadmin,2020-12-23 14:36:34.733857,,,,
+ID_REPO,1095,t,mosipadmin,2020-12-23 14:36:34.733857,,,,
+KERNEL,1095,t,mosipadmin,2020-12-23 14:36:34.733857,,,,
+ROOT,1826,t,mosipadmin,2020-12-23 14:36:34.733857,,,,
+BASE,730,t,mosipadmin,2020-12-23 14:36:34.733857,,,,
+PMS,1095,t,mosipadmin,2020-12-23 14:36:34.733857,,,,
+DATASHARE,1095,t,mosipadmin,2020-12-23 14:36:34.733857,,,,
+CREDENTIAL_SERVICE,1095,t,mosipadmin,2020-12-23 14:36:34.733857,,,,
+RESIDENT,1095,t,mosipadmin,2020-12-23 14:36:34.733857,,,,
