@@ -44,7 +44,7 @@ public class ClientCryptoFacade {
 
     @Deprecated
     public static void setIsTPMRequired(boolean flag) {
-        //nothing to do @since 1.1.4
+        //nothing to do @since 1.1.4.4
     }
 
     private void initializeClientSecurity() {

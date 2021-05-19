@@ -466,7 +466,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 		boolean prependThumbprint = false;
 		// Thumbprint flag is false in both encryption & decryption, then consider the latest 
 		// current key for decryption instead of taking the first generated key.
-		// to Support packet encryption done in 1.1.3(flag: flase) and packet decryption is performed in 1.1.4 (flag: true).
+		// to Support packet encryption done in 1.1.3(flag: flase) and packet decryption is performed in 1.1.4.4 (flag: true).
 		if(encryptedData.length == (CryptomanagerConstant.ENCRYPTED_SESSION_KEY_LENGTH 
 											+ CryptomanagerConstant.THUMBPRINT_LENGTH)) {
 			certThumbprint = Arrays.copyOfRange(encryptedData, 0, CryptomanagerConstant.THUMBPRINT_LENGTH);
@@ -561,7 +561,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 							LocalDateTime timeStamp, String referenceId,  
 							byte[] reqCertThumbprint, boolean packetTPFlag) {
 
-		// to Support packet encryption done in 1.1.3(flag: flase) and packet decryption is performed in 1.1.4 (flag: true).
+		// to Support packet encryption done in 1.1.3(flag: flase) and packet decryption is performed in 1.1.4.4 (flag: true).
 		// Considering always the first key generated for the application id & reference id
 		if (Objects.isNull(reqCertThumbprint) && !packetTPFlag) {
 			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.CURRENTKEYALIAS, keyAlias.get(0).getAlias(),
