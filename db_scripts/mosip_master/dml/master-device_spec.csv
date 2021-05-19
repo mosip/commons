@@ -1,8 +1,8 @@
-id,name,brand,model,dtyp_code,min_driver_ver,descr,lang_code,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes
-165,Fingerprint Scanner,Crossmatch,LscanGuardanUSB,FRS,1.12,To scan fingerprint,eng,t,superadmin,2020-12-23 14:36:53.252564,,
-165,የጣት አሻራ ማንሻ,Crossmatch,LscanGuardanUSB,FRS,1.12,የጣት አሻራ ለማንሳት,amh,t,superadmin,2020-12-23 14:36:53.252564,,
-327,High Speed Dual Iris Scanner,Cogent,3M,IRS,2.34,To scan iris,eng,t,superadmin,2020-12-23 14:36:53.252564,,
-327,ፈጣን ባለ ሁለት የአይን ብሌን ማንሻ ,Cogent,3M,IRS,2.34,የአይን ብሌን ለማንሳት,amh,t,superadmin,2020-12-23 14:36:53.252564,,
-736,Webcam,Logitech,C270,CMR,2.086,To capture photo,eng,t,superadmin,2020-12-23 14:36:53.252564,,
-736,የኮምፒውተር ካሜራ,Logitech,C270,CMR,2.086,ፎቶ ለማንሳት,amh,t,superadmin,2020-12-23 14:36:53.252564,,
-0efaa1b3-9930-4ba9-b5ba-042e954420c6,Document Scanner,Cannon,C200,SCN,1.5,Document Scanner,eng,f,110011,2021-02-08 12:14:23.478319,110011,2021-02-08 12:14:57.19309
+id,name,brand,model,dtyp_code,min_driver_ver,descr,lang_code,is_active,cr_by,cr_dtimes
+165,Fingerprint Scanner,Crossmatch,LscanGuardanUSB,FRS,1.12,To scan fingerprint,eng,t,superadmin,2020-12-23 14:36:53.252564
+165,የጣት አሻራ ማንሻ,Crossmatch,LscanGuardanUSB,FRS,1.12,የጣት አሻራ ለማንሳት,amh,t,superadmin,2020-12-23 14:36:53.252564
+327,High Speed Dual Iris Scanner,Cogent,3M,IRS,2.34,To scan iris,eng,t,superadmin,2020-12-23 14:36:53.252564
+327,ፈጣን ባለ ሁለት የአይን ብሌን ማንሻ ,Cogent,3M,IRS,2.34,የአይን ብሌን ለማንሳት,amh,t,superadmin,2020-12-23 14:36:53.252564
+736,Webcam,Logitech,C270,CMR,2.086,To capture photo,eng,t,superadmin,2020-12-23 14:36:53.252564
+736,የኮምፒውተር ካሜራ,Logitech,C270,CMR,2.086,ፎቶ ለማንሳት,amh,t,superadmin,2020-12-23 14:36:53.252564
+0efaa1b3-9930-4ba9-b5ba-042e954420c6,Document Scanner,Cannon,C200,SCN,1.5,Document Scanner,eng,f,110011,2021-02-08 12:14:23.478319

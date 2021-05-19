@@ -1,13 +1,13 @@
-code,name,hierarchy_level,hierarchy_level_name,hierarchy_path,parent_zone_code,lang_code,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted
-ADD,አዲስ አበባ,2,ክልል,ETH/NTH/ADD,NTH,amh,t,superadmin,2020-12-23 14:36:50.667707,,,f
-ADD,Addis Ababa,2,Region,ETH/NTH/ADD,NTH,eng,t,superadmin,2020-12-23 14:36:50.667707,,,f
-BLE,ቦሌ,3,ክፍለ ከተማ,ETH/NTH/ADD/BLE,ADD,amh,t,superadmin,2020-12-23 14:36:50.667707,,,f
-BLE,Bole,3,Province,ETH/NTH/ADD/BLE,ADD,eng,t,superadmin,2020-12-23 14:36:50.667707,,,f
-ETH,ሀገር,0,ሀገር,ETH,,amh,t,superadmin,2020-12-23 14:36:50.667707,,,f
-ETH,MyCountry,0,Country,ETH,,eng,t,superadmin,2020-12-23 14:36:50.667707,,,f
-NTH,ሰሜን,1,አቅጣጫ,ETH/NTH,ETH,amh,t,superadmin,2020-12-23 14:36:50.667707,,,f
-NTH,NORTH,1,Direction,ETH/NTH,ETH,eng,t,superadmin,2020-12-23 14:36:50.667707,,,f
-YKA,የካ,3,ክፍለ ከተማ,ETH/NTH/ADD/YKA,ADD,amh,t,superadmin,2020-12-23 14:36:50.667707,,,f
-YKA,Yeka,3,Province,ETH/NTH/ADD/YKA,ADD,eng,t,superadmin,2020-12-23 14:36:50.667707,,,f
-PLT,ፓይለት,3,ክፍለ ከተማ,ETH/NTH/ADD/PLT,ADD,amh,t,superadmin,2020-12-23 14:36:50.667707,,,f
-PLT,Pilot,3,Province,ETH/NTH/ADD/PLT,ADD,eng,t,superadmin,2020-12-23 14:36:50.667707,,,f
+code,name,hierarchy_level,hierarchy_level_name,hierarchy_path,parent_zone_code,lang_code,is_active,cr_by,cr_dtimes,is_deleted
+ADD,አዲስ አበባ,2,ክልል,ETH/NTH/ADD,NTH,amh,t,superadmin,2020-12-23 14:36:50.667707,f
+ADD,Addis Ababa,2,Region,ETH/NTH/ADD,NTH,eng,t,superadmin,2020-12-23 14:36:50.667707,f
+BLE,ቦሌ,3,ክፍለ ከተማ,ETH/NTH/ADD/BLE,ADD,amh,t,superadmin,2020-12-23 14:36:50.667707,f
+BLE,Bole,3,Province,ETH/NTH/ADD/BLE,ADD,eng,t,superadmin,2020-12-23 14:36:50.667707,f
+ETH,ሀገር,0,ሀገር,ETH,,amh,t,superadmin,2020-12-23 14:36:50.667707,f
+ETH,MyCountry,0,Country,ETH,,eng,t,superadmin,2020-12-23 14:36:50.667707,f
+NTH,ሰሜን,1,አቅጣጫ,ETH/NTH,ETH,amh,t,superadmin,2020-12-23 14:36:50.667707,f
+NTH,NORTH,1,Direction,ETH/NTH,ETH,eng,t,superadmin,2020-12-23 14:36:50.667707,f
+YKA,የካ,3,ክፍለ ከተማ,ETH/NTH/ADD/YKA,ADD,amh,t,superadmin,2020-12-23 14:36:50.667707,f
+YKA,Yeka,3,Province,ETH/NTH/ADD/YKA,ADD,eng,t,superadmin,2020-12-23 14:36:50.667707,f
+PLT,ፓይለት,3,ክፍለ ከተማ,ETH/NTH/ADD/PLT,ADD,amh,t,superadmin,2020-12-23 14:36:50.667707,f
+PLT,Pilot,3,Province,ETH/NTH/ADD/PLT,ADD,eng,t,superadmin,2020-12-23 14:36:50.667707,f
