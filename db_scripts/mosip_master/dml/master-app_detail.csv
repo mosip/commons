@@ -1,13 +1,13 @@
-id,name,descr,lang_code,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes
-10001,Pre-Registration,Web portal for pre-registrations,eng,t,superadmin,2020-12-23 14:36:45.977828,,,,
-10001,ቅድመ ምዝገባ,የቅድመ ምዝገባ ድህረ ገጽ,amh,t,superadmin,2020-12-23 14:36:45.977828,,,,
-10003,Registration Client,Desktop application for Registrations,eng,t,superadmin,2020-12-23 14:36:45.977828,,,,
-10003,የደንበኛ ምዝገባ,የምዝገባ ዴስክቶፕ መተግበሪያ,amh,t,superadmin,2020-12-23 14:36:45.977828,,,,
-10005,Registration Processor,Application for post-registration process,eng,t,superadmin,2020-12-23 14:36:45.977828,,,,
-10005,የምዝገባ ፕሮሰሰር ,የድህረ ምዝገባ መተግበሪያ,amh,t,superadmin,2020-12-23 14:36:45.977828,,,,
-10007,ID Authentication,Application for third party service provider authentication,eng,t,superadmin,2020-12-23 14:36:45.977828,,,,
-10007,የመታወቂያ ማረጋገጫ ,የሶስተኛ ወገን አገልግሎት አቅራቢ ማረጋገጫ መተግበሪያ,amh,t,superadmin,2020-12-23 14:36:45.977828,,,,
-10009,ID Control,Web portal for configuring applications,eng,t,superadmin,2020-12-23 14:36:45.977828,,,,
-10009,የመታወቂያ ቁጥጥር ,የመተግበሪያዎች ማስተካከያ ድህረ ገጽ,amh,t,superadmin,2020-12-23 14:36:45.977828,,,,
-10011,Resident Portal,Web portal for Post ID generation services,eng,t,superadmin,2020-12-23 14:36:45.977828,,,,
-10011,የነዋሪዎች ድህረ ገጽ,የድህረ መታወቂያ መፍጠሪያ አገልግሎቶች ድህረ ገጽ,amh,t,superadmin,2020-12-23 14:36:45.977828,,,,
+id,name,descr,lang_code,is_active,cr_by,cr_dtimes
+10001,Pre-Registration,Web portal for pre-registrations,eng,t,superadmin,2020-12-23 14:36:45.977828
+10001,ቅድመ ምዝገባ,የቅድመ ምዝገባ ድህረ ገጽ,amh,t,superadmin,2020-12-23 14:36:45.977828
+10003,Registration Client,Desktop application for Registrations,eng,t,superadmin,2020-12-23 14:36:45.977828
+10003,የደንበኛ ምዝገባ,የምዝገባ ዴስክቶፕ መተግበሪያ,amh,t,superadmin,2020-12-23 14:36:45.977828
+10005,Registration Processor,Application for post-registration process,eng,t,superadmin,2020-12-23 14:36:45.977828
+10005,የምዝገባ ፕሮሰሰር ,የድህረ ምዝገባ መተግበሪያ,amh,t,superadmin,2020-12-23 14:36:45.977828
+10007,ID Authentication,Application for third party service provider authentication,eng,t,superadmin,2020-12-23 14:36:45.977828
+10007,የመታወቂያ ማረጋገጫ ,የሶስተኛ ወገን አገልግሎት አቅራቢ ማረጋገጫ መተግበሪያ,amh,t,superadmin,2020-12-23 14:36:45.977828
+10009,ID Control,Web portal for configuring applications,eng,t,superadmin,2020-12-23 14:36:45.977828
+10009,የመታወቂያ ቁጥጥር ,የመተግበሪያዎች ማስተካከያ ድህረ ገጽ,amh,t,superadmin,2020-12-23 14:36:45.977828
+10011,Resident Portal,Web portal for Post ID generation services,eng,t,superadmin,2020-12-23 14:36:45.977828
+10011,የነዋሪዎች ድህረ ገጽ,የድህረ መታወቂያ መፍጠሪያ አገልግሎቶች ድህረ ገጽ,amh,t,superadmin,2020-12-23 14:36:45.977828
