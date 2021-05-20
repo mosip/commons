@@ -347,5 +347,4 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
              throw new SignatureException();
          }
 	}
-
 }
