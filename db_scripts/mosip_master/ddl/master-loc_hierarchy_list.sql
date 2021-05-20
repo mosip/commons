@@ -22,7 +22,7 @@ CREATE TABLE master.loc_hierarchy_list(
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
 	upd_dtimes timestamp,
-	is_deleted boolean NOT NULL DEFAULT FALSE,
+	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
 	CONSTRAINT pk_loc_hierlst PRIMARY KEY (hierarchy_level,hierarchy_level_name,lang_code)
 

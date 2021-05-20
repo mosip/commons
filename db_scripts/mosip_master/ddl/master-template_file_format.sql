@@ -22,7 +22,7 @@ CREATE TABLE master.template_file_format(
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
 	upd_dtimes timestamp,
-	is_deleted boolean NOT NULL DEFAULT FALSE,
+	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
 	CONSTRAINT pk_tffmt_code PRIMARY KEY (code,lang_code)
 
