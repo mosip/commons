@@ -1,64 +1,64 @@
-﻿apptyp_code,doccat_code,doctyp_code,lang_code,is_active,cr_by,cr_dtimes
-001,POI,CIN,eng,TRUE,superadmin,now()
-001,POA,RNC,eng,TRUE,superadmin,now()
-001,POB,COB,eng,TRUE,superadmin,now()
-001,POR,CRN,eng,TRUE,superadmin,now()
-002,POI,CIN,eng,TRUE,superadmin,now()
-002,POA,RNC,eng,TRUE,superadmin,now()
-002,POB,COB,eng,TRUE,superadmin,now()
-003,POI,CIN,eng,TRUE,superadmin,now()
-003,POB,COB,eng,TRUE,superadmin,now()
-003,POR,CRN,eng,TRUE,superadmin,now()
-004,POI,CIN,eng,TRUE,superadmin,now()
-004,POB,COB,eng,TRUE,superadmin,now()
-005,POI,CIN,eng,TRUE,superadmin,now()
-005,POA,RNC,eng,TRUE,superadmin,now()
-005,POB,COB,eng,TRUE,superadmin,now()
-005,POR,CRN,eng,TRUE,superadmin,now()
-006,POI,CIN,eng,TRUE,superadmin,now()
-006,POA,RNC,eng,TRUE,superadmin,now()
-006,POB,COB,eng,TRUE,superadmin,now()
-007,POI,CIN,eng,TRUE,superadmin,now()
-007,POB,COB,eng,TRUE,superadmin,now()
-007,POR,CRN,eng,TRUE,superadmin,now()
-008,POI,CIN,eng,TRUE,superadmin,now()
-008,POB,COB,eng,TRUE,superadmin,now()
-009,POI,CIN,eng,TRUE,superadmin,now()
-009,POA,RNC,eng,TRUE,superadmin,now()
-009,POB,COB,eng,TRUE,superadmin,now()
-009,POR,CRN,eng,TRUE,superadmin,now()
-009,POE,COE,eng,TRUE,superadmin,now()
-010,POI,CIN,eng,TRUE,superadmin,now()
-010,POA,RNC,eng,TRUE,superadmin,now()
-010,POB,COB,eng,TRUE,superadmin,now()
-010,POE,COE,eng,TRUE,superadmin,now()
-011,POI,CIN,eng,TRUE,superadmin,now()
-011,POB,COB,eng,TRUE,superadmin,now()
-011,POR,CRN,eng,TRUE,superadmin,now()
-011,POE,COE,eng,TRUE,superadmin,now()
-012,POI,CIN,eng,TRUE,superadmin,now()
-012,POB,COB,eng,TRUE,superadmin,now()
-012,POE,COE,eng,TRUE,superadmin,now()
-013,POI,CIN,eng,TRUE,superadmin,now()
-013,POA,RNC,eng,TRUE,superadmin,now()
-013,POB,COB,eng,TRUE,superadmin,now()
-013,POR,CRN,eng,TRUE,superadmin,now()
-013,POE,COE,eng,TRUE,superadmin,now()
-014,POI,CIN,eng,TRUE,superadmin,now()
-014,POA,RNC,eng,TRUE,superadmin,now()
-014,POB,COB,eng,TRUE,superadmin,now()
-014,POE,COE,eng,TRUE,superadmin,now()
-015,POI,CIN,eng,TRUE,superadmin,now()
-015,POB,COB,eng,TRUE,superadmin,now()
-015,POR,CRN,eng,TRUE,superadmin,now()
-015,POE,COE,eng,TRUE,superadmin,now()
-016,POI,CIN,eng,TRUE,superadmin,now()
-016,POB,COB,eng,TRUE,superadmin,now()
-016,POE,COE,eng,TRUE,superadmin,now()
-003,POA,RNC,eng,TRUE,superadmin,now()
-004,POA,RNC,eng,TRUE,superadmin,now()
-007,POA,RNC,eng,TRUE,superadmin,now()
-008,POA,RNC,eng,TRUE,superadmin,now()
-011,POA,RNC,eng,TRUE,superadmin,now()
-012,POA,RNC,eng,TRUE,superadmin,now()
-015,POA,RNC,eng,TRUE,superadmin,now()
+apptyp_code,doccat_code,doctyp_code,lang_code,is_active,cr_by,cr_dtimes
+1,POI,CIN,eng,t,superadmin,2020-12-23 14:36:54.599405
+1,POA,RNC,eng,t,superadmin,2020-12-23 14:36:54.599405
+1,POB,COB,eng,t,superadmin,2020-12-23 14:36:54.599405
+1,POR,CRN,eng,t,superadmin,2020-12-23 14:36:54.599405
+2,POI,CIN,eng,t,superadmin,2020-12-23 14:36:54.599405
+2,POA,RNC,eng,t,superadmin,2020-12-23 14:36:54.599405
+2,POB,COB,eng,t,superadmin,2020-12-23 14:36:54.599405
+3,POI,CIN,eng,t,superadmin,2020-12-23 14:36:54.599405
+3,POB,COB,eng,t,superadmin,2020-12-23 14:36:54.599405
+3,POR,CRN,eng,t,superadmin,2020-12-23 14:36:54.599405
+4,POI,CIN,eng,t,superadmin,2020-12-23 14:36:54.599405
+4,POB,COB,eng,t,superadmin,2020-12-23 14:36:54.599405
+5,POI,CIN,eng,t,superadmin,2020-12-23 14:36:54.599405
+5,POA,RNC,eng,t,superadmin,2020-12-23 14:36:54.599405
+5,POB,COB,eng,t,superadmin,2020-12-23 14:36:54.599405
+5,POR,CRN,eng,t,superadmin,2020-12-23 14:36:54.599405
+6,POI,CIN,eng,t,superadmin,2020-12-23 14:36:54.599405
+6,POA,RNC,eng,t,superadmin,2020-12-23 14:36:54.599405
+6,POB,COB,eng,t,superadmin,2020-12-23 14:36:54.599405
+7,POI,CIN,eng,t,superadmin,2020-12-23 14:36:54.599405
+7,POB,COB,eng,t,superadmin,2020-12-23 14:36:54.599405
+7,POR,CRN,eng,t,superadmin,2020-12-23 14:36:54.599405
+8,POI,CIN,eng,t,superadmin,2020-12-23 14:36:54.599405
+8,POB,COB,eng,t,superadmin,2020-12-23 14:36:54.599405
+9,POI,CIN,eng,t,superadmin,2020-12-23 14:36:54.599405
+9,POA,RNC,eng,t,superadmin,2020-12-23 14:36:54.599405
+9,POB,COB,eng,t,superadmin,2020-12-23 14:36:54.599405
+9,POR,CRN,eng,t,superadmin,2020-12-23 14:36:54.599405
+9,POE,COE,eng,t,superadmin,2020-12-23 14:36:54.599405
+10,POI,CIN,eng,t,superadmin,2020-12-23 14:36:54.599405
+10,POA,RNC,eng,t,superadmin,2020-12-23 14:36:54.599405
+10,POB,COB,eng,t,superadmin,2020-12-23 14:36:54.599405
+10,POE,COE,eng,t,superadmin,2020-12-23 14:36:54.599405
+11,POI,CIN,eng,t,superadmin,2020-12-23 14:36:54.599405
+11,POB,COB,eng,t,superadmin,2020-12-23 14:36:54.599405
+11,POR,CRN,eng,t,superadmin,2020-12-23 14:36:54.599405
+11,POE,COE,eng,t,superadmin,2020-12-23 14:36:54.599405
+12,POI,CIN,eng,t,superadmin,2020-12-23 14:36:54.599405
+12,POB,COB,eng,t,superadmin,2020-12-23 14:36:54.599405
+12,POE,COE,eng,t,superadmin,2020-12-23 14:36:54.599405
+13,POI,CIN,eng,t,superadmin,2020-12-23 14:36:54.599405
+13,POA,RNC,eng,t,superadmin,2020-12-23 14:36:54.599405
+13,POB,COB,eng,t,superadmin,2020-12-23 14:36:54.599405
+13,POR,CRN,eng,t,superadmin,2020-12-23 14:36:54.599405
+13,POE,COE,eng,t,superadmin,2020-12-23 14:36:54.599405
+14,POI,CIN,eng,t,superadmin,2020-12-23 14:36:54.599405
+14,POA,RNC,eng,t,superadmin,2020-12-23 14:36:54.599405
+14,POB,COB,eng,t,superadmin,2020-12-23 14:36:54.599405
+14,POE,COE,eng,t,superadmin,2020-12-23 14:36:54.599405
+15,POI,CIN,eng,t,superadmin,2020-12-23 14:36:54.599405
+15,POB,COB,eng,t,superadmin,2020-12-23 14:36:54.599405
+15,POR,CRN,eng,t,superadmin,2020-12-23 14:36:54.599405
+15,POE,COE,eng,t,superadmin,2020-12-23 14:36:54.599405
+16,POI,CIN,eng,t,superadmin,2020-12-23 14:36:54.599405
+16,POB,COB,eng,t,superadmin,2020-12-23 14:36:54.599405
+16,POE,COE,eng,t,superadmin,2020-12-23 14:36:54.599405
+3,POA,RNC,eng,t,superadmin,2020-12-23 14:36:54.599405
+4,POA,RNC,eng,t,superadmin,2020-12-23 14:36:54.599405
+7,POA,RNC,eng,t,superadmin,2020-12-23 14:36:54.599405
+8,POA,RNC,eng,t,superadmin,2020-12-23 14:36:54.599405
+11,POA,RNC,eng,t,superadmin,2020-12-23 14:36:54.599405
+12,POA,RNC,eng,t,superadmin,2020-12-23 14:36:54.599405
+15,POA,RNC,eng,t,superadmin,2020-12-23 14:36:54.599405

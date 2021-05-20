@@ -1,37 +1,59 @@
-﻿doctyp_code,doccat_code,lang_code,is_active,cr_by,cr_dtimes
-CIN,POI,ara,TRUE,superadmin,now()
-RNC,POA,ara,TRUE,superadmin,now()
-COR,POA,ara,TRUE,superadmin,now()
-CRN,POR,ara,TRUE,superadmin,now()
-COB,POB,ara,TRUE,superadmin,now()
-DOC001,POI,ara,TRUE,superadmin,now()
-DOC002,POI,ara,TRUE,superadmin,now()
-DOC003,POI,ara,TRUE,superadmin,now()
-DOC004,POI,ara,TRUE,superadmin,now()
-DOC005,POI,ara,TRUE,superadmin,now()
-DOC006,POI,ara,TRUE,superadmin,now()
-DOC007,POI,ara,TRUE,superadmin,now()
-DOC008,POI,ara,TRUE,superadmin,now()
-DOC009,POI,ara,TRUE,superadmin,now()
-DOC010,POI,ara,TRUE,superadmin,now()
-DOC011,POI,ara,TRUE,superadmin,now()
-DOC012,POI,ara,TRUE,superadmin,now()
-DOC001,POA,ara,TRUE,superadmin,now()
-DOC013,POA,ara,TRUE,superadmin,now()
-DOC014,POA,ara,TRUE,superadmin,now()
-DOC015,POA,ara,TRUE,superadmin,now()
-DOC004,POA,ara,TRUE,superadmin,now()
-DOC005,POA,ara,TRUE,superadmin,now()
-DOC006,POA,ara,TRUE,superadmin,now()
-DOC016,POA,ara,TRUE,superadmin,now()
-DOC017,POA,ara,TRUE,superadmin,now()
-DOC018,POA,ara,TRUE,superadmin,now()
-DOC008,POA,ara,TRUE,superadmin,now()
-DOC024,POR,ara,TRUE,superadmin,now()
-DOC025,POR,ara,TRUE,superadmin,now()
-DOC026,POR,ara,TRUE,superadmin,now()
-DOC001,POR,ara,TRUE,superadmin,now()
-DOC027,POR,ara,TRUE,superadmin,now()
-DOC028,POR,ara,TRUE,superadmin,now()
-COE,POE,ara,TRUE,superadmin,now()
-EOP,POE,ara,TRUE,superadmin,now()
+doctyp_code,doccat_code,lang_code,is_active,cr_by,cr_dtimes
+RNC,POA,amh,t,superadmin,2020-12-23 14:36:54.694342
+COR,POA,amh,t,superadmin,2020-12-23 14:36:54.694342
+CRN,POR,amh,t,superadmin,2020-12-23 14:36:54.694342
+COB,POB,amh,t,superadmin,2020-12-23 14:36:54.694342
+DOC001,POA,amh,t,superadmin,2020-12-23 14:36:54.694342
+DOC013,POA,amh,t,superadmin,2020-12-23 14:36:54.694342
+DOC014,POA,amh,t,superadmin,2020-12-23 14:36:54.694342
+DOC015,POA,amh,t,superadmin,2020-12-23 14:36:54.694342
+DOC004,POA,amh,t,superadmin,2020-12-23 14:36:54.694342
+DOC005,POA,amh,t,superadmin,2020-12-23 14:36:54.694342
+DOC006,POA,amh,t,superadmin,2020-12-23 14:36:54.694342
+DOC016,POA,amh,t,superadmin,2020-12-23 14:36:54.694342
+DOC017,POA,amh,t,superadmin,2020-12-23 14:36:54.694342
+DOC018,POA,amh,t,superadmin,2020-12-23 14:36:54.694342
+DOC008,POA,amh,t,superadmin,2020-12-23 14:36:54.694342
+DOC024,POR,amh,t,superadmin,2020-12-23 14:36:54.694342
+DOC025,POR,amh,t,superadmin,2020-12-23 14:36:54.694342
+DOC026,POR,amh,t,superadmin,2020-12-23 14:36:54.694342
+DOC001,POR,amh,t,superadmin,2020-12-23 14:36:54.694342
+DOC027,POR,amh,t,superadmin,2020-12-23 14:36:54.694342
+DOC028,POR,amh,t,superadmin,2020-12-23 14:36:54.694342
+COE,POE,amh,t,superadmin,2020-12-23 14:36:54.694342
+EOP,POE,amh,t,superadmin,2020-12-23 14:36:54.694342
+CIN,POA,eng,f,110011,2021-02-11 15:09:06.245172
+KID,POI,eng,t,110011,2021-02-11 15:10:50.083292
+DL,POI,eng,t,110011,2021-02-11 15:10:56.075238
+CON,POI,eng,f,110011,2021-02-16 07:12:20.544845
+CON,POA,eng,t,110011,2021-02-16 07:34:50.458759
+COR,POI,eng,f,110011,2021-02-11 15:10:38.303705
+CRN,POI,eng,f,110011,2021-02-11 15:10:39.257329
+DOC002,POI,amh,f,superadmin,2020-12-23 14:36:54.694342
+DOC003,POI,amh,f,superadmin,2020-12-23 14:36:54.694342
+DOC004,POI,amh,f,superadmin,2020-12-23 14:36:54.694342
+DOC005,POI,amh,f,superadmin,2020-12-23 14:36:54.694342
+DOC001,POI,amh,t,superadmin,2020-12-23 14:36:54.694342
+DOC006,POI,amh,f,superadmin,2020-12-23 14:36:54.694342
+DOC007,POI,amh,f,superadmin,2020-12-23 14:36:54.694342
+DOC008,POI,amh,f,superadmin,2020-12-23 14:36:54.694342
+DOC009,POI,amh,f,superadmin,2020-12-23 14:36:54.694342
+DOC010,POI,amh,f,superadmin,2020-12-23 14:36:54.694342
+DOC011,POI,amh,f,superadmin,2020-12-23 14:36:54.694342
+DOC012,POI,amh,f,superadmin,2020-12-23 14:36:54.694342
+DOC013,POI,eng,f,110011,2021-02-11 15:10:45.02478
+DOC014,POI,eng,f,110011,2021-02-11 15:10:46.160656
+DOC015,POI,eng,f,110011,2021-02-11 15:10:46.309531
+DOC016,POI,eng,f,110011,2021-02-11 15:10:46.482434
+DOC017,POI,eng,f,110011,2021-02-11 15:10:47.371082
+DOC018,POI,eng,f,110011,2021-02-11 15:10:47.550318
+DOC024,POI,eng,f,110011,2021-02-11 15:10:47.727727
+DOC025,POI,eng,f,110011,2021-02-11 15:10:47.903512
+DOC026,POI,eng,f,110011,2021-02-11 15:11:08.19756
+DOC027,POI,eng,f,110011,2021-02-11 15:11:11.298497
+DOC028,POI,eng,f,110011,2021-02-11 15:11:12.49626
+EOP,POI,eng,f,110011,2021-02-11 15:11:12.669469
+RNC,POI,eng,f,110011,2021-02-11 15:11:13.505058
+CIN,POI,amh,f,superadmin,2020-12-23 14:36:54.694342
+COB,POI,eng,f,110011,2021-02-11 15:10:37.397228
+COE,POI,eng,f,110011,2021-02-11 15:10:37.956735

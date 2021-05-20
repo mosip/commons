@@ -1,4 +1,6 @@
-﻿id,dprovider_id,dtype_code,dstype_code,make,model,partner_org_name,approval_status,is_active,cr_by,cr_dtimes
-10001,SmartX,Iris,Double,SmartX,IRISv101,SmartX ORG,APPROVED,TRUE,admin,now()
-10002,SmartX,Face,Full face,SmartX,FACEv101,SmartX ORG,APPROVED,TRUE,admin,now()
-10003,SmartX,Finger,Slab,SmartX,FPSv101,SmartX ORG,APPROVED,TRUE,admin,now()
+id,dprovider_id,dtype_code,dstype_code,make,model,partner_org_name,approval_status,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted
+mdevice_detail_default_face,MOSIP.PROXY.SBI,Face,Full face,MOSIP,FACE01,MOSIP,Activated,t,superadmin,2020-12-23 14:36:26.332151,superadmin,2020-12-23 14:36:26.332151,f
+mdevice_detail_default_finger,MOSIP.PROXY.SBI,Finger,Slap,MOSIP,SLAP01,MOSIP,Activated,t,superadmin,2020-12-23 14:36:26.332151,superadmin,2020-12-23 14:36:26.332151,f
+mdevice_detail_default_iris,MOSIP.PROXY.SBI,Iris,Double,MOSIP,IRIS01,MOSIP,Activated,t,superadmin,2020-12-23 14:36:26.332151,superadmin,2020-12-23 14:36:26.332151,f
+mdevice_detail_thales_finger,THALES.THALES,Finger,Slap,Thales,DactyScan84c,THALES,Activated,t,superadmin,2020-12-23 14:36:26.332151,superadmin,2020-12-23 14:36:26.332151,f
+mdevice_detail_thales_iris,THALES.THALES,Iris,Double,Thales,CIS-202,THALES,Activated,t,superadmin,2020-12-23 14:36:26.332151,superadmin,2020-12-23 14:36:26.332151,f

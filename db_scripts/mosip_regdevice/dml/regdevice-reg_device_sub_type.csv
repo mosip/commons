@@ -1,7 +1,7 @@
 code,dtyp_code,name,descr,is_active,cr_by,cr_dtimes
-Slab,Finger,Slab,Fingerprint Slab,TRUE,now(),now()
-Single,Finger,Single,Fingerprint Single Finger,TRUE,now(),now()
-Touchless,Finger,Touchless,Touch Fingerprint,TRUE,now(),now()
-Single,Iris,Single,Single,TRUE,now(),now()
-Double,Iris,Double,Double,TRUE,now(),now()
-Full face,Face,Full face,Full Face,TRUE,now(),now()
+Slap,Finger,Slap,Fingerprint Slap,t,superadmin,2020-12-23 14:36:26.067761
+Single,Finger,Single,Fingerprint Single Finger,t,superadmin,2020-12-23 14:36:26.067761
+Touchless,Finger,Touchless,Touch Fingerprint,t,superadmin,2020-12-23 14:36:26.067761
+Single,Iris,Single,Single,t,superadmin,2020-12-23 14:36:26.067761
+Double,Iris,Double,Double,t,superadmin,2020-12-23 14:36:26.067761
+Full face,Face,Full face,Full Face,t,superadmin,2020-12-23 14:36:26.067761

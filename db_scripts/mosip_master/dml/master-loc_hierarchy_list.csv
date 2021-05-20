@@ -1,19 +1,13 @@
-﻿hierarchy_level,hierarchy_level_name,lang_code,is_active,cr_by,cr_dtimes
-0,Country,eng,TRUE,superadmin,now()
-0,بلد,ara,TRUE,superadmin,now()
-0,Pays,fra,TRUE,superadmin,now()
-1,Region,eng,TRUE,superadmin,now()
-1,منطقة,ara,TRUE,superadmin,now()
-1,Région,fra,TRUE,superadmin,now()
-2,Province,eng,TRUE,superadmin,now()
-2,المحافظة,ara,TRUE,superadmin,now()
-2,Province,fra,TRUE,superadmin,now()
-3,City,eng,TRUE,superadmin,now()
-3,مدينة,ara,TRUE,superadmin,now()
-3,Ville,fra,TRUE,superadmin,now()
-4,Zone,eng,TRUE,superadmin,now()
-4,منطقة,ara,TRUE,superadmin,now()
-4,Zone,fra,TRUE,superadmin,now()
-5,Postal Code,eng,TRUE,superadmin,now()
-5,الرمز البريدي,ara,TRUE,superadmin,now()
-5,code postal,fra,TRUE,superadmin,now()
+hierarchy_level,hierarchy_level_name,lang_code,is_active,cr_by,cr_dtimes
+0,Country,eng,t,superadmin,2020-12-23 14:36:51.621006
+0,ሀገር,amh,t,superadmin,2020-12-23 14:36:51.621006
+1,Region,eng,t,superadmin,2020-12-23 14:36:51.621006
+1,ክልል,amh,t,superadmin,2020-12-23 14:36:51.621006
+2,Zone,eng,t,superadmin,2020-12-23 14:36:51.621006
+2,ዞን,amh,t,superadmin,2020-12-23 14:36:51.621006
+5,Kebele,eng,t,superadmin,2020-12-23 14:36:51.621006
+5,ቀበሌ,amh,t,superadmin,2020-12-23 14:36:51.621006
+3,City,eng,t,superadmin,2020-12-23 14:36:51.621006
+3,ከተማ,amh,t,superadmin,2020-12-23 14:36:51.621006
+4,Woreda,eng,t,superadmin,2020-12-23 14:36:51.621006
+4,ወረዳ,amh,t,superadmin,2020-12-23 14:36:51.621006

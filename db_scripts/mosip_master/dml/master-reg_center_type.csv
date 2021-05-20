@@ -1,4 +1,4 @@
-﻿code,name,descr,lang_code,is_active,cr_by,cr_dtimes
-REG,Regular,Regular Registration Center,eng,TRUE,superadmin,now()
-REG,منتظم,مركز التسجيل العادي,ara,TRUE,superadmin,now()
-REG,Ordinaire,Centre dinscription régulière,fra,TRUE,superadmin,now()
+code,name,descr,lang_code,is_active,cr_by,cr_dtimes
+REG,Regular,Regular Registration Center,eng,t,superadmin,2020-12-23 14:36:48.929222
+REG,መደበኛ,መደበኘኛ የምዝገባ ማዕከል,amh,t,superadmin,2020-12-23 14:36:48.929222
+test,Test,test,eng,f,110011,2021-02-08 12:09:17.847569

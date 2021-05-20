@@ -1,4 +1,3 @@
-﻿code,name,family,native_name,is_active,cr_by,cr_dtimes
-eng,English,Indo-European,English,TRUE,superadmin,now()
-ara,Arabic,Afro-Asiatic,العَرَبِيَّة‎,TRUE,superadmin,now()
-fra,French,Indo-European,français,TRUE,superadmin,now()
+code,name,family,native_name,is_active,cr_by,cr_dtimes
+eng,English,Indo-European,English,t,superadmin,2020-12-23 14:36:47.474656
+amh,Amharic,Ethio-Semitic,አማርኛ,t,superadmin,2020-12-23 14:36:47.474656

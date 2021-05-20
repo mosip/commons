@@ -1,4 +1,3 @@
-﻿code,name,descr,lang_code,is_active,cr_by,cr_dtimes
-ADT,Activation Status,Activation Status,eng,TRUE,superadmin,now()
-ADT,Activation status,Activation status,fra,TRUE,superadmin,now()
-ADT,حالة التفعيل أو التشغيل,حالة التفعيل أو التشغيل,ara,TRUE,superadmin,now()
+code,name,descr,lang_code,is_active,cr_by,cr_dtimes
+ADT,Activation Status,Activation Status,eng,t,superadmin,2020-12-23 14:36:49.451937
+ADT,የአክቲቬሽን ሁኔታ ,የአክቲቬሽን ሁኔታ ,amh,t,superadmin,2020-12-23 14:36:49.451937
