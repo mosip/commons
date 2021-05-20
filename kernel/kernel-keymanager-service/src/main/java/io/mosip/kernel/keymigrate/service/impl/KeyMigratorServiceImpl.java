@@ -68,19 +68,19 @@ public class KeyMigratorServiceImpl implements KeyMigratorService {
     
     private static final String CREATED_BY = "System-Migrator";
     
-    @Value("${mosip.kernel.partner.sign.masterkey.application.id}")
+    @Value("${mosip.kernel.partner.sign.masterkey.application.id:PMS}")
 	private String pmsSignAppId;
     
     @Value("${mosip.kernel.certificate.sign.algorithm:SHA256withRSA}")
 	private String signAlgorithm;
 
-    @Value("${mosip.kernel.zkcrypto.masterkey.application.id}")
+    @Value("${mosip.kernel.zkcrypto.masterkey.application.id:KERNEL}")
 	private String masterKeyAppId;
 
-	@Value("${mosip.kernel.zkcrypto.masterkey.reference.id}")
+	@Value("${mosip.kernel.zkcrypto.masterkey.reference.id:IDENTITY_CACHE}")
     private String masterKeyRefId;
 
-    @Value("${mosip.kernel.zkcrypto.wrap.algorithm-name}")
+    @Value("${mosip.kernel.zkcrypto.wrap.algorithm-name:AES/ECB/NoPadding}")
 	private String aesECBTransformation;
 
     /**

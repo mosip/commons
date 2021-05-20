@@ -398,10 +398,10 @@ public class KeymanagerUtil {
 		return certParams;
 	}
 
-	public CertificateParameters getCertificateParameters(String commonName, LocalDateTime notBefore, LocalDateTime notAfter) {
+	public CertificateParameters getCertificateParameters(String cName, LocalDateTime notBefore, LocalDateTime notAfter) {
 
 		CertificateParameters certParams = new CertificateParameters();
-		certParams.setCommonName(getParamValue(commonName, commonName));
+		certParams.setCommonName(getParamValue(cName, commonName));
 		certParams.setOrganizationUnit(getParamValue(KeymanagerConstant.EMPTY, organizationUnit));
 		certParams.setOrganization(getParamValue(KeymanagerConstant.EMPTY, organization));
 		certParams.setLocation(getParamValue(KeymanagerConstant.EMPTY, location));
