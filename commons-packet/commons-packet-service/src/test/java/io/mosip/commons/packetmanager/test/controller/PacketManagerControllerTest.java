@@ -15,6 +15,7 @@ import io.mosip.commons.packetmanager.dto.FieldDtos;
 import io.mosip.commons.packetmanager.dto.InfoDto;
 import io.mosip.commons.packetmanager.dto.InfoRequestDto;
 import io.mosip.commons.packetmanager.dto.InfoResponseDto;
+import io.mosip.commons.packetmanager.dto.SourceProcessDto;
 import io.mosip.commons.packetmanager.service.PacketReaderService;
 import io.mosip.commons.packetmanager.test.TestBootApplication;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
@@ -90,6 +91,8 @@ public class PacketManagerControllerTest {
         fieldDto.setProcess("NEW");
         fieldDto.setSource("REGISTRATION");
 
+        Mockito.when(packetReaderService.getSourceAndProcess(any(),any(),any(),any())).thenReturn(new SourceProcessDto("source", "process"));
+        
         Mockito.when(
                 packetReader.getField(anyString(), anyString(), anyString(), anyString(), anyBoolean())).thenReturn(value);
 
@@ -110,6 +113,8 @@ public class PacketManagerControllerTest {
         fieldDto.setProcess("NEW");
         fieldDto.setSource("REGISTRATION");
 
+        Mockito.when(packetReaderService.getSourceAndProcess(any(),any(),any(),any())).thenReturn(new SourceProcessDto("source", "process"));
+
         Mockito.when(
                 packetReader.getFields(anyString(), any(), anyString(), anyString(), anyBoolean())).thenReturn(new HashMap<>());
 
@@ -129,6 +134,8 @@ public class PacketManagerControllerTest {
         documentDto.setProcess("NEW");
         documentDto.setSource("REGISTRATION");
 
+        Mockito.when(packetReaderService.getSourceAndProcess(any(),any(),any(),any())).thenReturn(new SourceProcessDto("source", "process"));
+
         Mockito.when(
                 packetReader.getDocument(anyString(), anyString(), anyString(), anyString())).thenReturn(new Document());
 
@@ -146,6 +153,8 @@ public class PacketManagerControllerTest {
         biometricRequestDto.setId("id");
         biometricRequestDto.setProcess("NEW");
         biometricRequestDto.setSource("REGISTRATION");
+
+        Mockito.when(packetReaderService.getSourceAndProcess(any(),any(),any(),any())).thenReturn(new SourceProcessDto("source", "process"));
 
         Mockito.when(
                 packetReader.getBiometric(anyString(), anyString(), any(), anyString(), anyString(), anyBoolean())).thenReturn(new BiometricRecord());
@@ -165,6 +174,8 @@ public class PacketManagerControllerTest {
         infoDto.setProcess("NEW");
         infoDto.setSource("REGISTRATION");
 
+        Mockito.when(packetReaderService.getSourceAndProcess(any(),any(),any(),any())).thenReturn(new SourceProcessDto("source", "process"));
+
         Mockito.when(
                 packetReader.getMetaInfo(anyString(), anyString(), anyString(), anyBoolean())).thenReturn(new HashMap<>());
 
@@ -183,6 +194,8 @@ public class PacketManagerControllerTest {
         infoDto.setProcess("NEW");
         infoDto.setSource("REGISTRATION");
 
+        Mockito.when(packetReaderService.getSourceAndProcess(any(),any(),any(),any())).thenReturn(new SourceProcessDto("source", "process"));
+
         Mockito.when(
                 packetReader.getAudits(anyString(), anyString(), anyString(), anyBoolean())).thenReturn(new ArrayList<>());
 
@@ -200,6 +213,8 @@ public class PacketManagerControllerTest {
         infoDto.setId("id");
         infoDto.setProcess("NEW");
         infoDto.setSource("REGISTRATION");
+
+        Mockito.when(packetReaderService.getSourceAndProcess(any(),any(),any(),any())).thenReturn(new SourceProcessDto("source", "process"));
 
         Mockito.when(
                 packetReader.validatePacket(anyString(), anyString(), anyString())).thenReturn(true);
@@ -254,6 +269,8 @@ public class PacketManagerControllerTest {
         infoDto.setId("id");
         infoDto.setProcess("NEW");
         infoDto.setSource("REGISTRATION");
+
+        Mockito.when(packetReaderService.getSourceAndProcess(any(),any(),any(),any())).thenReturn(new SourceProcessDto("source", "process"));
 
         Mockito.when(
                 packetReader.getAudits(anyString(), anyString(), anyString(), anyBoolean())).thenThrow(new BaseCheckedException("errorCode", "errorMessage"));
