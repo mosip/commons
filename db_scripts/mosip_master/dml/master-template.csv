@@ -1,177 +1,177 @@
-id,name,descr,file_format_code,model,file_txt,module_id,module_name,template_typ_code,lang_code,is_active,cr_by,cr_dtimes,,,,,,,,,,,,,,,,,
+id,name,descr,file_format_code,model,file_txt,module_id,module_name,template_typ_code,lang_code,is_active,cr_by,cr_dtimes
 1101,Template for authorization content,Template for authorization content,txt,,"Dear $name
-Your Authentication of UIN $uin using $authType on $date at $time Hrs $status at a device deployed by MOSIP Services",10004,Authentification ID,auth-email-content,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Your Authentication of UIN $uin using $authType on $date at $time Hrs $status at a device deployed by MOSIP Services",10004,Authentification ID,auth-email-content,amh,t,superadmin,2020-12-23 14:36:54.459577
 1101,Template for authorization content,Template for authorization content,txt,,"Dear $name
-Your Authentication of UIN $uin using $authType on $date at $time Hrs $status at a device deployed by MOSIP Services",10004,ID Authentication,auth-email-content,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1102,Template for authorization subject,Template for authorization subject,txt,,UIN $uin Authentication $status,10004,Authentification ID,auth-email-subject,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1102,Template for authorization subject,Template for authorization subject,txt,,UIN $uin Authentication $status,10004,ID Authentication,auth-email-subject,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1103,Template for authorization SMS,Template for authorization SMS,txt,,Your Authentication of UIN $uin using $authType on $date at $time Hrs $status at a device deployed by MOSIP Services.,10004,Authentification ID,auth-sms,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1103,Template for authorization SMS,Template for authorization SMS,txt,,Your Authentication of UIN $uin using $authType on $date at $time Hrs $status at a device deployed by MOSIP Services.,10004,ID Authentication,auth-sms,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Your Authentication of UIN $uin using $authType on $date at $time Hrs $status at a device deployed by MOSIP Services",10004,ID Authentication,auth-email-content,eng,t,superadmin,2020-12-23 14:36:54.459577
+1102,Template for authorization subject,Template for authorization subject,txt,,UIN $uin Authentication $status,10004,Authentification ID,auth-email-subject,amh,t,superadmin,2020-12-23 14:36:54.459577
+1102,Template for authorization subject,Template for authorization subject,txt,,UIN $uin Authentication $status,10004,ID Authentication,auth-email-subject,eng,t,superadmin,2020-12-23 14:36:54.459577
+1103,Template for authorization SMS,Template for authorization SMS,txt,,Your Authentication of UIN $uin using $authType on $date at $time Hrs $status at a device deployed by MOSIP Services.,10004,Authentification ID,auth-sms,amh,t,superadmin,2020-12-23 14:36:54.459577
+1103,Template for authorization SMS,Template for authorization SMS,txt,,Your Authentication of UIN $uin using $authType on $date at $time Hrs $status at a device deployed by MOSIP Services.,10004,ID Authentication,auth-sms,eng,t,superadmin,2020-12-23 14:36:54.459577
 1107,Template for duplicate UIN Email,Template for duplicate UIN Email,txt,,"Dear $!name_eng,
 
 Your request for UIN for Registration ID: $!RID has failed because a duplicate UIN has been found against your details. Please visit your nearest Registration office or visit https://mosip.io/grievances
 
-Thank You",10003,Processeur dinscription,RPR_DUP_UIN_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You",10003,Processeur dinscription,RPR_DUP_UIN_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577
 1107,Template for duplicate UIN Email,Template for duplicate UIN Email,txt,,"Dear $!name_eng,
 
 Your request for UIN for Registration ID: $!RID has failed because a duplicate UIN has been found against your details. Please visit your nearest Registration office or visit https://mosip.io/grievances
 
-Thank You",10003,Registration Processor,RPR_DUP_UIN_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You",10003,Registration Processor,RPR_DUP_UIN_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577
 1108,Template for duplicate UIN SMS,Template for duplicate UIN SMS,txt,,"Dear $!name_eng,
 
-Your request for UIN for Registration ID: $!RID has failed because a duplicate UIN has been found against your details. Please visit your nearest Registration office or visit https://mosip.io/grievances",10003,Processeur dinscription,RPR_DUP_UIN_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Your request for UIN for Registration ID: $!RID has failed because a duplicate UIN has been found against your details. Please visit your nearest Registration office or visit https://mosip.io/grievances",10003,Processeur dinscription,RPR_DUP_UIN_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577
 1108,Template for duplicate UIN SMS,Template for duplicate UIN SMS,txt,,"Dear $!name_eng,
 
-Your request for UIN for Registration ID: $!RID has failed because a duplicate UIN has been found against your details. Please visit your nearest Registration office or visit https://mosip.io/grievances",10003,Registration Processor,RPR_DUP_UIN_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Your request for UIN for Registration ID: $!RID has failed because a duplicate UIN has been found against your details. Please visit your nearest Registration office or visit https://mosip.io/grievances",10003,Registration Processor,RPR_DUP_UIN_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577
 1109,Template for Technical Issue Email,Template for Technical Issue Email,txt,,"Dear $!name_eng,
 
 Your request for UIN for Registration ID: $!RID has failed because of a technical issue. Please visit your nearest Registration office or visit https://mosip.io/grievances
 
-Thank You",10003,Processeur dinscription,RPR_TEC_ISSUE_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You",10003,Processeur dinscription,RPR_TEC_ISSUE_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577
 1109,Template for Technical Issue Email,Template for Technical Issue Email,txt,,"Dear $!name_eng,
 
 Your request for UIN for Registration ID: $!RID has failed because of a technical issue. Please visit your nearest Registration office or visit https://mosip.io/grievances
 
-Thank You",10003,Registration Processor,RPR_TEC_ISSUE_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You",10003,Registration Processor,RPR_TEC_ISSUE_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577
 1110,Template for Technical Issue SMS,Template for Technical Issue SMS,txt,,"Dear $!name_eng,
 
-Your request for UIN for Registration ID: $!RID has failed because of a technical issue. Please visit your nearest Registration office or visit https://mosip.io/grievances",10003,Processeur dinscription,RPR_TEC_ISSUE_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Your request for UIN for Registration ID: $!RID has failed because of a technical issue. Please visit your nearest Registration office or visit https://mosip.io/grievances",10003,Processeur dinscription,RPR_TEC_ISSUE_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577
 1110,Template for Technical Issue SMS,Template for Technical Issue SMS,txt,,"Dear $!name_eng,
 
-Your request for UIN for Registration ID: $!RID has failed because of a technical issue. Please visit your nearest Registration office or visit https://mosip.io/grievances",10003,Registration Processor,RPR_TEC_ISSUE_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Your request for UIN for Registration ID: $!RID has failed because of a technical issue. Please visit your nearest Registration office or visit https://mosip.io/grievances",10003,Registration Processor,RPR_TEC_ISSUE_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577
 1111,Template for UIN generation Email,Template for UIN generation Email,txt,,"Dear $name_eng,
 
 Your UIN for Registration ID: $!RID has been successfully generated and will reach soon at your postal address.
 
-Thank You",10003,Processeur dinscription,RPR_UIN_GEN_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You",10003,Processeur dinscription,RPR_UIN_GEN_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577
 1111,Template for UIN generation Email,Template for UIN generation Email,txt,,"Dear $name_eng,
 
 Your UIN for Registration ID: $!RID has been successfully generated and will reach soon at your postal address.
 
-Thank You",10003,Registration Processor,RPR_UIN_GEN_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You",10003,Registration Processor,RPR_UIN_GEN_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577
 1112,Template for UIN generation SMS,Template for UIN generation SMS,txt,,"Dear $name_eng,
 
-Your UIN for Registration ID: $!RID has been successfully generated and will reach soon at your postal address.",10003,Processeur dinscription,RPR_UIN_GEN_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Your UIN for Registration ID: $!RID has been successfully generated and will reach soon at your postal address.",10003,Processeur dinscription,RPR_UIN_GEN_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577
 1112,Template for UIN generation SMS,Template for UIN generation SMS,txt,,"Dear $name_eng,
 
-Your UIN for Registration ID: $!RID has been successfully generated and will reach soon at your postal address.",10003,Registration Processor,RPR_UIN_GEN_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Your UIN for Registration ID: $!RID has been successfully generated and will reach soon at your postal address.",10003,Registration Processor,RPR_UIN_GEN_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577
 1113,Template for update details Email,Template for update details Email,txt,,"Dear $!name_eng,
 
 Your UIN details for the Registration ID: $!RID have been updated and a physical copy of your UIN card will reach you soon at your postal address.
 
-Thank You",10003,Processeur dinscription,RPR_UIN_UPD_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You",10003,Processeur dinscription,RPR_UIN_UPD_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577
 1113,Template for update details Email,Template for update details Email,txt,,"Dear $!name_eng,
 
 Your UIN details for the Registration ID: $!RID have been updated and a physical copy of your UIN card will reach you soon at your postal address.
 
-Thank You",10003,Registration Processor,RPR_UIN_UPD_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You",10003,Registration Processor,RPR_UIN_UPD_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577
 1114,Template for update Details SMS,Template for update Details SMS,txt,,"Dear $!name_eng,
 
-Your UIN details for the Registration ID: $!RID have been updated and a physical copy of your UIN card will reach you soon at your postal address.",10003,Processeur dinscription,RPR_UIN_UPD_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Your UIN details for the Registration ID: $!RID have been updated and a physical copy of your UIN card will reach you soon at your postal address.",10003,Processeur dinscription,RPR_UIN_UPD_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577
 1114,Template for update Details SMS,Template for update Details SMS,txt,,"Dear $!name_eng,
 
-Your UIN details for the Registration ID: $!RID have been updated and a physical copy of your UIN card will reach you soon at your postal address.",10003,Registration Processor,RPR_UIN_UPD_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Your UIN details for the Registration ID: $!RID have been updated and a physical copy of your UIN card will reach you soon at your postal address.",10003,Registration Processor,RPR_UIN_UPD_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577
 1115,Template for new registration Email Content,Template for new registration Email Content,txt,,"Dear $name, 
-Thank you for registering with the digital identity platform. Your registration id is $RegistrationID. If there are any corrections to be made in your details, please contact the Registration centre within the next 4 days.",10002,Client dinscription,NewReg-email-content-template,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank you for registering with the digital identity platform. Your registration id is $RegistrationID. If there are any corrections to be made in your details, please contact the Registration centre within the next 4 days.",10002,Client dinscription,NewReg-email-content-template,amh,t,superadmin,2020-12-23 14:36:54.459577
 1115,Template for new registration Email Content,Template for new registration Email Content,txt,,"Dear $name, 
-Thank you for registering with the digital identity platform. Your registration id is $RegistrationID. If there are any corrections to be made in your details, please contact the Registration centre within the next 4 days.",10002,Registration Client,NewReg-email-content-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1116,Template for new registration Email Subject,Template for new registration Email Subject,txt,,Registration confirmation,10002,Registration Client,NewReg-email-subject-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1116,Template for new registration Email Subject,Template for new registration Email Subject,txt,,Registration confirmation,10002,Registration Client,NewReg-email-subject-template,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank you for registering with the digital identity platform. Your registration id is $RegistrationID. If there are any corrections to be made in your details, please contact the Registration centre within the next 4 days.",10002,Registration Client,NewReg-email-content-template,eng,t,superadmin,2020-12-23 14:36:54.459577
+1116,Template for new registration Email Subject,Template for new registration Email Subject,txt,,Registration confirmation,10002,Registration Client,NewReg-email-subject-template,eng,t,superadmin,2020-12-23 14:36:54.459577
+1116,Template for new registration Email Subject,Template for new registration Email Subject,txt,,Registration confirmation,10002,Registration Client,NewReg-email-subject-template,amh,t,superadmin,2020-12-23 14:36:54.459577
 1117,Template for new registration SMS,Template for new registration SMS,txt,,"Dear $name,
-Thank you for registering with the digital identity platform. Your registration id is $RegistrationID. If there are any corrections to be made in your details, please contact the Registration centre within the next 4 days. ",10002,Registration Client,NewReg-sms-template,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank you for registering with the digital identity platform. Your registration id is $RegistrationID. If there are any corrections to be made in your details, please contact the Registration centre within the next 4 days. ",10002,Registration Client,NewReg-sms-template,amh,t,superadmin,2020-12-23 14:36:54.459577
 1117,Template for new registration SMS,Template for new registration SMS,txt,,"Dear $name,
-Thank you for registering with the digital identity platform. Your registration id is $RegistrationID. If there are any corrections to be made in your details, please contact the Registration centre within the next 4 days. ",10002,Registration Client,NewReg-sms-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank you for registering with the digital identity platform. Your registration id is $RegistrationID. If there are any corrections to be made in your details, please contact the Registration centre within the next 4 days. ",10002,Registration Client,NewReg-sms-template,eng,t,superadmin,2020-12-23 14:36:54.459577
 1118,Template for OTP generation Email Content,Template for OTP generation Email Content,txt,,"Dear $name, 
-OTP for username $username is $otp and is valid for $validTime minutes (Generated on $date at $time hrs).",10002,Client dinscription,OTP-email-content-template,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+OTP for username $username is $otp and is valid for $validTime minutes (Generated on $date at $time hrs).",10002,Client dinscription,OTP-email-content-template,amh,t,superadmin,2020-12-23 14:36:54.459577
 1118,Template for OTP generation Email Content,Template for OTP generation Email Content,txt,,"Dear $name, 
-OTP for username $username is $otp and is valid for $validTime minutes (Generated on $date at $time hrs).",10002,Registration Client,OTP-email-content-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1119,Template for OTP generation Email Subject,Template for OTP generation Email Subject,txt,,One time password from digital identify platfor,10002,Client dinscription,OTP-email-subject-template,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1119,Template for OTP generation Email Subject,Template for OTP generation Email Subject,txt,,One time password from digital identify platfor,10002,Registration Client,OTP-email-subject-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+OTP for username $username is $otp and is valid for $validTime minutes (Generated on $date at $time hrs).",10002,Registration Client,OTP-email-content-template,eng,t,superadmin,2020-12-23 14:36:54.459577
+1119,Template for OTP generation Email Subject,Template for OTP generation Email Subject,txt,,One time password from digital identify platfor,10002,Client dinscription,OTP-email-subject-template,amh,t,superadmin,2020-12-23 14:36:54.459577
+1119,Template for OTP generation Email Subject,Template for OTP generation Email Subject,txt,,One time password from digital identify platfor,10002,Registration Client,OTP-email-subject-template,eng,t,superadmin,2020-12-23 14:36:54.459577
 1120,Template for OTP SMS,Template for OTP SMS,txt,,"Dear $name, 
-OTP for username $username is $otp and is valid for $validTime minutes (Generated on $date at $time hrs).",10002,Client dinscription,OTP-sms-template,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+OTP for username $username is $otp and is valid for $validTime minutes (Generated on $date at $time hrs).",10002,Client dinscription,OTP-sms-template,amh,t,superadmin,2020-12-23 14:36:54.459577
 1120,Template for OTP SMS,Template for OTP SMS,txt,,"Dear $name, 
-OTP for username $username is $otp and is valid for $validTime minutes (Generated on $date at $time hrs).",10002,Registration Client,OTP-sms-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+OTP for username $username is $otp and is valid for $validTime minutes (Generated on $date at $time hrs).",10002,Registration Client,OTP-sms-template,eng,t,superadmin,2020-12-23 14:36:54.459577
 1121,Template for update registration Email Content,Template for update registration Email Content,txt,,"Dear $name, 
-Thank you for updating your details with the digital identity platform. Your registration id is $RegistrationID. If there are any corrections to be made in your details, please contact the Registration centre within the next 4 days.",10002,Client dinscription,Update-email-content-template,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank you for updating your details with the digital identity platform. Your registration id is $RegistrationID. If there are any corrections to be made in your details, please contact the Registration centre within the next 4 days.",10002,Client dinscription,Update-email-content-template,amh,t,superadmin,2020-12-23 14:36:54.459577
 1121,Template for update registration Email Content,Template for update registration Email Content,txt,,"Dear $name, 
-Thank you for updating your details with the digital identity platform. Your registration id is $RegistrationID. If there are any corrections to be made in your details, please contact the Registration centre within the next 4 days.",10002,Registration Client,Update-email-content-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1122,Template for update registration Email Subject,Template for update registration Email Subject,txt,,Registration update confirmation,10002,Client dinscription,Update-email-subject-template,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1122,Template for update registration Email Subject,Template for update registration Email Subject,txt,,Registration update confirmation,10002,Registration Client,Update-email-subject-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank you for updating your details with the digital identity platform. Your registration id is $RegistrationID. If there are any corrections to be made in your details, please contact the Registration centre within the next 4 days.",10002,Registration Client,Update-email-content-template,eng,t,superadmin,2020-12-23 14:36:54.459577
+1122,Template for update registration Email Subject,Template for update registration Email Subject,txt,,Registration update confirmation,10002,Client dinscription,Update-email-subject-template,amh,t,superadmin,2020-12-23 14:36:54.459577
+1122,Template for update registration Email Subject,Template for update registration Email Subject,txt,,Registration update confirmation,10002,Registration Client,Update-email-subject-template,eng,t,superadmin,2020-12-23 14:36:54.459577
 1123,Template for update registration SMS,Template for update registration SMS,txt,,"Dear $name, 
-Thank you for updating your details with the digital identity platform. Your registration id is $RegistrationID. If there are any corrections to be made in your details, please contact the Registration centre within the next 4 days.",10002,Client dinscription,Update-sms-template,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank you for updating your details with the digital identity platform. Your registration id is $RegistrationID. If there are any corrections to be made in your details, please contact the Registration centre within the next 4 days.",10002,Client dinscription,Update-sms-template,amh,t,superadmin,2020-12-23 14:36:54.459577
 1123,Template for update registration SMS,Template for update registration SMS,txt,,"Dear $name, 
-Thank you for updating your details with the digital identity platform. Your registration id is $RegistrationID. If there are any corrections to be made in your details, please contact the Registration centre within the next 4 days.",10002,Registration Client,Update-sms-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank you for updating your details with the digital identity platform. Your registration id is $RegistrationID. If there are any corrections to be made in your details, please contact the Registration centre within the next 4 days.",10002,Registration Client,Update-sms-template,eng,t,superadmin,2020-12-23 14:36:54.459577
 1124,Template for Email Acknowledgement,Template for Email Acknowledgement,txt,,"Dear $name,
 Your Pre-Registration for UIN is Completed Successfully
 on $Date at $Time. Your ID is #$PRID.
 Appointment is scheduled for $Appointmentdate at $Appointmenttime.
-you will also receive the details on your registered Mobile Number",10001,Pre-Registration,Email-Acknowledgement,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+you will also receive the details on your registered Mobile Number",10001,Pre-Registration,Email-Acknowledgement,eng,t,superadmin,2020-12-23 14:36:54.459577
 1124,Template for Email Acknowledgement,Template for Email Acknowledgement,txt,,"Dear $name,
 Your Pre-Registration for UIN is Completed Successfully
 on $Date at $Time. Your ID is #$PRID.
 Appointment is scheduled for $Appointmentdate at $Appointmenttime.
-you will also receive the details on your registered Mobile Number",10001,Pre-Registration,Email-Acknowledgement,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+you will also receive the details on your registered Mobile Number",10001,Pre-Registration,Email-Acknowledgement,amh,t,superadmin,2020-12-23 14:36:54.459577
 1126,Template for OTP Email Content,Template for OTP Email Content,txt,,"Dear $name,
-TP for Pre-Registration  $PRID is $otp and is valid for $validTime minutes. (Generated on $date at $time Hrs)",10001,Pre-Registration,otp-email-content-template,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+TP for Pre-Registration  $PRID is $otp and is valid for $validTime minutes. (Generated on $date at $time Hrs)",10001,Pre-Registration,otp-email-content-template,amh,t,superadmin,2020-12-23 14:36:54.459577
 1126,Template for OTP Email Content,Template for OTP Email Content,txt,,"Dear $name,
-TP for Pre-Registration  $PRID is $otp and is valid for $validTime minutes. (Generated on $date at $time Hrs)",10001,Pre-Registration,otp-email-content-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1127,Template for OTP Email Subject,Template for OTP Email Subject,txt,,Pre-Registration $PRID: OTP Request,10001,Pre-Registration,otp-email-subject-template,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1127,Template for OTP Email Subject,Template for OTP Email Subject,txt,,Pre-Registration $PRID: OTP Request,10001,Pre-Registration,otp-email-subject-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1128,Template for OTP SMS,Template for OTP SMS,txt,,OTP for Pre-Registration  $PRID is $otp and is valid for $validTime minutes. (Generated on $date at $time Hrs),10001,Pre-Registration,otp-sms-template,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1128,Template for OTP SMS,Template for OTP SMS,txt,,OTP for Pre-Registration  $PRID is $otp and is valid for $validTime minutes. (Generated on $date at $time Hrs),10001,Pre-Registration,otp-sms-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+TP for Pre-Registration  $PRID is $otp and is valid for $validTime minutes. (Generated on $date at $time Hrs)",10001,Pre-Registration,otp-email-content-template,eng,t,superadmin,2020-12-23 14:36:54.459577
+1127,Template for OTP Email Subject,Template for OTP Email Subject,txt,,Pre-Registration $PRID: OTP Request,10001,Pre-Registration,otp-email-subject-template,amh,t,superadmin,2020-12-23 14:36:54.459577
+1127,Template for OTP Email Subject,Template for OTP Email Subject,txt,,Pre-Registration $PRID: OTP Request,10001,Pre-Registration,otp-email-subject-template,eng,t,superadmin,2020-12-23 14:36:54.459577
+1128,Template for OTP SMS,Template for OTP SMS,txt,,OTP for Pre-Registration  $PRID is $otp and is valid for $validTime minutes. (Generated on $date at $time Hrs),10001,Pre-Registration,otp-sms-template,amh,t,superadmin,2020-12-23 14:36:54.459577
+1128,Template for OTP SMS,Template for OTP SMS,txt,,OTP for Pre-Registration  $PRID is $otp and is valid for $validTime minutes. (Generated on $date at $time Hrs),10001,Pre-Registration,otp-sms-template,eng,t,superadmin,2020-12-23 14:36:54.459577
 1129,Template for SMS Acknowledgement,Template for SMS Acknowledgement,txt,,"Your Pre-Registration for UIN is Completed Successfully
 on $Date at $Time. Your ID is #$PRID.
 Appointment is scheduled for $Appointmentdate at $Appointmenttime.
-you will also receive the details on your registered email address",10001,Pre-Registration,SMS-Acknowledgement,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+you will also receive the details on your registered email address",10001,Pre-Registration,SMS-Acknowledgement,amh,t,superadmin,2020-12-23 14:36:54.459577
 1129,Template for SMS Acknowledgement,Template for SMS Acknowledgement,txt,,"Your Pre-Registration for UIN is Completed Successfully
 on $Date at $Time. Your ID is #$PRID.
 Appointment is scheduled for $Appointmentdate at $Appointmenttime.
-you will also receive the details on your registered email address",10001,Pre-Registration,SMS-Acknowledgement,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1130,Template for email subject of Acknowledgement,Template for email subject of Acknowledgement,txt,,Pre-Registration $PRID: Acknowledgement ,10001,Pre-Registration,Acknowledgement-email-subject,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1130,Template for email subject of Acknowledgement,Template for email subject of Acknowledgement,txt,,Pre-Registration $PRID: Acknowledgement ,10001,Pre-Registration,Acknowledgement-email-subject,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+you will also receive the details on your registered email address",10001,Pre-Registration,SMS-Acknowledgement,eng,t,superadmin,2020-12-23 14:36:54.459577
+1130,Template for email subject of Acknowledgement,Template for email subject of Acknowledgement,txt,,Pre-Registration $PRID: Acknowledgement ,10001,Pre-Registration,Acknowledgement-email-subject,amh,t,superadmin,2020-12-23 14:36:54.459577
+1130,Template for email subject of Acknowledgement,Template for email subject of Acknowledgement,txt,,Pre-Registration $PRID: Acknowledgement ,10001,Pre-Registration,Acknowledgement-email-subject,eng,t,superadmin,2020-12-23 14:36:54.459577
 1132,Template for UIN Deactivation SMS,Template for UIN Deactivation SMS,txt,,"Dear $!name_eng,
 
 Your UIN has been de-activated. 
-If you have any conserns please visit the nearest Registration Center.",10003,Processeur dinscription,RPR_UIN_DEAC_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+If you have any conserns please visit the nearest Registration Center.",10003,Processeur dinscription,RPR_UIN_DEAC_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577
 1132,Template for UIN Deactivation SMS,Template for UIN Deactivation SMS,txt,,"Dear $!name_eng,
 
 Your UIN has been de-activated. 
-If you have any conserns please visit the nearest Registration Center.",10003,Registration Processor,RPR_UIN_DEAC_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+If you have any conserns please visit the nearest Registration Center.",10003,Registration Processor,RPR_UIN_DEAC_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577
 1133,Template for UIN Deactivation Email,Template for UIN Deactivation Email,txt,,"Dear $!name_eng,
 
 Your UIN has been de-activated. 
 If you have any conserns please visit the nearest Registration Center.
 
-Thank You",10003,Processeur dinscription,RPR_UIN_DEAC_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You",10003,Processeur dinscription,RPR_UIN_DEAC_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577
 1133,Template for UIN Deactivation Email,Template for UIN Deactivation Email,txt,,"Dear $!name_eng,
 
 Your UIN has been de-activated. 
 If you have any conserns please visit the nearest Registration Center.
 
-Thank You",10003,Registration Processor,RPR_UIN_DEAC_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You",10003,Registration Processor,RPR_UIN_DEAC_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577
 1134,Template for UIN Reactivate SMS,Template for UIN Reactivate SMS,txt,,"Dear $!name_eng,
 
 Your UIN has been re-activated. 
-If you have any conserns please visit the nearest Registration Center.",10003,Processeur dinscription,RPR_UIN_REAC_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+If you have any conserns please visit the nearest Registration Center.",10003,Processeur dinscription,RPR_UIN_REAC_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577
 1134,Template for UIN Reactivate SMS,Template for UIN Reactivate SMS,txt,,"Dear $!name_eng,
 
 Your UIN has been re-activated. 
-If you have any conserns please visit the nearest Registration Center.",10003,Registration Processor,RPR_UIN_REAC_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+If you have any conserns please visit the nearest Registration Center.",10003,Registration Processor,RPR_UIN_REAC_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577
 1135,Template for UIN Reactivate Email,Template for UIN Reactivate Email,txt,,"Dear $!name_eng,
 
 Your UIN has been re-activated. 
 If you have any conserns please visit the nearest Registration Center.
 
-Thank You",10003,Processeur dinscription,RPR_UIN_REAC_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1149,auth otp email service subject,auth otp email service subject,txt,velocity,Otp message,10004,Authentification ID,auth-otp-email-subject-template,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You",10003,Processeur dinscription,RPR_UIN_REAC_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577
+1149,auth otp email service subject,auth otp email service subject,txt,velocity,Otp message,10004,Authentification ID,auth-otp-email-subject-template,amh,t,superadmin,2020-12-23 14:36:54.459577
 1135,Template for UIN Reactivate Email,Template for UIN Reactivate Email,txt,,"Dear $!name_eng,
 
 Your UIN has been re-activated. 
 If you have any conserns please visit the nearest Registration Center.
 
-Thank You",10003,Registration Processor,RPR_UIN_REAC_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You",10003,Registration Processor,RPR_UIN_REAC_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577
 1136,Acknowledgement SMS Template,Registration Acknowledgement Template,txt,velocity,"Dear ${ResidentName},
-Thank you for registering with Digital Identity platform . Your registration id is '${RID}'"". The demographic details are as follows:
+Thank you for registering with Digital Identity platform . Your registration id is '"${RID}'". The demographic details are as follows:
 1.Date:${Date}
 2.Full Name:${FullName}
 3.Date of Birth:${DOB}
@@ -184,9 +184,9 @@ Thank you for registering with Digital Identity platform . Your registration id 
 10.Province:${Province}
 11.Postal Code:${PostalCode}
 12.Mobile Number:${Mobile}
-13.Email:${Email}""",10005,Inscription,reg-sms-notification,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+13.Email:${Email}",10005,Inscription,reg-sms-notification,amh,t,superadmin,2020-12-23 14:36:54.459577
 1136,Acknowledgement SMS Template,Registration Acknowledgement Template,txt,velocity,"Dear ${ResidentName},
-Thank you for registering with Digital Identity platform . Your registration id is '${RID}'"". The demographic details are as follows:
+Thank you for registering with Digital Identity platform . Your registration id is '"${RID}'". The demographic details are as follows:
 1.Date:${Date}
 2.Full Name:${FullName}
 3.Date of Birth:${DOB}
@@ -199,9 +199,9 @@ Thank you for registering with Digital Identity platform . Your registration id 
 10.Province:${Province}
 11.Postal Code:${PostalCode}
 12.Mobile Number:${Mobile}
-13.Email:${Email}""",10005,Registration,reg-sms-notification,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+13.Email:${Email}",10005,Registration,reg-sms-notification,eng,t,superadmin,2020-12-23 14:36:54.459577
 1137,Acknowledgement Email Template,Registration Acknowledgement Template,txt,velocity,"Dear ${ResidentName},
-Thank you for registering with Digital Identity platform . Your registration id is '${RID}'"". The demographic details are as follows:
+Thank you for registering with Digital Identity platform . Your registration id is '"${RID}'". The demographic details are as follows:
 1.Date:${Date}
 2.Full Name:${FullName}
 3.Date of Birth:${DOB}
@@ -214,9 +214,9 @@ Thank you for registering with Digital Identity platform . Your registration id 
 10.Province:${Province}
 11.Postal Code:${PostalCode}
 12.Mobile Number:${Mobile}
-13.Email:${Email}""",10005,Inscription,reg-email-notification,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+13.Email:${Email}",10005,Inscription,reg-email-notification,amh,t,superadmin,2020-12-23 14:36:54.459577
 1137,Acknowledgement Email Template,Registration Acknowledgement Template,txt,velocity,"Dear ${ResidentName},
-Thank you for registering with Digital Identity platform . Your registration id is '${RID}'"". The demographic details are as follows:
+Thank you for registering with Digital Identity platform . Your registration id is '"${RID}'". The demographic details are as follows:
 1.Date:${Date}
 2.Full Name:${FullName}
 3.Date of Birth:${DOB}
@@ -229,43 +229,33 @@ Thank you for registering with Digital Identity platform . Your registration id 
 10.Province:${Province}
 11.Postal Code:${PostalCode}
 12.Mobile Number:${Mobile}
-13.Email:${Email}""",10005,Registration,reg-email-notification,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1149,auth otp email service subject,auth otp email service subject,txt,velocity,Otp message,10004,ID Authentication,auth-otp-email-subject-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1150,auth otp email service subject,auth otp email service subject,txt,velocity,Please find the otp $otp,10004,Authentification ID,auth-otp-email-content-template,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1150,auth otp email service subject,auth otp email service subject,txt,velocity,Please find the otp $otp,10004,ID Authentication,auth-otp-email-content-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1174,Successful Unlocking of Auth Types SMS,Successful Unlocking of Auth Types SMS,txt,velocity,"Hi $fullName_eng,
-
-Your requested AUTH type(s) have been unlocked successfully.
-
-Thank You!",10006,Resident Services,RS_UNLOCK_AUTH_SUCCESS_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1139,Registration Acknowledgement Template - Part 1,Acknowledgement generated after registration - Part 1,txt,velocity,"<body><div class=section><div class=form><table ${AckReceipt} class=${headerTable}><tr><td class=bottom><img src=${QRCodeSource} width=85 height=85/></td><td class=bottom><p class=headings>${RIDPrimLabel} / ${RIDSecLabel}</p><br/>${RID}</td><td ${UINUpdate} class=bottom><p class=headings>${UINPrimLabel} / ${UINSecLabel}</p><br/>${UIN}</td><td class=bottom><p class=headings>${DatePrimLabel} / ${DateSecLabel}</p><br/>${Date}</td></tr></table><table ${Preview} class=headerTable><tr><td ${IsPreRegIDPresent}><p class=headings>${PreRegIDPrimLabel} / ${PreRegIDSecLabel}</p><br/>${PreRegID}</td><td><p class=headings>${DatePrimLabel} / ${DateSecLabel}</p><br/>${Date}</td></tr></table><br/><hr/><p class=head><b> ${DemographicInfo} / ${DemographicInfoSecondary} </b></p><div ${Preview} class=modify><img src=${ModifyImageSource} border=0 width=15 height=15/><button id=modifyDemographicInfo>${Modify}</button></div><hr/><div class='demoDiv'""><table class=dataTable>#foreach( $data in $demographicsdata ) #if('""'""!=$data.get('""primaryValue'""))<tr><td><p class=headings>$data.get('""primaryLabel'"")/$data.get('""secondaryLabel'"")</p> <br/><p> $data.get('""primaryValue'"")/$data.get('""secondaryValue'"")</p></td></tr> #end #end </table></div><div ${uinUpdateWithoutBiometrics} class='""photoDiv'""><table><tr><td><p>${PhotoPrim} / ${PhotoSec}</p></td></tr><tr><td><img src=${ApplicantImageSource} border=0 width=100 height=100/></td></tr></table></div><div style='""width: 100%; height: 50%; clear:both'""></div><br/><p ${DocumentsEnabled} class=head><b>${DocumentsPrimLabel} / ${DocumentsSecLabel}</b></p><div ${DocumentsEnabled} ${Preview} class=modify><img src=${ModifyImageSource} border=0 width=15 height=15/><button id=modifyDocuments>${Modify}</button></div><hr ${DocumentsEnabled}/><table ${DocumentsEnabled}><tr><td><br/>${Documents}<br/>${DocumentsSec}</td></tr></table><br/>	""",10005,Inscription,reg-ack-template-part2,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1139,Registration Acknowledgement Template - Part 2,Acknowledgement generated after registration - Part 2,txt,velocity,"<body><div class=section><div class=form><table ${AckReceipt} class=${headerTable}><tr><td class=bottom><img src=${QRCodeSource} width=85 height=85/></td><td class=bottom><p class=headings>${RIDPrimLabel} / ${RIDSecLabel}</p><br/>${RID}</td><td ${UINUpdate} class=bottom><p class=headings>${UINPrimLabel} / ${UINSecLabel}</p><br/>${UIN}</td><td class=bottom><p class=headings>${DatePrimLabel} / ${DateSecLabel}</p><br/>${Date}</td></tr></table><table ${Preview} class=headerTable><tr><td ${IsPreRegIDPresent}><p class=headings>${PreRegIDPrimLabel} / ${PreRegIDSecLabel}</p><br/>${PreRegID}</td><td><p class=headings>${DatePrimLabel} / ${DateSecLabel}</p><br/>${Date}</td></tr></table><br/><hr/><p class=head><b> ${DemographicInfo} / ${DemographicInfoSecondary} </b></p><div ${Preview} class=modify><img src=${ModifyImageSource} border=0 width=15 height=15/><button id=modifyDemographicInfo>${Modify}</button></div><hr/><div class='demoDiv'""><table class=dataTable>#foreach( $data in $demographicsdata ) #if('""'""!=$data.get('""primaryValue'""))<tr><td><p class=headings>$data.get('""primaryLabel'"")/$data.get('""secondaryLabel'"")</p> <br/><p> $data.get('""primaryValue'"")/$data.get('""secondaryValue'"")</p></td></tr> #end #end </table></div><div ${uinUpdateWithoutBiometrics} class='""photoDiv'""><table><tr><td><p>${PhotoPrim} / ${PhotoSec}</p></td></tr><tr><td><img src=${ApplicantImageSource} border=0 width=100 height=100/></td></tr></table></div><div style='""width: 100%; height: 50%; clear:both'""></div><br/><p ${DocumentsEnabled} class=head><b>${DocumentsPrimLabel} / ${DocumentsSecLabel}</b></p><div ${DocumentsEnabled} ${Preview} class=modify><img src=${ModifyImageSource} border=0 width=15 height=15/><button id=modifyDocuments>${Modify}</button></div><hr ${DocumentsEnabled}/><table ${DocumentsEnabled}><tr><td><br/>${Documents}<br/>${DocumentsSec}</td></tr></table><br/>	""",10005,Registration,reg-ack-template-part2,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1140,Registration Acknowledgement Template - Part 2,Acknowledgement generated after registration - Part 2,txt,velocity,"<p ${BiometricsEnabled} class=head><b>${BiometricsPrimLabel} / ${BiometricsSecLabel}</b></p><div ${BiometricsEnabled} ${Preview} class=modify><img src=${ModifyImageSource} border=0 width=15 height=15/><button id=modifyBiometrics>${Modify}</button></div><hr ${BiometricsEnabled}/>#foreach( $biodata in $biometricsData )<table ${BiometricsEnabled}><tr><td>$biodata.get('BiometricsFieldPrimLabel'"")/ $biodata.get('""BiometricsFieldSecLabel'"")<br/><p class=headings>$biodata.get('""Biometrics'"")<br/>$biodata.get('""BiometricsSec'"")</p><br/></td></tr><table ${BiometricsEnabled} class=biometricsTable><tr><td $biodata.get('""leftEyeCaptured'"") ><p class=headings>$biodata.get('""LeftEyePrimLabel'"") / $biodata.get('""LeftEyeSecLabel'"")</p></td><td $biodata.get('""rightEyeCaptured'"") ><p class=headings>$biodata.get('""RightEyePrimLabel'"") / $biodata.get('""RightEyeSecLabel'"")</p></td></tr><tr ${AckReceipt}><td $biodata.get('""leftEyeCaptured'"") ><div class=biometrics><h5 class=parentIris1>$biodata.get('""LeftEye'"")</h5><img src=$biodata.get('""EyeImageSource'"") border=0 width=85 height=80/></div></td><td $biodata.get('""rightEyeCaptured'"") ><div class=biometrics><h5 class=parentIris1>$biodata.get('""RightEye'"")</h5><img src=$biodata.get('""EyeImageSource'"") border=0 width=85 height=80/></div></td></tr><tr ${Preview}><td $biodata.get('""leftEyeCaptured'"") ><img src=$biodata.get('""CapturedLeftEye'"") border=0 width=85 height=80/></td><td $biodata.get('""rightEyeCaptured'"") ><img src=$biodata.get('""CapturedRightEye'"") border=0 width=85 height=80/></td></tr></table><table ${BiometricsEnabled} $biodata.get('""FingerprintsCaptured'"") class=biometricsTable><tr><td $biodata.get('""leftSlapCaptured'"") ><p class=headings>$biodata.get('""LeftPalmPrimLabel'"") / $biodata.get('""LeftPalmSecLabel'"")</p></td><td $biodata.get('""rightSlapCaptured'"") ><p class=headings>$biodata.get('""RightPalmPrimLabel'"") / $biodata.get('""RightPalmSecLabel'"")</p></td><td $biodata.get('""thumbsCaptured'"") ><p class=headings>$biodata.get('""ThumbsPrimLabel'"") / $biodata.get('""ThumbsSecLabel'"")</p></td></tr><tr ${AckReceipt}><td $biodata.get('""leftSlapCaptured'"") ><div class=biometrics><h5 class=leftLittle>$biodata.get('""leftLittle'"")</h5><h5 class=leftRing>$biodata.get('""leftRing'"")</h5><h5 class=leftMiddle>$biodata.get('""leftMiddle'"")</h5><h5 class=leftIndex>$biodata.get('""leftIndex'"")</h5><img src=$biodata.get('""LeftPalmImageSource'"") border=0 width=85 height=80/></div></td><td $biodata.get('""rightSlapCaptured'"") ><div class=biometrics><h5 class=rightIndex>$biodata.get('""rightIndex'"")</h5><h5 class=rightMiddle>$biodata.get('""rightMiddle'"")</h5><h5 class=rightRing>$biodata.get('""rightRing'"")</h5><h5 class=rightLittle>$biodata.get('""rightLittle'"")</h5><img src=$biodata.get('""RightPalmImageSource'"") border=0 width=85 height=80/></div></td><td $biodata.get('""thumbsCaptured'"") ><div class=biometrics><h5 class=leftThumb>$biodata.get('""leftThumb'"")</h5><h5 class=rightThumb>$biodata.get('""rightThumb'"")</h5><img src=$biodata.get('""ThumbsImageSource'"") border=0 width=85 height=80/></div></td></tr><tr ${Preview}><td $biodata.get('""leftSlapCaptured'"") ><img src=$biodata.get('""CapturedLeftSlap'"") border=0 width=85 height=80/></td><td $biodata.get('""rightSlapCaptured'"") ><img src=$biodata.get('""CapturedRightSlap'"") border=0 width=85 height=80/></td><td $biodata.get('""thumbsCaptured'"") ><img src=$biodata.get('""CapturedThumbs'"") border=0 width=85 height=80/></td></tr></table>	""",10005,Inscription,reg-ack-template-part3,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1142,auth otp service,auth otp service for sending otp,txt,velocity,Please find the otp $otp,10001,Pré-inscription,auth-otp-sms-template,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1142,auth otp service,auth otp service for sending otp,txt,velocity,Please find the otp $otp,10001,Pre-Registration,auth-otp-sms-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1143,auth otp email service subject,auth otp email service subject,txt,velocity,Otp message,10001,Pré-inscription,auth-otp-email-subject-template,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1143,auth otp email service subject,auth otp email service subject,txt,velocity,Otp message,10001,Pre-Registration,auth-otp-email-subject-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1144,auth otp email service subject,auth otp email service subject,txt,velocity,Please find the otp $otp,10001,Pré-inscription,auth-otp-email-content-template,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1144,auth otp email service subject,auth otp email service subject,txt,velocity,Please find the otp $otp,10001,Pre-Registration,auth-otp-email-content-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1145,auth otp service,auth otp service for sending otp,txt,velocity,Please find the otp $otp,10002,Client dinscription,auth-otp-sms-template,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1145,auth otp service,auth otp service for sending otp,txt,velocity,Please find the otp $otp,10002,Registration Client,auth-otp-sms-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1146,auth otp email service subject,auth otp email service subject,txt,velocity,Otp message,10002,Client dinscription,auth-otp-email-subject-template,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1146,auth otp email service subject,auth otp email service subject,txt,velocity,Otp message,10002,Registration Client,auth-otp-email-subject-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1147,auth otp email service subject,auth otp email service subject,txt,velocity,Please find the otp $otp,10002,Client dinscription,auth-otp-email-content-template,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1147,auth otp email service subject,auth otp email service subject,txt,velocity,Please find the otp $otp,10002,Registration Client,auth-otp-email-content-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1148,auth otp service,auth otp service for sending otp,txt,velocity,Please find the otp $otp,10004,Authentification ID,auth-otp-sms-template,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1148,auth otp service,auth otp service for sending otp,txt,velocity,Please find the otp $otp,10004,ID Authentication,auth-otp-sms-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1151,Template for Email Content,Template for Email Content,txt,model,Dear $name\nOTP for UIN  $uin is $otp and is valid for $validTime minutes. (Generated on $date at $time Hrs),10004,Authentification ID,ida-auth-otp-email-content-template,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1151,Template for Email Content,Template for Email Content,txt,model,Dear $name\nOTP for UIN  $uin is $otp and is valid for $validTime minutes. (Generated on $date at $time Hrs),10004,ID Authentication,ida-auth-otp-email-content-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1152,Template for Email Subject,Template for Email Subject,txt,model,UIN $uin: OTP Request,10004,Authentification ID,ida-auth-otp-email-subject-template,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1152,Template for Email Subject,Template for Email Subject,txt,model,UIN $uin: OTP Request,10004,ID Authentication,ida-auth-otp-email-subject-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1153,Template for OTP in SMS ,Template for OTP in SMS ,txt,model,OTP for UIN  $uin is $otp and is valid for $validTime minutes. (Generated on $date at $time Hrs),10004,Authentification ID,ida-auth-otp-sms-template,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1153,Template for OTP in SMS ,Template for OTP in SMS ,txt,model,OTP for UIN  $uin is $otp and is valid for $validTime minutes. (Generated on $date at $time Hrs),10004,ID Authentication,ida-auth-otp-sms-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1174,Successful Unlocking of Auth Types SMS,Successful Unlocking of Auth Types SMS,txt,velocity,"Hi $fullName_eng,
-
-Your requested AUTH type(s) have been unlocked successfully.
-
-Thank You!",10006,Resident Services,RS_UNLOCK_AUTH_SUCCESS_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+13.Email:${Email}",10005,Registration,reg-email-notification,eng,t,superadmin,2020-12-23 14:36:54.459577
+1149,auth otp email service subject,auth otp email service subject,txt,velocity,Otp message,10004,ID Authentication,auth-otp-email-subject-template,eng,t,superadmin,2020-12-23 14:36:54.459577
+1150,auth otp email service subject,auth otp email service subject,txt,velocity,Please find the otp $otp,10004,Authentification ID,auth-otp-email-content-template,amh,t,superadmin,2020-12-23 14:36:54.459577
+1150,auth otp email service subject,auth otp email service subject,txt,velocity,Please find the otp $otp,10004,ID Authentication,auth-otp-email-content-template,eng,t,superadmin,2020-12-23 14:36:54.459577
+1139,Registration Acknowledgement Template - Part 1,Acknowledgement generated after registration - Part 1,txt,velocity,"<body><div class=section><div class=form><table ${AckReceipt} class=${headerTable}><tr><td class=bottom><img src=${QRCodeSource} width=85 height=85/></td><td class=bottom><p class=headings>${RIDPrimLabel} / ${RIDSecLabel}</p><br/>${RID}</td><td ${UINUpdate} class=bottom><p class=headings>${UINPrimLabel} / ${UINSecLabel}</p><br/>${UIN}</td><td class=bottom><p class=headings>${DatePrimLabel} / ${DateSecLabel}</p><br/>${Date}</td></tr></table><table ${Preview} class=headerTable><tr><td ${IsPreRegIDPresent}><p class=headings>${PreRegIDPrimLabel} / ${PreRegIDSecLabel}</p><br/>${PreRegID}</td><td><p class=headings>${DatePrimLabel} / ${DateSecLabel}</p><br/>${Date}</td></tr></table><br/><hr/><p class=head><b> ${DemographicInfo} / ${DemographicInfoSecondary} </b></p><div ${Preview} class=modify><img src=${ModifyImageSource} border=0 width=15 height=15/><button id=modifyDemographicInfo>${Modify}</button></div><hr/><div class='"demoDiv'"><table class=dataTable>#foreach( $data in $demographicsdata ) #if('"'"!=$data.get('"primaryValue'"))<tr><td><p class=headings>$data.get('"primaryLabel'")/$data.get('"secondaryLabel'")</p> <br/><p> $data.get('"primaryValue'")/$data.get('"secondaryValue'")</p></td></tr> #end #end </table></div><div ${uinUpdateWithoutBiometrics} class='"photoDiv'"><table><tr><td><p>${PhotoPrim} / ${PhotoSec}</p></td></tr><tr><td><img src=${ApplicantImageSource} border=0 width=100 height=100/></td></tr></table></div><div style='"width: 100%; height: 50%; clear:both'"></div><br/><p ${DocumentsEnabled} class=head><b>${DocumentsPrimLabel} / ${DocumentsSecLabel}</b></p><div ${DocumentsEnabled} ${Preview} class=modify><img src=${ModifyImageSource} border=0 width=15 height=15/><button id=modifyDocuments>${Modify}</button></div><hr ${DocumentsEnabled}/><table ${DocumentsEnabled}><tr><td><br/>${Documents}<br/>${DocumentsSec}</td></tr></table><br/>	",10005,Inscription,reg-ack-template-part2,amh,t,superadmin,2020-12-23 14:36:54.459577
+1139,Registration Acknowledgement Template - Part 2,Acknowledgement generated after registration - Part 2,txt,velocity,"<body><div class=section><div class=form><table ${AckReceipt} class=${headerTable}><tr><td class=bottom><img src=${QRCodeSource} width=85 height=85/></td><td class=bottom><p class=headings>${RIDPrimLabel} / ${RIDSecLabel}</p><br/>${RID}</td><td ${UINUpdate} class=bottom><p class=headings>${UINPrimLabel} / ${UINSecLabel}</p><br/>${UIN}</td><td class=bottom><p class=headings>${DatePrimLabel} / ${DateSecLabel}</p><br/>${Date}</td></tr></table><table ${Preview} class=headerTable><tr><td ${IsPreRegIDPresent}><p class=headings>${PreRegIDPrimLabel} / ${PreRegIDSecLabel}</p><br/>${PreRegID}</td><td><p class=headings>${DatePrimLabel} / ${DateSecLabel}</p><br/>${Date}</td></tr></table><br/><hr/><p class=head><b> ${DemographicInfo} / ${DemographicInfoSecondary} </b></p><div ${Preview} class=modify><img src=${ModifyImageSource} border=0 width=15 height=15/><button id=modifyDemographicInfo>${Modify}</button></div><hr/><div class='"demoDiv'"><table class=dataTable>#foreach( $data in $demographicsdata ) #if('"'"!=$data.get('"primaryValue'"))<tr><td><p class=headings>$data.get('"primaryLabel'")/$data.get('"secondaryLabel'")</p> <br/><p> $data.get('"primaryValue'")/$data.get('"secondaryValue'")</p></td></tr> #end #end </table></div><div ${uinUpdateWithoutBiometrics} class='"photoDiv'"><table><tr><td><p>${PhotoPrim} / ${PhotoSec}</p></td></tr><tr><td><img src=${ApplicantImageSource} border=0 width=100 height=100/></td></tr></table></div><div style='"width: 100%; height: 50%; clear:both'"></div><br/><p ${DocumentsEnabled} class=head><b>${DocumentsPrimLabel} / ${DocumentsSecLabel}</b></p><div ${DocumentsEnabled} ${Preview} class=modify><img src=${ModifyImageSource} border=0 width=15 height=15/><button id=modifyDocuments>${Modify}</button></div><hr ${DocumentsEnabled}/><table ${DocumentsEnabled}><tr><td><br/>${Documents}<br/>${DocumentsSec}</td></tr></table><br/>	",10005,Registration,reg-ack-template-part2,eng,t,superadmin,2020-12-23 14:36:54.459577
+1140,Registration Acknowledgement Template - Part 2,Acknowledgement generated after registration - Part 2,txt,velocity,"<p ${BiometricsEnabled} class=head><b>${BiometricsPrimLabel} / ${BiometricsSecLabel}</b></p><div ${BiometricsEnabled} ${Preview} class=modify><img src=${ModifyImageSource} border=0 width=15 height=15/><button id=modifyBiometrics>${Modify}</button></div><hr ${BiometricsEnabled}/>#foreach( $biodata in $biometricsData )<table ${BiometricsEnabled}><tr><td>$biodata.get('"BiometricsFieldPrimLabel'")/ $biodata.get('"BiometricsFieldSecLabel'")<br/><p class=headings>$biodata.get('"Biometrics'")<br/>$biodata.get('"BiometricsSec'")</p><br/></td></tr><table ${BiometricsEnabled} class=biometricsTable><tr><td $biodata.get('"leftEyeCaptured'") ><p class=headings>$biodata.get('"LeftEyePrimLabel'") / $biodata.get('"LeftEyeSecLabel'")</p></td><td $biodata.get('"rightEyeCaptured'") ><p class=headings>$biodata.get('"RightEyePrimLabel'") / $biodata.get('"RightEyeSecLabel'")</p></td></tr><tr ${AckReceipt}><td $biodata.get('"leftEyeCaptured'") ><div class=biometrics><h5 class=parentIris1>$biodata.get('"LeftEye'")</h5><img src=$biodata.get('"EyeImageSource'") border=0 width=85 height=80/></div></td><td $biodata.get('"rightEyeCaptured'") ><div class=biometrics><h5 class=parentIris1>$biodata.get('"RightEye'")</h5><img src=$biodata.get('"EyeImageSource'") border=0 width=85 height=80/></div></td></tr><tr ${Preview}><td $biodata.get('"leftEyeCaptured'") ><img src=$biodata.get('"CapturedLeftEye'") border=0 width=85 height=80/></td><td $biodata.get('"rightEyeCaptured'") ><img src=$biodata.get('"CapturedRightEye'") border=0 width=85 height=80/></td></tr></table><table ${BiometricsEnabled} $biodata.get('"FingerprintsCaptured'") class=biometricsTable><tr><td $biodata.get('"leftSlapCaptured'") ><p class=headings>$biodata.get('"LeftPalmPrimLabel'") / $biodata.get('"LeftPalmSecLabel'")</p></td><td $biodata.get('"rightSlapCaptured'") ><p class=headings>$biodata.get('"RightPalmPrimLabel'") / $biodata.get('"RightPalmSecLabel'")</p></td><td $biodata.get('"thumbsCaptured'") ><p class=headings>$biodata.get('"ThumbsPrimLabel'") / $biodata.get('"ThumbsSecLabel'")</p></td></tr><tr ${AckReceipt}><td $biodata.get('"leftSlapCaptured'") ><div class=biometrics><h5 class=leftLittle>$biodata.get('"leftLittle'")</h5><h5 class=leftRing>$biodata.get('"leftRing'")</h5><h5 class=leftMiddle>$biodata.get('"leftMiddle'")</h5><h5 class=leftIndex>$biodata.get('"leftIndex'")</h5><img src=$biodata.get('"LeftPalmImageSource'") border=0 width=85 height=80/></div></td><td $biodata.get('"rightSlapCaptured'") ><div class=biometrics><h5 class=rightIndex>$biodata.get('"rightIndex'")</h5><h5 class=rightMiddle>$biodata.get('"rightMiddle'")</h5><h5 class=rightRing>$biodata.get('"rightRing'")</h5><h5 class=rightLittle>$biodata.get('"rightLittle'")</h5><img src=$biodata.get('"RightPalmImageSource'") border=0 width=85 height=80/></div></td><td $biodata.get('"thumbsCaptured'") ><div class=biometrics><h5 class=leftThumb>$biodata.get('"leftThumb'")</h5><h5 class=rightThumb>$biodata.get('"rightThumb'")</h5><img src=$biodata.get('"ThumbsImageSource'") border=0 width=85 height=80/></div></td></tr><tr ${Preview}><td $biodata.get('"leftSlapCaptured'") ><img src=$biodata.get('"CapturedLeftSlap'") border=0 width=85 height=80/></td><td $biodata.get('"rightSlapCaptured'") ><img src=$biodata.get('"CapturedRightSlap'") border=0 width=85 height=80/></td><td $biodata.get('"thumbsCaptured'") ><img src=$biodata.get('"CapturedThumbs'") border=0 width=85 height=80/></td></tr></table>	",10005,Inscription,reg-ack-template-part3,amh,t,superadmin,2020-12-23 14:36:54.459577
+1142,auth otp service,auth otp service for sending otp,txt,velocity,Please find the otp $otp,10001,Pré-inscription,auth-otp-sms-template,amh,t,superadmin,2020-12-23 14:36:54.459577
+1142,auth otp service,auth otp service for sending otp,txt,velocity,Please find the otp $otp,10001,Pre-Registration,auth-otp-sms-template,eng,t,superadmin,2020-12-23 14:36:54.459577
+1143,auth otp email service subject,auth otp email service subject,txt,velocity,Otp message,10001,Pré-inscription,auth-otp-email-subject-template,amh,t,superadmin,2020-12-23 14:36:54.459577
+1143,auth otp email service subject,auth otp email service subject,txt,velocity,Otp message,10001,Pre-Registration,auth-otp-email-subject-template,eng,t,superadmin,2020-12-23 14:36:54.459577
+1144,auth otp email service subject,auth otp email service subject,txt,velocity,Please find the otp $otp,10001,Pré-inscription,auth-otp-email-content-template,amh,t,superadmin,2020-12-23 14:36:54.459577
+1144,auth otp email service subject,auth otp email service subject,txt,velocity,Please find the otp $otp,10001,Pre-Registration,auth-otp-email-content-template,eng,t,superadmin,2020-12-23 14:36:54.459577
+1145,auth otp service,auth otp service for sending otp,txt,velocity,Please find the otp $otp,10002,Client dinscription,auth-otp-sms-template,amh,t,superadmin,2020-12-23 14:36:54.459577
+1145,auth otp service,auth otp service for sending otp,txt,velocity,Please find the otp $otp,10002,Registration Client,auth-otp-sms-template,eng,t,superadmin,2020-12-23 14:36:54.459577
+1146,auth otp email service subject,auth otp email service subject,txt,velocity,Otp message,10002,Client dinscription,auth-otp-email-subject-template,amh,t,superadmin,2020-12-23 14:36:54.459577
+1146,auth otp email service subject,auth otp email service subject,txt,velocity,Otp message,10002,Registration Client,auth-otp-email-subject-template,eng,t,superadmin,2020-12-23 14:36:54.459577
+1147,auth otp email service subject,auth otp email service subject,txt,velocity,Please find the otp $otp,10002,Client dinscription,auth-otp-email-content-template,amh,t,superadmin,2020-12-23 14:36:54.459577
+1147,auth otp email service subject,auth otp email service subject,txt,velocity,Please find the otp $otp,10002,Registration Client,auth-otp-email-content-template,eng,t,superadmin,2020-12-23 14:36:54.459577
+1148,auth otp service,auth otp service for sending otp,txt,velocity,Please find the otp $otp,10004,Authentification ID,auth-otp-sms-template,amh,t,superadmin,2020-12-23 14:36:54.459577
+1148,auth otp service,auth otp service for sending otp,txt,velocity,Please find the otp $otp,10004,ID Authentication,auth-otp-sms-template,eng,t,superadmin,2020-12-23 14:36:54.459577
+1151,Template for Email Content,Template for Email Content,txt,model,Dear $name\nOTP for UIN  $uin is $otp and is valid for $validTime minutes. (Generated on $date at $time Hrs),10004,Authentification ID,ida-auth-otp-email-content-template,amh,t,superadmin,2020-12-23 14:36:54.459577
+1151,Template for Email Content,Template for Email Content,txt,model,Dear $name\nOTP for UIN  $uin is $otp and is valid for $validTime minutes. (Generated on $date at $time Hrs),10004,ID Authentication,ida-auth-otp-email-content-template,eng,t,superadmin,2020-12-23 14:36:54.459577
+1152,Template for Email Subject,Template for Email Subject,txt,model,UIN $uin: OTP Request,10004,Authentification ID,ida-auth-otp-email-subject-template,amh,t,superadmin,2020-12-23 14:36:54.459577
+1152,Template for Email Subject,Template for Email Subject,txt,model,UIN $uin: OTP Request,10004,ID Authentication,ida-auth-otp-email-subject-template,eng,t,superadmin,2020-12-23 14:36:54.459577
+1153,Template for OTP in SMS ,Template for OTP in SMS ,txt,model,OTP for UIN  $uin is $otp and is valid for $validTime minutes. (Generated on $date at $time Hrs),10004,Authentification ID,ida-auth-otp-sms-template,amh,t,superadmin,2020-12-23 14:36:54.459577
+1153,Template for OTP in SMS ,Template for OTP in SMS ,txt,model,OTP for UIN  $uin is $otp and is valid for $validTime minutes. (Generated on $date at $time Hrs),10004,ID Authentication,ida-auth-otp-sms-template,eng,t,superadmin,2020-12-23 14:36:54.459577
 1154,Consent,Consent,txt,,"በብሔራዊ መታወቂያ መርሃግብር ቅድመ ምዝገባ ወቅት ስለ እኔ የተሰበሰበው መረጃ የእኔን -
 • ስም
 • የትውልድ ቀን
@@ -273,52 +263,52 @@ Thank You!",10006,Resident Services,RS_UNLOCK_AUTH_SUCCESS_SMS,eng,t,superadmin,
 • አድራሻ
 • የመኖሪያ ሁኔታ
 • ሰነዶች
-በተጨማሪም ይህ መረጃ የተለያዩ አገልግሎቶችን ለማግኘት ወይም የህግ ግዴታዎችን ለመወጣት ማንነቴን ለማጣራት እንደሚከማች እና እንደሚሰራ ተረድቻለሁ ፡፡ ለዚህ መረጃ መሰብሰብ ፈቃዴን እሰጣለሁ ፡፡",10001,Pre-Registration,consent,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1155,Acknowledgement Email Template,Registration Acknowledgement Template,txt,velocity,"Dear ${ResidentName}, Thank you for updating your details with Digital Identity platform. Your registration id is '${RID}'"".""",10005,Inscription,updateUIN-email-notification,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1155,Acknowledgement Email Template,Registration Acknowledgement Template,txt,velocity,"Dear ${ResidentName}, Thank you for updating your details with Digital Identity platform. Your registration id is '${RID}'"".""",10005,Registration,updateUIN-email-notification,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1156,Acknowledgement SMS Template,Registration Acknowledgement Template,txt,velocity,"Dear ${ResidentName}, Thank you for updating your details with Digital Identity platform. Your registration id is '${RID}'"".""",10005,Inscription,updateUIN-sms-notification,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1156,Acknowledgement SMS Template,Registration Acknowledgement Template,txt,velocity,"Dear ${ResidentName}, Thank you for updating your details with Digital Identity platform. Your registration id is '${RID}'"".""",10005,Registration,updateUIN-sms-notification,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1157,Acknowledgement Email Template,Registration Acknowledgement Template,txt,velocity,"Dear user, Thank you for your request to retrieve your lost UIN. Your registration id for this request is  '${RID}'"".""",10005,Inscription,lostUIN-email-notification,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1157,Acknowledgement Email Template,Registration Acknowledgement Template,txt,velocity,"Dear user, Thank you for your request to retrieve your lost UIN. Your registration id for this request is  '${RID}'"".""",10005,Registration,lostUIN-email-notification,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1158,Acknowledgement SMS Template,Registration Acknowledgement Template,txt,velocity,"Dear user, Thank you for your request to retrieve your lost UIN. Your registration id for this request is  '${RID}'"".""",10005,Inscription,lostUIN-sms-notification,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1158,Acknowledgement SMS Template,Registration Acknowledgement Template,txt,velocity,"Dear user, Thank you for your request to retrieve your lost UIN. Your registration id for this request is  '${RID}'"".""",10005,Registration,lostUIN-sms-notification,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+በተጨማሪም ይህ መረጃ የተለያዩ አገልግሎቶችን ለማግኘት ወይም የህግ ግዴታዎችን ለመወጣት ማንነቴን ለማጣራት እንደሚከማች እና እንደሚሰራ ተረድቻለሁ ፡፡ ለዚህ መረጃ መሰብሰብ ፈቃዴን እሰጣለሁ ፡፡",10001,Pre-Registration,consent,amh,t,superadmin,2020-12-23 14:36:54.459577
+1155,Acknowledgement Email Template,Registration Acknowledgement Template,txt,velocity,"Dear ${ResidentName}, Thank you for updating your details with Digital Identity platform. Your registration id is '"${RID}'".",10005,Inscription,updateUIN-email-notification,amh,t,superadmin,2020-12-23 14:36:54.459577
+1155,Acknowledgement Email Template,Registration Acknowledgement Template,txt,velocity,"Dear ${ResidentName}, Thank you for updating your details with Digital Identity platform. Your registration id is '"${RID}'".",10005,Registration,updateUIN-email-notification,eng,t,superadmin,2020-12-23 14:36:54.459577
+1156,Acknowledgement SMS Template,Registration Acknowledgement Template,txt,velocity,"Dear ${ResidentName}, Thank you for updating your details with Digital Identity platform. Your registration id is '"${RID}'".",10005,Inscription,updateUIN-sms-notification,amh,t,superadmin,2020-12-23 14:36:54.459577
+1156,Acknowledgement SMS Template,Registration Acknowledgement Template,txt,velocity,"Dear ${ResidentName}, Thank you for updating your details with Digital Identity platform. Your registration id is '"${RID}'".",10005,Registration,updateUIN-sms-notification,eng,t,superadmin,2020-12-23 14:36:54.459577
+1157,Acknowledgement Email Template,Registration Acknowledgement Template,txt,velocity,"Dear user, Thank you for your request to retrieve your lost UIN. Your registration id for this request is  '"${RID}'".",10005,Inscription,lostUIN-email-notification,amh,t,superadmin,2020-12-23 14:36:54.459577
+1157,Acknowledgement Email Template,Registration Acknowledgement Template,txt,velocity,"Dear user, Thank you for your request to retrieve your lost UIN. Your registration id for this request is  '"${RID}'".",10005,Registration,lostUIN-email-notification,eng,t,superadmin,2020-12-23 14:36:54.459577
+1158,Acknowledgement SMS Template,Registration Acknowledgement Template,txt,velocity,"Dear user, Thank you for your request to retrieve your lost UIN. Your registration id for this request is  '"${RID}'".",10005,Inscription,lostUIN-sms-notification,amh,t,superadmin,2020-12-23 14:36:54.459577
+1158,Acknowledgement SMS Template,Registration Acknowledgement Template,txt,velocity,"Dear user, Thank you for your request to retrieve your lost UIN. Your registration id for this request is  '"${RID}'".",10005,Registration,lostUIN-sms-notification,eng,t,superadmin,2020-12-23 14:36:54.459577
 1159,Template for Cancel Appointment,Template for Cancel Appointment,txt,velocity,"Dear $name,
 
 Your appointment for pre-registration id, $PRID and appointment date and time, $Appointmentdate $Appointmenttime has been canceled due to a government emergency/holiday. Please re-book another slot for Registration.
 
-Thanks",10001,Pre-Registration,cancel-appointment,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thanks",10001,Pre-Registration,cancel-appointment,amh,t,superadmin,2020-12-23 14:36:54.459577
 1159,Template for Cancel Appointment,Template for Cancel Appointment,txt,velocity,"Dear $name,
 
 Your appointment for pre-registration id, $PRID and appointment date and time, $Appointmentdate $Appointmenttime has been canceled due to a government emergency/holiday. Please re-book another slot for Registration.
 
-Thanks",10001,Pre-Registration,cancel-appointment,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thanks",10001,Pre-Registration,cancel-appointment,eng,t,superadmin,2020-12-23 14:36:54.459577
 1160,Lost UIN Notification SMS,Lost UIN Notification SMS,txt,velocity,"Dear $name_eng,
 
-Your UIN is Found. You will receive your UIN Card soon at your Postal Address.",10003,Processeur dinscription,RPR_LOST_UIN_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Your UIN is Found. You will receive your UIN Card soon at your Postal Address.",10003,Processeur dinscription,RPR_LOST_UIN_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577
 1160,Lost UIN Notification SMS,Lost UIN Notification SMS,txt,velocity,"Dear $name_eng,
 
-Your UIN is Found. You will receive your UIN Card soon at your Postal Address.",10003,Registration Processor,RPR_LOST_UIN_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Your UIN is Found. You will receive your UIN Card soon at your Postal Address.",10003,Registration Processor,RPR_LOST_UIN_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577
 1161,Lost UIN Notification Email,Lost UIN Notification Email,txt,velocity,"Dear $name_eng,
 
 Your UIN is Found. You will receive your UIN Card soon at your Postal Address.
 
-Thank You",10003,Processeur dinscription,RPR_LOST_UIN_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You",10003,Processeur dinscription,RPR_LOST_UIN_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577
 1161,Lost UIN Notification Email,Lost UIN Notification Email,txt,velocity,"Dear $name_eng,
 
 Your UIN is Found. You will receive your UIN Card soon at your Postal Address.
 
-Thank You",10003,Registration Processor,RPR_LOST_UIN_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1170,Successful Locking of Auth Types Email Subject,Successful Locking of Auth Types Email Subject,txt,velocity,Successfully Locked the AUTH Type(s),10006,Resident Services,RS_LOCK_AUTH_SUCCESS_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You",10003,Registration Processor,RPR_LOST_UIN_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577
+1170,Successful Locking of Auth Types Email Subject,Successful Locking of Auth Types Email Subject,txt,velocity,Successfully Locked the AUTH Type(s),10006,Resident Services,RS_LOCK_AUTH_SUCCESS_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577
 1171,Successful Locking of Auth Types SMS,Successful Locking of Auth Types SMS,txt,velocity,"Hi $fullName_eng,
 
 Your requested AUTH type(s) have been locked successfully.
 
-Thank You!",10006,Resident Services,RS_LOCK_AUTH_SUCCESS_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_LOCK_AUTH_SUCCESS_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577
 1162,Masked UIN card template,Masked UIN card template,txt,velocity,"<!DOCTYPE html>
 <html>
 <head>
-	<meta charset='utf-8'"">
-	<meta name='""viewport'"" content='""width=device-width"," initial-scale=1'"">
+	<meta charset='"utf-8'">
+	<meta name='"viewport'" content='"width=device-width, initial-scale=1'">
 	<title>Masked UIN Card</title>
 <style>
 .main-table {
@@ -351,85 +341,85 @@ Thank You!",10006,Resident Services,RS_LOCK_AUTH_SUCCESS_SMS,amh,t,superadmin,20
 </head>
 
 <body>
-<table class='""main-table'"">
+<table class='"main-table'">
 <tr>
 <td>&nbsp;
-<div class='""cir'"">
-<font size='""1'"">Logo</font>
+<div class='"cir'">
+<font size='"1'">Logo</font>
 </div>
 </td>
-<td><label class='""name-head-color'""> <font size='""5'"" class='"" head-title'""> &nbsp;&nbsp; Kingdom of MyCountry&nbsp;&nbsp;&nbsp; </font>
+<td><label class='"name-head-color'"> <font size='"5'" class='" head-title'"> &nbsp;&nbsp; Kingdom of MyCountry&nbsp;&nbsp;&nbsp; </font>
 </label></td>
-<td rowspan='""4'"">
+<td rowspan='"4'">
 <div>
-<div style='""border: solid black 1px; height: 150px; width: 120px;'"">
-<img src = $!ApplicantPhoto style='""width: 120px; height: 150px'"">
+<div style='"border: solid black 1px; height: 150px; width: 120px;'">
+<img src = $!ApplicantPhoto style='"width: 120px; height: 150px'">
 </div>
 </div>
 </td>
 </tr>
 <tr>
-<td rowspan='""1'"">
-<div class='""block top-buffer'"">
-<label class='""name-head-color'""><b>UIN&nbsp;:&nbsp;</b></label> <span class='""name-color'""> $!UIN </span>
+<td rowspan='"1'">
+<div class='"block top-buffer'">
+<label class='"name-head-color'"><b>UIN&nbsp;:&nbsp;</b></label> <span class='"name-color'"> $!UIN </span>
 </div>
 </td>
 </tr>
 <tr>
-<td rowspan='""1'"">
-<div class='""block top-buffer'"">
-<label class='""name-head-color'""><b>VID&nbsp;:&nbsp;</b></label> <span class='""name-color'""> $!VID </span>
+<td rowspan='"1'">
+<div class='"block top-buffer'">
+<label class='"name-head-color'"><b>VID&nbsp;:&nbsp;</b></label> <span class='"name-color'"> $!VID </span>
 </div>
 </td>
 </tr>
 <tr>
-<td rowspan='""1'"">
-<div class='""block top-buffer'"">
-<label class='""name-head-color'""><b>Name&nbsp;:&nbsp;</b></label> <span class='""name-color'""> $!fullName_eng</span>
+<td rowspan='"1'">
+<div class='"block top-buffer'">
+<label class='"name-head-color'"><b>Name&nbsp;:&nbsp;</b></label> <span class='"name-color'"> $!fullName_eng</span>
 </div>
 </td>
 </tr>
 <tr>
-<td rowspan='""1'"">
-<div class='""block top-buffer'"">
-<label class='""name-head-color'""><b>اسم&nbsp;:&nbsp;</b></label> <span> $!fullName_ara</span>
+<td rowspan='"1'">
+<div class='"block top-buffer'">
+<label class='"name-head-color'"><b>اسم&nbsp;:&nbsp;</b></label> <span> $!fullName_ara</span>
 </div>
 </td>
 </tr>
 <tr>
-<td rowspan='""1'"">
-<div class='""block top-buffer'"">
-<label class='""name-head-color'""><b>Date/تاريخ&nbsp;:&nbsp;</b></label>
+<td rowspan='"1'">
+<div class='"block top-buffer'">
+<label class='"name-head-color'"><b>Date/تاريخ&nbsp;:&nbsp;</b></label>
 <span>$!dateOfBirth</span>
 </div>
 </td>
 </tr>
 <tr>
-<td colspan='""2'"">
-<div class='""block top-buffer'"">
-<label class='""name-head-color'""><b>Gender&nbsp;:&nbsp;</b></label> <span>$!gender_eng</span>
-&nbsp;&nbsp; <label class='""name-head-color'""><b>جنس&nbsp;:&nbsp;</b></label>
+<td colspan='"2'">
+<div class='"block top-buffer'">
+<label class='"name-head-color'"><b>Gender&nbsp;:&nbsp;</b></label> <span>$!gender_eng</span>
+&nbsp;&nbsp; <label class='"name-head-color'"><b>جنس&nbsp;:&nbsp;</b></label>
 <span>$!gender_ara</span>
 </div>
 </td>
 </tr>
 <tr>
-<td colspan='""3'"">
-<div class='""row'"" style='""margin-right: 0px; margin-left: -10px;'"">
-<div class='""col-md-2 top-buffer'"">
-<div class='""block top-buffer'"">
+<td colspan='"3'">
+<div class='"row'" style='"margin-right: 0px; margin-left: -10px;'">
+<div class='"col-md-2 top-buffer'">
+<div class='"block top-buffer'">
 <table>
 <tr>
-<td><label class='""name-head-color'""><b>Address&nbsp;:&nbsp;</b></label>
+<td><label class='"name-head-color'"><b>Address&nbsp;:&nbsp;</b></label>
 </td>
-<td><span>$!addressLine1_eng", $!addressLine2_eng,"
-$!addressLine3_eng", $!region_eng, $!province_eng, $!city_eng,"
+<td><span>$!addressLine1_eng, $!addressLine2_eng,
+$!addressLine3_eng, $!region_eng, $!province_eng, $!city_eng,
 $!postalCode </span></td>
 </tr>
 <tr>
-<td><label class='""name-head-color'""><b>عنوان&nbsp;:&nbsp;</b></label>
+<td><label class='"name-head-color'"><b>عنوان&nbsp;:&nbsp;</b></label>
 </td>
-<td><span>$!addressLine1_ara", $!city_ara," $!postalCode </span>
+<td><span>$!addressLine1_ara, $!addressLine2_ara, $!addressLine3_ara, $!region_ara, $!province_ara, $!city_ara, $!postalCode </span>
 </td>
 </tr>
 </table>
@@ -440,23 +430,23 @@ $!postalCode </span></td>
 </tr>
 </table>
 <div>&nbsp;</div>
-<table class='""main-table'"" style='""height: 300px'"">
+<table class='"main-table'" style='"height: 300px'">
 <tr>
 <td>
-<div style='""margin-left: 10px; margin-right: 10px; border: solid black 1px; height: 250px; width: 250px;'"">
-<div class='""col-md-6'"">
-<div class='""bar-code-padding'""></div>
-<img src=$!QrCode style='""width: 250px; height: 250px; margin-top: -20px'"">
+<div style='"margin-left: 10px; margin-right: 10px; border: solid black 1px; height: 250px; width: 250px;'">
+<div class='"col-md-6'">
+<div class='"bar-code-padding'"></div>
+<img src=$!QrCode style='"width: 250px; height: 250px; margin-top: -20px'">
 </div>
 </div>
 </td>
 <td>
-<div class='""name-head-color col-md-6'"">
+<div class='"name-head-color col-md-6'">
 <br> For any issues please contact us at<br>
-<br> Registration Proccessor",Hanging Gardens,"Global Village
-Tech Park", Mysore Rd,RVCE,Bengaluru," Karnataka 560059<br>
+<br> Registration Proccessor,Hanging Gardens,Global Village
+Tech Park, Mysore Rd,RVCE,Bengaluru, Karnataka 560059<br>
 <br> لأية مشاكل يرجى الاتصال بنا على <br>التسجيل المعالج،
-الحدائق المعلقة ، القرية العالمية Tech Park", Mysore Rd,"RVCE 560059
+الحدائق المعلقة ، القرية العالمية Tech Park, Mysore Rd,RVCE 560059
 بنغالورو، كارناتاكا <br>
 <br>
 </div>
@@ -464,22 +454,12 @@ Tech Park", Mysore Rd,RVCE,Bengaluru," Karnataka 560059<br>
 </tr>
 </table>
 </body>
-</html>""",10003,Processeur dinscription,RPR_MASKED_UIN_CARD_TEMPLATE,amh,t,superadmin,2020-12-23 14:36:54.459577
-1175,VID Generation Success Email,VID Generation Success Email,txt,velocity,"Hi $fullName_eng,
-
-Your VID for your UIN has been successfully generated. Your VID number is $VID.
-
-Thank You!",10006,Resident Services,RS_VIN_GEN_SUCCESS_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1175,VID Generation Success Email,VID Generation Success Email,txt,velocity,"Hi $fullName_eng,
-
-Your VID for your UIN has been successfully generated. Your VID number is $VID.
-
-Thank You!",10006,Resident Services,RS_VIN_GEN_SUCCESS_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+</html>",10003,Processeur dinscription,RPR_MASKED_UIN_CARD_TEMPLATE,amh,t,superadmin,2020-12-23 14:36:54.459577
 1162,Masked UIN card template,Masked UIN card template,txt,velocity,"<!DOCTYPE html>
 <html>
 <head>
-	<meta charset='utf-8'"">
-	<meta name='""viewport'"" content='""width=device-width"," initial-scale=1'"">
+	<meta charset='"utf-8'">
+	<meta name='"viewport'" content='"width=device-width, initial-scale=1'">
 	<title>Masked UIN Card</title>
 <style>
 .main-table {
@@ -512,85 +492,85 @@ Thank You!",10006,Resident Services,RS_VIN_GEN_SUCCESS_EMAIL,eng,t,superadmin,20
 </head>
 
 <body>
-<table class='""main-table'"">
+<table class='"main-table'">
 <tr>
 <td>&nbsp;
-<div class='""cir'"">
-<font size='""1'"">Logo</font>
+<div class='"cir'">
+<font size='"1'">Logo</font>
 </div>
 </td>
-<td><label class='""name-head-color'""> <font size='""5'"" class='"" head-title'""> &nbsp;&nbsp; Kingdom of MyCountry&nbsp;&nbsp;&nbsp; </font>
+<td><label class='"name-head-color'"> <font size='"5'" class='" head-title'"> &nbsp;&nbsp; Kingdom of MyCountry&nbsp;&nbsp;&nbsp; </font>
 </label></td>
-<td rowspan='""4'"">
+<td rowspan='"4'">
 <div>
-<div style='""border: solid black 1px; height: 150px; width: 120px;'"">
-<img src = $!ApplicantPhoto style='""width: 120px; height: 150px'"">
+<div style='"border: solid black 1px; height: 150px; width: 120px;'">
+<img src = $!ApplicantPhoto style='"width: 120px; height: 150px'">
 </div>
 </div>
 </td>
 </tr>
 <tr>
-<td rowspan='""1'"">
-<div class='""block top-buffer'"">
-<label class='""name-head-color'""><b>UIN&nbsp;:&nbsp;</b></label> <span class='""name-color'""> $!UIN </span>
+<td rowspan='"1'">
+<div class='"block top-buffer'">
+<label class='"name-head-color'"><b>UIN&nbsp;:&nbsp;</b></label> <span class='"name-color'"> $!UIN </span>
 </div>
 </td>
 </tr>
 <tr>
-<td rowspan='""1'"">
-<div class='""block top-buffer'"">
-<label class='""name-head-color'""><b>VID&nbsp;:&nbsp;</b></label> <span class='""name-color'""> $!VID </span>
+<td rowspan='"1'">
+<div class='"block top-buffer'">
+<label class='"name-head-color'"><b>VID&nbsp;:&nbsp;</b></label> <span class='"name-color'"> $!VID </span>
 </div>
 </td>
 </tr>
 <tr>
-<td rowspan='""1'"">
-<div class='""block top-buffer'"">
-<label class='""name-head-color'""><b>Name&nbsp;:&nbsp;</b></label> <span class='""name-color'""> $!fullName_eng</span>
+<td rowspan='"1'">
+<div class='"block top-buffer'">
+<label class='"name-head-color'"><b>Name&nbsp;:&nbsp;</b></label> <span class='"name-color'"> $!fullName_eng</span>
 </div>
 </td>
 </tr>
 <tr>
-<td rowspan='""1'"">
-<div class='""block top-buffer'"">
-<label class='""name-head-color'""><b>اسم&nbsp;:&nbsp;</b></label> <span> $!fullName_ara</span>
+<td rowspan='"1'">
+<div class='"block top-buffer'">
+<label class='"name-head-color'"><b>اسم&nbsp;:&nbsp;</b></label> <span> $!fullName_ara</span>
 </div>
 </td>
 </tr>
 <tr>
-<td rowspan='""1'"">
-<div class='""block top-buffer'"">
-<label class='""name-head-color'""><b>Date/تاريخ&nbsp;:&nbsp;</b></label>
+<td rowspan='"1'">
+<div class='"block top-buffer'">
+<label class='"name-head-color'"><b>Date/تاريخ&nbsp;:&nbsp;</b></label>
 <span>$!dateOfBirth</span>
 </div>
 </td>
 </tr>
 <tr>
-<td colspan='""2'"">
-<div class='""block top-buffer'"">
-<label class='""name-head-color'""><b>Gender&nbsp;:&nbsp;</b></label> <span>$!gender_eng</span>
-&nbsp;&nbsp; <label class='""name-head-color'""><b>جنس&nbsp;:&nbsp;</b></label>
+<td colspan='"2'">
+<div class='"block top-buffer'">
+<label class='"name-head-color'"><b>Gender&nbsp;:&nbsp;</b></label> <span>$!gender_eng</span>
+&nbsp;&nbsp; <label class='"name-head-color'"><b>جنس&nbsp;:&nbsp;</b></label>
 <span>$!gender_ara</span>
 </div>
 </td>
 </tr>
 <tr>
-<td colspan='""3'"">
-<div class='""row'"" style='""margin-right: 0px; margin-left: -10px;'"">
-<div class='""col-md-2 top-buffer'"">
-<div class='""block top-buffer'"">
+<td colspan='"3'">
+<div class='"row'" style='"margin-right: 0px; margin-left: -10px;'">
+<div class='"col-md-2 top-buffer'">
+<div class='"block top-buffer'">
 <table>
 <tr>
-<td><label class='""name-head-color'""><b>Address&nbsp;:&nbsp;</b></label>
+<td><label class='"name-head-color'"><b>Address&nbsp;:&nbsp;</b></label>
 </td>
-<td><span>$!addressLine1_eng", $!addressLine2_eng,"
-$!addressLine3_eng", $!region_eng, $!province_eng, $!city_eng,"
+<td><span>$!addressLine1_eng, $!addressLine2_eng,
+$!addressLine3_eng, $!region_eng, $!province_eng, $!city_eng,
 $!postalCode </span></td>
 </tr>
 <tr>
-<td><label class='""name-head-color'""><b>عنوان&nbsp;:&nbsp;</b></label>
+<td><label class='"name-head-color'"><b>عنوان&nbsp;:&nbsp;</b></label>
 </td>
-<td><span>$!addressLine1_ara", $!city_ara," $!postalCode </span>
+<td><span>$!addressLine1_ara, $!addressLine2_ara, $!addressLine3_ara, $!region_ara, $!province_ara, $!city_ara, $!postalCode </span>
 </td>
 </tr>
 </table>
@@ -601,23 +581,23 @@ $!postalCode </span></td>
 </tr>
 </table>
 <div>&nbsp;</div>
-<table class='""main-table'"" style='""height: 300px'"">
+<table class='"main-table'" style='"height: 300px'">
 <tr>
 <td>
-<div style='""margin-left: 10px; margin-right: 10px; border: solid black 1px; height: 250px; width: 250px;'"">
-<div class='""col-md-6'"">
-<div class='""bar-code-padding'""></div>
-<img src=$!QrCode style='""width: 250px; height: 250px; margin-top: -20px'"">
+<div style='"margin-left: 10px; margin-right: 10px; border: solid black 1px; height: 250px; width: 250px;'">
+<div class='"col-md-6'">
+<div class='"bar-code-padding'"></div>
+<img src=$!QrCode style='"width: 250px; height: 250px; margin-top: -20px'">
 </div>
 </div>
 </td>
 <td>
-<div class='""name-head-color col-md-6'"">
+<div class='"name-head-color col-md-6'">
 <br> For any issues please contact us at<br>
-<br> Registration Proccessor",Hanging Gardens,"Global Village
-Tech Park", Mysore Rd,RVCE,Bengaluru," Karnataka 560059<br>
+<br> Registration Proccessor,Hanging Gardens,Global Village
+Tech Park, Mysore Rd,RVCE,Bengaluru, Karnataka 560059<br>
 <br> لأية مشاكل يرجى الاتصال بنا على <br>التسجيل المعالج،
-الحدائق المعلقة ، القرية العالمية Tech Park", Mysore Rd,"RVCE 560059
+الحدائق المعلقة ، القرية العالمية Tech Park, Mysore Rd,RVCE 560059
 بنغالورو، كارناتاكا <br>
 <br>
 </div>
@@ -625,352 +605,372 @@ Tech Park", Mysore Rd,RVCE,Bengaluru," Karnataka 560059<br>
 </tr>
 </table>
 </body>
-</html>""",10003,Registration Processor,RPR_MASKED_UIN_CARD_TEMPLATE,eng,t,superadmin,2020-12-23 14:36:54.459577
+</html>",10003,Registration Processor,RPR_MASKED_UIN_CARD_TEMPLATE,eng,t,superadmin,2020-12-23 14:36:54.459577
 1163,Authentication History Request Success Email,Authentication History Request Success Email,txt,velocity,"Hi $fullName_eng,
 
 Your Request for Authentication History has been processed successfully.
 
-Thank You!",10006,Resident Services,RS_AUTH_HIST_SUCCESS_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_AUTH_HIST_SUCCESS_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577
 1163,Authentication History Request Success Email,Authentication History Request Success Email,txt,velocity,"Hi $fullName_eng,
 
 Your Request for Authentication History has been processed successfully.
 
-Thank You!",10006,Resident Services,RS_AUTH_HIST_SUCCESS_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_AUTH_HIST_SUCCESS_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577
 1164,Authentication History Request Success SMS,Authentication History Request Success SMS,txt,velocity,"Hi $fullName_eng,
 
 Your Request for Authentication History has been processed successfully.
 
-Thank You!",10006,Resident Services,RS_AUTH_HIST_SUCCESS_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_AUTH_HIST_SUCCESS_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577
 1164,Authentication History Request Success SMS,Authentication History Request Success SMS,txt,velocity,"Hi $fullName_eng,
 
 Your Request for Authentication History has been processed successfully.
 
-Thank You!",10006,Resident Services,RS_AUTH_HIST_SUCCESS_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1165,Authentication History Request Success EMAIL Subject,Authentication History Request Success EMAIL Subject,txt,velocity,Authentication History Request Success,10006,Resident Services,RS_AUTH_HIST_SUCCESS_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1165,Authentication History Request Success EMAIL Subject,Authentication History Request Success EMAIL Subject,txt,velocity,Authentication History Request Success,10006,Resident Services,RS_AUTH_HIST_SUCCESS_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_AUTH_HIST_SUCCESS_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577
+1165,Authentication History Request Success EMAIL Subject,Authentication History Request Success EMAIL Subject,txt,velocity,Authentication History Request Success,10006,Resident Services,RS_AUTH_HIST_SUCCESS_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577
+1165,Authentication History Request Success EMAIL Subject,Authentication History Request Success EMAIL Subject,txt,velocity,Authentication History Request Success,10006,Resident Services,RS_AUTH_HIST_SUCCESS_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577
 1166,Successful Download of e-UIN Email,Successful Download of e-UIN Email,txt,velocity,"Hi $fullName_eng,
 
 Congratulations your request is processed. The request for downloading your e-UIN is Successful.
 
-Thank You!",10006,Resident Services,RS_DOW_UIN_SUCCESS_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_DOW_UIN_SUCCESS_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577
 1166,Successful Download of e-UIN Email,Successful Download of e-UIN Email,txt,velocity,"Hi $fullName_eng,
 
 Congratulations your request is processed. The request for downloading your e-UIN is Successful.
 
-Thank You!",10006,Resident Services,RS_DOW_UIN_SUCCESS_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1167,Successful Download of e-UIN Email Subject,Download e-UIN Status Email Subject,txt,velocity,Download e-UIN is Successful,10006,Resident Services,RS_DOW_UIN_SUCCESS_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1167,Successful Download of e-UIN Email Subject,Download e-UIN Status Email Subject,txt,velocity,Download e-UIN is Successful,10006,Resident Services,RS_DOW_UIN_SUCCESS_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_DOW_UIN_SUCCESS_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577
+1167,Successful Download of e-UIN Email Subject,Download e-UIN Status Email Subject,txt,velocity,Download e-UIN is Successful,10006,Resident Services,RS_DOW_UIN_SUCCESS_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577
+1167,Successful Download of e-UIN Email Subject,Download e-UIN Status Email Subject,txt,velocity,Download e-UIN is Successful,10006,Resident Services,RS_DOW_UIN_SUCCESS_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577
 1168,Successful Download of e-UIN SMS,Successful Download of e-UIN SMS,txt,velocity,"Hi $fullName_eng,
 
 Congratulations your request is processed. The request for downloading your e-UIN is Successful.
 
-Thank You!",10006,Resident Services,RS_DOW_UIN_SUCCESS_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_DOW_UIN_SUCCESS_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577
 1168,Successful Download of e-UIN SMS,Successful Download of e-UIN SMS,txt,velocity,"Hi $fullName_eng,
 
 Congratulations your request is processed. The request for downloading your e-UIN is Successful.
 
-Thank You!",10006,Resident Services,RS_DOW_UIN_SUCCESS_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_DOW_UIN_SUCCESS_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577
 1169,Successful Locking of Auth Types Email,Successful Locking of Auth Types Email,txt,velocity,"Hi $fullName_eng,
 
 Your requested AUTH type(s) have been locked successfully.
 
-Thank You!",10006,Resident Services,RS_LOCK_AUTH_SUCCESS_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_LOCK_AUTH_SUCCESS_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577
 1169,Successful Locking of Auth Types Email,Successful Locking of Auth Types Email,txt,velocity,"Hi $fullName_eng,
 
 Your requested AUTH type(s) have been locked successfully.
 
-Thank You!",10006,Resident Services,RS_LOCK_AUTH_SUCCESS_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1170,Successful Locking of Auth Types Email Subject,Successful Locking of Auth Types Email Subject,txt,velocity,Successfully Locked the AUTH Type(s),10006,Resident Services,RS_LOCK_AUTH_SUCCESS_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1200,VID Generation Failure Email Subject,VID Generation Failure Email Subject,txt,velocity,VID Generation Failure,10006,Resident Services,RS_VIN_GEN_FAILURE_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_LOCK_AUTH_SUCCESS_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577
+1170,Successful Locking of Auth Types Email Subject,Successful Locking of Auth Types Email Subject,txt,velocity,Successfully Locked the AUTH Type(s),10006,Resident Services,RS_LOCK_AUTH_SUCCESS_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577
+1200,VID Generation Failure Email Subject,VID Generation Failure Email Subject,txt,velocity,VID Generation Failure,10006,Resident Services,RS_VIN_GEN_FAILURE_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577
 1171,Successful Locking of Auth Types SMS,Successful Locking of Auth Types SMS,txt,velocity,"Hi $fullName_eng,
 
 Your requested AUTH type(s) have been locked successfully.
 
-Thank You!",10006,Resident Services,RS_LOCK_AUTH_SUCCESS_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_LOCK_AUTH_SUCCESS_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577
 1172,Successful Unlocking of Auth Types Email,Successful Unlocking of Auth Types Email,txt,velocity,"Hi $fullName_eng,
 
 Your requested AUTH type(s) have been unlocked successfully.
 
-Thank You!",10006,Resident Services,RS_UNLOCK_AUTH_SUCCESS_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_UNLOCK_AUTH_SUCCESS_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577
 1172,Successful Unlocking of Auth Types Email,Successful Unlocking of Auth Types Email,txt,velocity,"Hi $fullName_eng,
 
 Your requested AUTH type(s) have been unlocked successfully.
 
-Thank You!",10006,Resident Services,RS_UNLOCK_AUTH_SUCCESS_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1173,Successful Unlocking of Auth Types Email Subject,Successful Unlocking of Auth Types Email Subject,txt,velocity,Successfully Unlocked the AUTH Type(s),10006,Resident Services,RS_UNLOCK_AUTH_SUCCESS_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1173,Successful Unlocking of Auth Types Email Subject,Successful Unlocking of Auth Types Email Subject,txt,velocity,Successfully Unlocked the AUTH Type(s),10006,Resident Services,RS_UNLOCK_AUTH_SUCCESS_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1176,VID Generation Success Email Subject,VID Generation Success Email Subject,txt,velocity,Successful Generation of VID,10006,Resident Services,RS_VIN_GEN_SUCCESS_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1176,VID Generation Success Email Subject,VID Generation Success Email Subject,txt,velocity,Successful Generation of VID,10006,Resident Services,RS_VIN_GEN_SUCCESS_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_UNLOCK_AUTH_SUCCESS_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577
+1173,Successful Unlocking of Auth Types Email Subject,Successful Unlocking of Auth Types Email Subject,txt,velocity,Successfully Unlocked the AUTH Type(s),10006,Resident Services,RS_UNLOCK_AUTH_SUCCESS_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577
+1173,Successful Unlocking of Auth Types Email Subject,Successful Unlocking of Auth Types Email Subject,txt,velocity,Successfully Unlocked the AUTH Type(s),10006,Resident Services,RS_UNLOCK_AUTH_SUCCESS_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577
+1174,Successful Unlocking of Auth Types SMS,Successful Unlocking of Auth Types SMS,txt,velocity,"Hi $fullName_eng,
+
+Your requested AUTH type(s) have been unlocked successfully.
+
+Thank You!",10006,Resident Services,RS_UNLOCK_AUTH_SUCCESS_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577
+1174,Successful Unlocking of Auth Types SMS,Successful Unlocking of Auth Types SMS,txt,velocity,"Hi $fullName_eng,
+
+Your requested AUTH type(s) have been unlocked successfully.
+
+Thank You!",10006,Resident Services,RS_UNLOCK_AUTH_SUCCESS_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577
+1175,VID Generation Success Email,VID Generation Success Email,txt,velocity,"Hi $fullName_eng,
+
+Your VID for your UIN has been successfully generated. Your VID number is $VID.
+
+Thank You!",10006,Resident Services,RS_VIN_GEN_SUCCESS_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577
+1175,VID Generation Success Email,VID Generation Success Email,txt,velocity,"Hi $fullName_eng,
+
+Your VID for your UIN has been successfully generated. Your VID number is $VID.
+
+Thank You!",10006,Resident Services,RS_VIN_GEN_SUCCESS_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577
+1176,VID Generation Success Email Subject,VID Generation Success Email Subject,txt,velocity,Successful Generation of VID,10006,Resident Services,RS_VIN_GEN_SUCCESS_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577
+1176,VID Generation Success Email Subject,VID Generation Success Email Subject,txt,velocity,Successful Generation of VID,10006,Resident Services,RS_VIN_GEN_SUCCESS_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577
 1177,VID Generation Success SMS,VID Generation Success SMS,txt,velocity,"Hi $fullName_eng,
 
 Your VID for your UIN has been successfully generated. Your VID number is $VID.
 
-Thank You!",10006,Resident Services,RS_VIN_GEN_SUCCESS_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_VIN_GEN_SUCCESS_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577
 1177,VID Generation Success SMS,VID Generation Success SMS,txt,velocity,"Hi $fullName_eng,
 
 Your VID for your UIN has been successfully generated. Your VID number is $VID.
 
-Thank You!",10006,Resident Services,RS_VIN_GEN_SUCCESS_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_VIN_GEN_SUCCESS_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577
 1178,VID Revocation Success Email,VID Revocation Success Email,txt,velocity,"Hi $fullName_eng,
 
 Your $VID has been successfully revoked.
 
-Thank You!",10006,Resident Services,RS_VIN_REV_SUCCESS_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_VIN_REV_SUCCESS_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577
 1178,VID Revocation Success Email,VID Revocation Success Email,txt,velocity,"Hi $fullName_eng,
 
 Your $VID has been successfully revoked.
 
-Thank You!",10006,Resident Services,RS_VIN_REV_SUCCESS_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1179,VID Revocation Success Email Subject,VID Revocation Success Email Subject,txt,velocity,Successful Revocation of VID,10006,Resident Services,RS_VIN_REV_SUCCESS_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1179,VID Revocation Success Email Subject,VID Revocation Success Email Subject,txt,velocity,Successful Revocation of VID,10006,Resident Services,RS_VIN_REV_SUCCESS_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_VIN_REV_SUCCESS_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577
+1179,VID Revocation Success Email Subject,VID Revocation Success Email Subject,txt,velocity,Successful Revocation of VID,10006,Resident Services,RS_VIN_REV_SUCCESS_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577
+1179,VID Revocation Success Email Subject,VID Revocation Success Email Subject,txt,velocity,Successful Revocation of VID,10006,Resident Services,RS_VIN_REV_SUCCESS_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577
 1180,VID Revocation Success SMS,VID Revocation Success SMS,txt,velocity,"Hi $fullName_eng,
 
 Your $VID has been successfully revoked.
 
-Thank You!",10006,Resident Services,RS_VIN_REV_SUCCESS_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_VIN_REV_SUCCESS_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577
 1180,VID Revocation Success SMS,VID Revocation Success SMS,txt,velocity,"Hi $fullName_eng,
 
 Your $VID has been successfully revoked.
 
-Thank You!",10006,Resident Services,RS_VIN_REV_SUCCESS_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_VIN_REV_SUCCESS_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577
 1181,Reprint Request Success Email,Reprint Request Success Email,txt,velocity,"Hi $fullName_eng,
 
-Your request for 'Reprint Of UIN'"" has been successfully placed. Your RID (Req Number) is $RID.
+Your request for '"Reprint Of UIN'" has been successfully placed. Your RID (Req Number) is $RID.
 
-Thank You!""",10006,Resident Services,RS_UIN_RPR_SUCCESS_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_UIN_RPR_SUCCESS_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577
 1181,Reprint Request Success Email,Reprint Request Success Email,txt,velocity,"Hi $fullName_eng,
 
-Your request for 'Reprint Of UIN'"" has been successfully placed. Your RID (Req Number) is $RID.
+Your request for '"Reprint Of UIN'" has been successfully placed. Your RID (Req Number) is $RID.
 
-Thank You!""",10006,Resident Services,RS_UIN_RPR_SUCCESS_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1182,Reprint Request Success Email Subject,Reprint Request Success Email Subject,txt,velocity,Reprint Request Successful,10006,Resident Services,RS_UIN_RPR_SUCCESS_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1182,Reprint Request Success Email Subject,Reprint Request Success Email Subject,txt,velocity,Reprint Request Successful,10006,Resident Services,RS_UIN_RPR_SUCCESS_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_UIN_RPR_SUCCESS_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577
+1182,Reprint Request Success Email Subject,Reprint Request Success Email Subject,txt,velocity,Reprint Request Successful,10006,Resident Services,RS_UIN_RPR_SUCCESS_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577
+1182,Reprint Request Success Email Subject,Reprint Request Success Email Subject,txt,velocity,Reprint Request Successful,10006,Resident Services,RS_UIN_RPR_SUCCESS_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577
 1183,Reprint Request Success SMS,Reprint Request Success SMS,txt,velocity,"Hi $fullName_eng,
 
-Your request for 'Reprint Of UIN'"" has been successfully placed. Your RID (Req Number) is $RID.
+Your request for '"Reprint Of UIN'" has been successfully placed. Your RID (Req Number) is $RID.
 
-Thank You!""",10006,Resident Services,RS_UIN_RPR_SUCCESS_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_UIN_RPR_SUCCESS_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577
 1183,Reprint Request Success SMS,Reprint Request Success SMS,txt,velocity,"Hi $fullName_eng,
 
-Your request for 'Reprint Of UIN'"" has been successfully placed. Your RID (Req Number) is $RID.
+Your request for '"Reprint Of UIN'" has been successfully placed. Your RID (Req Number) is $RID.
 
-Thank You!""",10006,Resident Services,RS_UIN_RPR_SUCCESS_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_UIN_RPR_SUCCESS_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577
 1184,Authentication History Request Failure Email,Authentication History Request Failure Email,txt,velocity,"Hi $fullName_eng,
 
 Your Request to fetch your Authentication History details has failed.
 
-Thank You!",10006,Resident Services,RS_AUTH_HIST_FAILURE_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_AUTH_HIST_FAILURE_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577
 1184,Authentication History Request Failure Email,Authentication History Request Failure Email,txt,velocity,"Hi $fullName_eng,
 
 Your Request to fetch your Authentication History details has failed.
 
-Thank You!",10006,Resident Services,RS_AUTH_HIST_FAILURE_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1185,Authentication History Request Failure Email Subject,Authentication History Request Failure Email Subject,txt,velocity,Authentication History Request Failure,10006,Resident Services,RS_AUTH_HIST_FAILURE_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1185,Authentication History Request Failure Email Subject,Authentication History Request Failure Email Subject,txt,velocity,Authentication History Request Failure,10006,Resident Services,RS_AUTH_HIST_FAILURE_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_AUTH_HIST_FAILURE_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577
+1185,Authentication History Request Failure Email Subject,Authentication History Request Failure Email Subject,txt,velocity,Authentication History Request Failure,10006,Resident Services,RS_AUTH_HIST_FAILURE_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577
+1185,Authentication History Request Failure Email Subject,Authentication History Request Failure Email Subject,txt,velocity,Authentication History Request Failure,10006,Resident Services,RS_AUTH_HIST_FAILURE_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577
 1186,Authentication History Request Failure SMS,Authentication History Request Failure SMS,txt,velocity,"Hi $fullName_eng,
 
 Your Request for Authentication History has failed.
 
-Thank You!",10006,Resident Services,RS_AUTH_HIST_FAILURE_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_AUTH_HIST_FAILURE_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577
 1186,Authentication History Request Failure SMS,Authentication History Request Failure SMS,txt,velocity,"Hi $fullName_eng,
 
 Your Request for Authentication History has failed.
 
-Thank You!",10006,Resident Services,RS_AUTH_HIST_FAILURE_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_AUTH_HIST_FAILURE_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577
 1187,Download e-UIN Failure Email,Download e-UIN Failure Email,txt,velocity,"Hi $fullName_eng,
 
 Your request for downloading your e-UIN has failed. Please try again later.
 
-Thank You!",10006,Resident Services,RS_DOW_UIN_FAILURE_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_DOW_UIN_FAILURE_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577
 1187,Download e-UIN Failure Email,Download e-UIN Failure Email,txt,velocity,"Hi $fullName_eng,
 
 Your request for downloading your e-UIN has failed. Please try again later.
 
-Thank You!",10006,Resident Services,RS_DOW_UIN_FAILURE_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1188,Download e-UIN Failure Email Subject,Download e-UIN Failure Email Subject,txt,velocity,Download e-UIN Failure,10006,Resident Services,RS_DOW_UIN_FAILURE_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1188,Download e-UIN Failure Email Subject,Download e-UIN Failure Email Subject,txt,velocity,Download e-UIN Failure,10006,Resident Services,RS_DOW_UIN_FAILURE_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_DOW_UIN_FAILURE_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577
+1188,Download e-UIN Failure Email Subject,Download e-UIN Failure Email Subject,txt,velocity,Download e-UIN Failure,10006,Resident Services,RS_DOW_UIN_FAILURE_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577
+1188,Download e-UIN Failure Email Subject,Download e-UIN Failure Email Subject,txt,velocity,Download e-UIN Failure,10006,Resident Services,RS_DOW_UIN_FAILURE_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577
 1189,Download e-UIN Failure SMS,Download e-UIN Failure SMS,txt,velocity,"Hi $fullName_eng,
 
 Your request for downloading your e-UIN has failed. Please try again later.
 
-Thank You!",10006,Resident Services,RS_DOW_UIN_FAILURE_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_DOW_UIN_FAILURE_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577
 1189,Download e-UIN Failure SMS,Download e-UIN Failure SMS,txt,velocity,"Hi $fullName_eng,
 
 Your request for downloading your e-UIN has failed. Please try again later.
 
-Thank You!",10006,Resident Services,RS_DOW_UIN_FAILURE_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_DOW_UIN_FAILURE_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577
 1190,Failure in Locking of Auth Types Email,Failure in Locking of Auth Types Email,txt,velocity,"Hi $fullName_eng,
 
 Your requested for Locking AUTH type(s) has failed. Please try again later.
 
-Thank You!",10006,Resident Services,RS_LOCK_AUTH_FAILURE_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_LOCK_AUTH_FAILURE_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577
 1190,Failure in Locking of Auth Types Email,Failure in Locking of Auth Types Email,txt,velocity,"Hi $fullName_eng,
 
 Your requested for Locking AUTH type(s) has failed. Please try again later.
 
-Thank You!",10006,Resident Services,RS_LOCK_AUTH_FAILURE_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1191,Failure in Locking of Auth Types Email Subject,Failure in Locking of Auth Types Email Subject,txt,velocity,Locking of AUTH Type(s) Failed,10006,Resident Services,RS_LOCK_AUTH_FAILURE_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1191,Failure in Locking of Auth Types Email Subject,Failure in Locking of Auth Types Email Subject,txt,velocity,Locking of AUTH Type(s) Failed,10006,Resident Services,RS_LOCK_AUTH_FAILURE_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_LOCK_AUTH_FAILURE_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577
+1191,Failure in Locking of Auth Types Email Subject,Failure in Locking of Auth Types Email Subject,txt,velocity,Locking of AUTH Type(s) Failed,10006,Resident Services,RS_LOCK_AUTH_FAILURE_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577
+1191,Failure in Locking of Auth Types Email Subject,Failure in Locking of Auth Types Email Subject,txt,velocity,Locking of AUTH Type(s) Failed,10006,Resident Services,RS_LOCK_AUTH_FAILURE_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577
 1192,Failure in Locking of Auth Types SMS,Failure in Locking of Auth Types SMS,txt,velocity,"Hi $fullName_eng,
 
 Your requested for Locking AUTH type(s) has failed. Please try again later.
 
-Thank You!",10006,Resident Services,RS_LOCK_AUTH_FAILURE_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_LOCK_AUTH_FAILURE_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577
 1192,Failure in Locking of Auth Types SMS,Failure in Locking of Auth Types SMS,txt,velocity,"Hi $fullName_eng,
 
 Your requested for Locking AUTH type(s) has failed. Please try again later.
 
-Thank You!",10006,Resident Services,RS_LOCK_AUTH_FAILURE_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_LOCK_AUTH_FAILURE_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577
 1193,Reprint Request Failure Email,Reprint Request Failure Email,txt,velocity,"Hi $fullName_eng,
 
-Your request for 'Reprint of UIN Card'"" has failed. Please try again later.
+Your request for '"Reprint of UIN Card'" has failed. Please try again later.
 
-Thank You!""",10006,Resident Services,RS_UIN_RPR_FAILURE_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_UIN_RPR_FAILURE_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577
 1193,Reprint Request Failure Email,Reprint Request Failure Email,txt,velocity,"Hi $fullName_eng,
 
-Your request for 'Reprint of UIN Card'"" has failed. Please try again later.
+Your request for '"Reprint of UIN Card'" has failed. Please try again later.
 
-Thank You!""",10006,Resident Services,RS_UIN_RPR_FAILURE_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1194,Reprint Request Failure Email Subject,Reprint Request Failure Email Subject,txt,velocity,Reprint Request Failure,10006,Resident Services,RS_UIN_RPR_FAILURE_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1194,Reprint Request Failure Email Subject,Reprint Request Failure Email Subject,txt,velocity,Reprint Request Failure,10006,Resident Services,RS_UIN_RPR_FAILURE_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_UIN_RPR_FAILURE_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577
+1194,Reprint Request Failure Email Subject,Reprint Request Failure Email Subject,txt,velocity,Reprint Request Failure,10006,Resident Services,RS_UIN_RPR_FAILURE_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577
+1194,Reprint Request Failure Email Subject,Reprint Request Failure Email Subject,txt,velocity,Reprint Request Failure,10006,Resident Services,RS_UIN_RPR_FAILURE_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577
 1195,Reprint Request Failure SMS,Reprint Request Failure SMS,txt,velocity,"Hi $fullName_eng,
 
-Your request for 'Reprint of UIN Card'"" has failed. Please try again later.
+Your request for '"Reprint of UIN Card'" has failed. Please try again later.
 
-Thank You!""",10006,Resident Services,RS_UIN_RPR_FAILURE_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_UIN_RPR_FAILURE_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577
 1195,Reprint Request Failure SMS,Reprint Request Failure SMS,txt,velocity,"Hi $fullName_eng,
 
-Your request for 'Reprint of UIN Card'"" has failed. Please try again later.
+Your request for '"Reprint of UIN Card'" has failed. Please try again later.
 
-Thank You!""",10006,Resident Services,RS_UIN_RPR_FAILURE_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_UIN_RPR_FAILURE_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577
 1196,Failure in Unlocking of Auth Types Email,Failure in Unlocking of Auth Types Email,txt,velocity,"Hi $fullName_eng,
 
 Your requested for unlocking AUTH type(s) has failed. Please try again later.
 
-Thank You!",10006,Resident Services,RS_UNLOCK_AUTH_FAILURE_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_UNLOCK_AUTH_FAILURE_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577
 1196,Failure in Unlocking of Auth Types Email,Failure in Unlocking of Auth Types Email,txt,velocity,"Hi $fullName_eng,
 
 Your requested for unlocking AUTH type(s) has failed. Please try again later.
 
-Thank You!",10006,Resident Services,RS_UNLOCK_AUTH_FAILURE_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1197,Failure in Unlocking of Auth Types Email Subject,Failure in Unlocking of Auth Types Email Subject,txt,velocity,Unlocking of AUTH Type(s) Failed,10006,Resident Services,RS_UNLOCK_AUTH_FAILURE_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1197,Failure in Unlocking of Auth Types Email Subject,Failure in Unlocking of Auth Types Email Subject,txt,velocity,Unlocking of AUTH Type(s) Failed,10006,Resident Services,RS_UNLOCK_AUTH_FAILURE_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_UNLOCK_AUTH_FAILURE_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577
+1197,Failure in Unlocking of Auth Types Email Subject,Failure in Unlocking of Auth Types Email Subject,txt,velocity,Unlocking of AUTH Type(s) Failed,10006,Resident Services,RS_UNLOCK_AUTH_FAILURE_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577
+1197,Failure in Unlocking of Auth Types Email Subject,Failure in Unlocking of Auth Types Email Subject,txt,velocity,Unlocking of AUTH Type(s) Failed,10006,Resident Services,RS_UNLOCK_AUTH_FAILURE_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577
 1198,Failure in Unlocking of Auth Types SMS,Failure in Unlocking of Auth Types SMS,txt,velocity,"Hi $fullName_eng,
 
 Your requested for unlocking AUTH type(s) has failed. Please try again later.
 
-Thank You!",10006,Resident Services,RS_UNLOCK_AUTH_FAILURE_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_UNLOCK_AUTH_FAILURE_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577
 1198,Failure in Unlocking of Auth Types SMS,Failure in Unlocking of Auth Types SMS,txt,velocity,"Hi $fullName_eng,
 
 Your requested for unlocking AUTH type(s) has failed. Please try again later.
 
-Thank You!",10006,Resident Services,RS_UNLOCK_AUTH_FAILURE_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_UNLOCK_AUTH_FAILURE_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577
 1199,VID Generation Failure Email,VID Generation Failure Email,txt,velocity,"Hi $fullName_eng,
 
 VID generation for your UIN failed. Please try again later.
 
-Thank You!",10006,Resident Services,RS_VIN_GEN_FAILURE_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_VIN_GEN_FAILURE_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577
 1199,VID Generation Failure Email,VID Generation Failure Email,txt,velocity,"Hi $fullName_eng,
 
 VID generation for your UIN failed. Please try again later.
 
-Thank You!",10006,Resident Services,RS_VIN_GEN_FAILURE_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1200,VID Generation Failure Email Subject,VID Generation Failure Email Subject,txt,velocity,VID Generation Failure,10006,Resident Services,RS_VIN_GEN_FAILURE_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_VIN_GEN_FAILURE_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577
+1200,VID Generation Failure Email Subject,VID Generation Failure Email Subject,txt,velocity,VID Generation Failure,10006,Resident Services,RS_VIN_GEN_FAILURE_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577
 1201,VID Generation Failure SMS,VID Generation Failure SMS,txt,velocity,"Hi $fullName_eng,
 
 VID generation for your UIN failed. Please try again later.
 
-Thank You!",10006,Resident Services,RS_VIN_GEN_FAILURE_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_VIN_GEN_FAILURE_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577
 1201,VID Generation Failure SMS,VID Generation Failure SMS,txt,velocity,"Hi $fullName_eng,
 
 VID generation for your UIN failed. Please try again later.
 
-Thank You!",10006,Resident Services,RS_VIN_GEN_FAILURE_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_VIN_GEN_FAILURE_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577
 1202,VID Revocation Failure Email,VID Revocation Failure Email,txt,velocity,"Hi $fullName_eng,
 
 Your $VID revokation has failed. Please try again later.
 
-Thank You!",10006,Resident Services,RS_VIN_REV_FAILURE_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_VIN_REV_FAILURE_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577
 1202,VID Revocation Failure Email,VID Revocation Failure Email,txt,velocity,"Hi $fullName_eng,
 
 Your $VID revokation has failed. Please try again later.
 
-Thank You!",10006,Resident Services,RS_VIN_REV_FAILURE_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1203,VID Revocation Failure Email Subject,VID Revocation Failure Email Subject,txt,velocity,VID Revokation Failure,10006,Resident Services,RS_VIN_REV_FAILURE_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1203,VID Revocation Failure Email Subject,VID Revocation Failure Email Subject,txt,velocity,VID Revokation Failure,10006,Resident Services,RS_VIN_REV_FAILURE_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_VIN_REV_FAILURE_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577
+1203,VID Revocation Failure Email Subject,VID Revocation Failure Email Subject,txt,velocity,VID Revokation Failure,10006,Resident Services,RS_VIN_REV_FAILURE_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577
+1203,VID Revocation Failure Email Subject,VID Revocation Failure Email Subject,txt,velocity,VID Revokation Failure,10006,Resident Services,RS_VIN_REV_FAILURE_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577
 1204,VID Revocation Failure SMS,VID Revocation Failure SMS,txt,velocity,"Hi $fullName_eng,
 
 Your $VID revokation has failed. Please try again later.
 
-Thank You!",10006,Resident Services,RS_VIN_REV_FAILURE_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_VIN_REV_FAILURE_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577
 1204,VID Revocation Failure SMS,VID Revocation Failure SMS,txt,velocity,"Hi $fullName_eng,
 
 Your $VID revokation has failed. Please try again later.
 
-Thank You!",10006,Resident Services,RS_VIN_REV_FAILURE_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_VIN_REV_FAILURE_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577
 1205,UIN Update Request Placed Successfully Email,UIN Update Request Placed Successfully Email,txt,velocity,"Hi $fullName_eng,
 
-Your request for 'UIN Update'"" has been successfully placed. Your RID (Req Number) is $RID for tracking.
+Your request for '"UIN Update'" has been successfully placed. Your RID (Req Number) is $RID for tracking.
 
-Thank You!""",10006,Resident Services,RS_UIN_UPDATE_SUCCESS_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_UIN_UPDATE_SUCCESS_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577
 1205,UIN Update Request Placed Successfully Email,UIN Update Request Placed Successfully Email,txt,velocity,"Hi $fullName_eng,
 
-Your request for 'UIN Update'"" has been successfully placed. Your RID (Req Number) is $RID for tracking.
+Your request for '"UIN Update'" has been successfully placed. Your RID (Req Number) is $RID for tracking.
 
-Thank You!""",10006,Resident Services,RS_UIN_UPDATE_SUCCESS_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1206,UIN Update Request Placed Successfully Email Subject,UIN Update Request Placed Successfully Email Subject,txt,velocity,UIN Update Request Placed Successfully,10006,Resident Services,RS_UIN_UPDATE_SUCCESS_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1206,UIN Update Request Placed Successfully Email Subject,UIN Update Request Placed Successfully Email Subject,txt,velocity,UIN Update Request Placed Successfully,10006,Resident Services,RS_UIN_UPDATE_SUCCESS_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_UIN_UPDATE_SUCCESS_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577
+1206,UIN Update Request Placed Successfully Email Subject,UIN Update Request Placed Successfully Email Subject,txt,velocity,UIN Update Request Placed Successfully,10006,Resident Services,RS_UIN_UPDATE_SUCCESS_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577
+1206,UIN Update Request Placed Successfully Email Subject,UIN Update Request Placed Successfully Email Subject,txt,velocity,UIN Update Request Placed Successfully,10006,Resident Services,RS_UIN_UPDATE_SUCCESS_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577
 1207,UIN Update Request Placed Successfully SMS,UIN Update Request Placed Successfully SMS,txt,velocity,"Hi $fullName_eng,
 
-Your request for 'UIN Update'"" has been successfully placed. Your RID (Req Number) is $RID for tracking.
+Your request for '"UIN Update'" has been successfully placed. Your RID (Req Number) is $RID for tracking.
 
-Thank You!""",10006,Resident Services,RS_UIN_UPDATE_SUCCESS_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_UIN_UPDATE_SUCCESS_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577
 1207,UIN Update Request Placed Successfully SMS,UIN Update Request Placed Successfully SMS,txt,velocity,"Hi $fullName_eng,
 
-Your request for 'UIN Update'"" has been successfully placed. Your RID (Req Number) is $RID for tracking.
+Your request for '"UIN Update'" has been successfully placed. Your RID (Req Number) is $RID for tracking.
 
-Thank You!""",10006,Resident Services,RS_UIN_UPDATE_SUCCESS_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_UIN_UPDATE_SUCCESS_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577
 1208,UIN Update Request Failed Email,UIN Update Request Failed Email,txt,velocity,"Hi $fullName_eng,
 
-We were unable to process your 'UIN Update'"" request. Please try again later.
+We were unable to process your '"UIN Update'" request. Please try again later.
 
-Thank You!""",10006,Resident Services,RS_UIN_UPDATE_FAILURE_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_UIN_UPDATE_FAILURE_EMAIL,amh,t,superadmin,2020-12-23 14:36:54.459577
 1208,UIN Update Request Failed Email,UIN Update Request Failed Email,txt,velocity,"Hi $fullName_eng,
 
-We were unable to process your 'UIN Update'"" request. Please try again later.
+We were unable to process your '"UIN Update'" request. Please try again later.
 
-Thank You!""",10006,Resident Services,RS_UIN_UPDATE_FAILURE_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1209,UIN Update Request Failed Email Subject,UIN Update Request Failed Email Subject,txt,velocity,UIN Update Request Failed,10006,Resident Services,RS_UIN_UPDATE_FAILURE_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1209,UIN Update Request Failed Email Subject,UIN Update Request Failed Email Subject,txt,velocity,UIN Update Request Failed,10006,Resident Services,RS_UIN_UPDATE_FAILURE_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_UIN_UPDATE_FAILURE_EMAIL,eng,t,superadmin,2020-12-23 14:36:54.459577
+1209,UIN Update Request Failed Email Subject,UIN Update Request Failed Email Subject,txt,velocity,UIN Update Request Failed,10006,Resident Services,RS_UIN_UPDATE_FAILURE_EMAIL_SUB,amh,t,superadmin,2020-12-23 14:36:54.459577
+1209,UIN Update Request Failed Email Subject,UIN Update Request Failed Email Subject,txt,velocity,UIN Update Request Failed,10006,Resident Services,RS_UIN_UPDATE_FAILURE_EMAIL_SUB,eng,t,superadmin,2020-12-23 14:36:54.459577
 1210,UIN Update Request Failed SMS,UIN Update Request Failed SMS,txt,velocity,"Hi $fullName_eng,
 
-We were unable to process your 'UIN Update'"" request. Please try again later.
+We were unable to process your '"UIN Update'" request. Please try again later.
 
-Thank You!""",10006,Resident Services,RS_UIN_UPDATE_FAILURE_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_UIN_UPDATE_FAILURE_SMS,amh,t,superadmin,2020-12-23 14:36:54.459577
 1210,UIN Update Request Failed SMS,UIN Update Request Failed SMS,txt,velocity,"Hi $fullName_eng,
 
-We were unable to process your 'UIN Update'"" request. Please try again later.
+We were unable to process your '"UIN Update'" request. Please try again later.
 
-Thank You!""",10006,Resident Services,RS_UIN_UPDATE_FAILURE_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-ida,otp service,OTP Send Service,txt,string,Please find the OTP $otp,10002,login,otp-sms-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-preregistration,otp service,OTP Send Service,txt,string,Please find the OTP $otp,10001,Pre-Registration,otp-sms-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-registrationclient,otp service,OTP Send Service,txt,string,Please find the OTP $otp,10004,ID Authentication,otp-sms-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-registrationprocessor,otp service,OTP Send Service,txt,string,Please find the OTP $!otp,10003,login,otp-sms-template,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+Thank You!",10006,Resident Services,RS_UIN_UPDATE_FAILURE_SMS,eng,t,superadmin,2020-12-23 14:36:54.459577
+ida,otp service,OTP Send Service,txt,string,Please find the OTP $otp,10002,login,otp-sms-template,eng,t,superadmin,2020-12-23 14:36:54.459577
+preregistration,otp service,OTP Send Service,txt,string,Please find the OTP $otp,10001,Pre-Registration,otp-sms-template,eng,t,superadmin,2020-12-23 14:36:54.459577
+registrationclient,otp service,OTP Send Service,txt,string,Please find the OTP $otp,10004,ID Authentication,otp-sms-template,eng,t,superadmin,2020-12-23 14:36:54.459577
+registrationprocessor,otp service,OTP Send Service,txt,string,Please find the OTP $!otp,10003,login,otp-sms-template,eng,t,superadmin,2020-12-23 14:36:54.459577
 1125,Template for Onscreen Acknowledgment,Template for Onscreen Acknowledgment,txt,,"1. Once you registered online and booking, go to nearby enrollment center or you can go directly enrollment center
 2. Keep handy supporting documents such as proof of identity and a proof of address, for example, kebele ID card, Passport, Driver license, etc.
 3. Get an application form and fill all the required details. Once you submit application form and other supporting documents at the enrollment center, your biometric data will be taken by the official present at the center This will include an impression of fingerprints of your both hands, your iris and your photo.
 4. After all the documents and biometric data are checked, you will get an acknowledgement slip of your enrolment having a 20-digit enrolment number on it which will help you keep a check on the status of your application
-5. You can use the registration number and time provided in the acknowledgement slip to keep a track of your card.",10001,Pre-Registration,Onscreen-Acknowledgement,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+5. You can use the registration number and time provided in the acknowledgement slip to keep a track of your card.",10001,Pre-Registration,Onscreen-Acknowledgement,amh,t,superadmin,2020-12-23 14:36:54.459577
 1125,Template for Onscreen Acknowledgment,Template for Onscreen Acknowledgment,txt,,"1. Once you registered online and booking, go to nearby enrollment center or you can go directly enrollment center
 2. Keep handy supporting documents such as proof of identity and a proof of address, for example, kebele ID card, Passport, Driver license, etc.
 3. Get an application form and fill all the required details. Once you submit application form and other supporting documents at the enrollment center, your biometric data will be taken by the official present at the center This will include an impression of fingerprints of your both hands, your iris and your photo.
 4. After all the documents and biometric data are checked, you will get an acknowledgement slip of your enrolment having a 20-digit enrolment number on it which will help you keep a check on the status of your application
-5. You can use the registration number and time provided in the acknowledgement slip to keep a track of your card.",10001,Pre-Registration,Onscreen-Acknowledgement,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1131,UIN card template,UIN card template,html,,"<!DOCTYPE html><html><head><meta charset='utf-8'""><meta name='""viewport'"" content='""width=device-width","initial-scale=1'""><style>@page{size:8.54cm 5.198cm;margin:0}@media print{body",html{width:8.54cm;height:5.198cm}}body{margin:0;padding:0;font-size:7pt;color:#000}table{background-color:#fff;border:none;overflow:hidden;border:1px solid rgba(0,0,0,".165);border-radius:6px;-moz-border-radius:6px}tr{background-color:#fff;margin:auto;border:0;overflow:hidden;border-radius:2px;height:.3cm}td{background-color:#fff;margin:auto;padding:0;overflow:hidden;text-overflow:clip;width:1cm}</style></head><body><div style='""width:8.54cm;height:5.198cm;margin:auto'""><table class='""id-front'"" style='""width:8.54cm;height:5.198cm;table-layout:fixed'""><tr style='""height:0'""><td></td><td></td><td style='""width:1.4cm'""></td><td style='""width:.8cm'""></td><td style='""width:.8cm'""></td><td style='""width:1.5cm'""></td><td></td><td style='""width:.8cm'""></td></tr><tr><td style='""height:1cm'"" rowspan='""2'""><img src='""$!flag'"" style='""width:.8cm;height:.8cm;text-align:left'""></td><td style='""height:.5cm;text-align:center;font-size:10px'"" colspan='""6'"">የኢትዮጵያ ፌዴራላዊ ዲሞክራሲያዊ ሪፐብሊክ</td><td style='""height:1cm'"" rowspan='""2'""><img src='""$!map'"" style='""width:.8cm;height:.8cm;align-items:right'""></td></tr><tr><td style='""text-align:center;border-bottom:1px solid #ed7d31'"" colspan='""6'"">Federal Democratic Republic of Ethiopia</td></tr><tr style='""height:.15cm'""><td colspan='""8'""></td></tr><tr><td style='""border-right:solid #ed7d31 .05cm'"" colspan='""1'"">ስም</td><td colspan='""6'"">$!fullName_amh</td></tr><tr><td style='""border-right:solid #ed7d31 .05cm'"" colspan='""1'"">Name</td><td colspan='""6'"">$!fullName_eng</td></tr><tr style='""height:.15cm'""><td colspan='""8'""></td></tr><tr><td rowspan='""6'"" colspan='""2'""><img style='""width:2.4cm;height:2.9cm'"" src='""$!ApplicantPhoto'""></td><td style='""border-right:.05cm solid #ed7d31'"">&nbsp;ፆታ</td><td colspan='""2'"">$!gender_amh</td><td colspan='""1'"" style='""border-right:.05cm solid #ed7d31'"">የልደት ቀን</td><td colspan='""2'"">$!dateOfBirth</td></tr><tr><td style='""border-right:.05cm solid #ed7d31'"">&nbsp;Gender</td><td colspan='""2'"">$!gender_eng</td><td colspan='""1'"" style='""border-right:.05cm solid #ed7d31'"">Date of Birth</td><td colspan='""2'"">$!dateOfBirth</td></tr><tr style='""height:.15cm'""><td colspan='""6'""></td></tr><tr><td style='""border-right:.05cm solid #ed7d31'"">&nbsp;ዜግነት</td><td colspan='""2'"">$!residenceStatus_amh</td></tr><tr><td style='""border-right:.05cm solid #ed7d31'"">&nbsp;Nationality</td><td colspan='""2'"">$!residenceStatus_eng</td></tr><tr><td colspan='""2'""></td><td style='""font-size:12pt;text-align:right;padding-right:.3cm'"" colspan='""4'""><b>$!UIN</b></td></tr></table></div><p style='""page-break-before:always'""></p><div style='""width:8.54cm;height:5.198cm;margin:auto'""><table class='""id-back'"" style='""width:8.54cm;height:5.198cm;table-layout:fixed'""><tr style='""height:.5cm'""><td style='""width:1.2cm'""></td><td></td><td></td><td></td><td></td><td></td><td></td><td style='""width:1.2cm'""></td></tr><tr><td style='""border-right:1.5pt solid #ed7d31'"">አድራሻ</td><td colspan='""7'"">$!region_amh ፣ $!zone_amh ፣ $!woreda_amh</td></tr><tr><td style='""border-right:1.5pt solid #ed7d31'"">Address</td><td colspan='""7'"">$!region_eng", $!zone_eng," $!woreda_eng</td></tr><tr><td colspan='""2'""></td><td colspan='""4'"" style='""vertical-align:middle;text-align:center'""><img style='""width:3.2cm;height:3.2cm'"" src='""$!QrCode'""></td></tr></table></div></body></html>""",t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,
-1138,Registration Acknowledgement Template - Part 0,Acknowledgement generated after registration - Part 0,txt,velocity,"<!DOCTYPE html><html><head><style>body{font-family:'Noto Sans Ethiopic'""","""Roboto'"""," '""sans-serif'"";}table"," .head{font-size:13px;}.demoDiv{width: 70%;float: left;}.photoDiv{width: 30%;float:right;}\n.form{display:inline-block;}.section{align:center;padding:30px;width:800px;margin:auto;}.headings{color:#808080;font-size:10px;}p{display:inline;}.dataTable{word-wrap:break-word;table-layout:fixed;width:70%;}.headerTable{width:90%;}.uinHeaderTable{width:100%;}h5{display:inline;position:absolute;}.iris{top:-15px;left:152px;}.irisWithoutException{top:-15px;left:114px;}.tableWithoutException{width:50%;text-align:center;table-layout:fixed;margin:0 auto;}.biometricsTable{width:100%;text-align:center;table-layout:fixed;}.biometrics{position:relative;}.leftLittle{top:15px;left:90px;}.leftRing{top:3px;left:103px;}.leftMiddle{top:-7px;left:119px;}.leftIndex{top:3px;left:132px;}.rightIndex{top:3px;left:105px;}.rightMiddle{top:-7px;left:119px;}.rightRing{top:3px;left:132px;}.rightLittle{top:15px;left:146px;}.leftThumb{top:-4px;left:105px;}.rightThumb{top:-4px;left:130px;}.parentStyle{top:-15px;left:152px;}.parentIris1{top:-15px;left:212px;}.parentIris2{top:-15px;left:214px;}li span{color:black;font-size:12px;} li{color:lightgrey}button{float:right;font-size:12px;border:none;background-color:transparent;outline:none;}button:active{background-color:black;color:white;}.modify{float:right;}.bottom{vertical-align:bottom;}.consent-block{font-size:13px;border-radius: 8px;margin-top: 10px;margin-bottom: 10px;border: 2px solid #E88E3F;padding-top: -50px;padding:10px;}\n.consent-text{margin-left: 7px;margin-bottom: 4px;}\ninput[type='""radio'""] {display: none;}\ninput[type='""radio'""] + label:before { content: '""'""; display: inline-block; width: 15px; height: 15px; padding: 3px; margin-right: 5px; background-clip: content-box; border: 1px solid grey; background-color: #fff; border-radius: 50%;}\ninput[type='""radio'""]:checked + label:before { background-color: #FF4081; border-color:#FF4081;}\n*",*:before,"*:after { box-sizing: border-box;}\n.consent-block label { display: inline-flex; align-items: center;}\n</style><script>function changeColour(element) { var div = document.getElementById('""radioId'""); if(element.value == '""yes'""){div.style = '""border: 2px solid #68A933'"";}\nif(element.value == '""no'""){div.style = '""border: 2px solid #FF0000'"";}}\ndocument.onreadystatechange = function () {if(document.readyState === '""complete'""){var body = document.getElementsByTagName('""body'"")[0]; body.addEventListener('""dragstart'"""," function(event) {event.preventDefault();}); body.addEventListener('""selectstart'"""," function(event) {event.preventDefault();});}}</script></head>	""",t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,
-1141,Registration Acknowledgement Template - Part 3,Acknowledgement generated after registration - Part 3,txt,velocity,"<table ${BiometricsEnabled} class=biometricsTable><tr><td $biodata.get('WithException'"") ><p class=headings>$biodata.get('""ExceptionPhotoPrimLabel'"") / $biodata.get('""ExceptionPhotoSecLabel'"")</p></td><td $biodata.get('""FaceCaptureEnabled'"") ><p class=headings>$biodata.get('""PhotoPrim'"") / $biodata.get('""PhotoSec'"")</p></td></tr><tr><td $biodata.get('""WithException'"") ><img src=$biodata.get('""ExceptionImageSource'"") border=0 width=80 height=80/></td><td $biodata.get('""FaceCaptureEnabled'"") ><img src=$biodata.get('""FaceImageSource'"") border=0 width=100 height=100/></td></tr></table></table><br/>#end<br/><div ${Preview}><p class=head><b>${Consent}</b></p><div class=consent-block id=radioId><div class=consent-text>${ConsentData}</div><input type=radio name=consent id=consent-yes value=yes ${SelectedYes} onchange=changeColour(this)><label for=consent-yes>${Yes}</label> &nbsp;&nbsp;&nbsp;<input type=radio name=consent id=consent-no value=no ${SelectedNo} onchange=changeColour(this)><label for=consent-no>${No}</label></div></div><table class=dataTable><tr><td ${ROImage}><img src=${ROImageSource} border=0 width=80 height=80/></td><td><p class=headings>${RONamePrimLabel} / ${RONameSecLabel}</p><br/>${ROName}<br/>${RONameSec}</td><td><p class=headings>${RegCenterPrimLabel} / ${RegCenterSecLabel}</p><br/>${RegCenter}<br/>${RegCenterSec}</td></tr></table><hr/><br/></div></div></body></html>	""",10005,Inscription,reg-ack-template-part4,amh,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1138,Registration Acknowledgement Template - Part 1,Acknowledgement generated after registration - Part 1,txt,velocity,"<!DOCTYPE html><html><head><style>body{font-family:'Noto Sans Ethiopic'""","""Roboto'"""," '""sans-serif'"";}table"," .head{font-size:13px;}.demoDiv{width: 70%;float: left;}.photoDiv{width: 30%;float:right;}\n.form{display:inline-block;}.section{align:center;padding:30px;width:800px;margin:auto;}.headings{color:#808080;font-size:10px;}p{display:inline;}.dataTable{word-wrap:break-word;table-layout:fixed;width:70%;}.headerTable{width:90%;}.uinHeaderTable{width:100%;}h5{display:inline;position:absolute;}.iris{top:-15px;left:152px;}.irisWithoutException{top:-15px;left:114px;}.tableWithoutException{width:50%;text-align:center;table-layout:fixed;margin:0 auto;}.biometricsTable{width:100%;text-align:center;table-layout:fixed;}.biometrics{position:relative;}.leftLittle{top:15px;left:90px;}.leftRing{top:3px;left:103px;}.leftMiddle{top:-7px;left:119px;}.leftIndex{top:3px;left:132px;}.rightIndex{top:3px;left:105px;}.rightMiddle{top:-7px;left:119px;}.rightRing{top:3px;left:132px;}.rightLittle{top:15px;left:146px;}.leftThumb{top:-4px;left:105px;}.rightThumb{top:-4px;left:130px;}.parentStyle{top:-15px;left:152px;}.parentIris1{top:-15px;left:212px;}.parentIris2{top:-15px;left:214px;}li span{color:black;font-size:12px;} li{color:lightgrey}button{float:right;font-size:12px;border:none;background-color:transparent;outline:none;}button:active{background-color:black;color:white;}.modify{float:right;}.bottom{vertical-align:bottom;}.consent-block{font-size:13px;border-radius: 8px;margin-top: 10px;margin-bottom: 10px;border: 2px solid #E88E3F;padding-top: -50px;padding:10px;}\n.consent-text{margin-left: 7px;margin-bottom: 4px;}\ninput[type='""radio'""] {display: none;}\ninput[type='""radio'""] + label:before { content: '""'""; display: inline-block; width: 15px; height: 15px; padding: 3px; margin-right: 5px; background-clip: content-box; border: 1px solid grey; background-color: #fff; border-radius: 50%;}\ninput[type='""radio'""]:checked + label:before { background-color: #FF4081; border-color:#FF4081;}\n*",*:before,"*:after { box-sizing: border-box;}\n.consent-block label { display: inline-flex; align-items: center;}\n</style><script>function changeColour(element) { var div = document.getElementById('""radioId'""); if(element.value == '""yes'""){div.style = '""border: 2px solid #68A933'"";}\nif(element.value == '""no'""){div.style = '""border: 2px solid #FF0000'"";}}\ndocument.onreadystatechange = function () {if(document.readyState === '""complete'""){var body = document.getElementsByTagName('""body'"")[0]; body.addEventListener('""dragstart'"""," function(event) {event.preventDefault();}); body.addEventListener('""selectstart'"""," function(event) {event.preventDefault();});}}</script></head>	""",t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,
-1140,Registration Acknowledgement Template - Part 3,Acknowledgement generated after registration - Part 3,txt,velocity,"<p ${BiometricsEnabled} class=head><b>${BiometricsPrimLabel} / ${BiometricsSecLabel}</b></p><div ${BiometricsEnabled} ${Preview} class=modify><img src=${ModifyImageSource} border=0 width=15 height=15/><button id=modifyBiometrics>${Modify}</button></div><hr ${BiometricsEnabled}/>#foreach( $biodata in $biometricsData )<table ${BiometricsEnabled}><tr><td>$biodata.get('BiometricsFieldPrimLabel'"")/ $biodata.get('""BiometricsFieldSecLabel'"")<br/><p class=headings>$biodata.get('""Biometrics'"")<br/>$biodata.get('""BiometricsSec'"")</p><br/></td></tr><table ${BiometricsEnabled} class=biometricsTable><tr><td $biodata.get('""leftEyeCaptured'"") ><p class=headings>$biodata.get('""LeftEyePrimLabel'"") / $biodata.get('""LeftEyeSecLabel'"")</p></td><td $biodata.get('""rightEyeCaptured'"") ><p class=headings>$biodata.get('""RightEyePrimLabel'"") / $biodata.get('""RightEyeSecLabel'"")</p></td></tr><tr ${AckReceipt}><td $biodata.get('""leftEyeCaptured'"") ><div class=biometrics><h5 class=parentIris1>$biodata.get('""LeftEye'"")</h5><img src=$biodata.get('""EyeImageSource'"") border=0 width=85 height=80/></div></td><td $biodata.get('""rightEyeCaptured'"") ><div class=biometrics><h5 class=parentIris1>$biodata.get('""RightEye'"")</h5><img src=$biodata.get('""EyeImageSource'"") border=0 width=85 height=80/></div></td></tr><tr ${Preview}><td $biodata.get('""leftEyeCaptured'"") ><img src=$biodata.get('""CapturedLeftEye'"") border=0 width=85 height=80/></td><td $biodata.get('""rightEyeCaptured'"") ><img src=$biodata.get('""CapturedRightEye'"") border=0 width=85 height=80/></td></tr></table><table ${BiometricsEnabled} $biodata.get('""FingerprintsCaptured'"") class=biometricsTable><tr><td $biodata.get('""leftSlapCaptured'"") ><p class=headings>$biodata.get('""LeftPalmPrimLabel'"") / $biodata.get('""LeftPalmSecLabel'"")</p></td><td $biodata.get('""rightSlapCaptured'"") ><p class=headings>$biodata.get('""RightPalmPrimLabel'"") / $biodata.get('""RightPalmSecLabel'"")</p></td><td $biodata.get('""thumbsCaptured'"") ><p class=headings>$biodata.get('""ThumbsPrimLabel'"") / $biodata.get('""ThumbsSecLabel'"")</p></td></tr><tr ${AckReceipt}><td $biodata.get('""leftSlapCaptured'"") ><div class=biometrics><h5 class=leftLittle>$biodata.get('""leftLittle'"")</h5><h5 class=leftRing>$biodata.get('""leftRing'"")</h5><h5 class=leftMiddle>$biodata.get('""leftMiddle'"")</h5><h5 class=leftIndex>$biodata.get('""leftIndex'"")</h5><img src=$biodata.get('""LeftPalmImageSource'"") border=0 width=85 height=80/></div></td><td $biodata.get('""rightSlapCaptured'"") ><div class=biometrics><h5 class=rightIndex>$biodata.get('""rightIndex'"")</h5><h5 class=rightMiddle>$biodata.get('""rightMiddle'"")</h5><h5 class=rightRing>$biodata.get('""rightRing'"")</h5><h5 class=rightLittle>$biodata.get('""rightLittle'"")</h5><img src=$biodata.get('""RightPalmImageSource'"") border=0 width=85 height=80/></div></td><td $biodata.get('""thumbsCaptured'"") ><div class=biometrics><h5 class=leftThumb>$biodata.get('""leftThumb'"")</h5><h5 class=rightThumb>$biodata.get('""rightThumb'"")</h5><img src=$biodata.get('""ThumbsImageSource'"") border=0 width=85 height=80/></div></td></tr><tr ${Preview}><td $biodata.get('""leftSlapCaptured'"") ><img src=$biodata.get('""CapturedLeftSlap'"") border=0 width=85 height=80/></td><td $biodata.get('""rightSlapCaptured'"") ><img src=$biodata.get('""CapturedRightSlap'"") border=0 width=85 height=80/></td><td $biodata.get('""thumbsCaptured'"") ><img src=$biodata.get('""CapturedThumbs'"") border=0 width=85 height=80/></td></tr></table>	""",10005,Registration,reg-ack-template-part3,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+5. You can use the registration number and time provided in the acknowledgement slip to keep a track of your card.",10001,Pre-Registration,Onscreen-Acknowledgement,eng,t,superadmin,2020-12-23 14:36:54.459577
+1131,UIN card template,UIN card template,html,,"<!DOCTYPE html><html><head><meta charset='"utf-8'"><meta name='"viewport'" content='"width=device-width,initial-scale=1'"><style>@page{size:8.54cm 5.198cm;margin:0}@media print{body,html{width:8.54cm;height:5.198cm}}body{margin:0;padding:0;font-size:7pt;color:#000}table{background-color:#fff;border:none;overflow:hidden;border:1px solid rgba(0,0,0,.165);border-radius:6px;-moz-border-radius:6px}tr{background-color:#fff;margin:auto;border:0;overflow:hidden;border-radius:2px;height:.3cm}td{background-color:#fff;margin:auto;padding:0;overflow:hidden;text-overflow:clip;width:1cm}</style></head><body><div style='"width:8.54cm;height:5.198cm;margin:auto'"><table class='"id-front'" style='"width:8.54cm;height:5.198cm;table-layout:fixed'"><tr style='"height:0'"><td></td><td></td><td style='"width:1.4cm'"></td><td style='"width:.8cm'"></td><td style='"width:.8cm'"></td><td style='"width:1.5cm'"></td><td></td><td style='"width:.8cm'"></td></tr><tr><td style='"height:1cm'" rowspan='"2'"><img src='"$!flag'" style='"width:.8cm;height:.8cm;text-align:left'"></td><td style='"height:.5cm;text-align:center;font-size:10px'" colspan='"6'">የኢትዮጵያ ፌዴራላዊ ዲሞክራሲያዊ ሪፐብሊክ</td><td style='"height:1cm'" rowspan='"2'"><img src='"$!map'" style='"width:.8cm;height:.8cm;align-items:right'"></td></tr><tr><td style='"text-align:center;border-bottom:1px solid #ed7d31'" colspan='"6'">Federal Democratic Republic of Ethiopia</td></tr><tr style='"height:.15cm'"><td colspan='"8'"></td></tr><tr><td style='"border-right:solid #ed7d31 .05cm'" colspan='"1'">ስም</td><td colspan='"6'">$!fullName_amh</td></tr><tr><td style='"border-right:solid #ed7d31 .05cm'" colspan='"1'">Name</td><td colspan='"6'">$!fullName_eng</td></tr><tr style='"height:.15cm'"><td colspan='"8'"></td></tr><tr><td rowspan='"6'" colspan='"2'"><img style='"width:2.4cm;height:2.9cm'" src='"$!ApplicantPhoto'"></td><td style='"border-right:.05cm solid #ed7d31'">&nbsp;ፆታ</td><td colspan='"2'">$!gender_amh</td><td colspan='"1'" style='"border-right:.05cm solid #ed7d31'">የልደት ቀን</td><td colspan='"2'">$!dateOfBirth</td></tr><tr><td style='"border-right:.05cm solid #ed7d31'">&nbsp;Gender</td><td colspan='"2'">$!gender_eng</td><td colspan='"1'" style='"border-right:.05cm solid #ed7d31'">Date of Birth</td><td colspan='"2'">$!dateOfBirth</td></tr><tr style='"height:.15cm'"><td colspan='"6'"></td></tr><tr><td style='"border-right:.05cm solid #ed7d31'">&nbsp;ዜግነት</td><td colspan='"2'">$!residenceStatus_amh</td></tr><tr><td style='"border-right:.05cm solid #ed7d31'">&nbsp;Nationality</td><td colspan='"2'">$!residenceStatus_eng</td></tr><tr><td colspan='"2'"></td><td style='"font-size:12pt;text-align:right;padding-right:.3cm'" colspan='"4'"><b>$!UIN</b></td></tr></table></div><p style='"page-break-before:always'"></p><div style='"width:8.54cm;height:5.198cm;margin:auto'"><table class='"id-back'" style='"width:8.54cm;height:5.198cm;table-layout:fixed'"><tr style='"height:.5cm'"><td style='"width:1.2cm'"></td><td></td><td></td><td></td><td></td><td></td><td></td><td style='"width:1.2cm'"></td></tr><tr><td style='"border-right:1.5pt solid #ed7d31'">አድራሻ</td><td colspan='"7'">$!region_amh ፣ $!zone_amh ፣ $!woreda_amh</td></tr><tr><td style='"border-right:1.5pt solid #ed7d31'">Address</td><td colspan='"7'">$!region_eng, $!zone_eng, $!woreda_eng</td></tr><tr><td colspan='"2'"></td><td colspan='"4'" style='"vertical-align:middle;text-align:center'"><img style='"width:3.2cm;height:3.2cm'" src='"$!QrCode'"></td></tr></table></div></body></html>",10003,Processeur dinscription,RPR_UIN_CARD_TEMPLATE,amh,t,superadmin,2020-12-23 14:36:54.459577
+1138,Registration Acknowledgement Template - Part 0,Acknowledgement generated after registration - Part 0,txt,velocity,"<!DOCTYPE html><html><head><style>body{font-family:'"Noto Sans Ethiopic'",'"Roboto'", '"sans-serif'";}table, .head{font-size:13px;}.demoDiv{width: 70%;float: left;}.photoDiv{width: 30%;float:right;}\n.form{display:inline-block;}.section{align:center;padding:30px;width:800px;margin:auto;}.headings{color:#808080;font-size:10px;}p{display:inline;}.dataTable{word-wrap:break-word;table-layout:fixed;width:70%;}.headerTable{width:90%;}.uinHeaderTable{width:100%;}h5{display:inline;position:absolute;}.iris{top:-15px;left:152px;}.irisWithoutException{top:-15px;left:114px;}.tableWithoutException{width:50%;text-align:center;table-layout:fixed;margin:0 auto;}.biometricsTable{width:100%;text-align:center;table-layout:fixed;}.biometrics{position:relative;}.leftLittle{top:15px;left:90px;}.leftRing{top:3px;left:103px;}.leftMiddle{top:-7px;left:119px;}.leftIndex{top:3px;left:132px;}.rightIndex{top:3px;left:105px;}.rightMiddle{top:-7px;left:119px;}.rightRing{top:3px;left:132px;}.rightLittle{top:15px;left:146px;}.leftThumb{top:-4px;left:105px;}.rightThumb{top:-4px;left:130px;}.parentStyle{top:-15px;left:152px;}.parentIris1{top:-15px;left:212px;}.parentIris2{top:-15px;left:214px;}li span{color:black;font-size:12px;} li{color:lightgrey}button{float:right;font-size:12px;border:none;background-color:transparent;outline:none;}button:active{background-color:black;color:white;}.modify{float:right;}.bottom{vertical-align:bottom;}.consent-block{font-size:13px;border-radius: 8px;margin-top: 10px;margin-bottom: 10px;border: 2px solid #E88E3F;padding-top: -50px;padding:10px;}\n.consent-text{margin-left: 7px;margin-bottom: 4px;}\ninput[type='"radio'"] {display: none;}\ninput[type='"radio'"] + label:before { content: '"'"; display: inline-block; width: 15px; height: 15px; padding: 3px; margin-right: 5px; background-clip: content-box; border: 1px solid grey; background-color: #fff; border-radius: 50%;}\ninput[type='"radio'"]:checked + label:before { background-color: #FF4081; border-color:#FF4081;}\n*,*:before,*:after { box-sizing: border-box;}\n.consent-block label { display: inline-flex; align-items: center;}\n</style><script>function changeColour(element) { var div = document.getElementById('"radioId'"); if(element.value == '"yes'"){div.style = '"border: 2px solid #68A933'";}\nif(element.value == '"no'"){div.style = '"border: 2px solid #FF0000'";}}\ndocument.onreadystatechange = function () {if(document.readyState === '"complete'"){var body = document.getElementsByTagName('"body'")[0]; body.addEventListener('"dragstart'", function(event) {event.preventDefault();}); body.addEventListener('"selectstart'", function(event) {event.preventDefault();});}}</script></head>	",10005,Inscription,reg-ack-template-part1,amh,t,superadmin,2020-12-23 14:36:54.459577
+1141,Registration Acknowledgement Template - Part 3,Acknowledgement generated after registration - Part 3,txt,velocity,"<table ${BiometricsEnabled} class=biometricsTable><tr><td $biodata.get('"WithException'") ><p class=headings>$biodata.get('"ExceptionPhotoPrimLabel'") / $biodata.get('"ExceptionPhotoSecLabel'")</p></td><td $biodata.get('"FaceCaptureEnabled'") ><p class=headings>$biodata.get('"PhotoPrim'") / $biodata.get('"PhotoSec'")</p></td></tr><tr><td $biodata.get('"WithException'") ><img src=$biodata.get('"ExceptionImageSource'") border=0 width=80 height=80/></td><td $biodata.get('"FaceCaptureEnabled'") ><img src=$biodata.get('"FaceImageSource'") border=0 width=100 height=100/></td></tr></table></table><br/>#end<br/><div ${Preview}><p class=head><b>${Consent}</b></p><div class=consent-block id=radioId><div class=consent-text>${ConsentData}</div><input type=radio name=consent id=consent-yes value=yes ${SelectedYes} onchange=changeColour(this)><label for=consent-yes>${Yes}</label> &nbsp;&nbsp;&nbsp;<input type=radio name=consent id=consent-no value=no ${SelectedNo} onchange=changeColour(this)><label for=consent-no>${No}</label></div></div><table class=dataTable><tr><td ${ROImage}><img src=${ROImageSource} border=0 width=80 height=80/></td><td><p class=headings>${RONamePrimLabel} / ${RONameSecLabel}</p><br/>${ROName}<br/>${RONameSec}</td><td><p class=headings>${RegCenterPrimLabel} / ${RegCenterSecLabel}</p><br/>${RegCenter}<br/>${RegCenterSec}</td></tr></table><hr/><br/></div></div></body></html>	",10005,Inscription,reg-ack-template-part4,amh,t,superadmin,2020-12-23 14:36:54.459577
+1138,Registration Acknowledgement Template - Part 1,Acknowledgement generated after registration - Part 1,txt,velocity,"<!DOCTYPE html><html><head><style>body{font-family:'"Noto Sans Ethiopic'",'"Roboto'", '"sans-serif'";}table, .head{font-size:13px;}.demoDiv{width: 70%;float: left;}.photoDiv{width: 30%;float:right;}\n.form{display:inline-block;}.section{align:center;padding:30px;width:800px;margin:auto;}.headings{color:#808080;font-size:10px;}p{display:inline;}.dataTable{word-wrap:break-word;table-layout:fixed;width:70%;}.headerTable{width:90%;}.uinHeaderTable{width:100%;}h5{display:inline;position:absolute;}.iris{top:-15px;left:152px;}.irisWithoutException{top:-15px;left:114px;}.tableWithoutException{width:50%;text-align:center;table-layout:fixed;margin:0 auto;}.biometricsTable{width:100%;text-align:center;table-layout:fixed;}.biometrics{position:relative;}.leftLittle{top:15px;left:90px;}.leftRing{top:3px;left:103px;}.leftMiddle{top:-7px;left:119px;}.leftIndex{top:3px;left:132px;}.rightIndex{top:3px;left:105px;}.rightMiddle{top:-7px;left:119px;}.rightRing{top:3px;left:132px;}.rightLittle{top:15px;left:146px;}.leftThumb{top:-4px;left:105px;}.rightThumb{top:-4px;left:130px;}.parentStyle{top:-15px;left:152px;}.parentIris1{top:-15px;left:212px;}.parentIris2{top:-15px;left:214px;}li span{color:black;font-size:12px;} li{color:lightgrey}button{float:right;font-size:12px;border:none;background-color:transparent;outline:none;}button:active{background-color:black;color:white;}.modify{float:right;}.bottom{vertical-align:bottom;}.consent-block{font-size:13px;border-radius: 8px;margin-top: 10px;margin-bottom: 10px;border: 2px solid #E88E3F;padding-top: -50px;padding:10px;}\n.consent-text{margin-left: 7px;margin-bottom: 4px;}\ninput[type='"radio'"] {display: none;}\ninput[type='"radio'"] + label:before { content: '"'"; display: inline-block; width: 15px; height: 15px; padding: 3px; margin-right: 5px; background-clip: content-box; border: 1px solid grey; background-color: #fff; border-radius: 50%;}\ninput[type='"radio'"]:checked + label:before { background-color: #FF4081; border-color:#FF4081;}\n*,*:before,*:after { box-sizing: border-box;}\n.consent-block label { display: inline-flex; align-items: center;}\n</style><script>function changeColour(element) { var div = document.getElementById('"radioId'"); if(element.value == '"yes'"){div.style = '"border: 2px solid #68A933'";}\nif(element.value == '"no'"){div.style = '"border: 2px solid #FF0000'";}}\ndocument.onreadystatechange = function () {if(document.readyState === '"complete'"){var body = document.getElementsByTagName('"body'")[0]; body.addEventListener('"dragstart'", function(event) {event.preventDefault();}); body.addEventListener('"selectstart'", function(event) {event.preventDefault();});}}</script></head>	",10005,Registration,reg-ack-template-part1,eng,t,superadmin,2020-12-23 14:36:54.459577
+1140,Registration Acknowledgement Template - Part 3,Acknowledgement generated after registration - Part 3,txt,velocity,"<p ${BiometricsEnabled} class=head><b>${BiometricsPrimLabel} / ${BiometricsSecLabel}</b></p><div ${BiometricsEnabled} ${Preview} class=modify><img src=${ModifyImageSource} border=0 width=15 height=15/><button id=modifyBiometrics>${Modify}</button></div><hr ${BiometricsEnabled}/>#foreach( $biodata in $biometricsData )<table ${BiometricsEnabled}><tr><td>$biodata.get('"BiometricsFieldPrimLabel'")/ $biodata.get('"BiometricsFieldSecLabel'")<br/><p class=headings>$biodata.get('"Biometrics'")<br/>$biodata.get('"BiometricsSec'")</p><br/></td></tr><table ${BiometricsEnabled} class=biometricsTable><tr><td $biodata.get('"leftEyeCaptured'") ><p class=headings>$biodata.get('"LeftEyePrimLabel'") / $biodata.get('"LeftEyeSecLabel'")</p></td><td $biodata.get('"rightEyeCaptured'") ><p class=headings>$biodata.get('"RightEyePrimLabel'") / $biodata.get('"RightEyeSecLabel'")</p></td></tr><tr ${AckReceipt}><td $biodata.get('"leftEyeCaptured'") ><div class=biometrics><h5 class=parentIris1>$biodata.get('"LeftEye'")</h5><img src=$biodata.get('"EyeImageSource'") border=0 width=85 height=80/></div></td><td $biodata.get('"rightEyeCaptured'") ><div class=biometrics><h5 class=parentIris1>$biodata.get('"RightEye'")</h5><img src=$biodata.get('"EyeImageSource'") border=0 width=85 height=80/></div></td></tr><tr ${Preview}><td $biodata.get('"leftEyeCaptured'") ><img src=$biodata.get('"CapturedLeftEye'") border=0 width=85 height=80/></td><td $biodata.get('"rightEyeCaptured'") ><img src=$biodata.get('"CapturedRightEye'") border=0 width=85 height=80/></td></tr></table><table ${BiometricsEnabled} $biodata.get('"FingerprintsCaptured'") class=biometricsTable><tr><td $biodata.get('"leftSlapCaptured'") ><p class=headings>$biodata.get('"LeftPalmPrimLabel'") / $biodata.get('"LeftPalmSecLabel'")</p></td><td $biodata.get('"rightSlapCaptured'") ><p class=headings>$biodata.get('"RightPalmPrimLabel'") / $biodata.get('"RightPalmSecLabel'")</p></td><td $biodata.get('"thumbsCaptured'") ><p class=headings>$biodata.get('"ThumbsPrimLabel'") / $biodata.get('"ThumbsSecLabel'")</p></td></tr><tr ${AckReceipt}><td $biodata.get('"leftSlapCaptured'") ><div class=biometrics><h5 class=leftLittle>$biodata.get('"leftLittle'")</h5><h5 class=leftRing>$biodata.get('"leftRing'")</h5><h5 class=leftMiddle>$biodata.get('"leftMiddle'")</h5><h5 class=leftIndex>$biodata.get('"leftIndex'")</h5><img src=$biodata.get('"LeftPalmImageSource'") border=0 width=85 height=80/></div></td><td $biodata.get('"rightSlapCaptured'") ><div class=biometrics><h5 class=rightIndex>$biodata.get('"rightIndex'")</h5><h5 class=rightMiddle>$biodata.get('"rightMiddle'")</h5><h5 class=rightRing>$biodata.get('"rightRing'")</h5><h5 class=rightLittle>$biodata.get('"rightLittle'")</h5><img src=$biodata.get('"RightPalmImageSource'") border=0 width=85 height=80/></div></td><td $biodata.get('"thumbsCaptured'") ><div class=biometrics><h5 class=leftThumb>$biodata.get('"leftThumb'")</h5><h5 class=rightThumb>$biodata.get('"rightThumb'")</h5><img src=$biodata.get('"ThumbsImageSource'") border=0 width=85 height=80/></div></td></tr><tr ${Preview}><td $biodata.get('"leftSlapCaptured'") ><img src=$biodata.get('"CapturedLeftSlap'") border=0 width=85 height=80/></td><td $biodata.get('"rightSlapCaptured'") ><img src=$biodata.get('"CapturedRightSlap'") border=0 width=85 height=80/></td><td $biodata.get('"thumbsCaptured'") ><img src=$biodata.get('"CapturedThumbs'") border=0 width=85 height=80/></td></tr></table>	",10005,Registration,reg-ack-template-part3,eng,t,superadmin,2020-12-23 14:36:54.459577
 1154,Consent,Consent,txt,,"I understand that the data collected about me during pre-registration by the said authority includes my -  
 •                     Name
 •                     Date of birth
@@ -979,6 +979,6 @@ registrationprocessor,otp service,OTP Send Service,txt,string,Please find the OT
 •                     Residence Status
 •                     Contact details
 •                     Documents
-I also understand that this information will be stored and processed for the purpose of verifying my identity in order to access various services, or to comply with a legal obligation. I give my consent for the collection of this data for this purpose.",10001,Pre-Registration,consent,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
-1131,UIN card template,UIN card template,html,,"<!DOCTYPE html><html><head><meta charset='utf-8'""><meta name='""viewport'"" content='""width=device-width","initial-scale=1'""><style>@page{size:8.54cm 5.198cm;margin:0}@media print{body",html{width:8.54cm;height:5.198cm}}body{margin:0;padding:0;font-size:7pt;color:#000}table{background-color:#fff;border:none;overflow:hidden;border:1px solid rgba(0,0,0,".165);border-radius:6px;-moz-border-radius:6px}tr{background-color:#fff;margin:auto;border:0;overflow:hidden;border-radius:2px;height:.3cm}td{background-color:#fff;margin:auto;padding:0;overflow:hidden;text-overflow:clip;width:1cm}</style></head><body><div style='""width:8.54cm;height:5.198cm;margin:auto'""><table class='""id-front'"" style='""width:8.54cm;height:5.198cm;table-layout:fixed'""><tr style='""height:0'""><td></td><td></td><td style='""width:1.4cm'""></td><td style='""width:.8cm'""></td><td style='""width:.8cm'""></td><td style='""width:1.5cm'""></td><td></td><td style='""width:.8cm'""></td></tr><tr><td style='""height:1cm'"" rowspan='""2'""><img src='""$!flag'"" style='""width:.8cm;height:.8cm;text-align:left'""></td><td style='""height:.5cm;text-align:center;font-size:10px'"" colspan='""6'"">የኢትዮጵያ ፌዴራላዊ ዲሞክራሲያዊ ሪፐብሊክ</td><td style='""height:1cm'"" rowspan='""2'""><img src='""$!map'"" style='""width:.8cm;height:.8cm;align-items:right'""></td></tr><tr><td style='""text-align:center;border-bottom:1px solid #ed7d31'"" colspan='""6'"">Federal Democratic Republic of Ethiopia</td></tr><tr style='""height:.15cm'""><td colspan='""8'""></td></tr><tr><td style='""border-right:solid #ed7d31 .05cm'"" colspan='""1'"">ስም</td><td colspan='""6'"">$!fullName_amh</td></tr><tr><td style='""border-right:solid #ed7d31 .05cm'"" colspan='""1'"">Name</td><td colspan='""6'"">$!fullName_eng</td></tr><tr style='""height:.15cm'""><td colspan='""8'""></td></tr><tr><td rowspan='""6'"" colspan='""2'""><img style='""width:2.4cm;height:2.9cm'"" src='""$!ApplicantPhoto'""></td><td style='""border-right:.05cm solid #ed7d31'"">&nbsp;ፆታ</td><td colspan='""2'"">$!gender_amh</td><td colspan='""1'"" style='""border-right:.05cm solid #ed7d31'"">የልደት ቀን</td><td colspan='""2'"">$!dateOfBirth</td></tr><tr><td style='""border-right:.05cm solid #ed7d31'"">&nbsp;Gender</td><td colspan='""2'"">$!gender_eng</td><td colspan='""1'"" style='""border-right:.05cm solid #ed7d31'"">Date of Birth</td><td colspan='""2'"">$!dateOfBirth</td></tr><tr style='""height:.15cm'""><td colspan='""6'""></td></tr><tr><td style='""border-right:.05cm solid #ed7d31'"">&nbsp;ዜግነት</td><td colspan='""2'"">$!residenceStatus_amh</td></tr><tr><td style='""border-right:.05cm solid #ed7d31'"">&nbsp;Nationality</td><td colspan='""2'"">$!residenceStatus_eng</td></tr><tr><td colspan='""2'""></td><td style='""font-size:12pt;text-align:right;padding-right:.3cm'"" colspan='""4'""><b>$!UIN</b></td></tr></table></div><p style='""page-break-before:always'""></p><div style='""width:8.54cm;height:5.198cm;margin:auto'""><table class='""id-back'"" style='""width:8.54cm;height:5.198cm;table-layout:fixed'""><tr style='""height:.5cm'""><td style='""width:1.2cm'""></td><td></td><td></td><td></td><td></td><td></td><td></td><td style='""width:1.2cm'""></td></tr><tr><td style='""border-right:1.5pt solid #ed7d31'"">አድራሻ</td><td colspan='""7'"">$!region_amh ፣ $!zone_amh ፣ $!woreda_amh</td></tr><tr><td style='""border-right:1.5pt solid #ed7d31'"">Address</td><td colspan='""7'"">$!region_eng", $!zone_eng," $!woreda_eng</td></tr><tr><td colspan='""2'""></td><td colspan='""4'"" style='""vertical-align:middle;text-align:center'""><img style='""width:3.2cm;height:3.2cm'"" src='""$!QrCode'""></td></tr></table></div></body></html>""",t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,
-1141,Registration Acknowledgement Template - Part 4,Acknowledgement generated after registration - Part 4,txt,velocity,"<table ${BiometricsEnabled} class=biometricsTable><tr><td $biodata.get('WithException'"") ><p class=headings>$biodata.get('""ExceptionPhotoPrimLabel'"") / $biodata.get('""ExceptionPhotoSecLabel'"")</p></td><td $biodata.get('""FaceCaptureEnabled'"") ><p class=headings>$biodata.get('""PhotoPrim'"") / $biodata.get('""PhotoSec'"")</p></td></tr><tr><td $biodata.get('""WithException'"") ><img src=$biodata.get('""ExceptionImageSource'"") border=0 width=80 height=80/></td><td $biodata.get('""FaceCaptureEnabled'"") ><img src=$biodata.get('""FaceImageSource'"") border=0 width=100 height=100/></td></tr></table></table><br/>#end<br/><div ${Preview}><p class=head><b>${Consent}</b></p><div class=consent-block id=radioId><div class=consent-text>${ConsentData}</div><input type=radio name=consent id=consent-yes value=yes ${SelectedYes} onchange=changeColour(this)><label for=consent-yes>${Yes}</label> &nbsp;&nbsp;&nbsp;<input type=radio name=consent id=consent-no value=no ${SelectedNo} onchange=changeColour(this)><label for=consent-no>${No}</label></div></div><table class=dataTable><tr><td ${ROImage}><img src=${ROImageSource} border=0 width=80 height=80/></td><td><p class=headings>${RONamePrimLabel} / ${RONameSecLabel}</p><br/>${ROName}<br/>${RONameSec}</td><td><p class=headings>${RegCenterPrimLabel} / ${RegCenterSecLabel}</p><br/>${RegCenter}<br/>${RegCenterSec}</td></tr></table><hr/><br/></div></div></body></html>	""",10005,Registration,reg-ack-template-part4,eng,t,superadmin,2020-12-23 14:36:54.459577,,,,,,,,,,,,,,,,,
+I also understand that this information will be stored and processed for the purpose of verifying my identity in order to access various services, or to comply with a legal obligation. I give my consent for the collection of this data for this purpose.",10001,Pre-Registration,consent,eng,t,superadmin,2020-12-23 14:36:54.459577
+1131,UIN card template,UIN card template,html,,"<!DOCTYPE html><html><head><meta charset='"utf-8'"><meta name='"viewport'" content='"width=device-width,initial-scale=1'"><style>@page{size:8.54cm 5.198cm;margin:0}@media print{body,html{width:8.54cm;height:5.198cm}}body{margin:0;padding:0;font-size:7pt;color:#000}table{background-color:#fff;border:none;overflow:hidden;border:1px solid rgba(0,0,0,.165);border-radius:6px;-moz-border-radius:6px}tr{background-color:#fff;margin:auto;border:0;overflow:hidden;border-radius:2px;height:.3cm}td{background-color:#fff;margin:auto;padding:0;overflow:hidden;text-overflow:clip;width:1cm}</style></head><body><div style='"width:8.54cm;height:5.198cm;margin:auto'"><table class='"id-front'" style='"width:8.54cm;height:5.198cm;table-layout:fixed'"><tr style='"height:0'"><td></td><td></td><td style='"width:1.4cm'"></td><td style='"width:.8cm'"></td><td style='"width:.8cm'"></td><td style='"width:1.5cm'"></td><td></td><td style='"width:.8cm'"></td></tr><tr><td style='"height:1cm'" rowspan='"2'"><img src='"$!flag'" style='"width:.8cm;height:.8cm;text-align:left'"></td><td style='"height:.5cm;text-align:center;font-size:10px'" colspan='"6'">የኢትዮጵያ ፌዴራላዊ ዲሞክራሲያዊ ሪፐብሊክ</td><td style='"height:1cm'" rowspan='"2'"><img src='"$!map'" style='"width:.8cm;height:.8cm;align-items:right'"></td></tr><tr><td style='"text-align:center;border-bottom:1px solid #ed7d31'" colspan='"6'">Federal Democratic Republic of Ethiopia</td></tr><tr style='"height:.15cm'"><td colspan='"8'"></td></tr><tr><td style='"border-right:solid #ed7d31 .05cm'" colspan='"1'">ስም</td><td colspan='"6'">$!fullName_amh</td></tr><tr><td style='"border-right:solid #ed7d31 .05cm'" colspan='"1'">Name</td><td colspan='"6'">$!fullName_eng</td></tr><tr style='"height:.15cm'"><td colspan='"8'"></td></tr><tr><td rowspan='"6'" colspan='"2'"><img style='"width:2.4cm;height:2.9cm'" src='"$!ApplicantPhoto'"></td><td style='"border-right:.05cm solid #ed7d31'">&nbsp;ፆታ</td><td colspan='"2'">$!gender_amh</td><td colspan='"1'" style='"border-right:.05cm solid #ed7d31'">የልደት ቀን</td><td colspan='"2'">$!dateOfBirth</td></tr><tr><td style='"border-right:.05cm solid #ed7d31'">&nbsp;Gender</td><td colspan='"2'">$!gender_eng</td><td colspan='"1'" style='"border-right:.05cm solid #ed7d31'">Date of Birth</td><td colspan='"2'">$!dateOfBirth</td></tr><tr style='"height:.15cm'"><td colspan='"6'"></td></tr><tr><td style='"border-right:.05cm solid #ed7d31'">&nbsp;ዜግነት</td><td colspan='"2'">$!residenceStatus_amh</td></tr><tr><td style='"border-right:.05cm solid #ed7d31'">&nbsp;Nationality</td><td colspan='"2'">$!residenceStatus_eng</td></tr><tr><td colspan='"2'"></td><td style='"font-size:12pt;text-align:right;padding-right:.3cm'" colspan='"4'"><b>$!UIN</b></td></tr></table></div><p style='"page-break-before:always'"></p><div style='"width:8.54cm;height:5.198cm;margin:auto'"><table class='"id-back'" style='"width:8.54cm;height:5.198cm;table-layout:fixed'"><tr style='"height:.5cm'"><td style='"width:1.2cm'"></td><td></td><td></td><td></td><td></td><td></td><td></td><td style='"width:1.2cm'"></td></tr><tr><td style='"border-right:1.5pt solid #ed7d31'">አድራሻ</td><td colspan='"7'">$!region_amh ፣ $!zone_amh ፣ $!woreda_amh</td></tr><tr><td style='"border-right:1.5pt solid #ed7d31'">Address</td><td colspan='"7'">$!region_eng, $!zone_eng, $!woreda_eng</td></tr><tr><td colspan='"2'"></td><td colspan='"4'" style='"vertical-align:middle;text-align:center'"><img style='"width:3.2cm;height:3.2cm'" src='"$!QrCode'"></td></tr></table></div></body></html>",10003,Registration Processor,RPR_UIN_CARD_TEMPLATE,eng,t,superadmin,2020-12-23 14:36:54.459577
+1141,Registration Acknowledgement Template - Part 4,Acknowledgement generated after registration - Part 4,txt,velocity,"<table ${BiometricsEnabled} class=biometricsTable><tr><td $biodata.get('"WithException'") ><p class=headings>$biodata.get('"ExceptionPhotoPrimLabel'") / $biodata.get('"ExceptionPhotoSecLabel'")</p></td><td $biodata.get('"FaceCaptureEnabled'") ><p class=headings>$biodata.get('"PhotoPrim'") / $biodata.get('"PhotoSec'")</p></td></tr><tr><td $biodata.get('"WithException'") ><img src=$biodata.get('"ExceptionImageSource'") border=0 width=80 height=80/></td><td $biodata.get('"FaceCaptureEnabled'") ><img src=$biodata.get('"FaceImageSource'") border=0 width=100 height=100/></td></tr></table></table><br/>#end<br/><div ${Preview}><p class=head><b>${Consent}</b></p><div class=consent-block id=radioId><div class=consent-text>${ConsentData}</div><input type=radio name=consent id=consent-yes value=yes ${SelectedYes} onchange=changeColour(this)><label for=consent-yes>${Yes}</label> &nbsp;&nbsp;&nbsp;<input type=radio name=consent id=consent-no value=no ${SelectedNo} onchange=changeColour(this)><label for=consent-no>${No}</label></div></div><table class=dataTable><tr><td ${ROImage}><img src=${ROImageSource} border=0 width=80 height=80/></td><td><p class=headings>${RONamePrimLabel} / ${RONameSecLabel}</p><br/>${ROName}<br/>${RONameSec}</td><td><p class=headings>${RegCenterPrimLabel} / ${RegCenterSecLabel}</p><br/>${RegCenter}<br/>${RegCenterSec}</td></tr></table><hr/><br/></div></div></body></html>	",10005,Registration,reg-ack-template-part4,eng,t,superadmin,2020-12-23 14:36:54.459577
