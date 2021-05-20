@@ -74,9 +74,10 @@ public class OfflinePacketCryptoServiceImpl implements IPacketCryptoService {
     private boolean isPrependThumbprintEnabled;
 
     @Override
-    public byte[] sign(byte[] packet) {        
+    public byte[] sign(byte[] packet) {
+        String packetData = new String(packet, StandardCharsets.UTF_8);
         TpmSignRequestDto signRequest = new TpmSignRequestDto();
-        signRequest.setData(CryptoUtil.encodeBase64String(packet));
+        signRequest.setData(packetData);
         return getTpmCryptoService().csSign(signRequest).getData().getBytes(StandardCharsets.UTF_8);
     }
 

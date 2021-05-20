@@ -103,7 +103,7 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
         try {
             
         	TpmSignRequestDto dto = new TpmSignRequestDto();
-            dto.setData(CryptoUtil.encodeBase64String(packet));
+            dto.setData(new String(packet, StandardCharsets.UTF_8));
             RequestWrapper<TpmSignRequestDto> request = new RequestWrapper<>();
             request.setRequest(dto);
             request.setMetadata(null);
@@ -302,7 +302,7 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
        try {
     	   	String publicKey=getPublicKey(machineId);
             TpmSignVerifyRequestDto dto = new TpmSignVerifyRequestDto();
-            dto.setData(CryptoUtil.encodeBase64String(packet));
+            dto.setData(new String(packet, StandardCharsets.UTF_8));
             dto.setSignature(new String(signature, StandardCharsets.UTF_8));
             dto.setPublicKey(publicKey);
             dto.setTpm(false);
