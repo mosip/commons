@@ -42,6 +42,7 @@ import io.mosip.kernel.core.util.exception.JsonMappingException;
 import io.mosip.kernel.core.util.exception.JsonParseException;
 import io.mosip.kernel.keymanagerservice.constant.KeymanagerConstant;
 import io.mosip.kernel.keymanagerservice.constant.KeymanagerErrorConstant;
+import io.mosip.kernel.keymanagerservice.dto.KeyPairGenerateResponseDto;
 import io.mosip.kernel.keymanagerservice.dto.PublicKeyResponse;
 import io.mosip.kernel.keymanagerservice.dto.SignatureCertificate;
 import io.mosip.kernel.keymanagerservice.exception.KeymanagerServiceException;
@@ -328,12 +329,12 @@ public class SignatureServiceImpl implements SignatureService {
 			return keymanagerUtil.convertToCertificate(reqCertData);
 		
 		// 3rd precedence to consider certificate to use in signature verification. (based on AppId & RefId)
-		String timestamp = DateUtils.getUTCCurrentDateTimeString();
-		SignatureCertificate certificateResponse = keymanagerService.getSignatureCertificate(applicationId,
-				Optional.of(referenceId), timestamp);
-		return certificateResponse.getCertificateEntry().getChain()[0];
+		KeyPairGenerateResponseDto certificateResponse = keymanagerService.getCertificate(applicationId,
+				Optional.of(referenceId));
+		return keymanagerUtil.convertToCertificate(certificateResponse.getCertificate());
 	}
 	
+	@SuppressWarnings("unchecked")
 	private Certificate certificateExistsInHeader(String jwtHeader) {
 		String jwtTokenHeader = new String(CryptoUtil.decodeBase64(jwtHeader));
 		Map<String, Object> jwtTokenHeadersMap = null;

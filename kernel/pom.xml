@@ -143,6 +143,7 @@
 		<module>kernel-pinvalidator</module>
 		<module>kernel-keygenerator-bouncycastle</module>
 		<module>kernel-crypto-jce</module>
+		<module>kernel-crypto-signature</module>
 		<module>kernel-templatemanager-velocity</module>
 		<module>kernel-pdfgenerator-itext</module>
 		<module>kernel-datamapper-orika</module>
@@ -150,7 +151,6 @@
 		<module>kernel-cbeffutil-api</module>
 		<module>kernel-transliteration-icu4j</module>
 		<module>kernel-applicanttype-api</module>
-		<module>kernel-crypto-signature</module>
 		<module>kernel-idobjectvalidator</module>
 		<module>kernel-bioapi-provider</module>
 		<module>kernel-registration-packet-manager</module>
@@ -169,6 +169,7 @@
 		<module>kernel-biosdk-provider</module>
 		<module>object-store</module>
 		<module>keys-generator</module>
+		<module>keys-migrator</module>
 	</modules>
 
 	

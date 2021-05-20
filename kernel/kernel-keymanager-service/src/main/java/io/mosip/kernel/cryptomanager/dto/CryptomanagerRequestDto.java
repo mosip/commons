@@ -75,6 +75,7 @@ public class CryptomanagerRequestDto {
 	* flag to prepend certificate thumbprint, default to true. 
 	*/
 	@ApiModelProperty(notes = "flag to prepend certificate thumbprint to encrypted data.", example = "false", required = false)
+	@Deprecated
 	private Boolean prependThumbprint;
 
 	@Override

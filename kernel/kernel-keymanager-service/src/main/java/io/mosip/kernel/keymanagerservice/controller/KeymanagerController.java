@@ -58,7 +58,7 @@ public class KeymanagerController {
 	@ResponseFilter
 	@PostMapping(value = "/generateMasterKey/{objectType}")
 	public ResponseWrapper<KeyPairGenerateResponseDto> generateMasterKey(
-			@ApiParam("Response Type Certificate/CSR") @PathVariable("objectType") String objectType,
+			@ApiParam("Response Type CERTIFICATE/CSR") @PathVariable("objectType") String objectType,
 			@RequestBody @Valid RequestWrapper<KeyPairGenerateRequestDto> keyPairGenRequestDto) {
 
 		ResponseWrapper<KeyPairGenerateResponseDto> response = new ResponseWrapper<>();
