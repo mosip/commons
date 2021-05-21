@@ -119,10 +119,6 @@ public class AuthServiceImpl implements AuthService {
 	@Autowired
 	ObjectMapper objectmapper;
 
-	@Qualifier("keycloakRestTemplate")
-	@Autowired
-	private RestTemplate restTemplate;
-
 	@Value("${mosip.iam.open-id-url}")
 	private String openIdUrl;
 
@@ -421,7 +417,7 @@ public class AuthServiceImpl implements AuthService {
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(tokenRequestBody, headers);
 		ResponseEntity<AccessTokenResponse> response = null;
 		try {
-			response = restTemplate.postForEntity(uriComponentsBuilder.buildAndExpand(pathParams).toUriString(),
+			response = authrestTemplate.postForEntity(uriComponentsBuilder.buildAndExpand(pathParams).toUriString(),
 					request, AccessTokenResponse.class);
 		} catch (HttpServerErrorException | HttpClientErrorException ex) {
 			LOGGER.error("refresh token based authentication " + uriComponentsBuilder.toUriString() + " realm "+ realmId + " client id " + refreshTokenRequest.getClientID() + " failed with error ");
@@ -572,7 +568,7 @@ public class AuthServiceImpl implements AuthService {
 
 		HttpEntity<String> httpRequest = new HttpEntity<>(headers);
 		try {
-			response = restTemplate.exchange(uriComponentsBuilder.buildAndExpand(pathparams).toUriString(),
+			response = authrestTemplate.exchange(uriComponentsBuilder.buildAndExpand(pathparams).toUriString(),
 					HttpMethod.GET, httpRequest, String.class);
 		} catch (HttpClientErrorException | HttpServerErrorException e) {
 			LOGGER.error("Token validation failed for accessToken {}", accessToken);
@@ -619,7 +615,7 @@ public class AuthServiceImpl implements AuthService {
 		
 		LOGGER.info("logout user {} uri: {}",token, uriComponentsBuilder.toUriString() );
 		try {
-			response = restTemplate.getForEntity(uriComponentsBuilder.buildAndExpand(pathparams).toUriString(),
+			response = authrestTemplate.getForEntity(uriComponentsBuilder.buildAndExpand(pathparams).toUriString(),
 					String.class);
 			
 		} catch (HttpClientErrorException | HttpServerErrorException e) {
@@ -686,7 +682,7 @@ public class AuthServiceImpl implements AuthService {
 		HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
 		ResponseEntity<String> responseEntity = null;
 		try {
-			responseEntity = restTemplate.exchange(uriBuilder.buildAndExpand(pathParam).toUriString(), HttpMethod.POST,
+			responseEntity = authrestTemplate.exchange(uriBuilder.buildAndExpand(pathParam).toUriString(), HttpMethod.POST,
 					entity, String.class);
 
 		} catch (HttpClientErrorException | HttpServerErrorException e) {
