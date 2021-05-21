@@ -221,7 +221,7 @@
 		<kernel.dataaccess-hibernate.version>1.2.0-SNAPSHOT</kernel.dataaccess-hibernate.version>
 		<kernel.logger.version>1.2.0-SNAPSHOT</kernel.logger.version>
 		<kernel.idvalidator-prid.version>1.2.0-SNAPSHOT</kernel.idvalidator-prid.version>
-		<kernel.crypto-jce.version>1.2.0-SNAPSHOT</kernel.crypto-jce.version>
+		<kernel-keymanager-service.version>1.2.0-SNAPSHOT</kernel-keymanager-service.version>
 	</properties>
 	<artifactId>kernel-idgenerator-prid</artifactId>
 	<version>1.2.0-SNAPSHOT</version>
@@ -254,8 +254,21 @@
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-crypto-jce</artifactId>
-			<version>${kernel.crypto-jce.version}</version>
+			<artifactId>kernel-keymanager-service</artifactId>
+			<version>${kernel-keymanager-service.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>
+						spring-boot-starter-security
+					</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework.security</groupId>
+					<artifactId>spring-security-test</artifactId>
+				</exclusion>
+			</exclusions>
+			<classifier>lib</classifier>
 		</dependency>
 	</dependencies>
 	

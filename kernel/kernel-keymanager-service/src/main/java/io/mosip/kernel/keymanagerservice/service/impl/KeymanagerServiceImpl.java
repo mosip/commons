@@ -33,7 +33,6 @@ import io.mosip.kernel.core.crypto.exception.NullKeyException;
 import io.mosip.kernel.core.crypto.exception.NullMethodException;
 import io.mosip.kernel.core.crypto.spi.CryptoCoreSpec;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
-import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.keymanager.exception.KeystoreProcessingException;
 import io.mosip.kernel.core.keymanager.exception.NoSuchSecurityProviderException;
 import io.mosip.kernel.core.keymanager.model.CertificateEntry;
@@ -53,6 +52,8 @@ import io.mosip.kernel.keymanagerservice.dto.CertificateInfo;
 import io.mosip.kernel.keymanagerservice.dto.KeyPairGenerateRequestDto;
 import io.mosip.kernel.keymanagerservice.dto.KeyPairGenerateResponseDto;
 import io.mosip.kernel.keymanagerservice.dto.PublicKeyResponse;
+import io.mosip.kernel.keymanagerservice.dto.RevokeKeyRequestDto;
+import io.mosip.kernel.keymanagerservice.dto.RevokeKeyResponseDto;
 import io.mosip.kernel.keymanagerservice.dto.SignatureCertificate;
 import io.mosip.kernel.keymanagerservice.dto.SymmetricKeyGenerateRequestDto;
 import io.mosip.kernel.keymanagerservice.dto.SymmetricKeyGenerateResponseDto;
@@ -772,7 +773,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 
 		String applicationId = request.getApplicationId();
 		String refId = request.getReferenceId() == null ? KeymanagerConstant.EMPTY : request.getReferenceId();
-		Boolean forceFlag = request.getForce();
+		Boolean forceFlag = request.getForce() == null ? Boolean.FALSE : request.getForce();
 		
 		Optional<KeyPolicy> keyPolicy = dbHelper.getKeyPolicy(applicationId);
 		// Need to check with Team whether we need to check this condition..
@@ -982,7 +983,8 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 		responseDto.setExpiryAt(expiryDateTime);
 		responseDto.setIssuedAt(generationDateTime);
 		responseDto.setTimestamp(localDateTimeStamp);
-		if (refId.isPresent() || !refId.get().trim().isEmpty()) {
+		if ((refId.isPresent() || !refId.get().trim().isEmpty()) && (!appId.equalsIgnoreCase(signApplicationid) && 
+					!refId.get().equals(certificateSignRefID))) {
 			keymanagerUtil.destoryKey(signPrivateKey);
 		}
 		return responseDto;
@@ -1245,6 +1247,55 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 	private SymmetricKeyGenerateResponseDto buildSymGenKeyRespObject(LocalDateTime timestamp, String status){
 		SymmetricKeyGenerateResponseDto responseDto = new SymmetricKeyGenerateResponseDto();
 		responseDto.setStatus(status);
+		responseDto.setTimestamp(timestamp);
+		return responseDto;
+	}
+
+	@Override
+	public RevokeKeyResponseDto revokeKey(RevokeKeyRequestDto revokeKeyRequest) {
+
+		String appId = revokeKeyRequest.getApplicationId();
+		String refId = revokeKeyRequest.getReferenceId();
+		// Disable Auto Generation of functionality not implemented yet.
+		Boolean disableAutoGen = revokeKeyRequest.getDisableAutoGen() == null ? Boolean.FALSE : revokeKeyRequest.getDisableAutoGen();
+
+		LOGGER.info(KeymanagerConstant.SESSIONID, appId, refId,	KeymanagerConstant.REQ_REV_KEY);
+		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, appId,
+						KeymanagerConstant.REQ_REV_KEY + disableAutoGen);
+
+		if (!keymanagerUtil.isValidReferenceId(refId) ||
+						!keymanagerUtil.isValidApplicationId(appId)) {
+			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, null,
+					"Invalid Data provided to revoke key.");
+			throw new KeymanagerServiceException(KeymanagerErrorConstant.INVALID_REQUEST.getErrorCode(),
+					KeymanagerErrorConstant.INVALID_REQUEST.getErrorMessage());
+		}
+
+		if (appId.equalsIgnoreCase(signApplicationid) && refId.equalsIgnoreCase(certificateSignRefID)) {
+			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, null,
+					"Not allowed to revoke key. AppId: KERNEL & RefId: SIGN.");
+			throw new KeymanagerServiceException(KeymanagerErrorConstant.REVOKE_NOT_ALLOWED.getErrorCode(),
+					KeymanagerErrorConstant.REVOKE_NOT_ALLOWED.getErrorMessage());
+		}
+
+		LocalDateTime timestamp = DateUtils.getUTCCurrentDateTime();
+		Map<String, List<KeyAlias>> keyAliasMap = dbHelper.getKeyAliases(appId, refId, timestamp);
+		List<KeyAlias> currentKeyAlias = keyAliasMap.get(KeymanagerConstant.CURRENTKEYALIAS);
+
+		if (currentKeyAlias.isEmpty() || currentKeyAlias.size() > 1) {
+			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.CURRENTKEYALIAS,
+					String.valueOf(currentKeyAlias.size()), "CurrentKeyAlias size more than one");
+			throw new NoUniqueAliasException(KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorCode(),
+					KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorMessage());
+		}
+
+		LOGGER.debug(KeymanagerConstant.SESSIONID, appId, refId, "Invalidating the current valid key.");
+		
+		LocalDateTime expireTime = timestamp.minusMinutes(1L);
+		KeyAlias currentAlias = currentKeyAlias.get(0);
+		dbHelper.storeKeyInAlias(appId, currentAlias.getKeyGenerationTime(), refId, currentAlias.getAlias(), expireTime);
+		RevokeKeyResponseDto responseDto = new RevokeKeyResponseDto();
+		responseDto.setStatus(KeymanagerConstant.KEY_REVOKED);
 		responseDto.setTimestamp(timestamp);
 		return responseDto;
 	}

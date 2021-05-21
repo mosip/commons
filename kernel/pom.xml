@@ -141,9 +141,6 @@
 		<module>kernel-idvalidator-vid</module>
 		<module>kernel-idvalidator-mispid</module>
 		<module>kernel-pinvalidator</module>
-		<module>kernel-keygenerator-bouncycastle</module>
-		<module>kernel-crypto-jce</module>
-		<module>kernel-crypto-signature</module>
 		<module>kernel-templatemanager-velocity</module>
 		<module>kernel-pdfgenerator-itext</module>
 		<module>kernel-datamapper-orika</module>
@@ -153,7 +150,6 @@
 		<module>kernel-applicanttype-api</module>
 		<module>kernel-idobjectvalidator</module>
 		<module>kernel-bioapi-provider</module>
-		<module>kernel-registration-packet-manager</module>
 		<module>kernel-authcodeflowproxy-api</module>
 		<module>kernel-websubclient-api</module>
 		<module>kernel-auditmanager-service</module>
