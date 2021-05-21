@@ -9,7 +9,7 @@
     <name>commons-packet-manager</name>
     <description>Mosip commons project </description>
     <url>https://github.com/mosip/commons</url>
-    <version>1.1.5.2</version>
+    <version>1.1.5.3</version>
  <properties>
         <!-- maven -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

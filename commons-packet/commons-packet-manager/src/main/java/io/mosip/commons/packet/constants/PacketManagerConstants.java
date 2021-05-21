@@ -92,6 +92,8 @@ public class PacketManagerConstants {
 	public static final String RESPONSE = "response";
 
 	public static final String META_INFO_OPERATIONS_DATA = "operationsData";
+	public static final String METAINFO = "metaInfo";
+	public static final String AUDITS = "audits";
 
 	public static final String OFFICER_BIOMETRIC = "officerBiometricFileName";
 	public static final String SUPERVISOR_BIOMETRIC = "supervisorBiometricFileName";
