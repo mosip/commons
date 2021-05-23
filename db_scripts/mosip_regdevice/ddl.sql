@@ -1,4 +1,4 @@
-\c mosip_regdevice sysadmin
+\c mosip_regdevice
 
 \ir ddl/regdevice-device_detail.sql
 \ir ddl/regdevice-ftp_chip_detail.sql
@@ -9,6 +9,4 @@
 \ir ddl/regdevice-secure_biometric_interface.sql
 \ir ddl/regdevice-secure_biometric_interface_h.sql
 \ir ddl/regdevice-foundational_trust_provider.sql
-
-
 \ir ddl/regdevice-fk.sql

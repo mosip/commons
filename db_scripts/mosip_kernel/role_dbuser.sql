@@ -1,4 +1,3 @@
-DROP ROLE IF EXISTS kerneluser;
 CREATE ROLE kerneluser WITH 
 	INHERIT
 	LOGIN

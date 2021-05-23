@@ -1,17 +1,9 @@
-\c mosip_regdevice sysadmin
+\c mosip_regdevice 
 
-\set CSVDataPath '\'/home/dbadmin/mosip_regdevice/dml'
-
--------------- Level 1 data load scripts ------------------------
-
------ TRUNCATE regdevice.reg_device_type TABLE Data and It's reference Data and COPY Data from CSV file -----
 TRUNCATE TABLE regdevice.reg_device_type cascade ;
 
 \COPY regdevice.reg_device_type (code,name,descr,is_active,cr_by,cr_dtimes) FROM './dml/regdevice-reg_device_type.csv' delimiter ',' HEADER  csv;
 
--------------- Level 2 data load scripts ------------------------
-
------ TRUNCATE regdevice.reg_device_sub_type TABLE Data and It's reference Data and COPY Data from CSV file -----
 TRUNCATE TABLE regdevice.reg_device_sub_type cascade ;
 
 \COPY regdevice.reg_device_sub_type (code,dtyp_code,name,descr,is_active,cr_by,cr_dtimes) FROM './dml/regdevice-reg_device_sub_type.csv' delimiter ',' HEADER  csv;

@@ -1,4 +1,4 @@
-\c mosip_authdevice sysadmin
+\c mosip_authdevice 
 
 \ir ddl/authdevice-device_detail.sql
 \ir ddl/authdevice-ftp_chip_detail.sql
@@ -9,6 +9,4 @@
 \ir ddl/authdevice-secure_biometric_interface.sql
 \ir ddl/authdevice-secure_biometric_interface_h.sql
 \ir ddl/authdevice-foundational_trust_provider.sql
-
-
 \ir ddl/authdevice-fk.sql
