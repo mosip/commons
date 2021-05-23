@@ -1,4 +1,4 @@
-\c mosip_kernel sysadmin
+\c mosip_kernel 
 
 \ir ddl/kernel-otp_transaction.sql
 \ir ddl/kernel-uin.sql

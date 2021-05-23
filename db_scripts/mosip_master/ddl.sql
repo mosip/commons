@@ -1,4 +1,4 @@
-\c mosip_master sysadmin
+\c mosip_master 
 
 \ir ddl/master-admin_param.sql
 \ir ddl/master-appl_form_type.sql
