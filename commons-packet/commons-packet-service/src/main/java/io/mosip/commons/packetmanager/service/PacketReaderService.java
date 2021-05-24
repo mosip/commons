@@ -171,7 +171,7 @@ public class PacketReaderService {
                     InfoResponseDto infoResponseDto = info(id);
                     ContainerInfoDto containerInfoDto = findPriority(field, process, infoResponseDto);
                     if (containerInfoDto == null)
-                        throw new SourceNotPresentException();
+                        return null;
                     sourceProcessDto = new SourceProcessDto(containerInfoDto.getSource(), containerInfoDto.getProcess());
                 }
             } catch (Exception e) {

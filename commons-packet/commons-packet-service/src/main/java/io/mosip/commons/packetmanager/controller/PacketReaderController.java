@@ -49,7 +49,8 @@ public class PacketReaderController {
         public ResponseWrapper<FieldResponseDto> searchField(@RequestBody(required = true) RequestWrapper<FieldDto> fieldDto) {
         SourceProcessDto sourceProcessDto = packetReaderService.getSourceAndProcess(fieldDto.getRequest().getId(),
                 fieldDto.getRequest().getField(), fieldDto.getRequest().getSource(), fieldDto.getRequest().getProcess());
-        String resultField = packetReader.getField(fieldDto.getRequest().getId(),
+        String resultField = sourceProcessDto == null ? null :
+                packetReader.getField(fieldDto.getRequest().getId(),
                 fieldDto.getRequest().getField(), sourceProcessDto.getSource(), sourceProcessDto.getProcess(), fieldDto.getRequest().getBypassCache());
         ResponseWrapper<FieldResponseDto> response = new ResponseWrapper<FieldResponseDto>();
         Map<String, String> responseMap = new HashMap<>();
@@ -70,7 +71,8 @@ public class PacketReaderController {
             for (String field : fieldDtos.getFields()) {
                 SourceProcessDto sourceProcessDto = packetReaderService.getSourceAndProcess(fieldDtos.getId(),
                         field, fieldDtos.getSource(), fieldDtos.getProcess());
-                String value = packetReader.getField(fieldDtos.getId(), field, sourceProcessDto.getSource(),
+                String value = sourceProcessDto == null ? null :
+                        packetReader.getField(fieldDtos.getId(), field, sourceProcessDto.getSource(),
                         sourceProcessDto.getProcess(), fieldDtos.getBypassCache());
                 resultFields.put(field, value);
             }
@@ -89,7 +91,8 @@ public class PacketReaderController {
         DocumentDto documentDto = request.getRequest();
         SourceProcessDto sourceProcessDto = packetReaderService.getSourceAndProcess(documentDto.getId(),
                 documentDto.getDocumentName(), documentDto.getSource(), documentDto.getProcess());
-        Document document = packetReader.getDocument(documentDto.getId(), documentDto.getDocumentName(),
+        Document document = sourceProcessDto == null ? null :
+                packetReader.getDocument(documentDto.getId(), documentDto.getDocumentName(),
                 sourceProcessDto.getSource(), sourceProcessDto.getProcess());
         ResponseWrapper<Document> response = new ResponseWrapper<Document>();
         response.setResponse(document);
@@ -104,7 +107,8 @@ public class PacketReaderController {
         SourceProcessDto sourceProcessDto = packetReaderService.getSourceAndProcess(bioRequest.getId(),
                 bioRequest.getPerson(), bioRequest.getSource(), bioRequest.getProcess());
         List<String> modalities = bioRequest.getModalities() == null ? Lists.newArrayList() : bioRequest.getModalities();
-        BiometricRecord responseDto = packetReader.getBiometric(bioRequest.getId(), bioRequest.getPerson(), modalities,
+        BiometricRecord responseDto = sourceProcessDto == null ? null :
+                packetReader.getBiometric(bioRequest.getId(), bioRequest.getPerson(), modalities,
                 sourceProcessDto.getSource(), sourceProcessDto.getProcess(), bioRequest.isBypassCache());
         ResponseWrapper<BiometricRecord> response = getResponseWrapper();
         response.setResponse(responseDto);
