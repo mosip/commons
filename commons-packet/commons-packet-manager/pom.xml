@@ -69,7 +69,7 @@
             <artifactId>kernel-core</artifactId>
             <version>${kernel.core.version}</version>
         </dependency>
-        <!-- added for testing. Will be removed later  -->
+        <!-- added for health check. Should be removed Later.  -->
         <dependency>
             <groupId>com.hazelcast</groupId>
             <artifactId>hazelcast-all</artifactId>
