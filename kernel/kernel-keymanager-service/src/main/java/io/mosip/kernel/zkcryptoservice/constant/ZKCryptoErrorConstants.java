@@ -4,7 +4,7 @@ package io.mosip.kernel.zkcryptoservice.constant;
  * This ENUM provides all the constant identified for ZKCryptoManager errors.
  * 
  * @author Mahammed Taheer
- * @version 1.1.5.2
+ * @version 1.1.5.3
  *
  */
 public enum ZKCryptoErrorConstants {

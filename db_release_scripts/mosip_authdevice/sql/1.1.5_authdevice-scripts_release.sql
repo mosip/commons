@@ -1,6 +1,6 @@
 -- -------------------------------------------------------------------------------------------------
 -- Database Name	: mosip_authdevice
--- Release Version 	: 1.1.5.2
+-- Release Version 	: 1.1.5.3
 -- Purpose    		: Database Alter scripts for the release for Authdevice DB.       
 -- Create By   		: Ram Bhatt
 -- Created Date		: Jan-2021
