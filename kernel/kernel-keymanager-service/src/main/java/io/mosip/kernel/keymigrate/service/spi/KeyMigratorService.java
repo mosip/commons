@@ -1,7 +1,5 @@
 package io.mosip.kernel.keymigrate.service.spi;
 
-import org.springframework.stereotype.Service;
-
 import io.mosip.kernel.keymigrate.dto.KeyMigrateBaseKeyRequestDto;
 import io.mosip.kernel.keymigrate.dto.KeyMigrateBaseKeyResponseDto;
 import io.mosip.kernel.keymigrate.dto.ZKKeyMigrateCertficateResponseDto;
@@ -13,9 +11,8 @@ import io.mosip.kernel.keymigrate.dto.ZKKeyMigrateResponseDto;
  *  destination HSM.
  *
  * @author Mahammed Taheer
- * @since 1.1.5
+ * @since 1.1.6
  */
-@Service
 public interface KeyMigratorService {
 
     /**

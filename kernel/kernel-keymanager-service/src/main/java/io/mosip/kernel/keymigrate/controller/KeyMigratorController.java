@@ -3,6 +3,7 @@ package io.mosip.kernel.keymigrate.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,7 @@ import io.swagger.annotations.ApiParam;
  * @since 1.1.6
  */
 
+@Lazy
 @CrossOrigin
 @RestController
 @Api(value = "Operation related to Key Migration from one HSM to another HSM.", tags = { "keymigrator" })
