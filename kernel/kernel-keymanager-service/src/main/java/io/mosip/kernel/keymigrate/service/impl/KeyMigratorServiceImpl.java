@@ -23,6 +23,7 @@ import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,6 +61,7 @@ import io.mosip.kernel.keymanagerservice.repository.DataEncryptKeystoreRepositor
  *
  * @since 1.1.6
  */
+@Lazy
 @Service
 @Transactional
 public class KeyMigratorServiceImpl implements KeyMigratorService {
