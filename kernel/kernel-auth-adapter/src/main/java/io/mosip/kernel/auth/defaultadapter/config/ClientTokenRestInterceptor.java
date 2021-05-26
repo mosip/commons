@@ -1,5 +1,6 @@
 package io.mosip.kernel.auth.defaultadapter.config;
 
+
 import java.io.IOException;
 import java.util.List;
 
@@ -30,6 +31,7 @@ import io.mosip.kernel.core.authmanager.model.ClientSecret;
 import io.mosip.kernel.core.authmanager.model.MosipUserDto;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
+import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
 
 /** This class intercepts and renew client token.
@@ -84,13 +86,15 @@ public class ClientTokenRestInterceptor implements ClientHttpRequestInterceptor 
 	}
 
 	private String getClientToken(String clientID, String clienSecret, String appID) {
+		RequestWrapper<ClientSecret> requestWrapper = new RequestWrapper<>();
 		ClientSecret clientCred = new ClientSecret();
 		clientCred.setAppId(appID);
 		clientCred.setClientId(clientID);
 		clientCred.setSecretKey(clienSecret);
+		requestWrapper.setRequest(clientCred);
 		HttpEntity<String> response = null;
 		try {
-			response = restTemplate.postForEntity(tokenURL, clientCred, String.class);
+			response = restTemplate.postForEntity(tokenURL, requestWrapper, String.class);
 		} catch (HttpServerErrorException | HttpClientErrorException e) {
 			LOGGER.error("error connecting to auth service {}", e.getResponseBodyAsString());
 			throw new AuthAdapterException(AuthAdapterErrorCode.CANNOT_CONNECT_TO_AUTH_SERVICE.getErrorCode(),
@@ -105,18 +109,15 @@ public class ClientTokenRestInterceptor implements ClientHttpRequestInterceptor 
 		if (!validationErrorList.isEmpty()) {
 			throw new AuthRestException(validationErrorList);
 		}
-		ResponseWrapper<?> responseObject;
-		MosipUserDto mosipUserDto;
-		try {
-			responseObject = objectMapper.readValue(response.getBody(), ResponseWrapper.class);
-			mosipUserDto = objectMapper.readValue(objectMapper.writeValueAsString(responseObject.getResponse()),
-					MosipUserDto.class);
-		} catch (IOException e) {
+		HttpHeaders headers = response.getHeaders();
+		List<String> cookies = headers.get("Set-Cookie");
+		if(cookies==null|| cookies.isEmpty())
 			throw new AuthAdapterException(AuthAdapterErrorCode.IO_EXCEPTION.getErrorCode(),
 					AuthAdapterErrorCode.IO_EXCEPTION.getErrorMessage());
-		}
+		
+		String authToken = cookies.get(0).split(";")[0].split(AuthAdapterConstant.AUTH_HEADER)[1];
 
-		return mosipUserDto.getToken();
+		return authToken;
 	}
 
 	private boolean isTokenValid(String authToken) {
