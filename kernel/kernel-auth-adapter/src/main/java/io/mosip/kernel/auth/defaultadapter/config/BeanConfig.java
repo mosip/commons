@@ -34,6 +34,9 @@ public class BeanConfig {
 	
 	@Autowired
 	private Environment environment;
+	
+	@Autowired
+	private RestTemplateInterceptor defaultInterceptor;
 
 	@Value("${mosip.kernel.auth.adapter.ssl-bypass:true}")
 	private boolean sslBypass;
@@ -61,6 +64,13 @@ public class BeanConfig {
 		return restTemplate;
 	}
 	
+	// this is just used by client token interceptor to call to renew and validate token
+	private RestTemplate rt() {
+		RestTemplate template= new RestTemplate();
+		template.setInterceptors(Collections.singletonList(defaultInterceptor));
+		return template;
+	}
+	
 	@Bean
 	public RestTemplate clientTokenRestTemplate() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
 		HttpClientBuilder httpClientBuilder = HttpClients.custom().disableCookieManagement();
@@ -79,7 +89,7 @@ public class BeanConfig {
 		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
 		requestFactory.setHttpClient(httpClientBuilder.build());
 		restTemplate = new RestTemplate(requestFactory);
-		restTemplate.setInterceptors(Collections.singletonList(new ClientTokenRestInterceptor(environment)));
+		restTemplate.setInterceptors(Collections.singletonList(new ClientTokenRestInterceptor(environment,rt())));
 		//interceptor added in RestTemplatePostProcessor
 		return restTemplate;
 	}

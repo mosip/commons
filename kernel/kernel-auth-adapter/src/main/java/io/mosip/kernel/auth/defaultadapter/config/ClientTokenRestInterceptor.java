@@ -59,7 +59,7 @@ public class ClientTokenRestInterceptor implements ClientHttpRequestInterceptor 
 
 	private RestTemplate restTemplate;
 
-	public ClientTokenRestInterceptor(Environment environment) {
+	public ClientTokenRestInterceptor(Environment environment,RestTemplate restTemplate) {
 		clientID = environment.getProperty("mosip.iam.adapter.clientid", "");
 		clientSecret = environment.getProperty("mosip.iam.adapter.clientsecret", "");
 		appID = environment.getProperty("mosip.iam.adapter.appid", "");
@@ -67,7 +67,7 @@ public class ClientTokenRestInterceptor implements ClientHttpRequestInterceptor 
 				+ environment.getProperty("mosip.authmanager.token-endpoint", "");
 		validateTokenURL = environment.getProperty("auth.server.admin.validate.url", "");
 		memoryCache = new MemoryCache<>(1);
-		restTemplate = new RestTemplate();
+		this.restTemplate = restTemplate;
 	}
 
 	ObjectMapper objectMapper = new ObjectMapper();
