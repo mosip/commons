@@ -63,7 +63,7 @@ public class ClientTokenRestInterceptor implements ClientHttpRequestInterceptor 
 		appID = environment.getProperty("mosip.iam.adapter.appid", "");
 		tokenURL = environment.getProperty("mosip.authmanager.base-url", "")
 				+ environment.getProperty("mosip.authmanager.token-endpoint", "");
-		validateTokenURL = environment.getProperty("auth.server.validate.url", "");
+		validateTokenURL = environment.getProperty("auth.server.admin.validate.url", "");
 		memoryCache = new MemoryCache<>(1);
 		restTemplate = new RestTemplate();
 	}
@@ -73,7 +73,7 @@ public class ClientTokenRestInterceptor implements ClientHttpRequestInterceptor 
 	@Override
 	public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
 			throws IOException {
-		if (!isTokenValid(memoryCache.get(CLIENT_TOKEN_KEY))) {
+		if (memoryCache.get(CLIENT_TOKEN_KEY)==null || !isTokenValid(memoryCache.get(CLIENT_TOKEN_KEY))) {
 			String authToken = getClientToken(clientID, clientSecret, appID);
 			memoryCache.put(CLIENT_TOKEN_KEY, authToken);
 		}
