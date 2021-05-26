@@ -30,8 +30,8 @@ public class ClientCryptoFacade {
 
     //we are using 2048 bit RSA key
     private static final int ENC_SYM_KEY_LENGTH = 256;
-    private static final int IV_LENGTH = 16;
-    private static final int AAD_LENGTH = 12;
+    private static final int IV_LENGTH = 12;
+    private static final int AAD_LENGTH = 32;
     private static final Logger LOGGER = KeymanagerLogger.getLogger(ClientCryptoFacade.class);
     private static SecureRandom secureRandom = null;
     private static ClientCryptoService clientCryptoService = null;

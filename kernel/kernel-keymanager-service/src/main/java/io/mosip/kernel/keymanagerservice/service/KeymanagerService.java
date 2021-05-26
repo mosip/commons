@@ -6,6 +6,8 @@ import io.mosip.kernel.keymanagerservice.dto.CSRGenerateRequestDto;
 import io.mosip.kernel.keymanagerservice.dto.KeyPairGenerateRequestDto;
 import io.mosip.kernel.keymanagerservice.dto.KeyPairGenerateResponseDto;
 import io.mosip.kernel.keymanagerservice.dto.PublicKeyResponse;
+import io.mosip.kernel.keymanagerservice.dto.RevokeKeyRequestDto;
+import io.mosip.kernel.keymanagerservice.dto.RevokeKeyResponseDto;
 import io.mosip.kernel.keymanagerservice.dto.SignatureCertificate;
 import io.mosip.kernel.keymanagerservice.dto.SymmetricKeyGenerateRequestDto;
 import io.mosip.kernel.keymanagerservice.dto.SymmetricKeyGenerateResponseDto;
@@ -106,5 +108,13 @@ public interface KeymanagerService {
 	 */
 	//public UploadCertificateResponseDto isCertificateExists(UploadCertificateRequestDto uploadCertRequestDto);
 
+	/**
+	 * Key Revocation for the provided appId & refId.
+	 * 
+	 * @param RevokeKeyRequestDto revokeKeyRequestDto
+	 * @return {@link RevokeKeyResponseDto} instance
+	 */
+	public RevokeKeyResponseDto revokeKey(RevokeKeyRequestDto revokeKeyRequestDto);
+	
 }
 

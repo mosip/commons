@@ -4,7 +4,7 @@
 	
 	<artifactId>kernel-biosdk-provider</artifactId>
 	<groupId>io.mosip.kernel</groupId>
-	<version>1.1.7-SNAPSHOT</version>
+	<version>1.2.0-SNAPSHOT</version>
 	<name>kernel-biosdk-provider</name>
 	<description>Implementation of biosdk provider</description>
         <url>https://github.com/mosip/commons</url>
@@ -18,12 +18,12 @@
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<maven.compiler.version>3.8.0</maven.compiler.version>
-		<maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version>
+		<!-- <maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version> -->
 
 		<maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
 		<maven.war.plugin.version>3.1.0</maven.war.plugin.version>
-		<maven.jacoco.plugin.version>0.8.1</maven.jacoco.plugin.version>
-		<maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version>
+		<!-- <maven.jacoco.plugin.version>0.8.1</maven.jacoco.plugin.version> -->
+		<!-- <maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version> -->
 		<maven.javadoc.version>3.2.0</maven.javadoc.version>
 		<maven-shade-plugin.version>2.3</maven-shade-plugin.version>
 
@@ -117,8 +117,8 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.1.7-SNAPSHOT</kernel.core.version>
-		<kernel.biometricsdk.version>1.1.7-SNAPSHOT</kernel.biometricsdk.version>
+		<kernel.core.version>1.2.0-SNAPSHOT</kernel.core.version>
+		<kernel.biometricsdk.version>1.2.0-SNAPSHOT</kernel.biometricsdk.version>
 		<kernel.logger.logback.version>1.2.0-SNAPSHOT</kernel.logger.logback.version>
 	</properties>
 	

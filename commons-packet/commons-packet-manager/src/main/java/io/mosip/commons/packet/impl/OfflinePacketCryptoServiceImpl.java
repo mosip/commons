@@ -148,7 +148,7 @@ public class OfflinePacketCryptoServiceImpl implements IPacketCryptoService {
     }
 
     @Override
-    public boolean verify(byte[] packet, byte[] signature) {
+    public boolean verify(String MachineId,byte[] packet, byte[] signature) {
         String packetData = new String(packet, StandardCharsets.UTF_8);
         String signatureData = new String(signature, StandardCharsets.UTF_8);
         DateTimeFormatter format = DateTimeFormatter.ofPattern(DATETIME_PATTERN);

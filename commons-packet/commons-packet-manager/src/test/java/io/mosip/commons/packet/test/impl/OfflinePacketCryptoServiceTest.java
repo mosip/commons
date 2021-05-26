@@ -108,7 +108,7 @@ public class OfflinePacketCryptoServiceTest {
 
         Mockito.when(signatureService.validate(any())).thenReturn(responseDto);
 
-        boolean result = offlinePacketCryptoService.verify("packet".getBytes(), packetSignature.getBytes());
+        boolean result = offlinePacketCryptoService.verify("12345","packet".getBytes(), packetSignature.getBytes());
         assertTrue(result);
     }
 }
