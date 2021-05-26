@@ -4,6 +4,8 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+import java.util.Collection;
+import java.util.Collections;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -13,9 +15,11 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.client.RestTemplate;
@@ -27,6 +31,9 @@ import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 
 @Configuration
 public class BeanConfig {
+	
+	@Autowired
+	private Environment environment;
 
 	@Value("${mosip.kernel.auth.adapter.ssl-bypass:true}")
 	private boolean sslBypass;
@@ -49,9 +56,35 @@ public class BeanConfig {
 		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
 		requestFactory.setHttpClient(httpClientBuilder.build());
 		restTemplate = new RestTemplate(requestFactory);
+		restTemplate.setInterceptors(Collections.singletonList(new ContextTokenRestInterceptor()));
 		//interceptor added in RestTemplatePostProcessor
 		return restTemplate;
 	}
+	
+	@Bean
+	public RestTemplate clientTokenRestTemplate() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+		HttpClientBuilder httpClientBuilder = HttpClients.custom().disableCookieManagement();
+		RestTemplate restTemplate = null;
+		if (sslBypass) {
+			TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
+			SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom()
+					.loadTrustMaterial(null, acceptingTrustStrategy).build();
+			SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext, new HostnameVerifier() {
+				public boolean verify(String arg0, SSLSession arg1) {
+					return true;
+				}
+			});
+			httpClientBuilder.setSSLSocketFactory(csf);			
+		} 
+		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+		requestFactory.setHttpClient(httpClientBuilder.build());
+		restTemplate = new RestTemplate(requestFactory);
+		restTemplate.setInterceptors(Collections.singletonList(new ClientTokenRestInterceptor(environment)));
+		//interceptor added in RestTemplatePostProcessor
+		return restTemplate;
+	}
+	
+	
 
 	@Bean
 	public WebClient webClient() {
