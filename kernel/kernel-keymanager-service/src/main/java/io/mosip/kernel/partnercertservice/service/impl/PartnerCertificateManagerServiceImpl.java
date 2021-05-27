@@ -13,6 +13,7 @@ import java.security.cert.TrustAnchor;
 import java.security.cert.X509CertSelector;
 import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -75,6 +76,9 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
 
     @Value("${mosip.kernel.certificate.sign.algorithm:SHA256withRSA}")
     private String signAlgorithm;
+
+    @Value("${mosip.kernel.partner.issuer.certificate.duration.years:1}")
+    private int issuerCertDuration;
         
     /**
      * Utility to generate Metadata
@@ -343,8 +347,12 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
 
         X500Principal subjectPrincipal = reqX509Cert.getSubjectX500Principal();
         PublicKey partnerPublicKey = reqX509Cert.getPublicKey();
-        LocalDateTime notBeforeDate = DateUtils.parseDateToLocalDateTime(reqX509Cert.getNotBefore());
-        LocalDateTime notAfterDate = DateUtils.parseDateToLocalDateTime(reqX509Cert.getNotAfter());
+        
+        int noOfDays = PartnerCertManagerConstants.YEAR_DAYS * issuerCertDuration;
+        LOGGER.info(PartnerCertManagerConstants.SESSIONID, PartnerCertManagerConstants.UPLOAD_PARTNER_CERT, "Cert Duration",
+                "Calculated Signed Certficiate Number of Days for expire: " + noOfDays);
+        LocalDateTime notBeforeDate = DateUtils.getUTCCurrentDateTime(); 
+        LocalDateTime notAfterDate = notBeforeDate.plus(noOfDays, ChronoUnit.DAYS);
         CertificateParameters certParams = PartnerCertificateManagerUtil.getCertificateParameters(subjectPrincipal,
                 notBeforeDate, notAfterDate);
         return (X509Certificate) CertificateUtility.generateX509Certificate(signPrivateKey, partnerPublicKey, certParams,

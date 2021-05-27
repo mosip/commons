@@ -1,6 +1,6 @@
 -- -------------------------------------------------------------------------------------------------
 -- Database Name	: mosip_iam
--- Release Version 	: 1.1.5.2
+-- Release Version 	: 1.1.5.3
 -- Purpose    		: Revoking Database Alter deployement done for release in Iam DB.       
 -- Create By   		: Ram Bhatt
 -- Created Date		: Jan-2021
