@@ -11,6 +11,7 @@
 -- Apr-2021		Ram Bhatt	   Lang_code nullable, removed from pk constraints and multiple FK constraint changes	
 -- Apr-2021 		Ram Bhatt          Added new rows in template,template_type and module_detail csv
 -- Apr-2021 		Ram Bhatt  	   Creation of master.permitted_local_config
+-- May-2021		Ram Bhatt	   Changed Precision and size of version and identity_schema_version
 -- ------------------------------------------------------------------------------------------------------------
 --------------------------------------------UI SPEC TABLE CREATION-----------------------------------------------
 \c mosip_master sysadmin
@@ -129,6 +130,20 @@ ALTER TABLE master.reg_exceptional_holiday ADD CONSTRAINT fk_regeh_regcntr FOREI
 REFERENCES master.registration_center (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+
+ALTER TABLE master.device_master_h DROP CONSTRAINT IF EXISTS pk_devicem_h_id CASCADE;
+ALTER TABLE master.device_master_h ALTER COLUMN lang_code DROP NOT NULL;
+ALTER TABLE master.device_master_h ADD CONSTRAINT pk_devicem_h_id PRIMARY KEY (id,eff_dtimes);
+
+ALTER TABLE master.machine_master_h DROP CONSTRAINT IF EXISTS pk_machm_h_id CASCADE;
+ALTER TABLE master.machine_master_h ALTER COLUMN lang_code DROP NOT NULL;
+ALTER TABLE master.machine_master_h ADD CONSTRAINT pk_machm_h_id PRIMARY KEY (id,eff_dtimes);
+
+ALTER TABLE master.user_detail_h DROP CONSTRAINT IF EXISTS pk_usrdtl_h_id CASCADE;
+ALTER TABLE master.user_detail_h ALTER COLUMN lang_code DROP NOT NULL;
+ALTER TABLE master.user_detail_h ADD CONSTRAINT pk_usrdtl_h_id PRIMARY KEY (id,eff_dtimes);
+
+
 --------------------------------------------------------------DROP CONSTRAINTS-------------------------------------------
 
 ALTER TABLE master.dynamic_field DROP CONSTRAINT IF EXISTS uk_schfld_name;
@@ -244,3 +259,11 @@ TRUNCATE TABLE master.module_detail cascade ;
 \ir ../ddl/master-permitted_local_config.sql
 
 --------------------------------------------------------------------------------------------------------------------------------------------
+
+-----------------------------------------------	ALTER TABLE OF MASTER UI SPEC TABLE----------------------------------------------------------
+
+ALTER TABLE master.ui_spec ALTER COLUMN version TYPE numeric(5,3);
+ALTER TABLE master.ui_spec ALTER COLUMN identity_schema_version TYPE numeric(5,3);
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------

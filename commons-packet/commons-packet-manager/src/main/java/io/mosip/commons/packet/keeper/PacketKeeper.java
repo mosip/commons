@@ -66,6 +66,12 @@ public class PacketKeeper {
 
     @Value("${objectstore.crypto.name}")
     private String cryptoName;
+    
+    @Value("${mosip.kernel.registrationcenterid.length}")
+	private int centerIdLength;
+
+	@Value("${mosip.kernel.machineid.length}")
+	private int machineIdLength;
 
     @Autowired
     @Qualifier("OnlinePacketCryptoServiceImpl")
@@ -119,8 +125,8 @@ public class PacketKeeper {
      * @return
      */
     public boolean checkSignature(Packet packet, byte[] encryptedSubPacket) throws NoSuchAlgorithmException {
-        // TODO : disabling signature verification temporarily
-        boolean result = true;//getCryptoService().verify(packet.getPacket(), CryptoUtil.decodeBase64(packet.getPacketInfo().getSignature()));
+    	String machineId = packet.getPacketInfo().getId().substring(centerIdLength, centerIdLength+machineIdLength);
+        boolean result = getCryptoService().verify(machineId,packet.getPacket(), CryptoUtil.decodeBase64(packet.getPacketInfo().getSignature()));
         if (result)
             result = checkIntegrity(packet.getPacketInfo(), encryptedSubPacket);
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,

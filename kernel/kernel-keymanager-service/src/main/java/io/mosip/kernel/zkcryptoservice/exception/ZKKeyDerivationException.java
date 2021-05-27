@@ -26,4 +26,13 @@ public class ZKKeyDerivationException extends BaseUncheckedException {
 		super(errorCode, errorMessage);
 	}
 
+	/**
+	 * @param errorCode    The errorcode for this exception
+	 * @param errorMessage The error message for this exception
+	 * @param rootCause    cause of the error occoured
+	 */
+	public ZKKeyDerivationException(String errorCode, String errorMessage, Throwable rootCause) {
+		super(errorCode, errorMessage, rootCause);
+	}
+
 }

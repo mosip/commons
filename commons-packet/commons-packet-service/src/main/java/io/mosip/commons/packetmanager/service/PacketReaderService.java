@@ -99,7 +99,11 @@ public class PacketReaderService {
                         Map<String, List<String>> biomap = new HashMap<>();
                         for (BIR b : br.getSegments()) {
                             String key = b.getBdbInfo().getType().iterator().next().value();
-                            String subtype = b.getBdbInfo().getSubtype().stream().collect(Collectors.joining(" ")).strip();
+							String subtype = null;
+							if (b.getBdbInfo().getSubtype() != null) {
+								subtype = b.getBdbInfo().getSubtype().stream().collect(Collectors.joining(" ")).strip();
+							}
+
                             if (biomap.get(key) == null)
                                 biomap.put(key, StringUtils.isNotEmpty(subtype) ? Lists.newArrayList(subtype) : null);
                             else {
