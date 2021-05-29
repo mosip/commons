@@ -21,7 +21,7 @@ CREATE TABLE authdevice.reg_device_type(
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
 	upd_dtimes timestamp,
-	is_deleted boolean NOT NULL DEFAULT FALSE,
+	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
 	CONSTRAINT pk_rdtyp_code PRIMARY KEY (code)
 

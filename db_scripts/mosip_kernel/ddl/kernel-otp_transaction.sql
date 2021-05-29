@@ -27,7 +27,7 @@ CREATE TABLE kernel.otp_transaction(
 	cr_dtimes timestamp,
 	upd_by character varying(256),
 	upd_dtimes timestamp,
-	is_deleted boolean NOT NULL DEFAULT FALSE,
+	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
 	CONSTRAINT pk_otptrn_id PRIMARY KEY (id)
 

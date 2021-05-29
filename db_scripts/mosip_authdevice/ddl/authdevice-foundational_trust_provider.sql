@@ -19,7 +19,7 @@ CREATE TABLE authdevice.foundational_trust_provider(
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
 	upd_dtimes timestamp,
-	is_deleted boolean NOT NULL DEFAULT FALSE,
+	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
 	CONSTRAINT pk_ftp_id PRIMARY KEY (id)
 
