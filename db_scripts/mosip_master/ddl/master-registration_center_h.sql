@@ -41,7 +41,7 @@ CREATE TABLE master.registration_center_h(
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
 	upd_dtimes timestamp,
-	is_deleted boolean NOT NULL DEFAULT FALSE ,
+	is_deleted boolean DEFAULT FALSE ,
 	del_dtimes timestamp,
 	eff_dtimes timestamp NOT NULL,
 	CONSTRAINT pk_regcntr_h_code PRIMARY KEY (id,lang_code,eff_dtimes)

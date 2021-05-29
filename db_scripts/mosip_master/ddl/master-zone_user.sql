@@ -22,7 +22,7 @@ CREATE TABLE master.zone_user(
 	cr_dtimes 	timestamp NOT NULL,
 	upd_by 		character varying(256),
 	upd_dtimes 	timestamp,
-	is_deleted 	boolean NOT NULL DEFAULT FALSE,
+	is_deleted 	boolean DEFAULT FALSE,
 	del_dtimes 	timestamp,
 	CONSTRAINT pk_zoneuser PRIMARY KEY (zone_code,usr_id)
 
