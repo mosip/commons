@@ -356,7 +356,6 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, token);
 		Authentication authentication = new UsernamePasswordAuthenticationToken(authUserDetails,
 				authUserDetails.getPassword(), null);
-		routingContext.setUser(null);
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String[] authorities = mosipUserDto.getRole().split(",");
 		for (String role : roles) {

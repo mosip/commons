@@ -63,7 +63,7 @@ public class BeanConfig {
 		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
 		requestFactory.setHttpClient(httpClientBuilder.build());
 		restTemplate = new RestTemplate(requestFactory);
-		restTemplate.setInterceptors(Collections.singletonList(new RequesterTokenRestInterceptor(environment)));
+		restTemplate.setInterceptors(Collections.singletonList(new RequesterTokenRestInterceptor()));
 		// interceptor added in RestTemplatePostProcessor
 		return restTemplate;
 	}

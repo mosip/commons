@@ -15,18 +15,6 @@ import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 
 public class RequesterTokenRestInterceptor implements ClientHttpRequestInterceptor {
 
-	/*
-	 * This config is introduced as a patch to fix the use of expired token from
-	 * security context rather than taking token from actual request. Later proper
-	 * default behaviour to be coded and this config to be removed
-	 */
-	//TODO
-	private boolean skipContextTokenReuse;
-
-	public RequesterTokenRestInterceptor(Environment environment) {
-		skipContextTokenReuse = environment.getProperty("auth.adapter.rest.template.skip.context.token.reuse",
-				Boolean.class, false);
-	}
 
 	@Override
 	public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
@@ -38,7 +26,7 @@ public class RequesterTokenRestInterceptor implements ClientHttpRequestIntercept
 	private void addHeadersToRequest(HttpRequest httpRequest, byte[] bytes) {
 		HttpHeaders headers = httpRequest.getHeaders();
 		AuthUserDetails authUserDetails = getAuthUserDetails();
-			if (!skipContextTokenReuse && authUserDetails != null)
+			if (authUserDetails != null)
 				headers.set(AuthAdapterConstant.AUTH_HEADER_COOKIE,
 						AuthAdapterConstant.AUTH_HEADER_COOKIE + authUserDetails.getToken());
 	}
