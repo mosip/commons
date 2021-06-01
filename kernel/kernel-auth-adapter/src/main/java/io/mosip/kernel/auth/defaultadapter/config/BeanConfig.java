@@ -16,25 +16,29 @@ import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterConstant;
+import io.mosip.kernel.auth.defaultadapter.util.CachedTokenObject;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 
 @Configuration
+@EnableScheduling
 public class BeanConfig {
-	
+
 	@Autowired
 	private Environment environment;
-	
+
 	@Autowired
 	private RestTemplateInterceptor defaultInterceptor;
 
@@ -54,25 +58,35 @@ public class BeanConfig {
 					return true;
 				}
 			});
-			httpClientBuilder.setSSLSocketFactory(csf);			
-		} 
+			httpClientBuilder.setSSLSocketFactory(csf);
+		}
 		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
 		requestFactory.setHttpClient(httpClientBuilder.build());
 		restTemplate = new RestTemplate(requestFactory);
-		restTemplate.setInterceptors(Collections.singletonList(new ContextTokenRestInterceptor()));
-		//interceptor added in RestTemplatePostProcessor
+		restTemplate.setInterceptors(Collections.singletonList(new RequesterTokenRestInterceptor()));
+		// interceptor added in RestTemplatePostProcessor
 		return restTemplate;
 	}
-	
-	// this is just used by client token interceptor to call to renew and validate token
-	private RestTemplate rt() {
-		RestTemplate template= new RestTemplate();
+
+	// this is just used by client token interceptor to call to renew and validate
+	// token
+	@Bean
+	public RestTemplate plainRestTemplate() {
+		RestTemplate template = new RestTemplate();
 		template.setInterceptors(Collections.singletonList(defaultInterceptor));
 		return template;
 	}
-	
+
 	@Bean
-	public RestTemplate clientTokenRestTemplate() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+	public CachedTokenObject<String> cachedTokenObject() {
+		return new CachedTokenObject<>();
+	}
+
+	@Bean
+	public RestTemplate selfTokenRestTemplate(
+			@Autowired @Qualifier("plainRestTemplate") RestTemplate plainRestTemplate,
+			@Autowired CachedTokenObject<String> cachedTokenObject)
+			throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
 		HttpClientBuilder httpClientBuilder = HttpClients.custom().disableCookieManagement();
 		RestTemplate restTemplate = null;
 		if (sslBypass) {
@@ -84,17 +98,23 @@ public class BeanConfig {
 					return true;
 				}
 			});
-			httpClientBuilder.setSSLSocketFactory(csf);			
-		} 
+			httpClientBuilder.setSSLSocketFactory(csf);
+		}
 		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
 		requestFactory.setHttpClient(httpClientBuilder.build());
 		restTemplate = new RestTemplate(requestFactory);
-		restTemplate.setInterceptors(Collections.singletonList(new ClientTokenRestInterceptor(environment,rt())));
-		//interceptor added in RestTemplatePostProcessor
+		restTemplate.setInterceptors(Collections
+				.singletonList(new SelfTokenRestInterceptor(environment, plainRestTemplate, cachedTokenObject)));
+		// interceptor added in RestTemplatePostProcessor
 		return restTemplate;
 	}
-	
-	
+
+	@Bean
+	public SelfTokenRenewTaskExecutor selfTokenRenewTaskExecutor(@Autowired CachedTokenObject<String> cachedTokenObject,
+			@Autowired @Qualifier("plainRestTemplate") RestTemplate plainRestTemplate)
+			throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+		return new SelfTokenRenewTaskExecutor(cachedTokenObject, plainRestTemplate);
+	}
 
 	@Bean
 	public WebClient webClient() {

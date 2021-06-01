@@ -12,7 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterConstant;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 
-public class ContextTokenRestInterceptor implements ClientHttpRequestInterceptor {
+public class RequesterTokenRestInterceptor implements ClientHttpRequestInterceptor {
 
 	@Override
 	public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
@@ -27,7 +27,7 @@ public class ContextTokenRestInterceptor implements ClientHttpRequestInterceptor
 			AuthUserDetails authUserDetails = getAuthUserDetails();
 			if (authUserDetails != null)
 				headers.set(AuthAdapterConstant.AUTH_HEADER_COOKIE,
-				AuthAdapterConstant.AUTH_COOOKIE_HEADER + authUserDetails.getToken());
+				AuthAdapterConstant.AUTH_HEADER_COOKIE + authUserDetails.getToken());
 		
 	}
 
@@ -40,11 +40,11 @@ public class ContextTokenRestInterceptor implements ClientHttpRequestInterceptor
 		return authUserDetails;
 	}
 	
-	
+	// This methods set token send by resource server to context
 	private void getHeadersFromResponse(ClientHttpResponse clientHttpResponse) {
 		HttpHeaders headers = clientHttpResponse.getHeaders();
-		String responseToken = headers.get(AuthAdapterConstant.AUTH_HEADER_SET_COOKIE).get(0)
-				.replaceAll(AuthAdapterConstant.AUTH_COOOKIE_HEADER, "");
+		String responseToken = headers.get(AuthAdapterConstant.AUTH_HEADER_COOKIE).get(0)
+				.replaceAll(AuthAdapterConstant.AUTH_HEADER_COOKIE, "");
 		getAuthUserDetails().setToken(responseToken);
 	}
 

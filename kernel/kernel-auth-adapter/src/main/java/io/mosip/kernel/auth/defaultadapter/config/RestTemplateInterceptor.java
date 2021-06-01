@@ -78,8 +78,7 @@ public class RestTemplateInterceptor implements ClientHttpRequestInterceptor {
 				}
 			}
 		} catch (Exception ex) {
-			LOGGER.warn("Failed to choose service instance : " + ex.getMessage());
-			LOGGER.debug("Failed to choose service instance", ex);
+			LOGGER.warn("Failed to choose service instance : {}",ex.getMessage());
 		}
 		return request;
 	}
