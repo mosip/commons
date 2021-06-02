@@ -58,5 +58,5 @@ public interface PartnerCertificateStoreRepository extends JpaRepository<Partner
 	 * @param partnerDomain Partner Domain
 	 * @return PartnerCertificateStore
 	 */
-	PartnerCertificateStore findByCertThumbprintAndPartnerDomain(String certThumbprint, String partnerDomain);
+	List<PartnerCertificateStore> findByCertThumbprintAndPartnerDomain(String certThumbprint, String partnerDomain);
 }

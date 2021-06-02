@@ -6,7 +6,6 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.cert.CertPath;
 import java.security.cert.CertPathBuilder;
 import java.security.cert.CertPathBuilderException;
 import java.security.cert.CertStore;
@@ -361,7 +360,7 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
                                                         Optional.of(PartnerCertManagerConstants.EMPTY), timestamp);
         X509Certificate pmsCert = certificateResponse.getCertificateEntry().getChain()[0];
 
-        X509Certificate resignedCert = reSignPartnerKey(reqX509Cert, certificateResponse);
+        X509Certificate resignedCert = reSignPartnerKey(reqX509Cert, certificateResponse, partnerDomain);
         String signedCertData = keymanagerUtil.getPEMFormatedData(resignedCert);
         certDBHelper.storePartnerCertificate(certId, certSubject, certIssuer, issuerId, reqX509Cert, certThumbprint,
                 reqOrgName, partnerDomain, signedCertData);
@@ -457,7 +456,8 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
         }
     }
 
-    private X509Certificate reSignPartnerKey(X509Certificate reqX509Cert, SignatureCertificate certificateResponse) {
+    private X509Certificate reSignPartnerKey(X509Certificate reqX509Cert, SignatureCertificate certificateResponse, 
+                        String partnerDomain) {
 
         LOGGER.info(PartnerCertManagerConstants.SESSIONID, PartnerCertManagerConstants.UPLOAD_PARTNER_CERT, "KeyAlias",
                 "Found Master Key Alias: " + certificateResponse.getAlias());
@@ -476,8 +476,9 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
         LocalDateTime notAfterDate = notBeforeDate.plus(noOfDays, ChronoUnit.DAYS);
         CertificateParameters certParams = PartnerCertificateManagerUtil.getCertificateParameters(subjectPrincipal,
                 notBeforeDate, notAfterDate);
+        boolean encKeyUsage = partnerDomain.equalsIgnoreCase(PartnerCertManagerConstants.AUTH_DOMAIN);
         return (X509Certificate) CertificateUtility.generateX509Certificate(signPrivateKey, partnerPublicKey, certParams,
-                signerPrincipal, signAlgorithm, keyStore.getKeystoreProviderName());
+                signerPrincipal, signAlgorithm, keyStore.getKeystoreProviderName(), encKeyUsage);
     }
 
     @Override
