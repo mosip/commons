@@ -63,25 +63,13 @@ public class PacketManagerHelper {
 
 
     public byte[] getXMLData(BiometricRecord biometricRecord, boolean offlineMode) throws Exception {
-        byte[] xmlBytes = null;
-        if (offlineMode) {
-            try (InputStream xsd = getClass().getClassLoader().getResourceAsStream(PacketManagerConstants.CBEFF_SCHEMA_FILE_PATH)) {
-                CbeffContainerImpl cbeffContainer = new CbeffContainerImpl();
-                List<BIR> birList = new ArrayList<>();
-                biometricRecord.getSegments().forEach(s -> birList.add(convertToBIR(s)));
-				BIR bir = cbeffContainer.createBIRType(birList);
-                xmlBytes = CbeffValidator.createXMLBytes(bir, IOUtils.toByteArray(xsd));
-            }
-        } else {
-            try (InputStream xsd = new URL(configServerFileStorageURL + schemaName).openStream()) {
-                CbeffContainerImpl cbeffContainer = new CbeffContainerImpl();
-                List<BIR> birList = new ArrayList<>();
-                biometricRecord.getSegments().forEach(s -> birList.add(convertToBIR(s)));
-				BIR bir = cbeffContainer.createBIRType(birList);
-                xmlBytes = CbeffValidator.createXMLBytes(bir, IOUtils.toByteArray(xsd));
-            }
+        try (InputStream xsd = (offlineMode) ?
+                getClass().getClassLoader().getResourceAsStream(PacketManagerConstants.CBEFF_SCHEMA_FILE_PATH) :
+                new URL(configServerFileStorageURL + schemaName).openStream()) {
+            CbeffContainerImpl cbeffContainer = new CbeffContainerImpl();
+            BIR bir = cbeffContainer.createBIRType(biometricRecord.getSegments());
+            return CbeffValidator.createXMLBytes(bir, IOUtils.toByteArray(xsd));
         }
-        return xmlBytes;
     }
 
     public static byte[] generateHash(List<String> order, Map<String, byte[]> data) throws IOException, NoSuchAlgorithmException {
