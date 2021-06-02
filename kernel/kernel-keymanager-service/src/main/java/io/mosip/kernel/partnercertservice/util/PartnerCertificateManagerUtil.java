@@ -159,9 +159,16 @@ public class PartnerCertificateManagerUtil {
     }
 
     public static boolean isValidTimestamp(LocalDateTime timeStamp, CACertificateStore certStore) {
-		return timeStamp.isEqual(certStore.getCertNotBefore()) || timeStamp.isEqual(certStore.getCertNotAfter())
+		boolean valid = timeStamp.isEqual(certStore.getCertNotBefore()) || timeStamp.isEqual(certStore.getCertNotAfter())
 				|| (timeStamp.isAfter(certStore.getCertNotBefore())
 						&& timeStamp.isBefore(certStore.getCertNotAfter()));
+        if (!valid) {
+            LocalDateTime localDateTimeNow = LocalDateTime.now();
+            valid = localDateTimeNow.isEqual(certStore.getCertNotBefore()) || localDateTimeNow.isEqual(certStore.getCertNotAfter())
+				|| (localDateTimeNow.isAfter(certStore.getCertNotBefore())
+						&& localDateTimeNow.isBefore(certStore.getCertNotAfter()));
+        }
+        return valid;
 	}
 
     public static String getCertificateOrgName(X500Principal x500CertPrincipal) {

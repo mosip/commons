@@ -66,9 +66,9 @@ public class PartnerCertManagerDBHelper {
     }
 
     public boolean isPartnerCertificateExist(String certThumbprint, String partnerDomain){
-        PartnerCertificateStore partnerCertificate = partnerCertificateStoreRepository
+        List<PartnerCertificateStore> partnerCertificateList = partnerCertificateStoreRepository
                                                      .findByCertThumbprintAndPartnerDomain(certThumbprint, partnerDomain);
-        if (Objects.nonNull(partnerCertificate)) {
+        if (partnerCertificateList.size() > 0) {
             return true;
         }
         return false;
