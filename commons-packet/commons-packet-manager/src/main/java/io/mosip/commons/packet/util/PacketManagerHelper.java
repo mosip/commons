@@ -63,25 +63,20 @@ public class PacketManagerHelper {
 
 
     public byte[] getXMLData(BiometricRecord biometricRecord, boolean offlineMode) throws Exception {
-        byte[] xmlBytes = null;
-        if (offlineMode) {
-            try (InputStream xsd = getClass().getClassLoader().getResourceAsStream(PacketManagerConstants.CBEFF_SCHEMA_FILE_PATH)) {
-                CbeffContainerImpl cbeffContainer = new CbeffContainerImpl();
-                List<BIR> birList = new ArrayList<>();
-                biometricRecord.getSegments().forEach(s -> birList.add(convertToBIR(s)));
-				BIR bir = cbeffContainer.createBIRType(birList);
-                xmlBytes = CbeffValidator.createXMLBytes(bir, IOUtils.toByteArray(xsd));
-            }
-        } else {
-            try (InputStream xsd = new URL(configServerFileStorageURL + schemaName).openStream()) {
-                CbeffContainerImpl cbeffContainer = new CbeffContainerImpl();
-                List<BIR> birList = new ArrayList<>();
-                biometricRecord.getSegments().forEach(s -> birList.add(convertToBIR(s)));
-				BIR bir = cbeffContainer.createBIRType(birList);
-                xmlBytes = CbeffValidator.createXMLBytes(bir, IOUtils.toByteArray(xsd));
-            }
-        }
-        return xmlBytes;
+    	
+    	try (InputStream xsd = offlineMode ? getClass().getClassLoader().getResourceAsStream(PacketManagerConstants.CBEFF_SCHEMA_FILE_PATH)
+         		: new URL(configServerFileStorageURL + schemaName).openStream()) {
+
+         	/** Removed this code as with latest cbeff validator, directly pass the BIR  No conversion required*/
+    		 //TODO after review needs to be removed
+//                 CbeffContainerImpl cbeffContainer = new CbeffContainerImpl();
+//                 List<BIR> birList = new ArrayList<>();
+//                 biometricRecord.getSegments().forEach(s -> birList.add(convertToBIR(s)));
+//                 BIRType bir = cbeffContainer.createBIRType(birList);
+//                 xmlBytes = CbeffValidator.createXMLBytes(bir, IOUtils.toByteArray(xsd));
+
+             return io.mosip.kernel.biometrics.commons.CbeffValidator.createXMLBytes(biometricRecord.getSegments(), IOUtils.toByteArray(xsd));
+           }
     }
 
     public static byte[] generateHash(List<String> order, Map<String, byte[]> data) throws IOException, NoSuchAlgorithmException {

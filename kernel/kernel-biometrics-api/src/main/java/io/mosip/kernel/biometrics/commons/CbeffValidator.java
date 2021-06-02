@@ -60,7 +60,8 @@ public class CbeffValidator {
 		List<BIR> birList = birRoot.getBirs();
 		for (BIR bir : birList) {
 			if (bir != null) {
-				if (bir.getBdb().length < 1) {
+				if ((bir.getBdb()==null || bir.getBdb().length < 1)
+						&& (bir.getOthers()==null || bir.getOthers().get("EXCEPTION").equals(false))) {
 					throw new CbeffException("BDB value can't be empty");
 				}
 				if (bir.getBdbInfo() != null) {
@@ -147,7 +148,36 @@ public class CbeffValidator {
 	 * 
 	 */
 	public static byte[] createXMLBytes(BIR bir, byte[] xsd) throws Exception {
+		
 		CbeffValidator.validateXML(bir);
+		
+		return getSavedData(bir, xsd);
+	}
+	
+	/**
+	 * Method used for creating XML bytes using JAXB
+	 * 
+	 * @param birs list of bir's need to be added in xsd
+	 * @param xsd xml schema definition
+	 * @return byte[] byte array of XML data
+	 * 
+	 * @exception Exception exception
+	 * 
+	 */
+	public static byte[] createXMLBytes(List<BIR> birs, byte[] xsd) throws Exception {
+		
+		BIR capturedBIR = birs.get(0);
+		
+		BIR parentBIR = new BIR.BIRBuilder().withBirInfo(capturedBIR.getBirInfo())
+		.withVersion(capturedBIR.getVersion())
+		.withCbeffversion(capturedBIR.getCbeffversion())
+		.build();
+		
+		parentBIR.setBirs(birs);
+		return createXMLBytes(parentBIR, xsd);
+	}
+
+	private static byte[] getSavedData(BIR bir, byte[] xsd) throws Exception {
 		JAXBContext jaxbContext = JAXBContext.newInstance(BIR.class);
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // To
