@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.DateUtils;
-import io.mosip.kernel.core.util.HMACUtils;
+import io.mosip.kernel.core.util.HMACUtils2;
 import io.mosip.kernel.saltgenerator.entity.SaltEntity;
 import io.mosip.kernel.saltgenerator.logger.SaltGeneratorLogger;
 
@@ -55,7 +55,7 @@ public class SaltReader implements ItemReader<SaltEntity> {
 		if (startSeq <= endSeq) {
 			SaltEntity entity = new SaltEntity();
 			entity.setId(startSeq);
-			entity.setSalt(CryptoUtil.encodeBase64String(HMACUtils.generateSalt()));
+			entity.setSalt(CryptoUtil.encodeBase64String(HMACUtils2.generateSalt()));
 			entity.setCreatedBy("System");
 			entity.setCreateDtimes(DateUtils.getUTCCurrentDateTime());
 			mosipLogger.debug("SALT_GENERATOR", "SaltReader", "Entity with id created - ",
