@@ -5,7 +5,9 @@ package io.mosip.kernel.biometrics.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -35,9 +37,11 @@ public class BiometricRecord implements Serializable {
 	 * it has type and subtype info in it
 	 */
 	protected List<BIR> segments;
+	protected Map<String, String> others;
 	
 	public BiometricRecord() {
 		this.segments = new ArrayList<>();
+		this.others = new HashMap<>();
 	}
 	
 	public BiometricRecord(VersionType version, VersionType cbeffversion, BIRInfo birInfo) {
@@ -45,6 +49,7 @@ public class BiometricRecord implements Serializable {
 		this.cbeffversion = cbeffversion;
 		this.birInfo = birInfo;
 		this.segments = new ArrayList<BIR>();
+		this.others = new HashMap<>();
 	}	
 
 }

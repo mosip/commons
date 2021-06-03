@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import io.mosip.kernel.biometrics.entities.*;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -33,12 +34,6 @@ import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.constant.ProcessedLevelType;
 import io.mosip.kernel.biometrics.constant.PurposeType;
 import io.mosip.kernel.biometrics.constant.QualityType;
-import io.mosip.kernel.biometrics.entities.BDBInfo;
-import io.mosip.kernel.biometrics.entities.BIR;
-import io.mosip.kernel.biometrics.entities.BIRInfo;
-import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import io.mosip.kernel.biometrics.entities.RegistryIDType;
-import io.mosip.kernel.biometrics.entities.VersionType;
 import io.mosip.kernel.cbeffutil.container.impl.CbeffContainerImpl;
 import io.mosip.kernel.core.util.HMACUtils2;
 
@@ -68,6 +63,11 @@ public class PacketManagerHelper {
                 new URL(configServerFileStorageURL + schemaName).openStream()) {
             CbeffContainerImpl cbeffContainer = new CbeffContainerImpl();
             BIR bir = cbeffContainer.createBIRType(biometricRecord.getSegments());
+            List<Entry> entries = new ArrayList<>();
+            biometricRecord.getOthers().forEach((k, v) -> {
+                entries.add(new Entry(k, v));
+            });
+            bir.setOthers(entries);
             return CbeffValidator.createXMLBytes(bir, IOUtils.toByteArray(xsd));
         }
     }
