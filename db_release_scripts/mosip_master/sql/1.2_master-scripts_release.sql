@@ -12,9 +12,24 @@
 -- Apr-2021 		Ram Bhatt          Added new rows in template,template_type and module_detail csv
 -- Apr-2021 		Ram Bhatt  	   Creation of master.permitted_local_config
 -- May-2021		Ram Bhatt	   Changed Precision and size of version and identity_schema_version
+-- Jun-2021		Ram Bhatt	   Updated master-template and master-template_type csv
 -- ------------------------------------------------------------------------------------------------------------
---------------------------------------------UI SPEC TABLE CREATION-----------------------------------------------
 \c mosip_master sysadmin
+
+
+--------------------------------------------MASTER TEMPLATE AND TEMPLATE TYPE CSV---------------------------------
+
+TRUNCATE TABLE master.template cascade ;
+
+\COPY master.template (id,name,descr,file_format_code,model,file_txt,module_id,module_name,template_typ_code,lang_code,is_active,cr_by,cr_dtimes) FROM '../dml/master-template.csv' delimiter ',' HEADER  csv;
+
+
+TRUNCATE TABLE master.template_type cascade ;
+
+\COPY master.template_type (code,descr,lang_code,is_active,cr_by,cr_dtimes) FROM '../dml/master-template_type.csv' delimiter ',' HEADER  csv;
+
+
+--------------------------------------------UI SPEC TABLE CREATION-----------------------------------------------
 
 \ir ../ddl/master-ui_spec.sql
 
