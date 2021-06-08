@@ -50,7 +50,6 @@ public class UinServiceHealthCheckerhandler implements HealthCheckHandler {
 
 	private HealthChecks healthChecks;
 	private final AuthProvider authProvider;
-	private ObjectMapper objectMapper;
 	private String driver;
 	private String url;
 	private String username;
@@ -66,11 +65,9 @@ public class UinServiceHealthCheckerhandler implements HealthCheckHandler {
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(UinServiceHealthCheckerhandler.class);
 
-	public UinServiceHealthCheckerhandler(Vertx vertx, AuthProvider provider, ObjectMapper objectMapper,
-			Environment environment) {
+	public UinServiceHealthCheckerhandler(Vertx vertx, AuthProvider provider, Environment environment) {
 		this.healthChecks = new HealthChecksImpl(vertx);
 		this.authProvider = provider;
-		this.objectMapper = objectMapper;
 		this.driver = environment.getProperty(HibernatePersistenceConstant.JAVAX_PERSISTENCE_JDBC_DRIVER);
 		this.url = environment.getProperty(HibernatePersistenceConstant.JAVAX_PERSISTENCE_JDBC_URL);
 		this.username = environment.getProperty(HibernatePersistenceConstant.JAVAX_PERSISTENCE_JDBC_USER);
@@ -162,7 +159,7 @@ public class UinServiceHealthCheckerhandler implements HealthCheckHandler {
 						.add(UINHealthConstants.RESPONSE, response.result().body()).build();
 				future.complete(Status.OK(result));
 			} else {
-				future.complete(Status.KO());
+				future.complete(Status.OK());
 			}
 		});
 	}
@@ -274,6 +271,7 @@ public class UinServiceHealthCheckerhandler implements HealthCheckHandler {
 			healthCheckModel.setStatus(jsonobject.getString(UINHealthConstants.STATUS));
 			JsonObject result = null;
 			try {
+				ObjectMapper objectMapper = new ObjectMapper();
 				if (jsonobject.containsKey(UINHealthConstants.DATA)) {
 					healthCheckModel.setDetails(jsonobject.getJsonObject(UINHealthConstants.DATA).getMap());
 					result = new JsonObject(objectMapper.writeValueAsString(healthCheckModel));

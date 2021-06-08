@@ -107,22 +107,10 @@ public class UinServiceRouter {
 		router.route().handler(BodyHandler.create());
 		router.put().consumes(UinGeneratorConstant.APPLICATION_JSON).handler(this::updateRouter);
 
-		configureHealthCheckEndpoint(vertx, router, servletPath);
-
 		router.route(environment.getProperty(UinGeneratorConstant.SERVER_SERVLET_PATH) + "/*").handler(
 				StaticHandler.create().setCachingEnabled(false).setWebRoot(UinGeneratorConstant.SWAGGER_UI_PATH)
 						.setAlwaysAsyncFS(true).setAllowRootFileSystemAccess(true));
 		return router;
-	}
-
-	private void configureHealthCheckEndpoint(Vertx vertx, Router router, final String servletPath) {
-		UinServiceHealthCheckerhandler healthCheckHandler = new UinServiceHealthCheckerhandler(vertx, null,
-				objectMapper, environment);
-		router.get(servletPath + UinGeneratorConstant.HEALTH_ENDPOINT).handler(healthCheckHandler);
-		healthCheckHandler.register("db", healthCheckHandler::databaseHealthChecker);
-		healthCheckHandler.register("diskspace", healthCheckHandler::dispSpaceHealthChecker);
-		healthCheckHandler.register("uingeneratorverticle",
-				future -> healthCheckHandler.verticleHealthHandler(future, vertx));
 	}
 
 	private void getRouter(Vertx vertx, RoutingContext routingContext, boolean isSignEnable, String profile,
