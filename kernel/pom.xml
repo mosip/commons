@@ -123,12 +123,14 @@
 
 	<modules>
 	         <module>kernel-core</module>
-		<!--<module>kernel-logger-logback</module>
+		<module>kernel-logger-logback</module>
 		<module>kernel-auth-adapter</module>
-		<module>kernel-dataaccess-hibernate</module>
+		<module>kernel-idgenerator-vid</module>
+		<module>kernel-templatemanager-velocity</module>
+		<module>kernel-crypto-signature</module>
+		<!--<module>kernel-dataaccess-hibernate</module>
 		<module>kernel-auditmanager-api</module>
 		<module>kernel-idgenerator-prid</module>
-		<module>kernel-idgenerator-vid</module>
 		<module>kernel-idgenerator-tokenid</module>
 		<module>kernel-idgenerator-machineid</module>
 		<module>kernel-idgenerator-regcenterid</module>
@@ -144,14 +146,12 @@
 		<module>kernel-pinvalidator</module>
 		<module>kernel-keygenerator-bouncycastle</module>
 		<module>kernel-crypto-jce</module>
-		<module>kernel-templatemanager-velocity</module>
 		<module>kernel-pdfgenerator-itext</module>
 		<module>kernel-datamapper-orika</module>
 		<module>kernel-qrcodegenerator-zxing</module>
 		<module>kernel-cbeffutil-api</module>
 		<module>kernel-transliteration-icu4j</module>
 		<module>kernel-applicanttype-api</module>
-		<module>kernel-crypto-signature</module>
 		<module>kernel-idobjectvalidator</module>
 		<module>kernel-bioapi-provider</module>
 		<module>kernel-registration-packet-manager</module>
