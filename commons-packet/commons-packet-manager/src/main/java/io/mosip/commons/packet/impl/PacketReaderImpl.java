@@ -368,7 +368,7 @@ public class PacketReaderImpl implements IPacketReader {
 			List<BIR> birList) {
 		List<BIR> segments = new ArrayList<>();
 		if (modalities == null || modalities.isEmpty()) {
-			birList.forEach(bir -> segments.add(PacketManagerHelper.convertToBiometricRecordBIR(bir)));
+			birList.forEach(bir -> segments.add(bir));
 		} else {
 			Map<String, BIR> birMap = new HashMap<>();
 			for (BIR bir : birList) {
@@ -378,9 +378,9 @@ public class PacketReaderImpl implements IPacketReader {
 						mapKey += subType;
 					}
 					mapKey = bir.getBdbInfo().getType().get(0) + "_" + mapKey;
-					birMap.put(mapKey, PacketManagerHelper.convertToBiometricRecordBIR(bir));
+					birMap.put(mapKey, bir);
 				} else {
-					bir.getBdbInfo().getType().forEach(type -> birMap.put(type.toString(),PacketManagerHelper.convertToBiometricRecordBIR(bir) ));
+					bir.getBdbInfo().getType().forEach(type -> birMap.put(type.toString(),bir ));
 				}
 			}
 			for (String modality : modalities) {
