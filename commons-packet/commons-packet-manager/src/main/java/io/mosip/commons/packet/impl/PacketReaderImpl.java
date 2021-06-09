@@ -266,6 +266,13 @@ public class PacketReaderImpl implements IPacketReader {
 				return null;
 			BIR bir = CbeffValidator.getBIRFromXML(IOUtils.toByteArray(biometrics));
 			biometricRecord = new BiometricRecord();
+			if(bir.getOthers() != null) {
+				Map<String, String> others = new HashMap<>();
+				bir.getOthers().forEach(e -> {
+						others.put(e.getKey(), e.getValue());
+				});
+				biometricRecord.setOthers(others);
+			}
 			biometricRecord.setSegments(filterByModalities(modalities, bir.getBirs()));
 		} catch (Exception e) {
 			LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
