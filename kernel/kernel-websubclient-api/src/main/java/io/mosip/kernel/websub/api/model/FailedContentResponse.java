@@ -16,7 +16,7 @@ public class FailedContentResponse {
 	private List<Failedcontents> messages; 
 	
 	@Data
-	class Failedcontents{
+	public static class Failedcontents{
 		private String message;
 		private String timestamp;
 	}
