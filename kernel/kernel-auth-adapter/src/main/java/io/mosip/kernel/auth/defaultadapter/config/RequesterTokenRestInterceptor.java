@@ -22,7 +22,8 @@ public class RequesterTokenRestInterceptor implements ClientHttpRequestIntercept
 		addHeadersToRequest(request, body);
 		return execution.execute(request, body);
 	}
-
+ 
+	// TODO need to add support for vertx context
 	private void addHeadersToRequest(HttpRequest httpRequest, byte[] bytes) {
 		HttpHeaders headers = httpRequest.getHeaders();
 		AuthUserDetails authUserDetails = getAuthUserDetails();

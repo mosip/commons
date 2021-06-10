@@ -28,8 +28,7 @@ public enum AuthAdapterErrorCode {
 	
 	CANNOT_CONNECT_TO_AUTH_SERVICE("KER-ATH-003","Problem in connecting to auth service"),
 	
-	IO_EXCEPTION("KER-ATH-004", "IO Exception occured")
-	;
+	IO_EXCEPTION("KER-ATH-004", "IO Exception occured");
 
 	/**
 	 * The error code

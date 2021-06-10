@@ -29,7 +29,7 @@ import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterConstant;
-import io.mosip.kernel.auth.defaultadapter.util.CachedTokenObject;
+import io.mosip.kernel.auth.defaultadapter.util.TokenHolder;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 
 @Configuration
@@ -78,14 +78,14 @@ public class BeanConfig {
 	}
 
 	@Bean
-	public CachedTokenObject<String> cachedTokenObject() {
-		return new CachedTokenObject<>();
+	public TokenHolder<String> cachedTokenObject() {
+		return new TokenHolder<>();
 	}
 
 	@Bean
 	public RestTemplate selfTokenRestTemplate(
 			@Autowired @Qualifier("plainRestTemplate") RestTemplate plainRestTemplate,
-			@Autowired CachedTokenObject<String> cachedTokenObject)
+			@Autowired TokenHolder<String> cachedTokenObject)
 			throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
 		HttpClientBuilder httpClientBuilder = HttpClients.custom().disableCookieManagement();
 		RestTemplate restTemplate = null;
@@ -110,10 +110,10 @@ public class BeanConfig {
 	}
 
 	@Bean
-	public SelfTokenRenewTaskExecutor selfTokenRenewTaskExecutor(@Autowired CachedTokenObject<String> cachedTokenObject,
+	public SelfTokenRenewalTaskExecutor selfTokenRenewTaskExecutor(@Autowired TokenHolder<String> cachedTokenObject,
 			@Autowired @Qualifier("plainRestTemplate") RestTemplate plainRestTemplate)
 			throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
-		return new SelfTokenRenewTaskExecutor(cachedTokenObject, plainRestTemplate);
+		return new SelfTokenRenewalTaskExecutor(cachedTokenObject, plainRestTemplate);
 	}
 
 	@Bean
@@ -127,7 +127,7 @@ public class BeanConfig {
 				AuthUserDetails userDetail = (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication()
 						.getPrincipal();
 				filtered = ClientRequest.from(req).header(AuthAdapterConstant.AUTH_HEADER_COOKIE,
-						AuthAdapterConstant.AUTH_COOOKIE_HEADER + userDetail.getToken()).build();
+						AuthAdapterConstant.AUTH_REQUEST_COOOKIE_HEADER + userDetail.getToken()).build();
 			}
 			return next.exchange(filtered);
 		}).build();

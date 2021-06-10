@@ -2,7 +2,7 @@ package io.mosip.kernel.auth.defaultadapter.util;
 
 import lombok.Getter;
 
-public class CachedTokenObject<T> {
+public class TokenHolder<T> {
 
 	@Getter
 	private T token;

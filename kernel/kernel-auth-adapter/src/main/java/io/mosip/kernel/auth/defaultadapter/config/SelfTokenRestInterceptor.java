@@ -25,7 +25,7 @@ import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterConstant;
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterErrorCode;
 import io.mosip.kernel.auth.defaultadapter.exception.AuthAdapterException;
 import io.mosip.kernel.auth.defaultadapter.exception.AuthRestException;
-import io.mosip.kernel.auth.defaultadapter.util.CachedTokenObject;
+import io.mosip.kernel.auth.defaultadapter.util.TokenHolder;
 import io.mosip.kernel.core.authmanager.model.ClientSecret;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
@@ -49,14 +49,14 @@ public class SelfTokenRestInterceptor implements ClientHttpRequestInterceptor {
 	
 	private String validateTokenURL;
 
-	private CachedTokenObject<String> cachedToken;
+	private TokenHolder<String> cachedToken;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelfTokenRestInterceptor.class);
 
 	private RestTemplate restTemplate;
 
 	public SelfTokenRestInterceptor(Environment environment, RestTemplate restTemplate,
-			CachedTokenObject<String> cachedToken) {
+			TokenHolder<String> cachedToken) {
 		clientID = environment.getProperty("mosip.iam.adapter.clientid", "");
 		clientSecret = environment.getProperty("mosip.iam.adapter.clientsecret", "");
 		appID = environment.getProperty("mosip.iam.adapter.appid", "");

@@ -43,8 +43,6 @@ public class AuthAdapterConstant {
 
 	public final static String TOKEN_SUCCESS_MESSAGE = "Token had been validated successfully";
 
-	public static final String AUTH_COOOKIE_HEADER = "Authorization";
-
 	public static final String AUTH_HEADER = "Authorization=";
 
 }

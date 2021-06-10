@@ -26,16 +26,16 @@ import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterConstant;
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterErrorCode;
 import io.mosip.kernel.auth.defaultadapter.exception.AuthAdapterException;
 import io.mosip.kernel.auth.defaultadapter.exception.AuthRestException;
-import io.mosip.kernel.auth.defaultadapter.util.CachedTokenObject;
+import io.mosip.kernel.auth.defaultadapter.util.TokenHolder;
 import io.mosip.kernel.core.authmanager.model.ClientSecret;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.util.DateUtils;
 
-public class SelfTokenRenewTaskExecutor {
+public class SelfTokenRenewalTaskExecutor {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(SelfTokenRenewTaskExecutor.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SelfTokenRenewalTaskExecutor.class);
 
 	@Value("${mosip.iam.adapter.clientid:}")
 	private String clientID;
@@ -52,15 +52,17 @@ public class SelfTokenRenewTaskExecutor {
 	@Value("${mosip.authmanager.client-token-endpoint:}")
 	private String tokenURL;
 
-	// variable name
-	@Value("${mosip.iam.adapter.validate-expiry-check-rate:5}")
-	private int validateExpiryRange;
+	@Value("${mosip.iam.adapter.token-expiry-check-frequency:5}")
+	private int tokenExpiryCheckFrequency;
+	
+	@Value("${mosip.iam.adapter.renewal-before-expiry-interval:5}")
+	private int renewalBeforeExpiryInterval;
 
-	private CachedTokenObject<String> cachedTokenObject;
+	private TokenHolder<String> cachedTokenObject;
 
 	private RestTemplate restTemplate;
 
-	public SelfTokenRenewTaskExecutor(CachedTokenObject<String> cachedTokenObject, RestTemplate restTemplate) {
+	public SelfTokenRenewalTaskExecutor(TokenHolder<String> cachedTokenObject, RestTemplate restTemplate) {
 
 		this.cachedTokenObject = cachedTokenObject;
 		this.restTemplate = restTemplate;
@@ -71,7 +73,7 @@ public class SelfTokenRenewTaskExecutor {
 		ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
 		taskScheduler.setPoolSize(1);
 		taskScheduler.initialize();
-		taskScheduler.scheduleAtFixedRate(new SelfTokenHandlerTask(), TimeUnit.MINUTES.toMillis(validateExpiryRange));
+		taskScheduler.scheduleAtFixedRate(new SelfTokenHandlerTask(), TimeUnit.MINUTES.toMillis(tokenExpiryCheckFrequency));
 	}
 
 	private class SelfTokenHandlerTask implements Runnable {
@@ -126,11 +128,10 @@ public class SelfTokenRenewTaskExecutor {
 			LocalDateTime expiryTime = DateUtils
 					.convertUTCToLocalDateTime(DateUtils.getUTCTimeFromDate(decodedJWT.getExpiresAt()));
 
-			if (!decodedJWT.getIssuer().equals(issuerURL)) {
-				return false;
+			
 				// time is added here so that expiry will be checked after that time and if it
 				// does it will renew token
-			} else if (!DateUtils.before(DateUtils.getUTCCurrentDateTime().plusMinutes(validateExpiryRange),
+			if (!DateUtils.before(DateUtils.getUTCCurrentDateTime().plusMinutes(renewalBeforeExpiryInterval),
 					expiryTime)) {
 				return false;
 			} else if (!claims.get("clientId").asString().equals(clientID)) {
