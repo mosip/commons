@@ -125,8 +125,11 @@
 	         <module>kernel-core</module>
 		<module>kernel-logger-logback</module>
 		<module>kernel-auth-adapter</module>
+		<module>kernel-crypto-jce</module>
+		<module>kernel-idvalidator-vid</module>
 		<module>kernel-idgenerator-vid</module>
 		<module>kernel-templatemanager-velocity</module>
+		<module>kernel-keygenerator-bouncycastle</module>
 		<module>kernel-crypto-signature</module>
 		<!--<module>kernel-dataaccess-hibernate</module>
 		<module>kernel-auditmanager-api</module>
@@ -141,11 +144,9 @@
 		<module>kernel-idvalidator-prid</module>
 		<module>kernel-idvalidator-rid</module>
 		<module>kernel-idvalidator-uin</module>
-		<module>kernel-idvalidator-vid</module>
 		<module>kernel-idvalidator-mispid</module>
 		<module>kernel-pinvalidator</module>
 		<module>kernel-keygenerator-bouncycastle</module>
-		<module>kernel-crypto-jce</module>
 		<module>kernel-pdfgenerator-itext</module>
 		<module>kernel-datamapper-orika</module>
 		<module>kernel-qrcodegenerator-zxing</module>
