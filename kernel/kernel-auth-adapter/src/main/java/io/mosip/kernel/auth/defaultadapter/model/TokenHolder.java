@@ -1,4 +1,4 @@
-package io.mosip.kernel.auth.defaultadapter.util;
+package io.mosip.kernel.auth.defaultadapter.model;
 
 import lombok.Getter;
 
