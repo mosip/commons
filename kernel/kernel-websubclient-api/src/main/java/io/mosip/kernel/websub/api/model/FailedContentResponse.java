@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 public class FailedContentResponse {
 	
-	private List<Failedcontents> messages; 
+	private List<Failedcontents> failedcontents; 
 	
 	@Data
 	public static class Failedcontents{
