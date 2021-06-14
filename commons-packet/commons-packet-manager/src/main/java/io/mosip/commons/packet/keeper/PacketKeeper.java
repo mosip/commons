@@ -125,11 +125,10 @@ public class PacketKeeper {
      * @return
      */
     public boolean checkSignature(Packet packet, byte[] encryptedSubPacket) throws NoSuchAlgorithmException {
-    	/**TODO*/
-//    	  String machineId = packet.getPacketInfo().getId().substring(centerIdLength, centerIdLength+machineIdLength);
-//        boolean result = getCryptoService().verify(machineId,packet.getPacket(), CryptoUtil.decodeBase64(packet.getPacketInfo().getSignature()));
-//        if (result)
-         boolean   result = checkIntegrity(packet.getPacketInfo(), encryptedSubPacket);
+    	String machineId = packet.getPacketInfo().getId().substring(centerIdLength, centerIdLength+machineIdLength);
+        boolean result = getCryptoService().verify(machineId, packet.getPacket(), CryptoUtil.decodeBase64(packet.getPacketInfo().getSignature()));
+        if (result)
+            result = checkIntegrity(packet.getPacketInfo(), encryptedSubPacket);
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID,
                 getName(packet.getPacketInfo().getId(), packet.getPacketInfo().getPacketName()), "Integrity and signature check : " + result);
         return result;

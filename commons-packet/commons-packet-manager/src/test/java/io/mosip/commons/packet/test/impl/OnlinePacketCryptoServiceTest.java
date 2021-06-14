@@ -33,6 +33,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 
@@ -74,7 +75,7 @@ public class OnlinePacketCryptoServiceTest {
     public void signTest() throws IOException {
         String expected = "signature";
         LinkedHashMap submap = new LinkedHashMap();
-        submap.put("data", "signature");
+        submap.put("data", CryptoUtil.encodeBase64(expected.getBytes(StandardCharsets.UTF_8)));
         LinkedHashMap responseMap = new LinkedHashMap();
         responseMap.put("response", submap);
         ReflectionTestUtils.setField(onlinePacketCryptoService, "keymanagerCsSignUrl", "localhost");
