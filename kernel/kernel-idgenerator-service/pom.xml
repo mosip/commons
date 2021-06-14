@@ -226,7 +226,7 @@
 		<kernel.templatemanager.velocity.version>1.1.4.4</kernel.templatemanager.velocity.version>
 		<kernel.crypto.signature.version>1.1.4.4</kernel.crypto.signature.version>
 		<modelmapper.version>2.3.7</modelmapper.version>
-		<kernel.logger.version>1.1.4</kernel.logger.version>
+		<kernel.logger.version>1.1.4.4</kernel.logger.version>
 	</properties>
 	<artifactId>kernel-idgenerator-service</artifactId>
 	<version>1.1.4.5</version>
