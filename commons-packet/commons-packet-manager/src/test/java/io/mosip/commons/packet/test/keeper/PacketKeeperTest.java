@@ -78,7 +78,7 @@ public class PacketKeeperTest {
         ReflectionTestUtils.setField(packetKeeper, "PACKET_MANAGER_ACCOUNT", "PACKET_MANAGER_ACCOUNT");
         ReflectionTestUtils.setField(packetKeeper, "centerIdLength", 5);
         ReflectionTestUtils.setField(packetKeeper, "machineIdLength", 5);
-        ReflectionTestUtils.setField(packetKeeper, "isSignatureReqd", true);
+        ReflectionTestUtils.setField(packetKeeper, "disablePacketSignatureVerification", false);
 
         packetInfo = new PacketInfo();
         packetInfo.setCreationDate(DateUtils.getCurrentDateTimeString());
