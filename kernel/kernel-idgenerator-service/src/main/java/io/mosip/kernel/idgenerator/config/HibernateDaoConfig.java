@@ -42,7 +42,7 @@ import io.mosip.kernel.vidgenerator.constant.HibernatePersistenceConstant;
 @PropertySource(value = "classpath:application-${spring.profiles.active}.properties", ignoreResourceNotFound = true)
 @EnableJpaRepositories(basePackages = { "io.mosip.kernel.vidgenerator.repository", "io.mosip.kernel.uingenerator.repository"})
 @ComponentScan(basePackages = { "io.mosip.kernel.vidgenerator.*","io.mosip.kernel.uingenerator.*", "io.mosip.kernel.idgenerator.vid.*",
-		"io.mosip.kernel.crypto.*", "io.mosip.kernel.auth.adapter.*","io.mosip.kernel.cryptosignature.*","io.mosip.kernel.idgenerator.*","io.mosip.kernel.keygenerator.bouncycastle"})
+		"io.mosip.kernel.crypto.*", "${mosip.auth.adapter.impl.basepackage}","io.mosip.kernel.cryptosignature.*","io.mosip.kernel.idgenerator.*","io.mosip.kernel.keygenerator.bouncycastle"})
 @EnableTransactionManagement
 public class HibernateDaoConfig implements EnvironmentAware {
 
