@@ -339,7 +339,7 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
                 String.class);
 		 LinkedHashMap responseMap = (LinkedHashMap) mapper.readValue(response.getBody(), LinkedHashMap.class).get("response");//.get("signature");
 		 if (responseMap != null && responseMap.size() > 0)
-             return (String) responseMap.get("encryptionPublicKey") ;
+             return (String) responseMap.get("signingPublicKey") ;
          else {
              LOGGER.error(PacketManagerLogger.SESSIONID, "PUBLIC_KEY", machineId,
                      "Failed to get public key");
