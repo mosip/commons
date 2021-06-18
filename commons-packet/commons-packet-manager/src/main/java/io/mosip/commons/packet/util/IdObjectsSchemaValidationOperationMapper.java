@@ -79,11 +79,11 @@ public class IdObjectsSchemaValidationOperationMapper {
 		/** The reg proc logger. */
 	private static Logger LOGGER = PacketManagerLogger.getLogger(IdObjectsSchemaValidationOperationMapper.class);
 	
-	public static IdObjectValidatorSupportedOperations getOperation(String id, String process) {
+	public static String getOperation(String id, String process) {
 		LOGGER.debug(PacketManagerLogger.SESSIONID.toString(), PacketManagerLogger.REGISTRATIONID.toString(), "",
 				"IdObjectsSchemaValidationOperationMapper::getOperation()::entry");
 
-		if(process.matches(SyncTypeDto.NEW.getValue())) {
+		if(process.equalsIgnoreCase(SyncTypeDto.NEW.getValue())) {
 			/*int age = 20;//utility.getApplicantAge(id);
 			int ageThreshold = Integer.parseInt(ageLimit);
 			if (age < ageThreshold) {
@@ -93,34 +93,34 @@ public class IdObjectsSchemaValidationOperationMapper {
 			}*/
 			LOGGER.debug(PacketManagerLogger.SESSIONID.toString(), PacketManagerLogger.REGISTRATIONID.toString(), "",
 					"IdObjectsSchemaValidationOperationMapper::getOperation()::exit-NEW");
-			return IdObjectValidatorSupportedOperations.NEW_REGISTRATION;
+			return IdObjectValidatorSupportedOperations.NEW_REGISTRATION.name();
 		}
-		else if(process.matches(SyncTypeDto.LOST.getValue())) {
+		else if(process.equalsIgnoreCase(SyncTypeDto.LOST.getValue())) {
 			LOGGER.debug(PacketManagerLogger.SESSIONID.toString(), PacketManagerLogger.REGISTRATIONID.toString(), "",
 					"IdObjectsSchemaValidationOperationMapper::getOperation()::exit-LOST");
-			return IdObjectValidatorSupportedOperations.LOST;
+			return IdObjectValidatorSupportedOperations.LOST.name();
 		}
-		else if(process.matches(SyncTypeDto.UPDATE.getValue())) {
+		else if(process.equalsIgnoreCase(SyncTypeDto.UPDATE.getValue())) {
 			LOGGER.debug(PacketManagerLogger.SESSIONID.toString(), PacketManagerLogger.REGISTRATIONID.toString(), "",
 					"IdObjectsSchemaValidationOperationMapper::getOperation()::exit-UPDATE");
-			return IdObjectValidatorSupportedOperations.OTHER;
+			return IdObjectValidatorSupportedOperations.OTHER.name();
 		}
-		else if(process.matches(SyncTypeDto.RES_UPDATE.getValue())) {
+		else if(process.equalsIgnoreCase(SyncTypeDto.RES_UPDATE.getValue())) {
 			LOGGER.debug(PacketManagerLogger.SESSIONID.toString(), PacketManagerLogger.REGISTRATIONID.toString(), "",
 					"IdObjectsSchemaValidationOperationMapper::getOperation()::exit-RES_UPDATE");
-			return IdObjectValidatorSupportedOperations.OTHER;
+			return IdObjectValidatorSupportedOperations.OTHER.name();
 		}
-		else if(process.matches(SyncTypeDto.ACTIVATED.getValue())) {
+		else if(process.equalsIgnoreCase(SyncTypeDto.ACTIVATED.getValue())) {
 			LOGGER.debug(PacketManagerLogger.SESSIONID.toString(), PacketManagerLogger.REGISTRATIONID.toString(), "",
 					"IdObjectsSchemaValidationOperationMapper::getOperation()::exit-ACTIVATED");
-			return IdObjectValidatorSupportedOperations.OTHER;
+			return IdObjectValidatorSupportedOperations.OTHER.name();
 		}
-		else if(process.matches(SyncTypeDto.DEACTIVATED.getValue())) {
+		else if(process.equalsIgnoreCase(SyncTypeDto.DEACTIVATED.getValue())) {
 			LOGGER.debug(PacketManagerLogger.SESSIONID.toString(), PacketManagerLogger.REGISTRATIONID.toString(), "",
 					"IdObjectsSchemaValidationOperationMapper::getOperation()::exit-DEACTIVATED");
-			return IdObjectValidatorSupportedOperations.OTHER;
+			return IdObjectValidatorSupportedOperations.OTHER.name();
 		}
-		return null;
+		return process;
 		
 	}
 
