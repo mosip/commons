@@ -109,13 +109,13 @@ public class PacketValidator {
 
                 }
             }
-            String fields = env.getProperty(String.format(FIELD_LIST, IdObjectsSchemaValidationOperationMapper.getOperation(id, process).getOperation()));
+            String fields = env.getProperty(String.format(FIELD_LIST, IdObjectsSchemaValidationOperationMapper.getOperation(id, process.toLowerCase())));
             LinkedHashMap finalMap = new LinkedHashMap();
             finalMap.put(IDENTITY, objectMap);
             JSONObject finalIdObject = new JSONObject(finalMap);
 
             return idObjectValidator.validateIdObject(idSchemaUtils.getIdSchema(Double.valueOf(objectMap.get(
-                    PacketManagerConstants.IDSCHEMA_VERSION).toString())), finalIdObject, Arrays.asList(fields.split(",")));
+                    PacketManagerConstants.IDSCHEMA_VERSION).toString())), finalIdObject, fields != null ? Arrays.asList(fields.split(",")) : null);
         } catch (IdObjectValidationFailedException | PacketKeeperException e) {
             LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, "Id object validation failed :  " + ExceptionUtils.getStackTrace(e));
             return false;
