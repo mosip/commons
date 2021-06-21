@@ -151,7 +151,8 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
             cryptomanagerRequestDto.setSalt(CryptoUtil.encodeBase64String(nonce));
             // setLocal Date Time
             if (id.length() > 14) {
-                String packetCreatedDateTime = id.substring(id.length() - 14);
+            	String packetRid = id.split("-")[0];
+                String packetCreatedDateTime = packetRid.split("-")[0].substring(packetRid.length() - 14);
                 String formattedDate = packetCreatedDateTime.substring(0, 8) + "T"
                         + packetCreatedDateTime.substring(packetCreatedDateTime.length() - 6);
 
@@ -235,7 +236,8 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
             cryptomanagerRequestDto.setPrependThumbprint(isPrependThumbprintEnabled);
             // setLocal Date Time
             if (id.length() > 14) {
-                String packetCreatedDateTime = id.substring(id.length() - 14);
+            	String packetRid = id.split("-")[0];
+                String packetCreatedDateTime = packetRid.split("-")[0].substring(packetRid.length() - 14);
                 String formattedDate = packetCreatedDateTime.substring(0, 8) + "T"
                         + packetCreatedDateTime.substring(packetCreatedDateTime.length() - 6);
 
