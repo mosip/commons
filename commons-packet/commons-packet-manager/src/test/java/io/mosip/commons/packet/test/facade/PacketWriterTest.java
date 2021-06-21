@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.mapping.Any;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -166,9 +167,9 @@ public class PacketWriterTest {
     @Test
     public void testPersistPacket() {
         List<PacketInfo> packetInfos = new ArrayList<>();
-        Mockito.when(packetWriterProvider.persistPacket(id, "0.2", "schema", source, process, true)).thenReturn(packetInfos);
+        Mockito.when(packetWriterProvider.persistPacket(id, "0.2", "schema", source, process, true, 0)).thenReturn(packetInfos);
 
-        List<PacketInfo> result = packetWriter.persistPacket(id, "0.2", "schema", source, process, true);
+        List<PacketInfo> result = packetWriter.persistPacket(id, "0.2", "schema", source, process, true,0);
 
         assertTrue(result.equals(packetInfos));
     }
@@ -203,7 +204,7 @@ public class PacketWriterTest {
         Mockito.doNothing().when(packetWriterProvider).addAudit(anyString(),anyMap());
         Mockito.doNothing().when(packetWriterProvider).addAudits(anyString(),anyList());
         Mockito.when(packetWriterProvider.persistPacket(anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyBoolean())).thenReturn(packetInfos);
+                anyString(), anyString(), anyString(), anyBoolean(),any(Integer.class))).thenReturn(packetInfos);
 
         List<PacketInfo> result = packetWriter.createPacket(packetDto, false);
 
@@ -240,7 +241,7 @@ public class PacketWriterTest {
         Mockito.doNothing().when(packetWriterProvider).addAudit(anyString(),anyMap());
         Mockito.doNothing().when(packetWriterProvider).addAudits(anyString(),anyList());
         Mockito.when(packetWriterProvider.persistPacket(anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyBoolean())).thenThrow(new PacketCreatorException("",""));
+                anyString(), anyString(), anyString(), anyBoolean(),any(Integer.class))).thenThrow(new PacketCreatorException("",""));
 
         List<PacketInfo> result = packetWriter.createPacket(packetDto, false);
 

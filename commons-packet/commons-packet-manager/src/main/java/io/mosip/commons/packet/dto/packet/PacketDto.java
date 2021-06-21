@@ -22,6 +22,7 @@ public class PacketDto {
     private Map<String, Document> documents;
     private List<Map<String, String>> audits;
     private Map<String, BiometricRecord> biometrics;
+    private int iteration;
 
 
 

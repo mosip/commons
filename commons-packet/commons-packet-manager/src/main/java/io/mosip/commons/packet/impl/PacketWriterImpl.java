@@ -49,7 +49,7 @@ public class PacketWriterImpl implements IPacketWriter {
     private static final String UNDERSCORE = "_";
     private static final String HASHSEQUENCE1 = "hashSequence1";
     private static final String HASHSEQUENCE2 = "hashSequence2";
-
+    
     static {
         categorySubpacketMapping.put("pvt", "id");
         categorySubpacketMapping.put("kyc", "id");
@@ -121,7 +121,7 @@ public class PacketWriterImpl implements IPacketWriter {
         this.initialize(id).addMetaData(key, value);
     }
 
-    private List<PacketInfo> createPacket(String id, String version, String schemaJson, String source, String process, boolean offlineMode) throws PacketCreatorException {
+    private List<PacketInfo> createPacket(String id, String version, String schemaJson, String source, String process, boolean offlineMode, int iteration) throws PacketCreatorException {
         LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.ID.toString(), id, "Started packet creation");
         if (this.registrationPacket == null || !registrationPacket.getRegistrationId().equalsIgnoreCase(id))
             throw new PacketCreatorException(ErrorCode.INITIALIZATION_ERROR.getErrorCode(),
@@ -143,7 +143,7 @@ public class PacketWriterImpl implements IPacketWriter {
                 PacketInfo packetInfo = new PacketInfo();
                 packetInfo.setProviderName(this.getClass().getSimpleName());
                 packetInfo.setSchemaVersion(new Double(version).toString());
-                packetInfo.setId(id);
+                packetInfo.setId(iteration==0 ? String.format("%s-%s",id, process) : String.format("%s-%s-%s",id, process, iteration));
                 packetInfo.setSource(source);
                 packetInfo.setProcess(process);
                 packetInfo.setPacketName(id + UNDERSCORE + subPacketName);
@@ -408,9 +408,9 @@ public class PacketWriterImpl implements IPacketWriter {
     }
 
     @Override
-    public List<PacketInfo> persistPacket(String id, String version, String schemaJson, String source, String process, boolean offlineMode) {
+    public List<PacketInfo> persistPacket(String id, String version, String schemaJson, String source, String process, boolean offlineMode, int iteration) {
         try {
-            return createPacket(id, version, schemaJson, source, process, offlineMode);
+            return createPacket(id, version, schemaJson, source, process, offlineMode,iteration);
         } catch (PacketCreatorException e) {
             LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, ExceptionUtils.getStackTrace(e));
             throw e;

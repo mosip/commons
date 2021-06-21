@@ -153,10 +153,10 @@ public class PacketWriter {
      * @param process : the process
      * @return PacketInfo
      */
-    public List<PacketInfo> persistPacket(String id, String version, String schemaJson, String source, String process, boolean offlineMode) {
+    public List<PacketInfo> persistPacket(String id, String version, String schemaJson, String source, String process, boolean offlineMode, int iteration) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "persistPacket for source : " + source + " process : " + process);
-        return getProvider(source, process).persistPacket(id, version, schemaJson, source, process, offlineMode);
+        return getProvider(source, process).persistPacket(id, version, schemaJson, source, process, offlineMode,iteration);
     }
 
     public List<PacketInfo> createPacket(PacketDto packetDto, boolean offlineMode) {
@@ -176,7 +176,7 @@ public class PacketWriter {
             if (packetDto.getBiometrics() != null)
                 packetDto.getBiometrics().entrySet().forEach(bio -> provider.setBiometric(packetDto.getId(), bio.getKey(), bio.getValue()));
             packetInfos = provider.persistPacket(packetDto.getId(), packetDto.getSchemaVersion(),
-                    packetDto.getSchemaJson(), packetDto.getSource(), packetDto.getProcess(), offlineMode);
+                    packetDto.getSchemaJson(), packetDto.getSource(), packetDto.getProcess(), offlineMode, packetDto.getIteration());
 
         } catch (Exception e) {
             LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packetDto.getId(),
