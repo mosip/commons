@@ -7,6 +7,7 @@ public class PacketManagerLogger {
 
     public static final String SESSIONID = "SESSION_ID";
     public static final String REGISTRATIONID = "REGISTRATION_ID";
+    public static final String REFERENCEID = "REFERENCE_ID";
    
     /**
      * Instantiates a new packet manager logger.

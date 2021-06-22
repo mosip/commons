@@ -132,7 +132,7 @@ public class PacketWriterImplTest {
         packetWriter.setDocument(id, "proofOfAddress", document);
         packetWriter.setBiometric(id, "individualBiometrics", biometricRecord);
 
-        List<PacketInfo> result = packetWriter.persistPacket(id, "0.1", schemaJson, source, process, true);
+        List<PacketInfo> result = packetWriter.persistPacket(id, "0.1", schemaJson, source, process, null, null, true);
 
         assertTrue(result != null && result.size() == 3);
     }

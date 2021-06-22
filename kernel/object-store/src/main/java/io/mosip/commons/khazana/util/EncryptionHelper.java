@@ -19,11 +19,11 @@ public class EncryptionHelper {
     private OnlineCryptoUtil onlineCryptoUtil;
 
 
-    public byte[] encrypt(String id, byte[] packet) {
+    public byte[] encrypt(String refId, byte[] packet) {
         if (cryptoName.equalsIgnoreCase(CRYPTO))
-            return offlineEncryptionUtil.encrypt(id, packet);
+            return offlineEncryptionUtil.encrypt(refId, packet);
         else
-            return onlineCryptoUtil.encrypt(id, packet);
+            return onlineCryptoUtil.encrypt(refId, packet);
     }
 
 }

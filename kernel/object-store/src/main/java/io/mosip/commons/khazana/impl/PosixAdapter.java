@@ -273,7 +273,7 @@ public class PosixAdapter implements ObjectStoreAdapter {
     }
 
     @Override
-    public boolean pack(String account, String container, String source, String process) {
+    public boolean pack(String account, String container, String source, String process, String refId) {
         try {
             File accountLoc = new File(baseLocation + SEPARATOR + account);
             if (!accountLoc.exists())
@@ -284,7 +284,7 @@ public class PosixAdapter implements ObjectStoreAdapter {
                         KhazanaErrorCodes.CONTAINER_NOT_PRESENT_IN_DESTINATION.getErrorMessage());
 
             InputStream ios = new FileInputStream(containerZip);
-            byte[] encryptedPacket = helper.encrypt(container, IOUtils.toByteArray(ios));
+            byte[] encryptedPacket = helper.encrypt(refId, IOUtils.toByteArray(ios));
             FileUtils.copyToFile(new ByteArrayInputStream(encryptedPacket), containerZip);
             return encryptedPacket != null;
         } catch (Exception e) {

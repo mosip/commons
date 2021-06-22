@@ -60,13 +60,10 @@ public class OnlineCryptoUtil {
 
     private RestTemplate restTemplate = null;
 
-    public byte[] encrypt(String id, byte[] packet) {
+    public byte[] encrypt(String refId, byte[] packet) {
         byte[] encryptedPacket = null;
 
         try {
-            String centerId = id.substring(0, centerIdLength);
-            String machineId = id.substring(centerIdLength, centerIdLength + machineIdLength);
-            String refId = centerId + "_" + machineId;
             String packetString = CryptoUtil.encodeBase64String(packet);
             CryptomanagerRequestDto cryptomanagerRequestDto = new CryptomanagerRequestDto();
             RequestWrapper<CryptomanagerRequestDto> request = new RequestWrapper<>();
@@ -82,17 +79,8 @@ public class OnlineCryptoUtil {
             sRandom.nextBytes(aad);
             cryptomanagerRequestDto.setAad(CryptoUtil.encodeBase64String(aad));
             cryptomanagerRequestDto.setSalt(CryptoUtil.encodeBase64String(nonce));
-            // setLocal Date Time
-            if (id.length() > 14) {
-                String packetCreatedDateTime = id.substring(id.length() - 14);
-                String formattedDate = packetCreatedDateTime.substring(0, 8) + "T"
-                        + packetCreatedDateTime.substring(packetCreatedDateTime.length() - 6);
+            cryptomanagerRequestDto.setTimeStamp(DateUtils.getUTCCurrentDateTime());
 
-                cryptomanagerRequestDto.setTimeStamp(
-                        LocalDateTime.parse(formattedDate, DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss")));
-            } else {
-                throw new ObjectStoreAdapterException("", "Packet Encryption Failed-Invalid Packet format");
-            }
             request.setId(DECRYPT_SERVICE_ID);
             request.setMetadata(null);
             request.setRequest(cryptomanagerRequestDto);
@@ -134,13 +122,10 @@ public class OnlineCryptoUtil {
     }
 
 
-    public byte[] decrypt(String id, byte[] packet) {
+    public byte[] decrypt(String refId, byte[] packet) {
         byte[] decryptedPacket = null;
 
         try {
-            String centerId = id.substring(0, centerIdLength);
-            String machineId = id.substring(centerIdLength, centerIdLength + machineIdLength);
-            String refId = centerId + "_" + machineId;
             CryptomanagerRequestDto cryptomanagerRequestDto = new CryptomanagerRequestDto();
             RequestWrapper<CryptomanagerRequestDto> request = new RequestWrapper<>();
             cryptomanagerRequestDto.setApplicationId(APPLICATION_ID);
@@ -154,17 +139,8 @@ public class OnlineCryptoUtil {
             cryptomanagerRequestDto.setSalt(CryptoUtil.encodeBase64String(nonce));
             cryptomanagerRequestDto.setData(CryptoUtil.encodeBase64String(encryptedData));
             cryptomanagerRequestDto.setPrependThumbprint(isPrependThumbprintEnabled);
-            // setLocal Date Time
-            if (id.length() > 14) {
-                String packetCreatedDateTime = id.substring(id.length() - 14);
-                String formattedDate = packetCreatedDateTime.substring(0, 8) + "T"
-                        + packetCreatedDateTime.substring(packetCreatedDateTime.length() - 6);
+            cryptomanagerRequestDto.setTimeStamp(DateUtils.getUTCCurrentDateTime());
 
-                cryptomanagerRequestDto.setTimeStamp(
-                        LocalDateTime.parse(formattedDate, DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss")));
-            } else {
-                throw new ObjectStoreAdapterException("","Packet DecryptionFailed-Invalid Packet format");
-            }
             request.setId(DECRYPT_SERVICE_ID);
             request.setMetadata(null);
             request.setRequest(cryptomanagerRequestDto);

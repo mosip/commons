@@ -54,24 +54,6 @@ public class OfflinePacketCryptoServiceImpl implements IPacketCryptoService {
      */
     private ClientCryptoManagerService tpmCryptoService = null;
 
-    /**
-     * The sign applicationid.
-     */
-    @Value("${mosip.sign.applicationid:KERNEL}")
-    private String signApplicationid;
-
-    /**
-     * The sign refid.
-     */
-    @Value("${mosip.sign.refid:SIGN}")
-    private String signRefid;
-
-    @Value("${mosip.kernel.registrationcenterid.length:5}")
-    private int centerIdLength;
-
-    @Value("${mosip.kernel.machineid.length:5}")
-    private int machineIdLength;
-
     @Value("${crypto.PrependThumbprint.enable:true}")
     private boolean isPrependThumbprintEnabled;
 
@@ -83,10 +65,7 @@ public class OfflinePacketCryptoServiceImpl implements IPacketCryptoService {
     }
 
     @Override
-    public byte[] encrypt(String id, byte[] packet) {
-        String centerId = id.substring(0, centerIdLength);
-        String machineId = id.substring(centerIdLength, centerIdLength + machineIdLength);
-        String refId = centerId + "_" + machineId;
+    public byte[] encrypt(String refId, byte[] packet) {
         String packetString = CryptoUtil.encodeBase64String(packet);
         CryptomanagerRequestDto cryptomanagerRequestDto = new CryptomanagerRequestDto();
         cryptomanagerRequestDto.setApplicationId(APPLICATION_ID);
@@ -101,26 +80,14 @@ public class OfflinePacketCryptoServiceImpl implements IPacketCryptoService {
         sRandom.nextBytes(aad);
         cryptomanagerRequestDto.setAad(CryptoUtil.encodeBase64String(aad));
         cryptomanagerRequestDto.setSalt(CryptoUtil.encodeBase64String(nonce));
-        // setLocal Date Time
-        if (id.length() > 14) {
-            String packetCreatedDateTime = id.substring(id.length() - 14);
-            String formattedDate = packetCreatedDateTime.substring(0, 8) + "T"
-                    + packetCreatedDateTime.substring(packetCreatedDateTime.length() - 6);
+        cryptomanagerRequestDto.setTimeStamp(DateUtils.getUTCCurrentDateTime());
 
-            cryptomanagerRequestDto.setTimeStamp(LocalDateTime.parse(formattedDate, DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss")));
-        } else {
-            throw new PacketDecryptionFailureException("Packet Encryption Failed-Invalid Packet format");
-        }
         byte[] encryptedData = CryptoUtil.decodeBase64(getCryptomanagerService().encrypt(cryptomanagerRequestDto).getData());
         return EncryptionUtil.mergeEncryptedData(encryptedData, nonce, aad);
     }
 
     @Override
-    public byte[] decrypt(String id, byte[] packet) {
-        String centerId = id.substring(0, centerIdLength);
-        String machineId = id.substring(centerIdLength, centerIdLength + machineIdLength);
-        String refId = centerId + "_" + machineId;
-
+    public byte[] decrypt(String refId, byte[] packet) {
         byte[] nonce = Arrays.copyOfRange(packet, 0, CryptomanagerConstant.GCM_NONCE_LENGTH);
         byte[] aad = Arrays.copyOfRange(packet, CryptomanagerConstant.GCM_NONCE_LENGTH,
                 CryptomanagerConstant.GCM_NONCE_LENGTH + CryptomanagerConstant.GCM_AAD_LENGTH);
@@ -134,17 +101,8 @@ public class OfflinePacketCryptoServiceImpl implements IPacketCryptoService {
         cryptomanagerRequestDto.setSalt(CryptoUtil.encodeBase64String(nonce));
         cryptomanagerRequestDto.setData(CryptoUtil.encodeBase64String(encryptedData));
         cryptomanagerRequestDto.setPrependThumbprint(isPrependThumbprintEnabled);
-        // setLocal Date Time
-        if (id.length() > 14) {
-            String packetCreatedDateTime = id.substring(id.length() - 14);
-            String formattedDate = packetCreatedDateTime.substring(0, 8) + "T"
-                    + packetCreatedDateTime.substring(packetCreatedDateTime.length() - 6);
+        cryptomanagerRequestDto.setTimeStamp(DateUtils.getUTCCurrentDateTime());
 
-            cryptomanagerRequestDto.setTimeStamp(
-                    LocalDateTime.parse(formattedDate, DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss")));
-        } else {
-            throw new PacketDecryptionFailureException("Packet DecryptionFailed-Invalid Packet format");
-        }
         return CryptoUtil.decodeBase64(getCryptomanagerService().decrypt(cryptomanagerRequestDto).getData());
     }
 

@@ -7,6 +7,7 @@ import static io.mosip.commons.packet.constants.PacketManagerConstants.PACKET_NA
 import static io.mosip.commons.packet.constants.PacketManagerConstants.PROCESS;
 import static io.mosip.commons.packet.constants.PacketManagerConstants.PROVIDER_NAME;
 import static io.mosip.commons.packet.constants.PacketManagerConstants.PROVIDER_VERSION;
+import static io.mosip.commons.packet.constants.PacketManagerConstants.REFID;
 import static io.mosip.commons.packet.constants.PacketManagerConstants.SCHEMA_VERSION;
 import static io.mosip.commons.packet.constants.PacketManagerConstants.SIGNATURE;
 import static io.mosip.commons.packet.constants.PacketManagerConstants.SOURCE;
@@ -46,6 +47,12 @@ public class PacketManagerHelper {
     @Value("${mosip.kernel.xsdstorage-uri}")
     private String configServerFileStorageURL;
 
+    @Value("${mosip.kernel.registrationcenterid.length:5}")
+    private int centerIdLength;
+
+    @Value("${mosip.kernel.machineid.length:5}")
+    private int machineIdLength;
+
     /*
      * XSD file name
      */
@@ -58,7 +65,7 @@ public class PacketManagerHelper {
 
 
     public byte[] getXMLData(BiometricRecord biometricRecord, boolean offlineMode) throws Exception {
-        try (InputStream xsd = (offlineMode) ?
+        try (InputStream xsd = (offlineMode) && getClass().getClassLoader().getResourceAsStream(PacketManagerConstants.CBEFF_SCHEMA_FILE_PATH) != null ?
                 getClass().getClassLoader().getResourceAsStream(PacketManagerConstants.CBEFF_SCHEMA_FILE_PATH) :
                 new URL(configServerFileStorageURL + schemaName).openStream()) {
             CbeffContainerImpl cbeffContainer = new CbeffContainerImpl();
@@ -95,6 +102,7 @@ public class PacketManagerHelper {
         metaMap.put(PROVIDER_NAME, packetInfo.getProviderName());
         metaMap.put(PROVIDER_VERSION, packetInfo.getProviderVersion());
         metaMap.put(CREATION_DATE, packetInfo.getCreationDate());
+        metaMap.put(REFID, packetInfo.getRefId());
         return metaMap;
     }
 
@@ -110,7 +118,18 @@ public class PacketManagerHelper {
         packetInfo.setProviderName((String) metaMap.get(PROVIDER_NAME));
         packetInfo.setProviderVersion((String) metaMap.get(PROVIDER_VERSION));
         packetInfo.setCreationDate((String) metaMap.get(CREATION_DATE));
+        packetInfo.setRefId((String) metaMap.get(REFID));
         return packetInfo;
+    }
+
+    public String getRefId(String id, String refId) {
+        if (refId != null)
+            return refId;
+        else {
+            String centerId = id.substring(0, centerIdLength);
+            String machineId = id.substring(centerIdLength, centerIdLength + machineIdLength);
+            return centerId + "_" + machineId;
+        }
     }
 
 }
