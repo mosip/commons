@@ -104,7 +104,7 @@ public class OfflinePacketCryptoServiceImpl implements IPacketCryptoService {
         // setLocal Date Time
         if (id.length() > 14) {
         	String packetRid = id.split("-")[0];
-            String packetCreatedDateTime = packetRid.split("-")[0].substring(packetRid.length() - 14);
+            String packetCreatedDateTime = packetRid.substring(packetRid.length() - 14);
             String formattedDate = packetCreatedDateTime.substring(0, 8) + "T"
                     + packetCreatedDateTime.substring(packetCreatedDateTime.length() - 6);
 
@@ -138,7 +138,7 @@ public class OfflinePacketCryptoServiceImpl implements IPacketCryptoService {
         // setLocal Date Time
         if (id.length() > 14) {
         	String packetRid = id.split("-")[0];
-            String packetCreatedDateTime = packetRid.split("-")[0].substring(packetRid.length() - 14);
+            String packetCreatedDateTime = packetRid.substring(packetRid.length() - 14);
             String formattedDate = packetCreatedDateTime.substring(0, 8) + "T"
                     + packetCreatedDateTime.substring(packetCreatedDateTime.length() - 6);
 

@@ -148,9 +148,9 @@ public class PacketWriter {
     /**
      * Persist the packet into storage.
      * 
-     * default iteration value is "0"
+     * default iteration value is null
      * Example : 
-     * 1.if process is "NEW" & iteration is "0"
+     * 1.if process is "NEW" & iteration is "0" or "NULL"
      * 	packet name will be {id}-NEW
      * 2.if process is "CORRECTION" & iteration is "1"
      * 	packet name will be {id}-CORRECTION-1
@@ -161,7 +161,7 @@ public class PacketWriter {
      * @param process : the process
      * @return PacketInfo
      */
-    public List<PacketInfo> persistPacket(String id, String version, String schemaJson, String source, String process, boolean offlineMode, int iteration) {
+    public List<PacketInfo> persistPacket(String id, String version, String schemaJson, String source, String process, boolean offlineMode, Integer iteration) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "persistPacket for source : " + source + " process : " + process);
         return getProvider(source, process).persistPacket(id, version, schemaJson, source, process, offlineMode,iteration);

@@ -201,7 +201,7 @@ public class PacketKeeper {
     public PacketInfo putPacket(Packet packet) throws PacketKeeperException {
         try {
             // encrypt packet
-            byte[] encryptedSubPacket  = getCryptoService().encrypt(packet.getPacketInfo().getId(), packet.getPacket());
+            byte[] encryptedSubPacket = getCryptoService().encrypt(packet.getPacketInfo().getId(), packet.getPacket());
 
             // put packet in object store
             boolean response = getAdapter().putObject(PACKET_MANAGER_ACCOUNT,

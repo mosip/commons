@@ -121,7 +121,8 @@ public class PacketWriterImpl implements IPacketWriter {
         this.initialize(id).addMetaData(key, value);
     }
 
-    private List<PacketInfo> createPacket(String id, String version, String schemaJson, String source, String process, boolean offlineMode, int iteration) throws PacketCreatorException {
+    private List<PacketInfo> createPacket(String id, String version, String schemaJson,
+    		String source, String process, boolean offlineMode, Integer iteration) throws PacketCreatorException {
         LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.ID.toString(), id, "Started packet creation");
         if (this.registrationPacket == null || !registrationPacket.getRegistrationId().equalsIgnoreCase(id))
             throw new PacketCreatorException(ErrorCode.INITIALIZATION_ERROR.getErrorCode(),
@@ -144,7 +145,7 @@ public class PacketWriterImpl implements IPacketWriter {
                 packetInfo.setProviderName(this.getClass().getSimpleName());
                 packetInfo.setSchemaVersion(new Double(version).toString());
                 
-                packetInfo.setId(offlineMode ? (iteration == 0 ? String.format("%s-%s", id, process)
+                packetInfo.setId(offlineMode ? ((iteration == null || iteration == 0) ? String.format("%s-%s", id, process)
 						: String.format("%s-%s-%s", id, process, iteration))
 						: id);
 
@@ -412,7 +413,7 @@ public class PacketWriterImpl implements IPacketWriter {
     }
 
     @Override
-    public List<PacketInfo> persistPacket(String id, String version, String schemaJson, String source, String process, boolean offlineMode, int iteration) {
+    public List<PacketInfo> persistPacket(String id, String version, String schemaJson, String source, String process, boolean offlineMode, Integer iteration) {
         try {
             return createPacket(id, version, schemaJson, source, process, offlineMode,iteration);
         } catch (PacketCreatorException e) {
