@@ -13,5 +13,5 @@ COMMENT ON DATABASE mosip_kernel IS 'Kernel related logs and the data is stored 
 DROP SCHEMA IF EXISTS kernel CASCADE;
 CREATE SCHEMA kernel;
 ALTER SCHEMA kernel OWNER TO postgres;
-ALTER DATABASE mosip_kernel SET search_path TO audit,pg_catalog,public;
+ALTER DATABASE mosip_kernel SET search_path TO kernel,pg_catalog,public;
 
