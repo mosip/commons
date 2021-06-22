@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,6 +32,7 @@ import io.mosip.commons.packetmanager.constant.DefaultStrategy;
 import io.mosip.commons.packetmanager.dto.BiometricsDto;
 import io.mosip.commons.packetmanager.dto.ContainerInfoDto;
 import io.mosip.commons.packetmanager.dto.InfoResponseDto;
+import io.mosip.commons.packetmanager.dto.SourceProcessDto;
 import io.mosip.commons.packetmanager.exception.SourceNotPresentException;
 import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
@@ -171,6 +173,60 @@ public class PacketReaderService {
         return source;
     }
 
+    public SourceProcessDto getSourceAndProcess(String id, String field, String source, String process) {
+        SourceProcessDto sourceProcessDto = null;
+        if (StringUtils.isEmpty(source)) {
+            try {
+                if (defaultStrategy.equalsIgnoreCase(DefaultStrategy.DEFAULT_PRIORITY.getValue())) {
+                    InfoResponseDto infoResponseDto = info(id);
+                    ContainerInfoDto containerInfoDto = findPriority(field, process, infoResponseDto);
+                    if (containerInfoDto == null)
+                        return null;
+                    sourceProcessDto = new SourceProcessDto(containerInfoDto.getSource(), containerInfoDto.getProcess());
+                }
+            } catch (Exception e) {
+                throw new SourceNotPresentException(e);
+            }
+
+        } else {
+            sourceProcessDto = new SourceProcessDto(source, process);
+        }
+        return sourceProcessDto;
+    }
+
+    public ContainerInfoDto findPriority(String field, String process, InfoResponseDto infoResponseDto) throws IOException {
+        if (infoResponseDto.getInfo().size() == 1)
+            return infoResponseDto.getInfo().iterator().next();
+        else
+            return getContainerInfo(infoResponseDto, field);
+    }
+
+    private ContainerInfoDto getContainerInfo(InfoResponseDto infoResponseDto, String field) {
+        if (org.apache.commons.lang.StringUtils.isNotEmpty(defaultPriority)) {
+            String[] val = defaultPriority.split(",");
+            if (val != null && val.length > 0) {
+                for (String value : val) {
+                    String[] str = value.split("/");
+                    if (str != null && str.length > 0 && str[0].startsWith(sourceInitial)) {
+                        String sourceStr = str[0].substring(sourceInitial.length());
+                        String processStr = str[1].substring(processInitial.length());
+                        for (String process : processStr.split("\\|")) {
+                            Optional<ContainerInfoDto> containerDto = infoResponseDto.getInfo().stream().filter(info ->
+                                    info.getDemographics().contains(field) && info.getSource().equalsIgnoreCase(sourceStr)
+                            && info.getProcess().equalsIgnoreCase(process)).findAny();
+                            // if source is present then get from that source or else continue searching
+                            if (containerDto.isPresent()) {
+                                return containerDto.get();
+                            } else
+                                continue;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     private String getDefaultSource(String process) {
         if (org.apache.commons.lang.StringUtils.isNotEmpty(defaultPriority)) {
             String[] val = defaultPriority.split(",");
@@ -300,6 +356,6 @@ public class PacketReaderService {
 			throw new GetTagException(e.getMessage());
 
 		}
-    	
+
     }
 }
