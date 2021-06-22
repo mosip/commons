@@ -64,6 +64,7 @@ import io.mosip.kernel.signature.dto.SignatureRequestDto;
 import io.mosip.kernel.signature.dto.SignatureResponseDto;
 import io.mosip.kernel.signature.dto.TimestampRequestDto;
 import io.mosip.kernel.signature.dto.ValidatorResponseDto;
+import io.mosip.kernel.signature.exception.CertificateNotValidException;
 import io.mosip.kernel.signature.exception.PublicKeyParseException;
 import io.mosip.kernel.signature.exception.RequestException;
 import io.mosip.kernel.signature.exception.SignatureFailureException;
@@ -310,10 +311,10 @@ public class SignatureServiceImpl implements SignatureService {
 		boolean signatureValid = false;
 		Certificate certToVerify = certificateExistsInHeader(jwtTokens[0]);
 		if (Objects.nonNull(certToVerify)){
-			signatureValid = verifySignature(jwtTokens, encodedActualData, certToVerify.getPublicKey());
+			signatureValid = verifySignature(jwtTokens, encodedActualData, certToVerify);
 		} else {
 			Certificate reqCertToVerify = getCertificateToVerify(reqCertData, applicationId, referenceId);
-			signatureValid = verifySignature(jwtTokens, encodedActualData, reqCertToVerify.getPublicKey());
+			signatureValid = verifySignature(jwtTokens, encodedActualData, reqCertToVerify);
 		}
 
 		JWTSignatureVerifyResponseDto responseDto = new JWTSignatureVerifyResponseDto();
@@ -358,9 +359,18 @@ public class SignatureServiceImpl implements SignatureService {
 		return null;
 	}
 
-	private boolean verifySignature(String[] jwtTokens, String actualData, PublicKey publicKey) {
+	private boolean verifySignature(String[] jwtTokens, String actualData, Certificate certToVerify) {
 		JsonWebSignature jws = new JsonWebSignature();
 		try {
+			boolean validCert = SignatureUtil.isCertificateDatesValid((X509Certificate) certToVerify);
+			if (!validCert) {
+				LOGGER.error(SignatureConstant.SESSIONID, SignatureConstant.JWT_SIGN, SignatureConstant.BLANK,
+					"Error certificate dates are not valid.");
+					throw new CertificateNotValidException(SignatureErrorCode.CERT_NOT_VALID.getErrorCode(),
+								SignatureErrorCode.CERT_NOT_VALID.getErrorMessage());
+			}
+			
+			PublicKey publicKey = certToVerify.getPublicKey();
 			if (Objects.nonNull(actualData))
 				jwtTokens[1] = actualData;
 

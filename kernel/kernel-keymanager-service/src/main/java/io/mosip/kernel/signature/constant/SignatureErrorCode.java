@@ -19,7 +19,9 @@ public enum SignatureErrorCode {
 
 	VERIFY_ERROR("KER-JWS-105", "Error - Unable to verify the data."),
 
-	INVALID_VERIFY_INPUT("KER-JWS-102", "Signature data to verify not valid."),
+	INVALID_VERIFY_INPUT("KER-JWS-106", "Signature data to verify not valid."),
+
+	CERT_NOT_VALID("KER-JWS-107", "Signature verification certificate not valid."),
 
 	INTERNAL_SERVER_ERROR("KER-CSS-102", "Internal server error");
 

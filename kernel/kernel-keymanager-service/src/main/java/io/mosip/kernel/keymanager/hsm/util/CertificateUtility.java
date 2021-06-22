@@ -70,8 +70,12 @@ public class CertificateUtility {
 		X500Name rootCertIssuer = new X500Name(getCertificateAttributes(commonName, organizationalUnit, organization, country));
 		X500Name rootCertSubject = rootCertIssuer;
 		KeyUsage keyUsage = new KeyUsage(KeyUsage.digitalSignature | KeyUsage.keyCertSign);
+		BasicConstraints basicConstraints = new BasicConstraints(0);
+		if (rootCertSubject.equals(rootCertIssuer)) {
+			basicConstraints = new BasicConstraints(1);
+		}
 		return generateX509Certificate(signPrivateKey, publicKey, rootCertIssuer, rootCertSubject, signAlgorithm, providerName,
-				 validityFrom, validityTo, keyUsage);
+				 validityFrom, validityTo, keyUsage, basicConstraints);
 	}
 
 	/**
@@ -89,12 +93,17 @@ public class CertificateUtility {
 		X500Name certSubject = getCertificateAttributes(certParams); //new X500Name(RFC4519Style.INSTANCE, getCertificateAttributes(certParams));
 		X500Name certIssuer = Objects.nonNull(signerPrincipal)? new X500Name(RFC4519Style.INSTANCE, signerPrincipal.getName()) : certSubject;
 		KeyUsage keyUsage = new KeyUsage(KeyUsage.digitalSignature | KeyUsage.keyCertSign);
+		BasicConstraints basicConstraints = new BasicConstraints(0);
+		if (certSubject.equals(certIssuer)) {
+			basicConstraints = new BasicConstraints(1);
+		}
 		return generateX509Certificate(signPrivateKey, publicKey, certIssuer, certSubject, signAlgorithm, providerName, 
-									certParams.getNotBefore(), certParams.getNotAfter(), keyUsage);
+									certParams.getNotBefore(), certParams.getNotAfter(), keyUsage, basicConstraints);
 	}
 
 	private static X509Certificate generateX509Certificate(PrivateKey signPrivateKey, PublicKey publicKey, X500Name certIssuer, X500Name certSubject, 
-						String signAlgorithm, String providerName, LocalDateTime notBefore, LocalDateTime notAfter, KeyUsage keyUsage) {
+						String signAlgorithm, String providerName, LocalDateTime notBefore, LocalDateTime notAfter, KeyUsage keyUsage, 
+						BasicConstraints basicConstraints) {
 		try {
 			BigInteger certSerialNum = new BigInteger(Long.toString(new SecureRandom().nextLong()));
 			
@@ -102,7 +111,7 @@ public class CertificateUtility {
 			X509v3CertificateBuilder certBuilder = new JcaX509v3CertificateBuilder(certIssuer, certSerialNum, getDateFromLocalDateTime(notBefore), 
 													getDateFromLocalDateTime(notAfter), certSubject, publicKey);
 			JcaX509ExtensionUtils certExtUtils = new JcaX509ExtensionUtils();
-			certBuilder.addExtension(Extension.basicConstraints, true, new BasicConstraints(true));
+			certBuilder.addExtension(Extension.basicConstraints, true, basicConstraints);
 			certBuilder.addExtension(Extension.subjectKeyIdentifier, false, certExtUtils.createSubjectKeyIdentifier(publicKey));
 			certBuilder.addExtension(Extension.keyUsage, true, keyUsage);
 			X509CertificateHolder certHolder = certBuilder.build(certContentSigner);	        
@@ -122,8 +131,9 @@ public class CertificateUtility {
 		if (encKeyUsage) {
 			keyUsage = new KeyUsage(KeyUsage.digitalSignature | KeyUsage.keyCertSign | KeyUsage.keyEncipherment);
 		}
+		BasicConstraints basicConstraints = new BasicConstraints(false);
 		return generateX509Certificate(signPrivateKey, publicKey, certIssuer, certSubject, signAlgorithm, providerName, 
-									certParams.getNotBefore(), certParams.getNotAfter(), keyUsage);
+									certParams.getNotBefore(), certParams.getNotAfter(), keyUsage, basicConstraints);
 	}
 
 	public static X509Certificate generateX509Certificate(PrivateKey signPrivateKey, PublicKey publicKey, CertificateParameters certParams, 
@@ -132,9 +142,9 @@ public class CertificateUtility {
 		X500Name certSubject = getCertificateAttributes(certParams); 
 		X500Name certIssuer = Objects.nonNull(signerPrincipal)? new X500Name(RFC4519Style.INSTANCE, signerPrincipal.getName()) : certSubject;
 		KeyUsage keyUsage = new KeyUsage(KeyUsage.keyEncipherment);
-		
+		BasicConstraints basicConstraints = new BasicConstraints(false);
 		return generateX509Certificate(signPrivateKey, publicKey, certIssuer, certSubject, signAlgorithm, providerName, 
-									certParams.getNotBefore(), certParams.getNotAfter(), keyUsage);
+									certParams.getNotBefore(), certParams.getNotAfter(), keyUsage, basicConstraints);
 	}
 
 	/**

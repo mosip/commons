@@ -65,6 +65,13 @@ public class CryptomanagerServiceImpl implements CryptomanagerService {
 	@Value("${mosip.kernel.keymanager.113nothumbprint.support:false}")
 	private boolean noThumbprint;
 
+	@Value("${mosip.sign-certificate-refid:SIGN}")
+	private String signRefId;
+
+	/** The sign applicationid. */
+	@Value("${mosip.sign.applicationid:KERNEL}")
+	private String signApplicationId;
+
 	/**
 	 * {@link KeyGenerator} instance
 	 */
@@ -95,7 +102,9 @@ public class CryptomanagerServiceImpl implements CryptomanagerService {
 		LOGGER.info(CryptomanagerConstant.SESSIONID, CryptomanagerConstant.ENCRYPT, CryptomanagerConstant.ENCRYPT, 
 						"Request for data encryption.");
 		
-		if(!cryptomanagerUtil.isDataValid(cryptoRequestDto.getReferenceId())) {
+		if(!cryptomanagerUtil.isDataValid(cryptoRequestDto.getReferenceId()) || 
+			(cryptoRequestDto.getApplicationId().equalsIgnoreCase(signApplicationId) && 
+				cryptoRequestDto.getReferenceId().equalsIgnoreCase(signRefId))) {
 			LOGGER.error(CryptomanagerConstant.SESSIONID, CryptomanagerConstant.ENCRYPT, CryptomanagerConstant.ENCRYPT,
 								"Not Allowed to preform encryption with Master Key.");
 			throw new CryptoManagerSerivceException(CryptomanagerErrorCode.ENCRYPT_NOT_ALLOWED_ERROR.getErrorCode(),
