@@ -147,6 +147,14 @@ public class PacketWriter {
 
     /**
      * Persist the packet into storage.
+     * 
+     * default iteration value is "0"
+     * Example : 
+     * 1.if process is "NEW" & iteration is "0"
+     * 	packet name will be {id}-NEW
+     * 2.if process is "CORRECTION" & iteration is "1"
+     * 	packet name will be {id}-CORRECTION-1
+     * 3.If it is online mode then packet name will be {id}
      *
      * @param id      : the registration id
      * @param source  : the source packet. Default if not provided.

@@ -143,7 +143,11 @@ public class PacketWriterImpl implements IPacketWriter {
                 PacketInfo packetInfo = new PacketInfo();
                 packetInfo.setProviderName(this.getClass().getSimpleName());
                 packetInfo.setSchemaVersion(new Double(version).toString());
-                packetInfo.setId(iteration==0 ? String.format("%s-%s",id, process) : String.format("%s-%s-%s",id, process, iteration));
+                
+                packetInfo.setId(offlineMode ? (iteration == 0 ? String.format("%s-%s", id, process)
+						: String.format("%s-%s-%s", id, process, iteration))
+						: id);
+
                 packetInfo.setSource(source);
                 packetInfo.setProcess(process);
                 packetInfo.setPacketName(id + UNDERSCORE + subPacketName);
