@@ -25,7 +25,8 @@ import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterConstant;
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterErrorCode;
 import io.mosip.kernel.auth.defaultadapter.exception.AuthAdapterException;
 import io.mosip.kernel.auth.defaultadapter.exception.AuthRestException;
-import io.mosip.kernel.auth.defaultadapter.util.TokenHolder;
+import io.mosip.kernel.auth.defaultadapter.helper.TokenHelper;
+import io.mosip.kernel.auth.defaultadapter.model.TokenHolder;
 import io.mosip.kernel.core.authmanager.model.ClientSecret;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
@@ -54,9 +55,11 @@ public class SelfTokenRestInterceptor implements ClientHttpRequestInterceptor {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelfTokenRestInterceptor.class);
 
 	private RestTemplate restTemplate;
+	
+	private TokenHelper tokenHelper;
 
 	public SelfTokenRestInterceptor(Environment environment, RestTemplate restTemplate,
-			TokenHolder<String> cachedToken) {
+			TokenHolder<String> cachedToken,TokenHelper tokenHelper) {
 		clientID = environment.getProperty("mosip.iam.adapter.clientid", "");
 		clientSecret = environment.getProperty("mosip.iam.adapter.clientsecret", "");
 		appID = environment.getProperty("mosip.iam.adapter.appid", "");
@@ -64,6 +67,7 @@ public class SelfTokenRestInterceptor implements ClientHttpRequestInterceptor {
 		validateTokenURL = environment.getProperty("auth.server.admin.validate.url", "");
 		this.cachedToken = cachedToken;
 		this.restTemplate = restTemplate;
+		this.tokenHelper = tokenHelper;
 	}
 
 	ObjectMapper objectMapper = new ObjectMapper();
@@ -74,6 +78,8 @@ public class SelfTokenRestInterceptor implements ClientHttpRequestInterceptor {
 		// null check if job is not able to fetch client id secret
 		if (cachedToken.getToken() == null) {
 			LOGGER.error("there is some issue with getting token with clienid and secret");
+			throw new AuthAdapterException(AuthAdapterErrorCode.SELF_AUTH_TOKEN_NULL.getErrorCode(),
+					AuthAdapterErrorCode.SELF_AUTH_TOKEN_NULL.getErrorMessage());
 		}
 		request.getHeaders().add(AuthAdapterConstant.AUTH_HEADER_COOKIE,
 				AuthAdapterConstant.AUTH_HEADER + cachedToken.getToken());
@@ -85,7 +91,7 @@ public class SelfTokenRestInterceptor implements ClientHttpRequestInterceptor {
 		synchronized (this) {
 			// online validation
 			if(!isTokenValid(cachedToken.getToken())) {
-			String authToken = getClientToken(clientID, clientSecret, appID);
+			String authToken = tokenHelper.getClientToken(clientID, clientSecret, appID,restTemplate,tokenURL);
 			cachedToken.setToken(authToken);		
 			}
 		}
@@ -103,40 +109,7 @@ public class SelfTokenRestInterceptor implements ClientHttpRequestInterceptor {
 
 	
 
-	private String getClientToken(String clientID, String clienSecret, String appID) {
-		RequestWrapper<ClientSecret> requestWrapper = new RequestWrapper<>();
-		ClientSecret clientCred = new ClientSecret();
-		clientCred.setAppId(appID);
-		clientCred.setClientId(clientID);
-		clientCred.setSecretKey(clienSecret);
-		requestWrapper.setRequest(clientCred);
-		HttpEntity<String> response = null;
-		try {
-			response = restTemplate.postForEntity(tokenURL, requestWrapper, String.class);
-		} catch (HttpServerErrorException | HttpClientErrorException e) {
-			LOGGER.error("error connecting to auth service {}", e.getResponseBodyAsString());
-			throw new AuthAdapterException(AuthAdapterErrorCode.CANNOT_CONNECT_TO_AUTH_SERVICE.getErrorCode(),
-					e.getResponseBodyAsString());
-		}
-		if (response == null) {
-			throw new AuthAdapterException(AuthAdapterErrorCode.CANNOT_CONNECT_TO_AUTH_SERVICE.getErrorCode(),
-					AuthAdapterErrorCode.CANNOT_CONNECT_TO_AUTH_SERVICE.getErrorMessage());
-		}
-		String responseBody = response.getBody();
-		List<ServiceError> validationErrorList = ExceptionUtils.getServiceErrorList(responseBody);
-		if (!validationErrorList.isEmpty()) {
-			throw new AuthRestException(validationErrorList);
-		}
-		HttpHeaders headers = response.getHeaders();
-		List<String> cookies = headers.get(AuthAdapterConstant.AUTH_HEADER_SET_COOKIE);
-		if (cookies == null || cookies.isEmpty())
-			throw new AuthAdapterException(AuthAdapterErrorCode.IO_EXCEPTION.getErrorCode(),
-					AuthAdapterErrorCode.IO_EXCEPTION.getErrorMessage());
-
-		String authToken = cookies.get(0).split(";")[0].split(AuthAdapterConstant.AUTH_HEADER)[1];
-
-		return authToken;
-	}
+	
 	
 
 	private boolean isTokenValid(String authToken) {

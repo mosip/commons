@@ -4,7 +4,6 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
-import java.util.Collection;
 import java.util.Collections;
 
 import javax.net.ssl.HostnameVerifier;
@@ -29,13 +28,17 @@ import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterConstant;
-import io.mosip.kernel.auth.defaultadapter.util.TokenHolder;
+import io.mosip.kernel.auth.defaultadapter.helper.TokenHelper;
+import io.mosip.kernel.auth.defaultadapter.model.TokenHolder;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 
 @Configuration
 @EnableScheduling
 public class BeanConfig {
-
+	
+	@Autowired 
+	private TokenHelper tokenHelper; 
+	
 	@Autowired
 	private Environment environment;
 
@@ -85,7 +88,8 @@ public class BeanConfig {
 	@Bean
 	public RestTemplate selfTokenRestTemplate(
 			@Autowired @Qualifier("plainRestTemplate") RestTemplate plainRestTemplate,
-			@Autowired TokenHolder<String> cachedTokenObject)
+			@Autowired TokenHolder<String> cachedTokenObject
+			)
 			throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
 		HttpClientBuilder httpClientBuilder = HttpClients.custom().disableCookieManagement();
 		RestTemplate restTemplate = null;
@@ -104,7 +108,7 @@ public class BeanConfig {
 		requestFactory.setHttpClient(httpClientBuilder.build());
 		restTemplate = new RestTemplate(requestFactory);
 		restTemplate.setInterceptors(Collections
-				.singletonList(new SelfTokenRestInterceptor(environment, plainRestTemplate, cachedTokenObject)));
+				.singletonList(new SelfTokenRestInterceptor(environment, plainRestTemplate, cachedTokenObject,tokenHelper)));
 		// interceptor added in RestTemplatePostProcessor
 		return restTemplate;
 	}
@@ -113,7 +117,7 @@ public class BeanConfig {
 	public SelfTokenRenewalTaskExecutor selfTokenRenewTaskExecutor(@Autowired TokenHolder<String> cachedTokenObject,
 			@Autowired @Qualifier("plainRestTemplate") RestTemplate plainRestTemplate)
 			throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
-		return new SelfTokenRenewalTaskExecutor(cachedTokenObject, plainRestTemplate);
+		return new SelfTokenRenewalTaskExecutor(cachedTokenObject, plainRestTemplate,tokenHelper);
 	}
 
 	@Bean

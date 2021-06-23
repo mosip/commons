@@ -11,7 +11,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import io.mosip.kernel.auth.defaultadapter.config.SelfTokenRestInterceptor;
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterConstant;
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterErrorCode;
 import io.mosip.kernel.auth.defaultadapter.exception.AuthAdapterException;
@@ -26,7 +25,7 @@ public class TokenHelper {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TokenHelper.class);
 
-	private String getClientToken(String clientID, String clienSecret, String appID, RestTemplate restTemplate,
+	public String getClientToken(String clientID, String clienSecret, String appID, RestTemplate restTemplate,
 			String tokenURL) {
 		RequestWrapper<ClientSecret> requestWrapper = new RequestWrapper<>();
 		ClientSecret clientCred = new ClientSecret();
@@ -39,12 +38,10 @@ public class TokenHelper {
 			response = restTemplate.postForEntity(tokenURL, requestWrapper, String.class);
 		} catch (HttpServerErrorException | HttpClientErrorException e) {
 			LOGGER.error("error connecting to auth service {}", e.getResponseBodyAsString());
-			throw new AuthAdapterException(AuthAdapterErrorCode.CANNOT_CONNECT_TO_AUTH_SERVICE.getErrorCode(),
-					e.getResponseBodyAsString());
 		}
 		if (response == null) {
-			throw new AuthAdapterException(AuthAdapterErrorCode.CANNOT_CONNECT_TO_AUTH_SERVICE.getErrorCode(),
-					AuthAdapterErrorCode.CANNOT_CONNECT_TO_AUTH_SERVICE.getErrorMessage());
+			LOGGER.error("error connecting to auth service {}", AuthAdapterErrorCode.CANNOT_CONNECT_TO_AUTH_SERVICE.getErrorMessage());
+			return null;
 		}
 		String responseBody = response.getBody();
 		List<ServiceError> validationErrorList = ExceptionUtils.getServiceErrorList(responseBody);
