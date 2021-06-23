@@ -37,7 +37,7 @@ public class PacketWriterController {
     @PutMapping(path = "/createPacket", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseWrapper<List<PacketInfo>> createPacket(@RequestBody(required = true) RequestWrapper<PacketDto> requestr) {
 
-        List<PacketInfo> resultField = packetWriter.createPacket(requestr.getRequest(), false);
+        List<PacketInfo> resultField = packetWriter.createPacket(requestr.getRequest());
         ResponseWrapper<List<PacketInfo>> response = getResponseWrapper();
         response.setResponse(resultField);
         return response;

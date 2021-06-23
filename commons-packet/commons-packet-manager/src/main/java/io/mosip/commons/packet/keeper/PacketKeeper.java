@@ -84,26 +84,10 @@ public class PacketKeeper {
     @Qualifier("OfflinePacketCryptoServiceImpl")
     private IPacketCryptoService offlineCrypto;
 
+    @Autowired
+    private PacketManagerHelper helper;
+
     private static final String UNDERSCORE = "_";
-
-    /**
-     * Get the manifest information for given packet id
-     *
-     * @param id : packet id
-     * @return : Manifest
-     */
-    /*public Manifest getManifest(String id) {
-        Manifest manifest = new Manifest();
-
-        Map<String, Object> metaMap = getAdapter().getMetaData(PACKET_MANAGER_ACCOUNT, id, null);
-
-        metaMap.entrySet().forEach(entry -> {
-            Map<String, Object> tempMap = (Map<String, Object>) entry.getValue();
-            PacketInfo packetInfo = PacketManagerHelper.getPacketInfo(tempMap);
-            manifest.getPacketInfos().add(packetInfo);
-        });
-        return manifest;
-    }*/
 
     /**
      * Check packet integrity.
@@ -128,9 +112,8 @@ public class PacketKeeper {
      * @return
      */
     public boolean checkSignature(Packet packet, byte[] encryptedSubPacket) throws NoSuchAlgorithmException {
-    	String machineId = packet.getPacketInfo().getId().substring(centerIdLength, centerIdLength+machineIdLength);
-        boolean result = disablePacketSignatureVerification ? true : 
-        		getCryptoService().verify(machineId, packet.getPacket()
+        boolean result = disablePacketSignatureVerification ? true :
+        		getCryptoService().verify(packet.getPacketInfo().getRefId(), packet.getPacket()
         				, CryptoUtil.decodeBase64(packet.getPacketInfo().getSignature()));
         if (result)
             result = checkIntegrity(packet.getPacketInfo(), encryptedSubPacket);
@@ -155,10 +138,8 @@ public class PacketKeeper {
                 throw new PacketKeeperException(ErrorCode.PACKET_NOT_FOUND.getErrorCode(), ErrorCode.PACKET_NOT_FOUND.getErrorMessage());
             }
             byte[] encryptedSubPacket = IOUtils.toByteArray(is);
-            byte[] subPacket = getCryptoService().decrypt(packetInfo.getId(), encryptedSubPacket);
 
             Packet packet = new Packet();
-            packet.setPacket(subPacket);
             Map<String, Object> metaInfo = getAdapter().getMetaData(PACKET_MANAGER_ACCOUNT, packetInfo.getId(),
                     packetInfo.getSource(), packetInfo.getProcess(), getName(packetInfo.getId(), packetInfo.getPacketName()));
             if (metaInfo != null && !metaInfo.isEmpty())
@@ -168,6 +149,9 @@ public class PacketKeeper {
                         getName(packetInfo.getId(), packetInfo.getPacketName()), "metainfo not found for this packet");
                 packet.setPacketInfo(packetInfo);
             }
+            byte[] subPacket = getCryptoService().decrypt(helper.getRefId(
+                    packet.getPacketInfo().getId(), packet.getPacketInfo().getRefId()), encryptedSubPacket);
+            packet.setPacket(subPacket);
 
 
 			if (!checkSignature(packet, encryptedSubPacket)) {
@@ -201,7 +185,7 @@ public class PacketKeeper {
     public PacketInfo putPacket(Packet packet) throws PacketKeeperException {
         try {
             // encrypt packet
-            byte[] encryptedSubPacket = getCryptoService().encrypt(packet.getPacketInfo().getId(), packet.getPacket());
+            byte[] encryptedSubPacket = getCryptoService().encrypt(packet.getPacketInfo().getRefId(), packet.getPacket());
 
             // put packet in object store
             boolean response = getAdapter().putObject(PACKET_MANAGER_ACCOUNT,
@@ -265,8 +249,8 @@ public class PacketKeeper {
         return getAdapter().removeContainer(PACKET_MANAGER_ACCOUNT, id, source, process);
     }
 
-    public boolean pack(String id, String source, String process) {
-        return getAdapter().pack(PACKET_MANAGER_ACCOUNT, id, source, process);
+    public boolean pack(String id, String source, String process, String refId) {
+        return getAdapter().pack(PACKET_MANAGER_ACCOUNT, id, source, process, refId);
     }
 
 	public Map<String, String> addTags(TagDto tagDto) {

@@ -1,26 +1,23 @@
 package io.mosip.commons.packet.impl;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.SecureRandom;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.commons.khazana.util.EncryptionUtil;
-import io.mosip.commons.packet.dto.ValidateRequestDto;
+import io.mosip.commons.packet.constants.CryptomanagerConstant;
+import io.mosip.commons.packet.dto.TpmSignVerifyRequestDto;
 import io.mosip.commons.packet.dto.packet.CryptomanagerRequestDto;
 import io.mosip.commons.packet.dto.packet.CryptomanagerResponseDto;
 import io.mosip.commons.packet.exception.ApiNotAccessibleException;
 import io.mosip.commons.packet.exception.PacketDecryptionFailureException;
+import io.mosip.commons.packet.exception.SignatureException;
+import io.mosip.commons.packet.spi.IPacketCryptoService;
 import io.mosip.commons.packet.util.PacketManagerLogger;
 import io.mosip.kernel.clientcrypto.dto.TpmSignRequestDto;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
+import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.CryptoUtil;
+import io.mosip.kernel.core.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,20 +30,13 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.mosip.commons.packet.constants.CryptomanagerConstant;
-import io.mosip.commons.packet.dto.ClientPublicKeyResponseDto;
-import io.mosip.commons.packet.dto.SignRequestDto;
-import io.mosip.commons.packet.dto.TpmSignVerifyRequestDto;
-import io.mosip.commons.packet.dto.TpmSignVerifyResponseDto;
-import io.mosip.commons.packet.exception.SignatureException;
-import io.mosip.commons.packet.spi.IPacketCryptoService;
-import io.mosip.kernel.core.http.RequestWrapper;
-import io.mosip.kernel.core.http.ResponseWrapper;
-import io.mosip.kernel.core.util.DateUtils;
+import java.io.IOException;
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 
 @Component
 @Qualifier("OnlinePacketCryptoServiceImpl")
@@ -68,14 +58,8 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
     @Value("${mosip.kernel.cryptomanager.request_version:v1}")
     private String APPLICATION_VERSION;
 
-    @Value("${mosip.kernel.registrationcenterid.length:5}")
-    private int centerIdLength;
-
     @Value("${CRYPTOMANAGER_DECRYPT:null}")
     private String cryptomanagerDecryptUrl;
-
-    @Value("${mosip.kernel.machineid.length:5}")
-    private int machineIdLength;
 
     @Value("${crypto.PrependThumbprint.enable:true}")
     private boolean isPrependThumbprintEnabled;
@@ -127,13 +111,10 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
     }
 
     @Override
-    public byte[] encrypt(String id, byte[] packet) {
+    public byte[] encrypt(String refId, byte[] packet) {
         byte[] encryptedPacket = null;
 
         try {
-            String centerId = id.substring(0, centerIdLength);
-            String machineId = id.substring(centerIdLength, centerIdLength + machineIdLength);
-            String refId = centerId + "_" + machineId;
             String packetString = CryptoUtil.encodeBase64String(packet);
             CryptomanagerRequestDto cryptomanagerRequestDto = new CryptomanagerRequestDto();
             RequestWrapper<CryptomanagerRequestDto> request = new RequestWrapper<>();
@@ -149,19 +130,8 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
             sRandom.nextBytes(aad);
             cryptomanagerRequestDto.setAad(CryptoUtil.encodeBase64String(aad));
             cryptomanagerRequestDto.setSalt(CryptoUtil.encodeBase64String(nonce));
-            // setLocal Date Time
-            if (id.length() > 14) {
-                String packetCreatedDateTime = id.substring(id.length() - 14);
-                String formattedDate = packetCreatedDateTime.substring(0, 8) + "T"
-                        + packetCreatedDateTime.substring(packetCreatedDateTime.length() - 6);
+            cryptomanagerRequestDto.setTimeStamp(DateUtils.getUTCCurrentDateTime());
 
-                cryptomanagerRequestDto.setTimeStamp(
-                        LocalDateTime.parse(formattedDate, DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss")));
-            } else {
-                LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
-                        "Packet encryption Failed-Invalid datetime format");
-                throw new PacketDecryptionFailureException("Packet encryption Failed-Invalid datetime format");
-            }
             request.setId(DECRYPT_SERVICE_ID);
             request.setMetadata(null);
             request.setRequest(cryptomanagerRequestDto);
@@ -176,27 +146,27 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
             CryptomanagerResponseDto responseObject = mapper.readValue(response.getBody(), CryptomanagerResponseDto.class);
             if (responseObject != null &&
                     responseObject.getErrors() != null && !responseObject.getErrors().isEmpty()) {
-                LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
+                LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REFERENCEID, refId,
                         "Packet encryption failed");
                 ServiceError error = responseObject.getErrors().get(0);
-                LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
+                LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REFERENCEID, refId,
                         "Packet encryption failure message : " + error.getMessage());
                 throw new PacketDecryptionFailureException(error.getMessage());
             }
             byte[] encryptedData = CryptoUtil.decodeBase64(responseObject.getResponse().getData());
             encryptedPacket = EncryptionUtil.mergeEncryptedData(encryptedData, nonce, aad);
-            LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
+            LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REFERENCEID, refId,
                     "Successfully encrypted Packet");
         } catch (IOException e) {
-            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
+            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REFERENCEID, refId,
                     ExceptionUtils.getStackTrace(e));
             throw new PacketDecryptionFailureException(IO_EXCEPTION, e);
         } catch (DateTimeParseException e) {
-            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
+            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REFERENCEID, refId,
                     ExceptionUtils.getStackTrace(e));
             throw new PacketDecryptionFailureException(DATE_TIME_EXCEPTION);
         } catch (Exception e) {
-            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
+            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REFERENCEID, refId,
                     ExceptionUtils.getStackTrace(e));
             if (e.getCause() instanceof HttpClientErrorException) {
                 HttpClientErrorException httpClientException = (HttpClientErrorException) e.getCause();
@@ -213,13 +183,10 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
     }
 
     @Override
-    public byte[] decrypt(String id, byte[] packet) {
+    public byte[] decrypt(String refId, byte[] packet) {
         byte[] decryptedPacket = null;
 
         try {
-            String centerId = id.substring(0, centerIdLength);
-            String machineId = id.substring(centerIdLength, centerIdLength + machineIdLength);
-            String refId = centerId + "_" + machineId;
             CryptomanagerRequestDto cryptomanagerRequestDto = new CryptomanagerRequestDto();
             RequestWrapper<CryptomanagerRequestDto> request = new RequestWrapper<>();
             cryptomanagerRequestDto.setApplicationId(APPLICATION_ID);
@@ -233,19 +200,8 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
             cryptomanagerRequestDto.setSalt(CryptoUtil.encodeBase64String(nonce));
             cryptomanagerRequestDto.setData(CryptoUtil.encodeBase64String(encryptedData));
             cryptomanagerRequestDto.setPrependThumbprint(isPrependThumbprintEnabled);
-            // setLocal Date Time
-            if (id.length() > 14) {
-                String packetCreatedDateTime = id.substring(id.length() - 14);
-                String formattedDate = packetCreatedDateTime.substring(0, 8) + "T"
-                        + packetCreatedDateTime.substring(packetCreatedDateTime.length() - 6);
+            cryptomanagerRequestDto.setTimeStamp(DateUtils.getUTCCurrentDateTime());
 
-                cryptomanagerRequestDto.setTimeStamp(
-                        LocalDateTime.parse(formattedDate, DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss")));
-            } else {
-                LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
-                        "Packet DecryptionFailed-Invalid Packet format");
-                throw new PacketDecryptionFailureException("Packet DecryptionFailed-Invalid Packet format");
-            }
             request.setId(DECRYPT_SERVICE_ID);
             request.setMetadata(null);
             request.setRequest(cryptomanagerRequestDto);
@@ -262,26 +218,26 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
 
             if (responseObject != null &&
                     responseObject.getErrors() != null && !responseObject.getErrors().isEmpty()) {
-                LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
+                LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REFERENCEID, refId,
                         "Packet decryption failed");
                 ServiceError error = responseObject.getErrors().get(0);
-                LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
+                LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REFERENCEID, refId,
                         "Error message : " + error.getMessage());
                 throw new PacketDecryptionFailureException(error.getMessage());
             }
             decryptedPacket = CryptoUtil.decodeBase64(responseObject.getResponse().getData());
-            LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
+            LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REFERENCEID, refId,
                     "Successfully decrypted Packet");
         } catch (IOException e) {
-            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
+            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REFERENCEID, refId,
                     ExceptionUtils.getStackTrace(e));
             throw new PacketDecryptionFailureException(IO_EXCEPTION, e);
         } catch (DateTimeParseException e) {
-            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
+            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REFERENCEID, refId,
                     ExceptionUtils.getStackTrace(e));
             throw new PacketDecryptionFailureException(DATE_TIME_EXCEPTION);
         } catch (Exception e) {
-            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
+            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REFERENCEID, refId,
                     ExceptionUtils.getStackTrace(e));
             if (e.getCause() instanceof HttpClientErrorException) {
                 HttpClientErrorException httpClientException = (HttpClientErrorException) e.getCause();
@@ -298,8 +254,9 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
     }
 
     @Override
-    public boolean verify(String machineId,byte[] packet, byte[] signature) {
+    public boolean verify(String refId, byte[] packet, byte[] signature) {
        try {
+           String machineId = refId.split("_")[1];
     	   	String publicKey=getPublicKey(machineId);
             TpmSignVerifyRequestDto dto = new TpmSignVerifyRequestDto();
             dto.setData(CryptoUtil.encodeBase64(packet));
@@ -334,7 +291,7 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
         }
     }
 
-	private String getPublicKey(String machineId) throws JsonParseException, JsonMappingException, IOException {
+	private String getPublicKey(String machineId) throws IOException {
 		ResponseEntity<String> response = restTemplate.exchange(syncdataGetTpmKeyUrl+machineId, HttpMethod.GET, null,
                 String.class);
 		 LinkedHashMap responseMap = (LinkedHashMap) mapper.readValue(response.getBody(), LinkedHashMap.class).get("response");//.get("signature");

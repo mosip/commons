@@ -112,6 +112,7 @@ public class PacketManagerConstants {
 	public static final String PROVIDER_NAME = "providername";
 	public static final String PROVIDER_VERSION = "providerversion";
 	public static final String CREATION_DATE = "creationdate";
+	public static final String REFID = "refid";
 
 
 }

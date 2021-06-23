@@ -153,13 +153,14 @@ public class PacketWriter {
      * @param process : the process
      * @return PacketInfo
      */
-    public List<PacketInfo> persistPacket(String id, String version, String schemaJson, String source, String process, boolean offlineMode) {
+    public List<PacketInfo> persistPacket(String id, String version, String schemaJson, String source,
+                                          String process, String additionalInfoReqId, String refId, boolean offlineMode) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id,
                 "persistPacket for source : " + source + " process : " + process);
-        return getProvider(source, process).persistPacket(id, version, schemaJson, source, process, offlineMode);
+        return getProvider(source, process).persistPacket(id, version, schemaJson, source, process, additionalInfoReqId, refId, offlineMode);
     }
 
-    public List<PacketInfo> createPacket(PacketDto packetDto, boolean offlineMode) {
+    public List<PacketInfo> createPacket(PacketDto packetDto) {
         LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packetDto.getId(),
                 "createPacket for RID : " + packetDto.getId() + " source : " + packetDto.getSource() + " process : " + packetDto.getProcess());
         List<PacketInfo> packetInfos = null;
@@ -176,7 +177,8 @@ public class PacketWriter {
             if (packetDto.getBiometrics() != null)
                 packetDto.getBiometrics().entrySet().forEach(bio -> provider.setBiometric(packetDto.getId(), bio.getKey(), bio.getValue()));
             packetInfos = provider.persistPacket(packetDto.getId(), packetDto.getSchemaVersion(),
-                    packetDto.getSchemaJson(), packetDto.getSource(), packetDto.getProcess(), offlineMode);
+                    packetDto.getSchemaJson(), packetDto.getSource(), packetDto.getProcess(), packetDto.getAdditionalInfoReqId(),
+                    packetDto.getRefId(), packetDto.isOfflineMode());
 
         } catch (Exception e) {
             LOGGER.info(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, packetDto.getId(),

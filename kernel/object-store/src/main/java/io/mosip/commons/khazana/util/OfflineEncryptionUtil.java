@@ -4,6 +4,7 @@ import io.mosip.commons.khazana.constant.KhazanaConstant;
 import io.mosip.commons.khazana.constant.KhazanaErrorCodes;
 import io.mosip.commons.khazana.exception.ObjectStoreAdapterException;
 import io.mosip.kernel.core.util.CryptoUtil;
+import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.cryptomanager.dto.CryptomanagerRequestDto;
 import io.mosip.kernel.cryptomanager.service.CryptomanagerService;
 import io.mosip.kernel.cryptomanager.service.impl.CryptomanagerServiceImpl;
@@ -46,10 +47,7 @@ public class OfflineEncryptionUtil {
     @Value("${crypto.PrependThumbprint.enable:true}")
     private boolean isPrependThumbprintEnabled;
 
-    public byte[] encrypt(String id, byte[] packet) {
-        String centerId = id.substring(0, centerIdLength);
-        String machineId = id.substring(centerIdLength, centerIdLength + machineIdLength);
-        String refId = centerId + "_" + machineId;
+    public byte[] encrypt(String refId, byte[] packet) {
         String packetString = CryptoUtil.encodeBase64String(packet);
         CryptomanagerRequestDto cryptomanagerRequestDto = new CryptomanagerRequestDto();
         cryptomanagerRequestDto.setApplicationId(APPLICATION_ID);
@@ -64,16 +62,8 @@ public class OfflineEncryptionUtil {
         sRandom.nextBytes(aad);
         cryptomanagerRequestDto.setAad(CryptoUtil.encodeBase64String(aad));
         cryptomanagerRequestDto.setSalt(CryptoUtil.encodeBase64String(nonce));
-        // setLocal Date Time
-        if (id.length() > 14) {
-            String packetCreatedDateTime = id.substring(id.length() - 14);
-            String formattedDate = packetCreatedDateTime.substring(0, 8) + "T"
-                    + packetCreatedDateTime.substring(packetCreatedDateTime.length() - 6);
+        cryptomanagerRequestDto.setTimeStamp(DateUtils.getUTCCurrentDateTime());
 
-            cryptomanagerRequestDto.setTimeStamp(LocalDateTime.parse(formattedDate, DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss")));
-        } else {
-            throw new ObjectStoreAdapterException(KhazanaErrorCodes.ENCRYPTION_FAILURE.getErrorCode(), KhazanaErrorCodes.ENCRYPTION_FAILURE.getErrorMessage());
-        }
         byte[] encryptedData = CryptoUtil.decodeBase64(getCryptomanagerService().encrypt(cryptomanagerRequestDto).getData());
         return EncryptionUtil.mergeEncryptedData(encryptedData, nonce, aad);
     }

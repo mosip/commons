@@ -13,6 +13,7 @@ public class PacketInfo implements Serializable {
     private String packetName;
     private String source;
     private String process;
+    private String refId;
     private String schemaVersion;
     private String signature;
     private String encryptedHash;
