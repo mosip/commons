@@ -33,6 +33,10 @@ public class FailedContentRequest {
 	 */
 	private String timestamp;
 	/**
+	 * OPTIONAL. Index user in pagination.
+	 */
+	private int paginationIndex;
+	/**
 	 * OPTIONAL. No of failed content to be fetched.
 	 */
 	private int messageCount;
