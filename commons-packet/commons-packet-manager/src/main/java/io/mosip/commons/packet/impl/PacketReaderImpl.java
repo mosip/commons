@@ -12,13 +12,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
+import io.mosip.kernel.biometrics.constant.BiometricType;
+import io.mosip.kernel.core.util.JsonUtils;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.assertj.core.util.Lists;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,7 +63,6 @@ import io.mosip.kernel.core.exception.BaseCheckedException;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;
-import io.mosip.kernel.core.util.JsonUtils;
 
 
 @RefreshScope
@@ -239,14 +245,16 @@ public class PacketReaderImpl implements IPacketReader {
 				// biometric file not present in idobject. Search in meta data.
 				Map<String, String> metadataMap = getMetaInfo(id, source, process);
 				String operationsData = metadataMap.get(META_INFO_OPERATIONS_DATA);
-				JSONArray jsonArray = new JSONArray(operationsData);
-				for (int i = 0; i < jsonArray.length(); i++) {
-					JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-					if (jsonObject.has(LABEL)
-							&& jsonObject.get(LABEL).toString().equalsIgnoreCase(biometricFieldName)) {
-						packetName = ID;
-						fileName = jsonObject.isNull(VALUE) ? null : jsonObject.get(VALUE).toString();
-						break;
+				if (StringUtils.isNotEmpty(operationsData)) {
+					JSONArray jsonArray = new JSONArray(operationsData);
+					for (int i = 0; i < jsonArray.length(); i++) {
+						JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+						if (jsonObject.has(LABEL)
+								&& jsonObject.get(LABEL).toString().equalsIgnoreCase(biometricFieldName)) {
+							packetName = ID;
+							fileName = jsonObject.isNull(VALUE) ? null : jsonObject.get(VALUE).toString();
+							break;
+						}
 					}
 				}
 			} else {
@@ -374,31 +382,33 @@ public class PacketReaderImpl implements IPacketReader {
 	public List<BIR> filterByModalities(List<String> modalities,
 			List<BIR> birList) {
 		List<BIR> segments = new ArrayList<>();
-		if (modalities == null || modalities.isEmpty()) {
+		if (CollectionUtils.isEmpty(modalities)) {
 			birList.forEach(bir -> segments.add(bir));
 		} else {
-			Map<String, BIR> birMap = new HashMap<>();
+			// first search modalities in subtype and if not present search in type
 			for (BIR bir : birList) {
-				String mapKey = "";
-				if (bir.getBdbInfo().getSubtype() != null && !bir.getBdbInfo().getSubtype().isEmpty()) {
-					for (String subType : bir.getBdbInfo().getSubtype()) {
-						mapKey += subType;
-					}
-					mapKey = bir.getBdbInfo().getType().get(0) + "_" + mapKey;
-					birMap.put(mapKey, bir);
+				if (CollectionUtils.isNotEmpty(bir.getBdbInfo().getSubtype())
+						&& isModalityPresentInTypeSubtype(bir.getBdbInfo().getSubtype(), modalities)) {
+						segments.add(bir);
 				} else {
-					bir.getBdbInfo().getType().forEach(type -> birMap.put(type.toString(),bir ));
-				}
-			}
-			for (String modality : modalities) {
-				for (Entry<String, BIR> modalityEntry : birMap.entrySet()) {
-					if (modalityEntry.getKey().toLowerCase().contains(modality.toLowerCase())) {
-						segments.add(modalityEntry.getValue());
+					for (BiometricType type : bir.getBdbInfo().getType()) {
+						if (isModalityPresentInTypeSubtype(Lists.newArrayList(type.value()), modalities))
+							segments.add(bir);
 					}
 				}
 			}
 		}
-		return segments;
+			return segments;
+	}
+
+	private boolean isModalityPresentInTypeSubtype(List<String> typeSubtype, List<String> modalities) {
+		boolean isPresent = false;
+		for (String modality : modalities) {
+			String[] modalityArray = modality.split(" ");
+			if (ArrayUtils.isNotEmpty(modalityArray) && ListUtils.isEqualList(typeSubtype, Arrays.asList(modalityArray)))
+				isPresent = true;
+		}
+		return isPresent;
 	}
 
 }
