@@ -172,7 +172,7 @@ public class SubscriberClientImpl
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		if (failedContentRequest.getMessageCount() > 0) {
 			headers.set(WebSubClientConstants.SUBSCRIBER_SIGNATURE_HEADER,
-					getHmac256(failedContentRequest.getTopic() + failedContentRequest.getCallbackURL()+ failedContentRequest.getTimestamp()+String.valueOf(pageIndex)+ String.valueOf(failedContentRequest.getPaginationIndex())+String.valueOf(failedContentRequest.getMessageCount()),
+					getHmac256(failedContentRequest.getTopic() + failedContentRequest.getCallbackURL()+ failedContentRequest.getTimestamp()+String.valueOf(pageIndex)+String.valueOf(failedContentRequest.getMessageCount()),
 							failedContentRequest.getSecret()));
 		} else {
 			headers.set(WebSubClientConstants.SUBSCRIBER_SIGNATURE_HEADER,
