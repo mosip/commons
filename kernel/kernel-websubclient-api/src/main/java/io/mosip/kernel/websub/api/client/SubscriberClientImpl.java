@@ -170,7 +170,7 @@ public class SubscriberClientImpl
 		int pageIndex = failedContentRequest.getPaginationIndex() < 0 ? 0 : failedContentRequest.getPaginationIndex();
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		if (failedContentRequest.getMessageCount() > 0 && failedContentRequest.getPaginationIndex()>0) {
+		if (failedContentRequest.getMessageCount() > 0) {
 			headers.set(WebSubClientConstants.SUBSCRIBER_SIGNATURE_HEADER,
 					getHmac256(failedContentRequest.getTopic() + failedContentRequest.getCallbackURL()+ failedContentRequest.getTimestamp()+String.valueOf(pageIndex)+ String.valueOf(failedContentRequest.getPaginationIndex())+String.valueOf(failedContentRequest.getMessageCount()),
 							failedContentRequest.getSecret()));
