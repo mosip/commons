@@ -24,7 +24,7 @@ public class PacketSwaggerConfig {
 	@Bean
 	@Primary
 	public Docket swaggerBean() {
-		return new Docket(DocumentationType.SWAGGER_2).groupName("Packet manager").select()
+		return new Docket(DocumentationType.SWAGGER_2).select()
 				.apis(RequestHandlerSelectors.basePackage("io.mosip.commons.packetmanager.controller"))
 				.paths(PathSelectors.ant("/*")).build();
 	}
