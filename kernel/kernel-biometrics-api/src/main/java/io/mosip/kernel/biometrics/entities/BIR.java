@@ -75,11 +75,11 @@ public class BIR implements Serializable {
 		private SBInfo sbInfo;
 		private List<Entry> others;
 
-		public BIRBuilder withOther(String key, String value) {
+		public BIRBuilder withOthers(List<Entry> others) {
 			if(Objects.isNull(others))
 				this.others = new ArrayList<>();
-			
-			this.others.add(new Entry(key, value));
+			else
+				this.others = others;
 			return this;
 		}
 		

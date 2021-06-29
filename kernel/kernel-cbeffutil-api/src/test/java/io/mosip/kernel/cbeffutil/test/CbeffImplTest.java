@@ -28,6 +28,7 @@ import io.mosip.kernel.biometrics.constant.*;
 import io.mosip.kernel.biometrics.entities.BDBInfo;
 import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BIRInfo;
+import io.mosip.kernel.biometrics.entities.Entry;
 import io.mosip.kernel.biometrics.entities.RegistryIDType;
 import io.mosip.kernel.biometrics.entities.VersionType;
 import io.mosip.kernel.biometrics.spi.CbeffUtil;
@@ -275,6 +276,7 @@ public class CbeffImplTest {
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
 				.build();
+		Entry entry=new Entry(OtherKey.EXCEPTION, "true");
 		BIR exceptionThumb = new BIR.BIRBuilder().withBdb(new byte[0])
 				.withVersion(new VersionType(1, 1))
 				.withCbeffversion(new VersionType(1, 1))
@@ -283,7 +285,7 @@ public class CbeffImplTest {
 						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("Left Thumb"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
-				.withOther(OtherKey.EXCEPTION, "true")
+				.withOthers(Arrays.asList(entry))
 				.build();
 		exceptionList.add(validThumb);
 		exceptionList.add(exceptionThumb);

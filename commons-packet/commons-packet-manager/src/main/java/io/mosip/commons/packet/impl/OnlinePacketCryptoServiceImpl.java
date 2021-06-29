@@ -103,7 +103,7 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
         try {
             
         	TpmSignRequestDto dto = new TpmSignRequestDto();
-            dto.setData(new String(packet, StandardCharsets.UTF_8));
+            dto.setData(CryptoUtil.encodeBase64(packet));
             RequestWrapper<TpmSignRequestDto> request = new RequestWrapper<>();
             request.setRequest(dto);
             request.setMetadata(null);
@@ -116,7 +116,7 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
                     String.class);
             LinkedHashMap responseMap = (LinkedHashMap) mapper.readValue(response.getBody(), LinkedHashMap.class).get("response");
             if (responseMap != null && responseMap.size() > 0)
-                return responseMap.get("data").toString().getBytes();
+                return CryptoUtil.decodeBase64((String) responseMap.get("data"));
             else
                 throw new SignatureException();
         } catch (IOException e) {
@@ -302,10 +302,9 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
        try {
     	   	String publicKey=getPublicKey(machineId);
             TpmSignVerifyRequestDto dto = new TpmSignVerifyRequestDto();
-            dto.setData(new String(packet, StandardCharsets.UTF_8));
-            dto.setSignature(new String(signature, StandardCharsets.UTF_8));
+            dto.setData(CryptoUtil.encodeBase64(packet));
+            dto.setSignature(CryptoUtil.encodeBase64(signature));
             dto.setPublicKey(publicKey);
-            dto.setTpm(false);
             RequestWrapper<TpmSignVerifyRequestDto> request = new RequestWrapper<>();
             request.setRequest(dto);
             request.setMetadata(null);
@@ -340,7 +339,7 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
                 String.class);
 		 LinkedHashMap responseMap = (LinkedHashMap) mapper.readValue(response.getBody(), LinkedHashMap.class).get("response");//.get("signature");
 		 if (responseMap != null && responseMap.size() > 0)
-             return (String) responseMap.get("encryptionPublicKey") ;
+             return (String) responseMap.get("signingPublicKey") ;
          else {
              LOGGER.error(PacketManagerLogger.SESSIONID, "PUBLIC_KEY", machineId,
                      "Failed to get public key");

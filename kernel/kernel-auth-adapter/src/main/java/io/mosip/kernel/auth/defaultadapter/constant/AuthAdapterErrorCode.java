@@ -23,7 +23,14 @@ public enum AuthAdapterErrorCode {
 	/**
 	 * RESPONSE_PARSE_ERROR
 	 */
-	RESPONSE_PARSE_ERROR("KER-ATH-001", "Error occur while parsing error from response");
+	RESPONSE_PARSE_ERROR("KER-ATH-001", "Error occur while parsing error from response"),
+	
+	
+	CANNOT_CONNECT_TO_AUTH_SERVICE("KER-ATH-003","Problem in connecting to auth service"),
+	
+	IO_EXCEPTION("KER-ATH-004", "IO Exception occured"),
+	
+	SELF_AUTH_TOKEN_NULL("KER-ATH-005","Self cached auth token is null");
 
 	/**
 	 * The error code
