@@ -135,7 +135,7 @@ public class UinValidatorImpl implements UinValidator<String> {
 		 * <b>\1</b> matches the same text as most recently matched by the 1st capturing
 		 * group<br/>
 		 */
-		String repeatingRegEx = "(\\d)\\d{0," + (repeatingLimit - 1) + "}\\1";
+		String repeatingRegEx = repeatingLimit <0 ? "\\1":"(\\d)\\d{0," + (repeatingLimit - 1) + "}\\1";
 		/**
 		 * Regex for matching repeating block of digits like 482xx482, 4827xx4827 (x is
 		 * any digit).<br/>
@@ -151,9 +151,9 @@ public class UinValidatorImpl implements UinValidator<String> {
 		 * <b>\1</b> matches the same text as most recently matched by the 1st capturing
 		 * group<br/>
 		 */
-		String repeatingBlockRegEx = "(\\d{" + repeatingBlockLimit + ",}).*?\\1";
+		String repeatingBlockRegEx = repeatingBlockLimit <0 ? "\\1":"(\\d{" + repeatingBlockLimit + ",}).*?\\1";
 
-		String conjugativeEvenDigitsLimitRegEx = "[2468]{" + conjugativeEvenDigitsLimit + "}";
+		String conjugativeEvenDigitsLimitRegEx = conjugativeEvenDigitsLimit<0 ? "\\1":"[2468]{" + conjugativeEvenDigitsLimit + "}";
 
 		repeatingPattern = Pattern.compile(repeatingRegEx);
 		repeatingBlockPattern = Pattern.compile(repeatingBlockRegEx);
