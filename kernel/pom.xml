@@ -122,7 +122,7 @@
 	</properties>
 
 	<modules>
-	        <module>kernel-core</module>
+	  <!--       <module>kernel-core</module>
 		<module>kernel-logger-logback</module>
 		<module>kernel-auth-adapter</module>
 		<module>kernel-dataaccess-hibernate</module>
@@ -137,9 +137,9 @@
 		<module>kernel-idgenerator-rid</module>
 		<module>kernel-idgenerator-partnerid</module>
 		<module>kernel-idvalidator-prid</module>
-		<module>kernel-idvalidator-rid</module>
+		<module>kernel-idvalidator-rid</module> -->
 		<module>kernel-idvalidator-uin</module>
-		<module>kernel-idvalidator-vid</module>
+		<!--<module>kernel-idvalidator-vid</module>
 		<module>kernel-idvalidator-mispid</module>
 		<module>kernel-pinvalidator</module>
 		<module>kernel-keygenerator-bouncycastle</module>
@@ -162,14 +162,14 @@
 		<module>kernel-notification-service</module>
 		<module>kernel-auth-service</module>
 		<module>kernel-ridgenerator-service</module>
-		<module>kernel-keymanager-service</module>
+		<module>kernel-keymanager-service</module>-->
 		<module>kernel-idgenerator-service</module>
-		<module>kernel-pridgenerator-service</module>
+		<!--<module>kernel-pridgenerator-service</module>
 		<module>kernel-salt-generator</module>
 		<module>kernel-biometrics-api</module>
 		<module>kernel-biosdk-provider</module>
 		<module>object-store</module>
-		<module>keys-generator</module>
+		<module>keys-generator</module>-->
 	</modules>
 
 	
