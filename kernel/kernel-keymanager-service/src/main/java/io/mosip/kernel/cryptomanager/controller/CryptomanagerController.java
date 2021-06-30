@@ -108,4 +108,36 @@ public class CryptomanagerController {
 		responseDto.setResponse(cryptomanagerService.decryptWithPin(requestDto.getRequest()));
 		return responseDto;
 	}
+
+	/**
+	 * Controller for Encrypt the data & encrypt hash of the data with same session key.
+	 * 
+	 * @param cryptomanagerRequestDto {@link CryptomanagerRequestDto} request
+	 * @return {@link CryptomanagerResponseDto} encrypted Data
+	 */
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','ID_AUTHENTICATION','TEST', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@ResponseFilter
+	@PostMapping(value = "/encryptDt", produces = "application/json")
+	public ResponseWrapper<CryptomanagerResponseDto> encryptDt(
+			@ApiParam("Salt and Data to encrypt in BASE64 encoding with meta-data") @RequestBody @Valid RequestWrapper<CryptomanagerRequestDto> cryptomanagerRequestDto) {
+		ResponseWrapper<CryptomanagerResponseDto> response = new ResponseWrapper<>();
+		response.setResponse(cryptomanagerService.encrypt(cryptomanagerRequestDto.getRequest()));
+		return response;
+	}
+
+	/**
+	 * Controller for Decrypt the data and data hash. Compares the decrypted hash and hash of decrypted data if hash matches data will be returned otherwise throws exception.
+	 * 
+	 * @param cryptomanagerRequestDto {@link CryptomanagerRequestDto} request
+	 * @return {@link CryptomanagerResponseDto} decrypted Data
+	 */
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','ID_AUTHENTICATION', 'TEST', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@ResponseFilter
+	@PostMapping(value = "/decryptDt", produces = "application/json")
+	public ResponseWrapper<CryptomanagerResponseDto> decryptDt(
+			@ApiParam("Salt and Data to decrypt in BASE64 encoding with meta-data") @RequestBody @Valid RequestWrapper<CryptomanagerRequestDto> cryptomanagerRequestDto) {
+		ResponseWrapper<CryptomanagerResponseDto> response = new ResponseWrapper<>();
+		response.setResponse(cryptomanagerService.decrypt(cryptomanagerRequestDto.getRequest()));
+		return response;
+	}
 }
