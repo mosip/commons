@@ -24,6 +24,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -244,14 +245,16 @@ public class PacketReaderImpl implements IPacketReader {
 				// biometric file not present in idobject. Search in meta data.
 				Map<String, String> metadataMap = getMetaInfo(id, source, process);
 				String operationsData = metadataMap.get(META_INFO_OPERATIONS_DATA);
-				JSONArray jsonArray = new JSONArray(operationsData);
-				for (int i = 0; i < jsonArray.length(); i++) {
-					JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-					if (jsonObject.has(LABEL)
-							&& jsonObject.get(LABEL).toString().equalsIgnoreCase(biometricFieldName)) {
-						packetName = ID;
-						fileName = jsonObject.isNull(VALUE) ? null : jsonObject.get(VALUE).toString();
-						break;
+				if (StringUtils.isNotEmpty(operationsData)) {
+					JSONArray jsonArray = new JSONArray(operationsData);
+					for (int i = 0; i < jsonArray.length(); i++) {
+						JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+						if (jsonObject.has(LABEL)
+								&& jsonObject.get(LABEL).toString().equalsIgnoreCase(biometricFieldName)) {
+							packetName = ID;
+							fileName = jsonObject.isNull(VALUE) ? null : jsonObject.get(VALUE).toString();
+							break;
+						}
 					}
 				}
 			} else {
