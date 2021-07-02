@@ -57,8 +57,9 @@ public class KeymanagerController {
 	 * @param keyPairGenRequestDto     {@link KeyPairGenerateRequestDto} request
 	 * @return {@link KeyPairGenerateResponseDto} instance
 	*/
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','KEY_MAKER', 'INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	//@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','KEY_MAKER', 'INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostgeneratemasterkeyobjecttype())")
 	@PostMapping(value = "/generateMasterKey/{objectType}")
 	public ResponseWrapper<KeyPairGenerateResponseDto> generateMasterKey(
 			@ApiParam("Response Type CERTIFICATE/CSR") @PathVariable("objectType") String objectType,
@@ -76,8 +77,9 @@ public class KeymanagerController {
 	 * @param referenceId   Reference id of the application requesting Certificate. Blank in case of Master Key.
 	 * @return {@link KeyPairGenerateResponseDto} instance
 	*/
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	//@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetgetcertificate())")
 	@GetMapping(value = "/getCertificate")
 	public ResponseWrapper<KeyPairGenerateResponseDto> getCertificate(
 		@ApiParam("Id of application") @RequestParam("applicationId") String applicationId,
@@ -94,8 +96,9 @@ public class KeymanagerController {
 	 * @param csrGenRequestDto     {@link CSRGenerateRequestDto} request
 	 * @return {@link KeyPairGenerateResponseDto} instance
 	*/
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	//@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostgeneratecsr())")
 	@PostMapping(value = "/generateCSR")
 	public ResponseWrapper<KeyPairGenerateResponseDto> generateCSR(
 		@RequestBody @Valid RequestWrapper<CSRGenerateRequestDto> csrGenRequestDto) {
@@ -111,8 +114,9 @@ public class KeymanagerController {
 	 * @param uploadCertRequestDto     {@link UploadCertificateRequestDto} request
 	 * @return {@link UploadCertificateResponseDto} instance
 	*/
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	//@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostuploadcertificate())")
 	@PostMapping(value = "/uploadCertificate")
 	public ResponseWrapper<UploadCertificateResponseDto> uploadCertificate(
 		@RequestBody @Valid RequestWrapper<UploadCertificateRequestDto> uploadCertRequestDto) {
@@ -128,8 +132,9 @@ public class KeymanagerController {
 	 * @param uploadCertRequestDto     {@link UploadCertificateRequestDto} request
 	 * @return {@link UploadCertificateResponseDto} instance
 	*/
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	//@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostuploadotherdomaincertificate())")
 	@PostMapping(value = "/uploadOtherDomainCertificate")
 	public ResponseWrapper<UploadCertificateResponseDto> uploadOtherDomainCertificate(
 		@RequestBody @Valid RequestWrapper<UploadCertificateRequestDto> uploadCertRequestDto) {
@@ -145,8 +150,9 @@ public class KeymanagerController {
 	 * @param symGenRequestDto     {@link SymmetricKeyGenerateRequestDto} request
 	 * @return {@link SymmetricKeyGenerateResponseDto} instance
 	*/
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	//@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostgeneratesymmetrickey())")
 	@PostMapping(value = "/generateSymmetricKey")
 	public ResponseWrapper<SymmetricKeyGenerateResponseDto> generateSymmetricKey(
 		@RequestBody @Valid RequestWrapper<SymmetricKeyGenerateRequestDto> symGenRequestDto) {
@@ -162,8 +168,9 @@ public class KeymanagerController {
 	 * @param revokeKeyRequestDto     {@link RevokeKeyRequestDto} request
 	 * @return {@link RevokeKeyResponseDto} instance
 	*/
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	//@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutrevokekey())")
 	@PutMapping(value = "/revokeKey")
 	public ResponseWrapper<RevokeKeyResponseDto> revokeKey(
 		@RequestBody @Valid RequestWrapper<RevokeKeyRequestDto> revokeKeyRequestDto) {

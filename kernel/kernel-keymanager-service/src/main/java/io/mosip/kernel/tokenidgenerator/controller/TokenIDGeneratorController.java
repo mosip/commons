@@ -19,8 +19,9 @@ public class TokenIDGeneratorController {
 	private TokenIDGeneratorService tokenIDGeneratorService;
 
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetuinpartnercode())")
 	@GetMapping(value = "/{uin}/{partnercode}")
-	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','ID_AUTHENTICATION','RESIDENT')")
+	//@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','ID_AUTHENTICATION','RESIDENT')")
 	public ResponseWrapper<TokenIDResponseDto> generateTokenID(@ApiParam("uin of user") @PathVariable("uin") String uin,
 			@ApiParam("Partner Code") @PathVariable("partnercode") String partnerCode) {
 		ResponseWrapper<TokenIDResponseDto> response = new ResponseWrapper<>();
