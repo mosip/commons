@@ -93,32 +93,32 @@ public class IdObjectsSchemaValidationOperationMapper {
 			}*/
 			LOGGER.debug(PacketManagerLogger.SESSIONID.toString(), PacketManagerLogger.REGISTRATIONID.toString(), "",
 					"IdObjectsSchemaValidationOperationMapper::getOperation()::exit-NEW");
-			return IdObjectValidatorSupportedOperations.NEW_REGISTRATION.name();
+			return IdObjectValidatorSupportedOperations.NEW_REGISTRATION.getOperation();
 		}
 		else if(process.equalsIgnoreCase(SyncTypeDto.LOST.getValue())) {
 			LOGGER.debug(PacketManagerLogger.SESSIONID.toString(), PacketManagerLogger.REGISTRATIONID.toString(), "",
 					"IdObjectsSchemaValidationOperationMapper::getOperation()::exit-LOST");
-			return IdObjectValidatorSupportedOperations.LOST.name();
+			return IdObjectValidatorSupportedOperations.LOST.getOperation();
 		}
 		else if(process.equalsIgnoreCase(SyncTypeDto.UPDATE.getValue())) {
 			LOGGER.debug(PacketManagerLogger.SESSIONID.toString(), PacketManagerLogger.REGISTRATIONID.toString(), "",
 					"IdObjectsSchemaValidationOperationMapper::getOperation()::exit-UPDATE");
-			return IdObjectValidatorSupportedOperations.OTHER.name();
+			return IdObjectValidatorSupportedOperations.OTHER.getOperation();
 		}
 		else if(process.equalsIgnoreCase(SyncTypeDto.RES_UPDATE.getValue())) {
 			LOGGER.debug(PacketManagerLogger.SESSIONID.toString(), PacketManagerLogger.REGISTRATIONID.toString(), "",
 					"IdObjectsSchemaValidationOperationMapper::getOperation()::exit-RES_UPDATE");
-			return IdObjectValidatorSupportedOperations.OTHER.name();
+			return IdObjectValidatorSupportedOperations.OTHER.getOperation();
 		}
 		else if(process.equalsIgnoreCase(SyncTypeDto.ACTIVATED.getValue())) {
 			LOGGER.debug(PacketManagerLogger.SESSIONID.toString(), PacketManagerLogger.REGISTRATIONID.toString(), "",
 					"IdObjectsSchemaValidationOperationMapper::getOperation()::exit-ACTIVATED");
-			return IdObjectValidatorSupportedOperations.OTHER.name();
+			return IdObjectValidatorSupportedOperations.OTHER.getOperation();
 		}
 		else if(process.equalsIgnoreCase(SyncTypeDto.DEACTIVATED.getValue())) {
 			LOGGER.debug(PacketManagerLogger.SESSIONID.toString(), PacketManagerLogger.REGISTRATIONID.toString(), "",
 					"IdObjectsSchemaValidationOperationMapper::getOperation()::exit-DEACTIVATED");
-			return IdObjectValidatorSupportedOperations.OTHER.name();
+			return IdObjectValidatorSupportedOperations.OTHER.getOperation();
 		}
 		return process;
 		
