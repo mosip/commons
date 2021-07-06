@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.mosip.commons</groupId>
     <artifactId>commons-packet-service</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>MOSIP-11739</version>
     <name>commons-packet-service</name>
     <description>Mosip commons project </description>
     <url>https://github.com/mosip/commons</url>
@@ -44,7 +44,7 @@
         <khazana.version>1.2.0-SNAPSHOT</khazana.version>
         <sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/dto/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/security/**,**/*Config.java,**/*BootApplication.java,**/*VertxApplication.java,**/cbeffutil/**,**/*Utils.java,**/*Validator.java,**/*Helper.java,**/verticle/**,**/VidWriter.java/**,**/masterdata/utils/**,**/spi/**,**/core/http/**,"**/LocationServiceImpl.java","**/RegistrationCenterMachineServiceImpl.java","**/RegistrationCenterServiceImpl.java","**/pridgenerator/**","**/idgenerator/prid","**/proxy/**","**/cryptosignature/**"</sonar.coverage.exclusions>
         <sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**</sonar.cpd.exclusions>
-        <packet.manager.version>1.2.0-SNAPSHOT</packet.manager.version>
+        <packet.manager.version>MOSIP-11739</packet.manager.version>
     </properties>
 
     <dependencies>
