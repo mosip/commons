@@ -28,6 +28,13 @@ import io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator;
  */
 @Configuration
 public class IdObjectValidatorConfig {
+<<<<<<< HEAD
+=======
+
+	@Value("${mosip.kernel.idobjectvalidator.enabled:true}")
+	private boolean isEnabled;
+
+>>>>>>> 0f2b01b633 ([MOSIP-12752] added property to disable IOV)
 	private static final Logger logger = LoggerFactory.getLogger(IdObjectValidatorConfig.class);
 
 	/** The env. */
