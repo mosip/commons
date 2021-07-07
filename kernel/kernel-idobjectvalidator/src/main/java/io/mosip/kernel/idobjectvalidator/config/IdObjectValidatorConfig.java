@@ -11,7 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -29,10 +28,6 @@ import io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator;
  */
 @Configuration
 public class IdObjectValidatorConfig {
-
-	@Value("${mosip.kernel.idobjectvalidator.enabled:true}")
-	private boolean isEnabled;
-
 	private static final Logger logger = LoggerFactory.getLogger(IdObjectValidatorConfig.class);
 
 	/** The env. */
