@@ -30,7 +30,7 @@ import io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator;
 @Configuration
 public class IdObjectValidatorConfig {
 
-	@Value("${mosip.kernel.idobjectvalidator.enabled:true")
+	@Value("${mosip.kernel.idobjectvalidator.enabled:true}")
 	private boolean isEnabled;
 
 	private static final Logger logger = LoggerFactory.getLogger(IdObjectValidatorConfig.class);

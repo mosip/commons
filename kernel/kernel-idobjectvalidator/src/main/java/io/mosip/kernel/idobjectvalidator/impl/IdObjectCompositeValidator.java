@@ -23,8 +23,8 @@ import io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator;
 @Primary
 public class IdObjectCompositeValidator implements IdObjectValidator {
 
-	@Value("${mosip.kernel.idobjectvalidator.enabled:true")
-	private boolean isEnabled;
+	@Value("${mosip.kernel.idobjectvalidator.enabled:true}")
+	private Boolean isEnabled;
 
 	/** The schema validator. */
 	@Autowired
