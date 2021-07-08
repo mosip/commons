@@ -3,8 +3,6 @@ package io.mosip.kernel.websub.api.config;
 import javax.servlet.Filter;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,6 +36,7 @@ import io.mosip.kernel.websub.api.verifier.IntentVerifier;
 @EnableAspectJAutoProxy
 public class WebSubClientConfig {
 
+
 	@Bean
 	public IntentVerifier intentVerifier() {
 		return new IntentVerifier();
@@ -50,7 +49,9 @@ public class WebSubClientConfig {
 
 	@Bean(name = "websubRestTemplate")
 	public RestTemplate restTemplate() {
+
 		return new RestTemplate();
+
 	}
 
 	@Bean(name = "intentVerificationFilterBean")

@@ -51,6 +51,7 @@ public class SubscriberClientImpl
 	private static final Logger LOGGER = LoggerFactory.getLogger(SubscriberClientImpl.class);
 
 	@Autowired
+
 	private RestTemplateHelper restTemplateHelper;
 
 	@Autowired
@@ -197,6 +198,7 @@ public class SubscriberClientImpl
 
 		HttpEntity<String> response = restTemplateHelper.getRestTemplate().exchange(builder.toUriString(),
 				HttpMethod.GET, entity, String.class);
+
 		FailedContentResponse failedContentResponse = null;
 		try {
 			failedContentResponse = objectMapper.readValue(response.getBody(), FailedContentResponse.class);
