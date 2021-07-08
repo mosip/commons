@@ -5,4 +5,5 @@ io.mosip.kernel.websub.api.client.SubscriberClientImpl,\
 io.mosip.kernel.websub.api.config.IntentVerificationConfig,\
 io.mosip.kernel.websub.api.config.WebSubClientConfig,\
 io.mosip.kernel.websub.api.verifier.AuthenticatedContentVerifier,\
-io.mosip.kernel.websub.api.verifier.IntentVerifier
+io.mosip.kernel.websub.api.verifier.IntentVerifier,\
+io.mosip.kernel.websub.api.config.RestTemplateHelper

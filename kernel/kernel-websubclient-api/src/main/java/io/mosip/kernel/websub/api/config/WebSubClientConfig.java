@@ -3,14 +3,16 @@ package io.mosip.kernel.websub.api.config;
 import javax.servlet.Filter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.web.client.RestTemplate;
 
-import io.mosip.kernel.websub.api.filter.MultipleReadRequestBodyFilter;
 import io.mosip.kernel.websub.api.filter.IntentVerificationFilter;
+import io.mosip.kernel.websub.api.filter.MultipleReadRequestBodyFilter;
 import io.mosip.kernel.websub.api.verifier.IntentVerifier;
 
 /**
@@ -23,12 +25,17 @@ import io.mosip.kernel.websub.api.verifier.IntentVerifier;
 @EnableAspectJAutoProxy
 public class WebSubClientConfig {
 
+	@Value("${mosip.auth.filter_disable:true}")
+	private boolean isAuthFilterDisable;
+
 	@Autowired
 	private IntentVerifier intentVerifier;
 
 	@Bean(name = "websubRestTemplate")
 	public RestTemplate restTemplate() {
+
 		return new RestTemplate();
+
 	}
 
 	@Bean(name = "intentVerificationFilterBean")

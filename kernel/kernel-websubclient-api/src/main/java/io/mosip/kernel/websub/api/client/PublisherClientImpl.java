@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -19,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import io.mosip.kernel.core.websub.spi.PublisherClient;
+import io.mosip.kernel.websub.api.config.RestTemplateHelper;
 import io.mosip.kernel.websub.api.constants.HubMode;
 import io.mosip.kernel.websub.api.constants.WebSubClientConstants;
 import io.mosip.kernel.websub.api.constants.WebSubClientErrorCode;
@@ -35,10 +37,9 @@ public class PublisherClientImpl<P> implements PublisherClient<String, P, HttpHe
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PublisherClientImpl.class);
 
-	@Qualifier("websubRestTemplate")
-	@Autowired
-	private RestTemplate restTemplate;
-
+    @Autowired
+    private RestTemplateHelper restTemplateHelper;
+	
 	@Override
 	public void registerTopic(String topic,String hubURL) {
 		HttpHeaders headers = new HttpHeaders();
@@ -52,7 +53,7 @@ public class PublisherClientImpl<P> implements PublisherClient<String, P, HttpHe
 
 		ResponseEntity<String> response = null;
 		try {
-			response = restTemplate.exchange(hubURL, HttpMethod.POST, entity, String.class);
+			response = restTemplateHelper.getRestTemplate().exchange(hubURL, HttpMethod.POST, entity, String.class);
 		} catch (HttpClientErrorException | HttpServerErrorException exception) {
 			throw new WebSubClientException(WebSubClientErrorCode.REGISTER_ERROR.getErrorCode(),
 					WebSubClientErrorCode.REGISTER_ERROR.getErrorMessage() + exception.getResponseBodyAsString());
@@ -78,7 +79,7 @@ public class PublisherClientImpl<P> implements PublisherClient<String, P, HttpHe
 
 		ResponseEntity<String> response = null;
 		try {
-			response = restTemplate.exchange(hubURL, HttpMethod.POST, entity, String.class);
+			response = restTemplateHelper.getRestTemplate().exchange(hubURL, HttpMethod.POST, entity, String.class);
 		} catch (HttpClientErrorException | HttpServerErrorException exception) {
 			throw new WebSubClientException(WebSubClientErrorCode.UNREGISTER_ERROR.getErrorCode(),
 					WebSubClientErrorCode.UNREGISTER_ERROR.getErrorMessage() + exception.getResponseBodyAsString());
@@ -106,7 +107,7 @@ public class PublisherClientImpl<P> implements PublisherClient<String, P, HttpHe
 		HttpEntity<P> entity = new HttpEntity<>(payload,headers);
 		ResponseEntity<String> response = null;
 		try {
-			response= restTemplate.exchange(builder.toUriString(), HttpMethod.POST, entity,
+			response= restTemplateHelper.getRestTemplate().exchange(builder.toUriString(), HttpMethod.POST, entity,
 				String.class);
 		} catch (HttpClientErrorException | HttpServerErrorException exception) {
 			throw new WebSubClientException(WebSubClientErrorCode.PUBLISH_ERROR.getErrorCode(),
@@ -130,7 +131,7 @@ public class PublisherClientImpl<P> implements PublisherClient<String, P, HttpHe
 		HttpEntity<P> entity = new HttpEntity<>(headers);
 		ResponseEntity<String> response = null;
 		try {
-			response= restTemplate.exchange(builder.toUriString(), HttpMethod.POST, entity,
+			response= restTemplateHelper.getRestTemplate().exchange(builder.toUriString(), HttpMethod.POST, entity,
 				String.class);
 		} catch (HttpClientErrorException | HttpServerErrorException exception) {
 			throw new WebSubClientException(WebSubClientErrorCode.NOTIFY_UPDATE_ERROR.getErrorCode(),

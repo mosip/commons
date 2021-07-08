@@ -54,7 +54,7 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
 				"**/authenticate/**", "/**/actuator/**", "/**/authmanager/**", "/sendOtp", "/validateOtp",
 				"/invalidateToken", "/config", "/login", "/logout", "/validateOTP", "/sendOTP", "/**/login",
 				"/**/login/**","/**/login-redirect/**","/**/logout","/**/h2-console/**","/**/**/license/**",
-				"/**/callback/**", "/**/authenticate/**"};
+				"/**/callback/**", "/**/authenticate/**","/**/demo/**"};
 
 	}
 
