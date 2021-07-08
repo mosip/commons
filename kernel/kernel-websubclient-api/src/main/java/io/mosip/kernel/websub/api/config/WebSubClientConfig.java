@@ -3,6 +3,8 @@ package io.mosip.kernel.websub.api.config;
 import javax.servlet.Filter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,7 +54,9 @@ public class WebSubClientConfig {
 
 	@Bean(name = "websubRestTemplate")
 	public RestTemplate restTemplate() {
+
 		return new RestTemplate();
+
 	}
 
 	@Bean(name = "intentVerificationFilterBean")
