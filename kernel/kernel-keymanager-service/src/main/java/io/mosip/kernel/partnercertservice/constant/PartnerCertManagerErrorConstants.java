@@ -36,6 +36,8 @@ public enum PartnerCertManagerErrorConstants {
 	CERT_KEY_NOT_ALLOWED("KER-PCM-013", "Partner Certificate Key Size is less than allowed size."),
 
 	CERT_SIGNATURE_ALGO_NOT_ALLOWED("KER-PCM-014", "Partner Certificate Signature algorithm not supported."),
+
+	SELF_SIGNED_CERT_NOT_ALLOWED("KER-PCM-015", "Self Signed Certificate not allowed as partner."),
     ;
 
 	/**

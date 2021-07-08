@@ -5,6 +5,8 @@ import io.mosip.commons.packet.constants.CryptomanagerConstant;
 import io.mosip.commons.packet.exception.PacketDecryptionFailureException;
 import io.mosip.commons.packet.spi.IPacketCryptoService;
 import io.mosip.kernel.clientcrypto.dto.TpmSignRequestDto;
+import io.mosip.kernel.clientcrypto.dto.TpmSignVerifyRequestDto;
+import io.mosip.kernel.clientcrypto.dto.TpmSignVerifyResponseDto;
 import io.mosip.kernel.clientcrypto.service.spi.ClientCryptoManagerService;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.DateUtils;
@@ -75,10 +77,9 @@ public class OfflinePacketCryptoServiceImpl implements IPacketCryptoService {
 
     @Override
     public byte[] sign(byte[] packet) {
-        String packetData = new String(packet, StandardCharsets.UTF_8);
         TpmSignRequestDto signRequest = new TpmSignRequestDto();
-        signRequest.setData(packetData);
-        return getTpmCryptoService().csSign(signRequest).getData().getBytes(StandardCharsets.UTF_8);
+        signRequest.setData(CryptoUtil.encodeBase64(packet));
+        return CryptoUtil.decodeBase64(getTpmCryptoService().csSign(signRequest).getData());
     }
 
     @Override
@@ -148,16 +149,14 @@ public class OfflinePacketCryptoServiceImpl implements IPacketCryptoService {
     }
 
     @Override
-    public boolean verify(byte[] packet, byte[] signature) {
-        String packetData = new String(packet, StandardCharsets.UTF_8);
-        String signatureData = new String(signature, StandardCharsets.UTF_8);
-        DateTimeFormatter format = DateTimeFormatter.ofPattern(DATETIME_PATTERN);
-        LocalDateTime localdatetime = LocalDateTime.parse(DateUtils.getUTCCurrentDateTimeString(DATETIME_PATTERN), format);
-        TimestampRequestDto requestDto = new TimestampRequestDto();
-        requestDto.setTimestamp(localdatetime);
-        requestDto.setData(packetData);
-        requestDto.setSignature(signatureData);
-        return getSignatureService().validate(requestDto).getStatus().equalsIgnoreCase(CryptomanagerConstant.SIGNATURES_SUCCESS);
+    public boolean verify(String machineId, byte[] packet, byte[] signature) {
+        TpmSignVerifyRequestDto tpmSignVerifyRequestDto = new TpmSignVerifyRequestDto();
+        tpmSignVerifyRequestDto.setData(CryptoUtil.encodeBase64(packet));
+        tpmSignVerifyRequestDto.setSignature(CryptoUtil.encodeBase64(signature));
+        //TODO - get public key based on machine Id
+        //tpmSignVerifyRequestDto.setPublicKey(<>);
+        TpmSignVerifyResponseDto tpmSignVerifyResponseDto = getTpmCryptoService().csVerify(tpmSignVerifyRequestDto);
+        return tpmSignVerifyResponseDto.isVerified();
     }
 
     private CryptomanagerService getCryptomanagerService() {

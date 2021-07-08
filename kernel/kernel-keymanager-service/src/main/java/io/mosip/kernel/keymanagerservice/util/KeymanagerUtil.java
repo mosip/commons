@@ -232,6 +232,10 @@ public class KeymanagerUtil {
 	 * @return decrypted key
 	 */
 	public byte[] decryptKey(byte[] key, PrivateKey privateKey, PublicKey publicKey) {
+		return decryptKey(key, privateKey, publicKey, null);
+	}
+
+	public byte[] decryptKey(byte[] key, PrivateKey privateKey, PublicKey publicKey, String keystoreType) {
 
 		int keyDemiliterIndex = 0;
 		final int cipherKeyandDataLength = key.length;
@@ -239,7 +243,7 @@ public class KeymanagerUtil {
 		keyDemiliterIndex = CryptoUtil.getSplitterIndex(key, keyDemiliterIndex, keySplitter);
 		byte[] encryptedKey = copyOfRange(key, 0, keyDemiliterIndex);
 		byte[] encryptedData = copyOfRange(key, keyDemiliterIndex + keySplitterLength, cipherKeyandDataLength);
-		byte[] decryptedSymmetricKey = cryptoCore.asymmetricDecrypt(privateKey, publicKey, encryptedKey);
+		byte[] decryptedSymmetricKey = cryptoCore.asymmetricDecrypt(privateKey, publicKey, encryptedKey, keystoreType);
 		SecretKey symmetricKey = new SecretKeySpec(decryptedSymmetricKey, 0, decryptedSymmetricKey.length,
 				symmetricAlgorithmName);
 		return cryptoCore.symmetricDecrypt(symmetricKey, encryptedData, null);
@@ -366,10 +370,12 @@ public class KeymanagerUtil {
         return IETFUtils.valueToString((rdns[0]).getFirst().getValue());
     }
 
-	public CertificateParameters getCertificateParameters(KeyPairGenerateRequestDto request, LocalDateTime notBefore, LocalDateTime notAfter) {
+	public CertificateParameters getCertificateParameters(KeyPairGenerateRequestDto request, LocalDateTime notBefore, LocalDateTime notAfter, 
+				String appId) {
 
 		CertificateParameters certParams = new CertificateParameters();
-		certParams.setCommonName(getParamValue(request.getCommonName(), commonName));
+		String appIdCommonName = commonName + " (" + appId.toUpperCase() + ")";
+		certParams.setCommonName(getParamValue(request.getCommonName(), appIdCommonName));
 		certParams.setOrganizationUnit(getParamValue(request.getOrganizationUnit(), organizationUnit));
 		certParams.setOrganization(getParamValue(request.getOrganization(), organization));
 		certParams.setLocation(getParamValue(request.getLocation(), location));
@@ -389,6 +395,20 @@ public class KeymanagerUtil {
 		certParams.setLocation(getParamValue(request.getLocation(), location));
 		certParams.setState(getParamValue(request.getState(), state));
 		certParams.setCountry(getParamValue(request.getCountry(), country));
+		certParams.setNotBefore(notBefore);
+		certParams.setNotAfter(notAfter);
+		return certParams;
+	}
+
+	public CertificateParameters getCertificateParameters(String cName, LocalDateTime notBefore, LocalDateTime notAfter) {
+
+		CertificateParameters certParams = new CertificateParameters();
+		certParams.setCommonName(getParamValue(cName, commonName));
+		certParams.setOrganizationUnit(getParamValue(KeymanagerConstant.EMPTY, organizationUnit));
+		certParams.setOrganization(getParamValue(KeymanagerConstant.EMPTY, organization));
+		certParams.setLocation(getParamValue(KeymanagerConstant.EMPTY, location));
+		certParams.setState(getParamValue(KeymanagerConstant.EMPTY, state));
+		certParams.setCountry(getParamValue(KeymanagerConstant.EMPTY, country));
 		certParams.setNotBefore(notBefore);
 		certParams.setNotAfter(notAfter);
 		return certParams;

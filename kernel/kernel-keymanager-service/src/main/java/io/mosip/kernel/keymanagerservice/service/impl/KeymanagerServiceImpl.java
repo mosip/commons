@@ -33,7 +33,6 @@ import io.mosip.kernel.core.crypto.exception.NullKeyException;
 import io.mosip.kernel.core.crypto.exception.NullMethodException;
 import io.mosip.kernel.core.crypto.spi.CryptoCoreSpec;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
-import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.keymanager.exception.KeystoreProcessingException;
 import io.mosip.kernel.core.keymanager.exception.NoSuchSecurityProviderException;
 import io.mosip.kernel.core.keymanager.model.CertificateEntry;
@@ -53,6 +52,8 @@ import io.mosip.kernel.keymanagerservice.dto.CertificateInfo;
 import io.mosip.kernel.keymanagerservice.dto.KeyPairGenerateRequestDto;
 import io.mosip.kernel.keymanagerservice.dto.KeyPairGenerateResponseDto;
 import io.mosip.kernel.keymanagerservice.dto.PublicKeyResponse;
+import io.mosip.kernel.keymanagerservice.dto.RevokeKeyRequestDto;
+import io.mosip.kernel.keymanagerservice.dto.RevokeKeyResponseDto;
 import io.mosip.kernel.keymanagerservice.dto.SignatureCertificate;
 import io.mosip.kernel.keymanagerservice.dto.SymmetricKeyGenerateRequestDto;
 import io.mosip.kernel.keymanagerservice.dto.SymmetricKeyGenerateResponseDto;
@@ -159,8 +160,6 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 				KeymanagerConstant.GETPUBLICKEYHSM);
 
 		String alias = null;
-		LocalDateTime generationDateTime = null;
-		LocalDateTime expiryDateTime = null;
 		Optional<KeyPolicy> keyPolicy = dbHelper.getKeyPolicy(applicationId);
 		Map<String, List<KeyAlias>> keyAliasMap = dbHelper.getKeyAliases(applicationId, referenceId, timeStamp);
 		List<KeyAlias> currentKeyAlias = keyAliasMap.get(KeymanagerConstant.CURRENTKEYALIAS);
@@ -326,7 +325,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 													generationDateTime, expiryDateTime);
 			certParams.setCommonName(applicationId + "-" + referenceId);
 			x509Cert = (X509Certificate) CertificateUtility.generateX509Certificate(signPrivateKey, keypair.getPublic(), 
-						certParams, signerPrincipal, signAlgorithm, keyStore.getKeystoreProviderName());;
+						certParams, signerPrincipal, signAlgorithm, keyStore.getKeystoreProviderName(), KeymanagerConstant.ENCRYPTION_KEY);
 			String certificateData = keymanagerUtil.getPEMFormatedData(x509Cert);
 			dbHelper.storeKeyInDBStore(alias, masterAlias, certificateData, encryptedPrivateKey);
 			dbHelper.storeKeyInAlias(applicationId, generationDateTime, referenceId, alias, expiryDateTime);
@@ -355,6 +354,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 		Boolean reqPrependThumbprint = symmetricKeyRequestDto.getPrependThumbprint(); 
 		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.SYMMETRICKEYREQUEST,
 				symmetricKeyRequestDto.getApplicationId(), "prependThumbprint Value(Request): " + reqPrependThumbprint);
+				
 		boolean prependThumbprint = reqPrependThumbprint == null? false : symmetricKeyRequestDto.getPrependThumbprint();
 		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.SYMMETRICKEYREQUEST,
 				symmetricKeyRequestDto.getApplicationId(), "prependThumbprint Value: " + prependThumbprint);
@@ -406,13 +406,31 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 
 		List<KeyAlias> keyAlias = keyAliasMap.get(KeymanagerConstant.KEYALIAS);
 		List<KeyAlias> currentKeyAlias = keyAliasMap.get(KeymanagerConstant.CURRENTKEYALIAS);
+		if (keyAlias.isEmpty()) {
+			// Check Master Key exists to perform for decryption.
+			keyAliasMap = dbHelper.getKeyAliases(applicationId, KeymanagerConstant.EMPTY, localDateTimeStamp);
+			keyAlias = keyAliasMap.get(KeymanagerConstant.KEYALIAS);
+		 	currentKeyAlias = keyAliasMap.get(KeymanagerConstant.CURRENTKEYALIAS);
+			if (keyAlias.isEmpty()) { 
+				LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.KEYALIAS,
+						String.valueOf(keyAlias.size()), "KeyAlias is empty(with Key Identifier) Throwing exception");
+				throw new NoUniqueAliasException(KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorCode(),
+						KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorMessage());
+			}
+			// resetting the reference id to blank because base key is not generated but data encrypted with master key.
+			// And to avoid no key alias found exception in getKeyObjects method.
+			if(keymanagerUtil.isValidReferenceId(referenceId))
+				referenceId = KeymanagerConstant.EMPTY;
+		}
+
 		Object[] keys = getKeyObjects(keyAlias, currentKeyAlias, localDateTimeStamp, referenceId, 
-									certThumbprint);
+									certThumbprint, applicationId);
 		PrivateKey privateKey = (PrivateKey) keys[0];
 		PublicKey publicKey = ((Certificate) keys[1]).getPublicKey();
 		try {
 			byte[] decryptedSessionKey = cryptoCore.asymmetricDecrypt(privateKey, publicKey, encryptedSymmetricKey);
-			keymanagerUtil.destoryKey(privateKey);
+			if(keymanagerUtil.isValidReferenceId(referenceId))
+				keymanagerUtil.destoryKey(privateKey);
 			return decryptedSessionKey;
 		} catch(InvalidKeyException keyExp) {
 			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, KeymanagerConstant.REFERENCEID,
@@ -474,12 +492,13 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 		InvalidKeyException keyException = null;
 		InvalidDataException dataException = null;
 		Object[] keys = getPrivateKeyNoKeyIdentifier(keyAlias, currentKeyAlias, localDateTimeStamp, referenceId, 
-								certThumbprint, packetTPFlag);
+								certThumbprint, packetTPFlag, applicationId);
 		PrivateKey privateKey = (PrivateKey) keys[0];
 		PublicKey publicKey = ((Certificate) keys[1]).getPublicKey();
 		try {
 			byte[] decryptedSessionKey = cryptoCore.asymmetricDecrypt(privateKey, publicKey, encryptedSymmetricKey);
-			keymanagerUtil.destoryKey(privateKey);
+			if(keymanagerUtil.isValidReferenceId(referenceId))
+				keymanagerUtil.destoryKey(privateKey);
 			return decryptedSessionKey;
 		} catch(InvalidKeyException keyExp) {
 			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, KeymanagerConstant.REFERENCEID,
@@ -494,17 +513,47 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 		// Current key got rotated and there are more than 1 keys in DB. Packet encrypted with thumbprint flag as false 
 		// and used the latest key for encryption. Finally trying with all keys for decryption. 
 		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, KeymanagerConstant.REFERENCEID, 
-									"Unable to decrypt session with all the other validations, " +
+									"Unable to decrypt session key with all the other validations, " +
 									"trying the keys available for provided AppId & RefId.");
+		try {
+			return decryptWithKeyAlias(keyAlias, referenceId, encryptedSymmetricKey);
+		} catch (InvalidKeyException keyExp) {
+			keyException = keyExp;
+		} catch (InvalidDataException dataExp) {
+			dataException = dataExp;
+		}
+		
+		// Check whether data is decrypting with the master key(s).
+		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, KeymanagerConstant.REFERENCEID, 
+									"Unable to decrypt session key with all the base keys, " +
+									"trying with master keys available for provided AppId.");
+		Map<String, List<KeyAlias>> masterKeyAliasMap = dbHelper.getKeyAliases(applicationId, KeymanagerConstant.EMPTY, localDateTimeStamp);
+		List<KeyAlias> masterKeyAlias = masterKeyAliasMap.get(KeymanagerConstant.KEYALIAS);
+		try {
+			return decryptWithKeyAlias(masterKeyAlias, KeymanagerConstant.EMPTY, encryptedSymmetricKey);
+		} catch (InvalidKeyException keyExp) {
+			keyException = keyExp;
+		} catch (InvalidDataException dataExp) {
+			dataException = dataExp;
+		}
+
+		if(keyException == null) 
+			throw dataException;
+			 
+		throw keyException;
+	}
+
+	private byte[] decryptWithKeyAlias(List<KeyAlias> keyAlias, String referenceId, byte[]  encryptedSymmetricKey) {
+		InvalidKeyException keyException = null;
+		InvalidDataException dataException = null;
 		for (KeyAlias alias : keyAlias){
 			Object[] dbKeys = getPrivateKey(referenceId, alias);
 			PrivateKey dbPrivateKey = (PrivateKey) dbKeys[0];
 			PublicKey dbPublicKey = ((Certificate) dbKeys[1]).getPublicKey();
-			if (Arrays.equals(publicKey.getEncoded(), dbPublicKey.getEncoded()))
-				continue;
 			try {
 				byte[] decryptedSessionKey = cryptoCore.asymmetricDecrypt(dbPrivateKey, dbPublicKey, encryptedSymmetricKey);
-				keymanagerUtil.destoryKey(dbPrivateKey);
+				if(keymanagerUtil.isValidReferenceId(referenceId))
+					keymanagerUtil.destoryKey(dbPrivateKey);
 				return decryptedSessionKey;
 			} catch (InvalidKeyException keyExp) {
 				LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, KeymanagerConstant.REFERENCEID,
@@ -521,28 +570,44 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 			 
 		throw keyException;
 	}
-
 	/**
 	 * get private key base
 	 * 
 	 */
 	private Object[] getPrivateKeyNoKeyIdentifier(List<KeyAlias> keyAlias, List<KeyAlias>  currentKeyAlias, 
 							LocalDateTime timeStamp, String referenceId,  
-							byte[] reqCertThumbprint, boolean packetTPFlag) {
+							byte[] reqCertThumbprint, boolean packetTPFlag, String applicationId) {
+		
+		if (keyAlias.isEmpty()) {
+			// Check Master Key exists to perform for decryption.
+			Map<String, List<KeyAlias>> keyAliasMap = dbHelper.getKeyAliases(applicationId, KeymanagerConstant.EMPTY, timeStamp);
+			keyAlias = keyAliasMap.get(KeymanagerConstant.KEYALIAS);
+		 	currentKeyAlias = keyAliasMap.get(KeymanagerConstant.CURRENTKEYALIAS);
+			if (keyAlias.isEmpty()) { 
+				LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.KEYALIAS,
+					String.valueOf(keyAlias.size()), "KeyAlias is empty(no Key Identifier) Throwing exception");
+				throw new NoUniqueAliasException(KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorCode(),
+					KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorMessage());
+			}
+			// resetting the reference id to blank because base key is not generated but data encrypted with master key.
+			// And to avoid no key alias found exception in getKeyObjects method.
+			if(keymanagerUtil.isValidReferenceId(referenceId))
+				referenceId = KeymanagerConstant.EMPTY;
+		}
 
 		// to Support packet encryption done in 1.1.3(flag: flase) and packet decryption is performed in 1.1.4 (flag: true).
 		// Considering always the first key generated for the application id & reference id
 		if (Objects.isNull(reqCertThumbprint) && !packetTPFlag) {
 			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.CURRENTKEYALIAS, keyAlias.get(0).getAlias(),
-							"Thumbprint is value is null and packet Thumbprint Flag is true.");
+							"Thumbprint is value is null and packet Thumbprint Flag is false.");
 			KeyAlias fetchedKeyAlias = keyAlias.get(0);
 			return getPrivateKey(referenceId, fetchedKeyAlias);
 		}
-		return getKeyObjects(keyAlias, currentKeyAlias, timeStamp, referenceId, reqCertThumbprint);
+		return getKeyObjects(keyAlias, currentKeyAlias, timeStamp, referenceId, reqCertThumbprint, applicationId);
 	}
 
 	private Object[] getKeyObjects(List<KeyAlias> keyAlias, List<KeyAlias>  currentKeyAlias, LocalDateTime timeStamp, 
-				String referenceId,  byte[] reqCertThumbprint) {
+				String referenceId,  byte[] reqCertThumbprint, String applicationId) {
 		if (currentKeyAlias.size() == 1) {
 			LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.CURRENTKEYALIAS, currentKeyAlias.get(0).getAlias(),
 							"CurrentKeyAlias size is one. Will decrypt symmetric key with this alias after thumbprint matches.");
@@ -575,8 +640,22 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 			if (Arrays.equals(reqCertThumbprint, certThumbprint))
 				return keys;
 		}
+		// Check whether Thumbprint is matching with the master key(s).
+		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.KEYALIAS, "",
+							"Base key certificate thumbprint did not matched with thumbprint in encrypted data, " +
+							"Checking thumbprint match with master key.");
+		Map<String, List<KeyAlias>> keyAliasMap = dbHelper.getKeyAliases(applicationId, KeymanagerConstant.EMPTY, timeStamp);
+		List<KeyAlias> masterKeyAlias = keyAliasMap.get(KeymanagerConstant.KEYALIAS);
+		for (KeyAlias masterAlias : masterKeyAlias) {
+			Object[] keys = getPrivateKey(KeymanagerConstant.EMPTY, masterAlias);
+			Certificate certificate = (Certificate) keys[1];
+			byte[] certThumbprint = cryptomanagerUtil.getCertificateThumbprint(certificate);
+			if (Arrays.equals(reqCertThumbprint, certThumbprint))
+				return keys;
+		}
+
 		LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.KEYALIAS, "",
-					 "No Key Alias for the thumbprint provided, Throwing exception");
+					 "No Key Alias for the thumbprint provided (After comparing all thumbprints), Throwing exception");
 		throw new NoUniqueAliasException(KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorCode(),
 				KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorMessage());
 	}
@@ -631,7 +710,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 			 */
 			try {
 				byte[] decryptedPrivateKey = keymanagerUtil.decryptKey(CryptoUtil.decodeBase64(dbKeyStore.get().getPrivateKey()), 
-													masterPrivateKey, masterPublicKey);
+													masterPrivateKey, masterPublicKey, keyStore.getKeystoreProviderName());
 				KeyFactory keyFactory = KeyFactory.getInstance(KeymanagerConstant.RSA);
 				PrivateKey privateKey = keyFactory.generatePrivate(new PKCS8EncodedKeySpec(decryptedPrivateKey));
 				Certificate certificate = keymanagerUtil.convertToCertificate(dbKeyStore.get().getCertificateData());
@@ -759,8 +838,8 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 	public KeyPairGenerateResponseDto generateMasterKey(String responseObjectType, KeyPairGenerateRequestDto request) {
 
 		String applicationId = request.getApplicationId();
-		String refId = request.getReferenceId();
-		Boolean forceFlag = request.getForce();
+		String refId = request.getReferenceId() == null ? KeymanagerConstant.EMPTY : request.getReferenceId();
+		Boolean forceFlag = request.getForce() == null ? Boolean.FALSE : request.getForce();
 		
 		Optional<KeyPolicy> keyPolicy = dbHelper.getKeyPolicy(applicationId);
 		// Need to check with Team whether we need to check this condition..
@@ -829,7 +908,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 		LocalDateTime generationDateTime = timestamp;
 		LocalDateTime expiryDateTime = dbHelper.getExpiryPolicy(appId, generationDateTime, keyAliasMap.get(KeymanagerConstant.KEYALIAS));
 		String rootKeyAlias = getRootKeyAlias(appId, timestamp);
-		CertificateParameters certParams = keymanagerUtil.getCertificateParameters(request, generationDateTime, expiryDateTime);
+		CertificateParameters certParams = keymanagerUtil.getCertificateParameters(request, generationDateTime, expiryDateTime, appId);
 		keyStore.generateAndStoreAsymmetricKey(alias, rootKeyAlias, certParams);
 		dbHelper.storeKeyInAlias(appId, generationDateTime, refId, alias, expiryDateTime);
 		return buildResponseObject(responseObjectType, appId, refId, timestamp, alias, generationDateTime, expiryDateTime, request);
@@ -886,7 +965,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 			PublicKey publicKey = ((X509Certificate) keyStore.getCertificate(keyAlias)).getPublicKey();
 			PrivateKey privateKey = keyStore.getPrivateKey(keyAlias);
 			KeyPairGenerateResponseDto responseDto = new KeyPairGenerateResponseDto();
-			CertificateParameters certParams = keymanagerUtil.getCertificateParameters(request, generationDateTime, expiryDateTime);
+			CertificateParameters certParams = keymanagerUtil.getCertificateParameters(request, generationDateTime, expiryDateTime, appId);
 			responseDto.setCertSignRequest(keymanagerUtil.getCSR(privateKey, publicKey, certParams));
 			responseDto.setExpiryAt(expiryDateTime);
 			responseDto.setIssuedAt(generationDateTime);
@@ -970,7 +1049,8 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 		responseDto.setExpiryAt(expiryDateTime);
 		responseDto.setIssuedAt(generationDateTime);
 		responseDto.setTimestamp(localDateTimeStamp);
-		if (refId.isPresent() || !refId.get().trim().isEmpty()) {
+		if ((refId.isPresent() || !refId.get().trim().isEmpty()) && (!appId.equalsIgnoreCase(signApplicationid) && 
+					!refId.get().equals(certificateSignRefID))) {
 			keymanagerUtil.destoryKey(signPrivateKey);
 		}
 		return responseDto;
@@ -1027,7 +1107,7 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 		PublicKey masterPublicKey = masterKeyEntry.getCertificate().getPublicKey();
 		try {
 			byte[] decryptedPrivateKey = keymanagerUtil.decryptKey(CryptoUtil.decodeBase64(keyFromDBStore.get().getPrivateKey()), 
-													masterPrivateKey, masterPublicKey);
+													masterPrivateKey, masterPublicKey, keyStore.getKeystoreProviderName());
 			PrivateKey signPrivateKey = KeyFactory.getInstance(KeymanagerConstant.RSA).generatePrivate(new PKCS8EncodedKeySpec(decryptedPrivateKey));
 			X509Certificate x509Cert = (X509Certificate) keymanagerUtil.convertToCertificate(keyFromDBStore.get().getCertificateData());
 			return new Object[] {signPrivateKey, x509Cert};
@@ -1233,6 +1313,55 @@ public class KeymanagerServiceImpl implements KeymanagerService {
 	private SymmetricKeyGenerateResponseDto buildSymGenKeyRespObject(LocalDateTime timestamp, String status){
 		SymmetricKeyGenerateResponseDto responseDto = new SymmetricKeyGenerateResponseDto();
 		responseDto.setStatus(status);
+		responseDto.setTimestamp(timestamp);
+		return responseDto;
+	}
+
+	@Override
+	public RevokeKeyResponseDto revokeKey(RevokeKeyRequestDto revokeKeyRequest) {
+
+		String appId = revokeKeyRequest.getApplicationId();
+		String refId = revokeKeyRequest.getReferenceId();
+		// Disable Auto Generation of functionality not implemented yet.
+		Boolean disableAutoGen = revokeKeyRequest.getDisableAutoGen() == null ? Boolean.FALSE : revokeKeyRequest.getDisableAutoGen();
+
+		LOGGER.info(KeymanagerConstant.SESSIONID, appId, refId,	KeymanagerConstant.REQ_REV_KEY);
+		LOGGER.info(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, appId,
+						KeymanagerConstant.REQ_REV_KEY + disableAutoGen);
+
+		if (!keymanagerUtil.isValidReferenceId(refId) ||
+						!keymanagerUtil.isValidApplicationId(appId)) {
+			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, null,
+					"Invalid Data provided to revoke key.");
+			throw new KeymanagerServiceException(KeymanagerErrorConstant.INVALID_REQUEST.getErrorCode(),
+					KeymanagerErrorConstant.INVALID_REQUEST.getErrorMessage());
+		}
+
+		if (appId.equalsIgnoreCase(signApplicationid) && refId.equalsIgnoreCase(certificateSignRefID)) {
+			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.APPLICATIONID, null,
+					"Not allowed to revoke key. AppId: KERNEL & RefId: SIGN.");
+			throw new KeymanagerServiceException(KeymanagerErrorConstant.REVOKE_NOT_ALLOWED.getErrorCode(),
+					KeymanagerErrorConstant.REVOKE_NOT_ALLOWED.getErrorMessage());
+		}
+
+		LocalDateTime timestamp = DateUtils.getUTCCurrentDateTime();
+		Map<String, List<KeyAlias>> keyAliasMap = dbHelper.getKeyAliases(appId, refId, timestamp);
+		List<KeyAlias> currentKeyAlias = keyAliasMap.get(KeymanagerConstant.CURRENTKEYALIAS);
+
+		if (currentKeyAlias.isEmpty() || currentKeyAlias.size() > 1) {
+			LOGGER.error(KeymanagerConstant.SESSIONID, KeymanagerConstant.CURRENTKEYALIAS,
+					String.valueOf(currentKeyAlias.size()), "CurrentKeyAlias size more than one");
+			throw new NoUniqueAliasException(KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorCode(),
+					KeymanagerErrorConstant.NO_UNIQUE_ALIAS.getErrorMessage());
+		}
+
+		LOGGER.debug(KeymanagerConstant.SESSIONID, appId, refId, "Invalidating the current valid key.");
+		
+		LocalDateTime expireTime = timestamp.minusMinutes(1L);
+		KeyAlias currentAlias = currentKeyAlias.get(0);
+		dbHelper.storeKeyInAlias(appId, currentAlias.getKeyGenerationTime(), refId, currentAlias.getAlias(), expireTime);
+		RevokeKeyResponseDto responseDto = new RevokeKeyResponseDto();
+		responseDto.setStatus(KeymanagerConstant.KEY_REVOKED);
 		responseDto.setTimestamp(timestamp);
 		return responseDto;
 	}

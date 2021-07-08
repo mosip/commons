@@ -39,8 +39,7 @@ public class CSRGenerateRequestDto {
 	/**
 	 * Common Name For Generating Certificate or CSR
 	 */
-	@ApiModelProperty(notes = "Common Name (CN)", example = "MOSIP", required = true)
-	@NotBlank(message = KeymanagerConstant.INVALID_REQUEST)
+	@ApiModelProperty(notes = "Common Name (CN)", example = "MOSIP", required = false)
 	private String commonName;
 
 	/**

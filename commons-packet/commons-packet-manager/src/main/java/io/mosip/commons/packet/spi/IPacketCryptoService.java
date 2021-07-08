@@ -8,5 +8,5 @@ public interface IPacketCryptoService {
 
     public byte[] decrypt(String id, byte[] packet);
 
-    public boolean verify(byte[] packet, byte[] signature);
+    public boolean verify(String machineId, byte[] packet, byte[] signature);
 }

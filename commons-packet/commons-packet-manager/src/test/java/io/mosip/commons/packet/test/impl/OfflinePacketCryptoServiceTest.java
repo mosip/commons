@@ -4,8 +4,10 @@ import io.mosip.commons.packet.constants.CryptomanagerConstant;
 import io.mosip.commons.packet.impl.OfflinePacketCryptoServiceImpl;
 import io.mosip.commons.packet.util.ZipUtils;
 import io.mosip.kernel.clientcrypto.dto.TpmSignResponseDto;
+import io.mosip.kernel.clientcrypto.dto.TpmSignVerifyResponseDto;
 import io.mosip.kernel.clientcrypto.service.spi.ClientCryptoManagerService;
 import io.mosip.kernel.core.signatureutil.model.SignatureResponse;
+import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.JsonUtils;
 import io.mosip.kernel.cryptomanager.dto.CryptomanagerResponseDto;
 import io.mosip.kernel.cryptomanager.service.impl.CryptomanagerServiceImpl;
@@ -26,6 +28,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
+
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -65,7 +69,7 @@ public class OfflinePacketCryptoServiceTest {
     public void signTest() {
         String packetSignature = "signature";
         TpmSignResponseDto signatureResponse = new TpmSignResponseDto();
-        signatureResponse.setData(packetSignature);
+        signatureResponse.setData(CryptoUtil.encodeBase64(packetSignature.getBytes(StandardCharsets.UTF_8)));
 
         Mockito.when(clientCryptoManagerService.csSign(any())).thenReturn(signatureResponse);
 
@@ -102,13 +106,12 @@ public class OfflinePacketCryptoServiceTest {
     @Test
     public void verifyTest() {
         String packetSignature = "signature";
-        ValidatorResponseDto responseDto = new ValidatorResponseDto();
-        responseDto.setStatus(CryptomanagerConstant.SIGNATURES_SUCCESS);
 
+        TpmSignVerifyResponseDto tpmSignVerifyResponseDto = new TpmSignVerifyResponseDto();
+        tpmSignVerifyResponseDto.setVerified(true);
+        Mockito.when(clientCryptoManagerService.csVerify(any())).thenReturn(tpmSignVerifyResponseDto);
 
-        Mockito.when(signatureService.validate(any())).thenReturn(responseDto);
-
-        boolean result = offlinePacketCryptoService.verify("packet".getBytes(), packetSignature.getBytes());
+        boolean result = offlinePacketCryptoService.verify("12345","packet".getBytes(), packetSignature.getBytes());
         assertTrue(result);
     }
 }

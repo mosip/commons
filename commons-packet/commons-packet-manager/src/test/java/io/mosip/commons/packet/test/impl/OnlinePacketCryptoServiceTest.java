@@ -1,6 +1,9 @@
 package io.mosip.commons.packet.test.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.mosip.commons.packet.dto.ClientPublicKeyResponseDto;
+import io.mosip.commons.packet.dto.TpmSignVerifyResponseDto;
 import io.mosip.commons.packet.dto.packet.CryptomanagerResponseDto;
 import io.mosip.commons.packet.dto.packet.DecryptResponseDto;
 import io.mosip.commons.packet.exception.ApiNotAccessibleException;
@@ -8,6 +11,7 @@ import io.mosip.commons.packet.exception.PacketDecryptionFailureException;
 import io.mosip.commons.packet.exception.SignatureException;
 import io.mosip.commons.packet.impl.OnlinePacketCryptoServiceImpl;
 import io.mosip.commons.packet.util.ZipUtils;
+import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.JsonUtils;
 import org.apache.commons.io.IOUtils;
@@ -29,6 +33,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 
@@ -69,18 +74,17 @@ public class OnlinePacketCryptoServiceTest {
     @Test
     public void signTest() throws IOException {
         String expected = "signature";
-        byte[] packet = "packet".getBytes();
         LinkedHashMap submap = new LinkedHashMap();
-        submap.put("signature", expected);
+        submap.put("data", CryptoUtil.encodeBase64(expected.getBytes(StandardCharsets.UTF_8)));
         LinkedHashMap responseMap = new LinkedHashMap();
         responseMap.put("response", submap);
-        ReflectionTestUtils.setField(onlinePacketCryptoService, "keymanagerSignUrl", "localhost");
+        ReflectionTestUtils.setField(onlinePacketCryptoService, "keymanagerCsSignUrl", "localhost");
         ResponseEntity<String> response = new ResponseEntity<>("hello", HttpStatus.OK);
 
         Mockito.when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class), any(Class.class))).thenReturn(response);
         Mockito.when(mapper.readValue(anyString(), any(Class.class))).thenReturn(responseMap);
 
-        byte[] result = onlinePacketCryptoService.sign(packet);
+        byte[] result = onlinePacketCryptoService.sign("packet".getBytes());
         assertTrue(Arrays.equals(expected.getBytes(), result));
     }
 
@@ -92,7 +96,7 @@ public class OnlinePacketCryptoServiceTest {
         submap.put("signature", expected);
         LinkedHashMap responseMap = new LinkedHashMap();
         responseMap.put("response", submap);
-        ReflectionTestUtils.setField(onlinePacketCryptoService, "keymanagerSignUrl", "localhost");
+        ReflectionTestUtils.setField(onlinePacketCryptoService, "keymanagerCsSignUrl", "localhost");
         ResponseEntity<String> response = new ResponseEntity<>("hello", HttpStatus.OK);
 
         Mockito.when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class), any(Class.class))).thenReturn(response);
@@ -169,17 +173,27 @@ public class OnlinePacketCryptoServiceTest {
     public void verifyTest() throws IOException {
         String expected = "signature";
         byte[] packet = "packet".getBytes();
+        
         LinkedHashMap submap = new LinkedHashMap();
-        submap.put("status", "success");
+        submap.put("verified", true);
+        submap.put("encryptionPublicKey", "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkK7cfIRc"
+        		+ "b18uvtrQwajS9NElOzB6BRDZgy1BiumpAasKIf2kzUZfnctZqlIX1zkB1p6RDEaLeRoXHlPflz92kqMhfz5yZaDZFm7fV"
+        		+ "mMO4TVjZXy2+8OmWW1EQTEFa7SQ9V8MTYWlaBSheWfUqCaCPiUjX0B8n8y1j4f8GdLagso/DBPc+zcqItmNTPbKhb606Jc"
+        		+ "v6sSbu6N3HhhlnqGdsxmTradTnYYRYBNgRZ+tkmKlDjSAhOgnYpkRRvGBFI0hUYvm6fOgA7nUrqjc7xc8tSlk0ZJxr"
+        		+ "ic++DZYEEigypYE+CWpQXlkmioMnMwi/WEwQfg88LNoxrrY238kE9nRbwIDAQAB");
         LinkedHashMap responseMap = new LinkedHashMap();
         responseMap.put("response", submap);
-        ReflectionTestUtils.setField(onlinePacketCryptoService, "keymanagerValidateUrl", "localhost");
+        
+        ReflectionTestUtils.setField(onlinePacketCryptoService, "keymanagerCsverifysignUrl", "localhost");
+        ReflectionTestUtils.setField(onlinePacketCryptoService, "syncdataGetTpmKeyUrl", "localhost");
         ResponseEntity<String> response = new ResponseEntity<>("hello", HttpStatus.OK);
 
         Mockito.when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class), any(Class.class))).thenReturn(response);
+        Mockito.when(restTemplate.exchange("localhost"+"10077", HttpMethod.GET, null, String.class)).thenReturn(response);
+        
         Mockito.when(mapper.readValue(anyString(), any(Class.class))).thenReturn(responseMap);
 
-        boolean result = onlinePacketCryptoService.verify(packet, expected.getBytes());
+        boolean result = onlinePacketCryptoService.verify("10077",packet, expected.getBytes());
         assertTrue(result);
     }
 }

@@ -13,10 +13,10 @@ import lombok.Data;
 @Data
 public class FailedContentResponse {
 	
-	private List<Failedcontents> messages; 
+	private List<Failedcontents> failedcontents; 
 	
 	@Data
-	class Failedcontents{
+	public static class Failedcontents{
 		private String message;
 		private String timestamp;
 	}

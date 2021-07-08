@@ -26,4 +26,12 @@ public interface KeyAliasRepository extends JpaRepository<KeyAlias, String> {
 	 * @return list of keyalias
 	 */
 	List<KeyAlias> findByApplicationIdAndReferenceId(String applicationId, String referenceId);
+
+	/**
+	 * Function to find keyalias by applicationId
+	 * 
+	 * @param applicationId applicationId
+	 * @return list of keyalias
+	 */
+	List<KeyAlias> findByApplicationId(String applicationId);
 }

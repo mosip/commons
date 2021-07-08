@@ -49,6 +49,8 @@ public enum KeymanagerErrorConstant {
 
 	NOT_VALID_SIGNATURE_KEY("KER-KMS-020", "Signing operation for allowed for the provided application id & reference id."),
 
+	REVOKE_NOT_ALLOWED("KER-KMS-021", "Key Revocation not allowed."),
+
 	INTERNAL_SERVER_ERROR("KER-KMS-500", "Internal server error");
 
 	/**

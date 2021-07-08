@@ -8,6 +8,7 @@ import org.apache.commons.codec.digest.HmacUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -51,6 +52,7 @@ public class SubscriberClientImpl
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SubscriberClientImpl.class);
 
+	@Qualifier("websubRestTemplate")
 	@Autowired
 	private RestTemplate restTemplate;
 
@@ -167,23 +169,27 @@ public class SubscriberClientImpl
 
 	@Override
 	public FailedContentResponse getFailedContent(FailedContentRequest failedContentRequest) {
+		int pageIndex = failedContentRequest.getPaginationIndex() < 0 ? 0 : failedContentRequest.getPaginationIndex();
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		if (failedContentRequest.getMessageCount() > 0) {
 			headers.set(WebSubClientConstants.SUBSCRIBER_SIGNATURE_HEADER,
-					getHmac256(failedContentRequest.getTopic() + failedContentRequest.getCallbackURL()+ failedContentRequest.getTimestamp()+ String.valueOf(failedContentRequest.getMessageCount()),
+					getHmac256(failedContentRequest.getTopic() + failedContentRequest.getCallbackURL()+ failedContentRequest.getTimestamp()+String.valueOf(pageIndex)+String.valueOf(failedContentRequest.getMessageCount()),
 							failedContentRequest.getSecret()));
 		} else {
 			headers.set(WebSubClientConstants.SUBSCRIBER_SIGNATURE_HEADER,
 					getHmac256(failedContentRequest.getTopic() + failedContentRequest.getCallbackURL()
-							+ failedContentRequest.getTimestamp(), failedContentRequest.getSecret()));
+							+ failedContentRequest.getTimestamp()+String.valueOf(pageIndex), failedContentRequest.getSecret()));
 		}
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(failedContentRequest.getHubURL())
 				.queryParam("topic", failedContentRequest.getTopic())
 				.queryParam("callback",
 						Base64.encodeBase64URLSafeString(failedContentRequest.getCallbackURL().getBytes()))
-				.queryParam("timestamp", failedContentRequest.getTimestamp()).queryParam("messageCount",
-						failedContentRequest.getMessageCount() == 0 ? null : failedContentRequest.getMessageCount());
+				.queryParam("timestamp", failedContentRequest.getTimestamp())
+				.queryParam("pageindex",
+						pageIndex)
+				.queryParam("messageCount",
+						failedContentRequest.getMessageCount() <= 0 ? null : failedContentRequest.getMessageCount());
 
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 

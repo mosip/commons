@@ -14,12 +14,12 @@
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<maven.compiler.version>3.8.0</maven.compiler.version>
-		<maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version>
+    	 <maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version>
 
 		<maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
 		<maven.war.plugin.version>3.1.0</maven.war.plugin.version>
-		<maven.jacoco.plugin.version>0.8.1</maven.jacoco.plugin.version>
-		<maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version>
+		 <maven.jacoco.version>0.8.5</maven.jacoco.version>
+		 <maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version>
 		<maven.javadoc.version>3.2.0</maven.javadoc.version>
 		<maven-shade-plugin.version>2.3</maven-shade-plugin.version>
 
@@ -121,12 +121,12 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <maven.compiler.version>3.8.0</maven.compiler.version>
-        <maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version>
+        <!-- <maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version> -->
 
         <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
         <maven.war.plugin.version>3.1.0</maven.war.plugin.version>
-        <maven.jacoco.plugin.version>0.8.1</maven.jacoco.plugin.version>
-        <maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version>
+        <!-- <maven.jacoco.plugin.version>0.8.1</maven.jacoco.plugin.version> -->
+        <!-- <maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version> -->
         <maven.javadoc.version>3.2.0</maven.javadoc.version>
         <maven-shade-plugin.version>2.3</maven-shade-plugin.version>
 
@@ -136,7 +136,7 @@
         <maven.compiler.target>11</maven.compiler.target>
         <powermock.beta.version>2.0.7</powermock.beta.version>
         <s3mock.version>0.2.4</s3mock.version>
-        <maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version>
+        <!-- <maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version> -->
 
         <sonar.coverage.exclusions>**/constant/**,**/config/**,**/dto/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/security/**,**/*Config.java,**/*S3Adapter.java,**/*SwiftAdapter.java</sonar.coverage.exclusions>
         <sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**</sonar.cpd.exclusions>
@@ -213,35 +213,38 @@
                 </repository> 
         </distributionManagement> 
         <build>
-<plugins>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <configuration>
-                    <append>true</append>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>agent-for-ut</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>agent-for-it</id>
-                        <goals>
-                            <goal>prepare-agent-integration</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>jacoco-site</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven.surefire.plugin.version}</version>
+                    <configuration>
+                        <skipTests>${skipTests}</skipTests>
+                        <skip>false</skip>
+                        <argLine>
+                            ${argLine} --add-opens java.xml/jdk.xml.internal=ALL-UNNAMED --illegal-access=permit
+                        </argLine>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${maven.jacoco.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>report</id>
+                            <phase>prepare-package</phase>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -396,4 +399,35 @@
 		<name>Object store</name>
 		<description>Provides the implementation class for the object store </description>
         <url>https://github.com/mosip/commons</url>
-	</project>
+    <profiles>
+        <profile>
+            <id>sonar</id>
+            <properties>
+                <sonar.sources>.</sonar.sources>
+                <sonar.inclusions>src/main/java/**,src/main/resources/**</sonar.inclusions>
+                <sonar.exclusions>${sonar.coverage.exclusions}</sonar.exclusions>
+                <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonarsource.scanner.maven</groupId>
+                        <artifactId>sonar-maven-plugin</artifactId>
+                        <version>${maven.sonar.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sonar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

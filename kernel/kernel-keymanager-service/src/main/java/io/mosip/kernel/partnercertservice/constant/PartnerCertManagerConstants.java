@@ -55,6 +55,16 @@ public interface PartnerCertManagerConstants {
 	 */
 	String SUCCESS_UPLOAD = "Upload Success.";
 
+	/**
+	 * The constant PARTIAL_SUCCESS_UPLOAD
+	 */
+	String PARTIAL_SUCCESS_UPLOAD = "Partial Upload Success.";
+
+	/**
+	 * The constant UPLOAD_FAILED
+	 */
+	String UPLOAD_FAILED = "Upload Failed.";
+
 	 /**
 	 * The constant UPLOAD_PARTNER_CERT
 	 */
@@ -74,4 +84,16 @@ public interface PartnerCertManagerConstants {
 	 * The constant HASH_SHA2
 	 */
 	String HASH_SHA2 = "SHA2";
+
+	int YEAR_DAYS = 365;
+
+    String GET_PARTNER_CERT = "GetPartnerCertificate";
+
+	String CERT_TRUST_VALIDATION = "CertTrustPathValidation";
+
+	String FTM_PARTNER_DOMAIN = "FTM";
+
+	String ROOT_APP_ID = "ROOT";
+
+	String AUTH_DOMAIN = "AUTH";
 }

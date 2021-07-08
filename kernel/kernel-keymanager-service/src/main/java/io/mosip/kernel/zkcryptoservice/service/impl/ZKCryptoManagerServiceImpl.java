@@ -256,7 +256,7 @@ public class ZKCryptoManagerServiceImpl implements ZKCryptoManagerService, Initi
 			LOGGER.error(ZKCryptoManagerConstants.SESSIONID, ZKCryptoManagerConstants.RANDOM_KEY, 
 						ZKCryptoManagerConstants.EMPTY,	"Error Cipher Operations of Random Key.");
 			throw new ZKKeyDerivationException(ZKCryptoErrorConstants.RANDOM_KEY_CIPHER_FAILED.getErrorCode(), 
-				ZKCryptoErrorConstants.RANDOM_KEY_CIPHER_FAILED.getErrorMessage());
+				ZKCryptoErrorConstants.RANDOM_KEY_CIPHER_FAILED.getErrorMessage(), e);
 		}
 	}
 

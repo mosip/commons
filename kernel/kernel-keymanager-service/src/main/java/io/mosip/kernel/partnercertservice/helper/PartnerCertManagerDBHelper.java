@@ -66,9 +66,9 @@ public class PartnerCertManagerDBHelper {
     }
 
     public boolean isPartnerCertificateExist(String certThumbprint, String partnerDomain){
-        PartnerCertificateStore partnerCertificate = partnerCertificateStoreRepository
+        List<PartnerCertificateStore> partnerCertificateList = partnerCertificateStoreRepository
                                                      .findByCertThumbprintAndPartnerDomain(certThumbprint, partnerDomain);
-        if (Objects.nonNull(partnerCertificate)) {
+        if (partnerCertificateList.size() > 0) {
             return true;
         }
         return false;
@@ -102,10 +102,12 @@ public class PartnerCertManagerDBHelper {
             trustCert -> {
                 String certificateData = trustCert.getCertData();
                 X509Certificate x509Cert = (X509Certificate) keymanagerUtil.convertToCertificate(certificateData);
-                if (PartnerCertificateManagerUtil.isSelfSignedCertificate(x509Cert)) {
-                    rootTrust.add(new TrustAnchor(x509Cert, null));
-                } else{
-                    intermediateCerts.add(x509Cert);
+                if (PartnerCertificateManagerUtil.isCertificateDatesValid(x509Cert)) {
+                    if (PartnerCertificateManagerUtil.isSelfSignedCertificate(x509Cert)) {
+                        rootTrust.add(new TrustAnchor(x509Cert, null));
+                    } else{
+                        intermediateCerts.add(x509Cert);
+                    }
                 }
             }
         );
@@ -114,7 +116,6 @@ public class PartnerCertManagerDBHelper {
         hashMap.put(PartnerCertManagerConstants.TRUST_INTER, intermediateCerts);
         return hashMap;
     }
-
 
     public String getIssuerCertId(String certIssuerDn) {
         LocalDateTime currentDateTime = DateUtils.getUTCCurrentDateTime();
@@ -157,7 +158,7 @@ public class PartnerCertManagerDBHelper {
         partnerCertificateStoreRepository.saveAndFlush(keymanagerUtil.setMetaData(partnerStoreObj));
     }
 
-    public PartnerCertificateStore getPartnetCert(String certId) {
+    public PartnerCertificateStore getPartnerCert(String certId) {
         return partnerCertificateStoreRepository.findByCertId(certId);
     }
 }

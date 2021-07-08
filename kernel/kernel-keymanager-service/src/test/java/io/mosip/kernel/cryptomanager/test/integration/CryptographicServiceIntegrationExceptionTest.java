@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -102,7 +103,7 @@ public class CryptographicServiceIntegrationExceptionTest {
 	}
 
 	@WithUserDetails("reg-processor")
-
+	@Ignore
 	@Test
 	public void testInvalidSpecEncrypt() throws Exception {
 

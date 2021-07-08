@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,8 @@ import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.keymanagerservice.dto.CSRGenerateRequestDto;
 import io.mosip.kernel.keymanagerservice.dto.KeyPairGenerateRequestDto;
 import io.mosip.kernel.keymanagerservice.dto.KeyPairGenerateResponseDto;
+import io.mosip.kernel.keymanagerservice.dto.RevokeKeyRequestDto;
+import io.mosip.kernel.keymanagerservice.dto.RevokeKeyResponseDto;
 import io.mosip.kernel.keymanagerservice.dto.SymmetricKeyGenerateRequestDto;
 import io.mosip.kernel.keymanagerservice.dto.SymmetricKeyGenerateResponseDto;
 import io.mosip.kernel.keymanagerservice.dto.UploadCertificateRequestDto;
@@ -58,7 +61,7 @@ public class KeymanagerController {
 	@ResponseFilter
 	@PostMapping(value = "/generateMasterKey/{objectType}")
 	public ResponseWrapper<KeyPairGenerateResponseDto> generateMasterKey(
-			@ApiParam("Response Type Certificate/CSR") @PathVariable("objectType") String objectType,
+			@ApiParam("Response Type CERTIFICATE/CSR") @PathVariable("objectType") String objectType,
 			@RequestBody @Valid RequestWrapper<KeyPairGenerateRequestDto> keyPairGenRequestDto) {
 
 		ResponseWrapper<KeyPairGenerateResponseDto> response = new ResponseWrapper<>();
@@ -150,6 +153,23 @@ public class KeymanagerController {
 
 		ResponseWrapper<SymmetricKeyGenerateResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(keymanagerService.generateSymmetricKey(symGenRequestDto.getRequest()));
+		return response;
+	}
+
+	/**
+	 * Request to Revoke Base Key for the provided APP ID & REF ID.
+	 * 
+	 * @param revokeKeyRequestDto     {@link RevokeKeyRequestDto} request
+	 * @return {@link RevokeKeyResponseDto} instance
+	*/
+	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	@ResponseFilter
+	@PutMapping(value = "/revokeKey")
+	public ResponseWrapper<RevokeKeyResponseDto> revokeKey(
+		@RequestBody @Valid RequestWrapper<RevokeKeyRequestDto> revokeKeyRequestDto) {
+
+		ResponseWrapper<RevokeKeyResponseDto> response = new ResponseWrapper<>();
+		response.setResponse(keymanagerService.revokeKey(revokeKeyRequestDto.getRequest()));
 		return response;
 	}
 }

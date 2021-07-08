@@ -427,7 +427,6 @@ public class PKCS12KeyStoreImpl implements io.mosip.kernel.core.keymanager.spi.K
             keyStore.setEntry(alias, secret, password);
             storeKeyInFile();
 		} catch (KeyStoreException e) {
-            e.printStackTrace();
 			throw new KeystoreProcessingException(KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorCode(),
 					KeymanagerErrorCode.KEYSTORE_PROCESSING_ERROR.getErrorMessage() + e.getMessage(), e);
 		}

@@ -7,6 +7,7 @@
 package io.mosip.kernel.cryptomanager.util;
 
 import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.time.LocalDateTime;
@@ -17,6 +18,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -194,5 +196,31 @@ public class CryptomanagerUtils {
 		System.arraycopy(certThumbprint, 0, finalData, 0, certThumbprint.length);
 		System.arraycopy(encryptedKey, 0, finalData, certThumbprint.length, encryptedKey.length);
 		return finalData;
+	}
+
+	public byte[] generateRandomBytes(int size) {
+		byte[] randomBytes = new byte[size];
+		SecureRandom secureRandom = new SecureRandom();
+		secureRandom.nextBytes(randomBytes);
+		return randomBytes;
+	}
+
+	public byte[] concatByteArrays(byte[] array1, byte[] array2){
+		byte[] finalData = new byte[array1.length + array2.length];
+		System.arraycopy(array1, 0, finalData, 0, array1.length);
+		System.arraycopy(array2, 0, finalData, array1.length, array2.length);
+		return finalData;
+	}
+
+	public byte[] parseEncryptKeyHeader(byte[] encryptedKey){
+		byte[] versionHeaderBytes = Arrays.copyOfRange(encryptedKey, 0, CryptomanagerConstant.VERSION_RSA_2048.length);
+		if (!Arrays.equals(versionHeaderBytes, CryptomanagerConstant.VERSION_RSA_2048)) {
+			return new byte[0];
+		}
+		return versionHeaderBytes;
+	}
+
+	public boolean isDataValid(String anyData) {
+		return anyData != null && !anyData.trim().isEmpty();
 	}
 }

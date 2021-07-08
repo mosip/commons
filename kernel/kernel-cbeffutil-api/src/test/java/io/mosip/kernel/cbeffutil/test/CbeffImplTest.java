@@ -24,13 +24,11 @@ import java.util.Map;
 import java.util.Set;
 
 import io.mosip.kernel.biometrics.commons.CbeffValidator;
-import io.mosip.kernel.biometrics.constant.BiometricType;
-import io.mosip.kernel.biometrics.constant.ProcessedLevelType;
-import io.mosip.kernel.biometrics.constant.PurposeType;
-import io.mosip.kernel.biometrics.constant.QualityType;
+import io.mosip.kernel.biometrics.constant.*;
 import io.mosip.kernel.biometrics.entities.BDBInfo;
 import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BIRInfo;
+import io.mosip.kernel.biometrics.entities.Entry;
 import io.mosip.kernel.biometrics.entities.RegistryIDType;
 import io.mosip.kernel.biometrics.entities.VersionType;
 import io.mosip.kernel.biometrics.spi.CbeffUtil;
@@ -69,6 +67,7 @@ public class CbeffImplTest {
 
 	private List<BIR> createList;
 	private List<BIR> updateList;
+	private List<BIR> exceptionList;
 	private static final String localpath = "./src/main/resources";
 
 	@Before
@@ -267,6 +266,29 @@ public class CbeffImplTest {
 //		
 //		createList.add(rightIris);
 
+		exceptionList = new ArrayList<>();
+		BIR validThumb = new BIR.BIRBuilder().withBdb(leftthumb)
+				.withVersion(new VersionType(1, 1))
+				.withCbeffversion(new VersionType(1, 1))
+				.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(false).build())
+				.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format).withQuality(Qtype)
+						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("Left Thumb"))
+						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
+						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
+				.build();
+		Entry entry=new Entry(OtherKey.EXCEPTION, "true");
+		BIR exceptionThumb = new BIR.BIRBuilder().withBdb(new byte[0])
+				.withVersion(new VersionType(1, 1))
+				.withCbeffversion(new VersionType(1, 1))
+				.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(false).build())
+				.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format).withQuality(Qtype)
+						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("Left Thumb"))
+						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
+						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
+				.withOthers(Arrays.asList(entry))
+				.build();
+		exceptionList.add(validThumb);
+		exceptionList.add(exceptionThumb);
 	}
 
 	// @Test
@@ -285,6 +307,12 @@ public class CbeffImplTest {
 		createXMLFile(createXml, "createCbeffLatest2");
 		assertEquals(new String(createXml), new String(readCreatedXML("createCbeffLatest2")));
 
+	}
+
+	@Test
+	public void testCreateExceptionXMLFromLocal() throws Exception {
+		PowerMockito.mockStatic(CbeffValidator.class);
+		cbeffUtilImpl.createXML(exceptionList, readXSD("cbeff"));
 	}
 
 	private byte[] readCreatedXML(String name) throws IOException {

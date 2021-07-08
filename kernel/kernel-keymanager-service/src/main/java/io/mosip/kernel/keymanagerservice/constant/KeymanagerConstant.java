@@ -170,4 +170,10 @@ public class KeymanagerConstant {
 	public static final String GENERATE_SUCCESS = "Generation Success";
 
 	public static final String SYMM_KEY_EXISTS = "Key Exists.";
+
+	public static final String REQ_REV_KEY = "Request for key revocation.";
+
+	public static final String KEY_REVOKED = "Key Revoked";
+
+	public static final String ENCRYPTION_KEY = "EncryptionKey";
 }

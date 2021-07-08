@@ -16,6 +16,7 @@ import io.mosip.commons.packet.dto.packet.CryptomanagerResponseDto;
 import io.mosip.commons.packet.exception.ApiNotAccessibleException;
 import io.mosip.commons.packet.exception.PacketDecryptionFailureException;
 import io.mosip.commons.packet.util.PacketManagerLogger;
+import io.mosip.kernel.clientcrypto.dto.TpmSignRequestDto;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.logger.spi.Logger;
@@ -29,15 +30,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.commons.packet.constants.CryptomanagerConstant;
+import io.mosip.commons.packet.dto.ClientPublicKeyResponseDto;
 import io.mosip.commons.packet.dto.SignRequestDto;
+import io.mosip.commons.packet.dto.TpmSignVerifyRequestDto;
+import io.mosip.commons.packet.dto.TpmSignVerifyResponseDto;
 import io.mosip.commons.packet.exception.SignatureException;
 import io.mosip.commons.packet.spi.IPacketCryptoService;
 import io.mosip.kernel.core.http.RequestWrapper;
+import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.util.DateUtils;
 
 @Component
@@ -80,32 +88,35 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
 
     @Value("${CRYPTOMANAGER_ENCRYPT:null}")
     private String cryptomanagerEncryptUrl;
-
-    @Value("${mosip.kernel.keymanager-service-sign-url:null}")
-    private String keymanagerSignUrl;
-
-    @Value("${mosip.kernel.keymanager-service-validate-url:null}")
-    private String keymanagerValidateUrl;
-
+    
+    @Value("${mosip.kernel.keymanager-service-CsSign-url:null}")
+    private String keymanagerCsSignUrl;
+    
+    @Value("${mosip.kernel.keymanager-service-csverifysign-url:null}")
+    private String keymanagerCsverifysignUrl;
+    
+    @Value("${mosip.kernel.syncdata-service-get-tpm-publicKey-url:null}")
+    private String syncdataGetTpmKeyUrl;
+    
     @Override
     public byte[] sign(byte[] packet) {
         try {
-            String packetData = new String(packet, StandardCharsets.UTF_8);
-            SignRequestDto dto = new SignRequestDto();
-            dto.setData(packetData);
-            RequestWrapper<SignRequestDto> request = new RequestWrapper<>();
+            
+        	TpmSignRequestDto dto = new TpmSignRequestDto();
+            dto.setData(CryptoUtil.encodeBase64(packet));
+            RequestWrapper<TpmSignRequestDto> request = new RequestWrapper<>();
             request.setRequest(dto);
             request.setMetadata(null);
             DateTimeFormatter format = DateTimeFormatter.ofPattern(DATETIME_PATTERN);
             LocalDateTime localdatetime = LocalDateTime
                     .parse(DateUtils.getUTCCurrentDateTimeString(DATETIME_PATTERN), format);
             request.setRequesttime(localdatetime);
-            HttpEntity<RequestWrapper<SignRequestDto>> httpEntity = new HttpEntity<>(request);
-            ResponseEntity<String> response = restTemplate.exchange(keymanagerSignUrl, HttpMethod.POST, httpEntity,
+            HttpEntity<RequestWrapper<TpmSignRequestDto>> httpEntity = new HttpEntity<>(request);
+            ResponseEntity<String> response = restTemplate.exchange(keymanagerCsSignUrl, HttpMethod.POST, httpEntity,
                     String.class);
             LinkedHashMap responseMap = (LinkedHashMap) mapper.readValue(response.getBody(), LinkedHashMap.class).get("response");
             if (responseMap != null && responseMap.size() > 0)
-                return responseMap.get("signature").toString().getBytes();
+                return CryptoUtil.decodeBase64((String) responseMap.get("data"));
             else
                 throw new SignatureException();
         } catch (IOException e) {
@@ -287,26 +298,26 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
     }
 
     @Override
-    public boolean verify(byte[] packet, byte[] signature) {
+    public boolean verify(String machineId,byte[] packet, byte[] signature) {
        try {
-            String packetData = new String(packet, StandardCharsets.UTF_8);
-            ValidateRequestDto dto = new ValidateRequestDto();
-            dto.setData(packetData);
-            dto.setSignature(new String(signature, StandardCharsets.UTF_8));
-            dto.setTimestamp(DateUtils.getUTCCurrentDateTimeString(DATETIME_PATTERN));
-            RequestWrapper<ValidateRequestDto> request = new RequestWrapper<>();
+    	   	String publicKey=getPublicKey(machineId);
+            TpmSignVerifyRequestDto dto = new TpmSignVerifyRequestDto();
+            dto.setData(CryptoUtil.encodeBase64(packet));
+            dto.setSignature(CryptoUtil.encodeBase64(signature));
+            dto.setPublicKey(publicKey);
+            RequestWrapper<TpmSignVerifyRequestDto> request = new RequestWrapper<>();
             request.setRequest(dto);
             request.setMetadata(null);
             DateTimeFormatter format = DateTimeFormatter.ofPattern(DATETIME_PATTERN);
             LocalDateTime localdatetime = LocalDateTime
                     .parse(DateUtils.getUTCCurrentDateTimeString(DATETIME_PATTERN), format);
             request.setRequesttime(localdatetime);
-            HttpEntity<RequestWrapper<ValidateRequestDto>> httpEntity = new HttpEntity<>(request);
-            ResponseEntity<String> response = restTemplate.exchange(keymanagerValidateUrl, HttpMethod.POST, httpEntity,
+            HttpEntity<RequestWrapper<TpmSignVerifyRequestDto>> httpEntity = new HttpEntity<>(request);
+            ResponseEntity<String> response = restTemplate.exchange(keymanagerCsverifysignUrl, HttpMethod.POST, httpEntity,
                     String.class);
             LinkedHashMap responseMap = (LinkedHashMap) mapper.readValue(response.getBody(), LinkedHashMap.class).get("response");//.get("signature");
             if (responseMap != null && responseMap.size() > 0)
-                return responseMap.get("status") != null && responseMap.get("status").toString().equalsIgnoreCase("success");
+                return responseMap.get("verified") != null && responseMap.get("verified").toString().equalsIgnoreCase("true");
             else {
                 LOGGER.error(PacketManagerLogger.SESSIONID, "SIGNATURE", new String(signature),
                         "Failed to verify signature");
@@ -316,7 +327,23 @@ public class OnlinePacketCryptoServiceImpl implements IPacketCryptoService {
            LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, null,
                    ExceptionUtils.getStackTrace(e));
             throw new SignatureException(e);
+        } catch( RestClientException e) {
+        	LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, null,
+                    ExceptionUtils.getStackTrace(e));
+             throw new SignatureException(e);
         }
     }
 
+	private String getPublicKey(String machineId) throws JsonParseException, JsonMappingException, IOException {
+		ResponseEntity<String> response = restTemplate.exchange(syncdataGetTpmKeyUrl+machineId, HttpMethod.GET, null,
+                String.class);
+		 LinkedHashMap responseMap = (LinkedHashMap) mapper.readValue(response.getBody(), LinkedHashMap.class).get("response");//.get("signature");
+		 if (responseMap != null && responseMap.size() > 0)
+             return (String) responseMap.get("signingPublicKey") ;
+         else {
+             LOGGER.error(PacketManagerLogger.SESSIONID, "PUBLIC_KEY", machineId,
+                     "Failed to get public key");
+             throw new SignatureException();
+         }
+	}
 }

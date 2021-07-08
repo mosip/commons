@@ -29,4 +29,15 @@ public class CryptomanagerConstant {
 	public static final int THUMBPRINT_LENGTH = 32;
 
 	public static final int ENCRYPTED_SESSION_KEY_LENGTH = 256;
+
+	public static final byte[] VERSION_RSA_2048 = "VER_R2".getBytes();
+
+	public static final int GCM_AAD_LENGTH = 32; 
+
+	public static final int GCM_NONCE_LENGTH = 12; 
+
+	public static final String ENCRYPT_PIN = "CryptoManagerEncryptWithPin";
+
+	public static final String DECRYPT_PIN = "CryptoManagerDecryptWithPin";
 }
+

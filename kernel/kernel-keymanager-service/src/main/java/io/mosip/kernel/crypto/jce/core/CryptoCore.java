@@ -2,6 +2,7 @@ package io.mosip.kernel.crypto.jce.core;
 
 import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
@@ -292,9 +293,9 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 	public byte[] asymmetricDecrypt(PrivateKey privateKey, byte[] data) {
 		if (PKCS11_STORE_TYPE.equalsIgnoreCase(keystoreType)) {
 			BigInteger keyModulus = ((RSAPrivateKey) privateKey).getModulus();
-			return asymmetricDecrypt(privateKey, keyModulus, data);
+			return asymmetricDecrypt(privateKey, keyModulus, data, null);
 		}
-		return jceAsymmetricDecrypt(privateKey, data);
+		return jceAsymmetricDecrypt(privateKey, data, null);
 	}
 
 	@Override
@@ -302,18 +303,29 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 		if (PKCS11_STORE_TYPE.equalsIgnoreCase(keystoreType)) {
 			BigInteger keyModulus = Objects.nonNull(publicKey) ? ((RSAPublicKey) publicKey).getModulus() : 
 										((RSAPrivateKey) privateKey).getModulus();
-			return asymmetricDecrypt(privateKey, keyModulus, data);
+			return asymmetricDecrypt(privateKey, keyModulus, data, null);
 		}
-		return jceAsymmetricDecrypt(privateKey, data);
+		return jceAsymmetricDecrypt(privateKey, data, null);
 	}
 
-	private byte[] asymmetricDecrypt(PrivateKey privateKey, BigInteger keyModulus, byte[] data) {
+	@Override
+	public byte[] asymmetricDecrypt(PrivateKey privateKey, PublicKey publicKey, byte[] data, String storeType) {
+		if (PKCS11_STORE_TYPE.equalsIgnoreCase(keystoreType)) {
+			BigInteger keyModulus = Objects.nonNull(publicKey) ? ((RSAPublicKey) publicKey).getModulus() : 
+										((RSAPrivateKey) privateKey).getModulus();
+			return asymmetricDecrypt(privateKey, keyModulus, data, storeType);
+		}
+		return jceAsymmetricDecrypt(privateKey, data, storeType);
+	}
+
+	private byte[] asymmetricDecrypt(PrivateKey privateKey, BigInteger keyModulus, byte[] data, String storeType) {
 		Objects.requireNonNull(privateKey, SecurityExceptionCodeConstant.MOSIP_INVALID_KEY_EXCEPTION.getErrorMessage());
 		CryptoUtils.verifyData(data);
 		Cipher cipher;
 		try {
-			cipher = Cipher.getInstance(RSA_ECB_NO_PADDING);
-		} catch (java.security.NoSuchAlgorithmException | NoSuchPaddingException e) {
+			cipher = Objects.isNull(storeType) ? Cipher.getInstance(RSA_ECB_NO_PADDING) : 
+						Cipher.getInstance(RSA_ECB_NO_PADDING, storeType);
+		} catch (java.security.NoSuchAlgorithmException | NoSuchPaddingException | NoSuchProviderException e) {
 			throw new NoSuchAlgorithmException(
 					SecurityExceptionCodeConstant.MOSIP_NO_SUCH_ALGORITHM_EXCEPTION.getErrorCode(),
 					SecurityExceptionCodeConstant.MOSIP_NO_SUCH_ALGORITHM_EXCEPTION.getErrorMessage(), e);
@@ -362,17 +374,18 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 		}	    
 	}
 	 
-	private byte[] jceAsymmetricDecrypt(PrivateKey privateKey, byte[] data){
+	private byte[] jceAsymmetricDecrypt(PrivateKey privateKey, byte[] data, String storeType){
 		Objects.requireNonNull(privateKey, SecurityExceptionCodeConstant.MOSIP_INVALID_KEY_EXCEPTION.getErrorMessage());
 		CryptoUtils.verifyData(data);
 		Cipher cipher;
 		try {
-			cipher = Cipher.getInstance(asymmetricAlgorithm);
+			cipher = Objects.isNull(storeType) ? Cipher.getInstance(asymmetricAlgorithm) : 
+						Cipher.getInstance(asymmetricAlgorithm, storeType);
 			OAEPParameterSpec oaepParams = new OAEPParameterSpec(HASH_ALGO, MGF1, MGF1ParameterSpec.SHA256,
 				PSpecified.DEFAULT);
 			cipher.init(Cipher.DECRYPT_MODE, privateKey, oaepParams);
 			return doFinal(data, cipher);
-		} catch (java.security.NoSuchAlgorithmException | NoSuchPaddingException e) {
+		} catch (java.security.NoSuchAlgorithmException | NoSuchPaddingException | NoSuchProviderException e) {
 			throw new NoSuchAlgorithmException(
 					SecurityExceptionCodeConstant.MOSIP_NO_SUCH_ALGORITHM_EXCEPTION.getErrorCode(),
 					SecurityExceptionCodeConstant.MOSIP_NO_SUCH_ALGORITHM_EXCEPTION.getErrorMessage(), e);
@@ -530,4 +543,6 @@ public class CryptoCore implements CryptoCoreSpec<byte[], byte[], SecretKey, Pub
 		}
 
 	}
+
+	
 }

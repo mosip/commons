@@ -11,6 +11,7 @@
 -- Apr-2021		Ram Bhatt	   Lang_code nullable, removed from pk constraints and multiple FK constraint changes	
 -- Apr-2021 		Ram Bhatt          Added new rows in template,template_type and module_detail csv
 -- Apr-2021 		Ram Bhatt  	   Creation of master.permitted_local_config
+-- May-2021		Ram Bhatt	   Changed Precision and size of version and identity_schema_version
 -- ------------------------------------------------------------------------------------------------------------
 --------------------------------------------UI SPEC TABLE CREATION-----------------------------------------------
 \c mosip_master sysadmin
@@ -258,3 +259,11 @@ TRUNCATE TABLE master.module_detail cascade ;
 \ir ../ddl/master-permitted_local_config.sql
 
 --------------------------------------------------------------------------------------------------------------------------------------------
+
+-----------------------------------------------	ALTER TABLE OF MASTER UI SPEC TABLE----------------------------------------------------------
+
+ALTER TABLE master.ui_spec ALTER COLUMN version TYPE numeric(5,3);
+ALTER TABLE master.ui_spec ALTER COLUMN identity_schema_version TYPE numeric(5,3);
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------

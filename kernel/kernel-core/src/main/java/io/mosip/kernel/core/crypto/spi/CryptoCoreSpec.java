@@ -295,6 +295,47 @@ public interface CryptoCoreSpec<R, D, S, P, K, T> {
 	D asymmetricDecrypt(K privateKey, P publicKey, R data);
 
 	/**
+	 * This method is used for core <b> Asymmetric Decryption </b>.
+	 * 
+	 * Asymmetric Encryption is a form of Encryption where keys come in pairs. What
+	 * one key encrypts, only the other can decrypt.
+	 * 
+	 * Frequently (but not necessarily), the keys are interchangeable, in the sense
+	 * that if key A encrypts a message, then B can decrypt it, and if key B
+	 * encrypts a message, then key A can decrypt it. While common, this property is
+	 * not essential to asymmetric encryption.
+	 * 
+	 * Asymmetric Encryption is also known as Public Key Cryptography, since users
+	 * typically create a matching key pair, and make one public while keeping the
+	 * other secret.
+	 * 
+	 * Users can "sign" messages by encrypting them with their private keys. This is
+	 * effective since any message recipient can verify that the user's public key
+	 * can decrypt the message, and thus prove that the user's secret key was used
+	 * to encrypt it. If the user's secret key is, in fact, secret, then it follows
+	 * that the user, and not some impostor, really sent the message.
+	 * 
+	 * Users can send secret messages by encrypting a message with the recipient's
+	 * public key. In this case, only the intended recipient can decrypt the
+	 * message, since only that user should have access to the required secret key.
+	 * 
+	 * The key to successful use of Asymmetric Encryption is a Key Management
+	 * system, which implements a Public Key Infrastructure. Without this, it is
+	 * difficult to establish the reliability of public keys, or even to
+	 * conveniently find suitable ones.
+	 * 
+	 * Asymmetric Encryption is described in <a href=
+	 * "https://en.wikipedia.org/wiki/Public-key_cryptography">Public-key_cryptography</a>
+	 * 
+	 * @param key  Private Key as privateKey
+	 * @param key  Public Key as publicKey
+	 * @param data data to decrypt
+	 * @param keystoreType type of key store.
+	 * @return decrypted data
+	 */
+	D asymmetricDecrypt(K privateKey, P publicKey, R data, String keystoreType);
+
+	/**
 	 * This method is used as core <b> Cryptographic hash </b>.
 	 * 
 	 * Cryptographic hashing is described in <a href=

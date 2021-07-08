@@ -146,11 +146,15 @@ public class CryptographicServiceIntegrationTest {
 		requestDto.setData(data);
 		requestDto.setReferenceId(refid);
 		requestDto.setTimeStamp(DateUtils.parseToLocalDateTime(timeStamp));
+		when(cryptomanagerUtil.isDataValid(Mockito.anyString())).thenReturn(true);
+		when(cryptomanagerUtil.generateRandomBytes(Mockito.anyInt())).thenReturn("RANDOMBYTES".getBytes());
+		when(cryptomanagerUtil.concatByteArrays(Mockito.any(), Mockito.any())).thenReturn("CONCATEDHEADER".getBytes());
 		when(keyManagerService.getCertificate(Mockito.eq(appid), Mockito.eq(Optional.of(refid))))
 				.thenReturn(responseDto);
 		when(cryptomanagerUtil.getCertificate(Mockito.any())).thenReturn(cert);
 		when(cryptomanagerUtil.getCertificateThumbprint(Mockito.any())).thenReturn("CERTTHUMBPRINT".getBytes());
 		when(cryptomanagerUtil.concatCertThumbprint(Mockito.any(), Mockito.any())).thenReturn("CONCATEDENCRYPTEDSESSIONKEY".getBytes());
+		
 		String requestBody = objectMapper.writeValueAsString(requestWrapper);
 
 		MvcResult result = mockMvc
@@ -186,6 +190,7 @@ public class CryptographicServiceIntegrationTest {
 				appid, timeStamp,
 				refid, data, true);
 		when(keyManagerService.decryptSymmetricKey(Mockito.any())).thenReturn(symmetricKeyResponseDto);
+		when(cryptomanagerUtil.parseEncryptKeyHeader(Mockito.any())).thenReturn("".getBytes());
 		String requestBody = objectMapper.writeValueAsString(requestWrapper);
 		MvcResult result = mockMvc
 				.perform(post("/decrypt").contentType(MediaType.APPLICATION_JSON).content(requestBody))
@@ -211,6 +216,7 @@ public class CryptographicServiceIntegrationTest {
 		requestWithPinDto.setUserPin("AB1234");
 		requestWithPinWrapper.setRequest(requestWithPinDto);
 		
+		when(cryptomanagerUtil.isDataValid(Mockito.anyString())).thenReturn(true);
 		String requestBody = objectMapper.writeValueAsString(requestWithPinWrapper);
 
 		MvcResult result = mockMvc
@@ -237,6 +243,7 @@ public class CryptographicServiceIntegrationTest {
 		requestWithPinDto.setUserPin("AB1234");
 		requestWithPinWrapper.setRequest(requestWithPinDto);
 		
+		when(cryptomanagerUtil.isDataValid(Mockito.anyString())).thenReturn(true);
 		String requestBody = objectMapper.writeValueAsString(requestWithPinWrapper);
 
 		MvcResult result = mockMvc

@@ -9,23 +9,11 @@ package io.mosip.kernel.auth.defaultadapter.constant;
  */
 public class AuthAdapterConstant {
 
-	public static final String AUTH_COOOKIE_HEADER = "Authorization=";
 
-	public static final String BEARER = "Bearer ";
 
 	public static final String AUTH_ADMIN_COOKIE_PREFIX = "Mosip-Admin-Token";
 
 	public static final String AUTH_REQUEST_COOOKIE_HEADER = "Authorization";
-
-	public static final String AUTH_TOKEN_EXPIRED = "JWT expired";
-
-	public static final String AUTH_TOKEN_EXPIRATION_MESSAGE = "Token expired";
-
-	public static final String AUTH_SIGNATURE_TEXT = "JWT signature";
-
-	public static final String AUTH_SIGNATURE_MESSAGE = "Security voilation JWT compromised signature failing";
-
-	public static final String AUTH_INVALID_TOKEN = "Invalid Token";
 
 	public static final String AUTH_HEADER_COOKIE = "Cookie";
 
@@ -42,5 +30,19 @@ public class AuthAdapterConstant {
 	public static final String HTTP_METHOD_NOT_NULL = "Http Method Cannot Be Null";
 
 	public static final String ROLES_NOT_EMPTY_NULL = "Roles Cannot Be Empty or Null";
+	
+	public final static String APPTYPE_UIN = "UIN";
+
+	public final static String APPTYPE_USERID = "USERID";
+
+	public final static String APPTYPE_USER = "USERIDTYPE";
+
+	public final static String USERPWD_SUCCESS_MESSAGE = "Username and password combination had been validated successfully";
+
+	public final static String CLIENT_SECRET_SUCCESS_MESSAGE = "Clientid and Token combination had been validated successfully";
+
+	public final static String TOKEN_SUCCESS_MESSAGE = "Token had been validated successfully";
+
+	public static final String AUTH_HEADER = "Authorization=";
 
 }

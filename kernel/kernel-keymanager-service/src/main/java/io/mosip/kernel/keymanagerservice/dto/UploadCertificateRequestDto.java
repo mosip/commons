@@ -24,14 +24,14 @@ public class UploadCertificateRequestDto {
 
     	
 	/**
-	 * Application Id For Generating KeyPair
+	 * Application Id For Uploading Certificate
 	 */
 	@ApiModelProperty(notes = "Application ID", example = "KERNEL", required = true)
 	@NotBlank(message = KeymanagerConstant.INVALID_REQUEST)
 	private String applicationId;
 	
 	/**
-	 * Reference Id For Generating KeyPair
+	 * Reference Id For Uploading Certificate
 	 */
 	@ApiModelProperty(notes = "Reference ID", example = "", required = false)
     private String referenceId;

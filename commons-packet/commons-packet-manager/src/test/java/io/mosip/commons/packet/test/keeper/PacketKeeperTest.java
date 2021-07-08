@@ -67,7 +67,7 @@ public class PacketKeeperTest {
     private Packet packet;
     private PacketInfo packetInfo;
 
-    private static final String id = "123457890";
+    private static final String id = "1234567890";
     private static final String source = "source";
     private static final String process = "process";
 
@@ -76,6 +76,9 @@ public class PacketKeeperTest {
         ReflectionTestUtils.setField(packetKeeper, "cryptoName", onlineCrypto.getClass().getSimpleName());
         ReflectionTestUtils.setField(packetKeeper, "adapterName", swiftAdapter.getClass().getSimpleName());
         ReflectionTestUtils.setField(packetKeeper, "PACKET_MANAGER_ACCOUNT", "PACKET_MANAGER_ACCOUNT");
+        ReflectionTestUtils.setField(packetKeeper, "centerIdLength", 5);
+        ReflectionTestUtils.setField(packetKeeper, "machineIdLength", 5);
+        ReflectionTestUtils.setField(packetKeeper, "disablePacketSignatureVerification", false);
 
         packetInfo = new PacketInfo();
         packetInfo.setCreationDate(DateUtils.getCurrentDateTimeString());
@@ -107,7 +110,7 @@ public class PacketKeeperTest {
         Mockito.when(swiftAdapter.getObject(any(), any(),any(), any(), any())).thenReturn(is);
         Mockito.when(onlineCrypto.decrypt(any(), any())).thenReturn("decryptedpacket".getBytes());
         Mockito.when(swiftAdapter.getMetaData(any(), any(),any(), any(), any())).thenReturn(metaMap);
-        Mockito.when(onlineCrypto.verify(any(), any())).thenReturn(true);
+        Mockito.when(onlineCrypto.verify(any(),any(), any())).thenReturn(true);
         Map<String, String> tagsMap = new HashMap<>();
         tagsMap.put("osivalidation", "pass");
         Mockito.when(swiftAdapter.getTags(any(), any())).thenReturn(tagsMap);
@@ -164,7 +167,7 @@ public class PacketKeeperTest {
     @Test(expected = PacketKeeperException.class)
     @Ignore
     public void testPacketIntegrityFailure() throws PacketKeeperException {
-        Mockito.when(onlineCrypto.verify(any(), any())).thenReturn(false);
+        Mockito.when(onlineCrypto.verify(any(),any(), any())).thenReturn(false);
 
         packetKeeper.getPacket(packetInfo);
     }
