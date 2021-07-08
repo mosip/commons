@@ -26,7 +26,7 @@ public class WebSubClientConfig {
 	@Autowired
 	private IntentVerifier intentVerifier;
 
-	@Bean
+	@Bean(name = "websubRestTemplate")
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
 	}
