@@ -54,9 +54,7 @@ public class WebSubClientConfig {
 
 	@Bean(name = "websubRestTemplate")
 	public RestTemplate restTemplate() {
-
 		return new RestTemplate();
-
 	}
 
 	@Bean(name = "intentVerificationFilterBean")
