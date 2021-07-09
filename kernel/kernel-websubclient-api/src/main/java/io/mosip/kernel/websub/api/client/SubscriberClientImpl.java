@@ -51,7 +51,6 @@ public class SubscriberClientImpl
 	private static final Logger LOGGER = LoggerFactory.getLogger(SubscriberClientImpl.class);
 
 	@Autowired
-
 	private RestTemplateHelper restTemplateHelper;
 
 	@Autowired

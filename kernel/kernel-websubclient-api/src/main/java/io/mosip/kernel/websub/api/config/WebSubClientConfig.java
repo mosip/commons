@@ -36,6 +36,7 @@ import io.mosip.kernel.websub.api.verifier.IntentVerifier;
 @EnableAspectJAutoProxy
 public class WebSubClientConfig {
 
+<<<<<<< HEAD
 
 	@Bean
 	public IntentVerifier intentVerifier() {
@@ -46,12 +47,14 @@ public class WebSubClientConfig {
 	public AuthenticatedContentVerifier authenticatedContentVerifier() {
 		return new AuthenticatedContentVerifier();
 	}
+=======
+	@Autowired
+	private IntentVerifier intentVerifier;
+>>>>>>> 77378d6c1c... demo removed from auth filter
 
 	@Bean(name = "websubRestTemplate")
 	public RestTemplate restTemplate() {
-
 		return new RestTemplate();
-
 	}
 
 	@Bean(name = "intentVerificationFilterBean")
