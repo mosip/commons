@@ -51,8 +51,8 @@ public class SubscriberClientImpl
 	private static final Logger LOGGER = LoggerFactory.getLogger(SubscriberClientImpl.class);
 
 	@Autowired
-    private RestTemplateHelper restTemplateHelper;
-	
+	private RestTemplateHelper restTemplateHelper;
+
 	@Autowired
 	private ObjectMapper objectMapper;
 
@@ -78,7 +78,8 @@ public class SubscriberClientImpl
 
 		ResponseEntity<String> response = null;
 		try {
-			response = restTemplateHelper.getRestTemplate().exchange(subscriptionRequest.getHubURL(), HttpMethod.POST, entity, String.class);
+			response = restTemplateHelper.getRestTemplate().exchange(subscriptionRequest.getHubURL(), HttpMethod.POST,
+					entity, String.class);
 		} catch (HttpClientErrorException | HttpServerErrorException exception) {
 			throw new WebSubClientException(WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorCode(),
 					WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorMessage() + exception.getResponseBodyAsString());
@@ -147,7 +148,8 @@ public class SubscriberClientImpl
 
 		ResponseEntity<String> response = null;
 		try {
-			response = restTemplateHelper.getRestTemplate().exchange(unsubscriptionRequest.getHubURL(), HttpMethod.POST, entity, String.class);
+			response = restTemplateHelper.getRestTemplate().exchange(unsubscriptionRequest.getHubURL(), HttpMethod.POST,
+					entity, String.class);
 		} catch (HttpClientErrorException | HttpServerErrorException exception) {
 			throw new WebSubClientException(WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorCode(),
 					WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorMessage() + exception.getResponseBodyAsString());
@@ -171,27 +173,30 @@ public class SubscriberClientImpl
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		if (failedContentRequest.getMessageCount() > 0) {
 			headers.set(WebSubClientConstants.SUBSCRIBER_SIGNATURE_HEADER,
-					getHmac256(failedContentRequest.getTopic() + failedContentRequest.getCallbackURL()+ failedContentRequest.getTimestamp()+String.valueOf(pageIndex)+String.valueOf(failedContentRequest.getMessageCount()),
+					getHmac256(
+							failedContentRequest.getTopic() + failedContentRequest.getCallbackURL()
+									+ failedContentRequest.getTimestamp() + String.valueOf(pageIndex)
+									+ String.valueOf(failedContentRequest.getMessageCount()),
 							failedContentRequest.getSecret()));
 		} else {
 			headers.set(WebSubClientConstants.SUBSCRIBER_SIGNATURE_HEADER,
-					getHmac256(failedContentRequest.getTopic() + failedContentRequest.getCallbackURL()
-							+ failedContentRequest.getTimestamp()+String.valueOf(pageIndex), failedContentRequest.getSecret()));
+					getHmac256(
+							failedContentRequest.getTopic() + failedContentRequest.getCallbackURL()
+									+ failedContentRequest.getTimestamp() + String.valueOf(pageIndex),
+							failedContentRequest.getSecret()));
 		}
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(failedContentRequest.getHubURL())
 				.queryParam("topic", failedContentRequest.getTopic())
 				.queryParam("callback",
 						Base64.encodeBase64URLSafeString(failedContentRequest.getCallbackURL().getBytes()))
-				.queryParam("timestamp", failedContentRequest.getTimestamp())
-				.queryParam("pageindex",
-						pageIndex)
+				.queryParam("timestamp", failedContentRequest.getTimestamp()).queryParam("pageindex", pageIndex)
 				.queryParam("messageCount",
 						failedContentRequest.getMessageCount() <= 0 ? null : failedContentRequest.getMessageCount());
 
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
-		HttpEntity<String> response = restTemplateHelper.getRestTemplate().exchange(builder.toUriString(), HttpMethod.GET, entity,
-				String.class);
+		HttpEntity<String> response = restTemplateHelper.getRestTemplate().exchange(builder.toUriString(),
+				HttpMethod.GET, entity, String.class);
 		FailedContentResponse failedContentResponse = null;
 		try {
 			failedContentResponse = objectMapper.readValue(response.getBody(), FailedContentResponse.class);
