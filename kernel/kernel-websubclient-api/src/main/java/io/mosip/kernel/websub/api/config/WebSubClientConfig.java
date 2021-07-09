@@ -25,17 +25,12 @@ import io.mosip.kernel.websub.api.verifier.IntentVerifier;
 @EnableAspectJAutoProxy
 public class WebSubClientConfig {
 
-	@Value("${mosip.auth.filter_disable:true}")
-	private boolean isAuthFilterDisable;
-
 	@Autowired
 	private IntentVerifier intentVerifier;
 
 	@Bean(name = "websubRestTemplate")
 	public RestTemplate restTemplate() {
-
 		return new RestTemplate();
-
 	}
 
 	@Bean(name = "intentVerificationFilterBean")
