@@ -138,3 +138,4 @@ partner-reg-content-template,"partner registration notify content template
 ",eng,TRUE,superadmin,now()
 partner-status-content-template,partner status notify content template,eng,TRUE,superadmin,now()
 apikey-status-content-template,partner apikey status notify content template,eng,TRUE,superadmin,now()
+Registration Consent,Registration Consent Template,eng,TRUE,superadmin,now()
