@@ -31,6 +31,7 @@ import io.mosip.kernel.websub.api.exception.WebSubClientException;
  *
  * @param <P> Type of payload.
  */
+
 public class PublisherClientImpl<P> implements PublisherClient<String, P, HttpHeaders> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PublisherClientImpl.class);
