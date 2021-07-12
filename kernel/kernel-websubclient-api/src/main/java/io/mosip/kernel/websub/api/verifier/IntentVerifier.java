@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * @author Urvil Joshi
  *
  */
-//@Component
+@Component
 public class IntentVerifier {
 
 	public boolean isIntentVerified(String topic, String mode, String topicReq, String modeReq) {
