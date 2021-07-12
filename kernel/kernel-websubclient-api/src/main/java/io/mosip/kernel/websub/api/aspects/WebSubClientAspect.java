@@ -22,6 +22,7 @@ import io.mosip.kernel.websub.api.verifier.AuthenticatedContentVerifier;
  *
  */
 @Aspect
+@Component
 public class WebSubClientAspect implements EmbeddedValueResolverAware {
 
 	
