@@ -10,6 +10,7 @@ import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.keymanagerservice.logger.KeymanagerLogger;
 import io.mosip.kernel.zkcryptoservice.constant.ZKCryptoManagerConstants;
+import org.apache.commons.io.FileUtils;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -18,9 +19,7 @@ import javax.validation.constraints.NotNull;
 import java.io.*;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -42,8 +41,6 @@ class LocalClientCryptoServiceImpl implements ClientCryptoService {
     private static final String ALGORITHM = "RSA";
     private static final int KEY_LENGTH = 2048;
     private static final String SIGN_ALGORITHM = "SHA256withRSA";
-    private static final String KEY_PATH = System.getProperty("user.home");
-    private static final String KEYS_DIR = ".mosipkeys";
     private static final String PRIVATE_KEY = "reg.key";
     private static final String PUBLIC_KEY = "reg.pub";
     private static final String README = "readme.txt";
@@ -62,6 +59,7 @@ class LocalClientCryptoServiceImpl implements ClientCryptoService {
         LOGGER.info(ClientCryptoManagerConstant.SESSIONID, ClientCryptoManagerConstant.NON_TPM,
                 ClientCryptoManagerConstant.EMPTY, "Getting the instance of NON_TPM Security");
 
+        backwardCompatibilityFix();
         if(!doesKeysExists()) {
             setupKeysDir();
             KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance(ALGORITHM);
@@ -232,8 +230,28 @@ class LocalClientCryptoServiceImpl implements ClientCryptoService {
         return (keysDir.exists() && Objects.requireNonNull(keysDir.list()).length >= 2);
     }
 
+    //Copy ${user.home}/.mosipkeys/db.conf to ${user.dir}/.mosipkeys/db.conf
+    private void backwardCompatibilityFix() {
+        Path targetPrivateKey = Paths.get(ClientCryptoManagerConstant.KEY_PATH, ClientCryptoManagerConstant.KEYS_DIR, PRIVATE_KEY);
+        Path sourcePrivateKey = Paths.get(System.getProperty("user.home"), ClientCryptoManagerConstant.KEYS_DIR, PRIVATE_KEY);
+        if(!targetPrivateKey.toFile().exists() && sourcePrivateKey.toFile().exists()) {
+            Path target = Paths.get(ClientCryptoManagerConstant.KEY_PATH, ClientCryptoManagerConstant.KEYS_DIR);
+            File existingKeysDir = new File(System.getProperty("user.home") + File.separator + ClientCryptoManagerConstant.KEYS_DIR);
+            if(existingKeysDir.exists() && Objects.requireNonNull(existingKeysDir.list()).length >= 2) {
+                try {
+                    FileUtils.copyDirectory(existingKeysDir, target.toFile());
+                    LOGGER.info("Successfully performed backward compatible fix. Copied {} to {}",
+                            existingKeysDir, target);
+                } catch (IOException e) {
+                    LOGGER.error("Failed to perform backward compatible fix. Failed to copy {} to {} due to {}",
+                            existingKeysDir, target, e);
+                }
+            }
+        }
+    }
+
     private String getKeysDirPath() {
-        return KEY_PATH + File.separator + KEYS_DIR;
+        return ClientCryptoManagerConstant.KEY_PATH + File.separator + ClientCryptoManagerConstant.KEYS_DIR;
     }
 
     private void createKeyFile(String fileName, byte[] key) throws IOException {
