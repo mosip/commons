@@ -36,6 +36,7 @@ import io.mosip.kernel.websub.api.verifier.IntentVerifier;
 @EnableAspectJAutoProxy
 public class WebSubClientConfig {
 
+
 	@Bean
 	public IntentVerifier intentVerifier() {
 		return new IntentVerifier();
