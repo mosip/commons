@@ -45,7 +45,6 @@ import io.mosip.kernel.websub.api.model.UnsubscriptionRequest;
  * @author Urvil Joshi
  *
  */
-@Component
 public class SubscriberClientImpl
 		implements SubscriptionClient<SubscriptionChangeRequest, UnsubscriptionRequest, SubscriptionChangeResponse>,
 		SubscriptionExtendedClient<FailedContentResponse, FailedContentRequest> {
