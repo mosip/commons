@@ -166,6 +166,7 @@
 		<module>object-store</module>
 		<module>keys-generator</module>
 		<module>keys-migrator</module>
+		<module>kernel-demographics-api</module>
 	</modules>
 
 	

@@ -1,10 +1,7 @@
 package io.mosip.kernel.biometrics.entities;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -55,7 +52,7 @@ public class BIR implements Serializable {
 	@XmlElement(name = "SBInfo")
 	private SBInfo sbInfo;
 	@XmlElement(name = "Others")
-	private Map<String, Object> others;
+	private List<Entry> others;
 
 	public BIR(BIRBuilder birBuilder) {
 		this.version = birBuilder.version;
@@ -65,7 +62,7 @@ public class BIR implements Serializable {
 		this.bdb = birBuilder.bdb;
 		this.sb = birBuilder.sb;
 		this.sbInfo = birBuilder.sbInfo;
-		this.setOthers(birBuilder.others);
+		this.others = birBuilder.others;
 	}
 
 	public static class BIRBuilder {
@@ -76,23 +73,23 @@ public class BIR implements Serializable {
 		private byte[] bdb;
 		private byte[] sb;
 		private SBInfo sbInfo;
-		private Map<String, Object> others;
+		private List<Entry> others;
 
-		public BIRBuilder withOther(String key, Object value) {
+		public BIRBuilder withOthers(List<Entry> others) {
 			if(Objects.isNull(others))
-				this.others = new HashMap<>();
-			
-			this.others.put(key, value);
+				this.others = new ArrayList<>();
+			else
+				this.others = others;
 			return this;
 		}
 		
-		public BIRBuilder withOthers(Map<String, Object> others) {
+		/*public BIRBuilder withOthers(Map<String, String> others) {
 			if(Objects.isNull(this.others))
 				this.others = new HashMap<>();
 			if(!Objects.isNull(others))
 				this.others.putAll(others);
 			return this;
-		}
+		}*/
 
 		public BIRBuilder withVersion(VersionType version) {
 			this.version = version;
@@ -120,7 +117,7 @@ public class BIR implements Serializable {
 		}
 
 		public BIRBuilder withSb(byte[] sb) {
-			this.sb = sb;
+			this.sb = sb == null ? new byte[0] : sb;
 			return this;
 		}
 

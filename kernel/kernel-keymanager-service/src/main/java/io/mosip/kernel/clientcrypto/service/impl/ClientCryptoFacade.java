@@ -10,7 +10,9 @@ import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.keymanagerservice.logger.KeymanagerLogger;
 
 import org.junit.Assert;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import tss.tpm.TPMT_PUBLIC;
@@ -28,10 +30,6 @@ import java.util.Objects;
 @Component
 public class ClientCryptoFacade {
 
-    //we are using 2048 bit RSA key
-    private static final int ENC_SYM_KEY_LENGTH = 256;
-    private static final int IV_LENGTH = 12;
-    private static final int AAD_LENGTH = 32;
     private static final Logger LOGGER = KeymanagerLogger.getLogger(ClientCryptoFacade.class);
     private static SecureRandom secureRandom = null;
     private static ClientCryptoService clientCryptoService = null;
@@ -41,6 +39,16 @@ public class ClientCryptoFacade {
 
     @Autowired
     private Environment environment;
+
+    @Value("${mosip.kernel.client.crypto.iv-length:12}")
+    private int ivLength;
+
+    @Value("${mosip.kernel.client.crypto.aad-length:32}")
+    private int aadLength;
+
+    //we are using 2048 bit RSA key
+    @Value("${mosip.kernel.client.crypto.sym-key-length:256}")
+    private int symmetricKeyLength;
 
     @Deprecated
     public static void setIsTPMRequired(boolean flag) {
@@ -98,8 +106,8 @@ public class ClientCryptoFacade {
 
     public byte[] encrypt(byte[] publicKey, byte[] dataToEncrypt) {
         SecretKey secretKey = getSecretKey();
-        byte[] iv = generateRandomBytes(IV_LENGTH);
-        byte[] aad = generateRandomBytes(AAD_LENGTH);
+        byte[] iv = generateRandomBytes(ivLength);
+        byte[] aad = generateRandomBytes(aadLength);
         byte[] cipher = cryptoCore.symmetricEncrypt(secretKey, dataToEncrypt, iv, aad);
 
         byte[] encryptedSecretKey = null;
@@ -123,11 +131,11 @@ public class ClientCryptoFacade {
 
     public byte[] decrypt(byte[] dataToDecrypt) {
         Assert.assertNotNull(getClientSecurity());
-        byte[] encryptedSecretKey = Arrays.copyOfRange(dataToDecrypt, 0, ENC_SYM_KEY_LENGTH);
+        byte[] encryptedSecretKey = Arrays.copyOfRange(dataToDecrypt, 0, symmetricKeyLength);
         byte[] secretKeyBytes = getClientSecurity().asymmetricDecrypt(encryptedSecretKey);
-        byte[] iv = Arrays.copyOfRange(dataToDecrypt, ENC_SYM_KEY_LENGTH, ENC_SYM_KEY_LENGTH+IV_LENGTH);
-        byte[] aad = Arrays.copyOfRange(dataToDecrypt, ENC_SYM_KEY_LENGTH + IV_LENGTH, ENC_SYM_KEY_LENGTH+IV_LENGTH+AAD_LENGTH);
-        byte[] cipher = Arrays.copyOfRange(dataToDecrypt, ENC_SYM_KEY_LENGTH + IV_LENGTH + AAD_LENGTH,
+        byte[] iv = Arrays.copyOfRange(dataToDecrypt, symmetricKeyLength, symmetricKeyLength+ivLength);
+        byte[] aad = Arrays.copyOfRange(dataToDecrypt, symmetricKeyLength + ivLength, symmetricKeyLength+ivLength+aadLength);
+        byte[] cipher = Arrays.copyOfRange(dataToDecrypt, symmetricKeyLength + ivLength + aadLength,
                 dataToDecrypt.length);
 
         SecretKey secretKey = new SecretKeySpec(secretKeyBytes, "AES");
@@ -161,8 +169,8 @@ public class ClientCryptoFacade {
             Objects.requireNonNull(tpmPublic);
             return true;
         } catch (Throwable t) {
-            LOGGER.info(ClientCryptoManagerConstant.SESSIONID, "Client Security FACADE",
-                    ClientCryptoManagerConstant.EMPTY, "*** INVALID TPM KEY **** " + ExceptionUtils.getStackTrace(t));
+            //*** INVALID TPM KEY **** As its noisy, its logged at debug level
+            LOGGER.debug("*** INVALID TPM KEY **** " + ExceptionUtils.getStackTrace(t));
         }
         return false;
     }

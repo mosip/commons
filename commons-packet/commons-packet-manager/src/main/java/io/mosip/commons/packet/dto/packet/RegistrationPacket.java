@@ -30,8 +30,8 @@ public class RegistrationPacket {
 	private List<HashSequenceMetaInfo> hashSequence1;
 	private List<HashSequenceMetaInfo> hashSequence2;
 
-	public RegistrationPacket() {
-		this.creationDate = DateUtils.formatToISOString(LocalDateTime.now());
+	public RegistrationPacket(String pattern) {
+		this.creationDate = DateUtils.getUTCCurrentDateTimeString(pattern);
 		this.demographics = new HashMap<String, Object>();
 		this.documents = new HashMap<String, Document>();
 		this.biometrics = new HashMap<String, BiometricRecord>();

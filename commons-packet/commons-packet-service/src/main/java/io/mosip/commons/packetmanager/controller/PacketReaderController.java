@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.mosip.commons.packetmanager.dto.SourceProcessDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,10 +48,11 @@ public class PacketReaderController {
     @ResponseFilter
     @PostMapping(path = "/searchField", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseWrapper<FieldResponseDto> searchField(@RequestBody(required = true) RequestWrapper<FieldDto> fieldDto) {
-
-        String resultField = packetReader.getField(fieldDto.getRequest().getId(),
-                fieldDto.getRequest().getField(), packetReaderService.getSource(fieldDto.getRequest().getField(), fieldDto.getRequest().getSource(),
-                        fieldDto.getRequest().getProcess()), fieldDto.getRequest().getProcess(), fieldDto.getRequest().getBypassCache());
+        SourceProcessDto sourceProcessDto = packetReaderService.getSourceAndProcess(fieldDto.getRequest().getId(),
+                fieldDto.getRequest().getField(), fieldDto.getRequest().getSource(), fieldDto.getRequest().getProcess());
+        String resultField = sourceProcessDto == null ? null :
+                packetReader.getField(fieldDto.getRequest().getId(),
+                fieldDto.getRequest().getField(), sourceProcessDto.getSource(), sourceProcessDto.getProcess(), fieldDto.getRequest().getBypassCache());
         ResponseWrapper<FieldResponseDto> response = new ResponseWrapper<FieldResponseDto>();
         Map<String, String> responseMap = new HashMap<>();
         responseMap.put(fieldDto.getRequest().getField(), resultField);
@@ -68,8 +70,11 @@ public class PacketReaderController {
         Map<String, String> resultFields = new HashMap<>();
         if ((fieldDtos.getSource()) == null) {
             for (String field : fieldDtos.getFields()) {
-                String value = packetReader.getField(fieldDtos.getId(), field, packetReaderService.getSource(
-                        field, fieldDtos.getSource(), fieldDtos.getProcess()), fieldDtos.getProcess(), fieldDtos.getBypassCache());
+                SourceProcessDto sourceProcessDto = packetReaderService.getSourceAndProcess(fieldDtos.getId(),
+                        field, fieldDtos.getSource(), fieldDtos.getProcess());
+                String value = sourceProcessDto == null ? null :
+                        packetReader.getField(fieldDtos.getId(), field, sourceProcessDto.getSource(),
+                        sourceProcessDto.getProcess(), fieldDtos.getBypassCache());
                 resultFields.put(field, value);
             }
         } else
@@ -85,8 +90,11 @@ public class PacketReaderController {
     @PostMapping(path = "/document", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseWrapper<Document> getDocument(@RequestBody(required = true) RequestWrapper<DocumentDto> request) {
         DocumentDto documentDto = request.getRequest();
-        Document document = packetReader.getDocument(documentDto.getId(), documentDto.getDocumentName(), packetReaderService
-                .getSource(documentDto.getDocumentName(), documentDto.getSource(), documentDto.getProcess()), documentDto.getProcess());
+        SourceProcessDto sourceProcessDto = packetReaderService.getSourceAndProcess(documentDto.getId(),
+                documentDto.getDocumentName(), documentDto.getSource(), documentDto.getProcess());
+        Document document = sourceProcessDto == null ? null :
+                packetReader.getDocument(documentDto.getId(), documentDto.getDocumentName(),
+                sourceProcessDto.getSource(), sourceProcessDto.getProcess());
         ResponseWrapper<Document> response = new ResponseWrapper<Document>();
         response.setResponse(document);
         return response;
@@ -97,9 +105,12 @@ public class PacketReaderController {
     @PostMapping(path = "/biometrics", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseWrapper<BiometricRecord> getBiometrics(@RequestBody(required = true) RequestWrapper<BiometricRequestDto> request) {
         BiometricRequestDto bioRequest = request.getRequest();
+        SourceProcessDto sourceProcessDto = packetReaderService.getSourceAndProcess(bioRequest.getId(),
+                bioRequest.getPerson(), bioRequest.getSource(), bioRequest.getProcess());
         List<String> modalities = bioRequest.getModalities() == null ? Lists.newArrayList() : bioRequest.getModalities();
-        BiometricRecord responseDto = packetReader.getBiometric(bioRequest.getId(), bioRequest.getPerson(), modalities,
-                packetReaderService.getSource(bioRequest.getPerson(), bioRequest.getSource(), bioRequest.getProcess()), bioRequest.getProcess(), bioRequest.isBypassCache());
+        BiometricRecord responseDto = sourceProcessDto == null ? null :
+                packetReader.getBiometric(bioRequest.getId(), bioRequest.getPerson(), modalities,
+                sourceProcessDto.getSource(), sourceProcessDto.getProcess(), bioRequest.isBypassCache());
         ResponseWrapper<BiometricRecord> response = getResponseWrapper();
         response.setResponse(responseDto);
         return response;
@@ -110,8 +121,9 @@ public class PacketReaderController {
     @PostMapping(path = "/metaInfo", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseWrapper<FieldResponseDto> getMetaInfo(@RequestBody(required = true) RequestWrapper<InfoDto> request) {
         InfoDto metaDto = request.getRequest();
-        Map<String, String> resultFields = packetReader.getMetaInfo(metaDto.getId(), packetReaderService
-                .getSource(PacketReaderService.META_INFO, metaDto.getSource(), metaDto.getProcess()), metaDto.getProcess(), metaDto.getBypassCache());
+        Map<String, String> resultFields = packetReader.getMetaInfo(metaDto.getId(), packetReaderService.getSource(
+                null, metaDto.getSource(), metaDto.getProcess()),
+                metaDto.getProcess(), metaDto.getBypassCache());
         FieldResponseDto resultField = new FieldResponseDto(resultFields);
         ResponseWrapper<FieldResponseDto> response = getResponseWrapper();
         response.setResponse(resultField);
@@ -124,7 +136,8 @@ public class PacketReaderController {
     public ResponseWrapper<List<FieldResponseDto>> getAudits(@RequestBody(required = true) RequestWrapper<InfoDto> request) {
         InfoDto metaDto = request.getRequest();
         List<Map<String, String>> resultFields = packetReader.getAudits(metaDto.getId(), packetReaderService.getSource(
-                PacketReaderService.AUDITS, metaDto.getSource(), metaDto.getProcess()), metaDto.getProcess(), metaDto.getBypassCache());
+                null, metaDto.getSource(), metaDto.getProcess()),
+                metaDto.getProcess(), metaDto.getBypassCache());
         List<FieldResponseDto> resultField = new ArrayList<>();
         if (resultFields != null && !resultFields.isEmpty()) {
             resultFields.stream().forEach(e -> {

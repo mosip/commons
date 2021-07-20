@@ -20,6 +20,9 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
+import io.mosip.kernel.biometrics.constant.OtherKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import io.mosip.kernel.biometrics.constant.BiometricType;
@@ -42,7 +45,6 @@ import io.mosip.kernel.core.util.CryptoUtil;
  *
  */
 public class CbeffValidator {
-
 	/**
 	 * Method used for custom validation of the BIR
 	 * 
@@ -60,29 +62,32 @@ public class CbeffValidator {
 		List<BIR> birList = birRoot.getBirs();
 		for (BIR bir : birList) {
 			if (bir != null) {
-				if (bir.getBdb().length < 1) {
+
+				boolean isException = bir.getOthers() != null && bir.getOthers()
+						.stream()
+						.anyMatch( e -> OtherKey.EXCEPTION.equals(e.getKey()) && "true".equals(e.getValue()));
+
+				if((bir.getBdb() == null ||  bir.getBdb().length < 1 ) && !isException)
 					throw new CbeffException("BDB value can't be empty");
-				}
-				if (bir.getBdbInfo() != null) {
-					BDBInfo bdbInfo = bir.getBdbInfo();
+
+				if (bir.getBdbInfo() == null)
+					throw new CbeffException("BDB information can't be empty");
+
+				BDBInfo bdbInfo = bir.getBdbInfo();
 //					if (!Long.valueOf(bdbInfo.getFormat().getOrganization()).equals(CbeffConstant.FORMAT_OWNER)) {
 //						throw new CbeffException("Patron Format Owner should be standard specified of value "
 //								+ CbeffConstant.FORMAT_OWNER);
 //					}
-					List<BiometricType> biometricTypes = bdbInfo.getType();
-					if (biometricTypes == null || biometricTypes.isEmpty()) {
-						throw new CbeffException("Type value needs to be provided");
-					}
-					if (!validateFormatType(Long.valueOf(bdbInfo.getFormat().getType()), biometricTypes)) {
-						throw new CbeffException("Patron Format type is invalid");
-					}
-				} else {
-					throw new CbeffException("BDB information can't be empty");
+				List<BiometricType> biometricTypes = bdbInfo.getType();
+				if (biometricTypes == null || biometricTypes.isEmpty()) {
+					throw new CbeffException("Type value needs to be provided");
+				}
+				if (!validateFormatType(Long.valueOf(bdbInfo.getFormat().getType()), biometricTypes)) {
+					throw new CbeffException("Patron Format type is invalid");
 				}
 			}
 		}
 		return false;
-
 	}
 
 	/**
@@ -194,7 +199,7 @@ public class CbeffValidator {
 	/**
 	 * Method used for searching Cbeff data based on type and subtype
 	 * 
-	 * @param biometricType BIR data
+	 * @param bir BIR data
 	 * 
 	 * @param type          format type
 	 * 
@@ -401,14 +406,14 @@ public class CbeffValidator {
 	}
 
 
-	private static List<BIR> getBIRList(List<BIR> birs) {
+	/*private static List<BIR> getBIRList(List<BIR> birs) {
 		List<BIR> birList = new ArrayList<>();
 		for (BIR bir : birs) {
 			RegistryIDType format = new RegistryIDType();
 			format.setOrganization(bir.getBdbInfo().getFormat().getOrganization());
 			format.setType(bir.getBdbInfo().getFormat().getType());
 			BIR.BIRBuilder birBuilder = new BIR.BIRBuilder();
-			birBuilder.withBdb(bir.getBdb()).withOthers(bir.getOthers())
+			birBuilder.withBdb(bir.getBdb()).withOther(bir.getOthers())
 					.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(bir.getBirInfo().getIntegrity()).build())
 					.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format)
 							.withQuality(bir.getBdbInfo().getQuality()).withType(bir.getBdbInfo().getType())
@@ -430,7 +435,7 @@ public class CbeffValidator {
 			birList.add(birBuilder.build());
 		}
 		return birList;
-	}
+	}*/
 
 	public static List<BIR> getBIRDataFromXMLType(byte[] xmlBytes, String type) throws Exception {
 		BiometricType biometricType = null;

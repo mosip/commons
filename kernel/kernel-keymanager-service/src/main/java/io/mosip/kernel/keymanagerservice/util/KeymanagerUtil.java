@@ -370,10 +370,12 @@ public class KeymanagerUtil {
         return IETFUtils.valueToString((rdns[0]).getFirst().getValue());
     }
 
-	public CertificateParameters getCertificateParameters(KeyPairGenerateRequestDto request, LocalDateTime notBefore, LocalDateTime notAfter) {
+	public CertificateParameters getCertificateParameters(KeyPairGenerateRequestDto request, LocalDateTime notBefore, LocalDateTime notAfter, 
+				String appId) {
 
 		CertificateParameters certParams = new CertificateParameters();
-		certParams.setCommonName(getParamValue(request.getCommonName(), commonName));
+		String appIdCommonName = commonName + " (" + appId.toUpperCase() + ")";
+		certParams.setCommonName(getParamValue(request.getCommonName(), appIdCommonName));
 		certParams.setOrganizationUnit(getParamValue(request.getOrganizationUnit(), organizationUnit));
 		certParams.setOrganization(getParamValue(request.getOrganization(), organization));
 		certParams.setLocation(getParamValue(request.getLocation(), location));

@@ -215,7 +215,7 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 
 	private ResponseEntity<String> getValidatedUserResponse(String token) {
 		HttpHeaders headers = new HttpHeaders();
-		headers.set(AuthAdapterConstant.AUTH_HEADER_COOKIE, AuthAdapterConstant.AUTH_COOOKIE_HEADER + token);
+		headers.set(AuthAdapterConstant.AUTH_HEADER_COOKIE, AuthAdapterConstant.AUTH_REQUEST_COOOKIE_HEADER + token);
 		HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 		try {
 			//return getRestTemplate().exchange(validateUrl, HttpMethod.POST, entity, String.class);
@@ -227,7 +227,7 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 
 	private ResponseEntity<String> getKeycloakValidatedUserResponse(String token) {
 		HttpHeaders headers = new HttpHeaders();
-		headers.set(AuthAdapterConstant.AUTH_HEADER_COOKIE, AuthAdapterConstant.AUTH_COOOKIE_HEADER + token);
+		headers.set(AuthAdapterConstant.AUTH_HEADER_COOKIE, AuthAdapterConstant.AUTH_HEADER + token);
 		HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 		try {			
 			//return getRestTemplate().exchange(adminValidateUrl, HttpMethod.GET, entity, String.class);
@@ -317,8 +317,8 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 		HttpServerRequest httpRequest = routingContext.request();
 		String token = null;
 		String cookies = httpRequest.getHeader(AuthAdapterConstant.AUTH_HEADER_COOKIE);
-		if (cookies != null && !cookies.isEmpty() && cookies.contains(AuthAdapterConstant.AUTH_COOOKIE_HEADER)) {
-			token = cookies.replace(AuthAdapterConstant.AUTH_COOOKIE_HEADER, "").trim();
+		if (cookies != null && !cookies.isEmpty() && cookies.contains(AuthAdapterConstant.AUTH_REQUEST_COOOKIE_HEADER)) {
+			token = cookies.replace(AuthAdapterConstant.AUTH_REQUEST_COOOKIE_HEADER, "").trim();
 		}
 		if (token == null || token.isEmpty()) {
 			List<ServiceError> errors = new ArrayList<>();
@@ -376,7 +376,7 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 			return "";
 		}
 		return response.getHeaders().get(AuthAdapterConstant.AUTH_HEADER_SET_COOKIE).get(0)
-				.replaceAll(AuthAdapterConstant.AUTH_COOOKIE_HEADER, "");
+				.replaceAll(AuthAdapterConstant.AUTH_REQUEST_COOOKIE_HEADER, "");
 	}
 
 	private void sendErrors(RoutingContext routingContext, List<ServiceError> errors, int statusCode) {
