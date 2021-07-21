@@ -1,7 +1,5 @@
 package io.mosip.kernel.websub.api.verifier;
 
-import org.springframework.stereotype.Component;
-
 /**
  * This is a helper class to verify intent after subscribe and unsubscribe
  * operation according to
@@ -10,7 +8,6 @@ import org.springframework.stereotype.Component;
  * @author Urvil Joshi
  *
  */
-@Component
 public class IntentVerifier {
 
 	public boolean isIntentVerified(String topic, String mode, String topicReq, String modeReq) {

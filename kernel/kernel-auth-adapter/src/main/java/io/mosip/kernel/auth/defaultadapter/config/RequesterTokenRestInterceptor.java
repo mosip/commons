@@ -29,7 +29,7 @@ public class RequesterTokenRestInterceptor implements ClientHttpRequestIntercept
 		AuthUserDetails authUserDetails = getAuthUserDetails();
 			if (authUserDetails != null)
 				headers.set(AuthAdapterConstant.AUTH_HEADER_COOKIE,
-						AuthAdapterConstant.AUTH_HEADER_COOKIE + authUserDetails.getToken());
+						AuthAdapterConstant.AUTH_HEADER + authUserDetails.getToken());
 	}
 
 	private AuthUserDetails getAuthUserDetails() {

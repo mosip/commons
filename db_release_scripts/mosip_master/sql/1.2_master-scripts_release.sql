@@ -12,11 +12,18 @@
 -- Apr-2021 		Ram Bhatt          Added new rows in template,template_type and module_detail csv
 -- Apr-2021 		Ram Bhatt  	   Creation of master.permitted_local_config
 -- May-2021		Ram Bhatt	   Changed Precision and size of version and identity_schema_version
+-- Jul-2021		Ram Bhatt          Creation of blocklisted table
 -- ------------------------------------------------------------------------------------------------------------
 --------------------------------------------UI SPEC TABLE CREATION-----------------------------------------------
 \c mosip_master sysadmin
 
 \ir ../ddl/master-ui_spec.sql
+\ir ../ddl/master-blocklisted_words.sql
+
+----- TRUNCATE master.blocklisted_words TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.blocklisted_words cascade ;
+
+\COPY master.blocklisted_words (word,descr,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-blocklisted_words.csv' delimiter ',' HEADER  csv;
 
 TRUNCATE TABLE master.ui_spec  cascade ;
 

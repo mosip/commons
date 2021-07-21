@@ -131,7 +131,7 @@ public class BeanConfig {
 				AuthUserDetails userDetail = (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication()
 						.getPrincipal();
 				filtered = ClientRequest.from(req).header(AuthAdapterConstant.AUTH_HEADER_COOKIE,
-						AuthAdapterConstant.AUTH_REQUEST_COOOKIE_HEADER + userDetail.getToken()).build();
+						AuthAdapterConstant.AUTH_HEADER + userDetail.getToken()).build();
 			}
 			return next.exchange(filtered);
 		}).build();

@@ -8,6 +8,7 @@ import org.apache.commons.codec.digest.HmacUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -44,13 +45,13 @@ import io.mosip.kernel.websub.api.model.UnsubscriptionRequest;
  * @author Urvil Joshi
  *
  */
-@Component
 public class SubscriberClientImpl
 		implements SubscriptionClient<SubscriptionChangeRequest, UnsubscriptionRequest, SubscriptionChangeResponse>,
 		SubscriptionExtendedClient<FailedContentResponse, FailedContentRequest> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SubscriberClientImpl.class);
 
+	@Qualifier("websubRestTemplate")
 	@Autowired
 	private RestTemplate restTemplate;
 

@@ -33,7 +33,7 @@ import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.util.DateUtils;
-
+//TODO change props to conditional properties
 public class SelfTokenRenewalTaskExecutor {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelfTokenRenewalTaskExecutor.class);
@@ -58,6 +58,9 @@ public class SelfTokenRenewalTaskExecutor {
 	
 	@Value("${mosip.iam.adapter.renewal-before-expiry-interval:5}")
 	private int renewalBeforeExpiryInterval;
+	
+	@Value("${mosip.iam.adapter.self-token-renewal-enable:false}")
+	private boolean isRenewalEnable;
 
 	private TokenHolder<String> cachedTokenObject;
 
@@ -74,10 +77,12 @@ public class SelfTokenRenewalTaskExecutor {
 
 	@PostConstruct
 	private void init() {
+		if(isRenewalEnable) {
 		ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
 		taskScheduler.setPoolSize(1);
 		taskScheduler.initialize();
 		taskScheduler.scheduleAtFixedRate(new SelfTokenHandlerTask(), TimeUnit.MINUTES.toMillis(tokenExpiryCheckFrequency));
+		}
 	}
 
 	private class SelfTokenHandlerTask implements Runnable {

@@ -367,6 +367,12 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
         
         String p7bCertChain = PartnerCertificateManagerUtil.buildP7BCertificateChain(certList, resignedCert, partnerDomain, 
                         resignFTMDomainCerts, rootCert, pmsCert);
+        CACertificateRequestDto caCertReqDto = new CACertificateRequestDto();
+        caCertReqDto.setCertificateData(p7bCertChain);
+        caCertReqDto.setPartnerDomain(partnerDomain);
+        CACertificateResponseDto uploadResponseDto = uploadCACertificate(caCertReqDto);
+        LOGGER.info(PartnerCertManagerConstants.SESSIONID, PartnerCertManagerConstants.UPLOAD_PARTNER_CERT,
+        "Chain Upload Status: ", uploadResponseDto.getStatus());
         PartnerCertificateResponseDto responseDto = new PartnerCertificateResponseDto();
         responseDto.setCertificateId(certId);
         responseDto.setSignedCertificateData(p7bCertChain);
