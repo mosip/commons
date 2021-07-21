@@ -9,7 +9,7 @@
     <name>commons-packet-manager</name>
     <description>Mosip commons project </description>
     <url>https://github.com/mosip/commons</url>
-    <version>MOSIP-11739</version>
+    <version>MOSIP-11739-SNAPSHOT</version>
  <properties>
         <!-- maven -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -45,7 +45,7 @@
         <kernel-dataaccess-hibernate.version>1.2.0-SNAPSHOT</kernel-dataaccess-hibernate.version>
         <kernel.logger.logback.version>1.2.0-SNAPSHOT</kernel.logger.logback.version>
         <spring.boot.co>2.0.2.RELEASE</spring.boot.co>
-        <khazana.version>MOSIP-11739</khazana.version>
+        <khazana.version>MOSIP-11739-SNAPSHOT</khazana.version>
         <sonar.coverage.exclusions>**/constants/**,**/config/**,**/audit/**,**/util/**,**/dto/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/security/**,**/*Config.java,**/*BootApplication.java,**/*VertxApplication.java,**/cbeffutil/**,**/*Utils.java,**/*Validator.java,**/*Helper.java,**/verticle/**,**/VidWriter.java/**,**/masterdata/utils/**,**/spi/**,**/core/http/**,"**/LocationServiceImpl.java","**/RegistrationCenterMachineServiceImpl.java","**/RegistrationCenterServiceImpl.java","**/pridgenerator/**","**/idgenerator/prid","**/proxy/**","**/cryptosignature/**"</sonar.coverage.exclusions>
         <sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**</sonar.cpd.exclusions>
     </properties>
