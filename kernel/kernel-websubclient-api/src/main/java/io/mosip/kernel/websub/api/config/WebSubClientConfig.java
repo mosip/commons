@@ -7,14 +7,10 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.http.HttpHeaders;
-import org.springframework.web.client.RestTemplate;
 
-import io.mosip.kernel.core.websub.spi.PublisherClient;
 import io.mosip.kernel.core.websub.spi.SubscriptionClient;
 import io.mosip.kernel.core.websub.spi.SubscriptionExtendedClient;
 import io.mosip.kernel.websub.api.aspects.WebSubClientAspect;
-import io.mosip.kernel.websub.api.client.PublisherClientImpl;
 import io.mosip.kernel.websub.api.client.SubscriberClientImpl;
 import io.mosip.kernel.websub.api.filter.IntentVerificationFilter;
 import io.mosip.kernel.websub.api.filter.MultipleReadRequestBodyFilter;
@@ -46,11 +42,6 @@ public class WebSubClientConfig {
 		return new AuthenticatedContentVerifier();
 	}
 
-	@Bean(name = "websubRestTemplate")
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
-
 	@Bean(name = "intentVerificationFilterBean")
 	public FilterRegistrationBean<Filter> registerIntentVerificationFilterFilterBean(@Autowired IntentVerifier intentVerifier) {
 		FilterRegistrationBean<Filter> reqResFilter = new FilterRegistrationBean<>();
@@ -76,10 +67,6 @@ public class WebSubClientConfig {
 		return new MultipleReadRequestBodyFilter();
 	}
 	
-	@Bean
-	public <P> PublisherClient<String, P, HttpHeaders> publisherClient(){
-		return new PublisherClientImpl<>();
-	}
 
 	@Bean
 	public SubscriptionClient<SubscriptionChangeRequest, UnsubscriptionRequest, SubscriptionChangeResponse> subscriptionClient(){
