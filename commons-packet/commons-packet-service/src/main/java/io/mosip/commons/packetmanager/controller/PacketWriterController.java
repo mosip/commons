@@ -32,8 +32,9 @@ public class PacketWriterController {
     @Autowired
     private PacketWriterService packetWriterService;
 
-    @PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
+   // @PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
     @ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostcreatepacket())")
     @PutMapping(path = "/createPacket", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseWrapper<List<PacketInfo>> createPacket(@RequestBody(required = true) RequestWrapper<PacketDto> requestr) {
 
@@ -51,8 +52,9 @@ public class PacketWriterController {
         return response;
     }
 
-	@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
+	//@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostaddtag())")
 	@PostMapping(path = "/addTag", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseWrapper<TagResponseDto> setTags(
 			@RequestBody(required = true) RequestWrapper<TagDto> tagRequest) {
@@ -63,8 +65,9 @@ public class PacketWriterController {
 		return response;
 	}
 
-	@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
+	//@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostaddorupdatetag())")
 	@PostMapping(path = "/addOrUpdateTag", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseWrapper<TagResponseDto> updateTags(@RequestBody(required = true) RequestWrapper<TagDto> tagRequest) {
 
@@ -73,8 +76,9 @@ public class PacketWriterController {
 		response.setResponse(tagResponse);
 		return response;
 	}
-	@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
+	//@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR')")
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostdeletetag())")
 	@PostMapping(path = "/deleteTag", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseWrapper<TagDeleteResponseDto> deleteTags(@RequestBody(required = true) RequestWrapper<TagRequestDto> tagRequest) {
 

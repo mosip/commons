@@ -39,8 +39,9 @@ public class OtpGeneratorController {
 	 * @param otpDto The request DTO for OTP generation.
 	 * @return The generated OTP as DTO response.
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','AUTH','RESIDENT')")
+	//@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','AUTH','RESIDENT')")
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostotpgenerate())")
 	@PostMapping(value = "/otp/generate")
 	public ResponseWrapper<OtpGeneratorResponseDto> generateOtp(@Validated({
 			GenerationDTOValidationLevels.ValidationLevel.class }) @RequestBody RequestWrapper<OtpGeneratorRequestDto> otpDto) {

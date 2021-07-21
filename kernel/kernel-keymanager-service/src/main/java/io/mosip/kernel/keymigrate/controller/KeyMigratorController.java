@@ -49,8 +49,9 @@ public class KeyMigratorController {
 	 * @param migrateBaseKeyRequestDto {@link KeyMigrateBaseKeyRequestDto} request
 	 * @return {@link KeyMigrateBaseKeyAddResponseDto} migrate response
 	 */
-	@PreAuthorize("hasAnyRole('KEY_MIGRATION_ADMIN')")
+	//@PreAuthorize("hasAnyRole('KEY_MIGRATION_ADMIN')")
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostmigratebasekey())")
 	@PostMapping(value = "/migrateBaseKey", produces = "application/json")
 	public ResponseWrapper<KeyMigrateBaseKeyResponseDto> migrateBaseKey(
 			@ApiParam("Base Key Migrate Attributes.") @RequestBody @Valid RequestWrapper<KeyMigrateBaseKeyRequestDto> migrateBaseKeyRequestDto) {
@@ -66,8 +67,9 @@ public class KeyMigratorController {
 	 * @param migrateBaseKeyRequestDto {@link KeyMigrateBaseKeyRequestDto} request
 	 * @return {@link KeyMigrateBaseKeyAddResponseDto} migrate response
 	 */
-	@PreAuthorize("hasAnyRole('KEY_MIGRATION_ADMIN')")
+	//@PreAuthorize("hasAnyRole('KEY_MIGRATION_ADMIN')")
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetgetzktempcertificate())")
 	@GetMapping(value = "/getZKTempCertificate", produces = "application/json")
 	public ResponseWrapper<ZKKeyMigrateCertficateResponseDto> getZKTempCertificate() {
 
@@ -82,8 +84,9 @@ public class KeyMigratorController {
 	 * @param migrateZKKeysRequestDto {@link ZKKeyMigrateRequestDto} request
 	 * @return {@link ZKKeyMigrateResponseDto} migrate response
 	 */
-	@PreAuthorize("hasAnyRole('KEY_MIGRATION_ADMIN')")
+	//@PreAuthorize("hasAnyRole('KEY_MIGRATION_ADMIN')")
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostmigratezkkeys())")
 	@PostMapping(value = "/migrateZKKeys", produces = "application/json")
 	public ResponseWrapper<ZKKeyMigrateResponseDto> migrateZKKeys(
 			@ApiParam("ZK Keys Migrate Attributes.") @RequestBody @Valid RequestWrapper<ZKKeyMigrateRequestDto> migrateZKKeysRequestDto) {
