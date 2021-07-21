@@ -21,7 +21,6 @@ import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.core.util.JsonUtils;
-import io.mosip.kernel.core.util.StringUtils;
 import io.mosip.kernel.core.util.exception.JsonProcessingException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,9 +33,6 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -74,14 +70,14 @@ public class PacketWriterImpl implements IPacketWriter {
     @Value("${default.provider.version:v1.0}")
     private String defaultProviderVersion;
 
-    @Value("${packetmanager.zip.datetime.pattern:yyyyMMddHHmmss}")
-    private String zipDatetimePattern;
+    @Value("${mosip.utc-datetime-pattern:yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}")
+    private String dateTimePattern;
 
     private RegistrationPacket registrationPacket = null;
 
     public RegistrationPacket initialize(String id) {
         if (this.registrationPacket == null || !registrationPacket.getRegistrationId().equalsIgnoreCase(id)) {
-            this.registrationPacket = new RegistrationPacket();
+            this.registrationPacket = new RegistrationPacket(dateTimePattern);
             this.registrationPacket.setRegistrationId(id);
         }
         return registrationPacket;
@@ -128,8 +124,7 @@ public class PacketWriterImpl implements IPacketWriter {
         this.initialize(id).addMetaData(key, value);
     }
 
-    private List<PacketInfo> createPacket(String id, String version, String schemaJson, String source, String process,
-                                          String additionalInfoReqId, String refId, boolean offlineMode) throws PacketCreatorException {
+    private List<PacketInfo> createPacket(String id, String version, String schemaJson, String source, String process, boolean offlineMode) throws PacketCreatorException {
         LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.ID.toString(), id, "Started packet creation");
         if (this.registrationPacket == null || !registrationPacket.getRegistrationId().equalsIgnoreCase(id))
             throw new PacketCreatorException(ErrorCode.INITIALIZATION_ERROR.getErrorCode(),
@@ -141,12 +136,6 @@ public class PacketWriterImpl implements IPacketWriter {
 
         try {
             int counter = 1;
-            String packetId = new StringBuilder()
-                    .append(StringUtils.isNotBlank(additionalInfoReqId) ? additionalInfoReqId : id)
-                    .append("-")
-                    .append(refId)
-                    .append("-")
-                    .append(getcurrentTimeStamp()).toString();
             for (String subPacketName : identityProperties.keySet()) {
                 LOGGER.info(LoggerFileConstant.SESSIONID.toString(), LoggerFileConstant.ID.toString(),
                         id, "Started Subpacket: " + subPacketName);
@@ -157,11 +146,7 @@ public class PacketWriterImpl implements IPacketWriter {
                 PacketInfo packetInfo = new PacketInfo();
                 packetInfo.setProviderName(this.getClass().getSimpleName());
                 packetInfo.setSchemaVersion(new Double(version).toString());
-                if (offlineMode)
-                    packetInfo.setId(packetId);
-                else
-                    packetInfo.setId(id);
-                packetInfo.setRefId(refId);
+                packetInfo.setId(id);
                 packetInfo.setSource(source);
                 packetInfo.setProcess(process);
                 packetInfo.setPacketName(id + UNDERSCORE + subPacketName);
@@ -176,8 +161,7 @@ public class PacketWriterImpl implements IPacketWriter {
                         id, "Completed Subpacket: " + subPacketName);
 
                 if (counter == identityProperties.keySet().size()) {
-                    boolean res = packetKeeper.pack(packetInfo.getId(), packetInfo.getSource(),
-                            packetInfo.getProcess(), packetInfo.getRefId());
+                    boolean res = packetKeeper.pack(packetInfo.getId(), packetInfo.getSource(), packetInfo.getProcess());
                     if (!res)
                         packetKeeper.deletePacket(id, source, process);
                 }
@@ -427,20 +411,13 @@ public class PacketWriterImpl implements IPacketWriter {
     }
 
     @Override
-    public List<PacketInfo> persistPacket(String id, String version, String schemaJson, String source,
-                                          String process, String additionalInfoReqId, String refId, boolean offlineMode) {
+    public List<PacketInfo> persistPacket(String id, String version, String schemaJson, String source, String process, boolean offlineMode) {
         try {
-            return createPacket(id, version, schemaJson, source, process, additionalInfoReqId, refId, offlineMode);
+            return createPacket(id, version, schemaJson, source, process, offlineMode);
         } catch (PacketCreatorException e) {
             LOGGER.error(PacketManagerLogger.SESSIONID, PacketManagerLogger.REGISTRATIONID, id, ExceptionUtils.getStackTrace(e));
             throw e;
         }
-    }
-
-    private String getcurrentTimeStamp() {
-        DateTimeFormatter format = DateTimeFormatter
-                .ofPattern(zipDatetimePattern);
-        return LocalDateTime.now(ZoneId.of("UTC")).format(format);
     }
 
 }

@@ -242,7 +242,7 @@ public class PacketManagerControllerTest {
         packetDto.setSource("REGISTRATION");
 
         Mockito.when(
-                packetWriter.createPacket(any())).thenReturn(new ArrayList<>());
+                packetWriter.createPacket(any(), anyBoolean())).thenReturn(new ArrayList<>());
 
         request.setRequest(packetDto);
 
@@ -260,7 +260,7 @@ public class PacketManagerControllerTest {
         packetDto.setSource("REGISTRATION");
 
         Mockito.when(
-                packetWriter.createPacket(any())).thenThrow(new BaseUncheckedException("errorCode", "errorMessage"));
+                packetWriter.createPacket(any(), anyBoolean())).thenThrow(new BaseUncheckedException("errorCode", "errorMessage"));
 
         request.setRequest(packetDto);
 

@@ -3,13 +3,13 @@ package io.mosip.kernel.websub.api.client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
@@ -29,11 +29,11 @@ import io.mosip.kernel.websub.api.exception.WebSubClientException;
  *
  * @param <P> Type of payload.
  */
-@Component
 public class PublisherClientImpl<P> implements PublisherClient<String, P, HttpHeaders> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PublisherClientImpl.class);
 
+	@Qualifier("websubRestTemplate")
 	@Autowired
 	private RestTemplate restTemplate;
 
