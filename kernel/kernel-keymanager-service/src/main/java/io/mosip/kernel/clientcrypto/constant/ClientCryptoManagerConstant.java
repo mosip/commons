@@ -15,7 +15,7 @@ public interface ClientCryptoManagerConstant {
 
     String SERVER_PROD_PROFILE = "PROD";
 
-    String KEY_PATH = System.getProperty("user.home");
+    String KEY_PATH = System.getProperty("user.dir");
     String KEYS_DIR = ".mosipkeys";
     String DB_PWD_FILE = "db.conf";
 
