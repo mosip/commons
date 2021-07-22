@@ -233,19 +233,21 @@ class LocalClientCryptoServiceImpl implements ClientCryptoService {
     //Copy ${user.home}/.mosipkeys/db.conf to ${user.dir}/.mosipkeys/db.conf
     private void backwardCompatibilityFix() {
         Path targetPrivateKey = Paths.get(ClientCryptoManagerConstant.KEY_PATH, ClientCryptoManagerConstant.KEYS_DIR, PRIVATE_KEY);
-        Path sourcePrivateKey = Paths.get(System.getProperty("user.home"), ClientCryptoManagerConstant.KEYS_DIR, PRIVATE_KEY);
-        if(!targetPrivateKey.toFile().exists() && sourcePrivateKey.toFile().exists()) {
-            Path target = Paths.get(ClientCryptoManagerConstant.KEY_PATH, ClientCryptoManagerConstant.KEYS_DIR);
-            File existingKeysDir = new File(System.getProperty("user.home") + File.separator + ClientCryptoManagerConstant.KEYS_DIR);
-            if(existingKeysDir.exists() && Objects.requireNonNull(existingKeysDir.list()).length >= 2) {
-                try {
-                    FileUtils.copyDirectory(existingKeysDir, target.toFile());
-                    LOGGER.info("Successfully performed backward compatible fix. Copied {} to {}",
-                            existingKeysDir, target);
-                } catch (IOException e) {
-                    LOGGER.error("Failed to perform backward compatible fix. Failed to copy {} to {} due to {}",
-                            existingKeysDir, target, e);
-                }
+        if(targetPrivateKey.toFile().exists()) {
+            LOGGER.info("Backward compatibility fix not applicable");
+            return;
+        }
+
+        Path target = Paths.get(ClientCryptoManagerConstant.KEY_PATH, ClientCryptoManagerConstant.KEYS_DIR);
+        File existingKeysDir = new File(System.getProperty("user.home") + File.separator + ClientCryptoManagerConstant.KEYS_DIR);
+        if(existingKeysDir.exists() && Objects.requireNonNull(existingKeysDir.list()).length >= 2) {
+            try {
+                FileUtils.copyDirectory(existingKeysDir, target.toFile());
+                LOGGER.info("Successfully performed backward compatible fix. Copied {} to {}",
+                        existingKeysDir, target);
+            } catch (IOException e) {
+                LOGGER.error("Failed to perform backward compatible fix. Failed to copy {} to {} due to {}",
+                        existingKeysDir, target, e);
             }
         }
     }
