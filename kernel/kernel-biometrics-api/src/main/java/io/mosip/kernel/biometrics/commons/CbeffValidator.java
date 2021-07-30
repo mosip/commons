@@ -20,18 +20,13 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
-import io.mosip.kernel.biometrics.constant.OtherKey;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import io.mosip.kernel.biometrics.constant.BiometricType;
+import io.mosip.kernel.biometrics.constant.OtherKey;
 import io.mosip.kernel.biometrics.entities.BDBInfo;
 import io.mosip.kernel.biometrics.entities.BIR;
-import io.mosip.kernel.biometrics.entities.BIRInfo;
-import io.mosip.kernel.biometrics.entities.RegistryIDType;
 import io.mosip.kernel.biometrics.entities.SingleAnySubtypeType;
-import io.mosip.kernel.biometrics.entities.VersionType;
 import io.mosip.kernel.core.cbeffutil.common.CbeffXSDValidator;
 import io.mosip.kernel.core.cbeffutil.constant.CbeffConstant;
 import io.mosip.kernel.core.cbeffutil.exception.CbeffException;
@@ -247,7 +242,7 @@ public class CbeffValidator {
 			BDBInfo bdbInfo = bir.getBdbInfo();
 
 			if (bdbInfo != null) {
-				List<String> singleSubTypeList = bdbInfo.getSubtype();
+				List<String> singleSubTypeList = bdbInfo.getSubtype() == null ? List.of() : bdbInfo.getSubtype();
 				List<BiometricType> biometricTypes = bdbInfo.getType();
 				String bdbFormatType = bdbInfo.getFormat().getType();
 				boolean formatMatch = Long.valueOf(bdbFormatType).equals(formatType);
