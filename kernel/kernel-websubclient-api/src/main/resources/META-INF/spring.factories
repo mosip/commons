@@ -1,4 +1,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 io.mosip.kernel.websub.api.config.IntentVerificationConfig,\
 io.mosip.kernel.websub.api.config.WebSubClientConfig,\
-io.mosip.kernel.websub.api.config.publisher.WebSubPublisherClientConfig
+io.mosip.kernel.websub.api.config.publisher.WebSubPublisherClientConfig,\
+io.mosip.kernel.websub.api.config.publisher.RestTemplateHelper
