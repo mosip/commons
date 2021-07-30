@@ -21,10 +21,6 @@ public class BiometricsSignatureHelper {
 		String sb = new String(bir.getSb(), StandardCharsets.UTF_8);
 		String bdb = Base64.getUrlEncoder().encodeToString(bir.getBdb());
 
-		if (bir.getOthers() == null) {
-			throw new BiometricSignatureValidationException("Others value is null inside BIR");
-		}
-
 		for (Entry entry : bir.getOthers()) {
 			if (entry.getKey().equals("PAYLOAD")) {
 				String value = entry.getValue().replace("<bioValue>", bdb);
