@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.mosip.commons</groupId>
     <artifactId>khazana</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.2.0-rc1-SNAPSHOT</version>
 
     <properties>		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -114,8 +114,8 @@
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kernel.core.version>1.2.0-SNAPSHOT</kernel.core.version>
-        <kernel-keymanager-service.version>1.2.0-SNAPSHOT</kernel-keymanager-service.version>
+        <kernel.core.version>1.2.0-rc1-SNAPSHOT</kernel.core.version>
+        <kernel-keymanager-service.version>1.2.0-rc1-SNAPSHOT</kernel-keymanager-service.version>
 
         <!-- maven -->
         <maven.compiler.source>11</maven.compiler.source>

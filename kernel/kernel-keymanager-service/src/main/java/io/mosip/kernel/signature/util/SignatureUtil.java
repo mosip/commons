@@ -19,7 +19,7 @@ import io.mosip.kernel.signature.constant.SignatureConstant;
  * Utility class for Signature Service
  * 
  * @author Mahammed Taheer
-  * @since 1.2.0-SNAPSHOT
+  * @since 1.2.0-rc1-SNAPSHOT
  *
  */
 

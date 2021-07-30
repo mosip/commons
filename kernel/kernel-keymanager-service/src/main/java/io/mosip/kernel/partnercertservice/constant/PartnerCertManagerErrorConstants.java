@@ -4,7 +4,7 @@ package io.mosip.kernel.partnercertservice.constant;
  * This ENUM provides all the constant identified for PartnerCertManager errors.
  * 
  * @author Mahammed Taheer
- * @version 1.2.0-SNAPSHOT
+ * @version 1.2.0-rc1-SNAPSHOT
  *
  */
 public enum PartnerCertManagerErrorConstants {
