@@ -68,9 +68,17 @@ public class ApplicantTypeImpl implements ApplicantType {
 
 			Serializable s = MVEL.compileExpression("getApplicantType(map,agelimit);", context);
 
-			String code = (String) MVEL.executeExpression(s, m, myVarFactory);
-
-			if (code.equalsIgnoreCase("KER-MSD-147")) {
+			String code =  MVEL.executeExpression(s, m, myVarFactory).toString();
+			
+			if(code.equalsIgnoreCase("KER-MSD-151"))
+			{
+				LOGGER.error("Error in provided DOB");
+				throw new InvalidApplicantArgumentException(
+						ApplicantTypeErrorCode.INVALID_DATE_DOB_EXCEED_EXCEPTION.getErrorCode(),
+						ApplicantTypeErrorCode.INVALID_DATE_DOB_EXCEED_EXCEPTION.getErrorMessage());
+				
+			}
+			else if (code.equalsIgnoreCase("KER-MSD-147")) {
 				LOGGER.error("Error while fetching applicant code");
 				throw new InvalidApplicantArgumentException(
 						ApplicantTypeErrorCode.INVALID_QUERY_EXCEPTION.getErrorCode(),
