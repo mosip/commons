@@ -1,14 +1,10 @@
 package io.mosip.commons.khazana.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.mosip.commons.khazana.constant.KhazanaConstant;
-import io.mosip.commons.khazana.dto.CryptomanagerRequestDto;
-import io.mosip.commons.khazana.dto.CryptomanagerResponseDto;
-import io.mosip.commons.khazana.exception.ObjectStoreAdapterException;
-import io.mosip.kernel.core.exception.ServiceError;
-import io.mosip.kernel.core.http.RequestWrapper;
-import io.mosip.kernel.core.util.CryptoUtil;
-import io.mosip.kernel.core.util.DateUtils;
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -18,10 +14,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.security.SecureRandom;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.mosip.commons.khazana.constant.KhazanaConstant;
+import io.mosip.commons.khazana.dto.CryptomanagerRequestDto;
+import io.mosip.commons.khazana.dto.CryptomanagerResponseDto;
+import io.mosip.commons.khazana.exception.ObjectStoreAdapterException;
+import io.mosip.kernel.core.exception.ServiceError;
+import io.mosip.kernel.core.http.RequestWrapper;
+import io.mosip.kernel.core.util.CryptoUtil;
+import io.mosip.kernel.core.util.DateUtils;
 
 @Component
 public class OnlineCryptoUtil {
@@ -117,7 +119,7 @@ public class OnlineCryptoUtil {
 
     private RestTemplate getRestTemplate() {
         if (restTemplate == null)
-            restTemplate = applicationContext.getBean(RestTemplate.class);
+			restTemplate = (RestTemplate) applicationContext.getBean("restTemplate");
         return restTemplate;
     }
 
