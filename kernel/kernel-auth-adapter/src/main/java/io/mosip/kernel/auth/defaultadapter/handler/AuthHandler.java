@@ -317,8 +317,8 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 		HttpServerRequest httpRequest = routingContext.request();
 		String token = null;
 		String cookies = httpRequest.getHeader(AuthAdapterConstant.AUTH_HEADER_COOKIE);
-		if (cookies != null && !cookies.isEmpty() && cookies.contains(AuthAdapterConstant.AUTH_REQUEST_COOOKIE_HEADER)) {
-			token = cookies.replace(AuthAdapterConstant.AUTH_REQUEST_COOOKIE_HEADER, "").trim();
+		if (cookies != null && !cookies.isEmpty() && cookies.contains(AuthAdapterConstant.AUTH_HEADER)) {
+			token = cookies.replace(AuthAdapterConstant.AUTH_HEADER, "").trim();
 		}
 		if (token == null || token.isEmpty()) {
 			List<ServiceError> errors = new ArrayList<>();
