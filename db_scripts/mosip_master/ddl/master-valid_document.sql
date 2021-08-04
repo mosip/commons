@@ -17,7 +17,7 @@
 CREATE TABLE master.valid_document(
 	doctyp_code character varying(36) NOT NULL,
 	doccat_code character varying(36) NOT NULL,
-	lang_code character varying(3) NOT NULL,
+	lang_code character varying(3),
 	is_active boolean NOT NULL,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
