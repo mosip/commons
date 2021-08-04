@@ -301,7 +301,7 @@ public class S3Adapter implements ObjectStoreAdapter {
      * @return
      */
     @Override
-    public boolean pack(String account, String container, String source, String process) {
+    public boolean pack(String account, String container, String source, String process, String refId) {
         return false;
     }
 
