@@ -13,18 +13,25 @@
 -- Apr-2021 		Ram Bhatt  	   Creation of master.permitted_local_config
 -- May-2021		Ram Bhatt	   Changed Precision and size of version and identity_schema_version
 -- Jul-2021		Ram Bhatt          Creation of blocklisted table
+-- Aug-2021		Ram Bhatt	   Remove primary key constraint from blacklisted table
 -- ------------------------------------------------------------------------------------------------------------
---------------------------------------------UI SPEC TABLE CREATION-----------------------------------------------
-\c mosip_master sysadmin
 
+\c mosip_master sysadmin
+-----------------------------------------------------------------------------------------------------------------------
+
+ALTER TABLE master.blacklisted_words DROP CONSTRAINT IF EXISTS pk_blwrd_code CASCADE;
+-------------------------------------------------------------------------------------------------------------------
 \ir ../ddl/master-ui_spec.sql
 \ir ../ddl/master-blocklisted_words.sql
+
 
 ----- TRUNCATE master.blocklisted_words TABLE Data and It's reference Data and COPY Data from CSV file -----
 TRUNCATE TABLE master.blocklisted_words cascade ;
 
 \COPY master.blocklisted_words (word,descr,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-blocklisted_words.csv' delimiter ',' HEADER  csv;
 
+
+--------------------------------------------UI SPEC TABLE CREATION-----------------------------------------------
 TRUNCATE TABLE master.ui_spec  cascade ;
 
 ---------------------------------------------------------------------------------------------------------------------
