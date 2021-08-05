@@ -10,6 +10,7 @@
 -- ------------------------------------------------------------------------------------------
 -- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
 -- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
+-- Jul-2021		Ram Bhatt	    Remove Primary Key Constraint
 -- ------------------------------------------------------------------------------------------
 
 -- object: master.blacklisted_words | type: TABLE --
@@ -24,8 +25,7 @@ CREATE TABLE master.blacklisted_words(
 	upd_by character varying(256),
 	upd_dtimes timestamp,
 	is_deleted boolean DEFAULT FALSE,
-	del_dtimes timestamp,
-	CONSTRAINT pk_blwrd_code PRIMARY KEY (word,lang_code)
+	del_dtimes timestamp
 
 );
 -- ddl-end --
