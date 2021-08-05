@@ -244,6 +244,7 @@ ALTER TABLE master.template_type ADD CONSTRAINT pk_tmpltyp_code PRIMARY KEY (cod
 ALTER TABLE master.zone_user DROP CONSTRAINT IF EXISTS pk_tmpltyp_code;
 ALTER TABLE master.zone_user ALTER COLUMN lang_code DROP NOT NULL;
 ALTER TABLE master.valid_document ALTER COLUMN lang_code DROP NOT NULL;
+ALTER TABLE master.user_detail_h ALTER COLUMN status_code DROP NOT NULL;
 ALTER TABLE master.zone_user ADD CONSTRAINT pk_zoneuser PRIMARY KEY (zone_code,usr_id);
 
 
