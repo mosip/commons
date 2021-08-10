@@ -51,6 +51,7 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
 		return new String[] { "/**/assets/**", "/**/icons/**", "/**/screenshots/**", "/favicon**", "/**/favicon**",
 				"/**/css/**", "/**/js/**", "/**/error**", "/**/webjars/**", "/**/v2/api-docs",
 				"/**/v3/api-docs", "/**/v3/api-docs.yaml", "/**/configuration/ui",
+				"/**/swagger-ui/index.html", "/**/swagger-ui/**", "/**/v3/api-docs/swagger-config",
 				"/**/configuration/security", "/**/swagger-resources/**", "/**/swagger-ui.html", "/**/csrf", "/*/",
 				"**/authenticate/**", "/**/actuator/**", "/**/authmanager/**", "/sendOtp", "/validateOtp",
 				"/invalidateToken", "/config", "/login", "/logout", "/validateOTP", "/sendOTP", "/**/login",
