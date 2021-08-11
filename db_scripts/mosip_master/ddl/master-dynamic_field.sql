@@ -9,6 +9,8 @@
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
 -- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
+-- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
+-- Apr-2021		Ram Bhatt	    Constraint uk_schfld_name to be removed
 -- ------------------------------------------------------------------------------------------
 -- object: master.dynamic_field | type: TABLE --
 -- DROP TABLE IF EXISTS master.dynamic_field CASCADE;
@@ -26,9 +28,7 @@ CREATE TABLE master.dynamic_field(
 	upd_dtimes timestamp,
 	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
-	CONSTRAINT pk_schfld_id PRIMARY KEY (id),
-	CONSTRAINT uk_schfld_name UNIQUE (name,lang_code)
-
+	CONSTRAINT pk_schfld_id PRIMARY KEY (id)
 );
 -- ddl-end --
 COMMENT ON TABLE master.dynamic_field IS 'Schema Dynamic Fields: Table to store the fields which are used dynamically in MOSIP applications. These fields are also part of identity schema.';

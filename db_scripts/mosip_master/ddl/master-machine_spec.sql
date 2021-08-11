@@ -9,6 +9,8 @@
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
 -- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
+-- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
+-- Apr-2021		Ram Bhatt	    Lang_code nullable and/or removed from pk constraint
 -- ------------------------------------------------------------------------------------------
 
 -- object: master.machine_spec | type: TABLE --
@@ -21,7 +23,7 @@ CREATE TABLE master.machine_spec(
 	mtyp_code character varying(36) NOT NULL,
 	min_driver_ver character varying(16) NOT NULL,
 	descr character varying(256),
-	lang_code character varying(3) NOT NULL,
+	lang_code character varying(3) ,
 	is_active boolean NOT NULL,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
@@ -29,7 +31,7 @@ CREATE TABLE master.machine_spec(
 	upd_dtimes timestamp,
 	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
-	CONSTRAINT pk_mspec_code PRIMARY KEY (id,lang_code)
+	CONSTRAINT pk_mspec_code PRIMARY KEY (id)
 
 );
 -- ddl-end --

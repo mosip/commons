@@ -9,6 +9,8 @@
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
 -- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
+-- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
+-- Mar-2021		Ram Bhatt	    Drop id_attr_json column
 -- ------------------------------------------------------------------------------------------
 -- object: master.identity_schema | type: TABLE --
 -- DROP TABLE IF EXISTS master.identity_schema CASCADE;
@@ -17,7 +19,6 @@ CREATE TABLE master.identity_schema(
 	id_version numeric(5,3),
 	title character varying(64),
 	description character varying(256),
-	id_attr_json character varying,
 	schema_json character varying,
 	status_code character varying(36),
 	add_props boolean,
@@ -43,8 +44,6 @@ COMMENT ON COLUMN master.identity_schema.id_version IS 'ID Version: Version of t
 COMMENT ON COLUMN master.identity_schema.title IS 'Title: Tittle of the id schema, Gives high level detail about the id schema.';
 -- ddl-end --
 COMMENT ON COLUMN master.identity_schema.description IS 'Description: Description of the id schema which will give more details about id schema.';
--- ddl-end --
-COMMENT ON COLUMN master.identity_schema.id_attr_json IS 'ID Attribute JSON: Field includes both UI related attributes as well as actual ID-Schema related attributes. It is acutal representation of POJO used by UI.';
 -- ddl-end --
 COMMENT ON COLUMN master.identity_schema.schema_json IS 'Schema JSON: Its the ID-Schema json that is supported by JSON-Schema validator.';
 -- ddl-end --

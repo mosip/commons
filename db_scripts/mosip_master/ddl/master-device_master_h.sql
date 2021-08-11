@@ -9,6 +9,8 @@
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
 -- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
+-- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
+-- May-2021		Ram Bhatt	    Change LANG code TO NULLABLE AND remove from Primary Key
 -- ------------------------------------------------------------------------------------------
 
 -- object: master.device_master_h | type: TABLE --
@@ -23,7 +25,7 @@ CREATE TABLE master.device_master_h(
 	dspec_id 	character varying(36) NOT NULL,
 	zone_code 	character varying(36) NOT NULL,
 	regcntr_id  character varying(10),
-	lang_code 	character varying(3) NOT NULL,
+	lang_code 	character varying(3) ,
 	is_active 	boolean NOT NULL,
 	cr_by 		character varying(256) NOT NULL,
 	cr_dtimes 	timestamp NOT NULL,
@@ -32,7 +34,7 @@ CREATE TABLE master.device_master_h(
 	is_deleted 	boolean DEFAULT FALSE,
 	del_dtimes 	timestamp,
 	eff_dtimes 	timestamp NOT NULL,
-	CONSTRAINT pk_devicem_h_id PRIMARY KEY (id,lang_code,eff_dtimes)
+	CONSTRAINT pk_devicem_h_id PRIMARY KEY (id,eff_dtimes)
 
 );
 -- ddl-end --

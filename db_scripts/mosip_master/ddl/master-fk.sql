@@ -10,6 +10,7 @@
 -- ------------------------------------------------------------------------------------------
 -- Apr-2020          Sadanandegowda      Added FK constraints for location Hierarchy Level and Name
 -- Aug-2020          Sadanandegowda      removed FK constraints for mapping tables
+-- Apr-2021	     Ram Bhatt		 Removed Lang_code from FK Constraints for Device, Machine, Template and Biometric Tables
 -- ------------------------------------------------------------------------------------------
 
 -- Foreign Key Constraints Same DB/Schema tables.
@@ -91,66 +92,66 @@ ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- object: fk_bmattr_bmtyp | type: CONSTRAINT --
 -- ALTER TABLE master.biometric_attribute DROP CONSTRAINT IF EXISTS fk_bmattr_bmtyp CASCADE;
-ALTER TABLE master.biometric_attribute ADD CONSTRAINT fk_bmattr_bmtyp FOREIGN KEY (bmtyp_code,lang_code)
-REFERENCES master.biometric_type (code,lang_code) MATCH SIMPLE
+ALTER TABLE master.biometric_attribute ADD CONSTRAINT fk_bmattr_bmtyp FOREIGN KEY (bmtyp_code)
+REFERENCES master.biometric_type (code) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 -- object: fk_devicem_dspec | type: CONSTRAINT --
 -- ALTER TABLE master.device_master DROP CONSTRAINT IF EXISTS fk_devicem_dspec CASCADE;
-ALTER TABLE master.device_master ADD CONSTRAINT fk_devicem_dspec FOREIGN KEY (dspec_id,lang_code)
-REFERENCES master.device_spec (id,lang_code) MATCH SIMPLE
+ALTER TABLE master.device_master ADD CONSTRAINT fk_devicem_dspec FOREIGN KEY (dspec_id)
+REFERENCES master.device_spec (id) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 -- object: fk_devicem_zone | type: CONSTRAINT --
 -- ALTER TABLE master.device_master DROP CONSTRAINT IF EXISTS fk_devicem_zone CASCADE;
-ALTER TABLE master.device_master ADD CONSTRAINT fk_devicem_zone FOREIGN KEY (zone_code,lang_code)
-REFERENCES master.zone (code,lang_code) MATCH FULL
+ALTER TABLE master.device_master ADD CONSTRAINT fk_devicem_zone FOREIGN KEY (zone_code)
+REFERENCES master.zone (code) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 -- object: fk_devicem_center | type: CONSTRAINT --
 -- ALTER TABLE master.device_master DROP CONSTRAINT IF EXISTS fk_devicem_center CASCADE;
-ALTER TABLE master.device_master ADD CONSTRAINT fk_devicem_center FOREIGN KEY (regcntr_id,lang_code)
-REFERENCES master.registration_center (id,lang_code) MATCH SIMPLE
+ALTER TABLE master.device_master ADD CONSTRAINT fk_devicem_center FOREIGN KEY (regcntr_id)
+REFERENCES master.registration_center (id) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 -- object: fk_dspec_dtyp | type: CONSTRAINT --
 -- ALTER TABLE master.device_spec DROP CONSTRAINT IF EXISTS fk_dspec_dtyp CASCADE;
-ALTER TABLE master.device_spec ADD CONSTRAINT fk_dspec_dtyp FOREIGN KEY (dtyp_code,lang_code)
-REFERENCES master.device_type (code,lang_code) MATCH SIMPLE
+ALTER TABLE master.device_spec ADD CONSTRAINT fk_dspec_dtyp FOREIGN KEY (dtyp_code)
+REFERENCES master.device_type (code) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 
 -- object: fk_machm_mspec | type: CONSTRAINT --
 -- ALTER TABLE master.machine_master DROP CONSTRAINT IF EXISTS fk_machm_mspec CASCADE;
-ALTER TABLE master.machine_master ADD CONSTRAINT fk_machm_mspec FOREIGN KEY (mspec_id,lang_code)
-REFERENCES master.machine_spec (id,lang_code) MATCH SIMPLE
+ALTER TABLE master.machine_master ADD CONSTRAINT fk_machm_mspec FOREIGN KEY (mspec_id)
+REFERENCES master.machine_spec (id) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 -- object: fk_machm_zone | type: CONSTRAINT --
 -- ALTER TABLE master.machine_master DROP CONSTRAINT IF EXISTS fk_machm_zone CASCADE;
-ALTER TABLE master.machine_master ADD CONSTRAINT fk_machm_zone FOREIGN KEY (zone_code,lang_code)
-REFERENCES master.zone (code,lang_code) MATCH FULL
+ALTER TABLE master.machine_master ADD CONSTRAINT fk_machm_zone FOREIGN KEY (zone_code)
+REFERENCES master.zone (code) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 -- object: fk_machm_center | type: CONSTRAINT --
 -- ALTER TABLE master.machine_master DROP CONSTRAINT IF EXISTS fk_machm_center CASCADE;
-ALTER TABLE master.machine_master ADD CONSTRAINT fk_machm_center FOREIGN KEY (regcntr_id,lang_code)
-REFERENCES master.registration_center (id,lang_code) MATCH SIMPLE
+ALTER TABLE master.machine_master ADD CONSTRAINT fk_machm_center FOREIGN KEY (regcntr_id)
+REFERENCES master.registration_center (id) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 
 -- object: fk_mspec_mtyp | type: CONSTRAINT --
 -- ALTER TABLE master.machine_spec DROP CONSTRAINT IF EXISTS fk_mspec_mtyp CASCADE;
-ALTER TABLE master.machine_spec ADD CONSTRAINT fk_mspec_mtyp FOREIGN KEY (mtyp_code,lang_code)
-REFERENCES master.machine_type (code,lang_code) MATCH SIMPLE
+ALTER TABLE master.machine_spec ADD CONSTRAINT fk_mspec_mtyp FOREIGN KEY (mtyp_code)
+REFERENCES master.machine_type (code) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
@@ -212,30 +213,30 @@ ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- object: fk_tmplt_tmpltyp | type: CONSTRAINT --
 -- ALTER TABLE master.template DROP CONSTRAINT IF EXISTS fk_tmplt_tmpltyp CASCADE;
-ALTER TABLE master.template ADD CONSTRAINT fk_tmplt_tmpltyp FOREIGN KEY (template_typ_code,lang_code)
-REFERENCES master.template_type (code,lang_code) MATCH SIMPLE
-ON DELETE NO ACTION ON UPDATE NO ACTION;
+--ALTER TABLE master.template ADD CONSTRAINT fk_tmplt_tmpltyp FOREIGN KEY (template_typ_code)
+--REFERENCES master.template_type (code) MATCH SIMPLE
+--ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 -- object: fk_tmplt_tffmt | type: CONSTRAINT --
 -- ALTER TABLE master.template DROP CONSTRAINT IF EXISTS fk_tmplt_tffmt CASCADE;
-ALTER TABLE master.template ADD CONSTRAINT fk_tmplt_tffmt FOREIGN KEY (file_format_code,lang_code)
-REFERENCES master.template_file_format (code,lang_code) MATCH SIMPLE
+ALTER TABLE master.template ADD CONSTRAINT fk_tmplt_tffmt FOREIGN KEY (file_format_code)
+REFERENCES master.template_file_format (code) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 -- object: fk_tmplt_moddtl | type: CONSTRAINT --
 -- ALTER TABLE master.template DROP CONSTRAINT IF EXISTS fk_tmplt_moddtl CASCADE;
-ALTER TABLE master.template ADD CONSTRAINT fk_tmplt_moddtl FOREIGN KEY (module_id,lang_code)
-REFERENCES master.module_detail (id,lang_code) MATCH SIMPLE
+ALTER TABLE master.template ADD CONSTRAINT fk_tmplt_moddtl FOREIGN KEY (module_id)
+REFERENCES master.module_detail (id) MATCH SIMPLE
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 -- object: fk_usrdtl_center | type: CONSTRAINT --
 -- ALTER TABLE master.user_detail DROP CONSTRAINT IF EXISTS fk_usrdtl_center CASCADE;
-ALTER TABLE master.user_detail ADD CONSTRAINT fk_usrdtl_center FOREIGN KEY (regcntr_id,lang_code)
-REFERENCES master.registration_center (id,lang_code) MATCH SIMPLE
-ON DELETE NO ACTION ON UPDATE NO ACTION;
+--ALTER TABLE master.user_detail ADD CONSTRAINT fk_usrdtl_center FOREIGN KEY (regcntr_id,lang_code)
+--REFERENCES master.registration_center (id,lang_code) MATCH SIMPLE
+--ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 -- object: fk_valdoc_doctyp | type: CONSTRAINT --
@@ -254,30 +255,30 @@ ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- object: fk_zoneuser_zone | type: CONSTRAINT --
 -- ALTER TABLE master.zone_user DROP CONSTRAINT IF EXISTS fk_zoneuser_zone CASCADE;
-ALTER TABLE master.zone_user ADD CONSTRAINT fk_zoneuser_zone FOREIGN KEY (zone_code,lang_code)
-REFERENCES master.zone (code,lang_code) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION;
+--ALTER TABLE master.zone_user ADD CONSTRAINT fk_zoneuser_zone FOREIGN KEY (zone_code)
+--REFERENCES master.zone (code) MATCH FULL
+--ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 
 -- object: fk_rwn_daycode | type: CONSTRAINT --
 -- ALTER TABLE master.reg_working_nonworking DROP CONSTRAINT IF EXISTS fk_rwn_daycode CASCADE;
-ALTER TABLE master.reg_working_nonworking ADD CONSTRAINT fk_rwn_daycode FOREIGN KEY (day_code,lang_code)
-REFERENCES master.daysofweek_list (code,lang_code) MATCH FULL
+ALTER TABLE master.reg_working_nonworking ADD CONSTRAINT fk_rwn_daycode FOREIGN KEY (day_code)
+REFERENCES master.daysofweek_list (code) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 -- object: fk_rwn_regcntr | type: CONSTRAINT --
 -- ALTER TABLE master.reg_working_nonworking DROP CONSTRAINT IF EXISTS fk_rwn_regcntr CASCADE;
-ALTER TABLE master.reg_working_nonworking ADD CONSTRAINT fk_rwn_regcntr FOREIGN KEY (regcntr_id,lang_code)
-REFERENCES master.registration_center (id,lang_code) MATCH FULL
+ALTER TABLE master.reg_working_nonworking ADD CONSTRAINT fk_rwn_regcntr FOREIGN KEY (regcntr_id)
+REFERENCES master.registration_center (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 -- object: fk_regeh_regcntr | type: CONSTRAINT --
 -- ALTER TABLE master.reg_exceptional_holiday DROP CONSTRAINT IF EXISTS fk_regeh_regcntr CASCADE;
-ALTER TABLE master.reg_exceptional_holiday ADD CONSTRAINT fk_regeh_regcntr FOREIGN KEY (regcntr_id,lang_code)
-REFERENCES master.registration_center (id,lang_code) MATCH FULL
+ALTER TABLE master.reg_exceptional_holiday ADD CONSTRAINT fk_regeh_regcntr FOREIGN KEY (regcntr_id)
+REFERENCES master.registration_center (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 

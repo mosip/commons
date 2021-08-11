@@ -9,6 +9,7 @@
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
 -- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
+-- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
 -- ------------------------------------------------------------------------------------------
 
 -- object: master.app_detail | type: TABLE --
@@ -24,7 +25,7 @@ CREATE TABLE master.app_detail(
 	upd_by character varying(256),
 	upd_dtimes timestamp,
 	is_deleted boolean DEFAULT FALSE,
-	del_dtimes timestamp, 
+	del_dtimes timestamp,
 	CONSTRAINT pk_appdtl_id PRIMARY KEY (id,lang_code)
 
 );

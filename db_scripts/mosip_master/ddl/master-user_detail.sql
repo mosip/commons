@@ -9,6 +9,8 @@
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
 -- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
+-- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
+-- Apr-2021		Ram Bhatt           Status_code, name and lang_code to be nullable
 -- ------------------------------------------------------------------------------------------
 
 -- object: master.user_detail | type: TABLE --
@@ -16,12 +18,12 @@
 CREATE TABLE master.user_detail(
 	id character varying(256) NOT NULL,
 	uin character varying(28),
-	name character varying(64) NOT NULL,
+	name character varying(64) ,
 	email character varying(256),
 	mobile character varying(16),
-	status_code character varying(36) NOT NULL,
+	status_code character varying(36),
 	regcntr_id character varying(10),
-	lang_code character varying(3) NOT NULL,
+	lang_code character varying(3) ,
 	last_login_dtimes timestamp,
 	last_login_method character varying(64),
 	is_active boolean NOT NULL,
