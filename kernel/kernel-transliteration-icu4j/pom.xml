@@ -287,7 +287,7 @@
 			<organizationUrl>https://github.com/mosip/commons</organizationUrl>
 		</developer>
 	</developers>
-	<name>Auth service</name>
-		<description>Auth service acts as intermediatory between open id and mosip services </description>
+	<name>transliteration service</name>
+		<description>Transliteration service is used for different language dependencies </description>
         <url>https://github.com/mosip/commons</url>
 </project>
