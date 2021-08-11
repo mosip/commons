@@ -46,6 +46,7 @@ public class BIR implements Serializable {
 	@XmlJavaTypeAdapter(Base64Adapter.class)
 	private byte[] bdb;
 	@XmlElement(name = "SB")
+	@XmlJavaTypeAdapter(Base64Adapter.class)
 	private byte[] sb;
 	@XmlElement(name = "BIR")
 	protected List<BIR> birs;

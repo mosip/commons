@@ -21,7 +21,7 @@ CREATE TABLE master.user_detail_h(
 	name character varying(64) NOT NULL,
 	email character varying(256),
 	mobile character varying(16),
-	status_code character varying(36) NOT NULL,
+	status_code character varying(36),
 	regcntr_id character varying(10),
 	lang_code character varying(3),
 	last_login_dtimes timestamp,
