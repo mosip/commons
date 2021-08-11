@@ -11,6 +11,7 @@
 \ir ddl/master-biometric_attribute.sql
 \ir ddl/master-biometric_type.sql
 \ir ddl/master-blacklisted_words.sql
+\ir ddl/master-blocklisted_words.sql
 \ir ddl/master-device_master.sql
 \ir ddl/master-device_master_h.sql
 \ir ddl/master-device_spec.sql
@@ -80,3 +81,9 @@
 
 \ir ddl/master-fk.sql
 \ir ddl/master-batch-fk.sql
+
+\ir ddl/master-ui_spec.sql
+
+\ir ddl/master-ca_cert_store.sql
+
+\ir ddl/master-permitted_local_config.sql
