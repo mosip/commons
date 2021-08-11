@@ -288,6 +288,5 @@
 		</developer>
 	</developers>
 	<name>transliteration service</name>
-		<description>Transliteration service is used for different language dependencies </description>
         <url>https://github.com/mosip/commons</url>
 </project>
