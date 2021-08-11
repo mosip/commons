@@ -216,10 +216,10 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.2.0-rc1-SNAPSHOT</kernel.core.version>
+		<kernel.core.version>1.2.0-rc1</kernel.core.version>
     </properties>
 	<artifactId>kernel-idvalidator-prid</artifactId>
-	<version>1.2.0-rc1-SNAPSHOT</version>
+	<version>1.2.0-rc1</version>
 	<name>kernel-idvalidator-prid</name>
 	<dependencies>
 		<dependency>

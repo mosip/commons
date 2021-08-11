@@ -3,7 +3,7 @@
  
   <groupId>io.mosip.kernel</groupId>
   <artifactId>keys-generator</artifactId>
-  <version>1.2.0-rc1-SNAPSHOT</version>
+  <version>1.2.0-rc1</version>
   <properties>		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -127,12 +127,12 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.2.0-rc1-SNAPSHOT</kernel.core.version>
-		<kernel.auth.adaptor.version>1.2.0-rc1-SNAPSHOT</kernel.auth.adaptor.version>
-		<kernel-dataaccess-hibernate.version>1.2.0-rc1-SNAPSHOT</kernel-dataaccess-hibernate.version>
-		<kernel.logger.logback.version>1.2.0-rc1-SNAPSHOT</kernel.logger.logback.version>
-		<kernel.pdfgenerator.itext.version>1.2.0-rc1-SNAPSHOT</kernel.pdfgenerator.itext.version>
-		<kernel-keymanager-service.version>1.2.0-rc1-SNAPSHOT</kernel-keymanager-service.version>
+		<kernel.core.version>1.2.0-rc1</kernel.core.version>
+		<kernel.auth.adaptor.version>1.2.0-rc1</kernel.auth.adaptor.version>
+		<kernel-dataaccess-hibernate.version>1.2.0-rc1</kernel-dataaccess-hibernate.version>
+		<kernel.logger.logback.version>1.2.0-rc1</kernel.logger.logback.version>
+		<kernel.pdfgenerator.itext.version>1.2.0-rc1</kernel.pdfgenerator.itext.version>
+		<kernel-keymanager-service.version>1.2.0-rc1</kernel-keymanager-service.version>
 		<jose4j.version>0.6.5</jose4j.version>
 
 		<tss.version>0.3.0</tss.version>

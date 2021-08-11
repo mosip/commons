@@ -9,7 +9,7 @@
     <name>commons-packet-manager</name>
     <description>Mosip commons project </description>
     <url>https://github.com/mosip/commons</url>
-    <version>1.2.0-rc1-SNAPSHOT</version>
+    <version>1.2.0-rc1</version>
  <properties>
         <!-- maven -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -30,22 +30,22 @@
         <spring-cloud-config.version>2.0.0.RELEASE</spring-cloud-config.version>
         <h2.version>1.4.197</h2.version>
         <jackson.datatype.version>2.9.8</jackson.datatype.version>
-        <kernel.keygenerator.bouncycastle.version>1.2.0-rc1-SNAPSHOT</kernel.keygenerator.bouncycastle.version>
+        <kernel.keygenerator.bouncycastle.version>1.2.0-rc1</kernel.keygenerator.bouncycastle.version>
         <swagger.version>2.9.2</swagger.version>
         <powermock.beta.version>2.0.7</powermock.beta.version>
         <junit.version>4.13.1</junit.version>
         <hazelcast.kubernetes.version>1.3.1</hazelcast.kubernetes.version>
 
-        <kernel-keymanager-service.version>1.2.0-rc1-SNAPSHOT</kernel-keymanager-service.version>
-        <kernel.core.version>1.2.0-rc1-SNAPSHOT</kernel.core.version>
-        <kernel.biometrics.api.version>1.2.0-rc1-SNAPSHOT</kernel.biometrics.api.version>
-        <kernel.cbeffutil.api.version>1.2.0-rc1-SNAPSHOT</kernel.cbeffutil.api.version>
-        <kernel.crypto-jce.version>1.2.0-rc1-SNAPSHOT</kernel.crypto-jce.version>
-        <kernel.auth.adaptor.version>1.2.0-rc1-SNAPSHOT</kernel.auth.adaptor.version>
-        <kernel-dataaccess-hibernate.version>1.2.0-rc1-SNAPSHOT</kernel-dataaccess-hibernate.version>
-        <kernel.logger.logback.version>1.2.0-rc1-SNAPSHOT</kernel.logger.logback.version>
+        <kernel-keymanager-service.version>1.2.0-rc1</kernel-keymanager-service.version>
+        <kernel.core.version>1.2.0-rc1</kernel.core.version>
+        <kernel.biometrics.api.version>1.2.0-rc1</kernel.biometrics.api.version>
+        <kernel.cbeffutil.api.version>1.2.0-rc1</kernel.cbeffutil.api.version>
+        <kernel.crypto-jce.version>1.2.0-rc1</kernel.crypto-jce.version>
+        <kernel.auth.adaptor.version>1.2.0-rc1</kernel.auth.adaptor.version>
+        <kernel-dataaccess-hibernate.version>1.2.0-rc1</kernel-dataaccess-hibernate.version>
+        <kernel.logger.logback.version>1.2.0-rc1</kernel.logger.logback.version>
         <spring.boot.co>2.0.2.RELEASE</spring.boot.co>
-        <khazana.version>1.2.0-rc1-SNAPSHOT</khazana.version>
+        <khazana.version>1.2.0-rc1</khazana.version>
         <sonar.coverage.exclusions>**/constants/**,**/config/**,**/audit/**,**/util/**,**/dto/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/security/**,**/*Config.java,**/*BootApplication.java,**/*VertxApplication.java,**/cbeffutil/**,**/*Utils.java,**/*Validator.java,**/*Helper.java,**/verticle/**,**/VidWriter.java/**,**/masterdata/utils/**,**/spi/**,**/core/http/**,"**/LocationServiceImpl.java","**/RegistrationCenterMachineServiceImpl.java","**/RegistrationCenterServiceImpl.java","**/pridgenerator/**","**/idgenerator/prid","**/proxy/**","**/cryptosignature/**"</sonar.coverage.exclusions>
         <sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**</sonar.cpd.exclusions>
     </properties>
@@ -53,7 +53,7 @@
         <dependency>
             <groupId>io.mosip.kernel</groupId>
             <artifactId>kernel-idobjectvalidator</artifactId>
-            <version>1.2.0-rc1-SNAPSHOT</version>
+            <version>1.2.0-rc1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

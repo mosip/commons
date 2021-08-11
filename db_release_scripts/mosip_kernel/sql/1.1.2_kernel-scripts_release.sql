@@ -1,6 +1,6 @@
 -- -------------------------------------------------------------------------------------------------
 -- Database Name	: mosip_kernel
--- Release Version 	: 1.2.0-rc1-SNAPSHOT
+-- Release Version 	: 1.2.0-rc1
 -- Purpose    		: Database Alter scripts for the release for Kernel DB.       
 -- Create By   		: Sadanandegowda DM
 -- Created Date		: Sep-2020
