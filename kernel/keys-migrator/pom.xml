@@ -3,7 +3,7 @@
  
   <groupId>io.mosip.kernel</groupId>
   <artifactId>keys-migrator</artifactId>
-  <version>1.2.0-rc1-SNAPSHOT</version>
+  <version>1.2.0-rc1</version>
   <properties>		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -19,7 +19,7 @@
 		<spring.security.test.version>5.0.5.RELEASE</spring.security.test.version>
 		<spring-cloud-config.version>2.0.4.RELEASE</spring-cloud-config.version>
 		<lombok.version>1.18.8</lombok.version>
-		<kernel-keymanager-service.version>1.2.0-rc1-SNAPSHOT</kernel-keymanager-service.version>
+		<kernel-keymanager-service.version>1.2.0-rc1</kernel-keymanager-service.version>
 	</properties>
 
   <dependencies>

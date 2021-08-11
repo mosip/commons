@@ -7,7 +7,7 @@
 	<groupId>io.mosip.kernel</groupId>
 
 	<artifactId>kernel-ridgenerator-service</artifactId>
-	<version>1.2.0-rc1-SNAPSHOT</version>
+	<version>1.2.0-rc1</version>
 	<name>kernel-ridgenerator-service</name>
 	<description>Mosip commons project </description>
         <url>https://github.com/mosip/commons</url>
@@ -117,10 +117,10 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.2.0-rc1-SNAPSHOT</kernel.core.version>
-		<kernel.auth-adapter.version>1.2.0-rc1-SNAPSHOT</kernel.auth-adapter.version>
-		<kernel.dataaccess-hibernate.version>1.2.0-rc1-SNAPSHOT</kernel.dataaccess-hibernate.version>
-		<kernel.logger.version>1.2.0-rc1-SNAPSHOT</kernel.logger.version>
+		<kernel.core.version>1.2.0-rc1</kernel.core.version>
+		<kernel.auth-adapter.version>1.2.0-rc1</kernel.auth-adapter.version>
+		<kernel.dataaccess-hibernate.version>1.2.0-rc1</kernel.dataaccess-hibernate.version>
+		<kernel.logger.version>1.2.0-rc1</kernel.logger.version>
 	</properties>
 	<dependencies>
 		<dependency>
