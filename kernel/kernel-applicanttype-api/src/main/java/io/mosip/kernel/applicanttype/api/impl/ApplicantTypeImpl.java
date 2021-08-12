@@ -69,7 +69,7 @@ public class ApplicantTypeImpl implements ApplicantType {
 		try {
 			Map<String, String> ageGroupsMap = objectMapper.readValue(ageGroups,
 					new TypeReference<HashMap<String, String>>(){});
-			context.put("age-groups", ageGroupsMap);
+			context.put("ageGroups", ageGroupsMap);
 		} catch (IOException e) {
 			LOGGER.error("Failed to parse age groups configuration", e);
 		}
