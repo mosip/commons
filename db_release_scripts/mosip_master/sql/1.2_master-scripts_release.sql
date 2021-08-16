@@ -14,11 +14,16 @@
 -- May-2021		Ram Bhatt	   Changed Precision and size of version and identity_schema_version
 -- Jul-2021		Ram Bhatt          Creation of blocklisted table
 -- Aug-2021		Ram Bhatt	   Remove primary key constraint from blacklisted table
+-- Aug-2021		Ram Bhatt	   Column size increased for template_typ_code and code column
 -- ------------------------------------------------------------------------------------------------------------
 
 \c mosip_master sysadmin
 -----------------------------------------------------------------------------------------------------------------------
 
+ALTER TABLE master.template_type ALTER COLUMN code TYPE character varying(64) ;
+ALTER TABLE master.template ALTER COLUMN template_typ_code TYPE character varying(64) ;
+
+--------------------------------------------------------------------------------------------------------------------
 ALTER TABLE master.blacklisted_words DROP CONSTRAINT IF EXISTS pk_blwrd_code CASCADE;
 -------------------------------------------------------------------------------------------------------------------
 \ir ../ddl/master-ui_spec.sql
