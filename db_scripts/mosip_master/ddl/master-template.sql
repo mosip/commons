@@ -10,6 +10,7 @@
 -- ------------------------------------------------------------------------------------------
 -- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
 -- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
+-- Aug-2021		Ram Bhatt	    Column size increased for template_typ_code column
 -- ------------------------------------------------------------------------------------------
 
 -- object: master.template | type: TABLE --
@@ -23,7 +24,7 @@ CREATE TABLE master.template(
 	file_txt character varying,
 	module_id character varying(36),
 	module_name character varying(128),
-	template_typ_code character varying(36) NOT NULL,
+	template_typ_code character varying(64) NOT NULL,
 	lang_code character varying(3) NOT NULL,
 	is_active boolean NOT NULL,
 	cr_by character varying(256) NOT NULL,
