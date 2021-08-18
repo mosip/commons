@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.kernel.core.websub.spi.SubscriptionClient;
 import io.mosip.kernel.core.websub.spi.SubscriptionExtendedClient;
+import io.mosip.kernel.websub.api.config.publisher.RestTemplateHelper;
 import io.mosip.kernel.websub.api.constants.HubMode;
 import io.mosip.kernel.websub.api.constants.WebSubClientConstants;
 import io.mosip.kernel.websub.api.constants.WebSubClientErrorCode;
@@ -45,16 +46,15 @@ import io.mosip.kernel.websub.api.model.UnsubscriptionRequest;
  * @author Urvil Joshi
  *
  */
-@Component
 public class SubscriberClientImpl
 		implements SubscriptionClient<SubscriptionChangeRequest, UnsubscriptionRequest, SubscriptionChangeResponse>,
 		SubscriptionExtendedClient<FailedContentResponse, FailedContentRequest> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SubscriberClientImpl.class);
 
-	@Qualifier("websubRestTemplate")
 	@Autowired
-	private RestTemplate restTemplate;
+	private RestTemplateHelper restTemplateHelper;
+
 
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -81,7 +81,7 @@ public class SubscriberClientImpl
 
 		ResponseEntity<String> response = null;
 		try {
-			response = restTemplate.exchange(subscriptionRequest.getHubURL(), HttpMethod.POST, entity, String.class);
+			response = restTemplateHelper.getRestTemplate().exchange(subscriptionRequest.getHubURL(), HttpMethod.POST, entity, String.class);
 		} catch (HttpClientErrorException | HttpServerErrorException exception) {
 			throw new WebSubClientException(WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorCode(),
 					WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorMessage() + exception.getResponseBodyAsString());
@@ -150,7 +150,7 @@ public class SubscriberClientImpl
 
 		ResponseEntity<String> response = null;
 		try {
-			response = restTemplate.exchange(unsubscriptionRequest.getHubURL(), HttpMethod.POST, entity, String.class);
+			response = restTemplateHelper.getRestTemplate().exchange(unsubscriptionRequest.getHubURL(), HttpMethod.POST, entity, String.class);
 		} catch (HttpClientErrorException | HttpServerErrorException exception) {
 			throw new WebSubClientException(WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorCode(),
 					WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorMessage() + exception.getResponseBodyAsString());
@@ -193,7 +193,7 @@ public class SubscriberClientImpl
 
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
-		HttpEntity<String> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity,
+		HttpEntity<String> response = restTemplateHelper.getRestTemplate().exchange(builder.toUriString(), HttpMethod.GET, entity,
 				String.class);
 		FailedContentResponse failedContentResponse = null;
 		try {

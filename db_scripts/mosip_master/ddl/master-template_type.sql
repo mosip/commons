@@ -11,12 +11,13 @@
 -- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
 -- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
 -- Apr-2021		Ram Bhatt	    Lang_code nullable and/or removed from pk constraint
+-- Aug-2021		Ram Bhatt	    Column size increased for code column
 -- ------------------------------------------------------------------------------------------
 
 -- object: master.template_type | type: TABLE --
 -- DROP TABLE IF EXISTS master.template_type CASCADE;
 CREATE TABLE master.template_type(
-	code character varying(36) NOT NULL,
+	code character varying(64) NOT NULL,
 	descr character varying(256) NOT NULL,
 	lang_code character varying(3),
 	is_active boolean NOT NULL,
