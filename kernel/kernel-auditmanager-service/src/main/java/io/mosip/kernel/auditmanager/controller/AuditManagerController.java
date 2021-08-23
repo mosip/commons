@@ -49,7 +49,7 @@ public class AuditManagerController {
 	 */
 	@Operation(summary = "Persist a audit", description = "persist a audit", tags = { "Audit" })
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Audit persisted"),
+			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
