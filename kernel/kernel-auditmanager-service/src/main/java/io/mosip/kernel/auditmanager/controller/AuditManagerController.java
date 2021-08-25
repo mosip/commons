@@ -33,7 +33,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  */
 @RestController
 @CrossOrigin
-@Tag(name = "AuditManager", description = "AuditManager Controller")
+@Tag(name = "AuditManager", description = "Operation related to audit")
 public class AuditManagerController {
 	/**
 	 * AuditManager Service field with functions related to auditing
