@@ -30,6 +30,12 @@ import io.mosip.kernel.keymanagerservice.dto.UploadCertificateResponseDto;
 import io.mosip.kernel.keymanagerservice.service.KeymanagerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * This class provides controller methods for Key manager.
@@ -41,7 +47,7 @@ import io.swagger.annotations.ApiParam;
  */
 @CrossOrigin
 @RestController
-@Api(tags = { "keymanager" }, value = "Operation related to Keymanagement")
+@Tag(name = "keymanager", description = "Operation related to Keymanagement")
 public class KeymanagerController {
 
 	/**
@@ -57,6 +63,12 @@ public class KeymanagerController {
 	 * @param keyPairGenRequestDto     {@link KeyPairGenerateRequestDto} request
 	 * @return {@link KeyPairGenerateResponseDto} instance
 	*/
+	@Operation(summary = "Generate Master Key for the provided APP ID", description = "Generate Master Key for the provided APP ID", tags = { "keymanager" })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true))) })
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','KEY_MAKER', 'INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@PostMapping(value = "/generateMasterKey/{objectType}")
@@ -76,6 +88,12 @@ public class KeymanagerController {
 	 * @param referenceId   Reference id of the application requesting Certificate. Blank in case of Master Key.
 	 * @return {@link KeyPairGenerateResponseDto} instance
 	*/
+	@Operation(summary = "Request to get Certificate for the Provided APP ID & REF ID", description = "Request to get Certificate for the Provided APP ID & REF ID", tags = { "keymanager" })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true))) })
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@GetMapping(value = "/getCertificate")
@@ -94,6 +112,12 @@ public class KeymanagerController {
 	 * @param csrGenRequestDto     {@link CSRGenerateRequestDto} request
 	 * @return {@link KeyPairGenerateResponseDto} instance
 	*/
+	@Operation(summary = "Request to Generate CSR for the provided APP ID & REF ID along with other certificate params", description = "Request to Generate CSR for the provided APP ID & REF ID along with other certificate params", tags = { "keymanager" })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true))) })
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@PostMapping(value = "/generateCSR")
@@ -111,6 +135,12 @@ public class KeymanagerController {
 	 * @param uploadCertRequestDto     {@link UploadCertificateRequestDto} request
 	 * @return {@link UploadCertificateResponseDto} instance
 	*/
+	@Operation(summary = "Update signed certificate for the provided APP ID & REF ID", description = "Update signed certificate for the provided APP ID & REF ID", tags = { "keymanager" })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true))) })
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@PostMapping(value = "/uploadCertificate")
@@ -128,6 +158,12 @@ public class KeymanagerController {
 	 * @param uploadCertRequestDto     {@link UploadCertificateRequestDto} request
 	 * @return {@link UploadCertificateResponseDto} instance
 	*/
+	@Operation(summary = "Update signed certificate for the provided APP ID & REF ID for other domains", description = "Update signed certificate for the provided APP ID & REF ID for other domains", tags = { "keymanager" })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true))) })
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@PostMapping(value = "/uploadOtherDomainCertificate")
@@ -145,6 +181,12 @@ public class KeymanagerController {
 	 * @param symGenRequestDto     {@link SymmetricKeyGenerateRequestDto} request
 	 * @return {@link SymmetricKeyGenerateResponseDto} instance
 	*/
+	@Operation(summary = "Request to Generate Symmetric key for the provided APP ID & REF ID", description = "Request to Generate Symmetric key for the provided APP ID & REF ID", tags = { "keymanager" })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true))) })
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@PostMapping(value = "/generateSymmetricKey")
@@ -162,6 +204,12 @@ public class KeymanagerController {
 	 * @param revokeKeyRequestDto     {@link RevokeKeyRequestDto} request
 	 * @return {@link RevokeKeyResponseDto} instance
 	*/
+	@Operation(summary = "Request to Revoke Base Key for the provided APP ID & REF ID", description = "Request to Revoke Base Key for the provided APP ID & REF ID", tags = { "keymanager" })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true))) })
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','TEST','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@PutMapping(value = "/revokeKey")

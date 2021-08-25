@@ -21,6 +21,12 @@ import io.mosip.kernel.zkcryptoservice.dto.ZKCryptoResponseDto;
 import io.mosip.kernel.zkcryptoservice.service.spi.ZKCryptoManagerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * Rest Controller for Zero Knowledge Crypto-Manager-Service
@@ -32,7 +38,7 @@ import io.swagger.annotations.ApiParam;
 
 @CrossOrigin
 @RestController
-@Api(value = "Operation related to Zero Knowledge Encryption and Decryption", tags = { "zkcryptomanager" })
+@Tag(name = "zkcryptomanager", description = "Operation related to Zero Knowledge Encryption and Decryption")
 public class ZKCryptoManagerController {
 	
 	/**
@@ -47,6 +53,12 @@ public class ZKCryptoManagerController {
 	 * @param zkCryptoRequestDto {@link ZKCryptoRequestDto} request
 	 * @return {@link ZKCryptoResponseDto} encrypted Data
 	 */
+	@Operation(summary = "Endpoint for Encrypt the data", description = "Endpoint for Encrypt the data", tags = { "zkcryptomanager" })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true))) })
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','ID_AUTHENTICATION','TEST', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@PostMapping(value = "/zkEncrypt", produces = "application/json")
@@ -64,6 +76,12 @@ public class ZKCryptoManagerController {
 	 * @param zkCryptoRequestDto {@link ZKCryptoRequestDto} request
 	 * @return {@link ZKCryptoResponseDto} decrypted Data
 	 */
+	@Operation(summary = "Endpoint for Decrypt the data", description = "Endpoint for Decrypt the data", tags = { "zkcryptomanager" })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true))) })
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','ID_AUTHENTICATION', 'TEST', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@PostMapping(value = "/zkDecrypt", produces = "application/json")
@@ -81,6 +99,12 @@ public class ZKCryptoManagerController {
 	 * @param cryptomanagerRequestDto {@link CryptomanagerRequestDto} request
 	 * @return {@link CryptomanagerResponseDto} decrypted Data
 	 */
+	@Operation(summary = "Endpoint for Decrypt the data", description = "Endpoint for Decrypt the data", tags = { "zkcryptomanager" })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true))) })
 	@PreAuthorize("hasAnyRole('ZONAL_ADMIN','GLOBAL_ADMIN','INDIVIDUAL','ID_AUTHENTICATION', 'TEST', 'REGISTRATION_ADMIN', 'REGISTRATION_SUPERVISOR', 'REGISTRATION_OFFICER', 'REGISTRATION_PROCESSOR','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@PostMapping(value = "/zkReEncryptRandomKey", produces = "application/json")
