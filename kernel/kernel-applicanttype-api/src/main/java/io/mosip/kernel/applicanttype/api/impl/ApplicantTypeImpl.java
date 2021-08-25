@@ -22,7 +22,8 @@ import org.springframework.web.client.RestTemplate;
 import io.mosip.kernel.applicanttype.api.constant.ApplicantTypeErrorCode;
 import io.mosip.kernel.core.applicanttype.exception.InvalidApplicantArgumentException;
 import io.mosip.kernel.core.applicanttype.spi.ApplicantType;
-
+import org.json.simple.JSONObject;
+import org.springframework.context.ApplicationContext;
 /**
  * Implementation for Applicant Type.
  * 
@@ -67,8 +68,11 @@ public class ApplicantTypeImpl implements ApplicantType {
 	public String getApplicantType(Map<String, Object> map) throws InvalidApplicantArgumentException {
 		Map<String, Object> context = new HashMap();
 		try {
-			Map<String, String> ageGroupsMap = objectMapper.readValue(ageGroups,
-					new TypeReference<HashMap<String, String>>(){});
+			Map<String, String>  ageGroupsMap = new HashMap<String, String>();
+                        JSONObject ageGroupConfig = new JSONObject((String) ApplicationContext.map().get(ageGroups));
+                        for(String key : ageGroupConfig.keySet()) {
+                         ageGroupsMap.put(key, ageGroupConfig.getString(key));
+                       }
 			context.put("ageGroups", ageGroupsMap);
 		} catch (IOException e) {
 			LOGGER.error("Failed to parse age groups configuration", e);
