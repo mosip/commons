@@ -85,7 +85,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @CrossOrigin
 @RestController
-@Tag(name = "AuditManager", description = "Operation related to Authentication and Authorization")
+@Tag(name = "authmanager", description = "Operation related to Authentication and Authorization")
 public class AuthController {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
@@ -121,7 +121,7 @@ public class AuthController {
 	@ResponseFilter
 	@PostMapping(value = "/authenticate/useridPwd")
 	@Operation(summary = "Authenticate using username and password", description = "Authenticate using username and password", tags = {
-			"Auth" })
+			"authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -168,7 +168,7 @@ public class AuthController {
 	@ResponseFilter
 	@PostMapping(value = "/authenticate/sendotp")
 	@ResponseStatus(value = HttpStatus.OK)
-	@Operation(summary = "Authenticate using OTP", description = "Authenticate using OTP", tags = { "Auth" })
+	@Operation(summary = "Authenticate using OTP", description = "Authenticate using OTP", tags = { "authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -202,7 +202,7 @@ public class AuthController {
 	@ResponseFilter
 	@PostMapping(value = "/authenticate/useridOTP")
 	@Operation(summary = "API to validate OTP with user Id", description = "API to validate OTP with user Id", tags = {
-			"Auth" })
+			"authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -246,7 +246,7 @@ public class AuthController {
 	@ResponseFilter
 	@PostMapping(value = "/authenticate/clientidsecretkey")
 	@Operation(summary = "API to authenticate using clientId and secretKey", description = "API to authenticate using clientId and secretKey", tags = {
-			"Auth" })
+			"authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -283,7 +283,7 @@ public class AuthController {
 	 */
 	@ResponseFilter
 	@PostMapping(value = "/authorize/validateToken")
-	@Operation(summary = "API to validate token", description = "API to validate token", tags = { "Auth" })
+	@Operation(summary = "API to validate token", description = "API to validate token", tags = { "authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -336,7 +336,7 @@ public class AuthController {
 	 */
 	@ResponseFilter
 	@GetMapping(value = "/authorize/admin/validateToken")
-	@Operation(summary = "API to validate token", description = "API to validate token", tags = { "Auth" })
+	@Operation(summary = "API to validate token", description = "API to validate token", tags = { "authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -383,7 +383,7 @@ public class AuthController {
 	@ResponseFilter
 	@PostMapping(value = "/authorize/refreshToken/{appid}")
 	@Operation(summary = "API to retry token when access token expires", description = "API to retry token when access token expires", tags = {
-			"Auth" })
+			"authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -422,7 +422,7 @@ public class AuthController {
 	@ResponseFilter
 	@PostMapping(value = "/authorize/invalidateToken")
 	@Operation(summary = "API to invalidate token when both refresh and auth token expires", description = "API to invalidate token when both refresh and auth token expires", tags = {
-			"Auth" })
+			"authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -455,7 +455,7 @@ public class AuthController {
 
 	@ResponseFilter
 	@GetMapping(value = "/roles/{appid}")
-	@Operation(summary = "API to get all roles", description = "API to get all roles", tags = { "Auth" })
+	@Operation(summary = "API to get all roles", description = "API to get all roles", tags = { "authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -472,7 +472,7 @@ public class AuthController {
 	@ResponseFilter
 	@PostMapping(value = "/userdetails/{appid}")
 	@Operation(summary = "API to get list of users for a module", description = "API to get list of users for a module", tags = {
-			"Auth" })
+			"authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -492,7 +492,7 @@ public class AuthController {
 	@ResponseFilter
 	@PostMapping(value = "/usersaltdetails/{appid}")
 	@Operation(summary = "API to get list of users for a module with salt", description = "API to get list of users for a module with salt", tags = {
-			"Auth" })
+			"authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -520,7 +520,7 @@ public class AuthController {
 	 */
 	@ResponseFilter
 	@GetMapping(value = "rid/{appid}/{userid}")
-	@Operation(summary = "API to get rid", description = "API to get rid from userid", tags = { "Auth" })
+	@Operation(summary = "API to get rid", description = "API to get rid from userid", tags = { "authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -545,7 +545,7 @@ public class AuthController {
 	 */
 	@ResponseFilter
 	@GetMapping(value = "unblock/{appid}/{userid}")
-	@Operation(summary = "API to get username", description = "API to get username from userid", tags = { "Auth" })
+	@Operation(summary = "API to get username", description = "API to get username from userid", tags = { "authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -572,7 +572,7 @@ public class AuthController {
 	@ResponseFilter
 	@PostMapping(value = "/changepassword/{appid}")
 	@Operation(summary = "This API will change the password of the particular user", description = "This API will change the password of the particular user", tags = {
-			"Auth" })
+			"authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -598,7 +598,7 @@ public class AuthController {
 	@ResponseFilter
 	@PostMapping(value = "/resetpassword/{appid}")
 	@Operation(summary = "This API will reset the password of the particular user", description = "This API will reset the password of the particular user", tags = {
-			"Auth" })
+			"authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -623,7 +623,7 @@ public class AuthController {
 	@ResponseFilter
 	@GetMapping(value = "/username/{appid}/{mobilenumber}")
 	@Operation(summary = "This API will get username", description = "This API will get username based on mobileno", tags = {
-			"Auth" })
+			"authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -649,7 +649,7 @@ public class AuthController {
 	@PostMapping(value = "/user/addpassword")
 	@Deprecated(forRemoval = true, since = "1.1.4")
 	@Operation(summary = "This API will add password to the user", description = "This API will add password to the user", tags = {
-			"Auth" })
+			"authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -677,7 +677,7 @@ public class AuthController {
 	@GetMapping("/role/{appId}/{userId}")
 	@ResponseFilter
 	@Operation(summary = "This API will get user role", description = "This API will get user role useing appid and userid", tags = {
-			"Auth" })
+			"authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -702,7 +702,7 @@ public class AuthController {
 	@ResponseFilter
 	@GetMapping(value = "/userdetail/{appid}/{mobilenumber}")
 	@Operation(summary = "This API will get userdetails", description = "This API will get userdetails based on mobileno", tags = {
-			"Auth" })
+			"authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -727,7 +727,7 @@ public class AuthController {
 	@ResponseFilter
 	@GetMapping(value = "/validate/{appid}/{userid}")
 	@Operation(summary = "This API will validate username", description = "This API will validate username based on userid", tags = {
-			"Auth" })
+			"authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -753,7 +753,7 @@ public class AuthController {
 	@ResponseFilter
 	@PostMapping(value = "/userdetail/regid/{appid}")
 	@Operation(summary = "Gets the user detail based on user id", description = "Gets the user detail based on user id", tags = {
-			"Auth" })
+			"authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -779,7 +779,7 @@ public class AuthController {
 	 */
 	@ResponseFilter
 	@DeleteMapping(value = "/logout/user")
-	@Operation(summary = "Logout a user", description = "ends users session", tags = { "Auth" })
+	@Operation(summary = "Logout a user", description = "ends users session", tags = { "authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -843,7 +843,7 @@ public class AuthController {
 	@ResponseFilter
 	@PostMapping(value = "/authenticate/internal/useridPwd")
 	@Operation(summary = "Internal API used by syncdata delegate API to authenticate", description = "Internal API used by syncdata delegate API to authenticate", tags = {
-			"Auth" })
+			"authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -869,7 +869,7 @@ public class AuthController {
 	@ResponseFilter
 	@PostMapping(value = "/authenticate/internal/userotp")
 	@Operation(summary = "Internal API used by syncdata delegate API to authenticate using otp", description = "Internal API used by syncdata delegate API to authenticate using otp", tags = {
-			"Auth" })
+			"authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -896,7 +896,7 @@ public class AuthController {
 	@ResponseFilter
 	@PostMapping(value = "/authorize/internal/refreshToken/{appid}")
 	@Operation(summary = "Internal API used by syncdata delegate API to refreah token", description = "Internal API used by syncdata delegate API to refresh token", tags = {
-			"Auth" })
+			"authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -936,7 +936,7 @@ public class AuthController {
 	@ResponseFilter
 	@GetMapping(value = "individualId/{appid}/{userid}")
 	@Operation(summary = "This API will fetch IndividualId based on appId and userId", description = "This API will fetch IndividualId based on appId and userId", tags = {
-			"Auth" })
+			"authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -963,7 +963,7 @@ public class AuthController {
 	@ResponseFilter
 	@GetMapping(value = "/userdetails/{appid}")
 	@Operation(summary = "This API will fetch all users based on appId and roles", description = "This API will fetch all users based on appId and roles for role bases search only pagination will work,Without role can be searched by all,email,firstName,lastName and userName", tags = {
-			"Auth" })
+			"authmanager" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),

@@ -30,8 +30,8 @@ public class SwaggerConfig {
 	public OpenAPI openAPI() {
 		return new OpenAPI()
 				.components(new Components())
-				.info(new Info().title("Audit manager Service documentation").description(
-						"Audit manager Service ").version("1.2.0"));
+				.info(new Info().title("Audit manager Service").description(
+						"This Service is responsible for audit related operations").version("1.2.0"));
 	}
 
 }
