@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -50,11 +51,11 @@ public class ApplicantTypeImpl implements ApplicantType {
 	private RestTemplate restTemplate;
 
 	private ObjectMapper objectMapper = new ObjectMapper();
-	private String SCRIPT = null;
+	private String SCRIPT = "";
 
 	private String getScript() {
 		synchronized (SCRIPT) {
-			if (SCRIPT == null)
+			if (SCRIPT == null || SCRIPT.equals(""))
 				SCRIPT = restTemplate.getForObject(configServerFileStorageURL + mvelFile, String.class);
 		}
 		return SCRIPT;
@@ -72,10 +73,10 @@ public class ApplicantTypeImpl implements ApplicantType {
 		Map<String, Object> context = new HashMap<>();
 		try {
 			Map<String, String> ageGroupsMap = new HashMap<String, String>();
-			JSONObject ageGroupConfig = new JSONObject((String) ageGroups);
+			JSONObject ageGroupConfig = new JSONObject(ageGroups);
 			ageGroupConfig.keys().forEachRemaining(key -> {
 				try {
-					ageGroupsMap.put((String) key, (String) ageGroupConfig.get((String) key));
+					ageGroupsMap.put((String) key, ageGroupConfig.getString((String) key));
 				} catch (JSONException e) {
 					LOGGER.error("Failed to parse age groups configuration", e);
 				}
