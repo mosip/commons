@@ -1,26 +1,19 @@
 package io.mosip.kernel.applicanttype.api.impl;
 
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mvel2.MVEL;
-import org.mvel2.integration.VariableResolverFactory;
-import org.mvel2.integration.impl.MapVariableResolverFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.applicanttype.api.constant.ApplicantTypeErrorCode;
 import io.mosip.kernel.core.applicanttype.exception.InvalidApplicantArgumentException;
@@ -50,11 +43,11 @@ public class ApplicantTypeImpl implements ApplicantType {
 	private RestTemplate restTemplate;
 
 	private ObjectMapper objectMapper = new ObjectMapper();
-	private String SCRIPT = null;
+	private String SCRIPT = "";
 
 	private String getScript() {
 		synchronized (SCRIPT) {
-			if (SCRIPT == null)
+			if (SCRIPT == null || SCRIPT.equals(""))
 				SCRIPT = restTemplate.getForObject(configServerFileStorageURL + mvelFile, String.class);
 		}
 		return SCRIPT;
@@ -72,10 +65,10 @@ public class ApplicantTypeImpl implements ApplicantType {
 		Map<String, Object> context = new HashMap<>();
 		try {
 			Map<String, String> ageGroupsMap = new HashMap<String, String>();
-			JSONObject ageGroupConfig = new JSONObject((String) ageGroups);
+			JSONObject ageGroupConfig = new JSONObject(ageGroups);
 			ageGroupConfig.keys().forEachRemaining(key -> {
 				try {
-					ageGroupsMap.put((String) key, (String) ageGroupConfig.get((String) key));
+					ageGroupsMap.put((String) key, ageGroupConfig.getString((String) key));
 				} catch (JSONException e) {
 					LOGGER.error("Failed to parse age groups configuration", e);
 				}
