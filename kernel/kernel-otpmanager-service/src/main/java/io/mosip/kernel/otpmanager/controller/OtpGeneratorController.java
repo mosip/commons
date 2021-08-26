@@ -15,6 +15,12 @@ import io.mosip.kernel.core.otpmanager.spi.OtpGenerator;
 import io.mosip.kernel.otpmanager.dto.GenerationDTOValidationLevels;
 import io.mosip.kernel.otpmanager.dto.OtpGeneratorRequestDto;
 import io.mosip.kernel.otpmanager.dto.OtpGeneratorResponseDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * This class provides controller methods for OTP generation.
@@ -26,6 +32,7 @@ import io.mosip.kernel.otpmanager.dto.OtpGeneratorResponseDto;
  */
 @RestController
 @CrossOrigin
+@Tag(name = "otpgenerator", description = "Operation related to Otp generation")
 public class OtpGeneratorController {
 	/**
 	 * Autowired reference of {@link OtpGenerator}.
@@ -39,6 +46,12 @@ public class OtpGeneratorController {
 	 * @param otpDto The request DTO for OTP generation.
 	 * @return The generated OTP as DTO response.
 	 */
+	@Operation(summary = "This endpoint handles the OTP generation", description = "This endpoint handles the OTP generation", tags = { "otpgenerator" })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','AUTH','RESIDENT')")
 	@ResponseFilter
 	@PostMapping(value = "/otp/generate")
