@@ -143,6 +143,7 @@
 		<jose4j.version>0.6.5</jose4j.version>
 
 		<tss.version>0.3.0</tss.version>
+		<sonar.skip>true</sonar.skip>
 	</properties>
 
 	<dependencies>
