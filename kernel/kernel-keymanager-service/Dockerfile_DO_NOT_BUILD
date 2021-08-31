@@ -35,7 +35,7 @@ RUN mkdir /config
 
 COPY softhsm-application.conf /config
 
-COPY ./target/kernel-keymanager-service-1.2.0-SNAPSHOT.jar kernel-keymanager-service.jar
+COPY ./target/kernel-keymanager-service-1.2.0-rc2-SNAPSHOT.jar kernel-keymanager-service.jar
 
 VOLUME /softhsm
 

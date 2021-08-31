@@ -116,7 +116,7 @@
 		<mockito.core.version>2.22.0</mockito.core.version>
 	</properties>
 	<artifactId>kernel-core</artifactId>
-	<version>1.2.0-SNAPSHOT</version>
+	<version>1.2.0-rc2-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

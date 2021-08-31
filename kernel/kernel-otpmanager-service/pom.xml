@@ -7,7 +7,7 @@
 	<groupId>io.mosip.kernel</groupId>
 
 	<artifactId>kernel-otpmanager-service</artifactId>
-	<version>1.2.0-SNAPSHOT</version>
+	<version>1.2.0-rc2-SNAPSHOT</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -219,10 +219,10 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.2.0-SNAPSHOT</kernel.core.version>
-		<kernel.auth-adapter.version>1.2.0-SNAPSHOT</kernel.auth-adapter.version>
-		<kernel.dataaccess-hibernate.version>1.2.0-SNAPSHOT</kernel.dataaccess-hibernate.version>
-		<kernel.logger.version>1.2.0-SNAPSHOT</kernel.logger.version>
+		<kernel.core.version>1.2.0-rc2-SNAPSHOT</kernel.core.version>
+		<kernel.auth-adapter.version>1.2.0-rc2-SNAPSHOT</kernel.auth-adapter.version>
+		<kernel.dataaccess-hibernate.version>1.2.0-rc2-SNAPSHOT</kernel.dataaccess-hibernate.version>
+		<kernel.logger.version>1.2.0-rc2-SNAPSHOT</kernel.logger.version>
 	</properties>
 	<name>kernel-otpmanager-service</name>
 	<description>Mosip commons project </description>
