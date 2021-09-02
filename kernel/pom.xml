@@ -157,15 +157,15 @@
 		<module>kernel-notification-service</module>
 		<module>kernel-auth-service</module>
 		<module>kernel-ridgenerator-service</module>
-		<module>kernel-keymanager-service</module>
+<!--		<module>kernel-keymanager-service</module>-->
 		<module>kernel-idgenerator-service</module>
 		<module>kernel-pridgenerator-service</module>
 		<module>kernel-salt-generator</module>
 		<module>kernel-biometrics-api</module>
 		<module>kernel-biosdk-provider</module>
 		<module>object-store</module>
-		<module>keys-generator</module>
-		<module>keys-migrator</module>
+<!--		<module>keys-generator</module>-->
+<!--		<module>keys-migrator</module>-->
 		<module>kernel-demographics-api</module>
 	</modules>
 
