@@ -366,7 +366,8 @@
 						<skipTests>false</skipTests>
 						<skip>false</skip>
 						<argLine>
-							${argLine} --add-opens java.xml/jdk.xml.internal=ALL-UNNAMED
+							${argLine} --add-opens
+							java.xml/jdk.xml.internal=ALL-UNNAMED
 							--illegal-access=permit
 						</argLine>
 					</configuration>

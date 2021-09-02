@@ -261,7 +261,7 @@
 					<!-- <format>json</format> -->
 				</configuration>
 			</plugin>
-				<plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.22.0</version>
@@ -269,7 +269,8 @@
 					<skipTests>false</skipTests>
 					<skip>false</skip>
 					<argLine>
-						${argLine} --add-opens java.xml/jdk.xml.internal=ALL-UNNAMED
+						${argLine} --add-opens
+						java.xml/jdk.xml.internal=ALL-UNNAMED
 						--illegal-access=permit
 					</argLine>
 				</configuration>
