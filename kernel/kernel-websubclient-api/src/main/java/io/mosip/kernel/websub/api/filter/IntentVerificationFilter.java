@@ -16,6 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.mosip.kernel.websub.api.annotation.PreAuthenticateContentAndVerifyIntent;
 import io.mosip.kernel.websub.api.client.PublisherClientImpl;
+import io.mosip.kernel.websub.api.client.SubscriberClientImpl;
 import io.mosip.kernel.websub.api.config.IntentVerificationConfig;
 import io.mosip.kernel.websub.api.constants.WebSubClientConstants;
 import io.mosip.kernel.websub.api.constants.WebSubClientErrorCode;
@@ -47,21 +48,21 @@ public class IntentVerificationFilter extends OncePerRequestFilter {
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
-		LOGGER.info("filtering possible intent verification callback for uri"+request.getRequestURI());
-		String topic=matchCallbackURL(request.getRequestURI());
-		LOGGER.info("topic received for uri"+topic);
+			throws ServletException, IOException {		
+		String topic=matchCallbackURL(request.getRequestURI());	
 		if (request.getMethod().equals(HttpMethod.GET.name()) && topic!=null) {
-			String topicReq = request.getParameter(WebSubClientConstants.HUB_TOPIC);
-			LOGGER.info("HUB_TOPIC"+topicReq);
-			String modeReq = request.getParameter(WebSubClientConstants.HUB_MODE);
-			LOGGER.info("HUB_TOPIC"+modeReq);
+			String topicReq = request.getParameter(WebSubClientConstants.HUB_TOPIC);			
+			String modeReq = request.getParameter(WebSubClientConstants.HUB_MODE);			
+			String mode = request.getParameter("intentMode");
+	        if(mode.equals("denied")) {
+	        	LOGGER.error("intent verification failed, hub server mode id denied topic should be registered before subscribe");
+	        	response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+	        }
 			if (intentVerifier.isIntentVerified(topic,
-					request.getParameter("intentMode"), topicReq, modeReq)) {
+					mode, topicReq, modeReq)) {
 				response.setStatus(HttpServletResponse.SC_ACCEPTED);
 				try {
 					response.getWriter().write(request.getParameter(WebSubClientConstants.HUB_CHALLENGE));
-					LOGGER.info("writing hub challange back"+WebSubClientConstants.HUB_CHALLENGE);
 					response.getWriter().flush();
 					response.getWriter().close();
 				} catch (IOException exception) {
