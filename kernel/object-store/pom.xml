@@ -114,7 +114,7 @@
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kernel.core.version>1.1.4</kernel.core.version>
+        <kernel.core.version>1.1.4.4</kernel.core.version>
         <kernel-keymanager-service.version>1.1.4</kernel-keymanager-service.version>
 
         <!-- maven -->
