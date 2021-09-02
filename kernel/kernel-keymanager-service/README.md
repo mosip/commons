@@ -44,7 +44,7 @@ Key Manager helps you generate new key pairs and deploy them to endpoint servers
 *	key-generator job, and
 *	Rest API call
 
-![](_images/Key_manager/keymanager_hsm_keygenerator.png)
+![](_images/kernel-keymanager-service/keymanager_hsm_keygenerator.png)
 
 The job generates option under ``` key-generator job ``` allows you to generate all the configured ```APP_IDs``` master keys in HSM. It associate only module keys.
 
@@ -58,7 +58,7 @@ Once the API repository that allows call on ```getCertificate/generateCSR``` API
 
 ### Perform and Track Key Management Operations ###
 
-![](_images/Key_manager/keymanager_chain_of_trust.png)
+![](_images/kernel-keymanager-service/keymanager_chain_of_trust.png)
 
 Once keys are associated with their user, you can perform a range of key management operations like crypto that allows:
 
@@ -76,7 +76,7 @@ Eg:
 	*	REGISTRATION module key issued by root key
 		*	10001_110011 registration client key issued by REGISTRATION component
 
-![](_images/Key_manager/type_key_example.PNG)
+![](_images/kernel-keymanager-service/type_key_example.PNG)
 
 The different key in MOSIP have their own built-in validity as mentioned:
 
@@ -94,7 +94,7 @@ Whereas, you can configure existing key to revoke encryption/base key invoke ```
 
 ## Encryption/Decryption Process ##
 
-![](_images/Key_manager/keymanager_hsm_integration.png)
+![](_images/kernel-keymanager-service/keymanager_hsm_integration.png)
 
 We strongly recommend that you store the encryption key outside Key Manager server - preferably in any other separate machine or in any external drive (hard drive, thumb drive etc.,). And in such cases, you have to make sure that Key Manager server has full permission to access the device and the encryption key stored in it, whenever you start Key Manager service.
 
