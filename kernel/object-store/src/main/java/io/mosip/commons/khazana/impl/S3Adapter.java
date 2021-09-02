@@ -116,7 +116,7 @@ public class S3Adapter implements ObjectStoreAdapter {
     		 finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
     		 bucketName=container;
     	}
-        return getConnection(bucketName).doesObjectExist(bucketName, ObjectStoreUtil.getName(source, process, finalObjectName));
+        return getConnection(bucketName).doesObjectExist(bucketName, finalObjectName);
     }
 
     @Override
