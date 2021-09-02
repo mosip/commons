@@ -589,7 +589,7 @@ public class KeycloakImpl implements DataStore {
 		for(JsonNode jsonNode : node) {
 			MosipUserDto mosipUserDto = new MosipUserDto();
 			String username = jsonNode.get("username").textValue();
-			if (userDetails.stream().anyMatch(user -> user.equals(username))) {
+			if (userDetails.stream().anyMatch(user -> user.equalsIgnoreCase(username))) {
 				mosipUserDto.setUserId(username);
 				mosipUserDto.setMail(jsonNode.hasNonNull("email") ?
 						jsonNode.get("email").textValue() : null);
