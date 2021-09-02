@@ -168,8 +168,8 @@
 		<module>kernel-salt-generator</module>
 		<module>kernel-biometrics-api</module>
 		<module>kernel-biosdk-provider</module>
-		<module>object-store</module>
 		  <module>keys-generator</module>-->
+		<module>object-store</module>
 		<module>kernel-idgenerator-service</module>
 	</modules>
 
