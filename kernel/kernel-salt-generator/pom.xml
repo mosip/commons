@@ -224,7 +224,7 @@
 		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
 		<spring-cloud-config.version>2.0.0.RELEASE</spring-cloud-config.version>
 		<postgresql.version>42.2.2</postgresql.version>
-	<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
+		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 	</properties>
 	<dependencies>
 		<dependency>

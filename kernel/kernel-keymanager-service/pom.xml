@@ -144,7 +144,7 @@
 
 		<tss.version>0.3.0</tss.version>
 		<sonar.skip>true</sonar.skip>
-	<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
+		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 	</properties>
 
 	<dependencies>

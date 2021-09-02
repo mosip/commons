@@ -223,7 +223,7 @@
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
 		<kernel.core.version>1.2.0-SNAPSHOT</kernel.core.version>
 		<kernel.cbeff.version>1.2.0-SNAPSHOT</kernel.cbeff.version>
-	<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
+		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -366,7 +366,8 @@
 						<skipTests>false</skipTests>
 						<skip>false</skip>
 						<argLine>
-							${argLine} --add-opens java.xml/jdk.xml.internal=ALL-UNNAMED
+							${argLine} --add-opens
+							java.xml/jdk.xml.internal=ALL-UNNAMED
 							--illegal-access=permit
 						</argLine>
 					</configuration>

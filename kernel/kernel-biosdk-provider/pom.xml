@@ -121,7 +121,7 @@
 		<kernel.core.version>1.2.0-SNAPSHOT</kernel.core.version>
 		<kernel.biometricsdk.version>1.2.0-SNAPSHOT</kernel.biometricsdk.version>
 		<kernel.logger.logback.version>1.2.0-SNAPSHOT</kernel.logger.logback.version>
-	<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
+		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 	</properties>
 
 	<dependencies>

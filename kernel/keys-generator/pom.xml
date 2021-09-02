@@ -138,7 +138,7 @@
 		<jose4j.version>0.6.5</jose4j.version>
 
 		<tss.version>0.3.0</tss.version>
-	<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
+		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 	</properties>
 
 	<dependencies>

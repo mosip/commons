@@ -22,7 +22,7 @@
 		<spring-cloud-config.version>2.0.4.RELEASE</spring-cloud-config.version>
 		<lombok.version>1.18.8</lombok.version>
 		<kernel-keymanager-service.version>1.2.0-SNAPSHOT</kernel-keymanager-service.version>
-	<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
+		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 	</properties>
 
 	<dependencies>

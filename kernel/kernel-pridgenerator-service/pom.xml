@@ -220,7 +220,7 @@
 		<kernel.templatemanager-velocity.version>1.2.0-SNAPSHOT</kernel.templatemanager-velocity.version>
 		<kernel.logger.version>1.2.0-SNAPSHOT</kernel.logger.version>
 		<kernel.prid-generator.version>1.2.0-SNAPSHOT</kernel.prid-generator.version>
-	<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
+		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 	</properties>
 	<artifactId>kernel-pridgenerator-service</artifactId>
 	<version>1.2.0-SNAPSHOT</version>

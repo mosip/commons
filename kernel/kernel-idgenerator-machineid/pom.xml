@@ -222,7 +222,7 @@
 		<kernel.applicant-type.version>1.2.0-SNAPSHOT</kernel.applicant-type.version>
 		<kernel.dataaccess-hibernate.version>1.2.0-SNAPSHOT</kernel.dataaccess-hibernate.version>
 		<kernel.logger.version>1.2.0-SNAPSHOT</kernel.logger.version>
-	<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
+		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 	</properties>
 	<dependencies>
 		<dependency>
