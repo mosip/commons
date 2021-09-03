@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 <groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-templatemanager-velocity</artifactId>
-	<version>1.1.4.4</version>
+	<version>1.1.4.5-SNAPSHOT</version>
 	<description>Mosip Template Manager Using Velocity Template Engine</description>
 <properties>		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -218,7 +218,7 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.1.4.4</kernel.core.version>
+		<kernel.core.version>1.1.4.5-SNAPSHOT</kernel.core.version>
 	</properties>
 	<dependencies>
 		<dependency>
