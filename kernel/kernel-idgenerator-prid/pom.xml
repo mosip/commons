@@ -217,14 +217,14 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.1.4.4</kernel.core.version>
-		<kernel.dataaccess-hibernate.version>1.1.4.4</kernel.dataaccess-hibernate.version>
-		<kernel.logger.version>1.1.4.4</kernel.logger.version>
-		<kernel.idvalidator-prid.version>1.1.4.4</kernel.idvalidator-prid.version>
-		<kernel.crypto-jce.version>1.1.4.4</kernel.crypto-jce.version>
+		<kernel.core.version>1.1.4.5-SNAPSHOT</kernel.core.version>
+		<kernel.dataaccess-hibernate.version>1.1.4.5-SNAPSHOT</kernel.dataaccess-hibernate.version>
+		<kernel.logger.version>1.1.4.5-SNAPSHOT</kernel.logger.version>
+		<kernel.idvalidator-prid.version>1.1.4.5-SNAPSHOT</kernel.idvalidator-prid.version>
+		<kernel.crypto-jce.version>1.1.4.5-SNAPSHOT</kernel.crypto-jce.version>
 	</properties>
 	<artifactId>kernel-idgenerator-prid</artifactId>
-	<version>1.1.4.4</version>
+	<version>1.1.4.5-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
