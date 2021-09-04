@@ -8,6 +8,8 @@ This includes keying material such as symmetric keys, asymmetric keys, certifica
 
 Keymanager interfaces with key store like Hardware Security Module (HSM) and Database.
 
+![](_images/keymanager_hsm_integration.png)
+
 ## Encryption alrogithms
 * RSA-256 for all data encryption
 * AES-256 for zero-knowledge encryption (specific design for IDA data storage)
@@ -116,7 +118,7 @@ Whereas, you can configure existing key to revoke encryption/base key invoke ```
 
 ## Encryption/Decryption Process ##
 
-![](_images/keymanager_hsm_integration.png)
+
 
 We strongly recommend that you store the encryption key outside Key Manager server - preferably in any other separate machine or in any external drive (hard drive, thumb drive etc.,). And in such cases, you have to make sure that Key Manager server has full permission to access the device and the encryption key stored in it, whenever you start Key Manager service.
 
