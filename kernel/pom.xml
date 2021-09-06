@@ -123,7 +123,7 @@
 	<modules>
 	        <module>kernel-core</module>
 		<module>kernel-logger-logback</module>
-		<module>kernel-auth-adapter</module>
+<!--		<module>kernel-auth-adapter</module>-->
 		<module>kernel-dataaccess-hibernate</module>
 <!--		<module>kernel-auditmanager-api</module>-->
 		<module>kernel-idgenerator-prid</module>
@@ -155,7 +155,7 @@
 <!--		<module>kernel-auditmanager-service</module>-->
 		<module>kernel-otpmanager-service</module>
 		<module>kernel-notification-service</module>
-		<module>kernel-auth-service</module>
+<!--		<module>kernel-auth-service</module>-->
 		<module>kernel-ridgenerator-service</module>
 <!--		<module>kernel-keymanager-service</module>-->
 		<module>kernel-idgenerator-service</module>
