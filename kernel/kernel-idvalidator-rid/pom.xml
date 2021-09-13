@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.mosip.kernel</groupId>
@@ -6,6 +7,18 @@
   <name>kernel-idvalidator-rid</name>
   <description>kernel-idvalidator-rid</description>
   <properties>		
+=======
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>io.mosip.kernel</groupId>
+	<artifactId>kernel-idvalidator-rid</artifactId>
+	<version>1.2.0-SNAPSHOT</version>
+	<name>kernel-idvalidator-rid</name>
+	<description>kernel-idvalidator-rid</description>
+	<properties>
+>>>>>>> 82f391137a (Sonar plugin fix (#1004))
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- maven -->

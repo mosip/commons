@@ -7,8 +7,13 @@
 	<packaging>jar</packaging>
 	<name>kernel-notification-service</name>
 	<description>Mosip commons project </description>
+<<<<<<< HEAD
         <url>https://github.com/mosip/commons</url>
 	<version>1.2.0-rc2-SNAPSHOT</version>
+=======
+	<url>https://github.com/mosip/commons</url>
+	<version>1.2.0-SNAPSHOT</version>
+>>>>>>> 82f391137a (Sonar plugin fix (#1004))
 	<groupId>io.mosip.kernel</groupId>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
