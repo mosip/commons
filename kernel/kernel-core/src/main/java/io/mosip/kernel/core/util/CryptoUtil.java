@@ -2,7 +2,8 @@ package io.mosip.kernel.core.util;
 
 import static java.util.Arrays.copyOfRange;
 
-import org.apache.commons.codec.binary.Base64;
+import java.util.Base64;
+
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -70,7 +71,7 @@ public class CryptoUtil {
 	 * @return encoded data
 	 */
 	public static String encodeBase64(byte[] data) {
-		return Base64.encodeBase64URLSafeString(data);
+		return Base64.getUrlEncoder().encodeToString(data);
 	}
 
 	/**
@@ -80,7 +81,7 @@ public class CryptoUtil {
 	 * @return encoded data
 	 */
 	public static String encodeBase64String(byte[] data) {
-		return Base64.encodeBase64String(data);
+		return Base64.getEncoder().encodeToString(data);
 	}
 
 	/**
@@ -90,7 +91,7 @@ public class CryptoUtil {
 	 * @return decoded data
 	 */
 	public static byte[] decodeBase64(String data) {
-		return Base64.decodeBase64(data);
+		return Base64.getUrlDecoder().decode(data.getBytes());
 	}
 
 	/**
