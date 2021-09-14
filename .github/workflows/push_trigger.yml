@@ -385,6 +385,8 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
         if: failure() # Pick up events even if the job fails or is canceled.
 
+<<<<<<< HEAD
+=======
 #  docker-kernel-keymanager-service:
 #    needs: build
 #
@@ -446,6 +448,7 @@ jobs:
 #        if: failure() # Pick up events even if the job fails or is canceled.
 
 
+>>>>>>> origin/develop
   docker-kernel-pridgenerator-service:
     needs: build
 
@@ -685,6 +688,8 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
         if: failure() # Pick up events even if the job fails or is canceled.
+<<<<<<< HEAD
+=======
 
 #  docker-kernel-keys-generator:
 #    needs: build
@@ -800,3 +805,4 @@ jobs:
 #        env:
 #          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
 #        if: failure() # Pick up events even if the job fails or is canceled.
+>>>>>>> origin/develop

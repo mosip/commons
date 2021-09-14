@@ -7,7 +7,7 @@
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-transliteration-icu4j</artifactId>
 	<packaging>jar</packaging>
-	<version>1.2.0-SNAPSHOT</version>
+	<version>1.2.0-rc2-SNAPSHOT</version>
 	<description>kernel-transliteration-icu4j</description>
 
 	<properties>
