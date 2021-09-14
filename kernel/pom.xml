@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<version>1.1.5.4</version>
+	<version>1.1.5.5-SNAPSHOT</version>
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-parent</artifactId>
 	<packaging>pom</packaging>
@@ -122,8 +122,8 @@
 	</properties>
 
 	<modules>
-	        <module>kernel-core</module>
-		<module>kernel-logger-logback</module>
+	    <module>kernel-core</module>
+		<!-- <module>kernel-logger-logback</module>
 		<module>kernel-auth-adapter</module>
 		<module>kernel-dataaccess-hibernate</module>
 		<module>kernel-auditmanager-api</module>
@@ -169,7 +169,7 @@
 		<module>kernel-biometrics-api</module>
 		<module>kernel-biosdk-provider</module>
 		<module>object-store</module>
-		<module>keys-generator</module>
+		<module>keys-generator</module> -->
 	</modules>
 
 	
