@@ -16,10 +16,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.amazonaws.ClientConfiguration;
@@ -76,7 +78,7 @@ public class S3Adapter implements ObjectStoreAdapter {
     private boolean useAccountAsBucketname;
 
     private int retry = 0;
-    
+
     private AmazonS3 connection = null;
 
     @Override
@@ -90,8 +92,8 @@ public class S3Adapter implements ObjectStoreAdapter {
     		 finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
     		 bucketName=container;
     	}
-    	
-        
+
+
         S3Object s3Object = null;
         try {
             s3Object = getConnection(bucketName).getObject(bucketName, finalObjectName);
@@ -127,7 +129,16 @@ public class S3Adapter implements ObjectStoreAdapter {
     		 finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
     		 bucketName=container;
     	}
-        return getConnection(bucketName).doesObjectExist(bucketName,finalObjectName);
+        ObjectMetadata objectMetadata = null;
+    	try {
+            objectMetadata = getConnection(bucketName).getObjectMetadata(bucketName, finalObjectName);
+        } catch (AmazonS3Exception e) {
+    	    if (e.getStatusCode() == HttpStatus.NOT_FOUND.value())
+                LOGGER.error(SESSIONID, REGISTRATIONID, container,"Object not found in object store");
+            else
+                LOGGER.error(SESSIONID, REGISTRATIONID, container,ExceptionUtils.getStackTrace(e));
+        }
+        return objectMetadata != null;
     }
 
     @Override
@@ -145,7 +156,7 @@ public class S3Adapter implements ObjectStoreAdapter {
         if (!connection.doesBucketExistV2(bucketName))
             connection.createBucket(bucketName);
 
-     
+
         connection.putObject(bucketName, finalObjectName, data, null);
         return true;
     }
@@ -167,7 +178,7 @@ public class S3Adapter implements ObjectStoreAdapter {
             ObjectMetadata objectMetadata = new ObjectMetadata();
             //changed usermetadata getting  overrided
             //metadata.entrySet().stream().forEach(m -> objectMetadata.addUserMetadata(m.getKey(), m.getValue() != null ? m.getValue().toString() : null));
-           
+
             s3Object = getConnection(bucketName).getObject(bucketName, finalObjectName);
             if (s3Object.getObjectMetadata() != null && s3Object.getObjectMetadata().getUserMetadata() != null)
                 s3Object.getObjectMetadata().getUserMetadata().entrySet().forEach(m -> objectMetadata.addUserMetadata(m.getKey(), m.getValue()));
@@ -199,7 +210,7 @@ public class S3Adapter implements ObjectStoreAdapter {
    	    
    	   if(useAccountAsBucketname) {
    		  finalObjectName = ObjectStoreUtil.getName(container,source, process, objectName);
-   		
+
    	   }else {
    		 finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
    		}
@@ -274,7 +285,7 @@ public class S3Adapter implements ObjectStoreAdapter {
    		 finalObjectName = ObjectStoreUtil.getName(source, process, objectName);
    	  	 bucketName=container;
    	   }
-     
+
         getConnection(bucketName).deleteObject(bucketName, finalObjectName);
         return true;
     }
@@ -393,7 +404,7 @@ public class S3Adapter implements ObjectStoreAdapter {
 	@Override
 	public Map<String, String> addTags(String account, String container, Map<String, String> tags) {
 		try {
-	
+
         	 String bucketName=null;
         	 String finalObjectName=null;
         	if(useAccountAsBucketname) {
@@ -406,12 +417,12 @@ public class S3Adapter implements ObjectStoreAdapter {
 			AmazonS3 connection = getConnection(bucketName);
 			if (!connection.doesBucketExistV2(bucketName))
 	            connection.createBucket(bucketName);
-			
+
 			Map<String, String> existingMetadata=getTags(account, container);
 			if(!connection.doesObjectExist(bucketName, finalObjectName)) {
 				connection.putObject(bucketName, finalObjectName, "");
 			}
-			
+
 			tags.entrySet().stream()
 					.forEach(m -> existingMetadata.put(m.getKey(), m.getValue() != null ? m.getValue() : null));
 			List<Tag> tagSet=new ArrayList<Tag>();
@@ -419,10 +430,10 @@ public class S3Adapter implements ObjectStoreAdapter {
 				tagSet.add(new Tag(entry.getKey(), entry.getValue()));
 			}
 			ObjectTagging objectTagging=new ObjectTagging(tagSet);
-			
+
 			SetObjectTaggingRequest setObjectTaggingRequest=new SetObjectTaggingRequest(bucketName,finalObjectName,objectTagging);
 			connection.setObjectTagging(setObjectTaggingRequest);
-			
+
 
 		} catch (Exception e) {
 			LOGGER.error(SESSIONID, REGISTRATIONID, "Exception occured while addTags for : " + container,
@@ -437,7 +448,7 @@ public class S3Adapter implements ObjectStoreAdapter {
 	public Map<String, String> getTags(String account, String container) {
 		Map<String, String> objectTags = new HashMap<String, String>();
 		try {
-	
+
 		 String bucketName=null;
 		 String finalObjectName=null;
      	if(useAccountAsBucketname) {
@@ -449,11 +460,11 @@ public class S3Adapter implements ObjectStoreAdapter {
      	}
 		AmazonS3 connection = getConnection(bucketName);
 		if(connection.doesObjectExist(bucketName, finalObjectName)) {
-		
+
 		GetObjectTaggingRequest getObjectTaggingRequest=new GetObjectTaggingRequest(bucketName,finalObjectName);
-		
+
 			GetObjectTaggingResult getObjectTaggingResult=connection.getObjectTagging(getObjectTaggingRequest);
-		
+
 		if(getObjectTaggingResult!=null) {
 			List<Tag> tagSet = getObjectTaggingResult.getTagSet();
 			if (tagSet != null) {
@@ -471,7 +482,7 @@ public class S3Adapter implements ObjectStoreAdapter {
 			throw new ObjectStoreAdapterException(OBJECT_STORE_NOT_ACCESSIBLE.getErrorCode(),
 					OBJECT_STORE_NOT_ACCESSIBLE.getErrorMessage(), e);
 		}
-	
+
 	}
 
 }
