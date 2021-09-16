@@ -123,9 +123,9 @@
 
 	<modules>
 	    <module>kernel-core</module>
-		<!-- <module>kernel-logger-logback</module>
+		<!-- <module>kernel-logger-logback</module>  -->
 		<module>kernel-auth-adapter</module>
-		<module>kernel-dataaccess-hibernate</module>
+		<!-- <module>kernel-dataaccess-hibernate</module>
 		<module>kernel-auditmanager-api</module>
 		<module>kernel-idgenerator-prid</module>
 		<module>kernel-idgenerator-vid</module>

@@ -9,7 +9,7 @@
 	<artifactId>kernel-auth-adapter</artifactId>
 	<packaging>jar</packaging>
 	<description>auth adapter reference implementation </description>
-	<version>1.1.5.3</version>
+	<version>1.1.5.5-SNAPSHOT</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -229,7 +229,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>1.1.5.3</version>
+			<version>1.1.5.5-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
@@ -271,6 +271,12 @@
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-logger-logback</artifactId>
 			<version>1.1.5.3</version>
+			<exclusions>
+				<exclusion>
+					<groupId>io.mosip.kernel</groupId>
+					<artifactId>kernel-core</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>io.vertx</groupId>
