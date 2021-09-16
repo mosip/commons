@@ -18,7 +18,14 @@ import io.mosip.kernel.core.auditmanager.exception.AuditManagerException;
  * @since 1.0.0
  *
  */
+
 public class AuditUtils {
+
+	private static ValidatorFactory factory = null;
+
+	static {
+		factory = Validation.buildDefaultValidatorFactory();
+	}
 
 	/**
 	 * Private constructor for AuditUtils
@@ -33,21 +40,14 @@ public class AuditUtils {
 	 * @param auditRequest The audit request
 	 */
 	public static void validateAuditRequest(AuditRequestDto auditRequest) {
-		ValidatorFactory factory = null;
-		try {
-			factory = Validation.buildDefaultValidatorFactory();
-			Validator validator = factory.getValidator();
 
-			Set<ConstraintViolation<AuditRequestDto>> violations = validator.validate(auditRequest);
+		Validator validator = factory.getValidator();
+		Set<ConstraintViolation<AuditRequestDto>> violations = validator.validate(auditRequest);
 
-			if (!violations.isEmpty()) {
-				throw new AuditManagerException(AuditErrorCodes.HANDLEREXCEPTION.getErrorCode(),
-						AuditErrorCodes.HANDLEREXCEPTION.getErrorMessage());
-			}
-		} finally {
-			if (factory != null) {
-				factory.close();
-			}
+		if (!violations.isEmpty()) {
+			throw new AuditManagerException(AuditErrorCodes.HANDLEREXCEPTION.getErrorCode(),
+					AuditErrorCodes.HANDLEREXCEPTION.getErrorMessage());
 		}
+
 	}
 }
