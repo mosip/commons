@@ -23,9 +23,7 @@ public class BioProviderUtil {
 			String instanceKey = modalityParams.entrySet().stream().sorted(Map.Entry.comparingByKey())
 					.map(entry -> entry.getKey() + "=" + entry.getValue()).collect(Collectors.joining("-"));
 			if (sdkInstances.containsKey(instanceKey)) {
-				LOGGER.debug(ProviderConstants.LOGGER_SESSIONID, ProviderConstants.LOGGER_IDTYPE, "GET SDK INSTANCE",
-						"SDK instance reused for modality class >>> "
-								+ modalityParams.get(ProviderConstants.CLASSNAME));
+				LOGGER.debug("SDK instance reused for modality class >>> {}", modalityParams.get(ProviderConstants.CLASSNAME));
 				return sdkInstances.get(instanceKey);
 			}
 			Class<?> object = Class.forName(modalityParams.get(ProviderConstants.CLASSNAME));
@@ -38,8 +36,7 @@ public class BioProviderUtil {
 			if (result.isPresent()) {
 				Constructor<?> constructor = result.get();
 				constructor.setAccessible(true);
-				LOGGER.debug(ProviderConstants.LOGGER_SESSIONID, ProviderConstants.LOGGER_IDTYPE, "GET SDK INSTANCE",
-						"SDK instance created with params >>> " + modalityParams);
+				LOGGER.debug("SDK instance created with params >>> {}", modalityParams);
 				Object newInstance = constructor.newInstance(args);
 				sdkInstances.put(instanceKey, newInstance);
 				return newInstance;
