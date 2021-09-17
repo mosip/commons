@@ -279,7 +279,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.22.0</version>
 				<configuration>
-					<skipTests>false</skipTests>
+					<skipTests>${skipTests}</skipTests>
 					<skip>false</skip>
 					<argLine>
 						${argLine} --add-opens
