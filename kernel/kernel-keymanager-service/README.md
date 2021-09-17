@@ -18,7 +18,9 @@ Keymanager interfaces with key store like Hardware Security Module (HSM) and Dat
 1. ROOT key 
 1. Module keys
 1. Encryption keys
+
 |Key|Location|Issuer|
+|---|---|---|
 |ROOT|HSM|Self signed|
 |Module|HSM|ROOT|
 |Encryption|Database|Module|
