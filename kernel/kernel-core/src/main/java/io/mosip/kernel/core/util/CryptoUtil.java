@@ -105,7 +105,7 @@ public class CryptoUtil {
 		try {
 			return Base64.getUrlDecoder().decode(data);
 		} catch (IllegalArgumentException exception) {
-			return Base64.getDecoder().decode(data.getBytes());
+			return Base64.getDecoder().decode(data);
 		}
 	}
 
@@ -120,7 +120,7 @@ public class CryptoUtil {
 		if (EmptyCheckUtils.isNullEmpty(data)) {
 			return null;
 		}
-		return Base64.getUrlDecoder().decode(data.getBytes());
+		return Base64.getUrlDecoder().decode(data);
 	}
 
 	public static String encodeToPlainBase64(byte[] data) {
@@ -134,7 +134,7 @@ public class CryptoUtil {
 		if (EmptyCheckUtils.isNullEmpty(data)) {
 			return null;
 		}
-		return Base64.getDecoder().decode(data.getBytes());
+		return Base64.getDecoder().decode(data);
 	}
 
 	/**
