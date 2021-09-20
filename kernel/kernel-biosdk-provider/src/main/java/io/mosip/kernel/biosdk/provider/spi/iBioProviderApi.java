@@ -50,7 +50,7 @@ public interface iBioProviderApi {
 	 * @return
 	 */
 	float[] getSegmentQuality(@MetricTag(value = "modality",
-			extractor = "String[] names = new String[arg.length];for(int i=0;i<arg.length;i++){ names[i] = " +
+			extractor = "int size = arg.length; String[] names = new String[size];for(int i=0;i<size;i++){ names[i] = " +
 					"arg[i].bdbInfo.getSubtype().toString().replaceAll('\\\\[|\\\\]|,','');}" +
 					"return java.util.Arrays.toString(names);") BIR[] sample,
 							  Map<String, String> flags);
@@ -61,7 +61,7 @@ public interface iBioProviderApi {
 	 * @return
 	 */
 	Map<BiometricType, Float> getModalityQuality(@MetricTag(value = "modality",
-			extractor = "String[] names = new String[arg.length];for(int i=0;i<arg.length;i++){ names[i] = " +
+			extractor = "int size = arg.length; String[] names = new String[size];for(int i=0;i<size;i++){ names[i] = " +
 					"arg[i].bdbInfo.getSubtype().toString().replaceAll('\\\\[|\\\\]|,','');}" +
 					"return java.util.Arrays.toString(names);") BIR[] sample, Map<String, String> flags);
 	
@@ -72,7 +72,7 @@ public interface iBioProviderApi {
 	 * @return
 	 */
 	List<BIR> extractTemplate(@MetricTag(value = "modality",
-			extractor = "String[] names = new String[arg.size()];for(int i=0;i<arg.size();i++){ names[i] = " +
+			extractor = "int size = arg.size(); String[] names = new String[size];for(int i=0;i<size;i++){ names[i] = " +
 					"arg.get(i).bdbInfo.getSubtype().toString().replaceAll('\\\\[|\\\\]|,','');}" +
 					"return java.util.Arrays.toString(names);") List<BIR> sample, Map<String, String> flags);
 
