@@ -99,27 +99,42 @@ public class CryptoUtil {
 	 */
 	@Deprecated(since = "1.1.5.5", forRemoval = true)
 	public static byte[] decodeBase64(String data) {
+		if (EmptyCheckUtils.isNullEmpty(data)) {
+			return null;
+		}
 		try {
-			return Base64.getUrlDecoder().decode(data.getBytes());
+			return Base64.getUrlDecoder().decode(data);
 		} catch (IllegalArgumentException exception) {
-			return Base64.getDecoder().decode(data.getBytes());
+			return Base64.getDecoder().decode(data);
 		}
 	}
 
 	public static String encodeToURLSafeBase64(byte[] data) {
+		if (EmptyCheckUtils.isNullEmpty(data)) {
+			return null;
+		}
 		return Base64.getUrlEncoder().encodeToString(data);
 	}
 
 	public static byte[] decodeURLSafeBase64(String data) {
-		return Base64.getUrlDecoder().decode(data.getBytes());
+		if (EmptyCheckUtils.isNullEmpty(data)) {
+			return null;
+		}
+		return Base64.getUrlDecoder().decode(data);
 	}
 
 	public static String encodeToPlainBase64(byte[] data) {
+		if (EmptyCheckUtils.isNullEmpty(data)) {
+			return null;
+		}
 		return Base64.getEncoder().encodeToString(data);
 	}
 
 	public static byte[] decodePlainBase64(String data) {
-		return Base64.getDecoder().decode(data.getBytes());
+		if (EmptyCheckUtils.isNullEmpty(data)) {
+			return null;
+		}
+		return Base64.getDecoder().decode(data);
 	}
 
 	/**

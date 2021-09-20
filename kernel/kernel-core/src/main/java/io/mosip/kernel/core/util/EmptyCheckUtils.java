@@ -50,6 +50,17 @@ public final class EmptyCheckUtils {
 	}
 
 	/**
+	 * This method is used to check given <code>byte[]</code> is null or is Empty.
+	 * 
+	 * @param array of type byte.
+	 * @return true if given <code>byte[]</code> is null or does not contains any
+	 *         element inside it.
+	 */
+	public static boolean isNullEmpty(byte[] array) {
+		return array == null || array.length == 0;
+	}
+
+	/**
 	 * This method is used to check given <code>map</code> is null or is Empty.
 	 * 
 	 * @param map is of type java.util.Map
