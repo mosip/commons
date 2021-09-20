@@ -70,7 +70,7 @@ public class CryptoUtil {
 	 * @param data data to encode
 	 * @return encoded data
 	 */
-	@Deprecated(since = "1.1.5", forRemoval = true)
+	@Deprecated(since = "1.1.5.5", forRemoval = true)
 	public static String encodeBase64(byte[] data) {
 		return Base64.getUrlEncoder().encodeToString(data);
 	}
@@ -81,7 +81,7 @@ public class CryptoUtil {
 	 * @param data data to encode
 	 * @return encoded data
 	 */
-	@Deprecated(since = "1.1.5", forRemoval = true)
+	@Deprecated(since = "1.1.5.5", forRemoval = true)
 	public static String encodeBase64String(byte[] data) {
 		return Base64.getEncoder().encodeToString(data);
 	}
@@ -92,11 +92,12 @@ public class CryptoUtil {
 	 * @param data data to decode
 	 * @return decoded data
 	 */
-	/* This impl was a upgrade from apache coded to java 8 as apache has a single decoder  
-	 * for decoding both url safe and standard base64 encoding but java 8 has two decoders 
-	 * we are follwing this approach.
+	/*
+	 * This impl was a upgrade from apache coded to java 8 as apache has a single
+	 * decoder for decoding both url safe and standard base64 encoding but java 8
+	 * has two decoders we are follwing this approach.
 	 */
-	@Deprecated(since = "1.1.5", forRemoval = true)
+	@Deprecated(since = "1.1.5.5", forRemoval = true)
 	public static byte[] decodeBase64(String data) {
 		try {
 			return Base64.getUrlDecoder().decode(data.getBytes());
@@ -105,19 +106,19 @@ public class CryptoUtil {
 		}
 	}
 
-	public static String base64EncodeURLSafe(byte[] data) {
+	public static String encodeToURLSafeBase64(byte[] data) {
 		return Base64.getUrlEncoder().encodeToString(data);
 	}
 
-	public static byte[] base64DecodeURLSafe(String data) {
+	public static byte[] decodeURLSafeBase64(String data) {
 		return Base64.getUrlDecoder().decode(data.getBytes());
 	}
 
-	public static String base64Encode(byte[] data) {
+	public static String encodeToPlainBase64(byte[] data) {
 		return Base64.getEncoder().encodeToString(data);
 	}
 
-	public static byte[] base64Decode(String data) {
+	public static byte[] decodePlainBase64(String data) {
 		return Base64.getDecoder().decode(data.getBytes());
 	}
 
@@ -148,5 +149,4 @@ public class CryptoUtil {
 		}
 		return Hex.encodeHexString(HMACUtils.generateHash(combinedPlainTextBytes)).replaceAll("..(?!$)", "$0:");
 	}
-
 }
