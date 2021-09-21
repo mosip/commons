@@ -17,10 +17,7 @@
 -- DROP TABLE IF EXISTS master.user_detail CASCADE;
 CREATE TABLE master.user_detail(
 	id character varying(256) NOT NULL,
-	uin character varying(28),
 	name character varying(64) ,
-	email character varying(256),
-	mobile character varying(16),
 	status_code character varying(36),
 	regcntr_id character varying(10),
 	lang_code character varying(3) ,
@@ -41,15 +38,7 @@ COMMENT ON TABLE master.user_detail IS 'User Detail : List of applicatgion users
 -- ddl-end --
 COMMENT ON COLUMN master.user_detail.id IS 'User ID : Unique ID generated / assigned for a user';
 -- ddl-end --
-COMMENT ON COLUMN master.user_detail.uin IS 'UIN: UIN of the user. Typically this will be used for bio authentication';
--- ddl-end --
 COMMENT ON COLUMN master.user_detail.name IS 'Name : User name';
--- ddl-end --
-COMMENT ON COLUMN master.user_detail.email IS 'Email: Email address of the user';
--- ddl-end --
-COMMENT ON COLUMN master.user_detail.mobile IS 'Mobile: Mobile number of the user';
--- ddl-end --
-COMMENT ON COLUMN master.user_detail.status_code IS 'Status Code: User status. Refers to master.status_master.code';
 -- ddl-end --
 COMMENT ON COLUMN master.user_detail.regcntr_id IS 'Registration Center ID : registration center id refers to master.registration_center.id';
 -- ddl-end --

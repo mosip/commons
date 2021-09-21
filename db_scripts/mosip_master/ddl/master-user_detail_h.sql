@@ -17,10 +17,7 @@
 -- DROP TABLE IF EXISTS master.user_detail_h CASCADE;
 CREATE TABLE master.user_detail_h(
 	id character varying(256) NOT NULL,
-	uin character varying(28),
 	name character varying(64) NOT NULL,
-	email character varying(256),
-	mobile character varying(16),
 	status_code character varying(36),
 	regcntr_id character varying(10),
 	lang_code character varying(3),
@@ -42,13 +39,7 @@ COMMENT ON TABLE master.user_detail_h IS 'User Detail History : This to track ch
 -- ddl-end --
 COMMENT ON COLUMN master.user_detail_h.id IS 'User ID : Unique ID generated / assigned for a user';
 -- ddl-end --
-COMMENT ON COLUMN master.user_detail_h.uin IS 'UIN: UIN of the user. Typically this will be used for bio authentication';
--- ddl-end --
 COMMENT ON COLUMN master.user_detail_h.name IS 'Name : User name';
--- ddl-end --
-COMMENT ON COLUMN master.user_detail_h.email IS 'Email: Email address of the user';
--- ddl-end --
-COMMENT ON COLUMN master.user_detail_h.mobile IS 'Mobile: Mobile number of the user';
 -- ddl-end --
 COMMENT ON COLUMN master.user_detail_h.status_code IS 'Status Code: User status. Refers to master.status_master.code';
 -- ddl-end --
