@@ -7,6 +7,7 @@ import io.mosip.kernel.biometrics.constant.BiometricFunction;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.core.bioapi.exception.BiometricException;
+import io.mosip.kernel.logger.logback.util.MetricTag;
 
 
 public interface iBioProviderApi {
@@ -26,7 +27,9 @@ public interface iBioProviderApi {
 	 * @param modality
 	 * @return
 	 */
-	boolean verify(List<BIR> sample, List<BIR> record, BiometricType modality, Map<String, String> flags);	
+	boolean verify(List<BIR> sample, List<BIR> record,
+				   @MetricTag(value = "modality", extractor = "arg.value") BiometricType modality,
+				   Map<String, String> flags);
 	
 	/**
 	 * 1:n match
@@ -36,7 +39,9 @@ public interface iBioProviderApi {
 	 * @param modality
 	 * @return
 	 */
-	Map<String, Boolean> identify(List<BIR> sample, Map<String, List<BIR>> gallery, BiometricType modality, Map<String, String> flags);
+	Map<String, Boolean> identify(List<BIR> sample, Map<String, List<BIR>> gallery,
+								  @MetricTag(value = "modality", extractor = "arg.value") BiometricType modality,
+								  Map<String, String> flags);
 	
 	
 	/**
@@ -44,14 +49,21 @@ public interface iBioProviderApi {
 	 * @param sample
 	 * @return
 	 */
-	float[] getSegmentQuality(BIR[] sample, Map<String, String> flags);
+	float[] getSegmentQuality(@MetricTag(value = "modality",
+			extractor = "int size = arg.length; String[] names = new String[size];for(int i=0;i<size;i++){ names[i] = " +
+					"arg[i].bdbInfo.getSubtype().toString().replaceAll('\\\\[|\\\\]|,','');}" +
+					"return java.util.Arrays.toString(names);") BIR[] sample,
+							  Map<String, String> flags);
 	
 	/**
 	 * 
 	 * @param sample
 	 * @return
 	 */
-	Map<BiometricType, Float> getModalityQuality(BIR[] sample, Map<String, String> flags);
+	Map<BiometricType, Float> getModalityQuality(@MetricTag(value = "modality",
+			extractor = "int size = arg.length; String[] names = new String[size];for(int i=0;i<size;i++){ names[i] = " +
+					"arg[i].bdbInfo.getSubtype().toString().replaceAll('\\\\[|\\\\]|,','');}" +
+					"return java.util.Arrays.toString(names);") BIR[] sample, Map<String, String> flags);
 	
 	
 	/**
@@ -59,6 +71,9 @@ public interface iBioProviderApi {
 	 * @param sample
 	 * @return
 	 */
-	List<BIR> extractTemplate(List<BIR> sample, Map<String, String> flags);
+	List<BIR> extractTemplate(@MetricTag(value = "modality",
+			extractor = "int size = arg.size(); String[] names = new String[size];for(int i=0;i<size;i++){ names[i] = " +
+					"arg.get(i).bdbInfo.getSubtype().toString().replaceAll('\\\\[|\\\\]|,','');}" +
+					"return java.util.Arrays.toString(names);") List<BIR> sample, Map<String, String> flags);
 
 }

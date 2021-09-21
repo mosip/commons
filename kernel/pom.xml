@@ -116,16 +116,16 @@
  -->
 
 
-		<sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/*Config.java,**/*BootApplication.java,**/*VertxApplication.java,**/cbeffutil/**,**/*Utils.java,**/*Validator.java,**/*Helper.java,**/verticle/**,**/VidWriter.java/**,**/spi/**,"**/LocationServiceImpl.java","**/RegistrationCenterMachineServiceImpl.java","**/RegistrationCenterServiceImpl.java","**/proxy/**"</sonar.coverage.exclusions>
+		<sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/verticle/**,**/spi/**,"**/proxy/**"</sonar.coverage.exclusions>
 		<sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**</sonar.cpd.exclusions>
 	</properties>
 
 	<modules>
 	        <module>kernel-core</module>
 		<module>kernel-logger-logback</module>
-		<module>kernel-auth-adapter</module>
+<!--		<module>kernel-auth-adapter</module>-->
 		<module>kernel-dataaccess-hibernate</module>
-		<module>kernel-auditmanager-api</module>
+<!--		<module>kernel-auditmanager-api</module>-->
 		<module>kernel-idgenerator-prid</module>
 		<module>kernel-idgenerator-vid</module>
 		<module>kernel-idgenerator-tokenid</module>
@@ -152,20 +152,20 @@
 		<module>kernel-bioapi-provider</module>
 		<module>kernel-authcodeflowproxy-api</module>
 		<module>kernel-websubclient-api</module>
-		<module>kernel-auditmanager-service</module>
+<!--		<module>kernel-auditmanager-service</module>-->
 		<module>kernel-otpmanager-service</module>
 		<module>kernel-notification-service</module>
-		<module>kernel-auth-service</module>
+<!--		<module>kernel-auth-service</module>-->
 		<module>kernel-ridgenerator-service</module>
-		<module>kernel-keymanager-service</module>
+<!--		<module>kernel-keymanager-service</module>-->
 		<module>kernel-idgenerator-service</module>
 		<module>kernel-pridgenerator-service</module>
 		<module>kernel-salt-generator</module>
 		<module>kernel-biometrics-api</module>
 		<module>kernel-biosdk-provider</module>
 		<module>object-store</module>
-		<module>keys-generator</module>
-		<module>keys-migrator</module>
+<!--		<module>keys-generator</module>-->
+<!--		<module>keys-migrator</module>-->
 		<module>kernel-demographics-api</module>
 	</modules>
 

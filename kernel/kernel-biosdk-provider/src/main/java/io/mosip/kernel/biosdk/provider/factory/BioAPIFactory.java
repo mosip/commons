@@ -1,11 +1,11 @@
 package io.mosip.kernel.biosdk.provider.factory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.PostConstruct;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.env.Environment;
@@ -16,25 +16,27 @@ import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biosdk.provider.spi.iBioProviderApi;
 import io.mosip.kernel.biosdk.provider.util.BioSDKProviderLoggerFactory;
 import io.mosip.kernel.biosdk.provider.util.ErrorCode;
-import io.mosip.kernel.biosdk.provider.util.ProviderConstants;
 import io.mosip.kernel.core.bioapi.exception.BiometricException;
 import io.mosip.kernel.core.logger.spi.Logger;
 
-@ConfigurationProperties(prefix = "mosip.biometric.sdk.provider")
+@ConfigurationProperties(prefix = "mosip.biometric.sdk.providers")
 @Component
 public class BioAPIFactory {
 	
-	private static final Logger LOGGER = BioSDKProviderLoggerFactory.getLogger(BioAPIFactory.class);		
+	private static final Logger LOGGER = BioSDKProviderLoggerFactory.getLogger(BioAPIFactory.class);
 
-	private Map<String, String> finger;
-	
-	private Map<String, String> iris;
-	
-	private Map<String, String> face;
-	
-	@Autowired
-	private Environment environment;
-	
+	@Getter
+	@Setter
+	private Map<String, Map<String, String>> finger;
+
+	@Getter
+	@Setter
+	private Map<String, Map<String, String>> iris;
+
+	@Getter
+	@Setter
+	private Map<String, Map<String, String>> face;
+
 	@Autowired
 	private List<iBioProviderApi> providerApis;
 
@@ -48,30 +50,50 @@ public class BioAPIFactory {
 	public void initializeBioAPIProviders() throws BiometricException {
 		if(providerApis == null || providerApis.isEmpty()) {
 			throw new BiometricException(ErrorCode.NO_PROVIDERS.getErrorCode(), ErrorCode.NO_PROVIDERS.getErrorMessage());
-		}		
-		
-		Map<BiometricType, Map<String, String>> params = new HashMap<>();
-		params.put(BiometricType.FINGER, finger);
-		params.put(BiometricType.IRIS, iris);
-		params.put(BiometricType.FACE, face);
-		
-		LOGGER.info(ProviderConstants.LOGGER_SESSIONID, ProviderConstants.LOGGER_IDTYPE, "initializeBioAPIProviders invoked", 
-				"With params >> " + params);
-		
-		if(params.isEmpty())
-			throw new BiometricException(ErrorCode.NO_SDK_CONFIG.getErrorCode(), ErrorCode.NO_SDK_CONFIG.getErrorMessage());
-		
-		//pass params per modality to each provider, each providers will initialize supported SDK's
-		for(iBioProviderApi provider : providerApis) {
-			Map<BiometricType, List<BiometricFunction>> supportedModalities = provider.init(params);
-			if(supportedModalities != null && !supportedModalities.isEmpty()) {
-				supportedModalities.forEach((modality, functions) -> {
-					functions.forEach(function -> {
-						addToRegistry(modality, function, provider);
-					});					
-				});
+		}
+
+		List<String> vendorIds = new ArrayList<>();
+		vendorIds.addAll(this.finger == null ? Collections.EMPTY_LIST : this.finger.keySet());
+		vendorIds.addAll(this.iris == null ? Collections.EMPTY_LIST : this.iris.keySet());
+		vendorIds.addAll(this.face == null ? Collections.EMPTY_LIST : this.face.keySet());
+
+		for (String vendorId : new HashSet<>(vendorIds)) {
+
+			if(isProviderRegistryFilled()) {
+				LOGGER.info("Provider registry is already filled : {}", providerRegistry.keySet());
+				break;
+			}
+
+			Map<BiometricType, Map<String, String>> params = new HashMap<>();
+			params.put(BiometricType.FINGER, getFingerEntry(vendorId));
+			params.put(BiometricType.IRIS, getIrisEntry(vendorId));
+			params.put(BiometricType.FACE, getFaceEntry(vendorId));
+
+			LOGGER.info("Starting initialization for vendor {} with params >> {}", vendorId, params);
+
+			if(params.isEmpty())
+				throw new BiometricException(ErrorCode.NO_SDK_CONFIG.getErrorCode(), ErrorCode.NO_SDK_CONFIG.getErrorMessage());
+
+			//pass params per modality to each provider, each providers will initialize supported SDK's
+			for(iBioProviderApi provider : providerApis) {
+				try {
+					Map<BiometricType, List<BiometricFunction>> supportedModalities = provider.init(params);
+					if(supportedModalities != null && !supportedModalities.isEmpty()) {
+						supportedModalities.forEach((modality, functions) -> {
+							functions.forEach(function -> {
+								addToRegistry(modality, function, provider);
+							});
+						});
+					}
+				} catch (BiometricException ex) {
+					LOGGER.error("Failed to initialize SDK instance", ex);
+				}
 			}
 		}
+
+		if(!isProviderRegistryFilled())
+			throw new BiometricException(ErrorCode.SDK_REGISTRY_EMPTY.getErrorCode(),
+					ErrorCode.SDK_REGISTRY_EMPTY.getErrorMessage());
 	}
 	
 	/**
@@ -95,15 +117,35 @@ public class BioAPIFactory {
 		providerRegistry.get(modality).put(function, provider);
 	}
 
-	public void setFinger(Map<String, String> finger) {
-		this.finger = finger;
+	private boolean isProviderRegistryFilled() {
+		if(isModalityConfigured(BiometricType.FINGER)  && !providerRegistry.containsKey(BiometricType.FINGER))
+			return false;
+
+		if(isModalityConfigured(BiometricType.IRIS) && !providerRegistry.containsKey(BiometricType.IRIS))
+			return false;
+
+		if(isModalityConfigured(BiometricType.FACE) && !providerRegistry.containsKey(BiometricType.FACE))
+			return false;
+
+		return true;
 	}
 
-	public void setIris(Map<String, String> iris) {
-		this.iris = iris;
+	private boolean isModalityConfigured(BiometricType modality) {
+		switch (modality) {
+			case FINGER: return this.finger != null && !this.finger.isEmpty();
+			case IRIS: return this.iris != null && !this.iris.isEmpty();
+			case FACE: return this.face != null && !this.face.isEmpty();
+		}
+		return false;
 	}
 
-	public void setFace(Map<String, String> face) {
-		this.face = face;
+	private Map getFingerEntry(String key) {
+		return this.finger == null ? Collections.EMPTY_MAP : this.finger.getOrDefault(key, Collections.EMPTY_MAP);
+	}
+	private Map getIrisEntry(String key) {
+		return this.iris == null ? Collections.EMPTY_MAP : this.iris.getOrDefault(key, Collections.EMPTY_MAP);
+	}
+	private Map getFaceEntry(String key) {
+		return this.face == null ? Collections.EMPTY_MAP : this.face.getOrDefault(key, Collections.EMPTY_MAP);
 	}
 }

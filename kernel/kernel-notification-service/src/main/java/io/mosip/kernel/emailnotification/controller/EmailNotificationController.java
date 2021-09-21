@@ -37,8 +37,9 @@ public class EmailNotificationController {
 	 * @param attachments the attachments.
 	 * @return the dto response.
 	 */
-	@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','AUTH','ZONAL_ADMIN','PRE_REGISTRATION_ADMIN','PRE_REGISTRATION_ADMIN','RESIDENT')")
+	//@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','AUTH','ZONAL_ADMIN','PRE_REGISTRATION_ADMIN','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostemailsend())")
 	@PostMapping(value = "/email/send", consumes = "multipart/form-data")
 	public @ResponseBody ResponseWrapper<ResponseDto> sendEMail(String[] mailTo, String[] mailCc, String mailSubject,
 			String mailContent, MultipartFile[] attachments) {

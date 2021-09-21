@@ -35,9 +35,11 @@ import io.mosip.kernel.websub.api.constants.WebSubClientErrorCode;
 import io.mosip.kernel.websub.api.exception.WebSubClientException;
 import io.mosip.kernel.websub.api.model.FailedContentRequest;
 import io.mosip.kernel.websub.api.model.FailedContentResponse;
+import io.mosip.kernel.websub.api.model.HubResponse;
 import io.mosip.kernel.websub.api.model.SubscriptionChangeRequest;
 import io.mosip.kernel.websub.api.model.SubscriptionChangeResponse;
 import io.mosip.kernel.websub.api.model.UnsubscriptionRequest;
+import io.mosip.kernel.websub.api.util.ParseUtil;
 
 /**
  * This class is responsible for all the specification stated in
@@ -92,7 +94,20 @@ public class SubscriberClientImpl
 			subscriptionChangeResponse.setHubURL(subscriptionRequest.getHubURL());
 			subscriptionChangeResponse.setTopic(subscriptionRequest.getTopic());
 			return subscriptionChangeResponse;
-		} else {
+		} else if (response != null && response.getStatusCode() == HttpStatus.OK) {
+			HubResponse hubResponse = ParseUtil.parseHubResponse(response.getBody());
+			if (hubResponse.getHubResult().equals("accepted")) {
+				LOGGER.info("subscribed for topic {} at hub", subscriptionRequest.getTopic());
+				SubscriptionChangeResponse subscriptionChangeResponse = new SubscriptionChangeResponse();
+				subscriptionChangeResponse.setHubURL(subscriptionRequest.getHubURL());
+				subscriptionChangeResponse.setTopic(subscriptionRequest.getTopic());
+				return subscriptionChangeResponse;
+			} else {
+				throw new WebSubClientException(WebSubClientErrorCode.REGISTER_ERROR.getErrorCode(),
+						WebSubClientErrorCode.REGISTER_ERROR.getErrorMessage() + hubResponse.getErrorReason());
+			}
+
+		}else {
 			throw new WebSubClientException(WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorCode(),
 					WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorMessage() + response.getBody());
 		}
@@ -161,7 +176,20 @@ public class SubscriberClientImpl
 			subscriptionChangeResponse.setHubURL(unsubscriptionRequest.getHubURL());
 			subscriptionChangeResponse.setTopic(unsubscriptionRequest.getTopic());
 			return subscriptionChangeResponse;
-		} else {
+		} else if (response != null && response.getStatusCode() == HttpStatus.OK) {
+			HubResponse hubResponse = ParseUtil.parseHubResponse(response.getBody());
+			if (hubResponse.getHubResult().equals("accepted")) {
+				LOGGER.info("unsubscribed for topic {} at hub", unsubscriptionRequest.getTopic());
+				SubscriptionChangeResponse subscriptionChangeResponse = new SubscriptionChangeResponse();
+				subscriptionChangeResponse.setHubURL(unsubscriptionRequest.getHubURL());
+				subscriptionChangeResponse.setTopic(unsubscriptionRequest.getTopic());
+				return subscriptionChangeResponse;
+			} else {
+				throw new WebSubClientException(WebSubClientErrorCode.REGISTER_ERROR.getErrorCode(),
+						WebSubClientErrorCode.REGISTER_ERROR.getErrorMessage() + hubResponse.getErrorReason());
+			}
+
+		}else {
 			throw new WebSubClientException(WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorCode(),
 					WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorMessage() + response.getBody());
 		}
