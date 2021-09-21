@@ -2,7 +2,8 @@ package io.mosip.kernel.core.util;
 
 import static java.util.Arrays.copyOfRange;
 
-import org.apache.commons.codec.binary.Base64;
+import java.util.Base64;
+
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -69,8 +70,9 @@ public class CryptoUtil {
 	 * @param data data to encode
 	 * @return encoded data
 	 */
+	@Deprecated(since = "1.1.5.5", forRemoval = true)
 	public static String encodeBase64(byte[] data) {
-		return Base64.encodeBase64URLSafeString(data);
+		return Base64.getUrlEncoder().encodeToString(data);
 	}
 
 	/**
@@ -79,8 +81,9 @@ public class CryptoUtil {
 	 * @param data data to encode
 	 * @return encoded data
 	 */
+	@Deprecated(since = "1.1.5.5", forRemoval = true)
 	public static String encodeBase64String(byte[] data) {
-		return Base64.encodeBase64String(data);
+		return Base64.getEncoder().encodeToString(data);
 	}
 
 	/**
@@ -89,8 +92,49 @@ public class CryptoUtil {
 	 * @param data data to decode
 	 * @return decoded data
 	 */
+	/*
+	 * This impl was a upgrade from apache coded to java 8 as apache has a single
+	 * decoder for decoding both url safe and standard base64 encoding but java 8
+	 * has two decoders we are follwing this approach.
+	 */
+	@Deprecated(since = "1.1.5.5", forRemoval = true)
 	public static byte[] decodeBase64(String data) {
-		return Base64.decodeBase64(data);
+		if (EmptyCheckUtils.isNullEmpty(data)) {
+			return null;
+		}
+		try {
+			return Base64.getUrlDecoder().decode(data);
+		} catch (IllegalArgumentException exception) {
+			return Base64.getDecoder().decode(data);
+		}
+	}
+
+	public static String encodeToURLSafeBase64(byte[] data) {
+		if (EmptyCheckUtils.isNullEmpty(data)) {
+			return null;
+		}
+		return Base64.getUrlEncoder().encodeToString(data);
+	}
+
+	public static byte[] decodeURLSafeBase64(String data) {
+		if (EmptyCheckUtils.isNullEmpty(data)) {
+			return null;
+		}
+		return Base64.getUrlDecoder().decode(data);
+	}
+
+	public static String encodeToPlainBase64(byte[] data) {
+		if (EmptyCheckUtils.isNullEmpty(data)) {
+			return null;
+		}
+		return Base64.getEncoder().encodeToString(data);
+	}
+
+	public static byte[] decodePlainBase64(String data) {
+		if (EmptyCheckUtils.isNullEmpty(data)) {
+			return null;
+		}
+		return Base64.getDecoder().decode(data);
 	}
 
 	/**
