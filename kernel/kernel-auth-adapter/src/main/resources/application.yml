@@ -1,0 +1,85 @@
+#Global endpoints to access without authentication
+mosip:
+  admin-master-context: masterdata
+  global:
+    end-points:
+      - /**/assets/**
+      - /**/icons/**
+      - /**/screenshots/**
+      - /favicon**
+      - /**/favicon**
+      - /**/css/**
+      - /**/js/**
+      - /**/error**
+      - /**/webjars/**
+      - /**/v2/api-docs
+      - /**/v3/api-docs
+      - /**/v3/api-docs.yaml
+      - /**/configuration/ui
+      - /**/configuration/security
+      - /**/swagger-resources/**
+      - /**/swagger-ui.html
+      - /**/csrf
+      - /*/
+      - /**/authenticate/**
+      - /**/actuator/**
+      - /**/authmanager/**
+      - /sendOtp
+      - /validateOtp
+      - /invalidateToken
+      - /config
+      - /login
+      - /logout
+      - /validateOTP
+      - /sendOTP
+      - /**/login
+      - /**/login/**
+      - /**/login-redirect/**
+      - /**/logout
+      - /**/h2-console/**
+      - /**/**/license/**
+      - /**/callback/**
+      - /**/authenticate/**
+      - /**/swagger-ui/**
+#AdminMaster endpoints to access without authentication
+  admin-master:
+    end-points:
+      - /**/getApplicationType
+      - /**/applicationtype/{applicationId}/languages
+      - /**/blocklistedwords/{langcode}
+      - /**/documentcategories
+      - /**/documentcategories/{langcode}
+      - /**/documenttypes/{documentcategorycode}/{langcode}
+      - /**/documenttypes/{langcode}
+      - /**/dynamicfields
+      - /**/dynamicfields/distinct
+      - /**/exceptionalholidays/{registrationCenterId}/{languageCode}
+      - /**/gendertypes
+      - /**/gendertypes/{langcode}
+      - /**/gendertypes/validate/{gendername}
+      - /**/idtypes/{langcode}
+      - /**/individualtypes
+      - /**/languages
+      - /**/locations/{langcode}
+      - /**/locations/{locationcode}/{langcode}
+      - /**/locations/info/{locationcode}/{langcode}
+      - /**/locations/locationhierarchy/{hierarchyname}
+      - /**/locations/immediatechildren/{locationcode}/{langcode}
+      - /**/locations/validate/{locationname}
+      - /**/locationHierarchyLevels/{level}/{langcode}
+      - /**/locationHierarchyLevels/{langcode}
+      - /**/templates
+      - /**/templates/{langcode}
+      - /**/templates/{langcode}/{templatetypecode}
+      - /**/templates/templatetypecodes/{code}
+      - /**/templatetypes/{code}/{langcode}
+      - /**/templatetypes/{langcode}
+      - /**/title
+      - /**/title/{lancode}
+      - /**/uispec/{domain}/latest
+      - /**/validdocuments/{languagecode}
+      - /**/validdocuments/{docCategoryCode}/{languagecode}
+      - /**/weekdays/{registrationCenterId}/{langCode}
+      - /**/workingdays/{registrationCenterID}/{langCode}
+      - /**/workingdays/{langCode}
+      - /**/zones/leafs/{langCode}

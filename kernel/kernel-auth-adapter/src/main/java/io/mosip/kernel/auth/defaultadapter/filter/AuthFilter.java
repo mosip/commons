@@ -6,6 +6,9 @@ package io.mosip.kernel.auth.defaultadapter.filter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -15,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -28,6 +32,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import io.mosip.kernel.auth.defaultadapter.config.NoAuthenticationEndPoint;
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterConstant;
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterErrorCode;
 import io.mosip.kernel.auth.defaultadapter.exception.AuthManagerException;
@@ -41,41 +46,40 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
  * @author Ramadurai Saravana Pandian
  * @author Raj Jha
  * @author Urvil Joshi
+ * @author GOVINDARAJ VELU -> End-points modification
  *
  */
 public class AuthFilter extends AbstractAuthenticationProcessingFilter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AuthFilter.class);
 
-	private String[] allowedEndPoints() {
-		return new String[] { "/**/assets/**", "/**/icons/**", "/**/screenshots/**", "/favicon**", "/**/favicon**",
-				"/**/css/**", "/**/js/**", "/**/error**", "/**/webjars/**", "/**/v2/api-docs",
-				"/**/v3/api-docs", "/**/v3/api-docs.yaml", "/**/configuration/ui",
-				"/**/configuration/security", "/**/swagger-resources/**", "/**/swagger-ui.html", "/**/csrf", "/*/",
-				"**/authenticate/**", "/**/actuator/**", "/**/authmanager/**", "/sendOtp", "/validateOtp",
-				"/invalidateToken", "/config", "/login", "/logout", "/validateOTP", "/sendOTP", "/**/login",
-				"/**/login/**","/**/login-redirect/**","/**/logout","/**/h2-console/**","/**/**/license/**",
-				"/**/callback/**", "/**/authenticate/**", "/**/swagger-ui/**"};
+	private NoAuthenticationEndPoint noAuthenticationEndPoint;
 
-	}
-
-	public AuthFilter(RequestMatcher requiresAuthenticationRequestMatcher) {
+	public AuthFilter(RequestMatcher requiresAuthenticationRequestMatcher,
+			NoAuthenticationEndPoint noAuthenticationEndPoint) {
 		super(requiresAuthenticationRequestMatcher);
-		// this.requestMatcher = requiresAuthenticationRequestMatcher;
+		this.noAuthenticationEndPoint = noAuthenticationEndPoint;
 	}
 
 	@Override
 	protected boolean requiresAuthentication(HttpServletRequest request, HttpServletResponse response) {
-		String[] endpoints = allowedEndPoints();
-		for (String pattern : endpoints) {
-			RequestMatcher ignorePattern = new AntPathRequestMatcher(pattern);
-			LOGGER.debug("ignore pattern for " + request.getRequestURI() + " try to match " + pattern);
-			if (ignorePattern.matches(request)) {
-				return false;
-			}
-			LOGGER.debug("ignore pattern match failed for "  + request.getRequestURI() + " try to match " + pattern);
+		boolean isRequiresAuthentication = false;
+		// To check the global end-points
+		if (isPresent(request, this.noAuthenticationEndPoint.getGlobal().getEndPoints())) {
+			return isRequiresAuthentication;
 		}
-		return true;
+		// As the request not a part of the global end-points, check in master data
+		// end-points
+		return request.getRequestURI().contains(this.noAuthenticationEndPoint.getAdminMasterContext())
+				&& request.getMethod().equalsIgnoreCase(HttpMethod.GET.toString())
+				&& isPresent(request, this.noAuthenticationEndPoint.getAdminMaster().getEndPoints())
+						? isRequiresAuthentication
+						: !isRequiresAuthentication;
+	}
+
+	private boolean isPresent(HttpServletRequest request, List<String> endPoints) {
+		return endPoints.stream().filter(pattern -> new AntPathRequestMatcher(pattern).matches(request)).findFirst()
+				.isPresent();
 	}
 
 	@Override
@@ -89,14 +93,14 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
 			if (cookies != null) {
 				for (Cookie cookie : cookies) {
 					if (cookie.getName().contains(AuthAdapterConstant.AUTH_REQUEST_COOOKIE_HEADER)) {
-						LOGGER.debug("extract token from cookie named "  + cookie.getName() );
+						LOGGER.debug("extract token from cookie named " + cookie.getName());
 						token = cookie.getValue();
 					}
 				}
 			}
 		} catch (Exception e) {
-			LOGGER.debug("extract token from cookie failed for request " + httpServletRequest.getRequestURI() );
-			//e.printStackTrace();
+			LOGGER.debug("extract token from cookie failed for request " + httpServletRequest.getRequestURI());
+			// e.printStackTrace();
 		}
 
 		if (token == null) {
