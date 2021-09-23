@@ -27,3 +27,12 @@ ALTER TABLE master.bulkupload_transaction ALTER COLUMN upload_description charac
 
 ALTER TABLE master.ui_spec ALTER COLUMN version TYPE numeric(5);
 ALTER TABLE master.ui_spec ALTER COLUMN identity_schema_version TYPE numeric(5);
+
+
+ALTER TABLE master.user_detail ADD COLUMN uin character varying(28);
+ALTER TABLE master.user_detail ADD COLUMN email character varying(256);
+ALTER TABLE master.user_detail ADD COLUMN mobile character varying(16);
+
+ALTER TABLE master.user_detail_h ADD COLUMN uin character varying(28);
+ALTER TABLE master.user_detail_h ADD COLUMN email character varying(256);
+ALTER TABLE master.user_detail_h ADD COLUMN mobile character varying(16);
