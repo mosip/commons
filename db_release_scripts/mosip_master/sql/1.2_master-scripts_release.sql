@@ -22,6 +22,13 @@
 
 ALTER TABLE master.template_type ALTER COLUMN code TYPE character varying(64) ;
 ALTER TABLE master.template ALTER COLUMN template_typ_code TYPE character varying(64) ;
+ALTER TABLE master.user_detail DROP COLUMN uin;
+ALTER TABLE master.user_detail DROP COLUMN email;
+ALTER TABLE master.user_detail DROP COLUMN mobile;
+
+ALTER TABLE master.user_detail_h DROP COLUMN uin;
+ALTER TABLE master.user_detail_h DROP COLUMN email;
+ALTER TABLE master.user_detail_h DROP COLUMN mobile;
 
 --------------------------------------------------------------------------------------------------------------------
 ALTER TABLE master.blacklisted_words DROP CONSTRAINT IF EXISTS pk_blwrd_code CASCADE;
