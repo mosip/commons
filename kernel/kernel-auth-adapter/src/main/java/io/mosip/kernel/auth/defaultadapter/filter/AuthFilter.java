@@ -61,18 +61,17 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
 
 	@Override
 	protected boolean requiresAuthentication(HttpServletRequest request, HttpServletResponse response) {
-		boolean isRequiresAuthentication = false;
 		// To check the global end-points
 		if (isPresent(request, this.noAuthenticationEndPoint.getGlobal().getEndPoints())) {
-			return isRequiresAuthentication;
+			return false;
 		}
 		// As the request not a part of the global end-points, check in master data
 		// end-points
 		return request.getRequestURI().contains(this.noAuthenticationEndPoint.getAdminMasterContext())
 				&& request.getMethod().equalsIgnoreCase(HttpMethod.GET.toString())
 				&& isPresent(request, this.noAuthenticationEndPoint.getAdminMaster().getEndPoints())
-						? isRequiresAuthentication
-						: !isRequiresAuthentication;
+						? false
+						: true;
 	}
 
 	private boolean isPresent(HttpServletRequest request, List<String> endPoints) {
