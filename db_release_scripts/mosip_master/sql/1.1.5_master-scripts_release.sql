@@ -140,8 +140,3 @@
 --ALTER TABLE master.user_detail ALTER COLUMN is_deleted SET DEFAULT FALSE;
 
 \ir ../ddl/master-ca_cert_store.sql
-
-TRUNCATE TABLE master.dynamic_field cascade ;
-
-\COPY master.dynamic_field (id,name,description,data_type,value_json,lang_code,is_active,cr_by,cr_dtimes) FROM '../dml/master-dynamic_field.csv' delimiter ',' HEADER  csv;
-
