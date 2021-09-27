@@ -19,12 +19,9 @@ public class CryptoUtil {
 	
 	private static Encoder urlSafeEncoder;
 	
-	private static Encoder plainEncoder;
-	
 	
 	static {
 		urlSafeEncoder = Base64.getUrlEncoder().withoutPadding();
-		plainEncoder = Base64.getEncoder().withoutPadding();
 	}
 
 	/**
@@ -94,7 +91,7 @@ public class CryptoUtil {
 	 */
 	@Deprecated(since = "1.1.5.5", forRemoval = true)
 	public static String encodeBase64String(byte[] data) {
-		return plainEncoder.encodeToString(data);
+		return Base64.getEncoder().encodeToString(data);
 	}
 
 	/**
@@ -138,7 +135,7 @@ public class CryptoUtil {
 		if (EmptyCheckUtils.isNullEmpty(data)) {
 			return null;
 		}
-		return plainEncoder.encodeToString(data);
+		return Base64.getEncoder().encodeToString(data);
 	}
 
 	public static byte[] decodePlainBase64(String data) {
