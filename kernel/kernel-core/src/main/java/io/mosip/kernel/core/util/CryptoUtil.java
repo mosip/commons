@@ -3,6 +3,7 @@ package io.mosip.kernel.core.util;
 import static java.util.Arrays.copyOfRange;
 
 import java.util.Base64;
+import java.util.Base64.Encoder;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.ArrayUtils;
@@ -15,6 +16,16 @@ import org.apache.commons.lang3.ArrayUtils;
  * @since 1.0.0
  */
 public class CryptoUtil {
+	
+	private static Encoder urlSafeEncoder;
+	
+	private static Encoder plainEncoder;
+	
+	
+	static {
+		urlSafeEncoder = Base64.getUrlEncoder().withoutPadding();
+		plainEncoder = Base64.getEncoder().withoutPadding();
+	}
 
 	/**
 	 * Private Constructor for this class
@@ -72,7 +83,7 @@ public class CryptoUtil {
 	 */
 	@Deprecated(since = "1.1.5.5", forRemoval = true)
 	public static String encodeBase64(byte[] data) {
-		return Base64.getUrlEncoder().encodeToString(data);
+		return urlSafeEncoder.encodeToString(data);
 	}
 
 	/**
@@ -83,7 +94,7 @@ public class CryptoUtil {
 	 */
 	@Deprecated(since = "1.1.5.5", forRemoval = true)
 	public static String encodeBase64String(byte[] data) {
-		return Base64.getEncoder().encodeToString(data);
+		return plainEncoder.encodeToString(data);
 	}
 
 	/**
@@ -113,7 +124,7 @@ public class CryptoUtil {
 		if (EmptyCheckUtils.isNullEmpty(data)) {
 			return null;
 		}
-		return Base64.getUrlEncoder().encodeToString(data);
+		return urlSafeEncoder.encodeToString(data);
 	}
 
 	public static byte[] decodeURLSafeBase64(String data) {
@@ -127,7 +138,7 @@ public class CryptoUtil {
 		if (EmptyCheckUtils.isNullEmpty(data)) {
 			return null;
 		}
-		return Base64.getEncoder().encodeToString(data);
+		return plainEncoder.encodeToString(data);
 	}
 
 	public static byte[] decodePlainBase64(String data) {
