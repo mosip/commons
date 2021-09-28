@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import io.mosip.kernel.auth.defaultadapter.handler.AuthHandler;
+import io.mosip.kernel.auth.defaultadapter.handler.VertxAuthHandler;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -58,7 +58,7 @@ public class VidFetcherRouter {
 	private ObjectMapper objectMapper;
 	
 	@Autowired
-    private AuthHandler authHandler;
+    private VertxAuthHandler authHandler;
 	
 	/**
 	 * Creates router for vertx server
@@ -108,7 +108,7 @@ public class VidFetcherRouter {
 				}
 				VidFetchResponseDto vidFetchResponseDto = null;
 				try {
-					vidFetchResponseDto = vidService.fetchVid(expiryTime);
+					vidFetchResponseDto = vidService.fetchVid(expiryTime, routingContext);
 				} catch (VidGeneratorServiceException exception) {
 					ServiceError error = new ServiceError(exception.getErrorCode(), exception.getMessage());
 					setError(routingContext, error, blockingCodeHandler);
