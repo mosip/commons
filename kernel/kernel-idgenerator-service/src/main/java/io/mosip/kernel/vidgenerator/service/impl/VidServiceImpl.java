@@ -12,7 +12,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.mosip.kernel.auth.defaultadapter.handler.AuthHandler;
+import io.mosip.kernel.auth.defaultadapter.handler.VertxAuthHandler;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.vidgenerator.constant.VIDGeneratorErrorCode;
 import io.mosip.kernel.vidgenerator.constant.VidLifecycleStatus;
@@ -27,6 +27,7 @@ import io.mosip.kernel.vidgenerator.utils.ExceptionUtils;
 import io.mosip.kernel.vidgenerator.utils.VIDMetaDataUtil;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import io.vertx.ext.web.RoutingContext;
 
 @Service
 public class VidServiceImpl implements VidService {
@@ -49,11 +50,11 @@ public class VidServiceImpl implements VidService {
 	private VIDMetaDataUtil metaDataUtil;
 	
 	@Autowired
-	private AuthHandler authHandler;
+	private VertxAuthHandler authHandler;
 
 	@Override
 	@Transactional
-	public VidFetchResponseDto fetchVid(LocalDateTime vidExpiry) {
+	public VidFetchResponseDto fetchVid(LocalDateTime vidExpiry, RoutingContext routingContext) {
 		VidFetchResponseDto vidFetchResponseDto = new VidFetchResponseDto();
 		VidEntity vidEntity = null;
 		try {
@@ -73,7 +74,7 @@ public class VidServiceImpl implements VidService {
 			}
 			vidFetchResponseDto.setVid(vidEntity.getVid());
 			try {
-				vidRepository.updateVid(VidLifecycleStatus.ASSIGNED, authHandler.getContextUser(),
+				vidRepository.updateVid(VidLifecycleStatus.ASSIGNED, authHandler.getContextUser(routingContext),
 						DateUtils.getUTCCurrentDateTime(), vidEntity.getVid());
 			} catch (DataAccessException exception) {
 				LOGGER.error(ExceptionUtils.parseException(exception));
