@@ -21,13 +21,7 @@ import io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator;
 @Component
 @Primary
 public class IdObjectCompositeValidator implements IdObjectValidator {
-<<<<<<< HEAD
-=======
 
-	@Value("${mosip.kernel.idobjectvalidator.enabled:true}")
-	private Boolean isEnabled;
-
->>>>>>> 0f2b01b633 ([MOSIP-12752] added property to disable IOV)
 	/** The schema validator. */
 	@Autowired
 	private IdObjectSchemaValidator schemaValidator;
@@ -48,10 +42,8 @@ public class IdObjectCompositeValidator implements IdObjectValidator {
 	@Override
 	public boolean validateIdObject(String idSchema, Object identityObject, List<String> requiredFields)
 			throws IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
-		if (isEnabled) {
-			schemaValidator.validateIdObject(idSchema, identityObject, requiredFields);
-			referenceValidator.validateIdObject(idSchema, identityObject, requiredFields);
-		}
+		schemaValidator.validateIdObject(idSchema, identityObject, requiredFields);
+		referenceValidator.validateIdObject(idSchema, identityObject, requiredFields);
 		return true;
 	}
 
