@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -24,10 +25,16 @@ public class IdObjectCompositeValidator implements IdObjectValidator {
 <<<<<<< HEAD
 =======
 
+<<<<<<< HEAD
 	@Value("${mosip.kernel.idobjectvalidator.enabled:true}")
 	private Boolean isEnabled;
 
 >>>>>>> 0f2b01b633 ([MOSIP-12752] added property to disable IOV)
+=======
+	@Value("${mosip.kernel.idobjectvalidator.enabled:true")
+	private boolean isEnabled;
+
+>>>>>>> 7a9f11e6a6 ([MOSIP-12752] added property to disable IdObjectValidation)
 	/** The schema validator. */
 	@Autowired
 	private IdObjectSchemaValidator schemaValidator;
