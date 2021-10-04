@@ -13,6 +13,8 @@
 
 -- -------------------------------------------------------------------------------------------------
 
+ALTER TABLE authdevice.secure_biometric_interface DROP CONSTRAINT IF EXISTS fk_sbi_id CASCADE;
+
 ALTER TABLE authdevice.secure_biometric_interface ALTER COLUMN device_detail_id TYPE character varying;
 ALTER TABLE authdevice.secure_biometric_interface_h ALTER COLUMN device_detail_id TYPE character varying;
 
