@@ -3,6 +3,8 @@ package io.mosip.kernel.applicanttype.api.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mvel2.MVEL;
@@ -43,14 +45,12 @@ public class ApplicantTypeImpl implements ApplicantType {
 	private RestTemplate restTemplate;
 
 	private ObjectMapper objectMapper = new ObjectMapper();
-	private String SCRIPT = "";
+	private String script = "";
 
+	@PostConstruct
 	private String getScript() {
-		synchronized (SCRIPT) {
-			if (SCRIPT == null || SCRIPT.equals(""))
-				SCRIPT = restTemplate.getForObject(configServerFileStorageURL + mvelFile, String.class);
-		}
-		return SCRIPT;
+			script = restTemplate.getForObject(configServerFileStorageURL + mvelFile, String.class);
+	        return script;
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class ApplicantTypeImpl implements ApplicantType {
 			LOGGER.error("Failed to parse age groups configuration", e);
 		}
 
-		MVEL.eval(getScript(), context);
+		MVEL.eval(script, context);
 		context.put("identity", map);
 		final String code = MVEL.eval("return getApplicantType();", context, String.class);
 		LOGGER.info("Evaluated applicant code : {}", code);
