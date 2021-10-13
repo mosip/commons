@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
@@ -34,6 +35,7 @@ import io.mosip.kernel.core.cbeffutil.jaxbclasses.RegistryIDType;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.SingleAnySubtypeType;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.SingleType;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.VersionType;
+import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.util.CryptoUtil;
 
 /**
@@ -44,6 +46,17 @@ import io.mosip.kernel.core.util.CryptoUtil;
  *
  */
 public class CbeffValidator {
+	
+	
+	private static JAXBContext jaxbContext = null;
+	
+	static {
+		try {
+			jaxbContext = JAXBContext.newInstance(BIRType.class);
+		} catch (JAXBException e) {
+			ExceptionUtils.logRootCause(e);
+		}
+	}
 
 	/**
 	 * Method used for custom validation of the BIR
@@ -150,7 +163,6 @@ public class CbeffValidator {
 	 */
 	public static byte[] createXMLBytes(BIRType bir, byte[] xsd) throws Exception {
 		CbeffValidator.validateXML(bir);
-		JAXBContext jaxbContext = JAXBContext.newInstance(BIRType.class);
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // To
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -185,7 +197,6 @@ public class CbeffValidator {
 	 * 
 	 */
 	public static BIRType getBIRFromXML(byte[] fileBytes) throws Exception {
-		JAXBContext jaxbContext = JAXBContext.newInstance(BIRType.class);
 		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 		JAXBElement<BIRType> jaxBir = unmarshaller.unmarshal(new StreamSource(new ByteArrayInputStream(fileBytes)),
 				BIRType.class);
@@ -209,7 +220,6 @@ public class CbeffValidator {
 	 */
 	public static Map<String, String> getBDBBasedOnTypeAndSubType(BIRType bir, String type, String subType)
 			throws Exception {
-
 		if (type == null && subType == null) {
 			return getAllLatestDatafromBIR(bir);
 		}
@@ -242,7 +252,6 @@ public class CbeffValidator {
 			Long formatType, Map<String, String> bdbMap) {
 		for (BIRType birType : bir.getBIR()) {
 			BDBInfoType bdbInfo = birType.getBDBInfo();
-
 			if (bdbInfo != null) {
 				List<String> singleSubTypeList = bdbInfo.getSubtype();
 				List<SingleType> singleTypeList = bdbInfo.getType();
@@ -445,7 +454,6 @@ public class CbeffValidator {
 	public static List<BIRType> getBIRDataFromXMLType(byte[] xmlBytes, String type) throws Exception {
 		SingleType singleType = null;
 		List<BIRType> updatedBIRList = new ArrayList<>();
-		JAXBContext jaxbContext = JAXBContext.newInstance(BIRType.class);
 		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 		JAXBElement<BIRType> jaxBir = unmarshaller.unmarshal(new StreamSource(new ByteArrayInputStream(xmlBytes)),
 				BIRType.class);
