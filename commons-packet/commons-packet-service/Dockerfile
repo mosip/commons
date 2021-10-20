@@ -57,6 +57,8 @@ ENV iam_adapter_url_env=${iam_adapter_url}
 # environment variable to pass iam_adapter url, at docker runtime
 ENV cache_provider_url_env=${cache_provider_url}
 
+ENV cache_config_url_env=${cache_config_url}
+
 # install packages and create user
 RUN apt-get -y update \
 && apt-get install -y unzip \
@@ -88,6 +90,7 @@ CMD if [ "$is_glowroot_env" = "present" ]; then \
     wget -q --show-progress "${artifactory_url_env}"/artifactory/libs-release-local/io/mosip/testing/glowroot.zip ; \
     wget -q --show-progress "${iam_adapter_url_env}" -O "${loader_path_env}"/kernel-auth-adapter.jar; \
     wget -q --show-progress "${cache_provider_url_env}" -O "${loader_path_env}"/cache-provider.jar; \
+    wget -q --show-progress "${cache_config_url_env}" -O "${loader_path_env}"/hazelcast.xml; \
     unzip glowroot.zip ; \
     rm -rf glowroot.zip ; \
     sed -i 's/<service_name>/commons-packet-service/g' glowroot/glowroot.properties ; \
@@ -95,6 +98,7 @@ CMD if [ "$is_glowroot_env" = "present" ]; then \
     else \
     wget -q --show-progress "${iam_adapter_url_env}" -O "${loader_path_env}"/kernel-auth-adapter.jar; \
     wget -q --show-progress "${cache_provider_url_env}" -O "${loader_path_env}"/cache-provider.jar; \
+    wget -q --show-progress "${cache_config_url_env}" -O "${loader_path_env}"/hazelcast.xml; \
     java -Dloader.path="${loader_path_env}"  -jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" commons-packet-service.jar; \
     fi
 

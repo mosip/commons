@@ -50,20 +50,20 @@ echo `date "+%m/%d/%Y %H:%M:%S"` ": Database scripts are sourcing from :$BASEPAT
 
 echo `date "+%m/%d/%Y %H:%M:%S"` ": Database deployment on $MOSIP_DB_NAME database is started...." | tee -a $LOG 2>&1
 cd /$BASEPATH/$MOSIP_DB_NAME/
-VALUE=$(PGPASSWORD=$SU_USER_PWD  psql --username=$SU_USER --host=$DB_SERVERIP --port=$DB_PORT --dbname=$DEFAULT_DB_NAME -t -c "select count(1) from pg_roles where rolname IN('sysadmin','appadmin','dbadmin','dbuser')";exit; >> $LOG 2>&1)
+VALUE=$(PGPASSWORD=$SU_USER_PWD  psql --username=$SU_USER --host=$DB_SERVERIP --port=$DB_PORT --dbname=$DEFAULT_DB_NAME -t -c "select count(1) from pg_roles where rolname IN('sysadmin','appadmin','dbadmin')";exit; >> $LOG 2>&1)
     echo `date "+%m/%d/%Y %H:%M:%S"` ": Checking for existing users.... Count of existing users:"$VALUE | tee -a $LOG 2>&1
 if [ ${VALUE} == 0 ]
 then
     echo `date "+%m/%d/%Y %H:%M:%S"` ": Creating database users" | tee -a $LOG 2>&1
-    PGPASSWORD=$SU_USER_PWD psql --username=$SU_USER --host=$DB_SERVERIP --port=$DB_PORT --dbname=$DEFAULT_DB_NAME -f $COMMON_ROLE_FILENAME -v sysadminpwd=\'$SYSADMIN_PWD\' -v dbadminpwd=\'$DBADMIN_PWD\' -v appadminpwd=\'$APPADMIN_PWD\' -v rodbuserpwd=\'$RO_DBUSER_PWD\' >> $LOG 2>&1
+    PGPASSWORD=$SU_USER_PWD psql --username=$SU_USER --host=$DB_SERVERIP --port=$DB_PORT --dbname=$DEFAULT_DB_NAME -f $COMMON_ROLE_FILENAME -v sysadminpwd=\'$SYSADMIN_PWD\' -v dbadminpwd=\'$DBADMIN_PWD\' -v appadminpwd=\'$APPADMIN_PWD\' >> $LOG 2>&1
 elif [ ${VALUE} == 1 ]
 then
     echo `date "+%m/%d/%Y %H:%M:%S"` ": Creating database users" | tee -a $LOG 2>&1
-	PGPASSWORD=$SU_USER_PWD psql --username=$SU_USER --host=$DB_SERVERIP --port=$DB_PORT --dbname=$DEFAULT_DB_NAME -f $COMMON_ROLE_FILENAME -v sysadminpwd=\'$SYSADMIN_PWD\' -v dbadminpwd=\'$DBADMIN_PWD\' -v appadminpwd=\'$APPADMIN_PWD\' -v rodbuserpwd=\'$RO_DBUSER_PWD\' >> $LOG 2>&1
+	PGPASSWORD=$SU_USER_PWD psql --username=$SU_USER --host=$DB_SERVERIP --port=$DB_PORT --dbname=$DEFAULT_DB_NAME -f $COMMON_ROLE_FILENAME -v sysadminpwd=\'$SYSADMIN_PWD\' -v dbadminpwd=\'$DBADMIN_PWD\' -v appadminpwd=\'$APPADMIN_PWD\' >> $LOG 2>&1
 elif [ ${VALUE} == 2 ]
 then
     echo `date "+%m/%d/%Y %H:%M:%S"` ": Creating database users" | tee -a $LOG 2>&1
-    PGPASSWORD=$SU_USER_PWD psql --username=$SU_USER --host=$DB_SERVERIP --port=$DB_PORT --dbname=$DEFAULT_DB_NAME -f $COMMON_ROLE_FILENAME -v sysadminpwd=\'$SYSADMIN_PWD\' -v dbadminpwd=\'$DBADMIN_PWD\' -v appadminpwd=\'$APPADMIN_PWD\' -v rodbuserpwd=\'$RO_DBUSER_PWD\' >> $LOG 2>&1 	
+    PGPASSWORD=$SU_USER_PWD psql --username=$SU_USER --host=$DB_SERVERIP --port=$DB_PORT --dbname=$DEFAULT_DB_NAME -f $COMMON_ROLE_FILENAME -v sysadminpwd=\'$SYSADMIN_PWD\' -v dbadminpwd=\'$DBADMIN_PWD\' -v appadminpwd=\'$APPADMIN_PWD\' >> $LOG 2>&1 	
 else
     echo `date "+%m/%d/%Y %H:%M:%S"` ": Database users already exist" | tee -a $LOG 2>&1
 fi
@@ -92,6 +92,10 @@ PGPASSWORD=$SYSADMIN_PWD psql --username=$SYSADMIN_USER --host=$DB_SERVERIP --po
 
 if [ ${DML_FLAG} == 1 ]
 then
+    echo `date "+%m/%d/%Y %H:%M:%S"` ": Converting Excel to CSV for ${MOSIP_DB_NAME} database" | tee -a $LOG 2>&1
+    pip3 install xlrd==1.2.0
+    python3 xlsx_to_csv.py
+
     echo `date "+%m/%d/%Y %H:%M:%S"` ": Deploying DML for ${MOSIP_DB_NAME} database" | tee -a $LOG 2>&1
     PGPASSWORD=$SYSADMIN_PWD psql --username=$SYSADMIN_USER --host=$DB_SERVERIP --port=$DB_PORT --dbname=$DEFAULT_DB_NAME -a -b -f $DML_FILENAME >> $LOG 2>&1
 else

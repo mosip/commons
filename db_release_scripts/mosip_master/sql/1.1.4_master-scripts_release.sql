@@ -12,6 +12,3 @@
 \c mosip_master sysadmin
 
 ALTER TABLE master.template ALTER COLUMN file_txt TYPE character varying;
-
-insert into master.template_type values('reg-preview-template-part', 'Registration Preview Template', 'eng', 'true', 'superadmin', current_timestamp, null, null, null, null);
-insert into master.template_type values('reg-ack-template-part', 'Registration Acknowledgement Template', 'eng', 'true', 'superadmin', current_timestamp, null, null, null, null); 

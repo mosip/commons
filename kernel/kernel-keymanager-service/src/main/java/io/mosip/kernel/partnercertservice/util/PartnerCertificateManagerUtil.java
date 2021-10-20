@@ -116,11 +116,20 @@ public class PartnerCertificateManagerUtil {
         } catch(CertificateExpiredException | CertificateNotYetValidException exp) {
             LOGGER.info(PartnerCertManagerConstants.SESSIONID, PartnerCertManagerConstants.UPLOAD_CA_CERT,
                     PartnerCertManagerConstants.PCM_UTIL,
-                    "Ignore this exception, the exception thrown when signature validation failed.");
+                    "Ignore this exception, the exception thrown when certificate dates are not valid.");
+        }
+        try {
+            // Checking both system default timezone & UTC Offset timezone. Issue found in reg-client during trust validation. 
+            x509Cert.checkValidity();
+            return true;
+        } catch(CertificateExpiredException | CertificateNotYetValidException exp) {
+            LOGGER.info(PartnerCertManagerConstants.SESSIONID, PartnerCertManagerConstants.UPLOAD_CA_CERT,
+                    PartnerCertManagerConstants.PCM_UTIL,
+                    "Ignore this exception, the exception thrown when certificate dates are not valid.");
         }
         return false;
     }
-
+    
     public static boolean isValidTimestamp(LocalDateTime timeStamp, CACertificateStore certStore) {
 		return timeStamp.isEqual(certStore.getCertNotBefore()) || timeStamp.isEqual(certStore.getCertNotAfter())
 				|| (timeStamp.isAfter(certStore.getCertNotBefore())

@@ -1,6 +1,8 @@
 package io.mosip.kernel.biometrics.constant;
 
-public enum BiometricFunction {
+import java.io.Serializable;
+
+public enum BiometricFunction implements Serializable {
 	
 	QUALITY_CHECK,
 	SEGMENT,

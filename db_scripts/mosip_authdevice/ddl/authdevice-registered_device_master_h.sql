@@ -9,6 +9,7 @@
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
 -- 30-Dec-2019          Sadanandegowda      Removed some attributes as per the new API specs
+-- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
 -- ------------------------------------------------------------------------------------------
 
 -- object: authdevice.registered_device_master_h | type: TABLE --
@@ -32,7 +33,7 @@ CREATE TABLE authdevice.registered_device_master_h(
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
 	upd_dtimes timestamp,
-	is_deleted boolean,
+	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
 	eff_dtimes timestamp NOT NULL,
 	CONSTRAINT pk_regdevicemh_code PRIMARY KEY (code,eff_dtimes)

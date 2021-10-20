@@ -4,7 +4,7 @@
 	
 	<artifactId>kernel-biosdk-provider</artifactId>
 	<groupId>io.mosip.kernel</groupId>
-	<version>1.1.4</version>
+	<version>1.1.5.3</version>
 	<name>kernel-biosdk-provider</name>
 	<description>Implementation of biosdk provider</description>
         <url>https://github.com/mosip/commons</url>
@@ -117,9 +117,9 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.1.4</kernel.core.version>
-		<kernel.biometricsdk.version>1.1.4</kernel.biometricsdk.version>
-		<kernel.logger.logback.version>1.1.4</kernel.logger.logback.version>
+		<kernel.core.version>1.1.5.3</kernel.core.version>
+		<kernel.biometricsdk.version>1.1.5.3</kernel.biometricsdk.version>
+		<kernel.logger.logback.version>1.1.5.3</kernel.logger.logback.version>
 	</properties>
 	
 	<dependencies>

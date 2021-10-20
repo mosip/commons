@@ -83,27 +83,6 @@ public interface KeyStore {
 	Key getKey(String alias);
 
 	/**
-	 * Store symmetric key in keystore
-	 * 
-	 * @param secretKey the secret key
-	 * @param alias     the alias
-	 */
-	
-	void storeSymmetricKey(SecretKey secretKey, String alias);
-
-	/**
-	 * Store keypair in keystore
-	 * 
-	 * @param keyPair      the keypair
-	 * @param alias        the alias
-	 * @param validityFrom validityFrom
-	 * @param validityTo   validityTo
-	 */
-	
-	void storeAsymmetricKey(KeyPair keyPair, String alias, LocalDateTime validityFrom, LocalDateTime validityTo);
-
-
-	/**
 	 * Symmetric key will be generated based on the provider specified and Store the key in provider specific keystore
 	 * 
 	 * @param secretKey the secret key
@@ -138,18 +117,6 @@ public interface KeyStore {
 	 * @param certificate  Certificate to be stored
 	 */
 	void storeCertificate(String alias, PrivateKey privateKey, Certificate certificate);
-
-	/**
-	 * Creates a certificate for the given public key and signs the certificate with provided private key
-	 * 
-	 * 
-	 * @param signPrivateKey   privateKey used to create certificate
-	 * @param publicKey  	   publicKey to be signed to create certificate
-	 * @param certParams   	   required Certificate Parameters to create the certificate
-	 * @param signerPrincipal  Signer Principal 
-	 * @return returns the generated certificate.
-	 */
-	Certificate generateCertificate(PrivateKey signPrivateKey, PublicKey publicKey, CertificateParameters certParams, X500Principal signerPrincipal);
 
 	/**
 	 * Gets the keyStore provider name.

@@ -142,9 +142,9 @@ public class UinFilterUtil {
 
 	@PostConstruct
 	public void initializeRegEx() {
-		String repeatingRegEx = "(\\d)\\d{0," + (repeatingLimit - 1) + "}\\1";
-		String repeatingBlockRegEx = "(\\d{" + repeatingBlockLimit + ",}).*?\\1";
-		String conjugativeEvenDigitsLimitRegEx = "[2468]{" + conjugativeEvenDigitsLimit + "}";
+		String repeatingRegEx = repeatingLimit < 0 ? "\\1":"(\\d)\\d{0," + (repeatingLimit - 1) + "}\\1";
+		String repeatingBlockRegEx = repeatingBlockLimit < 0 ? "\\1":"(\\d{" + repeatingBlockLimit + ",}).*?\\1";
+		String conjugativeEvenDigitsLimitRegEx = conjugativeEvenDigitsLimit <0 ? "\\1":"[2468]{" + conjugativeEvenDigitsLimit + "}";
 		repeatingPattern = Pattern.compile(repeatingRegEx);
 		repeatingBlockPattern = Pattern.compile(repeatingBlockRegEx);
 		conjugativeEvenDigitsLimitPattern = Pattern.compile(conjugativeEvenDigitsLimitRegEx);

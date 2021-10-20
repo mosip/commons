@@ -2,6 +2,9 @@ package io.mosip.commons.packetmanager.test.controller;
 
 import com.google.common.collect.Lists;
 import io.mosip.commons.packet.dto.Document;
+import io.mosip.commons.packet.dto.TagDto;
+import io.mosip.commons.packet.dto.TagRequestDto;
+import io.mosip.commons.packet.dto.TagResponseDto;
 import io.mosip.commons.packet.dto.packet.PacketDto;
 import io.mosip.commons.packet.facade.PacketReader;
 import io.mosip.commons.packet.facade.PacketWriter;
@@ -10,6 +13,10 @@ import io.mosip.commons.packetmanager.dto.DocumentDto;
 import io.mosip.commons.packetmanager.dto.FieldDto;
 import io.mosip.commons.packetmanager.dto.FieldDtos;
 import io.mosip.commons.packetmanager.dto.InfoDto;
+import io.mosip.commons.packetmanager.dto.InfoRequestDto;
+import io.mosip.commons.packetmanager.dto.InfoResponseDto;
+import io.mosip.commons.packetmanager.dto.SourceProcessDto;
+import io.mosip.commons.packetmanager.service.PacketReaderService;
 import io.mosip.commons.packetmanager.test.TestBootApplication;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.core.exception.BaseCheckedException;
@@ -59,6 +66,9 @@ public class PacketManagerControllerTest {
     @MockBean
     private PacketWriter packetWriter;
 
+    @MockBean
+    private PacketReaderService packetReaderService;
+
 
     private RequestWrapper<Object> request = new RequestWrapper<>();
 
@@ -81,6 +91,8 @@ public class PacketManagerControllerTest {
         fieldDto.setProcess("NEW");
         fieldDto.setSource("REGISTRATION");
 
+        Mockito.when(packetReaderService.getSourceAndProcess(any(),any(),any(),any())).thenReturn(new SourceProcessDto("source", "process"));
+        
         Mockito.when(
                 packetReader.getField(anyString(), anyString(), anyString(), anyString(), anyBoolean())).thenReturn(value);
 
@@ -101,6 +113,8 @@ public class PacketManagerControllerTest {
         fieldDto.setProcess("NEW");
         fieldDto.setSource("REGISTRATION");
 
+        Mockito.when(packetReaderService.getSourceAndProcess(any(),any(),any(),any())).thenReturn(new SourceProcessDto("source", "process"));
+
         Mockito.when(
                 packetReader.getFields(anyString(), any(), anyString(), anyString(), anyBoolean())).thenReturn(new HashMap<>());
 
@@ -120,6 +134,8 @@ public class PacketManagerControllerTest {
         documentDto.setProcess("NEW");
         documentDto.setSource("REGISTRATION");
 
+        Mockito.when(packetReaderService.getSourceAndProcess(any(),any(),any(),any())).thenReturn(new SourceProcessDto("source", "process"));
+
         Mockito.when(
                 packetReader.getDocument(anyString(), anyString(), anyString(), anyString())).thenReturn(new Document());
 
@@ -137,6 +153,8 @@ public class PacketManagerControllerTest {
         biometricRequestDto.setId("id");
         biometricRequestDto.setProcess("NEW");
         biometricRequestDto.setSource("REGISTRATION");
+
+        Mockito.when(packetReaderService.getSourceAndProcess(any(),any(),any(),any())).thenReturn(new SourceProcessDto("source", "process"));
 
         Mockito.when(
                 packetReader.getBiometric(anyString(), anyString(), any(), anyString(), anyString(), anyBoolean())).thenReturn(new BiometricRecord());
@@ -156,6 +174,8 @@ public class PacketManagerControllerTest {
         infoDto.setProcess("NEW");
         infoDto.setSource("REGISTRATION");
 
+        Mockito.when(packetReaderService.getSourceAndProcess(any(),any(),any(),any())).thenReturn(new SourceProcessDto("source", "process"));
+
         Mockito.when(
                 packetReader.getMetaInfo(anyString(), anyString(), anyString(), anyBoolean())).thenReturn(new HashMap<>());
 
@@ -174,6 +194,8 @@ public class PacketManagerControllerTest {
         infoDto.setProcess("NEW");
         infoDto.setSource("REGISTRATION");
 
+        Mockito.when(packetReaderService.getSourceAndProcess(any(),any(),any(),any())).thenReturn(new SourceProcessDto("source", "process"));
+
         Mockito.when(
                 packetReader.getAudits(anyString(), anyString(), anyString(), anyBoolean())).thenReturn(new ArrayList<>());
 
@@ -191,6 +213,8 @@ public class PacketManagerControllerTest {
         infoDto.setId("id");
         infoDto.setProcess("NEW");
         infoDto.setSource("REGISTRATION");
+
+        Mockito.when(packetReaderService.getSourceAndProcess(any(),any(),any(),any())).thenReturn(new SourceProcessDto("source", "process"));
 
         Mockito.when(
                 packetReader.validatePacket(anyString(), anyString(), anyString())).thenReturn(true);
@@ -246,12 +270,78 @@ public class PacketManagerControllerTest {
         infoDto.setProcess("NEW");
         infoDto.setSource("REGISTRATION");
 
+        Mockito.when(packetReaderService.getSourceAndProcess(any(),any(),any(),any())).thenReturn(new SourceProcessDto("source", "process"));
+
         Mockito.when(
                 packetReader.getAudits(anyString(), anyString(), anyString(), anyBoolean())).thenThrow(new BaseCheckedException("errorCode", "errorMessage"));
 
         request.setRequest(infoDto);
 
         this.mockMvc.perform(post("/audits").contentType(MediaType.APPLICATION_JSON).content(JsonUtils.javaObjectToJsonString(request)))
+                .andExpect(status().isOk());
+    }
+    @Test
+    @WithUserDetails("reg-processor")
+    public void testAddTag() throws Exception {
+    	TagDto tagDto = new TagDto();
+    	tagDto.setId("id");
+      
+
+        Mockito.when(
+                packetWriter.addTags(any())).thenReturn(new TagResponseDto());
+
+        request.setRequest(tagDto);
+
+        this.mockMvc.perform(post("/addTag").contentType(MediaType.APPLICATION_JSON).content(JsonUtils.javaObjectToJsonString(request)))
+                .andExpect(status().isOk());
+    }
+    @Test
+    @WithUserDetails("reg-processor")
+    public void testUpdateTags() throws Exception {
+    	TagDto tagDto = new TagDto();
+    	tagDto.setId("id");
+      
+
+        Mockito.when(
+                packetWriter.updateTags(any())).thenReturn(new TagResponseDto());
+
+        request.setRequest(tagDto);
+
+        this.mockMvc.perform(post("/addOrUpdateTag").contentType(MediaType.APPLICATION_JSON).content(JsonUtils.javaObjectToJsonString(request)))
+                .andExpect(status().isOk());
+    }
+    @Test
+    @WithUserDetails("reg-processor")
+    public void testGetTags() throws Exception {
+    	TagRequestDto tagDto = new TagRequestDto();
+    	tagDto.setId("id");
+      
+
+        Mockito.when(
+                packetReader.getTags(any(), any())).thenReturn(new TagResponseDto());
+
+        request.setRequest(tagDto);
+
+        this.mockMvc.perform(post("/getTags").contentType(MediaType.APPLICATION_JSON).content(JsonUtils.javaObjectToJsonString(request)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithUserDetails("reg-processor")
+    public void testInfo() throws Exception {
+        InfoRequestDto infoDto = new InfoRequestDto();
+        infoDto.setId("id");
+
+        InfoResponseDto infoResponseDto = new InfoResponseDto();
+        infoResponseDto.setPacketId(infoDto.getId());
+        infoResponseDto.setApplicationId(infoDto.getId());
+
+        Mockito.when(
+                packetReaderService.info(anyString())).thenReturn(infoResponseDto);
+
+        request.setRequest(infoDto);
+
+        this.mockMvc.perform(post("/validatePacket").contentType(MediaType.APPLICATION_JSON).content(JsonUtils.javaObjectToJsonString(request)))
                 .andExpect(status().isOk());
     }
 }

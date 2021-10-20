@@ -8,7 +8,8 @@
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
--- 
+-- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
+-- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
 -- ------------------------------------------------------------------------------------------
 -- object: master.reg_exceptional_holiday | type: TABLE --
 -- DROP TABLE IF EXISTS master.reg_exceptional_holiday CASCADE;
@@ -23,7 +24,7 @@ CREATE TABLE master.reg_exceptional_holiday(
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
 	upd_dtimes timestamp,
-	is_deleted boolean,
+	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
 	CONSTRAINT pk_exceptional_hol PRIMARY KEY (regcntr_id,hol_date)
 

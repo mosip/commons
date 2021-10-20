@@ -8,7 +8,8 @@
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
--- 
+-- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
+-- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
 -- ------------------------------------------------------------------------------------------
 -- object: master.dynamic_field | type: TABLE --
 -- DROP TABLE IF EXISTS master.dynamic_field CASCADE;
@@ -24,7 +25,7 @@ CREATE TABLE master.dynamic_field(
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
 	upd_dtimes timestamp,
-	is_deleted boolean,
+	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
 	CONSTRAINT pk_schfld_id PRIMARY KEY (id),
 	CONSTRAINT uk_schfld_name UNIQUE (name,lang_code)

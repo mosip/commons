@@ -5,6 +5,8 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +27,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
+
+	private static final Logger logger = LoggerFactory.getLogger(SwaggerConfig.class);
 
 	@Value("${application.env.local:false}")
 	private Boolean localEnv;
@@ -60,7 +64,7 @@ public class SwaggerConfig {
 				}
 				swaggerBaseUrlSet = true;
 			} catch (MalformedURLException e) {
-				System.err.println("SwaggerUrlException: " + e);
+				logger.error("SwaggerUrlException: ", e);
 			}
 		}
 		Docket docket = new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.any())
@@ -68,7 +72,7 @@ public class SwaggerConfig {
 
 		if (swaggerBaseUrlSet) {
 			docket.protocols(protocols()).host(hostWithPort);
-			System.out.println("\nSwagger Base URL: " + proto + "://" + hostWithPort + "\n");
+			logger.info("Swagger Base URL: {}://{}", proto, hostWithPort);
 		}
 
 		return docket;

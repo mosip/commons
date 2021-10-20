@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.mosip.commons</groupId>
     <artifactId>commons-packet-service</artifactId>
-    <version>1.1.4</version>
+    <version>1.1.5.4</version>
     <name>commons-packet-service</name>
     <description>Mosip commons project </description>
     <url>https://github.com/mosip/commons</url>
@@ -30,21 +30,21 @@
         <spring-cloud-config.version>2.0.0.RELEASE</spring-cloud-config.version>
         <h2.version>1.4.197</h2.version>
         <jackson.datatype.version>2.9.8</jackson.datatype.version>
-        <kernel.keygenerator.bouncycastle.version>1.1.4</kernel.keygenerator.bouncycastle.version>
+        <kernel.keygenerator.bouncycastle.version>1.1.5.3</kernel.keygenerator.bouncycastle.version>
         <swagger.version>2.9.2</swagger.version>
         <powermock.beta.version>2.0.7</powermock.beta.version>
 
-        <kernel.core.version>1.1.4</kernel.core.version>
-        <kernel.biometrics.api.version>1.1.4</kernel.biometrics.api.version>
-        <kernel.crypto-jce.version>1.1.4</kernel.crypto-jce.version>
-        <kernel.auth.adaptor.version>1.1.4</kernel.auth.adaptor.version>
-        <kernel-dataaccess-hibernate.version>1.1.4</kernel-dataaccess-hibernate.version>
-        <kernel.logger.logback.version>1.1.4</kernel.logger.logback.version>
+        <kernel.core.version>1.1.5.3</kernel.core.version>
+        <kernel.biometrics.api.version>1.1.5.3</kernel.biometrics.api.version>
+        <kernel.crypto-jce.version>1.1.5.3</kernel.crypto-jce.version>
+        <kernel.auth.adaptor.version>1.1.5.3</kernel.auth.adaptor.version>
+        <kernel-dataaccess-hibernate.version>1.1.5.3</kernel-dataaccess-hibernate.version>
+        <kernel.logger.logback.version>1.1.5.3</kernel.logger.logback.version>
         <spring.boot.co>2.0.2.RELEASE</spring.boot.co>
-        <khazana.version>1.1.4</khazana.version>
+        <khazana.version>1.1.5.3</khazana.version>
         <sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/dto/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/security/**,**/*Config.java,**/*BootApplication.java,**/*VertxApplication.java,**/cbeffutil/**,**/*Utils.java,**/*Validator.java,**/*Helper.java,**/verticle/**,**/VidWriter.java/**,**/masterdata/utils/**,**/spi/**,**/core/http/**,"**/LocationServiceImpl.java","**/RegistrationCenterMachineServiceImpl.java","**/RegistrationCenterServiceImpl.java","**/pridgenerator/**","**/idgenerator/prid","**/proxy/**","**/cryptosignature/**"</sonar.coverage.exclusions>
         <sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**</sonar.cpd.exclusions>
-        <packet.manager.version>1.1.4</packet.manager.version>
+        <packet.manager.version>1.1.5.4</packet.manager.version>
     </properties>
 
     <dependencies>

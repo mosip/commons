@@ -9,7 +9,9 @@ package io.mosip.kernel.biometrics.constant;
 
 import io.mosip.kernel.biometrics.entities.RegistryIDType;
 
-public class QualityType {
+import java.io.Serializable;
+
+public class QualityType implements Serializable {
 
 	protected RegistryIDType algorithm;
 	protected Long score;

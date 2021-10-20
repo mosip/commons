@@ -20,7 +20,7 @@ public class UploadCertificateResponseDto {
 	private String status;
 
 	/**
-	 * Status of upload certificate.
+	 * Timestamp.
 	 */
 	private LocalDateTime timestamp;
 }

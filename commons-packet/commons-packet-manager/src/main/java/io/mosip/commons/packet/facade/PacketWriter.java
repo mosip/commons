@@ -1,24 +1,28 @@
 package io.mosip.commons.packet.facade;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
 import io.mosip.commons.packet.dto.Document;
 import io.mosip.commons.packet.dto.PacketInfo;
+import io.mosip.commons.packet.dto.TagDto;
+import io.mosip.commons.packet.dto.TagResponseDto;
 import io.mosip.commons.packet.dto.packet.PacketDto;
 import io.mosip.commons.packet.exception.NoAvailableProviderException;
+import io.mosip.commons.packet.keeper.PacketKeeper;
 import io.mosip.commons.packet.spi.IPacketWriter;
 import io.mosip.commons.packet.util.PacketHelper;
 import io.mosip.commons.packet.util.PacketManagerLogger;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.logger.spi.Logger;
-import org.json.JSONException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * The packet writer facade
@@ -32,6 +36,9 @@ public class PacketWriter {
     @Qualifier("referenceWriterProviders")
     @Lazy
     private List<IPacketWriter> referenceWriterProviders;
+
+	@Autowired
+	private PacketKeeper packetKeeper;
 
     /**
      * Set field in identity object
@@ -203,4 +210,23 @@ public class PacketWriter {
 
         return provider;
     }
+
+	@CacheEvict(value = "tags", key = "{#tagDto.id}")
+	public TagResponseDto addTags(TagDto tagDto) {
+		TagResponseDto tagResponseDto = new TagResponseDto();
+		Map<String, String> tags = packetKeeper.addTags(tagDto);
+		tagResponseDto.setTags(tags);
+
+		return tagResponseDto;
+
+	}
+
+	@CacheEvict(value = "tags", key = "{#tagDto.id}")
+	public TagResponseDto updateTags(TagDto tagDto) {
+		TagResponseDto tagResponseDto = new TagResponseDto();
+		Map<String, String> tags = packetKeeper.updateTags(tagDto);
+		tagResponseDto.setTags(tags);
+		return tagResponseDto;
+
+	}
 }

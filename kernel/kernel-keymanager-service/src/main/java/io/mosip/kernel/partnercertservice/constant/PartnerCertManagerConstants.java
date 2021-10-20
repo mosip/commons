@@ -74,4 +74,6 @@ public interface PartnerCertManagerConstants {
 	 * The constant HASH_SHA2
 	 */
 	String HASH_SHA2 = "SHA2";
+
+	int YEAR_DAYS = 365;
 }

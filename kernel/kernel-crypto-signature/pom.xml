@@ -8,7 +8,7 @@
 
 	<artifactId>kernel-crypto-signature</artifactId>
 	<name>kernel-crypto-signature</name>
-	<version>1.1.4</version>
+	<version>1.1.5.3</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -220,10 +220,10 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.1.4</kernel.core.version>
-		<kernel.auth.adaptor.version>1.1.4</kernel.auth.adaptor.version>
-		<kernel.crypto.jce.version>1.1.4</kernel.crypto.jce.version>
-		<kernel.keygenerator.bouncycastle.version>1.1.4</kernel.keygenerator.bouncycastle.version>
+		<kernel.core.version>1.1.5.3</kernel.core.version>
+		<kernel.auth.adaptor.version>1.1.5.3</kernel.auth.adaptor.version>
+		<kernel.crypto.jce.version>1.1.5.3</kernel.crypto.jce.version>
+		<kernel.keygenerator.bouncycastle.version>1.1.5.3</kernel.keygenerator.bouncycastle.version>
 	</properties>
 	<dependencies>
 		<dependency>

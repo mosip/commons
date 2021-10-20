@@ -67,4 +67,58 @@ public interface Logger {
 	 */
 	void trace(String sessionId, String idType, String id, String description);
 
+	/**
+	 * Default debug logging
+	 */
+	void debug(String message);
+
+	/**
+	 * Default debug logging with format and arguments
+	 */
+	void debug(String message, Object... args);
+
+	/**
+	 * Default info logging
+	 */
+	void info(String message);
+
+	/**
+	 * Default info logging with format and arguments
+	 */
+	void info(String message, Object... args);
+
+	/**
+	 * Default warn logging
+	 */
+	void warn(String message);
+
+	/**
+	 * Default warn logging with format and arguments
+	 */
+	void warn(String message, Object... args);
+
+	/**
+	 * Default trace logging
+	 */
+	void trace(String message);
+
+	/**
+	 * Default trace logging with format and arguments
+	 */
+	void trace(String message, Object... args);
+
+	/**
+	 * Default error logging
+	 */
+	void error(String message);
+
+	/**
+	 * Default error logging with format and arguments
+	 */
+	void error(String message, Object... args);
+
+	/**
+	 * Default error logging with stacktrace logging
+	 */
+	void error(String message, Throwable throwable);
 }

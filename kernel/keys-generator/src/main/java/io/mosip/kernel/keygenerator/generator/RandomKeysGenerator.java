@@ -3,14 +3,15 @@ package io.mosip.kernel.keygenerator.generator;
 import java.security.Key;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.Base64;
+import java.util.logging.Logger;
 
+import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import javax.crypto.Cipher;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,7 +34,9 @@ import io.mosip.kernel.keymanagerservice.repository.DataEncryptKeystoreRepositor
 @Component
 public class RandomKeysGenerator {
 
-    private static final String CREATED_BY = "system";
+    private static final Logger LOGGER = Logger.getLogger(RandomKeysGenerator.class.getName());
+
+    private static final String CREATED_BY = "System";
 
     private static final String WRAPPING_TRANSFORMATION = "AES/ECB/NoPadding";
 
@@ -59,7 +62,7 @@ public class RandomKeysGenerator {
         List<KeyAlias> currentKeyAlias = keyAliasMap.get(KeymanagerConstant.CURRENTKEYALIAS);
         String alias = null;
         if (currentKeyAlias.isEmpty()) {
-            System.out.println("Cache Master key not available, generating new key.");
+            LOGGER.info("Cache Master key not available, generating new key.");
             alias = UUID.randomUUID().toString();
             generateAndStore(appId, referenceId, alias, localDateTimeStamp);
         } else {
@@ -68,7 +71,7 @@ public class RandomKeysGenerator {
         try {
             generate10KKeysAndStoreInDB(alias);
         } catch (Exception e) {
-            System.err.println("Error generating Random Keys.");
+            LOGGER.warning("Error generating Random Keys.");
             e.printStackTrace();
         }
     }
@@ -87,7 +90,7 @@ public class RandomKeysGenerator {
 			noOfKeysToGenerate = (int) (noOfKeysRequire-noOfActiveKeys);
 		}
 		
-		System.out.println("No Of Keys To Generate:" + noOfKeysToGenerate);
+		LOGGER.info("No Of Keys To Generate:" + noOfKeysToGenerate);
 		
 		Long maxid = dataEncryptKeystoreRepository.findMaxId();
 		int startIndex = maxid == null ? 0 : maxid.intValue() + 1;
@@ -104,7 +107,7 @@ public class RandomKeysGenerator {
 			byte[] wrappedKey = cipher.doFinal(sKey.getEncoded());
 			String encodedKey = Base64.getEncoder().encodeToString(wrappedKey);
 			insertKeyIntoTable(i, encodedKey, "Active");
-			System.out.println("Insert secrets in DB: " + i);
+			LOGGER.info("Insert secrets in DB: " + i);
 		}
 	}
 

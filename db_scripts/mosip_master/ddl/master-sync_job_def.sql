@@ -8,7 +8,9 @@
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
--- 
+-- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false.
+-- Feb-2021		Ram Bhatt	    Job Type Column Added.
+-- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
 -- ------------------------------------------------------------------------------------------
 
 -- object: master.sync_job_def | type: TABLE --
@@ -26,8 +28,9 @@ CREATE TABLE master.sync_job_def(
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
 	upd_dtimes timestamp,
-	is_deleted boolean,
+	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
+	job_type character varying(128),
 	CONSTRAINT pk_syncjob_id PRIMARY KEY (id)
 
 );

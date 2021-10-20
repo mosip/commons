@@ -26,7 +26,7 @@ public class KeyPairGenerateRequestDto {
 	/**
 	 * Application Id For Generating KeyPair
 	 */
-	@ApiModelProperty(notes = "Application ID", example = "KERNEL", required = true)
+	@ApiModelProperty(notes = "Application ID", example = "REGISTRATION", required = true)
 	@NotBlank(message = KeymanagerConstant.INVALID_REQUEST)
 	private String applicationId;
 	
@@ -45,38 +45,36 @@ public class KeyPairGenerateRequestDto {
 	/**
 	 * Common Name For Generating Certificate or CSR
 	 */
-	@ApiModelProperty(notes = "Common Name (CN)", example = "MOSIP", required = true)
-	@NotBlank(message = KeymanagerConstant.INVALID_REQUEST)
+	@ApiModelProperty(notes = "Common Name (CN)", example = "", required = false)
 	private String commonName;
 
 	/**
 	 * Organization Unit For Generating Certificate or CSR
 	 */
-	@ApiModelProperty(notes = "Organization Unit (OU)", example = "MOSIP-TECH-CENTER", required = false)
+	@ApiModelProperty(notes = "Organization Unit (OU)", example = "", required = false)
 	private String organizationUnit;
 
 	/**
 	 * Organization For Generating Certificate or CSR
 	 */
-	@ApiModelProperty(notes = "Organization (O)", example = "IIITB", required = false)
+	@ApiModelProperty(notes = "Organization (O)", example = "", required = false)
 	private String organization;
 
 	/**
 	 * Location For Generating Certificate or CSR
 	 */
-	@ApiModelProperty(notes = "Location (L)", example = "BANGALORE", required = false)
+	@ApiModelProperty(notes = "Location (L)", example = "", required = false)
 	private String location;
 
 	/**
 	 * State For Generating Certificate or CSR
 	 */
-	@ApiModelProperty(notes = "State (ST)", example = "KA", required = false)
-	@NotBlank(message = KeymanagerConstant.INVALID_REQUEST)
+	@ApiModelProperty(notes = "State (ST)", example = "", required = false)
 	private String state;
 
 	/**
 	 * Country For Generating Certificate or CSR
 	 */
-	@ApiModelProperty(notes = "Country (C)", example = "IN", required = false)
+	@ApiModelProperty(notes = "Country (C)", example = "", required = false)
 	private String country;
 }

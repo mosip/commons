@@ -8,7 +8,8 @@
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
--- 
+-- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false 
+-- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
 -- ------------------------------------------------------------------------------------------
 -- object: authdevice.ftp_chip_detail | type: TABLE --
 -- DROP TABLE IF EXISTS authdevice.ftp_chip_detail CASCADE;
@@ -24,7 +25,7 @@ CREATE TABLE authdevice.ftp_chip_detail(
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
 	upd_dtimes timestamp,
-	is_deleted boolean,
+	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
 	CONSTRAINT pk_fcdtl_id PRIMARY KEY (id),
 	CONSTRAINT uk_fcdtl_id UNIQUE (foundational_trust_provider_id,make,model)

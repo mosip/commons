@@ -44,26 +44,3 @@ GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES
    ON ALL TABLES IN SCHEMA keymgr
    TO appadmin;
 -- ddl-end --
-
------------------------------------------------------------------------------------
--- object: grant_18180691b7 | type: PERMISSION --
-GRANT CONNECT
-   ON DATABASE mosip_keymgr
-   TO dbuser;
--- ddl-end --
-
--- object: grant_3543fb6cf7 | type: PERMISSION --
-GRANT USAGE
-   ON SCHEMA keymgr
-   TO dbuser;
--- ddl-end --
-
--- object: grant_8e1a2559ed | type: PERMISSION --
-GRANT SELECT
-   ON ALL TABLES IN SCHEMA keymgr
-   TO dbuser;
--- ddl-end --
-
-ALTER DEFAULT PRIVILEGES IN SCHEMA keymgr
-	GRANT SELECT ON TABLES TO dbuser;
--------------------------------------------------------------------------------------------
