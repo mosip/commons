@@ -8,7 +8,8 @@
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
--- 
+-- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
+-- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
 -- ------------------------------------------------------------------------------------------
 
 -- object: master.loc_holiday | type: TABLE --
@@ -25,7 +26,7 @@ CREATE TABLE master.loc_holiday(
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
 	upd_dtimes timestamp,
-	is_deleted boolean,
+	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
 	CONSTRAINT pk_lochol_id PRIMARY KEY (id,location_code,lang_code),
 	CONSTRAINT uk_lochol_name UNIQUE (holiday_name,holiday_date,location_code,lang_code)

@@ -2,8 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-
-	<version>1.1.4</version>
+	<version>1.1.5.4</version>
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-parent</artifactId>
 	<packaging>pom</packaging>
@@ -138,7 +137,7 @@
 		<module>kernel-idgenerator-rid</module>
 		<module>kernel-idgenerator-partnerid</module>
 		<module>kernel-idvalidator-prid</module>
-		<module>kernel-idvalidator-rid</module>
+		<module>kernel-idvalidator-rid</module> 
 		<module>kernel-idvalidator-uin</module>
 		<module>kernel-idvalidator-vid</module>
 		<module>kernel-idvalidator-mispid</module>
@@ -437,4 +436,3 @@
                 </developer>
         </developers>
 	</project>
-

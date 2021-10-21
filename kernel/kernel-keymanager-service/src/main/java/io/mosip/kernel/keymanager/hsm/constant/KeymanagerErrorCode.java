@@ -18,9 +18,13 @@ public enum KeymanagerErrorCode {
 
 	CERTIFICATE_PROCESSING_ERROR("KER-KMA-005", "Error occured while processing exception: "),
 
-	NOT_VALID_PKCS11_STORE_TYPE("KER-KMA-007", "Keystore loaded as offline, Retrivial of Private is not allowed."),
+	NOT_VALID_STORE_PASSWORD("KER-KMA-007", "Provided Keystore password is not valid."),
 	
-	KEYSTORE_NOT_INSTANTIATED("KER-KMA-006", "Keystore not instantiated error.");
+	KEYSTORE_NOT_INSTANTIATED("KER-KMA-006", "Keystore not instantiated error."),
+	
+	KEYSTORE_NO_CONSTRUCTOR_FOUND("KER-KMA-008", "Keystore implemenation clazz has no constructor with Map as argument."),
+	
+	OFFLINE_KEYSTORE_ACCESS_ERROR("KER-KMA-009", "Keystore instantiated as offline, performing operation not allowed.");
 
 	/**
 	 * The error code

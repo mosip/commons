@@ -1,9 +1,11 @@
 
 package io.mosip.kernel.keymanagerservice.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import io.mosip.kernel.keymanagerservice.entity.CACertificateStore;
@@ -22,7 +24,7 @@ public interface CACertificateStoreRepository extends JpaRepository<CACertificat
 	 * Function to find CACertificates by Certificate Subject and Certificate Issuer. 
 	 * 
 	 * @param certSubject Certificate Subject
-     * @param cercertIssuertSubject Certificate Issuer
+     * @param certIssuer Certificate Issuer
 	 * @return list of CACertificateStore
 	 */
     List<CACertificateStore> findByCertSubjectAndCertIssuer(String certSubject, String certIssuer);
@@ -68,5 +70,14 @@ public interface CACertificateStoreRepository extends JpaRepository<CACertificat
 	 * @return CACertificateStore
 	 */
 	CACertificateStore findByCertThumbprintAndPartnerDomain(String certThumbprint, String partnerDomain);
+
+	/**
+	 * Function to find all CACertificate created , updated or deleted time is within the lastUpdated and current time
+	 * @param lastUpdated
+	 * @param currentTimestamp
+	 * @return
+	 */
+	@Query("FROM CACertificateStore WHERE (createdtimes BETWEEN ?1 AND ?2) OR (updatedtimes BETWEEN ?1 AND ?2)  OR (deletedtimes BETWEEN ?1 AND ?2)")
+	List<CACertificateStore> findAllLatestCreatedUpdateDeleted(LocalDateTime lastUpdated, LocalDateTime currentTimestamp);
 
 }

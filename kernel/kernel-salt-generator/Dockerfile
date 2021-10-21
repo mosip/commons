@@ -80,6 +80,14 @@ RUN apt-get -y update \
 # set working directory for the user
 WORKDIR /home/${container_user}
 
+ENV work_dir=/home/${container_user}
+
+ARG loader_path=${work_dir}/additional_jars/
+
+RUN mkdir -p ${loader_path}
+
+ENV loader_path_env=${loader_path}
+
 COPY ./target/kernel-salt-generator-*.jar kernel-salt-generator.jar
 
 # change permissions of file inside working dir
@@ -90,7 +98,7 @@ USER ${container_user_uid}:${container_user_gid}
 #EXPOSE 8092
 
 CMD if [ "$is_glowroot_env" = "present" ]; then \
-    wget "${artifactory_url_env}"/artifactory/libs-release-local/io/mosip/testing/glowroot.zip ; \
+    wget -q --show-progress "${artifactory_url_env}"/artifactory/libs-release-local/io/mosip/testing/glowroot.zip ; \
     unzip glowroot.zip ; \
     rm -rf glowroot.zip ; \
     sed -i 's/<service_name>/salt-generator-service/g' glowroot/glowroot.properties ; \

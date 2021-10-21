@@ -29,10 +29,3 @@ CREATE ROLE appadmin WITH
 	PASSWORD :appadminpwd;
 -- ddl-end --
 
--- object: dbuser | type: ROLE --
--- DROP ROLE IF EXISTS dbuser;
-CREATE ROLE dbuser WITH 
-	INHERIT
-	LOGIN
-	PASSWORD :rodbuserpwd;
--- ddl-end --

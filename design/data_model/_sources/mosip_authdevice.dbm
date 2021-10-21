@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="36,30" last-zoom="0.5"
+<dbmodel pgmodeler-ver="0.9.3" use-changelog="false" last-position="0,4" last-zoom="0.75" max-obj-count="10"
 	 default-owner="postgres">
 <role name="sysadmin"
       superuser="true"
@@ -46,18 +46,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<comment><![CDATA[Database to store all master reference data, look-up data, configuration data, metadata...etc.]]></comment>
 </database>
 
-<schema name="public" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
+<schema name="public" layer="0" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
 </schema>
 
-<schema name="authdevice" rect-visible="true" fill-color="#83af1f">
+<schema name="authdevice" layer="0" rect-visible="true" fill-color="#83af1f">
 	<role name="sysadmin"/>
 </schema>
 
-<table name="registered_device_master" alias="regdevm" hide-ext-attribs="true">
+<table name="registered_device_master" layer="0" alias="regdevm" collapse-mode="2" max-obj-count="24" z-value="0">
 	<schema name="authdevice"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Registered Device Master : Contains list of registered devices and details, like fingerprint scanner, iris scanner, scanner etc used at registration centers, authentication services, eKYC...etc. Valid devices with active status only allowed at registering devices for respective functionalities. Device onboarding are handled through admin application/portal by the user who is having the device onboarding authority. ]]></comment>
-	<position x="780" y="320"/>
+	<position x="760" y="400"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Registred Device Code : Unique ID generated / assigned for device which is registred in MOSIP system for the purpose]]></comment>
@@ -129,7 +129,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -142,11 +142,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="registered_device_master_h" alias="regdevmh">
+<table name="registered_device_master_h" layer="0" alias="regdevmh" collapse-mode="2" max-obj-count="25" z-value="0">
 	<schema name="authdevice"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Registered Device History : History of changes of any MOSIP device registration will be stored in history table to track any chnages for future validations.]]></comment>
-	<position x="240" y="580"/>
+	<position x="220" y="680"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Registred Device Code : Unique ID generated / assigned for device which is registred in MOSIP system for the purpose]]></comment>
@@ -218,7 +218,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -235,11 +235,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="reg_device_type" alias="rdtyp">
+<table name="reg_device_type" layer="0" alias="rdtyp" collapse-mode="2" max-obj-count="12" z-value="0">
 	<schema name="authdevice"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Device Type : Types of devices that are supported by the MOSIP system,  like  scanning, finger, face, iris etc]]></comment>
-	<position x="620" y="660"/>
+	<position x="720" y="900"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Device Type Code: Types of devices used for registration processes, authentication...etc for ex., FNR, FACE, IRIS... etc]]></comment>
@@ -272,7 +272,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -285,11 +285,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="reg_device_sub_type" alias="rdstyp">
+<table name="reg_device_sub_type" layer="0" alias="rdstyp" collapse-mode="2" max-obj-count="13" z-value="0">
 	<schema name="authdevice"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Device Type : Sub types of devices that are supported by the MOSIP system,  like  Slab, Single, Touchless...etc]]></comment>
-	<position x="1120" y="640"/>
+	<position x="1100" y="860"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Device Sub Type Code: Sub types of devices used for registration processes, authentication...etc for ex., SLB, SINGLE, FULLFACE... etc]]></comment>
@@ -326,7 +326,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -339,11 +339,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="secure_biometric_interface" alias="sbi">
+<table name="secure_biometric_interface" layer="0" alias="sbi" collapse-mode="2" max-obj-count="16" z-value="0">
 	<schema name="authdevice"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Secure Biometric Interface : Secure Biometric Interface to have all the details about the device types, provider and software details]]></comment>
-	<position x="1100" y="60"/>
+	<position x="1360" y="40"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[ID: Unigue service ID, Service ID is geerated by the MOSIP system]]></comment>
@@ -392,7 +392,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -405,11 +405,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="secure_biometric_interface_h" alias="sbih">
+<table name="secure_biometric_interface_h" layer="0" alias="sbih" collapse-mode="2" max-obj-count="18" z-value="0">
 	<schema name="authdevice"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[MOSIP Secure Biometric Interface History : History of changes of any MOSIP secure biometric interface will be stored in history table to track any chnages for future validations.]]></comment>
-	<position x="720" y="40"/>
+	<position x="840" y="40"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[ID: Unigue service ID, Service ID is geerated by the MOSIP system]]></comment>
@@ -458,7 +458,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -475,11 +475,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="ftp_chip_detail" alias="fcdtl">
+<table name="ftp_chip_detail" layer="0" alias="fcdtl" collapse-mode="2" max-obj-count="15" z-value="0">
 	<schema name="authdevice"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Foundational Trust Provider Chip Details : To store all foundational trust provider chip details like make, model and certificate.]]></comment>
-	<position x="280" y="100"/>
+	<position x="320" y="40"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Foundational Trust Provider ID: Unique ID of the trust provider, Trust provider id is generated by MOSIP system.]]></comment>
@@ -524,7 +524,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -540,11 +540,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="device_detail" alias="devdtl">
+<table name="device_detail" layer="0" alias="devdtl" collapse-mode="2" max-obj-count="18" z-value="0">
 	<schema name="authdevice"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Device Detail : Details of the device like device provider id, make , model, device type, device sub type, approval status are stored here.]]></comment>
-	<position x="1540" y="420"/>
+	<position x="1340" y="460"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[ID: Unigue service ID, Service ID is geerated by the MOSIP system]]></comment>
@@ -597,7 +597,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -613,11 +613,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="foundational_trust_provider" alias="trp">
+<table name="foundational_trust_provider" layer="0" alias="trp" collapse-mode="2" max-obj-count="10" z-value="0">
 	<schema name="authdevice"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Foundational Trust Provider : To refere all foundational trust provider, This provider will issue certificates to the chip/device manufacturer to certify devices.]]></comment>
-	<position x="280" y="360"/>
+	<position x="240" y="420"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Foundational Trust Provider ID: Unique ID of the trust provider, Trust provider id is generated by MOSIP system.]]></comment>
@@ -646,7 +646,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
 	</column>
-	<column name="is_deleted">
+	<column name="is_deleted" not-null="true" default-value="FALSE">
 		<type name="boolean" length="0"/>
 		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
 	</column>
@@ -695,35 +695,35 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="dtyp_code,code" ref-type="dst-columns"/>
 </constraint>
 
-<relationship name="rel_reg_device_sub_type_reg_device_type" type="relfk"
-	 src-table="authdevice.reg_device_sub_type"
-	 dst-table="authdevice.reg_device_type" reference-fk="fk_rdstyp_dtype_code"
-	 src-required="false" dst-required="false"/>
-
-<relationship name="rel_secure_biometric_interface_device_detail" type="relfk"
-	 src-table="authdevice.secure_biometric_interface"
-	 dst-table="authdevice.device_detail" reference-fk="fk_sbi_id"
-	 src-required="false" dst-required="false"/>
-
-<relationship name="rel_device_detail_reg_device_sub_type" type="relfk"
-	 src-table="authdevice.device_detail"
-	 dst-table="authdevice.reg_device_sub_type" reference-fk="fk_devdtl_id"
-	 src-required="false" dst-required="false"/>
-
-<relationship name="rel_registered_device_master_device_detail" type="relfk"
+<relationship name="rel_registered_device_master_device_detail" type="relfk" layer="0"
 	 src-table="authdevice.registered_device_master"
 	 dst-table="authdevice.device_detail" reference-fk="fk_regdevm"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="true"/>
 
-<relationship name="rel_registered_device_master_foundational_trust_provider" type="relfk"
+<relationship name="rel_registered_device_master_foundational_trust_provider" type="relfk" layer="0"
 	 src-table="authdevice.registered_device_master"
 	 dst-table="authdevice.foundational_trust_provider" reference-fk="fk_regdevm_ftpid"
 	 src-required="false" dst-required="false"/>
 
-<relationship name="rel_ftp_chip_detail_foundational_trust_provider" type="relfk"
+<relationship name="rel_reg_device_sub_type_reg_device_type" type="relfk" layer="0"
+	 src-table="authdevice.reg_device_sub_type"
+	 dst-table="authdevice.reg_device_type" reference-fk="fk_rdstyp_dtype_code"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_secure_biometric_interface_device_detail" type="relfk" layer="0"
+	 src-table="authdevice.secure_biometric_interface"
+	 dst-table="authdevice.device_detail" reference-fk="fk_sbi_id"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_ftp_chip_detail_foundational_trust_provider" type="relfk" layer="0"
 	 src-table="authdevice.ftp_chip_detail"
 	 dst-table="authdevice.foundational_trust_provider" reference-fk="fk_fcdtl_ftpid"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_device_detail_reg_device_sub_type" type="relfk" layer="0"
+	 src-table="authdevice.device_detail"
+	 dst-table="authdevice.reg_device_sub_type" reference-fk="fk_devdtl_id"
+	 src-required="false" dst-required="true"/>
 
 <permission>
 	<object name="mosip_master" type="database"/>

@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.com/mosip/commons.svg?branch=master)](https://travis-ci.com/mosip/commons)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mosip_mosip-ref-impl&metric=alert_status)](https://sonarcloud.io/dashboard?id=mosip_mosip-ref-impl)
+
 [![Join the chat at https://gitter.im/mosip-community/Commons-Kernel](https://badges.gitter.im/mosip-community/Commons-Kernel.svg)](https://gitter.im/mosip-community/Commons-Kernel?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # mosip-platform

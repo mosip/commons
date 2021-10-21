@@ -4,7 +4,7 @@
 <groupId>io.mosip.kernel</groupId>
 
 	<artifactId>kernel-bioapi-provider</artifactId>
-	<version>1.1.4</version>
+	<version>1.1.5.3</version>
 	<name>kernel-bioapi-provider</name>
 	<description>bioapi provider</description>
 	<url>https://github.com/mosip/commons</url>
@@ -220,8 +220,8 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.1.4</kernel.core.version>
-		<kernel.cbeff.version>1.1.4</kernel.cbeff.version>
+		<kernel.core.version>1.1.5.3</kernel.core.version>
+		<kernel.cbeff.version>1.1.5.3</kernel.cbeff.version>
 	</properties>	
 	<dependencies>
 		<dependency>

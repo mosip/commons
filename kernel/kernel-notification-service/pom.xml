@@ -8,9 +8,7 @@
 	<name>kernel-notification-service</name>
 	<description>Mosip commons project </description>
         <url>https://github.com/mosip/commons</url>
-
-	<version>1.1.4</version>
-
+	<version>1.1.5.3</version>
 	<groupId>io.mosip.kernel</groupId>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -223,13 +221,11 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-
-		<kernel.core.version>1.1.4</kernel.core.version>
-		<kernel.auth-adapter.version>1.1.4</kernel.auth-adapter.version>
-		<kernel.applicant-type.version>1.1.4</kernel.applicant-type.version>
-		<kernel.dataaccess-hibernate.version>1.1.4</kernel.dataaccess-hibernate.version>
-		<kernel.logger.version>1.1.4</kernel.logger.version>
-
+		<kernel.core.version>1.1.5.3</kernel.core.version>
+		<kernel.auth-adapter.version>1.1.5.3</kernel.auth-adapter.version>
+		<kernel.applicant-type.version>1.1.5.3</kernel.applicant-type.version>
+		<kernel.dataaccess-hibernate.version>1.1.5.3</kernel.dataaccess-hibernate.version>
+		<kernel.logger.version>1.1.5.3</kernel.logger.version>
 	</properties>
 	<dependencies>
 		<dependency>

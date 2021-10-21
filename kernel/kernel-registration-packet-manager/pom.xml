@@ -5,12 +5,10 @@
     <parent>
         <artifactId>kernel-parent</artifactId>
         <groupId>io.mosip.kernel</groupId>
-
-        <version>1.1.4</version>
+        <version>1.1.5.3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <version>1.1.4</version>
-
+    <version>1.1.5.3</version>
 
     <artifactId>kernel-registration-packet-manager</artifactId>
 
@@ -121,12 +119,10 @@
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
         <sonar.skip>true</sonar.skip>
-
-        <kernel.core.version>1.1.4</kernel.core.version>
-        <kernel.crypto-jce.version>1.1.4</kernel.crypto-jce.version>
-        <kernel.keygenerator.bouncycastle.version>1.1.4</kernel.keygenerator.bouncycastle.version>
-        <kernel.logger.logback.version>1.1.4</kernel.logger.logback.version>
-
+        <kernel.core.version>1.1.5.3</kernel.core.version>
+        <kernel.crypto-jce.version>1.1.5.3</kernel.crypto-jce.version>
+        <kernel.keygenerator.bouncycastle.version>1.1.5.3</kernel.keygenerator.bouncycastle.version>
+        <kernel.logger.logback.version>1.1.5.3</kernel.logger.logback.version>
         <gson.version>2.8.4</gson.version>
         <json.version>20180813</json.version>
     </properties>
@@ -159,9 +155,7 @@
         <dependency>
             <groupId>io.mosip.kernel</groupId>
             <artifactId>kernel-cbeffutil-api</artifactId>
-
-            <version>1.1.4</version>
-
+            <version>1.1.5.3</version>
         </dependency>
         <dependency>
             <groupId>io.mosip.kernel</groupId>

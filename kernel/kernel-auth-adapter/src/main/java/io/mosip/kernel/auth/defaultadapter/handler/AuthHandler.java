@@ -5,10 +5,20 @@ import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.annotation.PostConstruct;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +28,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -40,6 +52,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.mosip.kernel.auth.defaultadapter.config.RestTemplateInterceptor;
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterConstant;
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterErrorCode;
 import io.mosip.kernel.auth.defaultadapter.exception.AuthManagerException;
@@ -94,9 +107,36 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 	private ObjectMapper objectMapper;
 	
 	@Autowired
-	private RestTemplate restTemplate;
+	private RestTemplateInterceptor restInterceptor;
+	
+	private RestTemplate restTemplate = null;
 	
 	private static final String DEFAULTADMIN_MOSIP_IO = "defaultadmin@mosip.io";
+	
+	@Value("${mosip.kernel.auth.adapter.ssl-bypass:true}")
+	private boolean sslBypass;
+	
+	@PostConstruct
+	void init() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
+		HttpClientBuilder httpClientBuilder = HttpClients.custom().disableCookieManagement();
+		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+		if (sslBypass) {
+			TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
+			SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom()
+					.loadTrustMaterial(null, acceptingTrustStrategy).build();
+			SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext, new HostnameVerifier() {
+				public boolean verify(String arg0, SSLSession arg1) {
+					return true;
+				}
+			});
+			httpClientBuilder.setSSLSocketFactory(csf);
+		}
+		requestFactory.setHttpClient(httpClientBuilder.build());
+		List<ClientHttpRequestInterceptor> list = new ArrayList<>();
+		list.add(restInterceptor);
+		restTemplate = new RestTemplate(requestFactory);
+		restTemplate.setInterceptors(list);
+	}
 
 	@Override
 	protected void additionalAuthenticationChecks(UserDetails userDetails,

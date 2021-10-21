@@ -7,4 +7,6 @@ public class KhazanaConstant {
     public static final int GCM_AAD_LENGTH = 32;
 
     public static final String SIGNATURES_SUCCESS = "success";
+
+    public static String TAGS_FILENAME="Tags";
 }

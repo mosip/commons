@@ -8,7 +8,8 @@
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
--- 
+-- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
+-- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
 -- ------------------------------------------------------------------------------------------
 
 -- object: master.zone_user | type: TABLE --
@@ -22,7 +23,7 @@ CREATE TABLE master.zone_user(
 	cr_dtimes 	timestamp NOT NULL,
 	upd_by 		character varying(256),
 	upd_dtimes 	timestamp,
-	is_deleted 	boolean,
+	is_deleted 	boolean DEFAULT FALSE,
 	del_dtimes 	timestamp,
 	CONSTRAINT pk_zoneuser PRIMARY KEY (zone_code,usr_id)
 

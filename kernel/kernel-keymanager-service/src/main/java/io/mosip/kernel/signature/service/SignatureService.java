@@ -18,6 +18,7 @@ public interface SignatureService {
 	 * @param timestampRequestDto {@link TimestampRequestDto}
 	 * @return {@link ValidatorResponseDto}
 	 */
+	@Deprecated
 	public ValidatorResponseDto validate(TimestampRequestDto timestampRequestDto);
 
 	/**
@@ -26,7 +27,7 @@ public interface SignatureService {
 	 * @param signRequestDto the signRequestDto
 	 * @return the SignatureResponse
 	 */
-
+	@Deprecated
 	public SignatureResponse sign(SignRequestDto signRequestDto);
 
 

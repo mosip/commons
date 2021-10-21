@@ -16,7 +16,7 @@ ARG is_glowroot
 ARG artifactory_url
 
 # can be passed during Docker build as build time environment for hsm client zip file path
-ARG client_zip_path
+ARG hsm_client_zip_path
 
 # can be passed during Docker build as build time environment management rmi server hostname
 #ARG management_rmi_server_hostname
@@ -42,7 +42,7 @@ ENV artifactory_url_env=${artifactory_url}
 ENV iam_adapter_url_env=${iam_adapter_url}
 
 # environment variable to pass hsm client zip file path, at docker runtime
-ENV zip_file_path=${client_zip_path}
+ENV hsm_zip_file_path=${hsm_client_zip_path}
 
 # environment variable to pass management rmi server hostname, at docker runtime
 #ENV management_rmi_server_hostname_env=${management_rmi_server_hostname}
@@ -62,42 +62,60 @@ ARG container_user_uid=1001
 # can be passed during Docker build as build time environment for github branch to pickup configuration from.
 ARG container_user_gid=1001
 
+ARG hsm_local_dir=hsm-client
+
+ENV hsm_local_dir_name=${hsm_local_dir}
+
 # install packages and create user
 RUN apt-get -y update \
-&& apt-get install -y unzip \
+&& apt-get install -y unzip sudo\
 && groupadd -g ${container_user_gid} ${container_user_group} \
-&& useradd -u ${container_user_uid} -g ${container_user_group} -s /bin/sh -m ${container_user}
+&& useradd -u ${container_user_uid} -g ${container_user_group} -s /bin/sh -m ${container_user} \
+&& adduser ${container_user} sudo \
+&& echo "%sudo ALL=(ALL) NOPASSWD:/home/${container_user}/${hsm_local_dir}/install.sh" >> /etc/sudoers
 
 # set working directory for the user
 WORKDIR /home/${container_user}
 
+ENV work_dir=/home/${container_user}
+
+ARG loader_path=${work_dir}/additional_jars/
+
+RUN mkdir -p ${loader_path}
+
+ENV loader_path_env=${loader_path}
+
 ADD configure_start.sh configure_start.sh
+
 RUN chmod +x configure_start.sh
+
+# creating folder to copy additional supporting jar files required at run-time.
+#RUN mkdir -p /home/${container_user}/additional-jars
 
 ADD ./target/*.jar /target/
 RUN find /target -name '*.jar' -executable -type f "-print0" | xargs "-0" cp -t / \
     && rm -rf /target \
-    && mv /*.jar /home/${container_user}/kernel-keymanager-service.jar
+    && mv /*.jar ${work_dir}/kernel-keymanager-service.jar
 
 # change permissions of file inside working dir
 RUN chown -R ${container_user}:${container_user} /home/${container_user}
 
 # select container user for all tasks
-#USER ${container_user_uid}:${container_user_gid}
+USER ${container_user_uid}:${container_user_gid}
 
 EXPOSE 8088
 EXPOSE 9010
 
 ENTRYPOINT [ "./configure_start.sh" ]
 CMD if [ "$is_glowroot_env" = "present" ]; then \
-    wget "${artifactory_url_env}"/artifactory/libs-release-local/io/mosip/testing/glowroot.zip ; \
+    wget -q --show-progress "${artifactory_url_env}"/artifactory/libs-release-local/io/mosip/testing/glowroot.zip ; \
     unzip glowroot.zip ; \
     rm -rf glowroot.zip ; \
     sed -i 's/<service_name>/kernel-keymanager-service/g' glowroot/glowroot.properties ; \
-    wget "${iam_adapter_url_env}" -O kernel-auth-adapter.jar; \
-    java -jar -javaagent:glowroot/glowroot.jar -Dloader.path=./kernel-auth-adapter.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -XX:HeapDumpPath=/home/  /home/${container_user}/kernel-keymanager-service.jar ; \
+    wget "${iam_adapter_url_env}" -O "${loader_path_env}"/kernel-auth-adapter.jar; \
+    java -jar -javaagent:glowroot/glowroot.jar -Dloader.path="${loader_path_env}" -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -XX:HeapDumpPath=/home/  ./kernel-keymanager-service.jar ; \
     else \
-    wget "${iam_adapter_url_env}" -O kernel-auth-adapter.jar; \
-    java -jar -Dloader.path=./kernel-auth-adapter.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" /home/${container_user}/kernel-keymanager-service.jar ; \
+    wget "${iam_adapter_url_env}" -O "${loader_path_env}"/kernel-auth-adapter.jar; \
+    java -jar -Dloader.path="${loader_path_env}" -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" ./kernel-keymanager-service.jar ; \
     fi
 

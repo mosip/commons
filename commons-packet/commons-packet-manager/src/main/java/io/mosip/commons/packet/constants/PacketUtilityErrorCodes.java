@@ -23,7 +23,14 @@ public enum PacketUtilityErrorCodes {
 	PACKET_KEEPER_INTEGRITY_ERROR("KER-PUT-017", "Packet keeper exception occured."),
 	CRYPTO_EXCEPTION("KER-PUT-018", "No available crypto service exception."),
 	INTEGRITY_FAILURE("KER-PUT-019", "Packet Integrity check failed."),
-	PACKET_VALIDATION_FAILED("KER-PUT-020", "Packet Validation exception occured.");
+	PACKET_VALIDATION_FAILED("KER-PUT-020", "Packet Validation exception occured."),
+	TAGGING_FAILED("KER-PUT-021", "Failed to add tags."), 
+	TAG_ALREADY_EXIST("KER-PUT-022", "Tag Already Exist."),
+	GET_TAG_EXCEPTION("KER-PUT-023","Failed to get tags"),
+	TAG_NOT_FOUND("KER-PUT-024", "Requested tag not present"),
+	SOURCE_NOT_PRESENT("KER-PUT-025", "Source not present in request.");
+	
+	
 
 
 	private final String errorCode;

@@ -11,10 +11,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VersionType {
+public class VersionType implements Serializable {
 	
 	private int major;
 	private int minor;

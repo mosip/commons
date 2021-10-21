@@ -1,12 +1,25 @@
 package io.mosip.commons.khazana.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.mosip.commons.khazana.constant.KhazanaErrorCodes;
-import io.mosip.commons.khazana.exception.FileNotFoundInDestinationException;
-import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
-import io.mosip.commons.khazana.util.EncryptionHelper;
-import io.mosip.commons.khazana.util.ObjectStoreUtil;
-import io.mosip.kernel.core.util.FileUtils;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
+
+import io.mosip.commons.khazana.dto.ObjectDto;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,13 +31,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.mosip.commons.khazana.constant.KhazanaErrorCodes;
+import io.mosip.commons.khazana.exception.FileNotFoundInDestinationException;
+import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
+import io.mosip.commons.khazana.util.EncryptionHelper;
+import io.mosip.commons.khazana.util.ObjectStoreUtil;
+import io.mosip.kernel.core.util.FileUtils;
 
 @Service
 @Qualifier("PosixAdapter")
@@ -34,6 +48,7 @@ public class PosixAdapter implements ObjectStoreAdapter {
     private static final String SEPARATOR = "/";
     private static final String ZIP = ".zip";
     private static final String JSON = ".json";
+	private static final String TAGS = "_tags";
     @Autowired
     private ObjectMapper objectMapper;
     @Value("${object.store.base.location:home}")
@@ -276,5 +291,76 @@ public class PosixAdapter implements ObjectStoreAdapter {
             LOGGER.error("exception occured while packing.", e);
             return false;
         }
+    }
+
+	@Override
+	public Map<String, String> addTags(String account, String container, Map<String, String> tags) {
+		try {
+		JSONObject jsonObject = containterTagging(account, container, tags);
+		createContainerWithTagging(account, container, new ByteArrayInputStream(jsonObject.toString().getBytes()));
+		} catch (Exception e) {
+			LOGGER.error("exception occured to add tags for id - " + container, e);
+		}
+		return tags;
+	}
+
+	@Override
+	public Map<String, String> getTags(String account, String container) {
+		Map<String, String> metaMap = new HashMap<String, String>();
+		File accountLocation = new File(baseLocation + SEPARATOR + account);
+		if (!accountLocation.exists())
+			accountLocation.mkdir();
+		File tagFile = new File(accountLocation.getPath() + SEPARATOR + container + TAGS + JSON);
+		try {
+		if (tagFile.createNewFile()) {
+			LOGGER.info(" tags file not yet present for  id - " + container);
+		} else {
+			InputStream inputstream = new FileInputStream(tagFile);
+			BufferedReader inputStreamReader = new BufferedReader(new InputStreamReader(inputstream, "UTF-8"));
+			StringBuilder responseStrBuilder = new StringBuilder();
+
+			String inputTags;
+			while ((inputTags = inputStreamReader.readLine()) != null)
+			    responseStrBuilder.append(inputTags);
+
+			inputStreamReader.close();
+			JSONObject jsonObject = objectMapper.readValue(objectMapper.writeValueAsString(responseStrBuilder.toString()),
+					JSONObject.class);
+			metaMap = objectMapper.readValue(jsonObject.toString(), HashMap.class);
+			}
+		} catch (Exception e) {
+			LOGGER.error("exception occured to get tags for id - " + container, e);
+		}
+		return metaMap;
+	}
+
+	private JSONObject containterTagging(String account, String container, Map<String, String> tags) {
+		JSONObject jsonObject = new JSONObject(tags);
+		Map<String, String> existingTags = getTags(account, container);
+		if (!CollectionUtils.isEmpty(existingTags))
+			existingTags.entrySet().forEach(entry -> {
+				try {
+					jsonObject.put(entry.getKey(), entry.getValue());
+				} catch (JSONException e) {
+					LOGGER.error("exception occured to add tags for id - " + container, e);
+				}
+			});
+		return jsonObject;
+	}
+
+	private void createContainerWithTagging(String account, String container, InputStream data) throws IOException {
+
+		File accountLocation = new File(baseLocation + SEPARATOR + account);
+		if (!accountLocation.exists())
+			accountLocation.mkdir();
+		File tagFile = new File(accountLocation.getPath() + SEPARATOR + container + TAGS + JSON);
+		OutputStream outStream = new FileOutputStream(tagFile);
+		outStream.write(IOUtils.toByteArray(data));
+		outStream.close();
+
+	}
+
+    public List<ObjectDto> getAllObjects(String account, String container) {
+        return null;
     }
 }

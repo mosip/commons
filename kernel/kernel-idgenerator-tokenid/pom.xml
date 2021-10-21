@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 <groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-idgenerator-tokenid</artifactId>
-	<version>1.1.4</version>
+	<version>1.1.5.3</version>
 <properties>		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -217,9 +217,9 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.1.4</kernel.core.version>
-		<kernel.dataaccess-hibernate.version>1.1.4</kernel.dataaccess-hibernate.version>
-		<kernel.crypto-jce.version>1.1.4</kernel.crypto-jce.version>
+		<kernel.core.version>1.1.5.3</kernel.core.version>
+		<kernel.dataaccess-hibernate.version>1.1.5.3</kernel.dataaccess-hibernate.version>
+		<kernel.crypto-jce.version>1.1.5.3</kernel.crypto-jce.version>
 	</properties>
 	<dependencies>
 		<dependency>

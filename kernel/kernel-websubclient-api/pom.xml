@@ -4,9 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 <groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-websubclient-api</artifactId>
-
-	<version>1.1.4</version>
-
+	<version>1.1.5.3</version>
 	<packaging>jar</packaging>
 	<name>kernel-websubclient-api</name>
 	<description>Mosip commons project </description>
@@ -222,9 +220,7 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-
-		<kernel.core.version>1.1.4</kernel.core.version>
-
+		<kernel.core.version>1.1.5.3</kernel.core.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -243,7 +239,6 @@
 			<version>5.0.6.RELEASE</version>
 		</dependency>
 	</dependencies>
-
 <distributionManagement>
 		<snapshotRepository>
                         <id>ossrh</id>
@@ -255,7 +250,6 @@
                 </repository> 
         </distributionManagement> 
         <build>
-
           <plugins>
             <plugin>
               <artifactId>maven-deploy-plugin</artifactId>

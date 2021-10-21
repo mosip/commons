@@ -4,7 +4,6 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.KeyStore.PrivateKeyEntry;
 import java.security.cert.CertPathBuilder;
 import java.security.cert.CertPathBuilderException;
 import java.security.cert.CertStore;
@@ -14,9 +13,10 @@ import java.security.cert.TrustAnchor;
 import java.security.cert.X509CertSelector;
 import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -28,16 +28,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.mosip.kernel.core.logger.spi.Logger;
-import io.mosip.kernel.core.util.DateUtils;
-import io.mosip.kernel.keymanagerservice.constant.KeymanagerConstant;
-import io.mosip.kernel.keymanagerservice.entity.KeyAlias;
-import io.mosip.kernel.keymanagerservice.entity.PartnerCertificateStore;
 import io.mosip.kernel.core.keymanager.model.CertificateParameters;
 import io.mosip.kernel.core.keymanager.spi.KeyStore;
-import io.mosip.kernel.keymanagerservice.exception.NoUniqueAliasException;
+import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.kernel.core.util.DateUtils;
+import io.mosip.kernel.keymanager.hsm.util.CertificateUtility;
+import io.mosip.kernel.keymanagerservice.dto.SignatureCertificate;
+import io.mosip.kernel.keymanagerservice.entity.PartnerCertificateStore;
 import io.mosip.kernel.keymanagerservice.helper.KeymanagerDBHelper;
 import io.mosip.kernel.keymanagerservice.logger.KeymanagerLogger;
+import io.mosip.kernel.keymanagerservice.service.KeymanagerService;
 import io.mosip.kernel.keymanagerservice.util.KeymanagerUtil;
 import io.mosip.kernel.partnercertservice.constant.PartnerCertManagerConstants;
 import io.mosip.kernel.partnercertservice.constant.PartnerCertManagerErrorConstants;
@@ -74,6 +74,12 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
     @Value("${mosip.kernel.partner.allowed.domains}")
     private String partnerAllowedDomains;
 
+    @Value("${mosip.kernel.certificate.sign.algorithm:SHA256withRSA}")
+    private String signAlgorithm;
+
+    @Value("${mosip.kernel.partner.issuer.certificate.duration.years:1}")
+    private int issuerCertDuration;
+        
     /**
      * Utility to generate Metadata
      */
@@ -97,6 +103,9 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
      */
     @Autowired
     private KeyStore keyStore;
+
+    @Autowired
+    private KeymanagerService keymanagerService;
 
     @Override
     public CACertificateResponseDto uploadCACertificate(CACertificateRequestDto caCertRequestDto) {
@@ -324,46 +333,30 @@ public class PartnerCertificateManagerServiceImpl implements PartnerCertificateM
         }
     }
 
-    private String getSignKeyAlias(String keyAppId) {
-        LOGGER.info(PartnerCertManagerConstants.SESSIONID, PartnerCertManagerConstants.UPLOAD_PARTNER_CERT,
-                PartnerCertManagerConstants.EMPTY, "Retrieve Master Key Alias from DB.");
-
-        Map<String, List<KeyAlias>> keyAliasMap = dbHelper.getKeyAliases(keyAppId, PartnerCertManagerConstants.EMPTY,
-                DateUtils.getUTCCurrentDateTime());
-
-        List<KeyAlias> currentKeyAliases = keyAliasMap.get(KeymanagerConstant.CURRENTKEYALIAS);
-
-        if (!currentKeyAliases.isEmpty() && currentKeyAliases.size() == 1) {
-            LOGGER.info(PartnerCertManagerConstants.SESSIONID, PartnerCertManagerConstants.UPLOAD_PARTNER_CERT,
-                    "getKeyAlias", "CurrentKeyAlias size is one. Will decrypt random symmetric key for this alias");
-            return currentKeyAliases.get(0).getAlias();
-        }
-
-        LOGGER.error(PartnerCertManagerConstants.SESSIONID, PartnerCertManagerConstants.UPLOAD_PARTNER_CERT,
-                PartnerCertManagerConstants.EMPTY,
-                "CurrentKeyAlias is not unique. KeyAlias count: " + currentKeyAliases.size());
-        throw new NoUniqueAliasException(PartnerCertManagerErrorConstants.NO_UNIQUE_ALIAS.getErrorCode(),
-                PartnerCertManagerErrorConstants.NO_UNIQUE_ALIAS.getErrorMessage());
-    }
-
     private X509Certificate reSignPartnerKey(X509Certificate reqX509Cert) {
 
-        String signKeyAlias = getSignKeyAlias(masterSignKeyAppId);
+        String timestamp = DateUtils.getUTCCurrentDateTimeString();
+	SignatureCertificate certificateResponse = keymanagerService.getSignatureCertificate(masterSignKeyAppId,
+                                        Optional.of(PartnerCertManagerConstants.EMPTY), timestamp);
         LOGGER.info(PartnerCertManagerConstants.SESSIONID, PartnerCertManagerConstants.UPLOAD_PARTNER_CERT, "KeyAlias",
-                "Found Master Key Alias: " + signKeyAlias);
-        PrivateKeyEntry signKeyEntry = keyStore.getAsymmetricKey(signKeyAlias);
-        PrivateKey signPrivateKey = signKeyEntry.getPrivateKey();
-        X509Certificate signCert = (X509Certificate) signKeyEntry.getCertificate();
+                "Found Master Key Alias: " + certificateResponse.getAlias());
+                
+        PrivateKey signPrivateKey = certificateResponse.getCertificateEntry().getPrivateKey();
+        X509Certificate signCert = certificateResponse.getCertificateEntry().getChain()[0];
         X500Principal signerPrincipal = signCert.getSubjectX500Principal();
 
         X500Principal subjectPrincipal = reqX509Cert.getSubjectX500Principal();
         PublicKey partnerPublicKey = reqX509Cert.getPublicKey();
-        LocalDateTime notBeforeDate = DateUtils.parseDateToLocalDateTime(reqX509Cert.getNotBefore());
-        LocalDateTime notAfterDate = DateUtils.parseDateToLocalDateTime(reqX509Cert.getNotAfter());
+        
+        int noOfDays = PartnerCertManagerConstants.YEAR_DAYS * issuerCertDuration;
+        LOGGER.info(PartnerCertManagerConstants.SESSIONID, PartnerCertManagerConstants.UPLOAD_PARTNER_CERT, "Cert Duration",
+                "Calculated Signed Certficiate Number of Days for expire: " + noOfDays);
+        LocalDateTime notBeforeDate = DateUtils.getUTCCurrentDateTime(); 
+        LocalDateTime notAfterDate = notBeforeDate.plus(noOfDays, ChronoUnit.DAYS);
         CertificateParameters certParams = PartnerCertificateManagerUtil.getCertificateParameters(subjectPrincipal,
                 notBeforeDate, notAfterDate);
-        return (X509Certificate) keyStore.generateCertificate(signPrivateKey, partnerPublicKey, certParams,
-                signerPrincipal);
+        return (X509Certificate) CertificateUtility.generateX509Certificate(signPrivateKey, partnerPublicKey, certParams,
+                signerPrincipal, signAlgorithm, keyStore.getKeystoreProviderName());
     }
 
     @Override

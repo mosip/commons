@@ -3,6 +3,7 @@
  */
 package io.mosip.kernel.biometrics.entities;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -13,7 +14,7 @@ import lombok.Data;
  */
 @Data
 @JsonDeserialize(builder = BIRInfo.BIRInfoBuilder.class)
-public class BIRInfo {
+public class BIRInfo implements Serializable {
 
 	private String creator;
 	private String index;

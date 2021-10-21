@@ -8,7 +8,9 @@
 package io.mosip.kernel.biometrics.constant;
 
 
-public enum BiometricType {
+import java.io.Serializable;
+
+public enum BiometricType implements Serializable {
 
 	
 	SCENT("Scent"), DNA("DNA"),

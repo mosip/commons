@@ -3,6 +3,7 @@
  */
 package io.mosip.kernel.biometrics.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import lombok.Data;
  *
  */
 @Data
-public class BiometricRecord {	
+public class BiometricRecord implements Serializable {
 
 	private VersionType version;
 	private VersionType cbeffversion;
