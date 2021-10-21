@@ -31,7 +31,7 @@
 		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
 		<spring.data.jpa.version>2.0.7.RELEASE</spring.data.jpa.version>
 		<spring.security.test.version>5.0.5.RELEASE</spring.security.test.version>
-		<spring-cloud-config.version>2.0.4.RELEASE</spring-cloud-config.version>
+		<spring-cloud-config.version>2.0.5.RELEASE</spring-cloud-config.version>
 
 		<!-- swagger -->
 		<swagger.core.version>2.0.7</swagger.core.version>
