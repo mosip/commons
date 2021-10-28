@@ -122,8 +122,8 @@
 	</properties>
 
 	<modules>
-	        <module>kernel-core</module>
-		<module>kernel-logger-logback</module>
+	    <module>kernel-core</module>
+		<!-- <module>kernel-logger-logback</module>
 		<module>kernel-auth-adapter</module>
 		<module>kernel-dataaccess-hibernate</module>
 		<module>kernel-auditmanager-api</module>
@@ -155,9 +155,9 @@
 		<module>kernel-idobjectvalidator</module>
 		<module>kernel-bioapi-provider</module>
 		<module>kernel-registration-packet-manager</module>
-		<module>kernel-authcodeflowproxy-api</module>
+		<module>kernel-authcodeflowproxy-api</module> -->
 		<module>kernel-websubclient-api</module>
-		<module>kernel-auditmanager-service</module>
+		<!-- <module>kernel-auditmanager-service</module>
 		<module>kernel-otpmanager-service</module>
 		<module>kernel-notification-service</module>
 		<module>kernel-auth-service</module>
@@ -169,7 +169,7 @@
 		<module>kernel-biometrics-api</module>
 		<module>kernel-biosdk-provider</module>
 		<module>object-store</module>
-		<module>keys-generator</module>
+		<module>keys-generator</module> -->
 	</modules>
 
 	

@@ -22,7 +22,6 @@ import io.mosip.kernel.websub.api.verifier.AuthenticatedContentVerifier;
  *
  */
 @Aspect
-@Component
 public class WebSubClientAspect implements EmbeddedValueResolverAware {
 
 	
@@ -53,7 +52,7 @@ public class WebSubClientAspect implements EmbeddedValueResolverAware {
 		}
 		String secret = null;
 		if (preAuthenticateContent.secret().startsWith("${")
-				&& preAuthenticateContent.topic().endsWith("}")) {
+				&& preAuthenticateContent.secret().endsWith("}")) {
 			secret = resolver.resolveStringValue(preAuthenticateContent.secret());
 		} else {
 			secret = preAuthenticateContent.secret();

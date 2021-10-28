@@ -9,10 +9,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 
 import io.mosip.kernel.websub.api.annotation.PreAuthenticateContentAndVerifyIntent;
+import io.mosip.kernel.websub.api.client.PublisherClientImpl;
+import io.mosip.kernel.websub.api.client.SubscriberClientImpl;
 import io.mosip.kernel.websub.api.config.IntentVerificationConfig;
 import io.mosip.kernel.websub.api.constants.WebSubClientConstants;
 import io.mosip.kernel.websub.api.constants.WebSubClientErrorCode;
@@ -30,6 +34,8 @@ import lombok.Setter;
  *
  */
 public class IntentVerificationFilter extends OncePerRequestFilter {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(IntentVerificationFilter.class);
 
 	private IntentVerifier intentVerifier;
 
@@ -42,19 +48,25 @@ public class IntentVerificationFilter extends OncePerRequestFilter {
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
-		String topic=matchCallbackURL(request.getRequestURI());
+			throws ServletException, IOException {		
+		String topic=matchCallbackURL(request.getRequestURI());	
 		if (request.getMethod().equals(HttpMethod.GET.name()) && topic!=null) {
-			String topicReq = request.getParameter(WebSubClientConstants.HUB_TOPIC);
-			String modeReq = request.getParameter(WebSubClientConstants.HUB_MODE);
+			String topicReq = request.getParameter(WebSubClientConstants.HUB_TOPIC);			
+			String modeReq = request.getParameter(WebSubClientConstants.HUB_MODE);			
+			String mode = request.getParameter("intentMode");
+	        if(mode.equals("denied")) {
+	        	LOGGER.error("intent verification failed, hub server mode id denied topic should be registered before subscribe");
+	        	response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+	        }
 			if (intentVerifier.isIntentVerified(topic,
-					request.getParameter("intentMode"), topicReq, modeReq)) {
+					mode, topicReq, modeReq)) {
 				response.setStatus(HttpServletResponse.SC_ACCEPTED);
 				try {
 					response.getWriter().write(request.getParameter(WebSubClientConstants.HUB_CHALLENGE));
 					response.getWriter().flush();
 					response.getWriter().close();
 				} catch (IOException exception) {
+					LOGGER.error("error received while writing challange back"+exception.getMessage());
 					throw new WebSubClientException(WebSubClientErrorCode.IO_ERROR.getErrorCode(),
 							WebSubClientErrorCode.IO_ERROR.getErrorMessage().concat(exception.getMessage()));
 				}
