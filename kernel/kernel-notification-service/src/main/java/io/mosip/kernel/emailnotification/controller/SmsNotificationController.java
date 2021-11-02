@@ -15,6 +15,12 @@ import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.notification.model.SMSResponseDto;
 import io.mosip.kernel.emailnotification.dto.SmsRequestDto;
 import io.mosip.kernel.emailnotification.service.SmsNotification;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * This controller class receives contact number and message in data transfer
@@ -26,6 +32,7 @@ import io.mosip.kernel.emailnotification.service.SmsNotification;
 
 @CrossOrigin
 @RestController
+@Tag(name = "smsnotification", description = "Operation related to sms notification")
 public class SmsNotificationController {
 
 	/**
@@ -42,6 +49,12 @@ public class SmsNotificationController {
 	 */
 	//@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','AUTH', 'PRE_REGISTRATION_ADMIN','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
+	@Operation(summary = "Endpoint for sending a sms", description = "Endpoint for sending a sms", tags = { "smsnotification" })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostsmssend())")
 	@PostMapping(value = "/sms/send")
 	public ResponseWrapper<SMSResponseDto> sendSmsNotification(
