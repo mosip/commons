@@ -16,7 +16,7 @@
 -- object: master.zone_user | type: TABLE --
 -- DROP TABLE IF EXISTS master.zone_user CASCADE;
 CREATE TABLE master.zone_user(
-	zone_code 	character varying(36) NOT NULL,
+	zone_code 	character varying(36),
 	usr_id 		character varying(256) NOT NULL,
 	lang_code 	character varying(3),
 	is_active 	boolean NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE master.zone_user(
 	upd_dtimes 	timestamp,
 	is_deleted 	boolean DEFAULT FALSE,
 	del_dtimes 	timestamp,
-	CONSTRAINT pk_zoneuser PRIMARY KEY (zone_code,usr_id)
+	CONSTRAINT pk_zoneuser PRIMARY KEY (usr_id)
 
 );
 -- ddl-end --
