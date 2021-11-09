@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import io.mosip.kernel.auth.defaultadapter.handler.VertxAuthHandler;
+//import io.mosip.kernel.auth.defaultadapter.handler.VertxAuthHandler;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
@@ -66,9 +66,9 @@ public class UinServiceRouter {
 	@Autowired
 	ObjectMapper objectMapper;
 
-	@Autowired
-	private VertxAuthHandler authHandler;
-
+	/*
+	 * @Autowired private VertxAuthHandler authHandler;
+	 */
 	@Autowired
 	private SignatureUtil signatureUtil;
 
@@ -99,11 +99,11 @@ public class UinServiceRouter {
 			routingContext.response().headers().add(CONTENT_TYPE, UinGeneratorConstant.APPLICATION_JSON);
 			routingContext.next();
 		});
-		authHandler.addAuthFilter(router, "/", HttpMethod.GET, "REGISTRATION_PROCESSOR");
+		//authHandler.addAuthFilter(router, "/", HttpMethod.GET, "REGISTRATION_PROCESSOR");
 		router.get().handler(routingContext -> {
 			getRouter(vertx, routingContext, isSignEnable, profile, router, workerExecutorPool);
 		});
-		authHandler.addAuthFilter(router, "/", HttpMethod.PUT, "REGISTRATION_PROCESSOR");
+		//authHandler.addAuthFilter(router, "/", HttpMethod.PUT, "REGISTRATION_PROCESSOR");
 		router.route().handler(BodyHandler.create());
 		router.put().consumes(UinGeneratorConstant.APPLICATION_JSON).handler(this::updateRouter);
 

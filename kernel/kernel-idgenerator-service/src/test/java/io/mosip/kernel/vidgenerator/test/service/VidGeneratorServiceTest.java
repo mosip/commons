@@ -32,7 +32,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
-import io.mosip.kernel.auth.defaultadapter.handler.VertxAuthHandler;
+//import io.mosip.kernel.auth.defaultadapter.handler.VertxAuthHandler;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.idgenerator.config.HibernateDaoConfig;
 import io.mosip.kernel.vidgenerator.constant.VidLifecycleStatus;
@@ -65,8 +65,9 @@ public class VidGeneratorServiceTest {
 	@MockBean
 	private RoutingContext routingContext;
 
-	@MockBean
-	private VertxAuthHandler authHandler;
+	/*
+	 * @MockBean private VertxAuthHandler authHandler;
+	 */
 
 	private List<VidAssignedEntity> expiredButAssignedStatusVAEntities;
 
@@ -158,7 +159,7 @@ public class VidGeneratorServiceTest {
 	@Test(expected = VidGeneratorServiceException.class)
 	public void fetchVidNotFoundTest() {
 		Mockito.when(vidRepository.findFirstByStatus(VidLifecycleStatus.AVAILABLE)).thenReturn(null);
-		Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
+		//Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
 		vidService.fetchVid(null, routingContext);
 	}
 
@@ -166,7 +167,7 @@ public class VidGeneratorServiceTest {
 	public void fetchVidGerDataAccessTest() {
 		Mockito.when(vidRepository.findFirstByStatus(VidLifecycleStatus.AVAILABLE))
 				.thenThrow(new DataRetrievalFailureException("DataBase error occur"));
-		Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
+		//	Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
 		vidService.fetchVid(null, routingContext);
 	}
 
@@ -174,7 +175,7 @@ public class VidGeneratorServiceTest {
 	public void fetchVidGetExceptionTest() {
 		Mockito.when(vidRepository.findFirstByStatus(VidLifecycleStatus.AVAILABLE))
 				.thenThrow(new RuntimeException("DataBase error occur"));
-		Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
+		//Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
 		vidService.fetchVid(null, routingContext);
 	}
 
@@ -184,7 +185,7 @@ public class VidGeneratorServiceTest {
 		Mockito.doThrow(new DataRetrievalFailureException("DataBase error occur")).when(vidRepository).updateVid(
 				Mockito.eq(VidLifecycleStatus.ASSIGNED), Mockito.anyString(), Mockito.any(),
 				Mockito.eq(availableEntity.getVid()));
-		Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
+		//Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
 		vidService.fetchVid(null, routingContext);
 	}
 
@@ -194,7 +195,7 @@ public class VidGeneratorServiceTest {
 		Mockito.doThrow(new RuntimeException("DataBase error occur")).when(vidRepository).updateVid(
 				Mockito.eq(VidLifecycleStatus.ASSIGNED), Mockito.anyString(), Mockito.any(),
 				Mockito.eq(availableEntity.getVid()));
-		Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
+		//Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
 		vidService.fetchVid(null, routingContext);
 	}
 
@@ -203,7 +204,7 @@ public class VidGeneratorServiceTest {
 		Mockito.when(vidRepository.findFirstByStatus(VidLifecycleStatus.AVAILABLE))
 				.thenReturn(availableEntityWithExpiry);
 		Mockito.when(vidRepository.save(Mockito.any())).thenReturn(availableEntityWithExpiry);
-		Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
+		//Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
 		vidService.fetchVid(DateUtils.getUTCCurrentDateTime().plusMonths(20), routingContext);
 	}
 
