@@ -3,10 +3,8 @@ package io.mosip.kernel.uingenerator.util;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import io.mosip.kernel.auth.defaultadapter.handler.VertxAuthHandler;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorConstant;
 import io.mosip.kernel.uingenerator.entity.BaseEntity;
 import io.vertx.ext.web.RoutingContext;
@@ -22,8 +20,9 @@ import io.vertx.ext.web.RoutingContext;
 @Component
 public class UINMetaDataUtil {
 	
-	@Autowired
-	private VertxAuthHandler authHandler;
+	/*
+	 * @Autowired private VertxAuthHandler authHandler;
+	 */
 
 	/**
 	 * Function to set metadata
@@ -47,7 +46,9 @@ public class UINMetaDataUtil {
 	 * @return <T> Entity with metadata
 	 */
 	public <T extends BaseEntity> T setUpdateMetaData(T entity, RoutingContext routingContext) {
-		String contextUser = authHandler.getContextUser(routingContext);
+		//String contextUser = authHandler.getContextUser(routingContext);
+		//TODO: integrate with new auth adapter
+		String contextUser = "MOSIPADMIN";
 		LocalDateTime time = LocalDateTime.now(ZoneId.of(UinGeneratorConstant.UTC));
 		entity.setUpdatedBy(contextUser);
 		entity.setUpdatedtimes(time);
