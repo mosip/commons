@@ -253,10 +253,11 @@ ALTER TABLE master.template_type ALTER COLUMN lang_code DROP NOT NULL;
 ALTER TABLE master.template_type ADD CONSTRAINT pk_tmpltyp_code PRIMARY KEY (code);
 
 
-ALTER TABLE master.zone_user DROP CONSTRAINT IF EXISTS pk_tmpltyp_code;
+ALTER TABLE master.zone_user DROP CONSTRAINT IF EXISTS pk_zoneuser;
 ALTER TABLE master.zone_user ALTER COLUMN lang_code DROP NOT NULL;
+ALTER TABLE master.zone_user ALTER COLUMN zone_code DROP NOT NULL;
 ALTER TABLE master.user_detail_h ALTER COLUMN status_code DROP NOT NULL;
-ALTER TABLE master.zone_user ADD CONSTRAINT pk_zoneuser PRIMARY KEY (zone_code,usr_id);
+ALTER TABLE master.zone_user ADD CONSTRAINT pk_zoneuser PRIMARY KEY (usr_id);
 
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
