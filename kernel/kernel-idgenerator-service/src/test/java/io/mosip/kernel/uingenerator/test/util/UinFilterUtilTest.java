@@ -10,14 +10,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
-import io.mosip.kernel.auth.defaultadapter.helper.TokenHelper;
 import io.mosip.kernel.idgenerator.config.HibernateDaoConfig;
 import io.mosip.kernel.uingenerator.util.UinFilterUtil;
 
@@ -74,10 +72,6 @@ public class UinFilterUtilTest {
 
 	@Autowired
 	private UinFilterUtil uinFilterUtils;
-	
-
-	@MockBean
-	private TokenHelper tokenHelper;
 
 	@Test
 	public void filterIdTest() {

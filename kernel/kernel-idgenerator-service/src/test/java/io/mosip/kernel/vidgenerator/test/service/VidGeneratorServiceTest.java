@@ -32,7 +32,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
-import io.mosip.kernel.auth.defaultadapter.helper.TokenHelper;
 //import io.mosip.kernel.auth.defaultadapter.handler.VertxAuthHandler;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.idgenerator.config.HibernateDaoConfig;
@@ -65,10 +64,6 @@ public class VidGeneratorServiceTest {
 
 	@MockBean
 	private RoutingContext routingContext;
-	
-
-	@MockBean
-	private TokenHelper tokenHelper;
 
 	/*
 	 * @MockBean private VertxAuthHandler authHandler;
