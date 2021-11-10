@@ -179,7 +179,7 @@ ALTER TABLE master.zone_user DROP CONSTRAINT IF EXISTS fk_zoneuser_zone CASCADE;
 
 ALTER TABLE master.app_authentication_method DROP CONSTRAINT IF EXISTS pk_appauthm_id;
 ALTER TABLE master.app_authentication_method ALTER COLUMN lang_code DROP NOT NULL;
-ALTER TABLE master.app_authentication_method ADD CONSTRAINT pk_appauthm_id PRIMARY KEY (id);
+ALTER TABLE master.app_authentication_method ADD CONSTRAINT pk_appauthm_id PRIMARY KEY (app_id,process_id,role_code,auth_method_code);
 
 
 ALTER TABLE master.app_role_priority DROP CONSTRAINT IF EXISTS pk_roleprt_id;
