@@ -49,7 +49,7 @@ INSERT into master.ui_spec (id,version,domain,title,description,type,json_spec,i
 ALTER TABLE master.identity_schema DROP COLUMN id_attr_json;
 --------------------------------------------------------------------------------------------------------------------------------------
 
-ALTER TABLE master.bulkupload_transaction ALTER COLUMN upload_description character varying;
+ALTER TABLE master.bulkupload_transaction ALTER COLUMN upload_description TYPE character varying;
 
 -----------------------------------------------ALTER FK constraints with lang code -----------------------------------------------------------
 
