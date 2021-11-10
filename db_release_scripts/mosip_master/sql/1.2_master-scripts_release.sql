@@ -26,8 +26,8 @@ ALTER TABLE master.template ALTER COLUMN template_typ_code TYPE character varyin
 --------------------------------------------------------------------------------------------------------------------
 ALTER TABLE master.blacklisted_words DROP CONSTRAINT IF EXISTS pk_blwrd_code CASCADE;
 -------------------------------------------------------------------------------------------------------------------
-\ir ../ddl/master-ui_spec.sql
-\ir ../ddl/master-blocklisted_words.sql
+\ir ../ddl/master-ui_spec.csv
+\ir ../ddl/master-blocklisted_words.csv
 
 
 ----- TRUNCATE master.blocklisted_words TABLE Data and It's reference Data and COPY Data from CSV file -----
