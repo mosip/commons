@@ -264,15 +264,15 @@ ALTER TABLE master.zone_user ADD CONSTRAINT pk_zoneuser PRIMARY KEY (zone_code,u
 
 TRUNCATE TABLE master.template cascade ;
 
-\COPY master.template (id,name,descr,file_format_code,model,file_txt,module_id,module_name,template_typ_code,lang_code,is_active,cr_by,cr_dtimes) FROM '../dml/master-template.csv' delimiter ',' HEADER  csv;
+\COPY master.template (id,name,descr,file_format_code,model,file_txt,module_id,module_name,template_typ_code,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-template.csv' delimiter ',' HEADER  csv;
 
 TRUNCATE TABLE master.template_type cascade ;
 
-\COPY master.template_type (code,descr,lang_code,is_active,cr_by,cr_dtimes) FROM '../dml/master-template_type.csv' delimiter ',' HEADER  csv;
+\COPY master.template_type (code,descr,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-template_type.csv' delimiter ',' HEADER  csv;
 
 TRUNCATE TABLE master.module_detail cascade ;
 
-\COPY master.module_detail (id,name,descr,lang_code,is_active,cr_by,cr_dtimes) FROM '../dml/master-module_detail.csv' delimiter ',' HEADER  csv;
+\COPY master.module_detail (id,name,descr,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-module_detail.csv' delimiter ',' HEADER  csv;
 
 ----------------------------------------------CREATION OF PERMITTED LOCAL CONFIG -------------------------------------------------------------
 
