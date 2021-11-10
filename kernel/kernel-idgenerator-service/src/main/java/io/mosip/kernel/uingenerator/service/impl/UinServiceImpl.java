@@ -9,9 +9,11 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import io.mosip.kernel.auth.defaultadapter.handler.VertxAuthHandler;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorConstant;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorErrorCode;
@@ -60,9 +62,8 @@ public class UinServiceImpl implements UinService {
 	@Autowired
 	private UINMetaDataUtil metaDataUtil;
 	
-	/*
-	 * @Autowired private VertxAuthHandler authHandler;
-	 */
+	@Autowired
+	private VertxAuthHandler authHandler;
 
 	/*
 	 * (non-Javadoc)
@@ -75,7 +76,7 @@ public class UinServiceImpl implements UinService {
 		UinResponseDto uinResponseDto = new UinResponseDto();
 		UinEntity uinBean = uinRepository.findFirstByStatus(UinGeneratorConstant.UNUSED);
 		if (uinBean != null) {
-			uinRepository.updateStatus(UinGeneratorConstant.ISSUED, "MOSIPADMIN",
+			uinRepository.updateStatus(UinGeneratorConstant.ISSUED, authHandler.getContextUser(routingContext),
 					DateUtils.getUTCCurrentDateTime(), uinBean.getUin());
 			uinResponseDto.setUin(uinBean.getUin());
 		} else {
