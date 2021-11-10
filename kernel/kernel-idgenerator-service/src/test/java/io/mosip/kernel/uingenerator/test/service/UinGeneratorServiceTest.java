@@ -13,7 +13,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
-//simport io.mosip.kernel.auth.defaultadapter.handler.VertxAuthHandler;
+import io.mosip.kernel.auth.defaultadapter.handler.VertxAuthHandler;
 import io.mosip.kernel.idgenerator.config.HibernateDaoConfig;
 import io.mosip.kernel.uingenerator.entity.UinEntity;
 import io.mosip.kernel.uingenerator.exception.UinNotFoundException;
@@ -47,9 +47,8 @@ public class UinGeneratorServiceTest {
 	@MockBean
 	private RoutingContext routingContext;
 
-	/*
-	 * @MockBean private VertxAuthHandler authHandler;
-	 */
+	@MockBean
+	private VertxAuthHandler authHandler;
 
 	@Test(expected = UinNotFoundException.class)
 	public void getUinNotFoundTest() {
@@ -63,7 +62,7 @@ public class UinGeneratorServiceTest {
 		UinEntity entity = new UinEntity("9723157067", "ISSUED");
 		Mockito.when(uinRepository.findFirstByStatus("UNUSED")).thenReturn(entity);
 		Mockito.when(uinRepository.save(Mockito.any())).thenReturn(entity);
-		//Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
+		Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
 		uinGeneratorServiceImpl.getUin(routingContext);
 
 	}
@@ -72,7 +71,7 @@ public class UinGeneratorServiceTest {
 	public void updateUinStatusNotFoundIssuedTest() {
 		UinEntity entity = new UinEntity("9723157067", "UNUSED");
 		Mockito.when(uinRepository.findByUin(Mockito.any())).thenReturn(entity);
-		//Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
+		Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
 		uinGeneratorServiceImpl.updateUinStatus(entity, routingContext);
 	}
 
@@ -80,7 +79,7 @@ public class UinGeneratorServiceTest {
 	public void updateUinStatusUinNotFoundTest() {
 		UinEntity entity = new UinEntity();
 		Mockito.when(uinRepository.findByUin(Mockito.any())).thenReturn(null);
-		//Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
+		Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
 		uinGeneratorServiceImpl.updateUinStatus(entity, routingContext);
 	}
 
@@ -88,7 +87,7 @@ public class UinGeneratorServiceTest {
 	public void updateUinStatusNotFoundStatusTest() {
 		UinEntity entity = new UinEntity("9723157067", "ISSUED");
 		Mockito.when(uinRepository.findByUin(Mockito.any())).thenReturn(entity);
-		//Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
+		Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
 		uinGeneratorServiceImpl.updateUinStatus(entity, routingContext);
 	}
 
@@ -98,7 +97,7 @@ public class UinGeneratorServiceTest {
 		UinEntity givEntity = new UinEntity("9723157067", "ASSIGNED");
 		Mockito.when(uinRepository.findByUin(Mockito.any())).thenReturn(extEntity);
 		Mockito.when(uinRepository.save(Mockito.any())).thenReturn(givEntity);
-		//Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
+		Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
 		uinGeneratorServiceImpl.updateUinStatus(givEntity, routingContext);
 	}
 
@@ -108,7 +107,7 @@ public class UinGeneratorServiceTest {
 		UinEntity givEntity = new UinEntity("9723157067", "UNASSIGNED");
 		Mockito.when(uinRepository.findByUin(Mockito.any())).thenReturn(entity);
 		Mockito.when(uinRepository.save(Mockito.any())).thenReturn(givEntity);
-		//Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
+		Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
 		uinGeneratorServiceImpl.updateUinStatus(givEntity, routingContext);
 	}
 }
