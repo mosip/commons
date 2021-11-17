@@ -125,7 +125,7 @@
 		<module>kernel-logger-logback</module>
 <!--		<module>kernel-auth-adapter</module> -->
 		<module>kernel-dataaccess-hibernate</module>
-		<module>kernel-auditmanager-api</module>
+<!--		<module>kernel-auditmanager-api</module>-->
 		<module>kernel-idgenerator-prid</module>
 		<module>kernel-idgenerator-vid</module>
 		<module>kernel-idgenerator-tokenid</module>
@@ -152,7 +152,7 @@
 		<module>kernel-bioapi-provider</module>
 		<module>kernel-authcodeflowproxy-api</module>
 		<module>kernel-websubclient-api</module>
-		<module>kernel-auditmanager-service</module>
+<!--		<module>kernel-auditmanager-service</module>-->
 		<module>kernel-otpmanager-service</module>
 		<module>kernel-notification-service</module>
 <!--		<module>kernel-auth-service</module> -->
