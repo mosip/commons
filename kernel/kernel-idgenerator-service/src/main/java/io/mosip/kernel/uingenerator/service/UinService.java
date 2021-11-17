@@ -6,6 +6,7 @@ package io.mosip.kernel.uingenerator.service;
 import io.mosip.kernel.uingenerator.dto.UinResponseDto;
 import io.mosip.kernel.uingenerator.dto.UinStatusUpdateReponseDto;
 import io.mosip.kernel.uingenerator.entity.UinEntity;
+import io.vertx.ext.web.RoutingContext;
 
 /**
  * @author Dharmesh Khandelwal
@@ -20,7 +21,8 @@ public interface UinService {
 	 * 
 	 * @return UinResponseDto
 	 */
-	UinResponseDto getUin();
+
+	UinResponseDto getUin(RoutingContext routingContext);
 
 	/**
 	 * Update the status of the Uin from ISSUED to ASSIGNED
@@ -29,10 +31,10 @@ public interface UinService {
 	 * 
 	 * @return UinStatusUpdateReponseDto
 	 */
-	UinStatusUpdateReponseDto updateUinStatus(UinEntity uin);
+	UinStatusUpdateReponseDto updateUinStatus(UinEntity uin, RoutingContext routingContext);
 
 	void transferUin();
 
 	boolean uinExist(String uin);
-
+	
 }
