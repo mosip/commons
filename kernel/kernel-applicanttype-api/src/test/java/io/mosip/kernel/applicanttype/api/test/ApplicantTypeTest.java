@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import io.mosip.kernel.applicanttype.api.impl.ApplicantTypeImpl;
 import io.mosip.kernel.core.applicanttype.exception.InvalidApplicantArgumentException;
