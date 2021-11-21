@@ -119,7 +119,7 @@ public class CbeffValidatorTest {
 				.withCbeffversion(new VersionType(1, 1))
 				.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(false).build())
 				.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format).withQuality(Qtype)
-						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("Right MiddleFinger"))
+						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("MiddleFinger"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
 				.build();
@@ -323,7 +323,7 @@ public class CbeffValidatorTest {
 	}
 
 	@Test
-	public void getBDBBasedOnTypeAndSubTypeTest() throws IOException, Exception {
+	public void getBDBBasedOnTypeAndSubTypeSubTypeNULLTest() throws IOException, Exception {
 		BIR bir = new BIR();
 		bir.setBirs(createList);
 		Map<String, String> bdbMap = CbeffValidator.getBDBBasedOnTypeAndSubType(bir, "Finger", null);
@@ -337,6 +337,22 @@ public class CbeffValidatorTest {
 		Map<String, String> bdbMap = CbeffValidator.getBDBBasedOnTypeAndSubType(bir, null, null);
 		assertThat(bdbMap.size(), is(10));
 	}
+	
+	@Test
+	public void getBDBBasedOnTypeAndSubTypeTypeNULLTest() throws IOException, Exception {
+		BIR bir = new BIR();
+		bir.setBirs(createList);
+		Map<String, String> bdbMap = CbeffValidator.getBDBBasedOnTypeAndSubType(bir, null, "MiddleFinger");
+		assertThat(bdbMap.size(), is(1));
+	}
+	
+	@Test
+	public void getBDBBasedOnTypeAndSubTypeTest() throws IOException, Exception {
+		BIR bir = new BIR();
+		bir.setBirs(createList);
+		Map<String, String> bdbMap = CbeffValidator.getBDBBasedOnTypeAndSubType(bir, "Finger", "MiddleFinger");
+		assertThat(bdbMap.size(), is(1));
+	}
 
 	@Test
 	public void isInEnumTest() throws IOException, Exception {
@@ -344,11 +360,27 @@ public class CbeffValidatorTest {
 	}
 
 	@Test
-	public void getAllBDBDataTest() throws IOException, Exception {
+	public void getAllBDBDataSubTypeNULLTest() throws IOException, Exception {
 		BIR bir = new BIR();
 		bir.setBirs(createList);
 		Map<String, String> bdbMap = CbeffValidator.getAllBDBData(bir, "Finger", null);
 		assertThat(bdbMap.size(), is(10));
+	}
+	
+	@Test
+	public void getAllBDBDataTypeNullTest() throws IOException, Exception {
+		BIR bir = new BIR();
+		bir.setBirs(createList);
+		Map<String, String> bdbMap = CbeffValidator.getAllBDBData(bir, null, "MiddleFinger");
+		assertThat(bdbMap.size(), is(1));
+	}
+	
+	@Test
+	public void getAllBDBDataTest() throws IOException, Exception {
+		BIR bir = new BIR();
+		bir.setBirs(createList);
+		Map<String, String> bdbMap = CbeffValidator.getAllBDBData(bir, "Finger", "MiddleFinger");
+		assertThat(bdbMap.size(), is(1));
 	}
 
 	@Test
