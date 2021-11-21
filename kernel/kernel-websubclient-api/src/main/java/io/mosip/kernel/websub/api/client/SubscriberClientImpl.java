@@ -8,19 +8,16 @@ import org.apache.commons.codec.digest.HmacUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 import io.mosip.kernel.core.websub.spi.SubscriptionClient;
 import io.mosip.kernel.core.websub.spi.SubscriptionExtendedClient;
+import io.mosip.kernel.websub.api.annotation.Generated;
 import io.mosip.kernel.websub.api.config.publisher.RestTemplateHelper;
 import io.mosip.kernel.websub.api.constants.HubMode;
 import io.mosip.kernel.websub.api.constants.WebSubClientConstants;
@@ -195,6 +193,8 @@ public class SubscriberClientImpl
 		}
 	}
 
+	@Generated
+	@Deprecated
 	@Override
 	public FailedContentResponse getFailedContent(FailedContentRequest failedContentRequest) {
 		int pageIndex = failedContentRequest.getPaginationIndex() < 0 ? 0 : failedContentRequest.getPaginationIndex();
@@ -232,6 +232,7 @@ public class SubscriberClientImpl
 		return failedContentResponse;
 	}
 
+	@Generated
 	private String getHmac256(String value, String secret) {
 		HmacUtils hmacUtils = new HmacUtils(HmacAlgorithms.HMAC_SHA_256, secret);
 		return Base64.encodeBase64String(hmacUtils.hmac(value));
