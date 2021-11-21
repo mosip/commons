@@ -64,7 +64,7 @@ public class ApplicantTypeImpl implements ApplicantType {
 	public String getApplicantType(Map<String, Object> map) throws InvalidApplicantArgumentException {
 		Map<String, Object> context = new HashMap<>();
 		try {
-			Map<String, String> ageGroupsMap = new HashMap<String, String>();
+			Map<String, String> ageGroupsMap = new HashMap<>();
 			JSONObject ageGroupConfig = new JSONObject(ageGroups);
 			ageGroupConfig.keys().forEachRemaining(key -> {
 				try {
