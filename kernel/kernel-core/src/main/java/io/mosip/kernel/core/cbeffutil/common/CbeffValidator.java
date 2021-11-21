@@ -45,6 +45,7 @@ import io.mosip.kernel.core.util.CryptoUtil;
  *         CBEFF XML and to get all the data based on Type and SubType
  *
  */
+@Generated
 @Deprecated(since = "1.1.7")
 public class CbeffValidator {
 	
