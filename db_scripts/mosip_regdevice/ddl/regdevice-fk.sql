@@ -44,9 +44,9 @@ ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- object: fk_sbi_id | type: CONSTRAINT --
 -- ALTER TABLE regdevice.secure_biometric_interface DROP CONSTRAINT IF EXISTS fk_sbi_id CASCADE;
-ALTER TABLE regdevice.secure_biometric_interface ADD CONSTRAINT fk_sbi_id FOREIGN KEY (device_detail_id)
-REFERENCES regdevice.device_detail (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION;
+--ALTER TABLE regdevice.secure_biometric_interface ADD CONSTRAINT fk_sbi_id FOREIGN KEY (device_detail_id)
+--REFERENCES regdevice.device_detail (id) MATCH FULL
+--ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
 -- object: fk_fcdtl_frpid | type: CONSTRAINT --
