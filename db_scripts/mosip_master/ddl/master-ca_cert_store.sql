@@ -33,7 +33,7 @@ CREATE TABLE master.ca_cert_store (
 	is_deleted boolean,
 	del_dtimes timestamp,
 	CONSTRAINT ca_cert_store_pk PRIMARY KEY (cert_id),
-	CONSTRAINT cert_thumbprint_unique UNIQUE (cert_thumbprint)
+	CONSTRAINT cert_thumbprint_unique UNIQUE (cert_thumbprint,partner_domain)
 
 );
 
