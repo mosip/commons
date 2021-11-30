@@ -46,28 +46,22 @@ import io.mosip.kernel.keygenerator.bouncycastle.KeyGenerator;
 
 public class SignatureUtilImplTest {
 
-	
+	private String syncDataRequestId = "SIGNATURE.REQUEST";
 
-	private String syncDataRequestId="SIGNATURE.REQUEST";
+	private String syncDataVersionId = "v1.0";
 
-	private String syncDataVersionId="v1.0";
-	
-	private String signUrl="http://localhost:8088/v1/keymanager/sign";
-
+	private String signUrl = "http://localhost:8088/v1/keymanager/sign";
 
 	private ObjectMapper objectMapper;
 
 	private MockRestServiceServer server;
 
-	
 	private SignatureUtil signingUtil;
-
 
 	private SignatureRequestDto cryptoManagerRequestDto;
 
 	private RequestWrapper<SignatureRequestDto> requestWrapper;
 
-	
 	private RestTemplate restTemplate;
 
 	@Before
@@ -81,7 +75,7 @@ public class SignatureUtilImplTest {
 		ReflectionTestUtils.setField(signingUtil, "signDataVersionId", syncDataVersionId);
 		ReflectionTestUtils.setField(signingUtil, "signUrl", signUrl);
 		server = MockRestServiceServer.bindTo(restTemplate).build();
-		
+
 		requestWrapper = new RequestWrapper<>();
 
 		server = MockRestServiceServer.bindTo(restTemplate).build();
@@ -166,9 +160,7 @@ public class SignatureUtilImplTest {
 	@Test(expected = SignatureUtilException.class)
 	public void validateWithPublicKeyTest() throws InvalidKeySpecException, NoSuchAlgorithmException {
 
-		
-	 signingUtil.validateWithPublicKey("MOCKSIGNATURE", "MOCKEDDATATOSIGN",
-				"MOCKPUBLICKEY");
+		signingUtil.validateWithPublicKey("MOCKSIGNATURE", "MOCKEDDATATOSIGN", "MOCKPUBLICKEY");
 	}
 
 	@Test(expected = SignatureUtilException.class)
