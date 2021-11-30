@@ -12,7 +12,7 @@ import io.mosip.kernel.biometrics.spi.IBioApi;
 import java.util.List;
 import java.util.Map;
 
-public class TestSDK2 implements IBioApi {
+public class SDKInstanceTwo implements IBioApi {
 
     @Override
     public SDKInfo init(Map<String, String> initParams) {

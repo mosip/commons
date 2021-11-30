@@ -2,17 +2,21 @@ package io.mosip.kernel.biosdk.provider.test;
 
 import io.mosip.kernel.biometrics.constant.BiometricFunction;
 import io.mosip.kernel.biometrics.constant.BiometricType;
+import io.mosip.kernel.biometrics.constant.Match;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
+import io.mosip.kernel.biometrics.model.Decision;
 import io.mosip.kernel.biometrics.model.MatchDecision;
 import io.mosip.kernel.biometrics.model.QualityCheck;
+import io.mosip.kernel.biometrics.model.QualityScore;
 import io.mosip.kernel.biometrics.model.Response;
 import io.mosip.kernel.biometrics.model.SDKInfo;
 import io.mosip.kernel.biometrics.spi.IBioApi;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TestSDK implements IBioApi {
+public class SDKInstanceOne implements IBioApi {
 
     @Override
     public SDKInfo init(Map<String, String> initParams) {
@@ -29,12 +33,32 @@ public class TestSDK implements IBioApi {
 
     @Override
     public Response<QualityCheck> checkQuality(BiometricRecord sample, List<BiometricType> modalitiesToCheck, Map<String, String> flags) {
-        return null;
+    	 Response<QualityCheck> response = new Response<>();
+    	 QualityCheck qualityCheck = new QualityCheck();
+    	 Map<BiometricType, QualityScore> scores = new HashMap<>();
+    	 QualityScore qualityScore= new QualityScore();
+    	 qualityScore.setScore(90.0F);
+    	 scores.put(BiometricType.FINGER,qualityScore);
+    	 qualityCheck.setScores(scores);
+    	 response.setStatusCode(210);
+    	 response.setResponse(qualityCheck);
+    	return response;
     }
 
     @Override
     public Response<MatchDecision[]> match(BiometricRecord sample, BiometricRecord[] gallery, List<BiometricType> modalitiesToMatch, Map<String, String> flags) {
-        return null;
+        Response<MatchDecision[]> response = new Response<>();
+        MatchDecision matchDecision = new MatchDecision(0);
+        Map<BiometricType, Decision> decisions = new HashMap<>();
+        Decision decision = new Decision();
+        decision.setMatch(Match.MATCHED);
+        decisions.put(BiometricType.FINGER, decision);
+        matchDecision.setDecisions(decisions);
+        MatchDecision[] matchDecisions = new MatchDecision[1];
+        matchDecisions[0]=matchDecision;
+        response.setStatusCode(210);
+        response.setResponse(matchDecisions);
+        return response;
     }
 
     @Override
