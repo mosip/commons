@@ -16,11 +16,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SDKInstanceOne implements IBioApi {
+public class SDKInstanceException implements IBioApi {
 
     @Override
     public SDKInfo init(Map<String, String> initParams) {
-        SDKInfo sdkInfo = new SDKInfo("0.9", "1.0", "MOCKVendor1", "test");
+        SDKInfo sdkInfo = new SDKInfo("0.8", "1.0", "MOCKVendor1", "test");
         sdkInfo.withSupportedMethod(BiometricFunction.MATCH, BiometricType.FINGER);
         sdkInfo.withSupportedMethod(BiometricFunction.EXTRACT, BiometricType.FINGER);
         sdkInfo.withSupportedMethod(BiometricFunction.QUALITY_CHECK, BiometricType.FINGER);

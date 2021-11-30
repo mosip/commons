@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SDKInstanceOne implements IBioApi {
+public class SDKInstanceThree implements IBioApi {
 
     @Override
     public SDKInfo init(Map<String, String> initParams) {
@@ -52,7 +52,7 @@ public class SDKInstanceOne implements IBioApi {
         Map<BiometricType, Decision> decisions = new HashMap<>();
         Decision decision = new Decision();
         decision.setMatch(Match.MATCHED);
-        decisions.put(BiometricType.FINGER, decision);
+        decisions.put(BiometricType.FOOT, decision);
         matchDecision.setDecisions(decisions);
         MatchDecision[] matchDecisions = new MatchDecision[1];
         matchDecisions[0]=matchDecision;
