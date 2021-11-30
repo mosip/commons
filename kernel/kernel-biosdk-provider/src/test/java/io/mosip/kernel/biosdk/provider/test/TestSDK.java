@@ -39,7 +39,10 @@ public class TestSDK implements IBioApi {
 
     @Override
     public Response<BiometricRecord> extractTemplate(BiometricRecord sample, List<BiometricType> modalitiesToExtract, Map<String, String> flags) {
-        return null;
+    	 Response<BiometricRecord> response = new Response<>();
+    	 response.setStatusCode(210);
+         response.setResponse(sample);
+    	 return response;
     }
 
     @Override
