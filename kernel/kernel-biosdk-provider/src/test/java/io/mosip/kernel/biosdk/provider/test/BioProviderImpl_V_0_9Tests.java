@@ -46,8 +46,6 @@ import io.mosip.kernel.core.cbeffutil.common.CbeffISOReader;
 import io.mosip.kernel.core.cbeffutil.exception.CbeffException;
 
 
-@SpringBootTest(classes = { BioProviderTestBootApplication.class })
-@RunWith(SpringRunner.class)
 public class BioProviderImpl_V_0_9Tests  {
 
 	private List<BIR> record;
