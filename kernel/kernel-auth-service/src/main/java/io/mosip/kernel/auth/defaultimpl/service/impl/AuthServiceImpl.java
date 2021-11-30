@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import io.mosip.kernel.core.authmanager.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +53,33 @@ import io.mosip.kernel.auth.defaultimpl.service.UinService;
 import io.mosip.kernel.auth.defaultimpl.util.AuthUtil;
 import io.mosip.kernel.auth.defaultimpl.util.TokenGenerator;
 import io.mosip.kernel.auth.defaultimpl.util.TokenValidator;
+import io.mosip.kernel.core.authmanager.model.AccessTokenResponseDTO;
+import io.mosip.kernel.core.authmanager.model.AuthNResponse;
+import io.mosip.kernel.core.authmanager.model.AuthNResponseDto;
+import io.mosip.kernel.core.authmanager.model.AuthResponseDto;
+import io.mosip.kernel.core.authmanager.model.AuthZResponseDto;
+import io.mosip.kernel.core.authmanager.model.ClientSecret;
+import io.mosip.kernel.core.authmanager.model.LoginUser;
+import io.mosip.kernel.core.authmanager.model.LoginUserWithClientId;
+import io.mosip.kernel.core.authmanager.model.MosipUserDto;
+import io.mosip.kernel.core.authmanager.model.MosipUserListDto;
+import io.mosip.kernel.core.authmanager.model.MosipUserSaltListDto;
+import io.mosip.kernel.core.authmanager.model.MosipUserTokenDto;
+import io.mosip.kernel.core.authmanager.model.OtpUser;
+import io.mosip.kernel.core.authmanager.model.PasswordDto;
+import io.mosip.kernel.core.authmanager.model.RIdDto;
+import io.mosip.kernel.core.authmanager.model.RefreshTokenRequest;
+import io.mosip.kernel.core.authmanager.model.RefreshTokenResponse;
+import io.mosip.kernel.core.authmanager.model.RolesListDto;
+import io.mosip.kernel.core.authmanager.model.UserDetailsResponseDto;
+import io.mosip.kernel.core.authmanager.model.UserNameDto;
+import io.mosip.kernel.core.authmanager.model.UserOtp;
+import io.mosip.kernel.core.authmanager.model.UserPasswordRequestDto;
+import io.mosip.kernel.core.authmanager.model.UserPasswordResponseDto;
+import io.mosip.kernel.core.authmanager.model.UserRegistrationRequestDto;
+import io.mosip.kernel.core.authmanager.model.UserRoleDto;
+import io.mosip.kernel.core.authmanager.model.ValidationResponseDto;
+import io.mosip.kernel.core.authmanager.model.IndividualIdDto;
 import io.mosip.kernel.core.authmanager.spi.AuthService;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 
@@ -118,10 +144,6 @@ public class AuthServiceImpl implements AuthService {
 
 	@Autowired
 	ObjectMapper objectmapper;
-
-	@Qualifier("keycloakRestTemplate")
-	@Autowired
-	private RestTemplate restTemplate;
 
 	@Value("${mosip.iam.open-id-url}")
 	private String openIdUrl;
@@ -421,7 +443,7 @@ public class AuthServiceImpl implements AuthService {
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(tokenRequestBody, headers);
 		ResponseEntity<AccessTokenResponse> response = null;
 		try {
-			response = restTemplate.postForEntity(uriComponentsBuilder.buildAndExpand(pathParams).toUriString(),
+			response = authRestTemplate.postForEntity(uriComponentsBuilder.buildAndExpand(pathParams).toUriString(),
 					request, AccessTokenResponse.class);
 		} catch (HttpServerErrorException | HttpClientErrorException ex) {
 			LOGGER.error("refresh token based authentication " + uriComponentsBuilder.toUriString() + " realm "+ realmId + " client id " + refreshTokenRequest.getClientID() + " failed with error ");
@@ -558,7 +580,11 @@ public class AuthServiceImpl implements AuthService {
 		if (EmptyCheckUtils.isNullEmpty(token)) {
 			throw new AuthenticationServiceException(AuthErrorCode.INVALID_TOKEN.getErrorMessage());
 		}
-		String realm = tokenValidator.getKeycloakRealm(token);
+		
+		DecodedJWT decodedJWT = JWT.decode(token);
+		String issuer=decodedJWT.getClaim("iss").asString();	
+		String realm = issuer.substring(issuer.lastIndexOf("/")+1);
+		
 		ResponseEntity<String> response = null;
 		MosipUserDto mosipUserDto = null;
 		StringBuilder urlBuilder = new StringBuilder().append(keycloakBaseURL).append("/auth/realms/").append(realm).append("/protocol/openid-connect/userinfo");
@@ -572,7 +598,7 @@ public class AuthServiceImpl implements AuthService {
 
 		HttpEntity<String> httpRequest = new HttpEntity<>(headers);
 		try {
-			response = restTemplate.exchange(uriComponentsBuilder.buildAndExpand(pathparams).toUriString(),
+			response = authRestTemplate.exchange(uriComponentsBuilder.buildAndExpand(pathparams).toUriString(),
 					HttpMethod.GET, httpRequest, String.class);
 		} catch (HttpClientErrorException | HttpServerErrorException e) {
 			LOGGER.error("Token validation failed for accessToken {}", accessToken);
@@ -590,7 +616,7 @@ public class AuthServiceImpl implements AuthService {
 		}
 
 		if (response.getStatusCode().is2xxSuccessful()) {			
-			mosipUserDto = getClaims(token);
+			mosipUserDto = getClaims(decodedJWT,token);
 			LOGGER.info("Response received for user id " + mosipUserDto.getUserId() + " is " + response.getStatusCode().toString());
 		}
 		return mosipUserDto;
@@ -619,7 +645,7 @@ public class AuthServiceImpl implements AuthService {
 		
 		LOGGER.info("logout user {} uri: {}",token, uriComponentsBuilder.toUriString() );
 		try {
-			response = restTemplate.getForEntity(uriComponentsBuilder.buildAndExpand(pathparams).toUriString(),
+			response = authRestTemplate.getForEntity(uriComponentsBuilder.buildAndExpand(pathparams).toUriString(),
 					String.class);
 			
 		} catch (HttpClientErrorException | HttpServerErrorException e) {
@@ -639,8 +665,7 @@ public class AuthServiceImpl implements AuthService {
 		return authResponseDto;
 	}
 
-	private MosipUserDto getClaims(String cookie) {
-		DecodedJWT decodedJWT = JWT.decode(cookie);
+	private MosipUserDto getClaims(DecodedJWT decodedJWT,String cookie) {
 
 		Claim realmAccess = decodedJWT.getClaim(AuthConstant.REALM_ACCESS);
 
@@ -686,7 +711,7 @@ public class AuthServiceImpl implements AuthService {
 		HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
 		ResponseEntity<String> responseEntity = null;
 		try {
-			responseEntity = restTemplate.exchange(uriBuilder.buildAndExpand(pathParam).toUriString(), HttpMethod.POST,
+			responseEntity = authRestTemplate.exchange(uriBuilder.buildAndExpand(pathParam).toUriString(), HttpMethod.POST,
 					entity, String.class);
 
 		} catch (HttpClientErrorException | HttpServerErrorException e) {
@@ -798,4 +823,15 @@ public class AuthServiceImpl implements AuthService {
 		return authNResponseDto;
 	}
 
+	@Override
+	public IndividualIdDto getIndividualIdBasedOnUserID(String userId, String appId) {
+		return keycloakImpl.getIndividualIdFromUserId(userId,authUtil.getRealmIdFromAppId(appId));
+	}
+
+	@Override
+	public MosipUserListDto getListOfUsersDetails(String realmId, String roleName, int pageStart, int pageFetch,
+			String email, String firstName, String lastName, String username,String search) {
+		return keycloakImpl.getListOfUsersDetails(authUtil.getRealmIdFromAppId(realmId), roleName, pageStart, pageFetch,
+				email, firstName, lastName, username,search);
+	}
 }

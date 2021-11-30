@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,20 +40,30 @@ import io.mosip.kernel.auth.defaultimpl.util.TokenValidator;
  * @author Srinivasan
  *
  */
-@Component
+//@Component
 public class RestInterceptor implements ClientHttpRequestInterceptor {
 
 	private static final Logger LOGGER= LoggerFactory.getLogger(RestInterceptor.class);
 	
-	@Autowired
+	//@Autowired
 	private MemoryCache<String, AccessTokenResponse> memoryCache;
 
-	@Autowired
+	//@Autowired
 	private TokenValidator tokenValidator;
 
-	@Qualifier("authRestTemplate")
-	@Autowired
+	//@Qualifier("authRestTemplate")
+	//@Autowired
 	private RestTemplate restTemplate;
+	
+	public RestInterceptor(MemoryCache<String, AccessTokenResponse> memoryCache,TokenValidator tokenValidator,RestTemplate restTemplate) {
+		this.memoryCache= memoryCache;
+		this.tokenValidator= tokenValidator;
+		this.restTemplate= restTemplate;
+		
+		
+	}
+	
+	
 
 	@Value("${mosip.iam.open-id-url}")
 	private String keycloakOpenIdUrl;
@@ -67,6 +79,7 @@ public class RestInterceptor implements ClientHttpRequestInterceptor {
 
 	@Value("${mosip.keycloak.admin.secret.key}")
 	private String adminSecret;
+
 
 	@Override
 	public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
