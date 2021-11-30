@@ -16,8 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TestSDK2 implements IBioApi {
-
+public class SDKInstanceOne implements IBioApi {
 
     @Override
     public SDKInfo init(Map<String, String> initParams) {
@@ -41,7 +40,7 @@ public class TestSDK2 implements IBioApi {
     	 qualityScore.setScore(90.0F);
     	 scores.put(BiometricType.FINGER,qualityScore);
     	 qualityCheck.setScores(scores);
-    	 response.setStatusCode(199);
+    	 response.setStatusCode(210);
     	 response.setResponse(qualityCheck);
     	return response;
     }
@@ -57,7 +56,7 @@ public class TestSDK2 implements IBioApi {
         matchDecision.setDecisions(decisions);
         MatchDecision[] matchDecisions = new MatchDecision[1];
         matchDecisions[0]=matchDecision;
-        response.setStatusCode(199);
+        response.setStatusCode(210);
         response.setResponse(matchDecisions);
         return response;
     }
@@ -65,7 +64,7 @@ public class TestSDK2 implements IBioApi {
     @Override
     public Response<BiometricRecord> extractTemplate(BiometricRecord sample, List<BiometricType> modalitiesToExtract, Map<String, String> flags) {
     	 Response<BiometricRecord> response = new Response<>();
-    	 response.setStatusCode(199);
+    	 response.setStatusCode(210);
          response.setResponse(sample);
     	 return response;
     }
