@@ -40,8 +40,8 @@ CREATE TABLE master.machine_master(
 	del_dtimes timestamp,
 	CONSTRAINT pk_machm_id PRIMARY KEY (id),
 	CONSTRAINT uq_machm_name UNIQUE (name),
-	CONSTRAINT uq_machm_public_key UNIQUE (public_key),
-	CONSTRAINT uq_machm_spublic_key UNIQUE (sign_public_key)
+	CONSTRAINT uq_machm_key_index UNIQUE (key_index),
+	CONSTRAINT uq_machm_skey_index UNIQUE (sign_key_index)
 
 );
 -- ddl-end --
