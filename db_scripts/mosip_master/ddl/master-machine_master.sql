@@ -24,9 +24,9 @@ CREATE TABLE master.machine_master(
 	ip_address character varying(17),
 	validity_end_dtimes timestamp,
 	mspec_id character varying(36) NOT NULL,
-	public_key character varying(1024),
+	public_key character varying(1024) NOT NULL,
 	key_index character varying(128),
-	sign_public_key character varying(1024),
+	sign_public_key character varying(1024) NOT NULL,
 	sign_key_index character varying(128),
 	zone_code character varying(36) NOT NULL,
 	regcntr_id character varying(10),
@@ -38,7 +38,8 @@ CREATE TABLE master.machine_master(
 	upd_dtimes timestamp,
 	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
-	CONSTRAINT pk_machm_id PRIMARY KEY (id)
+	CONSTRAINT pk_machm_id PRIMARY KEY (id),
+	CONSTRAINT uq_machm UNIQUE (name,public_key,sign_public_key)
 
 );
 -- ddl-end --

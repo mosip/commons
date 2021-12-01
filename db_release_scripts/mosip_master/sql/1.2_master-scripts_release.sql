@@ -258,6 +258,7 @@ ALTER TABLE master.zone_user ALTER COLUMN lang_code DROP NOT NULL;
 ALTER TABLE master.zone_user ALTER COLUMN zone_code DROP NOT NULL;
 ALTER TABLE master.user_detail_h ALTER COLUMN status_code DROP NOT NULL;
 ALTER TABLE master.zone_user ADD CONSTRAINT pk_zoneuser PRIMARY KEY (usr_id);
+ALTER TABLE master.machine_master ADD CONSTRAINT uq_machm UNIQUE (name,public_key,sign_public_key);
 
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
