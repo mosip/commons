@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -32,6 +33,7 @@ import org.springframework.core.io.ClassPathResource;
 import io.mosip.kernel.biometrics.commons.BiometricsSignatureHelper;
 import io.mosip.kernel.biometrics.commons.CbeffValidator;
 import io.mosip.kernel.biometrics.constant.BiometricType;
+import io.mosip.kernel.biometrics.constant.OtherKey;
 import io.mosip.kernel.biometrics.constant.ProcessedLevelType;
 import io.mosip.kernel.biometrics.constant.PurposeType;
 import io.mosip.kernel.biometrics.constant.QualityType;
@@ -54,6 +56,7 @@ import io.mosip.kernel.core.util.CalendarUtils;
 public class CbeffValidatorTest {
 
 	private List<BIR> createList;
+	private List<BIR> birList;
 	private List<BIR> updateList;
 	private List<BIR> exceptionList;
 	private String localpath = "./src/test/resources";
@@ -67,6 +70,9 @@ public class CbeffValidatorTest {
 	byte[] lringFinger = null;
 	byte[] llittleFinger = null;
 	byte[] leftthumb = null;
+	byte[] iris = null;
+	byte[] face = null;
+	byte[] handGeo = null;
 
 	@Before
 	public void setUp() throws Exception {
@@ -88,6 +94,9 @@ public class CbeffValidatorTest {
 		llittleFinger = CbeffISOReader.readISOImage(localpath + "/images/" + "FingerPrintLeft_Little.iso",
 				"Finger");
 		leftthumb = CbeffISOReader.readISOImage(localpath + "/images/" + "FingerPrintLeft_Thumb.iso", "Finger");
+		iris = CbeffISOReader.readISOImage(localpath + "/images/" + "FingerPrintLeft_Thumb.iso", "Finger");
+		face = CbeffISOReader.readISOImage(localpath + "/images/" + "FingerPrintLeft_Thumb.iso", "Finger");
+		handGeo = CbeffISOReader.readISOImage(localpath + "/images/" + "FingerPrintLeft_Thumb.iso", "Finger");
 		// byte[] irisImg1 = CbeffISOReader.readISOImage(localpath + "/images/" +
 		// "IrisImageRight.iso", "Iris");
 		// byte[] irisImg2 = CbeffISOReader.readISOImage(localpath + "/images/" +
@@ -104,6 +113,7 @@ public class CbeffValidatorTest {
 		algorithm.setType("SHA-256");
 		Qtype.setAlgorithm(algorithm);
 		createList = new ArrayList<>();
+		birList = new ArrayList<>();
 		BIR rIndexFinger = new BIR.BIRBuilder().withBdb(rindexFinger).withVersion(new VersionType(1, 1))
 				.withCbeffversion(new VersionType(1, 1))
 				.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(false).build())
@@ -213,6 +223,48 @@ public class CbeffValidatorTest {
 				.build();
 
 		createList.add(leftThumb);
+		
+		RegistryIDType irisFormat = new RegistryIDType();
+		irisFormat.setOrganization("257");
+		irisFormat.setType("9");
+		BIR iIris = new BIR.BIRBuilder().withBdb(iris).withVersion(new VersionType(1, 1))
+				.withCbeffversion(new VersionType(1, 1))
+				.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(false).build())
+				.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(irisFormat).withQuality(Qtype)
+						.withType(Arrays.asList(BiometricType.IRIS)).withSubtype(Arrays.asList("Iris"))
+						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
+						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
+				.build();
+
+		birList.add(iIris);
+		
+		RegistryIDType faceFormat = new RegistryIDType();
+		faceFormat.setOrganization("257");
+		faceFormat.setType("8");
+		BIR iFace = new BIR.BIRBuilder().withBdb(face).withVersion(new VersionType(1, 1))
+				.withCbeffversion(new VersionType(1, 1))
+				.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(false).build())
+				.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(faceFormat).withQuality(Qtype)
+						.withType(Arrays.asList(BiometricType.FACE)).withSubtype(Arrays.asList("Face"))
+						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
+						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
+				.build();
+
+		birList.add(iFace);
+		
+		BIR iHandGeo = new BIR.BIRBuilder().withBdb(handGeo).withVersion(new VersionType(1, 1))
+				.withCbeffversion(new VersionType(1, 1))
+				.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(false).build())
+				.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(faceFormat).withQuality(Qtype)
+						.withType(Arrays.asList(BiometricType.HAND_GEOMETRY)).withSubtype(Arrays.asList("Hand Geo"))
+						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
+						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
+				.build();
+
+		birList.add(iHandGeo);
+		
+		
+		
 	}
 
 	@Test
@@ -220,6 +272,69 @@ public class CbeffValidatorTest {
 		BIR bir = new BIR();
 		bir.setBirs(createList);
 		assertThat(CbeffValidator.validateXML(bir), is(true));
+	}
+	
+	@Test
+	public void validateXMLOtherThanFingerTest() throws CbeffException {
+		BIR bir = new BIR();
+		bir.setBirs(birList);
+		assertThat(CbeffValidator.validateXML(bir), is(true));
+	}
+	
+	@Test(expected = CbeffException.class)
+	public void validateXMLInvalidBioTypeTest() throws CbeffException {
+		BIR bir = new BIR();
+		List<BIR> invalidBio =new ArrayList<>();
+		RegistryIDType format = new RegistryIDType();
+		format.setOrganization("257");
+		format.setType("7");
+		QualityType Qtype = new QualityType();
+		Qtype.setScore(new Long(100));
+		RegistryIDType algorithm = new RegistryIDType();
+		algorithm.setOrganization("HMAC");
+		algorithm.setType("SHA-256");
+		Qtype.setAlgorithm(algorithm);
+		BIR invalidBiometricType = new BIR.BIRBuilder().withBdb(handGeo).withVersion(new VersionType(1, 1))
+				.withCbeffversion(new VersionType(1, 1))
+				.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(false).build())
+				.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format).withQuality(Qtype)
+						.withType(Arrays.asList(BiometricType.DNA)).withSubtype(Arrays.asList("Hand Geo"))
+						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
+						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
+				.build();
+		invalidBio.add(invalidBiometricType);
+		bir.setBirs(invalidBio);
+		CbeffValidator.validateXML(bir);
+	}
+
+	
+	@Test(expected = CbeffException.class)
+	public void validateXMLOtherExceptionTest() throws CbeffException {
+		BIR bir = new BIR();
+		List<BIR> invalidBio =new ArrayList<>();
+		RegistryIDType format = new RegistryIDType();
+		format.setOrganization("257");
+		format.setType("7");
+		QualityType Qtype = new QualityType();
+		Qtype.setScore(new Long(100));
+		RegistryIDType algorithm = new RegistryIDType();
+		algorithm.setOrganization("HMAC");
+		algorithm.setType("SHA-256");
+		Qtype.setAlgorithm(algorithm);
+		List<Entry> others = new ArrayList<>();
+		Entry exceptionEntry = new Entry(OtherKey.EXCEPTION, "true");
+		others.add(exceptionEntry);
+		BIR invalidBiometricType = new BIR.BIRBuilder().withBdb(handGeo).withVersion(new VersionType(1, 1))
+				.withCbeffversion(new VersionType(1, 1)).withOthers(others)
+				.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(false).build())
+				.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format).withQuality(Qtype)
+						.withType(Arrays.asList(BiometricType.DNA)).withSubtype(Arrays.asList("Hand Geo"))
+						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
+						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
+				.build();
+		invalidBio.add(invalidBiometricType);
+		bir.setBirs(invalidBio);
+		CbeffValidator.validateXML(bir);
 	}
 
 	@Test(expected = CbeffException.class)
@@ -330,6 +445,30 @@ public class CbeffValidatorTest {
 		assertThat(bdbMap.size(), is(10));
 	}
 	
+	@Test
+	public void getBDBBasedOnTypeAndSubTypeSubTypeNULLWithFaceBioTypeTest() throws IOException, Exception {
+		BIR bir = new BIR();
+		bir.setBirs(birList);
+		Map<String, String> bdbMap = CbeffValidator.getBDBBasedOnTypeAndSubType(bir, "Face", null);
+		assertThat(bdbMap.size(), is(1));
+	}
+	
+	@Test
+	public void getBDBBasedOnTypeAndSubTypeSubTypeNULLWithIrisBioTypeTest() throws IOException, Exception {
+		BIR bir = new BIR();
+		bir.setBirs(birList);
+		Map<String, String> bdbMap = CbeffValidator.getBDBBasedOnTypeAndSubType(bir, "Iris", null);
+		assertThat(bdbMap.size(), is(1));
+	}
+	
+	@Test
+	public void getBDBBasedOnTypeAndSubTypeSubTypeNULLWithHandGeoBioTypeTest() throws IOException, Exception {
+		BIR bir = new BIR();
+		bir.setBirs(birList);
+		Map<String, String> bdbMap = CbeffValidator.getBDBBasedOnTypeAndSubType(bir, "Handgeometry", null);
+		assertThat(bdbMap.size(), is(1));
+	}
+		
 	@Test
 	public void getBDBBasedOnTypeAndSubTypeAllNULLTest() throws IOException, Exception {
 		BIR bir = new BIR();
