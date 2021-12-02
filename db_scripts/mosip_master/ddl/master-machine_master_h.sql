@@ -39,7 +39,10 @@ CREATE TABLE master.machine_master_h(
 	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
 	eff_dtimes timestamp NOT NULL,
-	CONSTRAINT pk_machm_h_id PRIMARY KEY (id,eff_dtimes)
+	CONSTRAINT pk_machm_h_id PRIMARY KEY (id,eff_dtimes),
+    CONSTRAINT uq_machm_name UNIQUE (name),
+    CONSTRAINT uq_machm_public_key UNIQUE (public_key),
+    CONSTRAINT uq_machm_spublic_key UNIQUE (sign_public_key)
 
 );
 -- ddl-end --
