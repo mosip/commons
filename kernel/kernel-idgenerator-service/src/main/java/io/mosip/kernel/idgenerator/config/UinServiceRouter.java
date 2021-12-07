@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import io.mosip.kernel.auth.defaultadapter.handler.AuthHandler;
+import io.mosip.kernel.auth.defaultadapter.handler.VertxAuthHandler;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
@@ -67,7 +67,7 @@ public class UinServiceRouter {
 	ObjectMapper objectMapper;
 
 	@Autowired
-	private AuthHandler authHandler;
+	private VertxAuthHandler authHandler;
 
 	@Autowired
 	private SignatureUtil signatureUtil;
@@ -134,7 +134,7 @@ public class UinServiceRouter {
 			try {
 				checkAndGenerateUins(vertx);
 				UinResponseDto uin = new UinResponseDto();
-				uin = uinGeneratorService.getUin();
+				uin = uinGeneratorService.getUin(routingContext);
 				reswrp.setResponsetime(DateUtils.convertUTCToLocalDateTime(timestamp));
 				reswrp.setResponse(uin);
 				reswrp.setErrors(null);
@@ -218,7 +218,7 @@ public class UinServiceRouter {
 			return;
 		}
 		try {
-			uinresponse = uinGeneratorService.updateUinStatus(uin);
+			uinresponse = uinGeneratorService.updateUinStatus(uin, routingContext);
 			ResponseWrapper<UinStatusUpdateReponseDto> reswrp = new ResponseWrapper<>();
 			reswrp.setResponse(uinresponse);
 			reswrp.setId(reqwrp.getId());
