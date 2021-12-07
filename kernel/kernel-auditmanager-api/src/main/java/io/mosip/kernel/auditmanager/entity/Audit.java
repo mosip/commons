@@ -78,12 +78,12 @@ public class Audit extends BaseAudit {
 
 	@NotNull
 	@Size(min = 1, max = 64)
-	@Column(name = "ref_id", nullable = false, updatable = false, length = 64)
+	@Column(name = "ref_id", nullable = true, updatable = false, length = 64)
 	private String id;
 
 	@NotNull
 	@Size(min = 1, max = 64)
-	@Column(name = "ref_id_type", nullable = false, updatable = false, length = 64)
+	@Column(name = "ref_id_type", nullable = true, updatable = false, length = 64)
 	private String idType;
 
 	@NotNull
