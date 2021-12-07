@@ -62,12 +62,10 @@ public class AuditRequestDto {
 	@Size(min = 1, max = 128)
 	private String sessionUserName;
 
-	@NotNull
-	@Size(min = 1, max = 64)
-
+	@Size(max = 64)
 	private String id;
-	@NotNull
-	@Size(min = 1, max = 64)
+	
+	@Size(max = 64)
 	private String idType;
 
 	@NotNull
