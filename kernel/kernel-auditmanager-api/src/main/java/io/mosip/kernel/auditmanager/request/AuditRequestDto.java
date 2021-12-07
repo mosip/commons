@@ -64,8 +64,6 @@ public class AuditRequestDto {
 
 	private String id;
 	
-	@NotNull
-	@Size(min = 1, max = 64)
 	private String idType;
 
 	@NotNull
