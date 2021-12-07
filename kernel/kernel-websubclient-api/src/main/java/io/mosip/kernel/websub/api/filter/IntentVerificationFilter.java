@@ -54,9 +54,11 @@ public class IntentVerificationFilter extends OncePerRequestFilter {
 			String topicReq = request.getParameter(WebSubClientConstants.HUB_TOPIC);			
 			String modeReq = request.getParameter(WebSubClientConstants.HUB_MODE);			
 			String mode = request.getParameter("intentMode");
-	        if(mode.equals("denied")) {
-	        	LOGGER.error("intent verification failed, hub server mode id denied topic should be registered before subscribe");
-	        	response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+	        if(modeReq.equals("denied")) {
+	        	LOGGER.error("intent verification failed,"+request.getParameter("hub.reason"));
+	        	response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+	        	response.getWriter().flush();
+				response.getWriter().close();
 	        }
 			if (intentVerifier.isIntentVerified(topic,
 					mode, topicReq, modeReq)) {
