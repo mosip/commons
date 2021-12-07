@@ -76,13 +76,13 @@ public class Audit extends BaseAudit {
 	@Column(name = "session_user_name", updatable = false, length = 128)
 	private String sessionUserName;
 
-	@NotNull
-	@Size(min = 1, max = 64)
+	
+	@Size(max = 64)
 	@Column(name = "ref_id", nullable = true, updatable = false, length = 64)
 	private String id;
 
-	@NotNull
-	@Size(min = 1, max = 64)
+	
+	@Size(max = 64)
 	@Column(name = "ref_id_type", nullable = true, updatable = false, length = 64)
 	private String idType;
 
