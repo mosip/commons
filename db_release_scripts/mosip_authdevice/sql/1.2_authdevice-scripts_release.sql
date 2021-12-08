@@ -24,4 +24,7 @@ ALTER TABLE authdevice.secure_biometric_interface_h ADD partner_org_name varchar
 
 ALTER TABLE authdevice.secure_biometric_interface_h ADD provider_id varchar(36);
 
+ALTER TABLE authdevice.secure_biometric_interface DROP COLUMN IF EXISTS device_detail_id;
+ALTER TABLE authdevice.secure_biometric_interface_h DROP COLUMN IF EXISTS device_detail_id;
+
 ----------------------------------------------------------------------------------------------------
