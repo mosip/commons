@@ -31,6 +31,8 @@ CREATE TABLE authdevice.secure_biometric_interface_h(
 	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
 	eff_dtimes timestamp NOT NULL,
+	provider_id character varying(36) NOT NULL,
+	partner_org_name character varying(128),
 	CONSTRAINT pk_mdsh_id PRIMARY KEY (id,eff_dtimes)
 
 );

@@ -18,4 +18,9 @@ ALTER TABLE authdevice.secure_biometric_interface DROP CONSTRAINT IF EXISTS fk_s
 ALTER TABLE authdevice.secure_biometric_interface ALTER COLUMN device_detail_id TYPE character varying;
 ALTER TABLE authdevice.secure_biometric_interface_h ALTER COLUMN device_detail_id TYPE character varying;
 
+
+ALTER TABLE authdevice.secure_biometric_interface ADD partner_org_name varchar(128);
+
+ALTER TABLE authdevice.secure_biometric_interface ADD provider_id varchar(36);
+
 ----------------------------------------------------------------------------------------------------
