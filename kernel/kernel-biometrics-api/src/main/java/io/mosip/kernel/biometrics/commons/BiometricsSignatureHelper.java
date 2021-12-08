@@ -12,14 +12,13 @@ import org.json.JSONObject;
 import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.Entry;
 import io.mosip.kernel.core.exception.BiometricSignatureValidationException;
-import io.mosip.kernel.core.util.CryptoUtil;
 
 public class BiometricsSignatureHelper {
 
 	public static String extractJWTToken(BIR bir) throws BiometricSignatureValidationException, JSONException {
 
 		String constructedJWTToken = null;
-		
+
 		List<Entry> othersInfo = bir.getOthers();
 		if (othersInfo == null) {
 			throw new BiometricSignatureValidationException("Others value is null inside BIR");
@@ -31,7 +30,7 @@ public class BiometricsSignatureHelper {
 		for (Entry entry : othersInfo) {
 			if (entry.getKey().equals("PAYLOAD")) {
 				String value = entry.getValue().replace("<bioValue>", bdb);
-				String encodedPayloadValue = CryptoUtil.encodeBase64(value.getBytes());
+				String encodedPayloadValue = Base64.getUrlEncoder().encodeToString(value.getBytes());
 				constructedJWTToken = constructJWTToken(sb, encodedPayloadValue);
 				JSONObject jsonObject = new JSONObject(value);
 				String digitalID = jsonObject.getString("digitalId");
@@ -44,7 +43,7 @@ public class BiometricsSignatureHelper {
 
 	private static void compareJWTForSameCertificates(String jwtString1, String jwtString2)
 			throws JSONException, BiometricSignatureValidationException {
-		String jwtString1Header = new String(CryptoUtil.decodeBase64(jwtString1.split("\\.")[0]));
+		String jwtString1Header = new String( Base64.getUrlDecoder().decode(jwtString1.split("\\.")[0]));
 		JSONObject jwtString1HeaderCertificate = new JSONObject(jwtString1Header);
 		JSONArray jwtString1HeadercertificateJsonArray = jwtString1HeaderCertificate.getJSONArray("x5c");
 		ArrayList<String> jwtString1Certificates = new ArrayList<String>();
@@ -54,7 +53,7 @@ public class BiometricsSignatureHelper {
 			}
 		}
 
-		String jwtString2Header = new String(CryptoUtil.decodeBase64(jwtString2.split("\\.")[0]));
+		String jwtString2Header = new String(Base64.getUrlDecoder().decode(jwtString2.split("\\.")[0]));
 		JSONObject jwtString2HeaderCertificate = new JSONObject(jwtString2Header);
 		JSONArray jwtString2HeadercertificateJsonArray = jwtString2HeaderCertificate.getJSONArray("x5c");
 		ArrayList<String> jwtString2Certificates = new ArrayList<String>();
@@ -72,5 +71,4 @@ public class BiometricsSignatureHelper {
 	private static String constructJWTToken(String sb, String encodedPayloadValue) {
 		return sb.replace("..", "." + encodedPayloadValue + ".");
 	}
-
 }

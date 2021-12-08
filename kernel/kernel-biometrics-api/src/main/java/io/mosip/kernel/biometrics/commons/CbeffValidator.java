@@ -82,7 +82,7 @@ public class CbeffValidator {
 				}
 			}
 		}
-		return false;
+		return true;
 	}
 
 	/**
