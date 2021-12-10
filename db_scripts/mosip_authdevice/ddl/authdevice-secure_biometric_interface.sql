@@ -19,7 +19,6 @@ CREATE TABLE authdevice.secure_biometric_interface(
 	id character varying(36) NOT NULL,
 	sw_binary_hash bytea NOT NULL,
 	sw_version character varying(64) NOT NULL,
-	device_detail_id character varying NOT NULL,
 	sw_cr_dtimes timestamp,
 	sw_expiry_dtimes timestamp,
 	approval_status character varying(36) NOT NULL,
@@ -30,6 +29,8 @@ CREATE TABLE authdevice.secure_biometric_interface(
 	upd_dtimes timestamp,
 	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
+    provider_id character varying(36) NOT NULL,
+    partner_org_name character varying(128),
 	CONSTRAINT pk_sbi_id PRIMARY KEY (id)
 
 );
