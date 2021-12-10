@@ -1,5 +1,4 @@
 package io.mosip.kernel.biosdk.provider.test;
-
 import io.mosip.kernel.biometrics.constant.BiometricFunction;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biosdk.provider.factory.BioAPIFactory;

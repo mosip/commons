@@ -32,6 +32,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
+import io.mosip.kernel.auth.defaultadapter.handler.VertxAuthHandler;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.idgenerator.config.HibernateDaoConfig;
 import io.mosip.kernel.vidgenerator.constant.VidLifecycleStatus;
@@ -41,6 +42,7 @@ import io.mosip.kernel.vidgenerator.exception.VidGeneratorServiceException;
 import io.mosip.kernel.vidgenerator.repository.VidAssignedRepository;
 import io.mosip.kernel.vidgenerator.repository.VidRepository;
 import io.mosip.kernel.vidgenerator.service.VidService;
+import io.vertx.ext.web.RoutingContext;
 
 @SpringBootTest
 @TestPropertySource({ "classpath:application-test.properties", "classpath:bootstrap.properties" })
@@ -48,6 +50,8 @@ import io.mosip.kernel.vidgenerator.service.VidService;
 @ContextConfiguration(classes = HibernateDaoConfig.class, loader = AnnotationConfigContextLoader.class)
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class VidGeneratorServiceTest {
+
+	private static final String TEST_USER = "TestUser";
 
 	@Autowired
 	private VidService vidService;
@@ -57,6 +61,12 @@ public class VidGeneratorServiceTest {
 
 	@MockBean
 	private VidAssignedRepository vidAssignedRepository;
+
+	@MockBean
+	private RoutingContext routingContext;
+
+	@MockBean
+	private VertxAuthHandler authHandler;
 
 	private List<VidAssignedEntity> expiredButAssignedStatusVAEntities;
 
@@ -148,21 +158,24 @@ public class VidGeneratorServiceTest {
 	@Test(expected = VidGeneratorServiceException.class)
 	public void fetchVidNotFoundTest() {
 		Mockito.when(vidRepository.findFirstByStatus(VidLifecycleStatus.AVAILABLE)).thenReturn(null);
-		vidService.fetchVid(null);
+		Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
+		vidService.fetchVid(null, routingContext);
 	}
 
 	@Test(expected = VidGeneratorServiceException.class)
 	public void fetchVidGerDataAccessTest() {
 		Mockito.when(vidRepository.findFirstByStatus(VidLifecycleStatus.AVAILABLE))
 				.thenThrow(new DataRetrievalFailureException("DataBase error occur"));
-		vidService.fetchVid(null);
+		Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
+		vidService.fetchVid(null, routingContext);
 	}
 
 	@Test(expected = VidGeneratorServiceException.class)
 	public void fetchVidGetExceptionTest() {
 		Mockito.when(vidRepository.findFirstByStatus(VidLifecycleStatus.AVAILABLE))
 				.thenThrow(new RuntimeException("DataBase error occur"));
-		vidService.fetchVid(null);
+		Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
+		vidService.fetchVid(null, routingContext);
 	}
 
 	@Test(expected = VidGeneratorServiceException.class)
@@ -171,7 +184,8 @@ public class VidGeneratorServiceTest {
 		Mockito.doThrow(new DataRetrievalFailureException("DataBase error occur")).when(vidRepository).updateVid(
 				Mockito.eq(VidLifecycleStatus.ASSIGNED), Mockito.anyString(), Mockito.any(),
 				Mockito.eq(availableEntity.getVid()));
-		vidService.fetchVid(null);
+		Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
+		vidService.fetchVid(null, routingContext);
 	}
 
 	@Test(expected = VidGeneratorServiceException.class)
@@ -180,7 +194,8 @@ public class VidGeneratorServiceTest {
 		Mockito.doThrow(new RuntimeException("DataBase error occur")).when(vidRepository).updateVid(
 				Mockito.eq(VidLifecycleStatus.ASSIGNED), Mockito.anyString(), Mockito.any(),
 				Mockito.eq(availableEntity.getVid()));
-		vidService.fetchVid(null);
+		Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
+		vidService.fetchVid(null, routingContext);
 	}
 
 	@Test
@@ -188,7 +203,8 @@ public class VidGeneratorServiceTest {
 		Mockito.when(vidRepository.findFirstByStatus(VidLifecycleStatus.AVAILABLE))
 				.thenReturn(availableEntityWithExpiry);
 		Mockito.when(vidRepository.save(Mockito.any())).thenReturn(availableEntityWithExpiry);
-		vidService.fetchVid(DateUtils.getUTCCurrentDateTime().plusMonths(20));
+		Mockito.when(authHandler.getContextUser(routingContext)).thenReturn(TEST_USER);
+		vidService.fetchVid(DateUtils.getUTCCurrentDateTime().plusMonths(20), routingContext);
 	}
 
 	@Test

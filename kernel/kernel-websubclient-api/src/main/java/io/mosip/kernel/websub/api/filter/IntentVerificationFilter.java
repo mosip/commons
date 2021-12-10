@@ -49,14 +49,14 @@ public class IntentVerificationFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {		
-		String topic=matchCallbackURL(request.getRequestURI());	
+		String topic=matchCallbackURL(request.getRequestURI());
 		if (request.getMethod().equals(HttpMethod.GET.name()) && topic!=null) {
 			String topicReq = request.getParameter(WebSubClientConstants.HUB_TOPIC);			
-			String modeReq = request.getParameter(WebSubClientConstants.HUB_MODE);			
+			String modeReq = request.getParameter(WebSubClientConstants.HUB_MODE);
 			String mode = request.getParameter("intentMode");
-	        if(mode.equals("denied")) {
-	        	LOGGER.error("intent verification failed, hub server mode id denied topic should be registered before subscribe");
-	        	response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+	        if(modeReq.equals("denied")) {
+	        	LOGGER.error("intent verification failed,"+request.getParameter("hub.reason"));
+	        	response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 	        }
 			if (intentVerifier.isIntentVerified(topic,
 					mode, topicReq, modeReq)) {

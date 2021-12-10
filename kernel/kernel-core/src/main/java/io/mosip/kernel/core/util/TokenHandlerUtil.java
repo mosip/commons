@@ -2,6 +2,8 @@ package io.mosip.kernel.core.util;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +24,8 @@ import io.mosip.kernel.core.exception.ExceptionUtils;
 public class TokenHandlerUtil {
 	  private static Logger LOGGER= LoggerFactory.getLogger(TokenHandlerUtil.class);
 	  
+	  
+	  public static ConcurrentMap<String,DecodedJWT> decodedTokens = new ConcurrentHashMap<>();
 	  private TokenHandlerUtil() {
 		  
 	  }
@@ -40,7 +44,11 @@ public class TokenHandlerUtil {
 	public static boolean isValidBearerToken(String accessToken, String issuerUrl, String clientId) {
 
 		try {
-			DecodedJWT decodedJWT = JWT.decode(accessToken);
+			DecodedJWT decodedJWT = decodedTokens.get(accessToken);
+			if(decodedJWT==null) {
+				decodedJWT = JWT.decode(accessToken);
+				decodedTokens.put(accessToken, decodedJWT);
+			}
 			Map<String, Claim> claims = decodedJWT.getClaims();
 			LocalDateTime expiryTime = DateUtils
 					.convertUTCToLocalDateTime(DateUtils.getUTCTimeFromDate(decodedJWT.getExpiresAt()));
