@@ -54,14 +54,16 @@ public class IntentVerificationConfig implements ApplicationContextAware, Embedd
 						PreAuthenticateContentAndVerifyIntent preAuthenticateContent = method
 								.getAnnotation(PreAuthenticateContentAndVerifyIntent.class);
 
-						if (preAuthenticateContent.topic().startsWith("${")
-								&& preAuthenticateContent.topic().endsWith("}")) {
-							mappings.put(preAuthenticateContent.callback(),
-									resolver.resolveStringValue(preAuthenticateContent.topic()));
-						} else {
-							mappings.put(preAuthenticateContent.callback(), preAuthenticateContent.topic());
+						String topic = preAuthenticateContent.topic();
+						String callback = preAuthenticateContent.callback();
+						if (topic.startsWith("${") && topic.endsWith("}")) {
+							topic = resolver.resolveStringValue(topic);
 						}
 
+						if (callback.startsWith("${") && callback.endsWith("}")) {
+							callback = resolver.resolveStringValue(callback);
+						}
+						mappings.put(callback, topic);
 					}
 				}
 				IntentVerificationFilter intentVerificationFilter = applicationContext
