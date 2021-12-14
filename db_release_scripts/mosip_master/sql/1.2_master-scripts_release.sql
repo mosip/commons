@@ -261,6 +261,8 @@ ALTER TABLE master.machine_master ADD CONSTRAINT uq_machm_name UNIQUE (name);
 ALTER TABLE master.machine_master ADD CONSTRAINT uq_machm_key_index UNIQUE (key_index);
 ALTER TABLE master.machine_master ADD CONSTRAINT uq_machm_skey_index UNIQUE (sign_key_index);
 
+ALTER TABLE master.loc_holiday DROP CONSTRAINT IF EXISTS pk_lochol_id;
+ALTER TABLE master.loc_holiday ADD CONSTRAINT pk_lochol_id PRIMARY KEY (holiday_date, location_code, lang_code);
 
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
