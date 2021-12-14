@@ -28,7 +28,7 @@ CREATE TABLE master.loc_holiday(
 	upd_dtimes timestamp,
 	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
-	CONSTRAINT pk_lochol_id PRIMARY KEY (id,location_code,lang_code),
+	CONSTRAINT pk_lochol_id PRIMARY KEY (holiday_date,location_code,lang_code),
 	CONSTRAINT uk_lochol_name UNIQUE (holiday_name,holiday_date,location_code,lang_code)
 
 );
