@@ -88,7 +88,7 @@ CMD wget "${artifactory_url_env}"/artifactory/libs-release-local/io/mosip/testin
     unzip glowroot.zip ; \
     rm -rf glowroot.zip ; \
     sed -i 's/<service_name>/kernel-idgenerator-service/g' glowroot/glowroot.properties ; \
-    java -jar -javaagent:glowroot/glowroot.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -XX:HeapDumpPath=/home/ -Dceylon.cache.repo=./regproc-reprocessor-ceylon-cache-repo kernel-idgenerator-service.jar ; \
+    java -jar -javaagent:glowroot/glowroot.jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dlog4j2.formatMsgNoLookups=true -Dspring.cloud.config.uri="${spring_config_url_env}" -XX:HeapDumpPath=/home/ -Dceylon.cache.repo=./regproc-reprocessor-ceylon-cache-repo kernel-idgenerator-service.jar ; \
     else \
-    java -jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -Dceylon.cache.repo=./regproc-reprocessor-ceylon-cache-repo kernel-idgenerator-service.jar ; \
+    java -jar -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dlog4j2.formatMsgNoLookups=true -Dspring.cloud.config.uri="${spring_config_url_env}" -Dceylon.cache.repo=./regproc-reprocessor-ceylon-cache-repo kernel-idgenerator-service.jar ; \
     fi
