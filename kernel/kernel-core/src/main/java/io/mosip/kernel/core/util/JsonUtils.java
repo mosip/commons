@@ -7,6 +7,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 
 import io.mosip.kernel.core.exception.IOException;
 import io.mosip.kernel.core.util.constant.JsonUtilConstants;
@@ -22,6 +24,14 @@ import io.mosip.kernel.core.util.exception.JsonProcessingException;
  *
  */
 public class JsonUtils {
+
+	private static ObjectMapper objectMapper;
+
+	static {
+		objectMapper = JsonMapper.builder().addModule(new AfterburnerModule()).build();
+		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+	}
 
 	private JsonUtils() {
 
@@ -71,9 +81,6 @@ public class JsonUtils {
 	 * @throws JsonProcessingException when JSON is not properly processed
 	 */
 	public static String javaObjectToJsonString(Object className) throws JsonProcessingException {
-		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 		String outputJson = null;
 
 		try {
@@ -100,9 +107,6 @@ public class JsonUtils {
 	 */
 	public static Object jsonStringToJavaObject(Class<?> className, String jsonString)
 			throws JsonParseException, JsonMappingException, IOException {
-		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 		Object returnObject = null;
 
 		try {
@@ -163,10 +167,6 @@ public class JsonUtils {
 	 * @throws IOException when file is not found
 	 */
 	public static String jsonToJacksonJson(String jsonString, String key) throws IOException {
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 		JsonNode jsonNode = null;
 		try {
 			jsonNode = objectMapper.readTree(jsonString);
@@ -191,9 +191,6 @@ public class JsonUtils {
 	 */
 	public static List<Object> jsonStringToJavaList(String jsonArray)
 			throws JsonParseException, JsonMappingException, IOException {
-		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 		List<Object> javaList = null;
 		try {
 			javaList = objectMapper.readValue(jsonArray, new TypeReference<List<Object>>() {
@@ -225,9 +222,6 @@ public class JsonUtils {
 	 */
 	public static Map<String, Object> jsonStringToJavaMap(String jsonString)
 			throws JsonParseException, JsonMappingException, IOException {
-		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 		Map<String, Object> javaMap = null;
 		try {
 			javaMap = objectMapper.readValue(jsonString, new TypeReference<Map<String, Object>>() {
