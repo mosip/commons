@@ -19,15 +19,15 @@ public class HibernatePersistenceConstant {
 	/**
 	 * The string field JAVAX_PERSISTENCE_JDBC_PASS
 	 */
-	public static final String JAVAX_PERSISTENCE_JDBC_PASS = "uin_database_password";
+	public static final String JAVAX_PERSISTENCE_JDBC_PASS = "id_database_password";
 	/**
 	 * The string field JAVAX_PERSISTENCE_JDBC_USER
 	 */
-	public static final String JAVAX_PERSISTENCE_JDBC_USER = "uin_database_username";
+	public static final String JAVAX_PERSISTENCE_JDBC_USER = "id_database_username";
 	/**
 	 * The string field JAVAX_PERSISTENCE_JDBC_URL
 	 */
-	public static final String JAVAX_PERSISTENCE_JDBC_URL = "uin_database_url";
+	public static final String JAVAX_PERSISTENCE_JDBC_URL = "id_database_url";
 	/**
 	 * The string field JAVAX_PERSISTENCE_JDBC_DRIVER
 	 */
