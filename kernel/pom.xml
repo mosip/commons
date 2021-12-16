@@ -159,9 +159,9 @@
 		<module>kernel-websubclient-api</module>
 		<module>kernel-auditmanager-service</module>
 		<!-- <module>kernel-otpmanager-service</module>
-		<module>kernel-notification-service</module>
+		<module>kernel-notification-service</module> -->
 		<module>kernel-auth-service</module>
-		<module>kernel-ridgenerator-service</module>
+		<!--<module>kernel-ridgenerator-service</module>
 		<module>kernel-keymanager-service</module>
 		<module>kernel-idgenerator-service</module>
 		<module>kernel-pridgenerator-service</module>
