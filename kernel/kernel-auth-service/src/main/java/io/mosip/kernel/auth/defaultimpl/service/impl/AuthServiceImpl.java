@@ -79,7 +79,6 @@ import io.mosip.kernel.core.authmanager.model.UserPasswordResponseDto;
 import io.mosip.kernel.core.authmanager.model.UserRegistrationRequestDto;
 import io.mosip.kernel.core.authmanager.model.UserRoleDto;
 import io.mosip.kernel.core.authmanager.model.ValidationResponseDto;
-import io.mosip.kernel.core.authmanager.model.IndividualIdDto;
 import io.mosip.kernel.core.authmanager.spi.AuthService;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 
@@ -821,17 +820,5 @@ public class AuthServiceImpl implements AuthService {
 		authNResponseDto.setMessage(AuthConstant.USERPWD_SUCCESS_MESSAGE);
 		authNResponseDto.setRefreshExpiryTime(Long.parseLong(accessTokenResponse.getRefresh_expires_in()));
 		return authNResponseDto;
-	}
-
-	@Override
-	public IndividualIdDto getIndividualIdBasedOnUserID(String userId, String appId) {
-		return keycloakImpl.getIndividualIdFromUserId(userId,authUtil.getRealmIdFromAppId(appId));
-	}
-
-	@Override
-	public MosipUserListDto getListOfUsersDetails(String realmId, String roleName, int pageStart, int pageFetch,
-			String email, String firstName, String lastName, String username,String search) {
-		return keycloakImpl.getListOfUsersDetails(authUtil.getRealmIdFromAppId(realmId), roleName, pageStart, pageFetch,
-				email, firstName, lastName, username,search);
 	}
 }
