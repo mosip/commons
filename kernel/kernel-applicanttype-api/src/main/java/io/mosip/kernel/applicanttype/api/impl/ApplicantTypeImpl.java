@@ -15,8 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.mosip.kernel.applicanttype.api.constant.ApplicantTypeErrorCode;
 import io.mosip.kernel.core.applicanttype.exception.InvalidApplicantArgumentException;
 import io.mosip.kernel.core.applicanttype.spi.ApplicantType;
@@ -44,7 +42,7 @@ public class ApplicantTypeImpl implements ApplicantType {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	private ObjectMapper objectMapper = new ObjectMapper();
+	
 	private String script = "";
 
 	@PostConstruct

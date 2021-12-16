@@ -6,29 +6,23 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withBadRequest;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
-import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
@@ -36,13 +30,10 @@ import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.signatureutil.exception.ParseResponseException;
 import io.mosip.kernel.core.signatureutil.exception.SignatureUtilClientException;
 import io.mosip.kernel.core.signatureutil.exception.SignatureUtilException;
-import io.mosip.kernel.core.signatureutil.model.SignatureResponse;
 import io.mosip.kernel.core.signatureutil.spi.SignatureUtil;
-import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.cryptosignature.dto.SignResponseDto;
 import io.mosip.kernel.cryptosignature.dto.SignatureRequestDto;
 import io.mosip.kernel.cryptosignature.service.impl.SignatureUtilImpl;
-import io.mosip.kernel.keygenerator.bouncycastle.KeyGenerator;
 
 public class SignatureUtilImplTest {
 
@@ -67,7 +58,10 @@ public class SignatureUtilImplTest {
 	@Before
 	public void setUp() {
 		restTemplate = new RestTemplate();
-		objectMapper = new ObjectMapper();
+		objectMapper = JsonMapper.builder()
+			    .addModule(new AfterburnerModule())
+			    .build();
+		objectMapper.registerModule(new JavaTimeModule());
 		signingUtil = new SignatureUtilImpl();
 		ReflectionTestUtils.setField(signingUtil, "restTemplate", restTemplate);
 		ReflectionTestUtils.setField(signingUtil, "objectMapper", objectMapper);

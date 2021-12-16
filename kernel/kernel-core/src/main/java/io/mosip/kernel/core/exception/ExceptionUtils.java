@@ -8,10 +8,11 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 
 /**
  * This utils contains exception utilities.
@@ -25,6 +26,10 @@ public final class ExceptionUtils {
 
 	private static final Logger logger = LoggerFactory.getLogger(ExceptionUtils.class);
 
+	private static  ObjectMapper objectMapper=JsonMapper.builder()
+		    .addModule(new AfterburnerModule())
+		    .build();
+	
 	private ExceptionUtils() {
 
 	}
@@ -71,12 +76,11 @@ public final class ExceptionUtils {
 	 * @return the list of {@link ServiceError}
 	 */
 	public static List<ServiceError> getServiceErrorList(String responseBody) {
-		ObjectMapper mapper = new ObjectMapper();
 
 		List<ServiceError> validationErrorsList = new ArrayList<>();
 
 		try {
-			JsonNode errorResponse = mapper.readTree(responseBody);
+			JsonNode errorResponse = objectMapper.readTree(responseBody);
 
 			if (errorResponse.has("errors")) {
 
