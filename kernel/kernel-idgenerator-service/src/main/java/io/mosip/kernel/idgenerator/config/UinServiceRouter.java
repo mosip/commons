@@ -99,11 +99,11 @@ public class UinServiceRouter {
 			routingContext.response().headers().add(CONTENT_TYPE, UinGeneratorConstant.APPLICATION_JSON);
 			routingContext.next();
 		});
-		authHandler.addAuthFilter(router, "/", HttpMethod.GET, "REGISTRATION_PROCESSOR");
+		authHandler.addAuthFilter(router, "/", HttpMethod.GET, "ID_REPOSITORY");
 		router.get().handler(routingContext -> {
 			getRouter(vertx, routingContext, isSignEnable, profile, router, workerExecutorPool);
 		});
-		authHandler.addAuthFilter(router, "/", HttpMethod.PUT, "REGISTRATION_PROCESSOR");
+		authHandler.addAuthFilter(router, "/", HttpMethod.PUT, "ID_REPOSITORY");
 		router.route().handler(BodyHandler.create());
 		router.put().consumes(UinGeneratorConstant.APPLICATION_JSON).handler(this::updateRouter);
 
