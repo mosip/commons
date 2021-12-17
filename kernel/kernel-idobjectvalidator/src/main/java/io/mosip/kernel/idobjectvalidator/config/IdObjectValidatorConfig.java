@@ -1,12 +1,19 @@
-package io.mosip.kernel.idobjectvalidator.impl;
+package io.mosip.kernel.idobjectvalidator.config;
+
+import static io.mosip.kernel.idobjectvalidator.constant.IdObjectValidatorConstant.REFERENCE_VALIDATOR;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Component;
+import org.springframework.core.env.Environment;
 
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectIOException;
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectValidationFailedException;
@@ -14,37 +21,59 @@ import io.mosip.kernel.core.idobjectvalidator.exception.InvalidIdSchemaException
 import io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator;
 
 /**
- * The Class IdObjectCompositeValidator.
+ * The Class IdObjectValidatorConfig.
  *
  * @author Manoj SP
  */
-@Component
-@Primary
-public class IdObjectCompositeValidator implements IdObjectValidator {
+@Configuration
+public class IdObjectValidatorConfig {
 
-	/** The schema validator. */
+	private static final Logger logger = LoggerFactory.getLogger(IdObjectValidatorConfig.class);
+
+	/** The env. */
 	@Autowired
-	private IdObjectSchemaValidator schemaValidator;
+	private Environment env;
 
-	/** The reference validator. */
-	@Autowired(required = false)
-	@Qualifier("referenceValidator")
-	@Lazy
-	private IdObjectValidator referenceValidator;
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator#validateIdObject
-	 * (java.lang.Object)
+	/**
+	 * Validate reference validator.
+	 *
+	 * @throws ClassNotFoundException the class not found exception
 	 */
-	@Override
-	public boolean validateIdObject(String idSchema, Object identityObject, List<String> requiredFields)
-			throws IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
-		schemaValidator.validateIdObject(idSchema, identityObject, requiredFields);
-		referenceValidator.validateIdObject(idSchema, identityObject, requiredFields);
-		return true;
+	@PostConstruct
+	public void validateReferenceValidator() throws ClassNotFoundException {
+		if (StringUtils.isNotBlank(env.getProperty(REFERENCE_VALIDATOR))) {
+			logger.debug("validating referenceValidator Class is present or not");
+			Class.forName(env.getProperty(REFERENCE_VALIDATOR));
+		}
+		logger.debug("validateReferenceValidator: referenceValidator Class is not provided");
 	}
 
+	/**
+	 * Reference validator.
+	 *
+	 * @return the id object validator
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws InstantiationException the instantiation exception
+	 * @throws IllegalAccessException the illegal access exception
+	 */
+	@Bean
+	@Lazy
+	public IdObjectValidator referenceValidator()
+			throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+		if (StringUtils.isNotBlank(env.getProperty(REFERENCE_VALIDATOR))) {
+			logger.debug("instance of referenceValidator is created");
+			return (IdObjectValidator) Class.forName(env.getProperty(REFERENCE_VALIDATOR)).newInstance();
+		} else {
+			logger.debug("no reference validator is provided");
+			return new IdObjectValidator() {
+
+				@Override
+				public boolean validateIdObject(String identitySchema, Object identityObject,
+						List<String> requiredFields)
+						throws IdObjectValidationFailedException, IdObjectIOException, InvalidIdSchemaException {
+					return true;
+				}
+			};
+		}
+	}
 }
