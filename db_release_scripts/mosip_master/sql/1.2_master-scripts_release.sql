@@ -265,6 +265,10 @@ ALTER TABLE master.machine_master ADD CONSTRAINT uq_machm_skey_index UNIQUE (sig
 ALTER TABLE master.loc_holiday DROP CONSTRAINT IF EXISTS pk_lochol_id;
 ALTER TABLE master.loc_holiday ADD CONSTRAINT pk_lochol_id PRIMARY KEY (holiday_date, location_code, lang_code);
 
+ALTER TABLE master.blocklisted_words DROP CONSTRAINT IF EXISTS pk_blwrd_code;
+ALTER TABLE master.blocklisted_words ADD CONSTRAINT pk_blwrd_code PRIMARY KEY (word);
+ALTER TABLE master.blocklisted_words ALTER COLUMN lang_code DROP NOT NULL;
+
 -----------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------template,template_type and module_detail----------------------------------------------------------
 
