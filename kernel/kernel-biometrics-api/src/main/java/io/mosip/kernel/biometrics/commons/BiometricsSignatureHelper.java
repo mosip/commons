@@ -26,7 +26,7 @@ public class BiometricsSignatureHelper {
 		}
 
 		String sb = new String(bir.getSb(), StandardCharsets.UTF_8);
-		String bdb = Base64.getUrlEncoder().encodeToString(bir.getBdb());
+		String bdb = CryptoUtil.encodeToURLSafeBase64(bir.getBdb());
 
 		for (Entry entry : othersInfo) {
 			if (entry.getKey().equals("PAYLOAD")) {
