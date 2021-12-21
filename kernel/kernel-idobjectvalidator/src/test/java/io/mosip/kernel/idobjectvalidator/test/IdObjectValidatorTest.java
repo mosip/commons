@@ -14,7 +14,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.github.fge.jackson.JsonLoader;
 
 import io.mosip.kernel.core.idobjectvalidator.exception.IdObjectIOException;
@@ -95,7 +96,9 @@ public class IdObjectValidatorTest {
 	
 	@Before
 	public void setup() {
-		ReflectionTestUtils.setField(validator, "mapper", new ObjectMapper());
+		ReflectionTestUtils.setField(validator, "mapper", JsonMapper.builder()
+			    .addModule(new AfterburnerModule())
+			    .build());
 	}
 	
 	@Test
