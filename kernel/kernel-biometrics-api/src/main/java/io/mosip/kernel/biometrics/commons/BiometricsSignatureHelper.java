@@ -13,12 +13,8 @@ import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.Entry;
 import io.mosip.kernel.core.exception.BiometricSignatureValidationException;
 import io.mosip.kernel.core.util.CryptoUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class BiometricsSignatureHelper {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(BiometricsSignatureHelper.class);
 
 	public static String extractJWTToken(BIR bir) throws BiometricSignatureValidationException, JSONException {
 
@@ -31,15 +27,12 @@ public class BiometricsSignatureHelper {
 
 		String sb = new String(bir.getSb(), StandardCharsets.UTF_8);
 		String bdb = CryptoUtil.encodeToURLSafeBase64(bir.getBdb());
-		LOGGER.info("bdb : " + bdb);
+
 		for (Entry entry : othersInfo) {
 			if (entry.getKey().equals("PAYLOAD")) {
 				String value = entry.getValue().replace("<bioValue>", bdb);
-				LOGGER.info("value : " + value);
 				String encodedPayloadValue = CryptoUtil.encodeToURLSafeBase64(value.getBytes());
-				LOGGER.info("encodedPayloadValue : " + encodedPayloadValue);
 				constructedJWTToken = constructJWTToken(sb, encodedPayloadValue);
-				LOGGER.info("constructedJWTToken : " + constructedJWTToken);
 				JSONObject jsonObject = new JSONObject(value);
 				String digitalID = jsonObject.getString("digitalId");
 				compareJWTForSameCertificates(constructedJWTToken, digitalID);
