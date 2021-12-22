@@ -87,7 +87,7 @@ public class SubscriberClientImpl
 					WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorMessage() + exception.getResponseBodyAsString());
 		}
 		if (response != null && response.getStatusCode() == HttpStatus.ACCEPTED) {
-			LOGGER.info("subscribed for topic {} at hub", subscriptionRequest.getTopic());
+			LOGGER.info("subscribing for topic {} at hub", subscriptionRequest.getTopic());
 			SubscriptionChangeResponse subscriptionChangeResponse = new SubscriptionChangeResponse();
 			subscriptionChangeResponse.setHubURL(subscriptionRequest.getHubURL());
 			subscriptionChangeResponse.setTopic(subscriptionRequest.getTopic());
@@ -95,14 +95,15 @@ public class SubscriberClientImpl
 		} else if (response != null && response.getStatusCode() == HttpStatus.OK) {
 			HubResponse hubResponse = ParseUtil.parseHubResponse(response.getBody());
 			if (hubResponse.getHubResult().equals("accepted")) {
-				LOGGER.info("subscribed for topic {} at hub", subscriptionRequest.getTopic());
+				LOGGER.info("subscribing for topic {} at hub", subscriptionRequest.getTopic());
 				SubscriptionChangeResponse subscriptionChangeResponse = new SubscriptionChangeResponse();
 				subscriptionChangeResponse.setHubURL(subscriptionRequest.getHubURL());
 				subscriptionChangeResponse.setTopic(subscriptionRequest.getTopic());
 				return subscriptionChangeResponse;
 			} else {
-				throw new WebSubClientException(WebSubClientErrorCode.REGISTER_ERROR.getErrorCode(),
-						WebSubClientErrorCode.REGISTER_ERROR.getErrorMessage() + hubResponse.getErrorReason());
+				LOGGER.error(WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorMessage()+response.getBody());
+				throw new WebSubClientException(WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorCode(),
+						WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorMessage() + hubResponse.getErrorReason());
 			}
 
 		}else {
@@ -165,8 +166,8 @@ public class SubscriberClientImpl
 		try {
 			response = restTemplateHelper.getRestTemplate().exchange(unsubscriptionRequest.getHubURL(), HttpMethod.POST, entity, String.class);
 		} catch (HttpClientErrorException | HttpServerErrorException exception) {
-			throw new WebSubClientException(WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorCode(),
-					WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorMessage() + exception.getResponseBodyAsString());
+			throw new WebSubClientException(WebSubClientErrorCode.UNSUBSCRIBE_ERROR.getErrorCode(),
+					WebSubClientErrorCode.UNSUBSCRIBE_ERROR.getErrorMessage() + exception.getResponseBodyAsString());
 		}
 		if (response != null && response.getStatusCode() == HttpStatus.ACCEPTED) {
 			LOGGER.info("unsubscribed for topic {} at hub", unsubscriptionRequest.getTopic());
@@ -183,13 +184,14 @@ public class SubscriberClientImpl
 				subscriptionChangeResponse.setTopic(unsubscriptionRequest.getTopic());
 				return subscriptionChangeResponse;
 			} else {
-				throw new WebSubClientException(WebSubClientErrorCode.REGISTER_ERROR.getErrorCode(),
-						WebSubClientErrorCode.REGISTER_ERROR.getErrorMessage() + hubResponse.getErrorReason());
+				LOGGER.error(WebSubClientErrorCode.UNSUBSCRIBE_ERROR.getErrorMessage()+response.getBody());
+				throw new WebSubClientException(WebSubClientErrorCode.UNSUBSCRIBE_ERROR.getErrorCode(),
+						WebSubClientErrorCode.UNSUBSCRIBE_ERROR.getErrorMessage() + hubResponse.getErrorReason());
 			}
 
 		}else {
-			throw new WebSubClientException(WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorCode(),
-					WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorMessage() + response.getBody());
+			throw new WebSubClientException(WebSubClientErrorCode.UNSUBSCRIBE_ERROR.getErrorCode(),
+					WebSubClientErrorCode.UNSUBSCRIBE_ERROR.getErrorMessage() + response.getBody());
 		}
 	}
 

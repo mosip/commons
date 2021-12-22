@@ -56,7 +56,14 @@ public class IntentVerificationFilter extends OncePerRequestFilter {
 			String mode = request.getParameter("intentMode");
 	        if(modeReq.equals("denied")) {
 	        	LOGGER.error("intent verification failed,"+request.getParameter("hub.reason"));
-	        	response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+	        	response.setStatus(HttpServletResponse.SC_ACCEPTED);
+	        	String challange =request.getParameter(WebSubClientConstants.HUB_CHALLENGE);
+	        	if(challange !=null) {
+	        		response.getWriter().write(request.getParameter(WebSubClientConstants.HUB_CHALLENGE));
+	        		response.getWriter().flush();
+					response.getWriter().close();
+	        	}
+				
 	        }
 			if (intentVerifier.isIntentVerified(topic,
 					mode, topicReq, modeReq)) {
@@ -72,7 +79,8 @@ public class IntentVerificationFilter extends OncePerRequestFilter {
 				}
 
 			} else {
-				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+				LOGGER.error("intent verification failed,"+topic+mode+topicReq+modeReq);
+				response.setStatus(HttpServletResponse.SC_ACCEPTED);
 			}
 
 		} else {
