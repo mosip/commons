@@ -5,12 +5,10 @@ import org.springframework.core.env.Environment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.kernel.idgenerator.config.UinServiceHealthCheckerhandler;
 import io.mosip.kernel.pridgenerator.config.PridServiceHealthCheckerhandler;
 import io.mosip.kernel.pridgenerator.constant.EventType;
 import io.mosip.kernel.pridgenerator.constant.PRIDGeneratorConstant;
 import io.mosip.kernel.pridgenerator.router.PridFetcherRouter;
-import io.mosip.kernel.uingenerator.constant.UinGeneratorConstant;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.http.HttpServer;
