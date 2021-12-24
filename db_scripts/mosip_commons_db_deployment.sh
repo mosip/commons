@@ -32,13 +32,6 @@ echo "==========================================================================
 bash ./mosip_keymgr/mosip_keymgr_db_deploy.sh ./mosip_keymgr/mosip_keymgr_deploy.properties
 echo "=============================================================================================================="
 
-echo "=============================================================================================================="
-bash ./mosip_authdevice/mosip_authdevice_db_deploy.sh ./mosip_authdevice/mosip_authdevice_deploy.properties
-echo "=============================================================================================================="
-
-echo "=============================================================================================================="
-bash ./mosip_regdevice/mosip_regdevice_db_deploy.sh ./mosip_regdevice/mosip_regdevice_deploy.properties
-echo "=============================================================================================================="
 
 echo "`date` : MOSIP DB Deployment for core databases is completed, Please check the logs at respective logs directory for more information"
  
