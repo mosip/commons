@@ -243,9 +243,9 @@ ALTER TABLE master.reg_working_nonworking ALTER COLUMN lang_code DROP NOT NULL;
 ALTER TABLE master.reg_working_nonworking ADD CONSTRAINT pk_working_nonworking PRIMARY KEY (regcntr_id,day_code);
 
 
-ALTER TABLE master.template_file_format DROP CONSTRAINT IF EXISTS pk_tffmt_code;
-ALTER TABLE master.template_file_format ALTER COLUMN lang_code DROP NOT NULL;
-ALTER TABLE master.template_file_format ADD CONSTRAINT pk_tffmt_code PRIMARY KEY (code);
+--ALTER TABLE master.template_file_format DROP CONSTRAINT IF EXISTS pk_tffmt_code;
+--ALTER TABLE master.template_file_format ALTER COLUMN lang_code DROP NOT NULL;
+--ALTER TABLE master.template_file_format ADD CONSTRAINT pk_tffmt_code PRIMARY KEY (code);
 
 
 ALTER TABLE master.template_type DROP CONSTRAINT IF EXISTS pk_tmpltyp_code;
