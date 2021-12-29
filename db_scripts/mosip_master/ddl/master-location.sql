@@ -32,6 +32,9 @@ CREATE TABLE master.location(
 
 );
 -- ddl-end --
+-- index creation starts--
+CREATE INDEX IF NOT EXISTS idx_location_cr_dtimes ON master.location USING btree (cr_dtimes);
+-- index creation ends--
 COMMENT ON TABLE master.location IS 'Location :  List of all location and  hierarchies defined for various location requirements.  An example is provided for understanding the data to be populated.';
 -- ddl-end --
 COMMENT ON COLUMN master.location.code IS 'Code : Unique location code. ';

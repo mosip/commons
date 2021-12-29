@@ -34,6 +34,9 @@ CREATE TABLE master.user_detail(
 
 );
 -- ddl-end --
+-- index creation starts--
+CREATE INDEX IF NOT EXISTS idx_user_detail_cntr_id ON master.user_detail USING btree (regcntr_id);
+-- index creation ends --
 COMMENT ON TABLE master.user_detail IS 'User Detail : List of applicatgion users in the system, who can perform UIN registration functions as per roles assigned.';
 -- ddl-end --
 COMMENT ON COLUMN master.user_detail.id IS 'User ID : Unique ID generated / assigned for a user';

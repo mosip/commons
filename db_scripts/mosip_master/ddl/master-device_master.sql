@@ -37,6 +37,9 @@ CREATE TABLE master.device_master(
 
 );
 -- ddl-end --
+-- index creation starts--
+CREATE INDEX IF NOT EXISTS idx_device_master_cntr_id ON master.device_master USING btree (regcntr_id);
+-- index creation ends--
 COMMENT ON TABLE master.device_master IS 'Device Master : Contains list of approved devices and  details,  like fingerprint scanner, iris scanner, scanner etc used at registration centers. Valid devices with active status only allowed at registration centers for respective functionalities. Device onboarding are handled through admin application/portal by the user who is having the device onboarding authority. ';
 -- ddl-end --
 COMMENT ON COLUMN master.device_master.id IS 'Device ID : Unique ID generated / assigned for device';

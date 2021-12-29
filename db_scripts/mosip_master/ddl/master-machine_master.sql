@@ -44,6 +44,11 @@ CREATE TABLE master.machine_master(
     CONSTRAINT uq_machm_spublic_key UNIQUE (sign_public_key)
 );
 -- ddl-end --
+-- index creation starts--
+CREATE INDEX IF NOT EXISTS idx_mac_master_cntr_id ON master.machine_master USING btree (regcntr_id);
+CREATE INDEX IF NOT EXISTS idx_mac_master_cr_dtimes ON master.machine_master USING btree (cr_dtimes);
+CREATE INDEX IF NOT EXISTS idx_mac_master_regcntr_id ON master.machine_master USING btree (regcntr_id);
+-- index creation ends--
 COMMENT ON TABLE master.machine_master IS 'Machine Master : Contains list of approved Machines and  details,  like laptop, desktop, dongle etc used at registration centers. Valid Machines with active status only allowed at registration centers for respective functionalities. Machine onboarding are handled through admin application/portal by the user who is having the Machine onboarding authority. ';
 -- ddl-end --
 COMMENT ON COLUMN master.machine_master.id IS 'Machine ID : Unique ID generated / assigned for machine';

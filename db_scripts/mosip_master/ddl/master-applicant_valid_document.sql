@@ -30,6 +30,10 @@ CREATE TABLE master.applicant_valid_document(
 	CONSTRAINT pk_avaldoc_code PRIMARY KEY (apptyp_code,doccat_code,doctyp_code)
 
 );
+-- index creation starts--
+CREATE INDEX IF NOT EXISTS idx_app_val_doc_cr_dtimes ON master.applicant_valid_document USING btree (cr_dtimes);
+CREATE INDEX IF NOT EXISTS idx_app_val_doc_upd_dtimes ON master.applicant_valid_document USING btree (upd_dtimes);
+-- index creation ends--
 -- ddl-end --
 COMMENT ON TABLE master.applicant_valid_document IS 'Applicant Valid Document : This is mapping table that relates applicant type, document category and document type, that is valid document proof for UIN registration process.';
 -- ddl-end --

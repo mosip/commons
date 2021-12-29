@@ -25,6 +25,9 @@ CREATE TABLE kernel.prid(
 	CONSTRAINT pk_prid_id PRIMARY KEY (prid)
 
 );
+-- index creation starts--
+CREATE INDEX IF NOT EXISTS idx_prid_status ON kernel.prid USING btree (prid_status);
+-- index creation ends --
 -- ddl-end --
 COMMENT ON TABLE kernel.prid IS 'PRID: Stores pre-generated PRIDs that are assigned to an individual as part of mosip preregistration process';
 -- ddl-end --
