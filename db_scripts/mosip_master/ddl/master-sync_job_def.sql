@@ -1,17 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_master
--- Table Name 	: master.sync_job_def
--- Purpose    	: Sync Job Definition: Stores Sync jobs definition that MOSIP supports. This jobs are used to sync data from one application / module to another based on the sync frequency and other setup.
---           
--- Create By   	: Nasir Khan / Sadanandegowda
--- Created Date	: 15-Jul-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false.
--- Feb-2021		Ram Bhatt	    Job Type Column Added.
--- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
--- ------------------------------------------------------------------------------------------
+
 
 -- object: master.sync_job_def | type: TABLE --
 -- DROP TABLE IF EXISTS master.sync_job_def CASCADE;

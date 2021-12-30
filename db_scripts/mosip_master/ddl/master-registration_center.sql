@@ -1,16 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_master
--- Table Name 	: master.registration_center
--- Purpose    	: Registration Center : List of registration centers that are authorized to perform UIN registrations.
---           
--- Create By   	: Nasir Khan / Sadanandegowda
--- Created Date	: 15-Jul-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
--- ------------------------------------------------------------------------------------------
+
 
 -- object: master.registration_center | type: TABLE --
 -- DROP TABLE IF EXISTS master.registration_center CASCADE;
@@ -48,6 +36,9 @@ CREATE TABLE master.registration_center(
 
 );
 -- ddl-end --
+--index creation starts--
+CREATE INDEX IF NOT EXISTS idx_reg_centr_loc_code ON master.registration_center USING btree (holiday_loc_code);
+-- index creation ends--
 COMMENT ON TABLE master.registration_center IS 'Registration Center : List of registration centers that are authorized to perform UIN registrations ';
 -- ddl-end --
 COMMENT ON COLUMN master.registration_center.id IS 'Registration Center ID : Unique ID generated / assigned for a registration center';

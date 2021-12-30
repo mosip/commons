@@ -1,15 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_master
--- Table Name 	: master.blocklisted_words
--- Purpose    	: Block Listed Words : List of words that are block listed.
---           
--- Create By   	: Ram Bhatt
--- Created Date	: Jul-2021
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
 
--- ------------------------------------------------------------------------------------------
 
 -- object: master.blocklisted_words | type: TABLE --
 -- DROP TABLE IF EXISTS master.blocklisted_words CASCADE;

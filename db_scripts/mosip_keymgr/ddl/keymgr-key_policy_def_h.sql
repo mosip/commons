@@ -1,15 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_keymgr
--- Table Name 	: keymgr.key_policy_def_h
--- Purpose    	: Key Policy Definition History : This to track changes to master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ), Effective DateTimestamp is used for identifying latest or point in time information. Refer kernel.key_policy_def table description for details.
---           
--- Create By   	: Sadanandegowda DM
--- Created Date	: Sep-2020
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- ------------------------------------------------------------------------------------------
+
 
 -- object: keymgr.key_policy_def_h | type: TABLE --
 -- DROP TABLE IF EXISTS keymgr.key_policy_def_h CASCADE;

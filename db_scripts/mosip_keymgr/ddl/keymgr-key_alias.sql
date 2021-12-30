@@ -1,15 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_keymgr
--- Table Name 	: keymgr.key_alias
--- Purpose    	: Key Alias: To maintain a system generated key as alias for the encryption key that will be stored in key-store devices like HSM.
---           
--- Create By   	: Sadanandegowda DM
--- Created Date	: Sep-2020
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- ------------------------------------------------------------------------------------------
+
 
 -- object: keymgr.key_alias | type: TABLE --
 -- DROP TABLE IF EXISTS keymgr.key_alias CASCADE;

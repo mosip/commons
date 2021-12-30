@@ -1,17 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_master
--- Table Name 	: master.biometric_type
--- Purpose    	: Biometric Type : List of all biometric type supported for UIN registration.
---           
--- Create By   	: Nasir Khan / Sadanandegowda
--- Created Date	: 15-Jul-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
--- Apr-2021		Ram Bhatt	    Lang_code nullable and/or removed from pk constraint
--- ------------------------------------------------------------------------------------------
+
 
 -- object: master.biometric_type | type: TABLE --
 -- DROP TABLE IF EXISTS master.biometric_type CASCADE;

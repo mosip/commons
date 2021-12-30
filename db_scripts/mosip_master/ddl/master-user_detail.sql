@@ -1,17 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_master
--- Table Name 	: master.user_detail
--- Purpose    	: User Detail : List of applicatgion users in the system, who can perform UIN registration functions as per roles assigned.
---           
--- Create By   	: Nasir Khan / Sadanandegowda
--- Created Date	: 15-Jul-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
--- Apr-2021		Ram Bhatt           Status_code, name and lang_code to be nullable
--- ------------------------------------------------------------------------------------------
+
 
 -- object: master.user_detail | type: TABLE --
 -- DROP TABLE IF EXISTS master.user_detail CASCADE;
@@ -34,6 +21,9 @@ CREATE TABLE master.user_detail(
 
 );
 -- ddl-end --
+-- index creation starts--
+CREATE INDEX IF NOT EXISTS idx_user_detail_cntr_id ON master.user_detail USING btree (regcntr_id);
+-- index creation ends --
 COMMENT ON TABLE master.user_detail IS 'User Detail : List of applicatgion users in the system, who can perform UIN registration functions as per roles assigned.';
 -- ddl-end --
 COMMENT ON COLUMN master.user_detail.id IS 'User ID : Unique ID generated / assigned for a user';

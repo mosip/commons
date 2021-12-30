@@ -1,15 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_keymgr
--- Table Name 	: keymgr.data_encrypt_keystore
--- Purpose    	: Data Encrypt Keystore: Table is used to store the encryption key aliases which is used encrypt the data stored in identity cache table store.
---           
--- Create By   	: Sadanandegowda DM
--- Created Date	: Sep-2020
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
 
--- ------------------------------------------------------------------------------------------
 
 -- object: keymgr.data_encrypt_keystore | type: TABLE --
 -- DROP TABLE IF EXISTS keymgr.data_encrypt_keystore CASCADE;

@@ -1,17 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_master
--- Table Name 	: master.device_spec
--- Purpose    	: Device Specification :  Specification of devices for each device type that are supported by system for various process requirements, like scanning, printing, photo, biometric etc.
---           
--- Create By   	: Nasir Khan / Sadanandegowda
--- Created Date	: 15-Jul-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
--- Apr-2021		Ram Bhatt	    Lang_code nullable and/or removed from pk constraint
--- ------------------------------------------------------------------------------------------
+
 
 -- object: master.device_spec | type: TABLE --
 -- DROP TABLE IF EXISTS master.device_spec CASCADE;

@@ -1,16 +1,3 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_audit
--- Table Name 	: app_audit_log
--- Purpose    	: Application Audit Log : To track application related audit details for analysing, auditing and reporting purposes
---           
--- Create By   	: Nasir Khan / Sadanandegowda
--- Created Date	: 15-Jul-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- 
--- ------------------------------------------------------------------------------------------
-
 -- object: audit.app_audit_log | type: TABLE --
 -- DROP TABLE IF EXISTS audit.app_audit_log CASCADE;
 CREATE TABLE audit.app_audit_log(

@@ -1,16 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_kernel
--- Table Name 	: kernel.prid
--- Purpose    	: PRID: Stores pre-generated PRIDs that are assigned to an individual as part of mosip preregistration process
---           
--- Create By   	: Sadanandegowda
--- Created Date	: 30-Nov-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
--- ------------------------------------------------------------------------------------------
+
 -- object: kernel.prid | type: TABLE --
 -- DROP TABLE IF EXISTS kernel.prid CASCADE;
 CREATE TABLE kernel.prid(
@@ -25,6 +13,9 @@ CREATE TABLE kernel.prid(
 	CONSTRAINT pk_prid_id PRIMARY KEY (prid)
 
 );
+-- index creation starts--
+CREATE INDEX IF NOT EXISTS idx_prid_status ON kernel.prid USING btree (prid_status);
+-- index creation ends --
 -- ddl-end --
 COMMENT ON TABLE kernel.prid IS 'PRID: Stores pre-generated PRIDs that are assigned to an individual as part of mosip preregistration process';
 -- ddl-end --

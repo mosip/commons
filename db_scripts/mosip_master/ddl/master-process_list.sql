@@ -1,15 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_master
--- Table Name 	: master.process_list
--- Purpose    	: Process Detail : List of all processes within the system.
---           
--- Create By   	: Nasir Khan / Sadanandegowda
--- Created Date	: 15-Jul-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- ------------------------------------------------------------------------------------------
+
 
 -- object: master.process_list | type: TABLE --
 -- DROP TABLE IF EXISTS master.process_list CASCADE;

@@ -1,17 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_master
--- Table Name 	: master.device_master
--- Purpose    	: Device Master : Contains list of approved devices and  details,  like fingerprint scanner, iris scanner, scanner etc used at registration centers. Valid devices with active status only allowed at registration centers for respective functionalities. Device onboarding are handled through admin application/portal by the user who is having the device onboarding authority.
---           
--- Create By   	: Nasir Khan / Sadanandegowda
--- Created Date	: 15-Jul-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
--- Apr-2021		Ram Bhatt	    Lang_code nullable and/or removed from pk constraint
--- ------------------------------------------------------------------------------------------
+
 
 -- object: master.device_master | type: TABLE --
 -- DROP TABLE IF EXISTS master.device_master CASCADE;
@@ -37,6 +24,9 @@ CREATE TABLE master.device_master(
 
 );
 -- ddl-end --
+-- index creation starts--
+CREATE INDEX IF NOT EXISTS idx_device_master_cntr_id ON master.device_master USING btree (regcntr_id);
+-- index creation ends--
 COMMENT ON TABLE master.device_master IS 'Device Master : Contains list of approved devices and  details,  like fingerprint scanner, iris scanner, scanner etc used at registration centers. Valid devices with active status only allowed at registration centers for respective functionalities. Device onboarding are handled through admin application/portal by the user who is having the device onboarding authority. ';
 -- ddl-end --
 COMMENT ON COLUMN master.device_master.id IS 'Device ID : Unique ID generated / assigned for device';

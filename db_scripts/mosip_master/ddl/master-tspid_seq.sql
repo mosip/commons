@@ -1,15 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_master
--- Table Name 	: master.tspid_seq
--- Purpose    	: Trusted Service Provider ID Sequence : Maintains latest sequence number available for TSP ID  generation.
---           
--- Create By   	: Nasir Khan / Sadanandegowda
--- Created Date	: 15-Jul-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- 
--- ------------------------------------------------------------------------------------------
+
 
 -- object: master.tspid_seq | type: TABLE --
 -- DROP TABLE IF EXISTS master.tspid_seq CASCADE;

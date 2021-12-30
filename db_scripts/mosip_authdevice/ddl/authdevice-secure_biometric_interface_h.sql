@@ -1,4 +1,4 @@
--- Purpose    	: MOSIP Secure Biometric Interface History : History of changes of any MOSIP secure biometric interface will be stored in history table to track any chnages for future validations.
+
 -- object: authdevice.secure_biometric_interface_h | type: TABLE --
 -- DROP TABLE IF EXISTS authdevice.secure_biometric_interface_h CASCADE;
 CREATE TABLE authdevice.secure_biometric_interface_h(

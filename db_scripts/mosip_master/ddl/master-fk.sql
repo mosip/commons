@@ -1,17 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_master
--- Table Name 	: All tables at mosip_master Database
--- Purpose    	: To establish FOREIGN Constrations required for entity relationship
---       
--- Create By   	: Nasir Khan / Sadanandegowda
--- Created Date	: 15-Jul-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Apr-2020          Sadanandegowda      Added FK constraints for location Hierarchy Level and Name
--- Aug-2020          Sadanandegowda      removed FK constraints for mapping tables
--- Apr-2021	     Ram Bhatt		 Removed Lang_code from FK Constraints for Device, Machine, Template and Biometric Tables
--- ------------------------------------------------------------------------------------------
+
 
 -- Foreign Key Constraints Same DB/Schema tables.
 
