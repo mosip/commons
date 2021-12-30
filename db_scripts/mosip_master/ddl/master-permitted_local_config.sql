@@ -1,15 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_master
--- Table Name 	: master.permitted_local_config
--- Purpose    	: 
---           
--- Create By   	: Ram Bhatt
--- Created Date	: Apr-2021
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
 
--- ------------------------------------------------------------------------------------------
 
 -- object: master.permitted_local_config | type: TABLE --
 -- DROP TABLE IF EXISTS master.permitted_local_config CASCADE;

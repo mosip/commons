@@ -1,15 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_keymgr
--- Table Name 	: keymgr.licensekey_list
--- Purpose    	: License Key : Holds list of license keys which will be used by TSPs.
---           
--- Create By   	: Sadanandegowda DM
--- Created Date	: Sep-2020
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- ------------------------------------------------------------------------------------------
+
 
 -- object: keymgr.licensekey_list | type: TABLE --
 -- DROP TABLE IF EXISTS keymgr.licensekey_list CASCADE;

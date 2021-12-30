@@ -1,16 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_master
--- Table Name 	: master.schema_definition
--- Purpose    	: Schema Definition: Defination of the id defination, Based on this schema defination id schema will be generated.
---           
--- Create By   	: Sadanandegowda DM
--- Created Date	: 23-Apr-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
--- ------------------------------------------------------------------------------------------
+
 -- object: master.schema_definition | type: TABLE --
 -- DROP TABLE IF EXISTS master.schema_definition CASCADE;
 CREATE TABLE master.schema_definition(

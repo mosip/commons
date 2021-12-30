@@ -1,17 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_master
--- Table Name 	: master.identity_schema
--- Purpose    	: Identity Schema: To store id schema which is used in MOSIP platform. All MOSIP modules will use this schema for fields representation and validation. ID schema will contain the key pair of the fields and values used and other meta information of schema in table.
---           
--- Create By   	: Sadanandegowda DM
--- Created Date	: 23-Apr-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
--- Mar-2021		Ram Bhatt	    Drop id_attr_json column
--- ------------------------------------------------------------------------------------------
+
 -- object: master.identity_schema | type: TABLE --
 -- DROP TABLE IF EXISTS master.identity_schema CASCADE;
 CREATE TABLE master.identity_schema(

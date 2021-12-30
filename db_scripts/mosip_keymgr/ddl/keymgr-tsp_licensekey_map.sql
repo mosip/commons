@@ -1,15 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_keymgr
--- Table Name 	: keymgr.tsp_licensekey_map
--- Purpose    	: TSP License keys : TSP and License key mapping.
---           
--- Create By   	: Sadanandegowda DM
--- Created Date	: Sep-2020
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- ------------------------------------------------------------------------------------------
+
 
 -- object: keymgr.tsp_licensekey_map | type: TABLE --
 -- DROP TABLE IF EXISTS keymgr.tsp_licensekey_map CASCADE;

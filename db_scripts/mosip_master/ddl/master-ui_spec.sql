@@ -1,15 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_master
--- Table Name 	: master.ui_spec
--- Purpose    	: UI Specifications : Stores UI Specifications with values used in application modules.
---           
--- Create By   	: Ram Bhatt
--- Created Date	: March 2021
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- May-2021		Ram Bhatt	    Changed Precision and size of version and identity_schema_version
--- ------------------------------------------------------------------------------------------
+
 
 -- object: master.ui_spec | type: TABLE --
 -- DROP TABLE IF EXISTS master.ui_spec CASCADE;

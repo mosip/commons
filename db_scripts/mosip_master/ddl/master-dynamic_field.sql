@@ -1,17 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_master
--- Table Name 	: master.dynamic_field 
--- Purpose    	: Schema Dynamic Fields: Table to store the fields which are used dynamically in MOSIP applications. These fields are also part of identity schema.
---           
--- Create By   	: Sadanandegowda DM
--- Created Date	: 23-Apr-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
--- Apr-2021		Ram Bhatt	    Constraint uk_schfld_name to be removed
--- ------------------------------------------------------------------------------------------
+
 -- object: master.dynamic_field | type: TABLE --
 -- DROP TABLE IF EXISTS master.dynamic_field CASCADE;
 CREATE TABLE master.dynamic_field(

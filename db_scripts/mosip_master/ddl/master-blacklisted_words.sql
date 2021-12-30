@@ -1,17 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_master
--- Table Name 	: master.blacklisted_words
--- Purpose    	: Black Listed Words : List of words that are black listed.
---           
--- Create By   	: Nasir Khan / Sadanandegowda
--- Created Date	: 15-Jul-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
--- Jul-2021		Ram Bhatt	    Remove Primary Key Constraint
--- ------------------------------------------------------------------------------------------
+
 
 -- object: master.blacklisted_words | type: TABLE --
 -- DROP TABLE IF EXISTS master.blacklisted_words CASCADE;

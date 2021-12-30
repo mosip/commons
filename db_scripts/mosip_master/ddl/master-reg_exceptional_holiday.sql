@@ -1,17 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_master
--- Table Name 	: master.reg_exceptional_holiday
--- Purpose    	: Registration Center Exceptional Holiday : Table to store all the exceptioanl holidays declared for the registartion centers. Will have all details on the exceptional holiday details like data, reason for holiday and registration center details.
---           
--- Create By   	: Sadanandegowda DM
--- Created Date	: 03-Sep-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
--- Apr-2021		Ram Bhatt	    Lang_code nullable and/or removed from pk constraint
--- ------------------------------------------------------------------------------------------
+
 -- object: master.reg_exceptional_holiday | type: TABLE --
 -- DROP TABLE IF EXISTS master.reg_exceptional_holiday CASCADE;
 CREATE TABLE master.reg_exceptional_holiday(

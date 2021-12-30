@@ -1,15 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_master
--- Table Name 	: master.rcid_seq
--- Purpose    	: Registration Center ID Sequence : Maintains latest sequence number available for registration center ID generation.
---           
--- Create By   	: Nasir Khan / Sadanandegowda
--- Created Date	: 15-Jul-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- 
--- ------------------------------------------------------------------------------------------
+
 
 -- object: master.rcid_seq | type: TABLE --
 -- DROP TABLE IF EXISTS master.rcid_seq CASCADE;

@@ -1,16 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_master
--- Table Name 	: master.loc_hierarchy_list
--- Purpose    	: Location Hierarchy List: Master list of location hierarchy, Contains pre defined location hierarchy level, location hierarchy name in multiple language for the country.
---           
--- Create By   	: Sadanandegowda
--- Created Date	: 17-Apr-2020
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
--- ------------------------------------------------------------------------------------------
+
 
 -- object: master.loc_hierarchy_list | type: TABLE --
 -- DROP TABLE IF EXISTS master.loc_hierarchy_list CASCADE;

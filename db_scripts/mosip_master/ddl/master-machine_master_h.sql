@@ -1,18 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_master
--- Table Name 	: master.machine_master_h
--- Purpose    	: Machine Master History : This to track changes to master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ), Effective DateTimestamp is used for identifying latest or point in time information. Refer master.machine_master table description for details.
---           
--- Create By   	: Nasir Khan / Sadanandegowda
--- Created Date	: 15-Jul-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- 06-Apr-2020          Sadanandegowda      Nullable constraints and Datatype change
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
--- May-2021		Ram Bhatt	    Change LANG code TO NULLABLE AND remove from Primary Key
--- ------------------------------------------------------------------------------------------
+
 
 -- object: master.machine_master_h | type: TABLE --
 -- DROP TABLE IF EXISTS master.machine_master_h CASCADE;

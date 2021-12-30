@@ -1,16 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_kernel
--- Table Name 	: kernel.vid_assigned
--- Purpose    	: VID Assigned: Stores pre-generated VIDs that are assigned /expired to an individual as part of mosip process.
---           
--- Create By   	: Sadanandegowda DM
--- Created Date	: Dec-2020
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
--- ------------------------------------------------------------------------------------------
+
 
 -- object: kernel.vid_assigned | type: TABLE --
 -- DROP TABLE IF EXISTS kernel.vid_assigned CASCADE;

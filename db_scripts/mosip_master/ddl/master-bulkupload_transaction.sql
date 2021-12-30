@@ -1,17 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_master
--- Table Name 	: master.bulkupload_transaction
--- Purpose    	: Bulk Upload Transaction:  This transaction table to store all bulk upload transactions, This includes uploading master table data as well as packets uploads to the registration processor.
---           
--- Create By   	: Sadanandegowda DM
--- Created Date	: Aug-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
--- Apr-2021		Ram Bhatt	    Removed bulk upload transaction size limit
--- ------------------------------------------------------------------------------------------
+
 -- object: master.bulkupload_transaction | type: TABLE --
 -- DROP TABLE IF EXISTS master.bulkupload_transaction CASCADE;
 CREATE TABLE master.bulkupload_transaction(

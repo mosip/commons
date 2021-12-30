@@ -1,16 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_master
--- Table Name 	: master.daysofweek_list
--- Purpose    	: Days of Week List : Stores all days of the week with Code and Name. The Days of week are kept with multiple language based on country configured languages..
---           
--- Create By   	: Sadanandegowda DM
--- Created Date	: 03-Sep-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
----------------------------------------------------------------------------------------------
+
 
 -- object: master.daysofweek_list | type: TABLE --
 -- DROP TABLE IF EXISTS master.daysofweek_list CASCADE;

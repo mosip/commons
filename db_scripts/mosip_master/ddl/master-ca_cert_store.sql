@@ -1,15 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_master
--- Table Name 	: master.ca_cert_store
--- Purpose    	: CA Cert Details : List of MOSIP Certificates.
---           
--- Create By   	: Ram Bhatt
--- Created Date	: Mar-2021
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
 
--- ------------------------------------------------------------------------------------------
 
 
 -- object: master.ca_cert_store | type: TABLE --
