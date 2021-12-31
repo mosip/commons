@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 
 import io.mosip.kernel.core.exception.IOException;
@@ -28,7 +27,8 @@ public class JsonUtils {
 	private static ObjectMapper objectMapper;
 
 	static {
-		objectMapper = JsonMapper.builder().addModule(new AfterburnerModule()).build();
+		objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new AfterburnerModule());
 		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 	}

@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 
 /**
@@ -26,12 +25,14 @@ public final class ExceptionUtils {
 
 	private static final Logger logger = LoggerFactory.getLogger(ExceptionUtils.class);
 
-	private static  ObjectMapper objectMapper=JsonMapper.builder()
-		    .addModule(new AfterburnerModule())
-		    .build();
+	private static  ObjectMapper objectMapper=new ObjectMapper();
+	static {
+		objectMapper.registerModule(new AfterburnerModule());
+	}
+	
 	
 	private ExceptionUtils() {
-
+		
 	}
 
 	/**

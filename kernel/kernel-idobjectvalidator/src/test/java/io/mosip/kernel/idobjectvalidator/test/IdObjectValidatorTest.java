@@ -14,7 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.github.fge.jackson.JsonLoader;
 
@@ -96,9 +96,9 @@ public class IdObjectValidatorTest {
 	
 	@Before
 	public void setup() {
-		ReflectionTestUtils.setField(validator, "mapper", JsonMapper.builder()
-			    .addModule(new AfterburnerModule())
-			    .build());
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.registerModule(new AfterburnerModule());
+		ReflectionTestUtils.setField(validator, "mapper", mapper);
 	}
 	
 	@Test
