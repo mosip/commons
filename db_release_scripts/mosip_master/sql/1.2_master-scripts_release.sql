@@ -280,7 +280,7 @@ TRUNCATE TABLE master.module_detail cascade ;
 
 \COPY master.module_detail (id,name,descr,lang_code,is_active,cr_by,cr_dtimes) FROM '../dml/master-module_detail.csv' delimiter ',' HEADER  csv;
 
-----------------------------------------------CREATION OF PERMITTED LOCAL CONFIGpk_schfld_id -------------------------------------------------------------
+----------------------------------------------CREATION OF PERMITTED LOCAL CONFIG -------------------------------------------------------------
 
 \ir ../ddl/master-permitted_local_config.sql
 
