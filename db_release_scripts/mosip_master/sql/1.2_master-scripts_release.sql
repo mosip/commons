@@ -289,5 +289,7 @@ TRUNCATE TABLE master.module_detail cascade ;
 ALTER TABLE master.ui_spec ALTER COLUMN version TYPE numeric(5,3);
 ALTER TABLE master.ui_spec ALTER COLUMN identity_schema_version TYPE numeric(5,3);
 
+ALTER TABLE master.gender DROP CONSTRAINT pk_gndr_code;
+ALTER TABLE master.dynamic_field DROP CONSTRAINT pk_schfld_id;
 
 -------------------------------------------------------------------------------------------------------------------------------------------

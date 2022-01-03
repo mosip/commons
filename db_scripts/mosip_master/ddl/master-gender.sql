@@ -23,8 +23,8 @@ CREATE TABLE master.gender(
 	upd_by character varying(256),
 	upd_dtimes timestamp,
 	is_deleted boolean DEFAULT FALSE,
-	del_dtimes timestamp,
-	CONSTRAINT pk_gndr_code PRIMARY KEY (code,lang_code)
+	del_dtimes timestamp
+	--,CONSTRAINT pk_gndr_code PRIMARY KEY (code,lang_code)
 
 );
 -- ddl-end --
