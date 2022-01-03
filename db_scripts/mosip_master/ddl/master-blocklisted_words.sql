@@ -16,7 +16,7 @@
 CREATE TABLE master.blocklisted_words(
 	word character varying(128) NOT NULL,
 	descr character varying(256),
-	lang_code character varying(3) NOT NULL,
+	lang_code character varying(3),
 	is_active boolean NOT NULL,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE master.blocklisted_words(
 	upd_dtimes timestamp,
 	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
-	CONSTRAINT pk_blwrd_code PRIMARY KEY (word,lang_code)
+	CONSTRAINT pk_blwrd_code PRIMARY KEY (word)
 
 );
 -- ddl-end --
