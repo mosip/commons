@@ -280,7 +280,7 @@ TRUNCATE TABLE master.module_detail cascade ;
 
 \COPY master.module_detail (id,name,descr,lang_code,is_active,cr_by,cr_dtimes) FROM '../dml/master-module_detail.csv' delimiter ',' HEADER  csv;
 
-----------------------------------------------CREATION OF PERMITTED LOCAL CONFIG -------------------------------------------------------------
+----------------------------------------------CREATION OF PERMITTED LOCAL CONFIGpk_schfld_id -------------------------------------------------------------
 
 \ir ../ddl/master-permitted_local_config.sql
 
@@ -296,3 +296,9 @@ ALTER TABLE master.ui_spec ALTER COLUMN identity_schema_version TYPE numeric(5,3
 
 
 ALTER TABLE master.ca_cert_store ADD CONSTRAINT cert_thumbprint_unique UNIQUE (cert_thumbprint,partner_domain);
+
+
+ALTER TABLE master.gender DROP CONSTRAINT pk_gndr_code;
+ALTER TABLE master.dynamic_field DROP CONSTRAINT pk_schfld_id;
+
+
