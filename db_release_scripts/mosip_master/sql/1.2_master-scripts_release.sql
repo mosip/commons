@@ -262,6 +262,13 @@ ALTER TABLE master.machine_master ADD CONSTRAINT uq_machm_key_index UNIQUE (key_
 ALTER TABLE master.machine_master ADD CONSTRAINT uq_machm_skey_index UNIQUE (sign_key_index);
 
 
+ALTER TABLE master.loc_holiday DROP CONSTRAINT IF EXISTS pk_lochol_id;
+ALTER TABLE master.loc_holiday ADD CONSTRAINT pk_lochol_id PRIMARY KEY (holiday_date, location_code, lang_code);
+ALTER TABLE master.batch_job_execution_params ALTER COLUMN string_val TYPE varchar(5000) USING string_val::varchar;
+ALTER TABLE master.blocklisted_words DROP CONSTRAINT IF EXISTS pk_blwrd_code;
+ALTER TABLE master.blocklisted_words ALTER COLUMN lang_code DROP NOT NULL;
+ALTER TABLE master.blocklisted_words ADD CONSTRAINT pk_blwrd_code PRIMARY KEY (word);
+
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------template,template_type and module_detail----------------------------------------------------------
