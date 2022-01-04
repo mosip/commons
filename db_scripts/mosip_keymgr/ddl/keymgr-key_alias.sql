@@ -2,7 +2,6 @@ CREATE TABLE keymgr.key_alias(
     id character varying(36) NOT NULL,
     app_id character varying(36) NOT NULL,
     ref_id character varying(128),
-    cert_thumbprint character varying(100),
     key_gen_dtimes timestamp,
     key_expire_dtimes timestamp,
     status_code character varying(36),
@@ -17,7 +16,6 @@ CREATE TABLE keymgr.key_alias(
     uni_ident character varying(50),
     CONSTRAINT pk_keymals_id PRIMARY KEY (id),
     CONSTRAINT uni_ident_const UNIQUE (uni_ident)
-
 );
 
 COMMENT ON TABLE keymgr.key_alias IS 'Key Alias: To maintain a system generated key as alias for the encryption key that will be stored in key-store devices like HSM.';
