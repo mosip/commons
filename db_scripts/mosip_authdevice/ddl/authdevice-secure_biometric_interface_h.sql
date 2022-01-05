@@ -1,6 +1,3 @@
-
--- object: authdevice.secure_biometric_interface_h | type: TABLE --
--- DROP TABLE IF EXISTS authdevice.secure_biometric_interface_h CASCADE;
 CREATE TABLE authdevice.secure_biometric_interface_h(
 	id character varying(36) NOT NULL,
 	sw_binary_hash bytea NOT NULL,
@@ -25,7 +22,6 @@ COMMENT ON TABLE authdevice.secure_biometric_interface_h IS 'MOSIP Secure Biomet
 COMMENT ON COLUMN authdevice.secure_biometric_interface_h.id IS 'ID: Unigue service ID, Service ID is geerated by the MOSIP system';
 COMMENT ON COLUMN authdevice.secure_biometric_interface_h.sw_binary_hash IS 'Software Binary Hash : Its is a software binary stored in MOSIP system for the devices';
 COMMENT ON COLUMN authdevice.secure_biometric_interface_h.sw_version IS 'Software Version : Version of the stored software';
-COMMENT ON COLUMN authdevice.secure_biometric_interface_h.device_detail_id IS 'Device Detail ID';
 COMMENT ON COLUMN authdevice.secure_biometric_interface_h.sw_cr_dtimes IS 'Software Created Date Time: Date and Time on which this software is created';
 COMMENT ON COLUMN authdevice.secure_biometric_interface_h.sw_expiry_dtimes IS 'Software Expiry Date Time: Expiry date and time of the device software';
 COMMENT ON COLUMN authdevice.secure_biometric_interface_h.approval_status IS 'Approval Status';
