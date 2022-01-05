@@ -28,7 +28,7 @@ CREATE TABLE master.ui_spec (
 -- ddl-end --
 COMMENT ON TABLE master.ui_spec IS E'UI Specifications :  Stores UI Specifications with values used in application modules.';
 -- ddl-end --
-COMMENT ON CONSTRAINT unq_dmn_ttl_vrsn_ischmid ON master.ui_spec  IS E'Unique Constraint on domain,title,version,identity_schema_id';
+COMMENT ON CONSTRAINT unq_dmn_type_vrsn_ischmid ON master.ui_spec  IS E'Unique Constraint on domain,title,version,identity_schema_id';
 -- ddl-end --
 ALTER TABLE master.ui_spec OWNER TO sysadmin;
 -- ddl-end --

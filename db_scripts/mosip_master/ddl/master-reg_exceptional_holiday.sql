@@ -14,7 +14,7 @@ CREATE TABLE master.reg_exceptional_holiday(
 	upd_dtimes timestamp,
 	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
-	CONSTRAINT pk_exceptional_hol PRIMARY KEY (regcntr_id,hol_date)
+	CONSTRAINT pk_exceptional_hol PRIMARY KEY (regcntr_id, hol_date)
 
 );
 -- ddl-end --
