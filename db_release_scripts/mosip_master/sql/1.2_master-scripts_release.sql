@@ -300,3 +300,8 @@ ALTER TABLE master.ui_spec ALTER COLUMN identity_schema_version TYPE numeric(5,3
 
 
 ALTER TABLE master.ca_cert_store ADD CONSTRAINT cert_thumbprint_unique UNIQUE (cert_thumbprint,partner_domain);
+
+ALTER TABLE master.machine_master DROP constraint uq_machm_name;
+
+
+
