@@ -297,4 +297,6 @@ ALTER TABLE master.ui_spec ALTER COLUMN version TYPE numeric(5,3);
 ALTER TABLE master.ui_spec ALTER COLUMN identity_schema_version TYPE numeric(5,3);
 
 
+
+ALTER TABLE master.machine_master DROP constraint uq_machm_name;
 -------------------------------------------------------------------------------------------------------------------------------------------
