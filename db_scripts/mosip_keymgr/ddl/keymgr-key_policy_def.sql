@@ -1,15 +1,16 @@
 CREATE TABLE keymgr.key_policy_def(
-	app_id character varying(36) NOT NULL,
-	key_validity_duration smallint,
-	is_active boolean NOT NULL,
-	cr_by character varying(256) NOT NULL,
-	cr_dtimes timestamp NOT NULL,
-	upd_by character varying(256),
-	upd_dtimes timestamp,
-	is_deleted boolean DEFAULT FALSE,
-	del_dtimes timestamp,
-	CONSTRAINT pk_keypdef_id PRIMARY KEY (app_id)
-
+    app_id character varying(36) NOT NULL,
+    key_validity_duration smallint,
+    is_active boolean NOT NULL,
+    pre_expire_days smallint,
+    access_allowed character varying(1024), 
+    cr_by character varying(256) NOT NULL,
+    cr_dtimes timestamp NOT NULL,
+    upd_by character varying(256),
+    upd_dtimes timestamp,
+    is_deleted boolean DEFAULT FALSE,
+    del_dtimes timestamp,
+    CONSTRAINT pk_keypdef_id PRIMARY KEY (app_id)
 );
 COMMENT ON TABLE keymgr.key_policy_def IS 'Key Policy Defination: Policy related to encryption key management is defined here. For eg. Expiry duration of a key generated.';
 COMMENT ON COLUMN keymgr.key_policy_def.app_id IS 'Application ID: Application id for which the key policy is defined';

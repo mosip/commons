@@ -1,15 +1,17 @@
 CREATE TABLE keymgr.key_policy_def_h(
-	app_id character varying(36) NOT NULL,
-	eff_dtimes timestamp NOT NULL,
-	key_validity_duration smallint,
-	is_active boolean NOT NULL,
-	cr_by character varying(256) NOT NULL,
-	cr_dtimes timestamp NOT NULL,
-	upd_by character varying(256),
-	upd_dtimes timestamp,
-	is_deleted boolean DEFAULT FALSE,
-	del_dtimes timestamp,
-	CONSTRAINT pk_keypdefh_id PRIMARY KEY (app_id,eff_dtimes)
+    app_id character varying(36) NOT NULL,
+    eff_dtimes timestamp NOT NULL,
+    key_validity_duration smallint,
+    is_active boolean NOT NULL,
+    pre_expire_days smallint,
+    access_allowed character varying(1024), 
+    cr_by character varying(256) NOT NULL,
+    cr_dtimes timestamp NOT NULL,
+    upd_by character varying(256),
+    upd_dtimes timestamp,
+    is_deleted boolean DEFAULT FALSE,
+    del_dtimes timestamp,
+    CONSTRAINT pk_keypdefh_id PRIMARY KEY (app_id,eff_dtimes)
 );
 COMMENT ON TABLE keymgr.key_policy_def_h IS 'Key Policy Definition History : This to track changes to master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ), Effective DateTimestamp is used for identifying latest or point in time information. Refer kernel.key_policy_def table description for details.   ';
 COMMENT ON COLUMN keymgr.key_policy_def_h.app_id IS 'Application ID: Application id for which the key policy is defined';
