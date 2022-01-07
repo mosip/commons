@@ -28,7 +28,7 @@
         <spring.boot.version>2.0.2.RELEASE</spring.boot.version>
         <spring.data.jpa.version>2.0.7.RELEASE</spring.data.jpa.version>
         <spring-cloud-config.version>2.0.0.RELEASE</spring-cloud-config.version>
-        <h2.version>1.4.197</h2.version>
+        <h2.version>2.0.206</h2.version>
         <jackson.datatype.version>2.9.8</jackson.datatype.version>
         <kernel.keygenerator.bouncycastle.version>1.1.5.3</kernel.keygenerator.bouncycastle.version>
         <swagger.version>2.9.2</swagger.version>
