@@ -18,6 +18,8 @@ public enum WebSubClientErrorCode {
 	
 	SUBSCRIBE_ERROR("KER-WSC-105", "Error occured while subscribing at hub :- "),
 	
+	UNSUBSCRIBE_ERROR("KER-WSC-112", "Error occured while unSubscribing at hub :- "),
+	
 	AUTHENTTICATED_CONTENT_VERIFICATION_HEADER_ERROR("KER-WSC-106", "Error occured while verifing authenticated content :- header for signature is empty or null"),
 	
 	AUTHENTTICATED_CONTENT_ANNOTATION_SECRET_ERROR("KER-WSC-107", "Error occured while verifing authenticated content :- secret parameter for annotation preauthenticatecontent is empty"),
