@@ -20,6 +20,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
+import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import org.xml.sax.SAXException;
 
 import io.mosip.kernel.biometrics.constant.BiometricType;
@@ -59,8 +60,9 @@ public class CbeffValidator {
 			if (bir != null) {
 
 				boolean isException = bir.getOthers() != null && bir.getOthers()
+						.entrySet()
 						.stream()
-						.anyMatch( e -> OtherKey.EXCEPTION.equals(e.getKey()) && "true".equals(e.getValue()));
+						.anyMatch( e -> OtherKey.EXCEPTION.equals(e.getKey()) && "true".equals((String) e.getValue()));
 
 				if((bir.getBdb() == null ||  bir.getBdb().length < 1 ) && !isException)
 					throw new CbeffException("BDB value can't be empty");
