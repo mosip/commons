@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Permission is hereby granted, free of charge in perpetuity, to any person 
+Permission is hereby granted, free of charge in perpetuity, to any person
 obtaining a copy of the Schema, to use, copy, modify, merge and distribute free
-of charge, copies of the Schema for the purposes of developing, implementing, 
-installing and using software based on the Schema, and to permit persons to 
+of charge, copies of the Schema for the purposes of developing, implementing,
+installing and using software based on the Schema, and to permit persons to
 whom the Schema is furnished to do so, subject to the following conditions:
-
-THE SCHEMA IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+THE SCHEMA IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SCHEMA OR THE USE OR OTHER DEALINGS IN THE
-SCHEMA. 
+SCHEMA.
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-xmlns="http://standards.iso.org/iso-iec/19785/-3/ed-2/" targetNamespace="http://standards.iso.org/iso-iec/19785/-3/ed-2/" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		   xmlns="http://standards.iso.org/iso-iec/19785/-3/ed-2/" targetNamespace="http://standards.iso.org/iso-iec/19785/-3/ed-2/" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:element name="BIR" type="BIRType"/>
 	<xs:complexType name="BIRType">
 		<xs:sequence>
@@ -26,9 +25,9 @@ xmlns="http://standards.iso.org/iso-iec/19785/-3/ed-2/" targetNamespace="http://
 			<xs:element name="BDBInfo" type="BDBInfoType" minOccurs="0"/>
 			<xs:element name="SBInfo" type="SBInfoType" minOccurs="0"/>
 			<xs:element name="BIR" type="BIRType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="BDB" type="xs:base64Binary" minOccurs="0"/>
-			<xs:element name="SB" type="xs:base64Binary" minOccurs="0"/>
-			<xs:element name="Others" type="Entry" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+			<xs:element name="BDB" type="xs:base64Binary" minOccurs="0" />
+			<xs:element name="SB" type="xs:base64Binary" minOccurs="0" />
+			<xs:element name="others" type="OthersListType" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="VersionType">
@@ -173,10 +172,19 @@ xmlns="http://standards.iso.org/iso-iec/19785/-3/ed-2/" targetNamespace="http://
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:complexType name="Entry">
+	<xs:complexType name="OthersListType">
 		<xs:sequence>
-			<xs:element name="Key" type="xs:string"/>
-			<xs:element name="Value" type="xs:string"/>
+			<xs:element name="entry" type="Entry"
+						nillable="true" maxOccurs="unbounded"
+						minOccurs="0"/>
 		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Entry">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="key" type="xs:string"
+							  use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
 	</xs:complexType>
 </xs:schema>

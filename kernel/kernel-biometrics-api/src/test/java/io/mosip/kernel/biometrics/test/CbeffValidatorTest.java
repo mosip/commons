@@ -99,6 +99,8 @@ public class CbeffValidatorTest {
 						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("Right IndexFinger"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
+				.withOthers("test", "test")
+				.withOthers("test2", "teste")
 				.build();
 
 		createList.add(rIndexFinger);
@@ -110,6 +112,8 @@ public class CbeffValidatorTest {
 						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("MiddleFinger"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
+				.withOthers("test", "test")
+				.withOthers("test2", "teste")
 				.build();
 
 		createList.add(rMiddleFinger);
@@ -121,6 +125,8 @@ public class CbeffValidatorTest {
 						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("Right RingFinger"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
+				.withOthers("test", "test")
+				.withOthers("test2", "teste")
 				.build();
 
 		createList.add(rRingFinger);
@@ -132,6 +138,8 @@ public class CbeffValidatorTest {
 						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("Right LittleFinger"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
+				.withOthers("test", "test")
+				.withOthers("test2", "teste")
 				.build();
 
 		createList.add(rLittleFinger);
@@ -143,6 +151,8 @@ public class CbeffValidatorTest {
 						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("Left IndexFinger"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
+				.withOthers("test", "test")
+				.withOthers("test2", "teste")
 				.build();
 
 		createList.add(lIndexFinger);
@@ -154,6 +164,8 @@ public class CbeffValidatorTest {
 						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("Left MiddleFinger"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
+				.withOthers("test", "test")
+				.withOthers("test2", "teste")
 				.build();
 
 		createList.add(lMiddleFinger);
@@ -165,6 +177,8 @@ public class CbeffValidatorTest {
 						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("Left RingFinger"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
+				.withOthers("test", "test")
+				.withOthers("test2", "teste")
 				.build();
 
 		createList.add(lRightFinger);
@@ -176,6 +190,8 @@ public class CbeffValidatorTest {
 						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("Left LittleFinger"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
+				.withOthers("test", "test")
+				.withOthers("test2", "teste")
 				.build();
 
 		createList.add(lLittleFinger);
@@ -187,6 +203,8 @@ public class CbeffValidatorTest {
 						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("Right Thumb"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
+				.withOthers("test", "test")
+				.withOthers("test2", "teste")
 				.build();
 
 		createList.add(rightThumb);
@@ -198,6 +216,8 @@ public class CbeffValidatorTest {
 						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("Left Thumb"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
+				.withOthers("test", "test")
+				.withOthers("test2", "teste")
 				.build();
 
 		createList.add(leftThumb);
@@ -212,6 +232,8 @@ public class CbeffValidatorTest {
 						.withType(Arrays.asList(BiometricType.IRIS)).withSubtype(Arrays.asList("Iris"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
+				.withOthers("test", "test")
+				.withOthers("test2", "teste")
 				.build();
 
 		birList.add(iIris);
@@ -226,6 +248,8 @@ public class CbeffValidatorTest {
 						.withType(Arrays.asList(BiometricType.FACE)).withSubtype(Arrays.asList("Face"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
+				.withOthers("test", "test")
+				.withOthers("test2", "teste")
 				.build();
 
 		birList.add(iFace);
@@ -237,6 +261,8 @@ public class CbeffValidatorTest {
 						.withType(Arrays.asList(BiometricType.HAND_GEOMETRY)).withSubtype(Arrays.asList("Hand Geo"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
+				.withOthers("test", "test")
+				.withOthers("test2", "teste")
 				.build();
 
 		birList.add(iHandGeo);
@@ -299,11 +325,11 @@ public class CbeffValidatorTest {
 		algorithm.setOrganization("HMAC");
 		algorithm.setType("SHA-256");
 		Qtype.setAlgorithm(algorithm);
-		List<Entry> others = new ArrayList<>();
+		/*List<Entry> others = new ArrayList<>();
 		Entry exceptionEntry = new Entry(OtherKey.EXCEPTION, "true");
-		others.add(exceptionEntry);
+		others.add(exceptionEntry);*/
 		BIR invalidBiometricType = new BIR.BIRBuilder().withBdb(handGeo).withVersion(new VersionType(1, 1))
-				.withCbeffversion(new VersionType(1, 1)).withOthers(others)
+				.withCbeffversion(new VersionType(1, 1)).withOthers(OtherKey.EXCEPTION, "true")
 				.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(false).build())
 				.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format).withQuality(Qtype)
 						.withType(Arrays.asList(BiometricType.DNA)).withSubtype(Arrays.asList("Hand Geo"))
@@ -394,7 +420,8 @@ public class CbeffValidatorTest {
 		bir.setBirInfo(birInfo);
 		bir.setCbeffversion(type);
 		bir.setBirs(createList);
-		assertThat(CbeffValidator.createXMLBytes(bir, readXSD("updatedcbeff")), isA(byte[].class));
+		byte[] xmlbytes = CbeffValidator.createXMLBytes(bir, readXSD("updatedcbeff"));
+		assertThat(xmlbytes, isA(byte[].class));
 	}
 	
 	@Test(expected = CbeffException.class)

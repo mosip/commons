@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,15 +20,15 @@ public class BiometricsSignatureHelper {
 
 		String constructedJWTToken = null;
 
-		List<Entry> othersInfo = bir.getOthers();
-		if (othersInfo == null) {
-			throw new BiometricSignatureValidationException("Others value is null inside BIR");
+		Map<String, String> othersInfo = bir.getOthers();
+		if (othersInfo == null || othersInfo.isEmpty()) {
+			throw new BiometricSignatureValidationException("Others value is null / empty inside BIR");
 		}
 
 		String sb = new String(bir.getSb(), StandardCharsets.UTF_8);
 		String bdb = CryptoUtil.encodeToURLSafeBase64(bir.getBdb());
 
-		for (Entry entry : othersInfo) {
+		for (Map.Entry<String, String> entry : othersInfo.entrySet()) {
 			if (entry.getKey().equals("PAYLOAD")) {
 				String value = entry.getValue().replace("<bioValue>", bdb);
 				String encodedPayloadValue = CryptoUtil.encodeToURLSafeBase64(value.getBytes());
