@@ -37,7 +37,7 @@ public class BiometricRecord implements Serializable {
 	 * it has type and subtype info in it
 	 */
 	protected List<BIR> segments;
-	protected HashMap<String, String> others;
+	protected Map<String, String> others;
 	
 	public BiometricRecord() {
 		this.segments = new ArrayList<>();
