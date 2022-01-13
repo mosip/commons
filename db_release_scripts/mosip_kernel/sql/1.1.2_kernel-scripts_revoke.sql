@@ -1,6 +1,6 @@
 -- -------------------------------------------------------------------------------------------------
 -- Database Name	: mosip_kernel
--- Release Version 	: 1.2.0-SNAPSHOT
+-- Release Version 	: 1.2.0-rc2
 -- Purpose    		: Revoking Database Alter deployement done for release in Kernel DB.       
 -- Create By   		: Sadanandegowda DM
 -- Created Date		: Sep-2020

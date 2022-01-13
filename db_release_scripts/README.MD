@@ -39,7 +39,7 @@
 
 * **mosip_<schema_name>/<schema_name>_revoke_db_deploy.sh:**  Script to revoke database deployment.
 
-**Note:** SQL script files name under sql folder are appended with release version numbers( like **1.2.0-SNAPSHOT**_master-scripts_release.sql), Same version number has to be passed as argument while executing release/revoke shell scripts. Ex. **$bash master_release_db_deploy.sh master_release_deploy.properties 1.2.0-SNAPSHOT**
+**Note:** SQL script files name under sql folder are appended with release version numbers( like **1.2.0-rc2**_master-scripts_release.sql), Same version number has to be passed as argument while executing release/revoke shell scripts. Ex. **$bash master_release_db_deploy.sh master_release_deploy.properties 1.2.0-rc2**
 
 **Note :** No need of shell script update unless it is really causing any problem or any further implementation is being introduced.
 
