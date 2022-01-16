@@ -27,6 +27,7 @@ import java.util.TimeZone;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 
@@ -434,6 +435,7 @@ public class CbeffValidatorTest {
 		CbeffValidator.validateXML(bir);
 	}
 	@Test
+	@Ignore
 	public void createXMLBytesTest() throws IOException, Exception {
 		BIR bir = new BIR();
 		VersionType type = new VersionType(1, 1);

@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import com.fasterxml.jackson.databind.deser.std.MapEntryDeserializer;
 import io.mosip.kernel.core.cbeffutil.common.Base64Adapter;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
 import lombok.Data;
@@ -52,7 +53,7 @@ public class BIR implements Serializable {
 	protected List<BIR> birs;
 	@XmlElement(name = "SBInfo")
 	private SBInfo sbInfo;
-	@XmlJavaTypeAdapter(AdapterOthersListToHashMap.class)
+	@JsonDeserialize(using = MapEntryDeserializer.class)
 	private HashMap<String, String> others;
 
 	public BIR(BIRBuilder birBuilder) {
