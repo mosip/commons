@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import io.mosip.kernel.auth.defaultadapter.handler.VertxAuthHandler;
+import io.mosip.kernel.core.authmanager.authadapter.spi.VertxAuthenticationProvider;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
@@ -67,7 +67,7 @@ public class UinServiceRouter {
 	ObjectMapper objectMapper;
 
 	@Autowired
-	private VertxAuthHandler authHandler;
+	private VertxAuthenticationProvider authHandler;
 
 	@Autowired
 	private SignatureUtil signatureUtil;

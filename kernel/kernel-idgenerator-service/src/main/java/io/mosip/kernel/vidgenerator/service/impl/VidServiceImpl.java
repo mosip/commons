@@ -12,7 +12,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.mosip.kernel.auth.defaultadapter.handler.VertxAuthHandler;
+import io.mosip.kernel.core.authmanager.authadapter.spi.VertxAuthenticationProvider;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.vidgenerator.constant.VIDGeneratorErrorCode;
 import io.mosip.kernel.vidgenerator.constant.VidLifecycleStatus;
@@ -50,7 +50,7 @@ public class VidServiceImpl implements VidService {
 	private VIDMetaDataUtil metaDataUtil;
 	
 	@Autowired
-	private VertxAuthHandler authHandler;
+	private VertxAuthenticationProvider authHandler;
 
 	@Override
 	@Transactional

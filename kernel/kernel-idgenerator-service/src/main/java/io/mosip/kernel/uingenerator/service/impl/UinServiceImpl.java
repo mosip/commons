@@ -13,7 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.mosip.kernel.auth.defaultadapter.handler.VertxAuthHandler;
+import io.mosip.kernel.core.authmanager.authadapter.spi.VertxAuthenticationProvider;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorConstant;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorErrorCode;
@@ -63,7 +63,7 @@ public class UinServiceImpl implements UinService {
 	private UINMetaDataUtil metaDataUtil;
 	
 	@Autowired
-	private VertxAuthHandler authHandler;
+	private VertxAuthenticationProvider authHandler;
 
 	/*
 	 * (non-Javadoc)

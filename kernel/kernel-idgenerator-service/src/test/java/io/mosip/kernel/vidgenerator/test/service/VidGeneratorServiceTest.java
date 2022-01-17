@@ -31,8 +31,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.web.client.RestTemplate;
 
-import io.mosip.kernel.auth.defaultadapter.handler.VertxAuthHandler;
+import io.mosip.kernel.core.authmanager.authadapter.spi.VertxAuthenticationProvider;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.idgenerator.config.HibernateDaoConfig;
 import io.mosip.kernel.vidgenerator.constant.VidLifecycleStatus;
@@ -66,7 +67,10 @@ public class VidGeneratorServiceTest {
 	private RoutingContext routingContext;
 
 	@MockBean
-	private VertxAuthHandler authHandler;
+	private VertxAuthenticationProvider authHandler;
+
+	@MockBean
+	private RestTemplate restTemplate;
 
 	private List<VidAssignedEntity> expiredButAssignedStatusVAEntities;
 
