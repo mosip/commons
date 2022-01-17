@@ -8,6 +8,8 @@
 	<artifactId>kernel-transliteration-icu4j</artifactId>
 	<packaging>jar</packaging>
 	<version>1.2.0-rc2</version>
+	<name>kernel transliteration icu4j</name>
+	<url>https://github.com/mosip/commons</url>	
 	<description>kernel-transliteration-icu4j</description>
 
 	<properties>
