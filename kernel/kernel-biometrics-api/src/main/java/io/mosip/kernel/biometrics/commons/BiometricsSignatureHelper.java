@@ -10,7 +10,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.mosip.kernel.biometrics.entities.BIR;
-import io.mosip.kernel.biometrics.entities.Entry;
 import io.mosip.kernel.core.exception.BiometricSignatureValidationException;
 import io.mosip.kernel.core.util.CryptoUtil;
 
