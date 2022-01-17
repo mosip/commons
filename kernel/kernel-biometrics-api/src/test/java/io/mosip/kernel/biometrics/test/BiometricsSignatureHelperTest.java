@@ -12,7 +12,6 @@ import org.junit.Test;
 
 import io.mosip.kernel.biometrics.commons.BiometricsSignatureHelper;
 import io.mosip.kernel.biometrics.entities.BIR;
-import io.mosip.kernel.biometrics.entities.Entry;
 import io.mosip.kernel.core.exception.BiometricSignatureValidationException;
 
 public class BiometricsSignatureHelperTest {
