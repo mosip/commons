@@ -328,6 +328,12 @@
 			<artifactId>jackson-module-afterburner</artifactId>
 			<version>${fasterxml.jackson.module.afterburner.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-web</artifactId>
+			<version>${vertx.version}</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 	<distributionManagement>
 		<snapshotRepository>

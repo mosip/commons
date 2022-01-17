@@ -6,7 +6,7 @@ import java.time.ZoneId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import io.mosip.kernel.auth.defaultadapter.handler.VertxAuthHandler;
+import io.mosip.kernel.core.authmanager.authadapter.spi.VertxAuthenticationProvider;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorConstant;
 import io.mosip.kernel.uingenerator.entity.BaseEntity;
 import io.vertx.ext.web.RoutingContext;
@@ -23,7 +23,7 @@ import io.vertx.ext.web.RoutingContext;
 public class UINMetaDataUtil {
 	
 	@Autowired
-	private VertxAuthHandler authHandler;
+	private VertxAuthenticationProvider authHandler;
 
 	/**
 	 * Function to set metadata
