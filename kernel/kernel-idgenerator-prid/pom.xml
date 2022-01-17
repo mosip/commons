@@ -253,24 +253,6 @@
 			<artifactId>kernel-idvalidator-prid</artifactId>
 			<version>${kernel.idvalidator-prid.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-keymanager-service</artifactId>
-			<version>${kernel-keymanager-service.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>
-						spring-boot-starter-security
-					</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.springframework.security</groupId>
-					<artifactId>spring-security-test</artifactId>
-				</exclusion>
-			</exclusions>
-			<classifier>lib</classifier>
-		</dependency>
 	</dependencies>
 
 	<distributionManagement>

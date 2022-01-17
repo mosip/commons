@@ -1,8 +1,6 @@
 package io.mosip.kernel.idgenerator.vid.impl;
 
 import java.math.BigInteger;
-import java.security.PrivateKey;
-import java.security.PublicKey;
 
 import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
@@ -13,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import io.mosip.kernel.core.crypto.spi.CryptoCoreSpec;
 import io.mosip.kernel.core.idgenerator.spi.VidGenerator;
+import io.mosip.kernel.core.security.util.SecurityUtil;
 import io.mosip.kernel.core.util.ChecksumUtils;
 import io.mosip.kernel.idgenerator.vid.constant.VidPropertyConstant;
 import io.mosip.kernel.idgenerator.vid.util.VidFilterUtils;
@@ -37,9 +35,6 @@ public class VidGeneratorImpl implements VidGenerator<String> {
 	private String randomSeed;
 
 	private String counter;
-
-	@Autowired
-	private CryptoCoreSpec<byte[], byte[], SecretKey, PublicKey, PrivateKey, String> cryptoCore;
 
 	/**
 	 * Field to hold vidFilterUtils object
@@ -90,7 +85,7 @@ public class VidGeneratorImpl implements VidGenerator<String> {
 		init = false;
 		SecretKey secretKey = new SecretKeySpec(counter.getBytes(),
 				VidPropertyConstant.ENCRYPTION_ALGORITHM.getProperty());
-		byte[] encryptedData = cryptoCore.symmetricEncrypt(secretKey, randomSeed.getBytes(), null);
+		byte[] encryptedData = SecurityUtil.symmetricEncrypt(secretKey, randomSeed.getBytes());
 		BigInteger bigInteger = new BigInteger(encryptedData);
 		vid = String.valueOf(bigInteger.abs());
 		vid = vid.substring(0, vidLength - 1);

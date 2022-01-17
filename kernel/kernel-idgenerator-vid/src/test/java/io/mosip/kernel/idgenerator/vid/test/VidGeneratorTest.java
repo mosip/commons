@@ -3,7 +3,6 @@ package io.mosip.kernel.idgenerator.vid.test;
 import static org.hamcrest.CoreMatchers.isA;
 import static org.junit.Assert.assertThat;
 
-import io.mosip.kernel.crypto.jce.core.CryptoCore;
 import io.mosip.kernel.idgenerator.vid.impl.VidGeneratorImpl;
 import io.mosip.kernel.idgenerator.vid.util.VidFilterUtils;
 import org.junit.Test;
@@ -23,7 +22,7 @@ import io.mosip.kernel.core.idgenerator.spi.VidGenerator;
  *
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { CryptoCore.class, VidGeneratorImpl.class, VidFilterUtils.class})
+@SpringBootTest(classes = { VidGeneratorImpl.class, VidFilterUtils.class})
 public class VidGeneratorTest {
 
 	@Value("${mosip.kernel.vid.length}")
@@ -37,8 +36,6 @@ public class VidGeneratorTest {
 
 	@Autowired
 	VidGenerator<String> vidGenerator;
-
-
 
 	@Test
 	public void vidSequenceTest() {

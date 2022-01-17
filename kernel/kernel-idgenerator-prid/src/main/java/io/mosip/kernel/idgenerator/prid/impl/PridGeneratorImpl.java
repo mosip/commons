@@ -1,8 +1,6 @@
 package io.mosip.kernel.idgenerator.prid.impl;
 
 import java.math.BigInteger;
-import java.security.PrivateKey;
-import java.security.PublicKey;
 
 import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
@@ -13,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import io.mosip.kernel.core.crypto.spi.CryptoCoreSpec;
 import io.mosip.kernel.core.idgenerator.spi.PridGenerator;
+import io.mosip.kernel.core.security.util.SecurityUtil;
 import io.mosip.kernel.core.util.ChecksumUtils;
 import io.mosip.kernel.idgenerator.prid.constant.PridPropertyConstant;
 import io.mosip.kernel.idgenerator.prid.util.PridFilterUtils;
@@ -31,9 +29,6 @@ import io.mosip.kernel.idgenerator.prid.util.PridFilterUtils;
  */
 @Component
 public class PridGeneratorImpl implements PridGenerator<String> {
-
-	@Autowired
-	private CryptoCoreSpec<byte[], byte[], SecretKey, PublicKey, PrivateKey, String> cryptoCore;
 
 	boolean init = true;
 
@@ -86,7 +81,7 @@ public class PridGeneratorImpl implements PridGenerator<String> {
 		init = false;
 		SecretKey secretKey = new SecretKeySpec(counter.getBytes(),
 				PridPropertyConstant.ENCRYPTION_ALGORITHM.getProperty());
-		byte[] encryptedData = cryptoCore.symmetricEncrypt(secretKey, randomSeed.getBytes(), null);
+		byte[] encryptedData = SecurityUtil.symmetricEncrypt(secretKey, randomSeed.getBytes());
 		BigInteger bigInteger = new BigInteger(encryptedData);
 		prid = String.valueOf(bigInteger.abs());
 		prid = prid.substring(0, pridLength - 1);
