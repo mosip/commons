@@ -5,7 +5,7 @@
 	<groupId>io.mosip.kernel</groupId>
 
 	<artifactId>kernel-bioapi-provider</artifactId>
-	<version>1.2.0-rc2-SNAPSHOT</version>
+	<version>1.2.0-rc2-SNAPSHOT-SNAPSHOT</version>
 	<name>kernel-bioapi-provider</name>
 	<description>bioapi provider</description>
 	<url>https://github.com/mosip/commons</url>
@@ -221,8 +221,8 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.2.0-rc2</kernel.core.version>
-		<kernel.cbeff.version>1.2.0-rc2-SNAPSHOT</kernel.cbeff.version>
+		<kernel.core.version>1.2.0-rc2-SNAPSHOT</kernel.core.version>
+		<kernel.cbeff.version>1.2.0-rc2-SNAPSHOT-SNAPSHOT</kernel.cbeff.version>
 		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 	</properties>
 	<dependencies>
