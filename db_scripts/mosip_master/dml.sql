@@ -17,15 +17,35 @@ TRUNCATE TABLE master.biometric_type cascade ;
 
 \COPY master.biometric_type (code,name,descr,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-biometric_type.csv' delimiter ',' HEADER  csv;
 
+----- TRUNCATE master.blacklisted_words TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.blacklisted_words cascade ;
+
+\COPY master.blacklisted_words (word,descr,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-blacklisted_words.csv' delimiter ',' HEADER  csv;
+
 ----- TRUNCATE master.doc_category TABLE Data and It's reference Data and COPY Data from CSV file -----
 TRUNCATE TABLE master.doc_category cascade ;
 
 \COPY master.doc_category (code,name,descr,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-doc_category.csv' delimiter ',' HEADER  csv;
 
+----- TRUNCATE master.doc_type TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.doc_type cascade ;
+
+\COPY master.doc_type (code,name,descr,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-doc_type.csv' delimiter ',' HEADER  csv;
+
 ----- TRUNCATE master.gender TABLE Data and It's reference Data and COPY Data from CSV file -----
 TRUNCATE TABLE master.gender cascade ;
 
 \COPY master.gender (code,name,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-gender.csv' delimiter ',' HEADER  csv;
+
+----- TRUNCATE master.id_type TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.id_type cascade ;
+
+\COPY master.id_type (code,name,descr,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-id_type.csv' delimiter ',' HEADER  csv;
+
+----- TRUNCATE master.language TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.language cascade ;
+
+\COPY master.language (code,name,family,native_name,is_active,cr_by,cr_dtimes) FROM './dml/master-language.csv' delimiter ',' HEADER  csv;
 
 ----- TRUNCATE master.module_detail TABLE Data and It's reference Data and COPY Data from CSV file -----
 TRUNCATE TABLE master.module_detail cascade ;
@@ -41,6 +61,11 @@ TRUNCATE TABLE master.process_list cascade ;
 TRUNCATE TABLE master.reason_category cascade ;
 
 \COPY master.reason_category (code,name,descr,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-reason_category.csv' delimiter ',' HEADER  csv;
+
+----- TRUNCATE master.reg_center_type TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.reg_center_type cascade ;
+
+\COPY master.reg_center_type (code,name,descr,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-reg_center_type.csv' delimiter ',' HEADER  csv;
 
 ----- TRUNCATE master.role_list TABLE Data and It's reference Data and COPY Data from CSV file -----
 TRUNCATE TABLE master.role_list cascade ;
@@ -62,17 +87,56 @@ TRUNCATE TABLE master.template_type cascade ;
 
 \COPY master.template_type (code,descr,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-template_type.csv' delimiter ',' HEADER  csv;
 
+----- TRUNCATE master.title TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.title cascade ;
+
+\COPY master.title (code,name,descr,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-title.csv' delimiter ',' HEADER  csv;
+
+----- TRUNCATE master.individual_type TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.individual_type cascade ;
+
+\COPY master.individual_type (code,name,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-individual_type.csv' delimiter ',' HEADER  csv;
+
+----- TRUNCATE master.zone TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.zone cascade ;
+
+\COPY master.zone (code,name,hierarchy_level,hierarchy_level_name,hierarchy_path,parent_zone_code,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-zone.csv' delimiter ',' HEADER  csv;
+
+
 ----- TRUNCATE master.daysofweek_list TABLE Data and It's reference Data and COPY Data from CSV file -----
 TRUNCATE TABLE master.daysofweek_list cascade ;
 
 \COPY master.daysofweek_list (code,name,day_seq,is_global_working,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-daysofweek_list.csv' delimiter ',' HEADER  csv;
 
+----- TRUNCATE master.loc_hierarchy_list TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.loc_hierarchy_list cascade ;
+
+\COPY master.loc_hierarchy_list (hierarchy_level,hierarchy_level_name,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-loc_hierarchy_list.csv' delimiter ',' HEADER  csv;
+
+
+----- TRUNCATE master.identity_schema TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.identity_schema cascade ;
+
+\COPY master.identity_schema (id,id_version,title,description,id_attr_json,schema_json,status_code,add_props,effective_from,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-identity_schema.csv' delimiter ',' HEADER  csv;
+
 ----- TRUNCATE master.sync_job_def TABLE Data and It's reference Data and COPY Data from CSV file -----
 TRUNCATE TABLE master.sync_job_def  cascade ;
 
-\COPY master.sync_job_def (ID,NAME,API_NAME,PARENT_SYNCJOB_ID,SYNC_FREQ,LOCK_DURATION,LANG_CODE,IS_ACTIVE,CR_BY,CR_DTIMES,UPD_BY,UPD_DTIMES,IS_DELETED,DEL_DTIMES) FROM './dml/master-sync_job_def.csv' delimiter ',' HEADER  csv;
+\COPY master.sync_job_def (ID,NAME,API_NAME,PARENT_SYNCJOB_ID,SYNC_FREQ,LOCK_DURATION,LANG_CODE,IS_ACTIVE,CR_BY,CR_DTIMES,UPD_BY,UPD_DTIMES,IS_DELETED,DEL_DTIMES,JOB_TYPE) FROM './dml/master-sync_job_def.csv' delimiter ',' HEADER  csv;
+
+----- TRUNCATE master.dynamic_field TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.dynamic_field cascade ;
+
+\COPY master.dynamic_field (id,name,description,data_type,value_json,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-dynamic_field.csv' delimiter ',' HEADER  csv;
+
+
 
 -------------- Level 2 data load scripts ------------------------
+
+----- TRUNCATE master.location TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.location cascade ;
+
+\COPY master.location (code,name,hierarchy_level,hierarchy_level_name,parent_loc_code,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-location.csv' delimiter ',' HEADER  csv;
 
 ----- TRUNCATE master.app_authentication_method TABLE Data and It's reference Data and COPY Data from CSV file -----
 TRUNCATE TABLE master.app_authentication_method cascade ;
@@ -89,6 +153,21 @@ TRUNCATE TABLE master.biometric_attribute cascade ;
 
 \COPY master.biometric_attribute (code,name,descr,bmtyp_code,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-biometric_attribute.csv' delimiter ',' HEADER  csv;
 
+----- TRUNCATE master.loc_holiday TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.loc_holiday cascade ;
+
+\COPY master.loc_holiday (id,location_code,holiday_date,holiday_name,holiday_desc,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-loc_holiday.csv' delimiter ',' HEADER  csv;
+
+----- TRUNCATE master.reason_list TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.reason_list cascade ;
+
+\COPY master.reason_list (code,name,descr,rsncat_code,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-reason_list.csv' delimiter ',' HEADER  csv;
+
+----- TRUNCATE master.registration_center TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.registration_center cascade ;
+
+\COPY master.registration_center (id,name,cntrtyp_code,addr_line1,addr_line2,addr_line3,latitude,longitude,location_code,contact_phone,contact_person,number_of_kiosks,working_hours,per_kiosk_process_time,center_start_time,center_end_time,lunch_start_time,lunch_end_time,time_zone,holiday_loc_code,zone_code,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-registration_center.csv' delimiter ',' HEADER  csv;
+
 ----- TRUNCATE master.screen_detail TABLE Data and It's reference Data and COPY Data from CSV file -----
 TRUNCATE TABLE master.screen_detail cascade ;
 
@@ -104,6 +183,18 @@ TRUNCATE TABLE master.template cascade ;
 
 \COPY master.template (id,name,descr,file_format_code,model,file_txt,module_id,module_name,template_typ_code,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-template.csv' delimiter ',' HEADER  csv;
 
+----- TRUNCATE master.applicant_valid_document TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.applicant_valid_document cascade ;
+
+\COPY master.applicant_valid_document (apptyp_code,doccat_code,doctyp_code,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-applicant_valid_document.csv' delimiter ',' HEADER  csv;
+
+
+----- TRUNCATE master.valid_document TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.valid_document cascade ;
+
+\COPY master.valid_document (doctyp_code,doccat_code,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-valid_document.csv' delimiter ',' HEADER  csv;
+
+
 -------------- Level 3 data load scripts ------------------------
 
 ----- TRUNCATE master.screen_authorization TABLE Data and It's reference Data and COPY Data from CSV file -----
@@ -111,19 +202,22 @@ TRUNCATE TABLE master.screen_authorization cascade ;
 
 \COPY master.screen_authorization (screen_id,role_code,lang_code,is_permitted,is_active,cr_by,cr_dtimes) FROM './dml/master-screen_authorization.csv' delimiter ',' HEADER  csv;
 
+----- TRUNCATE master.reg_working_nonworking TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.reg_working_nonworking cascade ;
 
+\COPY master.reg_working_nonworking (regcntr_id,day_code,lang_code,is_working,is_active,cr_by,cr_dtimes) FROM './dml/master-reg_working_nonworking.csv' delimiter ',' HEADER  csv;
 
+----- TRUNCATE master.reg_exceptional_holiday TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.reg_exceptional_holiday cascade ;
 
+\COPY master.reg_exceptional_holiday (regcntr_id,hol_date,hol_name,hol_reason,lang_code,is_active,cr_by,cr_dtimes) FROM './dml/master-reg_exceptional_holiday.csv' delimiter ',' HEADER  csv;
 
+-------------- Level 4 data load scripts ------------------------
 
+----- TRUNCATE master.registration_center_h TABLE Data and It's reference Data and COPY Data from CSV file -----
+TRUNCATE TABLE master.registration_center_h cascade ;
 
+\COPY master.registration_center_h (id,name,cntrtyp_code,addr_line1,addr_line2,addr_line3,latitude,longitude,location_code,contact_phone,contact_person,number_of_kiosks,working_hours,per_kiosk_process_time,center_start_time,center_end_time,lunch_start_time,lunch_end_time,time_zone,holiday_loc_code,zone_code,lang_code,is_active,cr_by,cr_dtimes,eff_dtimes) FROM './dml/master-registration_center_h.csv' delimiter ',' HEADER  csv;
 
-
-
-
-
-
-
-
-
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 

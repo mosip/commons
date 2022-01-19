@@ -1,0 +1,165 @@
+﻿id,name,description,data_type,value_json,lang_code,is_active,cr_by,cr_dtimes
+10001,bloodType,Blood Type,string,"[
+	{
+		""code"": ""101"",
+		""value"": ""A"",
+		""langCode"": ""eng"",
+		""active"": true
+	},
+	{
+		""code"": ""102"",
+		""value"": ""A+"",
+		""langCode"": ""eng"",
+		""active"": true
+	},
+	{
+		""code"": ""103"",
+		""value"": ""A-"",
+		""langCode"": ""eng"",
+		""active"": true
+	},
+	{
+		""code"": ""104"",
+		""value"": ""B"",
+		""langCode"": ""eng"",
+		""active"": true
+	},
+	{
+		""code"": ""105"",
+		""value"": ""B+"",
+		""langCode"": ""eng"",
+		""active"": true
+	},
+	{
+		""code"": ""106"",
+		""value"": ""B-"",
+		""langCode"": ""eng"",
+		""active"": true
+	},
+	{
+		""code"": ""107"",
+		""value"": ""AB"",
+		""langCode"": ""eng"",
+		""active"": true
+	},
+	{
+		""code"": ""108"",
+		""value"": ""AB+"",
+		""langCode"": ""eng"",
+		""active"": true
+	},
+	{
+		""code"": ""109"",
+		""value"": ""AB-"",
+		""langCode"": ""eng"",
+		""active"": true
+	},
+	{
+		""code"": ""110"",
+		""value"": ""O"",
+		""langCode"": ""eng"",
+		""active"": true
+	},
+	{
+		""code"": ""111"",
+		""value"": ""O+"",
+		""langCode"": ""eng"",
+		""active"": true
+	},
+	{
+		""code"": ""112"",
+		""value"": ""O-"",
+		""langCode"": ""eng"",
+		""active"": true
+	},
+	{
+		""code"": ""113"",
+		""value"": ""Don't Know"",
+		""langCode"": ""eng"",
+		""active"": true
+	},
+	{
+		""code"": ""114"",
+		""value"": ""Not Applicable"",
+		""langCode"": ""eng"",
+		""active"": true
+	}
+]",eng,TRUE,superadmin,now()
+10002,maritalStatus,Marital Status,string,"[
+	{
+		""code"": ""101"",
+		""value"": ""Single"",
+		""langCode"": ""eng"",
+		""active"": true
+	},
+	{
+		""code"": ""102"",
+		""value"": ""Married"",
+		""langCode"": ""eng"",
+		""active"": true
+	},
+	{
+		""code"": ""103"",
+		""value"": ""Widowed"",
+		""langCode"": ""eng"",
+		""active"": true
+	},
+	{
+		""code"": ""104"",
+		""value"": ""Divorced"",
+		""langCode"": ""eng"",
+		""active"": true
+	},
+	{
+		""code"": ""105"",
+		""value"": ""Legally Separated"",
+		""langCode"": ""eng"",
+		""active"": true
+	},
+	{
+		""code"": ""106"",
+		""value"": ""Annulled"",
+		""langCode"": ""eng"",
+		""active"": true
+	},
+	{
+		""code"": ""107"",
+		""value"": ""Nullified"",
+		""langCode"": ""eng"",
+		""active"": true
+	}
+]",eng,TRUE,superadmin,now()
+10003,registrationType,Registration Type,string,"[
+	{
+		""code"": ""Document-based"",
+		""value"": ""Document-based"",
+		""langCode"": ""eng"",
+		""active"": true
+	},
+	{
+		""code"": ""Introducer-based"",
+		""value"": ""Introducer-based"",
+		""langCode"": ""eng"",
+		""active"": true
+	}
+]",eng,TRUE,superadmin,now()
+10004,modeOfClaim,Mode of Claim,string,"[
+	{
+		""code"": ""101"",
+		""value"": ""Pick-up"",
+		""langCode"": ""eng"",
+		""active"": true
+	},
+	{
+		""code"": ""102"",
+		""value"": ""Delivery to permanent address"",
+		""langCode"": ""eng"",
+		""active"": true
+	},
+	{
+		""code"": ""103"",
+		""value"": ""Delivery to present address"",
+		""langCode"": ""eng"",
+		""active"": true
+	}
+]",eng,TRUE,superadmin,now()
