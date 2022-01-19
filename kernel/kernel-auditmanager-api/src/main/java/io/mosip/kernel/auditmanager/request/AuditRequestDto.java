@@ -44,7 +44,7 @@ public class AuditRequestDto {
 	private String hostName;
 
 	@NotNull
-	@Size(min = 1, max = 16)
+	@Size(min = 1, max = 256)
 	private String hostIp;
 
 	@NotNull
