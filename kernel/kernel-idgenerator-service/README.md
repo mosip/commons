@@ -5,7 +5,7 @@ This service is used to generates various IDs like UIN, APPID, RID, VID
 
 ## UIN generation logic
 UIN should have the following properties:
-* Only integers with length as specified as `mosip.kernel.uin.length` configuration in [application properties](https://github.com/mosip/mosip-config/blob/develop3-v3/application-default.properties)
+* Only integers with length as specified in `mosip.kernel.uin.length` configuration in [application properties](https://github.com/mosip/mosip-config/blob/develop3-v3/application-default.properties)
 * No alphanumeric characters
 * No repeating numbers for 2 or more than 2 digits
 * No sequential number for 3 or more than 3 digits
