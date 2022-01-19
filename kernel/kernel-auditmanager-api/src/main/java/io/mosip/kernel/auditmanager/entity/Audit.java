@@ -53,8 +53,8 @@ public class Audit extends BaseAudit {
 	private String hostName;
 
 	@NotNull
-	@Size(min = 1, max = 16)
-	@Column(name = "host_ip", nullable = false, updatable = false, length = 16)
+	@Size(min = 1, max = 256)
+	@Column(name = "host_ip", nullable = false, updatable = false, length = 256)
 	private String hostIp;
 
 	@NotNull
