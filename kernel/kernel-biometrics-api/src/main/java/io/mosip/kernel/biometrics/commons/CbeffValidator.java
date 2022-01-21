@@ -265,7 +265,7 @@ public class CbeffValidator {
 						&& singleSubTypeList.contains(singleAnySubType != null ? singleAnySubType.value() : null)
 						&& formatMatch) {
 					bdbMap.put(
-							biometricType.toString() + "_" + singleAnySubType != null?singleAnySubType.value():null + "_"
+							biometricType.toString() + "_" + (singleAnySubType != null?singleAnySubType.value():null) + "_"
 									+ String.valueOf(bdbFormatType) + "_"
 									+ bdbInfo.getCreationDate().toInstant(ZoneOffset.UTC).toEpochMilli(),
 							CryptoUtil.encodeBase64String(bir.getBdb()));
@@ -383,7 +383,7 @@ public class CbeffValidator {
 							&& singleSubTypeList.contains(singleAnySubType != null ? singleAnySubType.value() : null)
 							&& formatMatch) {
 						bdbMap.put(
-								singleAnySubType != null?singleAnySubType.value():null + "_" + biometricType != null?biometricType.toString():null + "_"
+								(singleAnySubType != null?singleAnySubType.value():null) + "_" + biometricType != null?biometricType.toString():null + "_"
 										+ String.valueOf(bdbFormatType) + "_"
 										+ bdbInfo.getCreationDate().toInstant(ZoneOffset.UTC).toEpochMilli(),
 								new String(bir.getBdb(), "UTF-8"));
