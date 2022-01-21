@@ -78,7 +78,7 @@ public class CryptoUtil {
 	 * @param data data to encode
 	 * @return encoded data
 	 */
-	@Deprecated(since = "1.1.5.5", forRemoval = true)
+	@Deprecated(since = "1.1.5", forRemoval = true)
 	public static String encodeBase64(byte[] data) {
 		return urlSafeEncoder.encodeToString(data);
 	}
@@ -89,7 +89,7 @@ public class CryptoUtil {
 	 * @param data data to encode
 	 * @return encoded data
 	 */
-	@Deprecated(since = "1.1.5.5", forRemoval = true)
+	@Deprecated(since = "1.1.5", forRemoval = true)
 	public static String encodeBase64String(byte[] data) {
 		return Base64.getEncoder().encodeToString(data);
 	}
@@ -105,7 +105,7 @@ public class CryptoUtil {
 	 * decoder for decoding both url safe and standard base64 encoding but java 8
 	 * has two decoders we are follwing this approach.
 	 */
-	@Deprecated(since = "1.1.5.5", forRemoval = true)
+	@Deprecated(since = "1.1.5", forRemoval = true)
 	public static byte[] decodeBase64(String data) {
 		if (EmptyCheckUtils.isNullEmpty(data)) {
 			return null;

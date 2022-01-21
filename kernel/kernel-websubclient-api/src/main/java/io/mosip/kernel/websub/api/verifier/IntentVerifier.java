@@ -18,7 +18,6 @@ public class IntentVerifier {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PublisherClientImpl.class);
 
 	public boolean isIntentVerified(String topic, String mode, String topicReq, String modeReq) {
-		LOGGER.info("verification result "+(topic.equals(topicReq) && mode.equals(modeReq)));
 		return (topic.equals(topicReq) && mode.equals(modeReq));
 	}
 
