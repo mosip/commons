@@ -254,7 +254,7 @@ public class CbeffValidator {
 									+ String.valueOf(bdbFormatType) + "_"
 									+ bdbInfo.getCreationDate().toInstant(ZoneOffset.UTC).toEpochMilli(),
 							CryptoUtil.encodeBase64String(bir.getBdb()));
-				} else if (biometricType == null && singleSubTypeList.contains(singleAnySubType.value())) {
+				} else if (biometricType == null &&singleSubTypeList.contains(singleAnySubType != null?singleAnySubType.value():null)) {
 					List<String> singleTypeStringList = convertToList(biometricTypes);
 					bdbMap.put(
 							String.join(" ", singleTypeStringList) + "_" + String.join(" ", singleSubTypeList) + "_"
@@ -265,7 +265,7 @@ public class CbeffValidator {
 						&& singleSubTypeList.contains(singleAnySubType != null ? singleAnySubType.value() : null)
 						&& formatMatch) {
 					bdbMap.put(
-							biometricType.toString() + "_" + singleAnySubType.value() + "_"
+							biometricType.toString() + "_" + (singleAnySubType != null?singleAnySubType.value():null) + "_"
 									+ String.valueOf(bdbFormatType) + "_"
 									+ bdbInfo.getCreationDate().toInstant(ZoneOffset.UTC).toEpochMilli(),
 							CryptoUtil.encodeBase64String(bir.getBdb()));
@@ -372,7 +372,7 @@ public class CbeffValidator {
 										+ String.valueOf(bdbFormatType) + "_"
 										+ bdbInfo.getCreationDate().toInstant(ZoneOffset.UTC).toEpochMilli(),
 								new String(bir.getBdb(), "UTF-8"));
-					} else if (biometricType == null && singleSubTypeList.contains(singleAnySubType.value())) {
+					} else if (biometricType == null && singleSubTypeList.contains(singleAnySubType != null?singleAnySubType.value():null)) {
 						List<String> singleTypeStringList = convertToList(singleTypeList);
 						bdbMap.put(
 								String.join(" ", singleSubTypeList) + "_" + String.join(" ", singleTypeStringList) + "_"
@@ -383,7 +383,7 @@ public class CbeffValidator {
 							&& singleSubTypeList.contains(singleAnySubType != null ? singleAnySubType.value() : null)
 							&& formatMatch) {
 						bdbMap.put(
-								singleAnySubType.toString() + "_" + biometricType.toString() + "_"
+								(singleAnySubType != null?singleAnySubType.value():null) + "_" + biometricType != null?biometricType.toString():null + "_"
 										+ String.valueOf(bdbFormatType) + "_"
 										+ bdbInfo.getCreationDate().toInstant(ZoneOffset.UTC).toEpochMilli(),
 								new String(bir.getBdb(), "UTF-8"));

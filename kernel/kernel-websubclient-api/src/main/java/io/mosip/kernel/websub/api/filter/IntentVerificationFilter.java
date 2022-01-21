@@ -9,14 +9,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.owasp.encoder.Encode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-
 import io.mosip.kernel.websub.api.annotation.PreAuthenticateContentAndVerifyIntent;
-import io.mosip.kernel.websub.api.client.PublisherClientImpl;
-import io.mosip.kernel.websub.api.client.SubscriberClientImpl;
 import io.mosip.kernel.websub.api.config.IntentVerificationConfig;
 import io.mosip.kernel.websub.api.constants.WebSubClientConstants;
 import io.mosip.kernel.websub.api.constants.WebSubClientErrorCode;
@@ -55,21 +53,20 @@ public class IntentVerificationFilter extends OncePerRequestFilter {
 			String modeReq = request.getParameter(WebSubClientConstants.HUB_MODE);
 			String mode = request.getParameter("intentMode");
 	        if(modeReq.equals("denied")) {
-	        	LOGGER.error("intent verification failed,"+request.getParameter("hub.reason"));
-	        	response.setStatus(HttpServletResponse.SC_ACCEPTED);
-	        	String challange =request.getParameter(WebSubClientConstants.HUB_CHALLENGE);
-	        	if(challange !=null) {
-	        		response.getWriter().write(request.getParameter(WebSubClientConstants.HUB_CHALLENGE));
-	        		response.getWriter().flush();
-					response.getWriter().close();
-	        	}
-				
+	        	String reason = request.getParameter("hub.reason");
+	        	reason = reason.replaceAll("[\n\r\t]", " - ");
+	        	LOGGER.error("intent verification failed : {}",reason);
+	        	response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+	        	response.getWriter().flush();
+				response.getWriter().close();
 	        }
 			if (intentVerifier.isIntentVerified(topic,
 					mode, topicReq, modeReq)) {
 				response.setStatus(HttpServletResponse.SC_ACCEPTED);
 				try {
-					response.getWriter().write(request.getParameter(WebSubClientConstants.HUB_CHALLENGE));
+					String challange =request.getParameter(WebSubClientConstants.HUB_CHALLENGE);
+					String encodedChallange = Encode.forHtml(challange);
+					response.getWriter().write(encodedChallange);
 					response.getWriter().flush();
 					response.getWriter().close();
 				} catch (IOException exception) {
@@ -79,8 +76,13 @@ public class IntentVerificationFilter extends OncePerRequestFilter {
 				}
 
 			} else {
-				LOGGER.error("intent verification failed,"+topic+mode+topicReq+modeReq);
-				response.setStatus(HttpServletResponse.SC_ACCEPTED);
+				topicReq = topicReq.replaceAll("[\n\r\t]", " - ");			
+				modeReq = modeReq.replaceAll("[\n\r\t]", " - ");			
+				mode = mode.replaceAll("[\n\r\t]", " - ");
+				LOGGER.error("intent verification failed: {} {} {} {}",topic,mode,topicReq,modeReq);
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+				response.getWriter().flush();
+				response.getWriter().close();
 			}
 
 		} else {
