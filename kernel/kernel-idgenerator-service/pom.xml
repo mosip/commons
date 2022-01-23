@@ -113,18 +113,18 @@
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<kernel.core.version>1.2.0-rc2-SNAPSHOT</kernel.core.version>
-		<kernel.idgenerator.vid.version>1.2.0-rc2-SNAPSHOT</kernel.idgenerator.vid.version>
+		<kernel.core.version>1.2.0-rc2</kernel.core.version>
+		<kernel.idgenerator.vid.version>1.2.0-rc2</kernel.idgenerator.vid.version>
 		<ceylon.complete.version>1.3.2</ceylon.complete.version>
 		<vertx.lang.ceylon.version>3.4.1</vertx.lang.ceylon.version>
-		<kernel.templatemanager.velocity.version>1.2.0-rc2-SNAPSHOT</kernel.templatemanager.velocity.version>
-		<kernel.crypto.signature.version>1.2.0-rc2-SNAPSHOT</kernel.crypto.signature.version>
+		<kernel.templatemanager.velocity.version>1.2.0-rc2</kernel.templatemanager.velocity.version>
+		<kernel.crypto.signature.version>1.2.0-rc2</kernel.crypto.signature.version>
 		<modelmapper.version>2.3.7</modelmapper.version>
-		<kernel.logger.version>1.2.0-rc2-SNAPSHOT</kernel.logger.version>
+		<kernel.logger.version>1.2.0-rc2</kernel.logger.version>
 		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 	</properties>
 	<artifactId>kernel-idgenerator-service</artifactId>
-	<version>1.2.0-rc2-SNAPSHOT</version>
+	<version>1.2.0-rc2</version>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>

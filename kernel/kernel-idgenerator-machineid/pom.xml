@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-idgenerator-machineid</artifactId>
-	<version>1.2.0-rc2-SNAPSHOT</version>
+	<version>1.2.0-rc2</version>
 <properties>		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -217,11 +217,11 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.2.0-rc2-SNAPSHOT</kernel.core.version>
-		<kernel.auth-adapter.version>1.2.0-rc2-SNAPSHOT</kernel.auth-adapter.version>
-		<kernel.applicant-type.version>1.2.0-rc2-SNAPSHOT</kernel.applicant-type.version>
-		 <kernel.dataaccess-hibernate.version>1.2.0-rc2-SNAPSHOT</kernel.dataaccess-hibernate.version>
-		<kernel.logger.version>1.2.0-rc2-SNAPSHOT</kernel.logger.version>
+		<kernel.core.version>1.2.0-rc2</kernel.core.version>
+		<kernel.auth-adapter.version>1.2.0-rc2</kernel.auth-adapter.version>
+		<kernel.applicant-type.version>1.2.0-rc2</kernel.applicant-type.version>
+		 <kernel.dataaccess-hibernate.version>1.2.0-rc2</kernel.dataaccess-hibernate.version>
+		<kernel.logger.version>1.2.0-rc2</kernel.logger.version>
 		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 	</properties>
 	<dependencies>
