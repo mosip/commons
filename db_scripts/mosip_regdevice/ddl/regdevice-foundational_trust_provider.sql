@@ -1,16 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_regdevice
--- Table Name 	: regdevice.foundational_trust_provider
--- Purpose    	: Foundational Trust Provider : To refere all foundational trust provider, This provider will issue certificates to the chip/device manufacturer to certify devices.
---           
--- Create By   	: Sadanandegowda
--- Created Date	: Aug-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
--- ------------------------------------------------------------------------------------------
+
 
 -- object: regdevice.foundational_trust_provider | type: TABLE --
 -- DROP TABLE IF EXISTS regdevice.foundational_trust_provider CASCADE;

@@ -1,16 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_regdevice
--- Table Name 	: regdevice.secure_biometric_interface_h
--- Purpose    	: MOSIP Secure Biometric Interface History : History of changes of any MOSIP secure biometric interface will be stored in history table to track any chnages for future validations.
---           
--- Create By   	: Sadanandegowda
--- Created Date	: Aug-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
--- ------------------------------------------------------------------------------------------
+
 
 -- object: regdevice.secure_biometric_interface_h | type: TABLE --
 -- DROP TABLE IF EXISTS regdevice.secure_biometric_interface_h CASCADE;
@@ -18,7 +6,7 @@ CREATE TABLE regdevice.secure_biometric_interface_h(
 	id character varying(36) NOT NULL,
 	sw_binary_hash bytea NOT NULL,
 	sw_version character varying(64) NOT NULL,
-	device_detail_id character varying(36) NOT NULL,
+	device_detail_id character varying NOT NULL,
 	sw_cr_dtimes timestamp,
 	sw_expiry_dtimes timestamp,
 	approval_status character varying(36) NOT NULL,

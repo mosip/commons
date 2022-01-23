@@ -1,16 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_regdevice
--- Table Name 	: regdevice.ftp_chip_detail
--- Purpose    	: Foundational Trust Provider Chip Details : To store all foundational trust provider chip details like make, model and certificate.
---           
--- Create By   	: Sadanandegowda
--- Created Date	: Aug-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
--- ------------------------------------------------------------------------------------------
+
 
 -- object: regdevice.ftp_chip_detail | type: TABLE --
 -- DROP TABLE IF EXISTS regdevice.ftp_chip_detail CASCADE;
