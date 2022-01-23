@@ -1,15 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_regdevice
--- Table Name 	: All tables at mosip_regdevice Database
--- Purpose    	: To establish FOREIGN Constrations required for entity relationship
---       
--- Create By   	: Sadanandegowda DM
--- Created Date	: Aug-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
 
--- ------------------------------------------------------------------------------------------
 
 -- Foreign Key Constraints Same DB/Schema tables.
 
