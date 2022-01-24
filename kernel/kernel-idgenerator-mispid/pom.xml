@@ -7,7 +7,7 @@
 	<groupId>io.mosip.kernel</groupId>
 
 	<artifactId>kernel-idgenerator-mispid</artifactId>
-	<version>1.2.0-rc2-SNAPSHOT</version>
+	<version>1.2.0-prerel</version>
 	<name>kernel-idgenerator-mispid</name>
 	<description>Mosip commons project </description>
 	<url>https://github.com/mosip/commons</url>
@@ -117,9 +117,9 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-        <kernel.core.version>1.2.0-rc2-SNAPSHOT</kernel.core.version>
-		<kernel.dataaccess-hibernate.version>1.2.0-rc2-SNAPSHOT</kernel.dataaccess-hibernate.version>
-		<kernel.logger.version>1.2.0-rc2-SNAPSHOT</kernel.logger.version>
+        <kernel.core.version>1.2.0-prerel</kernel.core.version>
+		<kernel.dataaccess-hibernate.version>1.2.0-prerel</kernel.dataaccess-hibernate.version>
+		<kernel.logger.version>1.2.0-prerel</kernel.logger.version>
     	<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 	</properties>
 	<dependencies>
