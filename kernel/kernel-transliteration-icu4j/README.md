@@ -1,29 +1,11 @@
-## kernel-transliteration-icu4j
+# Kernel Transliteration Icu4j
 
-[Background & Design](../../docs/design/kernel/kernel-transliteration.md)
+## Overview
+This api providesbasic funtion for transliteration. This implementation is a wrapper on icu4j api.
+
+## Usage  
  
-
- 
-[API Documentation]
- 
- ```
- mvn javadoc:javadoc
-
- ```
- 
-**Properties to be added in Spring application environment using this component**
-
-
-```
-#-----------------------------TRANSLITERATION-Properties---------------------------
-
-mosip.kernel.transliteration.arabic-language-code=ara
-mosip.kernel.transliteration.franch-language-code=fra
-
-```
-
- 
- **Maven Dependency**
+1. Maven Dependency
  
  ```
  	<dependency>
@@ -34,11 +16,9 @@ mosip.kernel.transliteration.franch-language-code=fra
 
  ```
  
- 
+2. Usage Sample:
 
-**Usage Sample:**
-
-Autowired interface Transliteration
+- Autowired interface Transliteration
 
 ```
 	@Autowired
@@ -57,19 +37,17 @@ Valid transliteration Example:
  
  ```
  
- Output:ARABIC= بِِنڤِنُِ
+Output:ARABIC= بِِنڤِنُِ
  
- Invalid transliteration Example:
+- Invalid transliteration Example:
  
  ```
 	transliterateImpl.transliterate("dnjksd", "ara", "Bienvenue");
 	
-	
  ```
  
- Output: 
+Output: 
  
-
  InvalidTransliterationException:
  
  Language code not supported

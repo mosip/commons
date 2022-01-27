@@ -1,32 +1,15 @@
-## kernel-pdfgenerator-itext
+# Kernel Pdfgenerator Itext
 
-[Background & Design](../../docs/design/kernel/kernel-pdfgenerator.md)
- 
+## Overview
+This api provide functions related to generation of PDF in MOSIP.
 
-[API Documentation]
- 
- ```
- mvn javadoc:javadoc
+## Usage 
+1. Exceptions to be handled while using this functionality:
 
- ```
+- PDFGeneratorException
+- IOException 
 
-** Input template can be send  in the following format:**
-
-1. InputStream
-2. String
-3. File
-
-
-The response will be generated PDF file as OutputStream or generated PDF file as given output file path and and file name.
- 
-If there is any error which occurs while generate pdf, it will be thrown as Exception.
-
-Exceptions to be handled while using this functionality:
-
-1. PDFGeneratorException
-2. IOException 
-
-**Maven Dependency**
+2. Maven Dependency
  
  ```
  <dependency>
@@ -36,11 +19,9 @@ Exceptions to be handled while using this functionality:
  </dependency>
  ```
  
-**Usage Sample:**
+3. Usage Sample:
  
- Usage1:
- 
-Input processed Template as inputStream and generate OutputStream containing the resulting PDF
+- Input processed Template as inputStream and generate OutputStream containing the resulting PDF
  
  ```
 @Autowired
@@ -53,9 +34,7 @@ Input processed Template as inputStream and generate OutputStream containing the
   
  ```
 
-Usage2:
- 
-Input processed Template as String and generate OutputStream containing the resulting PDF
+- Input processed Template as String and generate OutputStream containing the resulting PDF
  
  ```
 @Autowired
@@ -72,9 +51,7 @@ Input processed Template as String and generate OutputStream containing the resu
        OutputStream os = pdfGenerator.generate(template); 
  ```
  
-Usage3:
- 
-Generate PDF take processed template as file, output file path and output file name and generate the resulting PDF in given output path with the given output file name
+- Generate PDF take processed template as file, output file path and output file name and generate the resulting PDF in given output path with the given output file name
  
  
  ```
@@ -89,9 +66,7 @@ Generate PDF take processed template as file, output file path and output file n
        
  ```
  
-Usage4:
- 
-Input processed Template as inputStream, resource file path  and generate OutputStream containing the resulting PDF.
+- Input processed Template as inputStream, resource file path  and generate OutputStream containing the resulting PDF.
  
  ```
 @Autowired
@@ -109,9 +84,7 @@ Input processed Template as inputStream, resource file path  and generate Output
   
  ```
  
-Usage5:
- 
-Input is list of BufferedImage and generate Byte Array containing the resulting PDF.
+- Input is list of BufferedImage and generate Byte Array containing the resulting PDF.
  
  ```
 		@Autowired
@@ -134,9 +107,7 @@ Input is list of BufferedImage and generate Byte Array containing the resulting 
   
  ```
 
-Usage6:
- 
-Input is list of URL of pdf files and generate Byte Array containing the resulting PDF.
+- Input is list of URL of pdf files and generate Byte Array containing the resulting PDF.
  
 ```
 		@Autowired
@@ -148,9 +119,7 @@ Input is list of URL of pdf files and generate Byte Array containing the resulti
   
  ```
  
- Usage 7:
- 
-Create a Password Protected PDF.
+- Create a Password Protected PDF.
  
 ```
 @Autowired

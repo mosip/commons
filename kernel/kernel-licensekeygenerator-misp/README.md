@@ -1,24 +1,11 @@
-## kernel-licensekeygenerator-misp
+# Kernel Licensekeygenerator Misp
 
-[Background & Design](../../docs/design/kernel/Kernel-licensekeygenerator-misp.md)
+## Overview
+This api provides funtions related to generation of licensekey.
 
-[API Documentation]
+## Usage
 
-```
- mvn javadoc:javadoc
-
- ```
- 
- **Properties to be added in Spring application environment using this component**
- 
-[application-dev.properties](../../config/application-dev.properties)
- 
-```
-mosip.kernel.idgenerator.misp.license-key-length=8
-```
- 
- 
-**Maven Dependency**
+1. Dependency 
 
 ```
 	<dependency>
@@ -29,7 +16,7 @@ mosip.kernel.idgenerator.misp.license-key-length=8
 
 ```
   
-**Sample Usage**
+2. Sample Usage
   
 ```
 	  Autowire the interface MISPLicenseGenerator
@@ -43,7 +30,7 @@ mosip.kernel.idgenerator.misp.license-key-length=8
 	  String generatedLicense = mispLicenseGenerator.generateLicense());
 ```
 	  
-**Sample License**
+Response
 
 ```
 

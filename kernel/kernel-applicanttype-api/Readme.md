@@ -1,6 +1,5 @@
 # Kernel Applicanttype Api
 
-
 ## Overview
 This api provides core functions related to applicant type.
 
@@ -17,7 +16,6 @@ This api provides core functions related to applicant type.
 			<version>1.2.0</version>
 		</dependency>
 ```
-
 
 2. Inputs to be provided:
 
@@ -41,7 +39,6 @@ biometricAvailable: true,false
 
 - InvalidApplicantArgumentException ("KER-MSD-147", "Invalid query passed for applicant type")
 - InvalidApplicantArgumentException ("KER-MSD-148", "Date string can not be parsed");
-
 
 4. Usage Sample
  
