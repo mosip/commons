@@ -29,18 +29,18 @@ The project requires JDK 1.11.
     ```
 
 ## Deploy
-To deploy Commons services on Kubernetes cluster using Dockers refer to [Sandbox Deployment](https://docs.mosip.io/1.2.0/deployment/sandbox-deployment)
+To deploy Commons services on Kubernetes cluster using Dockers refer to [Sandbox Deployment](https://docs.mosip.io/1.2.0/deployment/sandbox-deployment).
 
 ## Configuration
 Refer to the [configuration guide](docs/configuration.md).
 
 ## Test
-Automated functaionl tests available in [Functional Tests repo](https://github.com/mosip/mosip-functional-tests)
+Automated functaionl tests available in [Functional Tests repo](https://github.com/mosip/mosip-functional-tests).
 
 ## APIs
-API documentation is available [here](https://mosip.github.io/documentation/)
+API documentation is available [here](https://mosip.github.io/documentation/).
 
 ## License
-This project is licensed under the terms of [Mozilla Public License 2.0](LICENSE)
+This project is licensed under the terms of [Mozilla Public License 2.0](LICENSE).
 
 
