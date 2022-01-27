@@ -5,7 +5,7 @@ This api provides funtions related to generation of Partner ID.
 
 ## Usage
 
-1. Maven Dependency
+1. Maven dependency
 
 ```
 	<dependency>
