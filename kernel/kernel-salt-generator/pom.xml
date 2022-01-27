@@ -225,6 +225,7 @@
 		<spring-cloud-config.version>2.0.0.RELEASE</spring-cloud-config.version>
 		<postgresql.version>42.2.2</postgresql.version>
 		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
+		<com.fasterxml.jackson.core.version>2.12.0</com.fasterxml.jackson.core.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -261,6 +262,26 @@
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>${postgresql.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${com.fasterxml.jackson.core.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${com.fasterxml.jackson.core.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${com.fasterxml.jackson.core.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>${com.fasterxml.jackson.core.version}</version>
 		</dependency>
 	</dependencies>
 
