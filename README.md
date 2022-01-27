@@ -8,7 +8,6 @@
 ## Overview
 As the name suggests, Commons refers to all the common services (also called "kernel") that are used by other modules of MOSIP. The Kernel services are listed below:
 
-
 ## Databases
 Refer to [SQL scripts](db_scripts).
 
@@ -30,7 +29,7 @@ The project requires JDK 1.11.
     ```
 
 ## Deploy
-To deploy Commons services on Kubernetes cluster using Dockers refer to [mosip-infra](https://github.com/mosip/mosip-infra/tree/v1.2.0/deployment/v3/mosip/kernel)
+To deploy Commons services on Kubernetes cluster using Dockers refer to [Sandbox Deployment](https://docs.mosip.io/1.2.0/deployment/sandbox-deployment)
 
 ## Configuration
 Refer to the [configuration guide](docs/configuration.md).
