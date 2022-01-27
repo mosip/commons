@@ -1,7 +1,7 @@
 # Kernel Idgenerator RegcenterID
 
 ## Overview
-This api provides funtions related to generation of RegcenterID.
+This library provides funtions related to generation of registration center ID.
 
 ## Usage
 

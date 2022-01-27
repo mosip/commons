@@ -1,10 +1,10 @@
 # Kernel Idvalidator VID
 
 ## Overview
-This api provides funtions related to valition of VID.
+This library provides functions related to valition of VID.
 
 ## Usage
-1. Maven Dependency
+1. Maven dependency
  
 ```
  	<dependency>
@@ -15,7 +15,7 @@ This api provides funtions related to valition of VID.
 
 ```
  
-2. Usage Sample:
+2. Usage sample
 
 Autowired interface IdValidator
 
@@ -26,7 +26,7 @@ Autowired interface IdValidator
 
 Call the method to validate Id
 
-Valid VID Example:
+Valid VID example:
  
 ```
 	boolean return = vidValidatorImpl.validateId("537184361359820"); //return true

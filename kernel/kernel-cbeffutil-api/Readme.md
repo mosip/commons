@@ -1,7 +1,7 @@
 # Kernel Cbeffutil Api
 
 ## Overview
-This API contains utility classes for operations related to [CBEFF](https://en.wikipedia.org/wiki/CBEFF).
+This library contains utility classes for operations related to [CBEFF](https://en.wikipedia.org/wiki/CBEFF).
    
 ## Technical features
 - Create, update and validate CBEFF XML.

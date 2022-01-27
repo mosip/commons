@@ -1,7 +1,7 @@
 # Kernel Idgenerator Machineid
 
 ## Overview
-This API provides functions related to generation of Machine ID.
+This library provides functions related to generation of Machine ID.
 
 ## Usage
 

@@ -13,16 +13,12 @@ Refer to [SQL scripts](db_scripts).
 
 ## Build & run (for developers)
 The project requires JDK 1.11. 
-1. To build jars:
+1. Build and install:
     ```
-    $ cd registration
-    $ mvn clean install 
+    $ cd kernel
+    $ mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true
     ```
-1. To skip JUnit tests and Java Docs:
-    ```
-    $ mvn install -DskipTests=true -Dmaven.javadoc.skip=true
-    ```
-1. To build Docker for a service:
+1. Build Docker for a service:
     ```
     $ cd <service folder>
     $ docker build -f Dockerfile
@@ -30,9 +26,6 @@ The project requires JDK 1.11.
 
 ## Deploy
 To deploy Commons services on Kubernetes cluster using Dockers refer to [Sandbox Deployment](https://docs.mosip.io/1.2.0/deployment/sandbox-deployment).
-
-## Configuration
-Refer to the [configuration guide](docs/configuration.md).
 
 ## Test
 Automated functaionl tests available in [Functional Tests repo](https://github.com/mosip/mosip-functional-tests).

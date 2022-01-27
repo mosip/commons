@@ -1,11 +1,11 @@
 # Kernel Idvalidator PRID
 
 ## Overview
-This api provides funtions related to valition of PRID.
+This library provides funtions related to valition of PRID.
 
 ## Usage
  
-1.Maven Dependency
+1.Maven dependency
  
  ```
  	<dependency>
@@ -16,7 +16,7 @@ This api provides funtions related to valition of PRID.
 
  ```
  
-2. Usage Sample:
+2. Usage sample
 
 Autowired interface PridValidator 
 

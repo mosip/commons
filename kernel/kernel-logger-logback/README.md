@@ -1,7 +1,7 @@
 # Kernel Logger Logback
 
 ## Overview
-This api provides basic funtions related to logging in MOSIP. All the modules uses and follow method and rules created by this api for logging in MOSIP
+This library provides basic functions related to logging in MOSIP. All the modules uses and follow method and rules created by this api for logging in MOSIP.
 
 ## Usage 
 

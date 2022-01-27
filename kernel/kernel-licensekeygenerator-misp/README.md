@@ -1,10 +1,9 @@
-# Kernel Licensekeygenerator Misp
+# Kernel Licensekeygenerator MISP
 
 ## Overview
-This api provides funtions related to generation of licensekey.
+This API provides funtions related to generation of licensekey.
 
 ## Usage
-
 1. Dependency 
 
 ```
@@ -16,7 +15,7 @@ This api provides funtions related to generation of licensekey.
 
 ```
   
-2. Sample Usage
+2. Sample usage
   
 ```
 	  Autowire the interface MISPLicenseGenerator
@@ -30,10 +29,9 @@ This api provides funtions related to generation of licensekey.
 	  String generatedLicense = mispLicenseGenerator.generateLicense());
 ```
 	  
-Response
+Response:
 
 ```
-
  Generated License: u7y6thye
  
 ```   

@@ -1,7 +1,7 @@
 # Kernel Applicanttype Api
 
 ## Overview
-This api provides core functions related to applicant type.
+This library provides core functions related to applicant type.
 
 ## Technical features
 - Return a applicant type based on configurations and  given attributes and values.

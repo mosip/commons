@@ -1,10 +1,10 @@
 # Kernel Idgenerator VID
 
 ## Overview
-This api provides funtions related to generation of VID.
+This library provides funtions related to generation of VID.
 
 ## Usage 
-1. Maven Dependency
+1. Maven dependency
 
 ```
 	<dependency>
@@ -15,7 +15,7 @@ This api provides funtions related to generation of VID.
 
 ```
 
-2. Sample Usage
+2. Sample usage
   
 ```    
       //Autowire the interface class vidGenerator
@@ -27,15 +27,12 @@ This api provides funtions related to generation of VID.
      
 	  String generatedVid = vidGeneratorImpl.generateId());
 ```	  
-	  
 	 
-Response 
+Response:
 
 ```	  
  Generated vid : 5916983045841801  
 ```  
-
-
 
 
 

@@ -1,5 +1,5 @@
 # Kernel Ridgenerator Service
 
 ## Overview
-This api contains function related to rid generation and maintainence.
+This service contains function related to RID generation and lifecycle management.
 

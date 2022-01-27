@@ -1,11 +1,11 @@
-# Kernel Idobjectvalidator
+# Kernel Idvalidator MISP ID
 
 ## Overview
-This api provides funtions related to valition of MISP ID.
+This library provides funtions related to valition of MISP ID.
 
 ## Usage 
  
-1. Maven Dependency:
+1. Maven dependency:
  
  ```
  	<dependency>
@@ -16,11 +16,11 @@ This api provides funtions related to valition of MISP ID.
 
  ```
  
-2. Usage Sample:
+2. Usage sample
 
 Autowired interface IdValidator and call the method validateId(Id)
 
- Valid MISPID  Example:
+Valid MISP ID  Example:
  
  ```
 	@Autowired

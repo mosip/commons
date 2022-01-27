@@ -1,7 +1,7 @@
 # Kernel Idgenerator MispID
 
 ## Overview
-This api provides funtions related to generation of Misp ID.
+This library provides funtions related to generation of Misp ID.
 
 ## Usage
 

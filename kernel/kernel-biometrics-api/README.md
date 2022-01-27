@@ -1,7 +1,7 @@
 # Kernel Biometrics Api
 
 ## Overview
-This api provides core funtions related to biometrics.
+This library provides core funtions related to biometrics.
 
 ## Technical features
 - Creation and conversion of XML and BIR models.

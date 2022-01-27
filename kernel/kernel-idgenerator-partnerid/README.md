@@ -1,7 +1,7 @@
 # Kernel Idgenerator PartnerID
 
 ## Overview
-This api provides funtions related to generation of Partner ID.
+This library provides funtions related to generation of Partner ID.
 
 ## Usage
 

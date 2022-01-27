@@ -1,11 +1,11 @@
 # Kernel Idvalidator RID
 
 ## Overview
-This api provides funtions related to valition of RID.
+This library provides funtions related to valition of RID.
 
 ## Usage
 
-1. Maven Dependency
+1. Maven dependency
  
  ```
  	<dependency>
@@ -16,7 +16,7 @@ This api provides funtions related to valition of RID.
 
  ```
  
-2. Usage Sample:
+2. Usage sample:
 
 Autowired interface RidValidator
 

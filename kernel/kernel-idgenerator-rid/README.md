@@ -1,7 +1,7 @@
 # Kernel Idgenerator RID
 
 ## Overview
-This api provides funtions related to generation of RID.
+This library provides funtions related to generation of RID.
 
 ## Usage
 
@@ -17,19 +17,18 @@ This api provides funtions related to generation of RID.
 
 ```
    
-2.Autowired interface RidGenerator and call the method generateId(centerId,machineId).
+2. Autowired interface `RidGenerator` and call the method `generateId(centerId,machineId)`.
 
-For example-
+For example:
 
 ```
 @Autowired
 RidGenerator <String> ridGeneratorImpl;
 
 String rid = ridGeneratorImpl.generateId("34532","67897");
-
 ```
 
-Response
+Response:
 
 ```
 GENERATED RID = 34532678970000120181122173040

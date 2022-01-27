@@ -1,11 +1,11 @@
 # Kernel Idvalidator UIN
 
 ## Overview
-This api provides funtions related to valition of UIN.
+This library provides functions related to valition of UIN.
 
 ## Usage
 
-1. Maven Dependency
+1. Maven dependency
  
 ```
  	<dependency>
@@ -16,7 +16,7 @@ This api provides funtions related to valition of UIN.
 
 ```
 
-2. Usage Sample:
+2. Usage sample
 
 Autowired interface IdValidator
 
@@ -27,8 +27,7 @@ Autowired interface IdValidator
 
 Call the method validate Id
 
- 
-Valid UIN  Example:
+Valid UIN example:
  
 ```
 	boolean isValid = uinValidatorImpl.validateId("426789089018"); //return true

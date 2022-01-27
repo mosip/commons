@@ -1,10 +1,9 @@
 # Kernel Idgenerator Token ID
 
 ## Overview
-This api provides funtions related to generation of Token ID.
+This library provides funtions related to generation of Token ID.
 
 ## Usage  
-
 1. Maven Dependency
 
 ```
@@ -16,7 +15,7 @@ This api provides funtions related to generation of Token ID.
 
 ```
 
-2. Sample Request
+2. Sample request
  
   ```
 //Autowire the interface TokenIdGenerator
@@ -29,7 +28,7 @@ This api provides funtions related to generation of Token ID.
   
 ```
 
-Response
+Response:
 
 ```
 Generated tokenId: 526900409300563849276960763148952762

@@ -1,11 +1,10 @@
 # Kernel Idobjectvalidator
 
 ## Overview
-This api provides funtions related to valition of Id Object.
+This library provides funtions related to valition of Id Object.
 
 ## Usage
-
-1. Maven Dependency
+1. Maven dependency
 
 ```
 	<dependency>
@@ -16,9 +15,9 @@ This api provides funtions related to valition of Id Object.
 
 ```
 
-2.  Sample Usage
+2.  Sample usage
 
-Example1:-
+Example:
 
 ```
 		@Autowired
