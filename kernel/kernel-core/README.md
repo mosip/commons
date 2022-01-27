@@ -1,9 +1,9 @@
 # Kernel Core
 
 ## Overview
-This module is core package common for l modules in MOSIP.
+This module is core package common for all modules in MOSIP.
 
 ## Technical Functionalities
-- Contains core util functions common to all module in mosip such as File related operations, Hash related operations etc
-- Contains Interfaces(SPI) for commons functions used across MOSIP modules.
-- Contains Exceptions and Base Classes for MOSIP
+- File, Hash related operations etc.
+- Interfaces for common functions used across modules.
+- Exceptions and base classes for MOSIP.
