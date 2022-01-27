@@ -1,8 +1,8 @@
 # Kernel Datamapper Orika
 
 ## Overview
-This api has core fuctions for Object mapping functionality. This modules is a wrapper over orika library.
+This API has core fuctions for object mapping functionality.  This module is a wrapper over Orika library.
 
-## Technical Functionalities
-- Provide funtions to map one object to another based on configurations.
-- Funtionalities to excluse and include certain fields
+## Functionality
+- Map one object to another based on configurations.
+- Exclude and include certain fields.
