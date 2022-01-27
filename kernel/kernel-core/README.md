@@ -1,12 +1,9 @@
-## kernel-core
-[Background & Design](../../docs/design/kernel/kernel-utils.md)
+# Kernel Core
 
-This module is core package for kernel components containing SPI (Interfaces for all modular implementation), Exceptions and Utilities
+## Overview
+This module is core package common for l modules in MOSIP.
 
-**Api Documentation**
-
-[API Documentation]
-
-```
-mvn javadoc:javadoc
-```
+## Technical Functionalities
+- Contains core util functions common to all module in mosip such as File related operations, Hash related operations etc
+- Contains Interfaces(SPI) for commons functions used across MOSIP modules.
+- Contains Exceptions and Base Classes for MOSIP

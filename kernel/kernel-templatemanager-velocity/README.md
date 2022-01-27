@@ -1,18 +1,11 @@
-## kernel-templatemanager-velocity
+# Kernel Templatemanager Velocity
 
+## Overview
+This api has funtions related to template generation in MOSIP.
  
-[Background & Design](../../docs/design/kernel/kernel-templatemanager.md)
- 
+## Usage 
 
-[API Documentation]
- 
- ```
- mvn javadoc:javadoc
-
- ```
- 
- 
- **Maven Dependency**
+1. Maven Dependency
  
  ```
  <dependency>
@@ -23,10 +16,10 @@
  ```
  
  
- 3- Usage Sample
+2. Usage Sample
  
  
- Usage1: TemplateManager with default configuration and merge template (as InputStream)
+- Usage: TemplateManager with default configuration and merge template (as InputStream)
  
  ```
 //Autowire TemplateManagerBuilder
@@ -61,7 +54,7 @@ InputStream resultedTemplate = templateManager.merge(templateInputStream, templa
  
  ```
 
- Usage2: TemplateManager with custom configuration and merge template from classPath 
+- Usage: TemplateManager with custom configuration and merge template from classPath 
  
  ```
 //Autowire TemplateManagerBuilder
@@ -99,7 +92,7 @@ InputStream resultedTemplate = templateManager.merge(templatePath,writer, templa
  
  ```
 
- Usage3: TemplateManager with custom configuration and merge template from classPath and with different encoding type
+- Usage: TemplateManager with custom configuration and merge template from classPath and with different encoding type
  
  ```
 //Autowire TemplateManagerBuilder

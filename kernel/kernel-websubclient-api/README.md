@@ -1,14 +1,16 @@
-## kernel-websubclient-api
+# Kernel Websubclient Api
 
-**Api Documentation**
+## Overview
+This api provides funtions to connect to websub. For more overview on websub [refer](https://nayakrounak.gitbook.io/mosip-docs/modules/websub)
 
-[API Documentation <TBA>](TBA)
+## Technical functionalities
+- Provide funtions for publisher and subscriber as metioned below in usage.
+- Automatically creates a intent verification filter for all callbacks
+- Automatically takes care of authenticated content distribution.
 
-```
-mvn javadoc:javadoc
-```
+## Usage
 
-**Maven dependency**
+1. Maven dependency
   
  ```
     <dependency>
@@ -18,14 +20,9 @@ mvn javadoc:javadoc
 	</dependency>
  ```
 
-**Usage Sample**
-
-
-
-  
-*Usage for Publisher:*
+2 Usage for Publisher:
  
- Step 1 Register a topic
+- Register a topic
  
  ```
 @Autowired
@@ -34,7 +31,7 @@ private PublisherClient<String, DataBody, HttpHeaders> pb;
 pb.registerTopic(topic, hubURL);
 ```
  
- Step 2 Publish for Update 
+- Publish for Update 
  
  ```
 @Autowired
@@ -43,29 +40,10 @@ private PublisherClient<String, DataBody, HttpHeaders> pb;
 pb.publishUpdate(topic, body, MediaType.APPLICATION_JSON_UTF8_VALUE, httpHeaders,  hubURL); 
  ```
  
- Other Operation
-  
-1. Unregister a topic
  
- ```
-@Autowired
-private PublisherClient<String, DataBody, HttpHeaders> pb; 
-	
-pb.unregisterTopic(topic, hubURL);
-```
- 2. Notify an update
-
- ```
-@Autowired
-private PublisherClient<String, DataBody, HttpHeaders> pb; 
-	
-pb.notifyUpdate(topic, httpHeaders,  hubURL); 
-```
+3. Usage for Subscribers:
  
- 
-*Usage for Subscribers:*
- 
- 1 Subscribe to a topic
+- Subscribe to a topic
  
  Step 1: Create a callback endpoint and annotate it with @PreAuthenticateContentAndVerifyIntent provide value to parameters
 
@@ -94,6 +72,3 @@ SubscriptionClient<SubscriptionChangeRequest,UnsubscriptionRequest, Subscription
 		
 sb.unsubscribe(unsubscriptionRequest);
 ```
- 
-
-NOTE: We should create one callback endpoint per subscriptions
