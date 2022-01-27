@@ -18,7 +18,7 @@ This api provides funtions related to generation of Misp ID.
 
 2. Autowire interface TspIdGenerator and call the method generateId().
 
-For example-
+For example:
 
 ```
 @Autowired
