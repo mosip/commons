@@ -10,8 +10,7 @@ As the name suggests, Commons refers to all the common services (also called "ke
 
 
 ## Databases
-Refer to [SQL scripts](../db_scripts)
-
+Refer to [SQL scripts](db_scripts).
 
 ## Build & run (for developers)
 The project requires JDK 1.11. 
