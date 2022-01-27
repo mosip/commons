@@ -1,7 +1,7 @@
 # Kernel Idgenerator Machineid
 
 ## Overview
-This api provides funtions related to generation of Machine ID.
+This API provides functions related to generation of Machine ID.
 
 ## Usage
 
@@ -18,7 +18,7 @@ This api provides funtions related to generation of Machine ID.
 
 2. Autowire interface MachineIdGenerator and call the method generateMachineId().
 
-For example-
+For example:
 
 ```
 @Autowired
