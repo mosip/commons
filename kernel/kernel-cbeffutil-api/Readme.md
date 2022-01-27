@@ -1,8 +1,8 @@
 # Kernel Cbeffutil Api
 
 ## Overview
-This api contains utility classes for oberation related to CBEFF. For more information on cbeff [refer](https://en.wikipedia.org/wiki/CBEFF).
+This API contains utility classes for operations related to [CBEFF](https://en.wikipedia.org/wiki/CBEFF).
    
 ## Technical features
-- Provides functions related to biometric such as create,update and validate CBEFF xml
-- Provides functions related to biometric such as search for different biometric attributes in a XML or BIR.
+- Create, update and validate CBEFF XML.
+- Search for different biometric attributes in a XML or BIR.
