@@ -119,7 +119,7 @@
 		<fasterxml.jackson.module.jsr310.version>2.12.0</fasterxml.jackson.module.jsr310.version>
 	</properties>
 	<artifactId>kernel-core</artifactId>
-	<version>1.2.0-rc2-SNAPSHOT</version>
+	<version>1.2.0</version>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
