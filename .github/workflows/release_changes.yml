@@ -30,12 +30,17 @@ jobs:
     - name: Mannualy changing the pom versions
       run: find . -type f -name "*pom.xml" -print0 | xargs -0 sed -i "s/${{ github.event.inputs.snapshotTags }}/${{ github.event.inputs.releaseTags }}/g"
 
+    - name: Updating the Release URL in POM 
+      run: |
+          cd .github/workflows
+          sed -i 's/OSSRH_SNAPSHOT_URL/RELEASE_URL/g' push_trigger.yml
+
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
       with:
         commit-message: Updated Pom versions for release changes
         title: Release changes
-        body: Automated PR for ${ github.event.inputs.releaseTags release. }
+        body: Automated PR for ${{ github.event.inputs.releaseTags }} release.
         branch: release-branch
         delete-branch: true
         base: ${{ github.event.inputs.base }}
