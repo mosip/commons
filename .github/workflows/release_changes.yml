@@ -35,6 +35,9 @@ jobs:
           cd .github/workflows
           sed -i 's/OSSRH_SNAPSHOT_URL/RELEASE_URL/g' push_trigger.yml
 
+    - name: Updating libs-snapshot-local to libs-release local for artifactory URL's.
+      run: find . -type f -name "*Dockerfile" -print0 | xargs -0 sed -i "s/libs-snapshot-local/libs-release-local/g"
+
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
       with:
