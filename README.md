@@ -1,7 +1,6 @@
 
 [![Build Status](https://travis-ci.org/mosip/commons.svg)](https://travis-ci.org/mosip/commons)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mosip_commons&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=mosip_commons)
-[![Join the chat at https://gitter.im/mosip-community/commons](https://badges.gitter.im/mosip-community/commons.svg)]((https://gitter.im/mosip-community/community))
 
 # Commons
 
