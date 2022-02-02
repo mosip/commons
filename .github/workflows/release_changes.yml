@@ -41,8 +41,8 @@ jobs:
     - name: removing -DskipTests
       run: find . -type f -name "*push_trigger.yml" -print0 | xargs -0 sed -i "s/"-DskipTests"//g"
 
-    - name: removing --Dgpg.skip
-      run: find . -type f -name "*push_trigger.yml" -print0 | xargs -0 sed -i "s/"-Dgpg.skip"//g"
+#    - name: removing --Dgpg.skip
+#      run: find . -type f -name "*push_trigger.yml" -print0 | xargs -0 sed -i "s/"-Dgpg.skip"//g"
       
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
