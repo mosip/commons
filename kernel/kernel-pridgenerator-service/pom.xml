@@ -45,7 +45,7 @@
 		<glassfish.javax.el>2.2.6</glassfish.javax.el>
 
 		<!-- data -->
-		<h2.version>1.4.197</h2.version>
+		<h2.version>2.1.210</h2.version>
 		<mysql.connector.version>5.1.46</mysql.connector.version>
 		<postgresql.version>42.2.2</postgresql.version>
 		<eclipselink.version>2.5.0</eclipselink.version>
