@@ -70,7 +70,7 @@ jobs:
   
   publish_to_nexus:
     runs-on: ubuntu-latest
-
+    if: "!contains(github.ref, 'master')"
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
@@ -702,7 +702,13 @@ jobs:
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           echo "push version ${{steps.getPomVersion.outputs.info}}"
-          VERSION=$BRANCH_NAME
+
+          if [[ $BRANCH_NAME == 'master' ]]; then
+            VERSION=latest
+          else
+            VERSION=$BRANCH_NAME
+          fi
+          
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
