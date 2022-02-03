@@ -8,7 +8,7 @@
 	<groupId>io.mosip.kernel</groupId>
 
 	<artifactId>kernel-idgenerator-rid</artifactId>
-	<version>1.2.0</version>
+	<version>1.2.0-prerel</version>
     <properties>		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -115,8 +115,8 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.2.0</kernel.core.version>
-		<kernel.dataaccess-hibernate.version>1.2.0</kernel.dataaccess-hibernate.version>
+		<kernel.core.version>1.2.0-prerel</kernel.core.version>
+		<kernel.dataaccess-hibernate.version>1.2.0-prerel</kernel.dataaccess-hibernate.version>
    		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 	</properties>
 	<dependencies>
