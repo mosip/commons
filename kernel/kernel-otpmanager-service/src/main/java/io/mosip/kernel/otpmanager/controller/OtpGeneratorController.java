@@ -46,7 +46,6 @@ public class OtpGeneratorController {
 	 * @param otpDto The request DTO for OTP generation.
 	 * @return The generated OTP as DTO response.
 	 */
-	//@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','AUTH','RESIDENT')")
 	@ResponseFilter
 	@Operation(summary = "This endpoint handles the OTP generation", description = "This endpoint handles the OTP generation", tags = { "otpgenerator" })
 	@ApiResponses(value = {

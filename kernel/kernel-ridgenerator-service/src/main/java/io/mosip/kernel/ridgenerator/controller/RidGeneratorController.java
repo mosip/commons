@@ -52,8 +52,6 @@ public class RidGeneratorController {
 			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetgenerateridcenteridmachineid())")
 	@GetMapping("/generate/rid/{centerid}/{machineid}")
-	@ApiOperation(value = "Service to generate RID")
-	//@PreAuthorize("hasAnyRole('REGISTRATION_PROCESSOR','RESIDENT')")
 	public ResponseWrapper<RidGeneratorResponseDto> generateRid(@PathVariable("centerid") String centerId,
 			@PathVariable("machineid") String machineId) {
 		ResponseWrapper<RidGeneratorResponseDto> responseWrapper = new ResponseWrapper<>();

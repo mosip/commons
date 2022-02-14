@@ -47,10 +47,10 @@ public class IntentVerificationFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {		
-		String topic=matchCallbackURL(request.getRequestURI());	
+		String topic=matchCallbackURL(request.getRequestURI());
 		if (request.getMethod().equals(HttpMethod.GET.name()) && topic!=null) {
 			String topicReq = request.getParameter(WebSubClientConstants.HUB_TOPIC);			
-			String modeReq = request.getParameter(WebSubClientConstants.HUB_MODE);			
+			String modeReq = request.getParameter(WebSubClientConstants.HUB_MODE);
 			String mode = request.getParameter("intentMode");
 	        if(modeReq.equals("denied")) {
 	        	String reason = request.getParameter("hub.reason");
@@ -81,6 +81,8 @@ public class IntentVerificationFilter extends OncePerRequestFilter {
 				mode = mode.replaceAll("[\n\r\t]", " - ");
 				LOGGER.error("intent verification failed: {} {} {} {}",topic,mode,topicReq,modeReq);
 				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+				response.getWriter().flush();
+				response.getWriter().close();
 			}
 
 		} else {

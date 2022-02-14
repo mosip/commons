@@ -24,6 +24,8 @@ ARG is_glowroot
 # can be passed during Docker build as build time environment for artifactory URL
 ARG artifactory_url
 
+ARG iam_adapter_url
+
 # can be passed during Docker build as build time environment management rmi server hostname
 ARG management_rmi_server_hostname
 

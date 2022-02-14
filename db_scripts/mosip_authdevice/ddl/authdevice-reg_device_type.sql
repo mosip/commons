@@ -1,16 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_authdevice
--- Table Name 	: authdevice.reg_device_type
--- Purpose    	: Device Type : Types of devices that are supported by the MOSIP system,  like  scanning, finger, face, iris etc
---           
--- Create By   	: Sadanandegowda
--- Created Date	: Aug-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
--- ------------------------------------------------------------------------------------------
+
 -- object: authdevice.reg_device_type | type: TABLE --
 -- DROP TABLE IF EXISTS authdevice.reg_device_type CASCADE;
 CREATE TABLE authdevice.reg_device_type(

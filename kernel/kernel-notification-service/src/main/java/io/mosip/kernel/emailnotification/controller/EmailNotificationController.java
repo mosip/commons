@@ -44,7 +44,6 @@ public class EmailNotificationController {
 	 * @param attachments the attachments.
 	 * @return the dto response.
 	 */
-	//@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','AUTH','ZONAL_ADMIN','PRE_REGISTRATION_ADMIN','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@Operation(summary = "Endpoint for sending a email", description = "Endpoint for sending a email", tags = { "emailnotification" })
 	@ApiResponses(value = {

@@ -43,7 +43,6 @@ public class OtpValidatorController {
 	 * @param otp the OTP to be validated.
 	 * @return the validation status as DTO response.
 	 */
-	//@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','AUTH','RESIDENT')")
 	@ResponseFilter
 	@Operation(summary = "This endpoint validates the OTP against a key", description = "This endpoint validates the OTP against a key", tags = { "otpvalidator" })
 	@ApiResponses(value = {

@@ -47,7 +47,6 @@ public class SmsNotificationController {
 	 * @param smsRequestDto the request dto for sms-notification.
 	 * @return the status and message as dto response.
 	 */
-	//@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_PROCESSOR','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','AUTH', 'PRE_REGISTRATION_ADMIN','PRE_REGISTRATION_ADMIN','RESIDENT')")
 	@ResponseFilter
 	@Operation(summary = "Endpoint for sending a sms", description = "Endpoint for sending a sms", tags = { "smsnotification" })
 	@ApiResponses(value = {

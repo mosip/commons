@@ -1,34 +1,14 @@
-# kernel-idgenerator-regcenterid
+# Kernel Idgenerator RegcenterID
 
-[Background & Design](../../docs/design/kernel/kernel-idgenerator-regcenterid.md)
+## Overview
+This library provides funtions related to generation of registration center ID.
 
-[API Documentation]
+## Usage
 
- ```
-mvn javadoc:javadoc
-
- ```
- 
- 
- **Properties to be added in Spring application environment using this component**
- ```
- mosip.kernel.registrationcenterid.length=4
- ```
- 
- [application-dev.properties](../../config/application-dev.properties)
-
-
- **Database properties**
- 
-schema:master
-
-table:rcid_seq
-
-
-**Maven Dependency**
+1. Maven Dependency
 
 ```
-		<dependency>
+	<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-idgenerator-regcenterid</artifactId>
 			<version>${project.version}</version>
@@ -36,10 +16,7 @@ table:rcid_seq
 
 ```
 
-
-**Usage Sample:**
-
- Autowire interface RegistrationCenterIdGenerator and call the method generateRegistrationCenterId().
+2. Autowire interface RegistrationCenterIdGenerator and call the method generateRegistrationCenterId().
 
 For example-
 
@@ -51,8 +28,8 @@ String regCenterId = registrationCenterIdGenerator.generateRegistrationCenterId(
 
 ```
  
+Response
 
-**Sample RCID:**
-
+```
 GENERATED RCID = 1000
- 
+``` 

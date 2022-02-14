@@ -1,69 +1,22 @@
-## kernel-idvalidator-rid
+# Kernel Idvalidator RID
 
-[Background & Design](../../docs/design/kernel/kernel-idvalidator.md)
- 
+## Overview
+This library provides funtions related to valition of RID.
 
- 
-[API Documentation]
- 
- ```
- mvn javadoc:javadoc
+## Usage
 
- ```
- 
-**Properties to be added in Spring application environment using this component**
-
-[application-dev.properties](../../config/application-dev.properties)
-
-```
-#-----------------------------RID Properties---------------------------------------
-# length of the rid
-mosip.kernel.rid.length=29
-# length of the center id
-mosip.kernel.rid.centerid-length=5
-#length of the machine id
-mosip.kernel.rid.machineid-length=5
-# length of the timestamp
-mosip.kernel.rid.timestamp-length=14
-# rid sequence length
-mosip.kernel.rid.sequence-length=5
-```
-
- 
- **Maven Dependency**
+1. Maven dependency
  
  ```
  	<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-idvalidator-rid</artifactId>
 			<version>${project.version}</version>
-		</dependency>
+	</dependency>
 
  ```
  
-**RID validation**
-
-1. Input String should be Numeric String
-
-2. Length of the given RID is as mentioned in property file
-
-3. Input RID first 5 digit from 1 to 5 digit should contain Center ID
-
-4. and from 6 to 10 digit should contain Machine ID
-
-5. and next 5 digit should be sequential number
-
-6. and next 14 digit should be timestamp in this format yyyymmddhhmmss
-
-
-
-
-
-**The response will be true is case if it pass the all validation condition otherwise it will throw respective error message**
-
- 
-
-**Usage Sample:**
+2. Usage sample:
 
 Autowired interface RidValidator
 

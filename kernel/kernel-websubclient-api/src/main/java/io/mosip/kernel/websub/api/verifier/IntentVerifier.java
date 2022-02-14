@@ -15,7 +15,7 @@ import io.mosip.kernel.websub.api.client.PublisherClientImpl;
  */
 public class IntentVerifier {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(PublisherClientImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(IntentVerifier.class);
 
 	public boolean isIntentVerified(String topic, String mode, String topicReq, String modeReq) {
 		return (topic.equals(topicReq) && mode.equals(modeReq));
