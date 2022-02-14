@@ -2,8 +2,6 @@ package io.mosip.kernel.biometrics.commons;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -12,6 +10,7 @@ import org.json.JSONObject;
 
 import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.core.exception.BiometricSignatureValidationException;
+import io.mosip.kernel.core.util.CryptoUtil;
 
 public class BiometricsSignatureHelper {
 
