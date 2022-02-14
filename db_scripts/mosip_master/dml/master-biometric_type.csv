@@ -1,10 +1,7 @@
-﻿code,name,descr,lang_code,is_active,cr_by,cr_dtimes
-FNR,Fingerprint,Finger prints of the applicant,eng,TRUE,superadmin,now()
-IRS,Iris,Iris of the applicant,eng,TRUE,superadmin,now()
-PHT,Photo,Photo of the face of the applicant,eng,TRUE,superadmin,now()
-FNR,بصمة الإصبع,بصمات الأصابع لمقدم الطلب,ara,TRUE,superadmin,now()
-IRS,قزحية العين,آيريس لمقدم الطلب,ara,TRUE,superadmin,now()
-PHT,صور,صورة لوجه مقدم الطلب,ara,TRUE,superadmin,now()
-FNR,Empreintes digitales,Empreintes digitales du demandeur,fra,TRUE,superadmin,now()
-IRS,Iris,Iris du demandeur,fra,TRUE,superadmin,now()
-PHT,Photo,Photo du visage du demandeur,fra,TRUE,superadmin,now()
+code,name,descr,lang_code,is_active,cr_by,cr_dtimes
+FNR,Fingerprint,Finger prints of the applicant,eng,t,superadmin,2020-12-23 14:36:46.332105
+IRS,Iris,Iris of the applicant,eng,t,superadmin,2020-12-23 14:36:46.332105
+PHT,Photo,Photo of the face of the applicant,eng,t,superadmin,2020-12-23 14:36:46.332105
+FNR,የጣት አሻራ,የአመልካች የጣት አሻራ,amh,t,superadmin,2020-12-23 14:36:46.332105
+IRS,የአይን ብሌን, የአመልካች የአይን ብሌን,amh,t,superadmin,2020-12-23 14:36:46.332105
+PHT,ፎቶ, የአመልካች ፎቶ,amh,t,superadmin,2020-12-23 14:36:46.332105

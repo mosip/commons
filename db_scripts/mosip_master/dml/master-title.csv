@@ -1,10 +1,4 @@
-﻿code,name,descr,lang_code,is_active,cr_by,cr_dtimes
-MIR,Mr,Male Title,eng,TRUE,superadmin,now()
-MRS,Mrs,Female Title,eng,TRUE,superadmin,now()
-MIS,Miss,Unmarried Female Title,eng,TRUE,superadmin,now()
-MIR,أستاذ,العنوان الذكور,ara,TRUE,superadmin,now()
-MRS,ست,عنوان أنثى,ara,TRUE,superadmin,now()
-MIS,آنسة,العنوان الإناث غير المتزوجات,ara,TRUE,superadmin,now()
-MIR,Monsieur,Titre masculin,fra,TRUE,superadmin,now()
-MRS,Madame,Titre féminin,fra,TRUE,superadmin,now()
-MIS,Mademoiselle,Titre de femme célibataire,fra,TRUE,superadmin,now()
+code,name,descr,lang_code,is_active,cr_by,cr_dtimes
+MIR,Mr,Male Title,eng,t,superadmin,2020-12-23 14:36:54.898594
+MRS,Mrs,Female Title,eng,t,superadmin,2020-12-23 14:36:54.898594
+DR,Dr,Doctor,eng,f,110011,2021-02-08 12:12:34.597634

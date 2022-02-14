@@ -1,7 +1,5 @@
-﻿code,descr,sttyp_code,lang_code,is_active,cr_by,cr_dtimes
-ACT,Activated,ADT,eng,TRUE,superadmin,now()
-DCT,Deactivated,ADT,eng,TRUE,superadmin,now()
-ACT,activated,ADT,fra,TRUE,superadmin,now()
-DCT,disabled,ADT,fra,TRUE,superadmin,now()
-ACT,مفعل,ADT,ara,TRUE,superadmin,now()
-DCT,إبطال مفعولها,ADT,ara,TRUE,superadmin,now()
+code,descr,sttyp_code,lang_code,is_active,cr_by,cr_dtimes
+ACT,Activated,ADT,eng,t,superadmin,2020-12-23 14:36:54.366518
+DCT,Deactivated,ADT,eng,t,superadmin,2020-12-23 14:36:54.366518
+ACT,አክቲቬትድ,ADT,amh,t,superadmin,2020-12-23 14:36:54.366518
+DCT,ዲአክቲቬትድ,ADT,amh,t,superadmin,2020-12-23 14:36:54.366518

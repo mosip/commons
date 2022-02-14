@@ -1,121 +1,2095 @@
-﻿code,name,hierarchy_level,hierarchy_level_name,parent_loc_code,lang_code,is_active,cr_by,cr_dtimes
-MOR,MyCountry,0,Country,,eng,TRUE,superadmin,now()
-MOR,الْـمَغْرِبُ,0,بلد,,ara,TRUE,superadmin,now()
-MOR,Maroc,0,Pays,,fra,TRUE,superadmin,now()
-RSK,Rabat Sale Kenitra,1,Region,MOR,eng,TRUE,superadmin,now()
-RSK,جهة الرباط سلا القنيطرة,1,منطقة,MOR,ara,TRUE,superadmin,now()
-RSK,Rabat-Salé-Kénitra,1,Région,MOR,fra,TRUE,superadmin,now()
-KTA,Kenitra,2,Province,RSK,eng,TRUE,superadmin,now()
-KTA,القنيطرة,2,المحافظة,RSK,ara,TRUE,superadmin,now()
-KTA,Kénitra,2,Province,RSK,fra,TRUE,superadmin,now()
-KNT,Kenitra,3,City,KTA,eng,TRUE,superadmin,now()
-KNT,القنيطرة,3,مدينة,KTA,ara,TRUE,superadmin,now()
-KNT,Kénitra,3,Ville,KTA,fra,TRUE,superadmin,now()
-BNMR,Ben Mansour,4,Zone,KNT,eng,TRUE,superadmin,now()
-BNMR,بن منصور,4,منطقة,KNT,ara,TRUE,superadmin,now()
-BNMR,Ben Mansour,4,Zone,KNT,fra,TRUE,superadmin,now()
-14022,14022,5,Postal Code,BNMR,eng,TRUE,superadmin,now()
-14022,14022,5,الرمز البريدي,BNMR,ara,TRUE,superadmin,now()
-14022,14022,5,code postal,BNMR,fra,TRUE,superadmin,now()
-MNAS,Mnasra,4,Zone,KNT,eng,TRUE,superadmin,now()
-MNAS,منَسرَ,4,منطقة,KNT,ara,TRUE,superadmin,now()
-MNAS,Mnasra,4,Zone,KNT,fra,TRUE,superadmin,now()
-14053,14053,5,Postal Code,MNAS,eng,TRUE,superadmin,now()
-14053,14053,5,الرمز البريدي,MNAS,ara,TRUE,superadmin,now()
-14053,14053,5,code postal,MNAS,fra,TRUE,superadmin,now()
-MOGR,Mograne,4,Zone,KNT,eng,TRUE,superadmin,now()
-MOGR,مڭرن,4,منطقة,KNT,ara,TRUE,superadmin,now()
-MOGR,Mograne,4,Zone,KNT,fra,TRUE,superadmin,now()
-14023,14023,5,Postal Code,MOGR,eng,TRUE,superadmin,now()
-14023,14023,5,الرمز البريدي,MOGR,ara,TRUE,superadmin,now()
-14023,14023,5,code postal,MOGR,fra,TRUE,superadmin,now()
-ASSM,Assam,4,Zone,KNT,eng,TRUE,superadmin,now()
-ASSM,العصام,4,منطقة,KNT,ara,TRUE,superadmin,now()
-ASSM,Assam,4,Zone,KNT,fra,TRUE,superadmin,now()
-14000,14000,5,Postal Code,ASSM,eng,TRUE,superadmin,now()
-14000,14000,5,الرمز البريدي,ASSM,ara,TRUE,superadmin,now()
-14000,14000,5,code postal,ASSM,fra,TRUE,superadmin,now()
-MEHD,Mehdia,4,Zone,KNT,eng,TRUE,superadmin,now()
-MEHD,مهدية,4,منطقة,KNT,ara,TRUE,superadmin,now()
-MEHD,Mehdia,4,Zone,KNT,fra,TRUE,superadmin,now()
-14110,14110,5,Postal Code,MEHD,eng,TRUE,superadmin,now()
-14110,14110,5,الرمز البريدي,MEHD,ara,TRUE,superadmin,now()
-14110,14110,5,code postal,MEHD,fra,TRUE,superadmin,now()
-OLOJ,Ouled Oujih,4,Zone,KNT,eng,TRUE,superadmin,now()
-OLOJ,اولاد اوجيه,4,منطقة,KNT,ara,TRUE,superadmin,now()
-OLOJ,Ouled Oujih,4,Zone,KNT,fra,TRUE,superadmin,now()
-14080,14080,5,Postal Code,OLOJ,eng,TRUE,superadmin,now()
-14080,14080,5,الرمز البريدي,OLOJ,ara,TRUE,superadmin,now()
-14080,14080,5,code postal,OLOJ,fra,TRUE,superadmin,now()
-SDTB,Sidi Taibi,4,Zone,KNT,eng,TRUE,superadmin,now()
-SDTB,سيدي الطيبي,4,منطقة,KNT,ara,TRUE,superadmin,now()
-SDTB,Sidi Taibi,4,Zone,KNT,fra,TRUE,superadmin,now()
-14025,14025,5,Postal Code,SDTB,eng,TRUE,superadmin,now()
-14025,14025,5,الرمز البريدي,SDTB,ara,TRUE,superadmin,now()
-14025,14025,5,code postal,SDTB,fra,TRUE,superadmin,now()
-SATZ,Sidi Allal Tazi,4,Zone,KNT,eng,TRUE,superadmin,now()
-SATZ,علال التازي,4,منطقة,KNT,ara,TRUE,superadmin,now()
-SATZ,Sidi Allal Tazi,4,Zone,KNT,fra,TRUE,superadmin,now()
-14050,14050,5,Postal Code,SATZ,eng,TRUE,superadmin,now()
-14050,14050,5,الرمز البريدي,SATZ,ara,TRUE,superadmin,now()
-14050,14050,5,code postal,SATZ,fra,TRUE,superadmin,now()
-RBT,Rabat,2,Province,RSK,eng,TRUE,superadmin,now()
-RBT,الرباط,2,المحافظة,RSK,ara,TRUE,superadmin,now()
-RBT,Rabat,2,Province,RSK,fra,TRUE,superadmin,now()
-RAB,Rabat,3,City,RBT,eng,TRUE,superadmin,now()
-RAB,الرباط,3,مدينة,RBT,ara,TRUE,superadmin,now()
-RAB,Rabat,3,Ville,RBT,fra,TRUE,superadmin,now()
-AGDL,Agdal,4,Zone,RAB,eng,TRUE,superadmin,now()
-AGDL,أكدال,4,منطقة,RAB,ara,TRUE,superadmin,now()
-AGDL,Agdal,4,Zone,RAB,fra,TRUE,superadmin,now()
-10106,10106,5,Postal Code,AGDL,eng,TRUE,superadmin,now()
-10106,10106,5,الرمز البريدي,AGDL,ara,TRUE,superadmin,now()
-10106,10106,5,code postal,AGDL,fra,TRUE,superadmin,now()
-QRHS,Quartier Hassan,4,Zone,RAB,eng,TRUE,superadmin,now()
-QRHS,حي حسان,4,منطقة,RAB,ara,TRUE,superadmin,now()
-QRHS,Quartier Hassan,4,Zone,RAB,fra,TRUE,superadmin,now()
-10000,10000,5,Postal Code,QRHS,eng,TRUE,superadmin,now()
-10000,10000,5,الرمز البريدي,QRHS,ara,TRUE,superadmin,now()
-10000,10000,5,code postal,QRHS,fra,TRUE,superadmin,now()
-SOUS,Souissi,4,Zone,RAB,eng,TRUE,superadmin,now()
-SOUS,السويسي,4,منطقة,RAB,ara,TRUE,superadmin,now()
-SOUS,Souissi,4,Zone,RAB,fra,TRUE,superadmin,now()
-10105,10105,5,Postal Code,SOUS,eng,TRUE,superadmin,now()
-10105,10105,5,الرمز البريدي,SOUS,ara,TRUE,superadmin,now()
-10105,10105,5,code postal,SOUS,fra,TRUE,superadmin,now()
-MADI,Madinat Al Irfane,4,Zone,RAB,eng,TRUE,superadmin,now()
-MADI,مدينة العرفان,4,منطقة,RAB,ara,TRUE,superadmin,now()
-MADI,Madinat Al Irfane,4,Zone,RAB,fra,TRUE,superadmin,now()
-10112,10112,5,Postal Code,MADI,eng,TRUE,superadmin,now()
-10112,10112,5,الرمز البريدي,MADI,ara,TRUE,superadmin,now()
-10112,10112,5,code postal,MADI,fra,TRUE,superadmin,now()
-HARD,Hay Riad,4,Zone,RAB,eng,TRUE,superadmin,now()
-HARD,حي الرياض,4,منطقة,RAB,ara,TRUE,superadmin,now()
-HARD,Hay Riad,4,Zone,RAB,fra,TRUE,superadmin,now()
-10104,10104,5,Postal Code,HARD,eng,TRUE,superadmin,now()
-10104,10104,5,الرمز البريدي,HARD,ara,TRUE,superadmin,now()
-10104,10104,5,code postal,HARD,fra,TRUE,superadmin,now()
-MDDR,Medina de Rabat,4,Zone,RAB,eng,TRUE,superadmin,now()
-MDDR,مدينة,4,منطقة,RAB,ara,TRUE,superadmin,now()
-MDDR,Médina de Rabat,4,Zone,RAB,fra,TRUE,superadmin,now()
-10036,10036,5,Postal Code,MDDR,eng,TRUE,superadmin,now()
-10036,10036,5,الرمز البريدي,MDDR,ara,TRUE,superadmin,now()
-10036,10036,5,code postal,MDDR,fra,TRUE,superadmin,now()
-ELYF,EL YOUSSOUFIA,4,Zone,RAB,eng,TRUE,superadmin,now()
-ELYF,اليوسفية,4,منطقة,RAB,ara,TRUE,superadmin,now()
-ELYF,EL YOUSSOUFIA,4,Zone,RAB,fra,TRUE,superadmin,now()
-10190,10190,5,Postal Code,ELYF,eng,TRUE,superadmin,now()
-10190,10190,5,الرمز البريدي,ELYF,ara,TRUE,superadmin,now()
-10190,10190,5,code postal,ELYF,fra,TRUE,superadmin,now()
-10110,10110,5,Postal Code,BNMR,eng,TRUE,superadmin,now()
-10111,10111,5,Postal Code,BNMR,eng,TRUE,superadmin,now()
-10113,10113,5,Postal Code,BNMR,eng,TRUE,superadmin,now()
-10114,10114,5,Postal Code,BNMR,eng,TRUE,superadmin,now()
-10111,10111,5,code postal,BNMR,fra,TRUE,superadmin,now()
-10110,10110,5,code postal,BNMR,fra,TRUE,superadmin,now()
-10113,10113,5,code postal,BNMR,fra,TRUE,superadmin,now()
-10114,10114,5,code postal,BNMR,fra,TRUE,superadmin,now()
-10111,10111,5,الرمز البريدي,BNMR,ara,TRUE,superadmin,now()
-10110,10110,5,الرمز البريدي,BNMR,ara,TRUE,superadmin,now()
-10113,10113,5,الرمز البريدي,BNMR,ara,TRUE,superadmin,now()
-10114,10114,5,الرمز البريدي,BNMR,ara,TRUE,superadmin,now()
+code,name,hierarchy_level,hierarchy_level_name,parent_loc_code,lang_code,is_active,cr_by,cr_dtimes
+ORO,Oromia,1,Region,ETH,eng,t,110011,2021-02-10 07:55:07.585804
+ORO,ኦሮሚያ,1,ክልል,ETH,amh,t,110011,2021-02-10 07:55:07.585804
+AMH,Amhara,1,Region,ETH,eng,t,110011,2021-02-10 07:55:07.585804
+AMH,አማራ,1,ክልል,ETH,amh,t,110011,2021-02-10 07:55:07.585804
+AFR,Afar,1,Region,ETH,eng,t,110011,2021-02-10 07:55:07.585804
+AFR,አፋር,1,ክልል,ETH,amh,t,110011,2021-02-10 07:55:07.585804
+SOM,ሶማሌ,1,ክልል,ETH,amh,t,110011,2021-02-10 07:55:07.585804
+TGI,Tigray,1,Region,ETH,eng,t,110011,2021-02-10 07:55:07.585804
+GML,Gambela,1,Region,ETH,eng,t,110011,2021-02-10 07:55:07.585804
+GML,ጋምቤላ,1,ክልል,ETH,amh,t,110011,2021-02-10 07:55:07.585804
+DRW,Dire Dawa,1,Region,ETH,eng,t,110011,2021-02-10 07:55:07.585804
+DRW,ድሬዳዋ,1,ክልል,ETH,amh,t,110011,2021-02-10 07:55:07.585804
+BGZ,Benishangul-Gumuz,1,Region,ETH,eng,t,110011,2021-02-10 07:55:07.585804
+BGZ,ቤኒሻንጉል-ጉሙዝ,1,ክልል,ETH,amh,t,110011,2021-02-10 07:55:07.585804
+AAB,Addis Abeba,1,Region,ETH,eng,t,110011,2021-02-10 07:55:07.585804
+AAB,አዲስ አበባ,1,ክልል,ETH,amh,t,110011,2021-02-10 07:55:07.585804
+SNN,Southern Nations Nationalities and People's Region,1,Region,ETH,eng,t,110011,2021-02-10 07:55:07.585804
+W01,Woreda-01,4,ወረዳ,BLE,amh,t,superadmin,2020-12-23 14:36:52.700461
+W01,Woreda-01,4,Woreda,BLE,eng,t,superadmin,2020-12-23 14:36:52.700461
+SNN,የደቡብ ብሔሮች ብሔረሰቦችና ሕዝቦች ክልል,1,ክልል,ETH,amh,t,110011,2021-02-10 07:55:07.585804
+HAR,Harari,1,Region,ETH,eng,t,110011,2021-02-10 07:55:07.585804
+HAR,ሀረሪ,1,ክልል,ETH,amh,t,110011,2021-02-10 07:55:07.585804
+SDM,Sedama,1,Region,ETH,eng,t,110011,2021-02-10 07:55:07.585804
+SDM,ሲዳማ,1,ክልል,ETH,amh,t,110011,2021-02-10 07:55:07.585804
+ADK,Addis Ketema,2,Zone,AAB,eng,t,110011,2021-02-10 07:55:07.585804
+ADK,አዲስ ከተማ,2,ዞን,AAB,amh,t,110011,2021-02-10 07:55:07.585804
+ARK,Arada,2,Zone,AAB,eng,t,110011,2021-02-10 07:55:07.585804
+ARK,አራዳ,2,ዞን,AAB,amh,t,110011,2021-02-10 07:55:07.585804
+GKK,Gullele,2,Zone,AAB,eng,t,110011,2021-02-10 07:55:07.585804
+GKK,ጉለሌ,2,ዞን,AAB,amh,t,110011,2021-02-10 07:55:07.585804
+KKK,Kirkos,2,Zone,AAB,eng,t,110011,2021-02-10 07:55:07.585804
+KKK,ቂርቆስ,2,ዞን,AAB,amh,t,110011,2021-02-10 07:55:07.585804
+KKE,Kolfe Keranio,2,Zone,AAB,eng,t,110011,2021-02-10 07:55:07.585804
+KKE,ኮልፌ ቀራንዮ,2,ዞን,AAB,amh,t,110011,2021-02-10 07:55:07.585804
+LKK,Lideta,2,Zone,AAB,eng,t,110011,2021-02-10 07:55:07.585804
+LKK,ልደታ,2,ዞን,AAB,amh,t,110011,2021-02-10 07:55:07.585804
+NSK,Nifas Silk-Lafto,2,Zone,AAB,eng,t,110011,2021-02-10 07:55:07.585804
+NSK,ኒፋስ ስልክ ላፍቶ,2,ዞን,AAB,amh,t,110011,2021-02-10 07:55:07.585804
+YKK,Yeka,2,Zone,AAB,eng,t,110011,2021-02-10 07:55:07.585804
+YKK,የካ,2,ዞን,AAB,amh,t,110011,2021-02-10 07:55:07.585804
+BOL,Bole,2,Zone,AAB,eng,t,110011,2021-02-10 07:55:07.585804
+BOL,ቦሌ,2,ዞን,AAB,amh,t,110011,2021-02-10 07:55:07.585804
+LMK,Lemi Kura,2,Zone,AAB,eng,t,110011,2021-02-10 07:55:07.585804
+LMK,ለሚ ኩራ,2,ዞን,AAB,amh,t,110011,2021-02-10 07:55:07.585804
+WAR,West Arsi,2,Zone,ORO,eng,t,110011,2021-02-10 07:55:07.585804
+WAR,ምዕራብ አርሲ,2,ዞን,ORO,amh,t,110011,2021-02-10 07:55:07.585804
+KWZ,Kelam Welega,2,Zone,ORO,eng,t,110011,2021-02-10 07:55:07.585804
+KWZ,ኬላም ወለጋ,2,ዞን,ORO,amh,t,110011,2021-02-10 07:55:07.585804
+ARS,Arsi,2,Zone,ORO,eng,t,110011,2021-02-10 07:55:07.585804
+ARS,ምዕራብ አርሲ,2,ዞን,ORO,amh,t,110011,2021-02-10 07:55:07.585804
+BAL,Bale,2,Zone,ORO,eng,t,110011,2021-02-10 07:55:07.585804
+BAL,ባሌ,2,ዞን,ORO,amh,t,110011,2021-02-10 07:55:07.585804
+EBA,East Bale,2,Zone,ORO,eng,t,110011,2021-02-10 07:55:07.585804
+EBA,ምስራቅ ባሌ,2,ዞን,ORO,amh,t,110011,2021-02-10 07:55:07.585804
+BOR,Borena,2,Zone,ORO,eng,t,110011,2021-02-10 07:55:07.585804
+BOR,ቦረና,2,ዞን,ORO,amh,t,110011,2021-02-10 07:55:07.585804
+GUJ,Guji,2,Zone,ORO,eng,t,110011,2021-02-10 07:55:07.585804
+GUJ,ጉጂ,2,ዞን,ORO,amh,t,110011,2021-02-10 07:55:07.585804
+WGU,West Guji,2,Zone,ORO,eng,t,110011,2021-02-10 07:55:07.585804
+WGU,የምዕራብ ጉጂ,2,ዞን,ORO,amh,t,110011,2021-02-10 07:55:07.585804
+EHR,East Hararghe,2,Zone,ORO,eng,t,110011,2021-02-10 07:55:07.585804
+EHR,ምስራቅ ሀረርጌ,2,ዞን,ORO,amh,t,110011,2021-02-10 07:55:07.585804
+WHR,West Hararghe,2,Zone,ORO,eng,t,110011,2021-02-10 07:55:07.585804
+WHR,የምዕራብ ሀረርጌ,2,ዞን,ORO,amh,t,110011,2021-02-10 07:55:07.585804
+BBL,Buno Bedele,2,Zone,ORO,eng,t,110011,2021-02-10 07:55:07.585804
+BBL,ቡኖ በደሌ,2,ዞን,ORO,amh,t,110011,2021-02-10 07:55:07.585804
+ESH,East Shewa,2,Zone,ORO,eng,t,110011,2021-02-10 07:55:07.585804
+ESH,ምስራቅ ሸዋ,2,ዞን,ORO,amh,t,110011,2021-02-10 07:55:07.585804
+IAB,Ilu Abba Bora,2,Zone,ORO,eng,t,110011,2021-02-10 07:55:07.585804
+IAB,ኢሉ ኣባ ቦራ,2,ዞን,ORO,amh,t,110011,2021-02-10 07:55:07.585804
+WSZ,West Shewa,2,Zone,ORO,eng,t,110011,2021-02-10 07:55:07.585804
+WSZ,ምዕራብ ሸዋ,2,ዞን,ORO,amh,t,110011,2021-02-10 07:55:07.585804
+NSH,North Shewa,2,Zone,ORO,eng,t,110011,2021-02-10 07:55:07.585804
+NSH,ሰሜን ሸዋ,2,ዞን,ORO,amh,t,110011,2021-02-10 07:55:07.585804
+SWS,South West Shewa,2,Zone,ORO,eng,t,110011,2021-02-10 07:55:07.585804
+SWS,ደቡብ ምዕራብ ሸዋ,2,ዞን,ORO,amh,t,110011,2021-02-10 07:55:07.585804
+OSF,Oromia Special Zone Surrounding Finfinne,2,Zone,ORO,eng,t,110011,2021-02-10 07:55:07.585804
+SOM,somali,1,Region,ETH,eng,t,110011,2021-02-10 07:55:07.585804
+ADM,Adama,2,Zone,ORO,eng,t,110011,2021-02-10 07:55:07.585804
+ADM,አዳማ,2,ዞን,ORO,amh,t,110011,2021-02-10 07:55:07.585804
+JMM,Jimma,2,Zone,ORO,eng,t,110011,2021-02-10 07:55:07.585804
+JMM,ጅማ,2,ዞን,ORO,amh,t,110011,2021-02-10 07:55:07.585804
+ETH,ኢትዮጵያ,0,ሀገር,,amh,t,110011,2021-02-10 07:55:07.585804
+ETH,Ethiopia,0,Country,,eng,t,110011,2021-02-10 07:55:07.585804
+2000,Woreda 01,4,Woreda,KKE,eng,t,110011,2021-02-12 08:34:14.104514
+SDZ,ሲዳማ,2,ዞን,SDM,amh,t,110011,2021-02-10 07:55:07.585804
+AWR,Awsi Rasu,2,Zone,AFR,eng,t,110011,2021-02-10 07:55:07.585804
+AWR,አውሲ ራሱ,2,ዞን,AFR,amh,t,110011,2021-02-10 07:55:07.585804
+KBR,Kilbet Rasu,2,Zone,AFR,eng,t,110011,2021-02-10 07:55:07.585804
+KBR,ኪልቤት ራሱ,2,ዞን,AFR,amh,t,110011,2021-02-10 07:55:07.585804
+GBR,Gabi Rasu,2,Zone,AFR,eng,t,110011,2021-02-10 07:55:07.585804
+GBR,ጋቢ ራሱ,2,ዞን,AFR,amh,t,110011,2021-02-10 07:55:07.585804
+FTR,Fantena Rasu,2,Zone,AFR,eng,t,110011,2021-02-10 07:55:07.585804
+FTR,ፋንታና ራሱ,2,ዞን,AFR,amh,t,110011,2021-02-10 07:55:07.585804
+HIR,Hari Rasu,2,Zone,AFR,eng,t,110011,2021-02-10 07:55:07.585804
+HIR,ሀሪ ራሱ,2,ዞን,AFR,amh,t,110011,2021-02-10 07:55:07.585804
+TSHZ,South Zone,2,Zone,TGI,eng,t,110011,2021-02-10 07:55:07.585804
+TSHZ,ደቡብ ዞን,2,ዞን,TGI,amh,t,110011,2021-02-10 07:55:07.585804
+TSEZ,South East Zone,2,Zone,TGI,eng,t,110011,2021-02-10 07:55:07.585804
+TSEZ,ደቡብ ምስራቅ ዞን,2,ዞን,TGI,amh,t,110011,2021-02-10 07:55:07.585804
+TCEZ,Central Zone,2,Zone,TGI,eng,t,110011,2021-02-10 07:55:07.585804
+TCEZ,ማዕከላዊ ዞን,2,ዞን,TGI,amh,t,110011,2021-02-10 07:55:07.585804
+TMSZ,Mekele Special Zone,2,Zone,TGI,eng,t,110011,2021-02-10 07:55:07.585804
+TMSZ,መቀሌ ልዩ ዞን,2,ዞን,TGI,amh,t,110011,2021-02-10 07:55:07.585804
+TWSZ,West Zone,2,Zone,TGI,eng,t,110011,2021-02-10 07:55:07.585804
+TWSZ,ምዕራብ ዞን,2,ዞን,TGI,amh,t,110011,2021-02-10 07:55:07.585804
+TESZ,East Zone,2,Zone,TGI,eng,t,110011,2021-02-10 07:55:07.585804
+TESZ,ምስራቅ ዞን,2,ዞን,TGI,amh,t,110011,2021-02-10 07:55:07.585804
+TNWZ,North West Zone,2,Zone,TGI,eng,t,110011,2021-02-10 07:55:07.585804
+TNWZ,ሰሜን ምዕራብ ዞን,2,ዞን,TGI,amh,t,110011,2021-02-10 07:55:07.585804
+ASS,Assosa Zone,2,Zone,BGZ,eng,t,110011,2021-02-10 07:55:07.585804
+ASS,አሶሳ ዞን,2,ዞን,BGZ,amh,t,110011,2021-02-10 07:55:07.585804
+KAZ,Kamashi Zone,2,Zone,BGZ,eng,t,110011,2021-02-10 07:55:07.585804
+KAZ,ካማሺ ዞን,2,ዞን,BGZ,amh,t,110011,2021-02-10 07:55:07.585804
+MEZ,Metekel Zone,2,Zone,BGZ,eng,t,110011,2021-02-10 07:55:07.585804
+MEZ,መተከል ዞን,2,ዞን,BGZ,amh,t,110011,2021-02-10 07:55:07.585804
+BGID,Independent districts,2,Zone,BGZ,eng,t,110011,2021-02-10 07:55:07.585804
+BGID,ገለልተኛ ወረዳዎች,2,ዞን,BGZ,amh,t,110011,2021-02-10 07:55:07.585804
+LBZ,Liben Zone,2,Zone,SOM,eng,t,110011,2021-02-10 07:55:07.585804
+LBZ,ሊበን ዞን,2,ዞን,SOM,amh,t,110011,2021-02-10 07:55:07.585804
+AFZ,Afder Zone,2,Zone,SOM,eng,t,110011,2021-02-10 07:55:07.585804
+AFZ,አፍደር ዞን,2,ዞን,SOM,amh,t,110011,2021-02-10 07:55:07.585804
+JARZ,Jarar Zone,2,Zone,SOM,eng,t,110011,2021-02-10 07:55:07.585804
+JARZ,ጃረር ዞን,2,ዞን,SOM,amh,t,110011,2021-02-10 07:55:07.585804
+NOGZ,Nogob Zone,2,Zone,SOM,eng,t,110011,2021-02-10 07:55:07.585804
+NOGZ,ኖጎብ ዞን,2,ዞን,SOM,amh,t,110011,2021-02-10 07:55:07.585804
+ERZ,Erer Zone,2,Zone,SOM,eng,t,110011,2021-02-10 07:55:07.585804
+ERZ,ኤረር ዞን,2,ዞን,SOM,amh,t,110011,2021-02-10 07:55:07.585804
+SBHZ,Shabelle Zone,2,Zone,SOM,eng,t,110011,2021-02-10 07:55:07.585804
+SBHZ,ሸበሌ ዞን,2,ዞን,SOM,amh,t,110011,2021-02-10 07:55:07.585804
+FFZ,Fafan Zone,2,Zone,SOM,eng,t,110011,2021-02-10 07:55:07.585804
+FFZ,ፋፋን ዞን,2,ዞን,SOM,amh,t,110011,2021-02-10 07:55:07.585804
+KOZ,Korahe Zone,2,Zone,SOM,eng,t,110011,2021-02-10 07:55:07.585804
+KOZ,ቆራሄ ዞን,2,ዞን,SOM,amh,t,110011,2021-02-10 07:55:07.585804
+SIT,Sitti Zone,2,Zone,SOM,eng,t,110011,2021-02-10 07:55:07.585804
+SIT,ሲቲ ዞን,2,ዞን,SOM,amh,t,110011,2021-02-10 07:55:07.585804
+DOL,Dollo Zone,2,Zone,SOM,eng,t,110011,2021-02-10 07:55:07.585804
+DOL,ዶሎ ዞን,2,ዞን,SOM,amh,t,110011,2021-02-10 07:55:07.585804
+DHZ,Dhawa zone,2,Zone,SOM,eng,t,110011,2021-02-10 07:55:07.585804
+DHZ,ዳዋ ዞን,2,ዞን,SOM,amh,t,110011,2021-02-10 07:55:07.585804
+SIL,Silti Zone,2,Zone,SNN,eng,t,110011,2021-02-10 07:55:07.585804
+SIL,ስልጢ ዞን,2,ዞን,SNN,amh,t,110011,2021-02-10 07:55:07.585804
+GGZ,Gamo Gofa Zone,2,Zone,SNN,eng,t,110011,2021-02-10 07:55:07.585804
+GGZ,ስልጢ ዞን,2,ዞን,SNN,amh,t,110011,2021-02-10 07:55:07.585804
+BMZ,Bench Maji Zone,2,Zone,SNN,eng,t,110011,2021-02-10 07:55:07.585804
+BMZ,ቤንች ማጂ ዞን,2,ዞን,SNN,amh,t,110011,2021-02-10 07:55:07.585804
+SOZ,South Omo Zone,2,Zone,SNN,eng,t,110011,2021-02-10 07:55:07.585804
+SOZ,ደቡብ ኦሞ ዞን,2,ዞን,SNN,amh,t,110011,2021-02-10 07:55:07.585804
+SGZ,South Gondar Zone,2,Zone,AMH,eng,t,110011,2021-02-10 07:55:07.585804
+BSZ,Bench Sheko Zone,2,Zone,SNN,eng,t,110011,2021-02-10 07:55:07.585804
+BSZ,ቤንች ሸኮ ዞን,2,ዞን,SNN,amh,t,110011,2021-02-10 07:55:07.585804
+WOL,Wolayita Zone,2,Zone,SNN,eng,t,110011,2021-02-10 07:55:07.585804
+WOL,ወላይታ ዞን,2,ዞን,SNN,amh,t,110011,2021-02-10 07:55:07.585804
+DAW,Dawro Zone,2,Zone,SNN,eng,t,110011,2021-02-10 07:55:07.585804
+DAW,ዳውሮ ዞን,2,ዞን,SNN,amh,t,110011,2021-02-10 07:55:07.585804
+GAM,Gamo Zone,2,Zone,SNN,eng,t,110011,2021-02-10 07:55:07.585804
+GAM,ጋሞ ዞን,2,ዞን,SNN,amh,t,110011,2021-02-10 07:55:07.585804
+GOF,Gofa Zones,2,Zone,SNN,eng,t,110011,2021-02-10 07:55:07.585804
+GOF,የጎፋ ዞኖች,2,ዞን,SNN,amh,t,110011,2021-02-10 07:55:07.585804
+GED,Gedeo Zone,2,Zone,SNN,eng,t,110011,2021-02-10 07:55:07.585804
+GED,የጌዴኦ ዞን,2,ዞን,SNN,amh,t,110011,2021-02-10 07:55:07.585804
+GUR,Gurage Zone,2,Zone,SNN,eng,t,110011,2021-02-10 07:55:07.585804
+GUR,ጉራጌ ዞን,2,ዞን,SNN,amh,t,110011,2021-02-10 07:55:07.585804
+HAD,Hadiya Zone,2,Zone,SNN,eng,t,110011,2021-02-10 07:55:07.585804
+HAD,ሀዲያ ​​ዞን,2,ዞን,SNN,amh,t,110011,2021-02-10 07:55:07.585804
+KEF,Keffa Zone,2,Zone,SNN,eng,t,110011,2021-02-10 07:55:07.585804
+KEF,ከፋ ዞን,2,ዞን,SNN,amh,t,110011,2021-02-10 07:55:07.585804
+KTZ,Kembata Tembaro Zone,2,Zone,SNN,eng,t,110011,2021-02-10 07:55:07.585804
+KTZ,ከምባታ ጠምባሮ ዞን,2,ዞን,SNN,amh,t,110011,2021-02-10 07:55:07.585804
+SHK,Sheka Zone,2,Zone,SNN,eng,t,110011,2021-02-10 07:55:07.585804
+SHK,ሸካ ዞን,2,ዞን,SNN,amh,t,110011,2021-02-10 07:55:07.585804
+WOZ,West Omo zone,2,Zone,SNN,eng,t,110011,2021-02-10 07:55:07.585804
+WOZ,ምዕራብ ኦሞ ዞን,2,ዞን,SNN,amh,t,110011,2021-02-10 07:55:07.585804
+IDD,Independent districts,2,Zone,SNN,eng,t,110011,2021-02-10 07:55:07.585804
+IDD,ገለልተኛ ወረዳዎች,2,ዞን,SNN,amh,t,110011,2021-02-10 07:55:07.585804
+GIDD,Independent districts,2,Zone,GML,eng,t,110011,2021-02-10 07:55:07.585804
+100,Robe,4,Woreda,ARS,eng,t,110011,2021-02-10 07:57:45.892058
+100,ሮበ,4,ወረዳ,ARS,amh,t,110011,2021-02-10 07:57:45.892058
+101,Seru,4,Woreda,ARS,eng,t,110011,2021-02-10 07:57:45.892058
+101,ሴሩ,4,ወረዳ,ARS,amh,t,110011,2021-02-10 07:57:45.892058
+102,Sere,4,Woreda,ARS,eng,t,110011,2021-02-10 07:57:45.892058
+102,ሲሪ,4,ወረዳ,ARS,amh,t,110011,2021-02-10 07:57:45.892058
+103,Tena,4,Woreda,ARS,eng,t,110011,2021-02-10 07:57:45.892058
+103,ቴና,4,ወረዳ,ARS,amh,t,110011,2021-02-10 07:57:45.892058
+104,Tiyo,4,Woreda,ARS,eng,t,110011,2021-02-10 07:57:45.892058
+104,ትዮ,4,ወረዳ,ARS,amh,t,110011,2021-02-10 07:57:45.892058
+105,Guna,4,Woreda,ARS,eng,t,110011,2021-02-10 07:57:45.892058
+105,ጉና,4,ወረዳ,ARS,amh,t,110011,2021-02-10 07:57:45.892058
+106,Amigna,4,Woreda,ARS,eng,t,110011,2021-02-10 07:57:45.892058
+106,አሚኛ,4,ወረዳ,ARS,amh,t,110011,2021-02-10 07:57:45.892058
+107,Asko,4,Woreda,ARS,eng,t,110011,2021-02-10 07:57:45.892058
+107,አስኮ,4,ወረዳ,ARS,amh,t,110011,2021-02-10 07:57:45.892058
+108,Asalla town,4,Woreda,ARS,eng,t,110011,2021-02-10 07:57:45.892058
+108,አሳላ ከተማ,4,ወረዳ,ARS,amh,t,110011,2021-02-10 07:57:45.892058
+109,Bale Gasgar,4,Woreda,ARS,eng,t,110011,2021-02-10 07:57:45.892058
+109,ባሌ ጋስገር,4,ወረዳ,ARS,amh,t,110011,2021-02-10 07:57:45.892058
+110,Chole,4,Woreda,ARS,eng,t,110011,2021-02-10 07:57:45.892058
+110,ጮሌ,4,ወረዳ,ARS,amh,t,110011,2021-02-10 07:57:45.892058
+111,Digalu and tijo,4,Woreda,ARS,eng,t,110011,2021-02-10 07:57:45.892058
+111,ዲጋሉ እና ቲጆ,4,ወረዳ,ARS,amh,t,110011,2021-02-10 07:57:45.892058
+112,Shanan Kolu,4,Woreda,ARS,eng,t,110011,2021-02-10 07:57:45.892058
+112,ሻናን ኮሉ,4,ወረዳ,ARS,amh,t,110011,2021-02-10 07:57:45.892058
+113,Diksis,4,Woreda,ARS,eng,t,110011,2021-02-10 07:57:45.892058
+113,ዲክሲስ,4,ወረዳ,ARS,amh,t,110011,2021-02-10 07:57:45.892058
+114,Dodota,4,Woreda,ARS,eng,t,110011,2021-02-10 07:57:45.892058
+114,ዶዶታ,4,ወረዳ,ARS,amh,t,110011,2021-02-10 07:57:45.892058
+115,Honkolo Wabe,4,Woreda,ARS,eng,t,110011,2021-02-10 07:57:45.892058
+115,ሆንኮሎ ዋቤ,4,ወረዳ,ARS,amh,t,110011,2021-02-10 07:57:45.892058
+116,Gololcha,4,Woreda,ARS,eng,t,110011,2021-02-10 07:57:45.892058
+116,ጎሎልቻ,4,ወረዳ,ARS,amh,t,110011,2021-02-10 07:57:45.892058
+117,Hetosa,4,Woreda,ARS,eng,t,110011,2021-02-10 07:57:45.892058
+117,ሄጦሳ,4,ወረዳ,ARS,amh,t,110011,2021-02-10 07:57:45.892058
+118,Jeju,4,Woreda,ARS,eng,t,110011,2021-02-10 07:57:45.892058
+118,ጀጁ,4,ወረዳ,ARS,amh,t,110011,2021-02-10 07:57:45.892058
+119,Lemu and Bilbilo,4,Woreda,ARS,eng,t,110011,2021-02-10 07:57:45.892058
+119,ለሙ እና ቢልቢሎ,4,ወረዳ,ARS,amh,t,110011,2021-02-10 07:57:45.892058
+120,Lude Hetosa,4,Woreda,ARS,eng,t,110011,2021-02-10 07:57:45.892058
+120,ሉዴ ህጦሳ,4,ወረዳ,ARS,amh,t,110011,2021-02-10 07:57:45.892058
+121,Marti,4,Woreda,ARS,eng,t,110011,2021-02-10 07:57:45.892058
+121,ማርቲ,4,ወረዳ,ARS,amh,t,110011,2021-02-10 07:57:45.892058
+122,Munesa,4,Woreda,ARS,eng,t,110011,2021-02-10 07:57:45.892058
+122,ሙኔሳ,4,ወረዳ,ARS,amh,t,110011,2021-02-10 07:57:45.892058
+123,Agarfa,4,Woreda,BAL,eng,t,110011,2021-02-10 07:57:45.892058
+123,ኣጋርፋ,4,ወረዳ,BAL,amh,t,110011,2021-02-10 07:57:45.892058
+124,Barbare,4,Woreda,BAL,eng,t,110011,2021-02-10 07:57:45.892058
+124,ባርባሬ,4,ወረዳ,BAL,amh,t,110011,2021-02-10 07:57:45.892058
+125,Dawe kachan,4,Woreda,BAL,eng,t,110011,2021-02-10 07:57:45.892058
+125,ዳዌ ቃጫን,4,ወረዳ,BAL,amh,t,110011,2021-02-10 07:57:45.892058
+126,Dawe Sarar,4,Woreda,BAL,eng,t,110011,2021-02-10 07:57:45.892058
+126,ዳዌ ሳራሪ,4,ወረዳ,BAL,amh,t,110011,2021-02-10 07:57:45.892058
+127,Dallo Manna,4,Woreda,BAL,eng,t,110011,2021-02-10 07:57:45.892058
+127,ዳሎ መና,4,ወረዳ,BAL,amh,t,110011,2021-02-10 07:57:45.892058
+128,Gololcha,4,Woreda,BAL,eng,t,110011,2021-02-10 07:57:45.892058
+128,ጎሎልቻ,4,ወረዳ,BAL,amh,t,110011,2021-02-10 07:57:45.892058
+129,Goro,4,Woreda,BAL,eng,t,110011,2021-02-10 07:57:45.892058
+129,ጎሮ,4,ወረዳ,BAL,amh,t,110011,2021-02-10 07:57:45.892058
+130,Gurdamole,4,Woreda,BAL,eng,t,110011,2021-02-10 07:57:45.892058
+130,ጉራዳሞሌ,4,ወረዳ,BAL,amh,t,110011,2021-02-10 07:57:45.892058
+131,Harana Buluk,4,Woreda,BAL,eng,t,110011,2021-02-10 07:57:45.892058
+131,ሃራና ቡሉክ,4,ወረዳ,BAL,amh,t,110011,2021-02-10 07:57:45.892058
+132,Legahida,4,Woreda,BAL,eng,t,110011,2021-02-10 07:57:45.892058
+132,ለጋ ሂዳ,4,ወረዳ,BAL,amh,t,110011,2021-02-10 07:57:45.892058
+133,Madda Wolabu,4,Woreda,BAL,eng,t,110011,2021-02-10 07:57:45.892058
+133,ማዳ ወላቡ,4,ወረዳ,BAL,amh,t,110011,2021-02-10 07:57:45.892058
+134,Rayitu,4,Woreda,BAL,eng,t,110011,2021-02-10 07:57:45.892058
+134,ራይቱ,4,ወረዳ,BAL,amh,t,110011,2021-02-10 07:57:45.892058
+135,Roobe,4,Woreda,BAL,eng,t,110011,2021-02-10 07:57:45.892058
+135,ሮቤ,4,ወረዳ,BAL,amh,t,110011,2021-02-10 07:57:45.892058
+136,Sawina,4,Woreda,BAL,eng,t,110011,2021-02-10 07:57:45.892058
+136,ሳወና,4,ወረዳ,BAL,amh,t,110011,2021-02-10 07:57:45.892058
+137,Senana,4,Woreda,BAL,eng,t,110011,2021-02-10 07:57:45.892058
+137,ስናና,4,ወረዳ,BAL,amh,t,110011,2021-02-10 07:57:45.892058
+138,Dinsho,4,Woreda,BAL,eng,t,110011,2021-02-10 07:57:45.892058
+138,ዲንሾ,4,ወረዳ,BAL,amh,t,110011,2021-02-10 07:57:45.892058
+139,Gindhir,4,Woreda,BAL,eng,t,110011,2021-02-10 07:57:45.892058
+139,ጊንዲር,4,ወረዳ,BAL,amh,t,110011,2021-02-10 07:57:45.892058
+140,Goba,4,Woreda,BAL,eng,t,110011,2021-02-10 07:57:45.892058
+140,ጎባ,4,ወረዳ,BAL,amh,t,110011,2021-02-10 07:57:45.892058
+141,Dire,4,Woreda,BOR,eng,t,110011,2021-02-10 07:57:45.892058
+141,ድሬ,4,ወረዳ,BOR,amh,t,110011,2021-02-10 07:57:45.892058
+142,Miyu,4,Woreda,BOR,eng,t,110011,2021-02-10 07:57:45.892058
+142,ሚዩ,4,ወረዳ,BOR,amh,t,110011,2021-02-10 07:57:45.892058
+143,Teltele,4,Woreda,BOR,eng,t,110011,2021-02-10 07:57:45.892058
+143,ቴልቴል,4,ወረዳ,BOR,amh,t,110011,2021-02-10 07:57:45.892058
+144,Yabelo,4,Woreda,BOR,eng,t,110011,2021-02-10 07:57:45.892058
+144,ያቤሎ,4,ወረዳ,BOR,amh,t,110011,2021-02-10 07:57:45.892058
+145,Dehas,4,Woreda,BOR,eng,t,110011,2021-02-10 07:57:45.892058
+145,ደሃሳ,4,ወረዳ,BOR,amh,t,110011,2021-02-10 07:57:45.892058
+146,Arero,4,Woreda,BOR,eng,t,110011,2021-02-10 07:57:45.892058
+146,አረሮ,4,ወረዳ,BOR,amh,t,110011,2021-02-10 07:57:45.892058
+147,Moyale,4,Woreda,BOR,eng,t,110011,2021-02-10 07:57:45.892058
+147,ሞያሌ,4,ወረዳ,BOR,amh,t,110011,2021-02-10 07:57:45.892058
+148,Dillo,4,Woreda,BOR,eng,t,110011,2021-02-10 07:57:45.892058
+148,ዲሎ,4,ወረዳ,BOR,amh,t,110011,2021-02-10 07:57:45.892058
+149,Guchi,4,Woreda,BOR,eng,t,110011,2021-02-10 07:57:45.892058
+149,ጉቺ,4,ወረዳ,BOR,amh,t,110011,2021-02-10 07:57:45.892058
+150,Dubuluk,4,Woreda,BOR,eng,t,110011,2021-02-10 07:57:45.892058
+150,ዱቡሉክ,4,ወረዳ,BOR,amh,t,110011,2021-02-10 07:57:45.892058
+151,Gomole,4,Woreda,BOR,eng,t,110011,2021-02-10 08:01:52.111203
+151,ጎሞሌ,4,ወረዳ,BOR,amh,t,110011,2021-02-10 08:01:52.111203
+152,Wachile,4,Woreda,BOR,eng,t,110011,2021-02-10 08:01:52.111203
+152,ዋችሌ,4,ወረዳ,BOR,amh,t,110011,2021-02-10 08:01:52.111203
+153,Elowaye,4,Woreda,BOR,eng,t,110011,2021-02-10 08:01:52.111203
+153,ኢሎዋዬ,4,ወረዳ,BOR,amh,t,110011,2021-02-10 08:01:52.111203
+154,Gimbichu,4,Woreda,ESH,eng,t,110011,2021-02-10 08:01:52.111203
+154,ጊምቢቹ,4,ወረዳ,ESH,amh,t,110011,2021-02-10 08:01:52.111203
+155,Bora,4,Woreda,ESH,eng,t,110011,2021-02-10 08:01:52.111203
+155,ቦራ,4,ወረዳ,ESH,amh,t,110011,2021-02-10 08:01:52.111203
+156,Dugda,4,Woreda,ESH,eng,t,110011,2021-02-10 08:01:52.111203
+156,ዱግዳ,4,ወረዳ,ESH,amh,t,110011,2021-02-10 08:01:52.111203
+157,Adaa,4,Woreda,ESH,eng,t,110011,2021-02-10 08:01:52.111203
+157,አዳዓ,4,ወረዳ,ESH,amh,t,110011,2021-02-10 08:01:52.111203
+158,Around Adama,4,Woreda,ESH,eng,t,110011,2021-02-10 08:01:52.111203
+158,አዳማ ዙሪያ,4,ወረዳ,ESH,amh,t,110011,2021-02-10 08:01:52.111203
+159,Adame Tulu,4,Woreda,ESH,eng,t,110011,2021-02-10 08:01:52.111203
+159,አዳሚ ቱሉ,4,ወረዳ,ESH,amh,t,110011,2021-02-10 08:01:52.111203
+160,BishoftuTown,4,Woreda,ESH,eng,t,110011,2021-02-10 08:01:52.111203
+160,ብሾፍቱ,4,ወረዳ,ESH,amh,t,110011,2021-02-10 08:01:52.111203
+161,Bosat,4,Woreda,ESH,eng,t,110011,2021-02-10 08:01:52.111203
+161,ቦሳት,4,ወረዳ,ESH,amh,t,110011,2021-02-10 08:01:52.111203
+162,Fantalle,4,Woreda,ESH,eng,t,110011,2021-02-10 08:01:52.111203
+162,ፋንታሌ,4,ወረዳ,ESH,amh,t,110011,2021-02-10 08:01:52.111203
+163,Liban,4,Woreda,ESH,eng,t,110011,2021-02-10 08:01:52.111203
+163,ሊባን,4,ወረዳ,ESH,amh,t,110011,2021-02-10 08:01:52.111203
+164,Lome,4,Woreda,ESH,eng,t,110011,2021-02-10 08:01:52.111203
+164,ሎሜ,4,ወረዳ,ESH,amh,t,110011,2021-02-10 08:01:52.111203
+165,Batu town,4,Woreda,ESH,eng,t,110011,2021-02-10 08:01:52.111203
+165,ባቱ,4,ወረዳ,ESH,amh,t,110011,2021-02-10 08:01:52.111203
+166,Haro Limmu,4,Woreda,EWZ,eng,t,110011,2021-02-10 08:01:52.111203
+166,ሃሮ ሊሙ,4,ወረዳ,EWZ,amh,t,110011,2021-02-10 08:01:52.111203
+167,Leka Dulecha,4,Woreda,EWZ,eng,t,110011,2021-02-10 08:01:52.111203
+167,ለካ ዱለቻ,4,ወረዳ,EWZ,amh,t,110011,2021-02-10 08:01:52.111203
+168,Ibantu,4,Woreda,EWZ,eng,t,110011,2021-02-10 08:01:52.111203
+168,ኢባንቱ,4,ወረዳ,EWZ,amh,t,110011,2021-02-10 08:01:52.111203
+169,Jimma Arjo,4,Woreda,EWZ,eng,t,110011,2021-02-10 08:01:52.111203
+169,ጅማ አርጆ,4,ወረዳ,EWZ,amh,t,110011,2021-02-10 08:01:52.111203
+170,Nekemte town,4,Woreda,EWZ,eng,t,110011,2021-02-10 08:01:52.111203
+170,ነቀምቴ ከተማ,4,ወረዳ,EWZ,amh,t,110011,2021-02-10 08:01:52.111203
+171,Nunu Kumba,4,Woreda,EWZ,eng,t,110011,2021-02-10 08:01:52.111203
+171,ኑኑ ኩምባ,4,ወረዳ,EWZ,amh,t,110011,2021-02-10 08:01:52.111203
+172,Sasiga,4,Woreda,EWZ,eng,t,110011,2021-02-10 08:01:52.111203
+172,ሳሲጋ,4,ወረዳ,EWZ,amh,t,110011,2021-02-10 08:01:52.111203
+173,Sibu Sire,4,Woreda,EWZ,eng,t,110011,2021-02-10 08:01:52.111203
+173,ስቡ ሲሬ,4,ወረዳ,EWZ,amh,t,110011,2021-02-10 08:01:52.111203
+174,Wama Hagalo,4,Woreda,EWZ,eng,t,110011,2021-02-10 08:01:52.111203
+174,ዋማ ሃጋሎ,4,ወረዳ,EWZ,amh,t,110011,2021-02-10 08:01:52.111203
+175,Wayu Tuka,4,Woreda,EWZ,eng,t,110011,2021-02-10 08:01:52.111203
+175,ዋዩ ቱካ,4,ወረዳ,EWZ,amh,t,110011,2021-02-10 08:01:52.111203
+176,Kiramu,4,Woreda,EWZ,eng,t,110011,2021-02-10 08:01:52.111203
+176,ኪራሙ,4,ወረዳ,EWZ,amh,t,110011,2021-02-10 08:01:52.111203
+177,Gida Ayana,4,Woreda,EWZ,eng,t,110011,2021-02-10 08:01:52.111203
+177,ጊዳ አያና,4,ወረዳ,EWZ,amh,t,110011,2021-02-10 08:01:52.111203
+178,Gudaya bila,4,Woreda,EWZ,eng,t,110011,2021-02-10 08:01:52.111203
+178,ጉዳያ ቢላ,4,ወረዳ,EWZ,amh,t,110011,2021-02-10 08:01:52.111203
+179,Gudaya Jare,4,Woreda,EWZ,eng,t,110011,2021-02-10 08:01:52.111203
+179,ጉዳያ ጃሬ,4,ወረዳ,EWZ,amh,t,110011,2021-02-10 08:01:52.111203
+180,Guto Gida,4,Woreda,EWZ,eng,t,110011,2021-02-10 08:01:52.111203
+180,ጉቶ ጊዳ,4,ወረዳ,EWZ,amh,t,110011,2021-02-10 08:01:52.111203
+181,Gida kiramu,4,Woreda,EWZ,eng,t,110011,2021-02-10 08:01:52.111203
+181,ጊዳ ክራሙ,4,ወረዳ,EWZ,amh,t,110011,2021-02-10 08:01:52.111203
+182,Guto Wayu,4,Woreda,EWZ,eng,t,110011,2021-02-10 08:01:52.111203
+182,ጎቶ ዋዩ,4,ወረዳ,EWZ,amh,t,110011,2021-02-10 08:01:52.111203
+183,Bore,4,Woreda,GUJ,eng,t,110011,2021-02-10 08:01:52.111203
+183,ቦሬ,4,ወረዳ,GUJ,amh,t,110011,2021-02-10 08:01:52.111203
+184,Dama,4,Woreda,GUJ,eng,t,110011,2021-02-10 08:01:52.111203
+184,ዳማ,4,ወረዳ,GUJ,amh,t,110011,2021-02-10 08:01:52.111203
+185,Aga Wayu,4,Woreda,GUJ,eng,t,110011,2021-02-10 08:01:52.111203
+185,አጋ ዋዩ,4,ወረዳ,GUJ,amh,t,110011,2021-02-10 08:01:52.111203
+186,Gumi Eldalo,4,Woreda,GUJ,eng,t,110011,2021-02-10 08:01:52.111203
+186,ጉሚ ኤልዳሎ,4,ወረዳ,GUJ,amh,t,110011,2021-02-10 08:01:52.111203
+187,Goro dola,4,Woreda,GUJ,eng,t,110011,2021-02-10 08:01:52.111203
+187,ጎሮ ዶላ,4,ወረዳ,GUJ,amh,t,110011,2021-02-10 08:01:52.111203
+188,Liben,4,Woreda,GUJ,eng,t,110011,2021-02-10 08:01:52.111203
+188,ሊበን,4,ወረዳ,GUJ,amh,t,110011,2021-02-10 08:01:52.111203
+189,Uraga,4,Woreda,GUJ,eng,t,110011,2021-02-10 08:01:52.111203
+189,ኡራጋ,4,ወረዳ,GUJ,amh,t,110011,2021-02-10 08:01:52.111203
+190,Adola rede,4,Woreda,GUJ,eng,t,110011,2021-02-10 08:01:52.111203
+190,አዶላ ሬዴ,4,ወረዳ,GUJ,amh,t,110011,2021-02-10 08:01:52.111203
+191,Ana Sora,4,Woreda,GUJ,eng,t,110011,2021-02-10 08:01:52.111203
+191,አና ሶራ,4,ወረዳ,GUJ,amh,t,110011,2021-02-10 08:01:52.111203
+192,Girja,4,Woreda,GUJ,eng,t,110011,2021-02-10 08:01:52.111203
+192,ግርጃ,4,ወረዳ,GUJ,amh,t,110011,2021-02-10 08:01:52.111203
+193,Haro walabu,4,Woreda,GUJ,eng,t,110011,2021-02-10 08:01:52.111203
+193,ሃሮ ወላቡ,4,ወረዳ,GUJ,amh,t,110011,2021-02-10 08:01:52.111203
+194,Odo Shakisotown,4,Woreda,GUJ,eng,t,110011,2021-02-10 08:01:52.111203
+194,ኦዶ ሻኪሶ ከተማ,4,ወረዳ,GUJ,amh,t,110011,2021-02-10 08:01:52.111203
+195,Adola town,4,Woreda,GUJ,eng,t,110011,2021-02-10 08:01:52.111203
+195,አዶላ ከተማ,4,ወረዳ,GUJ,amh,t,110011,2021-02-10 08:01:52.111203
+196,Saba Boru,4,Woreda,GUJ,eng,t,110011,2021-02-10 08:01:52.111203
+196,ሳባ ቦሩ,4,ወረዳ,GUJ,amh,t,110011,2021-02-10 08:01:52.111203
+197,Aga Wayu,4,Woreda,GUJ,eng,t,110011,2021-02-10 08:01:52.111203
+197,አጋ ዋዩ,4,ወረዳ,GUJ,amh,t,110011,2021-02-10 08:01:52.111203
+198,Gumi Eldalo,4,Woreda,GUJ,eng,t,110011,2021-02-10 08:01:52.111203
+198,ጉሚ ኤልዳሎ,4,ወረዳ,GUJ,amh,t,110011,2021-02-10 08:01:52.111203
+199,Negele town,4,Woreda,GUJ,eng,t,110011,2021-02-10 08:01:52.111203
+199,ነገሌ ከተማ,4,ወረዳ,GUJ,amh,t,110011,2021-02-10 08:01:52.111203
+200,Wadera,4,Woreda,GUJ,eng,t,110011,2021-02-10 08:01:52.111203
+200,ዋደራ,4,ወረዳ,GUJ,amh,t,110011,2021-02-10 08:01:52.111203
+201,Gera,4,Woreda,JMM,eng,t,110011,2021-02-10 08:03:18.985939
+201,ጌራ,4,ወረዳ,JMM,amh,t,110011,2021-02-10 08:03:18.985939
+202,Gomma,4,Woreda,JMM,eng,t,110011,2021-02-10 08:03:18.985939
+202,ጎማ,4,ወረዳ,JMM,amh,t,110011,2021-02-10 08:03:18.985939
+203,Guma,4,Woreda,JMM,eng,t,110011,2021-02-10 08:03:18.985939
+203,ጉማ,4,ወረዳ,JMM,amh,t,110011,2021-02-10 08:03:18.985939
+204,Seka Chekorsa,4,Woreda,JMM,eng,t,110011,2021-02-10 08:03:18.985939
+204,ሴካ ቼኮርሳ,4,ወረዳ,JMM,amh,t,110011,2021-02-10 08:03:18.985939
+205,Mana,4,Woreda,JMM,eng,t,110011,2021-02-10 08:03:18.985939
+205,ማና,4,ወረዳ,JMM,amh,t,110011,2021-02-10 08:03:18.985939
+206,Sokoru,4,Woreda,JMM,eng,t,110011,2021-02-10 08:03:18.985939
+206,ሶኮሩ,4,ወረዳ,JMM,amh,t,110011,2021-02-10 08:03:18.985939
+207,Sigmo,4,Woreda,JMM,eng,t,110011,2021-02-10 08:03:18.985939
+207,ሲግሞ,4,ወረዳ,JMM,amh,t,110011,2021-02-10 08:03:18.985939
+208,Botor tolay,4,Woreda,JMM,eng,t,110011,2021-02-10 08:03:18.985939
+208,ቦቶር ጦላይ,4,ወረዳ,JMM,amh,t,110011,2021-02-10 08:03:18.985939
+209,Mancho,4,Woreda,JMM,eng,t,110011,2021-02-10 08:03:18.985939
+209,ማንቾ,4,ወረዳ,JMM,amh,t,110011,2021-02-10 08:03:18.985939
+210,Omo Beyan,4,Woreda,JMM,eng,t,110011,2021-02-10 08:03:18.985939
+210,ኦሞ ቤያን,4,ወረዳ,JMM,amh,t,110011,2021-02-10 08:03:18.985939
+211,Agaro town,4,Woreda,JMM,eng,t,110011,2021-02-10 08:03:18.985939
+211,አጋሮ ከተማ,4,ወረዳ,JMM,amh,t,110011,2021-02-10 08:03:18.985939
+212,Chora Botor,4,Woreda,JMM,eng,t,110011,2021-02-10 08:03:18.985939
+212,ቾራ ቦቶር,4,ወረዳ,JMM,amh,t,110011,2021-02-10 08:03:18.985939
+213,Dedo,4,Woreda,JMM,eng,t,110011,2021-02-10 08:03:18.985939
+213,ዴዶ,4,ወረዳ,JMM,amh,t,110011,2021-02-10 08:03:18.985939
+214,Limu Kosa,4,Woreda,JMM,eng,t,110011,2021-02-10 08:03:18.985939
+214,ሊሙ ኮሳ,4,ወረዳ,JMM,amh,t,110011,2021-02-10 08:03:18.985939
+215,Limu Saka,4,Woreda,JMM,eng,t,110011,2021-02-10 08:03:18.985939
+215,ሊሙ ሳካ,4,ወረዳ,JMM,amh,t,110011,2021-02-10 08:03:18.985939
+216,Omo Nada,4,Woreda,JMM,eng,t,110011,2021-02-10 08:03:18.985939
+216,ኦሞ ናዳ,4,ወረዳ,JMM,amh,t,110011,2021-02-10 08:03:18.985939
+217,Seka Chekorsa,4,Woreda,JMM,eng,t,110011,2021-02-10 08:03:18.985939
+217,ሴካ ቼኮርሳ,4,ወረዳ,JMM,amh,t,110011,2021-02-10 08:03:18.985939
+218,Setema,4,Woreda,JMM,eng,t,110011,2021-02-10 08:03:18.985939
+218,ሴቴማ,4,ወረዳ,JMM,amh,t,110011,2021-02-10 08:03:18.985939
+219,Shebe Senbo,4,Woreda,JMM,eng,t,110011,2021-02-10 08:03:18.985939
+219,ሸቤ ሰንቦ,4,ወረዳ,JMM,amh,t,110011,2021-02-10 08:03:18.985939
+220,Omo Beyan woreda,4,Woreda,JMM,eng,t,110011,2021-02-10 08:03:18.985939
+220,ኦሞ ቤያን,4,ወረዳ,JMM,amh,t,110011,2021-02-10 08:03:18.985939
+221,Anfillo,4,Woreda,KWZ,eng,t,110011,2021-02-10 08:03:18.985939
+221,አንፊሎ,4,ወረዳ,KWZ,amh,t,110011,2021-02-10 08:03:18.985939
+222,Dale Sedi,4,Woreda,KWZ,eng,t,110011,2021-02-10 08:03:18.985939
+222,ዳሌ ሴዲ,4,ወረዳ,KWZ,amh,t,110011,2021-02-10 08:03:18.985939
+223,Dale Wabera,4,Woreda,KWZ,eng,t,110011,2021-02-10 08:03:18.985939
+223,ዳሌ ዋበራ,4,ወረዳ,KWZ,amh,t,110011,2021-02-10 08:03:18.985939
+224,Dembidolo town,4,Woreda,KWZ,eng,t,110011,2021-02-10 08:03:18.985939
+224,ደምቢዶሎ ከተማ,4,ወረዳ,KWZ,amh,t,110011,2021-02-10 08:03:18.985939
+225,Gawo Kebe,4,Woreda,KWZ,eng,t,110011,2021-02-10 08:03:18.985939
+225,ጋዎ ኬቤ,4,ወረዳ,KWZ,amh,t,110011,2021-02-10 08:03:18.985939
+226,Gidami,4,Woreda,KWZ,eng,t,110011,2021-02-10 08:03:18.985939
+226,ጊዳሚ,4,ወረዳ,KWZ,amh,t,110011,2021-02-10 08:03:18.985939
+227,Hawa Gelan,4,Woreda,KWZ,eng,t,110011,2021-02-10 08:03:18.985939
+227,ሃዋ ገላን,4,ወረዳ,KWZ,amh,t,110011,2021-02-10 08:03:18.985939
+228,Jimma Horo <Kelem Welega>,4,Woreda,KWZ,eng,t,110011,2021-02-10 08:03:18.985939
+228,ጅማ ሆሮ ቀለም ወለጋ,4,ወረዳ,KWZ,amh,t,110011,2021-02-10 08:03:18.985939
+229,Lalo Kile,4,Woreda,KWZ,eng,t,110011,2021-02-10 08:03:18.985939
+229,ላሎ ኪሌ,4,ወረዳ,KWZ,amh,t,110011,2021-02-10 08:03:18.985939
+230,Sayo,4,Woreda,KWZ,eng,t,110011,2021-02-10 08:03:18.985939
+230,ሳዮ,4,ወረዳ,KWZ,amh,t,110011,2021-02-10 08:03:18.985939
+231,Yemalogi Welele,4,Woreda,KWZ,eng,t,110011,2021-02-10 08:03:18.985939
+231,ዬማሎጊ ወለሌ,4,ወረዳ,KWZ,amh,t,110011,2021-02-10 08:03:18.985939
+232,Sadi Chanka,4,Woreda,KWZ,eng,t,110011,2021-02-10 08:03:18.985939
+232,ሳዲ ቻንካ,4,ወረዳ,KWZ,amh,t,110011,2021-02-10 08:03:18.985939
+233,Aira Guliso,4,Woreda,KWZ,eng,t,110011,2021-02-10 08:03:18.985939
+233,አይራ ጉሊሶ,4,ወረዳ,KWZ,amh,t,110011,2021-02-10 08:03:18.985939
+234,Shararo,4,Woreda,NSZ,eng,t,110011,2021-02-10 08:03:18.985939
+234,ሻራሮ,4,ወረዳ,NSZ,amh,t,110011,2021-02-10 08:03:18.985939
+235,Abichuna Gne'a,4,Woreda,NSZ,eng,t,110011,2021-02-10 08:03:18.985939
+235,አቢቹና ግነአ,4,ወረዳ,NSZ,amh,t,110011,2021-02-10 08:03:18.985939
+236,Aleltu,4,Woreda,NSZ,eng,t,110011,2021-02-10 08:03:18.985939
+236,አለልቱ,4,ወረዳ,NSZ,amh,t,110011,2021-02-10 08:03:18.985939
+237,Degem,4,Woreda,NSZ,eng,t,110011,2021-02-10 08:03:18.985939
+237,ደገም,4,ወረዳ,NSZ,amh,t,110011,2021-02-10 08:03:18.985939
+238,Dera,4,Woreda,NSZ,eng,t,110011,2021-02-10 08:03:18.985939
+238,ደራ,4,ወረዳ,NSZ,amh,t,110011,2021-02-10 08:03:18.985939
+239,Fiche town,4,Woreda,NSZ,eng,t,110011,2021-02-10 08:03:18.985939
+239,ፊቼ ከተማ,4,ወረዳ,NSZ,amh,t,110011,2021-02-10 08:03:18.985939
+240,Gerar Jarso,4,Woreda,NSZ,eng,t,110011,2021-02-10 08:03:18.985939
+240,ጌራራ ጃርሶ,4,ወረዳ,NSZ,amh,t,110011,2021-02-10 08:03:18.985939
+241,Hidabu Abote,4,Woreda,NSZ,eng,t,110011,2021-02-10 08:03:18.985939
+241,ሂዳቡ አቦቴ,4,ወረዳ,NSZ,amh,t,110011,2021-02-10 08:03:18.985939
+242,Jida,4,Woreda,NSZ,eng,t,110011,2021-02-10 08:03:18.985939
+242,ጂዳ,4,ወረዳ,NSZ,amh,t,110011,2021-02-10 08:03:18.985939
+243,Wuchale,4,Woreda,NSZ,eng,t,110011,2021-02-10 08:03:18.985939
+243,ዉቻሌ,4,ወረዳ,NSZ,amh,t,110011,2021-02-10 08:03:18.985939
+244,Yaya Gulele,4,Woreda,NSZ,eng,t,110011,2021-02-10 08:03:18.985939
+244,ያያ ጉለሌ,4,ወረዳ,NSZ,amh,t,110011,2021-02-10 08:03:18.985939
+245,Debra Libanos,4,Woreda,NSZ,eng,t,110011,2021-02-10 08:03:18.985939
+245,ደብራ ሊባኖስ,4,ወረዳ,NSZ,amh,t,110011,2021-02-10 08:03:18.985939
+246,Kembibit,4,Woreda,NSZ,eng,t,110011,2021-02-10 08:03:18.985939
+246,ከምቢቢት,4,ወረዳ,NSZ,amh,t,110011,2021-02-10 08:03:18.985939
+247,Kuyu,4,Woreda,NSZ,eng,t,110011,2021-02-10 08:03:18.985939
+247,ኩዩ,4,ወረዳ,NSZ,amh,t,110011,2021-02-10 08:03:18.985939
+248,Wara Jarso,4,Woreda,NSZ,eng,t,110011,2021-02-10 08:03:18.985939
+248,ዋራ ጃርሶ,4,ወረዳ,NSZ,amh,t,110011,2021-02-10 08:03:18.985939
+249,Amaya,4,Woreda,SWS,eng,t,110011,2021-02-10 08:03:18.985939
+249,አማያ,4,ወረዳ,SWS,amh,t,110011,2021-02-10 08:03:18.985939
+250,Becho,4,Woreda,SWS,eng,t,110011,2021-02-10 08:03:18.985939
+250,ቤቾ,4,ወረዳ,SWS,amh,t,110011,2021-02-10 08:03:18.985939
+251,Dawo,4,Woreda,SWS,eng,t,110011,2021-02-10 08:03:18.985939
+251,ዳዎ,4,ወረዳ,SWS,amh,t,110011,2021-02-10 08:03:18.985939
+252,Ilu,4,Woreda,SWS,eng,t,110011,2021-02-10 08:03:18.985939
+252,ኢሉ,4,ወረዳ,SWS,amh,t,110011,2021-02-10 08:03:18.985939
+253,Goro,4,Woreda,SWS,eng,t,110011,2021-02-10 08:03:18.985939
+253,ጎሮ,4,ወረዳ,SWS,amh,t,110011,2021-02-10 08:03:18.985939
+254,Kersa Malima,4,Woreda,SWS,eng,t,110011,2021-02-10 08:03:18.985939
+254,ኬርሳ ማሊማ,4,ወረዳ,SWS,amh,t,110011,2021-02-10 08:03:18.985939
+255,Seden Sodo,4,Woreda,SWS,eng,t,110011,2021-02-10 08:03:18.985939
+255,ሰደን ሶዶ,4,ወረዳ,SWS,amh,t,110011,2021-02-10 08:03:18.985939
+256,Sodo Dacha,4,Woreda,SWS,eng,t,110011,2021-02-10 08:03:18.985939
+256,ሶዶ ዳቻ,4,ወረዳ,SWS,amh,t,110011,2021-02-10 08:03:18.985939
+257,Tole,4,Woreda,SWS,eng,t,110011,2021-02-10 08:03:18.985939
+257,ቶሌ,4,ወረዳ,SWS,amh,t,110011,2021-02-10 08:03:18.985939
+258,Waliso,4,Woreda,SWS,eng,t,110011,2021-02-10 08:03:18.985939
+258,ወሊሶ,4,ወረዳ,SWS,amh,t,110011,2021-02-10 08:03:18.985939
+259,Waliso town,4,Woreda,SWS,eng,t,110011,2021-02-10 08:03:18.985939
+259,ወሊሶ ከተማ,4,ወረዳ,SWS,amh,t,110011,2021-02-10 08:03:18.985939
+260,Wonchi,4,Woreda,SWS,eng,t,110011,2021-02-10 08:03:18.985939
+260,ወንጪ,4,ወረዳ,SWS,amh,t,110011,2021-02-10 08:03:18.985939
+261,Around Shashamene,4,Woreda,WAR,eng,t,110011,2021-02-10 08:03:18.985939
+261,ሻሻመኔ ዙሪያ,4,ወረዳ,WAR,amh,t,110011,2021-02-10 08:03:18.985939
+262,Adaba,4,Woreda,WAR,eng,t,110011,2021-02-10 08:03:18.985939
+262,ኣዳባ,4,ወረዳ,WAR,amh,t,110011,2021-02-10 08:03:18.985939
+263,Dodola,4,Woreda,WAR,eng,t,110011,2021-02-10 08:03:18.985939
+263,ዶዶላ,4,ወረዳ,WAR,amh,t,110011,2021-02-10 08:03:18.985939
+264,Gadab Hasaasa,4,Woreda,WAR,eng,t,110011,2021-02-10 08:03:18.985939
+264,ጋዳብ ሓሳሳ,4,ወረዳ,WAR,amh,t,110011,2021-02-10 08:03:18.985939
+265,Heeban Arssi,4,Woreda,WAR,eng,t,110011,2021-02-10 08:03:18.985939
+265,ሄባን አርሲ,4,ወረዳ,WAR,amh,t,110011,2021-02-10 08:03:18.985939
+266,Kofale,4,Woreda,WAR,eng,t,110011,2021-02-10 08:03:18.985939
+266,ኮፋሌ,4,ወረዳ,WAR,amh,t,110011,2021-02-10 08:03:18.985939
+267,Kokosa,4,Woreda,WAR,eng,t,110011,2021-02-10 08:03:18.985939
+267,ኮኮሳ,4,ወረዳ,WAR,amh,t,110011,2021-02-10 08:03:18.985939
+268,Wando,4,Woreda,WAR,eng,t,110011,2021-02-10 08:03:18.985939
+268,ወንዶ,4,ወረዳ,WAR,amh,t,110011,2021-02-10 08:03:18.985939
+269,Kore,4,Woreda,WAR,eng,t,110011,2021-02-10 08:03:18.985939
+269,ቆሬ,4,ወረዳ,WAR,amh,t,110011,2021-02-10 08:03:18.985939
+270,Nansabo,4,Woreda,WAR,eng,t,110011,2021-02-10 08:03:18.985939
+270,ናንሳቦ,4,ወረዳ,WAR,amh,t,110011,2021-02-10 08:03:18.985939
+271,Siraro,4,Woreda,WAR,eng,t,110011,2021-02-10 08:03:18.985939
+271,ሲራሮ,4,ወረዳ,WAR,amh,t,110011,2021-02-10 08:03:18.985939
+272,Shalla,4,Woreda,WAR,eng,t,110011,2021-02-10 08:03:18.985939
+272,ሻላ,4,ወረዳ,WAR,amh,t,110011,2021-02-10 08:03:18.985939
+273,Shashamanee town,4,Woreda,WAR,eng,t,110011,2021-02-10 08:03:18.985939
+273,ሻሻመኔ ከተማ,4,ወረዳ,WAR,amh,t,110011,2021-02-10 08:03:18.985939
+274,Sululta,4,Woreda,OSF,eng,t,110011,2021-02-10 08:03:18.985939
+274,ሱሉልታ,4,ወረዳ,OSF,amh,t,110011,2021-02-10 08:03:18.985939
+275,Bereh,4,Woreda,OSF,eng,t,110011,2021-02-10 08:03:18.985939
+275,በረህ,4,ወረዳ,OSF,amh,t,110011,2021-02-10 08:03:18.985939
+276,Laga tafo laga dadhitown,4,Woreda,OSF,eng,t,110011,2021-02-10 08:03:18.985939
+276,ላጋ ታፎ ላ ዳዲ ከተማ,4,ወረዳ,OSF,amh,t,110011,2021-02-10 08:03:18.985939
+277,Burayu town,4,Woreda,OSF,eng,t,110011,2021-02-10 08:03:18.985939
+277,ቡራዩ ከተማ,4,ወረዳ,OSF,amh,t,110011,2021-02-10 08:03:18.985939
+278,Dukam town,4,Woreda,OSF,eng,t,110011,2021-02-10 08:03:18.985939
+278,ዱከም ከተማ,4,ወረዳ,OSF,amh,t,110011,2021-02-10 08:03:18.985939
+279,Holeta Genet town,4,Woreda,OSF,eng,t,110011,2021-02-10 08:03:18.985939
+279,ሆለታ ገነት ከተማ,4,ወረዳ,OSF,amh,t,110011,2021-02-10 08:03:18.985939
+280,Mulo,4,Woreda,OSF,eng,t,110011,2021-02-10 08:03:18.985939
+280,ሙሎ,4,ወረዳ,OSF,amh,t,110011,2021-02-10 08:03:18.985939
+281,Chancho town,4,Woreda,OSF,eng,t,110011,2021-02-10 08:03:18.985939
+281,ጫንጮ ከተማ,4,ወረዳ,OSF,amh,t,110011,2021-02-10 08:03:18.985939
+282,Sebeta Hawas,4,Woreda,OSF,eng,t,110011,2021-02-10 08:03:18.985939
+282,ሰበታ ሀዋስ,4,ወረዳ,OSF,amh,t,110011,2021-02-10 08:03:18.985939
+283,Sebeta town,4,Woreda,OSF,eng,t,110011,2021-02-10 08:03:18.985939
+283,ሰበታ ከተማ,4,ወረዳ,OSF,amh,t,110011,2021-02-10 08:03:18.985939
+284,Sendafa town,4,Woreda,OSF,eng,t,110011,2021-02-10 08:03:18.985939
+284,ሰንዳፋ ከተማ,4,ወረዳ,OSF,amh,t,110011,2021-02-10 08:03:18.985939
+285,Walmara,4,Woreda,OSF,eng,t,110011,2021-02-10 08:03:18.985939
+285,ዋልመራ,4,ወረዳ,OSF,amh,t,110011,2021-02-10 08:03:18.985939
+286,Sululta town,4,Woreda,OSF,eng,t,110011,2021-02-10 08:03:18.985939
+286,ሱሉልታ ከተማ,4,ወረዳ,OSF,amh,t,110011,2021-02-10 08:03:18.985939
+287,Galan town,4,Woreda,OSF,eng,t,110011,2021-02-10 08:03:18.985939
+287,ጋላን ከተማ,4,ወረዳ,OSF,amh,t,110011,2021-02-10 08:03:18.985939
+288,Chawaka,4,Woreda,BBL,eng,t,110011,2021-02-10 08:03:18.985939
+288,ጫዋካ,4,ወረዳ,BBL,amh,t,110011,2021-02-10 08:03:18.985939
+289,Dabohana,4,Woreda,BBL,eng,t,110011,2021-02-10 08:03:18.985939
+289,ዳቦሃና,4,ወረዳ,BBL,amh,t,110011,2021-02-10 08:03:18.985939
+290,Bedele,4,Woreda,BBL,eng,t,110011,2021-02-10 08:03:18.985939
+290,በደሌ,4,ወረዳ,BBL,amh,t,110011,2021-02-10 08:03:18.985939
+291,Bedele Town,4,Woreda,BBL,eng,t,110011,2021-02-10 08:03:18.985939
+291,በደሌ ከተማ,4,ወረዳ,BBL,amh,t,110011,2021-02-10 08:03:18.985939
+292,Gachi,4,Woreda,BBL,eng,t,110011,2021-02-10 08:03:18.985939
+292,ጋቺ,4,ወረዳ,BBL,amh,t,110011,2021-02-10 08:03:18.985939
+293,Didesa,4,Woreda,BBL,eng,t,110011,2021-02-10 08:03:18.985939
+293,ዲደሳ,4,ወረዳ,BBL,amh,t,110011,2021-02-10 08:03:18.985939
+294,Boracha,4,Woreda,BBL,eng,t,110011,2021-02-10 08:03:18.985939
+294,ቦራቻ,4,ወረዳ,BBL,amh,t,110011,2021-02-10 08:03:18.985939
+295,Chora,4,Woreda,BBL,eng,t,110011,2021-02-10 08:03:18.985939
+295,ጮራ,4,ወረዳ,BBL,amh,t,110011,2021-02-10 08:03:18.985939
+296,Dega,4,Woreda,BBL,eng,t,110011,2021-02-10 08:03:18.985939
+296,ደጋ,4,ወረዳ,BBL,amh,t,110011,2021-02-10 08:03:18.985939
+297,Mako,4,Woreda,BBL,eng,t,110011,2021-02-10 08:03:18.985939
+297,ማኮ,4,ወረዳ,BBL,amh,t,110011,2021-02-10 08:03:18.985939
+298,Galana,4,Woreda,WGU,eng,t,110011,2021-02-10 08:03:18.985939
+298,ጋላና,4,ወረዳ,WGU,amh,t,110011,2021-02-10 08:03:18.985939
+299,Dugda Dawa,4,Woreda,WGU,eng,t,110011,2021-02-10 08:03:18.985939
+299,ዱግዳ ዳዋ,4,ወረዳ,WGU,amh,t,110011,2021-02-10 08:03:18.985939
+300,Qarsaa,4,Woreda,WGU,eng,t,110011,2021-02-10 08:03:18.985939
+300,ቄርሳ,4,ወረዳ,WGU,amh,t,110011,2021-02-10 08:04:53.277167
+301,Qarcha,4,Woreda,WGU,eng,t,110011,2021-02-10 08:04:53.277167
+301,ቃርጫ,4,ወረዳ,WGU,amh,t,110011,2021-02-10 08:04:53.277167
+302,Malka Sodo,4,Woreda,WGU,eng,t,110011,2021-02-10 08:04:53.277167
+302,ማልካ ሶዶ,4,ወረዳ,WGU,amh,t,110011,2021-02-10 08:04:53.277167
+303,Suro,4,Woreda,WGU,eng,t,110011,2021-02-10 08:04:53.277167
+303,ሱሮ,4,ወረዳ,WGU,amh,t,110011,2021-02-10 08:04:53.277167
+304,Bule Hora,4,Woreda,WGU,eng,t,110011,2021-02-10 08:04:53.277167
+304,ቡሌ ሆራ,4,ወረዳ,WGU,amh,t,110011,2021-02-10 08:04:53.277167
+305,Abaya,4,Woreda,WGU,eng,t,110011,2021-02-10 08:04:53.277167
+305,አባያ,4,ወረዳ,WGU,amh,t,110011,2021-02-10 08:04:53.277167
+306,Hambala,4,Woreda,WGU,eng,t,110011,2021-02-10 08:04:53.277167
+306,ሀምበላ,4,ወረዳ,WGU,amh,t,110011,2021-02-10 08:04:53.277167
+307,Abuna Ginde Beret,4,Woreda,WSZ,eng,t,110011,2021-02-10 08:04:53.277167
+307,አቡነ ጊንዴ በረት,4,ወረዳ,WSZ,amh,t,110011,2021-02-10 08:04:53.277167
+308,Adaa Barga,4,Woreda,WSZ,eng,t,110011,2021-02-10 08:04:53.277167
+308,ኣደኣ ባርጋ,4,ወረዳ,WSZ,amh,t,110011,2021-02-10 08:04:53.277167
+309,Ambotown,4,Woreda,WSZ,eng,t,110011,2021-02-10 08:04:53.277167
+309,አምቦ ከተማ,4,ወረዳ,WSZ,amh,t,110011,2021-02-10 08:04:53.277167
+310,Ambo woreda,4,Woreda,WSZ,eng,t,110011,2021-02-10 08:04:53.277167
+310,አምቦ,4,ወረዳ,WSZ,amh,t,110011,2021-02-10 08:04:53.277167
+311,Bako Tibe,4,Woreda,WSZ,eng,t,110011,2021-02-10 08:04:53.277167
+311,ባኮ ቲቤ,4,ወረዳ,WSZ,amh,t,110011,2021-02-10 08:04:53.277167
+312,Cheliya,4,Woreda,WSZ,eng,t,110011,2021-02-10 08:04:53.277167
+312,ጨቼሊያ,4,ወረዳ,WSZ,amh,t,110011,2021-02-10 08:04:53.277167
+313,Dano,4,Woreda,WSZ,eng,t,110011,2021-02-10 08:04:53.277167
+313,ዳኖ,4,ወረዳ,WSZ,amh,t,110011,2021-02-10 08:04:53.277167
+314,Dendi,4,Woreda,WSZ,eng,t,110011,2021-02-10 08:04:53.277167
+314,ዴንዲ,4,ወረዳ,WSZ,amh,t,110011,2021-02-10 08:04:53.277167
+315,Ejerie,4,Woreda,WSZ,eng,t,110011,2021-02-10 08:04:53.277167
+315,ኢጄሪ,4,ወረዳ,WSZ,amh,t,110011,2021-02-10 08:04:53.277167
+316,Elfata,4,Woreda,WSZ,eng,t,110011,2021-02-10 08:04:53.277167
+316,ኢልፋታ,4,ወረዳ,WSZ,amh,t,110011,2021-02-10 08:04:53.277167
+317,Ginde Beret,4,Woreda,WSZ,eng,t,110011,2021-02-10 08:04:53.277167
+317,ጊንዴ በረት,4,ወረዳ,WSZ,amh,t,110011,2021-02-10 08:04:53.277167
+318,Jeldu,4,Woreda,WSZ,eng,t,110011,2021-02-10 08:04:53.277167
+318,ጄልዱ,4,ወረዳ,WSZ,amh,t,110011,2021-02-10 08:04:53.277167
+319,Jibat,4,Woreda,WSZ,eng,t,110011,2021-02-10 08:04:53.277167
+319,ጅባት,4,ወረዳ,WSZ,amh,t,110011,2021-02-10 08:04:53.277167
+320,Meta Robi,4,Woreda,WSZ,eng,t,110011,2021-02-10 08:04:53.277167
+320,ሜታ ሮቢ,4,ወረዳ,WSZ,amh,t,110011,2021-02-10 08:04:53.277167
+321,Midakegn,4,Woreda,WSZ,eng,t,110011,2021-02-10 08:04:53.277167
+321,ሚዳ ቀኝ,4,ወረዳ,WSZ,amh,t,110011,2021-02-10 08:04:53.277167
+322,Nono,4,Woreda,WSZ,eng,t,110011,2021-02-10 08:04:53.277167
+322,ኖኖ,4,ወረዳ,WSZ,amh,t,110011,2021-02-10 08:04:53.277167
+323,Dire Enchini,4,Woreda,WSZ,eng,t,110011,2021-02-10 08:04:53.277167
+323,ድሬ እንቺኒ,4,ወረዳ,WSZ,amh,t,110011,2021-02-10 08:04:53.277167
+324,Toke Kutaye,4,Woreda,WSZ,eng,t,110011,2021-02-10 08:04:53.277167
+324,ቶክ ኩታዬ,4,ወረዳ,WSZ,amh,t,110011,2021-02-10 08:04:53.277167
+325,cobii woreda,4,Woreda,WSZ,eng,t,110011,2021-02-10 08:04:53.277167
+325,ጮቢ,4,ወረዳ,WSZ,amh,t,110011,2021-02-10 08:04:53.277167
+326,meta walqite,4,Woreda,WSZ,eng,t,110011,2021-02-10 08:04:53.277167
+326,ሜታ ዋልቅጤ,4,ወረዳ,WSZ,amh,t,110011,2021-02-10 08:04:53.277167
+327,liban jawwi,4,Woreda,WSZ,eng,t,110011,2021-02-10 08:04:53.277167
+327,ሊበን ጃዊ,4,ወረዳ,WSZ,amh,t,110011,2021-02-10 08:04:53.277167
+328,ejersa lafo,4,Woreda,WSZ,eng,t,110011,2021-02-10 08:04:53.277167
+328,ኢጃርሳ ላፎ,4,ወረዳ,WSZ,amh,t,110011,2021-02-10 08:04:53.277167
+329,Ilu galan,4,Woreda,WSZ,eng,t,110011,2021-02-10 08:04:53.277167
+329,ኢሉ ጋላን,4,ወረዳ,WSZ,amh,t,110011,2021-02-10 08:04:53.277167
+330,Tegeda,4,Woreda,NGZ,eng,t,110011,2021-02-10 08:04:53.277167
+330,ተገዳ,4,ወረዳ,NGZ,amh,t,110011,2021-02-10 08:04:53.277167
+331,Addi Arkay,4,Woreda,NGZ,eng,t,110011,2021-02-10 08:04:53.277167
+331,ዓዲ አርካይ,4,ወረዳ,NGZ,amh,t,110011,2021-02-10 08:04:53.277167
+332,Beyeda,4,Woreda,NGZ,eng,t,110011,2021-02-10 08:04:53.277167
+332,ቤየዳ,4,ወረዳ,NGZ,amh,t,110011,2021-02-10 08:04:53.277167
+333,Debark,4,Woreda,NGZ,eng,t,110011,2021-02-10 08:04:53.277167
+333,ደባርቅ,4,ወረዳ,NGZ,amh,t,110011,2021-02-10 08:04:53.277167
+334,Dabat,4,Woreda,NGZ,eng,t,110011,2021-02-10 08:04:53.277167
+334,ዳባት,4,ወረዳ,NGZ,amh,t,110011,2021-02-10 08:04:53.277167
+335,Jan Amora,4,Woreda,NGZ,eng,t,110011,2021-02-10 08:04:53.277167
+335,ጃን አሞራ,4,ወረዳ,NGZ,amh,t,110011,2021-02-10 08:04:53.277167
+336,Lay Armachiho,4,Woreda,NGZ,eng,t,110011,2021-02-10 08:04:53.277167
+336,ላይ አርማጭሆ,4,ወረዳ,NGZ,amh,t,110011,2021-02-10 08:04:53.277167
+337,Wegera,4,Woreda,NGZ,eng,t,110011,2021-02-10 08:04:53.277167
+337,ወገራ,4,ወረዳ,NGZ,amh,t,110011,2021-02-10 08:04:53.277167
+338,Around Gonder,4,Woreda,NGZ,eng,t,110011,2021-02-10 08:04:53.277167
+338,ጎንደር ዙሪያ,4,ወረዳ,NGZ,amh,t,110011,2021-02-10 08:04:53.277167
+339,Mirab Belessa,4,Woreda,NGZ,eng,t,110011,2021-02-10 08:04:53.277167
+339,ምዕራብ በለሳ,4,ወረዳ,NGZ,amh,t,110011,2021-02-10 08:04:53.277167
+340,Misraq Belessa,4,Woreda,NGZ,eng,t,110011,2021-02-10 08:04:53.277167
+340,ምስራቅ በለሳ,4,ወረዳ,NGZ,amh,t,110011,2021-02-10 08:04:53.277167
+341,Dembiya,4,Woreda,NGZ,eng,t,110011,2021-02-10 08:04:53.277167
+341,ደምቢያ,4,ወረዳ,NGZ,amh,t,110011,2021-02-10 08:04:53.277167
+342,Chilga,4,Woreda,NGZ,eng,t,110011,2021-02-10 08:04:53.277167
+342,ቺልጋ,4,ወረዳ,NGZ,amh,t,110011,2021-02-10 08:04:53.277167
+343,Metema,4,Woreda,NGZ,eng,t,110011,2021-02-10 08:04:53.277167
+343,መተማ,4,ወረዳ,NGZ,amh,t,110011,2021-02-10 08:04:53.277167
+344,Qwara,4,Woreda,NGZ,eng,t,110011,2021-02-10 08:04:53.277167
+344,ቋዋራ,4,ወረዳ,NGZ,amh,t,110011,2021-02-10 08:04:53.277167
+345,Alefa,4,Woreda,NGZ,eng,t,110011,2021-02-10 08:04:53.277167
+345,አለፋ,4,ወረዳ,NGZ,amh,t,110011,2021-02-10 08:04:53.277167
+346,Gonder,4,Woreda,NGZ,eng,t,110011,2021-02-10 08:04:53.277167
+346,ጎንደር,4,ወረዳ,NGZ,amh,t,110011,2021-02-10 08:04:53.277167
+347,Tselemt,4,Woreda,NGZ,eng,t,110011,2021-02-10 08:04:53.277167
+347,ፀለምት,4,ወረዳ,NGZ,amh,t,110011,2021-02-10 08:04:53.277167
+348,Tach Armachiho,4,Woreda,NGZ,eng,t,110011,2021-02-10 08:04:53.277167
+348,ታች አርማጭሆ,4,ወረዳ,NGZ,amh,t,110011,2021-02-10 08:04:53.277167
+349,Takusa,4,Woreda,NGZ,eng,t,110011,2021-02-10 08:04:53.277167
+349,ታኩሳ,4,ወረዳ,NGZ,amh,t,110011,2021-02-10 08:04:53.277167
+350,Kemekem,4,Woreda,SGZ,eng,t,110011,2021-02-10 08:04:53.277167
+350,ከመከም,4,ወረዳ,SGZ,amh,t,110011,2021-02-10 08:04:53.277167
+351,Ebenat,4,Woreda,SGZ,eng,t,110011,2021-02-10 08:04:53.277167
+351,እቤናት,4,ወረዳ,SGZ,amh,t,110011,2021-02-10 08:04:53.277167
+352,Fogera,4,Woreda,SGZ,eng,t,110011,2021-02-10 08:04:53.277167
+352,ፎገራ,4,ወረዳ,SGZ,amh,t,110011,2021-02-10 08:04:53.277167
+353,Simada,4,Woreda,SGZ,eng,t,110011,2021-02-10 08:04:53.277167
+353,ስማዳ,4,ወረዳ,SGZ,amh,t,110011,2021-02-10 08:04:53.277167
+354,Lay Gayint,4,Woreda,SGZ,eng,t,110011,2021-02-10 08:04:53.277167
+354,ላይ ጋይንት,4,ወረዳ,SGZ,amh,t,110011,2021-02-10 08:04:53.277167
+355,Farta,4,Woreda,SGZ,eng,t,110011,2021-02-10 08:04:53.277167
+355,ፋርታ,4,ወረዳ,SGZ,amh,t,110011,2021-02-10 08:04:53.277167
+356,Tach Gayint,4,Woreda,SGZ,eng,t,110011,2021-02-10 08:04:53.277167
+356,ታች ጋይንት,4,ወረዳ,SGZ,amh,t,110011,2021-02-10 08:04:53.277167
+357,Dera,4,Woreda,SGZ,eng,t,110011,2021-02-10 08:04:53.277167
+357,ደራ,4,ወረዳ,SGZ,amh,t,110011,2021-02-10 08:04:53.277167
+358,Misraq Este,4,Woreda,SGZ,eng,t,110011,2021-02-10 08:04:53.277167
+358,ምስራቅ,4,ወረዳ,SGZ,amh,t,110011,2021-02-10 08:04:53.277167
+359,Debre Tabortown,4,Woreda,SGZ,eng,t,110011,2021-02-10 08:04:53.277167
+359,ደብረታቦር ከተማ,4,ወረዳ,SGZ,amh,t,110011,2021-02-10 08:04:53.277167
+360,Mirab Este,4,Woreda,SGZ,eng,t,110011,2021-02-10 08:04:53.277167
+360,ምዕራብ እስቴ,4,ወረዳ,SGZ,amh,t,110011,2021-02-10 08:04:53.277167
+361,Bugna,4,Woreda,NWZ,eng,t,110011,2021-02-10 08:04:53.277167
+361,ቡኛ,4,ወረዳ,NWZ,amh,t,110011,2021-02-10 08:04:53.277167
+362,Delanta,4,Woreda,NWZ,eng,t,110011,2021-02-10 08:04:53.277167
+362,ደላንታ,4,ወረዳ,NWZ,amh,t,110011,2021-02-10 08:04:53.277167
+363,Woldiyatown,4,Woreda,NWZ,eng,t,110011,2021-02-10 08:04:53.277167
+363,ወልድያ ከተማ,4,ወረዳ,NWZ,amh,t,110011,2021-02-10 08:04:53.277167
+364,Kobo,4,Woreda,NWZ,eng,t,110011,2021-02-10 08:04:53.277167
+364,ቆቦ,4,ወረዳ,NWZ,amh,t,110011,2021-02-10 08:04:53.277167
+365,Gidan,4,Woreda,NWZ,eng,t,110011,2021-02-10 08:04:53.277167
+365,ግዳን,4,ወረዳ,NWZ,amh,t,110011,2021-02-10 08:04:53.277167
+366,Meket,4,Woreda,NWZ,eng,t,110011,2021-02-10 08:04:53.277167
+366,መኬት,4,ወረዳ,NWZ,amh,t,110011,2021-02-10 08:04:53.277167
+367,Wadla,4,Woreda,NWZ,eng,t,110011,2021-02-10 08:04:53.277167
+367,ዋድላ,4,ወረዳ,NWZ,amh,t,110011,2021-02-10 08:04:53.277167
+368,Delanta,4,Woreda,NWZ,eng,t,110011,2021-02-10 08:04:53.277167
+368,ደላንታ,4,ወረዳ,NWZ,amh,t,110011,2021-02-10 08:04:53.277167
+369,Lasta,4,Woreda,NWZ,eng,t,110011,2021-02-10 08:04:53.277167
+369,ላስታ,4,ወረዳ,NWZ,amh,t,110011,2021-02-10 08:04:53.277167
+370,Dawunt,4,Woreda,NWZ,eng,t,110011,2021-02-10 08:04:53.277167
+370,ዳውንት,4,ወረዳ,NWZ,amh,t,110011,2021-02-10 08:04:53.277167
+371,Around Dese,4,Woreda,SWZ,eng,t,110011,2021-02-10 08:04:53.277167
+371,ደሴ ዙርያ,4,ወረዳ,SWZ,amh,t,110011,2021-02-10 08:04:53.277167
+372,Ambassel,4,Woreda,SWZ,eng,t,110011,2021-02-10 08:04:53.277167
+372,አምባሰል,4,ወረዳ,SWZ,amh,t,110011,2021-02-10 08:04:53.277167
+373,Debre Sina,4,Woreda,SWZ,eng,t,110011,2021-02-10 08:04:53.277167
+373,ደብረ ሲና,4,ወረዳ,SWZ,amh,t,110011,2021-02-10 08:04:53.277167
+374,Magdala,4,Woreda,SWZ,eng,t,110011,2021-02-10 08:04:53.277167
+374,መቅደላ,4,ወረዳ,SWZ,amh,t,110011,2021-02-10 08:04:53.277167
+375,Tenta,4,Woreda,SWZ,eng,t,110011,2021-02-10 08:04:53.277167
+375,ተንታ,4,ወረዳ,SWZ,amh,t,110011,2021-02-10 08:04:53.277167
+376,Kutaber,4,Woreda,SWZ,eng,t,110011,2021-02-10 08:04:53.277167
+376,ኩታበር,4,ወረዳ,SWZ,amh,t,110011,2021-02-10 08:04:53.277167
+377,Tehuledere,4,Woreda,SWZ,eng,t,110011,2021-02-10 08:04:53.277167
+377,ተሁለደሬ,4,ወረዳ,SWZ,amh,t,110011,2021-02-10 08:04:53.277167
+378,Kalu,4,Woreda,SWZ,eng,t,110011,2021-02-10 08:04:53.277167
+378,ካሉ,4,ወረዳ,SWZ,amh,t,110011,2021-02-10 08:04:53.277167
+379,Albuko,4,Woreda,SWZ,eng,t,110011,2021-02-10 08:04:53.277167
+379,አልቡኮ,4,ወረዳ,SWZ,amh,t,110011,2021-02-10 08:04:53.277167
+380,Legambo,4,Woreda,SWZ,eng,t,110011,2021-02-10 08:04:53.277167
+380,ለጋምቦ,4,ወረዳ,SWZ,amh,t,110011,2021-02-10 08:04:53.277167
+381,Sayint,4,Woreda,SWZ,eng,t,110011,2021-02-10 08:04:53.277167
+381,ሳይንት,4,ወረዳ,SWZ,amh,t,110011,2021-02-10 08:04:53.277167
+382,Kelala,4,Woreda,SWZ,eng,t,110011,2021-02-10 08:04:53.277167
+382,ኬላላ,4,ወረዳ,SWZ,amh,t,110011,2021-02-10 08:04:53.277167
+383,Jama,4,Woreda,SWZ,eng,t,110011,2021-02-10 08:04:53.277167
+383,ጃማ,4,ወረዳ,SWZ,amh,t,110011,2021-02-10 08:04:53.277167
+384,Were Ilu,4,Woreda,SWZ,eng,t,110011,2021-02-10 08:04:53.277167
+384,ወረ ኢሉ,4,ወረዳ,SWZ,amh,t,110011,2021-02-10 08:04:53.277167
+385,Wegde,4,Woreda,SWZ,eng,t,110011,2021-02-10 08:04:53.277167
+385,ወግዴ,4,ወረዳ,SWZ,amh,t,110011,2021-02-10 08:04:53.277167
+386,Legambo,4,Woreda,SWZ,eng,t,110011,2021-02-10 08:04:53.277167
+386,ለጋምቦ,4,ወረዳ,SWZ,amh,t,110011,2021-02-10 08:04:53.277167
+387,Mehal Sayint,4,Woreda,SWZ,eng,t,110011,2021-02-10 08:04:53.277167
+387,መሐል ሳይንት,4,ወረዳ,SWZ,amh,t,110011,2021-02-10 08:04:53.277167
+388,Legahida,4,Woreda,SWZ,eng,t,110011,2021-02-10 08:04:53.277167
+388,ለጋሂዳ,4,ወረዳ,SWZ,amh,t,110011,2021-02-10 08:04:53.277167
+389,Menz Gera Midir,4,Woreda,NSA,eng,t,110011,2021-02-10 08:04:53.277167
+389,መንዝ ጌራ መዲር,4,ወረዳ,NSA,amh,t,110011,2021-02-10 08:04:53.277167
+390,Mida Woremo,4,Woreda,NSA,eng,t,110011,2021-02-10 08:04:53.277167
+390,ሚዳ ወረሞ,4,ወረዳ,NSA,amh,t,110011,2021-02-10 08:04:53.277167
+391,Antsokiyana Gemza,4,Woreda,NSA,eng,t,110011,2021-02-10 08:04:53.277167
+391,አንጾኪያና ገምዛ,4,ወረዳ,NSA,amh,t,110011,2021-02-10 08:04:53.277167
+392,Mojana Wadera,4,Woreda,NSA,eng,t,110011,2021-02-10 08:04:53.277167
+392,ሞጃና ዋደራ,4,ወረዳ,NSA,amh,t,110011,2021-02-10 08:04:53.277167
+393,Hagere Mariamna Kesem,4,Woreda,NSA,eng,t,110011,2021-02-10 08:04:53.277167
+393,ሀገሬ ማርያምናከሰም,4,ወረዳ,NSA,amh,t,110011,2021-02-10 08:04:53.277167
+394,Debre Berhan,4,Woreda,NSA,eng,t,110011,2021-02-10 08:04:53.277167
+394,ደብረ ብርሃን,4,ወረዳ,NSA,amh,t,110011,2021-02-10 08:04:53.277167
+395,Mida Woremo,4,Woreda,NSA,eng,t,110011,2021-02-10 08:04:53.277167
+395,ሚዳ ወረሞ,4,ወረዳ,NSA,amh,t,110011,2021-02-10 08:04:53.277167
+396,Merhabete,4,Woreda,NSA,eng,t,110011,2021-02-10 08:04:53.277167
+396,መርሐቤቴ,4,ወረዳ,NSA,amh,t,110011,2021-02-10 08:04:53.277167
+397,Geshe,4,Woreda,NSA,eng,t,110011,2021-02-10 08:04:53.277167
+397,ጌሸ,4,ወረዳ,NSA,amh,t,110011,2021-02-10 08:04:53.277167
+398,Efratana Gidim,4,Woreda,NSA,eng,t,110011,2021-02-10 08:04:53.277167
+398,ኤፍራታና ግዲም,4,ወረዳ,NSA,amh,t,110011,2021-02-10 08:04:53.277167
+399,Menz Mam Midir,4,Woreda,NSA,eng,t,110011,2021-02-10 08:04:53.277167
+399,መንዝ ማም ሚዲር,4,ወረዳ,NSA,amh,t,110011,2021-02-10 08:04:53.277167
+400,Termaber,4,Woreda,NSA,eng,t,110011,2021-02-10 08:04:53.277167
+400,ተርማበር,4,ወረዳ,NSA,amh,t,110011,2021-02-10 08:23:57.893742
+401,Kewet,4,Woreda,NSA,eng,t,110011,2021-02-10 08:23:57.893742
+401,ኬወት,4,ወረዳ,NSA,amh,t,110011,2021-02-10 08:23:57.893742
+402,Angolalla Tera,4,Woreda,NSA,eng,t,110011,2021-02-10 08:23:57.893742
+402,አንጎላላ ቴራ,4,ወረዳ,NSA,amh,t,110011,2021-02-10 08:23:57.893742
+403,Asagirt,4,Woreda,NSA,eng,t,110011,2021-02-10 08:23:57.893742
+403,አሳጊርት,4,ወረዳ,NSA,amh,t,110011,2021-02-10 08:23:57.893742
+404,Berehet,4,Woreda,NSA,eng,t,110011,2021-02-10 08:23:57.893742
+404,በረኸት,4,ወረዳ,NSA,amh,t,110011,2021-02-10 08:23:57.893742
+405,Ankober,4,Woreda,NSA,eng,t,110011,2021-02-10 08:23:57.893742
+405,አንኮበር,4,ወረዳ,NSA,amh,t,110011,2021-02-10 08:23:57.893742
+406,Menjarna Shenkora,4,Woreda,NSA,eng,t,110011,2021-02-10 08:23:57.893742
+406,ምንጃርና ሸንኮራ,4,ወረዳ,NSA,amh,t,110011,2021-02-10 08:23:57.893742
+407,Basona Werana,4,Woreda,NSA,eng,t,110011,2021-02-10 08:23:57.893742
+407,ባሶና ዌራና,4,ወረዳ,NSA,amh,t,110011,2021-02-10 08:23:57.893742
+408,Menz Keya Gebreal,4,Woreda,NSA,eng,t,110011,2021-02-10 08:23:57.893742
+408,መንዝ ኪያ ገብረል,4,ወረዳ,NSA,amh,t,110011,2021-02-10 08:23:57.893742
+409,Menz Lalo Midir,4,Woreda,NSA,eng,t,110011,2021-02-10 08:23:57.893742
+409,መንዝ ላሎ ሚዲር,4,ወረዳ,NSA,amh,t,110011,2021-02-10 08:23:57.893742
+410,Siyadebrina Wayu,4,Woreda,NSA,eng,t,110011,2021-02-10 08:23:57.893742
+410,ሲያደብርና ዋዩ,4,ወረዳ,NSA,amh,t,110011,2021-02-10 08:23:57.893742
+411,Gozamin,4,Woreda,EGZ,eng,t,110011,2021-02-10 08:23:57.893742
+411,ጎዛሚን,4,ወረዳ,EGZ,amh,t,110011,2021-02-10 08:23:57.893742
+412,Hulet Ej Enese,4,Woreda,EGZ,eng,t,110011,2021-02-10 08:23:57.893742
+412,ሁለት እጅ እነስ,4,ወረዳ,EGZ,amh,t,110011,2021-02-10 08:23:57.893742
+413,Debre Elias,4,Woreda,EGZ,eng,t,110011,2021-02-10 08:23:57.893742
+413,ደብረ ኤልያስ,4,ወረዳ,EGZ,amh,t,110011,2021-02-10 08:23:57.893742
+414,Enbise Sar Midir,4,Woreda,EGZ,eng,t,110011,2021-02-10 08:23:57.893742
+414,ኢንቢሰ ሳር ሚዲር,4,ወረዳ,EGZ,amh,t,110011,2021-02-10 08:23:57.893742
+415,Enarj Enawga,4,Woreda,EGZ,eng,t,110011,2021-02-10 08:23:57.893742
+415,እናርጅ እናውጋ,4,ወረዳ,EGZ,amh,t,110011,2021-02-10 08:23:57.893742
+416,Enemay,4,Woreda,EGZ,eng,t,110011,2021-02-10 08:23:57.893742
+416,እንማይ,4,ወረዳ,EGZ,amh,t,110011,2021-02-10 08:23:57.893742
+417,Debay Telatgen,4,Woreda,EGZ,eng,t,110011,2021-02-10 08:23:57.893742
+417,ደባይ ተላትገን,4,ወረዳ,EGZ,amh,t,110011,2021-02-10 08:23:57.893742
+418,Machakel,4,Woreda,EGZ,eng,t,110011,2021-02-10 08:23:57.893742
+418,ማቻከል,4,ወረዳ,EGZ,amh,t,110011,2021-02-10 08:23:57.893742
+419,Baso Liben,4,Woreda,EGZ,eng,t,110011,2021-02-10 08:23:57.893742
+419,ባሶ ሊበን,4,ወረዳ,EGZ,amh,t,110011,2021-02-10 08:23:57.893742
+420,Awabel,4,Woreda,EGZ,eng,t,110011,2021-02-10 08:23:57.893742
+420,አዋበል,4,ወረዳ,EGZ,amh,t,110011,2021-02-10 08:23:57.893742
+421,Dejen,4,Woreda,EGZ,eng,t,110011,2021-02-10 08:23:57.893742
+421,ደጀን,4,ወረዳ,EGZ,amh,t,110011,2021-02-10 08:23:57.893742
+422,Debre Markos town,4,Woreda,EGZ,eng,t,110011,2021-02-10 08:23:57.893742
+422,ደብረ ማርቆስ ከተማ,4,ወረዳ,EGZ,amh,t,110011,2021-02-10 08:23:57.893742
+423,Shebel Berenta,4,Woreda,EGZ,eng,t,110011,2021-02-10 08:23:57.893742
+423,ሸበል በረንታ,4,ወረዳ,EGZ,amh,t,110011,2021-02-10 08:23:57.893742
+424,Sinan,4,Woreda,EGZ,eng,t,110011,2021-02-10 08:23:57.893742
+424,ሲናን,4,ወረዳ,EGZ,amh,t,110011,2021-02-10 08:23:57.893742
+425,Aneded,4,Woreda,EGZ,eng,t,110011,2021-02-10 08:23:57.893742
+425,አንዲድ,4,ወረዳ,EGZ,amh,t,110011,2021-02-10 08:23:57.893742
+426,Semien Achefer,4,Woreda,WGZ,eng,t,110011,2021-02-10 08:23:57.893742
+426,ስሜን አቸፈር,4,ወረዳ,WGZ,amh,t,110011,2021-02-10 08:23:57.893742
+427,Dega Damot,4,Woreda,WGZ,eng,t,110011,2021-02-10 08:23:57.893742
+427,ደጋ ዳሞት,4,ወረዳ,WGZ,amh,t,110011,2021-02-10 08:23:57.893742
+428,Debub Achefer,4,Woreda,WGZ,eng,t,110011,2021-02-10 08:23:57.893742
+428,ደቡብ አቸፈር,4,ወረዳ,WGZ,amh,t,110011,2021-02-10 08:23:57.893742
+429,Wemberma,4,Woreda,WGZ,eng,t,110011,2021-02-10 08:23:57.893742
+429,ወምበርማ,4,ወረዳ,WGZ,amh,t,110011,2021-02-10 08:23:57.893742
+430,Around Bahir Dar,4,Woreda,WGZ,eng,t,110011,2021-02-10 08:23:57.893742
+430,ባህርዳር ዙሪያ,4,ወረዳ,WGZ,amh,t,110011,2021-02-10 08:23:57.893742
+431,Yilmana Densa,4,Woreda,WGZ,eng,t,110011,2021-02-10 08:23:57.893742
+431,ይልማና ደንሳ,4,ወረዳ,WGZ,amh,t,110011,2021-02-10 08:23:57.893742
+432,Mecha,4,Woreda,WGZ,eng,t,110011,2021-02-10 08:23:57.893742
+432,ሜቻ,4,ወረዳ,WGZ,amh,t,110011,2021-02-10 08:23:57.893742
+433,Sekela,4,Woreda,WGZ,eng,t,110011,2021-02-10 08:23:57.893742
+433,ሰከላ,4,ወረዳ,WGZ,amh,t,110011,2021-02-10 08:23:57.893742
+434,Kuarit,4,Woreda,WGZ,eng,t,110011,2021-02-10 08:23:57.893742
+434,ኩአሪት,4,ወረዳ,WGZ,amh,t,110011,2021-02-10 08:23:57.893742
+435,Dembecha,4,Woreda,WGZ,eng,t,110011,2021-02-10 08:23:57.893742
+435,ደምበጫ,4,ወረዳ,WGZ,amh,t,110011,2021-02-10 08:23:57.893742
+436,Jabi Tehnan,4,Woreda,WGZ,eng,t,110011,2021-02-10 08:23:57.893742
+436,ጃቢ ተህናን,4,ወረዳ,WGZ,amh,t,110011,2021-02-10 08:23:57.893742
+437,Bure,4,Woreda,WGZ,eng,t,110011,2021-02-10 08:23:57.893742
+437,ቡሬ,4,ወረዳ,WGZ,amh,t,110011,2021-02-10 08:23:57.893742
+438,Goncha,4,Woreda,WGZ,eng,t,110011,2021-02-10 08:23:57.893742
+438,ጎንቻ,4,ወረዳ,WGZ,amh,t,110011,2021-02-10 08:23:57.893742
+439,Finote Selam town,4,Woreda,WGZ,eng,t,110011,2021-02-10 08:23:57.893742
+439,ፍኖተ ሰላም ከተማ,4,ወረዳ,WGZ,amh,t,110011,2021-02-10 08:23:57.893742
+440,Zikuala,4,Woreda,WHZ,eng,t,110011,2021-02-10 08:23:57.893742
+440,ዚኩአላ,4,ወረዳ,WHZ,amh,t,110011,2021-02-10 08:23:57.893742
+441,Aberegelle,4,Woreda,WHZ,eng,t,110011,2021-02-10 08:23:57.893742
+441,አበረገሌ,4,ወረዳ,WHZ,amh,t,110011,2021-02-10 08:23:57.893742
+442,Around Sokota,4,Woreda,WHZ,eng,t,110011,2021-02-10 08:23:57.893742
+442,ሶቆታ ዙርያ,4,ወረዳ,WHZ,amh,t,110011,2021-02-10 08:23:57.893742
+443,Dehana,4,Woreda,WHZ,eng,t,110011,2021-02-10 08:23:57.893742
+443,ደሃና,4,ወረዳ,WHZ,amh,t,110011,2021-02-10 08:23:57.893742
+444,Gazbibla,4,Woreda,WHZ,eng,t,110011,2021-02-10 08:23:57.893742
+444,ጋዝቢብላ,4,ወረዳ,WHZ,amh,t,110011,2021-02-10 08:23:57.893742
+445,Sehala,4,Woreda,WHZ,eng,t,110011,2021-02-10 08:23:57.893742
+445,ሰሃላ,4,ወረዳ,WHZ,amh,t,110011,2021-02-10 08:23:57.893742
+446,Sekota town,4,Woreda,WHZ,eng,t,110011,2021-02-10 08:23:57.893742
+446,ሰቆጣ ከተማ,4,ወረዳ,WHZ,amh,t,110011,2021-02-10 08:23:57.893742
+447,Dangila,4,Woreda,AGZ,eng,t,110011,2021-02-10 08:23:57.893742
+447,ዳንጊላ,4,ወረዳ,AGZ,amh,t,110011,2021-02-10 08:23:57.893742
+448,Ankasha Guagusa,4,Woreda,AGZ,eng,t,110011,2021-02-10 08:23:57.893742
+448,አካንክሻ ጓጉሳ,4,ወረዳ,AGZ,amh,t,110011,2021-02-10 08:23:57.893742
+449,Jawi,4,Woreda,AGZ,eng,t,110011,2021-02-10 08:23:57.893742
+449,ጃዊ,4,ወረዳ,AGZ,amh,t,110011,2021-02-10 08:23:57.893742
+450,Banja Shekudad,4,Woreda,AGZ,eng,t,110011,2021-02-10 08:23:57.893742
+450,ባንጃ ሽኩዳድ,4,ወረዳ,AGZ,amh,t,110011,2021-02-10 08:23:57.893742
+451,Guangua,4,Woreda,AGZ,eng,t,110011,2021-02-10 08:23:57.893742
+451,ጓንጓ,4,ወረዳ,AGZ,amh,t,110011,2021-02-10 08:23:57.893742
+452,Faggeta Lekoma,4,Woreda,AGZ,eng,t,110011,2021-02-10 08:23:57.893742
+452,ፋጌታ ለኮማ,4,ወረዳ,AGZ,amh,t,110011,2021-02-10 08:23:57.893742
+453,Guagusa Shekudad,4,Woreda,AGZ,eng,t,110011,2021-02-10 08:23:57.893742
+453,ጓጉሳ ሽኩዳድ,4,ወረዳ,AGZ,amh,t,110011,2021-02-10 08:23:57.893742
+454,Dawa Chefe,4,Woreda,OSZ,eng,t,110011,2021-02-10 08:23:57.893742
+454,ዳዋ ጨፌ,4,ወረዳ,OSZ,amh,t,110011,2021-02-10 08:23:57.893742
+455,Dawa Harewa,4,Woreda,OSZ,eng,t,110011,2021-02-10 08:23:57.893742
+455,ዳዋ ሀረዋ,4,ወረዳ,OSZ,amh,t,110011,2021-02-10 08:23:57.893742
+456,Jile Timuga,4,Woreda,OSZ,eng,t,110011,2021-02-10 08:23:57.893742
+456,ጂሌ ቲሙጋ,4,ወረዳ,OSZ,amh,t,110011,2021-02-10 08:23:57.893742
+457,Kemise,4,Woreda,OSZ,eng,t,110011,2021-02-10 08:23:57.893742
+457,ከሚሴ,4,ወረዳ,OSZ,amh,t,110011,2021-02-10 08:23:57.893742
+458,Artuma Fursi,4,Woreda,OSZ,eng,t,110011,2021-02-10 08:23:57.893742
+458,አርቱማ ፉርሲ,4,ወረዳ,OSZ,amh,t,110011,2021-02-10 08:23:57.893742
+459,Argobba,4,Woreda,ASZ,eng,t,110011,2021-02-10 08:23:57.893742
+459,አርጎባባ,4,ወረዳ,ASZ,amh,t,110011,2021-02-10 08:23:57.893742
+460,Bahir Dar,4,Woreda,BDZ,eng,t,110011,2021-02-10 08:23:57.893742
+460,ባህር ዳር,4,ወረዳ,BDZ,amh,t,110011,2021-02-10 08:23:57.893742
+481,Alaba Special Woreda,4,Woreda,IDD,eng,t,110011,2021-02-10 08:23:57.893742
+481,የሀላባ ልዩ ወረዳ,4,ወረዳ,IDD,amh,t,110011,2021-02-10 08:23:57.893742
+482,Amaro Special Woreda,4,Woreda,IDD,eng,t,110011,2021-02-10 08:23:57.893742
+482,አማሮ ልዩ ወረዳ,4,ወረዳ,IDD,amh,t,110011,2021-02-10 08:23:57.893742
+483,Alle Special Woreda,4,Woreda,IDD,eng,t,110011,2021-02-10 08:23:57.893742
+483,አለ ልዩ ወረዳ,4,ወረዳ,IDD,amh,t,110011,2021-02-10 08:23:57.893742
+484,Basketo Special Woreda,4,Woreda,IDD,eng,t,110011,2021-02-10 08:23:57.893742
+484,የባስኬቶ ልዩ ወረዳ,4,ወረዳ,IDD,amh,t,110011,2021-02-10 08:23:57.893742
+485,Burji Special Woreda,4,Woreda,IDD,eng,t,110011,2021-02-10 08:23:57.893742
+485,ቡርጂ ልዩ ወረዳ,4,ወረዳ,IDD,amh,t,110011,2021-02-10 08:23:57.893742
+486,Dirashe Special Woreda,4,Woreda,IDD,eng,t,110011,2021-02-10 08:23:57.893742
+486,ዲራሺ ልዩ ወረዳ,4,ወረዳ,IDD,amh,t,110011,2021-02-10 08:23:57.893742
+487,Konso Special Woreda,4,Woreda,IDD,eng,t,110011,2021-02-10 08:23:57.893742
+487,ኮንሶ ልዩ ወረዳ,4,ወረዳ,IDD,amh,t,110011,2021-02-10 08:23:57.893742
+488,Konta Special Woreda,4,Woreda,IDD,eng,t,110011,2021-02-10 08:23:57.893742
+488,ኮንታ ልዩ ወረዳ,4,ወረዳ,IDD,amh,t,110011,2021-02-10 08:23:57.893742
+489,Bero,4,Woreda,BMZ,eng,t,110011,2021-02-10 08:23:57.893742
+489,ቤሮ,4,ወረዳ,BMZ,amh,t,110011,2021-02-10 08:23:57.893742
+490,Debub Bench,4,Woreda,BMZ,eng,t,110011,2021-02-10 08:23:57.893742
+490,ደቡብ ቤንች,4,ወረዳ,BMZ,amh,t,110011,2021-02-10 08:23:57.893742
+491,Guraferda,4,Woreda,BMZ,eng,t,110011,2021-02-10 08:23:57.893742
+491,ጉራፈርዳ,4,ወረዳ,BMZ,amh,t,110011,2021-02-10 08:23:57.893742
+492,Maji,4,Woreda,BMZ,eng,t,110011,2021-02-10 08:23:57.893742
+492,ማጂ,4,ወረዳ,BMZ,amh,t,110011,2021-02-10 08:23:57.893742
+493,Meinit Goldiya,4,Woreda,BMZ,eng,t,110011,2021-02-10 08:23:57.893742
+493,መኢኒት ጎልድያ,4,ወረዳ,BMZ,amh,t,110011,2021-02-10 08:23:57.893742
+494,Meinit Shasha,4,Woreda,BMZ,eng,t,110011,2021-02-10 08:23:57.893742
+494,መኢኒት ሻሻ,4,ወረዳ,BMZ,amh,t,110011,2021-02-10 08:23:57.893742
+495,Mizan Aman town,4,Woreda,BMZ,eng,t,110011,2021-02-10 08:23:57.893742
+495,ሚዛን አማን ከተማ,4,ወረዳ,BMZ,amh,t,110011,2021-02-10 08:23:57.893742
+496,Semien Bench,4,Woreda,BMZ,eng,t,110011,2021-02-10 08:23:57.893742
+496,ሰሜን ቤንች,4,ወረዳ,BMZ,amh,t,110011,2021-02-10 08:23:57.893742
+497,She Bench,4,Woreda,BMZ,eng,t,110011,2021-02-10 08:23:57.893742
+497,ሺ ቤንች,4,ወረዳ,BMZ,amh,t,110011,2021-02-10 08:23:57.893742
+498,Sheko,4,Woreda,BMZ,eng,t,110011,2021-02-10 08:23:57.893742
+498,ሸኮ,4,ወረዳ,BMZ,amh,t,110011,2021-02-10 08:23:57.893742
+499,Surma,4,Woreda,BMZ,eng,t,110011,2021-02-10 08:23:57.893742
+499,ሱርማ,4,ወረዳ,BMZ,amh,t,110011,2021-02-10 08:23:57.893742
+500,Gena Bosa,4,Woreda,DAW,eng,t,110011,2021-02-10 08:23:57.893742
+500,ጌና ቦሳ,4,ወረዳ,DAW,amh,t,110011,2021-02-10 08:23:57.893742
+501,Isara,4,Woreda,DAW,eng,t,110011,2021-02-10 08:25:47.567001
+501,ኢሳራ,4,ወረዳ,DAW,amh,t,110011,2021-02-10 08:25:47.567001
+502,Loma,4,Woreda,DAW,eng,t,110011,2021-02-10 08:25:47.567001
+502,ሎማ,4,ወረዳ,DAW,amh,t,110011,2021-02-10 08:25:47.567001
+503,Mareka,4,Woreda,DAW,eng,t,110011,2021-02-10 08:25:47.567001
+503,ማሬካ,4,ወረዳ,DAW,amh,t,110011,2021-02-10 08:25:47.567001
+504,Tocha,4,Woreda,DAW,eng,t,110011,2021-02-10 08:25:47.567001
+504,ቶቻ,4,ወረዳ,DAW,amh,t,110011,2021-02-10 08:25:47.567001
+505,Alicho Werero,4,Woreda,SIL,eng,t,110011,2021-02-10 08:25:47.567001
+505,አሊቾ ወረሮ,4,ወረዳ,SIL,amh,t,110011,2021-02-10 08:25:47.567001
+506,Dalocha,4,Woreda,SIL,eng,t,110011,2021-02-10 08:25:47.567001
+506,ዳሎቻ,4,ወረዳ,SIL,amh,t,110011,2021-02-10 08:25:47.567001
+507,Wulbareg,4,Woreda,SIL,eng,t,110011,2021-02-10 08:25:47.567001
+507,ውልባርግ,4,ወረዳ,SIL,amh,t,110011,2021-02-10 08:25:47.567001
+508,Lanfro,4,Woreda,SIL,eng,t,110011,2021-02-10 08:25:47.567001
+508,ላንፍሮ,4,ወረዳ,SIL,amh,t,110011,2021-02-10 08:25:47.567001
+509,Mirab Azernet Berbere,4,Woreda,SIL,eng,t,110011,2021-02-10 08:25:47.567001
+509,ምዕራብ አዘርነት በርበሬ,4,ወረዳ,SIL,amh,t,110011,2021-02-10 08:25:47.567001
+510,Misraq Azernet Berbere,4,Woreda,SIL,eng,t,110011,2021-02-10 08:25:47.567001
+510,ምስራቅ አዘርነት በርበሬ,4,ወረዳ,SIL,amh,t,110011,2021-02-10 08:25:47.567001
+511,Sankurra,4,Woreda,SIL,eng,t,110011,2021-02-10 08:25:47.567001
+511,ሳንኩራ,4,ወረዳ,SIL,amh,t,110011,2021-02-10 08:25:47.567001
+512,Silte,4,Woreda,SIL,eng,t,110011,2021-02-10 08:25:47.567001
+512,ስልጤ,4,ወረዳ,SIL,amh,t,110011,2021-02-10 08:25:47.567001
+513,Debub Ari,4,Woreda,SOZ,eng,t,110011,2021-02-10 08:25:47.567001
+513,ደቡብ አሪ,4,ወረዳ,SOZ,amh,t,110011,2021-02-10 08:25:47.567001
+514,Bena Tsemay,4,Woreda,SOZ,eng,t,110011,2021-02-10 08:25:47.567001
+514,በና ጸማይ,4,ወረዳ,SOZ,amh,t,110011,2021-02-10 08:25:47.567001
+515,Hamer,4,Woreda,SOZ,eng,t,110011,2021-02-10 08:25:47.567001
+515,ሐመር,4,ወረዳ,SOZ,amh,t,110011,2021-02-10 08:25:47.567001
+516,Semen Ari,4,Woreda,SOZ,eng,t,110011,2021-02-10 08:25:47.567001
+516,ሳሜን አሪ,4,ወረዳ,SOZ,amh,t,110011,2021-02-10 08:25:47.567001
+517,Male,4,Woreda,SOZ,eng,t,110011,2021-02-10 08:25:47.567001
+517,ማለ,4,ወረዳ,SOZ,amh,t,110011,2021-02-10 08:25:47.567001
+518,Nyangatom,4,Woreda,SOZ,eng,t,110011,2021-02-10 08:25:47.567001
+518,ንያንጋቶም,4,ወረዳ,SOZ,amh,t,110011,2021-02-10 08:25:47.567001
+519,Selamago,4,Woreda,SOZ,eng,t,110011,2021-02-10 08:25:47.567001
+519,ሰላማጎ,4,ወረዳ,SOZ,amh,t,110011,2021-02-10 08:25:47.567001
+520,Dasenech,4,Woreda,SOZ,eng,t,110011,2021-02-10 08:25:47.567001
+520,ዳሰነች,4,ወረዳ,SOZ,amh,t,110011,2021-02-10 08:25:47.567001
+521,Offa,4,Woreda,WOL,eng,t,110011,2021-02-10 08:25:47.567001
+521,ኦፋፋ,4,ወረዳ,WOL,amh,t,110011,2021-02-10 08:25:47.567001
+522,Humbo,4,Woreda,WOL,eng,t,110011,2021-02-10 08:25:47.567001
+522,ሁምቦ,4,ወረዳ,WOL,amh,t,110011,2021-02-10 08:25:47.567001
+523,Damot Gale,4,Woreda,WOL,eng,t,110011,2021-02-10 08:25:47.567001
+523,ዳሞት ገላ,4,ወረዳ,WOL,amh,t,110011,2021-02-10 08:25:47.567001
+524,Boloso Bombe,4,Woreda,WOL,eng,t,110011,2021-02-10 08:25:47.567001
+524,ቦሎሶ ቦምቤ,4,ወረዳ,WOL,amh,t,110011,2021-02-10 08:25:47.567001
+525,Boloso Sore,4,Woreda,WOL,eng,t,110011,2021-02-10 08:25:47.567001
+525,ቦሎሶ ሶር,4,ወረዳ,WOL,amh,t,110011,2021-02-10 08:25:47.567001
+526,Damot Pulasa,4,Woreda,WOL,eng,t,110011,2021-02-10 08:25:47.567001
+526,ዳሞት ፑላሳ,4,ወረዳ,WOL,amh,t,110011,2021-02-10 08:25:47.567001
+527,Damot Sore,4,Woreda,WOL,eng,t,110011,2021-02-10 08:25:47.567001
+527,ዳሞት ሶሬ,4,ወረዳ,WOL,amh,t,110011,2021-02-10 08:25:47.567001
+528,Damot Weyde,4,Woreda,WOL,eng,t,110011,2021-02-10 08:25:47.567001
+528,ዳሞት ወይዴ,4,ወረዳ,WOL,amh,t,110011,2021-02-10 08:25:47.567001
+529,Diguna Fango,4,Woreda,WOL,eng,t,110011,2021-02-10 08:25:47.567001
+529,ዲጉና ፋንጎ,4,ወረዳ,WOL,amh,t,110011,2021-02-10 08:25:47.567001
+530,Kindo Didaye,4,Woreda,WOL,eng,t,110011,2021-02-10 08:25:47.567001
+530,ኪንዶ ዲዳዬ,4,ወረዳ,WOL,amh,t,110011,2021-02-10 08:25:47.567001
+531,Kindo Koysha,4,Woreda,WOL,eng,t,110011,2021-02-10 08:25:47.567001
+531,ኪንዶ ኮይሻ,4,ወረዳ,WOL,amh,t,110011,2021-02-10 08:25:47.567001
+532,Sodo town,4,Woreda,WOL,eng,t,110011,2021-02-10 08:25:47.567001
+532,ሶዶ ከተማ,4,ወረዳ,WOL,amh,t,110011,2021-02-10 08:25:47.567001
+533,around Sodo,4,Woreda,WOL,eng,t,110011,2021-02-10 08:25:47.567001
+533,ሶዶ ዙርያ,4,ወረዳ,WOL,amh,t,110011,2021-02-10 08:25:47.567001
+534,Abeshge,4,Woreda,WOL,eng,t,110011,2021-02-10 08:25:47.567001
+534,አበሽጌ,4,ወረዳ,WOL,amh,t,110011,2021-02-10 08:25:47.567001
+535,Butajira town,4,Woreda,GUR,eng,t,110011,2021-02-10 08:25:47.567001
+535,ቡታጅራ ከተማ,4,ወረዳ,GUR,amh,t,110011,2021-02-10 08:25:47.567001
+536,Cheha,4,Woreda,GUR,eng,t,110011,2021-02-10 08:25:47.567001
+536,ቼሃ,4,ወረዳ,GUR,amh,t,110011,2021-02-10 08:25:47.567001
+537,Endegagn,4,Woreda,GUR,eng,t,110011,2021-02-10 08:25:47.567001
+537,እንደጋኝ,4,ወረዳ,GUR,amh,t,110011,2021-02-10 08:25:47.567001
+538,Enemorina Eaner,4,Woreda,WOL,eng,t,110011,2021-02-10 08:25:47.567001
+538,ኤነሞሪና ኢአነር,4,ወረዳ,WOL,amh,t,110011,2021-02-10 08:25:47.567001
+539,Ezha,4,Woreda,GUR,eng,t,110011,2021-02-10 08:25:47.567001
+539,ኢዝሃ,4,ወረዳ,GUR,amh,t,110011,2021-02-10 08:25:47.567001
+540,Geta,4,Woreda,GUR,eng,t,110011,2021-02-10 08:25:47.567001
+540,ጌታ,4,ወረዳ,GUR,amh,t,110011,2021-02-10 08:25:47.567001
+541,Kebena,4,Woreda,GUR,eng,t,110011,2021-02-10 08:25:47.567001
+541,ቀቤና,4,ወረዳ,GUR,amh,t,110011,2021-02-10 08:25:47.567001
+542,Gedebano Gutazer Welene,4,Woreda,GUR,eng,t,110011,2021-02-10 08:25:47.567001
+542,ገደባኖ ጉታዘር ወለኔ,4,ወረዳ,GUR,amh,t,110011,2021-02-10 08:25:47.567001
+543,Mareko,4,Woreda,GUR,eng,t,110011,2021-02-10 08:25:47.567001
+543,ማረቆ,4,ወረዳ,GUR,amh,t,110011,2021-02-10 08:25:47.567001
+544,Meskane,4,Woreda,GUR,eng,t,110011,2021-02-10 08:25:47.567001
+544,መስካኔ,4,ወረዳ,GUR,amh,t,110011,2021-02-10 08:25:47.567001
+545,Muhor Na Aklil,4,Woreda,GUR,eng,t,110011,2021-02-10 08:25:47.567001
+545,ሙሆር እና አክሊል,4,ወረዳ,GUR,amh,t,110011,2021-02-10 08:25:47.567001
+546,Soddo,4,Woreda,GUR,eng,t,110011,2021-02-10 08:25:47.567001
+546,ሶዶ,4,ወረዳ,GUR,amh,t,110011,2021-02-10 08:25:47.567001
+547,Welkite town,4,Woreda,GUR,eng,t,110011,2021-02-10 08:25:47.567001
+547,ወልቅጤ ከተማ,4,ወረዳ,GUR,amh,t,110011,2021-02-10 08:25:47.567001
+548,Anderacha,4,Woreda,SHK,eng,t,110011,2021-02-10 08:25:47.567001
+548,አንድራቻ,4,ወረዳ,SHK,amh,t,110011,2021-02-10 08:25:47.567001
+549,Masha,4,Woreda,SHK,eng,t,110011,2021-02-10 08:25:47.567001
+549,ማሻ,4,ወረዳ,SHK,amh,t,110011,2021-02-10 08:25:47.567001
+550,Yeki,4,Woreda,SHK,eng,t,110011,2021-02-10 08:25:47.567001
+550,ዬኪ,4,ወረዳ,SHK,amh,t,110011,2021-02-10 08:25:47.567001
+551,Bita,4,Woreda,KEF,eng,t,110011,2021-02-10 08:30:25.23017
+551,ቢታ,4,ወረዳ,KEF,amh,t,110011,2021-02-10 08:30:25.23017
+464,Aroresa,4,Woreda,SDZ,eng,t,110011,2021-02-10 08:23:57.893742
+465,ሀዋሳ ዙሪያ,4,ወረዳ,SDZ,amh,t,110011,2021-02-10 08:23:57.893742
+465,Around Hawassa,4,Woreda,SDZ,eng,t,110011,2021-02-10 08:23:57.893742
+466,ቤንሳ,4,ወረዳ,SDZ,amh,t,110011,2021-02-10 08:23:57.893742
+466,Bensa,4,Woreda,SDZ,eng,t,110011,2021-02-10 08:23:57.893742
+467,ቦና ዙርያ,4,ወረዳ,SDZ,amh,t,110011,2021-02-10 08:23:57.893742
+467,Around Bona,4,Woreda,SDZ,eng,t,110011,2021-02-10 08:23:57.893742
+468,ቦሪቻ,4,ወረዳ,SDZ,amh,t,110011,2021-02-10 08:23:57.893742
+468,Boricha,4,Woreda,SDZ,eng,t,110011,2021-02-10 08:23:57.893742
+469,ቡርሳ,4,ወረዳ,SDZ,amh,t,110011,2021-02-10 08:23:57.893742
+469,Bursa,4,Woreda,SDZ,eng,t,110011,2021-02-10 08:23:57.893742
+2000,ወረዳ 01,4,ወረዳ,KKE,amh,t,110011,2021-02-12 08:34:14.104514
+2001,Woreda 02,4,Woreda,KKE,eng,t,110011,2021-02-12 08:34:14.104514
+2001,ወረዳ 02,4,ወረዳ,KKE,amh,t,110011,2021-02-12 08:34:14.104514
+2002,Woreda 03,4,Woreda,KKE,eng,t,110011,2021-02-12 08:34:14.104514
+2002,ወረዳ 03,4,ወረዳ,KKE,amh,t,110011,2021-02-12 08:34:14.104514
+2003,Woreda 04,4,Woreda,KKE,eng,t,110011,2021-02-12 08:34:14.104514
+2003,ወረዳ 04,4,ወረዳ,KKE,amh,t,110011,2021-02-12 08:34:14.104514
+2004,Woreda 05,4,Woreda,KKE,eng,t,110011,2021-02-12 08:34:14.104514
+2004,ወረዳ 05,4,ወረዳ,KKE,amh,t,110011,2021-02-12 08:34:14.104514
+2005,Woreda 06,4,Woreda,KKE,eng,t,110011,2021-02-12 08:34:14.104514
+2005,ወረዳ 06,4,ወረዳ,KKE,amh,t,110011,2021-02-12 08:34:14.104514
+2006,Woreda 07,4,Woreda,KKE,eng,t,110011,2021-02-12 08:34:14.104514
+2006,ወረዳ 07,4,ወረዳ,KKE,amh,t,110011,2021-02-12 08:34:14.104514
+2007,Woreda 08,4,Woreda,KKE,eng,t,110011,2021-02-12 08:34:14.104514
+2007,ወረዳ 08,4,ወረዳ,KKE,amh,t,110011,2021-02-12 08:34:14.104514
+2008,Woreda 09,4,Woreda,KKE,eng,t,110011,2021-02-12 08:34:14.104514
+2008,ወረዳ 09,4,ወረዳ,KKE,amh,t,110011,2021-02-12 08:34:14.104514
+2009,Woreda 10,4,Woreda,KKE,eng,t,110011,2021-02-12 08:34:14.104514
+2009,ወረዳ 10,4,ወረዳ,KKE,amh,t,110011,2021-02-12 08:34:14.104514
+2010,Woreda 11,4,Woreda,KKE,eng,t,110011,2021-02-12 08:34:14.104514
+2010,ወረዳ 11,4,ወረዳ,KKE,amh,t,110011,2021-02-12 08:34:14.104514
+2011,Woreda 12,4,Woreda,KKE,eng,t,110011,2021-02-12 08:34:14.104514
+2011,ወረዳ 12,4,ወረዳ,KKE,amh,t,110011,2021-02-12 08:34:14.104514
+2012,Woreda 13,4,Woreda,KKE,eng,t,110011,2021-02-12 08:34:14.104514
+2012,ወረዳ 13,4,ወረዳ,KKE,amh,t,110011,2021-02-12 08:34:14.104514
+2013,Woreda 14,4,Woreda,KKE,eng,t,110011,2021-02-12 08:34:14.104514
+2013,ወረዳ 14,4,ወረዳ,KKE,amh,t,110011,2021-02-12 08:34:14.104514
+2014,Woreda 15,4,Woreda,KKE,eng,t,110011,2021-02-12 08:34:14.104514
+2015,ወረዳ 15,4,ወረዳ,KKE,amh,t,110011,2021-02-12 08:34:14.104514
+2016,Woreda 16,4,Woreda,KKE,eng,t,110011,2021-02-12 08:34:14.104514
+GIDD,ገለልተኛ ወረዳዎች,2,ዞን,GML,amh,t,110012,2021-02-10 13:49:41.953435
+ANWZ,Anywaa Zone,2,Zone,GML,eng,t,110012,2021-02-10 13:49:41.953435
+ANWZ,አኙዋ,2,ዞን,GML,amh,t,110012,2021-02-10 13:49:41.953435
+NURZ,Nuer Zone,2,Zone,GML,eng,t,110012,2021-02-10 13:49:41.953435
+NURZ,ኑዌር,2,ዞን,GML,amh,t,110012,2021-02-10 13:49:41.953435
+MAJZ,Majang Zone,2,Zone,GML,eng,t,110012,2021-02-10 13:49:41.953435
+MAJZ,ማጃንግ,2,ዞን,GML,amh,t,110012,2021-02-10 13:49:41.953435
+2016,ወረዳ 16,4,ወረዳ,KKE,amh,t,110011,2021-02-12 08:34:14.104514
+2017,Woreda 17,4,Woreda,KKE,eng,t,110011,2021-02-12 08:34:14.104514
+2017,ወረዳ 17,4,ወረዳ,KKE,amh,t,110011,2021-02-12 08:34:14.104514
+2018,Woreda 18,4,Woreda,KKE,eng,t,110011,2021-02-12 08:34:14.104514
+2018,ወረዳ 18,4,ወረዳ,KKE,amh,t,110011,2021-02-12 08:34:14.104514
+2019,Woreda 19,4,Woreda,KKE,eng,t,110011,2021-02-12 08:34:14.104514
+2019,ወረዳ 19,4,ወረዳ,KKE,amh,t,110011,2021-02-12 08:34:14.104514
+2020,Woreda 20,4,Woreda,KKE,eng,t,110011,2021-02-12 08:34:14.104514
+2020,ወረዳ 20,4,ወረዳ,KKE,amh,t,110011,2021-02-12 08:34:14.104514
+2021,Woreda 22,4,Woreda,KKE,eng,t,110011,2021-02-12 08:34:14.104514
+2021,ወረዳ 22,4,ወረዳ,KKE,amh,t,110011,2021-02-12 08:34:14.104514
+552,Bonga town,4,Woreda,KEF,eng,t,110011,2021-02-10 08:41:48.120998
+552,ቦንጋ ከተማ,4,ወረዳ,KEF,amh,t,110011,2021-02-10 08:41:48.120998
+553,Chena woreda,4,Woreda,KEF,eng,t,110011,2021-02-10 08:41:48.120998
+553,ቼና,4,ወረዳ,KEF,amh,t,110011,2021-02-10 08:41:48.120998
+554,Cheta woreda,4,Woreda,KEF,eng,t,110011,2021-02-10 08:41:48.120998
+554,ቼታ,4,ወረዳ,KEF,amh,t,110011,2021-02-10 08:41:48.120998
+555,Decha,4,Woreda,KEF,eng,t,110011,2021-02-10 08:41:48.120998
+555,ደቻ,4,ወረዳ,KEF,amh,t,110011,2021-02-10 08:41:48.120998
+556,Gesha,4,Woreda,KEF,eng,t,110011,2021-02-10 08:41:48.120998
+556,ጌሻ,4,ወረዳ,KEF,amh,t,110011,2021-02-10 08:41:48.120998
+557,Gewata,4,Woreda,KEF,eng,t,110011,2021-02-10 08:41:48.120998
+557,ገዋታ,4,ወረዳ,KEF,amh,t,110011,2021-02-10 08:41:48.120998
+558,Misha woreda,4,Woreda,KEF,eng,t,110011,2021-02-10 08:41:48.120998
+558,ሚሻ,4,ወረዳ,KEF,amh,t,110011,2021-02-10 08:41:48.120998
+559,Ginbo,4,Woreda,KEF,eng,t,110011,2021-02-10 08:41:48.120998
+559,ጊንቦ,4,ወረዳ,KEF,amh,t,110011,2021-02-10 08:41:48.120998
+952,Woreda 04,4,Woreda,YKK,eng,t,110011,2021-02-10 10:08:05.739903
+952,ወረዳ 04,4,ወረዳ,YKK,amh,t,110011,2021-02-10 10:08:05.739903
+953,Woreda 05,4,Woreda,YKK,eng,t,110011,2021-02-10 10:08:56.5975
+561,Sayilem,4,Woreda,KEF,eng,t,110011,2021-02-10 08:46:03.065808
+561,ሳይለም,4,ወረዳ,KEF,amh,t,110011,2021-02-10 08:46:03.065808
+562,Telo,4,Woreda,KEF,eng,t,110011,2021-02-10 08:46:03.065808
+562,ቴሎ,4,ወረዳ,KEF,amh,t,110011,2021-02-10 08:46:03.065808
+563,Siraro woreda,4,Woreda,KEF,eng,t,110011,2021-02-10 08:46:03.065808
+563,ሲራሮ,4,ወረዳ,KEF,amh,t,110011,2021-02-10 08:46:03.065808
+564,Amekka woreda,4,Woreda,KEF,eng,t,110011,2021-02-10 08:46:03.065808
+564,አሜካ,4,ወረዳ,KEF,amh,t,110011,2021-02-10 08:46:03.065808
+565,Ana Lemo,4,Woreda,HAD,eng,t,110011,2021-02-10 08:46:03.065808
+565,አና ሌሞ,4,ወረዳ,HAD,amh,t,110011,2021-02-10 08:46:03.065808
+953,ወረዳ 05,4,ወረዳ,YKK,amh,t,110011,2021-02-10 10:08:56.5975
+954,Woreda 06,4,Woreda,YKK,eng,t,110011,2021-02-10 10:08:56.5975
+954,ወረዳ 06,4,ወረዳ,YKK,amh,t,110011,2021-02-10 10:08:56.5975
+955,Woreda 07,4,Woreda,YKK,eng,t,110011,2021-02-10 10:08:56.5975
+955,ወረዳ 07,4,ወረዳ,YKK,amh,t,110011,2021-02-10 10:08:56.5975
+956,Woreda 08,4,Woreda,YKK,eng,t,110011,2021-02-10 10:08:56.5975
+956,ወረዳ 08,4,ወረዳ,YKK,amh,t,110011,2021-02-10 10:08:56.5975
+957,Woreda 09,4,Woreda,YKK,eng,t,110011,2021-02-10 10:08:56.5975
+957,ወረዳ 09,4,ወረዳ,YKK,amh,t,110011,2021-02-10 10:08:56.5975
+958,Woreda 10,4,Woreda,YKK,eng,t,110011,2021-02-10 10:08:56.5975
+958,ወረዳ 10,4,ወረዳ,YKK,amh,t,110011,2021-02-10 10:08:56.5975
+959,Woreda 11,4,Woreda,YKK,eng,t,110011,2021-02-10 10:08:56.5975
+959,ወረዳ 11,4,ወረዳ,YKK,amh,t,110011,2021-02-10 10:08:56.5975
+960,Woreda 12,4,Woreda,YKK,eng,t,110011,2021-02-10 10:08:56.5975
+960,ወረዳ 12,4,ወረዳ,YKK,amh,t,110011,2021-02-10 10:08:56.5975
+560,Menjiwo,4,Woreda,KEF,eng,t,110011,2021-02-10 08:49:50.569005
+560,መንጂዎ,4,ወረዳ,KEF,amh,t,110011,2021-02-10 08:49:50.569005
+961,Woreda 13,4,Woreda,YKK,eng,t,110011,2021-02-10 10:10:09.688663
+961,ወረዳ 13,4,ወረዳ,YKK,amh,t,110011,2021-02-10 10:10:09.688663
+962,Woreda 14,4,Woreda,YKK,eng,t,110011,2021-02-10 10:10:09.688663
+962,ወረዳ 14,4,ወረዳ,YKK,amh,t,110011,2021-02-10 10:10:09.688663
+963,Woreda 15,4,Woreda,YKK,eng,t,110011,2021-02-10 10:10:09.688663
+963,ወረዳ 15,4,ወረዳ,YKK,amh,t,110011,2021-02-10 10:10:09.688663
+964,Woreda 16,4,Woreda,YKK,eng,t,110011,2021-02-10 10:10:09.688663
+964,ወረዳ 16,4,ወረዳ,YKK,amh,t,110011,2021-02-10 10:10:09.688663
+965,Woreda 17,4,Woreda,YKK,eng,t,110011,2021-02-10 10:10:09.688663
+965,ወረዳ 17,4,ወረዳ,YKK,amh,t,110011,2021-02-10 10:10:09.688663
+966,Woreda 18,4,Woreda,YKK,eng,t,110011,2021-02-10 10:10:09.688663
+966,ወረዳ 18,4,ወረዳ,YKK,amh,t,110011,2021-02-10 10:10:09.688663
+967,Woreda 19,4,Woreda,YKK,eng,t,110011,2021-02-10 10:10:09.688663
+967,ወረዳ 19,4,ወረዳ,YKK,amh,t,110011,2021-02-10 10:10:09.688663
+968,Woreda 20,4,Woreda,YKK,eng,t,110011,2021-02-10 10:10:09.688663
+968,ወረዳ 20,4,ወረዳ,YKK,amh,t,110011,2021-02-10 10:10:09.688663
+969,Woreda 22,4,Woreda,YKK,eng,t,110011,2021-02-10 10:10:09.688663
+969,ወረዳ 22,4,ወረዳ,YKK,amh,t,110011,2021-02-10 10:10:09.688663
+NGZ,North Gondar Zone,2,Zone,AMH,eng,t,110011,2021-02-10 07:55:07.585804
+970,Woreda 01,4,Woreda,LMK,eng,t,110011,2021-02-10 10:10:55.070731
+970,ወረዳ 01,4,ወረዳ,LMK,amh,t,110011,2021-02-10 10:10:55.070731
+971,Woreda 02,4,Woreda,LMK,eng,t,110011,2021-02-10 10:10:55.070731
+971,ወረዳ 02,4,ወረዳ,LMK,amh,t,110011,2021-02-10 10:10:55.070731
+972,Woreda 03,4,Woreda,LMK,eng,t,110011,2021-02-10 10:10:55.070731
+972,ወረዳ 03,4,ወረዳ,LMK,amh,t,110011,2021-02-10 10:10:55.070731
+973,Woreda 04,4,Woreda,LMK,eng,t,110011,2021-02-10 10:10:55.070731
+973,ወረዳ 04,4,ወረዳ,LMK,amh,t,110011,2021-02-10 10:10:55.070731
+974,Woreda 05,4,Woreda,LMK,eng,t,110011,2021-02-10 10:10:55.070731
+974,ወረዳ 05,4,ወረዳ,LMK,amh,t,110011,2021-02-10 10:10:55.070731
+975,Woreda 06,4,Woreda,LMK,eng,t,110011,2021-02-10 10:10:55.070731
+975,ወረዳ 06,4,ወረዳ,LMK,amh,t,110011,2021-02-10 10:10:55.070731
+976,Woreda 07,4,Woreda,LMK,eng,t,110011,2021-02-10 10:10:55.070731
+976,ወረዳ 07,4,ወረዳ,LMK,amh,t,110011,2021-02-10 10:10:55.070731
+977,Woreda 08,4,Woreda,LMK,eng,t,110011,2021-02-10 10:10:55.070731
+566,Duna,4,Woreda,HAD,eng,t,110011,2021-02-10 08:52:34.677162
+566,ዱና,4,ወረዳ,HAD,amh,t,110011,2021-02-10 08:52:34.677162
+977,ወረዳ 08,4,ወረዳ,LMK,amh,t,110011,2021-02-10 10:10:55.070731
+978,Woreda 09,4,Woreda,LMK,eng,t,110011,2021-02-10 10:10:55.070731
+978,ወረዳ 09,4,ወረዳ,LMK,amh,t,110011,2021-02-10 10:10:55.070731
+979,Woreda 10,4,Woreda,LMK,eng,t,110011,2021-02-10 10:10:55.070731
+979,ወረዳ 10,4,ወረዳ,LMK,amh,t,110011,2021-02-10 10:10:55.070731
+NGZ,ሰሜን ጎንደር ዞን,2,ዞን,AMH,amh,t,110011,2021-02-10 07:55:07.585804
+567,Gibe,4,Woreda,HAD,eng,t,110011,2021-02-10 10:11:21.38965
+567,ጊቤ,4,ወረዳ,HAD,amh,t,110011,2021-02-10 10:11:21.38965
+980,Woreda 11,4,Woreda,LMK,eng,t,110011,2021-02-10 10:11:43.479574
+980,ወረዳ 11,4,ወረዳ,LMK,amh,t,110011,2021-02-10 10:11:43.479574
+981,Woreda 12,4,Woreda,LMK,eng,t,110011,2021-02-10 10:11:43.479574
+981,ወረዳ 12,4,ወረዳ,LMK,amh,t,110011,2021-02-10 10:11:43.479574
+982,Woreda 13,4,Woreda,LMK,eng,t,110011,2021-02-10 10:11:43.479574
+982,ወረዳ 13,4,ወረዳ,LMK,amh,t,110011,2021-02-10 10:11:43.479574
+983,Woreda 14,4,Woreda,LMK,eng,t,110011,2021-02-10 10:11:43.479574
+983,ወረዳ 14,4,ወረዳ,LMK,amh,t,110011,2021-02-10 10:11:43.479574
+984,Woreda 15,4,Woreda,LMK,eng,t,110011,2021-02-10 10:11:43.479574
+984,ወረዳ 15,4,ወረዳ,LMK,amh,t,110011,2021-02-10 10:11:43.479574
+985,Woreda 16,4,Woreda,LMK,eng,t,110011,2021-02-10 10:11:43.479574
+985,ወረዳ 16,4,ወረዳ,LMK,amh,t,110011,2021-02-10 10:11:43.479574
+986,Woreda 17,4,Woreda,LMK,eng,t,110011,2021-02-10 10:11:43.479574
+986,ወረዳ 17,4,ወረዳ,LMK,amh,t,110011,2021-02-10 10:11:43.479574
+987,Woreda 18,4,Woreda,LMK,eng,t,110011,2021-02-10 10:11:43.479574
+987,ወረዳ 18,4,ወረዳ,LMK,amh,t,110011,2021-02-10 10:11:43.479574
+988,Woreda 19,4,Woreda,LMK,eng,t,110011,2021-02-10 10:11:43.479574
+988,ወረዳ 19,4,ወረዳ,LMK,amh,t,110011,2021-02-10 10:11:43.479574
+989,Woreda 20,4,Woreda,LMK,eng,t,110011,2021-02-10 10:11:43.479574
+989,ወረዳ 20,4,ወረዳ,LMK,amh,t,110011,2021-02-10 10:11:43.479574
+NWZ,North Wollo Zone,2,Zone,AMH,eng,t,110011,2021-02-10 07:55:07.585804
+990,Woreda 22,4,Woreda,LMK,eng,t,110011,2021-02-10 10:15:22.55779
+990,ወረዳ 22,4,ወረዳ,LMK,amh,t,110011,2021-02-10 10:15:22.55779
+700,ዋርደር,4,ወረዳ,DOL,amh,t,110011,2021-02-10 10:30:17.801648
+NWZ,ሰሜን ወሎ ዞን,2,ዞን,AMH,amh,t,110011,2021-02-10 07:55:07.585804
+SWZ,South Wollo Zone,2,Zone,AMH,eng,t,110011,2021-02-10 07:55:07.585804
+SWZ,ደቡብ ወሎ ዞን,2,ዞን,AMH,amh,t,110011,2021-02-10 07:55:07.585804
+NSA,North Shewa Zone,2,Zone,AMH,eng,t,110011,2021-02-10 07:55:07.585804
+NSA,ሰሜን ሸዋ ዞን,2,ዞን,AMH,amh,t,110011,2021-02-10 07:55:07.585804
+EGZ,East Gojjam Zone,2,Zone,AMH,eng,t,110011,2021-02-10 07:55:07.585804
+EGZ,ምስራቅ ጎጃም ዞን,2,ዞን,AMH,amh,t,110011,2021-02-10 07:55:07.585804
+WGZ,West Gojjam Zone,2,Zone,AMH,eng,t,110011,2021-02-10 07:55:07.585804
+WGZ,ምዕራብ ጎጃም ዞን,2,ዞን,AMH,amh,t,110011,2021-02-10 07:55:07.585804
+WHZ,Wag Hemra Zone,2,Zone,AMH,eng,t,110011,2021-02-10 07:55:07.585804
+WHZ,የዋግ ኽምራ ዞን,2,ዞን,AMH,amh,t,110011,2021-02-10 07:55:07.585804
+AGZ,Agew Awi Zone,2,Zone,AMH,eng,t,110011,2021-02-10 07:55:07.585804
+AGZ,አገው አዊ ዞን,2,ዞን,AMH,amh,t,110011,2021-02-10 07:55:07.585804
+OSZ,Oromo-special Zone,2,Zone,AMH,eng,t,110011,2021-02-10 07:55:07.585804
+OSZ,የኦሮሞ-ልዩ ዞን,2,ዞን,AMH,amh,t,110011,2021-02-10 07:55:07.585804
+BDZ,Bahir Dar Special Zone,2,Zone,AMH,eng,t,110011,2021-02-10 07:55:07.585804
+701,Daratole,4,Woreda,DOL,eng,t,110011,2021-02-10 10:31:53.737035
+701,ዳራቶሌ,4,ወረዳ,DOL,amh,t,110011,2021-02-10 10:31:53.737035
+575,Soro woreda,4,Woreda,HAD,eng,t,110011,2021-02-10 10:33:06.722318
+575,ሶሮ,4,ወረዳ,HAD,amh,t,110011,2021-02-10 10:33:06.722318
+703,Galxamur,4,ወረዳ,DOL,amh,t,110011,2021-02-10 10:33:35.177524
+703,Lehel-yucub,4,Woreda,DOL,eng,t,110011,2021-02-10 10:33:35.177524
+704,Alaje,4,Woreda,TSHZ,eng,t,110011,2021-02-10 10:33:35.177524
+704,አላጄ,4,ወረዳ,TSHZ,amh,t,110011,2021-02-10 10:33:35.177524
+705,Alamata,4,Woreda,TSHZ,eng,t,110011,2021-02-10 10:33:35.177524
+705,አላማጣ,4,ወረዳ,TSHZ,amh,t,110011,2021-02-10 10:33:35.177524
+706,Endamehoni,4,Woreda,TSHZ,eng,t,110011,2021-02-10 10:33:35.177524
+706,እንደመሆኒ,4,ወረዳ,TSHZ,amh,t,110011,2021-02-10 10:33:35.177524
+707,Ofla,4,Woreda,TSHZ,eng,t,110011,2021-02-10 10:33:35.177524
+802,Woreda 01,4,Woreda,AKI,eng,t,110011,2021-02-10 10:01:01.635388
+802,ወረዳ 01,4,ወረዳ,AKI,amh,t,110011,2021-02-10 10:01:01.635388
+803,Woreda 02,4,Woreda,AKI,eng,t,110011,2021-02-10 10:01:01.635388
+803,ወረዳ 02,4,ወረዳ,AKI,amh,t,110011,2021-02-10 10:01:01.635388
+804,Woreda 03,4,Woreda,AKI,eng,t,110011,2021-02-10 10:01:01.635388
+804,ወረዳ 03,4,ወረዳ,AKI,amh,t,110011,2021-02-10 10:01:01.635388
+805,Woreda 04,4,Woreda,AKI,eng,t,110011,2021-02-10 10:01:01.635388
+805,ወረዳ 04,4,ወረዳ,AKI,amh,t,110011,2021-02-10 10:01:01.635388
+806,Woreda 05,4,Woreda,AKI,eng,t,110011,2021-02-10 10:01:01.635388
+707,ኦፍላ,4,ወረዳ,TSHZ,amh,t,110011,2021-02-10 10:33:35.177524
+708,Maichew,4,Woreda,TSHZ,eng,t,110011,2021-02-10 10:33:35.177524
+806,ወረዳ 05,4,ወረዳ,AKI,amh,t,110011,2021-02-10 10:01:01.635388
+807,Woreda 06,4,Woreda,AKI,eng,t,110011,2021-02-10 10:01:01.635388
+807,ወረዳ 06,4,ወረዳ,AKI,amh,t,110011,2021-02-10 10:01:01.635388
+808,Woreda 07,4,Woreda,AKI,eng,t,110011,2021-02-10 10:01:01.635388
+808,ወረዳ 07,4,ወረዳ,AKI,amh,t,110011,2021-02-10 10:01:01.635388
+809,Woreda 08,4,Woreda,AKI,eng,t,110011,2021-02-10 10:01:01.635388
+809,ወረዳ 08,4,ወረዳ,AKI,amh,t,110011,2021-02-10 10:01:01.635388
+810,Woreda 09,4,Woreda,AKI,eng,t,110011,2021-02-10 10:01:01.635388
+810,ወረዳ 09,4,ወረዳ,AKI,amh,t,110011,2021-02-10 10:01:01.635388
+811,Woreda 10,4,Woreda,AKI,eng,t,110011,2021-02-10 10:01:01.635388
+811,ወረዳ 10,4,ወረዳ,AKI,amh,t,110011,2021-02-10 10:01:01.635388
+812,Woreda 11,4,Woreda,AKI,eng,t,110011,2021-02-10 10:01:01.635388
+812,ወረዳ 11,4,ወረዳ,AKI,amh,t,110011,2021-02-10 10:01:01.635388
+813,Woreda 12,4,Woreda,AKI,eng,t,110011,2021-02-10 10:01:01.635388
+813,ወረዳ 12,4,ወረዳ,AKI,amh,t,110011,2021-02-10 10:01:01.635388
+814,Woreda 13,4,Woreda,AKI,eng,t,110011,2021-02-10 10:01:01.635388
+814,ወረዳ 13,4,ወረዳ,AKI,amh,t,110011,2021-02-10 10:01:01.635388
+815,Woreda 14,4,Woreda,AKI,eng,t,110011,2021-02-10 10:01:01.635388
+815,ወረዳ 14,4,ወረዳ,AKI,amh,t,110011,2021-02-10 10:01:01.635388
+816,Woreda 15,4,Woreda,AKI,eng,t,110011,2021-02-10 10:01:01.635388
+816,ወረዳ 15,4,ወረዳ,AKI,amh,t,110011,2021-02-10 10:01:01.635388
+817,Woreda 16,4,Woreda,AKI,eng,t,110011,2021-02-10 10:01:01.635388
+817,ወረዳ 16,4,ወረዳ,AKI,amh,t,110011,2021-02-10 10:01:01.635388
+818,Woreda 17,4,Woreda,AKI,eng,t,110011,2021-02-10 10:01:01.635388
+818,ወረዳ 17,4,ወረዳ,AKI,amh,t,110011,2021-02-10 10:01:01.635388
+819,Woreda 18,4,Woreda,AKI,eng,t,110011,2021-02-10 10:01:01.635388
+819,ወረዳ 18,4,ወረዳ,AKI,amh,t,110011,2021-02-10 10:01:01.635388
+820,Woreda 19,4,Woreda,AKI,eng,t,110011,2021-02-10 10:01:01.635388
+820,ወረዳ 19,4,ወረዳ,AKI,amh,t,110011,2021-02-10 10:01:01.635388
+821,Woreda 20,4,Woreda,AKI,eng,t,110011,2021-02-10 10:01:01.635388
+821,ወረዳ 20,4,ወረዳ,AKI,amh,t,110011,2021-02-10 10:01:01.635388
+822,Woreda 22,4,Woreda,AKI,eng,t,110011,2021-02-10 10:01:01.635388
+822,ወረዳ 22,4,ወረዳ,AKI,amh,t,110011,2021-02-10 10:01:01.635388
+823,Woreda 01,4,Woreda,AKI,eng,t,110011,2021-02-10 10:01:01.635388
+823,ወረዳ 01,4,ወረዳ,ADK,amh,t,110011,2021-02-10 10:01:01.635388
+824,Woreda 02,4,Woreda,ADK,eng,t,110011,2021-02-10 10:01:01.635388
+824,ወረዳ 02,4,ወረዳ,ADK,amh,t,110011,2021-02-10 10:01:01.635388
+825,Woreda 03,4,Woreda,ADK,eng,t,110011,2021-02-10 10:01:01.635388
+825,ወረዳ 03,4,ወረዳ,ADK,amh,t,110011,2021-02-10 10:01:01.635388
+826,Woreda 04,4,Woreda,ADK,eng,t,110011,2021-02-10 10:01:01.635388
+826,ወረዳ 04,4,ወረዳ,ADK,amh,t,110011,2021-02-10 10:01:01.635388
+827,Woreda 05,4,Woreda,ADK,eng,t,110011,2021-02-10 10:01:01.635388
+827,ወረዳ 05,4,ወረዳ,ADK,amh,t,110011,2021-02-10 10:01:01.635388
+828,Woreda 06,4,Woreda,ADK,eng,t,110011,2021-02-10 10:01:01.635388
+828,ወረዳ 06,4,ወረዳ,ADK,amh,t,110011,2021-02-10 10:01:01.635388
+829,Woreda 07,4,Woreda,ADK,eng,t,110011,2021-02-10 10:01:01.635388
+829,ወረዳ 07,4,ወረዳ,ADK,amh,t,110011,2021-02-10 10:01:01.635388
+830,Woreda 08,4,Woreda,ADK,eng,t,110011,2021-02-10 10:01:01.635388
+830,ወረዳ 08,4,ወረዳ,ADK,amh,t,110011,2021-02-10 10:01:01.635388
+831,Woreda 09,4,Woreda,ADK,eng,t,110011,2021-02-10 10:01:01.635388
+831,ወረዳ 09,4,ወረዳ,ADK,amh,t,110011,2021-02-10 10:01:01.635388
+832,Woreda 10,4,Woreda,ADK,eng,t,110011,2021-02-10 10:01:01.635388
+832,ወረዳ 10,4,ወረዳ,ADK,amh,t,110011,2021-02-10 10:01:01.635388
+833,Woreda 11,4,Woreda,ADK,eng,t,110011,2021-02-10 10:01:01.635388
+833,ወረዳ 11,4,ወረዳ,ADK,amh,t,110011,2021-02-10 10:01:01.635388
+834,Woreda 12,4,Woreda,ADK,eng,t,110011,2021-02-10 10:01:01.635388
+834,ወረዳ 12,4,ወረዳ,ADK,amh,t,110011,2021-02-10 10:01:01.635388
+835,Woreda 13,4,Woreda,ADK,eng,t,110011,2021-02-10 10:01:01.635388
+835,ወረዳ 13,4,ወረዳ,ADK,amh,t,110011,2021-02-10 10:01:01.635388
+836,Woreda 14,4,Woreda,ADK,eng,t,110011,2021-02-10 10:01:01.635388
+836,ወረዳ 14,4,ወረዳ,ADK,amh,t,110011,2021-02-10 10:01:01.635388
+837,Woreda 15,4,Woreda,ADK,eng,t,110011,2021-02-10 10:01:01.635388
+837,ወረዳ 15,4,ወረዳ,ADK,amh,t,110011,2021-02-10 10:01:01.635388
+838,Woreda 16,4,Woreda,ADK,eng,t,110011,2021-02-10 10:01:01.635388
+838,ወረዳ 16,4,ወረዳ,ADK,amh,t,110011,2021-02-10 10:01:01.635388
+839,Woreda 17,4,Woreda,ADK,eng,t,110011,2021-02-10 10:01:01.635388
+839,ወረዳ 17,4,ወረዳ,ADK,amh,t,110011,2021-02-10 10:01:01.635388
+840,Woreda 18,4,Woreda,ADK,eng,t,110011,2021-02-10 10:01:01.635388
+840,ወረዳ 18,4,ወረዳ,ADK,amh,t,110011,2021-02-10 10:01:01.635388
+841,Woreda 19,4,Woreda,ADK,eng,t,110011,2021-02-10 10:01:01.635388
+841,ወረዳ 19,4,ወረዳ,ADK,amh,t,110011,2021-02-10 10:01:01.635388
+842,Woreda 20,4,Woreda,ADK,eng,t,110011,2021-02-10 10:01:01.635388
+842,ወረዳ 20,4,ወረዳ,ADK,amh,t,110011,2021-02-10 10:01:01.635388
+843,Woreda 22,4,Woreda,ADK,eng,t,110011,2021-02-10 10:01:01.635388
+843,ወረዳ 22,4,ወረዳ,ADK,amh,t,110011,2021-02-10 10:01:01.635388
+844,Woreda 01,4,Woreda,ARK,eng,t,110011,2021-02-10 10:01:01.635388
+844,ወረዳ 01,4,ወረዳ,ARK,amh,t,110011,2021-02-10 10:01:01.635388
+845,Woreda 02,4,Woreda,ARK,eng,t,110011,2021-02-10 10:01:01.635388
+845,ወረዳ 02,4,ወረዳ,ARK,amh,t,110011,2021-02-10 10:01:01.635388
+846,Woreda 03,4,Woreda,ARK,eng,t,110011,2021-02-10 10:01:01.635388
+846,ወረዳ 03,4,ወረዳ,ARK,amh,t,110011,2021-02-10 10:01:01.635388
+847,Woreda 04,4,Woreda,ARK,eng,t,110011,2021-02-10 10:01:01.635388
+847,ወረዳ 04,4,ወረዳ,ARK,amh,t,110011,2021-02-10 10:01:01.635388
+848,Woreda 05,4,Woreda,ARK,eng,t,110011,2021-02-10 10:01:01.635388
+848,ወረዳ 05,4,ወረዳ,ARK,amh,t,110011,2021-02-10 10:01:01.635388
+849,Woreda 06,4,Woreda,ARK,eng,t,110011,2021-02-10 10:01:01.635388
+849,ወረዳ 06,4,ወረዳ,ARK,amh,t,110011,2021-02-10 10:01:01.635388
+850,Woreda 07,4,Woreda,ARK,eng,t,110011,2021-02-10 10:01:01.635388
+850,ወረዳ 07,4,ወረዳ,ARK,amh,t,110011,2021-02-10 10:01:01.635388
+851,Woreda 08,4,Woreda,ARK,eng,t,110011,2021-02-10 10:01:01.635388
+851,ወረዳ 08,4,ወረዳ,ARK,amh,t,110011,2021-02-10 10:01:01.635388
+852,Woreda 09,4,Woreda,ARK,eng,t,110011,2021-02-10 10:01:01.635388
+852,ወረዳ 09,4,ወረዳ,ARK,amh,t,110011,2021-02-10 10:01:01.635388
+853,Woreda 10,4,Woreda,ARK,eng,t,110011,2021-02-10 10:01:01.635388
+853,ወረዳ 10,4,ወረዳ,ARK,amh,t,110011,2021-02-10 10:01:01.635388
+854,Woreda 11,4,Woreda,ARK,eng,t,110011,2021-02-10 10:01:01.635388
+854,ወረዳ 11,4,ወረዳ,ARK,amh,t,110011,2021-02-10 10:01:01.635388
+855,Woreda 12,4,Woreda,ARK,eng,t,110011,2021-02-10 10:01:01.635388
+855,ወረዳ 12,4,ወረዳ,ARK,amh,t,110011,2021-02-10 10:01:01.635388
+856,Woreda 13,4,Woreda,ARK,eng,t,110011,2021-02-10 10:01:01.635388
+856,ወረዳ 13,4,ወረዳ,ARK,amh,t,110011,2021-02-10 10:01:01.635388
+857,Woreda 14,4,Woreda,ARK,eng,t,110011,2021-02-10 10:01:01.635388
+857,ወረዳ 14,4,ወረዳ,ARK,amh,t,110011,2021-02-10 10:01:01.635388
+858,Woreda 15,4,Woreda,ARK,eng,t,110011,2021-02-10 10:01:01.635388
+858,ወረዳ 15,4,ወረዳ,ARK,amh,t,110011,2021-02-10 10:01:01.635388
+859,Woreda 16,4,Woreda,ARK,eng,t,110011,2021-02-10 10:01:01.635388
+859,ወረዳ 16,4,ወረዳ,ARK,amh,t,110011,2021-02-10 10:01:01.635388
+860,Woreda 17,4,Woreda,ARK,eng,t,110011,2021-02-10 10:01:01.635388
+860,ወረዳ 17,4,ወረዳ,ARK,amh,t,110011,2021-02-10 10:01:01.635388
+861,Woreda 18,4,Woreda,ARK,eng,t,110011,2021-02-10 10:01:01.635388
+861,ወረዳ 18,4,ወረዳ,ARK,amh,t,110011,2021-02-10 10:01:01.635388
+862,Woreda 19,4,Woreda,ARK,eng,t,110011,2021-02-10 10:01:01.635388
+862,ወረዳ 19,4,ወረዳ,ARK,amh,t,110011,2021-02-10 10:01:01.635388
+863,Woreda 20,4,Woreda,ARK,eng,t,110011,2021-02-10 10:01:01.635388
+863,ወረዳ 20,4,ወረዳ,ARK,amh,t,110011,2021-02-10 10:01:01.635388
+864,Woreda 22,4,Woreda,ARK,eng,t,110011,2021-02-10 10:01:01.635388
+864,ወረዳ 22,4,ወረዳ,ARK,amh,t,110011,2021-02-10 10:01:01.635388
+865,Woreda 01,4,Woreda,GKK,eng,t,110011,2021-02-10 10:01:01.635388
+865,ወረዳ 01,4,ወረዳ,GKK,amh,t,110011,2021-02-10 10:01:01.635388
+866,Woreda 02,4,Woreda,GKK,eng,t,110011,2021-02-10 10:01:01.635388
+866,ወረዳ 02,4,ወረዳ,GKK,amh,t,110011,2021-02-10 10:01:01.635388
+867,Woreda 03,4,Woreda,GKK,eng,t,110011,2021-02-10 10:01:01.635388
+867,ወረዳ 03,4,ወረዳ,GKK,amh,t,110011,2021-02-10 10:01:01.635388
+868,Woreda 04,4,Woreda,GKK,eng,t,110011,2021-02-10 10:01:01.635388
+868,ወረዳ 04,4,ወረዳ,GKK,amh,t,110011,2021-02-10 10:01:01.635388
+869,Woreda 05,4,Woreda,GKK,eng,t,110011,2021-02-10 10:01:01.635388
+869,ወረዳ 05,4,ወረዳ,GKK,amh,t,110011,2021-02-10 10:01:01.635388
+870,Woreda 06,4,Woreda,GKK,eng,t,110011,2021-02-10 10:01:01.635388
+870,ወረዳ 06,4,ወረዳ,GKK,amh,t,110011,2021-02-10 10:01:01.635388
+871,Woreda 07,4,Woreda,GKK,eng,t,110011,2021-02-10 10:01:01.635388
+871,ወረዳ 07,4,ወረዳ,GKK,amh,t,110011,2021-02-10 10:01:01.635388
+872,Woreda 08,4,Woreda,GKK,eng,t,110011,2021-02-10 10:01:01.635388
+872,ወረዳ 08,4,ወረዳ,GKK,amh,t,110011,2021-02-10 10:01:01.635388
+873,Woreda 09,4,Woreda,GKK,eng,t,110011,2021-02-10 10:01:01.635388
+873,ወረዳ 09,4,ወረዳ,GKK,amh,t,110011,2021-02-10 10:01:01.635388
+874,Woreda 10,4,Woreda,GKK,eng,t,110011,2021-02-10 10:01:01.635388
+874,ወረዳ 10,4,ወረዳ,GKK,amh,t,110011,2021-02-10 10:01:01.635388
+875,Woreda 11,4,Woreda,GKK,eng,t,110011,2021-02-10 10:01:01.635388
+875,ወረዳ 11,4,ወረዳ,GKK,amh,t,110011,2021-02-10 10:01:01.635388
+876,Woreda 12,4,Woreda,GKK,eng,t,110011,2021-02-10 10:01:01.635388
+876,ወረዳ 12,4,ወረዳ,GKK,amh,t,110011,2021-02-10 10:01:01.635388
+877,Woreda 13,4,Woreda,GKK,eng,t,110011,2021-02-10 10:01:01.635388
+877,ወረዳ 13,4,ወረዳ,GKK,amh,t,110011,2021-02-10 10:01:01.635388
+878,Woreda 14,4,Woreda,GKK,eng,t,110011,2021-02-10 10:01:01.635388
+878,ወረዳ 14,4,ወረዳ,GKK,amh,t,110011,2021-02-10 10:01:01.635388
+879,Woreda 15,4,Woreda,GKK,eng,t,110011,2021-02-10 10:01:01.635388
+879,ወረዳ 15,4,ወረዳ,GKK,amh,t,110011,2021-02-10 10:01:01.635388
+880,Woreda 16,4,Woreda,GKK,eng,t,110011,2021-02-10 10:01:01.635388
+880,ወረዳ 16,4,ወረዳ,GKK,amh,t,110011,2021-02-10 10:01:01.635388
+881,Woreda 17,4,Woreda,GKK,eng,t,110011,2021-02-10 10:01:01.635388
+881,ወረዳ 17,4,ወረዳ,GKK,amh,t,110011,2021-02-10 10:01:01.635388
+882,Woreda 18,4,Woreda,GKK,eng,t,110011,2021-02-10 10:01:01.635388
+882,ወረዳ 18,4,ወረዳ,GKK,amh,t,110011,2021-02-10 10:01:01.635388
+883,Woreda 19,4,Woreda,GKK,eng,t,110011,2021-02-10 10:01:01.635388
+883,ወረዳ 19,4,ወረዳ,GKK,amh,t,110011,2021-02-10 10:01:01.635388
+884,Woreda 20,4,Woreda,GKK,eng,t,110011,2021-02-10 10:01:01.635388
+884,ወረዳ 20,4,ወረዳ,GKK,amh,t,110011,2021-02-10 10:01:01.635388
+885,Woreda 22,4,Woreda,GKK,eng,t,110011,2021-02-10 10:01:01.635388
+885,ወረዳ 22,4,ወረዳ,GKK,amh,t,110011,2021-02-10 10:01:01.635388
+886,Woreda 01,4,Woreda,KKK,eng,t,110011,2021-02-10 10:01:01.635388
+886,ወረዳ 01,4,ወረዳ,KKK,amh,t,110011,2021-02-10 10:01:01.635388
+887,Woreda 02,4,Woreda,KKK,eng,t,110011,2021-02-10 10:01:01.635388
+887,ወረዳ 02,4,ወረዳ,KKK,amh,t,110011,2021-02-10 10:01:01.635388
+888,Woreda 03,4,Woreda,KKK,eng,t,110011,2021-02-10 10:01:01.635388
+888,ወረዳ 03,4,ወረዳ,KKK,amh,t,110011,2021-02-10 10:01:01.635388
+889,Woreda 04,4,Woreda,KKK,eng,t,110011,2021-02-10 10:01:01.635388
+889,ወረዳ 04,4,ወረዳ,KKK,amh,t,110011,2021-02-10 10:01:01.635388
+890,Woreda 05,4,Woreda,KKK,eng,t,110011,2021-02-10 10:01:01.635388
+890,ወረዳ 05,4,ወረዳ,KKK,amh,t,110011,2021-02-10 10:01:01.635388
+891,Woreda 06,4,Woreda,KKK,eng,t,110011,2021-02-10 10:01:01.635388
+891,ወረዳ 06,4,ወረዳ,KKK,amh,t,110011,2021-02-10 10:01:01.635388
+892,Woreda 07,4,Woreda,KKK,eng,t,110011,2021-02-10 10:01:01.635388
+892,ወረዳ 07,4,ወረዳ,KKK,amh,t,110011,2021-02-10 10:01:01.635388
+893,Woreda 08,4,Woreda,KKK,eng,t,110011,2021-02-10 10:01:01.635388
+893,ወረዳ 08,4,ወረዳ,KKK,amh,t,110011,2021-02-10 10:01:01.635388
+894,Woreda 09,4,Woreda,KKK,eng,t,110011,2021-02-10 10:01:01.635388
+894,ወረዳ 09,4,ወረዳ,KKK,amh,t,110011,2021-02-10 10:01:01.635388
+895,Woreda 10,4,Woreda,KKK,eng,t,110011,2021-02-10 10:01:01.635388
+895,ወረዳ 10,4,ወረዳ,KKK,amh,t,110011,2021-02-10 10:01:01.635388
+896,Woreda 11,4,Woreda,KKK,eng,t,110011,2021-02-10 10:01:01.635388
+896,ወረዳ 11,4,ወረዳ,KKK,amh,t,110011,2021-02-10 10:01:01.635388
+897,Woreda 12,4,Woreda,KKK,eng,t,110011,2021-02-10 10:01:01.635388
+897,ወረዳ 12,4,ወረዳ,KKK,amh,t,110011,2021-02-10 10:01:01.635388
+898,Woreda 13,4,Woreda,KKK,eng,t,110011,2021-02-10 10:01:01.635388
+898,ወረዳ 13,4,ወረዳ,KKK,amh,t,110011,2021-02-10 10:01:01.635388
+899,Woreda 14,4,Woreda,KKK,eng,t,110011,2021-02-10 10:01:01.635388
+899,ወረዳ 14,4,ወረዳ,KKK,amh,t,110011,2021-02-10 10:01:01.635388
+900,Woreda 15,4,Woreda,KKK,eng,t,110011,2021-02-10 10:01:01.635388
+900,ወረዳ 15,4,ወረዳ,KKK,amh,t,110011,2021-02-10 10:01:01.635388
+901,Woreda 16,4,Woreda,KKK,eng,t,110011,2021-02-10 10:01:01.635388
+901,ወረዳ 16,4,ወረዳ,KKK,amh,t,110011,2021-02-10 10:01:01.635388
+902,Woreda 17,4,Woreda,KKK,eng,t,110011,2021-02-10 10:01:01.635388
+902,ወረዳ 17,4,ወረዳ,KKK,amh,t,110011,2021-02-10 10:01:01.635388
+903,Woreda 18,4,Woreda,KKK,eng,t,110011,2021-02-10 10:01:01.635388
+903,ወረዳ 18,4,ወረዳ,KKK,amh,t,110011,2021-02-10 10:01:01.635388
+904,Woreda 19,4,Woreda,KKK,eng,t,110011,2021-02-10 10:01:01.635388
+904,ወረዳ 19,4,ወረዳ,KKK,amh,t,110011,2021-02-10 10:01:01.635388
+905,Woreda 20,4,Woreda,KKK,eng,t,110011,2021-02-10 10:01:01.635388
+905,ወረዳ 20,4,ወረዳ,KKK,amh,t,110011,2021-02-10 10:01:01.635388
+906,Woreda 22,4,Woreda,KKK,eng,t,110011,2021-02-10 10:01:01.635388
+906,ወረዳ 22,4,ወረዳ,KKK,amh,t,110011,2021-02-10 10:01:01.635388
+907,Woreda 01,4,Woreda,LKK,eng,t,110011,2021-02-10 10:01:01.635388
+907,ወረዳ 01,4,ወረዳ,LKK,amh,t,110011,2021-02-10 10:01:01.635388
+908,Woreda 02,4,Woreda,LKK,eng,t,110011,2021-02-10 10:01:01.635388
+908,ወረዳ 02,4,ወረዳ,LKK,amh,t,110011,2021-02-10 10:01:01.635388
+909,Woreda 03,4,Woreda,LKK,eng,t,110011,2021-02-10 10:01:01.635388
+909,ወረዳ 03,4,ወረዳ,LKK,amh,t,110011,2021-02-10 10:01:01.635388
+910,Woreda 04,4,Woreda,LKK,eng,t,110011,2021-02-10 10:01:01.635388
+910,ወረዳ 04,4,ወረዳ,LKK,amh,t,110011,2021-02-10 10:01:01.635388
+911,Woreda 05,4,Woreda,LKK,eng,t,110011,2021-02-10 10:01:01.635388
+911,ወረዳ 05,4,ወረዳ,LKK,amh,t,110011,2021-02-10 10:01:01.635388
+912,Woreda 06,4,Woreda,LKK,eng,t,110011,2021-02-10 10:01:01.635388
+912,ወረዳ 06,4,ወረዳ,LKK,amh,t,110011,2021-02-10 10:01:01.635388
+913,Woreda 07,4,Woreda,LKK,eng,t,110011,2021-02-10 10:01:01.635388
+913,ወረዳ 07,4,ወረዳ,LKK,amh,t,110011,2021-02-10 10:01:01.635388
+914,Woreda 08,4,Woreda,LKK,eng,t,110011,2021-02-10 10:01:01.635388
+914,ወረዳ 08,4,ወረዳ,LKK,amh,t,110011,2021-02-10 10:01:01.635388
+915,Woreda 09,4,Woreda,LKK,eng,t,110011,2021-02-10 10:01:01.635388
+915,ወረዳ 09,4,ወረዳ,LKK,amh,t,110011,2021-02-10 10:01:01.635388
+916,Woreda 10,4,Woreda,LKK,eng,t,110011,2021-02-10 10:01:01.635388
+916,ወረዳ 10,4,ወረዳ,LKK,amh,t,110011,2021-02-10 10:01:01.635388
+917,Woreda 11,4,Woreda,LKK,eng,t,110011,2021-02-10 10:01:01.635388
+917,ወረዳ 11,4,ወረዳ,LKK,amh,t,110011,2021-02-10 10:01:01.635388
+918,Woreda 12,4,Woreda,LKK,eng,t,110011,2021-02-10 10:01:01.635388
+918,ወረዳ 12,4,ወረዳ,LKK,amh,t,110011,2021-02-10 10:01:01.635388
+919,Woreda 13,4,Woreda,LKK,eng,t,110011,2021-02-10 10:01:01.635388
+919,ወረዳ 13,4,ወረዳ,LKK,amh,t,110011,2021-02-10 10:01:01.635388
+920,Woreda 14,4,Woreda,LKK,eng,t,110011,2021-02-10 10:01:01.635388
+920,ወረዳ 14,4,ወረዳ,LKK,amh,t,110011,2021-02-10 10:01:01.635388
+921,Woreda 15,4,Woreda,LKK,eng,t,110011,2021-02-10 10:01:01.635388
+921,ወረዳ 15,4,ወረዳ,LKK,amh,t,110011,2021-02-10 10:01:01.635388
+922,Woreda 16,4,Woreda,LKK,eng,t,110011,2021-02-10 10:01:01.635388
+922,ወረዳ 16,4,ወረዳ,LKK,amh,t,110011,2021-02-10 10:01:01.635388
+923,Woreda 17,4,Woreda,LKK,eng,t,110011,2021-02-10 10:01:01.635388
+923,ወረዳ 17,4,ወረዳ,LKK,amh,t,110011,2021-02-10 10:01:01.635388
+924,Woreda 18,4,Woreda,LKK,eng,t,110011,2021-02-10 10:01:01.635388
+924,ወረዳ 18,4,ወረዳ,LKK,amh,t,110011,2021-02-10 10:01:01.635388
+925,Woreda 19,4,Woreda,LKK,eng,t,110011,2021-02-10 10:01:01.635388
+925,ወረዳ 19,4,ወረዳ,LKK,amh,t,110011,2021-02-10 10:01:01.635388
+926,Woreda 20,4,Woreda,LKK,eng,t,110011,2021-02-10 10:01:01.635388
+926,ወረዳ 20,4,ወረዳ,LKK,amh,t,110011,2021-02-10 10:01:01.635388
+927,Woreda 22,4,Woreda,LKK,eng,t,110011,2021-02-10 10:01:01.635388
+927,ወረዳ 22,4,ወረዳ,LKK,amh,t,110011,2021-02-10 10:01:01.635388
+928,Woreda 01,4,Woreda,NSK,eng,t,110011,2021-02-10 10:01:01.635388
+928,ወረዳ 01,4,ወረዳ,NSK,amh,t,110011,2021-02-10 10:01:01.635388
+929,Woreda 02,4,Woreda,NSK,eng,t,110011,2021-02-10 10:01:01.635388
+929,ወረዳ 02,4,ወረዳ,NSK,amh,t,110011,2021-02-10 10:01:01.635388
+930,Woreda 03,4,Woreda,NSK,eng,t,110011,2021-02-10 10:01:01.635388
+930,ወረዳ 03,4,ወረዳ,NSK,amh,t,110011,2021-02-10 10:01:01.635388
+931,Woreda 04,4,Woreda,NSK,eng,t,110011,2021-02-10 10:01:01.635388
+931,ወረዳ 04,4,ወረዳ,NSK,amh,t,110011,2021-02-10 10:01:01.635388
+932,Woreda 05,4,Woreda,NSK,eng,t,110011,2021-02-10 10:01:01.635388
+932,ወረዳ 05,4,ወረዳ,NSK,amh,t,110011,2021-02-10 10:01:01.635388
+933,Woreda 06,4,Woreda,NSK,eng,t,110011,2021-02-10 10:01:01.635388
+933,ወረዳ 06,4,ወረዳ,NSK,amh,t,110011,2021-02-10 10:01:01.635388
+934,Woreda 07,4,Woreda,NSK,eng,t,110011,2021-02-10 10:01:01.635388
+934,ወረዳ 07,4,ወረዳ,NSK,amh,t,110011,2021-02-10 10:01:01.635388
+935,Woreda 08,4,Woreda,NSK,eng,t,110011,2021-02-10 10:01:01.635388
+935,ወረዳ 08,4,ወረዳ,NSK,amh,t,110011,2021-02-10 10:01:01.635388
+936,Woreda 09,4,Woreda,NSK,eng,t,110011,2021-02-10 10:01:01.635388
+936,ወረዳ 09,4,ወረዳ,NSK,amh,t,110011,2021-02-10 10:01:01.635388
+937,Woreda 10,4,Woreda,NSK,eng,t,110011,2021-02-10 10:01:01.635388
+937,ወረዳ 10,4,ወረዳ,NSK,amh,t,110011,2021-02-10 10:01:01.635388
+938,Woreda 11,4,Woreda,NSK,eng,t,110011,2021-02-10 10:01:01.635388
+938,ወረዳ 11,4,ወረዳ,NSK,amh,t,110011,2021-02-10 10:01:01.635388
+939,Woreda 12,4,Woreda,NSK,eng,t,110011,2021-02-10 10:01:01.635388
+939,ወረዳ 12,4,ወረዳ,NSK,amh,t,110011,2021-02-10 10:01:01.635388
+940,Woreda 13,4,Woreda,NSK,eng,t,110011,2021-02-10 10:01:01.635388
+940,ወረዳ 13,4,ወረዳ,NSK,amh,t,110011,2021-02-10 10:01:01.635388
+941,Woreda 14,4,Woreda,NSK,eng,t,110011,2021-02-10 10:01:01.635388
+941,ወረዳ 14,4,ወረዳ,NSK,amh,t,110011,2021-02-10 10:01:01.635388
+942,Woreda 15,4,Woreda,NSK,eng,t,110011,2021-02-10 10:01:01.635388
+942,ወረዳ 15,4,ወረዳ,NSK,amh,t,110011,2021-02-10 10:01:01.635388
+943,Woreda 16,4,Woreda,NSK,eng,t,110011,2021-02-10 10:01:01.635388
+943,ወረዳ 16,4,ወረዳ,NSK,amh,t,110011,2021-02-10 10:01:01.635388
+944,Woreda 17,4,Woreda,NSK,eng,t,110011,2021-02-10 10:01:01.635388
+944,ወረዳ 17,4,ወረዳ,NSK,amh,t,110011,2021-02-10 10:01:01.635388
+945,Woreda 18,4,Woreda,NSK,eng,t,110011,2021-02-10 10:01:01.635388
+945,ወረዳ 18,4,ወረዳ,NSK,amh,t,110011,2021-02-10 10:01:01.635388
+946,Woreda 19,4,Woreda,NSK,eng,t,110011,2021-02-10 10:01:01.635388
+946,ወረዳ 19,4,ወረዳ,NSK,amh,t,110011,2021-02-10 10:01:01.635388
+947,Woreda 20,4,Woreda,NSK,eng,t,110011,2021-02-10 10:01:01.635388
+947,ወረዳ 20,4,ወረዳ,NSK,amh,t,110011,2021-02-10 10:01:01.635388
+948,Woreda 22,4,Woreda,NSK,eng,t,110011,2021-02-10 10:01:01.635388
+948,ወረዳ 22,4,ወረዳ,NSK,amh,t,110011,2021-02-10 10:01:01.635388
+949,Woreda 01,4,Woreda,YKK,eng,t,110011,2021-02-10 10:01:01.635388
+949,ወረዳ 01,4,ወረዳ,YKK,amh,t,110011,2021-02-10 10:01:01.635388
+950,Woreda 02,4,Woreda,YKK,eng,t,110011,2021-02-10 10:01:01.635388
+950,ወረዳ 02,4,ወረዳ,YKK,amh,t,110011,2021-02-10 10:01:01.635388
+951,Woreda 03,4,Woreda,YKK,eng,t,110011,2021-02-10 10:01:01.635388
+951,ወረዳ 03,4,ወረዳ,YKK,amh,t,110011,2021-02-10 10:01:01.635388
+BDZ,ባህር ዳር ልዩ ዞን,2,ዞን,AMH,amh,t,110011,2021-02-10 07:55:07.585804
+ASZ,Argobba Special Zone,2,Zone,AMH,eng,t,110011,2021-02-10 07:55:07.585804
+ASZ,አርጎባ ልዩ ዞን,2,ዞን,AMH,amh,t,110011,2021-02-10 07:55:07.585804
+AKI,Akaki Kality,2,Zone,AAB,eng,t,110011,2021-02-10 07:55:07.585804
+AKI,አቃቂ ቃሊቲ,2,ዞን,AAB,amh,t,110011,2021-02-10 07:55:07.585804
+568,Gomibora,4,Woreda,HAD,eng,t,110011,2021-02-10 10:23:34.521401
+568,ጎሚቦራ,4,ወረዳ,HAD,amh,t,110011,2021-02-10 10:23:34.521401
+569,Hosaena town,4,Woreda,HAD,eng,t,110011,2021-02-10 10:23:34.521401
+569,ሆሳእና ከተማ,4,ወረዳ,HAD,amh,t,110011,2021-02-10 10:23:34.521401
+570,Lemo woreda,4,Woreda,HAD,eng,t,110011,2021-02-10 10:23:34.521401
+570,ሌሞ,4,ወረዳ,HAD,amh,t,110011,2021-02-10 10:23:34.521401
+571,Mirab Badawacho,4,Woreda,HAD,eng,t,110011,2021-02-10 10:24:58.452785
+571,ምዕራብ ባዳዋቾ,4,ወረዳ,HAD,amh,t,110011,2021-02-10 10:24:58.452785
+572,Misha,4,Woreda,HAD,eng,t,110011,2021-02-10 10:25:53.480987
+572,ሚሻ,4,ወረዳ,HAD,amh,t,110011,2021-02-10 10:25:53.480987
+573,Misraq Badawacho,4,Woreda,HAD,eng,t,110011,2021-02-10 10:25:53.480987
+573,ምስራቅ ባዳዋቾ,4,ወረዳ,HAD,amh,t,110011,2021-02-10 10:25:53.480987
+700,Warder,4,Woreda,DOL,eng,t,110011,2021-02-10 10:30:17.801648
+708,ማይጨው,4,ወረዳ,TSHZ,amh,t,110011,2021-02-10 10:33:35.177524
+709,Raya Azebo,4,Woreda,TSHZ,eng,t,110011,2021-02-10 10:33:35.177524
+709,ራያ አዘቦ,4,ወረዳ,TSHZ,amh,t,110011,2021-02-10 10:33:35.177524
+710,Enderta,4,Woreda,`TSEZ,eng,t,110011,2021-02-10 10:33:35.177524
+710,እንደርታ,4,ወረዳ,`TSEZ,amh,t,110011,2021-02-10 10:33:35.177524
+711,Samre,4,Woreda,`TSEZ,eng,t,110011,2021-02-10 10:33:35.177524
+711,ሳምሬ,4,ወረዳ,`TSEZ,amh,t,110011,2021-02-10 10:33:35.177524
+712,Hintalo Wajirat,4,Woreda,`TSEZ,eng,t,110011,2021-02-10 10:33:35.177524
+712,ሂንታሎ ዋጂራት,4,ወረዳ,`TSEZ,amh,t,110011,2021-02-10 10:33:35.177524
+713,Degua Tembien,4,Woreda,`TSEZ,eng,t,110011,2021-02-10 10:33:35.177524
+713,ደጉዋ ተምቢየን,4,ወረዳ,`TSEZ,amh,t,110011,2021-02-10 10:33:35.177524
+714,Abergele,4,Woreda,TCEZ,eng,t,110011,2021-02-10 10:33:35.177524
+714,አበርገሌ,4,ወረዳ,TCEZ,amh,t,110011,2021-02-10 10:33:35.177524
+715,Adwa,4,Woreda,TCEZ,eng,t,110011,2021-02-10 10:33:35.177524
+715,አድዋ,4,ወረዳ,TCEZ,amh,t,110011,2021-02-10 10:33:35.177524
+716,Enticho,4,Woreda,TCEZ,eng,t,110011,2021-02-10 10:33:35.177524
+716,እንጦጦ,4,ወረዳ,TCEZ,amh,t,110011,2021-02-10 10:33:35.177524
+717,Mereb Lehe,4,Woreda,TCEZ,eng,t,110011,2021-02-10 10:33:35.177524
+717,መረብ ለሄ,4,ወረዳ,TCEZ,amh,t,110011,2021-02-10 10:33:35.177524
+718,Werie Lehe,4,Woreda,TCEZ,eng,t,110011,2021-02-10 10:33:35.177524
+718,ወሪ ልሄ,4,ወረዳ,TCEZ,amh,t,110011,2021-02-10 10:33:35.177524
+719,Kola Tembien,4,Woreda,TCEZ,eng,t,110011,2021-02-10 10:33:35.177524
+719,ቆላ ተምቢን,4,ወረዳ,TCEZ,amh,t,110011,2021-02-10 10:33:35.177524
+720,La'ilay Maychew,4,Woreda,TCEZ,eng,t,110011,2021-02-10 10:33:35.177524
+720,ላኢላይ ማይጨው,4,ወረዳ,TCEZ,amh,t,110011,2021-02-10 10:33:35.177524
+721,Naeder Adet,4,Woreda,TCEZ,eng,t,110011,2021-02-10 10:33:35.177524
+721,ናደር አዴት,4,ወረዳ,TCEZ,amh,t,110011,2021-02-10 10:33:35.177524
+722,Tahtay Maychew,4,Woreda,TCEZ,eng,t,110011,2021-02-10 10:33:35.177524
+722,ታሕታይ ማይጨው,4,ወረዳ,TCEZ,amh,t,110011,2021-02-10 10:33:35.177524
+723,Mekele,4,Woreda,TMSZ,eng,t,110011,2021-02-10 10:33:35.177524
+723,መቀሌ,4,ወረዳ,TMSZ,amh,t,110011,2021-02-10 10:33:35.177524
+724,Kafta Humera,4,Woreda,TWSZ,eng,t,110011,2021-02-10 10:33:35.177524
+724,ቃፍታ ሁመራ,4,ወረዳ,TWSZ,amh,t,110011,2021-02-10 10:33:35.177524
+725,Tsegede,4,Woreda,TWSZ,eng,t,110011,2021-02-10 10:33:35.177524
+725,ፀገዴ,4,ወረዳ,TWSZ,amh,t,110011,2021-02-10 10:33:35.177524
+726,Welkait,4,Woreda,TWSZ,eng,t,110011,2021-02-10 10:33:35.177524
+726,ወለካይት,4,ወረዳ,TWSZ,amh,t,110011,2021-02-10 10:33:35.177524
+727,Atsbi Wenberta,4,Woreda,TESZ,eng,t,110011,2021-02-10 10:33:35.177524
+727,ኣጽቢ ወንበርታ,4,ወረዳ,TESZ,amh,t,110011,2021-02-10 10:33:35.177524
+728,Gulomahda,4,Woreda,TESZ,eng,t,110011,2021-02-10 10:33:35.177524
+728,ጉሎማዳ,4,ወረዳ,TESZ,amh,t,110011,2021-02-10 10:33:35.177524
+729,Kilte Awulaelo,4,Woreda,TESZ,eng,t,110011,2021-02-10 10:33:35.177524
+729,ክልተ ኣውላእሎ,4,ወረዳ,TESZ,amh,t,110011,2021-02-10 10:33:35.177524
+730,Ganta Afeshum,4,Woreda,TESZ,eng,t,110011,2021-02-10 10:33:35.177524
+730,ጋንታ ኣፈሽኩም,4,ወረዳ,TESZ,amh,t,110011,2021-02-10 10:33:35.177524
+731,Hawzen,4,Woreda,TESZ,eng,t,110011,2021-02-10 10:33:35.177524
+731,ሀውዜን,4,ወረዳ,TESZ,amh,t,110011,2021-02-10 10:33:35.177524
+732,Irob,4,Woreda,TESZ,eng,t,110011,2021-02-10 10:33:35.177524
+732,ኢሮብ,4,ወረዳ,TESZ,amh,t,110011,2021-02-10 10:33:35.177524
+733,Saesi Tsaedaemba,4,Woreda,TESZ,eng,t,110011,2021-02-10 10:33:35.177524
+779,Sherkole,4,Woreda,ASS,eng,t,110011,2021-02-10 10:33:35.177524
+733,ሳእሲ ፃዕዳምባ,4,ወረዳ,TESZ,amh,t,110011,2021-02-10 10:33:35.177524
+734,Asgede Tsimbela,4,Woreda,TNWZ,eng,t,110011,2021-02-10 10:33:35.177524
+734,አስገደ ጽምበላ,4,ወረዳ,TNWZ,amh,t,110011,2021-02-10 10:33:35.177524
+735,Medebay Zana,4,Woreda,TNWZ,eng,t,110011,2021-02-10 10:33:35.177524
+735,መደባይ ዛና,4,ወረዳ,TNWZ,amh,t,110011,2021-02-10 10:33:35.177524
+736,Tahtay Koraro,4,Woreda,TNWZ,eng,t,110011,2021-02-10 10:33:35.177524
+736,ታሕታይ ቆራሮ,4,ወረዳ,TNWZ,amh,t,110011,2021-02-10 10:33:35.177524
+737,Tselemti,4,Woreda,TNWZ,eng,t,110011,2021-02-10 10:33:35.177524
+737,ጸለምቲ,4,ወረዳ,TNWZ,amh,t,110011,2021-02-10 10:33:35.177524
+738,La'ilay Adiyabo,4,Woreda,TNWZ,eng,t,110011,2021-02-10 10:33:35.177524
+738,ላኢላይ አዲያቦ,4,ወረዳ,TNWZ,amh,t,110011,2021-02-10 10:33:35.177524
+739,Tahtay Adiyabo,4,Woreda,TNWZ,eng,t,110011,2021-02-10 10:33:35.177524
+739,ታሕታይ ኣዲያቦ,4,ወረዳ,TNWZ,amh,t,110011,2021-02-10 10:33:35.177524
+740,Afambo,4,Woreda,AWR,eng,t,110011,2021-02-10 10:33:35.177524
+740,አፋምቦ,4,ወረዳ,AWR,amh,t,110011,2021-02-10 10:33:35.177524
+741,Dubti,4,Woreda,AWR,eng,t,110011,2021-02-10 10:33:35.177524
+741,ዱብቲ,4,ወረዳ,AWR,amh,t,110011,2021-02-10 10:33:35.177524
+742,Ada'ar,4,Woreda,AWR,eng,t,110011,2021-02-10 10:33:35.177524
+742,አዳአር,4,ወረዳ,AWR,amh,t,110011,2021-02-10 10:33:35.177524
+743,Chifra,4,Woreda,AWR,eng,t,110011,2021-02-10 10:33:35.177524
+743,ቺፍራ,4,ወረዳ,AWR,amh,t,110011,2021-02-10 10:33:35.177524
+744,Mille,4,Woreda,AWR,eng,t,110011,2021-02-10 10:33:35.177524
+744,ሚሌ,4,ወረዳ,AWR,amh,t,110011,2021-02-10 10:33:35.177524
+745,Asayita,4,Woreda,AWR,eng,t,110011,2021-02-10 10:33:35.177524
+745,ኣሳይታ,4,ወረዳ,AWR,amh,t,110011,2021-02-10 10:33:35.177524
+746,Elidar,4,Woreda,AWR,eng,t,110011,2021-02-10 10:33:35.177524
+746,ኤሊዳር,4,ወረዳ,AWR,amh,t,110011,2021-02-10 10:33:35.177524
+747,Garani,4,Woreda,AWR,eng,t,110011,2021-02-10 10:33:35.177524
+747,ጋራን,4,ወረዳ,AWR,amh,t,110011,2021-02-10 10:33:35.177524
+748,Semera Logia,4,Woreda,AWR,eng,t,110011,2021-02-10 10:33:35.177524
+748,ሰመራ ሎጊያ,4,ወረዳ,AWR,amh,t,110011,2021-02-10 10:33:35.177524
+749,Kori,4,Woreda,AWR,eng,t,110011,2021-02-10 10:33:35.177524
+749,ኮሪ,4,ወረዳ,AWR,amh,t,110011,2021-02-10 10:33:35.177524
+750,Abala,4,Woreda,KBR,eng,t,110011,2021-02-10 10:33:35.177524
+750,አባላ,4,ወረዳ,KBR,amh,t,110011,2021-02-10 10:33:35.177524
+751,Afdera,4,Woreda,KBR,eng,t,110011,2021-02-10 10:33:35.177524
+751,አፍዴራ,4,ወረዳ,KBR,amh,t,110011,2021-02-10 10:33:35.177524
+752,Berhale,4,Woreda,KBR,eng,t,110011,2021-02-10 10:33:35.177524
+752,በርሀሌ,4,ወረዳ,KBR,amh,t,110011,2021-02-10 10:33:35.177524
+753,Dallol,4,Woreda,KBR,eng,t,110011,2021-02-10 10:33:35.177524
+753,ዳሎል,4,ወረዳ,KBR,amh,t,110011,2021-02-10 10:33:35.177524
+754,Megale,4,Woreda,KBR,eng,t,110011,2021-02-10 10:33:35.177524
+754,ሜጋሌ,4,ወረዳ,KBR,amh,t,110011,2021-02-10 10:33:35.177524
+755,Bidu,4,Woreda,KBR,eng,t,110011,2021-02-10 10:33:35.177524
+755,ቢዱ,4,ወረዳ,KBR,amh,t,110011,2021-02-10 10:33:35.177524
+756,Erebti,4,Woreda,KBR,eng,t,110011,2021-02-10 10:33:35.177524
+756,ኤረብቲ,4,ወረዳ,KBR,amh,t,110011,2021-02-10 10:33:35.177524
+757,Dalifage,4,Woreda,HIR,eng,t,110011,2021-02-10 10:33:35.177524
+757,ዳሊፋጅ,4,ወረዳ,HIR,amh,t,110011,2021-02-10 10:33:35.177524
+758,Hadele Ele,4,Woreda,HIR,eng,t,110011,2021-02-10 10:33:35.177524
+758,ሀደለ እሌ,4,ወረዳ,HIR,amh,t,110011,2021-02-10 10:33:35.177524
+759,Telalak,4,Woreda,HIR,eng,t,110011,2021-02-10 10:33:35.177524
+759,ተላላክ,4,ወረዳ,HIR,amh,t,110011,2021-02-10 10:33:35.177524
+760,Dewe,4,Woreda,HIR,eng,t,110011,2021-02-10 10:33:35.177524
+760,ድዌ,4,ወረዳ,HIR,amh,t,110011,2021-02-10 10:33:35.177524
+761,Simurobi Gele'alo,4,Woreda,HIR,eng,t,110011,2021-02-10 10:33:35.177524
+761,ሲሙሮቢ ገለአሎ,4,ወረዳ,HIR,amh,t,110011,2021-02-10 10:33:35.177524
+762,Yangudi,4,Woreda,HIR,eng,t,110011,2021-02-10 10:33:35.177524
+762,ያንጉዲ,4,ወረዳ,HIR,amh,t,110011,2021-02-10 10:33:35.177524
+763,Aura,4,Woreda,FTR,eng,t,110011,2021-02-10 10:33:35.177524
+763,ኦራ,4,ወረዳ,FTR,amh,t,110011,2021-02-10 10:33:35.177524
+764,Ewa,4,Woreda,FTR,eng,t,110011,2021-02-10 10:33:35.177524
+764,ኢዋ,4,ወረዳ,FTR,amh,t,110011,2021-02-10 10:33:35.177524
+765,Gulina,4,Woreda,FTR,eng,t,110011,2021-02-10 10:33:35.177524
+765,ጉሊና,4,ወረዳ,FTR,amh,t,110011,2021-02-10 10:33:35.177524
+766,Teru,4,Woreda,FTR,eng,t,110011,2021-02-10 10:33:35.177524
+766,ቴሩ,4,ወረዳ,FTR,amh,t,110011,2021-02-10 10:33:35.177524
+767,Yalo,4,Woreda,FTR,eng,t,110011,2021-02-10 10:33:35.177524
+767,ያሎ,4,ወረዳ,FTR,amh,t,110011,2021-02-10 10:33:35.177524
+768,canruka,4,Woreda,GBR,eng,t,110011,2021-02-10 10:33:35.177524
+768,ካንሩካ,4,ወረዳ,GBR,amh,t,110011,2021-02-10 10:33:35.177524
+769,Awash Fentale,4,Woreda,GBR,eng,t,110011,2021-02-10 10:33:35.177524
+769,አዋሽ ፈንታሌ,4,ወረዳ,GBR,amh,t,110011,2021-02-10 10:33:35.177524
+770,Gewane,4,Woreda,GBR,eng,t,110011,2021-02-10 10:33:35.177524
+770,ገዋኔ,4,ወረዳ,GBR,amh,t,110011,2021-02-10 10:33:35.177524
+771,Amibara,4,Woreda,GBR,eng,t,110011,2021-02-10 10:33:35.177524
+771,አሚባራ,4,ወረዳ,GBR,amh,t,110011,2021-02-10 10:33:35.177524
+772,Mao-Komo,4,Woreda,BGID,eng,t,110011,2021-02-10 10:33:35.177524
+772,ማኦ-ኮሞ,4,ወረዳ,BGID,amh,t,110011,2021-02-10 10:33:35.177524
+773,Pawe,4,Woreda,BGID,eng,t,110011,2021-02-10 10:33:35.177524
+773,ፓዌ,4,ወረዳ,BGID,amh,t,110011,2021-02-10 10:33:35.177524
+774,Bambasi,4,Woreda,ASS,eng,t,110011,2021-02-10 10:33:35.177524
+774,ባምባሲ,4,ወረዳ,ASS,amh,t,110011,2021-02-10 10:33:35.177524
+775,Assosa,4,Woreda,ASS,eng,t,110011,2021-02-10 10:33:35.177524
+775,አሶሳ,4,ወረዳ,ASS,amh,t,110011,2021-02-10 10:33:35.177524
+776,Horazab,4,Woreda,ASS,eng,t,110011,2021-02-10 10:33:35.177524
+776,ሆራዛብ,4,ወረዳ,ASS,amh,t,110011,2021-02-10 10:33:35.177524
+777,Menge,4,Woreda,ASS,eng,t,110011,2021-02-10 10:33:35.177524
+777,መንጌ,4,ወረዳ,ASS,amh,t,110011,2021-02-10 10:33:35.177524
+778,Oda Bildigilu,4,Woreda,ASS,eng,t,110011,2021-02-10 10:33:35.177524
+778,ኦዳ ቢልዲጊሉ,4,ወረዳ,ASS,amh,t,110011,2021-02-10 10:33:35.177524
+779,ሸርኮል,4,ወረዳ,ASS,amh,t,110011,2021-02-10 10:33:35.177524
+780,Agalo Mite,4,Woreda,KAZ,eng,t,110011,2021-02-10 10:33:35.177524
+780,አጋሎ ሚቴ,4,ወረዳ,KAZ,amh,t,110011,2021-02-10 10:33:35.177524
+781,Kamashi,4,Woreda,KAZ,eng,t,110011,2021-02-10 10:33:35.177524
+781,ካማሺ,4,ወረዳ,KAZ,amh,t,110011,2021-02-10 10:33:35.177524
+782,Belo Jegonfoy,4,Woreda,KAZ,eng,t,110011,2021-02-10 10:33:35.177524
+782,ቤሎ ጀጎንፎይ,4,ወረዳ,KAZ,amh,t,110011,2021-02-10 10:33:35.177524
+783,Sadal,4,Woreda,KAZ,eng,t,110011,2021-02-10 10:33:35.177524
+783,ሳዳል,4,ወረዳ,KAZ,amh,t,110011,2021-02-10 10:33:35.177524
+784,Mandura,4,Woreda,MEZ,eng,t,110011,2021-02-10 10:33:35.177524
+784,ማንዱራ,4,ወረዳ,MEZ,amh,t,110011,2021-02-10 10:33:35.177524
+785,Guba,4,Woreda,MEZ,eng,t,110011,2021-02-10 10:33:35.177524
+785,ጉባ,4,ወረዳ,MEZ,amh,t,110011,2021-02-10 10:33:35.177524
+786,Bulen,4,Woreda,MEZ,eng,t,110011,2021-02-10 10:33:35.177524
+786,ቡለን,4,ወረዳ,MEZ,amh,t,110011,2021-02-10 10:33:35.177524
+787,Wenbera,4,Woreda,MEZ,eng,t,110011,2021-02-10 10:33:35.177524
+787,ወንበራ,4,ወረዳ,MEZ,amh,t,110011,2021-02-10 10:33:35.177524
+788,Dibate,4,Woreda,MEZ,eng,t,110011,2021-02-10 10:33:35.177524
+788,ዲባቴ,4,ወረዳ,MEZ,amh,t,110011,2021-02-10 10:33:35.177524
+789,Dangur,4,Woreda,MEZ,eng,t,110011,2021-02-10 10:33:35.177524
+789,ዳንጉር,4,ወረዳ,MEZ,amh,t,110011,2021-02-10 10:33:35.177524
+790,Itang,4,Woreda,GIDD,eng,t,110011,2021-02-10 10:33:35.177524
+790,ኢታንግ,4,ወረዳ,GIDD,amh,t,110011,2021-02-10 10:33:35.177524
+791,Abobo,4,Woreda,ANWZ,eng,t,110011,2021-02-10 10:33:35.177524
+791,አቦቦ,4,ወረዳ,ANWZ,amh,t,110011,2021-02-10 10:33:35.177524
+792,Gambela,4,Woreda,ANWZ,eng,t,110011,2021-02-10 10:33:35.177524
+792,ጋምቤላ,4,ወረዳ,ANWZ,amh,t,110011,2021-02-10 10:33:35.177524
+793,Gog,4,Woreda,ANWZ,eng,t,110011,2021-02-10 10:33:35.177524
+793,ጎግ,4,ወረዳ,ANWZ,amh,t,110011,2021-02-10 10:33:35.177524
+794,Jor,4,Woreda,ANWZ,eng,t,110011,2021-02-10 10:33:35.177524
+794,ጆር,4,ወረዳ,ANWZ,amh,t,110011,2021-02-10 10:33:35.177524
+795,Jikawo,4,Woreda,NURZ,eng,t,110011,2021-02-10 10:33:35.177524
+795,ጂካዎ,4,ወረዳ,NURZ,amh,t,110011,2021-02-10 10:33:35.177524
+796,Lare,4,Woreda,NURZ,eng,t,110011,2021-02-10 10:33:35.177524
+796,ላሬ,4,ወረዳ,NURZ,amh,t,110011,2021-02-10 10:33:35.177524
+797,Akobo,4,Woreda,NURZ,eng,t,110011,2021-02-10 10:33:35.177524
+797,አኮቦ,4,ወረዳ,NURZ,amh,t,110011,2021-02-10 10:33:35.177524
+798,Matar,4,Woreda,NURZ,eng,t,110011,2021-02-10 10:33:35.177524
+798,ማታር,4,ወረዳ,NURZ,amh,t,110011,2021-02-10 10:33:35.177524
+799,Makuey,4,Woreda,NURZ,eng,t,110011,2021-02-10 10:33:35.177524
+799,ማኩአይ,4,ወረዳ,NURZ,amh,t,110011,2021-02-10 10:33:35.177524
+576,Mirab Sooro woreda,4,Woreda,HAD,eng,t,110011,2021-02-10 10:33:49.933839
+576,ምዕራብ ሶሮ,4,ወረዳ,HAD,amh,t,110011,2021-02-10 10:33:49.933839
+577,Siraro woreda,4,Woreda,HAD,eng,t,110011,2021-02-10 10:33:49.933839
+577,ሲራሮ,4,ወረዳ,HAD,amh,t,110011,2021-02-10 10:33:49.933839
+578,Bule,4,Woreda,GED,eng,t,110011,2021-02-10 10:33:49.933839
+578,ቡሌ,4,ወረዳ,GED,amh,t,110011,2021-02-10 10:33:49.933839
+579,Dila town,4,Woreda,GED,eng,t,110011,2021-02-10 10:33:49.933839
+579,ዲላ ከተማ,4,ወረዳ,GED,amh,t,110011,2021-02-10 10:33:49.933839
+SDZ,Sidama zone,2,Zone,SDM,eng,t,110011,2021-02-10 07:55:07.585804
+461,አዋሳከተማ,4,ወረዳ,SDZ,amh,t,110011,2021-02-10 08:23:57.893742
+461,AwasaTown,4,Woreda,SDZ,eng,t,110011,2021-02-10 08:23:57.893742
+462,አለታ ወንዶ,4,ወረዳ,SDZ,amh,t,110011,2021-02-10 08:23:57.893742
+462,Aleta Wendo,4,Woreda,SDZ,eng,t,110011,2021-02-10 08:23:57.893742
+463,አርቤጎና,4,ወረዳ,SDZ,amh,t,110011,2021-02-10 08:23:57.893742
+463,Arbegona,4,Woreda,SDZ,eng,t,110011,2021-02-10 08:23:57.893742
+464,አሮሬሳ,4,ወረዳ,SDZ,amh,t,110011,2021-02-10 08:23:57.893742
+470,ቼሪ,4,ወረዳ,SDZ,amh,t,110011,2021-02-10 08:23:57.893742
+470,Chere,4,Woreda,SDZ,eng,t,110011,2021-02-10 08:23:57.893742
+471,አለታ ቹኮ,4,ወረዳ,SDZ,amh,t,110011,2021-02-10 08:23:57.893742
+471,AletaChuko,4,Woreda,SDZ,eng,t,110011,2021-02-10 08:23:57.893742
+472,ዳሌ,4,ወረዳ,SDZ,amh,t,110011,2021-02-10 08:23:57.893742
+472,Dale,4,Woreda,SDZ,eng,t,110011,2021-02-10 08:23:57.893742
+473,ዳራ,4,ወረዳ,SDZ,amh,t,110011,2021-02-10 08:23:57.893742
+473,Dara,4,Woreda,SDZ,eng,t,110011,2021-02-10 08:23:57.893742
+474,ጎርቼ,4,ወረዳ,SDZ,amh,t,110011,2021-02-10 08:23:57.893742
+474,Gorche,4,Woreda,SDZ,eng,t,110011,2021-02-10 08:23:57.893742
+475,ሁላ,4,ወረዳ,SDZ,amh,t,110011,2021-02-10 08:23:57.893742
+475,Hula,4,Woreda,SDZ,eng,t,110011,2021-02-10 08:23:57.893742
+476,ሎኮ አባያ,4,ወረዳ,SDZ,amh,t,110011,2021-02-10 08:23:57.893742
+476,Loko Abaya,4,Woreda,SDZ,eng,t,110011,2021-02-10 08:23:57.893742
+477,ማልጋ,4,ወረዳ,SDZ,amh,t,110011,2021-02-10 08:23:57.893742
+477,Malga,4,Woreda,SDZ,eng,t,110011,2021-02-10 08:23:57.893742
+478,ሸበዲኖ,4,ወረዳ,SDZ,amh,t,110011,2021-02-10 08:23:57.893742
+478,Shebedino,4,Woreda,SDZ,eng,t,110011,2021-02-10 08:23:57.893742
+479,ዌንሾ,4,ወረዳ,SDZ,amh,t,110011,2021-02-10 08:23:57.893742
+479,Wensho,4,Woreda,SDZ,eng,t,110011,2021-02-10 08:23:57.893742
+480,ወንዶ ገነት,4,ወረዳ,SDZ,amh,t,110011,2021-02-10 08:23:57.893742
+480,Wondo Genet,4,Woreda,SDZ,eng,t,110011,2021-02-10 08:23:57.893742
+991,Woreda 01,4,Woreda,BOL,eng,t,110011,2021-02-10 14:30:12.864507
+991,ወረዳ 01,4,ወረዳ,BOL,amh,t,110011,2021-02-10 14:30:12.864507
+992,Woreda 02,4,Woreda,BOL,eng,t,110011,2021-02-10 14:30:12.864507
+992,ወረዳ 02,4,ወረዳ,BOL,amh,t,110011,2021-02-10 14:30:12.864507
+993,Woreda 03,4,Woreda,BOL,eng,t,110011,2021-02-10 14:30:12.864507
+993,ወረዳ 03,4,ወረዳ,BOL,amh,t,110011,2021-02-10 14:30:12.864507
+994,Woreda 04,4,Woreda,BOL,eng,t,110011,2021-02-10 14:30:12.864507
+994,ወረዳ 04,4,ወረዳ,BOL,amh,t,110011,2021-02-10 14:30:12.864507
+995,Woreda 05,4,Woreda,BOL,eng,t,110011,2021-02-10 14:30:12.864507
+581,Gedeb,4,Woreda,GED,eng,t,110011,2021-02-10 10:35:57.246626
+581,ገድብ,4,ወረዳ,GED,amh,t,110011,2021-02-10 10:35:57.246626
+995,ወረዳ 05,4,ወረዳ,BOL,amh,t,110011,2021-02-10 14:30:12.864507
+996,Woreda 06,4,Woreda,BOL,eng,t,110011,2021-02-10 14:30:12.864507
+996,ወረዳ 06,4,ወረዳ,BOL,amh,t,110011,2021-02-10 14:30:12.864507
+997,Woreda 07,4,Woreda,BOL,eng,t,110011,2021-02-10 14:30:12.864507
+997,ወረዳ 07,4,ወረዳ,BOL,amh,t,110011,2021-02-10 14:30:12.864507
+998,Woreda 08,4,Woreda,BOL,eng,t,110011,2021-02-10 14:30:12.864507
+998,ወረዳ 08,4,ወረዳ,BOL,amh,t,110011,2021-02-10 14:30:12.864507
+999,Woreda 09,4,Woreda,BOL,eng,t,110011,2021-02-10 14:30:12.864507
+999,ወረዳ 09,4,ወረዳ,BOL,amh,t,110011,2021-02-10 14:30:12.864507
+1000,Woreda 10,4,Woreda,BOL,eng,t,110011,2021-02-10 14:30:12.864507
+1000,ወረዳ 10,4,ወረዳ,BOL,amh,t,110011,2021-02-10 14:30:12.864507
+1001,Woreda 11,4,Woreda,BOL,eng,t,110011,2021-02-10 14:30:12.864507
+1001,ወረዳ 11,4,ወረዳ,BOL,amh,t,110011,2021-02-10 14:30:12.864507
+1002,Woreda 12,4,Woreda,BOL,eng,t,110011,2021-02-10 14:30:12.864507
+1002,ወረዳ 12,4,ወረዳ,BOL,amh,t,110011,2021-02-10 14:30:12.864507
+1003,Woreda 13,4,Woreda,BOL,eng,t,110011,2021-02-10 14:30:12.864507
+1003,ወረዳ 13,4,ወረዳ,BOL,amh,t,110011,2021-02-10 14:30:12.864507
+1004,Woreda 14,4,Woreda,BOL,eng,t,110011,2021-02-10 14:30:12.864507
+1004,ወረዳ 14,4,ወረዳ,BOL,amh,t,110011,2021-02-10 14:30:12.864507
+1005,Woreda 15,4,Woreda,BOL,eng,t,110011,2021-02-10 14:30:12.864507
+1005,ወረዳ 15,4,ወረዳ,BOL,amh,t,110011,2021-02-10 14:30:12.864507
+1006,Woreda 16,4,Woreda,BOL,eng,t,110011,2021-02-10 14:30:12.864507
+1006,ወረዳ 16,4,ወረዳ,BOL,amh,t,110011,2021-02-10 14:30:12.864507
+1007,Woreda 17,4,Woreda,BOL,eng,t,110011,2021-02-10 14:30:12.864507
+1007,ወረዳ 17,4,ወረዳ,BOL,amh,t,110011,2021-02-10 14:30:12.864507
+1008,Woreda 18,4,Woreda,BOL,eng,t,110011,2021-02-10 14:30:12.864507
+1008,ወረዳ 18,4,ወረዳ,BOL,amh,t,110011,2021-02-10 14:30:12.864507
+1009,Woreda 19,4,Woreda,BOL,eng,t,110011,2021-02-10 14:30:12.864507
+1009,ወረዳ 19,4,ወረዳ,BOL,amh,t,110011,2021-02-10 14:30:12.864507
+1010,Woreda 20,4,Woreda,BOL,eng,t,110011,2021-02-10 14:30:12.864507
+1010,ወረዳ 20,4,ወረዳ,BOL,amh,t,110011,2021-02-10 14:30:12.864507
+1011,Woreda 22,4,Woreda,BOL,eng,t,110011,2021-02-10 14:30:12.864507
+1011,ወረዳ 22,4,ወረዳ,BOL,amh,t,110011,2021-02-10 14:30:12.864507
+HARZ,Harari,2,Zone,HAR,eng,t,110011,2021-02-10 14:55:53.872127
+HARZ,ሀሪሪ,2,ዞን,HAR,amh,t,110011,2021-02-10 14:55:53.872127
+DRWZ,Dire Dawa,2,Zone,DRW,eng,t,110011,2021-02-10 14:55:53.872127
+DRWZ,ድሬዳዋ,2,ዞን,DRW,amh,t,110011,2021-02-10 14:55:53.872127
+1112,Woreda 01,4,Woreda,DRWZ,eng,t,110011,2021-02-10 14:56:49.16016
+1112,ወረዳ 01,4,ወረዳ,DRWZ,amh,t,110011,2021-02-10 14:56:49.16016
+1113,Amir-Nur Woreda,4,Woreda,HARZ,eng,t,110011,2021-02-10 14:56:49.16016
+1113,አሚር-ኑር ወረዳ,4,ወረዳ,HARZ,amh,t,110011,2021-02-10 14:56:49.16016
+1114,Abadir Woreda,4,Woreda,HARZ,eng,t,110011,2021-02-10 14:56:49.16016
+1114,አባድር ወረዳ,4,ወረዳ,HARZ,amh,t,110011,2021-02-10 14:56:49.16016
+1115,Shenkor Woreda,4,Woreda,HARZ,eng,t,110011,2021-02-10 14:56:49.16016
+1115,ሸንኮር ወረዳ,4,ወረዳ,HARZ,amh,t,110011,2021-02-10 14:56:49.16016
+1116,JinEala Woreda,4,Woreda,HARZ,eng,t,110011,2021-02-10 14:56:49.16016
+1116,ጅንእላ ወረዳ,4,ወረዳ,HARZ,amh,t,110011,2021-02-10 14:56:49.16016
+1117,Aboker Woreda,4,Woreda,HARZ,eng,t,110011,2021-02-10 14:56:49.16016
+1117,አቦከር ወረዳ,4,ወረዳ,HARZ,amh,t,110011,2021-02-10 14:56:49.16016
+1118,Hakim Woreda,4,Woreda,HARZ,eng,t,110011,2021-02-10 14:56:49.16016
+1118,ሀኪም ወረዳ,4,ወረዳ,HARZ,amh,t,110011,2021-02-10 14:56:49.16016
+580,Dila,4,Woreda,GED,eng,t,110011,2021-02-10 10:36:59.453317
+580,ዲላ,4,ወረዳ,GED,amh,t,110011,2021-02-10 10:36:59.453317
+600,Deramalo,4,Woreda,GGZ,eng,t,110011,2021-02-10 10:37:49.464857
+600,ደራማሎ,4,ወረዳ,GGZ,amh,t,110011,2021-02-10 10:37:49.464857
+601,Demba Gofa,4,Woreda,GGZ,eng,t,110011,2021-02-10 10:37:49.464857
+601,ደምባ ጎፋ,4,ወረዳ,GGZ,amh,t,110011,2021-02-10 10:37:49.464857
+602,Geze Gofa,4,Woreda,GGZ,eng,t,110011,2021-02-10 10:37:49.464857
+602,ገዜ ጎፋ,4,ወረዳ,GGZ,amh,t,110011,2021-02-10 10:37:49.464857
+603,Kemba,4,Woreda,GGZ,eng,t,110011,2021-02-10 10:37:49.464857
+603,ኬምባ,4,ወረዳ,GGZ,amh,t,110011,2021-02-10 10:37:49.464857
+604,Kucha,4,Woreda,GGZ,eng,t,110011,2021-02-10 10:37:49.464857
+604,ኩቻ,4,ወረዳ,GGZ,amh,t,110011,2021-02-10 10:37:49.464857
+605,Melokoza,4,Woreda,GGZ,eng,t,110011,2021-02-10 10:37:49.464857
+605,ሜሎኮዛ,4,ወረዳ,GGZ,amh,t,110011,2021-02-10 10:37:49.464857
+606,Mirab Abaya,4,Woreda,GGZ,eng,t,110011,2021-02-10 10:37:49.464857
+606,ምዕራብ አባያ,4,ወረዳ,GGZ,amh,t,110011,2021-02-10 10:37:49.464857
+607,Oyda,4,Woreda,GGZ,eng,t,110011,2021-02-10 10:37:49.464857
+607,ኦይዳ,4,ወረዳ,GGZ,amh,t,110011,2021-02-10 10:37:49.464857
+608,Sawla town,4,Woreda,GGZ,eng,t,110011,2021-02-10 10:37:49.464857
+608,ሳውላ ከተማ,4,ወረዳ,GGZ,amh,t,110011,2021-02-10 10:37:49.464857
+609,Uba Debretsehay,4,Woreda,GGZ,eng,t,110011,2021-02-10 10:37:49.464857
+609,ኡባ ደብረፀሐይ,4,ወረዳ,GGZ,amh,t,110011,2021-02-10 10:37:49.464857
+610,Zala woreda,4,Woreda,GGZ,eng,t,110011,2021-02-10 10:37:49.464857
+610,ዛላ,4,ወረዳ,GGZ,amh,t,110011,2021-02-10 10:37:49.464857
+611,filtu,4,Woreda,LBZ,eng,t,110011,2021-02-10 10:37:49.464857
+611,ፍልቱ,4,ወረዳ,LBZ,amh,t,110011,2021-02-10 10:37:49.464857
+612,Dollo Ado,4,Woreda,LBZ,eng,t,110011,2021-02-10 10:37:49.464857
+612,ዶሎ አዶ,4,ወረዳ,LBZ,amh,t,110011,2021-02-10 10:37:49.464857
+613,qarsadula,4,Woreda,LBZ,eng,t,110011,2021-02-10 10:37:49.464857
+613,ቃርሳዱላ,4,ወረዳ,LBZ,amh,t,110011,2021-02-10 10:37:49.464857
+614,gura damole,4,Woreda,LBZ,eng,t,110011,2021-02-10 10:37:49.464857
+614,ጉራ ዳሞሌ,4,ወረዳ,LBZ,amh,t,110011,2021-02-10 10:37:49.464857
+615,gura baqasa,4,Woreda,LBZ,eng,t,110011,2021-02-10 10:37:49.464857
+615,ጉራ ባቃሳ,4,ወረዳ,LBZ,amh,t,110011,2021-02-10 10:37:49.464857
+616,Bokolmayo,4,Woreda,LBZ,eng,t,110011,2021-02-10 10:37:49.464857
+616,ቦኮለማዮ,4,ወረዳ,LBZ,amh,t,110011,2021-02-10 10:37:49.464857
+617,Qadhaadhumo,4,Woreda,DHZ,eng,t,110011,2021-02-10 10:37:49.464857
+617,ቀዳሃድሁሞ,4,ወረዳ,DHZ,amh,t,110011,2021-02-10 10:37:49.464857
+618,Hudet,4,Woreda,DHZ,eng,t,110011,2021-02-10 10:37:49.464857
+618,ሁደት,4,ወረዳ,DHZ,amh,t,110011,2021-02-10 10:37:49.464857
+619,Moyale,4,Woreda,DHZ,eng,t,110011,2021-02-10 10:37:49.464857
+619,ሞያሌ,4,ወረዳ,DHZ,amh,t,110011,2021-02-10 10:37:49.464857
+620,mubarek,4,Woreda,DHZ,eng,t,110011,2021-02-10 10:37:49.464857
+620,ሙባረክ,4,ወረዳ,DHZ,amh,t,110011,2021-02-10 10:37:49.464857
+574,Shashogo,4,Woreda,HAD,eng,t,110011,2021-02-10 10:38:14.76585
+574,ሻሾጎ,4,ወረዳ,HAD,amh,t,110011,2021-02-10 10:38:14.76585
+621,Hargelle,4,Woreda,AFZ,eng,t,110011,2021-02-10 10:38:39.675132
+621,ሃርጌል,4,ወረዳ,AFZ,amh,t,110011,2021-02-10 10:38:39.675132
+622,Cherati,4,Woreda,AFZ,eng,t,110011,2021-02-10 10:38:39.675132
+622,ቼራቲ,4,ወረዳ,AFZ,amh,t,110011,2021-02-10 10:38:39.675132
+623,Dolobay,4,Woreda,AFZ,eng,t,110011,2021-02-10 10:38:39.675132
+623,ዶሎባይ,4,ወረዳ,AFZ,amh,t,110011,2021-02-10 10:38:39.675132
+624,Raaso,4,Woreda,AFZ,eng,t,110011,2021-02-10 10:38:39.675132
+624,ራአሶ,4,ወረዳ,AFZ,amh,t,110011,2021-02-10 10:38:39.675132
+625,Baarey,4,Woreda,AFZ,eng,t,110011,2021-02-10 10:38:39.675132
+625,ባአረይ,4,ወረዳ,AFZ,amh,t,110011,2021-02-10 10:38:39.675132
+626,Ceelkarri,4,Woreda,AFZ,eng,t,110011,2021-02-10 10:38:39.675132
+626,ኢልካሪሪ,4,ወረዳ,AFZ,amh,t,110011,2021-02-10 10:38:39.675132
+627,Iimey galbeed,4,Woreda,AFZ,eng,t,110011,2021-02-10 10:38:39.675132
+627,ምዕራብ አይሜይ,4,ወረዳ,AFZ,amh,t,110011,2021-02-10 10:38:39.675132
+628,Goro Bekeksa,4,Woreda,AFZ,eng,t,110011,2021-02-10 10:38:39.675132
+628,ጎሮ በከክሳ,4,ወረዳ,AFZ,amh,t,110011,2021-02-10 10:38:39.675132
+629,Qooxle,4,Woreda,AFZ,eng,t,110011,2021-02-10 10:38:39.675132
+629,ኮክስሌ,4,ወረዳ,AFZ,amh,t,110011,2021-02-10 10:38:39.675132
+630,Ilig dheere,4,Woreda,AFZ,eng,t,110011,2021-02-10 10:38:39.675132
+630,ኢልጌ ደሀሬ,4,ወረዳ,AFZ,amh,t,110011,2021-02-10 10:38:39.675132
+631,Daroor,4,Woreda,JARZ,eng,t,110011,2021-02-10 10:39:27.322599
+631,ዳሮር,4,ወረዳ,JARZ,amh,t,110011,2021-02-10 10:39:27.322599
+632,Gunagado,4,Woreda,JARZ,eng,t,110011,2021-02-10 10:39:27.322599
+632,ጉናጋዶ,4,ወረዳ,JARZ,amh,t,110011,2021-02-10 10:39:27.322599
+633,Bilcil buur,4,Woreda,JARZ,eng,t,110011,2021-02-10 10:39:27.322599
+633,ቢልሲል ቡር,4,ወረዳ,JARZ,amh,t,110011,2021-02-10 10:39:27.322599
+634,Gashamo,4,Woreda,JARZ,eng,t,110011,2021-02-10 10:39:27.322599
+634,ጋሻሞ,4,ወረዳ,JARZ,amh,t,110011,2021-02-10 10:39:27.322599
+635,Aware,4,Woreda,JARZ,eng,t,110011,2021-02-10 10:39:27.322599
+635,አዋሬ,4,ወረዳ,JARZ,amh,t,110011,2021-02-10 10:39:27.322599
+1119,Sofi Woreda,4,Woreda,HARZ,eng,t,110011,2021-02-10 14:56:49.16016
+1119,ሶፊ ወረዳ,4,ወረዳ,HARZ,amh,t,110011,2021-02-10 14:56:49.16016
+1120,Erer Woreda,4,Woreda,HARZ,eng,t,110011,2021-02-10 14:56:49.16016
+1120,ኤረር ወረዳ,4,ወረዳ,HARZ,amh,t,110011,2021-02-10 14:56:49.16016
+1121,Dire-Teyara Woreda,4,Woreda,HARZ,eng,t,110011,2021-02-10 14:56:49.16016
+1121,ድሬ-ተያራ ወረዳ,4,ወረዳ,HARZ,amh,t,110011,2021-02-10 14:56:49.16016
+1122,Woreda 02,4,Woreda,DRWZ,eng,t,110011,2021-02-10 15:00:26.005277
+1122,ወረዳ 02,4,ወረዳ,DRWZ,amh,t,110011,2021-02-10 15:00:26.005277
+642,Araarso,4,Woreda,JARZ,eng,t,110011,2021-02-10 10:51:12.945678
+642,አርአርሶ,4,ወረዳ,JARZ,amh,t,110011,2021-02-10 10:51:12.945678
+643,Gerbo,4,Woreda,NOGZ,eng,t,110011,2021-02-10 10:51:12.945678
+643,ገርቦ,4,ወረዳ,NOGZ,amh,t,110011,2021-02-10 10:51:12.945678
+644,Ayun,4,Woreda,NOGZ,eng,t,110011,2021-02-10 10:51:12.945678
+644,አዩን,4,ወረዳ,NOGZ,amh,t,110011,2021-02-10 10:51:12.945678
+645,Hor-shagah,4,Woreda,NOGZ,eng,t,110011,2021-02-10 10:51:12.945678
+645,ሆር ሻጋህ,4,ወረዳ,NOGZ,amh,t,110011,2021-02-10 10:51:12.945678
+646,Elweyn Town,4,Woreda,NOGZ,eng,t,110011,2021-02-10 10:51:12.945678
+646,ኤልዌይን ከተማ,4,ወረዳ,NOGZ,amh,t,110011,2021-02-10 10:51:12.945678
+647,Dhuxun,4,Woreda,NOGZ,eng,t,110011,2021-02-10 10:51:12.945678
+647,ዱክሱን,4,ወረዳ,NOGZ,amh,t,110011,2021-02-10 10:51:12.945678
+648,Xaraarey,4,Woreda,NOGZ,eng,t,110011,2021-02-10 10:51:12.945678
+648,Xaraarey,4,ወረዳ,NOGZ,amh,t,110011,2021-02-10 10:51:12.945678
+649,Segeg,4,Woreda,NOGZ,eng,t,110011,2021-02-10 10:51:12.945678
+649,ሴጌግ,4,ወረዳ,NOGZ,amh,t,110011,2021-02-10 10:51:12.945678
+650,Lagahida,4,Woreda,ERZ,eng,t,110011,2021-02-10 10:51:12.945678
+650,ላጋሂዳ,4,ወረዳ,ERZ,amh,t,110011,2021-02-10 10:51:12.945678
+651,Qubi,4,Woreda,ERZ,eng,t,110011,2021-02-10 10:51:12.945678
+651,ቁቢ,4,ወረዳ,ERZ,amh,t,110011,2021-02-10 10:51:12.945678
+652,Waangay,4,Woreda,ERZ,eng,t,110011,2021-02-10 10:51:12.945678
+652,ዋንጋይ,4,ወረዳ,ERZ,amh,t,110011,2021-02-10 10:51:12.945678
+653,Fik,4,Woreda,ERZ,eng,t,110011,2021-02-10 10:51:12.945678
+653,ፍቅ,4,ወረዳ,ERZ,amh,t,110011,2021-02-10 10:51:12.945678
+654,Salaxaad,4,Woreda,ERZ,eng,t,110011,2021-02-10 10:51:12.945678
+654,ስላክስ,4,ወረዳ,ERZ,amh,t,110011,2021-02-10 10:51:12.945678
+655,Mayu-Muuqdheer,4,Woreda,ERZ,eng,t,110011,2021-02-10 10:51:12.945678
+655,መዩ-ሙቋደር,4,ወረዳ,ERZ,amh,t,110011,2021-02-10 10:51:12.945678
+656,Yaxoob,4,Woreda,ERZ,eng,t,110011,2021-02-10 10:51:12.945678
+656,Yaxoob,4,ወረዳ,ERZ,amh,t,110011,2021-02-10 10:51:12.945678
+657,Danan,4,Woreda,SBHZ,eng,t,110011,2021-02-10 10:51:12.945678
+657,ዳናን,4,ወረዳ,SBHZ,amh,t,110011,2021-02-10 10:51:12.945678
+658,Ferfer,4,Woreda,SBHZ,eng,t,110011,2021-02-10 10:51:12.945678
+658,ፈርፈር,4,ወረዳ,SBHZ,amh,t,110011,2021-02-10 10:51:12.945678
+659,Gode,4,Woreda,SBHZ,eng,t,110011,2021-02-10 10:51:12.945678
+659,ጎዴ,4,ወረዳ,SBHZ,amh,t,110011,2021-02-10 10:51:12.945678
+660,Kelafo,4,Woreda,SBHZ,eng,t,110011,2021-02-10 10:51:12.945678
+660,ኬላፎ,4,ወረዳ,SBHZ,amh,t,110011,2021-02-10 10:51:12.945678
+661,Beer Caano,4,Woreda,SBHZ,eng,t,110011,2021-02-10 10:51:12.945678
+661,Beer Caano,4,ወረዳ,SBHZ,amh,t,110011,2021-02-10 10:51:12.945678
+662,Iimey bari,4,Woreda,SBHZ,eng,t,110011,2021-02-10 10:51:12.945678
+662,Iimey bari,4,ወረዳ,SBHZ,amh,t,110011,2021-02-10 10:51:12.945678
+663,Elale,4,Woreda,SBHZ,eng,t,110011,2021-02-10 10:51:12.945678
+663,ኢሌሌ,4,ወረዳ,SBHZ,amh,t,110011,2021-02-10 10:51:12.945678
+664,Abaqorow,4,Woreda,SBHZ,eng,t,110011,2021-02-10 10:51:12.945678
+664,አባቆሮው,4,ወረዳ,SBHZ,amh,t,110011,2021-02-10 10:51:12.945678
+665,Awbare,4,Woreda,FFZ,eng,t,110011,2021-02-10 10:51:12.945678
+665,አውባሬ,4,ወረዳ,FFZ,amh,t,110011,2021-02-10 10:51:12.945678
+666,Jijiga,4,Woreda,FFZ,eng,t,110011,2021-02-10 10:51:12.945678
+666,ጅጅጋ,4,ወረዳ,FFZ,amh,t,110011,2021-02-10 10:51:12.945678
+667,Babille,4,Woreda,FFZ,eng,t,110011,2021-02-10 10:51:12.945678
+667,ባቢሌ,4,ወረዳ,FFZ,amh,t,110011,2021-02-10 10:51:12.945678
+668,Gursum,4,Woreda,FFZ,eng,t,110011,2021-02-10 10:51:12.945678
+668,ጉርሱም,4,ወረዳ,FFZ,amh,t,110011,2021-02-10 10:51:12.945678
+669,Harshin,4,Woreda,FFZ,eng,t,110011,2021-02-10 10:51:12.945678
+669,ሀርሺን,4,ወረዳ,FFZ,amh,t,110011,2021-02-10 10:51:12.945678
+670,Tuli Guled,4,Woreda,FFZ,eng,t,110011,2021-02-10 10:51:12.945678
+670,ቱሊ ጉሌድ,4,ወረዳ,FFZ,amh,t,110011,2021-02-10 10:51:12.945678
+671,Kebri Beyah,4,Woreda,FFZ,eng,t,110011,2021-02-10 10:51:12.945678
+671,Kebri Beyah,4,ወረዳ,FFZ,amh,t,110011,2021-02-10 10:51:12.945678
+672,shabeeley,4,Woreda,FFZ,eng,t,110011,2021-02-10 10:51:12.945678
+672,ሻቢሌይ,4,ወረዳ,FFZ,amh,t,110011,2021-02-10 10:51:12.945678
+673,Harawo,4,Woreda,FFZ,eng,t,110011,2021-02-10 10:51:12.945678
+673,ሀራዎ,4,ወረዳ,FFZ,amh,t,110011,2021-02-10 10:51:12.945678
+674,Qooraan or Mulla,4,Woreda,FFZ,eng,t,110011,2021-02-10 10:51:12.945678
+674,ኩራን  ሙላ,4,ወረዳ,FFZ,amh,t,110011,2021-02-10 10:51:12.945678
+675,Harorays,4,Woreda,FFZ,eng,t,110011,2021-02-10 10:51:12.945678
+675,ሃሮራይስ,4,ወረዳ,FFZ,amh,t,110011,2021-02-10 10:51:12.945678
+676,Goljano,4,Woreda,FFZ,eng,t,110011,2021-02-10 10:51:12.945678
+676,ጎልጃኖ,4,ወረዳ,FFZ,amh,t,110011,2021-02-10 10:51:12.945678
+677,Wajaale,4,Woreda,FFZ,eng,t,110011,2021-02-10 10:51:12.945678
+677,ዋጃለ,4,ወረዳ,FFZ,amh,t,110011,2021-02-10 10:51:12.945678
+678,Kebri Dahar,4,Woreda,KOZ,eng,t,110011,2021-02-10 10:51:12.945678
+678,ቀብሪ ደሓር,4,ወረዳ,KOZ,amh,t,110011,2021-02-10 10:51:12.945678
+679,Sheygoosh,4,Woreda,KOZ,eng,t,110011,2021-02-10 10:51:12.945678
+679,ሸይጎሽ,4,ወረዳ,KOZ,amh,t,110011,2021-02-10 10:51:12.945678
+680,Las Dharkaynle,4,Woreda,KOZ,eng,t,110011,2021-02-10 10:51:12.945678
+680,ላስ Dharkaynle,4,ወረዳ,KOZ,amh,t,110011,2021-02-10 10:51:12.945678
+681,Kudunbuur,4,Woreda,KOZ,eng,t,110011,2021-02-10 10:51:12.945678
+681,ኩዱንቡር,4,ወረዳ,KOZ,amh,t,110011,2021-02-10 10:51:12.945678
+682,Dhooboweyn,4,Woreda,KOZ,eng,t,110011,2021-02-10 10:51:12.945678
+682,ዱህቦወይን,4,ወረዳ,KOZ,amh,t,110011,2021-02-10 10:51:12.945678
+683,Shilaabo,4,Woreda,KOZ,eng,t,110011,2021-02-10 10:51:12.945678
+683,ሺላቦ,4,ወረዳ,KOZ,amh,t,110011,2021-02-10 10:51:12.945678
+684,Marsin,4,Woreda,KOZ,eng,t,110011,2021-02-10 10:51:12.945678
+684,ማርሲን,4,ወረዳ,KOZ,amh,t,110011,2021-02-10 10:51:12.945678
+685,Higloley,4,Woreda,KOZ,eng,t,110011,2021-02-10 10:51:12.945678
+685,ሂግሎሌይ,4,ወረዳ,KOZ,amh,t,110011,2021-02-10 10:51:12.945678
+686,Bodalay,4,Woreda,KOZ,eng,t,110011,2021-02-10 10:51:12.945678
+686,ቦዳላይ,4,ወረዳ,KOZ,amh,t,110011,2021-02-10 10:51:12.945678
+687,Ceel-Ogadeen,4,Woreda,KOZ,eng,t,110011,2021-02-10 10:51:12.945678
+687,ኢል-ኦጋዴን,4,ወረዳ,KOZ,amh,t,110011,2021-02-10 10:51:12.945678
+688,Afdem,4,Woreda,SIT,eng,t,110011,2021-02-10 10:51:12.945678
+688,አፍዴም,4,ወረዳ,SIT,amh,t,110011,2021-02-10 10:51:12.945678
+689,Ayesha,4,Woreda,SIT,eng,t,110011,2021-02-10 10:51:12.945678
+689,አየሻ,4,ወረዳ,SIT,amh,t,110011,2021-02-10 10:51:12.945678
+690,Shinile,4,Woreda,SIT,eng,t,110011,2021-02-10 10:51:12.945678
+690,ሸእኔለ,4,ወረዳ,SIT,amh,t,110011,2021-02-10 10:51:12.945678
+691,Dambal,4,Woreda,SIT,eng,t,110011,2021-02-10 10:51:12.945678
+691,ደምባል,4,ወረዳ,SIT,amh,t,110011,2021-02-10 10:51:12.945678
+692,Mieso,4,Woreda,SIT,eng,t,110011,2021-02-10 10:51:12.945678
+692,መኢሶ,4,ወረዳ,SIT,amh,t,110011,2021-02-10 10:51:12.945678
+693,Erer,4,Woreda,SIT,eng,t,110011,2021-02-10 10:51:12.945678
+693,ኤረር,4,ወረዳ,SIT,amh,t,110011,2021-02-10 10:51:12.945678
+694,Hadhagaale,4,Woreda,SIT,eng,t,110011,2021-02-10 10:51:12.945678
+694,ሓዳጋለ,4,ወረዳ,SIT,amh,t,110011,2021-02-10 10:51:12.945678
+695,Geblalu,4,Woreda,SIT,eng,t,110011,2021-02-10 10:51:12.945678
+695,ገብላሉ,4,ወረዳ,SIT,amh,t,110011,2021-02-10 10:51:12.945678
+696,biki,4,Woreda,SIT,eng,t,110011,2021-02-10 10:51:12.945678
+696,ቢኪ,4,ወረዳ,SIT,amh,t,110011,2021-02-10 10:51:12.945678
+697,Bokh,4,Woreda,DOL,eng,t,110011,2021-02-10 10:51:12.945678
+697,ቦካ,4,ወረዳ,DOL,amh,t,110011,2021-02-10 10:51:12.945678
+698,Danot,4,Woreda,DOL,eng,t,110011,2021-02-10 10:51:12.945678
+698,ዳኖት,4,ወረዳ,DOL,amh,t,110011,2021-02-10 10:51:12.945678
+699,Galadi,4,Woreda,DOL,eng,t,110011,2021-02-10 10:51:12.945678
+699,ጋላዲ,4,ወረዳ,DOL,amh,t,110011,2021-02-10 10:51:12.945678
+636,Dhagax-buur,4,Woreda,JARZ,eng,t,110011,2021-02-10 10:58:34.895271
+636,Dhagax-buur,4,ወረዳ,JARZ,amh,t,110011,2021-02-10 10:58:34.895271
+637,Dhagax-madow,4,Woreda,JARZ,eng,t,110011,2021-02-10 10:58:34.895271
+637,Dhagax-madow,4,ወረዳ,JARZ,amh,t,110011,2021-02-10 10:58:34.895271
+638,Gunagado,4,Woreda,JARZ,eng,t,110011,2021-02-10 10:58:34.895271
+638,Gunagado,4,ወረዳ,JARZ,amh,t,110011,2021-02-10 10:58:34.895271
+639,Birqod,4,Woreda,JARZ,eng,t,110011,2021-02-10 10:58:34.895271
+639,Birqod,4,ወረዳ,JARZ,amh,t,110011,2021-02-10 10:58:34.895271
+640,Dig,4,Woreda,JARZ,eng,t,110011,2021-02-10 10:58:34.895271
+640,Dig,4,ወረዳ,JARZ,amh,t,110011,2021-02-10 10:58:34.895271
+641,Yoocaale,4,Woreda,JARZ,eng,t,110011,2021-02-10 10:58:34.895271
+641,Yoocaale,4,ወረዳ,JARZ,amh,t,110011,2021-02-10 10:58:34.895271
+599,Dita,4,Woreda,GGZ,eng,t,110011,2021-02-10 10:59:30.781107
+599,ዲታ,4,ወረዳ,GGZ,amh,t,110011,2021-02-10 10:59:30.781107
+595,Arba Minch Zuria,4,Woreda,GGZ,eng,t,110011,2021-02-10 11:01:18.551345
+595,አርባ ምንጭ ዙርያ,4,ወረዳ,GGZ,amh,t,110011,2021-02-10 11:01:18.551345
+596,Bonke,4,Woreda,GGZ,eng,t,110011,2021-02-10 11:01:18.551345
+596,ቦንኬ,4,ወረዳ,GGZ,amh,t,110011,2021-02-10 11:01:18.551345
+597,Boreda,4,Woreda,GGZ,eng,t,110011,2021-02-10 11:01:18.551345
+597,ቦረዳ,4,ወረዳ,GGZ,amh,t,110011,2021-02-10 11:01:18.551345
+598,Chencha,4,Woreda,GGZ,eng,t,110011,2021-02-10 11:01:18.551345
+598,ጨንቻ,4,ወረዳ,GGZ,amh,t,110011,2021-02-10 11:01:18.551345
+593,Decha,4,Woreda,KTZ,eng,t,110011,2021-02-10 11:02:33.659954
+593,ደቻ,4,ወረዳ,KTZ,amh,t,110011,2021-02-10 11:02:33.659954
+591,Kedida Gamela,4,Woreda,KTZ,eng,t,110011,2021-02-10 11:03:44.179215
+591,ኬዲዳ ጋሜላ,4,ወረዳ,KTZ,amh,t,110011,2021-02-10 11:03:44.179215
+592,Tembaro,4,Woreda,KTZ,eng,t,110011,2021-02-10 11:07:10.909857
+592,ተምባሮ,4,ወረዳ,KTZ,amh,t,110011,2021-02-10 11:07:10.909857
+583,Wenago,4,Woreda,GED,eng,t,110011,2021-02-10 11:10:02.821423
+583,ወናጎ,4,ወረዳ,GED,amh,t,110011,2021-02-10 11:10:02.821423
+702,Galxamur,4,Woreda,DOL,eng,t,110011,2021-02-10 11:10:20.359364
+702,Galxamur,4,ወረዳ,DOL,amh,t,110011,2021-02-10 11:10:20.359364
+582,Kochere,4,Woreda,GED,eng,t,110011,2021-02-10 11:13:36.72919
+582,ኮቼሬ,4,ወረዳ,GED,amh,t,110011,2021-02-10 11:13:36.72919
+587,Doyogena,4,Woreda,KTZ,eng,t,110011,2021-02-10 11:14:18.776262
+587,ዶዮጌና,4,ወረዳ,KTZ,amh,t,110011,2021-02-10 11:14:18.776262
+588,Durame (town),4,Woreda,KTZ,eng,t,110011,2021-02-10 11:15:10.069184
+588,ዱራሜ (ከተማ),4,ወረዳ,KTZ,amh,t,110011,2021-02-10 11:15:10.069184
+589,Hadero Tunto,4,Woreda,KTZ,eng,t,110011,2021-02-10 11:15:55.668215
+589,ሓድሮ ቱንቶ,4,ወረዳ,KTZ,amh,t,110011,2021-02-10 11:15:55.668215
+590,Kacha Bira,4,Woreda,KTZ,eng,t,110011,2021-02-10 11:17:43.504995
+590,ሓድሮ ቱንቶ,4,ወረዳ,KTZ,amh,t,110011,2021-02-10 11:17:43.504995
+584,Yirgachefe,4,Woreda,KTZ,eng,t,110011,2021-02-10 11:18:22.752511
+584,ይርጋጨፌ,4,ወረዳ,KTZ,amh,t,110011,2021-02-10 11:18:22.752511
+585,Angacha,4,Woreda,KTZ,eng,t,110011,2021-02-10 11:18:22.752511
+585,አንጋቻ,4,ወረዳ,KTZ,amh,t,110011,2021-02-10 11:18:22.752511
+586,Damboya,4,Woreda,KTZ,eng,t,110011,2021-02-10 11:18:22.752511
+586,ዳምቦያ,4,ወረዳ,KTZ,amh,t,110011,2021-02-10 11:18:22.752511
+OSF,የኦሮሚያ ልዩ ዞን ፊንፊኔ ዙሪያ,2,ዞን,ORO,amh,t,110011,2021-02-10 07:55:07.585804

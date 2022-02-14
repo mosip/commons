@@ -1,19 +1,19 @@
 screen_id,role_code,lang_code,is_permitted,is_active,cr_by,cr_dtimes
-eodRoot,REGISTRATION_SUPERVISOR,eng,TRUE,TRUE,system,now()
-eodRoot,REGISTRATION_ADMIN,eng,TRUE,TRUE,system,now()
-reRegisterRoot,REGISTRATION_SUPERVISOR,eng,TRUE,TRUE,system,now()
-reRegisterRoot,REGISTRATION_ADMIN,eng,TRUE,TRUE,system,now()
-lostUINRoot,REGISTRATION_OFFICER,eng,TRUE,TRUE,system,now()
-lostUINRoot,REGISTRATION_SUPERVISOR,eng,TRUE,TRUE,system,now()
-lostUINRoot,REGISTRATION_ADMIN,eng,TRUE,TRUE,system,now()
-newRegistrationRoot,REGISTRATION_OFFICER,eng,TRUE,TRUE,system,now()
-newRegistrationRoot,REGISTRATION_SUPERVISOR,eng,TRUE,TRUE,system,now()
-newRegistrationRoot,REGISTRATION_ADMIN,eng,TRUE,TRUE,system,now()
-reportRoot,REGISTRATION_SUPERVISOR,eng,TRUE,TRUE,system,now()
-reportRoot,REGISTRATION_ADMIN,eng,TRUE,TRUE,system,now()
-uinUpdateRoot,REGISTRATION_OFFICER,eng,TRUE,TRUE,system,now()
-uinUpdateRoot,REGISTRATION_SUPERVISOR,eng,TRUE,TRUE,system,now()
-uinUpdateRoot,REGISTRATION_ADMIN,eng,TRUE,TRUE,system,now()
-uploadPacketRoot,REGISTRATION_OFFICER,eng,TRUE,TRUE,system,now()
-uploadPacketRoot,REGISTRATION_SUPERVISOR,eng,TRUE,TRUE,system,now()
-uploadPacketRoot,REGISTRATION_ADMIN,eng,TRUE,TRUE,system,now()
+eodRoot,REGISTRATION_SUPERVISOR,eng,t,t,system,2020-12-23 14:36:54.986853
+eodRoot,REGISTRATION_ADMIN,eng,t,t,system,2020-12-23 14:36:54.986853
+reRegisterRoot,REGISTRATION_SUPERVISOR,eng,t,t,system,2020-12-23 14:36:54.986853
+reRegisterRoot,REGISTRATION_ADMIN,eng,t,t,system,2020-12-23 14:36:54.986853
+lostUINRoot,REGISTRATION_OFFICER,eng,t,t,system,2020-12-23 14:36:54.986853
+lostUINRoot,REGISTRATION_SUPERVISOR,eng,t,t,system,2020-12-23 14:36:54.986853
+lostUINRoot,REGISTRATION_ADMIN,eng,t,t,system,2020-12-23 14:36:54.986853
+newRegistrationRoot,REGISTRATION_OFFICER,eng,t,t,system,2020-12-23 14:36:54.986853
+newRegistrationRoot,REGISTRATION_SUPERVISOR,eng,t,t,system,2020-12-23 14:36:54.986853
+newRegistrationRoot,REGISTRATION_ADMIN,eng,t,t,system,2020-12-23 14:36:54.986853
+reportRoot,REGISTRATION_SUPERVISOR,eng,t,t,system,2020-12-23 14:36:54.986853
+reportRoot,REGISTRATION_ADMIN,eng,t,t,system,2020-12-23 14:36:54.986853
+uinUpdateRoot,REGISTRATION_OFFICER,eng,t,t,system,2020-12-23 14:36:54.986853
+uinUpdateRoot,REGISTRATION_SUPERVISOR,eng,t,t,system,2020-12-23 14:36:54.986853
+uinUpdateRoot,REGISTRATION_ADMIN,eng,t,t,system,2020-12-23 14:36:54.986853
+uploadPacketRoot,REGISTRATION_OFFICER,eng,t,t,system,2020-12-23 14:36:54.986853
+uploadPacketRoot,REGISTRATION_SUPERVISOR,eng,t,t,system,2020-12-23 14:36:54.986853
+uploadPacketRoot,REGISTRATION_ADMIN,eng,t,t,system,2020-12-23 14:36:54.986853

@@ -1,4 +1,3 @@
-﻿id,name,brand,model,mtyp_code,min_driver_ver,descr,lang_code,is_active,cr_by,cr_dtimes
-1001,Vostro,Dell,3568,DKS,1.454,To take enrollments,fra,TRUE,superadmin,now()
-1001,ستر,دلّ,3568,DKS,1.454,لأخذ التسجيلات,ara,TRUE,superadmin,now()
-1001,Vostro,Dell,3568,DKS,1.454,To take enrollments,eng,TRUE,superadmin,now()
+id,name,brand,model,mtyp_code,min_driver_ver,descr,lang_code,is_active,cr_by,cr_dtimes
+1001,HP 250 G7,HP,RTL8822BE,LAP,1.454,To take enrollments,eng,t,superadmin,2020-12-23 14:36:53.534207
+1001,HP 250 G7,HP,RTL8822BE,LAP,1.454,ምዝገባ ለማካሄድ,amh,t,superadmin,2020-12-23 14:36:53.534207
