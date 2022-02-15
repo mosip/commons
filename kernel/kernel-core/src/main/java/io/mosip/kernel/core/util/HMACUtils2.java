@@ -59,7 +59,7 @@ public final class HMACUtils2 {
 		MessageDigest messageDigest = MessageDigest.getInstance(HASH_ALGORITHM_NAME);
 		messageDigest.update(password);
 		messageDigest.update(salt);
-		return encodeByteToHex(messageDigest.digest(), false, ByteOrder.BIG_ENDIAN);
+		return encodeBytesToHex(messageDigest.digest(), false, ByteOrder.BIG_ENDIAN);
 	}
 
 	/**
@@ -70,7 +70,7 @@ public final class HMACUtils2 {
 	 * @throws NoSuchAlgorithmException
 	 */
 	public static String digestAsPlainText(final byte[] bytes) throws NoSuchAlgorithmException {
-		return encodeByteToHex(generateHash(bytes), false, ByteOrder.BIG_ENDIAN).toUpperCase();
+		return encodeBytesToHex(generateHash(bytes), false, ByteOrder.BIG_ENDIAN).toUpperCase();
 	}
 
 	/**
@@ -150,7 +150,7 @@ public final class HMACUtils2 {
 		}
 	}
 
-	public static String encodeByteToHex(byte[] byteArray, boolean upperCase, ByteOrder byteOrder) {
+	public static String encodeBytesToHex(byte[] byteArray, boolean upperCase, ByteOrder byteOrder) {
 
 		// our output size will be exactly 2x byte-array length
 		final char[] buffer = new char[byteArray.length * 2];
