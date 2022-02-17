@@ -70,7 +70,7 @@ public final class HMACUtils2 {
 	 * @throws NoSuchAlgorithmException
 	 */
 	public static String digestAsPlainText(final byte[] bytes) throws NoSuchAlgorithmException {
-		return encodeBytesToHex(generateHash(bytes), false, ByteOrder.BIG_ENDIAN).toUpperCase();
+		return encodeBytesToHex(generateHash(bytes), true, ByteOrder.BIG_ENDIAN);
 	}
 
 	/**
