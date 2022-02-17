@@ -13,6 +13,7 @@ import java.util.Base64;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import javax.xml.bind.DatatypeConverter;
 
 /**
  * This class defines the alternate safer HMAC Util to be used in MOSIP Project.
@@ -59,7 +60,7 @@ public final class HMACUtils2 {
 		MessageDigest messageDigest = MessageDigest.getInstance(HASH_ALGORITHM_NAME);
 		messageDigest.update(password);
 		messageDigest.update(salt);
-		return encodeBytesToHex(messageDigest.digest(), false, ByteOrder.BIG_ENDIAN);
+		return encodeBytesToHex(messageDigest.digest(), false, ByteOrder.BIG_ENDIAN).toUpperCase();
 	}
 
 	/**
@@ -169,6 +170,30 @@ public final class HMACUtils2 {
 			buffer[(i << 1) + 1] = lookup[(byteArray[index] & 0xF)];
 		}
 		return new String(buffer);
+	}
+	
+	public static void main(String[] args) throws NoSuchAlgorithmException {
+		String a="{\r\n"
+				+ "	\"demographics\": {\r\n"
+				+ "		\"name\": [{\r\n"
+				+ "			\"language\": \"eng\",\r\n"
+				+ "			\"value\": \"Alex Bob\"\r\n"
+				+ "		},{\r\n"
+				+ "			\"language\": \"ara\",\r\n"
+				+ "			\"value\": \"منج سب\"\r\n"
+				+ "		}],\r\n"
+				+ "		\"dob\": \"1992/04/15\",\r\n"
+				+ "		\"phoneNumber\": \"9052090237\",\r\n"
+				+ "		\"emailId\": \"Alex.Bob@mosip.com\"\r\n"
+				+ "\r\n"
+				+ "	},\r\n"
+				+ "	\"timestamp\": \"2022-02-01T04:58:47.195Z\"\r\n"
+				+ "\r\n"
+				+ "}";
+	String newHash = digestAsPlainTextWithSalt(a.getBytes(),"f1nd1ngn3m0".getBytes());
+	String oldHash = digestAsPlainTextWithSaltOld(a.getBytes(),"f1nd1ngn3m0".getBytes());
+	System.out.println(newHash);
+	System.out.println(oldHash);
 	}
 
 }
