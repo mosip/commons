@@ -10,6 +10,6 @@
 
 \c mosip_kernel sysadmin
 
--- TO-DO
+ALTER TABLE keymgr.key_alias DROP COLUMN IF EXISTS cert_thumbprint;
 
 -----------------------------------------------------------------------------------------------------
