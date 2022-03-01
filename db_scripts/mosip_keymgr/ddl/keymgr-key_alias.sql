@@ -6,10 +6,11 @@
 -- Create By   	: Sadanandegowda DM
 -- Created Date	: Sep-2020
 -- 
--- Modified Date        Modified By         Comments / Remarks
+-- Modified Date        Modified By         	Comments / Remarks
 -- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
+-- Jan-2021		Ram Bhatt	    	Set is_deleted flag to not null and default false
+-- Mar-2021		Ram Bhatt	    	Reverting is_deleted not null changes
+-- FEB-2022		Chandra Keshav Mishra	adding cert_thumbprint column
 -- ------------------------------------------------------------------------------------------
 
 -- object: keymgr.key_alias | type: TABLE --
@@ -28,6 +29,7 @@ CREATE TABLE keymgr.key_alias(
 	upd_dtimes timestamp,
 	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
+	cert_thumbprint character varying(100),
 	CONSTRAINT pk_keymals_id PRIMARY KEY (id)
 
 );
