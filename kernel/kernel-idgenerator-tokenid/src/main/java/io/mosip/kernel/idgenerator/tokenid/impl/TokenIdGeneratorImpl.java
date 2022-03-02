@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.idgenerator.spi.TokenIdGenerator;
-import io.mosip.kernel.core.security.util.SecurityUtil;
+import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.idgenerator.tokenid.constant.TokenIDExceptionConstant;
 import io.mosip.kernel.idgenerator.tokenid.constant.TokenIdPropertyConstant;
 import io.mosip.kernel.idgenerator.tokenid.entity.TokenIdSeed;
@@ -110,7 +110,7 @@ public class TokenIdGeneratorImpl implements TokenIdGenerator<String> {
 			}
 			SecretKey secretKey = new SecretKeySpec(counterSecureRandom.getBytes(),
 					TokenIdPropertyConstant.ENCRYPTION_ALGORITHM.getProperty());
-			byte[] encryptedData = SecurityUtil.symmetricEncrypt(secretKey, randomSeed.getBytes());
+			byte[] encryptedData = CryptoUtil.symmetricEncrypt(secretKey, randomSeed.getBytes());
 			BigInteger bigInteger = new BigInteger(encryptedData);
 			tokenId = String.valueOf(bigInteger.abs());
 		} catch (DataAccessLayerException | DataAccessException e) {
