@@ -1,9 +1,6 @@
 package io.mosip.kernel.websub.api.verifier;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.mosip.kernel.websub.api.client.PublisherClientImpl;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * This is a helper class to verify intent after subscribe and unsubscribe
@@ -14,11 +11,16 @@ import io.mosip.kernel.websub.api.client.PublisherClientImpl;
  *
  */
 public class IntentVerifier {
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(IntentVerifier.class);
+
+	@Value("${mosip.kernel.websub-db-version-client-behaviour-enable:false}")
+	private boolean isWebsubDbVersionClientBehaviourEnable;
 
 	public boolean isIntentVerified(String topic, String mode, String topicReq, String modeReq) {
-		return (topic.equals(topicReq) && mode.equals(modeReq));
+		if (!isWebsubDbVersionClientBehaviourEnable) {
+			return topic.equals(topicReq);
+		} else {
+			return (topic.equals(topicReq) && mode.equals(modeReq));
+		}
 	}
 
 }
