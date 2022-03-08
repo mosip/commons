@@ -103,6 +103,8 @@ public class CbeffValidator {
 					|| formatType == CbeffConstant.FORMAT_TYPE_FINGER_MINUTIAE;
 		case "Iris":
 			return formatType == CbeffConstant.FORMAT_TYPE_IRIS;
+
+		case "ExceptionPhoto":
 		case "Face":
 			return formatType == CbeffConstant.FORMAT_TYPE_FACE;
 		case "HandGeometry":
@@ -129,6 +131,7 @@ public class CbeffValidator {
 		case "fmr":
 			return CbeffConstant.FORMAT_TYPE_FINGER_MINUTIAE;
 		case "face":
+		case "exceptionphoto":
 			return CbeffConstant.FORMAT_TYPE_FACE;
 		case "handgeometry":
 			return CbeffConstant.FORMAT_TYPE_FACE;
