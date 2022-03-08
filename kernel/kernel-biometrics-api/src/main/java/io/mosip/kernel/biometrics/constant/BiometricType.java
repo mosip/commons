@@ -47,7 +47,9 @@ public enum BiometricType implements Serializable {
 	@XmlEnumValue("LipMovement")
 	LIP_MOVEMENT("LipMovement"),
 	@XmlEnumValue("SignatureSign")
-	SIGNATURE_SIGN("SignatureSign");
+	SIGNATURE_SIGN("SignatureSign"),
+	@XmlEnumValue("ExceptionPhoto")
+	EXCEPTION_PHOTO("ExceptionPhoto");
 
 	private final String value;
 
