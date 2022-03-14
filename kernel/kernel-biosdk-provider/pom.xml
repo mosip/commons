@@ -5,7 +5,7 @@
 
 	<artifactId>kernel-biosdk-provider</artifactId>
 	<groupId>io.mosip.kernel</groupId>
-	<version>1.2.0.1-SNAPSHOT</version>
+	<version>1.2.1-SNAPSHOT</version>
 	<name>kernel-biosdk-provider</name>
 	<description>Implementation of biosdk provider</description>
 	<url>https://github.com/mosip/commons</url>
@@ -118,9 +118,9 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.2.0.1-SNAPSHOT</kernel.core.version>
-		<kernel.biometricsdk.version>1.2.0.1-SNAPSHOT</kernel.biometricsdk.version>
-		<kernel.logger.logback.version>1.2.0.1-SNAPSHOT</kernel.logger.logback.version>
+		<kernel.core.version>1.2.1-SNAPSHOT</kernel.core.version>
+		<kernel.biometricsdk.version>1.2.1-SNAPSHOT</kernel.biometricsdk.version>
+		<kernel.logger.logback.version>1.2.1-SNAPSHOT</kernel.logger.logback.version>
 		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 	</properties>
 
