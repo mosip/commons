@@ -1,17 +1,13 @@
 package io.mosip.kernel.vidgenerator.test.router;
 
-import static org.mockito.Mockito.when;
-
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 
@@ -25,8 +21,6 @@ import io.mosip.kernel.uingenerator.constant.UinGeneratorErrorCode;
 import io.mosip.kernel.uingenerator.verticle.UinGeneratorVerticle;
 import io.mosip.kernel.uingenerator.verticle.UinTransferVerticle;
 import io.mosip.kernel.vidgenerator.constant.EventType;
-import io.mosip.kernel.vidgenerator.exception.VidGeneratorServiceException;
-import io.mosip.kernel.vidgenerator.service.VidService;
 import io.mosip.kernel.vidgenerator.verticle.VidExpiryVerticle;
 import io.mosip.kernel.vidgenerator.verticle.VidPoolCheckerVerticle;
 import io.mosip.kernel.vidgenerator.verticle.VidPopulatorVerticle;
@@ -42,7 +36,6 @@ import io.vertx.core.logging.SLF4JLogDelegateFactory;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
-import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.client.HttpResponse;
 import io.vertx.ext.web.client.WebClient;
 
@@ -64,6 +57,7 @@ public class UinNullExceptionTest {
 		ServerSocket socket = new ServerSocket(0);
 		vertx = Vertx.vertx();
 		port = socket.getLocalPort();
+		LOGGER.info("UinNullExceptionTest server starting on port "+port);
 		System.setProperty("server.port", String.valueOf(port));
 		socket.close();
 		VertxOptions options = new VertxOptions();
