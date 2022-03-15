@@ -70,6 +70,7 @@ public class IntegrationExceptionTest {
 		ServerSocket socket = new ServerSocket(0);
 		vertx = Vertx.vertx();
 		port = socket.getLocalPort();
+		LOGGER.info("IntegrationExceptionTest server starting on port "+port);
 		System.setProperty("server.port", String.valueOf(port));
 		socket.close();
 		VertxOptions options = new VertxOptions();
