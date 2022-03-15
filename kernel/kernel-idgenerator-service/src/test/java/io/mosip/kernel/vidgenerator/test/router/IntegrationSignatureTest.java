@@ -68,7 +68,7 @@ public class IntegrationSignatureTest {
 		LOGGER = LoggerFactory.getLogger(IntegrationSignatureTest.class);
 		ServerSocket socket = new ServerSocket(0);
 		vertx = Vertx.vertx();
-		port = socket.getLocalPort();
+		port = 8080;
 		LOGGER.info("IntegrationSignatureTest server starting on port "+port);
 		System.setProperty("server.port", String.valueOf(port));
 		socket.close();
