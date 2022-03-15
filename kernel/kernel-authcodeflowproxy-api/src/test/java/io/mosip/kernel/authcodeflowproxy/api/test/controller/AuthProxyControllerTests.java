@@ -35,6 +35,7 @@ import org.springframework.web.util.NestedServletException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
 import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponse;
 import io.mosip.kernel.authcodeflowproxy.api.dto.IAMErrorResponseDto;
 import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
@@ -132,7 +133,7 @@ public class AuthProxyControllerTests {
 				.andExpect(jsonPath("$.response.status", is("Success")));
 	}
 	
-	@Test(expected = NestedServletException.class)
+	
 	public void logoutNullTokenTest() throws Exception {
 		ResponseWrapper<MosipUserDto> responseWrapper = new ResponseWrapper<MosipUserDto>();
 		MosipUserDto mosipUserDto = new MosipUserDto();
@@ -147,7 +148,8 @@ public class AuthProxyControllerTests {
 		          requestTo(new URI("https://dev.mosip.net/keycloak/auth/realms/mosip/protocol/openid-connect/logout?id_token_hint="+mockToken)))
 		          .andExpect(method(HttpMethod.GET))
 		          .andRespond(withStatus(HttpStatus.OK)); 
-		mockMvc.perform(delete("/logout/user").contentType(MediaType.APPLICATION_JSON));
+		mockMvc.perform(delete("/logout/user").contentType(MediaType.APPLICATION_JSON))
+		.andExpect(jsonPath("$.errors[0].errorCode", is("KER-ACP-500")));;
 	}
 	
 	@Test
@@ -167,7 +169,7 @@ public class AuthProxyControllerTests {
 		          .andRespond(withStatus(HttpStatus.BAD_REQUEST)); 
 		Cookie cookie = new Cookie("Authorization", mockToken);
 		mockMvc.perform(delete("/logout/user").contentType(MediaType.APPLICATION_JSON).cookie(cookie)).andExpect(status().isOk())
-				.andExpect(jsonPath("$.errors[0].message", isA(String.class)));
+				.andExpect(jsonPath("$.errors[0].errorCode", isA(String.class)));
 	}
 	
 	
@@ -194,7 +196,7 @@ public class AuthProxyControllerTests {
 		          .contentType(MediaType.APPLICATION_JSON)
 				  .body(objectMapper.writeValueAsString(accessTokenResponse)));		  
 		Cookie cookie = new Cookie("state", "mockstate");
-		mockMvc.perform(get("/login-redirect/abc?state=mockstate&session_state=mock-session-state&code=mockcode").contentType(MediaType.APPLICATION_JSON).cookie(cookie)).andExpect(status().is3xxRedirection());
+		mockMvc.perform(get("/login-redirect/aHR0cDovL2xvY2FsaG9zdDo1MDAwLw==?state=mockstate&session_state=mock-session-state&code=mockcode").contentType(MediaType.APPLICATION_JSON).cookie(cookie)).andExpect(status().is3xxRedirection());
 	}
 	
 	@Test
@@ -210,9 +212,25 @@ public class AuthProxyControllerTests {
 		          .contentType(MediaType.APPLICATION_JSON)
 				  .body(objectMapper.writeValueAsString(errorResponseDto)));		  
 		Cookie cookie = new Cookie("state", "mockstate");
-		mockMvc.perform(get("/login-redirect/abc?state=mockstate&session_state=mock-session-state&code=mockcode").contentType(MediaType.APPLICATION_JSON).cookie(cookie)).andExpect(status().is2xxSuccessful()).andExpect(jsonPath("$.errors[0].message", isA(String.class)));;
+		mockMvc.perform(get("/login-redirect/abc?state=mockstate&session_state=mock-session-state&code=mockcode").contentType(MediaType.APPLICATION_JSON).cookie(cookie)).andExpect(status().is2xxSuccessful()).andExpect(jsonPath("$.errors[0].errorCode", is(Errors.ACESSTOKEN_EXCEPTION.getErrorCode())));
 	}
 	
+	
+	@Test
+	public void logoutRedirectHostCheckTest() throws Exception {
+		AccessTokenResponse accessTokenResponse = new AccessTokenResponse();
+		accessTokenResponse.setAccess_token("mock-access-token");
+		accessTokenResponse.setExpires_in("111");
+		
+		mockServer.expect(ExpectedCount.once(), 
+		          requestTo(new URI("http://localhost:8080/keycloak/auth/realms/mosip/protocol/openid-connect/token")))
+		          .andExpect(method(HttpMethod.POST))
+		          .andRespond(withStatus(HttpStatus.OK)
+		          .contentType(MediaType.APPLICATION_JSON)
+				  .body(objectMapper.writeValueAsString(accessTokenResponse)));		  
+		Cookie cookie = new Cookie("state", "mockstate");
+		mockMvc.perform(get("/login-redirect/aHR0cDovL2FiOjUwMDAv?state=mockstate&session_state=mock-session-state&code=mockcode").contentType(MediaType.APPLICATION_JSON).cookie(cookie)).andExpect(status().isOk()).andExpect(jsonPath("$.errors[0].errorCode", is(Errors.DOMAIN_EXCEPTION.getErrorCode())));;
+	}
 	
 
 }

@@ -147,10 +147,6 @@ public class LoginServiceImpl implements LoginService {
 		headers.add("Cookie", authTokenHeader + "=" + authToken);
 		HttpEntity<String> requestEntity = new HttpEntity<>(headers);
 		HttpEntity<String> response = restTemplate.exchange(validateUrl, HttpMethod.GET, requestEntity, String.class);
-		if (response == null) {
-			throw new ServiceException(Errors.CANNOT_CONNECT_TO_AUTH_SERVICE.getErrorCode(),
-					Errors.CANNOT_CONNECT_TO_AUTH_SERVICE.getErrorMessage());
-		}
 		String responseBody = response.getBody();
 		List<ServiceError> validationErrorList = ExceptionUtils.getServiceErrorList(responseBody);
 		if (!validationErrorList.isEmpty()) {

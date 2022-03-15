@@ -57,7 +57,7 @@
 		<module>kernel-transliteration-icu4j</module>
 		<module>kernel-applicanttype-api</module>
 		<module>kernel-idobjectvalidator</module>
-		<module>kernel-bioapi-provider</module>
+		<!-- <module>kernel-bioapi-provider</module> -->
 		<module>kernel-authcodeflowproxy-api</module>
 		<module>kernel-websubclient-api</module>
 		<module>kernel-otpmanager-service</module>

@@ -31,8 +31,9 @@ public enum Errors {
 	STATE_EXCEPTION("KER-ACP-007", "state is not maching"),
 	
 	REST_EXCEPTION("KER-ACP-008", "Exception occured while consuming service"),
-	INVALID_TOKEN("KER-ATH-401", "Authentication Failed : Invalid Token :"),;
-	
+	INVALID_TOKEN("KER-ATH-401", "Authentication Failed : Invalid Token :"),
+	EXCEPTION("KER-ACP-500", "Exception occured "),
+	DOMAIN_EXCEPTION("KER-ACP-009", "uri's domain name not found in allowed domains");
 
 
 	/**

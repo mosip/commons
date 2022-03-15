@@ -19,6 +19,9 @@ public class CbeffXSDValidator {
 
 	public static boolean validateXML(byte[] xsdBytes, byte[] xmlBytes) throws Exception {
 		SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+		factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+		factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
 		Schema schema = factory.newSchema(new StreamSource(new ByteArrayInputStream(xsdBytes)));
 		Validator validator = schema.newValidator();
 		validator.validate(new StreamSource(new ByteArrayInputStream(xmlBytes)));

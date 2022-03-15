@@ -1,5 +1,9 @@
 package io.mosip.kernel.licensekeygenerator.misp.util;
 
+import java.security.SecureRandom;
+
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -21,6 +25,13 @@ public class MISPLicenseKeyGeneratorUtil {
 	 */
 	@Value("${mosip.kernel.idgenerator.misp.license-key-length}")
 	private int licenseKeyLength;
+
+	private SecureRandom random;
+
+	@PostConstruct
+	private void init() {
+		random = new SecureRandom();
+	}
 
 	/**
 	 * Method to generate license key.

@@ -1,6 +1,8 @@
 package io.mosip.kernel.authcodeflowproxy.api.controller;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.List;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +22,7 @@ import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
 import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponseDTO;
 import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
 import io.mosip.kernel.authcodeflowproxy.api.exception.ClientException;
+import io.mosip.kernel.authcodeflowproxy.api.exception.ServiceException;
 import io.mosip.kernel.authcodeflowproxy.api.service.LoginService;
 import io.mosip.kernel.core.authmanager.model.AuthResponseDto;
 import io.mosip.kernel.core.http.ResponseFilter;
@@ -30,6 +33,10 @@ public class LoginController {
 
 	@Value("${auth.token.header:Authorization}")
 	private String authTokenHeader;
+	
+	
+	@Value("#{'${auth.allowed.domains}'.split(',')}")
+	private List<String> listOfStrings;
 
 	@Autowired
 	private LoginService loginService;
@@ -55,6 +62,10 @@ public class LoginController {
 		res.addCookie(cookie);
 		res.setStatus(302);
 		String uri = new String(Base64.decodeBase64(redirectURI.getBytes()));
+		URL url = new URL(uri);
+		if(!listOfStrings.contains(url.getHost())) {
+			throw new ServiceException(Errors.DOMAIN_EXCEPTION.getErrorCode(), Errors.DOMAIN_EXCEPTION.getErrorMessage());
+		}
 		res.sendRedirect(uri);	
 		}
 
