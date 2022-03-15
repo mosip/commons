@@ -72,7 +72,7 @@ public class IntegrationTest {
 		LOGGER = LoggerFactory.getLogger(IntegrationTest.class);
 		ServerSocket socket = new ServerSocket(0);
 		vertx = Vertx.vertx();
-		port = socket.getLocalPort();
+		port = 8080;
 		LOGGER.info("IntegrationTest server starting on port "+port);
 		System.setProperty("server.port", String.valueOf(port));
 		socket.close();
