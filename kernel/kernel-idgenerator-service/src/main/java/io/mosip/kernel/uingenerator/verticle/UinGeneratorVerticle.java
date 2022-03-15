@@ -40,7 +40,7 @@ public class UinGeneratorVerticle extends AbstractVerticle {
 		uinProcesser = (UinProcesser) context.getBean("uinProcesser");
 	}
 
-	private volatile AtomicBoolean locked = new AtomicBoolean(false);
+	private AtomicBoolean locked = new AtomicBoolean(false);
 
 	/*
 	 * (non-Javadoc)
@@ -66,7 +66,7 @@ public class UinGeneratorVerticle extends AbstractVerticle {
 					}
 				});
 			}else {
-				 LOGGER.info("here");
+				 LOGGER.info("Generated and persisted uins lock is true.");
 			}
 			receivedMessage.reply(UINHealthConstants.ACTIVE);
 		});

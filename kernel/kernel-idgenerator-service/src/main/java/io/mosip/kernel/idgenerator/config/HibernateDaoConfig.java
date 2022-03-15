@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,8 @@ import io.mosip.kernel.vidgenerator.constant.HibernatePersistenceConstant;
 		"io.mosip.kernel.crypto.*", "${mosip.auth.adapter.impl.basepackage}","io.mosip.kernel.cryptosignature.*","io.mosip.kernel.idgenerator.*","io.mosip.kernel.keygenerator.bouncycastle"})
 @EnableTransactionManagement
 public class HibernateDaoConfig implements EnvironmentAware {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(HibernateDaoConfig.class);
 
 	/**
 	 * Field for {@link #env}
@@ -169,7 +173,7 @@ public class HibernateDaoConfig implements EnvironmentAware {
 				 * We can add a default interceptor whenever we require here.
 				 */
 			} catch (BeanInstantiationException | ClassNotFoundException e) {
-				e.printStackTrace();
+				LOGGER.error(e.getMessage());
 			}
 		} else {
 			jpaProperties.put(property, env.containsProperty(property) ? env.getProperty(property) : defaultValue);

@@ -38,7 +38,7 @@ public class VidPoolCheckerVerticle extends AbstractVerticle {
 		this.threshold = environment.getProperty("mosip.kernel.vid.min-unused-threshold", Long.class);
 	}
 
-	private volatile AtomicBoolean locked = new AtomicBoolean(false);
+	private AtomicBoolean locked = new AtomicBoolean(false);
 
 	@Override
 	public void start(Future<Void> startFuture) {

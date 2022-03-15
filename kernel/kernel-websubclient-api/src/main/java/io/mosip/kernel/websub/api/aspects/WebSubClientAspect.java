@@ -58,7 +58,7 @@ public class WebSubClientAspect implements EmbeddedValueResolverAware {
 			secret = preAuthenticateContent.secret();
 		}
 		
-		if (!secret.trim().isEmpty()) {
+		if (secret!=null && !secret.trim().isEmpty()) {
 			if (!authenticatedContentVerifier.verifyAuthorizedContentVerified(request, secret)) {
 				throw new WebSubClientException(WebSubClientErrorCode.AUTHENTTICATED_CONTENT_ERROR.getErrorCode(),
 						WebSubClientErrorCode.AUTHENTTICATED_CONTENT_ERROR.getErrorMessage());

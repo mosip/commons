@@ -1,10 +1,12 @@
 package io.mosip.kernel.idgenerator.tokenid.impl;
 
 import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import javax.persistence.PersistenceException;
@@ -45,6 +47,13 @@ public class TokenIdGeneratorImpl implements TokenIdGenerator<String> {
 	@Autowired
 	private TokenIdSequenceRepository sequenceRepository;
 
+	private SecureRandom random;
+
+	@PostConstruct
+	private void init() {
+		random = new SecureRandom();
+	}
+
 	/**
 	 * The length of Token ID.[fetched from configuration]
 	 */
@@ -81,9 +90,11 @@ public class TokenIdGeneratorImpl implements TokenIdGenerator<String> {
 
 			if (sequenceEntity == null) {
 				do {
-					counterSecureRandom = RandomStringUtils.random(
-							Integer.parseInt(TokenIdPropertyConstant.RANDOM_NUMBER_SIZE.getProperty()),
-							TokenIdPropertyConstant.ZERO_TO_NINE.getProperty());
+					byte[] randomSeedBytes = new byte[Integer
+							.parseInt(TokenIdPropertyConstant.RANDOM_NUMBER_SIZE.getProperty())];
+					random.nextBytes(randomSeedBytes);
+					counterSecureRandom = new BigInteger(randomSeedBytes).abs().toString().substring(0,
+							Integer.parseInt(TokenIdPropertyConstant.RANDOM_NUMBER_SIZE.getProperty()));
 				} while (counterSecureRandom.charAt(0) == '0');
 				counterEntity.setSequenceNumber(counterSecureRandom);
 			} else {
@@ -95,9 +106,11 @@ public class TokenIdGeneratorImpl implements TokenIdGenerator<String> {
 			sequenceRepository.saveAndFlush(counterEntity);
 
 			if (listOfSeed.isEmpty()) {
-				randomSeed = RandomStringUtils.random(
-						Integer.parseInt(TokenIdPropertyConstant.RANDOM_NUMBER_SIZE.getProperty()),
-						TokenIdPropertyConstant.ZERO_TO_NINE.getProperty());
+				byte[] randomSeedBytes = new byte[Integer
+						.parseInt(TokenIdPropertyConstant.RANDOM_NUMBER_SIZE.getProperty())];
+				random.nextBytes(randomSeedBytes);
+				randomSeed = new BigInteger(randomSeedBytes).abs().toString().substring(0,
+						Integer.parseInt(TokenIdPropertyConstant.RANDOM_NUMBER_SIZE.getProperty()));
 				TokenIdSeed seedEntity = new TokenIdSeed();
 				seedEntity.setCreatedBy("SYSTEM");
 				seedEntity.setCreatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));

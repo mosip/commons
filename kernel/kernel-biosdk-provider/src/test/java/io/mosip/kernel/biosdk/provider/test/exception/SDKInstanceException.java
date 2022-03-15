@@ -1,4 +1,4 @@
-package io.mosip.kernel.biosdk.provider.test;
+package io.mosip.kernel.biosdk.provider.test.exception;
 
 import io.mosip.kernel.biometrics.constant.BiometricFunction;
 import io.mosip.kernel.biometrics.constant.BiometricType;
@@ -16,11 +16,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SDKInstanceThree implements IBioApi {
+public class SDKInstanceException implements IBioApi {
 
     @Override
     public SDKInfo init(Map<String, String> initParams) {
-        SDKInfo sdkInfo = new SDKInfo("0.9", "1.0", "MOCKVendor1", "test");
+        SDKInfo sdkInfo = new SDKInfo("0.8", "1.0", "MOCKVendor1", "test");
         sdkInfo.withSupportedMethod(BiometricFunction.MATCH, BiometricType.FINGER);
         sdkInfo.withSupportedMethod(BiometricFunction.EXTRACT, BiometricType.FINGER);
         sdkInfo.withSupportedMethod(BiometricFunction.QUALITY_CHECK, BiometricType.FINGER);
@@ -52,7 +52,7 @@ public class SDKInstanceThree implements IBioApi {
         Map<BiometricType, Decision> decisions = new HashMap<>();
         Decision decision = new Decision();
         decision.setMatch(Match.MATCHED);
-        decisions.put(BiometricType.FOOT, decision);
+        decisions.put(BiometricType.FINGER, decision);
         matchDecision.setDecisions(decisions);
         MatchDecision[] matchDecisions = new MatchDecision[1];
         matchDecisions[0]=matchDecision;
