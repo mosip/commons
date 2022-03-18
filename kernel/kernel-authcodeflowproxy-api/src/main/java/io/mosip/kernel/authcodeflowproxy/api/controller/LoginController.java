@@ -1,8 +1,12 @@
 package io.mosip.kernel.authcodeflowproxy.api.controller;
 
 import java.io.IOException;
+<<<<<<< HEAD
 import java.net.URL;
 import java.util.List;
+=======
+import java.util.UUID;
+>>>>>>> b7a809cb97 (uuid check added for state)
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -43,13 +47,27 @@ public class LoginController {
 	private LoginService loginService;
 
 	@GetMapping(value = "/login/{redirectURI}")
-	public void login(@CookieValue(name="state", required=false) String state, @PathVariable("redirectURI") String redirectURI, @RequestParam(name = "state",required = false) String stateParam,
-			HttpServletResponse res) throws IOException {
-		String stateValue = EmptyCheckUtils.isNullEmpty(state)?stateParam:state;
-		if(EmptyCheckUtils.isNullEmpty(stateValue)) {
-			 throw new ServiceException(Errors.STATE_NULL_EXCEPTION.getErrorCode(),
+	public void login(@CookieValue(name = "state", required = false) String state,
+			@PathVariable("redirectURI") String redirectURI,
+			@RequestParam(name = "state", required = false) String stateParam, HttpServletResponse res)
+			throws IOException {
+		String stateValue = EmptyCheckUtils.isNullEmpty(state) ? stateParam : state;
+		if (EmptyCheckUtils.isNullEmpty(stateValue)) {
+			throw new ServiceException(Errors.STATE_NULL_EXCEPTION.getErrorCode(),
 					Errors.STATE_NULL_EXCEPTION.getErrorMessage());
 		}
+
+		// there is no UUID.parse method till so using this as alternative
+		try {
+			if (!UUID.fromString(stateValue).toString().equals(stateValue)) {
+				throw new ServiceException(Errors.STATE_NOT_UUID_EXCEPTION.getErrorCode(),
+						Errors.STATE_NOT_UUID_EXCEPTION.getErrorMessage());
+			}
+		} catch (IllegalArgumentException exception) {
+			throw new ServiceException(Errors.STATE_NOT_UUID_EXCEPTION.getErrorCode(),
+					Errors.STATE_NOT_UUID_EXCEPTION.getErrorMessage());
+		}
+		
 		String uri = loginService.login(redirectURI, stateValue);
 		Cookie stateCookie = new Cookie("state", stateValue);
 		stateCookie.setHttpOnly(true);
@@ -58,8 +76,6 @@ public class LoginController {
 		res.setStatus(302);
 		res.sendRedirect(uri);
 	}
-
-
 
 	@GetMapping(value = "/login-redirect/{redirectURI}")
 	public void loginRedirect(@PathVariable("redirectURI") String redirectURI, @RequestParam("state") String state,
@@ -71,12 +87,17 @@ public class LoginController {
 		res.addCookie(cookie);
 		res.setStatus(302);
 		String uri = new String(Base64.decodeBase64(redirectURI.getBytes()));
+<<<<<<< HEAD
 		if(!allowedUrls.contains(uri)) {
 			throw new ServiceException(Errors.DOMAIN_EXCEPTION.getErrorCode(), Errors.DOMAIN_EXCEPTION.getErrorMessage());
 		}
 		res.sendRedirect(uri);	
 		}
 
+=======
+		res.sendRedirect(uri);
+	}
+>>>>>>> b7a809cb97 (uuid check added for state)
 
 	@ResponseFilter
 	@GetMapping(value = "/authorize/admin/validateToken")
@@ -106,7 +127,7 @@ public class LoginController {
 		responseWrapper.setResponse(mosipUserDto);
 		return responseWrapper;
 	}
-	
+
 	@ResponseFilter
 	@DeleteMapping(value = "/logout/user")
 	public ResponseWrapper<AuthResponseDto> logoutUser(

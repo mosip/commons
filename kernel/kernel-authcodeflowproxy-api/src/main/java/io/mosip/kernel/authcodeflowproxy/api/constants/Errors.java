@@ -34,7 +34,8 @@ public enum Errors {
 	INVALID_TOKEN("KER-ATH-401", "Authentication Failed : Invalid Token :"),
 	EXCEPTION("KER-ACP-500", "Exception occured "),
 	DOMAIN_EXCEPTION("KER-ACP-009", "uri's domain name not found in allowed domains"),
-	STATE_NULL_EXCEPTION("KER-ACP-009", "state is null or empty");
+	STATE_NULL_EXCEPTION("KER-ACP-009", "state is null or empty"),
+	STATE_NOT_UUID_EXCEPTION("KER-ACP-010", "state is not uuid");
 
 	/**
 	 * The error code
