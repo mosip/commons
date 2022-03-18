@@ -35,10 +35,14 @@ public class LoginController {
 	private LoginService loginService;
 
 	@GetMapping(value = "/login/{redirectURI}")
-	public void login(@CookieValue("state") String state, @PathVariable("redirectURI") String redirectURI,
+	public void login(@CookieValue("state") String state, @PathVariable("redirectURI") String redirectURI, @RequestParam(name = "state",required = false) String stateParam,
 			HttpServletResponse res) throws IOException {
-		String uri = loginService.login(redirectURI, state);
-
+		String stateValue = state==null?stateParam:state;
+		String uri = loginService.login(redirectURI, stateValue);
+		Cookie stateCookie = new Cookie("state", stateValue);
+		stateCookie.setHttpOnly(true);
+		stateCookie.setSecure(true);
+		res.addCookie(stateCookie);
 		res.setStatus(302);
 		res.sendRedirect(uri);
 	}
