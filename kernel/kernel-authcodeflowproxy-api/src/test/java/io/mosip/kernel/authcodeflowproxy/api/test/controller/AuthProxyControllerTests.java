@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.Cookie;
 
@@ -173,13 +174,10 @@ public class AuthProxyControllerTests {
 	}
 	
 	
-	
-
-	
-	//@Test
+	@Test
 	public void loginTest() throws Exception {
 		//http://localhost:8080/keycloak/auth/realms/mosip/protocol/openid-connect/auth?client_id=mosip-admin-client&redirect_uri=http://localhost:8082/v1/admin/login-redirect/abc&state=mock-state&response_type=code&scope=cls
-		Cookie cookie = new Cookie("state", "mockstate");
+		Cookie cookie = new Cookie("state", UUID.randomUUID().toString());
 		mockMvc.perform(get("/login/abc").contentType(MediaType.APPLICATION_JSON).cookie(cookie)).andExpect(status().is3xxRedirection());
 	}
 	
@@ -214,6 +212,28 @@ public class AuthProxyControllerTests {
 		Cookie cookie = new Cookie("state", "mockstate");
 		mockMvc.perform(get("/login-redirect/abc?state=mockstate&session_state=mock-session-state&code=mockcode").contentType(MediaType.APPLICATION_JSON).cookie(cookie)).andExpect(status().is2xxSuccessful()).andExpect(jsonPath("$.errors[0].errorCode", is(Errors.ACESSTOKEN_EXCEPTION.getErrorCode())));
 	}
+	
+	@Test
+	public void loginUUIDEmptyTest() throws Exception {
+		//http://localhost:8080/keycloak/auth/realms/mosip/protocol/openid-connect/auth?client_id=mosip-admin-client&redirect_uri=http://localhost:8082/v1/admin/login-redirect/abc&state=mock-state&response_type=code&scope=cls
+		Cookie cookie = new Cookie("state", "");
+		mockMvc.perform(get("/login/abc").contentType(MediaType.APPLICATION_JSON).cookie(cookie)).andExpect(status().isOk()).andExpect(jsonPath("$.errors[0].errorCode", is(Errors.STATE_NULL_EXCEPTION.getErrorCode())));
+	}
+	
+	@Test
+	public void loginUUIDNullTest() throws Exception {
+		//http://localhost:8080/keycloak/auth/realms/mosip/protocol/openid-connect/auth?client_id=mosip-admin-client&redirect_uri=http://localhost:8082/v1/admin/login-redirect/abc&state=mock-state&response_type=code&scope=cls
+		mockMvc.perform(get("/login/abc").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andExpect(jsonPath("$.errors[0].errorCode", is(Errors.STATE_NULL_EXCEPTION.getErrorCode())));
+	}
+	
+	@Test
+	public void loginInvalidUUIDTest() throws Exception {
+		//http://localhost:8080/keycloak/auth/realms/mosip/protocol/openid-connect/auth?client_id=mosip-admin-client&redirect_uri=http://localhost:8082/v1/admin/login-redirect/abc&state=mock-state&response_type=code&scope=cls
+		Cookie cookie = new Cookie("state", "abc/nabc");
+		mockMvc.perform(get("/login/abc").contentType(MediaType.APPLICATION_JSON).cookie(cookie)).andExpect(status().isOk()).andExpect(jsonPath("$.errors[0].errorCode", is(Errors.STATE_NOT_UUID_EXCEPTION.getErrorCode())));
+	}
+	
+	
 	
 	
 	@Test

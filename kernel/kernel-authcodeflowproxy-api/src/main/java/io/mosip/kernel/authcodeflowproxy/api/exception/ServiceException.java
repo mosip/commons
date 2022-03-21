@@ -18,6 +18,6 @@ public class ServiceException extends BaseUncheckedException {
 	}
 
 	public ServiceException(String errorCode, String errorMessage, Throwable cause) {
-		super(errorMessage, errorCode, cause);
+		super(errorCode, errorMessage, cause);
 	}
 }
