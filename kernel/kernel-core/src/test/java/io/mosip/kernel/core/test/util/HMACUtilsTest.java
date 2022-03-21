@@ -22,6 +22,11 @@ public class HMACUtilsTest {
 	public void testDigestAsPlainText() throws NoSuchAlgorithmException{
 		assertNotNull(HMACUtils2.digestAsPlainText("Bal Vikash Sharma".getBytes()));
 	}
+	
+	@Test
+	public void testDigestAsPlainWithSaltText() throws NoSuchAlgorithmException{
+		assertNotNull(HMACUtils2.digestAsPlainTextWithSalt("testData".getBytes(),"randomsalt".getBytes()));
+	}
 
 	@Test
 	public void testGenerateRandomIV() {
