@@ -70,6 +70,7 @@ public class LoginController {
 		Cookie stateCookie = new Cookie("state", stateValue);
 		stateCookie.setHttpOnly(true);
 		stateCookie.setSecure(true);
+		stateCookie.setPath("/");
 		res.addCookie(stateCookie);
 		res.setStatus(302);
 		res.sendRedirect(uri);
