@@ -3,9 +3,12 @@ package io.mosip.kernel.licensekeygenerator.misp.test;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
+import java.security.SecureRandom;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -56,7 +59,7 @@ public class MISPLicenseGeneratorExceptionTest {
 			dummyValue = "failTheTestCase";
 		}
 		mockStatic(RandomStringUtils.class);
-		when(RandomStringUtils.randomAlphanumeric(licenseKeyLength)).thenReturn(dummyValue);
+		when(RandomStringUtils.random(Mockito.eq(licenseKeyLength),Mockito.eq(0),Mockito.eq(0),Mockito.eq(true),Mockito.eq(true),Mockito.eq(null),Mockito.any(SecureRandom.class))).thenReturn(dummyValue);
 		licenseGeneratorUtil.generate();
 	}
 }
