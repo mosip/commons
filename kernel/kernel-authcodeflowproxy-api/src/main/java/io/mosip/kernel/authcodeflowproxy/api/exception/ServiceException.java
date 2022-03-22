@@ -14,10 +14,10 @@ public class ServiceException extends BaseUncheckedException {
 	 * @param errorMessage The error message for this exception
 	 */
 	public ServiceException(String errorCode, String errorMessage) {
-		super(errorCode,errorMessage);
+		super(errorCode, errorMessage);
 	}
 
 	public ServiceException(String errorCode, String errorMessage, Throwable cause) {
-		super(errorMessage, errorCode, cause);
+		super(errorCode, errorMessage, cause);
 	}
 }
