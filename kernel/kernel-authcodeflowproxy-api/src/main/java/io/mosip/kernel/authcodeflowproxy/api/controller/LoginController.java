@@ -35,8 +35,8 @@ public class LoginController {
 	private String authTokenHeader;
 	
 	
-	@Value("#{'${auth.allowed.domains}'.split(',')}")
-	private List<String> listOfStrings;
+	@Value("#{'${auth.allowed.urls}'.split(',')}")
+	private List<String> allowedUrls;
 
 	@Autowired
 	private LoginService loginService;
@@ -62,8 +62,7 @@ public class LoginController {
 		res.addCookie(cookie);
 		res.setStatus(302);
 		String uri = new String(Base64.decodeBase64(redirectURI.getBytes()));
-		URL url = new URL(uri);
-		if(!listOfStrings.contains(url.getHost())) {
+		if(!allowedUrls.contains(uri)) {
 			throw new ServiceException(Errors.DOMAIN_EXCEPTION.getErrorCode(), Errors.DOMAIN_EXCEPTION.getErrorMessage());
 		}
 		res.sendRedirect(uri);	
