@@ -1,6 +1,8 @@
 package io.mosip.kernel.core.test.util;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.isA;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 import java.security.NoSuchAlgorithmException;
@@ -70,5 +72,49 @@ public class CryptoUtilTest {
 		SecretKey secretKey = setSymmetricUp(64, "AES");
 		assertThat(CryptoUtil.symmetricEncrypt(secretKey, "testData".getBytes()), isA(byte[].class));
 	}
+	
+	
+	@Test
+	public void testEncodeDecodeToURLSafeBase64() {
+		assertThat(new String(CryptoUtil.decodeURLSafeBase64(CryptoUtil.encodeToURLSafeBase64("data".getBytes()))), is("data"));
+	}
+	
+	@Test
+	public void testNullEncodeToURLSafeBase64() {
+		assertNull(CryptoUtil.encodeToURLSafeBase64(null));
+	}
+	
+	@Test
+	public void testNullDecodeToURLSafeBase64() {
+		assertNull(CryptoUtil.decodeURLSafeBase64(""));
+	}
+	
+	
+	@Test
+	public void testEncodeDecodeToBase64() {
+		assertThat(new String(CryptoUtil.decodePlainBase64(CryptoUtil.encodeToPlainBase64("data".getBytes()))), is("data"));
+	}
+	
+	@Test
+	public void testNullEncodeToBase64() {
+		assertNull(CryptoUtil.encodeToPlainBase64(null));
+	}
+	
+	@Test
+	public void testNullDecodeToBase64() {
+		assertNull(CryptoUtil.decodePlainBase64(""));
+	}
+	
+	@Test
+	public void testComputeFingerPrint() {
+		assertThat(CryptoUtil.computeFingerPrint("testcert","testMetadata"),isA(String.class));
+	}
+	
+	@Test
+	public void testNullMetadataComputeFingerPrint() {
+		assertThat(CryptoUtil.computeFingerPrint("testcert",null),isA(String.class));
+	}
+	
+	
 
 }

@@ -1,5 +1,6 @@
 package io.mosip.kernel.applicanttype.api.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
@@ -62,7 +63,7 @@ public class ApplicantTypeTest {
 			map.put("genderCode", arr[1]);
 			map.put("biometricAvailable", arr[3]);
 			String code = applicantType.getApplicantType(map);
-			assertTrue(code.equals(createCode(i)));
+			assertEquals(code,createCode(i));
 		}
 	}
 
@@ -74,7 +75,7 @@ public class ApplicantTypeTest {
 		map.put("genderCode", null);
 		map.put("biometricAvailable", null);
 		String code = applicantType.getApplicantType(map);
-		assertTrue(code.equals("KER-MSD-147"));
+		assertEquals(code,"KER-MSD-147");
 	}
 
 	@Test(expected = Exception.class)
@@ -87,7 +88,7 @@ public class ApplicantTypeTest {
 		map.put("biometricAvailable", "false");
 		String code = applicantType.getApplicantType(map);
 		System.out.println(code);
-		assertTrue(code.equals("KER-MSD-147"));
+		assertEquals(code,"KER-MSD-147");
 	}
 
 	private String createCode(int i) {

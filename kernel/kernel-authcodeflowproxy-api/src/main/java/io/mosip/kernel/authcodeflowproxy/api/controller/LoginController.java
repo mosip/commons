@@ -1,6 +1,8 @@
 package io.mosip.kernel.authcodeflowproxy.api.controller;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.Cookie;
@@ -33,6 +35,10 @@ public class LoginController {
 
 	@Value("${auth.token.header:Authorization}")
 	private String authTokenHeader;
+	
+	
+	@Value("#{'${auth.allowed.urls}'.split(',')}")
+	private List<String> allowedUrls;
 
 	@Autowired
 	private LoginService loginService;
@@ -80,8 +86,12 @@ public class LoginController {
 		res.addCookie(cookie);
 		res.setStatus(302);
 		String uri = new String(Base64.decodeBase64(redirectURI.getBytes()));
-		res.sendRedirect(uri);
-	}
+		if(!allowedUrls.contains(uri)) {
+			throw new ServiceException(Errors.DOMAIN_EXCEPTION.getErrorCode(), Errors.DOMAIN_EXCEPTION.getErrorMessage());
+		}
+		res.sendRedirect(uri);	
+		}
+
 
 	@ResponseFilter
 	@GetMapping(value = "/authorize/admin/validateToken")

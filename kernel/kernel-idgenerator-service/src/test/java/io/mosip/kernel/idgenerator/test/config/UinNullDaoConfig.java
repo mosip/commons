@@ -1,0 +1,205 @@
+package io.mosip.kernel.idgenerator.test.config;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+
+import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanInstantiationException;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.EnvironmentAware;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.client.RestTemplate;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
+import io.mosip.kernel.core.authmanager.authadapter.spi.VertxAuthenticationProvider;
+import io.mosip.kernel.core.signatureutil.spi.SignatureUtil;
+import io.mosip.kernel.uingenerator.service.UinService;
+import io.mosip.kernel.uingenerator.service.impl.UinServiceImpl;
+import io.mosip.kernel.vidgenerator.constant.HibernatePersistenceConstant;
+import io.mosip.kernel.vidgenerator.service.VidService;
+import io.mosip.kernel.vidgenerator.service.impl.VidServiceImpl;
+
+/**
+ * Configuration class for IDGenerator
+ * 
+ * @author Dharmesh Khandelwal
+ * @author Raj Jha
+ * @since 1.0.0
+ *
+ */
+
+@Configuration
+@PropertySource({ "classpath:bootstrap.properties" })
+@PropertySource(value = "classpath:application-uinnull.properties", ignoreResourceNotFound = true)
+@EnableJpaRepositories(basePackages = { "io.mosip.kernel.vidgenerator.repository", "io.mosip.kernel.uingenerator.repository"})
+@ComponentScan(basePackages = { "io.mosip.kernel.vidgenerator.*","io.mosip.kernel.uingenerator.*", "io.mosip.kernel.idgenerator.vid.*",
+		"io.mosip.kernel.crypto.*", "${mosip.auth.adapter.impl.basepackage}","io.mosip.kernel.idgenerator.*","io.mosip.kernel.cryptosignature.*","io.mosip.kernel.keygenerator.bouncycastle"},excludeFilters={
+				  @ComponentScan.Filter(type=FilterType.ASSIGNABLE_TYPE, value=HibernateDaoConfig.class),@ComponentScan.Filter(type=FilterType.ASSIGNABLE_TYPE, value=io.mosip.kernel.idgenerator.config.HibernateDaoConfig.class),@ComponentScan.Filter(type=FilterType.ASSIGNABLE_TYPE, value=ExceptionDaoConfig.class)})
+@EnableTransactionManagement
+public class UinNullDaoConfig implements EnvironmentAware {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(UinNullDaoConfig.class);
+
+	/**
+	 * Field for {@link #env}
+	 */
+	@Autowired
+	private Environment env;
+
+	@Value("${mosip.kernel.vid.hikari_maximumPoolSize:10}")
+	private int maximumPoolSize;
+	@Value("${hikari.validationTimeout:3000}")
+	private int validationTimeout;
+	@Value("${hikari.connectionTimeout:60000}")
+	private int connectionTimeout;
+	@Value("${hikari.idleTimeout:200000}")
+	private int idleTimeout;
+	@Value("${hikari.minimumIdle:0}")
+	private int minimumIdle;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.springframework.context.EnvironmentAware#setEnvironment(org.
+	 * springframework.core.env.Environment)
+	 */
+	@Override
+	public void setEnvironment(final Environment environment) {
+		this.env = environment;
+	}
+
+	/**
+	 * A factory for connections to the physical data source that this DataSource
+	 * object represents.
+	 * 
+	 * @return dataSource
+	 */
+	@Bean
+	@Autowired
+	public DataSource dataSource() {
+		HikariConfig hikariConfig = new HikariConfig();
+		hikariConfig.setDriverClassName(env.getProperty(HibernatePersistenceConstant.JAVAX_PERSISTENCE_JDBC_DRIVER));
+		hikariConfig.setJdbcUrl(env.getProperty(HibernatePersistenceConstant.JAVAX_PERSISTENCE_JDBC_URL));
+		hikariConfig.setUsername(env.getProperty(HibernatePersistenceConstant.JAVAX_PERSISTENCE_JDBC_USER));
+		hikariConfig.setPassword(env.getProperty(HibernatePersistenceConstant.JAVAX_PERSISTENCE_JDBC_PASS));
+		hikariConfig.setMaximumPoolSize(maximumPoolSize);
+		hikariConfig.setValidationTimeout(validationTimeout);
+		hikariConfig.setConnectionTimeout(connectionTimeout);
+		hikariConfig.setIdleTimeout(idleTimeout);
+		hikariConfig.setMinimumIdle(minimumIdle);
+		return new HikariDataSource(hikariConfig);
+	}
+
+	/**
+	 * Set up a shared JPA EntityManagerFactory in a Spring application context
+	 * 
+	 * @param dataSource dataSource
+	 * @return LocalContainerEntityManagerFactoryBean
+	 */
+	@Bean
+	@Autowired
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory(final DataSource dataSource) {
+		LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
+		entityManagerFactory.setDataSource(dataSource);
+		entityManagerFactory.setPackagesToScan("io.mosip.kernel.vidgenerator.entity","io.mosip.kernel.uingenerator.entity");
+		entityManagerFactory.setJpaPropertyMap(jpaProperties());
+		entityManagerFactory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+		return entityManagerFactory;
+	}
+
+	/**
+	 * This is the central interface in Spring's transaction infrastructure.
+	 * 
+	 * @param entityManagerFactory entityManagerFactory
+	 * @return PlatformTransactionManager
+	 */
+	@Bean(name = "transactionManager")
+	@Autowired
+	public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+		JpaTransactionManager jpaTransactionManager = new JpaTransactionManager(entityManagerFactory);
+		jpaTransactionManager.setDataSource(dataSource());
+		return jpaTransactionManager;
+	}
+
+	public Map<String, Object> jpaProperties() {
+		HashMap<String, Object> jpaProperties = new HashMap<>();
+		getProperty(jpaProperties, HibernatePersistenceConstant.HIBERNATE_HBM2DDL_AUTO,
+				HibernatePersistenceConstant.UPDATE);
+		getProperty(jpaProperties, HibernatePersistenceConstant.HIBERNATE_DIALECT, null);
+		getProperty(jpaProperties, HibernatePersistenceConstant.HIBERNATE_SHOW_SQL, HibernatePersistenceConstant.TRUE);
+		getProperty(jpaProperties, HibernatePersistenceConstant.HIBERNATE_FORMAT_SQL,
+				HibernatePersistenceConstant.TRUE);
+		getProperty(jpaProperties, HibernatePersistenceConstant.HIBERNATE_CONNECTION_CHAR_SET,
+				HibernatePersistenceConstant.UTF8);
+		getProperty(jpaProperties, HibernatePersistenceConstant.HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE,
+				HibernatePersistenceConstant.FALSE);
+		getProperty(jpaProperties, HibernatePersistenceConstant.HIBERNATE_CACHE_USE_QUERY_CACHE,
+				HibernatePersistenceConstant.FALSE);
+		getProperty(jpaProperties, HibernatePersistenceConstant.HIBERNATE_CACHE_USE_STRUCTURED_ENTRIES,
+				HibernatePersistenceConstant.FALSE);
+		getProperty(jpaProperties, HibernatePersistenceConstant.HIBERNATE_GENERATE_STATISTICS,
+				HibernatePersistenceConstant.FALSE);
+		getProperty(jpaProperties, HibernatePersistenceConstant.HIBERNATE_NON_CONTEXTUAL_CREATION,
+				HibernatePersistenceConstant.FALSE);
+		getProperty(jpaProperties, HibernatePersistenceConstant.HIBERNATE_CURRENT_SESSION_CONTEXT,
+				HibernatePersistenceConstant.JTA);
+		getProperty(jpaProperties, HibernatePersistenceConstant.HIBERNATE_EJB_INTERCEPTOR,
+				HibernatePersistenceConstant.EMPTY_INTERCEPTOR);
+		return jpaProperties;
+	}
+
+	private HashMap<String, Object> getProperty(HashMap<String, Object> jpaProperties, String property,
+			String defaultValue) {
+		/**
+		 * if property found in properties file then add that interceptor to the jpa
+		 * properties.
+		 */
+		if (property.equals(HibernatePersistenceConstant.HIBERNATE_EJB_INTERCEPTOR)) {
+			try {
+				if (env.containsProperty(property)) {
+					jpaProperties.put(property, BeanUtils.instantiateClass(Class.forName(env.getProperty(property))));
+				}
+				/**
+				 * We can add a default interceptor whenever we require here.
+				 */
+			} catch (BeanInstantiationException | ClassNotFoundException e) {
+				LOGGER.error(e.getMessage());
+			}
+		} else {
+			jpaProperties.put(property, env.containsProperty(property) ? env.getProperty(property) : defaultValue);
+		}
+		return jpaProperties;
+	}
+	
+	
+	@Bean
+	public VertxAuthenticationProvider authHandler(){
+		return Mockito.mock(VertxAuthenticationProvider.class);
+	}
+	
+	@Bean
+	public RestTemplate restTemplate(){
+		return new RestTemplate();
+	}
+
+}

@@ -1,4 +1,4 @@
-package io.mosip.kernel.biosdk.provider.test;
+package io.mosip.kernel.biosdk.provider.test.dto;
 
 import io.mosip.kernel.biometrics.constant.BiometricFunction;
 import io.mosip.kernel.biometrics.constant.BiometricType;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SDKInstanceTwo implements IBioApi {
+public class SDKInstanceTwo0_9 implements IBioApi {
 
 
     @Override

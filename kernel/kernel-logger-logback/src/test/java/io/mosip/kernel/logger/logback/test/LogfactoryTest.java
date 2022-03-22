@@ -2,7 +2,9 @@ package io.mosip.kernel.logger.logback.test;
 
 import static org.hamcrest.CoreMatchers.isA;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,6 +32,7 @@ import io.mosip.kernel.logger.logback.appender.RollingFileAppender;
 import io.mosip.kernel.logger.logback.constant.LogLevel;
 import io.mosip.kernel.logger.logback.constant.LoggerMethod;
 import io.mosip.kernel.logger.logback.factory.Logfactory;
+import io.mosip.kernel.logger.logback.impl.Slf4jLoggerImpl;
 
 public class LogfactoryTest {
 
@@ -61,6 +64,8 @@ public class LogfactoryTest {
 
 	@AfterClass
 	public static void cleanUp() throws IOException {
+		Logfactory.stop("testNormalFileappender");
+		Logfactory.stop("testRollingFileappender");
 		Logfactory.stopAll();
 		Files.walk(new File("src/test/resources/test").toPath()).sorted(Comparator.reverseOrder()).map(Path::toFile)
 				.forEach(File::delete);
@@ -146,7 +151,7 @@ public class LogfactoryTest {
 
 	@Test
 	public void testgetDefaultFileLoggerClassWithoutRolling() {
-		mosipFileAppender.setAppenderName("testFileappender");
+		mosipFileAppender.setAppenderName("testNormalFileappender");
 		mosipFileAppender.setAppend(true);
 		mosipFileAppender.setFileName(FILENAME);
 		mosipFileAppender.setImmediateFlush(true);
@@ -388,7 +393,7 @@ public class LogfactoryTest {
 
 	@Test
 	public void testgetDefaultFileLoggerNameWithFullRolling() {
-		mosipRollingFileAppender.setAppenderName("testFileappender");
+		mosipRollingFileAppender.setAppenderName("testRollingFileappender");
 		mosipRollingFileAppender.setAppend(true);
 		mosipRollingFileAppender.setFileName(FILENAME);
 		mosipRollingFileAppender.setImmediateFlush(true);
@@ -667,5 +672,362 @@ public class LogfactoryTest {
 		rollingFileAppenderFile = new ClassPathResource("/rollingfileappenderexception.xml").getFile();
 		Logfactory.getDefaultRollingFileLogger(rollingFileAppenderFile, "LogfactoryTest");
 	}
-
+	
+	@Test
+	public void testgetDefaultConsoleLoggerLogInfoTest() throws IOException {
+		mosipConsoleAppender.setAppenderName("testConsoleappender");
+		mosipConsoleAppender.setImmediateFlush(true);
+		mosipConsoleAppender.setTarget("System.out");
+	    Logger logger=Logfactory.getDefaultConsoleLogger(mosipConsoleAppender, LogfactoryTest.class);
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.info("sessionID", "idTYPE", "id", "mocklog");
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	@Test
+	public void testgetDefaultConsoleLoggerLogDebugTest() throws IOException {
+		mosipConsoleAppender.setAppenderName("testConsoleappender");
+		mosipConsoleAppender.setImmediateFlush(true);
+		mosipConsoleAppender.setTarget("System.out");
+	    Logger logger=Logfactory.getDefaultConsoleLogger(mosipConsoleAppender, LogfactoryTest.class);
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.debug("sessionID", "idTYPE", "id", "mocklog");
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	@Test
+	public void testgetDefaultConsoleLoggerLogWarnTest() throws IOException {
+		mosipConsoleAppender.setAppenderName("testConsoleappender");
+		mosipConsoleAppender.setImmediateFlush(true);
+		mosipConsoleAppender.setTarget("System.out");
+	    Logger logger=Logfactory.getDefaultConsoleLogger(mosipConsoleAppender, LogfactoryTest.class);
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.warn("sessionID", "idTYPE", "id", "mocklog");
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	@Test
+	public void testgetDefaultConsoleLoggerLogTraceTest() throws IOException {
+		mosipConsoleAppender.setAppenderName("testConsoleappender");
+		mosipConsoleAppender.setImmediateFlush(true);
+		mosipConsoleAppender.setTarget("System.out");
+	    Logger logger=Logfactory.getDefaultConsoleLogger(mosipConsoleAppender, LogfactoryTest.class);
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.info("sessionID", "idTYPE", "id", "mocklog");
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	@Test
+	public void testgetDefaultConsoleLoggerLogErrorTest() throws IOException {
+		mosipConsoleAppender.setAppenderName("testConsoleappender");
+		mosipConsoleAppender.setImmediateFlush(true);
+		mosipConsoleAppender.setTarget("System.out");
+	    Logger logger=Logfactory.getDefaultConsoleLogger(mosipConsoleAppender, LogfactoryTest.class);
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.error("sessionID", "idTYPE", "id", "mocklog");
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	@Test
+	public void testgetDefaultConsoleLoggerLogInfoSingleArgTest() throws IOException {
+		mosipConsoleAppender.setAppenderName("testConsoleappender");
+		mosipConsoleAppender.setImmediateFlush(true);
+		mosipConsoleAppender.setTarget("System.out");
+	    Logger logger=Logfactory.getDefaultConsoleLogger(mosipConsoleAppender, LogfactoryTest.class);
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.info("mocklog");
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	@Test
+	public void testgetDefaultConsoleLoggerLogDebugSingleArgTest() throws IOException {
+		mosipConsoleAppender.setAppenderName("testConsoleappender");
+		mosipConsoleAppender.setImmediateFlush(true);
+		mosipConsoleAppender.setTarget("System.out");
+	    Logger logger=Logfactory.getDefaultConsoleLogger(mosipConsoleAppender, LogfactoryTest.class);
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.debug("mocklog");
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	@Test
+	public void testgetDefaultConsoleLoggerLogWarnSingleArgTest() throws IOException {
+		mosipConsoleAppender.setAppenderName("testConsoleappender");
+		mosipConsoleAppender.setImmediateFlush(true);
+		mosipConsoleAppender.setTarget("System.out");
+	    Logger logger=Logfactory.getDefaultConsoleLogger(mosipConsoleAppender, LogfactoryTest.class);
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.warn("mocklog");
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	@Test
+	public void testgetDefaultConsoleLoggerLogTraceSingleArgTest() throws IOException {
+		mosipConsoleAppender.setAppenderName("testConsoleappender");
+		mosipConsoleAppender.setImmediateFlush(true);
+		mosipConsoleAppender.setTarget("System.out");
+	    Logger logger=Logfactory.getDefaultConsoleLogger(mosipConsoleAppender, LogfactoryTest.class);
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.info("mocklog");
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	@Test
+	public void testgetDefaultConsoleLoggerLogErrorSingleArgTest() throws IOException {
+		mosipConsoleAppender.setAppenderName("testConsoleappender");
+		mosipConsoleAppender.setImmediateFlush(true);
+		mosipConsoleAppender.setTarget("System.out");
+	    Logger logger=Logfactory.getDefaultConsoleLogger(mosipConsoleAppender, LogfactoryTest.class);
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.error("mocklog");
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	@Test
+	public void testgetDefaultConsoleLoggerLogInfoObjectArgTest() throws IOException {
+		mosipConsoleAppender.setAppenderName("testConsoleappender");
+		mosipConsoleAppender.setImmediateFlush(true);
+		mosipConsoleAppender.setTarget("System.out");
+	    Logger logger=Logfactory.getDefaultConsoleLogger(mosipConsoleAppender, LogfactoryTest.class);
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.info("mocklog",new String("mockobject"));
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	@Test
+	public void testgetDefaultConsoleLoggerLogDebugObjectArgTest() throws IOException {
+		mosipConsoleAppender.setAppenderName("testConsoleappender");
+		mosipConsoleAppender.setImmediateFlush(true);
+		mosipConsoleAppender.setTarget("System.out");
+	    Logger logger=Logfactory.getDefaultConsoleLogger(mosipConsoleAppender, LogfactoryTest.class);
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.debug("mocklog",new String("mockobject"));
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	@Test
+	public void testgetDefaultConsoleLoggerLogWarnObjectArgTest() throws IOException {
+		mosipConsoleAppender.setAppenderName("testConsoleappender");
+		mosipConsoleAppender.setImmediateFlush(true);
+		mosipConsoleAppender.setTarget("System.out");
+	    Logger logger=Logfactory.getDefaultConsoleLogger(mosipConsoleAppender, LogfactoryTest.class);
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.warn("mocklog",new String("mockobject"));
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	@Test
+	public void testgetDefaultConsoleLoggerLogTraceObjectArgTest() throws IOException {
+		mosipConsoleAppender.setAppenderName("testConsoleappender");
+		mosipConsoleAppender.setImmediateFlush(true);
+		mosipConsoleAppender.setTarget("System.out");
+	    Logger logger=Logfactory.getDefaultConsoleLogger(mosipConsoleAppender, LogfactoryTest.class);
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.info("mocklog",new String("mockobject"));
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	@Test
+	public void testgetDefaultConsoleLoggerLogErrorObjectArgTest() throws IOException {
+		mosipConsoleAppender.setAppenderName("testConsoleappender");
+		mosipConsoleAppender.setImmediateFlush(true);
+		mosipConsoleAppender.setTarget("System.out");
+	    Logger logger=Logfactory.getDefaultConsoleLogger(mosipConsoleAppender, LogfactoryTest.class);
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.error("mocklog",new String("mockobject"));
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	
+	@Test
+	public void  testSLf4jLogInfoTest() throws IOException {
+		Logger logger = new Slf4jLoggerImpl(this.getClass());
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.info("sessionID", "idTYPE", "id", "mocklog");
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	
+	@Test
+	public void  testSLf4jLogDebugTest() throws IOException {
+		Logger logger = new Slf4jLoggerImpl(this.getClass());
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.debug("sessionID", "idTYPE", "id", "mocklog");
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	@Test
+	public void  testSLf4jLogErrorTest() throws IOException {
+		Logger logger = new Slf4jLoggerImpl(this.getClass());
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.error("sessionID", "idTYPE", "id", "mocklog");
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	@Test
+	public void  testSLf4jLogWarnTest() throws IOException {
+		Logger logger = new Slf4jLoggerImpl(this.getClass());
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.warn("sessionID", "idTYPE", "id", "mocklog");
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	@Test
+	public void  testSLf4jLogInfoSingleArgTest() throws IOException {
+		Logger logger = new Slf4jLoggerImpl(this.getClass());
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.info("mocklog");
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	
+	@Test
+	public void  testSLf4jLogDebugSingleArgTest() throws IOException {
+		Logger logger = new Slf4jLoggerImpl(this.getClass());
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.debug("mocklog");
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	@Test
+	public void  testSLf4jLogErrorSingleArgTest() throws IOException {
+		Logger logger = new Slf4jLoggerImpl(this.getClass());
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.error("mocklog");
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	@Test
+	public void  testSLf4jLogWarnSingleArgTest() throws IOException {
+		Logger logger = new Slf4jLoggerImpl(this.getClass());
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.warn("mocklog");
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	@Test
+	public void  testSLf4jLogInfoObjectArgTest() throws IOException {
+		Logger logger = new Slf4jLoggerImpl(this.getClass());
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.info("mocklog",new String("mockobject"));
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	
+	@Test
+	public void  testSLf4jLogDebugObjectArgTest() throws IOException {
+		Logger logger = new Slf4jLoggerImpl(this.getClass());
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.debug("mocklog",new String("mockobject"));
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	@Test
+	public void  testSLf4jLogErrorObjectArgTest() throws IOException {
+		Logger logger = new Slf4jLoggerImpl(this.getClass());
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.error("mocklog",new String("mockobject"));
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	@Test
+	public void  testSLf4jLogWarnObjectArgTest() throws IOException {
+		Logger logger = new Slf4jLoggerImpl(this.getClass());
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.warn("mocklog",new String("mockobject"));
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
+	@Test
+	public void  testSLf4jLogErrorThrowableArgTest() throws IOException {
+		Logger logger = new Slf4jLoggerImpl(this.getClass());
+	    try(ByteArrayOutputStream out = new ByteArrayOutputStream()){   
+	    System.setOut(new java.io.PrintStream(out));    
+	    logger.error("mocklog",new Throwable("mockexception"));
+	    assertTrue(out.toString().contains("mocklog"));
+	    out.close();
+	    }
+	}
+	
 }

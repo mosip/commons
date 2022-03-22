@@ -29,11 +29,13 @@ public enum Errors {
 	ACESSTOKEN_EXCEPTION("KER-ACP-006", "Error Occured while getting access token from iam"),
 
 	STATE_EXCEPTION("KER-ACP-007", "state is not maching"),
-
+	
 	REST_EXCEPTION("KER-ACP-008", "Exception occured while consuming service"),
 	INVALID_TOKEN("KER-ATH-401", "Authentication Failed : Invalid Token :"),
-	STATE_NULL_EXCEPTION("KER-ACP-009", "state is null or empty"),
-	STATE_NOT_UUID_EXCEPTION("KER-ACP-010", "state is not uuid");
+	EXCEPTION("KER-ACP-500", "Exception occured "),
+	DOMAIN_EXCEPTION("KER-ACP-009", "uri's domain name not found in allowed domains"),
+	STATE_NULL_EXCEPTION("KER-ACP-010", "state is null or empty"),
+	STATE_NOT_UUID_EXCEPTION("KER-ACP-011", "state is not uuid");
 
 	/**
 	 * The error code

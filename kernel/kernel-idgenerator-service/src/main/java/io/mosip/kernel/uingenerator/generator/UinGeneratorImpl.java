@@ -1,5 +1,10 @@
 package io.mosip.kernel.uingenerator.generator;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
+
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.random.RandomDataGenerator;
@@ -66,6 +71,14 @@ public class UinGeneratorImpl implements UinGenerator {
 	 * The uin default status
 	 */
 	private final String uinDefaultStatus;
+	private SecureRandom random;
+	
+	@PostConstruct
+	private void init() {
+		random = new SecureRandom();
+	}
+	
+
 
 	/**
 	 * Constructor to set {@link #uinsCount} and {@link #uinLength}
@@ -120,7 +133,9 @@ public class UinGeneratorImpl implements UinGenerator {
 	 * @return the uin with checksum
 	 */
 	private String generateSingleId(int generatedIdLength, long lowerBound, long upperBound) {
-		String generatedID = RandomStringUtils.random(generatedIdLength, UinGeneratorConstant.ZERO_TO_NINE);
+		byte[] randomSeedBytes = new byte[generatedIdLength];
+		random.nextBytes(randomSeedBytes);
+		String generatedID = new BigInteger(randomSeedBytes).abs().toString().substring(0,generatedIdLength);
 		String verhoeffDigit = ChecksumUtils.generateChecksumDigit(String.valueOf(generatedID));
 		return appendChecksum(generatedIdLength, generatedID, verhoeffDigit);
 	}

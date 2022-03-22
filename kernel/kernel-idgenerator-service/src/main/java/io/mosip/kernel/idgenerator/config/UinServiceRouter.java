@@ -163,11 +163,13 @@ public class UinServiceRouter {
 					} catch (SignatureUtilClientException e1) {
 						ExceptionUtils.logRootCause(e1);
 						setError(routingContext, e1.getList().get(0));
+						return;
 					} catch (SignatureUtilException e1) {
 						ExceptionUtils.logRootCause(e1);
 						ServiceError error = new ServiceError(
 								UinGeneratorErrorCode.INTERNAL_SERVER_ERROR.getErrorCode(), e1.toString());
 						setError(routingContext, error);
+						return;
 					}
 					signedData = cryptoManagerResponseDto.getData();
 					routingContext.response().putHeader("response-signature", signedData);
@@ -305,6 +307,8 @@ public class UinServiceRouter {
 			}
 		}
 		try {
+			routingContext.response().putHeader("content-type", UinGeneratorConstant.APPLICATION_JSON)
+					.setStatusCode(200).end(objectMapper.writeValueAsString(errorResponse));
 			blockingHandler.fail(objectMapper.writeValueAsString(errorResponse));
 		} catch (JsonProcessingException e1) {
 
