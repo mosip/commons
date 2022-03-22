@@ -5,25 +5,7 @@ package io.mosip.kernel.core.authmanager.spi;
 
 import java.util.List;
 
-import io.mosip.kernel.core.authmanager.model.AccessTokenResponseDTO;
-import io.mosip.kernel.core.authmanager.model.AuthNResponse;
-import io.mosip.kernel.core.authmanager.model.AuthResponseDto;
-import io.mosip.kernel.core.authmanager.model.AuthZResponseDto;
-import io.mosip.kernel.core.authmanager.model.MosipUserDto;
-import io.mosip.kernel.core.authmanager.model.MosipUserListDto;
-import io.mosip.kernel.core.authmanager.model.MosipUserSaltListDto;
-import io.mosip.kernel.core.authmanager.model.PasswordDto;
-import io.mosip.kernel.core.authmanager.model.RIdDto;
-import io.mosip.kernel.core.authmanager.model.RefreshTokenRequest;
-import io.mosip.kernel.core.authmanager.model.RefreshTokenResponse;
-import io.mosip.kernel.core.authmanager.model.RolesListDto;
-import io.mosip.kernel.core.authmanager.model.UserDetailsResponseDto;
-import io.mosip.kernel.core.authmanager.model.UserNameDto;
-import io.mosip.kernel.core.authmanager.model.UserPasswordRequestDto;
-import io.mosip.kernel.core.authmanager.model.UserPasswordResponseDto;
-import io.mosip.kernel.core.authmanager.model.UserRegistrationRequestDto;
-import io.mosip.kernel.core.authmanager.model.UserRoleDto;
-import io.mosip.kernel.core.authmanager.model.ValidationResponseDto;
+import io.mosip.kernel.core.authmanager.model.*;
 
 /**
  * @author Ramadurai Pandian
@@ -72,5 +54,7 @@ public interface AuthService extends AuthZService, AuthNService {
 			String redirectURI);
 
 	public String getKeycloakURI(String redirectURI, String state);
+
+	public IndividualIdDto getIndividualIdBasedOnUserID(String userId, String appId);
 
 }
