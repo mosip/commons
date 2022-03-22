@@ -8,7 +8,7 @@
 	<name>kernel-notification-service</name>
 	<description>Mosip commons project </description>
 	<url>https://github.com/mosip/commons</url>
-	<version>1.2.1-SNAPSHOT</version>
+	<version>1.2.0.1-SNAPSHOT</version>
 	<groupId>io.mosip.kernel</groupId>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -221,11 +221,11 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.2.1-SNAPSHOT</kernel.core.version>
-		<kernel.auth-adapter.version>1.2.1-SNAPSHOT</kernel.auth-adapter.version>
-		<kernel.applicant-type.version>1.2.1-SNAPSHOT</kernel.applicant-type.version>
-		<kernel.dataaccess-hibernate.version>1.2.1-SNAPSHOT</kernel.dataaccess-hibernate.version>
-		<kernel.logger.version>1.2.1-SNAPSHOT</kernel.logger.version>
+		<kernel.core.version>1.2.0.1-SNAPSHOT</kernel.core.version>
+		<kernel.auth-adapter.version>1.2.0.1-SNAPSHOT</kernel.auth-adapter.version>
+		<kernel.applicant-type.version>1.2.0.1-SNAPSHOT</kernel.applicant-type.version>
+		<kernel.dataaccess-hibernate.version>1.2.0.1-SNAPSHOT</kernel.dataaccess-hibernate.version>
+		<kernel.logger.version>1.2.0.1-SNAPSHOT</kernel.logger.version>
 		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 		<springdoc.version>1.5.10</springdoc.version>
 	</properties>
@@ -491,7 +491,7 @@
 				<dependency>
 					<groupId>io.mosip.kernel</groupId>
 					<artifactId>kernel-smsserviceprovider-msg91</artifactId>
-					<version>1.2.1-SNAPSHOT-rc1</version>
+					<version>1.2.0.1-SNAPSHOT-rc1</version>
 				</dependency>
 			</dependencies>
 			<build>
