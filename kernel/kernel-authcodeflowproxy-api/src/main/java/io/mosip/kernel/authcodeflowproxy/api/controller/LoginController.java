@@ -1,12 +1,9 @@
 package io.mosip.kernel.authcodeflowproxy.api.controller;
 
 import java.io.IOException;
-<<<<<<< HEAD
 import java.net.URL;
 import java.util.List;
-=======
 import java.util.UUID;
->>>>>>> b7a809cb97 (uuid check added for state)
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -68,12 +65,10 @@ public class LoginController {
 					Errors.STATE_NOT_UUID_EXCEPTION.getErrorMessage());
 		}
 		
-
 		String uri = loginService.login(redirectURI, stateValue);
 		Cookie stateCookie = new Cookie("state", stateValue);
 		stateCookie.setHttpOnly(true);
 		stateCookie.setSecure(true);
-		stateCookie.setPath("/");
 		res.addCookie(stateCookie);
 		res.setStatus(302);
 		res.sendRedirect(uri);
@@ -89,17 +84,12 @@ public class LoginController {
 		res.addCookie(cookie);
 		res.setStatus(302);
 		String uri = new String(Base64.decodeBase64(redirectURI.getBytes()));
-<<<<<<< HEAD
 		if(!allowedUrls.contains(uri)) {
 			throw new ServiceException(Errors.DOMAIN_EXCEPTION.getErrorCode(), Errors.DOMAIN_EXCEPTION.getErrorMessage());
 		}
 		res.sendRedirect(uri);	
 		}
 
-=======
-		res.sendRedirect(uri);
-	}
->>>>>>> b7a809cb97 (uuid check added for state)
 
 	@ResponseFilter
 	@GetMapping(value = "/authorize/admin/validateToken")
