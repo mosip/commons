@@ -55,7 +55,7 @@ public class AuthCodeProxyExceptionHandler {
 		ExceptionUtils.logRootCause(exception);
 		ResponseWrapper<ServiceError> errorResponse = setErrors(httpServletRequest);
 		errorResponse.getErrors().addAll(exception.getList());
-		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
+		return new ResponseEntity<>(errorResponse, exception.getHttpStatus());
 	}
 	
 	@ExceptionHandler(Exception.class)
