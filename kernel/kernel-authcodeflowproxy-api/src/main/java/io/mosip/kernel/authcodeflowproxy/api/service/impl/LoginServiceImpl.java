@@ -146,11 +146,11 @@ public class LoginServiceImpl implements LoginService {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Cookie", authTokenHeader + "=" + authToken);
 		HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-		HttpEntity<String> response = restTemplate.exchange(validateUrl, HttpMethod.GET, requestEntity, String.class);
+		ResponseEntity<String> response = restTemplate.exchange(validateUrl, HttpMethod.GET, requestEntity, String.class);
 		String responseBody = response.getBody();
 		List<ServiceError> validationErrorList = ExceptionUtils.getServiceErrorList(responseBody);
 		if (!validationErrorList.isEmpty()) {
-			throw new AuthRestException(validationErrorList);
+			throw new AuthRestException(validationErrorList,response.getStatusCode());
 		}
 		ResponseWrapper<?> responseObject;
 		MosipUserDto mosipUserDto;
