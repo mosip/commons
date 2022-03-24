@@ -163,13 +163,13 @@
 		<!--<module>kernel-auth-service</module>-->
 		<!--<module>kernel-ridgenerator-service</module>
 		<module>kernel-keymanager-service</module>
-		<module>kernel-idgenerator-service</module>
 		<module>kernel-pridgenerator-service</module>
 		<module>kernel-salt-generator</module>
 		<module>kernel-biometrics-api</module>
 		<module>kernel-biosdk-provider</module>
 		<module>keys-generator</module> -->
 		<!--<module>object-store</module>-->
+		<module>kernel-idgenerator-service</module>
 	</modules>
 
 	

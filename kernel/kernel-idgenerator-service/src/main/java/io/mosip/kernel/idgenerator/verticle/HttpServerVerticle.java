@@ -1,5 +1,8 @@
 package io.mosip.kernel.idgenerator.verticle;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.mosip.kernel.idgenerator.config.UinServiceHealthCheckerhandler;
+import io.vertx.core.Vertx;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
@@ -72,6 +75,8 @@ public class HttpServerVerticle extends AbstractVerticle {
 		parentRouter.mountSubRouter(
 				environment.getProperty(VIDGeneratorConstant.SERVER_SERVLET_PATH) + UinGeneratorConstant.VUIN,
 				uinServiceRouter.createRouter(vertx));
+
+		configureHealthCheckEndpoint(vertx, parentRouter, environment.getProperty(VIDGeneratorConstant.SERVER_SERVLET_PATH));
 		
 		parentRouter.mountSubRouter(environment.getProperty(VIDGeneratorConstant.SERVER_SERVLET_PATH), metricRouter);
 
@@ -86,5 +91,16 @@ public class HttpServerVerticle extends AbstractVerticle {
 				future.fail(result.cause());
 			}
 		});
+	}
+
+	private void configureHealthCheckEndpoint(Vertx vertx, Router router, final String servletPath) {
+		ObjectMapper objectMapper = new ObjectMapper();
+		UinServiceHealthCheckerhandler healthCheckHandler = new UinServiceHealthCheckerhandler(vertx, null,
+				objectMapper, environment);
+		router.get(servletPath + UinGeneratorConstant.HEALTH_ENDPOINT).handler(healthCheckHandler);
+		healthCheckHandler.register("db", healthCheckHandler::databaseHealthChecker);
+		healthCheckHandler.register("diskspace", healthCheckHandler::dispSpaceHealthChecker);
+		healthCheckHandler.register("uingeneratorverticle",
+				future -> healthCheckHandler.verticleHealthHandler(future, vertx));
 	}
 }
