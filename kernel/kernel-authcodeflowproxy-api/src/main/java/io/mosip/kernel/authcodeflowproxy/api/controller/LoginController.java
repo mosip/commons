@@ -65,12 +65,10 @@ public class LoginController {
 					Errors.STATE_NOT_UUID_EXCEPTION.getErrorMessage());
 		}
 		
-
 		String uri = loginService.login(redirectURI, stateValue);
 		Cookie stateCookie = new Cookie("state", stateValue);
 		stateCookie.setHttpOnly(true);
 		stateCookie.setSecure(true);
-		stateCookie.setPath("/");
 		res.addCookie(stateCookie);
 		res.setStatus(302);
 		res.sendRedirect(uri);
@@ -92,6 +90,10 @@ public class LoginController {
 		res.sendRedirect(uri);	
 		}
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3e52bc7f1d (conflits resolved)
 	@ResponseFilter
 	@GetMapping(value = "/authorize/admin/validateToken")
 	public ResponseWrapper<MosipUserDto> validateAdminToken(HttpServletRequest request, HttpServletResponse res) {
