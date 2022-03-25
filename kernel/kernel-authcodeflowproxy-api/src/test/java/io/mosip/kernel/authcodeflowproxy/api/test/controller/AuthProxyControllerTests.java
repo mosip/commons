@@ -32,7 +32,6 @@ import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.NestedServletException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -40,7 +39,6 @@ import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
 import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponse;
 import io.mosip.kernel.authcodeflowproxy.api.dto.IAMErrorResponseDto;
 import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
-import io.mosip.kernel.authcodeflowproxy.api.service.LoginService;
 import io.mosip.kernel.authcodeflowproxy.api.test.AuthProxyFlowTestBootApplication;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -64,8 +62,6 @@ public class AuthProxyControllerTests {
 		mockServer = MockRestServiceServer.createServer(restTemplate);
 		 
 	}
-	@Autowired
-	private LoginService service;
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -94,6 +90,42 @@ public class AuthProxyControllerTests {
 		Cookie cookie = new Cookie("Authorization", "mock_access_token");
 		mockMvc.perform(get("/authorize/admin/validateToken").contentType(MediaType.APPLICATION_JSON).cookie(cookie)).andExpect(status().isOk())
 				.andExpect(jsonPath("$.response.userId", is("mock-user")));
+	}
+	
+	@Test
+	public void validateTokenHttpClientExceptionTest() throws Exception {
+		ResponseWrapper<MosipUserDto> responseWrapper = new ResponseWrapper<MosipUserDto>();
+		ServiceError serviceError = new ServiceError("KER-ATH-401", "un auth"); 
+		List<ServiceError> serviceErrors = new ArrayList<>();
+		serviceErrors.add(serviceError);
+		responseWrapper.setErrors(serviceErrors);
+		mockServer.expect(ExpectedCount.once(), 
+		          requestTo(new URI(validateUrl)))
+		          .andExpect(method(HttpMethod.GET))
+		          .andRespond(withStatus(HttpStatus.UNAUTHORIZED)
+		          .contentType(MediaType.APPLICATION_JSON)
+		          .body(objectMapper.writeValueAsString(responseWrapper))); 
+		Cookie cookie = new Cookie("Authorization", "mock_access_token");
+		mockMvc.perform(get("/authorize/admin/validateToken").contentType(MediaType.APPLICATION_JSON).cookie(cookie)).andExpect(status().isUnauthorized())
+				.andExpect(jsonPath("$.errors[0].errorCode", is("KER-ATH-401")));
+	}
+	
+	@Test
+	public void validateTokenInternalServerTest() throws Exception {
+		ResponseWrapper<MosipUserDto> responseWrapper = new ResponseWrapper<MosipUserDto>();
+		ServiceError serviceError = new ServiceError("KER-ATH-401", "un auth"); 
+		List<ServiceError> serviceErrors = new ArrayList<>();
+		serviceErrors.add(serviceError);
+		responseWrapper.setErrors(serviceErrors);
+		mockServer.expect(ExpectedCount.once(), 
+		          requestTo(new URI(validateUrl)))
+		          .andExpect(method(HttpMethod.GET))
+		          .andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+		          .contentType(MediaType.APPLICATION_JSON)
+		          .body(objectMapper.writeValueAsString("internal server error"))); 
+		Cookie cookie = new Cookie("Authorization", "mock_access_token");
+		mockMvc.perform(get("/authorize/admin/validateToken").contentType(MediaType.APPLICATION_JSON).cookie(cookie)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.errors[0].errorCode", is(Errors.REST_EXCEPTION.getErrorCode())));
 	}
 	
 	@Test
