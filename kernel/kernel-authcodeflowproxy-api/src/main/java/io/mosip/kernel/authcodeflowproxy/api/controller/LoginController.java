@@ -90,10 +90,6 @@ public class LoginController {
 		res.sendRedirect(uri);	
 		}
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 3e52bc7f1d (conflits resolved)
 	@ResponseFilter
 	@GetMapping(value = "/authorize/admin/validateToken")
 	public ResponseWrapper<MosipUserDto> validateAdminToken(HttpServletRequest request, HttpServletResponse res) {
