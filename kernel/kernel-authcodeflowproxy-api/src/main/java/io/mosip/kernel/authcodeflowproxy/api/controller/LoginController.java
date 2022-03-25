@@ -1,10 +1,9 @@
 package io.mosip.kernel.authcodeflowproxy.api.controller;
 
 import java.io.IOException;
-
-import java.net.URL;
 import java.util.List;
 import java.util.UUID;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -90,10 +89,6 @@ public class LoginController {
 		res.sendRedirect(uri);	
 		}
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 3e52bc7f1d (conflits resolved)
 	@ResponseFilter
 	@GetMapping(value = "/authorize/admin/validateToken")
 	public ResponseWrapper<MosipUserDto> validateAdminToken(HttpServletRequest request, HttpServletResponse res) {
