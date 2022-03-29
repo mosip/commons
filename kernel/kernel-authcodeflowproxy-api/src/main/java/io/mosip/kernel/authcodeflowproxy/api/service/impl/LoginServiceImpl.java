@@ -45,7 +45,6 @@ import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 
-
 @Service
 public class LoginServiceImpl implements LoginService {
 
@@ -96,7 +95,7 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	private ObjectMapper objectMapper;
-	
+
 	private static final String LOG_OUT_FAILED = "log out failed";
 
 	private static final String FAILED = "Failed";
@@ -104,16 +103,6 @@ public class LoginServiceImpl implements LoginService {
 	private static final String SUCCESS = "Success";
 
 	private static final String SUCCESSFULLY_LOGGED_OUT = "successfully loggedout";
-
-
-	/*
-	 * @Override public String login(String redirectURI, String state) {
-	 * UriComponentsBuilder uriComponentsBuilder =
-	 * UriComponentsBuilder.fromHttpUrl(authServiceLoginURL); Map<String, String>
-	 * pathParam = new HashMap<>(); pathParam.put("redirectURI",
-	 * redirectURI+urlSplitter+Base64.encodeBase64String(moduleRedirectURL.getBytes(
-	 * ))); return uriComponentsBuilder.buildAndExpand(pathParam).toUriString(); }
-	 */
 
 	@Override
 	public String login(String redirectURI, String state) {
@@ -146,11 +135,25 @@ public class LoginServiceImpl implements LoginService {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Cookie", authTokenHeader + "=" + authToken);
 		HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-		HttpEntity<String> response = restTemplate.exchange(validateUrl, HttpMethod.GET, requestEntity, String.class);
+		ResponseEntity<String> response = null;
+		try {
+			response = restTemplate.exchange(validateUrl, HttpMethod.GET, requestEntity, String.class);
+		} catch (HttpClientErrorException | HttpServerErrorException e) {
+			String responseBody = e.getResponseBodyAsString();
+			List<ServiceError> validationErrorList = ExceptionUtils.getServiceErrorList(responseBody);
+
+			if (!validationErrorList.isEmpty()) {
+				throw new AuthRestException(validationErrorList, e.getStatusCode());
+			} else {
+				throw new ServiceException(Errors.REST_EXCEPTION.getErrorCode(), e.getResponseBodyAsString());
+			}
+
+		}
 		String responseBody = response.getBody();
 		List<ServiceError> validationErrorList = ExceptionUtils.getServiceErrorList(responseBody);
+
 		if (!validationErrorList.isEmpty()) {
-			throw new AuthRestException(validationErrorList);
+			throw new AuthRestException(validationErrorList, response.getStatusCode());
 		}
 		ResponseWrapper<?> responseObject;
 		MosipUserDto mosipUserDto;
@@ -163,7 +166,6 @@ public class LoginServiceImpl implements LoginService {
 		}
 		return mosipUserDto;
 	}
-
 
 	@Override
 	public AccessTokenResponseDTO loginRedirect(String state, String sessionState, String code, String stateCookie,
@@ -234,11 +236,11 @@ public class LoginServiceImpl implements LoginService {
 		StringBuilder urlBuilder = new StringBuilder().append(issuer).append("/protocol/openid-connect/logout");
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(urlBuilder.toString())
 				.queryParam(IAMConstants.ID_TOKEN_HINT, token);
-		
+
 		try {
 			response = restTemplate.getForEntity(uriComponentsBuilder.buildAndExpand(pathparams).toUriString(),
 					String.class);
-			
+
 		} catch (HttpClientErrorException | HttpServerErrorException e) {
 			throw new ServiceException(Errors.REST_EXCEPTION.getErrorCode(),
 					Errors.REST_EXCEPTION.getErrorMessage() + e.getResponseBodyAsString());

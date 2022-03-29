@@ -38,7 +38,7 @@ public class AuthCodeProxyExceptionHandler {
 			HttpServletRequest httpServletRequest, final ClientException e) throws IOException {
 		ExceptionUtils.logRootCause(e);
 		return new ResponseEntity<>(
-				getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText(), HttpStatus.OK), HttpStatus.OK);
+				getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText()), HttpStatus.OK);
 	}
 	
 	@ExceptionHandler(ServiceException.class)
@@ -46,7 +46,7 @@ public class AuthCodeProxyExceptionHandler {
 			HttpServletRequest httpServletRequest, final ServiceException e) throws IOException {
 		ExceptionUtils.logRootCause(e);
 		return new ResponseEntity<>(
-				getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText(), HttpStatus.OK), HttpStatus.OK);
+				getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText()), HttpStatus.OK);
 	}
 
 	@ExceptionHandler(AuthRestException.class)
@@ -55,16 +55,9 @@ public class AuthCodeProxyExceptionHandler {
 		ExceptionUtils.logRootCause(exception);
 		ResponseWrapper<ServiceError> errorResponse = setErrors(httpServletRequest);
 		errorResponse.getErrors().addAll(exception.getList());
-		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
+		return new ResponseEntity<>(errorResponse, exception.getHttpStatus());
 	}
 	
-	@ExceptionHandler(Exception.class)
-	public ResponseEntity<ResponseWrapper<ServiceError>> oldException(
-			HttpServletRequest httpServletRequest, final Exception e) throws IOException {
-		ExceptionUtils.logRootCause(e);
-		return new ResponseEntity<>(
-				getErrorResponse(httpServletRequest, Errors.EXCEPTION.getErrorCode(), e.getMessage(), HttpStatus.OK), HttpStatus.OK);
-	}
 
 	private ResponseWrapper<ServiceError> setErrors(HttpServletRequest httpServletRequest) throws IOException {
 		ResponseWrapper<ServiceError> responseWrapper = new ResponseWrapper<>();
@@ -84,7 +77,7 @@ public class AuthCodeProxyExceptionHandler {
 	}
 	
 	private ResponseWrapper<ServiceError> getErrorResponse(HttpServletRequest httpServletRequest, String errorCode,
-			String errorMessage, HttpStatus httpStatus) throws IOException {
+			String errorMessage) throws IOException {
 		ServiceError error = new ServiceError(errorCode, errorMessage);
 		ResponseWrapper<ServiceError> errorResponse = setErrors(httpServletRequest);
 		errorResponse.getErrors().add(error);
