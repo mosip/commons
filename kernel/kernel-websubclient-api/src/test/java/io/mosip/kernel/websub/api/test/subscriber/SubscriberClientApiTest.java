@@ -20,6 +20,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
@@ -225,6 +226,17 @@ public class SubscriberClientApiTest {
 		assertThat(subscriptionChangeResponse.getTopic(),is("demo"));	
 	}
 	
+	@Test
+	public void subscribeOKPreviousVerisonTest() throws URISyntaxException {
+		ReflectionTestUtils.setField(subscriptionClient, "isWebsubDbVersionClientBehaviourEnable", true);
+		mockServer.expect(ExpectedCount.once(), requestTo(new URI("http://localhost:9191/hub")))
+				.andExpect(method(HttpMethod.POST))
+				.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body("hub.mode=accepted"));
+		SubscriptionChangeResponse subscriptionChangeResponse=subscriptionClient.subscribe(subscriptionRequest);
+		assertThat(subscriptionChangeResponse.getTopic(),is("demo"));	
+		ReflectionTestUtils.setField(subscriptionClient, "isWebsubDbVersionClientBehaviourEnable", false);
+	}
+	
 	
 	////////////////////////////
 	
@@ -316,6 +328,17 @@ public class SubscriberClientApiTest {
 				.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body("hub.mode=accepted"));
 		SubscriptionChangeResponse subscriptionChangeResponse=subscriptionClient.unSubscribe(unsubscriptionRequest);
 		assertThat(subscriptionChangeResponse.getTopic(),is("demo"));	
+	}
+	
+	@Test
+	public void unSubscribeOKPreviousTest() throws URISyntaxException {
+		ReflectionTestUtils.setField(subscriptionClient, "isWebsubDbVersionClientBehaviourEnable", true);
+		mockServer.expect(ExpectedCount.once(), requestTo(new URI("http://localhost:9191/hub")))
+				.andExpect(method(HttpMethod.POST))
+				.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body("hub.mode=accepted"));
+		SubscriptionChangeResponse subscriptionChangeResponse=subscriptionClient.unSubscribe(unsubscriptionRequest);
+		assertThat(subscriptionChangeResponse.getTopic(),is("demo"));
+		ReflectionTestUtils.setField(subscriptionClient, "isWebsubDbVersionClientBehaviourEnable", false);
 	}
 	
 	@Test

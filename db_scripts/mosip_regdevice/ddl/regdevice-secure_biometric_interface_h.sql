@@ -1,5 +1,4 @@
 
-
 -- object: regdevice.secure_biometric_interface_h | type: TABLE --
 -- DROP TABLE IF EXISTS regdevice.secure_biometric_interface_h CASCADE;
 CREATE TABLE regdevice.secure_biometric_interface_h(

@@ -37,7 +37,7 @@ public class PridPoolCheckerVerticle extends AbstractVerticle {
 		this.threshold = environment.getProperty("mosip.kernel.prid.min-unused-threshold", Long.class);
 	}
 
-	private volatile AtomicBoolean locked = new AtomicBoolean(false);
+	private AtomicBoolean locked = new AtomicBoolean(false);
 
 	@Override
 	public void start(Future<Void> startFuture) {

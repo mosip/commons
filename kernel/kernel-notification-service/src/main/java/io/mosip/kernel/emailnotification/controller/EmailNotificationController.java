@@ -44,7 +44,6 @@ public class EmailNotificationController {
 	 * @param attachments the attachments.
 	 * @return the dto response.
 	 */
-
 	@ResponseFilter
 	@Operation(summary = "Endpoint for sending a email", description = "Endpoint for sending a email", tags = { "emailnotification" })
 	@ApiResponses(value = {

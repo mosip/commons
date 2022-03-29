@@ -1,19 +1,19 @@
 package io.mosip.kernel.idgenerator.prid.impl;
 
 import java.math.BigInteger;
+import java.security.SecureRandom;
 
 import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.core.idgenerator.spi.PridGenerator;
-import io.mosip.kernel.core.security.util.SecurityUtil;
 import io.mosip.kernel.core.util.ChecksumUtils;
+import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.idgenerator.prid.constant.PridPropertyConstant;
 import io.mosip.kernel.idgenerator.prid.util.PridFilterUtils;
 
@@ -51,12 +51,14 @@ public class PridGeneratorImpl implements PridGenerator<String> {
 
 	@PostConstruct
 	private void init() {
-		randomSeed = RandomStringUtils.random(Integer.parseInt(PridPropertyConstant.RANDOM_NUMBER_SIZE.getProperty()),
-				PridPropertyConstant.ZERO_TO_NINE.getProperty());
-
+		SecureRandom random = new SecureRandom();
+		byte[] randomSeedBytes = new byte[Integer.parseInt(PridPropertyConstant.RANDOM_NUMBER_SIZE.getProperty())];
+		random.nextBytes(randomSeedBytes);
+		randomSeed = new BigInteger(randomSeedBytes).abs().toString().substring(0,Integer.parseInt(PridPropertyConstant.RANDOM_NUMBER_SIZE.getProperty()));
 		do {
-			counter = RandomStringUtils.random(Integer.parseInt(PridPropertyConstant.RANDOM_NUMBER_SIZE.getProperty()),
-					PridPropertyConstant.ZERO_TO_NINE.getProperty());
+			byte[] counterBytes = new byte[Integer.parseInt(PridPropertyConstant.RANDOM_NUMBER_SIZE.getProperty())];
+			random.nextBytes(counterBytes);
+			counter = new BigInteger(counterBytes).abs().toString().substring(0,Integer.parseInt(PridPropertyConstant.RANDOM_NUMBER_SIZE.getProperty()));
 		} while (counter.charAt(0) == '0');
 	}
 
@@ -81,7 +83,7 @@ public class PridGeneratorImpl implements PridGenerator<String> {
 		init = false;
 		SecretKey secretKey = new SecretKeySpec(counter.getBytes(),
 				PridPropertyConstant.ENCRYPTION_ALGORITHM.getProperty());
-		byte[] encryptedData = SecurityUtil.symmetricEncrypt(secretKey, randomSeed.getBytes());
+		byte[] encryptedData = CryptoUtil.symmetricEncrypt(secretKey, randomSeed.getBytes());
 		BigInteger bigInteger = new BigInteger(encryptedData);
 		prid = String.valueOf(bigInteger.abs());
 		prid = prid.substring(0, pridLength - 1);

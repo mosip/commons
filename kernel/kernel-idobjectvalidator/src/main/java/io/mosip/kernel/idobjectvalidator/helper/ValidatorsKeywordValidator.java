@@ -39,7 +39,7 @@ public class ValidatorsKeywordValidator extends AbstractKeywordValidator {
 
 	@Override
 	public String toString() {
-		return null;
+		return "";
 	}	
 	
 	//TODO --

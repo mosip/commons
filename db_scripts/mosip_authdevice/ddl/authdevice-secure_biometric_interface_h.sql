@@ -1,3 +1,20 @@
+-- -------------------------------------------------------------------------------------------------
+-- Database Name: mosip_authdevice
+-- Table Name 	: authdevice.secure_biometric_interface_h
+-- Purpose    	: MOSIP Secure Biometric Interface History : History of changes of any MOSIP secure biometric interface will be stored in history table to track any chnages for future validations.
+--           
+-- Create By   	: Sadanandegowda
+-- Created Date	: Aug-2019
+-- 
+-- Modified Date        Modified By         Comments / Remarks
+-- ------------------------------------------------------------------------------------------
+-- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
+-- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
+-- Oct-2021		Ram Bhatt	    Max column length for device_detail_id
+-- ------------------------------------------------------------------------------------------
+
+-- object: authdevice.secure_biometric_interface_h | type: TABLE --
+-- DROP TABLE IF EXISTS authdevice.secure_biometric_interface_h CASCADE;
 CREATE TABLE authdevice.secure_biometric_interface_h(
 	id character varying(36) NOT NULL,
 	sw_binary_hash bytea NOT NULL,

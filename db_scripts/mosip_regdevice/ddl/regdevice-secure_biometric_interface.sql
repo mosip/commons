@@ -1,4 +1,17 @@
-
+-- -------------------------------------------------------------------------------------------------
+-- Database Name: mosip_regdevice
+-- Table Name 	: regdevice.secure_biometric_interface
+-- Purpose    	: Secure Biometric Interface : Secure Biometric Interface to have all the details about the device types, provider and software details
+--           
+-- Create By   	: Sadanandegowda
+-- Created Date	: Aug-2019
+-- 
+-- Modified Date        Modified By         Comments / Remarks
+-- ------------------------------------------------------------------------------------------
+-- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
+-- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
+-- Oct-2021		Ram Bhatt	    Max column length for device_detail_id
+-- ------------------------------------------------------------------------------------------
 
 -- object: regdevice.secure_biometric_interface | type: TABLE --
 -- DROP TABLE IF EXISTS regdevice.secure_biometric_interface CASCADE;

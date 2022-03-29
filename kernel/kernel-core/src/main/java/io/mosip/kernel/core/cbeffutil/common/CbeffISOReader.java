@@ -33,19 +33,21 @@ public class CbeffISOReader {
 		File testFile = new File(path);
 		try (DataInputStream in = new DataInputStream(new FileInputStream(testFile))) {
 			int formatId = in.readInt();
-			if (checkFormatIdentifier(formatId, type)) {
-				byte[] result = new byte[(int) testFile.length()];
-				FileInputStream fileIn = new FileInputStream(testFile);
+			// if (checkFormatIdentifier(formatId, type)) {
+			byte[] result = new byte[(int) testFile.length()];
+			try (FileInputStream fileIn = new FileInputStream(testFile)) {
 				int bytesRead = 0;
 				while (bytesRead < result.length) {
 					bytesRead += fileIn.read(result, bytesRead, result.length - bytesRead);
 				}
-				fileIn.close();
-				return result;
-			} else {
-				throw new CbeffException(
-						"Format Identifier is wrong for the image,Please upload correct image of type : " + type);
 			}
+			return result;
+
+			/*
+			 * } else { throw new CbeffException(
+			 * "Format Identifier is wrong for the image,Please upload correct image of type : "
+			 * + type); }
+			 */
 		}
 	}
 
@@ -59,16 +61,12 @@ public class CbeffISOReader {
 	 * @return boolean value if identifier matches with id
 	 * 
 	 */
-	private static boolean checkFormatIdentifier(int formatId, String type) {
-//		switch (type) {
-//		case "Finger":
-//			return CbeffConstant.FINGER_FORMAT_IDENTIFIER == formatId;
-//		case "Iris":
-//			return CbeffConstant.IRIS_FORMAT_IDENTIFIER == formatId;
-//		case "Face":
-//			return CbeffConstant.FACE_FORMAT_IDENTIFIER == formatId;
-//		}
-		return true;
-	}
+	/*
+	 * private static boolean checkFormatIdentifier(int formatId, String type) { //
+	 * switch (type) { // case "Finger": // return
+	 * CbeffConstant.FINGER_FORMAT_IDENTIFIER == formatId; // case "Iris": // return
+	 * CbeffConstant.IRIS_FORMAT_IDENTIFIER == formatId; // case "Face": // return
+	 * CbeffConstant.FACE_FORMAT_IDENTIFIER == formatId; // } return true; }
+	 */
 
 }

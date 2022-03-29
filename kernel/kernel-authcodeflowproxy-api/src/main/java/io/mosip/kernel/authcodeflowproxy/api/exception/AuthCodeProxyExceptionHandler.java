@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -55,6 +56,14 @@ public class AuthCodeProxyExceptionHandler {
 		ResponseWrapper<ServiceError> errorResponse = setErrors(httpServletRequest);
 		errorResponse.getErrors().addAll(exception.getList());
 		return new ResponseEntity<>(errorResponse, HttpStatus.OK);
+	}
+	
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<ResponseWrapper<ServiceError>> oldException(
+			HttpServletRequest httpServletRequest, final Exception e) throws IOException {
+		ExceptionUtils.logRootCause(e);
+		return new ResponseEntity<>(
+				getErrorResponse(httpServletRequest, Errors.EXCEPTION.getErrorCode(), e.getMessage(), HttpStatus.OK), HttpStatus.OK);
 	}
 
 	private ResponseWrapper<ServiceError> setErrors(HttpServletRequest httpServletRequest) throws IOException {

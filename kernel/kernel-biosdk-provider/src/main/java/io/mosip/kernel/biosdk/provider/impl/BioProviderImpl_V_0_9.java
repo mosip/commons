@@ -197,7 +197,7 @@ public class BioProviderImpl_V_0_9 implements iBioProviderApi {
 
 					Response<BiometricRecord> response = sdkRegistry
 							.get(modality)
-							.get(BiometricFunction.EXTRACT).extractTemplate(sampleRecord, null, flags);
+							.get(BiometricFunction.EXTRACT).extractTemplate(sampleRecord, List.of(modality), flags);
 
 					if(isSuccessResponse(response)) {
 						return response.getResponse().getSegments().stream();

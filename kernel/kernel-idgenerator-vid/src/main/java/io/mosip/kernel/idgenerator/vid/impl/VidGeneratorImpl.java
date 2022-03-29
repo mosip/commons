@@ -1,6 +1,7 @@
 package io.mosip.kernel.idgenerator.vid.impl;
 
 import java.math.BigInteger;
+import java.security.SecureRandom;
 
 import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
@@ -12,8 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.core.idgenerator.spi.VidGenerator;
-import io.mosip.kernel.core.security.util.SecurityUtil;
 import io.mosip.kernel.core.util.ChecksumUtils;
+import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.idgenerator.vid.constant.VidPropertyConstant;
 import io.mosip.kernel.idgenerator.vid.util.VidFilterUtils;
 
@@ -50,13 +51,18 @@ public class VidGeneratorImpl implements VidGenerator<String> {
 
 	@PostConstruct
 	private void init() {
-		randomSeed = RandomStringUtils.random(Integer.parseInt(VidPropertyConstant.RANDOM_NUMBER_SIZE.getProperty()),
-				VidPropertyConstant.ZERO_TO_NINE.getProperty());
-
+		SecureRandom random = new SecureRandom();
+		byte[] randomSeedBytes = new byte[Integer.parseInt(VidPropertyConstant.RANDOM_NUMBER_SIZE.getProperty())];
+		random.nextBytes(randomSeedBytes);
+		randomSeed = new BigInteger(randomSeedBytes).abs().toString().substring(0,
+				Integer.parseInt(VidPropertyConstant.RANDOM_NUMBER_SIZE.getProperty()));
 		do {
-			counter = RandomStringUtils.random(Integer.parseInt(VidPropertyConstant.RANDOM_NUMBER_SIZE.getProperty()),
-					VidPropertyConstant.ZERO_TO_NINE.getProperty());
+			byte[] counterBytes = new byte[Integer.parseInt(VidPropertyConstant.RANDOM_NUMBER_SIZE.getProperty())];
+			random.nextBytes(counterBytes);
+			counter = new BigInteger(counterBytes).abs().toString().substring(0,
+					Integer.parseInt(VidPropertyConstant.RANDOM_NUMBER_SIZE.getProperty()));
 		} while (counter.charAt(0) == '0');
+
 	}
 
 	/**
@@ -85,7 +91,7 @@ public class VidGeneratorImpl implements VidGenerator<String> {
 		init = false;
 		SecretKey secretKey = new SecretKeySpec(counter.getBytes(),
 				VidPropertyConstant.ENCRYPTION_ALGORITHM.getProperty());
-		byte[] encryptedData = SecurityUtil.symmetricEncrypt(secretKey, randomSeed.getBytes());
+		byte[] encryptedData = CryptoUtil.symmetricEncrypt(secretKey, randomSeed.getBytes());
 		BigInteger bigInteger = new BigInteger(encryptedData);
 		vid = String.valueOf(bigInteger.abs());
 		vid = vid.substring(0, vidLength - 1);

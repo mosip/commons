@@ -6,7 +6,9 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.zip.ZipException;
 
+import org.junit.After;
 import org.junit.Test;
 
 import io.mosip.kernel.core.exception.FileNotFoundException;
@@ -21,6 +23,27 @@ import io.mosip.kernel.core.util.ZipUtils;
  *
  */
 public class ZipUtilTest {
+
+	@After
+	public void cleanup() {
+		File dir = new File("unzip");
+		if (dir.exists()) {
+
+			String[] entries = dir.list();
+			for (String s : entries) {
+				File currentFile = new File(dir.getPath(), s);
+				if (currentFile.isDirectory()) {
+					String[] innerEntries = currentFile.list();
+					for (String s1 : innerEntries) {
+						File innerCurrentFile = new File(currentFile.getPath(), s1);
+						innerCurrentFile.delete();
+					}
+				}
+				currentFile.delete();
+			}
+			dir.delete();
+		}
+	}
 
 	public static ZipUtils zip;
 
@@ -157,6 +180,140 @@ public class ZipUtilTest {
 		boolean ren = ZipUtils.unZipDirectory(zipFile, outputUnZip);
 		assertTrue(ren);
 
+		File dir = new File(outputUnZip);
+		String[] entries = dir.list();
+		for (String s : entries) {
+			File currentFile = new File(dir.getPath(), s);
+			if (currentFile.isDirectory()) {
+				String[] innerEntries = currentFile.list();
+				for (String s1 : innerEntries) {
+					File innerCurrentFile = new File(currentFile.getPath(), s1);
+					innerCurrentFile.delete();
+				}
+			}
+			currentFile.delete();
+		}
+		dir.delete();
+	}
+
+	@Test
+	public void unZipTest() throws Exception {
+
+		String outputUnZip = "unzip";
+		ClassLoader classLoader = getClass().getClassLoader();
+		String zipFile = classLoader.getResource("test.zip").getFile();
+
+		boolean ren = ZipUtils.unZipDirectory(zipFile, outputUnZip, 15, 200000, 10);
+		assertTrue(ren);
+
+		File dir = new File(outputUnZip);
+		String[] entries = dir.list();
+		for (String s : entries) {
+			File currentFile = new File(dir.getPath(), s);
+			if (currentFile.isDirectory()) {
+				String[] innerEntries = currentFile.list();
+				for (String s1 : innerEntries) {
+					File innerCurrentFile = new File(currentFile.getPath(), s1);
+					innerCurrentFile.delete();
+				}
+			}
+			currentFile.delete();
+		}
+		dir.delete();
+	}
+
+	@Test(expected = ZipException.class)
+	public void unZipSlipTest() throws Exception {
+		String outputUnZip = "../../unzip";
+		ClassLoader classLoader = getClass().getClassLoader();
+		String zipFile = classLoader.getResource("test.zip").getFile();
+		ZipUtils.unZipDirectory(zipFile, outputUnZip, 15, 200000, 10);
+		File dir = new File(outputUnZip);
+		String[] entries = dir.list();
+		for (String s : entries) {
+			File currentFile = new File(dir.getPath(), s);
+			if (currentFile.isDirectory()) {
+				String[] innerEntries = currentFile.list();
+				for (String s1 : innerEntries) {
+					File innerCurrentFile = new File(currentFile.getPath(), s1);
+					innerCurrentFile.delete();
+				}
+			}
+			currentFile.delete();
+		}
+		dir.delete();
+	}
+
+	@Test(expected = IOException.class)
+	public void unZipBombTest() throws Exception {
+		String outputUnZip = "unzip";
+		ClassLoader classLoader = getClass().getClassLoader();
+		String zipFile = classLoader.getResource("zipbomb.zip").getFile();
+		ZipUtils.unZipDirectory(zipFile, outputUnZip, 15, 200000, 10);
+		File dir = new File(outputUnZip);
+		String[] entries = dir.list();
+		for (String s : entries) {
+			File currentFile = new File(dir.getPath(), s);
+			if (currentFile.isDirectory()) {
+				String[] innerEntries = currentFile.list();
+				for (String s1 : innerEntries) {
+					File innerCurrentFile = new File(currentFile.getPath(), s1);
+					innerCurrentFile.delete();
+				}
+			}
+			currentFile.delete();
+		}
+		dir.delete();
+	}
+
+	@Test(expected = IOException.class)
+	public void unZipSizeTest() throws Exception {
+		String outputUnZip = "unzip";
+		ClassLoader classLoader = getClass().getClassLoader();
+		String zipFile = classLoader.getResource("test.zip").getFile();
+		ZipUtils.unZipDirectory(zipFile, outputUnZip, 15, 200, 10);
+		File dir = new File(outputUnZip);
+		String[] entries = dir.list();
+		for (String s : entries) {
+			File currentFile = new File(dir.getPath(), s);
+			if (currentFile.isDirectory()) {
+				String[] innerEntries = currentFile.list();
+				for (String s1 : innerEntries) {
+					File innerCurrentFile = new File(currentFile.getPath(), s1);
+					innerCurrentFile.delete();
+				}
+			}
+			currentFile.delete();
+		}
+		dir.delete();
+	}
+
+	@Test(expected = IOException.class)
+	public void unZipEntriesTest() throws Exception {
+		String outputUnZip = "unzip";
+		ClassLoader classLoader = getClass().getClassLoader();
+		String zipFile = classLoader.getResource("test.zip").getFile();
+		ZipUtils.unZipDirectory(zipFile, outputUnZip, 2, 200000, 10);
+		File dir = new File(outputUnZip);
+		String[] entries = dir.list();
+		for (String s : entries) {
+			File currentFile = new File(dir.getPath(), s);
+			if (currentFile.isDirectory()) {
+				String[] innerEntries = currentFile.list();
+				for (String s1 : innerEntries) {
+					File innerCurrentFile = new File(currentFile.getPath(), s1);
+					innerCurrentFile.delete();
+				}
+			}
+			currentFile.delete();
+		}
+		dir.delete();
+	}
+
+	@Test(expected = IOException.class)
+	public void unZipDirextoryNotFoundExceptionTest() throws Exception {
+		String outputUnZip = "";
+		ZipUtils.unZipDirectory("", "", 15, 200000, 10);
 		File dir = new File(outputUnZip);
 		String[] entries = dir.list();
 		for (String s : entries) {
