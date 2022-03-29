@@ -38,8 +38,6 @@ ENV is_glowroot_env=${is_glowroot}
 
 # environment variable to pass artifactory url, at docker runtime
 ENV artifactory_url_env=${artifactory_url}
-# environment variable to pass iam_adapter url, at docker runtime
-ENV iam_adapter_url_env=${iam_adapter_url}
 
 # can be passed during Docker build as build time environment for github branch to pickup configuration from.
 ARG container_user=mosip

@@ -181,7 +181,6 @@ public final class HMACUtils {
 		} catch (InvalidKeySpecException e) {
 			throw new RuntimeException("Credential could not be encoded", e);
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 	}

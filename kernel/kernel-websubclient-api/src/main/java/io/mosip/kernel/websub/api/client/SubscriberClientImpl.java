@@ -8,6 +8,7 @@ import org.apache.commons.codec.digest.HmacUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -55,9 +56,11 @@ public class SubscriberClientImpl
 	@Autowired
 	private RestTemplateHelper restTemplateHelper;
 
-
 	@Autowired
 	private ObjectMapper objectMapper;
+
+	@Value("${mosip.kernel.websub-db-version-client-behaviour-enable:false}")
+	private boolean isWebsubDbVersionClientBehaviourEnable;
 
 	@Override
 	public SubscriptionChangeResponse subscribe(SubscriptionChangeRequest subscriptionRequest) {
@@ -70,8 +73,13 @@ public class SubscriberClientImpl
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add(WebSubClientConstants.HUB_MODE, HubMode.SUBSCRIBE.gethubModeValue());
 		map.add(WebSubClientConstants.HUB_TOPIC, subscriptionRequest.getTopic());
-		map.add(WebSubClientConstants.HUB_CALLBACK, subscriptionRequest.getCallbackURL().concat("?intentMode=")
-				.concat(HubMode.SUBSCRIBE.gethubModeValue()));
+		if (!isWebsubDbVersionClientBehaviourEnable) {
+			map.add(WebSubClientConstants.HUB_CALLBACK,
+					subscriptionRequest.getCallbackURL());
+		} else {
+			map.add(WebSubClientConstants.HUB_CALLBACK, subscriptionRequest.getCallbackURL().concat("?intentMode=")
+					.concat(HubMode.SUBSCRIBE.gethubModeValue()));
+		}
 		map.add(WebSubClientConstants.HUB_SECRET, subscriptionRequest.getSecret());
 
 		if (subscriptionRequest.getLeaseSeconds() > 0) {
@@ -81,13 +89,14 @@ public class SubscriberClientImpl
 
 		ResponseEntity<String> response = null;
 		try {
-			response = restTemplateHelper.getRestTemplate().exchange(subscriptionRequest.getHubURL(), HttpMethod.POST, entity, String.class);
+			response = restTemplateHelper.getRestTemplate().exchange(subscriptionRequest.getHubURL(), HttpMethod.POST,
+					entity, String.class);
 		} catch (HttpClientErrorException | HttpServerErrorException exception) {
 			throw new WebSubClientException(WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorCode(),
 					WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorMessage() + exception.getResponseBodyAsString());
 		}
 		if (response != null && response.getStatusCode() == HttpStatus.ACCEPTED) {
-			LOGGER.info("subscribed for topic {} at hub", subscriptionRequest.getTopic());
+			LOGGER.info("subscribing for topic {} at hub", subscriptionRequest.getTopic());
 			SubscriptionChangeResponse subscriptionChangeResponse = new SubscriptionChangeResponse();
 			subscriptionChangeResponse.setHubURL(subscriptionRequest.getHubURL());
 			subscriptionChangeResponse.setTopic(subscriptionRequest.getTopic());
@@ -95,17 +104,18 @@ public class SubscriberClientImpl
 		} else if (response != null && response.getStatusCode() == HttpStatus.OK) {
 			HubResponse hubResponse = ParseUtil.parseHubResponse(response.getBody());
 			if (hubResponse.getHubResult().equals("accepted")) {
-				LOGGER.info("subscribed for topic {} at hub", subscriptionRequest.getTopic());
+				LOGGER.info("subscribing for topic {} at hub", subscriptionRequest.getTopic());
 				SubscriptionChangeResponse subscriptionChangeResponse = new SubscriptionChangeResponse();
 				subscriptionChangeResponse.setHubURL(subscriptionRequest.getHubURL());
 				subscriptionChangeResponse.setTopic(subscriptionRequest.getTopic());
 				return subscriptionChangeResponse;
 			} else {
-				throw new WebSubClientException(WebSubClientErrorCode.REGISTER_ERROR.getErrorCode(),
-						WebSubClientErrorCode.REGISTER_ERROR.getErrorMessage() + hubResponse.getErrorReason());
+				LOGGER.error(WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorMessage() + response.getBody());
+				throw new WebSubClientException(WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorCode(),
+						WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorMessage() + hubResponse.getErrorReason());
 			}
 
-		}else {
+		} else {
 			throw new WebSubClientException(WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorCode(),
 					WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorMessage() + response.getBody());
 		}
@@ -157,16 +167,21 @@ public class SubscriberClientImpl
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add(WebSubClientConstants.HUB_MODE, HubMode.UNSUBSCRIBE.gethubModeValue());
 		map.add(WebSubClientConstants.HUB_TOPIC, unsubscriptionRequest.getTopic());
-		map.add(WebSubClientConstants.HUB_CALLBACK, unsubscriptionRequest.getCallbackURL().concat("?intentMode=")
-				.concat(HubMode.UNSUBSCRIBE.gethubModeValue()));
+		if (!isWebsubDbVersionClientBehaviourEnable) {
+		map.add(WebSubClientConstants.HUB_CALLBACK, unsubscriptionRequest.getCallbackURL());
+		}else {
+			map.add(WebSubClientConstants.HUB_CALLBACK, unsubscriptionRequest.getCallbackURL().concat("?intentMode=")
+					.concat(HubMode.UNSUBSCRIBE.gethubModeValue()));
+		}
 		HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
 
 		ResponseEntity<String> response = null;
 		try {
-			response = restTemplateHelper.getRestTemplate().exchange(unsubscriptionRequest.getHubURL(), HttpMethod.POST, entity, String.class);
+			response = restTemplateHelper.getRestTemplate().exchange(unsubscriptionRequest.getHubURL(), HttpMethod.POST,
+					entity, String.class);
 		} catch (HttpClientErrorException | HttpServerErrorException exception) {
-			throw new WebSubClientException(WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorCode(),
-					WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorMessage() + exception.getResponseBodyAsString());
+			throw new WebSubClientException(WebSubClientErrorCode.UNSUBSCRIBE_ERROR.getErrorCode(),
+					WebSubClientErrorCode.UNSUBSCRIBE_ERROR.getErrorMessage() + exception.getResponseBodyAsString());
 		}
 		if (response != null && response.getStatusCode() == HttpStatus.ACCEPTED) {
 			LOGGER.info("unsubscribed for topic {} at hub", unsubscriptionRequest.getTopic());
@@ -183,13 +198,14 @@ public class SubscriberClientImpl
 				subscriptionChangeResponse.setTopic(unsubscriptionRequest.getTopic());
 				return subscriptionChangeResponse;
 			} else {
-				throw new WebSubClientException(WebSubClientErrorCode.REGISTER_ERROR.getErrorCode(),
-						WebSubClientErrorCode.REGISTER_ERROR.getErrorMessage() + hubResponse.getErrorReason());
+				LOGGER.error(WebSubClientErrorCode.UNSUBSCRIBE_ERROR.getErrorMessage() + response.getBody());
+				throw new WebSubClientException(WebSubClientErrorCode.UNSUBSCRIBE_ERROR.getErrorCode(),
+						WebSubClientErrorCode.UNSUBSCRIBE_ERROR.getErrorMessage() + hubResponse.getErrorReason());
 			}
 
-		}else {
-			throw new WebSubClientException(WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorCode(),
-					WebSubClientErrorCode.SUBSCRIBE_ERROR.getErrorMessage() + response.getBody());
+		} else {
+			throw new WebSubClientException(WebSubClientErrorCode.UNSUBSCRIBE_ERROR.getErrorCode(),
+					WebSubClientErrorCode.UNSUBSCRIBE_ERROR.getErrorMessage() + response.getBody());
 		}
 	}
 
@@ -202,27 +218,30 @@ public class SubscriberClientImpl
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		if (failedContentRequest.getMessageCount() > 0) {
 			headers.set(WebSubClientConstants.SUBSCRIBER_SIGNATURE_HEADER,
-					getHmac256(failedContentRequest.getTopic() + failedContentRequest.getCallbackURL()+ failedContentRequest.getTimestamp()+String.valueOf(pageIndex)+String.valueOf(failedContentRequest.getMessageCount()),
+					getHmac256(
+							failedContentRequest.getTopic() + failedContentRequest.getCallbackURL()
+									+ failedContentRequest.getTimestamp() + String.valueOf(pageIndex)
+									+ String.valueOf(failedContentRequest.getMessageCount()),
 							failedContentRequest.getSecret()));
 		} else {
 			headers.set(WebSubClientConstants.SUBSCRIBER_SIGNATURE_HEADER,
-					getHmac256(failedContentRequest.getTopic() + failedContentRequest.getCallbackURL()
-							+ failedContentRequest.getTimestamp()+String.valueOf(pageIndex), failedContentRequest.getSecret()));
+					getHmac256(
+							failedContentRequest.getTopic() + failedContentRequest.getCallbackURL()
+									+ failedContentRequest.getTimestamp() + String.valueOf(pageIndex),
+							failedContentRequest.getSecret()));
 		}
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(failedContentRequest.getHubURL())
 				.queryParam("topic", failedContentRequest.getTopic())
 				.queryParam("callback",
 						Base64.encodeBase64URLSafeString(failedContentRequest.getCallbackURL().getBytes()))
-				.queryParam("timestamp", failedContentRequest.getTimestamp())
-				.queryParam("pageindex",
-						pageIndex)
+				.queryParam("timestamp", failedContentRequest.getTimestamp()).queryParam("pageindex", pageIndex)
 				.queryParam("messageCount",
 						failedContentRequest.getMessageCount() <= 0 ? null : failedContentRequest.getMessageCount());
 
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
-		HttpEntity<String> response = restTemplateHelper.getRestTemplate().exchange(builder.toUriString(), HttpMethod.GET, entity,
-				String.class);
+		HttpEntity<String> response = restTemplateHelper.getRestTemplate().exchange(builder.toUriString(),
+				HttpMethod.GET, entity, String.class);
 		FailedContentResponse failedContentResponse = null;
 		try {
 			failedContentResponse = objectMapper.readValue(response.getBody(), FailedContentResponse.class);

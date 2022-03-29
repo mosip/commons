@@ -69,7 +69,7 @@
 		<!-- json -->
 		<jackson.version>2.9.5</jackson.version>
 		<jackson.datatype.version>2.9.8</jackson.datatype.version>
-		<jackson.databind>2.9.10.5</jackson.databind>
+		<jackson.databind>2.12.0</jackson.databind>
 		<json.utility.version>20180130</json.utility.version>
 		<json.schema.validator.version>2.2.10</json.schema.validator.version>
 		<json.version>20180813</json.version>
@@ -114,10 +114,13 @@
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
 		<jwt.version> 3.8.1</jwt.version>
 		<mockito.core.version>2.22.0</mockito.core.version>
-	<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
+		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
+		<fasterxml.jackson.module.afterburner.version>2.12.0</fasterxml.jackson.module.afterburner.version>
+		<fasterxml.jackson.module.jsr310.version>2.12.0</fasterxml.jackson.module.jsr310.version>
+		<sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/verticle/**,**/spi/**,"**/proxy/**","**/entities/**","**/filter/**","**/util/**","**/verifier/**","**/jaxbclasses/**"</sonar.coverage.exclusions>
 	</properties>
 	<artifactId>kernel-core</artifactId>
-	<version>1.2.0-SNAPSHOT</version>
+	<version>1.2.1-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -306,6 +309,11 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>${fasterxml.jackson.module.jsr310.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.retry</groupId>
 			<artifactId>spring-retry</artifactId>
 			<version>${spring.retry.version}</version>
@@ -315,6 +323,17 @@
 					<artifactId>spring-core</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.module</groupId>
+			<artifactId>jackson-module-afterburner</artifactId>
+			<version>${fasterxml.jackson.module.afterburner.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-web</artifactId>
+			<version>${vertx.version}</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	<distributionManagement>
@@ -444,7 +463,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.22.0</version>
 				<configuration>
-					<skipTests>${skipTests}</skipTests>
+					<skipTests>false</skipTests>
 					<skip>false</skip>
 					<argLine>
 						${argLine} --add-opens

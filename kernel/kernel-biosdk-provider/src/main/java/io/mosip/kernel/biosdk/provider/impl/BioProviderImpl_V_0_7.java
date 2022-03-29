@@ -136,7 +136,7 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 	public float[] getSegmentQuality(BIR[] sample, Map<String, String> flags) {
 		float[] scores = new float[sample.length];		
 		for(int i =0; i< sample.length; i++) {			
-			BiometricType modality = BiometricType.valueOf(sample[i].getBdbInfo().getType().get(0).value());
+			BiometricType modality = BiometricType.fromValue(sample[i].getBdbInfo().getType().get(0).value());
 			Method method = ReflectionUtils.findRequiredMethod(this.sdkRegistry.get(modality).getClass(), 
 					"checkQuality", BIR.class, KeyValuePair[].class);
 			method.setAccessible(true);
@@ -165,7 +165,7 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 	public Map<BiometricType, Float> getModalityQuality(BIR[] sample, Map<String, String> flags) {			
 		Map<BiometricType, LongStream.Builder> result = new HashMap<>();
 		for(BIR bir : sample) {
-			BiometricType modality = BiometricType.valueOf(bir.getBdbInfo().getType().get(0).value());
+			BiometricType modality = BiometricType.fromValue(bir.getBdbInfo().getType().get(0).value());
 			Method method = ReflectionUtils.findRequiredMethod(this.sdkRegistry.get(modality).getClass(), 
 					"checkQuality", BIR.class, KeyValuePair[].class);
 			method.setAccessible(true);
@@ -198,7 +198,7 @@ public class BioProviderImpl_V_0_7 implements iBioProviderApi {
 	public List<BIR> extractTemplate(List<BIR> sample, Map<String, String> flags) {		
 		List<BIR> extracts = new ArrayList<>();
 		for(BIR bir : sample) {
-			BiometricType modality = BiometricType.valueOf(bir.getBdbInfo().getType().get(0).value());
+			BiometricType modality = BiometricType.fromValue(bir.getBdbInfo().getType().get(0).value());
 			Method method = ReflectionUtils.findRequiredMethod(this.sdkRegistry.get(modality).getClass(), 
 					"extractTemplate", BIR.class, KeyValuePair[].class);
 			method.setAccessible(true);

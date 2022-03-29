@@ -3,7 +3,6 @@ package io.mosip.kernel.otpmanager.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +30,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  *
  */
 @RestController
-@CrossOrigin
 @Tag(name = "otpgenerator", description = "Operation related to Otp generation")
 public class OtpGeneratorController {
 	/**
@@ -46,7 +44,6 @@ public class OtpGeneratorController {
 	 * @param otpDto The request DTO for OTP generation.
 	 * @return The generated OTP as DTO response.
 	 */
-	//@PreAuthorize("hasAnyRole('INDIVIDUAL','REGISTRATION_ADMIN','REGISTRATION_SUPERVISOR','REGISTRATION_OFFICER','ID_AUTHENTICATION','AUTH','RESIDENT')")
 	@ResponseFilter
 	@Operation(summary = "This endpoint handles the OTP generation", description = "This endpoint handles the OTP generation", tags = { "otpgenerator" })
 	@ApiResponses(value = {

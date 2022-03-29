@@ -3,7 +3,7 @@
 -- Release Version 	: 1.2.0-SNAPSHOT
 -- Purpose    		: Database Alter scripts for the release for Authdevice DB.       
 -- Create By   		: Ram Bhatt
--- Created Date		: Oct-2021
+-- Created Date		: Nov-2021
 -- 
 -- Modified Date        Modified By         Comments / Remarks
 --

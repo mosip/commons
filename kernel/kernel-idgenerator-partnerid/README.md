@@ -1,35 +1,14 @@
-# kernel-idgenerator-partnerid
+# Kernel Idgenerator PartnerID
 
-[Background & Design](../../docs/design/kernel/Kernel-idgenerator-partner.md)
+## Overview
+This library provides funtions related to generation of Partner ID.
 
-API Documentation
+## Usage
 
- ```
-mvn javadoc:javadoc
-
- ```
- 
- 
- **Properties to be added in Spring application environment using this component**
- 
- ```
- mosip.kernel.partnerid.length=4
- ```
- 
- [application-dev.properties](../../config/application-dev.properties)
-
-
- **Database properties**
- 
-schema:master
-
-table:tspid_seq
-
-
-**Maven Dependency**
+1. Maven dependency
 
 ```
-		<dependency>
+	<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-idgenerator-partnerid</artifactId>
 			<version>${project.version}</version>
@@ -37,10 +16,7 @@ table:tspid_seq
 
 ```
 
-
-**Usage Sample:**
-
- Autowire interface PartnerIdGenerator and call the method generateId().
+2. Autowire interface PartnerIdGenerator and call the method generateId().
 
 For example-
 
@@ -52,8 +28,8 @@ String partnerId = service.generateId();
 
 ```
  
+Response
 
-**Sample PartnerId:**
-
+```
 GENERATED PARTNERID = 1000
- 
+``` 

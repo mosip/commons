@@ -217,15 +217,15 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.2.0-SNAPSHOT</kernel.core.version>
-		<kernel.dataaccess-hibernate.version>1.2.0-SNAPSHOT</kernel.dataaccess-hibernate.version>
-		<kernel.logger.version>1.2.0-SNAPSHOT</kernel.logger.version>
-		<kernel.idvalidator-prid.version>1.2.0-SNAPSHOT</kernel.idvalidator-prid.version>
-		<kernel-keymanager-service.version>1.2.0-SNAPSHOT</kernel-keymanager-service.version>
+		<kernel.core.version>1.2.1-SNAPSHOT</kernel.core.version>
+		<kernel.dataaccess-hibernate.version>1.2.1-SNAPSHOT</kernel.dataaccess-hibernate.version>
+		<kernel.logger.version>1.2.1-SNAPSHOT</kernel.logger.version>
+		<kernel.idvalidator-prid.version>1.2.1-SNAPSHOT</kernel.idvalidator-prid.version>
+		<kernel-keymanager-service.version>1.2.1-SNAPSHOT</kernel-keymanager-service.version>
 		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 	</properties>
 	<artifactId>kernel-idgenerator-prid</artifactId>
-	<version>1.2.0-SNAPSHOT</version>
+	<version>1.2.1-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
@@ -252,24 +252,6 @@
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-idvalidator-prid</artifactId>
 			<version>${kernel.idvalidator-prid.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-keymanager-service</artifactId>
-			<version>${kernel-keymanager-service.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>
-						spring-boot-starter-security
-					</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.springframework.security</groupId>
-					<artifactId>spring-security-test</artifactId>
-				</exclusion>
-			</exclusions>
-			<classifier>lib</classifier>
 		</dependency>
 	</dependencies>
 
@@ -408,7 +390,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.22.0</version>
 				<configuration>
-					<skipTests>${skipTests}</skipTests>
+					<skipTests>false</skipTests>
 					<skip>false</skip>
 					<argLine>
 						${argLine} --add-opens

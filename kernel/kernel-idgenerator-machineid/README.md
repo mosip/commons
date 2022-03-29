@@ -1,35 +1,14 @@
-# kernel-idgenerator-machineid
+# Kernel Idgenerator Machineid
 
-[Background & Design](../../docs/design/kernel/Kernel-idgenerator-machineid.md)
+## Overview
+This library provides functions related to generation of Machine ID.
 
-API Documentation
+## Usage
 
- ```
-mvn javadoc:javadoc
-
- ```
- 
- 
- **Properties to be added in Spring application environment using this component**
- 
- ```
- mosip.kernel.machineid.length=4
- ```
- 
- [application-dev.properties](../../config/application-dev.properties)
-
-
- **Database properties**
- 
-schema:master
-
-table:mid_seq
-
-
-**Maven Dependency**
+1. Maven Dependency
 
 ```
-		<dependency>
+	<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-idgenerator-machineid</artifactId>
 			<version>${project.version}</version>
@@ -37,12 +16,9 @@ table:mid_seq
 
 ```
 
+2. Autowire interface MachineIdGenerator and call the method generateMachineId().
 
-**Usage Sample:**
-
- Autowire interface MachineIdGenerator and call the method generateMachineId().
-
-For example-
+For example:
 
 ```
 @Autowired
@@ -52,8 +28,8 @@ String machineId = machineIdGenerator.generateMachineId();
 
 ```
  
+Response
 
-**Sample MID:**
-
+```
 GENERATED MID = 1000
- 
+```

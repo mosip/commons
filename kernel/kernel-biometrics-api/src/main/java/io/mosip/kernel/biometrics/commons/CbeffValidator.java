@@ -20,6 +20,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
+import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import org.xml.sax.SAXException;
 
 import io.mosip.kernel.biometrics.constant.BiometricType;
@@ -58,11 +59,10 @@ public class CbeffValidator {
 		for (BIR bir : birList) {
 			if (bir != null) {
 
-				boolean isException = bir.getOthers() != null && bir.getOthers()
-						.stream()
-						.anyMatch( e -> OtherKey.EXCEPTION.equals(e.getKey()) && "true".equals(e.getValue()));
+				boolean isException = bir.getOthers() != null && bir.getOthers().entrySet().stream()
+						.anyMatch(e -> OtherKey.EXCEPTION.equals(e.getKey()) && "true".equals((String) e.getValue()));
 
-				if((bir.getBdb() == null ||  bir.getBdb().length < 1 ) && !isException)
+				if ((bir.getBdb() == null || bir.getBdb().length < 1) && !isException)
 					throw new CbeffException("BDB value can't be empty");
 
 				if (bir.getBdbInfo() == null)
@@ -103,6 +103,8 @@ public class CbeffValidator {
 					|| formatType == CbeffConstant.FORMAT_TYPE_FINGER_MINUTIAE;
 		case "Iris":
 			return formatType == CbeffConstant.FORMAT_TYPE_IRIS;
+
+		case "ExceptionPhoto":
 		case "Face":
 			return formatType == CbeffConstant.FORMAT_TYPE_FACE;
 		case "HandGeometry":
@@ -129,6 +131,7 @@ public class CbeffValidator {
 		case "fmr":
 			return CbeffConstant.FORMAT_TYPE_FINGER_MINUTIAE;
 		case "face":
+		case "exceptionphoto":
 			return CbeffConstant.FORMAT_TYPE_FACE;
 		case "handgeometry":
 			return CbeffConstant.FORMAT_TYPE_FACE;
@@ -185,8 +188,8 @@ public class CbeffValidator {
 	public static BIR getBIRFromXML(byte[] fileBytes) throws Exception {
 		JAXBContext jaxbContext = JAXBContext.newInstance(BIR.class);
 		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-		JAXBElement<BIR> jaxBir = unmarshaller
-				.unmarshal(new StreamSource(new ByteArrayInputStream(fileBytes)), BIR.class);
+		JAXBElement<BIR> jaxBir = unmarshaller.unmarshal(new StreamSource(new ByteArrayInputStream(fileBytes)),
+				BIR.class);
 		BIR bir = jaxBir.getValue();
 		return bir;
 	}
@@ -194,18 +197,18 @@ public class CbeffValidator {
 	/**
 	 * Method used for searching Cbeff data based on type and subtype
 	 * 
-	 * @param bir BIR data
+	 * @param bir     BIR data
 	 * 
-	 * @param type          format type
+	 * @param type    format type
 	 * 
-	 * @param subType       format subtype
+	 * @param subType format subtype
 	 * 
 	 * @return bdbMap
 	 * 
 	 * @exception Exception exception
 	 * 
 	 */
-	public static Map<String, String> getBDBBasedOnTypeAndSubType(BIR bir, String type,String subType)
+	public static Map<String, String> getBDBBasedOnTypeAndSubType(BIR bir, String type, String subType)
 			throws Exception {
 
 		if (type == null && subType == null) {
@@ -236,8 +239,8 @@ public class CbeffValidator {
 		return finalMap;
 	}
 
-	private static void populateBDBMap(BIR birRoot, BiometricType biometricType,
-			 SingleAnySubtypeType singleAnySubType, Long formatType, Map<String, String> bdbMap) {
+	private static void populateBDBMap(BIR birRoot, BiometricType biometricType, SingleAnySubtypeType singleAnySubType,
+			Long formatType, Map<String, String> bdbMap) {
 		for (BIR bir : birRoot.getBirs()) {
 			BDBInfo bdbInfo = bir.getBdbInfo();
 
@@ -248,11 +251,12 @@ public class CbeffValidator {
 				boolean formatMatch = Long.valueOf(bdbFormatType).equals(formatType);
 				if (singleAnySubType == null && biometricTypes.contains(biometricType) && formatMatch) {
 					bdbMap.put(
-							biometricType.toString() + "_" + String.join(" ", singleSubTypeList) + "_"
-									+ String.valueOf(bdbFormatType) + "_"
+							(biometricType != null ? biometricType.toString() : null) + "_"
+									+ String.join(" ", singleSubTypeList) + "_" + String.valueOf(bdbFormatType) + "_"
 									+ bdbInfo.getCreationDate().toInstant(ZoneOffset.UTC).toEpochMilli(),
 							CryptoUtil.encodeBase64String(bir.getBdb()));
-				} else if (biometricType == null && singleSubTypeList.contains(singleAnySubType.value())) {
+				} else if (biometricType == null
+						&& singleSubTypeList.contains(singleAnySubType != null ? singleAnySubType.value() : null)) {
 					List<String> singleTypeStringList = convertToList(biometricTypes);
 					bdbMap.put(
 							String.join(" ", singleTypeStringList) + "_" + String.join(" ", singleSubTypeList) + "_"
@@ -263,7 +267,8 @@ public class CbeffValidator {
 						&& singleSubTypeList.contains(singleAnySubType != null ? singleAnySubType.value() : null)
 						&& formatMatch) {
 					bdbMap.put(
-							biometricType.toString() + "_" + singleAnySubType.value() + "_"
+							(biometricType != null ? biometricType.toString() : null) + "_"
+									+ (singleAnySubType != null ? singleAnySubType.value() : null) + "_"
 									+ String.valueOf(bdbFormatType) + "_"
 									+ bdbInfo.getCreationDate().toInstant(ZoneOffset.UTC).toEpochMilli(),
 							CryptoUtil.encodeBase64String(bir.getBdb()));
@@ -313,7 +318,6 @@ public class CbeffValidator {
 		return biometricTypeList.stream().map(Enum::name).collect(Collectors.toList());
 	}
 
-
 	/**
 	 * Method to get enum type from string type
 	 * 
@@ -340,7 +344,7 @@ public class CbeffValidator {
 		return false;
 	}
 
-	public static Map<String, String> getAllBDBData(BIR birRoot, String type,String subType) throws Exception {
+	public static Map<String, String> getAllBDBData(BIR birRoot, String type, String subType) throws Exception {
 		BiometricType biometricType = null;
 		SingleAnySubtypeType singleAnySubType = null;
 		Long formatType = null;
@@ -354,8 +358,8 @@ public class CbeffValidator {
 			formatType = getFormatType(type);
 		}
 		Map<String, String> bdbMap = new HashMap<>();
-		List<BIR> birs =birRoot.getBirs();
-		if ( birs!= null && !birs.isEmpty()) {
+		List<BIR> birs = birRoot.getBirs();
+		if (birs != null && !birs.isEmpty()) {
 			for (BIR bir : birs) {
 				BDBInfo bdbInfo = bir.getBdbInfo();
 
@@ -366,11 +370,12 @@ public class CbeffValidator {
 					boolean formatMatch = Long.valueOf(bdbFormatType).equals(formatType);
 					if (singleAnySubType == null && singleTypeList.contains(biometricType) && formatMatch) {
 						bdbMap.put(
-								biometricType.toString() + "_" + String.join(" ", singleSubTypeList) + "_"
+								(biometricType != null ? biometricType.toString() : null) + "_" + String.join(" ", singleSubTypeList) + "_"
 										+ String.valueOf(bdbFormatType) + "_"
 										+ bdbInfo.getCreationDate().toInstant(ZoneOffset.UTC).toEpochMilli(),
 								new String(bir.getBdb(), "UTF-8"));
-					} else if (biometricType == null && singleSubTypeList.contains(singleAnySubType.value())) {
+					} else if (biometricType == null
+							&& singleSubTypeList.contains(singleAnySubType != null ? singleAnySubType.value() : null)) {
 						List<String> singleTypeStringList = convertToList(singleTypeList);
 						bdbMap.put(
 								String.join(" ", singleSubTypeList) + "_" + String.join(" ", singleTypeStringList) + "_"
@@ -381,9 +386,9 @@ public class CbeffValidator {
 							&& singleSubTypeList.contains(singleAnySubType != null ? singleAnySubType.value() : null)
 							&& formatMatch) {
 						bdbMap.put(
-								singleAnySubType.toString() + "_" + biometricType.toString() + "_"
-										+ String.valueOf(bdbFormatType) + "_"
-										+ bdbInfo.getCreationDate().toInstant(ZoneOffset.UTC).toEpochMilli(),
+								(singleAnySubType != null ? singleAnySubType.value() : null) + "_"
+										+ (biometricType != null ? biometricType.toString() : null) + "_" + String.valueOf(bdbFormatType) + "_" + bdbInfo
+														.getCreationDate().toInstant(ZoneOffset.UTC).toEpochMilli(),
 								new String(bir.getBdb(), "UTF-8"));
 					}
 				}
@@ -391,7 +396,7 @@ public class CbeffValidator {
 		}
 		return bdbMap;
 	}
-	
+
 	/**
 	 * Method to get enum sub type from string subtype
 	 * 
@@ -400,45 +405,38 @@ public class CbeffValidator {
 		return subType != null ? SingleAnySubtypeType.fromValue(subType) : null;
 	}
 
-
-	/*private static List<BIR> getBIRList(List<BIR> birs) {
-		List<BIR> birList = new ArrayList<>();
-		for (BIR bir : birs) {
-			RegistryIDType format = new RegistryIDType();
-			format.setOrganization(bir.getBdbInfo().getFormat().getOrganization());
-			format.setType(bir.getBdbInfo().getFormat().getType());
-			BIR.BIRBuilder birBuilder = new BIR.BIRBuilder();
-			birBuilder.withBdb(bir.getBdb()).withOther(bir.getOthers())
-					.withBirInfo(new BIRInfo.BIRInfoBuilder().withIntegrity(bir.getBirInfo().getIntegrity()).build())
-					.withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format)
-							.withQuality(bir.getBdbInfo().getQuality()).withType(bir.getBdbInfo().getType())
-							.withSubtype(bir.getBdbInfo().getSubtype())
-							.withPurpose(bir.getBdbInfo().getPurpose()).withLevel(bir.getBdbInfo().getLevel())
-							.withCreationDate(bir.getBdbInfo().getCreationDate()).build());
-			
-			VersionType versionType = bir.getVersion();
-			if(versionType != null) {
-				birBuilder.withVersion(versionType);
-			}
-			
-			VersionType cbeffversionType = bir.getCbeffversion();
-			if(cbeffversionType != null) {
-				birBuilder.withCbeffversion(cbeffversionType);
-			}
-			
-			
-			birList.add(birBuilder.build());
-		}
-		return birList;
-	}*/
+	/*
+	 * private static List<BIR> getBIRList(List<BIR> birs) { List<BIR> birList = new
+	 * ArrayList<>(); for (BIR bir : birs) { RegistryIDType format = new
+	 * RegistryIDType();
+	 * format.setOrganization(bir.getBdbInfo().getFormat().getOrganization());
+	 * format.setType(bir.getBdbInfo().getFormat().getType()); BIR.BIRBuilder
+	 * birBuilder = new BIR.BIRBuilder();
+	 * birBuilder.withBdb(bir.getBdb()).withOther(bir.getOthers()) .withBirInfo(new
+	 * BIRInfo.BIRInfoBuilder().withIntegrity(bir.getBirInfo().getIntegrity()).build
+	 * ()) .withBdbInfo(new BDBInfo.BDBInfoBuilder().withFormat(format)
+	 * .withQuality(bir.getBdbInfo().getQuality()).withType(bir.getBdbInfo().getType
+	 * ()) .withSubtype(bir.getBdbInfo().getSubtype())
+	 * .withPurpose(bir.getBdbInfo().getPurpose()).withLevel(bir.getBdbInfo().
+	 * getLevel()) .withCreationDate(bir.getBdbInfo().getCreationDate()).build());
+	 * 
+	 * VersionType versionType = bir.getVersion(); if(versionType != null) {
+	 * birBuilder.withVersion(versionType); }
+	 * 
+	 * VersionType cbeffversionType = bir.getCbeffversion(); if(cbeffversionType !=
+	 * null) { birBuilder.withCbeffversion(cbeffversionType); }
+	 * 
+	 * 
+	 * birList.add(birBuilder.build()); } return birList; }
+	 */
 
 	public static List<BIR> getBIRDataFromXMLType(byte[] xmlBytes, String type) throws Exception {
 		BiometricType biometricType = null;
 		List<BIR> updatedBIRList = new ArrayList<>();
 		JAXBContext jaxbContext = JAXBContext.newInstance(BIR.class);
 		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-		JAXBElement<BIR> jaxBir = unmarshaller
-				.unmarshal(new StreamSource(new ByteArrayInputStream(xmlBytes)), BIR.class);
+		JAXBElement<BIR> jaxBir = unmarshaller.unmarshal(new StreamSource(new ByteArrayInputStream(xmlBytes)),
+				BIR.class);
 		BIR birRoot = jaxBir.getValue();
 		for (BIR bir : birRoot.getBirs()) {
 			if (type != null) {

@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import com.fasterxml.jackson.databind.deser.std.MapEntryDeserializer;
 import io.mosip.kernel.core.cbeffutil.common.Base64Adapter;
 import io.mosip.kernel.core.cbeffutil.jaxbclasses.BIRType;
 import lombok.Data;
@@ -52,8 +53,9 @@ public class BIR implements Serializable {
 	protected List<BIR> birs;
 	@XmlElement(name = "SBInfo")
 	private SBInfo sbInfo;
-	@XmlElement(name = "Others")
-	private List<Entry> others;
+	@XmlJavaTypeAdapter(AdapterOthersListToHashMap.class)
+	@JsonDeserialize(using = MapEntryDeserializer.class)
+	private HashMap<String, String> others;
 
 	public BIR(BIRBuilder birBuilder) {
 		this.version = birBuilder.version;
@@ -74,23 +76,20 @@ public class BIR implements Serializable {
 		private byte[] bdb;
 		private byte[] sb;
 		private SBInfo sbInfo;
-		private List<Entry> others;
+		private HashMap<String, String> others = new HashMap<>();
 
-		public BIRBuilder withOthers(List<Entry> others) {
-			if(Objects.isNull(others))
-				this.others = new ArrayList<>();
-			else
-				this.others = others;
+		public BIRBuilder withOthers(HashMap<String, String> others) {
+			this.others = others;
 			return this;
 		}
-		
-		/*public BIRBuilder withOthers(Map<String, String> others) {
+
+		public BIRBuilder withOthers(String key, String value) {
 			if(Objects.isNull(this.others))
 				this.others = new HashMap<>();
-			if(!Objects.isNull(others))
-				this.others.putAll(others);
+			else
+				this.others.put(key, value);
 			return this;
-		}*/
+		}
 
 		public BIRBuilder withVersion(VersionType version) {
 			this.version = version;

@@ -30,5 +30,16 @@ public class NullDataException extends BaseUncheckedException {
 	public NullDataException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);
 	}
+	
+	/**
+	 * Constructor with errorCode, errorMessage, and rootCause
+	 * 
+	 * @param errorCode    The error code for this exception
+	 * @param errorMessage The error message for this exception
+	 * @param rootCause    Cause of this exception
+	 */
+	public NullDataException(String errorCode, String errorMessage, Throwable rootCause) {
+		super(errorCode, errorMessage, rootCause);
+	}
 
 }

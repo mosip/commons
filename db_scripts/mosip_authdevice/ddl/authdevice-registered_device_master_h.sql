@@ -1,16 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_authdevice
--- Table Name 	: authdevice.registered_device_master_h
--- Purpose    	: Registered Device History : History of changes of any MOSIP device registration will be stored in history table to track any chnages for future validations.
---           
--- Create By   	: Sadanandegowda
--- Created Date	: Aug-2019
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- 30-Dec-2019          Sadanandegowda      Removed some attributes as per the new API specs
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- ------------------------------------------------------------------------------------------
+
 
 -- object: authdevice.registered_device_master_h | type: TABLE --
 -- DROP TABLE IF EXISTS authdevice.registered_device_master_h CASCADE;
