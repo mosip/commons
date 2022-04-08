@@ -51,6 +51,29 @@ public class PublisherClientApiExceptionsTest {
 		
 	}
 
+	@Test
+	public void registerKafkaHubOKTest() throws URISyntaxException {
+		 mockServer.expect(ExpectedCount.once(), 
+		          requestTo(new URI("http://localhost:9191/hub")))
+		          .andExpect(method(HttpMethod.POST))
+		          .andRespond(withStatus(HttpStatus.OK)
+		          .contentType(MediaType.APPLICATION_JSON)
+		          .body("hub.mode=accepted")
+		        );    
+		publisherClientImpl.registerTopic("demo", "http://localhost:9191/hub");
+	}
+	
+	@Test
+	public void registerKafkaHubAcceptedTest() throws URISyntaxException {
+		 mockServer.expect(ExpectedCount.once(), 
+		          requestTo(new URI("http://localhost:9191/hub")))
+		          .andExpect(method(HttpMethod.POST))
+		          .andRespond(withStatus(HttpStatus.ACCEPTED)
+		          .contentType(MediaType.APPLICATION_JSON)
+		          .body("hub.mode=accepted")
+		        );    
+		publisherClientImpl.registerTopic("demo", "http://localhost:9191/hub");
+	}
 
 	@Test(expected = WebSubClientException.class)
 	public void registerKafkaHubExceptionTest() throws URISyntaxException {
@@ -83,6 +106,30 @@ public class PublisherClientApiExceptionsTest {
 		          .andRespond(withStatus(HttpStatus.NO_CONTENT)
 		        );    
 		publisherClientImpl.registerTopic("demo", "http://localhost:9191/hub");
+	}
+	
+	@Test
+	public void unRegisterKafkaHubOKTest() throws URISyntaxException {
+		mockServer.expect(ExpectedCount.once(), 
+		          requestTo(new URI("http://localhost:9191/hub")))
+		          .andExpect(method(HttpMethod.POST))
+		          .andRespond(withStatus(HttpStatus.OK)
+		          .contentType(MediaType.APPLICATION_JSON)
+		          .body("hub.mode=accepted")
+		        );    
+		publisherClientImpl.unregisterTopic("demo", "http://localhost:9191/hub");
+	}
+	
+	@Test
+	public void unRegisterKafkaHubAcceptedTest() throws URISyntaxException {
+		mockServer.expect(ExpectedCount.once(), 
+		          requestTo(new URI("http://localhost:9191/hub")))
+		          .andExpect(method(HttpMethod.POST))
+		          .andRespond(withStatus(HttpStatus.ACCEPTED)
+		          .contentType(MediaType.APPLICATION_JSON)
+		          .body("hub.mode=denied")
+		        );    
+		publisherClientImpl.unregisterTopic("demo", "http://localhost:9191/hub");
 	}
 	
 	@Test(expected = WebSubClientException.class)
@@ -119,6 +166,30 @@ public class PublisherClientApiExceptionsTest {
 	}
 	
 	
+	@Test
+	public void publishKafkaHubOKTest() throws URISyntaxException {
+		 mockServer.expect(ExpectedCount.once(), 
+		          requestTo(new URI("http://localhost:9191/hub?hub.mode=publish&hub.topic=demo")))
+		          .andExpect(method(HttpMethod.POST))
+		          .andRespond(withStatus(HttpStatus.OK)
+		          .contentType(MediaType.APPLICATION_JSON)
+		          .body("hub.mode=accepted")
+		        );
+		 publisherClientImpl.publishUpdate("demo", "{\r\n \"data\": \"1#2021-08-10T05:47:26.853Z\" \r\n}", MediaType.APPLICATION_JSON_UTF8_VALUE, null, "http://localhost:9191/hub");
+	}
+	
+	@Test
+	public void publishKafkaHubAcceptedTest() throws URISyntaxException {
+		 mockServer.expect(ExpectedCount.once(), 
+		          requestTo(new URI("http://localhost:9191/hub?hub.mode=publish&hub.topic=demo")))
+		          .andExpect(method(HttpMethod.POST))
+		          .andRespond(withStatus(HttpStatus.ACCEPTED)
+		          .contentType(MediaType.APPLICATION_JSON)
+		          .body("hub.mode=denied")
+		        );
+		 publisherClientImpl.publishUpdate("demo", "{\r\n \"data\": \"1#2021-08-10T05:47:26.853Z\" \r\n}", MediaType.APPLICATION_JSON_UTF8_VALUE, null, "http://localhost:9191/hub");
+	}
+	
 	@Test(expected = WebSubClientException.class)
 	public void publishKafkaHubExceptionTest() throws URISyntaxException {
 		 mockServer.expect(ExpectedCount.once(), 
@@ -152,6 +223,29 @@ public class PublisherClientApiExceptionsTest {
 		 publisherClientImpl.publishUpdate("demo", "{\r\n \"data\": \"1#2021-08-10T05:47:26.853Z\" \r\n}", MediaType.APPLICATION_JSON_UTF8_VALUE, null, "http://localhost:9191/hub");
 	}
 	
+	@Test
+	public void notifyUpdateKafkaHubOKTest() throws URISyntaxException {
+		 mockServer.expect(ExpectedCount.once(), 
+		          requestTo(new URI("http://localhost:9191/hub?hub.mode=publish&hub.topic=demo")))
+		          .andExpect(method(HttpMethod.POST))
+		          .andRespond(withStatus(HttpStatus.OK)
+		          .contentType(MediaType.APPLICATION_JSON)
+		          .body("hub.mode=accepted")
+		        );    
+		publisherClientImpl.notifyUpdate("demo", null,"http://localhost:9191/hub");
+	}
+	
+	@Test
+	public void notifyUpdateKafkaHubAccptedTest() throws URISyntaxException {
+		 mockServer.expect(ExpectedCount.once(), 
+		          requestTo(new URI("http://localhost:9191/hub?hub.mode=publish&hub.topic=demo")))
+		          .andExpect(method(HttpMethod.POST))
+		          .andRespond(withStatus(HttpStatus.ACCEPTED)
+		          .contentType(MediaType.APPLICATION_JSON)
+		          .body("hub.mode=denied")
+		        );    
+		publisherClientImpl.notifyUpdate("demo", null,"http://localhost:9191/hub");
+	}
 	
 	@Test(expected = WebSubClientException.class)
 	public void notifyUpdateKafkaHubExceptionTest() throws URISyntaxException {
