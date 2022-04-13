@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -31,6 +33,8 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
 
 @RestController
 public class LoginController {
+	
+	private final static Logger LOGGER= LoggerFactory.getLogger(LoginController.class);
 
 	@Value("${auth.token.header:Authorization}")
 	private String authTokenHeader;
@@ -84,11 +88,15 @@ public class LoginController {
 		Cookie cookie = loginService.createCookie(jwtResponseDTO.getAccessToken());
 		res.addCookie(cookie);
 		res.setStatus(302);
-		String uri = new String(Base64.decodeBase64(redirectURI.getBytes()));
-		if(!allowedUrls.contains(uri)) {
-			throw new ServiceException(Errors.DOMAIN_EXCEPTION.getErrorCode(), Errors.DOMAIN_EXCEPTION.getErrorMessage());
+		String url = new String(Base64.decodeBase64(redirectURI.getBytes()));
+		if(url.contains("#")) {
+			url= url.split("#")[0];
 		}
-		res.sendRedirect(uri);	
+		if(!allowedUrls.contains(url)) {
+			LOGGER.error("Url {} was not part of allowed url's",url);
+			throw new ServiceException(Errors.ALLOWED_URL_EXCEPTION.getErrorCode(), Errors.ALLOWED_URL_EXCEPTION.getErrorMessage());
+		}
+		res.sendRedirect(url);	
 		}
 
 	@ResponseFilter

@@ -229,6 +229,23 @@ public class AuthProxyControllerTests {
 		mockMvc.perform(get("/login-redirect/aHR0cDovL2xvY2FsaG9zdDo1MDAwLw==?state=mockstate&session_state=mock-session-state&code=mockcode").contentType(MediaType.APPLICATION_JSON).cookie(cookie)).andExpect(status().is3xxRedirection());
 	}
 	
+	
+	@Test
+	public void logoutRedirectTestWithHash() throws Exception {
+		AccessTokenResponse accessTokenResponse = new AccessTokenResponse();
+		accessTokenResponse.setAccess_token("mock-access-token");
+		accessTokenResponse.setExpires_in("111");
+		
+		mockServer.expect(ExpectedCount.once(), 
+		          requestTo(new URI("http://localhost:8080/keycloak/auth/realms/mosip/protocol/openid-connect/token")))
+		          .andExpect(method(HttpMethod.POST))
+		          .andRespond(withStatus(HttpStatus.OK)
+		          .contentType(MediaType.APPLICATION_JSON)
+				  .body(objectMapper.writeValueAsString(accessTokenResponse)));		  
+		Cookie cookie = new Cookie("state", "mockstate");
+		mockMvc.perform(get("/login-redirect/aHR0cDovL2xvY2FsaG9zdDo1MDAwLyMvcmFuZG9tcGF0bS9yYW5kb21wYXRo?state=mockstate&session_state=mock-session-state&code=mockcode").contentType(MediaType.APPLICATION_JSON).cookie(cookie)).andExpect(status().is3xxRedirection());
+	}
+	
 	@Test
 	public void logoutServerExceptionRedirectTest() throws Exception {
 		IAMErrorResponseDto errorResponseDto = new IAMErrorResponseDto();
@@ -281,7 +298,7 @@ public class AuthProxyControllerTests {
 		          .contentType(MediaType.APPLICATION_JSON)
 				  .body(objectMapper.writeValueAsString(accessTokenResponse)));		  
 		Cookie cookie = new Cookie("state", "mockstate");
-		mockMvc.perform(get("/login-redirect/aHR0cDovL2FiOjUwMDAv?state=mockstate&session_state=mock-session-state&code=mockcode").contentType(MediaType.APPLICATION_JSON).cookie(cookie)).andExpect(status().isOk()).andExpect(jsonPath("$.errors[0].errorCode", is(Errors.DOMAIN_EXCEPTION.getErrorCode())));;
+		mockMvc.perform(get("/login-redirect/aHR0cDovL2FiOjUwMDAv?state=mockstate&session_state=mock-session-state&code=mockcode").contentType(MediaType.APPLICATION_JSON).cookie(cookie)).andExpect(status().isOk()).andExpect(jsonPath("$.errors[0].errorCode", is(Errors.ALLOWED_URL_EXCEPTION.getErrorCode())));;
 	}
 	
 
