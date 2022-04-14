@@ -1,4 +1,4 @@
-# MOSIP Commons Module Database Release Guide. 
+# MOSIP Commons Module Database Release Guide
 
 ## Prerequisities
 
@@ -8,15 +8,15 @@
 
 ## Process
 
-### Release Script Transfer To Deployment Server
+### Release script transfer to deployment server
 
 *  Pull the DB deployment scripts to the deployment server directly and start deploying.
 
-*  For pulling in local system and pushing them back to deployment server using WinSCP then make a note to modify the following encoding settings in WinSCP before pushing the files to deployment server --> Open WinSCP --> Options --> Preferences --> Transfer --> Edit --> In "Transfer mode" section --> select "Text" --> Click Ok --> Click Ok.
+*  For pulling in local system and pushing them back to deployment server using WinSCP then make a note to modify the following encoding settings in WinSCP before pushing the files to deployment server  ``` Open WinSCP --> Options --> Preferences --> Transfer --> Edit --> In "Transfer mode" section --> select "Text" --> Click Ok --> Click Ok.```
 
-#### Release Scripts Folder Structure
+#### Release scripts folder structure
 
- Database release scripts related to MOSIP modules are placed in **mosip_base_directory**>>db_release_scripts>>mosip_<schema_name> folder on git/repository.
+ Database release scripts related to MOSIP modules are placed in ```**mosip_base_directory**>>db_release_scripts>>mosip_<schema_name>``` folder on git/repository.
 
 **Example:** For commons module release script folder is **mosip_base_directory**>>db_release_scripts>>mosip_kernel.
 
@@ -52,31 +52,31 @@ Log files can be placed in a different folder by specifying the path of the dire
 
 Properties file variable details:
 
-**DB_SERVERIP=** Contains details of Destination SERVER_IP(Ex:10.0.0.1) where the deployment is targeted.
+**DB_SERVERIP=** Contains details of Destination SERVER_IP(Eg:10.0.0.1) where the deployment is targeted.
 
-**DB_PORT=** Contains the postgres server port details where the postgres is allowed to connect. Ex: 5433.
+**DB_PORT=** Contains the postgres server port details where the postgres is allowed to connect. Eg: 5433.
 
 **SU_USER=** Contains the postgres super user name to connect to the postgres database i.e. postgres.
 
-**DEFAULT_DB_NAME=** Default database name to connect with respective postgres server i.e. ex: postgres.
+**DEFAULT_DB_NAME=** Default database name to connect with respective postgres server i.e. Eg: postgres.
 
 **MOSIP_DB_NAME=** Database name for which the deployment is scheduled.
 
-**SYSADMIN_USER=** Variable contains the sysadmin user name which is super user for the remaining actions going to be performed by shell script.
+**SYSADMIN_USER=** Variable contains the sysadmin user name which is super user for the remaining actions that are going to be performed by shell script.
 
-**BASEPATH=** Path for DB scrips which are kept in the Deployment server. Ex: /home/madmin/database_release.
+**BASEPATH=** Path for DB scrips which are kept in the Deployment server. Eg: /home/madmin/database_release.
 
-**LOG_PATH=** Path where deployment log file will be created. Ex: /home/madmin/logs/ .
+**LOG_PATH=** Path where deployment log file will be created. Eg: /home/madmin/logs/ .
 
 **ALTER_SCRIPT_FLAG=** Flag variable which contains value as 0 or 1 to determine any alter scripts existance for the particular DB. If flag=0 then no alterscripts else flag=1.
 
-**ALTER_SCRIPT_FILENAME=** Alter scripts sql filename, This file is kept under sql directory, ex: <release_version_number>_<schema_name>-scripts_release.sql.
+**ALTER_SCRIPT_FILENAME=** Alter scripts sql filename, This file is kept under sql directory, Eg: <release_version_number>_<schema_name>-scripts_release.sql.
 
 **REVOKE_SCRIPT_FLAG=** Flag variable which contains value as 0 or 1 to determine any revoke scripts existance for the particular DB. if flag=0 then no revoke scripts else flag=1.
 
-**REVOKE_SCRIPT_FILENAME=** Revoke scripts sql filename, This file is kept under sql directory, ex: <release_version_number>_<schema_name>-scripts_revoke.sql.
+**REVOKE_SCRIPT_FILENAME=** Revoke scripts sql filename, This file is kept under sql directory, Eg: <release_version_number>_<schema_name>-scripts_revoke.sql.
 
-**Note - There should be a empty line at end of the .properties files and No spaces in beginning and end of the parameter values**
+**Note -There should be an empty line at the end of the .properties files and no spaces in the beginning and at the end of the parameter values.**
 
 ### Set Password For User
 
@@ -88,7 +88,7 @@ Example:
 
 ### DB release deployment:
 		
-**Step 1** -> Modify respective database properties files **(<<schema>>_release_deploy.properties)** in the respective database directories.
+**Step 1** -> Modify respective database properties files ```**(<<schema>>_release_deploy.properties)**``` in the respective database directories.
 
 **Step 2** -> Run the **"<<schema>>_release_db_deploy.sh"** script with release version as parameter to deploy all databases. To access and exeute **"<<schema>>_release_db_deploy.sh"** script, follow the below given sample commands:
 
@@ -103,7 +103,7 @@ bash-4.2$** bash <<schema>>_release_db_deploy.sh  <<schema>>_release_deploy.prop
 
 ### DB Deployment Revoke 
 
-**Execute only if db version release deployment revoking required.**
+**Execute only if DB version release deployment revoking required.**
 
 **Step 1** -> Run the DB Revoke deployment **"mosip_revoke_commons_db_deployment.sh "** script with release version as parameter.To access and exeute **"mosip_revoke_commons_db_deployment.sh "** script, follow the below given commands:
 
@@ -142,4 +142,4 @@ bash-4.2$** bash bash <<schema>>_revoke_db_deploy.sh  <<schema>>_release_deploy.
 
  * End of sourcing or deployment process.
 		
-* Database deployment log file captures all stages of deployment. Check Log files for any ERRORs. Ignore **NOTICE** or **SKIPPING** messages as these  states that particular action is already done.
+* Database deployment log file captures all stages of deployment. Check Log files for any errors. Ignore **NOTICE** or **SKIPPING** messages as these  states that particular action is already done.
