@@ -222,7 +222,7 @@
 		<kernel.prid-generator.version>1.1.5.3</kernel.prid-generator.version>
 	</properties>
 	<artifactId>kernel-pridgenerator-service</artifactId>
-	<version>1.1.5.3</version>
+	<version>1.1.5.6</version>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
