@@ -51,7 +51,6 @@
 		<!-- <module>kernel-bioapi-provider</module> -->
 		<!-- <module>kernel-registration-packet-manager</module> -->
 		<!-- <module>kernel-authcodeflowproxy-api</module> -->
-		<!-- -->
 		<!-- <module>kernel-otpmanager-service</module> -->
 		<module>kernel-websubclient-api</module>
 		<module>kernel-notification-service</module>
