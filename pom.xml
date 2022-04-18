@@ -169,6 +169,5 @@
         </build>
         <modules>
            <module>kernel</module>
-           <!-- <module>commons-packet</module> -->
         </modules>
 </project>
