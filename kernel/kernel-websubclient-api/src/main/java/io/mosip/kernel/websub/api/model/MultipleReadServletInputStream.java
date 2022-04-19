@@ -8,6 +8,9 @@ import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * This class is wrapper to modification to {@link ServletInputStream} to
  * convert {@link ServletRequest} to {@link MultipleReadHttpRequest}.
@@ -17,6 +20,8 @@ import javax.servlet.ServletRequest;
  *
  */
 public class MultipleReadServletInputStream extends ServletInputStream {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(MultipleReadServletInputStream.class);
 
 	private InputStream cachedBodyInputStream;
 
@@ -29,7 +34,7 @@ public class MultipleReadServletInputStream extends ServletInputStream {
 		try {
 			return cachedBodyInputStream.available() == 0;
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
 		}
 		return false;
 
@@ -42,8 +47,7 @@ public class MultipleReadServletInputStream extends ServletInputStream {
 
 	@Override
 	public void setReadListener(ReadListener listener) {
-		// TODO Auto-generated method stub
-
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

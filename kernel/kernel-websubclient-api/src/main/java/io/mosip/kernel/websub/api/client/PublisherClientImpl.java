@@ -64,6 +64,7 @@ public class PublisherClientImpl<P> implements PublisherClient<String, P, HttpHe
 			if (hubResponse.getHubResult().equals("accepted")) {
 				LOGGER.info("topic {} registered at hub", topic);
 			} else {
+				LOGGER.error(WebSubClientErrorCode.REGISTER_ERROR.getErrorMessage()+response.getBody());
 				throw new WebSubClientException(WebSubClientErrorCode.REGISTER_ERROR.getErrorCode(),
 						WebSubClientErrorCode.REGISTER_ERROR.getErrorMessage() + hubResponse.getErrorReason());
 			}
@@ -99,8 +100,9 @@ public class PublisherClientImpl<P> implements PublisherClient<String, P, HttpHe
 			if (hubResponse.getHubResult().equals("accepted")) {
 				LOGGER.info("topic {} unregistered at hub", topic);
 			} else {
-				throw new WebSubClientException(WebSubClientErrorCode.REGISTER_ERROR.getErrorCode(),
-						WebSubClientErrorCode.REGISTER_ERROR.getErrorMessage() + hubResponse.getErrorReason());
+				LOGGER.error(WebSubClientErrorCode.UNREGISTER_ERROR.getErrorMessage()+response.getBody());
+				throw new WebSubClientException(WebSubClientErrorCode.UNREGISTER_ERROR.getErrorCode(),
+						WebSubClientErrorCode.UNREGISTER_ERROR.getErrorMessage() + hubResponse.getErrorReason());
 			}
 
 		} else {
@@ -137,8 +139,9 @@ public class PublisherClientImpl<P> implements PublisherClient<String, P, HttpHe
 			if (hubResponse.getHubResult().equals("accepted")) {
 				LOGGER.info("published topic {} update at hub", topic);
 			} else {
-				throw new WebSubClientException(WebSubClientErrorCode.REGISTER_ERROR.getErrorCode(),
-						WebSubClientErrorCode.REGISTER_ERROR.getErrorMessage() + hubResponse.getErrorReason());
+				LOGGER.error(WebSubClientErrorCode.PUBLISH_ERROR.getErrorMessage()+response.getBody());
+				throw new WebSubClientException(WebSubClientErrorCode.PUBLISH_ERROR.getErrorCode(),
+						WebSubClientErrorCode.PUBLISH_ERROR.getErrorMessage() + hubResponse.getErrorReason());
 			}
 
 		} else {
@@ -170,8 +173,9 @@ public class PublisherClientImpl<P> implements PublisherClient<String, P, HttpHe
 			if (hubResponse.getHubResult().equals("accepted")) {
 				LOGGER.info("notify topic {} update at hub", topic);
 			} else {
-				throw new WebSubClientException(WebSubClientErrorCode.REGISTER_ERROR.getErrorCode(),
-						WebSubClientErrorCode.REGISTER_ERROR.getErrorMessage() + hubResponse.getErrorReason());
+				LOGGER.error(WebSubClientErrorCode.NOTIFY_UPDATE_ERROR.getErrorMessage()+response.getBody());
+				throw new WebSubClientException(WebSubClientErrorCode.NOTIFY_UPDATE_ERROR.getErrorCode(),
+						WebSubClientErrorCode.NOTIFY_UPDATE_ERROR.getErrorMessage() + hubResponse.getErrorReason());
 			}
 
 		} else {

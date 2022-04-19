@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<version>1.1.5.5-SNAPSHOT</version>
+	<version>1.1.5.6-SNAPSHOT</version>
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-parent</artifactId>
 	<packaging>pom</packaging>
@@ -163,13 +163,13 @@
 		<!-- <module>kernel-auth-service</module> -->
 		<!--<module>kernel-ridgenerator-service</module>
 		<module>kernel-keymanager-service</module>
-		<module>kernel-idgenerator-service</module>
 		<module>kernel-pridgenerator-service</module>
 		<module>kernel-salt-generator</module>
 		<module>kernel-biometrics-api</module>
 		<module>kernel-biosdk-provider</module>
 		<module>keys-generator</module> -->
-		<module>object-store</module>
+		<!--<module>object-store</module>-->
+		<module>kernel-idgenerator-service</module>
 	</modules>
 
 	
