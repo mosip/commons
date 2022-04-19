@@ -222,6 +222,7 @@
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
 		<kernel.core.version>1.1.5.6-SNAPSHOT</kernel.core.version>
 		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
+		<owasp.encoder.version>1.2.3</owasp.encoder.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -238,6 +239,11 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aspects</artifactId>
 			<version>5.0.6.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.owasp.encoder</groupId>
+			<artifactId>encoder</artifactId>
+			<version>${owasp.encoder.version}</version>
 		</dependency>
 	</dependencies>
 	<distributionManagement>
