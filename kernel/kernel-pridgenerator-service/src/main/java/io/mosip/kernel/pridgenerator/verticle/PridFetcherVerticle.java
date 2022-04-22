@@ -67,7 +67,7 @@ public class PridFetcherVerticle extends AbstractVerticle {
 				.produces(PRIDGeneratorConstant.APPLICATION_JSON);
 		// mount all the routers to parent router
 		parentRouter.mountSubRouter(environment.getProperty(PRIDGeneratorConstant.SERVER_SERVLET_PATH), metricRouter);
-		parentRouter.mountSubRouter(environment.getProperty(PRIDGeneratorConstant.SERVER_SERVLET_PATH), healthCheckRouter);
+		parentRouter.get(environment.getProperty(PRIDGeneratorConstant.SERVER_SERVLET_PATH)+PRIDGeneratorConstant.HEALTH_ENDPOINT).handler(healthCheckHandler);
 		parentRouter.mountSubRouter(
 				environment.getProperty(PRIDGeneratorConstant.SERVER_SERVLET_PATH) + PRIDGeneratorConstant.PRID,
 				pridFetcherRouter.createRouter(vertx));
