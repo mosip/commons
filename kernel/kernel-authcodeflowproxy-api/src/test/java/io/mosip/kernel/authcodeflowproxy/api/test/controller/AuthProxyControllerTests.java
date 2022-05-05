@@ -259,7 +259,7 @@ public class AuthProxyControllerTests {
 		          .contentType(MediaType.APPLICATION_JSON)
 				  .body(objectMapper.writeValueAsString(errorResponseDto)));		  
 		Cookie cookie = new Cookie("state", "mockstate");
-		mockMvc.perform(get("/login-redirect/abc?state=mockstate&session_state=mock-session-state&code=mockcode").contentType(MediaType.APPLICATION_JSON).cookie(cookie)).andExpect(status().is2xxSuccessful()).andExpect(jsonPath("$.errors[0].errorCode", is(Errors.ACESSTOKEN_EXCEPTION.getErrorCode())));
+		mockMvc.perform(get("/login-redirect/abc?state=mockstate&session_state=mock-session-state&code=mockcode").contentType(MediaType.APPLICATION_JSON).cookie(cookie)).andExpect(status().is2xxSuccessful()).andExpect(jsonPath("$.errors[0].message", isA(String.class)));
 	}
 	
 	@Test

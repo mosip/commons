@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-salt-generator</artifactId>
-	<version>1.2.1-SNAPSHOT</version>
+	<version>1.2.0.1-SNAPSHOT</version>
 	<name>Kernel Salt Generator</name>
 	<description>Batch Job Application to for one-time populating of salt values for MOSIP related application salt tables.</description>
 	<url>https://github.com/mosip/commons</url>
@@ -219,8 +219,8 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel-core.version>1.2.1-SNAPSHOT</kernel-core.version>
-		<kernel-logger-logback.version>1.2.1-SNAPSHOT</kernel-logger-logback.version>
+		<kernel-core.version>1.2.0.1-SNAPSHOT</kernel-core.version>
+		<kernel-logger-logback.version>1.2.0.1-SNAPSHOT</kernel-logger-logback.version>
 		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
 		<spring-cloud-config.version>2.0.0.RELEASE</spring-cloud-config.version>
 		<postgresql.version>42.2.2</postgresql.version>
