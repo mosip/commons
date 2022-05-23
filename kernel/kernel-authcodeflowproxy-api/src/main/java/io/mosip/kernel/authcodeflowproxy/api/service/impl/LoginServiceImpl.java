@@ -1,6 +1,9 @@
 package io.mosip.kernel.authcodeflowproxy.api.service.impl;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +33,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.authcodeflowproxy.api.constants.Constants;
 import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
-import io.mosip.kernel.authcodeflowproxy.api.constants.IAMConstants;
 import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponse;
 import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponseDTO;
 import io.mosip.kernel.authcodeflowproxy.api.dto.IAMErrorResponseDto;
@@ -39,7 +41,6 @@ import io.mosip.kernel.authcodeflowproxy.api.exception.AuthRestException;
 import io.mosip.kernel.authcodeflowproxy.api.exception.ClientException;
 import io.mosip.kernel.authcodeflowproxy.api.exception.ServiceException;
 import io.mosip.kernel.authcodeflowproxy.api.service.LoginService;
-import io.mosip.kernel.core.authmanager.model.AuthResponseDto;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -89,20 +90,20 @@ public class LoginServiceImpl implements LoginService {
 
 	@Value("${auth.server.admin.validate.url}")
 	private String validateUrl;
+	
+	
+	@Value("${mosip.iam.post-logout-uri-param-key:post_logout_redirect_uri}")
+	private String postLogoutRedirectURIParamKey;
+	
+	@Value("${mosip.iam.end-session-endpoint-path:/protocol/openid-connect/logout}")
+	private String endSessionEndpointPath;
+	
 
 	@Autowired
 	private RestTemplate restTemplate;
 
 	@Autowired
 	private ObjectMapper objectMapper;
-
-	private static final String LOG_OUT_FAILED = "log out failed";
-
-	private static final String FAILED = "Failed";
-
-	private static final String SUCCESS = "Success";
-
-	private static final String SUCCESSFULLY_LOGGED_OUT = "successfully loggedout";
 
 	@Override
 	public String login(String redirectURI, String state) {
@@ -225,35 +226,21 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	@Override
-	public AuthResponseDto logoutUser(String token) {
+	public String logoutUser(String token,String redirectURI) {
 		if (EmptyCheckUtils.isNullEmpty(token)) {
 			throw new AuthenticationServiceException(Errors.INVALID_TOKEN.getErrorMessage());
 		}
-		Map<String, String> pathparams = new HashMap<>();
 		String issuer = getissuer(token);
-		ResponseEntity<String> response = null;
-		AuthResponseDto authResponseDto = new AuthResponseDto();
-		StringBuilder urlBuilder = new StringBuilder().append(issuer).append("/protocol/openid-connect/logout");
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(urlBuilder.toString())
-				.queryParam(IAMConstants.ID_TOKEN_HINT, token);
-
+		StringBuilder urlBuilder = new StringBuilder().append(issuer).append(endSessionEndpointPath);
+		UriComponentsBuilder uriComponentsBuilder;
 		try {
-			response = restTemplate.getForEntity(uriComponentsBuilder.buildAndExpand(pathparams).toUriString(),
-					String.class);
-
-		} catch (HttpClientErrorException | HttpServerErrorException e) {
-			throw new ServiceException(Errors.REST_EXCEPTION.getErrorCode(),
-					Errors.REST_EXCEPTION.getErrorMessage() + e.getResponseBodyAsString());
+			uriComponentsBuilder = UriComponentsBuilder.fromUriString(urlBuilder.toString())
+					.queryParam(postLogoutRedirectURIParamKey, URLEncoder.encode(redirectURI, StandardCharsets.UTF_8.toString()));
+		} catch (UnsupportedEncodingException e) {
+			throw new ServiceException(Errors.UNSUPPORTED_ENCODING_EXCEPTION.getErrorCode(),
+					Errors.UNSUPPORTED_ENCODING_EXCEPTION.getErrorMessage() + Constants.WHITESPACE + e.getMessage());
 		}
-
-		if (response.getStatusCode().is2xxSuccessful()) {
-			authResponseDto.setMessage(SUCCESSFULLY_LOGGED_OUT);
-			authResponseDto.setStatus(SUCCESS);
-		} else {
-			authResponseDto.setMessage(LOG_OUT_FAILED);
-			authResponseDto.setStatus(FAILED);
-		}
-		return authResponseDto;
+		return uriComponentsBuilder.toString();
 	}
 
 	public String getissuer(String token) {

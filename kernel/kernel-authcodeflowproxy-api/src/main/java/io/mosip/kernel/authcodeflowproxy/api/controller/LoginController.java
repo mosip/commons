@@ -133,32 +133,18 @@ public class LoginController {
 		responseWrapper.setResponse(mosipUserDto);
 		return responseWrapper;
 	}
-
+	
 	@ResponseFilter
 	@DeleteMapping(value = "/logout/user")
-	public ResponseWrapper<AuthResponseDto> logoutUser(
-			@CookieValue(value = "Authorization", required = false) String token, HttpServletResponse res) {
-		AuthResponseDto authResponseDto = loginService.logoutUser(token);
-		ResponseWrapper<AuthResponseDto> responseWrapper = new ResponseWrapper<>();
-		responseWrapper.setResponse(authResponseDto);
-		return responseWrapper;
-	}
-	
-	@ResponseFilter
-	@DeleteMapping(value = "session/logout/user")
 	public void logoutUser(
-			@CookieValue(value = "Authorization", required = false) String token,@RequestParam(name = "redirecturi", required = false) String redirectURI, HttpServletResponse res) throws IOException {
-		String issuer = getissuer(token);
-		StringBuilder urlBuilder = new StringBuilder().append(issuer).append("/protocol/openid-connect/logout");
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(urlBuilder.toString())
-				.queryParam("post_logout_redirect_uri", URLEncoder.encode(new String(CryptoUtil.decodeURLSafeBase64(redirectURI)), StandardCharsets.UTF_8.toString()));
-		res.setStatus(302);
-		res.sendRedirect(uriComponentsBuilder.toString());
-	}
-	
-	public String getissuer(String token) {
-		DecodedJWT decodedJWT = JWT.decode(token);
-		return decodedJWT.getClaim("iss").asString();
+			@CookieValue(value = "Authorization", required = false) String token,@RequestParam(name = "redirecturi", required = true) String redirectURI, HttpServletResponse res) throws IOException {
+		redirectURI = new String(CryptoUtil.decodeURLSafeBase64(redirectURI));
+		if(!allowedUrls.contains(redirectURI)) {
+			LOGGER.error("Url {} was not part of allowed url's",redirectURI);
+			throw new ServiceException(Errors.ALLOWED_URL_EXCEPTION.getErrorCode(), Errors.ALLOWED_URL_EXCEPTION.getErrorMessage());
+		}
+		String uri = loginService.logoutUser(token,redirectURI);
+		res.sendRedirect(uri);
 	}
 
 }

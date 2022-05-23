@@ -20,7 +20,7 @@ public interface LoginService {
 	AccessTokenResponseDTO loginRedirect(String state, String sessionState, String code, String stateCookie,
 			String redirectURI);
 
-	AuthResponseDto logoutUser(String token);
+	String logoutUser(String token, String redirectURI);
 
 
 }
