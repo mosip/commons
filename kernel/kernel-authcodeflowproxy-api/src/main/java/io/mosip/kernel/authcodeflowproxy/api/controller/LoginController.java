@@ -138,7 +138,10 @@ public class LoginController {
 	@GetMapping(value = "/logout/user")
 	public void logoutUser(
 			@CookieValue(value = "Authorization", required = false) String token,@RequestParam(name = "redirecturi", required = true) String redirectURI, HttpServletResponse res) throws IOException {
-		redirectURI = new String(CryptoUtil.decodeURLSafeBase64(redirectURI));
+		redirectURI = new String(Base64.decodeBase64(redirectURI));
+		if(redirectURI.contains("#")) {
+			redirectURI= redirectURI.split("#")[0];
+		}
 		if(!allowedUrls.contains(redirectURI)) {
 			LOGGER.error("Url {} was not part of allowed url's",redirectURI);
 			throw new ServiceException(Errors.ALLOWED_URL_EXCEPTION.getErrorCode(), Errors.ALLOWED_URL_EXCEPTION.getErrorMessage());
