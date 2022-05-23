@@ -146,6 +146,6 @@ public class LoginController {
 		String uri = loginService.logoutUser(token,redirectURI);
 		res.sendRedirect(uri);
 	}
-	
+
 
 }
