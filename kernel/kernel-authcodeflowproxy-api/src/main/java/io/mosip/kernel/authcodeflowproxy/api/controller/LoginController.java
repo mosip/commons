@@ -135,7 +135,7 @@ public class LoginController {
 	}
 	
 	@ResponseFilter
-	@DeleteMapping(value = "/logout/user")
+	@GetMapping(value = "/logout/user")
 	public void logoutUser(
 			@CookieValue(value = "Authorization", required = false) String token,@RequestParam(name = "redirecturi", required = true) String redirectURI, HttpServletResponse res) throws IOException {
 		redirectURI = new String(CryptoUtil.decodeURLSafeBase64(redirectURI));
