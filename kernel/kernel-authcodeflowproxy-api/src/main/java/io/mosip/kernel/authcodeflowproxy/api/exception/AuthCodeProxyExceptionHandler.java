@@ -11,6 +11,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.util.ContentCachingRequestWrapper;
@@ -47,6 +48,14 @@ public class AuthCodeProxyExceptionHandler {
 		ExceptionUtils.logRootCause(e);
 		return new ResponseEntity<>(
 				getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText()), HttpStatus.OK);
+	}
+	
+	@ExceptionHandler(AuthenticationServiceException.class)
+	public ResponseEntity<ResponseWrapper<ServiceError>> servieException(
+			HttpServletRequest httpServletRequest, final AuthenticationServiceException e) throws IOException {
+		ExceptionUtils.logRootCause(e);
+		return new ResponseEntity<>(
+				getErrorResponse(httpServletRequest,Errors.INVALID_TOKEN.getErrorCode(), e.getMessage()), HttpStatus.OK);
 	}
 
 	@ExceptionHandler(AuthRestException.class)
