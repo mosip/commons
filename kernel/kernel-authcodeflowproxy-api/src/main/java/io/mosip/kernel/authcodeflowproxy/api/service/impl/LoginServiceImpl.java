@@ -240,7 +240,7 @@ public class LoginServiceImpl implements LoginService {
 			throw new ServiceException(Errors.UNSUPPORTED_ENCODING_EXCEPTION.getErrorCode(),
 					Errors.UNSUPPORTED_ENCODING_EXCEPTION.getErrorMessage() + Constants.WHITESPACE + e.getMessage());
 		}
-		return uriComponentsBuilder.toString();
+		return uriComponentsBuilder.toUriString();
 	}
 
 	public String getissuer(String token) {

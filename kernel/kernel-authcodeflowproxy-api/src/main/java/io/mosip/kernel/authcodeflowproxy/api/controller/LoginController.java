@@ -148,6 +148,7 @@ public class LoginController {
 			throw new ServiceException(Errors.ALLOWED_URL_EXCEPTION.getErrorCode(), Errors.ALLOWED_URL_EXCEPTION.getErrorMessage());
 		}
 		String uri = loginService.logoutUser(token,redirectURI);
+		res.setStatus(302);
 		res.sendRedirect(uri);
 	}
 
