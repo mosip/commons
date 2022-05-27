@@ -13,7 +13,12 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
-
+/**
+ * Validator used to validate the scope in the token
+ * 
+ * @author Loganathan Sekar
+ *
+ */
 @Component("scopeValidator")
 public class ScopeValidator {
 	
