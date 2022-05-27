@@ -16,7 +16,7 @@ import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 /**
  * Validator used to validate the scope in the token
  * 
- * @author Loganathan Sekar
+ * @author Loganathan S
  *
  */
 @Component("scopeValidator")

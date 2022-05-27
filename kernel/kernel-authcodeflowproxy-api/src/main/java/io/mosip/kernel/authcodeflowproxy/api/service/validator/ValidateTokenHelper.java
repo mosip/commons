@@ -38,6 +38,12 @@ import io.mosip.kernel.authcodeflowproxy.api.constants.AuthErrorCode;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 
+/**
+ * Token validator
+ * 
+ * @author Loganathan S
+ *
+ */
 @Component
 public class ValidateTokenHelper {
 
