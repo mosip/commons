@@ -1,7 +1,9 @@
 package io.mosip.kernel.core.authmanager.authadapter.model;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -41,12 +43,26 @@ public class AuthUserDetails implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return authorities.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role.getAuthority()))
-				.collect(Collectors.toList());
+		return authorities;
 	}
 
-	public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
-		this.authorities = authorities;
+	public void addAuthorities(Collection<? extends GrantedAuthority> authorities, String authorityPrefix) {
+		Stream<SimpleGrantedAuthority> authortiesStream = authorities.stream().map(role -> new SimpleGrantedAuthority(authorityPrefix + role.getAuthority()));
+		if(this.authorities == null) {
+			this.authorities = Collections.unmodifiableCollection(authortiesStream
+					.collect(Collectors.toList()));
+		} else {
+			this.authorities = Collections.unmodifiableCollection(Stream.concat(this.authorities.stream(), authortiesStream)
+					.collect(Collectors.toList()));
+		}
+	}
+	
+	public void addRoleAuthorities(Collection<? extends GrantedAuthority> authorities) {
+		this.addAuthorities(authorities, "ROLE_");
+	}
+	
+	public void addScopeAuthorities(Collection<? extends GrantedAuthority> authorities) {
+		this.addAuthorities(authorities, "SCOPE_");
 	}
 
 	@Override
