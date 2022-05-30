@@ -1,8 +1,6 @@
 package io.mosip.kernel.authcodeflowproxy.api.controller;
 
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,15 +14,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.interfaces.DecodedJWT;
 
 import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
 import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponseDTO;
@@ -32,10 +25,9 @@ import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
 import io.mosip.kernel.authcodeflowproxy.api.exception.ClientException;
 import io.mosip.kernel.authcodeflowproxy.api.exception.ServiceException;
 import io.mosip.kernel.authcodeflowproxy.api.service.LoginService;
-import io.mosip.kernel.core.authmanager.model.AuthResponseDto;
+import io.mosip.kernel.authcodeflowproxy.api.service.validator.ValidateTokenHelper;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
-import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 
 @RestController
@@ -52,6 +44,9 @@ public class LoginController {
 
 	@Autowired
 	private LoginService loginService;
+	
+	@Autowired
+	private ValidateTokenHelper validateTokenHelper; 
 
 	@GetMapping(value = "/login/{redirectURI}")
 	public void login(@CookieValue(name = "state", required = false) String state,
@@ -91,7 +86,9 @@ public class LoginController {
 			@CookieValue("state") String stateCookie, HttpServletResponse res) throws IOException {
 		AccessTokenResponseDTO jwtResponseDTO = loginService.loginRedirect(state, sessionState, code, stateCookie,
 				redirectURI);
-		Cookie cookie = loginService.createCookie(jwtResponseDTO.getAccessToken());
+		String accessToken = jwtResponseDTO.getAccessToken();
+		validateToken(accessToken);
+		Cookie cookie = loginService.createCookie(accessToken);
 		res.addCookie(cookie);
 		res.setStatus(302);
 		String url = new String(Base64.decodeBase64(redirectURI.getBytes()));
@@ -104,6 +101,12 @@ public class LoginController {
 		}
 		res.sendRedirect(url);	
 		}
+
+	private void validateToken(String accessToken) {
+		if(!validateTokenHelper.isTokenValid(accessToken).getKey()){
+			throw new ServiceException(Errors.INVALID_TOKEN.getErrorCode(), Errors.INVALID_TOKEN.getErrorMessage());
+		}
+	}
 
 	@ResponseFilter
 	@GetMapping(value = "/authorize/admin/validateToken")
