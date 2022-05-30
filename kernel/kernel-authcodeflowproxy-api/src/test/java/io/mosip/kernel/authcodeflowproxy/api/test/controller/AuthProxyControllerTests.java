@@ -2,28 +2,34 @@ package io.mosip.kernel.authcodeflowproxy.api.test.controller;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.isA;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.net.URI;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.Cookie;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,12 +39,17 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.client.RestTemplate;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator.Builder;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.mosip.kernel.authcodeflowproxy.api.constants.AuthConstant;
 import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
 import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponse;
 import io.mosip.kernel.authcodeflowproxy.api.dto.IAMErrorResponseDto;
 import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
+import io.mosip.kernel.authcodeflowproxy.api.service.validator.ValidateTokenHelper;
 import io.mosip.kernel.authcodeflowproxy.api.test.AuthProxyFlowTestBootApplication;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -59,11 +70,14 @@ public class AuthProxyControllerTests {
 	private RestTemplate restTemplate;
 
 	private MockRestServiceServer mockServer;
-
+	
+	@MockBean
+	private ValidateTokenHelper validateTokenHelper;
+	
 	@Before
 	public void init() {
 		mockServer = MockRestServiceServer.createServer(restTemplate);
-
+		when(validateTokenHelper.isTokenValid(Mockito.anyString())).thenReturn(ImmutablePair.of(true, null));
 	}
 
 	@Autowired
@@ -176,7 +190,7 @@ public class AuthProxyControllerTests {
 	@Test
 	public void loginRedirectTest() throws Exception {
 		AccessTokenResponse accessTokenResponse = new AccessTokenResponse();
-		accessTokenResponse.setAccess_token("mock-access-token");
+		accessTokenResponse.setAccess_token("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
 		accessTokenResponse.setExpires_in("111");
 
 		mockServer
@@ -186,6 +200,7 @@ public class AuthProxyControllerTests {
 				.andExpect(method(HttpMethod.POST))
 				.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
 						.body(objectMapper.writeValueAsString(accessTokenResponse)));
+		
 		Cookie cookie = new Cookie("state", "mockstate");
 		mockMvc.perform(get(
 				"/login-redirect/aHR0cDovL2xvY2FsaG9zdDo1MDAwLw==?state=mockstate&session_state=mock-session-state&code=mockcode")
@@ -195,8 +210,18 @@ public class AuthProxyControllerTests {
 
 	@Test
 	public void loginRedirectTestWithHash() throws Exception {
+		
+
+		Builder jwtbuilder = JWT.create();
+		jwtbuilder.withExpiresAt(Date.from(Instant.now().plusSeconds(100)));
+		jwtbuilder.withClaim(AuthConstant.PREFERRED_USERNAME, "12345");
+		jwtbuilder.withClaim(AuthConstant.ISSUER, "http://localhost");
+		Algorithm alg = Mockito.mock(Algorithm.class);
+		when(alg.getName()).thenReturn("none");
+		String jwtToken = jwtbuilder.sign(alg);
+		
 		AccessTokenResponse accessTokenResponse = new AccessTokenResponse();
-		accessTokenResponse.setAccess_token("mock-access-token");
+		accessTokenResponse.setAccess_token(jwtToken);
 		accessTokenResponse.setExpires_in("111");
 
 		mockServer
@@ -206,6 +231,15 @@ public class AuthProxyControllerTests {
 				.andExpect(method(HttpMethod.POST))
 				.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
 						.body(objectMapper.writeValueAsString(accessTokenResponse)));
+		
+		mockServer
+		.expect(ExpectedCount.once(),
+				requestTo(new URI(
+						"http://localhost:5000/keycloak/auth/realms/mosip/protocol/openid-connect/certs")))
+		.andExpect(method(HttpMethod.POST))
+		.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
+				.body(objectMapper.writeValueAsString(accessTokenResponse)));
+		
 		Cookie cookie = new Cookie("state", "mockstate");
 		mockMvc.perform(get(
 				"/login-redirect/aHR0cDovL2xvY2FsaG9zdDo1MDAwLyMvcmFuZG9tcGF0bS9yYW5kb21wYXRo?state=mockstate&session_state=mock-session-state&code=mockcode")
@@ -260,7 +294,7 @@ public class AuthProxyControllerTests {
 	@Test
 	public void logoutRedirectHostCheckTest() throws Exception {
 		AccessTokenResponse accessTokenResponse = new AccessTokenResponse();
-		accessTokenResponse.setAccess_token("mock-access-token");
+		accessTokenResponse.setAccess_token("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
 		accessTokenResponse.setExpires_in("111");
 
 		mockServer
