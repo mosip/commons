@@ -5,9 +5,9 @@ import org.springframework.core.env.Environment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.mosip.kernel.idgenerator.config.AccessLogHandler;
 import io.mosip.kernel.idgenerator.config.UinServiceHealthCheckerhandler;
 import io.mosip.kernel.idgenerator.config.UinServiceRouter;
-import io.mosip.kernel.uingenerator.constant.UINHealthConstants;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorConstant;
 import io.mosip.kernel.vidgenerator.constant.EventType;
 import io.mosip.kernel.vidgenerator.constant.VIDGeneratorConstant;
@@ -18,6 +18,7 @@ import io.vertx.core.http.HttpServer;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 import io.vertx.micrometer.PrometheusScrapingHandler;
 
 /**
@@ -63,6 +64,10 @@ public class HttpServerVerticle extends AbstractVerticle {
 
 		// Parent router so that global options can be applied to it in future
 		Router parentRouter = Router.router(vertx);
+		AccessLogHandler accessLogHandler = new AccessLogHandler();
+		parentRouter.route().handler(routingContext -> {
+			accessLogHandler(routingContext,accessLogHandler);
+		});
 		Router metricRouter = Router.router(vertx);
 		// giving the root to parent router
 		parentRouter.route().consumes(VIDGeneratorConstant.APPLICATION_JSON)
@@ -100,4 +105,17 @@ public class HttpServerVerticle extends AbstractVerticle {
 			}
 		});
 	}
+
+	private void accessLogHandler(final RoutingContext context, AccessLogHandler accessLogHandler) {
+
+		long startMillis = System.currentTimeMillis();
+
+		context.addBodyEndHandler(x -> accessLogHandler.log(context, startMillis));
+
+		context.next();
+
+	}
+
+	
+
 }
