@@ -1,6 +1,8 @@
 package io.mosip.kernel.authcodeflowproxy.api.controller;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,6 +21,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 
 import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
 import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponseDTO;
@@ -29,6 +35,7 @@ import io.mosip.kernel.authcodeflowproxy.api.service.LoginService;
 import io.mosip.kernel.core.authmanager.model.AuthResponseDto;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
+import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
 
 @RestController
@@ -127,14 +134,22 @@ public class LoginController {
 		responseWrapper.setResponse(mosipUserDto);
 		return responseWrapper;
 	}
-
+	
 	@ResponseFilter
-	@DeleteMapping(value = "/logout/user")
-	public ResponseWrapper<AuthResponseDto> logoutUser(
-			@CookieValue(value = "Authorization", required = false) String token, HttpServletResponse res) {
-		AuthResponseDto authResponseDto = loginService.logoutUser(token);
-		ResponseWrapper<AuthResponseDto> responseWrapper = new ResponseWrapper<>();
-		responseWrapper.setResponse(authResponseDto);
-		return responseWrapper;
+	@GetMapping(value = "/logout/user")
+	public void logoutUser(
+			@CookieValue(value = "Authorization", required = false) String token,@RequestParam(name = "redirecturi", required = true) String redirectURI, HttpServletResponse res) throws IOException {
+		redirectURI = new String(Base64.decodeBase64(redirectURI));
+		if(redirectURI.contains("#")) {
+			redirectURI= redirectURI.split("#")[0];
+		}
+		if(!allowedUrls.contains(redirectURI)) {
+			LOGGER.error("Url {} was not part of allowed url's",redirectURI);
+			throw new ServiceException(Errors.ALLOWED_URL_EXCEPTION.getErrorCode(), Errors.ALLOWED_URL_EXCEPTION.getErrorMessage());
+		}
+		String uri = loginService.logoutUser(token,redirectURI);
+		res.setStatus(302);
+		res.sendRedirect(uri);
 	}
+
 }

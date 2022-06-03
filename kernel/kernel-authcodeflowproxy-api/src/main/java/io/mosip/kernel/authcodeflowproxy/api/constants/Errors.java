@@ -35,7 +35,8 @@ public enum Errors {
 	EXCEPTION("KER-ACP-500", "Exception occured "),
 	ALLOWED_URL_EXCEPTION("KER-ACP-009", "url not found in allowed url's"),
 	STATE_NULL_EXCEPTION("KER-ACP-010", "state is null or empty"),
-	STATE_NOT_UUID_EXCEPTION("KER-ACP-011", "state is not uuid");
+	STATE_NOT_UUID_EXCEPTION("KER-ACP-011", "state is not uuid"),
+	UNSUPPORTED_ENCODING_EXCEPTION("KER-ACP-012", "unsupported encoding exception :");
 
 	/**
 	 * The error code
