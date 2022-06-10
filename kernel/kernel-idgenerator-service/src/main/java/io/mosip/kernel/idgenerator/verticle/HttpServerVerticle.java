@@ -66,7 +66,7 @@ public class HttpServerVerticle extends AbstractVerticle {
 		Router parentRouter = Router.router(vertx);
 		AccessLogHandler accessLogHandler = new AccessLogHandler();
 		parentRouter.route().handler(routingContext -> {
-			accessLogHandler(routingContext,accessLogHandler);
+			addAccessLogHandler(routingContext,accessLogHandler);
 		});
 		Router metricRouter = Router.router(vertx);
 		// giving the root to parent router
@@ -106,7 +106,7 @@ public class HttpServerVerticle extends AbstractVerticle {
 		});
 	}
 
-	private void accessLogHandler(final RoutingContext context, AccessLogHandler accessLogHandler) {
+	private void addAccessLogHandler(final RoutingContext context, AccessLogHandler accessLogHandler) {
 
 		long startMillis = System.currentTimeMillis();
 
