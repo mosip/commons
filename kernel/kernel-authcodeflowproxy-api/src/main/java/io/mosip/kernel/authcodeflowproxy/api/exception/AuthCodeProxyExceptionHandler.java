@@ -46,8 +46,14 @@ public class AuthCodeProxyExceptionHandler {
 	public ResponseEntity<ResponseWrapper<ServiceError>> servieException(
 			HttpServletRequest httpServletRequest, final ServiceException e) throws IOException {
 		ExceptionUtils.logRootCause(e);
+		HttpStatus status;
+		if(e.getErrorCode().equals(Errors.INVALID_TOKEN.getErrorCode())) {
+			status = HttpStatus.UNAUTHORIZED;
+		} else {
+			status = HttpStatus.OK;
+		}
 		return new ResponseEntity<>(
-				getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText()), HttpStatus.OK);
+				getErrorResponse(httpServletRequest, e.getErrorCode(), e.getErrorText()), status);
 	}
 	
 	@ExceptionHandler(AuthenticationServiceException.class)

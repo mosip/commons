@@ -24,24 +24,24 @@ public class ScopeValidator {
 	
 	private static final String SCOPE = "scope";
 
-	public static boolean hasAllScopes(List<String> scopes) {
+	public boolean hasAllScopes(List<String> scopes) {
 		return hasScopes(scopes, Stream::allMatch);
 	}
 	
-	public static boolean hasAnyScopes(List<String> scopes) {
+	public boolean hasAnyScopes(List<String> scopes) {
 		return hasScopes(scopes, Stream::anyMatch);
 	}
 	
-	public static boolean hasScope(String scope) {
+	public boolean hasScope(String scope) {
 		return hasAllScopes(List.of(scope));
 	}
 	
-	public static boolean hasScopes(List<String> scopes, BiPredicate<Stream<String>, Predicate<? super String>> condition) {
+	public boolean hasScopes(List<String> scopes, BiPredicate<Stream<String>, Predicate<? super String>> condition) {
 		List<? extends String> scopesInToken = getScopes();
 		return condition.test(scopes.stream(), scopesInToken::contains);
 	}
 
-	private static List<String> getScopes() {
+	private List<String> getScopes() {
 		Object principal = SecurityContextHolder
 		.getContext()
 		.getAuthentication().getPrincipal();
