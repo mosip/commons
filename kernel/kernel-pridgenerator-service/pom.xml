@@ -8,8 +8,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- maven -->
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 		<maven.compiler.version>3.8.0</maven.compiler.version>
 		<!-- <maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version> -->
 
@@ -17,14 +17,14 @@
 		<maven.war.plugin.version>3.1.0</maven.war.plugin.version>
 		<!-- <maven.jacoco.plugin.version>0.8.1</maven.jacoco.plugin.version> -->
 		<!-- <maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version> -->
-		<maven.javadoc.version>3.2.0</maven.javadoc.version>
+		<maven.javadoc.version>3.4.0</maven.javadoc.version>
 		<maven-shade-plugin.version>2.3</maven-shade-plugin.version>
 
 		<!-- spring -->
-		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
-		<spring.data.jpa.version>2.0.7.RELEASE</spring.data.jpa.version>
-		<spring.security.test.version>5.0.5.RELEASE</spring.security.test.version>
-		<spring-cloud-config.version>2.0.4.RELEASE</spring-cloud-config.version>
+		<spring.boot.version>2.7.0</spring.boot.version>
+		<spring.data.jpa.version>2.7.0</spring.data.jpa.version>
+		<spring.security.test.version>5.7.1</spring.security.test.version>
+		<spring-cloud-config.version>3.1.3</spring-cloud-config.version>
 
 		<!-- swagger -->
 		<swagger.core.version>2.0.7</swagger.core.version>
@@ -53,7 +53,7 @@
 		<hibernate.validator.version>6.0.12.Final</hibernate.validator.version>
 
 		<!-- test -->
-		<junit.version>4.12</junit.version>
+		<junit.version>4.13.2</junit.version>
 		<mockito.version>2.23.4</mockito.version>
 		<powermock.version>1.7.4</powermock.version>
 		<powermock.beta.version>2.0.7</powermock.beta.version>
@@ -83,7 +83,7 @@
 		<commons.configuration2.version>2.2</commons.configuration2.version>
 		<apache.httpcomponents.version>4.5.6</apache.httpcomponents.version>
 		<guava.version>19.0</guava.version>
-		<lombok.version>1.18.8</lombok.version>
+		<lombok.version>1.18.22</lombok.version>
 		<jsch.version>0.1.54</jsch.version>
 		<sshd.version>1.4.0</sshd.version>
 		<itextcore.version>7.1.0</itextcore.version>
@@ -94,7 +94,7 @@
 		<velocity.tool.version>2.0</velocity.tool.version>
 		<datamapper.orika>1.5.2</datamapper.orika>
 		<modelmapper.version>2.1.1</modelmapper.version>
-		<bouncycastle.version>1.66</bouncycastle.version>
+		<bouncycastle.version>1.46</bouncycastle.version>
 		<icu4j.version>63.1</icu4j.version>
 		<seventeam-otp.version>1.0.0</seventeam-otp.version>
 		<google.zxing.version>3.3.3</google.zxing.version>
@@ -113,8 +113,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- maven -->
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 		<maven.compiler.version>3.8.0</maven.compiler.version>
 		<!-- <maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version> -->
 
@@ -122,14 +122,14 @@
 		<maven.war.plugin.version>3.1.0</maven.war.plugin.version>
 		<!-- <maven.jacoco.plugin.version>0.8.1</maven.jacoco.plugin.version> -->
 		<!-- <maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version> -->
-		<maven.javadoc.version>3.2.0</maven.javadoc.version>
+		<maven.javadoc.version>3.4.0</maven.javadoc.version>
 		<maven-shade-plugin.version>2.3</maven-shade-plugin.version>
 
 		<!-- spring -->
-		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
-		<spring.data.jpa.version>2.0.7.RELEASE</spring.data.jpa.version>
-		<spring.security.test.version>5.0.5.RELEASE</spring.security.test.version>
-		<spring-cloud-config.version>2.0.4.RELEASE</spring-cloud-config.version>
+		<spring.boot.version>2.7.0</spring.boot.version>
+		<spring.data.jpa.version>2.7.0</spring.data.jpa.version>
+		<spring.security.test.version>5.7.1</spring.security.test.version>
+		<spring-cloud-config.version>3.1.3</spring-cloud-config.version>
 
 		<!-- swagger -->
 		<swagger.core.version>2.0.7</swagger.core.version>
@@ -158,7 +158,7 @@
 		<hibernate.validator.version>6.0.12.Final</hibernate.validator.version>
 
 		<!-- test -->
-		<junit.version>4.12</junit.version>
+		<junit.version>4.13.2</junit.version>
 		<mockito.version>2.23.4</mockito.version>
 		<powermock.version>1.7.4</powermock.version>
 		<powermock.beta.version>2.0.7</powermock.beta.version>
@@ -188,7 +188,7 @@
 		<commons.configuration2.version>2.2</commons.configuration2.version>
 		<apache.httpcomponents.version>4.5.6</apache.httpcomponents.version>
 		<guava.version>19.0</guava.version>
-		<lombok.version>1.18.8</lombok.version>
+		<lombok.version>1.18.22</lombok.version>
 		<jsch.version>0.1.54</jsch.version>
 		<sshd.version>1.4.0</sshd.version>
 		<itextcore.version>7.1.0</itextcore.version>
@@ -199,7 +199,7 @@
 		<velocity.tool.version>2.0</velocity.tool.version>
 		<datamapper.orika>1.5.2</datamapper.orika>
 		<modelmapper.version>2.1.1</modelmapper.version>
-		<bouncycastle.version>1.66</bouncycastle.version>
+		<bouncycastle.version>1.46</bouncycastle.version>
 		<icu4j.version>63.1</icu4j.version>
 		<seventeam-otp.version>1.0.0</seventeam-otp.version>
 		<google.zxing.version>3.3.3</google.zxing.version>
@@ -220,7 +220,7 @@
 		<kernel.templatemanager-velocity.version>1.2.1-SNAPSHOT</kernel.templatemanager-velocity.version>
 		<kernel.logger.version>1.2.1-SNAPSHOT</kernel.logger.version>
 		<kernel.prid-generator.version>1.2.1-SNAPSHOT</kernel.prid-generator.version>
-		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
+		<jacoco.maven.plugin.version>0.8.8</jacoco.maven.plugin.version>
 		<sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/verticle/**,**/spi/**,"**/proxy/**","**/entities/**","**/filter/**","**/util/**","**/verifier/**","**/KernelPridgeneratorServiceApplication.java"</sonar.coverage.exclusions>
 	</properties>
 	<artifactId>kernel-pridgenerator-service</artifactId>
@@ -354,6 +354,12 @@
 			<artifactId>kernel-logger-logback</artifactId>
 			<version>${kernel.logger.version}</version>
 		</dependency>
+	<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 
@@ -438,7 +444,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>3.4.0</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>

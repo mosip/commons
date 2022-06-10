@@ -7,10 +7,11 @@
 	<description>Mosip Applicant type API</description>
 	<version>1.2.1-SNAPSHOT</version>
 	<properties>
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 		<json.version>20180813</json.version>
-		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
+		<junit.version>4.13.2</junit.version>
+		<jacoco.maven.plugin.version>0.8.8</jacoco.maven.plugin.version>
 	</properties>
 
 	<dependencies>
@@ -37,6 +38,12 @@
 		</dependency>
 
 
+	<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	<distributionManagement>
 		<snapshotRepository>
@@ -102,7 +109,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>3.4.0</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>

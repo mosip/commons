@@ -4,9 +4,10 @@ import static java.util.Arrays.copyOfRange;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.SecureRandom;
+import java.security.Security;
 import java.util.Base64;
-import java.util.Objects;
 import java.util.Base64.Encoder;
+import java.util.Objects;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -18,6 +19,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.ArrayUtils;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import io.mosip.kernel.core.crypto.constant.CryptoExceptionCodeConstants;
 import io.mosip.kernel.core.crypto.exception.InvalidKeyException;
@@ -33,7 +35,18 @@ import io.mosip.kernel.core.crypto.exception.NullDataException;
  */
 public class CryptoUtil {
 	
-	private static final String SYMMETRIC_ALGORITHM = "AES/GCM/PKCS5Padding";
+	/**
+	 * Bouncy-Castle provider instance
+	 */
+	/*
+	 * private static BouncyCastleProvider provider;
+	 * 
+	 * static { provider = new BouncyCastleProvider();
+	 * Security.addProvider(provider); }
+	 */
+	
+	
+	private static final String SYMMETRIC_ALGORITHM = "AES/GCM/NoPadding";
 
 	private static final String AES = "AES";
 
