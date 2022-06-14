@@ -183,7 +183,7 @@ public class LoginServiceImpl implements LoginService {
 		map.add(Constants.CLIENT_ID, clientID);
 		map.add(Constants.CLIENT_SECRET, clientSecret);
 		map.add(Constants.CODE, code);
-		map.add(Constants.REDIRECT_URI, this.redirectURI + redirectURI);
+		map.add(Constants.REDIRECT_URI, "https://dev.mosip.net/resident/v1/login");
 		Map<String, String> pathParam = new HashMap<>();
 		pathParam.put("realmId", realmID);
 		UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(tokenEndpoint);
@@ -209,6 +209,7 @@ public class LoginServiceImpl implements LoginService {
 		AccessTokenResponseDTO accessTokenResponseDTO = new AccessTokenResponseDTO();
 		accessTokenResponseDTO.setAccessToken(accessTokenResponse.getAccess_token());
 		accessTokenResponseDTO.setExpiresIn(accessTokenResponse.getExpires_in());
+		accessTokenResponseDTO.setIdToken(accessTokenResponse.getId_token());
 		return accessTokenResponseDTO;
 	}
 

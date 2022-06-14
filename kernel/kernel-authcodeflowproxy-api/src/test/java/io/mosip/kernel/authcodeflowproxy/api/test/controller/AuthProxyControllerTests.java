@@ -191,6 +191,7 @@ public class AuthProxyControllerTests {
 	public void loginRedirectTest() throws Exception {
 		AccessTokenResponse accessTokenResponse = new AccessTokenResponse();
 		accessTokenResponse.setAccess_token("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
+		accessTokenResponse.setId_token("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
 		accessTokenResponse.setExpires_in("111");
 
 		mockServer
@@ -222,6 +223,7 @@ public class AuthProxyControllerTests {
 		
 		AccessTokenResponse accessTokenResponse = new AccessTokenResponse();
 		accessTokenResponse.setAccess_token(jwtToken);
+		accessTokenResponse.setId_token(jwtToken);
 		accessTokenResponse.setExpires_in("111");
 
 		mockServer
@@ -295,6 +297,7 @@ public class AuthProxyControllerTests {
 	public void logoutRedirectHostCheckTest() throws Exception {
 		AccessTokenResponse accessTokenResponse = new AccessTokenResponse();
 		accessTokenResponse.setAccess_token("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
+		accessTokenResponse.setId_token("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
 		accessTokenResponse.setExpires_in("111");
 
 		mockServer
