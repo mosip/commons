@@ -209,6 +209,7 @@ public class LoginServiceImpl implements LoginService {
 		AccessTokenResponseDTO accessTokenResponseDTO = new AccessTokenResponseDTO();
 		accessTokenResponseDTO.setAccessToken(accessTokenResponse.getAccess_token());
 		accessTokenResponseDTO.setExpiresIn(accessTokenResponse.getExpires_in());
+		accessTokenResponseDTO.setIdToken(accessTokenResponse.getId_token());
 		return accessTokenResponseDTO;
 	}
 
