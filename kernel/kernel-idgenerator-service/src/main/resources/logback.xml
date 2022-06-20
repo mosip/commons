@@ -27,5 +27,4 @@
 		name="io.mosip.kernel.idgenerator.config.AccessLogHandler" additivity="false">
 		<appender-ref ref="ACCESS" />
 	</logger>
-	l
 </configuration>
