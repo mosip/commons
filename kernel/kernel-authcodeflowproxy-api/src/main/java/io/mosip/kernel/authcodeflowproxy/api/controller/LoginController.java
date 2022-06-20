@@ -88,8 +88,11 @@ public class LoginController {
 				redirectURI);
 		String accessToken = jwtResponseDTO.getAccessToken();
 		validateToken(accessToken);
+		String idToken = jwtResponseDTO.getIdToken();
+		validateToken(idToken);
 		Cookie cookie = loginService.createCookie(accessToken);
 		res.addCookie(cookie);
+		res.addCookie(new Cookie("id_token", idToken));
 		res.setStatus(302);
 		String url = new String(Base64.decodeBase64(redirectURI.getBytes()));
 		if(url.contains("#")) {

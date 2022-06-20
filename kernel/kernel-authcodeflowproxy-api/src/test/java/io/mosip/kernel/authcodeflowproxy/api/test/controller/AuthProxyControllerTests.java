@@ -579,6 +579,7 @@ public class AuthProxyControllerTests {
 		String token = withExpiresAt.withClaim("scope", "aaa bbb").sign(mockAlgo);
 
 		accessTokenResponse.setAccess_token(token);
+		accessTokenResponse.setId_token(token);
 		accessTokenResponse.setExpires_in("111");
 
 		mockServer
