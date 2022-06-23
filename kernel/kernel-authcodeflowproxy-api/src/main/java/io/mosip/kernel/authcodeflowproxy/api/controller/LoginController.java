@@ -33,6 +33,8 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
 @RestController
 public class LoginController {
 	
+	private static final String ID_TOKEN = "id_token";
+
 	private final static Logger LOGGER= LoggerFactory.getLogger(LoginController.class);
 
 	@Value("${auth.token.header:Authorization}")
@@ -46,7 +48,10 @@ public class LoginController {
 	private LoginService loginService;
 	
 	@Autowired
-	private ValidateTokenHelper validateTokenHelper; 
+	private ValidateTokenHelper validateTokenHelper;
+
+	@Value("${auth.validate.id-token:false}")
+	private boolean validateIdToken; 
 
 	@GetMapping(value = "/login/{redirectURI}")
 	public void login(@CookieValue(name = "state", required = false) String state,
@@ -88,11 +93,17 @@ public class LoginController {
 				redirectURI);
 		String accessToken = jwtResponseDTO.getAccessToken();
 		validateToken(accessToken);
-		String idToken = jwtResponseDTO.getIdToken();
-		validateToken(idToken);
 		Cookie cookie = loginService.createCookie(accessToken);
 		res.addCookie(cookie);
-		res.addCookie(new Cookie("id_token", idToken));
+		if(validateIdToken) {
+			String idToken = jwtResponseDTO.getIdToken();
+			if(idToken == null) {
+				throw new ClientException(Errors.TOKEN_NOTPRESENT_ERROR.getErrorCode(),
+						Errors.TOKEN_NOTPRESENT_ERROR.getErrorMessage() + ": " + ID_TOKEN);
+			}
+			validateToken(idToken);
+			res.addCookie(new Cookie(ID_TOKEN, idToken));
+		}
 		res.setStatus(302);
 		String url = new String(Base64.decodeBase64(redirectURI.getBytes()));
 		if(url.contains("#")) {
@@ -103,7 +114,7 @@ public class LoginController {
 			throw new ServiceException(Errors.ALLOWED_URL_EXCEPTION.getErrorCode(), Errors.ALLOWED_URL_EXCEPTION.getErrorMessage());
 		}
 		res.sendRedirect(url);	
-		}
+	}
 
 	private void validateToken(String accessToken) {
 		if(!validateTokenHelper.isTokenValid(accessToken).getKey()){
