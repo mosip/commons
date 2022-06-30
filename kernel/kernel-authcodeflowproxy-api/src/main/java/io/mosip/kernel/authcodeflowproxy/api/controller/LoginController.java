@@ -26,6 +26,7 @@ import io.mosip.kernel.authcodeflowproxy.api.exception.ClientException;
 import io.mosip.kernel.authcodeflowproxy.api.exception.ServiceException;
 import io.mosip.kernel.authcodeflowproxy.api.service.LoginService;
 import io.mosip.kernel.authcodeflowproxy.api.service.validator.ValidateTokenHelper;
+import io.mosip.kernel.authcodeflowproxy.api.utils.AuthCodeProxyFlowUtils;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
@@ -39,6 +40,12 @@ public class LoginController {
 
 	@Value("${auth.token.header:Authorization}")
 	private String authTokenHeader;
+	
+	@Value("${iam.locale.cookie.name:KEYCLOAK_LOCALE}")
+	private String localeCookieName;
+	
+	@Value("${iam.locale.cookie.name:/auth/realms/}")
+	private String localeCookiePath;
 	
 	
 	@Value("#{'${auth.allowed.urls}'.split(',')}")
@@ -164,6 +171,13 @@ public class LoginController {
 			throw new ServiceException(Errors.ALLOWED_URL_EXCEPTION.getErrorCode(), Errors.ALLOWED_URL_EXCEPTION.getErrorMessage());
 		}
 		String uri = loginService.logoutUser(token,redirectURI);
+		// remove keycloak locale cookie from keycloak
+		Cookie localeCookie = new Cookie(localeCookieName, "");
+		String issuer = AuthCodeProxyFlowUtils.getissuer(token);
+		String[] issuerSplit=issuer.split("/");
+		localeCookie.setPath(localeCookiePath+issuerSplit[issuerSplit.length-1]+"/");
+		localeCookie.setMaxAge(0);
+		res.addCookie(localeCookie);
 		res.setStatus(302);
 		res.sendRedirect(uri);
 	}
