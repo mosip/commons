@@ -27,8 +27,6 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.authcodeflowproxy.api.constants.Constants;
@@ -41,6 +39,7 @@ import io.mosip.kernel.authcodeflowproxy.api.exception.AuthRestException;
 import io.mosip.kernel.authcodeflowproxy.api.exception.ClientException;
 import io.mosip.kernel.authcodeflowproxy.api.exception.ServiceException;
 import io.mosip.kernel.authcodeflowproxy.api.service.LoginService;
+import io.mosip.kernel.authcodeflowproxy.api.utils.AuthCodeProxyFlowUtils;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -97,6 +96,8 @@ public class LoginServiceImpl implements LoginService {
 	
 	@Value("${mosip.iam.end-session-endpoint-path:/protocol/openid-connect/logout}")
 	private String endSessionEndpointPath;
+	
+
 	
 
 	@Autowired
@@ -209,6 +210,7 @@ public class LoginServiceImpl implements LoginService {
 		AccessTokenResponseDTO accessTokenResponseDTO = new AccessTokenResponseDTO();
 		accessTokenResponseDTO.setAccessToken(accessTokenResponse.getAccess_token());
 		accessTokenResponseDTO.setExpiresIn(accessTokenResponse.getExpires_in());
+		accessTokenResponseDTO.setIdToken(accessTokenResponse.getId_token());
 		return accessTokenResponseDTO;
 	}
 
@@ -230,7 +232,7 @@ public class LoginServiceImpl implements LoginService {
 		if (EmptyCheckUtils.isNullEmpty(token)) {
 			throw new AuthenticationServiceException(Errors.INVALID_TOKEN.getErrorMessage());
 		}
-		String issuer = getissuer(token);
+		String issuer = AuthCodeProxyFlowUtils.getissuer(token);
 		StringBuilder urlBuilder = new StringBuilder().append(issuer).append(endSessionEndpointPath);
 		UriComponentsBuilder uriComponentsBuilder;
 		try {
@@ -241,11 +243,6 @@ public class LoginServiceImpl implements LoginService {
 					Errors.UNSUPPORTED_ENCODING_EXCEPTION.getErrorMessage() + Constants.WHITESPACE + e.getMessage());
 		}
 		return uriComponentsBuilder.build().toString();
-	}
-
-	public String getissuer(String token) {
-		DecodedJWT decodedJWT = JWT.decode(token);
-		return decodedJWT.getClaim("iss").asString();
 	}
 
 }

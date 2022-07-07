@@ -31,6 +31,8 @@ import com.auth0.jwk.UrlJwkProvider;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
+import com.auth0.jwt.impl.NullClaim;
+import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import io.mosip.kernel.authcodeflowproxy.api.constants.AuthConstant;
@@ -101,8 +103,7 @@ public class ValidateTokenHelper {
 		}
 
 		// Second, issuer domain check.
-		boolean tokenDomainMatch = getTokenIssuerDomain(decodedJWT);
-		if (validateIssuerDomain && !tokenDomainMatch) {
+		if (validateIssuerDomain && !getTokenIssuerDomain(decodedJWT)) {
 			LOGGER.error(
 					"Provided Auth Token Issue domain does not match. Throwing Authentication Exception. UserName: "
 							+ userName);
@@ -121,9 +122,8 @@ public class ValidateTokenHelper {
 		}
 
 		// Fourth, audience | azp validation.
-		boolean matchFound = validateAudience(decodedJWT);
 		// No match found after comparing audience & azp
-		if (!matchFound) {
+		if (validateAudClaim && !validateAudience(decodedJWT)) {
 			LOGGER.error("Provided Client Id does not match with Aud/AZP. Throwing Authorizaion Exception. UserName: "
 					+ userName);
 			return ImmutablePair.of(Boolean.FALSE, AuthErrorCode.FORBIDDEN);
@@ -132,18 +132,17 @@ public class ValidateTokenHelper {
 	}
 
 	private boolean validateAudience(DecodedJWT decodedJWT) {
-		boolean matchFound = false;
-		if (validateAudClaim) {
+		boolean matchFound;
 
-			List<String> tokenAudience = decodedJWT.getAudience();
-			matchFound = tokenAudience.stream().anyMatch(allowedAudience::contains);
+		List<String> tokenAudience =  decodedJWT.getAudience();
+		matchFound = tokenAudience != null && tokenAudience.stream().anyMatch(allowedAudience::contains);
 
-			// comparing with azp.
-			String azp = decodedJWT.getClaim(AuthConstant.AZP).asString();
-			if (!matchFound) {
-				matchFound = allowedAudience.stream().anyMatch(azp::equalsIgnoreCase);
-			}
+		// comparing with azp.
+		if (!matchFound) {
+			Claim azp = decodedJWT.getClaim(AuthConstant.AZP);
+			matchFound = azp != null && !(azp instanceof NullClaim) && allowedAudience.stream().anyMatch(azp.asString()::equalsIgnoreCase);
 		}
+		
 		return matchFound;
 	}
 

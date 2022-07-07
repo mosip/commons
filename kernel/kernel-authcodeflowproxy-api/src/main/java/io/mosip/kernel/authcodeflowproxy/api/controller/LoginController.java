@@ -26,6 +26,7 @@ import io.mosip.kernel.authcodeflowproxy.api.exception.ClientException;
 import io.mosip.kernel.authcodeflowproxy.api.exception.ServiceException;
 import io.mosip.kernel.authcodeflowproxy.api.service.LoginService;
 import io.mosip.kernel.authcodeflowproxy.api.service.validator.ValidateTokenHelper;
+import io.mosip.kernel.authcodeflowproxy.api.utils.AuthCodeProxyFlowUtils;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
@@ -33,10 +34,18 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
 @RestController
 public class LoginController {
 	
+	private static final String ID_TOKEN = "id_token";
+
 	private final static Logger LOGGER= LoggerFactory.getLogger(LoginController.class);
 
 	@Value("${auth.token.header:Authorization}")
 	private String authTokenHeader;
+	
+	@Value("${iam.locale.cookie.name:KEYCLOAK_LOCALE}")
+	private String localeCookieName;
+	
+	@Value("${iam.locale.cookie.name:/auth/realms/}")
+	private String localeCookiePath;
 	
 	
 	@Value("#{'${auth.allowed.urls}'.split(',')}")
@@ -46,7 +55,10 @@ public class LoginController {
 	private LoginService loginService;
 	
 	@Autowired
-	private ValidateTokenHelper validateTokenHelper; 
+	private ValidateTokenHelper validateTokenHelper;
+
+	@Value("${auth.validate.id-token:false}")
+	private boolean validateIdToken; 
 
 	@GetMapping(value = "/login/{redirectURI}")
 	public void login(@CookieValue(name = "state", required = false) String state,
@@ -90,6 +102,15 @@ public class LoginController {
 		validateToken(accessToken);
 		Cookie cookie = loginService.createCookie(accessToken);
 		res.addCookie(cookie);
+		if(validateIdToken) {
+			String idToken = jwtResponseDTO.getIdToken();
+			if(idToken == null) {
+				throw new ClientException(Errors.TOKEN_NOTPRESENT_ERROR.getErrorCode(),
+						Errors.TOKEN_NOTPRESENT_ERROR.getErrorMessage() + ": " + ID_TOKEN);
+			}
+			validateToken(idToken);
+			res.addCookie(new Cookie(ID_TOKEN, idToken));
+		}
 		res.setStatus(302);
 		String url = new String(Base64.decodeBase64(redirectURI.getBytes()));
 		if(url.contains("#")) {
@@ -100,7 +121,7 @@ public class LoginController {
 			throw new ServiceException(Errors.ALLOWED_URL_EXCEPTION.getErrorCode(), Errors.ALLOWED_URL_EXCEPTION.getErrorMessage());
 		}
 		res.sendRedirect(url);	
-		}
+	}
 
 	private void validateToken(String accessToken) {
 		if(!validateTokenHelper.isTokenValid(accessToken).getKey()){
@@ -150,6 +171,13 @@ public class LoginController {
 			throw new ServiceException(Errors.ALLOWED_URL_EXCEPTION.getErrorCode(), Errors.ALLOWED_URL_EXCEPTION.getErrorMessage());
 		}
 		String uri = loginService.logoutUser(token,redirectURI);
+		// remove keycloak locale cookie from keycloak
+		Cookie localeCookie = new Cookie(localeCookieName, "");
+		String issuer = AuthCodeProxyFlowUtils.getissuer(token);
+		String[] issuerSplit=issuer.split("/");
+		localeCookie.setPath(localeCookiePath+issuerSplit[issuerSplit.length-1]+"/");
+		localeCookie.setMaxAge(0);
+		res.addCookie(localeCookie);
 		res.setStatus(302);
 		res.sendRedirect(uri);
 	}
