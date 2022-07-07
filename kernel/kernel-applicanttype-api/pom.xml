@@ -5,7 +5,7 @@
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-applicanttype-api</artifactId>
 	<description>Mosip Applicant type API</description>
-	<version>1.2.1-SNAPSHOT</version>
+	<version>1-2-1-j17-SNAPSHOT</version>
 	<properties>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
@@ -18,7 +18,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
-			<version>1.2.1-SNAPSHOT</version>
+			<version>1-2-1-j17-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mvel</groupId>
