@@ -139,3 +139,4 @@
 --ALTER TABLE master.user_detail ALTER COLUMN is_deleted SET DEFAULT FALSE;
 
 \ir ../ddl/master-ca_cert_store.sql
+\ir ../ddl/master-applicant_login_detail.sql
