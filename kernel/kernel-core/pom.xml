@@ -110,7 +110,7 @@
 		<io.jsonwebtoken.jjwt.version>0.6.0</io.jsonwebtoken.jjwt.version>
 		<apache.directory.api.version>2.0.0.AM2</apache.directory.api.version>
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
-		<micrometer.core.version>1.4.2</micrometer.core.version>
+		<micrometer.core.version>1.9.0</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
 		<jwt.version> 3.8.1</jwt.version>
 		<mockito.core.version>2.22.0</mockito.core.version>
@@ -334,6 +334,13 @@
 			<artifactId>vertx-web</artifactId>
 			<version>${vertx.version}</version>
 			<scope>provided</scope>
+		</dependency>
+		<!--  added for junit 4 working with junit 5  -->
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<version>5.6.3</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<distributionManagement>
