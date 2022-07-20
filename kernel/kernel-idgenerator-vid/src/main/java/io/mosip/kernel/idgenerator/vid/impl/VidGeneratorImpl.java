@@ -2,14 +2,15 @@ package io.mosip.kernel.idgenerator.vid.impl;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.core.idgenerator.spi.VidGenerator;
@@ -48,9 +49,28 @@ public class VidGeneratorImpl implements VidGenerator<String> {
 	 */
 	@Value("${mosip.kernel.vid.length}")
 	private int vidLength;
-
+	
+	@Value("${mosip.idgen.vid.secure-random-reinit-frequency:45}")
+	private int reInitSecureRandomFrequency;
+	
 	@PostConstruct
 	private void init() {
+			ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
+			taskScheduler.setPoolSize(1);
+			taskScheduler.initialize();
+			taskScheduler.scheduleAtFixedRate(new ReInitSecureRandomTask(), TimeUnit.MINUTES.toMillis(reInitSecureRandomFrequency));
+	}
+
+	private class ReInitSecureRandomTask implements Runnable {
+
+		public void run() {
+			initialize();
+		}
+
+		
+	}
+	
+	private void initialize() {
 		SecureRandom random = new SecureRandom();
 		byte[] randomSeedBytes = new byte[Integer.parseInt(VidPropertyConstant.RANDOM_NUMBER_SIZE.getProperty())];
 		random.nextBytes(randomSeedBytes);
@@ -62,7 +82,6 @@ public class VidGeneratorImpl implements VidGenerator<String> {
 			counter = new BigInteger(counterBytes).abs().toString().substring(0,
 					Integer.parseInt(VidPropertyConstant.RANDOM_NUMBER_SIZE.getProperty()));
 		} while (counter.charAt(0) == '0');
-
 	}
 
 	/**
@@ -87,6 +106,9 @@ public class VidGeneratorImpl implements VidGenerator<String> {
 	 */
 	private String generateRandomId() {
 		String vid = null;
+		if(counter == null) {
+			initialize();
+		}
 		counter = init ? counter : new BigInteger(counter).add(BigInteger.ONE).toString();
 		init = false;
 		SecretKey secretKey = new SecretKeySpec(counter.getBytes(),

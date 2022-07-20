@@ -5,16 +5,17 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import javax.persistence.PersistenceException;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,11 +50,28 @@ public class TokenIdGeneratorImpl implements TokenIdGenerator<String> {
 
 	private SecureRandom random;
 
+	@Value("${mosip.idgen.tokenid.secure-random-reinit-frequency:45}")
+	private int reInitSecureRandomFrequency;
+
 	@PostConstruct
 	private void init() {
-		random = new SecureRandom();
+		ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
+		taskScheduler.setPoolSize(1);
+		taskScheduler.initialize();
+		taskScheduler.scheduleAtFixedRate(new ReInitSecureRandomTask(),
+				TimeUnit.MINUTES.toMillis(reInitSecureRandomFrequency));
 	}
 
+	private class ReInitSecureRandomTask implements Runnable {
+
+		public void run() {
+			initializeSecureRandom();
+		}
+	}
+
+	private void initializeSecureRandom() {
+		random = new SecureRandom();
+	}
 	/**
 	 * The length of Token ID.[fetched from configuration]
 	 */
@@ -71,6 +89,9 @@ public class TokenIdGeneratorImpl implements TokenIdGenerator<String> {
 		String counterSecureRandom = null;
 		String randomSeed = null;
 		String tokenId = null;
+		if(random==null) {
+			initializeSecureRandom();
+		}
 
 		List<TokenIdSeed> listOfSeed = null;
 		TokenIdSequence sequenceEntity = null;
