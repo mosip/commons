@@ -165,7 +165,7 @@
 
 		<!-- test -->
 		<junit.version>4.13.2</junit.version>
-		<mockito.version>2.23.4</mockito.version>
+		<mockito.version>3.7.7</mockito.version>
 		<powermock.version>1.7.4</powermock.version>
 		<powermock.beta.version>2.0.7</powermock.beta.version>
 
@@ -295,6 +295,11 @@
 			<artifactId>junit-vintage-engine</artifactId>
 			<version>5.6.3</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito.version}</version>
 		</dependency>
 	</dependencies>
 

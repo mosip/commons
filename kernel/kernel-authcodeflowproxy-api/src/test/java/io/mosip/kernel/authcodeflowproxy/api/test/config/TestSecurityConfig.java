@@ -26,7 +26,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = false)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class TestSecurityConfig extends WebSecurityConfigurerAdapter  {
 
 	@Bean

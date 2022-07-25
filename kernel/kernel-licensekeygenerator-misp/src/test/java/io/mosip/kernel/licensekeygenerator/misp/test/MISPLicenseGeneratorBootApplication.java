@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-//@ComponentScan({ "io.mosip.kernel.*" })
+//@ComponentScan({ "io.mosip.kernel.licensekeygenerator.misp.*" })
 public class MISPLicenseGeneratorBootApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(MISPLicenseGeneratorBootApplication.class, args);
