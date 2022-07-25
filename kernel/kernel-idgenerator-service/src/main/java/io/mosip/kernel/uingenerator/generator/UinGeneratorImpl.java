@@ -2,14 +2,14 @@ package io.mosip.kernel.uingenerator.generator;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.math3.random.RandomDataGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.core.idgenerator.spi.UinGenerator;
@@ -42,9 +42,9 @@ public class UinGeneratorImpl implements UinGenerator {
 	 */
 	@Autowired
 	private UINMetaDataUtil metaDataUtil;
-	
+
 	@Autowired
-	private UinService uinService; 
+	private UinService uinService;
 
 	/**
 	 * Field for UinWriter
@@ -72,19 +72,35 @@ public class UinGeneratorImpl implements UinGenerator {
 	 */
 	private final String uinDefaultStatus;
 	private SecureRandom random;
-	
+
+	@Value("${mosip.idgen.uin.secure-random-reinit-frequency:45}")
+	private int reInitSecureRandomFrequency;
+
 	@PostConstruct
 	private void init() {
+		ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
+		taskScheduler.setPoolSize(1);
+		taskScheduler.initialize();
+		taskScheduler.scheduleAtFixedRate(new ReInitSecureRandomTask(),
+				TimeUnit.MINUTES.toMillis(reInitSecureRandomFrequency));
+	}
+
+	private class ReInitSecureRandomTask implements Runnable {
+
+		public void run() {
+			initializeSecureRandom();
+		}
+	}
+
+	private void initializeSecureRandom() {
 		random = new SecureRandom();
 	}
-	
-
 
 	/**
 	 * Constructor to set {@link #uinsCount} and {@link #uinLength}
 	 * 
-	 * @param uinsCount        The number of uins to generate
-	 * @param uinLength        The length of the uin
+	 * @param uinsCount The number of uins to generate
+	 * @param uinLength The length of the uin
 	 */
 	public UinGeneratorImpl(@Value("${mosip.kernel.uin.uins-to-generate}") long uinsCount,
 			@Value("${mosip.kernel.uin.length}") int uinLength) {
@@ -93,7 +109,8 @@ public class UinGeneratorImpl implements UinGenerator {
 		this.uinDefaultStatus = UinGeneratorConstant.UNUSED;
 	}
 
-	private static final RandomDataGenerator RANDOM_DATA_GENERATOR = new RandomDataGenerator();
+	// private static final RandomDataGenerator RANDOM_DATA_GENERATOR = new
+	// RandomDataGenerator();
 
 	/*
 	 * (non-Javadoc)
@@ -134,8 +151,11 @@ public class UinGeneratorImpl implements UinGenerator {
 	 */
 	private String generateSingleId(int generatedIdLength, long lowerBound, long upperBound) {
 		byte[] randomSeedBytes = new byte[generatedIdLength];
+		if(random==null) {
+			initializeSecureRandom();
+		}
 		random.nextBytes(randomSeedBytes);
-		String generatedID = new BigInteger(randomSeedBytes).abs().toString().substring(0,generatedIdLength);
+		String generatedID = new BigInteger(randomSeedBytes).abs().toString().substring(0, generatedIdLength);
 		String verhoeffDigit = ChecksumUtils.generateChecksumDigit(String.valueOf(generatedID));
 		return appendChecksum(generatedIdLength, generatedID, verhoeffDigit);
 	}
