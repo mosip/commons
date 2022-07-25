@@ -220,11 +220,7 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-<<<<<<< HEAD
-    <kernel.core.version>1-2-1-j17-SNAPSHOT</kernel.core.version>
-=======
-		<kernel.core.version>1-2-1-j17-SNAPSHOT</kernel.core.version>
->>>>>>> 6e4067c850 (modified the version for j17)
+    	<kernel.core.version>1-2-1-j17-SNAPSHOT</kernel.core.version>
 		<jacoco.maven.plugin.version>0.8.8</jacoco.maven.plugin.version>
 		<powermock.version>2.0.0</powermock.version>
 	</properties>
