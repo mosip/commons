@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan({ "io.mosip.kernel.*" })
+@ComponentScan({ "io.mosip.kernel.idgenerator.regcenterid.*" })
 public class RegistrationCenterIdGeneratorBootApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RegistrationCenterIdGeneratorBootApplication.class, args);
