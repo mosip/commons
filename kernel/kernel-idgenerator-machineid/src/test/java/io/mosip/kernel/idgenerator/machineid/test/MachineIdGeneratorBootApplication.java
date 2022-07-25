@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan({ "io.mosip.kernel.*" })
+@ComponentScan({ "io.mosip.kernel.idgenerator.machineid.*" })
 public class MachineIdGeneratorBootApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(MachineIdGeneratorBootApplication.class, args);

@@ -245,6 +245,13 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
+	<!--  added for junit 4 working with junit 5  -->
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<version>5.6.3</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<distributionManagement>
@@ -385,9 +392,7 @@
 					<skipTests>false</skipTests>
 					<skip>false</skip>
 					<argLine>
-						${argLine} --add-opens
-						java.xml/jdk.xml.internal=ALL-UNNAMED
-						--illegal-access=permit
+					 --add-opens java.base/java.lang=ALL-UNNAMED
 					</argLine>
 				</configuration>
 			</plugin>

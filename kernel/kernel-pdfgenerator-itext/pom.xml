@@ -202,7 +202,7 @@
 		<velocity.tool.version>2.0</velocity.tool.version>
 		<datamapper.orika>1.5.2</datamapper.orika>
 		<modelmapper.version>2.1.1</modelmapper.version>
-		<bouncycastle.version>1.46</bouncycastle.version>
+		<bouncycastle.version>1.49</bouncycastle.version>
 		<icu4j.version>63.1</icu4j.version>
 		<seventeam-otp.version>1.0.0</seventeam-otp.version>
 		<google.zxing.version>3.3.3</google.zxing.version>
@@ -226,6 +226,16 @@
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
 			<version>${kernel.core.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcprov-jdk16</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcpkix-jdk15on</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.itextpdf</groupId>
@@ -249,15 +259,23 @@
 			<version>${itext.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcprov-jdk16</artifactId>
-			<version>${bouncycastle.version}</version>
-		</dependency>
-	<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
 			<scope>test</scope>
+		</dependency>
+		<!-- added for junit 4 working with junit 5 -->
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<version>5.6.3</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcpkix-jdk15on</artifactId>
+			<version>${bouncycastle.version}</version>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 	<distributionManagement>

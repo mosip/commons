@@ -220,7 +220,11 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
+<<<<<<< HEAD
     <kernel.core.version>1-2-1-j17-SNAPSHOT</kernel.core.version>
+=======
+		<kernel.core.version>1-2-1-j17-SNAPSHOT</kernel.core.version>
+>>>>>>> 6e4067c850 (modified the version for j17)
 		<jacoco.maven.plugin.version>0.8.8</jacoco.maven.plugin.version>
 		<powermock.version>2.0.0</powermock.version>
 	</properties>
@@ -240,7 +244,6 @@
 			<artifactId>jwks-rsa</artifactId>
 			<version>0.18.0</version>
 		</dependency>
-
 	<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -258,6 +261,13 @@
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-module-junit4</artifactId>
 			<version>${powermock.version}</version>
+			<scope>test</scope>
+		</dependency>
+	<!--  added for junit 4 working with junit 5  -->
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<version>5.6.3</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

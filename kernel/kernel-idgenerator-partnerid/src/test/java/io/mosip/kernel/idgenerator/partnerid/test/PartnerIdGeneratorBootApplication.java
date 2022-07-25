@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
  *
  */
 @SpringBootApplication
-@ComponentScan({ "io.mosip.kernel.*" })
+@ComponentScan({ "io.mosip.kernel.idgenerator.partnerid.*" })
 public class PartnerIdGeneratorBootApplication {
 
 	public static void main(String[] args) {
