@@ -26,7 +26,6 @@ import io.mosip.kernel.authcodeflowproxy.api.exception.ClientException;
 import io.mosip.kernel.authcodeflowproxy.api.exception.ServiceException;
 import io.mosip.kernel.authcodeflowproxy.api.service.LoginService;
 import io.mosip.kernel.authcodeflowproxy.api.service.validator.ValidateTokenHelper;
-import io.mosip.kernel.authcodeflowproxy.api.utils.AuthCodeProxyFlowUtils;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
@@ -84,9 +83,7 @@ public class LoginController {
 		
 		String uri = loginService.login(redirectURI, stateValue);
 		Cookie stateCookie = new Cookie("state", stateValue);
-		stateCookie.setHttpOnly(true);
-		stateCookie.setSecure(true);
-		stateCookie.setPath("/");
+		setCookieParams(stateCookie,true,true,"/");
 		res.addCookie(stateCookie);
 		res.setStatus(302);
 		res.sendRedirect(uri);
@@ -109,7 +106,9 @@ public class LoginController {
 						Errors.TOKEN_NOTPRESENT_ERROR.getErrorMessage() + ": " + ID_TOKEN);
 			}
 			validateToken(idToken);
-			res.addCookie(new Cookie(ID_TOKEN, idToken));
+			Cookie idTokenCookie = new Cookie(ID_TOKEN, idToken);
+			setCookieParams(idTokenCookie,true,true,"/");
+			res.addCookie(idTokenCookie);
 		}
 		res.setStatus(302);
 		String url = new String(Base64.decodeBase64(redirectURI.getBytes()));
@@ -121,6 +120,12 @@ public class LoginController {
 			throw new ServiceException(Errors.ALLOWED_URL_EXCEPTION.getErrorCode(), Errors.ALLOWED_URL_EXCEPTION.getErrorMessage());
 		}
 		res.sendRedirect(url);	
+	}
+
+	private void setCookieParams(Cookie idTokenCookie, boolean isHttpOnly, boolean isSecure,String path) {
+		idTokenCookie.setHttpOnly(isHttpOnly);
+		idTokenCookie.setSecure(isSecure);
+		idTokenCookie.setPath(path);
 	}
 
 	private void validateToken(String accessToken) {
@@ -171,13 +176,6 @@ public class LoginController {
 			throw new ServiceException(Errors.ALLOWED_URL_EXCEPTION.getErrorCode(), Errors.ALLOWED_URL_EXCEPTION.getErrorMessage());
 		}
 		String uri = loginService.logoutUser(token,redirectURI);
-		// remove keycloak locale cookie from keycloak
-		Cookie localeCookie = new Cookie(localeCookieName, "");
-		String issuer = AuthCodeProxyFlowUtils.getissuer(token);
-		String[] issuerSplit=issuer.split("/");
-		localeCookie.setPath(localeCookiePath+issuerSplit[issuerSplit.length-1]+"/");
-		localeCookie.setMaxAge(0);
-		res.addCookie(localeCookie);
 		res.setStatus(302);
 		res.sendRedirect(uri);
 	}
