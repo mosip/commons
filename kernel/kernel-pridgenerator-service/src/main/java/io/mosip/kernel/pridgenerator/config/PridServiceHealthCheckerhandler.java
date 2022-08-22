@@ -17,6 +17,7 @@ import org.springframework.jdbc.support.JdbcUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.mosip.kernel.pridgenerator.constant.EventType;
 import io.mosip.kernel.pridgenerator.constant.HibernatePersistenceConstant;
 import io.mosip.kernel.pridgenerator.constant.PRIDGeneratorConstant;
 import io.mosip.kernel.pridgenerator.constant.PRIDHealthConstants;
@@ -156,7 +157,7 @@ public class PridServiceHealthCheckerhandler implements HealthCheckHandler {
 	 */
 	public void verticleHealthHandler(Future<Status> future, Vertx vertx) {
 
-		vertx.eventBus().send(PRIDGeneratorConstant.PRID_GENERATOR_ADDRESS, PRIDHealthConstants.PING, response -> {
+		vertx.eventBus().send(EventType.CHECKPOOL, PRIDHealthConstants.PING, response -> {
 
 			if (response.succeeded()) {
 				final JsonObject result = resultBuilder.create()

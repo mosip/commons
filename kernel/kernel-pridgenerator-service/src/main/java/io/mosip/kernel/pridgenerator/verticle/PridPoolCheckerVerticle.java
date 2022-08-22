@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
 import io.mosip.kernel.pridgenerator.constant.EventType;
+import io.mosip.kernel.pridgenerator.constant.PRIDHealthConstants;
 import io.mosip.kernel.pridgenerator.constant.PridLifecycleStatus;
 import io.mosip.kernel.pridgenerator.service.PridService;
 import io.vertx.core.AbstractVerticle;
@@ -64,6 +65,7 @@ public class PridPoolCheckerVerticle extends AbstractVerticle {
 				LOGGER.info("event type is send {} eventBus{}", handler.isSend(), eventBus);
 				LOGGER.info("locked generation");
 			}
+			handler.reply(PRIDHealthConstants.ACTIVE);
 		});
 
 		MessageConsumer<String> initPoolConsumer = eventBus.consumer(EventType.INITPOOL);
