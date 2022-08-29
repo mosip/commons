@@ -285,7 +285,7 @@ public class CbeffImplTest {
 						.withType(Arrays.asList(BiometricType.FINGER)).withSubtype(Arrays.asList("Left Thumb"))
 						.withPurpose(PurposeType.ENROLL).withLevel(ProcessedLevelType.RAW)
 						.withCreationDate(LocalDateTime.now(ZoneId.of("UTC"))).build())
-				.withOthers(Arrays.asList(entry))
+				.withOthers(OtherKey.EXCEPTION, "true")
 				.build();
 		exceptionList.add(validThumb);
 		exceptionList.add(exceptionThumb);

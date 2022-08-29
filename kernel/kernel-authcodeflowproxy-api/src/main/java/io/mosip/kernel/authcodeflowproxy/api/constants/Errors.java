@@ -19,21 +19,24 @@ public enum Errors {
 	 * Cannot connect to auth service
 	 */
 
-	CANNOT_CONNECT_TO_AUTH_SERVICE("KER-ACP-004","Problem in connecting to auth service"),
-	
+	CANNOT_CONNECT_TO_AUTH_SERVICE("KER-ACP-004", "Problem in connecting to auth service"),
+
 	/**
 	 * RESPONSE_PARSE_ERROR
 	 */
 	RESPONSE_PARSE_ERROR("KER-ACP-005", "Error occur while parsing error from response"),
-	
+
 	ACESSTOKEN_EXCEPTION("KER-ACP-006", "Error Occured while getting access token from iam"),
-	
+
 	STATE_EXCEPTION("KER-ACP-007", "state is not maching"),
 	
 	REST_EXCEPTION("KER-ACP-008", "Exception occured while consuming service"),
-	INVALID_TOKEN("KER-ATH-401", "Authentication Failed : Invalid Token :"),;
-	
-
+	INVALID_TOKEN("KER-ATH-401", "Authentication Failed : Invalid Token :"),
+	EXCEPTION("KER-ACP-500", "Exception occured "),
+	ALLOWED_URL_EXCEPTION("KER-ACP-009", "url not found in allowed url's"),
+	STATE_NULL_EXCEPTION("KER-ACP-010", "state is null or empty"),
+	STATE_NOT_UUID_EXCEPTION("KER-ACP-011", "state is not uuid"),
+	UNSUPPORTED_ENCODING_EXCEPTION("KER-ACP-012", "unsupported encoding exception :");
 
 	/**
 	 * The error code

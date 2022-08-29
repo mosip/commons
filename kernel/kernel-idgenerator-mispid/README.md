@@ -1,35 +1,14 @@
-# kernel-idgenerator-mispid
+# Kernel Idgenerator MispID
 
-[Background & Design](../../docs/design/kernel/kernel-idgenerator-mispid.md)
+## Overview
+This library provides funtions related to generation of Misp ID.
 
-API Documentation
+## Usage
 
- ```
-mvn javadoc:javadoc
-
- ```
- 
- 
- **Properties to be added in Spring application environment using this component**
- 
- ```
- mosip.kernel.mispid.length=3
- ```
- 
- [application-dev.properties](../../config/application-dev.properties)
-
-
- **Database properties**
- 
-schema:master
-
-table:tspid_seq
-
-
-**Maven Dependency**
+1. Maven Dependency
 
 ```
-		<dependency>
+	<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-idgenerator-mispid</artifactId>
 			<version>${project.version}</version>
@@ -37,12 +16,9 @@ table:tspid_seq
 
 ```
 
+2. Autowire interface TspIdGenerator and call the method generateId().
 
-**Usage Sample:**
-
- Autowire interface TspIdGenerator and call the method generateId().
-
-For example-
+For example:
 
 ```
 @Autowired
@@ -52,8 +28,8 @@ String mispId = mispIdGenerator.generateId();
 
 ```
  
+Response
 
-**Sample MISPID:**
-
+```
 GENERATED MISPID = 100
- 
+``` 

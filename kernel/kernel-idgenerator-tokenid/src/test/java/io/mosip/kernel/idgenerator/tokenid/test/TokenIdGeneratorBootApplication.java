@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
  *
  */
 @SpringBootApplication
-@ComponentScan(basePackages = {"io.mosip.kernel.idgenerator.*", "io.mosip.kernel.crypto.*"})
+@ComponentScan(basePackages = {"io.mosip.kernel.idgenerator.*"})
 public class TokenIdGeneratorBootApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TokenIdGeneratorBootApplication.class, args);

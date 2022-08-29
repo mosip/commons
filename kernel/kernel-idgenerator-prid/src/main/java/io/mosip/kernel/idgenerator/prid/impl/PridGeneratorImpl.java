@@ -1,21 +1,21 @@
 package io.mosip.kernel.idgenerator.prid.impl;
 
 import java.math.BigInteger;
-import java.security.PrivateKey;
-import java.security.PublicKey;
+import java.security.SecureRandom;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
-import io.mosip.kernel.core.crypto.spi.CryptoCoreSpec;
 import io.mosip.kernel.core.idgenerator.spi.PridGenerator;
 import io.mosip.kernel.core.util.ChecksumUtils;
+import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.idgenerator.prid.constant.PridPropertyConstant;
 import io.mosip.kernel.idgenerator.prid.util.PridFilterUtils;
 
@@ -31,9 +31,6 @@ import io.mosip.kernel.idgenerator.prid.util.PridFilterUtils;
  */
 @Component
 public class PridGeneratorImpl implements PridGenerator<String> {
-
-	@Autowired
-	private CryptoCoreSpec<byte[], byte[], SecretKey, PublicKey, PrivateKey, String> cryptoCore;
 
 	boolean init = true;
 
@@ -54,14 +51,36 @@ public class PridGeneratorImpl implements PridGenerator<String> {
 	@Value("${mosip.kernel.prid.length}")
 	private int pridLength;
 
+	@Value("${mosip.idgen.prid.secure-random-reinit-frequency:45}")
+	private int reInitSecureRandomFrequency;
+
 	@PostConstruct
 	private void init() {
-		randomSeed = RandomStringUtils.random(Integer.parseInt(PridPropertyConstant.RANDOM_NUMBER_SIZE.getProperty()),
-				PridPropertyConstant.ZERO_TO_NINE.getProperty());
+		ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
+		taskScheduler.setPoolSize(1);
+		taskScheduler.initialize();
+		taskScheduler.scheduleAtFixedRate(new ReInitSecureRandomTask(),
+				TimeUnit.MINUTES.toMillis(reInitSecureRandomFrequency));
+	}
 
+	private class ReInitSecureRandomTask implements Runnable {
+
+		public void run() {
+			initialize();
+		}	
+	}
+	
+	private void initialize() {
+		SecureRandom random = new SecureRandom();
+		byte[] randomSeedBytes = new byte[Integer.parseInt(PridPropertyConstant.RANDOM_NUMBER_SIZE.getProperty())];
+		random.nextBytes(randomSeedBytes);
+		randomSeed = new BigInteger(randomSeedBytes).abs().toString().substring(0,
+				Integer.parseInt(PridPropertyConstant.RANDOM_NUMBER_SIZE.getProperty()));
 		do {
-			counter = RandomStringUtils.random(Integer.parseInt(PridPropertyConstant.RANDOM_NUMBER_SIZE.getProperty()),
-					PridPropertyConstant.ZERO_TO_NINE.getProperty());
+			byte[] counterBytes = new byte[Integer.parseInt(PridPropertyConstant.RANDOM_NUMBER_SIZE.getProperty())];
+			random.nextBytes(counterBytes);
+			counter = new BigInteger(counterBytes).abs().toString().substring(0,
+					Integer.parseInt(PridPropertyConstant.RANDOM_NUMBER_SIZE.getProperty()));
 		} while (counter.charAt(0) == '0');
 	}
 
@@ -82,11 +101,14 @@ public class PridGeneratorImpl implements PridGenerator<String> {
 	 */
 	private String generateRandomId() {
 		String prid = null;
+		if(counter == null) {
+			initialize();
+		}
 		counter = init ? counter : new BigInteger(counter).add(BigInteger.ONE).toString();
 		init = false;
 		SecretKey secretKey = new SecretKeySpec(counter.getBytes(),
 				PridPropertyConstant.ENCRYPTION_ALGORITHM.getProperty());
-		byte[] encryptedData = cryptoCore.symmetricEncrypt(secretKey, randomSeed.getBytes(), null);
+		byte[] encryptedData = CryptoUtil.symmetricEncrypt(secretKey, randomSeed.getBytes());
 		BigInteger bigInteger = new BigInteger(encryptedData);
 		prid = String.valueOf(bigInteger.abs());
 		prid = prid.substring(0, pridLength - 1);

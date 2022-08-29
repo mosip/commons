@@ -3,6 +3,9 @@ package io.mosip.kernel.pridgenerator.verticle;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.mosip.kernel.pridgenerator.config.PridServiceHealthCheckerhandler;
 import io.mosip.kernel.pridgenerator.constant.EventType;
 import io.mosip.kernel.pridgenerator.constant.PRIDGeneratorConstant;
 import io.mosip.kernel.pridgenerator.router.PridFetcherRouter;
@@ -51,12 +54,20 @@ public class PridFetcherVerticle extends AbstractVerticle {
 		Router parentRouter = Router.router(vertx);
 		Router metricRouter = Router.router(vertx);
 		metricRouter.route("/metrics").handler(PrometheusScrapingHandler.create());
+		Router healthCheckRouter = Router.router(vertx);
+		PridServiceHealthCheckerhandler healthCheckHandler = new PridServiceHealthCheckerhandler(vertx, null,
+				new ObjectMapper(), environment);
+		healthCheckRouter.get(PRIDGeneratorConstant.HEALTH_ENDPOINT)
+				.handler(healthCheckHandler);
+		healthCheckHandler.register("db", healthCheckHandler::databaseHealthChecker);
+		healthCheckHandler.register("diskspace", healthCheckHandler::dispSpaceHealthChecker);
+		healthCheckHandler.register("pridgenerator", f -> healthCheckHandler.verticleHealthHandler(f, vertx));
 		// giving the root to parent router
 		parentRouter.route().consumes(PRIDGeneratorConstant.APPLICATION_JSON)
 				.produces(PRIDGeneratorConstant.APPLICATION_JSON);
-		// System.out.println(environment.getProperty(PRIDGeneratorConstant.SERVER_SERVLET_PATH));
 		// mount all the routers to parent router
 		parentRouter.mountSubRouter(environment.getProperty(PRIDGeneratorConstant.SERVER_SERVLET_PATH), metricRouter);
+		parentRouter.get(environment.getProperty(PRIDGeneratorConstant.SERVER_SERVLET_PATH)+PRIDGeneratorConstant.HEALTH_ENDPOINT).handler(healthCheckHandler);
 		parentRouter.mountSubRouter(
 				environment.getProperty(PRIDGeneratorConstant.SERVER_SERVLET_PATH) + PRIDGeneratorConstant.PRID,
 				pridFetcherRouter.createRouter(vertx));

@@ -1,6 +1,6 @@
 package io.mosip.kernel.websub.api.verifier;
 
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * This is a helper class to verify intent after subscribe and unsubscribe
@@ -10,11 +10,17 @@ import org.springframework.stereotype.Component;
  * @author Urvil Joshi
  *
  */
-@Component
 public class IntentVerifier {
 
+	@Value("${mosip.kernel.websub-db-version-client-behaviour-enable:false}")
+	private boolean isWebsubDbVersionClientBehaviourEnable;
+
 	public boolean isIntentVerified(String topic, String mode, String topicReq, String modeReq) {
-		return (topic.equals(topicReq) && mode.equals(modeReq));
+		if (!isWebsubDbVersionClientBehaviourEnable) {
+			return topic.equals(topicReq);
+		} else {
+			return (topic.equals(topicReq) && mode.equals(modeReq));
+		}
 	}
 
 }

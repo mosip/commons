@@ -7,7 +7,8 @@ public enum ErrorCode {
 	NO_CONSTRUCTOR_FOUND("BIO_SDK_003", "Constructor not found for %s with args %s"),
 	NO_SDK_CONFIG("BIO_SDK_004", "SDK Configurations not found"),
 	INVALID_SDK_VERSION("BIO_SDK_005", "Configured SDK version is different"),
-	UNSUPPORTED_OPERATION("BIO_SDK_006", "Unsupported Operation");
+	UNSUPPORTED_OPERATION("BIO_SDK_006", "Unsupported Operation"),
+	SDK_REGISTRY_EMPTY("BIO_SDK_007", "SDK provider registry is empty!");
 	
 	
 	private String errorCode;
@@ -21,14 +22,9 @@ public enum ErrorCode {
 	public String getErrorCode() {
 		return errorCode;
 	}
-	public void setErrorCode(String errorCode) {
-		this.errorCode = errorCode;
-	}
+
 	public String getErrorMessage() {
 		return errorMessage;
-	}
-	public void setErrorMessage(String errorMessage) {
-		this.errorMessage = errorMessage;
 	}
 
 }

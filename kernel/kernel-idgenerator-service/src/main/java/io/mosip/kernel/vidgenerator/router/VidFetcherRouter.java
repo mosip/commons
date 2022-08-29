@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import io.mosip.kernel.auth.defaultadapter.handler.AuthHandler;
+import io.mosip.kernel.core.authmanager.authadapter.spi.VertxAuthenticationProvider;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -58,7 +58,7 @@ public class VidFetcherRouter {
 	private ObjectMapper objectMapper;
 	
 	@Autowired
-    private AuthHandler authHandler;
+    private VertxAuthenticationProvider authHandler;
 	
 	/**
 	 * Creates router for vertx server
@@ -69,7 +69,7 @@ public class VidFetcherRouter {
 	public Router createRouter(Vertx vertx) {
 		LOGGER.info("worker executor pool {}", workerExecutorPool);
 		Router router = Router.router(vertx);
-		authHandler.addAuthFilter(router, "/", HttpMethod.GET, "RESIDENT,REGISTRATION_PROCESSOR");
+		authHandler.addAuthFilter(router, "/", HttpMethod.GET, "ID_REPOSITORY");
 		router.get().handler(routingContext -> {
 			LOGGER.info("publishing event to CHECKPOOL");
 			// send a publish event to vid pool checker
@@ -108,7 +108,7 @@ public class VidFetcherRouter {
 				}
 				VidFetchResponseDto vidFetchResponseDto = null;
 				try {
-					vidFetchResponseDto = vidService.fetchVid(expiryTime);
+					vidFetchResponseDto = vidService.fetchVid(expiryTime, routingContext);
 				} catch (VidGeneratorServiceException exception) {
 					ServiceError error = new ServiceError(exception.getErrorCode(), exception.getMessage());
 					setError(routingContext, error, blockingCodeHandler);

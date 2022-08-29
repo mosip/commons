@@ -3,6 +3,10 @@ package io.mosip.kernel.idgenerator.verticle;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.mosip.kernel.idgenerator.config.AccessLogHandler;
+import io.mosip.kernel.idgenerator.config.UinServiceHealthCheckerhandler;
 import io.mosip.kernel.idgenerator.config.UinServiceRouter;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorConstant;
 import io.mosip.kernel.vidgenerator.constant.EventType;
@@ -14,6 +18,7 @@ import io.vertx.core.http.HttpServer;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 import io.vertx.micrometer.PrometheusScrapingHandler;
 
 /**
@@ -59,11 +64,24 @@ public class HttpServerVerticle extends AbstractVerticle {
 
 		// Parent router so that global options can be applied to it in future
 		Router parentRouter = Router.router(vertx);
+		AccessLogHandler accessLogHandler = new AccessLogHandler();
+		parentRouter.route().handler(routingContext -> {
+			addAccessLogHandler(routingContext,accessLogHandler);
+		});
 		Router metricRouter = Router.router(vertx);
-		metricRouter.route("/metrics").handler(PrometheusScrapingHandler.create());
 		// giving the root to parent router
 		parentRouter.route().consumes(VIDGeneratorConstant.APPLICATION_JSON)
 				.produces(VIDGeneratorConstant.APPLICATION_JSON);
+		Router healthCheckRouter = Router.router(vertx);
+		UinServiceHealthCheckerhandler healthCheckHandler = new UinServiceHealthCheckerhandler(vertx, null,
+				new ObjectMapper(), environment);
+		healthCheckRouter.get(UinGeneratorConstant.HEALTH_ENDPOINT)
+				.handler(healthCheckHandler);
+		healthCheckHandler.register("db", healthCheckHandler::databaseHealthChecker);
+		healthCheckHandler.register("diskspace", healthCheckHandler::dispSpaceHealthChecker);
+		healthCheckHandler.register("idgenerator", f -> healthCheckHandler.verticleHealthHandler(f, vertx));
+
+		metricRouter.route("/metrics").handler(PrometheusScrapingHandler.create());
 
 		// mount all the routers to parent router
 		parentRouter.mountSubRouter(
@@ -72,7 +90,7 @@ public class HttpServerVerticle extends AbstractVerticle {
 		parentRouter.mountSubRouter(
 				environment.getProperty(VIDGeneratorConstant.SERVER_SERVLET_PATH) + UinGeneratorConstant.VUIN,
 				uinServiceRouter.createRouter(vertx));
-		
+		parentRouter.mountSubRouter(environment.getProperty(VIDGeneratorConstant.SERVER_SERVLET_PATH), healthCheckRouter);
 		parentRouter.mountSubRouter(environment.getProperty(VIDGeneratorConstant.SERVER_SERVLET_PATH), metricRouter);
 
 		httpServer.requestHandler(parentRouter);
@@ -87,4 +105,17 @@ public class HttpServerVerticle extends AbstractVerticle {
 			}
 		});
 	}
+
+	private void addAccessLogHandler(final RoutingContext context, AccessLogHandler accessLogHandler) {
+
+		long startMillis = System.currentTimeMillis();
+
+		context.addBodyEndHandler(x -> accessLogHandler.log(context, startMillis));
+
+		context.next();
+
+	}
+
+	
+
 }

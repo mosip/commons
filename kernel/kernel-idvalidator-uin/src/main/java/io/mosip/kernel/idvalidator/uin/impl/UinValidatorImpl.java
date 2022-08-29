@@ -61,7 +61,7 @@ public class UinValidatorImpl implements UinValidator<String> {
 	 * id. For example if limit is 2, then 11 and 1x1 is not allowed in id (x is any
 	 * digit)
 	 */
-	@Value("${mosip.kernel.uin.length.repeating-limit:-1}")
+	@Value("${mosip.kernel.uin.length.repeating-limit:10}")
 	private int repeatingLimit;
 
 	/**
@@ -135,7 +135,7 @@ public class UinValidatorImpl implements UinValidator<String> {
 		 * <b>\1</b> matches the same text as most recently matched by the 1st capturing
 		 * group<br/>
 		 */
-		String repeatingRegEx = "(\\d)\\d{0," + (repeatingLimit - 1) + "}\\1";
+		String repeatingRegEx = "([0-9])\\1{"+repeatingLimit+"}";
 		/**
 		 * Regex for matching repeating block of digits like 482xx482, 4827xx4827 (x is
 		 * any digit).<br/>
@@ -382,5 +382,5 @@ public class UinValidatorImpl implements UinValidator<String> {
 	private boolean restrictedAdminFilter(String id) {
 		return restrictedAdminDigits.parallelStream().anyMatch(id::contains);
 	}
-
+	
 }

@@ -1,0 +1,17 @@
+\c mosip_regdevice 
+
+GRANT CONNECT
+   ON DATABASE mosip_regdevice
+   TO regdeviceuser;
+
+GRANT USAGE
+   ON SCHEMA regdevice
+   TO regdeviceuser;
+
+GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES
+   ON ALL TABLES IN SCHEMA regdevice
+   TO regdeviceuser;
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA regdevice 
+	GRANT SELECT,INSERT,UPDATE,DELETE,REFERENCES ON TABLES TO regdeviceuser;
+

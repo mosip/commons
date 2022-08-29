@@ -29,7 +29,6 @@ import io.mosip.kernel.websub.api.exception.WebSubClientException;
  * @author Urvil Joshi
  *
  */
-@Component
 public class AuthenticatedContentVerifier {
 
 	private static final String METHOD_SIGNATURE_SPLITTER = "=";

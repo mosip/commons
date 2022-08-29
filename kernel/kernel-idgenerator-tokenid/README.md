@@ -1,16 +1,10 @@
-## kernel-idgenerator-tokenid
+# Kernel Idgenerator Token ID
 
-[Background & Design](../../docs/design/kernel/kernel-idgenerator-tokenid.md)
+## Overview
+This library provides funtions related to generation of Token ID.
 
-[API Documentation]
-
-
-```
- mvn javadoc:javadoc
-
- ```
- 
- **Maven Dependency**
+## Usage  
+1. Maven Dependency
 
 ```
 	<dependency>
@@ -21,34 +15,7 @@
 
 ```
 
-** Properties to be added in parent Spring Application environment **
-
-```
-#-----------------------------TOKEN-ID Properties---------------------------------
-#lenght of the token id
-mosip.kernel.tokenid.length=36
-
-# Crypto asymmetric algorithm name
-mosip.kernel.crypto.asymmetric-algorithm-name=RSA
-
-#Crypto symmetric algorithm name
-mosip.kernel.crypto.symmetric-algorithm-name=AES
-```
-
-[application-dev.properties](../../config/application-dev.properties)
-
-
-** Database Properties **
-
-```
-Schema : ida
-
-Tables : token_seed , token_seq
-
-```
-
-
-**Sample**
+2. Sample request
  
   ```
 //Autowire the interface TokenIdGenerator
@@ -60,10 +27,12 @@ Tables : token_seed , token_seq
   String tokenId = tokenIdGenerator.generateId();
   
 ```
-**Sample TokenID:**
 
+Response:
+
+```
 Generated tokenId: 526900409300563849276960763148952762
-
+```
 
 
 

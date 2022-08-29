@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import io.mosip.kernel.auth.defaultadapter.handler.AuthHandler;
+import io.mosip.kernel.core.authmanager.authadapter.spi.VertxAuthenticationProvider;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
@@ -67,7 +67,7 @@ public class UinServiceRouter {
 	ObjectMapper objectMapper;
 
 	@Autowired
-	private AuthHandler authHandler;
+	private VertxAuthenticationProvider authHandler;
 
 	@Autowired
 	private SignatureUtil signatureUtil;
@@ -99,11 +99,11 @@ public class UinServiceRouter {
 			routingContext.response().headers().add(CONTENT_TYPE, UinGeneratorConstant.APPLICATION_JSON);
 			routingContext.next();
 		});
-		authHandler.addAuthFilter(router, "/", HttpMethod.GET, "REGISTRATION_PROCESSOR");
+		authHandler.addAuthFilter(router, "/", HttpMethod.GET, "ID_REPOSITORY");
 		router.get().handler(routingContext -> {
 			getRouter(vertx, routingContext, isSignEnable, profile, router, workerExecutorPool);
 		});
-		authHandler.addAuthFilter(router, "/", HttpMethod.PUT, "REGISTRATION_PROCESSOR");
+		authHandler.addAuthFilter(router, "/", HttpMethod.PUT, "ID_REPOSITORY");
 		router.route().handler(BodyHandler.create());
 		router.put().consumes(UinGeneratorConstant.APPLICATION_JSON).handler(this::updateRouter);
 
@@ -134,7 +134,7 @@ public class UinServiceRouter {
 			try {
 				checkAndGenerateUins(vertx);
 				UinResponseDto uin = new UinResponseDto();
-				uin = uinGeneratorService.getUin();
+				uin = uinGeneratorService.getUin(routingContext);
 				reswrp.setResponsetime(DateUtils.convertUTCToLocalDateTime(timestamp));
 				reswrp.setResponse(uin);
 				reswrp.setErrors(null);
@@ -163,11 +163,13 @@ public class UinServiceRouter {
 					} catch (SignatureUtilClientException e1) {
 						ExceptionUtils.logRootCause(e1);
 						setError(routingContext, e1.getList().get(0));
+						return;
 					} catch (SignatureUtilException e1) {
 						ExceptionUtils.logRootCause(e1);
 						ServiceError error = new ServiceError(
 								UinGeneratorErrorCode.INTERNAL_SERVER_ERROR.getErrorCode(), e1.toString());
 						setError(routingContext, error);
+						return;
 					}
 					signedData = cryptoManagerResponseDto.getData();
 					routingContext.response().putHeader("response-signature", signedData);
@@ -218,7 +220,7 @@ public class UinServiceRouter {
 			return;
 		}
 		try {
-			uinresponse = uinGeneratorService.updateUinStatus(uin);
+			uinresponse = uinGeneratorService.updateUinStatus(uin, routingContext);
 			ResponseWrapper<UinStatusUpdateReponseDto> reswrp = new ResponseWrapper<>();
 			reswrp.setResponse(uinresponse);
 			reswrp.setId(reqwrp.getId());
@@ -305,6 +307,8 @@ public class UinServiceRouter {
 			}
 		}
 		try {
+			routingContext.response().putHeader("content-type", UinGeneratorConstant.APPLICATION_JSON)
+					.setStatusCode(200).end(objectMapper.writeValueAsString(errorResponse));
 			blockingHandler.fail(objectMapper.writeValueAsString(errorResponse));
 		} catch (JsonProcessingException e1) {
 

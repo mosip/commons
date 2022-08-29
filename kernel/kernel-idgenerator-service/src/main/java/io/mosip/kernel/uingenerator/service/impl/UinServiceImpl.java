@@ -13,7 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.mosip.kernel.auth.defaultadapter.handler.AuthHandler;
+import io.mosip.kernel.core.authmanager.authadapter.spi.VertxAuthenticationProvider;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorConstant;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorErrorCode;
@@ -30,6 +30,7 @@ import io.mosip.kernel.uingenerator.service.UinService;
 import io.mosip.kernel.uingenerator.util.UINMetaDataUtil;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import io.vertx.ext.web.RoutingContext;
 
 /**
  * @author Dharmesh Khandelwal
@@ -62,7 +63,7 @@ public class UinServiceImpl implements UinService {
 	private UINMetaDataUtil metaDataUtil;
 	
 	@Autowired
-	private AuthHandler authHandler;
+	private VertxAuthenticationProvider authHandler;
 
 	/*
 	 * (non-Javadoc)
@@ -71,11 +72,11 @@ public class UinServiceImpl implements UinService {
 	 */
 	@Transactional
 	@Override
-	public UinResponseDto getUin() {
+	public UinResponseDto getUin(RoutingContext routingContext) {
 		UinResponseDto uinResponseDto = new UinResponseDto();
 		UinEntity uinBean = uinRepository.findFirstByStatus(UinGeneratorConstant.UNUSED);
 		if (uinBean != null) {
-			uinRepository.updateStatus(UinGeneratorConstant.ISSUED, authHandler.getContextUser(),
+			uinRepository.updateStatus(UinGeneratorConstant.ISSUED, authHandler.getContextUser(routingContext),
 					DateUtils.getUTCCurrentDateTime(), uinBean.getUin());
 			uinResponseDto.setUin(uinBean.getUin());
 		} else {
@@ -95,12 +96,12 @@ public class UinServiceImpl implements UinService {
 	 * vertx.core.json.JsonObject)
 	 */
 	@Override
-	public UinStatusUpdateReponseDto updateUinStatus(UinEntity uinAck) {
+	public UinStatusUpdateReponseDto updateUinStatus(UinEntity uinAck, RoutingContext routingContext) {
 		UinStatusUpdateReponseDto uinResponseDto = new UinStatusUpdateReponseDto();
 		UinEntity existingUin = uinRepository.findByUin(uinAck.getUin());
 		if (existingUin != null) {
 			if (UinGeneratorConstant.ISSUED.equals(existingUin.getStatus())) {
-				metaDataUtil.setUpdateMetaData(existingUin);
+				metaDataUtil.setUpdateMetaData(existingUin, routingContext);
 				if (UinGeneratorConstant.ASSIGNED.equals(uinAck.getStatus())) {
 					existingUin.setStatus(UinGeneratorConstant.ASSIGNED);
 					uinRepository.save(existingUin);
@@ -139,5 +140,5 @@ public class UinServiceImpl implements UinService {
 	Optional<UinEntityAssigned> uinEntityAssignedOptional=uinRepositoryAssigned.findById(uin);
 	return uinEntityAssignedOptional.isPresent();
 	}
-
+	
 }

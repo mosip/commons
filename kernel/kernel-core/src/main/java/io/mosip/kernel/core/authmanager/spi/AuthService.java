@@ -32,7 +32,8 @@ import io.mosip.kernel.core.authmanager.model.IndividualIdDto;
  */
 public interface AuthService extends AuthZService, AuthNService {
 
-	public RefreshTokenResponse refreshToken(String refereshToken,String refreshToken, RefreshTokenRequest refreshTokenRequest) throws Exception;
+	public RefreshTokenResponse refreshToken(String refereshToken, String refreshToken,
+			RefreshTokenRequest refreshTokenRequest) throws Exception;
 
 	public AuthNResponse invalidateToken(String token) throws Exception;
 
@@ -44,26 +45,7 @@ public interface AuthService extends AuthZService, AuthNService {
 
 	public RIdDto getRidBasedOnUid(String userId, String appId) throws Exception;
 
-	public AuthZResponseDto unBlockUser(String userId, String appId) throws Exception;
-
-	public AuthZResponseDto changePassword(String appId, PasswordDto passwordDto) throws Exception;
-
-	public AuthZResponseDto resetPassword(String appId, PasswordDto passwordDto) throws Exception;
-
-	public UserNameDto getUserNameBasedOnMobileNumber(String appId, String mobileNumber) throws Exception;
-
 	MosipUserDto registerUser(UserRegistrationRequestDto userCreationRequestDto);
-
-	@Deprecated(forRemoval = true, since = "1.1.4")
-	UserPasswordResponseDto addUserPassword(UserPasswordRequestDto userPasswordRequestDto);
-
-	public UserRoleDto getUserRole(String appId, String userId) throws Exception;
-
-	public MosipUserDto getUserDetailBasedonMobileNumber(String appId, String mobileNumber) throws Exception;
-
-	public ValidationResponseDto validateUserName(String appId, String userName);
-
-	public UserDetailsResponseDto getUserDetailBasedOnUserId(String appId, List<String> userIds);
 
 	public MosipUserDto valdiateToken(String token);
 
@@ -73,8 +55,9 @@ public interface AuthService extends AuthZService, AuthNService {
 			String redirectURI);
 
 	public String getKeycloakURI(String redirectURI, String state);
-	
-	public IndividualIdDto getIndividualIdBasedOnUserID(String userId, String appId) ;
-	
-	public MosipUserListDto getListOfUsersDetails(String realmId,String roleName, int pageStart, int pageFetch, String email,String firstName, String lastName, String username);
+
+	public IndividualIdDto getIndividualIdBasedOnUserID(String userId, String appId);
+
+	public MosipUserListDto getListOfUsersDetails(String realmId, String roleName, int pageStart, int pageFetch,
+			String email, String firstName, String lastName, String username, String search);
 }

@@ -17,7 +17,9 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 
 /**
  * Configuration class for LocalDate, LocalTime LocalDateTime.
@@ -36,7 +38,7 @@ public class LocalDateLocalTimeConfig {
 	@Bean
 	@Primary
 	public ObjectMapper serializingObjectMapper() {
-		ObjectMapper objectMapper = new ObjectMapper();
+		ObjectMapper objectMapper = JsonMapper.builder().addModule(new AfterburnerModule()).build();
 		JavaTimeModule javaTimeModule = new JavaTimeModule();
 		javaTimeModule.addSerializer(LocalTime.class, new LocalTimeSerializer());
 		javaTimeModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer());

@@ -1,16 +1,4 @@
--- -------------------------------------------------------------------------------------------------
--- Database Name: mosip_kernel
--- Table Name 	: kernel.uin_assigned
--- Purpose    	: UIN ASSIGNED: Stores pre-generated UINs that are assigned to an individual as part of registration process..
---           
--- Create By   	: Sadanandegowda DM
--- Created Date	: 20-May-2020
--- 
--- Modified Date        Modified By         Comments / Remarks
--- ------------------------------------------------------------------------------------------
--- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Mar-2021		Ram Bhatt	    Reverting is_deleted not null changes
--- ------------------------------------------------------------------------------------------
+
 
 -- object: kernel.uin_assigned | type: TABLE --
 -- DROP TABLE IF EXISTS kernel.uin_assigned CASCADE;
