@@ -51,6 +51,9 @@ public class EmailNotificationServiceImpl implements EmailNotification<Multipart
 	
 	@Value("${mosip.kernel.mail.proxy-mail:false}")
 	private boolean isProxytrue;
+	
+	@Value("${mosip.kernel.mail.content.html.enable:true}")
+	private boolean isHtmlEnable;
 
 	/**
 	 * SendEmail
@@ -105,7 +108,7 @@ public class EmailNotificationServiceImpl implements EmailNotification<Multipart
 			if (mailSubject != null) {
 				helper.setSubject(mailSubject);
 			}
-			helper.setText(mailContent);
+			helper.setText(mailContent,isHtmlEnable);
 		} catch (MessagingException exception) {
 			throw new NotificationException(exception);
 		}
