@@ -9,7 +9,7 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,9 +41,11 @@ import io.vertx.ext.web.RoutingContext;
  */
 @Component
 public class UinServiceImpl implements UinService {
-
+	
 	private Logger LOGGER = LoggerFactory.getLogger(UinServiceImpl.class);
 
+	@Value("${mosip.kernel.uin-transfer-limit:20000}")
+	private int uinTransferLimit;
 	/**
 	 * Field for {@link #uinRepository}
 	 */
@@ -128,7 +130,7 @@ public class UinServiceImpl implements UinService {
 	@Transactional(transactionManager = "transactionManager")
 	@Override
 	public void transferUin() {
-		List<UinEntity> uinEntities=uinRepository.findByStatus(UinGeneratorConstant.ASSIGNED);
+		List<UinEntity> uinEntities=uinRepository.findByStatus(UinGeneratorConstant.ASSIGNED,uinTransferLimit);
 		List<UinEntityAssigned> uinEntitiesAssined = modelMapper.map(uinEntities, new TypeToken<List<UinEntityAssigned>>() {}.getType());
 		uinRepositoryAssigned.saveAll(uinEntitiesAssined);
 	    uinRepository.deleteAll(uinEntities);
