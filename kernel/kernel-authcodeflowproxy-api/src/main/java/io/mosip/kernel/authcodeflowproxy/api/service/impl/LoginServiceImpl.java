@@ -96,9 +96,9 @@ public class LoginServiceImpl implements LoginService {
 	
 	@Value("${mosip.iam.end-session-endpoint-path:/protocol/openid-connect/logout}")
 	private String endSessionEndpointPath;
-	
 
-	
+	@Value("${mosip.iam.module.login_flow.claim}")
+	private String claim;
 
 	@Autowired
 	private RestTemplate restTemplate;
@@ -116,6 +116,7 @@ public class LoginServiceImpl implements LoginService {
 		uriComponentsBuilder.queryParam(Constants.STATE, state);
 		uriComponentsBuilder.queryParam(Constants.RESPONSE_TYPE, responseType);
 		uriComponentsBuilder.queryParam(Constants.SCOPE, scope);
+		uriComponentsBuilder.queryParam(Constants.CLAIM, claim);
 
 		return uriComponentsBuilder.buildAndExpand(pathParam).toString();
 

@@ -36,4 +36,6 @@ public class Constants {
 	public static final String ID_TOKEN_HINT = "id_token_hint";
 	
 	public static final String WHITESPACE = " ";
+
+	public static final String CLAIM = "claim";
 }
