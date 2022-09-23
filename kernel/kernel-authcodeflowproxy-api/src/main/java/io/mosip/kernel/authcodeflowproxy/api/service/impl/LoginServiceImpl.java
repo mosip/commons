@@ -12,6 +12,7 @@ import javax.servlet.http.Cookie;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -97,14 +98,14 @@ public class LoginServiceImpl implements LoginService {
 	@Value("${mosip.iam.end-session-endpoint-path:/protocol/openid-connect/logout}")
 	private String endSessionEndpointPath;
 
-	@Value("${mosip.iam.module.login_flow.claim}")
-	private String claim;
-
 	@Autowired
 	private RestTemplate restTemplate;
 
 	@Autowired
 	private ObjectMapper objectMapper;
+
+	@Autowired
+	private Environment environment;
 
 	@Override
 	public String login(String redirectURI, String state) {
@@ -116,10 +117,11 @@ public class LoginServiceImpl implements LoginService {
 		uriComponentsBuilder.queryParam(Constants.STATE, state);
 		uriComponentsBuilder.queryParam(Constants.RESPONSE_TYPE, responseType);
 		uriComponentsBuilder.queryParam(Constants.SCOPE, scope);
-		uriComponentsBuilder.queryParam(Constants.CLAIM, claim);
-
+		String claim = this.environment.getProperty(Constants.CLAIM_PROPERTY);
+		if(claim != null){
+			uriComponentsBuilder.queryParam(Constants.CLAIM, claim);
+		}
 		return uriComponentsBuilder.buildAndExpand(pathParam).toString();
-
 	}
 
 	@Override

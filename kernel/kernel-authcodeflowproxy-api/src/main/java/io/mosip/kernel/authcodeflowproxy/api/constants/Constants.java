@@ -38,4 +38,6 @@ public class Constants {
 	public static final String WHITESPACE = " ";
 
 	public static final String CLAIM = "claim";
+
+	public static final String CLAIM_PROPERTY = "mosip.iam.module.login_flow.claim";
 }
