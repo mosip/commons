@@ -3,8 +3,6 @@ package io.mosip.kernel.biometrics.spi;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.stereotype.Repository;
-
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.biometrics.model.MatchDecision;
@@ -20,7 +18,6 @@ import io.mosip.kernel.biometrics.model.SDKInfo;
  * @author Manoj SP
  * 
  */
-@Repository
 public interface IBioApi {
 	
 	/**
