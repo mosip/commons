@@ -1,27 +1,22 @@
 package io.mosip.kernel.authcodeflowproxy.api.test.controller;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.isA;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.net.URI;
-import java.time.Instant;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
-import javax.servlet.http.Cookie;
-
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator.Builder;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.SignatureVerificationException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.mosip.kernel.authcodeflowproxy.api.constants.AuthConstant;
 import io.mosip.kernel.authcodeflowproxy.api.constants.Constants;
+import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
+import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponse;
+import io.mosip.kernel.authcodeflowproxy.api.dto.IAMErrorResponseDto;
+import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
+import io.mosip.kernel.authcodeflowproxy.api.service.validator.ValidateTokenHelper;
+import io.mosip.kernel.authcodeflowproxy.api.test.AuthProxyFlowTestBootApplication;
+import io.mosip.kernel.core.exception.ServiceError;
+import io.mosip.kernel.core.http.ResponseWrapper;
+import io.mosip.kernel.core.util.CryptoUtil;
+import io.mosip.kernel.core.util.DateUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,23 +43,25 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.client.RestTemplate;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTCreator.Builder;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.SignatureVerificationException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.servlet.http.Cookie;
+import java.net.URI;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
-import io.mosip.kernel.authcodeflowproxy.api.constants.AuthConstant;
-import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
-import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponse;
-import io.mosip.kernel.authcodeflowproxy.api.dto.IAMErrorResponseDto;
-import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
-import io.mosip.kernel.authcodeflowproxy.api.service.validator.ValidateTokenHelper;
-import io.mosip.kernel.authcodeflowproxy.api.test.AuthProxyFlowTestBootApplication;
-import io.mosip.kernel.core.exception.ServiceError;
-import io.mosip.kernel.core.http.ResponseWrapper;
-import io.mosip.kernel.core.util.CryptoUtil;
-import io.mosip.kernel.core.util.DateUtils;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.isA;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = { AuthProxyFlowTestBootApplication.class })
 @AutoConfigureMockMvc
