@@ -92,7 +92,7 @@ public class LoginController {
 	@GetMapping(value = "/login-redirect/{redirectURI}")
 	public void loginRedirect(@PathVariable("redirectURI") String redirectURI, @RequestParam("state") String state,
 			@RequestParam("session_state") String sessionState, @RequestParam("code") String code,
-			@CookieValue("state") String stateCookie, HttpServletResponse res) throws IOException {
+			@CookieValue("state") String stateCookie, HttpServletRequest req, HttpServletResponse res) throws IOException {
 		AccessTokenResponseDTO jwtResponseDTO = loginService.loginRedirect(state, sessionState, code, stateCookie,
 				redirectURI);
 		String accessToken = jwtResponseDTO.getAccessToken();
