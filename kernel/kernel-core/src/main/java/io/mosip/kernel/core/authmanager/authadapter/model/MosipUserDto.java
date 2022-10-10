@@ -25,17 +25,4 @@ public class MosipUserDto {
 	private String role;
 	private String rId;
 	private String token;
-	private String idToken;
-
-	public MosipUserDto(String userId, String mobile, String mail, String langCode, String userPassword, String name, String role, String rId, String token) {
-		this.userId = userId;
-		this.mobile = mobile;
-		this.mail = mail;
-		this.langCode = langCode;
-		this.userPassword = userPassword;
-		this.name = name;
-		this.role = role;
-		this.rId = rId;
-		this.token = token;
-	}
 }
