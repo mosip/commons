@@ -89,6 +89,9 @@ public class LoginServiceImpl implements LoginService {
 	@Value("${mosip.iam.end-session-endpoint-path:/protocol/openid-connect/logout}")
 	private String endSessionEndpointPath;
 
+	@Value("${mosip.iam.module.token.endpoint.private-key-jwt.auth.enabled:false}")
+	private boolean isJwtAuthEnabled;
+
 	@Autowired
 	private RestTemplate restTemplate;
 
@@ -176,7 +179,7 @@ public class LoginServiceImpl implements LoginService {
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add(Constants.GRANT_TYPE, loginFlowName);
 		map.add(Constants.CLIENT_ID, clientID);
-		if(Boolean.parseBoolean(this.environment.getProperty(Constants.PRIVATE_KEY_JWT_AUTH_ENABLED))){
+		if(isJwtAuthEnabled){
 			map.add(Constants.CLIENT_ASSERTION, getClientAssertion());
 		} else{
 			map.add(Constants.CLIENT_SECRET, clientSecret);

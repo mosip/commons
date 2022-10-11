@@ -56,7 +56,5 @@ public class Constants {
 
 	public static final String CLAIM_PROPERTY = "mosip.iam.module.login_flow.claim";
 
-	public static final String PRIVATE_KEY_JWT_AUTH_ENABLED = "mosip.iam.module.token.endpoint.private-key-jwt.auth.enabled";
-
 	public static final String CLIENT_ASSERTION = "client_assertion ";
 }

@@ -10,7 +10,9 @@ import io.mosip.kernel.authcodeflowproxy.api.constants.Constants;
 import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
 import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponse;
 import io.mosip.kernel.authcodeflowproxy.api.dto.IAMErrorResponseDto;
+import io.mosip.kernel.authcodeflowproxy.api.dto.JWTSignatureResponseDto;
 import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
+import io.mosip.kernel.authcodeflowproxy.api.service.LoginService;
 import io.mosip.kernel.authcodeflowproxy.api.service.validator.ValidateTokenHelper;
 import io.mosip.kernel.authcodeflowproxy.api.test.AuthProxyFlowTestBootApplication;
 import io.mosip.kernel.core.exception.ServiceError;
@@ -54,8 +56,7 @@ import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.isA;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
@@ -86,6 +87,9 @@ public class AuthProxyControllerTests {
 	
 	@SpyBean
 	private ValidateTokenHelper validateTokenHelper;
+
+	@SpyBean
+	private LoginService loginService;
 	
 	@Mock
 	private Algorithm mockAlgo;
@@ -100,6 +104,7 @@ public class AuthProxyControllerTests {
 		when(Algorithm.RSA256(Mockito.any(), Mockito.any())).thenReturn(mockAlgo);
 		ReflectionTestUtils.setField(validateTokenHelper, "validateIssuerDomain", false);
 		ReflectionTestUtils.setField(validateTokenHelper, "validateAudClaim", false);
+		ReflectionTestUtils.setField(loginService, "isJwtAuthEnabled", false);
 	}
 
 	@Autowired
@@ -494,13 +499,13 @@ public class AuthProxyControllerTests {
 
 	@Test
 	public void loginRedirectTestWithHash() throws Exception {
-		
+
 
 		Builder jwtbuilder = JWT.create();
 		jwtbuilder.withExpiresAt(Date.from(Instant.now().plusSeconds(100)));
 		jwtbuilder.withClaim(AuthConstant.PREFERRED_USERNAME, "12345");
 		jwtbuilder.withClaim(AuthConstant.ISSUER, "http://localhost");
-		Algorithm alg = Mockito.mock(Algorithm.class);
+		Algorithm alg = mock(Algorithm.class);
 		when(alg.getName()).thenReturn("none");
 		String jwtToken = jwtbuilder.sign(alg);
 		
@@ -555,6 +560,40 @@ public class AuthProxyControllerTests {
 				.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
 						.body(objectMapper.writeValueAsString(accessTokenResponse)));
 
+		Cookie cookie = new Cookie("state", "mockstate");
+		mockMvc.perform(get(
+						"/login-redirect/aHR0cDovL2xvY2FsaG9zdDo1MDAwLw==?state=mockstate&session_state=mock-session-state&code=mockcode&claims=mockClaim")
+						.contentType(MediaType.APPLICATION_JSON).cookie(cookie))
+				.andExpect(status().is3xxRedirection());
+	}
+
+	@Test
+	public void loginRedirectWithPrivateKeyJwtAuthEnabled() throws Exception {
+		AccessTokenResponse accessTokenResponse = new AccessTokenResponse();
+		Builder withExpiresAt = JWT.create().withExpiresAt(Date.from(DateUtils.getUTCCurrentDateTime().plusHours(1).toInstant(ZoneOffset.UTC)));
+		withExpiresAt.withClaim(AuthConstant.ISSUER, "http://localhost");
+		ReflectionTestUtils.setField(loginService, "isJwtAuthEnabled", true);
+		when(mockAlgo.getName()).thenReturn("RSA256");
+		String token = withExpiresAt.withClaim("scope", "aaa bbb").sign(mockAlgo);
+		JWTSignatureResponseDto jwtSignatureResponseDto = new JWTSignatureResponseDto();
+		jwtSignatureResponseDto.setJwtSignedData("abc");
+		jwtSignatureResponseDto.setTimestamp(DateUtils.getUTCCurrentDateTime());
+		mockServer.expect(ExpectedCount.once(),
+				requestTo(new URI(
+						"http://localhost/keymanager/v1/keymanager/jwtSign"
+				))).andExpect(method(HttpMethod.POST))
+						.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
+								.body(objectMapper.writeValueAsString(jwtSignatureResponseDto)));
+		accessTokenResponse.setAccess_token(token);
+		accessTokenResponse.setId_token(token);
+		accessTokenResponse.setExpires_in("111");
+		mockServer
+				.expect(ExpectedCount.once(),
+						requestTo(new URI(
+								"http://localhost:8080/keycloak/auth/realms/mosip/protocol/openid-connect/token")))
+				.andExpect(method(HttpMethod.POST))
+				.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
+						.body(objectMapper.writeValueAsString(accessTokenResponse)));
 		Cookie cookie = new Cookie("state", "mockstate");
 		mockMvc.perform(get(
 						"/login-redirect/aHR0cDovL2xvY2FsaG9zdDo1MDAwLw==?state=mockstate&session_state=mock-session-state&code=mockcode&claims=mockClaim")
