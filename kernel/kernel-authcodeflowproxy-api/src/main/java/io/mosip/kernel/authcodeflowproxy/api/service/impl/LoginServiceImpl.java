@@ -21,6 +21,7 @@ import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -40,6 +41,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.*;
 
 @Service
@@ -249,13 +251,20 @@ public class LoginServiceImpl implements LoginService {
 		dataToSignMap.put(Constants.ISS, mosipResidentIDPClient);
 		dataToSignMap.put(Constants.AUD, Constants.BASE_URL);
 		dataToSignMap.put(Constants.EXP, getExpiryTime());
-		dataToSignMap.put(Constants.IAT, DateUtils.getUTCCurrentDateTimeString());
-		return CryptoUtil.encodeToPlainBase64(dataToSignMap.toString().getBytes());
+		dataToSignMap.put(Constants.IAT, getEpochTime());
+		JSONObject jsonObject = objectMapper.convertValue(dataToSignMap, JSONObject.class);
+		return CryptoUtil.encodeToPlainBase64(jsonObject.toString().getBytes());
+	}
+
+	private Object getEpochTime() {
+		Instant instant = Instant.now();
+		return instant.getEpochSecond();
 	}
 
 	private Object getExpiryTime() {
 		int expirySec = Integer.parseInt(Objects.requireNonNull(this.environment.getProperty(Constants.JWT_EXPIRY_TIME)));
-		return DateUtils.addSeconds(java.sql.Timestamp.valueOf(DateUtils.getUTCCurrentDateTime()), expirySec);
+		Instant instant = Instant.now().plusSeconds(expirySec);
+		return instant.getEpochSecond();
 	}
 
 	private IAMErrorResponseDto parseKeyClockErrorResponse(HttpStatusCodeException exception) {
