@@ -3,7 +3,12 @@ package io.mosip.kernel.authcodeflowproxy.api.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.authcodeflowproxy.api.constants.Constants;
 import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
-import io.mosip.kernel.authcodeflowproxy.api.dto.*;
+import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponse;
+import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponseDTO;
+import io.mosip.kernel.authcodeflowproxy.api.dto.IAMErrorResponseDto;
+import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
+import io.mosip.kernel.authcodeflowproxy.api.dto.JWSSignatureRequestDto;
+import io.mosip.kernel.authcodeflowproxy.api.dto.JWTSignatureResponseDto;
 import io.mosip.kernel.authcodeflowproxy.api.exception.AuthRestException;
 import io.mosip.kernel.authcodeflowproxy.api.exception.ClientException;
 import io.mosip.kernel.authcodeflowproxy.api.exception.ServiceException;
@@ -168,7 +173,7 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public AccessTokenResponseDTO loginRedirect(String state, String sessionState, String code, String stateCookie,
-			String redirectURI) {
+												String redirectURI) {
 		// Compare states
 		if (!stateCookie.equals(state)) {
 			throw new ClientException(Errors.STATE_EXCEPTION.getErrorCode(), Errors.STATE_EXCEPTION.getErrorMessage());
