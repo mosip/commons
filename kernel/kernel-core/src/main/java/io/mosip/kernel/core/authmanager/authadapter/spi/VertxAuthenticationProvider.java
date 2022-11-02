@@ -16,6 +16,8 @@ public interface VertxAuthenticationProvider {
 
     public void addAuthFilter(Router router, String path, HttpMethod httpMethod, String commaSepratedRoles);
 
+    public void addAuthFilter(RoutingContext routingContext, String commaSepratedRoles);
+
     public String getContextUser(RoutingContext routingContext);
     
 }
