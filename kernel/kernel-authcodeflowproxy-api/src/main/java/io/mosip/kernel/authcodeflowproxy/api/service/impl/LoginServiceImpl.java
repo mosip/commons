@@ -1,22 +1,31 @@
 package io.mosip.kernel.authcodeflowproxy.api.service.impl;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.Cookie;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.mosip.kernel.authcodeflowproxy.api.constants.Constants;
+import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
+import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponse;
+import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponseDTO;
+import io.mosip.kernel.authcodeflowproxy.api.dto.IAMErrorResponseDto;
+import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
+import io.mosip.kernel.authcodeflowproxy.api.dto.JWSSignatureRequestDto;
+import io.mosip.kernel.authcodeflowproxy.api.dto.JWTSignatureResponseDto;
+import io.mosip.kernel.authcodeflowproxy.api.exception.AuthRestException;
+import io.mosip.kernel.authcodeflowproxy.api.exception.ClientException;
+import io.mosip.kernel.authcodeflowproxy.api.exception.ServiceException;
+import io.mosip.kernel.authcodeflowproxy.api.service.LoginService;
+import io.mosip.kernel.authcodeflowproxy.api.utils.AuthCodeProxyFlowUtils;
+import io.mosip.kernel.core.exception.ExceptionUtils;
+import io.mosip.kernel.core.exception.ServiceError;
+import io.mosip.kernel.core.http.RequestWrapper;
+import io.mosip.kernel.core.http.ResponseWrapper;
+import io.mosip.kernel.core.util.CryptoUtil;
+import io.mosip.kernel.core.util.DateUtils;
+import io.mosip.kernel.core.util.EmptyCheckUtils;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.env.Environment;
+import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -27,23 +36,13 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.mosip.kernel.authcodeflowproxy.api.constants.Constants;
-import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
-import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponse;
-import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponseDTO;
-import io.mosip.kernel.authcodeflowproxy.api.dto.IAMErrorResponseDto;
-import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
-import io.mosip.kernel.authcodeflowproxy.api.exception.AuthRestException;
-import io.mosip.kernel.authcodeflowproxy.api.exception.ClientException;
-import io.mosip.kernel.authcodeflowproxy.api.exception.ServiceException;
-import io.mosip.kernel.authcodeflowproxy.api.service.LoginService;
-import io.mosip.kernel.authcodeflowproxy.api.utils.AuthCodeProxyFlowUtils;
-import io.mosip.kernel.core.exception.ExceptionUtils;
-import io.mosip.kernel.core.exception.ServiceError;
-import io.mosip.kernel.core.http.ResponseWrapper;
-import io.mosip.kernel.core.util.EmptyCheckUtils;
+import javax.servlet.http.Cookie;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.util.*;
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -96,15 +95,18 @@ public class LoginServiceImpl implements LoginService {
 	
 	@Value("${mosip.iam.end-session-endpoint-path:/protocol/openid-connect/logout}")
 	private String endSessionEndpointPath;
-	
 
-	
+	@Value("${mosip.iam.module.token.endpoint.private-key-jwt.auth.enabled:false}")
+	private boolean isJwtAuthEnabled;
 
 	@Autowired
 	private RestTemplate restTemplate;
 
 	@Autowired
 	private ObjectMapper objectMapper;
+
+	@Autowired
+	private Environment environment;
 
 	@Override
 	public String login(String redirectURI, String state) {
@@ -116,9 +118,11 @@ public class LoginServiceImpl implements LoginService {
 		uriComponentsBuilder.queryParam(Constants.STATE, state);
 		uriComponentsBuilder.queryParam(Constants.RESPONSE_TYPE, responseType);
 		uriComponentsBuilder.queryParam(Constants.SCOPE, scope);
-
+		String claim = this.environment.getProperty(Constants.CLAIM_PROPERTY);
+		if(claim != null){
+			uriComponentsBuilder.queryParam(Constants.CLAIM, claim);
+		}
 		return uriComponentsBuilder.buildAndExpand(pathParam).toString();
-
 	}
 
 	@Override
@@ -171,7 +175,7 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public AccessTokenResponseDTO loginRedirect(String state, String sessionState, String code, String stateCookie,
-			String redirectURI) {
+												String redirectURI) {
 		// Compare states
 		if (!stateCookie.equals(state)) {
 			throw new ClientException(Errors.STATE_EXCEPTION.getErrorCode(), Errors.STATE_EXCEPTION.getErrorMessage());
@@ -182,7 +186,11 @@ public class LoginServiceImpl implements LoginService {
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add(Constants.GRANT_TYPE, loginFlowName);
 		map.add(Constants.CLIENT_ID, clientID);
-		map.add(Constants.CLIENT_SECRET, clientSecret);
+		if(isJwtAuthEnabled){
+			map.add(Constants.CLIENT_ASSERTION, getClientAssertion());
+		} else{
+			map.add(Constants.CLIENT_SECRET, clientSecret);
+		}
 		map.add(Constants.CODE, code);
 		map.add(Constants.REDIRECT_URI, this.redirectURI + redirectURI);
 		Map<String, String> pathParam = new HashMap<>();
@@ -212,6 +220,51 @@ public class LoginServiceImpl implements LoginService {
 		accessTokenResponseDTO.setExpiresIn(accessTokenResponse.getExpires_in());
 		accessTokenResponseDTO.setIdToken(accessTokenResponse.getId_token());
 		return accessTokenResponseDTO;
+	}
+
+	private String getClientAssertion() {
+		JWSSignatureRequestDto jwsSignatureRequestDto = new JWSSignatureRequestDto();
+		try {
+			jwsSignatureRequestDto.setDataToSign(getDataToSign());
+			jwsSignatureRequestDto.setReferenceId(this.environment.getProperty(Constants.CLIENT_ASSERTION_REFERENCE_ID));
+			jwsSignatureRequestDto.setApplicationId(this.environment.getProperty(Constants.APPLICATION_ID));
+			jwsSignatureRequestDto.setIncludePayload(Boolean.valueOf(this.environment.getProperty(Constants.IS_INCLUDE_PAYLOAD)));
+			jwsSignatureRequestDto.setIncludeCertificate(Boolean.valueOf(this.environment.getProperty(Constants.IS_INCLUDE_CERTIFICATE)));
+			jwsSignatureRequestDto.setIncludeCertHash(Boolean.valueOf(this.environment.getProperty(Constants.IS_iNCLUDE_CERT_HASH)));
+
+			RequestWrapper<JWSSignatureRequestDto> requestWrapper = new RequestWrapper<>();
+			requestWrapper.setRequest(jwsSignatureRequestDto);
+			requestWrapper.setRequesttime(DateUtils.getUTCCurrentDateTime());
+			UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(Objects.requireNonNull(this.environment.getProperty(Constants.KEYMANAGER_JWT_SIGN_END_POINT)));
+			JWTSignatureResponseDto jwtSignatureResponseDto = restTemplate.postForEntity(uriBuilder.toUriString(), requestWrapper, JWTSignatureResponseDto.class).getBody();
+			return Objects.requireNonNull(jwtSignatureResponseDto).getJwtSignedData();
+		} catch (HttpClientErrorException | HttpServerErrorException e) {
+			throw new ServiceException(Errors.JWT_SIGN_EXCEPTION.getErrorCode(),
+					Errors.JWT_SIGN_EXCEPTION.getErrorMessage());
+		}
+	}
+
+	private String getDataToSign() {
+		Map dataToSignMap = new LinkedHashMap();
+		String mosipResidentIDPClient = this.environment.getProperty(Constants.MOSIP_RESIDENT_IDP_CLIENT_ID);
+		dataToSignMap.put(Constants.SUB, mosipResidentIDPClient);
+		dataToSignMap.put(Constants.ISS, mosipResidentIDPClient);
+		dataToSignMap.put(Constants.AUD, Constants.BASE_URL);
+		dataToSignMap.put(Constants.EXP, getExpiryTime());
+		dataToSignMap.put(Constants.IAT, getEpochTime());
+		JSONObject jsonObject = objectMapper.convertValue(dataToSignMap, JSONObject.class);
+		return CryptoUtil.encodeToPlainBase64(jsonObject.toString().getBytes());
+	}
+
+	private Object getEpochTime() {
+		Instant instant = Instant.now();
+		return instant.getEpochSecond();
+	}
+
+	private Object getExpiryTime() {
+		int expirySec = Integer.parseInt(Objects.requireNonNull(this.environment.getProperty(Constants.JWT_EXPIRY_TIME)));
+		Instant instant = Instant.now().plusSeconds(expirySec);
+		return instant.getEpochSecond();
 	}
 
 	private IAMErrorResponseDto parseKeyClockErrorResponse(HttpStatusCodeException exception) {
