@@ -1,14 +1,15 @@
 package io.mosip.kernel.authcodeflowproxy.api.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.authcodeflowproxy.api.constants.Constants;
 import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
 import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponse;
 import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponseDTO;
 import io.mosip.kernel.authcodeflowproxy.api.dto.IAMErrorResponseDto;
-import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
 import io.mosip.kernel.authcodeflowproxy.api.dto.JWSSignatureRequestDto;
 import io.mosip.kernel.authcodeflowproxy.api.dto.JWTSignatureResponseDto;
+import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
 import io.mosip.kernel.authcodeflowproxy.api.exception.AuthRestException;
 import io.mosip.kernel.authcodeflowproxy.api.exception.ClientException;
 import io.mosip.kernel.authcodeflowproxy.api.exception.ServiceException;
@@ -21,11 +22,15 @@ import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -39,10 +44,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.Cookie;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -101,6 +111,10 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	private RestTemplate restTemplate;
+
+	@Autowired(required = false)
+	@Qualifier("selfTokenRestTemplate")
+	private RestTemplate selfTokenRestTemplate;
 
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -235,9 +249,13 @@ public class LoginServiceImpl implements LoginService {
 			RequestWrapper<JWSSignatureRequestDto> requestWrapper = new RequestWrapper<>();
 			requestWrapper.setRequest(jwsSignatureRequestDto);
 			requestWrapper.setRequesttime(DateUtils.getUTCCurrentDateTime());
-			UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(Objects.requireNonNull(this.environment.getProperty(Constants.KEYMANAGER_JWT_SIGN_END_POINT)));
-			JWTSignatureResponseDto jwtSignatureResponseDto = restTemplate.postForEntity(uriBuilder.toUriString(), requestWrapper, JWTSignatureResponseDto.class).getBody();
-			return Objects.requireNonNull(jwtSignatureResponseDto).getJwtSignedData();
+			HttpEntity<RequestWrapper<JWSSignatureRequestDto>> requestWrapperHttpEntity = new HttpEntity<>(requestWrapper);
+			ResponseWrapper<?> responseWrapper =
+					selfTokenRestTemplate.exchange(URI.create(Objects.requireNonNull(this.environment.getProperty(Constants.KEYMANAGER_JWT_SIGN_END_POINT))),
+							HttpMethod.POST, requestWrapperHttpEntity, ResponseWrapper.class).getBody();
+			Object responseObject = Objects.requireNonNull(responseWrapper).getResponse();
+			JWTSignatureResponseDto responseDto= objectMapper.convertValue(responseObject, JWTSignatureResponseDto.class);
+			return responseDto.getJwtSignedData();
 		} catch (HttpClientErrorException | HttpServerErrorException e) {
 			throw new ServiceException(Errors.JWT_SIGN_EXCEPTION.getErrorCode(),
 					Errors.JWT_SIGN_EXCEPTION.getErrorMessage());
@@ -252,8 +270,14 @@ public class LoginServiceImpl implements LoginService {
 		dataToSignMap.put(Constants.AUD, Constants.BASE_URL);
 		dataToSignMap.put(Constants.EXP, getExpiryTime());
 		dataToSignMap.put(Constants.IAT, getEpochTime());
-		JSONObject jsonObject = objectMapper.convertValue(dataToSignMap, JSONObject.class);
-		return CryptoUtil.encodeToPlainBase64(jsonObject.toString().getBytes());
+		String jsonObject = null;
+		try {
+			jsonObject = objectMapper.writeValueAsString(dataToSignMap);
+		} catch (JsonProcessingException e) {
+			throw new ServiceException(Errors.JSON_PROCESSING_EXCEPTION.getErrorCode(),
+					Errors.JSON_PROCESSING_EXCEPTION.getErrorMessage());
+		}
+		return CryptoUtil.encodeToPlainBase64(jsonObject.getBytes());
 	}
 
 	private Object getEpochTime() {
