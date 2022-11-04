@@ -7,9 +7,9 @@ import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
 import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponse;
 import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponseDTO;
 import io.mosip.kernel.authcodeflowproxy.api.dto.IAMErrorResponseDto;
-import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
 import io.mosip.kernel.authcodeflowproxy.api.dto.JWSSignatureRequestDto;
 import io.mosip.kernel.authcodeflowproxy.api.dto.JWTSignatureResponseDto;
+import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
 import io.mosip.kernel.authcodeflowproxy.api.exception.AuthRestException;
 import io.mosip.kernel.authcodeflowproxy.api.exception.ClientException;
 import io.mosip.kernel.authcodeflowproxy.api.exception.ServiceException;
@@ -22,11 +22,15 @@ import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.core.util.EmptyCheckUtils;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -43,7 +47,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -102,6 +110,10 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	private RestTemplate restTemplate;
+
+	@Autowired(required = false)
+	@Qualifier("selfTokenRestTemplate")
+	private RestTemplate selfTokenRestTemplate;
 
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -237,7 +249,7 @@ public class LoginServiceImpl implements LoginService {
 			requestWrapper.setRequest(jwsSignatureRequestDto);
 			requestWrapper.setRequesttime(DateUtils.getUTCCurrentDateTime());
 			UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(Objects.requireNonNull(this.environment.getProperty(Constants.KEYMANAGER_JWT_SIGN_END_POINT)));
-			JWTSignatureResponseDto jwtSignatureResponseDto = restTemplate.postForEntity(uriBuilder.toUriString(), requestWrapper, JWTSignatureResponseDto.class).getBody();
+			JWTSignatureResponseDto jwtSignatureResponseDto = selfTokenRestTemplate.postForEntity(uriBuilder.toUriString(), requestWrapper, JWTSignatureResponseDto.class).getBody();
 			return Objects.requireNonNull(jwtSignatureResponseDto).getJwtSignedData();
 		} catch (HttpClientErrorException | HttpServerErrorException e) {
 			throw new ServiceException(Errors.JWT_SIGN_EXCEPTION.getErrorCode(),

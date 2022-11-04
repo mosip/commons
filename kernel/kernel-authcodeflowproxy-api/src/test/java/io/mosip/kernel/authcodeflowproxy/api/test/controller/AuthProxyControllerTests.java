@@ -23,21 +23,23 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.client.ExpectedCount;
@@ -56,7 +58,10 @@ import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.isA;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
@@ -96,12 +101,16 @@ public class AuthProxyControllerTests {
 
 	@Mock
 	private Environment environment;
+
+	@MockBean
+	@Qualifier("selfTokenRestTemplate")
+	private RestTemplate selfTokenRestTemplate;
 	
 	@Before
 	public void init() throws Exception {
 		mockServer = MockRestServiceServer.createServer(restTemplate);
 		PowerMockito.mockStatic(Algorithm.class);
-		when(Algorithm.RSA256(Mockito.any(), Mockito.any())).thenReturn(mockAlgo);
+		when(Algorithm.RSA256(any(), any())).thenReturn(mockAlgo);
 		ReflectionTestUtils.setField(validateTokenHelper, "validateIssuerDomain", false);
 		ReflectionTestUtils.setField(validateTokenHelper, "validateAudClaim", false);
 		ReflectionTestUtils.setField(loginService, "isJwtAuthEnabled", false);
@@ -249,7 +258,7 @@ public class AuthProxyControllerTests {
 		withExpiresAt.withClaim(AuthConstant.ISSUER, "http://localhost");
 		
 		when(mockAlgo.getName()).thenReturn("RSA256");
-		doThrow(new SignatureVerificationException(mockAlgo)).when(mockAlgo).verify(Mockito.any());
+		doThrow(new SignatureVerificationException(mockAlgo)).when(mockAlgo).verify(any());
 		String token = withExpiresAt.withClaim("scope", "aaa bbb").sign(mockAlgo);
 		
 		accessTokenResponse.setAccess_token(token);
@@ -570,20 +579,17 @@ public class AuthProxyControllerTests {
 	@Test
 	public void loginRedirectWithPrivateKeyJwtAuthEnabled() throws Exception {
 		AccessTokenResponse accessTokenResponse = new AccessTokenResponse();
+
 		Builder withExpiresAt = JWT.create().withExpiresAt(Date.from(DateUtils.getUTCCurrentDateTime().plusHours(1).toInstant(ZoneOffset.UTC)));
 		withExpiresAt.withClaim(AuthConstant.ISSUER, "http://localhost");
 		ReflectionTestUtils.setField(loginService, "isJwtAuthEnabled", true);
 		when(mockAlgo.getName()).thenReturn("RSA256");
+
 		String token = withExpiresAt.withClaim("scope", "aaa bbb").sign(mockAlgo);
 		JWTSignatureResponseDto jwtSignatureResponseDto = new JWTSignatureResponseDto();
 		jwtSignatureResponseDto.setJwtSignedData("abc");
 		jwtSignatureResponseDto.setTimestamp(DateUtils.getUTCCurrentDateTime());
-		mockServer.expect(ExpectedCount.once(),
-				requestTo(new URI(
-						"http://localhost/keymanager/v1/keymanager/jwtSign"
-				))).andExpect(method(HttpMethod.POST))
-						.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
-								.body(objectMapper.writeValueAsString(jwtSignatureResponseDto)));
+		when(selfTokenRestTemplate.postForEntity((String) any(), (Object) any(), (Class<Object>) any())).thenReturn(ResponseEntity.ok(jwtSignatureResponseDto));
 		accessTokenResponse.setAccess_token(token);
 		accessTokenResponse.setId_token(token);
 		accessTokenResponse.setExpires_in("111");
