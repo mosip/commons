@@ -44,6 +44,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.Cookie;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -248,9 +249,13 @@ public class LoginServiceImpl implements LoginService {
 			RequestWrapper<JWSSignatureRequestDto> requestWrapper = new RequestWrapper<>();
 			requestWrapper.setRequest(jwsSignatureRequestDto);
 			requestWrapper.setRequesttime(DateUtils.getUTCCurrentDateTime());
-			UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(Objects.requireNonNull(this.environment.getProperty(Constants.KEYMANAGER_JWT_SIGN_END_POINT)));
-			JWTSignatureResponseDto jwtSignatureResponseDto = selfTokenRestTemplate.postForEntity(uriBuilder.toUriString(), requestWrapper, JWTSignatureResponseDto.class).getBody();
-			return Objects.requireNonNull(jwtSignatureResponseDto).getJwtSignedData();
+			HttpEntity<RequestWrapper<JWSSignatureRequestDto>> requestWrapperHttpEntity = new HttpEntity<>(requestWrapper);
+			ResponseWrapper<?> responseWrapper =
+					selfTokenRestTemplate.exchange(URI.create(Objects.requireNonNull(this.environment.getProperty(Constants.KEYMANAGER_JWT_SIGN_END_POINT))),
+							HttpMethod.POST, requestWrapperHttpEntity, ResponseWrapper.class).getBody();
+			Object responseObject = Objects.requireNonNull(responseWrapper).getResponse();
+			JWTSignatureResponseDto responseDto= objectMapper.convertValue(responseObject, JWTSignatureResponseDto.class);
+			return responseDto.getJwtSignedData();
 		} catch (HttpClientErrorException | HttpServerErrorException e) {
 			throw new ServiceException(Errors.JWT_SIGN_EXCEPTION.getErrorCode(),
 					Errors.JWT_SIGN_EXCEPTION.getErrorMessage());

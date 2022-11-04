@@ -36,6 +36,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -589,7 +590,10 @@ public class AuthProxyControllerTests {
 		JWTSignatureResponseDto jwtSignatureResponseDto = new JWTSignatureResponseDto();
 		jwtSignatureResponseDto.setJwtSignedData("abc");
 		jwtSignatureResponseDto.setTimestamp(DateUtils.getUTCCurrentDateTime());
-		when(selfTokenRestTemplate.postForEntity((String) any(), (Object) any(), (Class<Object>) any())).thenReturn(ResponseEntity.ok(jwtSignatureResponseDto));
+		ResponseWrapper<JWTSignatureResponseDto> responseWrapper = new ResponseWrapper<>();
+		responseWrapper.setResponse(jwtSignatureResponseDto);
+		when(selfTokenRestTemplate.exchange((URI) any(), (HttpMethod) any(), (HttpEntity<?>) any(), (Class<Object>) any()))
+				.thenReturn(ResponseEntity.ok(responseWrapper));
 		accessTokenResponse.setAccess_token(token);
 		accessTokenResponse.setId_token(token);
 		accessTokenResponse.setExpires_in("111");
