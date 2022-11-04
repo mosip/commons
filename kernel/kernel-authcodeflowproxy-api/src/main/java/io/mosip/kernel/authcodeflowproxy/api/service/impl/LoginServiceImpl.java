@@ -1,5 +1,6 @@
 package io.mosip.kernel.authcodeflowproxy.api.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.authcodeflowproxy.api.constants.Constants;
 import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
@@ -252,8 +253,14 @@ public class LoginServiceImpl implements LoginService {
 		dataToSignMap.put(Constants.AUD, Constants.BASE_URL);
 		dataToSignMap.put(Constants.EXP, getExpiryTime());
 		dataToSignMap.put(Constants.IAT, getEpochTime());
-		JSONObject jsonObject = objectMapper.convertValue(dataToSignMap, JSONObject.class);
-		return CryptoUtil.encodeToPlainBase64(jsonObject.toString().getBytes());
+		String jsonObject = null;
+		try {
+			jsonObject = objectMapper.writeValueAsString(dataToSignMap);
+		} catch (JsonProcessingException e) {
+			throw new ServiceException(Errors.JSON_PROCESSING_EXCEPTION.getErrorCode(),
+					Errors.JSON_PROCESSING_EXCEPTION.getErrorMessage());
+		}
+		return CryptoUtil.encodeToPlainBase64(jsonObject.getBytes());
 	}
 
 	private Object getEpochTime() {
