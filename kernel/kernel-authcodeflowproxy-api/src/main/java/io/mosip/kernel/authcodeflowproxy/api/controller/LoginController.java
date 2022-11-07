@@ -37,6 +37,7 @@ public class LoginController {
 	private static final String ID_TOKEN = "id_token";
 
 	private final static Logger LOGGER= LoggerFactory.getLogger(LoginController.class);
+	private static final String IDTOKEN = "idToken";
 
 	@Value("${auth.token.header:Authorization}")
 	private String authTokenHeader;
@@ -104,7 +105,7 @@ public class LoginController {
 		Cookie cookie = loginService.createCookie(accessToken);
 		res.addCookie(cookie);
 		if(validateIdToken) {
-			String idTokenProperty  = this.environment.getProperty(ID_TOKEN, ID_TOKEN);
+			String idTokenProperty  = this.environment.getProperty(IDTOKEN, ID_TOKEN);
 			String idToken = jwtResponseDTO.getIdToken();
 			if(idToken == null) {
 				throw new ClientException(Errors.TOKEN_NOTPRESENT_ERROR.getErrorCode(),
