@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,8 +57,11 @@ public class LoginController {
 	@Autowired
 	private ValidateTokenHelper validateTokenHelper;
 
+	@Autowired
+	private Environment environment;
+
 	@Value("${auth.validate.id-token:false}")
-	private boolean validateIdToken; 
+	private boolean validateIdToken;
 
 	@GetMapping(value = "/login/{redirectURI}")
 	public void login(@CookieValue(name = "state", required = false) String state,
@@ -103,10 +107,10 @@ public class LoginController {
 			String idToken = jwtResponseDTO.getIdToken();
 			if(idToken == null) {
 				throw new ClientException(Errors.TOKEN_NOTPRESENT_ERROR.getErrorCode(),
-						Errors.TOKEN_NOTPRESENT_ERROR.getErrorMessage() + ": " + ID_TOKEN);
+						Errors.TOKEN_NOTPRESENT_ERROR.getErrorMessage() + ": " + this.environment.getProperty(ID_TOKEN));
 			}
 			validateToken(idToken);
-			Cookie idTokenCookie = new Cookie(ID_TOKEN, idToken);
+			Cookie idTokenCookie = new Cookie(this.environment.getProperty(ID_TOKEN), idToken);
 			setCookieParams(idTokenCookie,true,true,"/");
 			res.addCookie(idTokenCookie);
 		}
