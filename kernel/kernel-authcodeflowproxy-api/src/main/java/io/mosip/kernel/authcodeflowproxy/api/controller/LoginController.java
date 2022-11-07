@@ -104,10 +104,7 @@ public class LoginController {
 		Cookie cookie = loginService.createCookie(accessToken);
 		res.addCookie(cookie);
 		if(validateIdToken) {
-			String idTokenProperty  = this.environment.getProperty(ID_TOKEN);
-			if(idTokenProperty==null){
-				idTokenProperty=ID_TOKEN;
-			}
+			String idTokenProperty  = this.environment.getProperty(ID_TOKEN, ID_TOKEN);
 			String idToken = jwtResponseDTO.getIdToken();
 			if(idToken == null) {
 				throw new ClientException(Errors.TOKEN_NOTPRESENT_ERROR.getErrorCode(),
