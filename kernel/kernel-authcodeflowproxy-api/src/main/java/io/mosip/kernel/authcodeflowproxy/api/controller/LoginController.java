@@ -103,14 +103,15 @@ public class LoginController {
 		validateToken(accessToken);
 		Cookie cookie = loginService.createCookie(accessToken);
 		res.addCookie(cookie);
+		String idTokenProperty  = this.environment.getProperty(ID_TOKEN);
 		if(validateIdToken) {
 			String idToken = jwtResponseDTO.getIdToken();
 			if(idToken == null) {
 				throw new ClientException(Errors.TOKEN_NOTPRESENT_ERROR.getErrorCode(),
-						Errors.TOKEN_NOTPRESENT_ERROR.getErrorMessage() + ": " + this.environment.getProperty(ID_TOKEN));
+						Errors.TOKEN_NOTPRESENT_ERROR.getErrorMessage() + ": " + idTokenProperty);
 			}
 			validateToken(idToken);
-			Cookie idTokenCookie = new Cookie(this.environment.getProperty(ID_TOKEN), idToken);
+			Cookie idTokenCookie = new Cookie(idTokenProperty, idToken);
 			setCookieParams(idTokenCookie,true,true,"/");
 			res.addCookie(idTokenCookie);
 		}
