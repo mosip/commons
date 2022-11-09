@@ -14,7 +14,7 @@ public class Constants {
 	public static final Object ISS = "iss";
 	public static final Object IAT = "iat";
 	public static final String JWT_EXPIRY_TIME = "mosip.iam.module.token.endpoint.private-key-jwt.expiry.seconds";
-	public static final Object BASE_URL = "mosip.iam.base.url";
+	public static final String BASE_URL = "mosip.iam.base.url";
 	public static final String MOSIP_RESIDENT_IDP_CLIENT_ID = "mosip.resident.idp.client.id";
 	public static final String APPLICATION_ID = "APPLICATION_Id";
 	public static final String CLIENT_ASSERTION_REFERENCE_ID = "mosip.client.assertion.reference.id";
@@ -22,6 +22,8 @@ public class Constants {
 	public static final String IS_INCLUDE_CERTIFICATE = "mosip.include.certificate";
 	public static final String IS_iNCLUDE_CERT_HASH = "mosip.include.cert.hash";
 	public static final String KEYMANAGER_JWT_SIGN_END_POINT = "mosip.keymanager.jwt.sign.end.point";
+	public static final String CLIENT_ASSERTION_TYPE = "client_assertion_type";
+	public static final String CLIENT_ASSERTION_TYPE_PROPERTY = "mosip.client.assertion.type";
 
 	/**
 	 * Private constructor
