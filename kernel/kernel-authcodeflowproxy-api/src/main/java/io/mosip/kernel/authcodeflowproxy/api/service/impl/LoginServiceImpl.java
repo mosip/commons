@@ -218,16 +218,17 @@ public class LoginServiceImpl implements LoginService {
 
 		} catch (HttpClientErrorException | HttpServerErrorException e) {
 			IAMErrorResponseDto keycloakErrorResponseDto = parseKeyClockErrorResponse(e);
+
 			throw new ServiceException(Errors.ACESSTOKEN_EXCEPTION.getErrorCode(),
 					Errors.ACESSTOKEN_EXCEPTION.getErrorMessage() + Constants.WHITESPACE
-							+ keycloakErrorResponseDto.getError_description());
+							+ keycloakErrorResponseDto.getError_description(), e);
 		}
 		AccessTokenResponse accessTokenResponse = null;
 		try {
 			accessTokenResponse = objectMapper.readValue(responseEntity.getBody(), AccessTokenResponse.class);
 		} catch (IOException exception) {
 			throw new ServiceException(Errors.RESPONSE_PARSE_ERROR.getErrorCode(),
-					Errors.RESPONSE_PARSE_ERROR.getErrorMessage() + Constants.WHITESPACE + exception.getMessage());
+					Errors.RESPONSE_PARSE_ERROR.getErrorMessage() + Constants.WHITESPACE + exception.getMessage(), exception);
 		}
 		AccessTokenResponseDTO accessTokenResponseDTO = new AccessTokenResponseDTO();
 		accessTokenResponseDTO.setAccessToken(accessTokenResponse.getAccess_token());
