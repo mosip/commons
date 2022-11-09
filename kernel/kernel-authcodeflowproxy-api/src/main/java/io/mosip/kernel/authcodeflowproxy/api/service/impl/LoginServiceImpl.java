@@ -202,6 +202,7 @@ public class LoginServiceImpl implements LoginService {
 		map.add(Constants.CLIENT_ID, clientID);
 		if(isJwtAuthEnabled){
 			map.add(Constants.CLIENT_ASSERTION, getClientAssertion());
+			map.add(Constants.CLIENT_ASSERTION_TYPE, this.environment.getProperty(Constants.CLIENT_ASSERTION_TYPE_PROPERTY));
 		} else{
 			map.add(Constants.CLIENT_SECRET, clientSecret);
 		}
@@ -268,7 +269,7 @@ public class LoginServiceImpl implements LoginService {
 		String mosipResidentIDPClient = this.environment.getProperty(Constants.MOSIP_RESIDENT_IDP_CLIENT_ID);
 		dataToSignMap.put(Constants.SUB, mosipResidentIDPClient);
 		dataToSignMap.put(Constants.ISS, mosipResidentIDPClient);
-		dataToSignMap.put(Constants.AUD, Constants.BASE_URL);
+		dataToSignMap.put(Constants.AUD, this.environment.getProperty(Constants.BASE_URL));
 		dataToSignMap.put(Constants.EXP, getExpiryTime());
 		dataToSignMap.put(Constants.IAT, getEpochTime());
 		String jsonObject = null;
