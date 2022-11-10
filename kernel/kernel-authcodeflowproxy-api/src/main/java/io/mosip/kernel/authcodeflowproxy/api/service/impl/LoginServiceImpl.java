@@ -266,9 +266,8 @@ public class LoginServiceImpl implements LoginService {
 
 	private String getDataToSign() {
 		Map dataToSignMap = new LinkedHashMap();
-		String mosipResidentIDPClient = this.environment.getProperty(Constants.MOSIP_IAM_MODULE_CLIENT_ID);
-		dataToSignMap.put(Constants.SUB, mosipResidentIDPClient);
-		dataToSignMap.put(Constants.ISS, mosipResidentIDPClient);
+		dataToSignMap.put(Constants.SUB, clientID);
+		dataToSignMap.put(Constants.ISS, clientID);
 		dataToSignMap.put(Constants.AUD, this.environment.getProperty(Constants.BASE_URL));
 		dataToSignMap.put(Constants.EXP, getExpiryTime());
 		dataToSignMap.put(Constants.IAT, getEpochTime());
