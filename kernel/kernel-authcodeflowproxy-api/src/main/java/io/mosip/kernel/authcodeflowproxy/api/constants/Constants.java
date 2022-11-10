@@ -15,7 +15,7 @@ public class Constants {
 	public static final Object IAT = "iat";
 	public static final String JWT_EXPIRY_TIME = "mosip.iam.module.token.endpoint.private-key-jwt.expiry.seconds";
 	public static final String BASE_URL = "mosip.iam.base.url";
-	public static final String MOSIP_RESIDENT_IDP_CLIENT_ID = "mosip.resident.idp.client.id";
+	public static final String MOSIP_IAM_MODULE_CLIENT_ID = "mosip.iam.module.clientID";
 	public static final String APPLICATION_ID = "APPLICATION_Id";
 	public static final String CLIENT_ASSERTION_REFERENCE_ID = "mosip.client.assertion.reference.id";
 	public static final String IS_INCLUDE_PAYLOAD = "mosip.include.payload";
