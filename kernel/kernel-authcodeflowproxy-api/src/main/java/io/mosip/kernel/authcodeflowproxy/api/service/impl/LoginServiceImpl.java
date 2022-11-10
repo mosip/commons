@@ -202,7 +202,8 @@ public class LoginServiceImpl implements LoginService {
 		map.add(Constants.CLIENT_ID, clientID);
 		if(isJwtAuthEnabled){
 			map.add(Constants.CLIENT_ASSERTION, getClientAssertion());
-			map.add(Constants.CLIENT_ASSERTION_TYPE, this.environment.getProperty(Constants.CLIENT_ASSERTION_TYPE_PROPERTY));
+			map.add(this.environment.getProperty(Constants.CLIENT_ASSERTION_TYPE, Constants.CLIENT_ASSERTION_TYPE),
+					this.environment.getProperty(Constants.CLIENT_ASSERTION_TYPE_PROPERTY));
 		} else{
 			map.add(Constants.CLIENT_SECRET, clientSecret);
 		}
