@@ -134,9 +134,18 @@ public class LoginServiceImpl implements LoginService {
 		uriComponentsBuilder.queryParam(Constants.SCOPE, scope);
 		String claim = this.environment.getProperty(Constants.CLAIM_PROPERTY);
 		if(claim != null){
-			uriComponentsBuilder.queryParam(Constants.CLAIM, claim);
+			uriComponentsBuilder.queryParam(Constants.CLAIM, encodeValue(claim));
 		}
 		return uriComponentsBuilder.buildAndExpand(pathParam).toString();
+	}
+	
+	private String encodeValue(String value) {
+	    try {
+			return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
+		} catch (UnsupportedEncodingException e) {
+			throw new ServiceException(Errors.UNSUPPORTED_ENCODING_EXCEPTION.getErrorCode(),
+					Errors.UNSUPPORTED_ENCODING_EXCEPTION.getErrorMessage() + Constants.WHITESPACE + e.getMessage(), e);
+		}
 	}
 
 	@Override
@@ -318,7 +327,7 @@ public class LoginServiceImpl implements LoginService {
 					.queryParam(postLogoutRedirectURIParamKey, URLEncoder.encode(redirectURI, StandardCharsets.UTF_8.toString()));
 		} catch (UnsupportedEncodingException e) {
 			throw new ServiceException(Errors.UNSUPPORTED_ENCODING_EXCEPTION.getErrorCode(),
-					Errors.UNSUPPORTED_ENCODING_EXCEPTION.getErrorMessage() + Constants.WHITESPACE + e.getMessage());
+					Errors.UNSUPPORTED_ENCODING_EXCEPTION.getErrorMessage() + Constants.WHITESPACE + e.getMessage(), e);
 		}
 		return uriComponentsBuilder.build().toString();
 	}

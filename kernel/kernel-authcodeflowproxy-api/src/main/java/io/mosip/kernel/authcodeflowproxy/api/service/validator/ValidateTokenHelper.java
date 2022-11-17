@@ -177,6 +177,22 @@ public class ValidateTokenHelper {
 		}
 		return publicKey;
 	}
+	
+	public ImmutablePair<Boolean, AuthErrorCode> verifyUserInfoSignature(DecodedJWT decodedJWT) {
+		try {
+			String tokenAlgo = decodedJWT.getAlgorithm();
+			PublicKey publicKey = getPublicKey(decodedJWT);
+			Algorithm algorithm = getVerificationAlgorithm(tokenAlgo, publicKey);
+			algorithm.verify(decodedJWT);
+		} catch (SignatureVerificationException signatureException) {
+			LOGGER.error("Signature validation failed for User Info, Throwing Authentication Exception.",
+					signatureException);
+			return ImmutablePair.of(Boolean.FALSE, AuthErrorCode.UNAUTHORIZED);
+		}
+		
+		return ImmutablePair.of(Boolean.TRUE, null);
+
+	}
 
 	private PublicKey getIssuerPublicKey(String keyId) {
 		try {
