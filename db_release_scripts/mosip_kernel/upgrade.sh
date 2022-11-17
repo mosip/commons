@@ -1,8 +1,8 @@
 ## Properties file
 set -e
-properties_file="$1"
-upgrade_version="$3"
-current_version="$2"
+properties_file="$3"
+upgrade_version="$2"
+current_version="$1"
      echo "Properties File Name - $properties_file"
      echo "DB Upgrade Version - $upgrade_version"
      echo "DB current version - $current_version"
@@ -16,17 +16,16 @@ then
    done < "$properties_file"
 else
      echo "Property file not found, Pass property file name as argument."
-     exit 0
 fi
 
-if [ $# -ge 2 ] 
+if [ $# -ge 1 ] 
 then
      echo "DB current version \"$current_version\" found."
 else
      echo "DB current version not found, Pass current version as argument."
      exit 0
 fi
-if [ $# -ge 3 ] 
+if [ $# -ge 2 ] 
 then
      echo "DB upgrade version \"$upgrade_version\" found."
 else
@@ -42,7 +41,7 @@ echo "Terminated connections"
 
 ## Executing DB Upgrade scripts
 echo "Alter scripts deployment on $MOSIP_DB_NAME database from $current_version to $upgrade_version  started...."
-ALTER_SCRIPT_FILE="sql/${current_version}_to_${upgrade_version}_${ALTER_SCRIPT_FILENAME}"
+ALTER_SCRIPT_FILE="sql/${current_version}_to_${upgrade_version}_upgrade.sh"
 
 echo "Upgrade script considered for release deployment - $ALTER_SCRIPT_FILE"
 
