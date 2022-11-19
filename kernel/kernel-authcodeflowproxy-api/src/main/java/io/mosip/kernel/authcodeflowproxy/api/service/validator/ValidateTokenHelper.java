@@ -111,15 +111,7 @@ public class ValidateTokenHelper {
 		}
 
 		// Third, signature validation.
-		try {
-			String tokenAlgo = decodedJWT.getAlgorithm();
-			Algorithm algorithm = getVerificationAlgorithm(tokenAlgo, publicKey);
-			algorithm.verify(decodedJWT);
-		} catch (SignatureVerificationException signatureException) {
-			LOGGER.error("Signature validation failed, Throwing Authentication Exception. UserName: " + userName,
-					signatureException);
-			return ImmutablePair.of(Boolean.FALSE, AuthErrorCode.UNAUTHORIZED);
-		}
+		verifySignagure(decodedJWT);
 
 		// Fourth, audience | azp validation.
 		// No match found after comparing audience & azp
@@ -178,7 +170,7 @@ public class ValidateTokenHelper {
 		return publicKey;
 	}
 	
-	public ImmutablePair<Boolean, AuthErrorCode> verifyUserInfoSignature(DecodedJWT decodedJWT) {
+	public ImmutablePair<Boolean, AuthErrorCode> verifySignagure(DecodedJWT decodedJWT) {
 		try {
 			String tokenAlgo = decodedJWT.getAlgorithm();
 			PublicKey publicKey = getPublicKey(decodedJWT);
