@@ -111,7 +111,7 @@ public class ValidateTokenHelper {
 		}
 
 		// Third, signature validation.
-		verifySignagure(decodedJWT);
+		verifyJWTSignagure(decodedJWT);
 
 		// Fourth, audience | azp validation.
 		// No match found after comparing audience & azp
@@ -170,7 +170,13 @@ public class ValidateTokenHelper {
 		return publicKey;
 	}
 	
-	public ImmutablePair<Boolean, AuthErrorCode> verifySignagure(DecodedJWT decodedJWT) {
+	/**
+	 * Verify the signature of the given JWT.
+	 * 
+	 * @param decodedJWT - the decoded JWT
+	 * @return if it is valid or not and any error code in case if it not valid.
+	 */
+	public ImmutablePair<Boolean, AuthErrorCode> verifyJWTSignagure(DecodedJWT decodedJWT) {
 		try {
 			String tokenAlgo = decodedJWT.getAlgorithm();
 			PublicKey publicKey = getPublicKey(decodedJWT);
@@ -181,7 +187,7 @@ public class ValidateTokenHelper {
 					signatureException);
 			return ImmutablePair.of(Boolean.FALSE, AuthErrorCode.UNAUTHORIZED);
 		}
-		
+
 		return ImmutablePair.of(Boolean.TRUE, null);
 
 	}
