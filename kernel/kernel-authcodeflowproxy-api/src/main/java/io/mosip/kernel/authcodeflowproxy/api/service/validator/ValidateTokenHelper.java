@@ -111,8 +111,12 @@ public class ValidateTokenHelper {
 		}
 
 		// Third, signature validation.
-		verifyJWTSignagure(decodedJWT);
-
+		ImmutablePair<Boolean, AuthErrorCode> signatureVerificationResult = verifyJWTSignagure(decodedJWT);
+		// If signature validation fails return the error code
+		if(!signatureVerificationResult.getLeft()) {
+			return signatureVerificationResult;
+		}
+		
 		// Fourth, audience | azp validation.
 		// No match found after comparing audience & azp
 		if (validateAudClaim && !validateAudience(decodedJWT)) {
