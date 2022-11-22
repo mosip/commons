@@ -43,13 +43,19 @@ jobs:
 
 #    - name: removing --Dgpg.skip
 #      run: find . -type f -name "*push_trigger.yml" -print0 | xargs -0 sed -i "s/"-Dgpg.skip"//g"
-      
+
+    - name: update Branch name in badges
+      run: |
+        sed -i 's/branch=.*)]/branch=${{ env.BRANCH_NAME }}\)]/g'  README.md
+        sed -i 's/branch=.*\&/branch=${{ env.BRANCH_NAME }}\&/g'  README.md
+        
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
       with:
-        commit-message: Updated Pom versions for release changes
+        commit-message: Release Bot Pre-release changes
         title: Release changes
         body: Automated PR for ${{ github.event.inputs.releaseTags }} release.
         branch: release-branch
         delete-branch: true
         base: ${{ github.event.inputs.base }}
+        token: ${{ secrets.ACTION_PAT }}
