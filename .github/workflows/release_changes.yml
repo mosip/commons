@@ -46,8 +46,8 @@ jobs:
 
     - name: update Branch name in badges
       run: |
-        sed -i 's/branch=.*)]/branch=${{ env.BRANCH_NAME }}\)]/g'  README.md
-        sed -i 's/branch=.*\&/branch=${{ env.BRANCH_NAME }}\&/g'  README.md
+        sed -i 's/branch=[^\&]*)]/branch=${{ env.BRANCH_NAME }}\)]/g'  README.md
+        sed -i 's/branch=[^\&]*\&/branch=${{ env.BRANCH_NAME }}\&/g'  README.md
         
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
