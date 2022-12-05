@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-biometrics-api</artifactId>
-	<version>1.2.1-SNAPSHOT</version>
+	<version>1.2.0.1-SNAPSHOT</version>
 	<name>kernel-biometrics-api</name>
 	<description>biometrics api definitions</description>
 	<url>https://github.com/mosip/commons</url>
@@ -220,10 +220,9 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.2.1-SNAPSHOT</kernel.core.version>
+		<kernel.core.version>1.2.0.1-SNAPSHOT</kernel.core.version>
 		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 	</properties>
-
 
 	<dependencies>
 		<dependency>
@@ -329,6 +328,9 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
 				<version>1.5</version>
+				<!-- <configuration>
+					<skip>true</skip>  
+				</configuration>-->
 				<executions>
 					<execution>
 						<id>sign-artifacts</id>
