@@ -361,7 +361,7 @@ public class ZipUtils {
 
 		try (ZipInputStream zipIn = new ZipInputStream(new FileInputStream(zipFilePath))) {
 
-			ZipEntry entry = zipIn.getNextEntry();     //NOSONAR Setting the ZipEntry here.
+			ZipEntry entry = zipIn.getNextEntry();    //NOSONAR Setting the ZipEntry here.
 			while (entry != null) {
 
 				String filePath = destDirectory + File.separator + entry.getName();

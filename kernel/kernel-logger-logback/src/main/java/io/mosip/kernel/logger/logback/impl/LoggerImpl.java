@@ -68,7 +68,7 @@ public class LoggerImpl implements Logger {
 		consoleAppender.setTarget(mosipConsoleAppender.getTarget());
 		consoleAppender.start();
 		if (logLevel != null) {
-			this.logger.setLevel(Level.valueOf(logLevel.getLevel()));   //NOSONAR Setting the loglevel here.
+			this.logger.setLevel(Level.valueOf(logLevel.getLevel()));    //NOSONAR Setting the loglevel here.
 		} else {
 			this.logger.setLevel(Level.valueOf(LogLevel.DEBUG.getLevel()));    //NOSONAR Setting the loglevel to DEBUG here.
 		}
