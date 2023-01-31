@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,19 +33,10 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
 @RestController
 public class LoginController {
 	
-	private static final String ID_TOKEN = "id_token";
-
 	private final static Logger LOGGER= LoggerFactory.getLogger(LoginController.class);
-	private static final String IDTOKEN = "idToken";
 
 	@Value("${auth.token.header:Authorization}")
 	private String authTokenHeader;
-	
-	@Value("${iam.locale.cookie.name:KEYCLOAK_LOCALE}")
-	private String localeCookieName;
-	
-	@Value("${iam.locale.cookie.name:/auth/realms/}")
-	private String localeCookiePath;
 	
 	
 	@Value("#{'${auth.allowed.urls}'.split(',')}")
@@ -56,13 +46,7 @@ public class LoginController {
 	private LoginService loginService;
 	
 	@Autowired
-	private ValidateTokenHelper validateTokenHelper;
-
-	@Autowired
-	private Environment environment;
-
-	@Value("${auth.validate.id-token:false}")
-	private boolean validateIdToken;
+	private ValidateTokenHelper validateTokenHelper; 
 
 	@GetMapping(value = "/login/{redirectURI}")
 	public void login(@CookieValue(name = "state", required = false) String state,
@@ -88,7 +72,9 @@ public class LoginController {
 		
 		String uri = loginService.login(redirectURI, stateValue);
 		Cookie stateCookie = new Cookie("state", stateValue);
-		setCookieParams(stateCookie,true,true,"/");
+		stateCookie.setHttpOnly(true);
+		stateCookie.setSecure(true);
+		stateCookie.setPath("/");
 		res.addCookie(stateCookie);
 		res.setStatus(302);
 		res.sendRedirect(uri);
@@ -96,26 +82,17 @@ public class LoginController {
 
 	@GetMapping(value = "/login-redirect/{redirectURI}")
 	public void loginRedirect(@PathVariable("redirectURI") String redirectURI, @RequestParam("state") String state,
-			@RequestParam(value="session_state",required = false) String sessionState, @RequestParam("code") String code,
-			@CookieValue("state") String stateCookie, HttpServletRequest req, HttpServletResponse res) throws IOException {
+			@RequestParam("session_state") String sessionState, @RequestParam("code") String code,
+			@CookieValue("state") String stateCookie, HttpServletResponse res) throws IOException {
 		AccessTokenResponseDTO jwtResponseDTO = loginService.loginRedirect(state, sessionState, code, stateCookie,
 				redirectURI);
 		String accessToken = jwtResponseDTO.getAccessToken();
 		validateToken(accessToken);
+		String idToken = jwtResponseDTO.getIdToken();
+		validateToken(idToken);
 		Cookie cookie = loginService.createCookie(accessToken);
 		res.addCookie(cookie);
-		if(validateIdToken) {
-			String idTokenProperty  = this.environment.getProperty(IDTOKEN, ID_TOKEN);
-			String idToken = jwtResponseDTO.getIdToken();
-			if(idToken == null) {
-				throw new ClientException(Errors.TOKEN_NOTPRESENT_ERROR.getErrorCode(),
-						Errors.TOKEN_NOTPRESENT_ERROR.getErrorMessage() + ": " + idTokenProperty);
-			}
-			validateToken(idToken);
-			Cookie idTokenCookie = new Cookie(idTokenProperty, idToken);
-			setCookieParams(idTokenCookie,true,true,"/");
-			res.addCookie(idTokenCookie);
-		}
+		res.addCookie(new Cookie("id_token", idToken));
 		res.setStatus(302);
 		String url = new String(Base64.decodeBase64(redirectURI.getBytes()));
 		if(url.contains("#")) {
@@ -126,13 +103,7 @@ public class LoginController {
 			throw new ServiceException(Errors.ALLOWED_URL_EXCEPTION.getErrorCode(), Errors.ALLOWED_URL_EXCEPTION.getErrorMessage());
 		}
 		res.sendRedirect(url);	
-	}
-
-	private void setCookieParams(Cookie idTokenCookie, boolean isHttpOnly, boolean isSecure,String path) {
-		idTokenCookie.setHttpOnly(isHttpOnly);
-		idTokenCookie.setSecure(isSecure);
-		idTokenCookie.setPath(path);
-	}
+		}
 
 	private void validateToken(String accessToken) {
 		if(!validateTokenHelper.isTokenValid(accessToken).getKey()){
