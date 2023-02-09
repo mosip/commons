@@ -38,6 +38,7 @@ All the configurations used by the codebase in `mosip-platform` is present in [m
 ### Functional Test-cases
 Functional tests run against the codebase in `mosip-platform` is present in [mosip-functional-tests](https://github.com/mosip/mosip-functional-tests) repository.
 
+
 ### Documentation
 Relevant documents to get started with MOSIP can be found in [mosip-docs](https://github.com/mosip/mosip-docs) repository. 
 In order to get started, please refer to the [Getting-Started](https://github.com/mosip/mosip-docs/wiki/Getting-Started) guide.
