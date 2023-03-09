@@ -57,7 +57,10 @@
 		<module>kernel-transliteration-icu4j</module>
 		<module>kernel-applicanttype-api</module>
 		<module>kernel-idobjectvalidator</module>
-		<!-- <module>kernel-bioapi-provider</module> -->
+		<!-- 
+		Depricated or Moved out of commons
+		<module>kernel-biometrics-api</module>
+		<module>kernel-bioapi-provider</module> -->
 		<module>kernel-authcodeflowproxy-api</module>
 		<module>kernel-websubclient-api</module>
 		<module>kernel-otpmanager-service</module>
@@ -66,7 +69,6 @@
 		<module>kernel-idgenerator-service</module>
 		<module>kernel-pridgenerator-service</module>
 		<module>kernel-salt-generator</module>
-		<module>kernel-biometrics-api</module>
 		<module>kernel-biosdk-provider</module>
 		<module>kernel-demographics-api</module>
 	</modules>
