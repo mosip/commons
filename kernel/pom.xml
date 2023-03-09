@@ -59,14 +59,14 @@
 		<module>kernel-idobjectvalidator</module>
 		<!-- <module>kernel-bioapi-provider</module> -->
 		<!-- <module>kernel-authcodeflowproxy-api</module> -->
-		<module>kernel-websubclient-api</module>
+		<!-- <module>kernel-biometrics-api</module> Moved to mosip/bio-utils-->
+                <module>kernel-websubclient-api</module>
 		<module>kernel-otpmanager-service</module>
 		<module>kernel-notification-service</module>
 		<module>kernel-ridgenerator-service</module>
 		<module>kernel-idgenerator-service</module>
 		<module>kernel-pridgenerator-service</module>
 		<module>kernel-salt-generator</module>
-		<module>kernel-biometrics-api</module>
 		<module>kernel-biosdk-provider</module>
 		<module>kernel-demographics-api</module>
 	</modules>
