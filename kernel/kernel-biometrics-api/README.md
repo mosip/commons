@@ -1,4 +1,5 @@
 # Kernel Biometrics Api
+[MOVED TO mosip/bio-utils]
 
 ## Overview
 This library provides core funtions related to biometrics.
