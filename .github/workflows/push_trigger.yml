@@ -6,6 +6,7 @@ on:
       - master
       - 1.*
       - develop
+      - DSD-2527
   
 jobs:
   build:
