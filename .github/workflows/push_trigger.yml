@@ -7,7 +7,7 @@ on:
       - master
       - 1.*
       - develop
-  
+      - DSD-2583
 jobs:
   build:
 
