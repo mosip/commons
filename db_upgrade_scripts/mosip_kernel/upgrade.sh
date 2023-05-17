@@ -15,9 +15,9 @@ else
      echo `date "+%m/%d/%Y %H:%M:%S"` ": Property file not found, Pass property file name as argument."
 fi
 
-echo "Current version: $CURRENT_VERSION"
-echo "UPGRADE version: $UPGRADE_VERSION"
-echo "Action: $ACTION"
+echo "Current version: "$CURRENT_VERSION
+echo "UPGRADE version: "$UPGRADE_VERSION
+echo "Action: "$ACTION
 
 # Terminate existing connections
 echo "Terminating active connections"
@@ -25,7 +25,7 @@ CONN=$(PGPASSWORD=$SU_USER_PWD psql -v ON_ERROR_STOP=1 --username=$SU_USER --hos
 echo "Terminated connections"
 
 # Execute upgrade or rollback
-if [ "$ACTION" == "upgrade" ]; then
+if [ $ACTION == "upgrade" ]; then
   echo "Upgrading database from $CURRENT_VERSION to $UPGRADE_VERSION"
   UPGRADE_SCRIPT_FILE="sql/${CURRENT_VERSION}_to_${UPGRADE_VERSION}_upgrade.sql"
   if [ -f "$UPGRADE_SCRIPT_FILE" ]; then
@@ -35,7 +35,7 @@ if [ "$ACTION" == "upgrade" ]; then
     echo "Upgrade script not found, exiting."
     exit 1
   fi
-elif [ "$ACTION" == "rollback" ]; then
+elif [ $ACTION == "rollback" ]; then
   echo "Rolling back database for $CURRENT_VERSION to $UPGRADE_VERSION"
   REVOKE_SCRIPT_FILE="sql/${CURRENT_VERSION}_to_${UPGRADE_VERSION}_rollback.sql"
   if [ -f "$REVOKE_SCRIPT_FILE" ]; then
