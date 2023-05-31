@@ -111,16 +111,12 @@ public class ValidateTokenHelper {
 		}
 
 		// Third, signature validation.
-		try {
-			String tokenAlgo = decodedJWT.getAlgorithm();
-			Algorithm algorithm = getVerificationAlgorithm(tokenAlgo, publicKey);
-			algorithm.verify(decodedJWT);
-		} catch (SignatureVerificationException signatureException) {
-			LOGGER.error("Signature validation failed, Throwing Authentication Exception. UserName: " + userName,
-					signatureException);
-			return ImmutablePair.of(Boolean.FALSE, AuthErrorCode.UNAUTHORIZED);
+		ImmutablePair<Boolean, AuthErrorCode> signatureVerificationResult = verifyJWTSignagure(decodedJWT);
+		// If signature validation fails return the error code
+		if(!signatureVerificationResult.getLeft()) {
+			return signatureVerificationResult;
 		}
-
+		
 		// Fourth, audience | azp validation.
 		// No match found after comparing audience & azp
 		if (validateAudClaim && !validateAudience(decodedJWT)) {
@@ -176,6 +172,28 @@ public class ValidateTokenHelper {
 			publicKeys.put(keyId, publicKey);
 		}
 		return publicKey;
+	}
+	
+	/**
+	 * Verify the signature of the given JWT.
+	 * 
+	 * @param decodedJWT - the decoded JWT
+	 * @return if it is valid or not and any error code in case if it not valid.
+	 */
+	public ImmutablePair<Boolean, AuthErrorCode> verifyJWTSignagure(DecodedJWT decodedJWT) {
+		try {
+			String tokenAlgo = decodedJWT.getAlgorithm();
+			PublicKey publicKey = getPublicKey(decodedJWT);
+			Algorithm algorithm = getVerificationAlgorithm(tokenAlgo, publicKey);
+			algorithm.verify(decodedJWT);
+		} catch (SignatureVerificationException signatureException) {
+			LOGGER.error("Signature validation failed for User Info, Throwing Authentication Exception.",
+					signatureException);
+			return ImmutablePair.of(Boolean.FALSE, AuthErrorCode.UNAUTHORIZED);
+		}
+
+		return ImmutablePair.of(Boolean.TRUE, null);
+
 	}
 
 	private PublicKey getIssuerPublicKey(String keyId) {

@@ -94,8 +94,7 @@ public interface IBioApi {
 	 * @param modalitiesToConvert
 	 * @return
 	 */
-	BiometricRecord convertFormat(BiometricRecord sample, String sourceFormat, String targetFormat, Map<String, String> sourceParams, 
+	Response<BiometricRecord> convertFormat(BiometricRecord sample, String sourceFormat, String targetFormat, Map<String, String> sourceParams, 
 			Map<String, String> targetParams, List<BiometricType> modalitiesToConvert);
-	
-	
+		
 }

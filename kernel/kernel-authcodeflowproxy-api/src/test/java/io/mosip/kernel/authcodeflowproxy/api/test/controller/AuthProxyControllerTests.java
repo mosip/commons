@@ -1,16 +1,54 @@
 package io.mosip.kernel.authcodeflowproxy.api.test.controller;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.isA;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator.Builder;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.SignatureVerificationException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.mosip.kernel.authcodeflowproxy.api.constants.AuthConstant;
+import io.mosip.kernel.authcodeflowproxy.api.constants.Constants;
+import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
+import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponse;
+import io.mosip.kernel.authcodeflowproxy.api.dto.IAMErrorResponseDto;
+import io.mosip.kernel.authcodeflowproxy.api.dto.JWTSignatureResponseDto;
+import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
+import io.mosip.kernel.authcodeflowproxy.api.service.LoginService;
+import io.mosip.kernel.authcodeflowproxy.api.service.validator.ValidateTokenHelper;
+import io.mosip.kernel.authcodeflowproxy.api.test.AuthProxyFlowTestBootApplication;
+import io.mosip.kernel.core.exception.ServiceError;
+import io.mosip.kernel.core.http.ResponseWrapper;
+import io.mosip.kernel.core.util.CryptoUtil;
+import io.mosip.kernel.core.util.DateUtils;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.test.web.client.ExpectedCount;
+import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.Cookie;
 import java.net.URI;
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -19,50 +57,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import javax.servlet.http.Cookie;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.PowerMockRunnerDelegate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.test.web.client.ExpectedCount;
-import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.client.RestTemplate;
-
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTCreator.Builder;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.SignatureVerificationException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.mosip.kernel.authcodeflowproxy.api.constants.AuthConstant;
-import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
-import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponse;
-import io.mosip.kernel.authcodeflowproxy.api.dto.IAMErrorResponseDto;
-import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
-import io.mosip.kernel.authcodeflowproxy.api.service.validator.ValidateTokenHelper;
-import io.mosip.kernel.authcodeflowproxy.api.test.AuthProxyFlowTestBootApplication;
-import io.mosip.kernel.core.exception.ServiceError;
-import io.mosip.kernel.core.http.ResponseWrapper;
-import io.mosip.kernel.core.util.CryptoUtil;
-import io.mosip.kernel.core.util.DateUtils;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.isA;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = { AuthProxyFlowTestBootApplication.class })
 @AutoConfigureMockMvc
@@ -87,17 +93,28 @@ public class AuthProxyControllerTests {
 	
 	@SpyBean
 	private ValidateTokenHelper validateTokenHelper;
+
+	@SpyBean
+	private LoginService loginService;
 	
 	@Mock
 	private Algorithm mockAlgo;
+
+	@Mock
+	private Environment environment;
+
+	@MockBean
+	@Qualifier("selfTokenRestTemplate")
+	private RestTemplate selfTokenRestTemplate;
 	
 	@Before
 	public void init() throws Exception {
 		mockServer = MockRestServiceServer.createServer(restTemplate);
 		PowerMockito.mockStatic(Algorithm.class);
-		when(Algorithm.RSA256(Mockito.any(), Mockito.any())).thenReturn(mockAlgo);
+		when(Algorithm.RSA256(any(), any())).thenReturn(mockAlgo);
 		ReflectionTestUtils.setField(validateTokenHelper, "validateIssuerDomain", false);
 		ReflectionTestUtils.setField(validateTokenHelper, "validateAudClaim", false);
+		ReflectionTestUtils.setField(loginService, "isJwtAuthEnabled", false);
 	}
 
 	@Autowired
@@ -242,7 +259,7 @@ public class AuthProxyControllerTests {
 		withExpiresAt.withClaim(AuthConstant.ISSUER, "http://localhost");
 		
 		when(mockAlgo.getName()).thenReturn("RSA256");
-		doThrow(new SignatureVerificationException(mockAlgo)).when(mockAlgo).verify(Mockito.any());
+		doThrow(new SignatureVerificationException(mockAlgo)).when(mockAlgo).verify(any());
 		String token = withExpiresAt.withClaim("scope", "aaa bbb").sign(mockAlgo);
 		
 		accessTokenResponse.setAccess_token(token);
@@ -492,13 +509,13 @@ public class AuthProxyControllerTests {
 
 	@Test
 	public void loginRedirectTestWithHash() throws Exception {
-		
+
 
 		Builder jwtbuilder = JWT.create();
 		jwtbuilder.withExpiresAt(Date.from(Instant.now().plusSeconds(100)));
 		jwtbuilder.withClaim(AuthConstant.PREFERRED_USERNAME, "12345");
 		jwtbuilder.withClaim(AuthConstant.ISSUER, "http://localhost");
-		Algorithm alg = Mockito.mock(Algorithm.class);
+		Algorithm alg = mock(Algorithm.class);
 		when(alg.getName()).thenReturn("none");
 		String jwtToken = jwtbuilder.sign(alg);
 		
@@ -526,6 +543,70 @@ public class AuthProxyControllerTests {
 		Cookie cookie = new Cookie("state", "mockstate");
 		mockMvc.perform(get(
 				"/login-redirect/aHR0cDovL2xvY2FsaG9zdDo1MDAwLyMvcmFuZG9tcGF0bS9yYW5kb21wYXRo?state=mockstate&session_state=mock-session-state&code=mockcode")
+						.contentType(MediaType.APPLICATION_JSON).cookie(cookie))
+				.andExpect(status().is3xxRedirection());
+	}
+
+	@Test
+	public void loginRedirectWithClaimTest() throws Exception {
+		AccessTokenResponse accessTokenResponse = new AccessTokenResponse();
+		Builder withExpiresAt = JWT.create().withExpiresAt(Date.from(DateUtils.getUTCCurrentDateTime().plusHours(1).toInstant(ZoneOffset.UTC)));
+		withExpiresAt.withClaim(AuthConstant.ISSUER, "http://localhost");
+
+		when(mockAlgo.getName()).thenReturn("RSA256");
+		String token = withExpiresAt.withClaim("scope", "aaa bbb").sign(mockAlgo);
+
+		when(environment.getProperty(Constants.CLAIM_PROPERTY)).thenReturn("claim");
+
+		accessTokenResponse.setAccess_token(token);
+		accessTokenResponse.setId_token(token);
+		accessTokenResponse.setExpires_in("111");
+
+		mockServer
+				.expect(ExpectedCount.once(),
+						requestTo(new URI(
+								"http://localhost:8080/keycloak/auth/realms/mosip/protocol/openid-connect/token")))
+				.andExpect(method(HttpMethod.POST))
+				.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
+						.body(objectMapper.writeValueAsString(accessTokenResponse)));
+
+		Cookie cookie = new Cookie("state", "mockstate");
+		mockMvc.perform(get(
+						"/login-redirect/aHR0cDovL2xvY2FsaG9zdDo1MDAwLw==?state=mockstate&session_state=mock-session-state&code=mockcode&claims=mockClaim")
+						.contentType(MediaType.APPLICATION_JSON).cookie(cookie))
+				.andExpect(status().is3xxRedirection());
+	}
+
+	@Test
+	public void loginRedirectWithPrivateKeyJwtAuthEnabled() throws Exception {
+		AccessTokenResponse accessTokenResponse = new AccessTokenResponse();
+
+		Builder withExpiresAt = JWT.create().withExpiresAt(Date.from(DateUtils.getUTCCurrentDateTime().plusHours(1).toInstant(ZoneOffset.UTC)));
+		withExpiresAt.withClaim(AuthConstant.ISSUER, "http://localhost");
+		ReflectionTestUtils.setField(loginService, "isJwtAuthEnabled", true);
+		when(mockAlgo.getName()).thenReturn("RSA256");
+
+		String token = withExpiresAt.withClaim("scope", "aaa bbb").sign(mockAlgo);
+		JWTSignatureResponseDto jwtSignatureResponseDto = new JWTSignatureResponseDto();
+		jwtSignatureResponseDto.setJwtSignedData("abc");
+		jwtSignatureResponseDto.setTimestamp(DateUtils.getUTCCurrentDateTime());
+		ResponseWrapper<JWTSignatureResponseDto> responseWrapper = new ResponseWrapper<>();
+		responseWrapper.setResponse(jwtSignatureResponseDto);
+		when(selfTokenRestTemplate.exchange((URI) any(), (HttpMethod) any(), (HttpEntity<?>) any(), (Class<Object>) any()))
+				.thenReturn(ResponseEntity.ok(responseWrapper));
+		accessTokenResponse.setAccess_token(token);
+		accessTokenResponse.setId_token(token);
+		accessTokenResponse.setExpires_in("111");
+		mockServer
+				.expect(ExpectedCount.once(),
+						requestTo(new URI(
+								"http://localhost:8080/keycloak/auth/realms/mosip/protocol/openid-connect/token")))
+				.andExpect(method(HttpMethod.POST))
+				.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
+						.body(objectMapper.writeValueAsString(accessTokenResponse)));
+		Cookie cookie = new Cookie("state", "mockstate");
+		mockMvc.perform(get(
+						"/login-redirect/aHR0cDovL2xvY2FsaG9zdDo1MDAwLw==?state=mockstate&session_state=mock-session-state&code=mockcode&claims=mockClaim")
 						.contentType(MediaType.APPLICATION_JSON).cookie(cookie))
 				.andExpect(status().is3xxRedirection());
 	}
