@@ -6,12 +6,12 @@ import io.mosip.kernel.biometrics.model.MatchDecision;
 import io.mosip.kernel.biometrics.model.QualityCheck;
 import io.mosip.kernel.biometrics.model.Response;
 import io.mosip.kernel.biometrics.model.SDKInfo;
-import io.mosip.kernel.biometrics.spi.IBioApi;
+import io.mosip.kernel.biometrics.spi.IBioApiV2;
 
 import java.util.List;
 import java.util.Map;
 
-public class TestSDK implements IBioApi {
+public class TestSDK implements IBioApiV2 {
 
     @Override
     public SDKInfo init(Map<String, String> initParams) {
@@ -47,7 +47,12 @@ public class TestSDK implements IBioApi {
     }
 
     @Override
-    public Response<BiometricRecord> convertFormat(BiometricRecord sample, String sourceFormat, String targetFormat, Map<String, String> sourceParams, Map<String, String> targetParams, List<BiometricType> modalitiesToConvert) {
+    public Response<BiometricRecord> convertFormatV2(BiometricRecord sample, String sourceFormat, String targetFormat, Map<String, String> sourceParams, Map<String, String> targetParams, List<BiometricType> modalitiesToConvert) {
+        return null;
+    }
+
+    @Override
+    public BiometricRecord convertFormat(BiometricRecord sample, String sourceFormat, String targetFormat, Map<String, String> sourceParams, Map<String, String> targetParams, List<BiometricType> modalitiesToConvert) {
         return null;
     }
 }
