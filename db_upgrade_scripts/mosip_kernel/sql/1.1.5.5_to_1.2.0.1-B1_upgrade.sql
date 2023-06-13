@@ -1,3 +1,5 @@
+\c mosip_kernel
+
 ALTER DATABASE mosip_kernel OWNER TO postgres;
 
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA kernel TO postgres;
