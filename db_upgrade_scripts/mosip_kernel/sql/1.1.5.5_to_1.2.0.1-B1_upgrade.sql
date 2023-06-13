@@ -1,1 +1,7 @@
-\c mosip_kernel sysadmin
+ALTER DATABASE mosip_kernel OWNER TO postgres;
+
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA kernel TO postgres;
+
+REVOKE ALL PRIVILEGES ON DATABASE mosip_kernel FROM kerneluser, sysadmin;
+
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO kerneluser;
