@@ -1,6 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-io.mosip.kernel.authcodeflowproxy.api.controller.LoginController,\
-io.mosip.kernel.authcodeflowproxy.api.service.impl.LoginServiceImpl,\
-io.mosip.kernel.authcodeflowproxy.api.config.AuthCodeProxyConfig,\
-io.mosip.kernel.authcodeflowproxy.api.exception.AuthCodeProxyExceptionHandler,\
-io.mosip.kernel.authcodeflowproxy.api.service.validator.ValidateTokenHelper
