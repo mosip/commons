@@ -60,8 +60,8 @@
 		<!-- 
 		Depricated or Moved out of commons
 		<module>kernel-biometrics-api</module>
-		<module>kernel-bioapi-provider</module> -->
-		<module>kernel-authcodeflowproxy-api</module>
+		<module>kernel-bioapi-provider</module> 
+		<module>kernel-authcodeflowproxy-api</module> -->
 		<module>kernel-websubclient-api</module>
 		<module>kernel-otpmanager-service</module>
 		<module>kernel-notification-service</module>
