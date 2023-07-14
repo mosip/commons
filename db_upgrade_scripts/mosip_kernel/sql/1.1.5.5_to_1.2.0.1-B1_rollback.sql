@@ -1,3 +1,5 @@
 \c mosip_kernel
 
-\echo 'Upgrade Queries not required for transition from $CURRENT_VERSION to $UPGRADE_VERSION'
+REASSIGN OWNED BY postgres TO sysadmin;
+
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA kernel TO sysadmin;
