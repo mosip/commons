@@ -79,7 +79,7 @@ CMD if [ "$is_glowroot_env" = "present" ]; then \
     rm -rf glowroot.zip ; \
     sed -i 's/<service_name>/kernel-notification-service/g' glowroot/glowroot.properties ; \
     wget -q --show-progress "${runtime_dep_url_env}/kernel-auth-adapter.jar" -O "${loader_path_env}"/kernel-auth-adapter.jar; \
-    wget -q --show-progress "${runtime_dep_url_env}/kernel-smsserviceprovider-msg91.jar" -O "${loader_path_env}"/kernel-smsserviceprovider-msg91.jar; \
+    wget -q --show-progress "${runtime_dep_url_env}/kernel-smsserviceprovider-smartmessagingsuite.jar" -O "${loader_path_env}"/kernel-smsserviceprovider-smartmessagingsuite.jar; \
     java -jar -javaagent:glowroot/glowroot.jar -Dloader.path="${loader_path_env}" -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" kernel-notification-service.jar ; \
     else \
     wget -q --show-progress "${runtime_dep_url_env}/kernel-auth-adapter.jar" -O "${loader_path_env}"/kernel-auth-adapter.jar; \
