@@ -1,0 +1,24 @@
+name: Trigger postgres-init repo upon db scripts updates
+
+on:
+  push:
+    branches:
+      - master
+      - 1.*
+      - develop
+      - release*
+    paths:
+      #- db_release_scripts/**
+      - db_scripts/**
+
+jobs:
+  # This job is to trigger postgres-init repo.
+  trigger-postgres-init-repo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.ACTION_PAT }}
+          repository: mosip/postgres-init
+          client-payload: '{ "ref": "${{ github.ref }}" }'
+          event-type: db-event
