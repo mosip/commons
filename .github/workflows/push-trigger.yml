@@ -3,6 +3,14 @@ name: Maven Package upon a push
 on:
   release:
     types: [published]
+  pull_request:
+    types: [opened]
+    branches:
+      - '!release-branch'
+      - release-1*
+      - 1.*
+      - develop
+      - MOSIP*
   workflow_dispatch:
     inputs:
       message:
@@ -32,7 +40,7 @@ jobs:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
   publish_to_nexus:
-    if: "!contains(github.ref, 'master')"
+    if: "${{ !contains(github.ref, 'master') && github.event_name != 'pull_request' }}"
     needs: build-commons
     uses: mosip/kattu/.github/workflows/maven-publish-to-nexus.yml@master
     with:
@@ -47,6 +55,7 @@ jobs:
 
   sonar_analysis:
     needs: build-commons
+    if: "${{ github.event_name != 'pull_request' }}"
     uses: mosip/kattu/.github/workflows/maven-sonar-analysis.yml@master
     with:
       SERVICE_LOCATION: ./
@@ -84,6 +93,7 @@ jobs:
             BUILD_ARTIFACT: 'commons'
       fail-fast: false
     uses: mosip/kattu/.github/workflows/docker-build.yml@master
+    name: ${{ matrix.SERVICE_NAME }}
     with:
       SERVICE_LOCATION: ${{ matrix.SERVICE_LOCATION }}
       SERVICE_NAME: ${{ matrix.SERVICE_NAME }}
