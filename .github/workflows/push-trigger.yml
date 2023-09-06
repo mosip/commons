@@ -38,7 +38,7 @@ jobs:
     with:
       SERVICE_LOCATION: ./
     secrets:
-      OSSRH_URL: https://oss.sonatype.org/service/local/staging/deploy/maven2
+      OSSRH_URL: ${{ secrets.OSSRH_SNAPSHOT_URL }}
       OSSRH_USER: ${{ secrets.OSSRH_USER }}
       OSSRH_SECRET: ${{ secrets.OSSRH_SECRET }}
       OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
@@ -82,6 +82,7 @@ jobs:
           - SERVICE_LOCATION: 'kernel/kernel-salt-generator'
             SERVICE_NAME: 'kernel-salt-generator'
             BUILD_ARTIFACT: 'commons'
+      fail-fast: false
     uses: mosip/kattu/.github/workflows/docker-build.yml@master
     with:
       SERVICE_LOCATION: ${{ matrix.SERVICE_LOCATION }}
