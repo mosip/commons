@@ -3,6 +3,13 @@ name: Maven Package upon a push
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      message:
+        description: 'Message for manually triggering'
+        required: false
+        default: 'Triggered for Updates'
+        type: string
   push:
     branches:
       - '!release-branch'
