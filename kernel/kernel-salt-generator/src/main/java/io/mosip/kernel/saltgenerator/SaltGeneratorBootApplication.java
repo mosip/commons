@@ -26,7 +26,7 @@ public class SaltGeneratorBootApplication {
 	 */
 	public static void main(String[] args) {
 		ApplicationContext applicationContext = SpringApplication.run(SaltGeneratorBootApplication.class, args);
-		SpringApplication.exit(applicationContext);
+		System.exit(SpringApplication.exit(applicationContext));
 	}
 
 }
