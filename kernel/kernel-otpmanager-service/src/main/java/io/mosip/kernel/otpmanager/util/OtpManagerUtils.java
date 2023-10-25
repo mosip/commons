@@ -94,7 +94,7 @@ public class OtpManagerUtils {
 
 	public static String getHash(String string) {
 		try {
-			return new String(HMACUtils2.generateHash(string.getBytes()));
+			return HMACUtils2.digestAsPlainText(string.getBytes());
 		} catch (NoSuchAlgorithmException e) {
 			throw new BaseUncheckedException(OtpErrorConstants.OTP_GEN_ALGO_FAILURE.getErrorCode(),
 					OtpErrorConstants.OTP_GEN_ALGO_FAILURE.getErrorMessage(), e);
