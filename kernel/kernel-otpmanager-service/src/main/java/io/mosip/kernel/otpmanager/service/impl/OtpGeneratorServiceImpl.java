@@ -11,6 +11,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 
 import io.mosip.kernel.core.otpmanager.spi.OtpGenerator;
+import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.otpmanager.constant.OtpStatusConstants;
 import io.mosip.kernel.otpmanager.dto.OtpGeneratorRequestDto;
 import io.mosip.kernel.otpmanager.dto.OtpGeneratorResponseDto;
@@ -89,7 +90,8 @@ public class OtpGeneratorServiceImpl implements OtpGenerator<OtpGeneratorRequest
 		/*
 		 * Checking whether the key exists in the repository.
 		 */
-		OtpEntity keyCheck = otpRepository.findById(OtpEntity.class, otpDto.getKey());
+		String keyHash = OtpManagerUtils.getHash(otpDto.getKey());
+		OtpEntity keyCheck = otpRepository.findById(OtpEntity.class, keyHash);
 		if ((keyCheck != null) && (keyCheck.getStatusCode().equals(OtpStatusConstants.KEY_FREEZED.getProperty()))
 				&& (OtpManagerUtils.timeDifferenceInSeconds(keyCheck.getUpdatedDtimes(),
 						LocalDateTime.now(ZoneId.of("UTC"))) <= Integer.parseInt(keyFreezeTime))) {
@@ -103,9 +105,9 @@ public class OtpGeneratorServiceImpl implements OtpGenerator<OtpGeneratorRequest
 			}
 			
 			OtpEntity otp = new OtpEntity();
-			otp.setId(otpDto.getKey());
+			otp.setId(keyHash);
 			otp.setValidationRetryCount(0);
-			otp.setOtp(generatedOtp);
+			otp.setOtp(OtpManagerUtils.getHash(generatedOtp));
 			otpRepository.save(otp);
 			response.setOtp(generatedOtp);
 			response.setStatus(OtpStatusConstants.GENERATION_SUCCESSFUL.getProperty());
