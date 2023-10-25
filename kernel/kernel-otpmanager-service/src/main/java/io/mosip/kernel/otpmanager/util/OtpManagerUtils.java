@@ -1,5 +1,6 @@
 package io.mosip.kernel.otpmanager.util;
 
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -10,7 +11,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
+import io.mosip.kernel.core.exception.BaseUncheckedException;
 import io.mosip.kernel.core.exception.ServiceError;
+import io.mosip.kernel.core.util.HMACUtils2;
 import io.mosip.kernel.core.util.StringUtils;
 import io.mosip.kernel.otpmanager.constant.OtpErrorConstants;
 import io.mosip.kernel.otpmanager.exception.OtpInvalidArgumentException;
@@ -86,6 +89,15 @@ public class OtpManagerUtils {
 		}
 		if (!validationErrorsList.isEmpty()) {
 			throw new OtpInvalidArgumentException(validationErrorsList);
+		}
+	}
+
+	public static String getHash(String string) {
+		try {
+			return new String(HMACUtils2.generateHash(string.getBytes()));
+		} catch (NoSuchAlgorithmException e) {
+			throw new BaseUncheckedException(OtpErrorConstants.OTP_GEN_ALGO_FAILURE.getErrorCode(),
+					OtpErrorConstants.OTP_GEN_ALGO_FAILURE.getErrorMessage(), e);
 		}
 	}
 }

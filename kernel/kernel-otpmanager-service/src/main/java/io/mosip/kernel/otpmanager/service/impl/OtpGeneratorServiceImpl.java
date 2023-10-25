@@ -11,6 +11,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 
 import io.mosip.kernel.core.otpmanager.spi.OtpGenerator;
+import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.otpmanager.constant.OtpStatusConstants;
 import io.mosip.kernel.otpmanager.dto.OtpGeneratorRequestDto;
 import io.mosip.kernel.otpmanager.dto.OtpGeneratorResponseDto;
@@ -52,6 +53,14 @@ public class OtpGeneratorServiceImpl implements OtpGenerator<OtpGeneratorRequest
 	@Value("${javax.persistence.jdbc.url}")
 	String jdbcUrl;
 	
+	@Value("${spring.profiles.active}")
+	String activeProfile;
+	
+	@Value("${mosip.kernel.auth.proxy-otp-value:111111}")
+	String localOtp;
+	
+	@Value("${mosip.kernel.auth.proxy-otp}")
+	private boolean isProxytrue;
 
 	/*
 	 * (non-Javadoc)
@@ -70,21 +79,35 @@ public class OtpGeneratorServiceImpl implements OtpGenerator<OtpGeneratorRequest
 		 */
 		OtpGeneratorResponseDto response = new OtpGeneratorResponseDto();
 		/*
+		 * Skipping OTP creation for local profile 
+		 */
+        if(activeProfile.equalsIgnoreCase("local")) {
+        	response.setOtp(localOtp);
+			response.setStatus(OtpStatusConstants.GENERATION_SUCCESSFUL.getProperty());
+		    return response;
+        }
+		
+		/*
 		 * Checking whether the key exists in the repository.
 		 */
-		OtpEntity keyCheck = otpRepository.findById(OtpEntity.class, otpDto.getKey());
+		String keyHash = OtpManagerUtils.getHash(otpDto.getKey());
+		OtpEntity keyCheck = otpRepository.findById(OtpEntity.class, keyHash);
 		if ((keyCheck != null) && (keyCheck.getStatusCode().equals(OtpStatusConstants.KEY_FREEZED.getProperty()))
 				&& (OtpManagerUtils.timeDifferenceInSeconds(keyCheck.getUpdatedDtimes(),
 						LocalDateTime.now(ZoneId.of("UTC"))) <= Integer.parseInt(keyFreezeTime))) {
 			response.setOtp(OtpStatusConstants.SET_AS_NULL_IN_STRING.getProperty());
 			response.setStatus(OtpStatusConstants.BLOCKED_USER.getProperty());
 		} else {
+			if (isProxytrue){
+				generatedOtp = localOtp;
+			} else {
 				generatedOtp = otpProvider.computeOtp(otpDto.getKey(), otpLength, macAlgorithm);
+			}
 			
 			OtpEntity otp = new OtpEntity();
-			otp.setId(otpDto.getKey());
+			otp.setId(keyHash);
 			otp.setValidationRetryCount(0);
-			otp.setOtp(generatedOtp);
+			otp.setOtp(OtpManagerUtils.getHash(generatedOtp));
 			otpRepository.save(otp);
 			response.setOtp(generatedOtp);
 			response.setStatus(OtpStatusConstants.GENERATION_SUCCESSFUL.getProperty());
