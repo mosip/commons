@@ -6,7 +6,7 @@ CREATE TABLE kernel.otp_transaction(
 	id character varying(64) NOT NULL,
 	ref_id character varying(64),
 	ref_id_type character varying(64),
-	otp character varying(8),
+	otp character varying(64),
 	generated_dtimes timestamp,
 	expiry_dtimes timestamp,
 	validation_retry_count smallint,
