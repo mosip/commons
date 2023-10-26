@@ -1,5 +1,7 @@
 package io.mosip.kernel.otpmanager.repository;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Repository;
 
 import io.mosip.kernel.core.dataaccess.spi.repository.BaseRepository;
@@ -16,4 +18,5 @@ import io.mosip.kernel.otpmanager.entity.OtpEntity;
  */
 @Repository
 public interface OtpRepository extends BaseRepository<OtpEntity, String> {
+	Optional<OtpEntity> findByRefId(String refId);
 }
