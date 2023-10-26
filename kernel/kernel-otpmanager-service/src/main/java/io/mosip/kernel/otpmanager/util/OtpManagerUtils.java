@@ -36,6 +36,8 @@ public class OtpManagerUtils {
 
 	@Value("${mosip.kernel.otp.max-key-length}")
 	String keyMaxLength;
+	
+	private static final String KEY_OTP_SEPARATOR = ":";
 
 	/**
 	 * This method returns the difference between two LocalDateTime objects in
@@ -90,6 +92,10 @@ public class OtpManagerUtils {
 		if (!validationErrorsList.isEmpty()) {
 			throw new OtpInvalidArgumentException(validationErrorsList);
 		}
+	}
+
+	public static String getKeyOtpHash(String key, String otp) {
+		return getHash(key + KEY_OTP_SEPARATOR + otp);
 	}
 
 	public static String getHash(String string) {

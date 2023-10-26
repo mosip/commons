@@ -2,16 +2,14 @@ package io.mosip.kernel.otpmanager.service.impl;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 
 import io.mosip.kernel.core.otpmanager.spi.OtpGenerator;
-import io.mosip.kernel.core.util.CryptoUtil;
 import io.mosip.kernel.otpmanager.constant.OtpStatusConstants;
 import io.mosip.kernel.otpmanager.dto.OtpGeneratorRequestDto;
 import io.mosip.kernel.otpmanager.dto.OtpGeneratorResponseDto;
@@ -34,7 +32,6 @@ public class OtpGeneratorServiceImpl implements OtpGenerator<OtpGeneratorRequest
 	/**
 	 * The reference that autowires OtpRepository class.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(OtpGeneratorServiceImpl.class);
 	@Autowired
 	private OtpRepository otpRepository;
 
@@ -90,10 +87,10 @@ public class OtpGeneratorServiceImpl implements OtpGenerator<OtpGeneratorRequest
 		/*
 		 * Checking whether the key exists in the repository.
 		 */
-		String keyHash = OtpManagerUtils.getHash(otpDto.getKey());
-		OtpEntity keyCheck = otpRepository.findById(OtpEntity.class, keyHash);
-		if ((keyCheck != null) && (keyCheck.getStatusCode().equals(OtpStatusConstants.KEY_FREEZED.getProperty()))
-				&& (OtpManagerUtils.timeDifferenceInSeconds(keyCheck.getUpdatedDtimes(),
+		String refIdHash = OtpManagerUtils.getHash(otpDto.getKey());
+		Optional<OtpEntity> entityOpt = otpRepository.findByRefId(refIdHash);
+		if (entityOpt.isPresent() && (entityOpt.get().getStatusCode().equals(OtpStatusConstants.KEY_FREEZED.getProperty()))
+				&& (OtpManagerUtils.timeDifferenceInSeconds(entityOpt.get().getUpdatedDtimes(),
 						LocalDateTime.now(ZoneId.of("UTC"))) <= Integer.parseInt(keyFreezeTime))) {
 			response.setOtp(OtpStatusConstants.SET_AS_NULL_IN_STRING.getProperty());
 			response.setStatus(OtpStatusConstants.BLOCKED_USER.getProperty());
@@ -105,9 +102,9 @@ public class OtpGeneratorServiceImpl implements OtpGenerator<OtpGeneratorRequest
 			}
 			
 			OtpEntity otp = new OtpEntity();
-			otp.setId(keyHash);
+			otp.setId(OtpManagerUtils.getKeyOtpHash(otpDto.getKey(), generatedOtp));
+			otp.setRefId(refIdHash);
 			otp.setValidationRetryCount(0);
-			otp.setOtp(OtpManagerUtils.getHash(generatedOtp));
 			otpRepository.save(otp);
 			response.setOtp(generatedOtp);
 			response.setStatus(OtpStatusConstants.GENERATION_SUCCESSFUL.getProperty());
