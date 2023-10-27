@@ -10,7 +10,7 @@ package io.mosip.kernel.otpmanager.constant;
  */
 public enum SqlQueryConstants {
 	UPDATE("UPDATE"), ID("id"), NEW_OTP_STATUS("newOtpStatus"), NEW_NUM_OF_ATTEMPT("newNumOfAttempt"),
-	NEW_VALIDATION_TIME("newValidationTime");
+	NEW_VALIDATION_TIME("newValidationTime"), REF_ID("refId");
 
 	/**
 	 * The property.
