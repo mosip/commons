@@ -61,7 +61,7 @@
 		<!-- <module>kernel-authcodeflowproxy-api</module> Move to mosip/mosip-openid-bridge -->
 		<!-- <module>kernel-biometrics-api</module> Moved to mosip/bio-utils -->
                 <module>kernel-websubclient-api</module>
-		<module>kernel-otpmanager-service</module>
+		<!-- <module>kernel-otpmanager-service</module> Moved to mosip/otp-manager -->
 		<module>kernel-notification-service</module>
 		<module>kernel-ridgenerator-service</module>
 		<module>kernel-idgenerator-service</module>
