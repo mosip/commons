@@ -1,5 +1,4 @@
 # Kernel Otp Manager Service
+## [DEPRECATED]
 
-## Overview
-This service provides funtions to generate and validate OTP.
- 
+THIS MODULE IS MOVED TO https://github.com/mosip/otp-manager
