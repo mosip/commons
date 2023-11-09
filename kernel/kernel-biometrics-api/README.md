@@ -1,9 +1,4 @@
 # Kernel Biometrics Api
-[MOVED TO mosip/bio-utils]
+## [DEPRECATED]
 
-## Overview
-This library provides core funtions related to biometrics.
-
-## Technical features
-- Creation and conversion of XML and BIR models.
-- Biometric opertions like matching and quality assessment.
+THIS MODULE IS MOVED TO https://github.com/mosip/bio-utils
