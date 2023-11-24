@@ -63,7 +63,7 @@
 		<module>kernel-bioapi-provider</module> 
 		<module>kernel-authcodeflowproxy-api</module> -->
 		<module>kernel-websubclient-api</module>
-		<module>kernel-otpmanager-service</module>
+		<!-- <module>kernel-otpmanager-service</module> -->
 		<module>kernel-notification-service</module>
 		<module>kernel-ridgenerator-service</module>
 		<module>kernel-idgenerator-service</module>
