@@ -491,7 +491,7 @@
 				<dependency>
 					<groupId>io.mosip.kernel</groupId>
 					<artifactId>kernel-smsserviceprovider-msg91</artifactId>
-					<version>1.2.0.1-B2-rc1</version>
+					<version>1.2.0.1-B2</version>
 				</dependency>
 			</dependencies>
 			<build>
