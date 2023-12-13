@@ -220,7 +220,6 @@
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
 		<kernel.core.version>1.2.0.1-B2</kernel.core.version>
 		<kernel.dataaccess-hibernate.version>1.2.0.1-B2</kernel.dataaccess-hibernate.version>
-		<kernel-keymanager-service.version>1.2.0.1-B2</kernel-keymanager-service.version>
 		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 	</properties>
 	<dependencies>
