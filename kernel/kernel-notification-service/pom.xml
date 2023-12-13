@@ -222,7 +222,6 @@
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
 		<kernel.core.version>1.2.0.1-SNAPSHOT</kernel.core.version>
-		<kernel.auth-adapter.version>1.2.0.1-SNAPSHOT</kernel.auth-adapter.version>
 		<kernel.applicant-type.version>1.2.0.1-SNAPSHOT</kernel.applicant-type.version>
 		<kernel.dataaccess-hibernate.version>1.2.0.1-SNAPSHOT</kernel.dataaccess-hibernate.version>
 		<kernel.logger.version>1.2.0.1-SNAPSHOT</kernel.logger.version>
@@ -486,7 +485,7 @@
 				<dependency>
 					<groupId>io.mosip.kernel</groupId>
 					<artifactId>kernel-auth-adapter</artifactId>
-					<version>${project.version}</version>
+                                        <version>v1.2.0.1-B2</version>  <!-- Updating to last released version to remove circular dependency in release -->
 				</dependency>
 				<dependency>
 					<groupId>io.mosip.kernel</groupId>
