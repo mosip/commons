@@ -5,7 +5,7 @@
 
 	<artifactId>kernel-biosdk-provider</artifactId>
 	<groupId>io.mosip.kernel</groupId>
-	<version>1.2.0.1-B3</version>
+	<version>1.2.0.1-B2</version>
 	<name>kernel-biosdk-provider</name>
 	<description>Implementation of biosdk provider</description>
 	<url>https://github.com/mosip/commons</url>
