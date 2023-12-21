@@ -221,7 +221,6 @@
 		<kernel.dataaccess-hibernate.version>1.2.1-SNAPSHOT</kernel.dataaccess-hibernate.version>
 		<kernel.logger.version>1.2.1-SNAPSHOT</kernel.logger.version>
 		<kernel.idvalidator-prid.version>1.2.1-SNAPSHOT</kernel.idvalidator-prid.version>
-		<kernel-keymanager-service.version>1.2.1-SNAPSHOT</kernel-keymanager-service.version>
 		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 	</properties>
 	<artifactId>kernel-idgenerator-prid</artifactId>
