@@ -15,12 +15,12 @@ jobs:
 
       - name: Create branch protection
         run: |
-          BRANCH_NAME=develop
+          BRANCH_NAME="develop"
           GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
 
           # Get the repository information
-          REPO_OWNER=Rakshithb1
-          REPO_NAME=commons
+          REPO_OWNER="Rakshithb1"
+          REPO_NAME="commons"
 
           # Create a branch protection rule using GitHub API
           curl -X PUT \
