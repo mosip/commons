@@ -15,7 +15,7 @@ jobs:
 
       - name: Add branch protection rule
         run: |
-          TOKEN=$GITHUB_TOKEN
+          TOKEN=$TOKEN
           REPO_OWNER=${{ github.repository_owner }}
           REPO_NAME=${{ github.event.repository.name }}
           BRANCH_NAME=${{ github.event.ref }}
@@ -35,7 +35,7 @@ jobs:
             }'
 
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
         
       - name: Add branch protection rule 
         run: |
