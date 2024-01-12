@@ -16,7 +16,7 @@ jobs:
       - name: Create branch protection
         run: |
           BRANCH_NAME="your-branch-name"
-          GITHUB_TOKEN=${{ secrets.TOKEN }}
+          GITHUB_TOKEN=${{ secrets.$GITHUB_TOKEN }}
 
           # Get the repository information
           REPO_OWNER=$(echo $GITHUB_REPOSITORY | cut -d '/' -f 1)
@@ -24,7 +24,7 @@ jobs:
 
           # Create a branch protection rule using GitHub API
           curl -X PUT \
-            -H "Authorization: Bearer $TOKEN" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/branches/$BRANCH_NAME/protection" \
             -d '{
