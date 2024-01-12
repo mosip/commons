@@ -15,8 +15,8 @@ jobs:
 
       - name: Create branch protection
         run: |
-          BRANCH_NAME="your-branch-name"
-          GITHUB_TOKEN=${{ secrets.$GITHUB_TOKEN }}
+          BRANCH_NAME="develop"
+          GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
 
           # Get the repository information
           REPO_OWNER=$(echo $GITHUB_REPOSITORY | cut -d '/' -f 1)
