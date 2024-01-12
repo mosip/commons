@@ -19,8 +19,8 @@ jobs:
           GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
 
           # Get the repository information
-          REPO_OWNER=$(echo $GITHUB_REPOSITORY | cut -d '/' -f 1)
-          REPO_NAME=$(echo $GITHUB_REPOSITORY | cut -d '/' -f 2)
+          REPO_OWNER=Rakshithb1
+          REPO_NAME=commons
 
           # Create a branch protection rule using GitHub API
           curl -X PUT \
