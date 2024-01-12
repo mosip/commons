@@ -46,3 +46,13 @@ jobs:
             https://api.github.com/repos/Rakshithb1/commons/branches/develop/protection/required_status_checks
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}   
+
+
+      - name: Add branch protection rule 
+        run: |
+           curl -X POST \
+                 -H "Authorization: token ${{ secrets.TOKEN }}" \
+                 -H "Accept: application/vnd.github.v3+json" \
+                 -H "X-GitHub-Api-Version: 2022-11-28" \
+                 https://api.github.com/repos/Rakshithb1/commons/git/refs \
+                 -d '{"ref": "refs/tags/'"$TAG"'", "sha": "'"$OBJECT_SHA"'"}'
