@@ -12,47 +12,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-           
-           
-      - name: Add branch protection rule
-        run: |
-          TOKEN=$GITHUB_TOKEN
-          REPO_OWNER=${{ github.repository_owner }}
-          REPO_NAME=${{ github.event.repository.name }}
-          BRANCH_NAME=${{ github.event.ref }}
-
-          # Create a branch protection rule
-          curl -X PUT \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "Accept: application/vnd.github.v3+json" \
-            https://api.github.com/repos/Rakshithb1/commons/branches/develop/protection \
-            -d '{
-              "required_status_checks": {
-                "contexts": ["kernel-idgenerator-service/build-dockers"]
-              },
-              "enforce_admins": true,
-              "required_pull_request_reviews": null,
-              "restrictions": null
-            }'
-
-        env:
-          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
-        
-      - name: Add branch protection rule 
-        run: |
-          curl -L \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: token  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" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/repos/Rakshithb1/commons/branches/develop/protection/required_status_checks
-           
-
+          
 
       - name: Add branch protection rule 
         run: |
-           curl -X POST \
-                 -H "Authorization: token ${{ secrets.TOKEN }}" \
-                 -H "Accept: application/vnd.github.v3+json" \
-                 -H "X-GitHub-Api-Version: 2022-11-28" \
-                 https://api.github.com/repos/Rakshithb1/commons/git/refs \
-                 -d '{"ref": "refs/tags/'"$TAG"'", "sha": "'"$OBJECT_SHA"'"}'
+           curl -L \
+              -X POST \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer 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" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/Rakshithb1/commons/branches/develop/protection/required_status_checks/contexts  \
+              -d '{"contexts":["build-commons / maven-build","kernel-notification-service / build-dockers"]}'
