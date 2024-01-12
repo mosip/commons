@@ -27,7 +27,7 @@ jobs:
             https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/branches/$BRANCH_NAME/protection \
             -d '{
               "required_status_checks": {
-                "contexts": ["kernel-idgenerator-service / build-dockers"]
+                "contexts": ["kernel-idgenerator-service/build-dockers"]
               },
               "enforce_admins": true,
               "required_pull_request_reviews": null,
