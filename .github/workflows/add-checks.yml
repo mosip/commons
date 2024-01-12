@@ -12,7 +12,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
+      - name: Add 
+        run: |
+         gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+             /repos/Rakshithb1/commons/branches/develop/protection
       - name: Add branch protection rule
         run: |
           TOKEN=$GITHUB_TOKEN
