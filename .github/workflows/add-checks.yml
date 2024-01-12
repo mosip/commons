@@ -16,8 +16,8 @@ jobs:
       - name: Add branch protection rule 
         run: |
         
-          curl -L \
-            -X POST \
+          curl -X POST \
+            
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: token  ${{ secrets.TOKEN }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
