@@ -13,7 +13,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Add branch protection rule
+        run: |
+          TOKEN=$GITHUB_TOKEN
+          REPO_OWNER=${{ github.repository_owner }}
+          REPO_NAME=${{ github.event.repository.name }}
+          BRANCH_NAME=${{ github.event.ref }}
 
+          # Create a branch protection rule
+          curl -X PUT \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/branches/$BRANCH_NAME/protection \
+            -d '{
+              "required_status_checks": {
+                "contexts": ["your-check-name"]
+              },
+              "enforce_admins": true,
+              "required_pull_request_reviews": null,
+              "restrictions": null
+            }'
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
       - name: Add branch protection rule 
         run: |
