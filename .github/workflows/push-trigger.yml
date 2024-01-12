@@ -1,4 +1,4 @@
-name: Maven Package upon a push
+name: Maven Package upon a push 
 
 on:
   release:
