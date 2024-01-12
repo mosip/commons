@@ -30,7 +30,7 @@ jobs:
             -d '{
               "required_status_checks": {
                 "enforcement_level": "strict",
-                "contexts": ["Your-Status-Check-Context"]
+                "contexts": ["kernel-idgenerator-service / build-dockers"]
               }
             }'
         
