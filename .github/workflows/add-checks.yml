@@ -20,7 +20,7 @@ jobs:
             -H "X-GitHub-Api-Version: 2022-11-28" \
              /repos/Rakshithb1/commons/branches/develop/protection
         env:
-         GH_TOKEN: ${{ github.token }}      
+         GH_TOKEN: ${{ secrets.TOKEN }}       
       - name: Add branch protection rule
         run: |
           TOKEN=$GITHUB_TOKEN
