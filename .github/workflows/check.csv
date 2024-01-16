@@ -1,1 +1,7 @@
+repo_name,branch_name,checks
+example-repo,main,context1
+example-repo,main,context2
+example-repo,feature-branch,context3
+example-repo,feature-branch,context4
+example-repo,bugfix-branch,context5
 
