@@ -32,7 +32,7 @@ jobs:
           done
           
       - name: Delete branch protection rule
-        if: "${{ contains(github.event.inputs.api_method, 'Delete') }}"
+        if: "${{ !github.event.inputs.api_method || contains(github.event.inputs.api_method, 'Get') }}"
         run: |
           tail -n +2 .github/workflows/check.csv | while IFS=, read -r REPO_NAME BRANCH_NAME CHECKS; do
             curl -L \
