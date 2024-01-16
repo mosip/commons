@@ -1,5 +1,5 @@
 repo_name,branch_name,checks
-commons,develop,kernel-salt-generator / build-dockers
-commons,develop,kernel-ridgenerator-service / build-dockers
+Rakshithb1/commons,develop,kernel-salt-generator / build-dockers
+Rakshithb1/commons,develop,kernel-ridgenerator-service / build-dockers
 
 
