@@ -1,12 +1,12 @@
-name: Add Branch Protection
+name: Branch Protection
 
 on:
   push:
     branches:
-      - main
+      - develop
 
 jobs:
-  add-branch-protection:
+  branch-protection:
     runs-on: ubuntu-latest
     env: 
      G_TOKEN: ${{ secrets.SSTOKEN }}
