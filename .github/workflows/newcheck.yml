@@ -19,9 +19,9 @@ jobs:
         run: |
           cd .github/workflows
           CSV_CONTENT=$(tail -n +2 check.csv)
-          REPO_NAMES=($(echo "$CSV_CONTENT" | cut -d ',' -f 1))
-          BRANCH_NAMES=($(echo "$CSV_CONTENT" | cut -d ',' -f 2))
-          CHECKS=($(echo "$CSV_CONTENT" | cut -d ',' -f 3))
+          echo "::set-output name=repo_names::$(echo "$CSV_CONTENT" | cut -d ',' -f 1 | jq -R -s -c 'split("\n")[:-1]')"
+          echo "::set-output name=branch_names::$(echo "$CSV_CONTENT" | cut -d ',' -f 2 | jq -R -s -c 'split("\n")[:-1]')"
+          echo "::set-output name=checks::$(echo "$CSV_CONTENT" | cut -d ',' -f 3 | jq -R -s -c 'split("\n")[:-1]')"
 
           echo "::set-output name=repo_names::${REPO_NAMES[@]}"
           echo "::set-output name=branch_names::${BRANCH_NAMES[@]}"
@@ -29,9 +29,9 @@ jobs:
 
       - name: Add branch protection rule
         run: |
-          REPO_NAMES=("${{ fromJson(steps.read-values.outputs.repo_names) }}")
-          BRANCH_NAMES=("${{ fromJson(steps.read-values.outputs.branch_names) }}")
-          CHECKS=("${{ fromJson(steps.read-values.outputs.checks) }}")
+          REPO_NAMES=(${{ steps.read-values.outputs.repo_names }})
+          BRANCH_NAMES=(${{ steps.read-values.outputs.branch_names }})
+          CHECKS=(${{ steps.read-values.outputs.checks }})
 
           for i in $(seq 0 $((${#REPO_NAMES[@]} - 1))); do
             REPO_NAME=${REPO_NAMES[$i]}
