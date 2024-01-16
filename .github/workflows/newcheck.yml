@@ -1,0 +1,50 @@
+name: Add Branch Protection
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  add-branch-protection:
+    runs-on: ubuntu-latest
+    env: 
+     G_TOKEN: ${{ secrets.SSTOKEN }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Read values from CSV
+        id: read-values
+        run: |
+          CSV_CONTENT=$(tail -n +2 status_checks.csv)
+          REPO_NAMES=($(echo "$CSV_CONTENT" | cut -d ',' -f 1))
+          BRANCH_NAMES=($(echo "$CSV_CONTENT" | cut -d ',' -f 2))
+          CHECKS=($(echo "$CSV_CONTENT" | cut -d ',' -f 3))
+
+          echo "::set-output name=repo_names::${REPO_NAMES[@]}"
+          echo "::set-output name=branch_names::${BRANCH_NAMES[@]}"
+          echo "::set-output name=checks::${CHECKS[@]}"
+
+      - name: Add branch protection rule
+        run: |
+          REPO_NAMES=(${{ steps.read-values.outputs.repo_names | toJson }})
+          BRANCH_NAMES=(${{ steps.read-values.outputs.branch_names | toJson }})
+          CHECKS=(${{ steps.read-values.outputs.checks | toJson }})
+
+          for i in $(seq 0 $((${#REPO_NAMES[@]} - 1))); do
+            REPO_NAME=${REPO_NAMES[$i]}
+            BRANCH_NAME=${BRANCH_NAMES[$i]}
+            CHECK=${CHECKS[$i]}
+
+            # Create a branch protection rule
+            curl -X PUT \
+              -H "Authorization: Bearer $G_TOKEN" \
+              -H "Accept: application/vnd.github.v3+json" \
+              https://api.github.com/repos/$REPO_NAME/$BRANCH_NAME/protection \
+              -d "{
+                \"required_status_checks\": {
+                  \"contexts\": [\"$CHECK\"]
+                },
+              }"
+          done
