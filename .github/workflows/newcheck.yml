@@ -45,7 +45,7 @@ jobs:
            done
               
       - name: Get branch protection rule
-        if: "${{ !github.event.inputs.api_method || contains(github.event.inputs.api_method, 'Get') }}"
+        if: "${{contains(github.event.inputs.api_method, 'Get') github.event.inputs.api_method == 'Add' || github.event.inputs.api_method == 'Delete' }}"
         run: |
          tail -n +2 .github/workflows/check.csv | while IFS=, read -r REPO_NAME BRANCH_NAME CHECKS; do
            curl -L \
