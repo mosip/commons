@@ -28,9 +28,9 @@ jobs:
 
       - name: Add branch protection rule
         run: |
-          REPO_NAMES=(${{ steps.read-values.outputs.repo_names | toJson }})
-          BRANCH_NAMES=(${{ steps.read-values.outputs.branch_names | toJson }})
-          CHECKS=(${ { steps.read-values.outputs.checks } | toJson })
+          REPO_NAMES=${{ steps.read-values.outputs.repo_names.toJson() }}
+          BRANCH_NAMES=${{ steps.read-values.outputs.branch_names.toJson() }}
+          CHECKS=${{ steps.read-values.outputs.checks.toJson() }}
 
           for i in $(seq 0 $((${#REPO_NAMES[@]} - 1))); do
             REPO_NAME=${REPO_NAMES[$i]}
