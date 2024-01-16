@@ -14,15 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Read values from CSV
-        id: read-values
-        run: |
-          cd .github/workflows
-          CSV_CONTENT=$(tail -n +2 check.csv)
-          echo "REPO_NAMES=$(echo "$CSV_CONTENT" | cut -d ',' -f 1 | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_ENV
-          echo "BRANCH_NAMES=$(echo "$CSV_CONTENT" | cut -d ',' -f 2 | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_ENV
-          echo "CHECKS=$(echo "$CSV_CONTENT" | cut -d ',' -f 3 | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_ENV
-
+      
 
 
       - name: Add branch protection rule
