@@ -1,9 +1,13 @@
 name: Branch Protection
 
 on:
-  push:
-    branches:
-      - develop
+  workflow_dispatch:
+    inputs:
+      api_method:
+        description: 'Provide API method (ADD, GET, DELETE)'
+        required: true
+        default: ''
+        type: string
 
 jobs:
   branch-protection:
