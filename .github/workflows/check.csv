@@ -1,4 +1,4 @@
-REPO,TAG,BRANCH,CHECKS
+REPO,BRANCH,CHECKS
 Rakshithb1/commons,develop,kernel-salt-generator / build-dockers
 Rakshithb1/commons,develop,kernel-ridgenerator-service / build-dockers
 
