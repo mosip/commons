@@ -1,5 +1,6 @@
-repo_name,branch_name,checks
+REPO,TAG,BRANCH,CHECKS
 Rakshithb1/commons,develop,kernel-salt-generator / build-dockers
 Rakshithb1/commons,develop,kernel-ridgenerator-service / build-dockers
+
 
 
