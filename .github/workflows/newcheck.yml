@@ -17,6 +17,7 @@ jobs:
       - name: Read values from CSV
         id: read-values
         run: |
+          cd .github/workflows
           CSV_CONTENT=$(tail -n +2 check.csv)
           REPO_NAMES=($(echo "$CSV_CONTENT" | cut -d ',' -f 1))
           BRANCH_NAMES=($(echo "$CSV_CONTENT" | cut -d ',' -f 2))
