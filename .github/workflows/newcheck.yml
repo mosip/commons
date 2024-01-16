@@ -1,4 +1,4 @@
-name: Branch Protection
+name: Require status checks to pass before merging
 
 on:
   workflow_dispatch:
@@ -10,47 +10,48 @@ on:
         type: string
 
 jobs:
-  branch-protection:
+  status-checks:
     runs-on: ubuntu-latest
     env: 
-     G_TOKEN: ${{ secrets.SSTOKEN }}
+     Status_TOKEN: ${{ secrets.SSTOKEN }}
+     CSV_LOCATION: .github/workflows/check.csv
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
  
-      - name: Add branch protection rule
+      - name: Add status checks
         if: "${{ contains(github.event.inputs.api_method, 'Add') }}"
         run: |
-          tail -n +2 .github/workflows/check.csv | while IFS=, read -r REPO_NAME BRANCH_NAME CHECKS; do
+          tail -n +2 $CSV_LOCATION | while IFS=, read -r REPO_NAME BRANCH_NAME CHECKS; do
             curl -L \
               -X POST \
               -H "Accept: application/vnd.github+json" \
-              -H "Authorization: Bearer $G_TOKEN" \
+              -H "Authorization: Bearer $Status_TOKEN" \
               -H "X-GitHub-Api-Version: 2022-11-28" \
               "https://api.github.com/repos/$REPO_NAME/branches/$BRANCH_NAME/protection/required_status_checks/contexts" \
               -d "{\"contexts\":[\"$CHECKS\"]}"
           done
           
-      - name: Delete branch protection rule
+      - name: Delete status checks
         if: "${{ contains(github.event.inputs.api_method, 'Delete') }}"
         run: |
-          tail -n +2 .github/workflows/check.csv | while IFS=, read -r REPO_NAME BRANCH_NAME CHECKS; do
+          tail -n +2 $CSV_LOCATION | while IFS=, read -r REPO_NAME BRANCH_NAME CHECKS; do
             curl -L \
               -X DELETE \
               -H "Accept: application/vnd.github+json" \
-              -H "Authorization: Bearer $G_TOKEN" \
+              -H "Authorization: Bearer $Status_TOKEN" \
               -H "X-GitHub-Api-Version: 2022-11-28" \
               https://api.github.com/repos/$REPO_NAME/branches/$BRANCH_NAME/protection/required_status_checks/contexts \
               -d "{\"contexts\":[\"$CHECKS\"]}"
            done
               
-      - name: Get branch protection rule
+      - name: Get status checks
         if: "${{contains(github.event.inputs.api_method, 'Get') || github.event.inputs.api_method == 'Add' || github.event.inputs.api_method == 'Delete' }}"
         run: |
-         tail -n +2 .github/workflows/check.csv | while IFS=, read -r REPO_NAME BRANCH_NAME CHECKS; do
+         tail -n +2 $CSV_LOCATION | while IFS=, read -r REPO_NAME BRANCH_NAME CHECKS; do
            curl -L \
              -H "Accept: application/vnd.github+json" \
-             -H "Authorization: Bearer $G_TOKEN" \
+             -H "Authorization: Bearer $Status_TOKEN" \
              -H "X-GitHub-Api-Version: 2022-11-28" \
               https://api.github.com/repos/$REPO_NAME/branches/$BRANCH_NAME/protection/required_status_checks/contexts
          done     
