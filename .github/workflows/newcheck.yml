@@ -27,14 +27,10 @@ jobs:
 
       - name: Add branch protection rule
         run: |
-          REPO_NAMES=($REPO_NAMES)
-          BRANCH_NAMES=($BRANCH_NAMES)
-          CHECKS=($CHECKS)
-
-          for i in $(seq 0 $((${#REPO_NAMES[@]} - 1))); do
-            REPO_NAME=${REPO_NAMES[$i]}
-            BRANCH_NAME=${BRANCH_NAMES[$i]}
-            CHECK=${CHECKS[$i]}
+          for line in $(tail -n +2 .github/workflows/check.csv); do
+            REPO_NAME=$(echo $line | cut -d ',' -f 1)
+            BRANCH_NAME=$(echo $line | cut -d ',' -f 2)
+            CHECK=$(echo $line | cut -d ',' -f 3)
 
             # Create a branch protection rule
             curl -X PUT \
@@ -47,6 +43,7 @@ jobs:
                 }
               }"
           done
+
 
 
 
