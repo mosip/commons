@@ -9,8 +9,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- maven -->
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<java.version>17</java.version>
 		<maven.compiler.version>3.8.0</maven.compiler.version>
 		<!-- <maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version> -->
 
@@ -18,15 +19,16 @@
 		<maven.war.plugin.version>3.1.0</maven.war.plugin.version>
 		<!-- <maven.jacoco.plugin.version>0.8.1</maven.jacoco.plugin.version> -->
 		<!-- <maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version> -->
-		<maven.javadoc.version>3.2.0</maven.javadoc.version>
+		<maven.javadoc.version>3.6.3</maven.javadoc.version>
 		<maven-shade-plugin.version>2.3</maven-shade-plugin.version>
 
 		<!-- spring -->
-		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
-		<spring.data.jpa.version>2.0.7.RELEASE</spring.data.jpa.version>
-		<spring.security.test.version>5.0.5.RELEASE</spring.security.test.version>
-		<spring-cloud-config.version>2.0.4.RELEASE</spring-cloud-config.version>
-		<spring.retry.version>1.2.1.RELEASE</spring.retry.version>
+		<spring.boot.version>3.2.2</spring.boot.version>
+		<spring.data.jpa.version>3.2.2</spring.data.jpa.version>
+		<spring.security.test.version>6.2.1</spring.security.test.version>
+		<spring-cloud-config.version>4.1.0</spring-cloud-config.version>
+		<spring-cloud-config-sleuth.version>3.1.11</spring-cloud-config-sleuth.version>
+		<spring.retry.version>2.0.5</spring.retry.version>
 
 		<!-- swagger -->
 		<swagger.core.version>2.0.7</swagger.core.version>
@@ -55,10 +57,10 @@
 		<hibernate.validator.version>6.0.12.Final</hibernate.validator.version>
 
 		<!-- test -->
-		<junit.version>4.13.1</junit.version>
-		<mockito.version>2.23.4</mockito.version>
-		<powermock.version>1.7.4</powermock.version>
-		<powermock.beta.version>2.0.7</powermock.beta.version>
+		<junit.version>	4.13.2</junit.version>
+		<mockito.version>5.10.0</mockito.version>
+		<powermock.version>2.0.9</powermock.version>
+		<powermock.beta.version>2.0.9</powermock.beta.version>
 
 		<!-- logger -->
 		<logback.version>1.2.3</logback.version>
@@ -85,7 +87,7 @@
 		<commons.configuration2.version>2.2</commons.configuration2.version>
 		<apache.httpcomponents.version>4.5.6</apache.httpcomponents.version>
 		<guava.version>19.0</guava.version>
-		<lombok.version>1.18.8</lombok.version>
+		<lombok.version>1.18.22</lombok.version>
 		<jsch.version>0.1.54</jsch.version>
 		<sshd.version>1.4.0</sshd.version>
 		<itextcore.version>7.1.0</itextcore.version>
@@ -114,7 +116,7 @@
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
 		<jwt.version> 3.8.1</jwt.version>
 		<mockito.core.version>2.22.0</mockito.core.version>
-		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
+		<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
 		<fasterxml.jackson.module.afterburner.version>2.12.0</fasterxml.jackson.module.afterburner.version>
 		<fasterxml.jackson.module.jsr310.version>2.12.0</fasterxml.jackson.module.jsr310.version>
 		<sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/verticle/**,**/spi/**,"**/proxy/**","**/entities/**","**/filter/**","**/util/**","**/verifier/**","**/jaxbclasses/**"</sonar.coverage.exclusions>
@@ -280,7 +282,7 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-sleuth</artifactId>
-			<version>${spring-cloud-config.version}</version>
+			<version>${spring-cloud-config-sleuth.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
@@ -406,7 +408,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>${maven.javadoc.version}</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
