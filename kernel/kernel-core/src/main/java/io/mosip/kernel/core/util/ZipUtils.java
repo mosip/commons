@@ -361,7 +361,7 @@ public class ZipUtils {
 
 		try (ZipInputStream zipIn = new ZipInputStream(new FileInputStream(zipFilePath))) {
 
-			ZipEntry entry = zipIn.getNextEntry();
+			ZipEntry entry = zipIn.getNextEntry();    //NOSONAR Setting the ZipEntry here.
 			while (entry != null) {
 
 				String filePath = destDirectory + File.separator + entry.getName();
@@ -387,7 +387,7 @@ public class ZipUtils {
 					}
 				}
 				zipIn.closeEntry();
-				entry = zipIn.getNextEntry();
+				entry = zipIn.getNextEntry();     //NOSONAR Setting the Next Entry here.
 			}
 		} catch (java.io.FileNotFoundException e) {
 			throw new FileNotFoundException(ZipUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getErrorCode(),
