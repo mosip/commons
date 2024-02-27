@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-pinvalidator</artifactId>
-	<version>1.2.0.1-B2</version>
+	<version>1.2.0.1-SNAPSHOT</version>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -218,7 +218,7 @@
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<kernel.core.version>1.2.0.1-B2</kernel.core.version>
+		<kernel.core.version>1.2.0.1-SNAPSHOT</kernel.core.version>
 		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 	</properties>
 	<dependencies>
