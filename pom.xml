@@ -4,7 +4,7 @@
         <modelVersion>4.0.0</modelVersion>
         <groupId>io.mosip</groupId>
         <artifactId>commons</artifactId>
-        <version>1.2.0.1-SNAPSHOT</version>
+        <version>1.2.0.1</version>
         <packaging>pom</packaging>
 
         <name>MOSIP Commons Parent POM</name>
