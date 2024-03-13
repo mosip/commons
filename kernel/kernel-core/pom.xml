@@ -11,7 +11,6 @@
 		<!-- maven -->
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
-		<java.version>17</java.version>
 		<maven.compiler.version>3.8.0</maven.compiler.version>
 		<!-- <maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version> -->
 
@@ -57,7 +56,7 @@
 		<hibernate.validator.version>6.0.12.Final</hibernate.validator.version>
 
 		<!-- test -->
-		<junit.version>	4.13.2</junit.version>
+		<junit.version>4.13.2</junit.version>
 		<mockito.version>5.10.0</mockito.version>
 		<powermock.version>2.0.9</powermock.version>
 		<powermock.beta.version>2.0.9</powermock.beta.version>
@@ -122,7 +121,7 @@
 		<sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/verticle/**,**/spi/**,"**/proxy/**","**/entities/**","**/filter/**","**/util/**","**/verifier/**","**/jaxbclasses/**"</sonar.coverage.exclusions>
 	</properties>
 	<artifactId>kernel-core</artifactId>
-	<version>1.2.1-SNAPSHOT</version>
+	<version>1.2.1-java17-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

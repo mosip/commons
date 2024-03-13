@@ -4,13 +4,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-logger-logback</artifactId>
-	<version>1.2.1-SNAPSHOT</version>
+	<version>1.2.1-java17-SNAPSHOT</version>
 <properties>		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- maven -->
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 		<maven.compiler.version>3.8.0</maven.compiler.version>
 		<!-- <maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version> -->
 
@@ -22,10 +22,10 @@
 		<maven-shade-plugin.version>2.3</maven-shade-plugin.version>
 
 		<!-- spring -->
-		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
-		<spring.data.jpa.version>2.0.7.RELEASE</spring.data.jpa.version>
-		<spring.security.test.version>5.0.5.RELEASE</spring.security.test.version>
-		<spring-cloud-config.version>2.0.4.RELEASE</spring-cloud-config.version>
+		<spring.boot.version>3.2.2</spring.boot.version>
+		<spring.data.jpa.version>3.2.2</spring.data.jpa.version>
+		<spring.security.test.version>6.2.1</spring.security.test.version>
+		<spring-cloud-config.version>4.1.0</spring-cloud-config.version>
 
 		<!-- swagger -->
 		<swagger.core.version>2.0.7</swagger.core.version>
@@ -54,10 +54,10 @@
 		<hibernate.validator.version>6.0.12.Final</hibernate.validator.version>
 
 		<!-- test -->
-		<junit.version>4.12</junit.version>
-		<mockito.version>2.23.4</mockito.version>
-		<powermock.version>1.7.4</powermock.version>
-		<powermock.beta.version>2.0.7</powermock.beta.version>
+		<junit.version>4.13.2</junit.version>
+		<mockito.version>5.10.0</mockito.version>
+		<powermock.version>2.0.9</powermock.version>
+		<powermock.beta.version>2.0.9</powermock.beta.version>
 
 		<!-- logger -->
 		<logback.version>1.2.3</logback.version>
@@ -84,7 +84,7 @@
 		<commons.configuration2.version>2.2</commons.configuration2.version>
 		<apache.httpcomponents.version>4.5.6</apache.httpcomponents.version>
 		<guava.version>19.0</guava.version>
-		<lombok.version>1.18.8</lombok.version>
+		<lombok.version>1.18.12</lombok.version>
 		<jsch.version>0.1.54</jsch.version>
 		<sshd.version>1.4.0</sshd.version>
 		<itextcore.version>7.1.0</itextcore.version>
@@ -216,8 +216,8 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.2.1-SNAPSHOT</kernel.core.version>
-		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
+		<kernel.core.version>1.2.1-java17-SNAPSHOT</kernel.core.version>
+		<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -243,7 +243,12 @@
 			<artifactId>logback-access</artifactId>
 			<version>${logback.version}</version>
 		</dependency>
-
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	<distributionManagement>
 		<snapshotRepository>
@@ -309,7 +314,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>${maven.javadoc.version}</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
