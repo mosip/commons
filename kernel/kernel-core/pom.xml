@@ -6,6 +6,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.mosip.kernel</groupId>
 	<properties>
+		<tomcat-embed-core-version>10.1.19</tomcat-embed-core-version>
+		<aspectjweaver-version>1.9.21.2</aspectjweaver-version>
+		<micrometer-tracing-version>1.2.4</micrometer-tracing-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- maven -->
@@ -22,9 +25,9 @@
 		<maven-shade-plugin.version>2.3</maven-shade-plugin.version>
 
 		<!-- spring -->
-		<spring.boot.version>3.2.2</spring.boot.version>
-		<spring.data.jpa.version>3.2.2</spring.data.jpa.version>
-		<spring.security.test.version>6.2.1</spring.security.test.version>
+		<spring.boot.version>3.2.3</spring.boot.version>
+		<spring.data.jpa.version>3.2.3</spring.data.jpa.version>
+		<spring.security.test.version>6.2.2</spring.security.test.version>
 		<spring-cloud-config.version>4.1.0</spring-cloud-config.version>
 		<spring-cloud-config-sleuth.version>3.1.11</spring-cloud-config-sleuth.version>
 		<spring.retry.version>2.0.5</spring.retry.version>
@@ -63,14 +66,14 @@
 
 		<!-- logger -->
 		<logback.version>1.2.3</logback.version>
-		<slf4j.version>1.7.19</slf4j.version>
+		<slf4j.version>2.0.7</slf4j.version>
 		<log4j-over-slf4j>1.7.7</log4j-over-slf4j>
 		<jcl.to.slf4j.version>1.7.25</jcl.to.slf4j.version>
 
 		<!-- json -->
-		<jackson.version>2.9.5</jackson.version>
-		<jackson.datatype.version>2.9.8</jackson.datatype.version>
-		<jackson.databind>2.12.0</jackson.databind>
+		<jackson.version>2.16.2</jackson.version>
+		<jackson.datatype.version>2.16.2</jackson.datatype.version>
+		<jackson.databind>2.16.2</jackson.databind>
 		<json.utility.version>20180130</json.utility.version>
 		<json.schema.validator.version>2.2.10</json.schema.validator.version>
 		<json.version>20180813</json.version>
@@ -111,13 +114,13 @@
 		<io.jsonwebtoken.jjwt.version>0.6.0</io.jsonwebtoken.jjwt.version>
 		<apache.directory.api.version>2.0.0.AM2</apache.directory.api.version>
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
-		<micrometer.core.version>1.4.2</micrometer.core.version>
-		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
+		<micrometer.core.version>1.12.4</micrometer.core.version>
+		<micrometer.registry.prometheus.version>1.12.4</micrometer.registry.prometheus.version>
 		<jwt.version> 3.8.1</jwt.version>
 		<mockito.core.version>2.22.0</mockito.core.version>
 		<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
-		<fasterxml.jackson.module.afterburner.version>2.12.0</fasterxml.jackson.module.afterburner.version>
-		<fasterxml.jackson.module.jsr310.version>2.12.0</fasterxml.jackson.module.jsr310.version>
+		<fasterxml.jackson.module.afterburner.version>2.16.2</fasterxml.jackson.module.afterburner.version>
+		<fasterxml.jackson.module.jsr310.version>2.16.2</fasterxml.jackson.module.jsr310.version>
 		<sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/verticle/**,**/spi/**,"**/proxy/**","**/entities/**","**/filter/**","**/util/**","**/verifier/**","**/jaxbclasses/**"</sonar.coverage.exclusions>
 	</properties>
 	<artifactId>kernel-core</artifactId>
@@ -132,12 +135,22 @@
 					<groupId>org.apache.logging.log4j</groupId>
 					<artifactId>log4j-to-slf4j</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<version>${spring.boot.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.data</groupId>
@@ -147,6 +160,10 @@
 				<exclusion>
 					<groupId>com.h2database</groupId>
 					<artifactId>h2</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -231,6 +248,12 @@
 			<groupId>io.swagger</groupId>
 			<artifactId>swagger-models</artifactId>
 			<version>${swagger.annotations.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.auth0</groupId>
@@ -251,11 +274,23 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>jul-to-slf4j</artifactId>
 			<version>${jcl.to.slf4j.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
 			<version>${jcl.to.slf4j.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
@@ -278,11 +313,29 @@
 			<version>3.27.0-GA</version>
 		</dependency>
 
-		<dependency>
+		<!--<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-sleuth</artifactId>
 			<version>${spring-cloud-config-sleuth.version}</version>
+		</dependency>-->
+		<!-- Sleuth is migrated to micrometer tracing-->
+		<dependency>
+		    <groupId>io.micrometer</groupId>
+		    <artifactId>micrometer-tracing</artifactId>
+		    <version>${micrometer-tracing-version}</version>
 		</dependency>
+		<dependency>
+		    <groupId>io.micrometer</groupId>
+		    <artifactId>micrometer-tracing-bridge-brave</artifactId>
+		    <version>${micrometer-tracing-version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.aspectj</groupId>
+		    <artifactId>aspectjweaver</artifactId>
+		    <version>${aspectjweaver-version}</version>
+		</dependency>
+		
+		
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
@@ -302,6 +355,12 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-config</artifactId>
 			<version>${spring-cloud-config.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -312,7 +371,7 @@
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-core</artifactId>
-			<version>8.5.55</version>
+			<version>${tomcat-embed-core-version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -341,6 +400,36 @@
 			<artifactId>vertx-web</artifactId>
 			<version>${vertx.version}</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-core</artifactId>
+		    <version>2.23.1</version>
+		</dependency>
+		<dependency>
+		    <groupId>ch.qos.logback</groupId>
+		    <artifactId>logback-core</artifactId>
+		    <version>1.5.3</version>
+		</dependency>
+		<dependency>
+		    <groupId>ch.qos.logback</groupId>
+		    <artifactId>logback-classic</artifactId>
+		    <version>1.5.3</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.springframework.cloud</groupId>
+		    <artifactId>spring-cloud-starter-bootstrap</artifactId>
+		    <version>${spring-cloud-config.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.quartz-scheduler</groupId>
+		    <artifactId>quartz</artifactId>
+		    <version>2.3.2</version>
 		</dependency>
 	</dependencies>
 	<distributionManagement>

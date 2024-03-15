@@ -1,20 +1,21 @@
 package io.mosip.kernel.core.logger.config;
 
-import brave.Span;
-import brave.Tracer;
+import java.io.IOException;
+
 import org.apache.catalina.Valve;
 import org.apache.catalina.connector.Request;
 import org.apache.catalina.connector.Response;
-import org.apache.catalina.valves.ValveBase;
+import org.apache.catalina.valves.ExtendedAccessLogValve;
 import org.apache.tomcat.util.buf.MessageBytes;
 import org.apache.tomcat.util.http.MimeHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.ServletException;
-import java.io.IOException;
+import io.micrometer.tracing.Span;
+import io.micrometer.tracing.Tracer;
+import jakarta.servlet.ServletException;
 
-public class SleuthValve extends ValveBase {
+public class SleuthValve extends ExtendedAccessLogValve {
 
     private Logger logger = LoggerFactory.getLogger(SleuthValve.class);
     private static final String TRACE_ID_NAME = "X-B3-TraceId";
@@ -41,9 +42,9 @@ public class SleuthValve extends ValveBase {
         if (null == header) {
             org.apache.coyote.Request coyoteRequest = request.getCoyoteRequest();
             MimeHeaders mimeHeaders = coyoteRequest.getMimeHeaders();
-            Span span = tracer.newTrace();
-            addHeader(mimeHeaders, TRACE_ID_NAME, span.context().traceIdString());
-            addHeader(mimeHeaders, SPAN_ID_NAME, span.context().spanIdString());
+            Span span = tracer.nextSpan();
+            addHeader(mimeHeaders, TRACE_ID_NAME, span.context().traceId());
+            addHeader(mimeHeaders, SPAN_ID_NAME, span.context().spanId());
         }
     }
 
