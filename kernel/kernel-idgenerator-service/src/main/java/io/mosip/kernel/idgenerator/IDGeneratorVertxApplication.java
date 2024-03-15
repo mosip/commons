@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 
 import io.mosip.kernel.core.templatemanager.spi.TemplateManager;
 import io.mosip.kernel.core.util.FileUtils;
@@ -55,6 +57,11 @@ import io.vertx.micrometer.VertxPrometheusOptions;
  *
  */
 @SpringBootApplication
+// Java-17 Migration: Need to exclude to avoid class loading error of AsyncRestTemplate
+@ComponentScan(excludeFilters = {
+		@ComponentScan.Filter(type = FilterType.REGEX, 
+				pattern = {"org\\.springframework\\.cloud\\.sleuth\\.autoconfig\\.instrument\\.web\\.client\\.TraceWebAsyncClientAutoConfiguration"
+}) })
 public class IDGeneratorVertxApplication {
 
 	private static Vertx vertx;
