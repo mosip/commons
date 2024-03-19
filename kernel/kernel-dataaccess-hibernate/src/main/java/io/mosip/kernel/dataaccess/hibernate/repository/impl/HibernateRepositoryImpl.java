@@ -4,11 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.CacheStoreMode;
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaQuery;
 
 import org.hibernate.HibernateException;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
@@ -19,6 +16,9 @@ import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.dataaccess.spi.repository.BaseRepository;
 import io.mosip.kernel.dataaccess.hibernate.constant.HibernateErrorCode;
 import io.mosip.kernel.dataaccess.hibernate.constant.HibernatePersistenceConstant;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
+import jakarta.persistence.criteria.CriteriaQuery;
 
 /**
  * Hibernate implementation of the {@link BaseRepository} interface.
