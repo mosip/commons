@@ -124,7 +124,7 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	private Environment environment;
-
+	
 	@Override
 	public String login(String redirectURI, String state) {
 		Map<String, String> pathParam = new HashMap<>();
