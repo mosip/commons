@@ -20,26 +20,25 @@ import io.micrometer.tracing.Tracer;
 @Import({BraveAutoConfiguration.class}) 
 public class SleuthLoggingAutoConfiguration implements WebServerFactoryCustomizer<ConfigurableWebServerFactory> {
 
-	@Lazy
-    @Autowired
-    private SleuthValve sleuthValve;
 
+	@Autowired
+	private Tracer tracer;
+	
     @Bean
     public MDCInsertingServletFilter mdcInsertingServletFilter() {
         return new MDCInsertingServletFilter();
     }
 
     @Bean
-    public SleuthValve sleuthValve(Tracer tracer) {
-        sleuthValve = new SleuthValve(tracer);
-        return sleuthValve;
+    public SleuthValve sleuthValve() {
+        return new SleuthValve(tracer);
     }
 
     @Override
     public void customize(ConfigurableWebServerFactory factory) {
         if(factory instanceof TomcatServletWebServerFactory) {
             ((TomcatServletWebServerFactory)factory).addContextCustomizers(context ->
-                    context.getPipeline().addValve(sleuthValve));
+                    context.getPipeline().addValve(sleuthValve()));
         }
     }
 }

@@ -2,10 +2,12 @@ package io.mosip.kernel.core.logger.config;
 
 import java.io.IOException;
 
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.LifecycleState;
 import org.apache.catalina.Valve;
 import org.apache.catalina.connector.Request;
 import org.apache.catalina.connector.Response;
-import org.apache.catalina.valves.ExtendedAccessLogValve;
+import org.apache.catalina.valves.AccessLogValve;
 import org.apache.tomcat.util.buf.MessageBytes;
 import org.apache.tomcat.util.http.MimeHeaders;
 import org.slf4j.Logger;
@@ -15,7 +17,7 @@ import io.micrometer.tracing.Span;
 import io.micrometer.tracing.Tracer;
 import jakarta.servlet.ServletException;
 
-public class SleuthValve extends ExtendedAccessLogValve {
+public class SleuthValve extends AccessLogValve {
 
     private Logger logger = LoggerFactory.getLogger(SleuthValve.class);
     private static final String TRACE_ID_NAME = "X-B3-TraceId";
@@ -23,6 +25,7 @@ public class SleuthValve extends ExtendedAccessLogValve {
     private final Tracer tracer;
 
     public SleuthValve(Tracer tracer) {
+    	super();
         this.tracer = tracer;
     }
 
