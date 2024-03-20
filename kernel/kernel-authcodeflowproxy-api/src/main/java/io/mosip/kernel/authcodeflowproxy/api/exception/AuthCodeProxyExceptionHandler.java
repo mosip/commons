@@ -63,14 +63,6 @@ public class AuthCodeProxyExceptionHandler {
 		return new ResponseEntity<>(
 				getErrorResponse(httpServletRequest,Errors.INVALID_TOKEN.getErrorCode(), e.getMessage()), HttpStatus.OK);
 	}
-	
-	@ExceptionHandler(AuthenticationServiceException.class)
-	public ResponseEntity<ResponseWrapper<ServiceError>> servieException(
-			HttpServletRequest httpServletRequest, final AuthenticationServiceException e) throws IOException {
-		ExceptionUtils.logRootCause(e);
-		return new ResponseEntity<>(
-				getErrorResponse(httpServletRequest,Errors.INVALID_TOKEN.getErrorCode(), e.getMessage()), HttpStatus.OK);
-	}
 
 	@ExceptionHandler(AuthRestException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> authRestException(
