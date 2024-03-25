@@ -6,13 +6,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-dataaccess-hibernate</artifactId>
-	<version>1.2.1-java17-SNAPSHOT</version>
+	<version>1.2.1-java21-SNAPSHOT</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- maven -->
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
 		<maven.compiler.version>3.8.0</maven.compiler.version>
 		<!-- <maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version> -->
 
@@ -23,7 +23,7 @@
 		<maven.javadoc.version>3.2.0</maven.javadoc.version>
 		<maven-shade-plugin.version>2.3</maven-shade-plugin.version>
 
-		<kernel.core.version>1.2.1-java17-SNAPSHOT</kernel.core.version>
+		<kernel.core.version>1.2.1-java21-SNAPSHOT</kernel.core.version>
 		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 	</properties>
 	<dependencyManagement>
@@ -31,7 +31,7 @@
 			<dependency>
 				<groupId>io.mosip.kernel</groupId>
 				<artifactId>kernel-bom</artifactId>
-				<version>1.2.1-java17-SNAPSHOT</version>
+				<version>1.2.1-java21-SNAPSHOT</version>
 				<type>pom</type>
 			    <scope>import</scope>
 			</dependency>
