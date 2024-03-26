@@ -25,7 +25,6 @@ public class SleuthValve extends AccessLogValve {
     private final Tracer tracer;
 
     public SleuthValve(Tracer tracer) {
-    	super();
         this.tracer = tracer;
     }
 
