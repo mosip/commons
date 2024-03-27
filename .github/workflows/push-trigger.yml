@@ -84,7 +84,7 @@ jobs:
             SERVICE_NAME: 'kernel-salt-generator'
             BUILD_ARTIFACT: 'commons'
       fail-fast: false
-    uses: abhishek8shankar/kattu/.github/workflows/docker-build.yml@develop
+    uses: mosip/kattu/.github/workflows/docker-build.yml@master
     name: ${{ matrix.SERVICE_NAME }}
     with:
       SERVICE_LOCATION: ${{ matrix.SERVICE_LOCATION }}
