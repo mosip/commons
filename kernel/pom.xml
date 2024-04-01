@@ -31,7 +31,8 @@
 	</properties>
 
 	<modules>
-	        <module>kernel-core</module>
+		<module>kernel-bom</module>
+		<module>kernel-core</module>
 		<module>kernel-logger-logback</module>
 		<module>kernel-dataaccess-hibernate</module>
 		<module>kernel-idgenerator-prid</module>
