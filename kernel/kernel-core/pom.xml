@@ -78,7 +78,6 @@
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
-				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>commons-io</groupId>
@@ -184,6 +183,10 @@
 				<artifactId>httpclient</artifactId>
 			</dependency>
 			<dependency>
+			    <groupId>org.apache.httpcomponents.client5</groupId>
+			    <artifactId>httpclient5</artifactId>
+			</dependency>
+			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
 				<scope>provided</scope>
@@ -244,6 +247,10 @@
 			    <groupId>net.colesico.framework</groupId>
 			    <artifactId>colesico-hikaricp</artifactId>
 			    <version>5.3.0</version>
+			</dependency>
+			<dependency>
+			    <groupId>jakarta.validation</groupId>
+			    <artifactId>jakarta.validation-api</artifactId>
 			</dependency>
 	</dependencies>
 	<distributionManagement>

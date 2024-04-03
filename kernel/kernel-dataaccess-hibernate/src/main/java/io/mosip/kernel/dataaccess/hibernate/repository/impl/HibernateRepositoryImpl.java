@@ -3,9 +3,9 @@ package io.mosip.kernel.dataaccess.hibernate.repository.impl;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.CacheStoreMode;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.CacheStoreMode;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceContext;
 
 import org.hibernate.HibernateException;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
