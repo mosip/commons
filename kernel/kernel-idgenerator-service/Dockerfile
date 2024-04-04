@@ -64,7 +64,7 @@ ARG container_user_gid=1001
 
 # install packages and create user
 RUN apk -q update \
-&& apk add -y unzip \
+&& apk add -q unzip \
 && groupadd -g ${container_user_gid} ${container_user_group} \
 && useradd -u ${container_user_uid} -g ${container_user_group} -s /bin/sh -m ${container_user}
 
