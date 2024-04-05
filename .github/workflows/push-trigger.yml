@@ -18,7 +18,7 @@ on:
       - release*
       - master
       - 1.*
-      - develop
+      - develop*
       - MOSIP*
 
 jobs:
