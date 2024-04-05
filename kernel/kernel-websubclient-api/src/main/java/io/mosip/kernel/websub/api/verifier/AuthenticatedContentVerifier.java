@@ -3,7 +3,7 @@ package io.mosip.kernel.websub.api.verifier;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
 
 import org.bouncycastle.crypto.digests.SHA1Digest;

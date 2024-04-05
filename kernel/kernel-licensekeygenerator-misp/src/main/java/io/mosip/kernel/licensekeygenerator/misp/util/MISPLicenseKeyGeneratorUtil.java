@@ -3,7 +3,7 @@ package io.mosip.kernel.licensekeygenerator.misp.util;
 import java.security.SecureRandom;
 import java.util.concurrent.TimeUnit;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
