@@ -3,7 +3,7 @@ package io.mosip.kernel.saltgenerator.step;
 import static io.mosip.kernel.saltgenerator.constant.SaltGeneratorConstant.END_SEQ;
 import static io.mosip.kernel.saltgenerator.constant.SaltGeneratorConstant.START_SEQ;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.annotation.Autowired;

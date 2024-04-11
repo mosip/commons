@@ -10,11 +10,8 @@ import static io.mosip.kernel.saltgenerator.constant.SaltGeneratorConstant.PACKA
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-import org.springframework.batch.core.configuration.annotation.BatchConfigurer;
-import org.springframework.batch.core.configuration.annotation.DefaultBatchConfigurer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +23,8 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import jakarta.persistence.EntityManagerFactory;
 
 /**
  * The Class SaltGeneratorConfig - Provides configuration for Salt
@@ -44,32 +43,6 @@ public class SaltGeneratorConfig {
 	/** The naming resolver. */
 	@Autowired
 	private PhysicalNamingStrategyResolver namingResolver;
-	
-	/**
-	 * Batch config
-	 *
-	 * @return the batch configurer
-	 */
-	@Bean
-	public BatchConfigurer batchConfig() {
-		return new DefaultBatchConfigurer(null) {
-			
-			/**
-			 * By default, Spring batch will try to create/update records 
-			 * in the provided datasource related to Job completion, schedule etc.
-			 * This override will stop spring batch to create/update any tables in provided
-			 * Datasource and instead use Map based implementation internally.
-			 *
-			 */
-			@Override
-			public void setDataSource(DataSource dataSource) {
-				// By default, Spring batch will try to create/update records in the provided
-				// datasource related to Job completion, schedule etc.
-				// This override will stop spring batch to create/update any tables in provided
-				// Datasource and instead use Map based implementation internally.
-			}
-		};
-	}
 	
 	/**
 	 * Entity manager factory.
