@@ -19,31 +19,31 @@ public class HibernatePersistenceConstant {
 	/**
 	 * The string constant jdbc driver
 	 */
-	public static final String JDBC_DRIVER = "jakarta.persistence.jdbc.driver";
+	public static final String JDBC_DRIVER = "javax.persistence.jdbc.driver";
 
 	/**
 	 * The string constant jdbc url
 	 */
-	public static final String JDBC_URL = "jakarta.persistence.jdbc.url";
+	public static final String JDBC_URL = "javax.persistence.jdbc.url";
 
 	/**
 	 * The string constant jdbc password
 	 */
-	public static final String JDBC_PASS = "jakarta.persistence.jdbc.password";
+	public static final String JDBC_PASS = "javax.persistence.jdbc.password";
 
 	/**
 	 * The string constant jdbc schema
 	 */
-	public static final String JDBC_SCHEMA = "jakarta.persistence.jdbc.schema";
+	public static final String JDBC_SCHEMA = "javax.persistence.jdbc.schema";
 
 	/**
 	 * The string constant jdbc user
 	 */
-	public static final String JDBC_USER = "jakarta.persistence.jdbc.user";
+	public static final String JDBC_USER = "javax.persistence.jdbc.user";
 	/**
 	 * The string constant cache query property
 	 */
-	public static final String CACHE_QUERY_PROPERTY = "jakarta.persistence.cache.storeMode";
+	public static final String CACHE_QUERY_PROPERTY = "javax.persistence.cache.storeMode";
 	/**
 	 * The string constant my sql dialect
 	 */
@@ -51,7 +51,7 @@ public class HibernatePersistenceConstant {
 	/**
 	 * The string constant my sql dialect
 	 */
-	public static final String POSTGRESQL_95_DIALECT = "org.hibernate.dialect.PostgreSQL95Dialect";
+	public static final String POSTGRESQL_95_DIALECT = "org.hibernate.dialect.PostgreSQLDialect";
 	/**
 	 * The string constant for hibernate statistics
 	 */
