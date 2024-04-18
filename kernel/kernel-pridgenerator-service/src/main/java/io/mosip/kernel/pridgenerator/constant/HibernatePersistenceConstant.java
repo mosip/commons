@@ -31,7 +31,7 @@ public class HibernatePersistenceConstant {
 	/**
 	 * The string field JAVAX_PERSISTENCE_JDBC_DRIVER
 	 */
-	public static final String JAVAX_PERSISTENCE_JDBC_DRIVER = "jakarta.persistence.jdbc.driver";
+	public static final String JAVAX_PERSISTENCE_JDBC_DRIVER = "javax.persistence.jdbc.driver";
 	/**
 	 * The string constant my sql dialect
 	 */
@@ -39,7 +39,7 @@ public class HibernatePersistenceConstant {
 	/**
 	 * The string constant my sql dialect
 	 */
-	public static final String POSTGRESQL_95_DIALECT = "org.hibernate.dialect.PostgreSQL95Dialect";
+	public static final String POSTGRESQL_95_DIALECT = "org.hibernate.dialect.PostgreSQLDialect";
 	/**
 	 * The string constant for hibernate statistics
 	 */
