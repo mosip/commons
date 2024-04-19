@@ -28,7 +28,7 @@ ARG loader_path=${work_dir}/additional_jars/
 # can be passed during Docker build as build time environment for github branch to pickup configuration from.
 ARG container_user=mosip
 ARG container_user_group=mosip
-ARG container_user_uid=1002
+ARG container_user_uid=1001
 ARG container_user_gid=1001
 
 ARG SOURCE
