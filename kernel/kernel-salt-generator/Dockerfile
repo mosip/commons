@@ -81,6 +81,8 @@ LABEL commit_hash=${COMMIT_HASH}
 LABEL commit_id=${COMMIT_ID}
 LABEL build_time=${BUILD_TIME}
 
+COPY ./target/kernel-salt-generator-*.jar kernel-salt-generator.jar
+
 # install packages and create user
 RUN apk -q update \
 && apk add -q unzip wget \
@@ -89,8 +91,6 @@ RUN apk -q update \
 && mkdir -p ${loader_path} \
 # change permissions of file inside working dir
 && chown -R ${container_user}:${container_user} /home/${container_user}
-
-COPY ./target/kernel-salt-generator-*.jar kernel-salt-generator.jar
 
 # set working directory for the user
 WORKDIR /home/${container_user}
