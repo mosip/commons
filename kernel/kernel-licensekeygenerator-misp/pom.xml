@@ -183,9 +183,10 @@
 					<skipTests>false</skipTests>
 					<skip>false</skip>
 					<argLine>
-						${argLine} --add-opens
-						java.xml/jdk.xml.internal=ALL-UNNAMED
-						--illegal-access=permit
+						${argLine}
+						--add-opens java.xml/jdk.xml.internal=ALL-UNNAMED
+						--add-opens java.base/java.lang=ALL-UNNAMED
+						--illegal-access=debug
 					</argLine>
 				</configuration>
 			</plugin>

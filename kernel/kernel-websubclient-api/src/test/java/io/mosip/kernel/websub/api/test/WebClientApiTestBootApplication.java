@@ -2,6 +2,7 @@ package io.mosip.kernel.websub.api.test;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 /**
  * Audit manager application
@@ -10,7 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 1.0.0
  *
  */
-@SpringBootApplication(scanBasePackages = { "io.mosip.kernel.websub.api.*" })
+@SpringBootApplication(scanBasePackages = { "io.mosip.kernel.websub.api.*" },
+exclude={DataSourceAutoConfiguration.class})
 public class WebClientApiTestBootApplication {
 
 	/**

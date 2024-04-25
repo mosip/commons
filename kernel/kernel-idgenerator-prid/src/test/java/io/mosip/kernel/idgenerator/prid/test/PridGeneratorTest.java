@@ -11,10 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,17 +20,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
-import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.idgenerator.spi.PridGenerator;
 import io.mosip.kernel.core.idvalidator.spi.PridValidator;
 import io.mosip.kernel.idgenerator.prid.entity.PridSeed;
 import io.mosip.kernel.idgenerator.prid.entity.PridSequence;
-import io.mosip.kernel.idgenerator.prid.exception.PridException;
+import io.mosip.kernel.idgenerator.prid.impl.PridGeneratorImpl;
 import io.mosip.kernel.idgenerator.prid.repository.PridSeedRepository;
 import io.mosip.kernel.idgenerator.prid.repository.PridSequenceRepository;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PridGeneratorBootApplication.class)
+@SpringBootTest(classes = {PridGeneratorBootApplication.class} )
 public class PridGeneratorTest {
 
 	@Value("${mosip.kernel.prid.length}")
