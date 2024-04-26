@@ -34,12 +34,12 @@ public class TestSecurityConfig {
 		return new DefaultHttpFirewall();
 	}
 
-	@Bean
-	public Filter configureWebSecurityFilter(WebSecurity webSecurity) throws Exception {
-		webSecurity.ignoring().requestMatchers(allowedEndPoints());
-		webSecurity.httpFirewall(defaultHttpFirewall());
-		return webSecurity.build();
-	}
+//	@Bean
+//	public Filter configureWebSecurityFilter(WebSecurity webSecurity) throws Exception {
+//		webSecurity.ignoring().requestMatchers(allowedEndPoints());
+//		webSecurity.httpFirewall(defaultHttpFirewall());
+//		return webSecurity.build();
+//	}
 
 	private String[] allowedEndPoints() {
 		return new String[] { "/assets/**", "/icons/**", "/screenshots/**", "/favicon**", "/**/favicon**", "/css/**",
