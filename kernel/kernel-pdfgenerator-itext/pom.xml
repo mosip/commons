@@ -16,7 +16,7 @@
 		<kernel.core.version>1.2.1-java21-SNAPSHOT</kernel.core.version>
 		<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
 
-		<itextcore.version>7.2.0</itextcore.version>
+		<itextcore.version>7.1.0</itextcore.version>
 		<itexthtml2pdf.version>2.0.0</itexthtml2pdf.version>
 		<itext.version>5.5.13</itext.version>
 		<bouncycastle.version>1.66</bouncycastle.version>
@@ -37,6 +37,12 @@
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-core</artifactId>
 			<version>${kernel.core.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcprov-jdk18on</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.itextpdf</groupId>
@@ -68,6 +74,16 @@
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcpkix-jdk15on</artifactId>
 			<version>${bouncycastle.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.itextpdf</groupId>
+		    <artifactId>kernel</artifactId>
+		    <version>7.1.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.itextpdf</groupId>
+		    <artifactId>io</artifactId>
+		    <version>7.1.0</version>
 		</dependency>
 	</dependencies>
 	<distributionManagement>

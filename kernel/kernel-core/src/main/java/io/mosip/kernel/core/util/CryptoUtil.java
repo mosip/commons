@@ -33,7 +33,7 @@ import io.mosip.kernel.core.crypto.exception.NullDataException;
  */
 public class CryptoUtil {
 	
-	private static final String SYMMETRIC_ALGORITHM = "AES/GCM/PKCS5Padding";
+	private static final String SYMMETRIC_ALGORITHM = "AES/GCM/NoPadding";
 
 	private static final String AES = "AES";
 

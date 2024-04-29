@@ -15,7 +15,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
  *
  */
 @SpringBootApplication(scanBasePackages = { "io.mosip.kernel.emailnotification.*", "${mosip.auth.adapter.impl.basepackage}",
-		"io.mosip.kernel.core.logger.config" })
+		"io.mosip.kernel.core.logger.config", "io.mosip.kernel.smsserviceprovider.*" })
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
 @EnableAsync
 public class NotificationBootApplication {

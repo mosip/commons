@@ -10,6 +10,7 @@
 	<description>Kernel Bill Of Materials</description>
 	<url>https://github.com/mosip/commons</url>
 	<properties>
+		<mockito-version>3.4.3</mockito-version>
 		<quartz-version>2.3.2</quartz-version>
 		<javax.servlet-api-version>3.1.0</javax.servlet-api-version>
 		<javassist-version>3.27.0-GA</javassist-version>
@@ -55,7 +56,6 @@
 		
 		<swagger.core.version>2.0.7</swagger.core.version>
 
-
 		<sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/verticle/**,**/spi/**,"**/proxy/**","**/entities/**","**/filter/**","**/util/**","**/verifier/**"</sonar.coverage.exclusions>
 		<sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**</sonar.cpd.exclusions>
 	    <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../</sonar.coverage.jacoco.xmlReportPaths>
@@ -75,7 +75,14 @@
 			    <version>2023.0.0</version>
 			    <type>pom</type>
 			    <scope>import</scope>
+			    <exclusions>
+					<exclusion>
+						 <groupId>org.mockito</groupId>
+  						 <artifactId>mockito-bom</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
+			
 			<dependency>
 		        <groupId>org.springframework.cloud</groupId>
 		        <artifactId>spring-cloud-starter-loadbalancer</artifactId>
@@ -280,6 +287,39 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
+			
+			<!-- Mockito compatible with powermock 2.0.9-->
+			  <dependency>
+		        <groupId>org.mockito</groupId>
+		        <artifactId>mockito-core</artifactId>
+		        <version>${mockito-version}</version>
+		      </dependency>
+		      <dependency>
+		        <groupId>org.mockito</groupId>
+		        <artifactId>mockito-android</artifactId>
+		        <version>${mockito-version}</version>
+		      </dependency>
+		      <dependency>
+		        <groupId>org.mockito</groupId>
+		        <artifactId>mockito-errorprone</artifactId>
+		        <version>${mockito-version}</version>
+		      </dependency>
+		      <dependency>
+		        <groupId>org.mockito</groupId>
+		        <artifactId>mockito-junit-jupiter</artifactId>
+		        <version>${mockito-version}</version>
+		      </dependency>
+		      <dependency>
+		        <groupId>org.mockito</groupId>
+		        <artifactId>mockito-proxy</artifactId>
+		        <version>${mockito-version}</version>
+		      </dependency>
+		      <dependency>
+		        <groupId>org.mockito</groupId>
+		        <artifactId>mockito-subclass</artifactId>
+		        <version>${mockito-version}</version>
+		      </dependency>
+		    <!-- end of mockito dependencies -->
 		</dependencies>
 	</dependencyManagement>
 </project>

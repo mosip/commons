@@ -4,6 +4,7 @@ import java.util.concurrent.Executor;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -17,7 +18,8 @@ import io.mosip.kernel.ridgenerator.test.config.TestSecurityConfig;
  * @author Abhishek Kumar
  * @since 1.0.0
  */
-@SpringBootApplication(scanBasePackages = "io.mosip.kernel.ridgenerator.*")
+@SpringBootApplication(scanBasePackages = "io.mosip.kernel.ridgenerator.*",
+	exclude={DataSourceAutoConfiguration.class})
 @EnableAsync
 @Import(TestSecurityConfig.class)
 public class TestBootApplication {

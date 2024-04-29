@@ -40,6 +40,10 @@ public class IntentVerificationConfig implements ApplicationContextAware, Embedd
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		mappings = new HashMap<>();
 		for (String beanName : applicationContext.getBeanDefinitionNames()) {
+			//Skip processing this intentVerificationConfig bean.
+			if(beanName.equals("intentVerificationConfig")) {
+				continue;
+			}
 			if (!((ConfigurableApplicationContext) applicationContext).getBeanFactory().getBeanDefinition(beanName)
 					.isLazyInit()) {
 				Object obj = applicationContext.getBean(beanName);

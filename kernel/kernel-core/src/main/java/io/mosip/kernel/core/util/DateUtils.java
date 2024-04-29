@@ -35,6 +35,7 @@ import java.util.TimeZone;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 import io.mosip.kernel.core.exception.IllegalArgumentException;
+import io.mosip.kernel.core.util.constant.CalendarUtilConstants;
 import io.mosip.kernel.core.util.constant.DateUtilConstants;
 
 /**
@@ -83,6 +84,9 @@ public final class DateUtils {
 		} catch (java.lang.IllegalArgumentException e) {
 			throw new IllegalArgumentException(DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getErrorCode(),
 					DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getEexceptionMessage(), e.getCause());
+		} catch (java.lang.NullPointerException exception) {
+			throw new IllegalArgumentException(CalendarUtilConstants.ILLEGAL_ARGUMENT_CODE.getErrorCode(),
+					CalendarUtilConstants.ILLEGAL_ARGUMENT_MESSAGE.getErrorCode(), exception.getCause());
 		}
 	}
 
@@ -104,6 +108,9 @@ public final class DateUtils {
 		} catch (java.lang.IllegalArgumentException e) {
 			throw new IllegalArgumentException(DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getErrorCode(),
 					DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getEexceptionMessage(), e.getCause());
+		} catch (java.lang.NullPointerException exception) {
+			throw new IllegalArgumentException(CalendarUtilConstants.ILLEGAL_ARGUMENT_CODE.getErrorCode(),
+					CalendarUtilConstants.ILLEGAL_ARGUMENT_MESSAGE.getErrorCode(), exception.getCause());
 		}
 	}
 
@@ -125,6 +132,9 @@ public final class DateUtils {
 		} catch (java.lang.IllegalArgumentException e) {
 			throw new IllegalArgumentException(DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getErrorCode(),
 					DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getEexceptionMessage(), e.getCause());
+		} catch (java.lang.NullPointerException exception) {
+			throw new IllegalArgumentException(CalendarUtilConstants.ILLEGAL_ARGUMENT_CODE.getErrorCode(),
+					CalendarUtilConstants.ILLEGAL_ARGUMENT_MESSAGE.getErrorCode(), exception.getCause());
 		}
 	}
 
@@ -146,6 +156,9 @@ public final class DateUtils {
 		} catch (java.lang.IllegalArgumentException e) {
 			throw new IllegalArgumentException(DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getErrorCode(),
 					DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getEexceptionMessage(), e.getCause());
+		} catch (java.lang.NullPointerException exception) {
+			throw new IllegalArgumentException(CalendarUtilConstants.ILLEGAL_ARGUMENT_CODE.getErrorCode(),
+					CalendarUtilConstants.ILLEGAL_ARGUMENT_MESSAGE.getErrorCode(), exception.getCause());
 		}
 	}
 
