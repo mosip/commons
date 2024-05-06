@@ -3,7 +3,6 @@ package io.mosip.kernel.idgenerator.config;
 import java.util.HashMap;
 import java.util.Map;
 
-import jakarta.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
@@ -12,10 +11,13 @@ import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -29,6 +31,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import io.mosip.kernel.vidgenerator.constant.HibernatePersistenceConstant;
+import jakarta.persistence.EntityManagerFactory;
 
 /**
  * Configuration class for IDGenerator
@@ -43,8 +46,10 @@ import io.mosip.kernel.vidgenerator.constant.HibernatePersistenceConstant;
 @PropertySource({ "classpath:bootstrap.properties" })
 @PropertySource(value = "classpath:application-${spring.profiles.active}.properties", ignoreResourceNotFound = true)
 @EnableJpaRepositories(basePackages = { "io.mosip.kernel.vidgenerator.repository", "io.mosip.kernel.uingenerator.repository"})
+@EnableAutoConfiguration
 @ComponentScan(basePackages = { "io.mosip.kernel.vidgenerator.*","io.mosip.kernel.uingenerator.*", "io.mosip.kernel.idgenerator.vid.*",
-		"io.mosip.kernel.crypto.*", "${mosip.auth.adapter.impl.basepackage}","io.mosip.kernel.cryptosignature.*","io.mosip.kernel.idgenerator.*","io.mosip.kernel.keygenerator.bouncycastle"})
+		"io.mosip.kernel.crypto.*", "${mosip.auth.adapter.impl.basepackage}.*","io.mosip.kernel.cryptosignature.*","io.mosip.kernel.idgenerator.*","io.mosip.kernel.keygenerator.bouncycastle"}, 
+excludeFilters = @Filter(type=FilterType.REGEX,pattern="io\\.mosip\\.kernel\\.idgenerator\\.test\\..*"))
 @EnableTransactionManagement
 public class HibernateDaoConfig implements EnvironmentAware {
 	
