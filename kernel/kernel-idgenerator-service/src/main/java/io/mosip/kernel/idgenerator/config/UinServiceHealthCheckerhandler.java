@@ -24,6 +24,7 @@ import io.netty.handler.codec.http.HttpResponse;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpMethod;
@@ -80,13 +81,13 @@ public class UinServiceHealthCheckerhandler implements HealthCheckHandler {
 	}
 
 	@Override
-	public HealthCheckHandler register(String name, Handler<Future<Status>> procedure) {
+	public HealthCheckHandler register(String name, Handler<Promise<Status>> procedure) {
 		healthChecks.register(name, procedure);
 		return this;
 	}
 
 	@Override
-	public HealthCheckHandler register(String name, long timeout, Handler<Future<Status>> procedure) {
+	public HealthCheckHandler register(String name, long timeout, Handler<Promise<Status>> procedure) {
 		healthChecks.register(name, timeout, procedure);
 		return this;
 	}
@@ -96,7 +97,7 @@ public class UinServiceHealthCheckerhandler implements HealthCheckHandler {
 	 * 
 	 * @param future {@link Future} instance from handler
 	 */
-	public void databaseHealthChecker(Future<Status> future) {
+	public void databaseHealthChecker(Promise<Status> future) {
 
 		try {
 			Class.forName(driver);
@@ -131,7 +132,7 @@ public class UinServiceHealthCheckerhandler implements HealthCheckHandler {
 	 * 
 	 * @param future {@link Future} instance from handler
 	 */
-	public void dispSpaceHealthChecker(Future<Status> future) {
+	public void dispSpaceHealthChecker(Promise<Status> future) {
 
 		final long diskFreeInBytes = this.currentWorkingDirPath.getUsableSpace();
 		if (diskFreeInBytes >= THRESHOLD) {
@@ -153,7 +154,7 @@ public class UinServiceHealthCheckerhandler implements HealthCheckHandler {
 	 * @param future {@link Future} instance from handler
 	 * @param vertx  {@link Vertx} instance
 	 */
-	public void verticleHealthHandler(Future<Status> future, Vertx vertx) {
+	public void verticleHealthHandler(Promise<Status> future, Vertx vertx) {
 
 		vertx.eventBus().send(UinGeneratorConstant.UIN_GENERATOR_ADDRESS, UINHealthConstants.PING, response -> {
 
