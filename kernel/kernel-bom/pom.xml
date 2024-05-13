@@ -36,7 +36,7 @@
 
 		<apache.httpcomponents.version>4.5.6</apache.httpcomponents.version>
 		
-		<vertx.version>3.6.2</vertx.version>
+		<vertx.version>3.9.1</vertx.version>
 		
 		<jwt.version> 3.8.1</jwt.version>
 		<jwks-rsa-version>0.18.0</jwks-rsa-version>
