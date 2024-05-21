@@ -36,7 +36,8 @@
 
 		<apache.httpcomponents.version>4.5.6</apache.httpcomponents.version>
 		
-		<vertx.version>3.9.1</vertx.version>
+		<vertx.version>3.9.13</vertx.version>
+		<hazelcast-version>3.9.4</hazelcast-version>
 		
 		<jwt.version> 3.8.1</jwt.version>
 		<jwks-rsa-version>0.18.0</jwks-rsa-version>
@@ -320,6 +321,11 @@
 		        <version>${mockito-version}</version>
 		      </dependency>
 		    <!-- end of mockito dependencies -->
+		    <dependency>
+				<groupId>com.hazelcast</groupId>
+				<artifactId>hazelcast</artifactId>
+				<version>${hazelcast-version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 </project>
