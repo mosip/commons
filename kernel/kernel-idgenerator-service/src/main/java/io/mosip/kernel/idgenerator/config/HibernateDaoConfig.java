@@ -54,7 +54,6 @@ import jakarta.persistence.EntityManagerFactory;
 		"io.mosip.kernel.crypto.*", "${mosip.auth.adapter.impl.basepackage}.*","io.mosip.kernel.cryptosignature.*","io.mosip.kernel.idgenerator.*","io.mosip.kernel.keygenerator.bouncycastle"}, 
 excludeFilters = @Filter(type=FilterType.REGEX,pattern="io\\.mosip\\.kernel\\.idgenerator\\.test\\..*"))
 @EnableTransactionManagement
-@Import({WebSecurityConfiguration.class})
 public class HibernateDaoConfig implements EnvironmentAware {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(HibernateDaoConfig.class);
