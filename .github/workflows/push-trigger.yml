@@ -83,6 +83,9 @@ jobs:
           - SERVICE_LOCATION: 'kernel/kernel-salt-generator'
             SERVICE_NAME: 'kernel-salt-generator'
             BUILD_ARTIFACT: 'commons'
+          - SERVICE_LOCATION: 'kernel/kernel-config-server'
+            SERVICE_NAME: 'kernel-config-server'
+            BUILD_ARTIFACT: 'commons'
       fail-fast: false
     uses: mosip/kattu/.github/workflows/docker-build.yml@master-java21
     name: ${{ matrix.SERVICE_NAME }}
