@@ -9,6 +9,32 @@ LABEL commit_hash=${COMMIT_HASH}
 LABEL commit_id=${COMMIT_ID}
 LABEL build_time=${BUILD_TIME}
 
+
+
+# can be passed during Docker build as build time environment for github branch to pickup configuration from.
+ARG container_user=mosip
+
+# can be passed during Docker build as build time environment for github branch to pickup configuration from.
+ARG container_user_group=mosip
+
+# can be passed during Docker build as build time environment for github branch to pickup configuration from.
+ARG container_user_uid=1002
+
+# can be passed during Docker build as build time environment for github branch to pickup configuration from.
+ARG container_user_gid=1001
+
+# install packages and create user
+RUN apk -q update \
+&& apk add -q unzip wget \
+&& addgroup -g ${container_user_gid} ${container_user_group} \
+&& adduser -s /bin/sh -u ${container_user_uid} -G ${container_user_group} -h /home/${container_user} --disabled-password ${container_user}
+
+# set working directory for the user
+WORKDIR /home/${container_user}
+
+ENV work_dir=/home/${container_user}
+
+
 # can be passed during Docker build as build time environment for  keystore location for encryption
 ARG encrypt_keyStore_location
 
@@ -39,12 +65,21 @@ ENV encrypt_keyStore_alias_env=${encrypt_keyStore_alias}
 # environment variable to pass encryption keystore secret at docker runtime
 ENV encrypt_keyStore_secret_env=${encrypt_keyStore_secret}
 
-ADD execute-jar.sh execute-jar.sh
+#ADD execute-jar.sh execute-jar.sh
 
-RUN chmod 777 execute-jar.sh
+#RUN chmod 777 execute-jar.sh
+
+# change permissions of file inside working dir
+RUN chown -R ${container_user}:${container_user} /home/${container_user}
+
+# select container user for all tasks
+USER ${container_user_uid}:${container_user_gid}
+
 
 COPY ./target/kernel-config-server-*.jar kernel-config-server.jar
 
 EXPOSE 51000
 
-CMD  ./execute-jar.sh
+#CMD  ./execute-jar.sh
+CMD ["/bin/sh" "-c" "java -jar kernel-config-server.jar"]
+
