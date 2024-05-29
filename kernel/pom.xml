@@ -68,6 +68,7 @@
 		<module>kernel-pridgenerator-service</module>
 		<module>kernel-salt-generator</module>
 		<module>kernel-demographics-api</module>
+		<module>kernel-config-server</module>
 	</modules>
 
     <repositories>
