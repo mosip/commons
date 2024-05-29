@@ -67,7 +67,14 @@ ENV encrypt_keyStore_secret_env=${encrypt_keyStore_secret}
 
 #ADD execute-jar.sh execute-jar.sh
 
-RUN chmod 777 execute-jar.sh
+#RUN chmod 777 execute-jar.sh
+
+# change permissions of file inside working dir
+RUN chown -R ${container_user}:${container_user} /home/${container_user}
+
+# select container user for all tasks
+USER ${container_user_uid}:${container_user_gid}
+
 
 COPY ./target/kernel-config-server-*.jar kernel-config-server.jar
 
