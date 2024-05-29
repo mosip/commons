@@ -81,5 +81,5 @@ COPY ./target/kernel-config-server-*.jar kernel-config-server.jar
 EXPOSE 51000
 
 #CMD  ./execute-jar.sh
-CMD ["/bin/sh" "-c" "java -jar kernel-config-server.jar"]
+CMD java -jar kernel-config-server.jar
 
