@@ -16,6 +16,7 @@
 		<!-- maven -->
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
+		<maven.compiler.version>3.8.0</maven.compiler.version>
 		<kernel.core.version>1.2.1-java21-SNAPSHOT</kernel.core.version>
 		<kernel.applicant-type.version>1.2.1-java21-SNAPSHOT</kernel.applicant-type.version>
 		<kernel.dataaccess-hibernate.version>1.2.1-java21-SNAPSHOT</kernel.dataaccess-hibernate.version>
@@ -65,7 +66,6 @@
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-ui</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
@@ -81,8 +81,12 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<dependency>
+		    <groupId>org.hibernate.validator</groupId>
+		    <artifactId>hibernate-validator</artifactId>
+		</dependency>
 	</dependencies>
-
+	
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
@@ -95,6 +99,15 @@
 	</distributionManagement>
 	<build>
 		<plugins>
+			<plugin>
+		        <artifactId>maven-compiler-plugin</artifactId>
+		        <version>${maven.compiler.version}</version>
+		        <configuration>
+		          <source>${maven.compiler.source}</source>
+		          <target>${maven.compiler.target}</target>
+		          <parameters>true</parameters>
+		        </configuration>
+		    </plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -211,7 +224,7 @@
 				</executions>
 				<configuration>
 					<generateGitPropertiesFile>true</generateGitPropertiesFile>
-					<generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+					<generateGitPropertiesFilename>${project.build.outputDirectory}/service-git.properties</generateGitPropertiesFilename>
 					<includeOnlyProperties>
 						<includeOnlyProperty>^git.build.(time|version)$</includeOnlyProperty>
 						<includeOnlyProperty>^git.commit.id.(abbrev|full)$</includeOnlyProperty>

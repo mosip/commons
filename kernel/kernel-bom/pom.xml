@@ -10,6 +10,7 @@
 	<description>Kernel Bill Of Materials</description>
 	<url>https://github.com/mosip/commons</url>
 	<properties>
+		<mockito-version>3.4.3</mockito-version>
 		<quartz-version>2.3.2</quartz-version>
 		<javax.servlet-api-version>3.1.0</javax.servlet-api-version>
 		<javassist-version>3.27.0-GA</javassist-version>
@@ -25,7 +26,7 @@
 		<commons-io>2.6</commons-io>
 		<commons-math3>3.6.1</commons-math3>
 		
-		<bouncycastle.version>1.66</bouncycastle.version>
+		<bouncycastle.version>1.78.1</bouncycastle.version>
 		
 		<findbugs.version>3.0.1</findbugs.version>
 		
@@ -35,7 +36,8 @@
 
 		<apache.httpcomponents.version>4.5.6</apache.httpcomponents.version>
 		
-		<vertx.version>3.6.2</vertx.version>
+		<vertx.version>3.9.13</vertx.version>
+		<hazelcast-version>3.9.4</hazelcast-version>
 		
 		<jwt.version> 3.8.1</jwt.version>
 		<jwks-rsa-version>0.18.0</jwks-rsa-version>
@@ -54,7 +56,6 @@
 		<guava.version>19.0</guava.version>
 		
 		<swagger.core.version>2.0.7</swagger.core.version>
-
 
 		<sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/verticle/**,**/spi/**,"**/proxy/**","**/entities/**","**/filter/**","**/util/**","**/verifier/**"</sonar.coverage.exclusions>
 		<sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**</sonar.cpd.exclusions>
@@ -75,7 +76,14 @@
 			    <version>2023.0.0</version>
 			    <type>pom</type>
 			    <scope>import</scope>
+			    <exclusions>
+					<exclusion>
+						 <groupId>org.mockito</groupId>
+  						 <artifactId>mockito-bom</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
+			
 			<dependency>
 		        <groupId>org.springframework.cloud</groupId>
 		        <artifactId>spring-cloud-starter-loadbalancer</artifactId>
@@ -114,7 +122,7 @@
 			</dependency>
 			<dependency>
 				<groupId>org.bouncycastle</groupId>
-				<artifactId>bcprov-jdk15on</artifactId>
+				<artifactId>bcprov-jdk18on</artifactId>
 				<version>${bouncycastle.version}</version>
 			</dependency>
 			<dependency>
@@ -279,6 +287,44 @@
 						<artifactId>jackson-annotations</artifactId>
 					</exclusion>
 				</exclusions>
+			</dependency>
+			
+			<!-- Mockito compatible with powermock 2.0.9-->
+			  <dependency>
+		        <groupId>org.mockito</groupId>
+		        <artifactId>mockito-core</artifactId>
+		        <version>${mockito-version}</version>
+		      </dependency>
+		      <dependency>
+		        <groupId>org.mockito</groupId>
+		        <artifactId>mockito-android</artifactId>
+		        <version>${mockito-version}</version>
+		      </dependency>
+		      <dependency>
+		        <groupId>org.mockito</groupId>
+		        <artifactId>mockito-errorprone</artifactId>
+		        <version>${mockito-version}</version>
+		      </dependency>
+		      <dependency>
+		        <groupId>org.mockito</groupId>
+		        <artifactId>mockito-junit-jupiter</artifactId>
+		        <version>${mockito-version}</version>
+		      </dependency>
+		      <dependency>
+		        <groupId>org.mockito</groupId>
+		        <artifactId>mockito-proxy</artifactId>
+		        <version>${mockito-version}</version>
+		      </dependency>
+		      <dependency>
+		        <groupId>org.mockito</groupId>
+		        <artifactId>mockito-subclass</artifactId>
+		        <version>${mockito-version}</version>
+		      </dependency>
+		    <!-- end of mockito dependencies -->
+		    <dependency>
+				<groupId>com.hazelcast</groupId>
+				<artifactId>hazelcast</artifactId>
+				<version>${hazelcast-version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

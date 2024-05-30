@@ -36,7 +36,7 @@ import io.mosip.kernel.emailnotification.constant.SmsExceptionConstant;
  * @since 1.0.0
  */
 @RestControllerAdvice
-public class ApiExceptionHandler {
+public class EmailNotificationApiExceptionHandler {
 
 	/**
 	 * Autowired reference for {@link ObjectMapper}.

@@ -25,7 +25,7 @@ import io.mosip.kernel.vidgenerator.constant.VIDGeneratorErrorCode;
 import io.mosip.kernel.vidgenerator.dto.VidFetchResponseDto;
 import io.mosip.kernel.vidgenerator.exception.VidGeneratorServiceException;
 import io.mosip.kernel.vidgenerator.service.VidService;
-import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.WorkerExecutor;
 import io.vertx.core.http.HttpMethod;
@@ -136,7 +136,7 @@ public class VidFetcherRouter {
 		return router;
 	}
 
-	private void setError(RoutingContext routingContext, ServiceError error, Future<Object> blockingCodeHandler) {
+	private void setError(RoutingContext routingContext, ServiceError error, Promise<Object> blockingCodeHandler) {
 		ResponseWrapper<ServiceError> errorResponse = new ResponseWrapper<>();
 		errorResponse.getErrors().add(error);
 		objectMapper.registerModule(new JavaTimeModule());

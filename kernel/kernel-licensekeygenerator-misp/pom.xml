@@ -34,6 +34,12 @@
 			<version>${kernel.core.version}</version>
 		</dependency>
 		<dependency>
+		    <groupId>org.mockito</groupId>
+		    <artifactId>mockito-core</artifactId>
+		    <version>3.3.3</version>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-module-junit4</artifactId>
 			<scope>test</scope>
@@ -183,9 +189,10 @@
 					<skipTests>false</skipTests>
 					<skip>false</skip>
 					<argLine>
-						${argLine} --add-opens
-						java.xml/jdk.xml.internal=ALL-UNNAMED
-						--illegal-access=permit
+						${argLine}
+						--add-opens java.xml/jdk.xml.internal=ALL-UNNAMED
+						--add-opens java.base/java.lang=ALL-UNNAMED
+						--illegal-access=debug
 					</argLine>
 				</configuration>
 			</plugin>

@@ -102,7 +102,7 @@
 			</dependency>
 			<dependency>
 				<groupId>org.bouncycastle</groupId>
-				<artifactId>bcprov-jdk15on</artifactId>
+				<artifactId>bcprov-jdk18on</artifactId>
 			</dependency>
 			<dependency>
 				<groupId>commons-codec</groupId>
@@ -251,6 +251,10 @@
 			<dependency>
 			    <groupId>jakarta.validation</groupId>
 			    <artifactId>jakarta.validation-api</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>org.junit.vintage</groupId>
+				<artifactId>junit-vintage-engine</artifactId>	
 			</dependency>
 	</dependencies>
 	<distributionManagement>

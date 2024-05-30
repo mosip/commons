@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -15,10 +15,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.firewall.DefaultHttpFirewall;
 import org.springframework.security.web.firewall.HttpFirewall;
 
-import jakarta.servlet.Filter;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
@@ -32,26 +32,9 @@ public class TestSecurityConfig {
 	}
 
 	@Bean
-	public Filter configure(WebSecurity webSecurity) throws Exception {
-		webSecurity.ignoring().requestMatchers(allowedEndPoints());
-		webSecurity.httpFirewall(defaultHttpFirewall());
-		return webSecurity.build();
+	protected SecurityFilterChain configure(final HttpSecurity httpSecurity) throws Exception {
+		return httpSecurity.build();
 	}
-
-	private String[] allowedEndPoints() {
-		return new String[] { "/assets/**", "/icons/**", "/screenshots/**", "/favicon**", "/**/favicon**", "/css/**",
-				"/js/**", "/*/error**", "/*/webjars/**", "/*/v2/api-docs", "/*/configuration/ui",
-				"/*/configuration/security", "/*/swagger-resources/**", "/*/swagger-ui.html" };
-	}
-
-//	@Bean
-//	protected SecurityFilterChain configure(final HttpSecurity httpSecurity) throws Exception {
-//		httpSecurity.csrf(http -> http.disable());
-//		httpSecurity.httpBasic().and().authorizeRequests().anyRequest().authenticated().and().sessionManagement()
-//				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().exceptionHandling()
-//				.authenticationEntryPoint(unauthorizedEntryPoint());
-//		return httpSecurity.build();
-//	}
 
 	@Bean
 	public AuthenticationEntryPoint unauthorizedEntryPoint() {
