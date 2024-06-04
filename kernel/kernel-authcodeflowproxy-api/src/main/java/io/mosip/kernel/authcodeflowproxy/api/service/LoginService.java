@@ -6,7 +6,6 @@ import jakarta.servlet.http.Cookie;
 import io.mosip.kernel.authcodeflowproxy.api.dto.AccessTokenResponseDTO;
 
 import io.mosip.kernel.authcodeflowproxy.api.dto.MosipUserDto;
-import io.mosip.kernel.core.authmanager.model.AuthResponseDto;
 
 public interface LoginService {
 
