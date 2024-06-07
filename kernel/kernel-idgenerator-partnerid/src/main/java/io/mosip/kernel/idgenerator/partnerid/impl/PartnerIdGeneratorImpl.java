@@ -3,7 +3,7 @@ package io.mosip.kernel.idgenerator.partnerid.impl;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-import javax.persistence.EntityExistsException;
+import jakarta.persistence.EntityExistsException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

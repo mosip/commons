@@ -21,6 +21,7 @@ import java.util.Locale;
 import io.mosip.kernel.core.exception.ArrayIndexOutOfBoundsException;
 import io.mosip.kernel.core.exception.IllegalArgumentException;
 import io.mosip.kernel.core.exception.PatternSyntaxException;
+import io.mosip.kernel.core.util.constant.CalendarUtilConstants;
 import io.mosip.kernel.core.util.constant.StringUtilConstants;
 
 /**
@@ -617,6 +618,10 @@ public final class StringUtils {
 		try {
 			return org.apache.commons.lang3.StringUtils.join(array, separator, startIndex, endIndex);
 		} catch (java.lang.ArrayIndexOutOfBoundsException e) {
+			throw new ArrayIndexOutOfBoundsException(
+					StringUtilConstants.MOSIP_ARRAY_INDEX_OUT_OF_BOUNDS_ERROR_CODE.getErrorCode(),
+					StringUtilConstants.MOSIP_ARRAY_INDEX_OUT_OF_BOUNDS_ERROR_CODE.getErrorMessage(), e.getCause());
+		} catch (java.lang.IllegalArgumentException e) {
 			throw new ArrayIndexOutOfBoundsException(
 					StringUtilConstants.MOSIP_ARRAY_INDEX_OUT_OF_BOUNDS_ERROR_CODE.getErrorCode(),
 					StringUtilConstants.MOSIP_ARRAY_INDEX_OUT_OF_BOUNDS_ERROR_CODE.getErrorMessage(), e.getCause());

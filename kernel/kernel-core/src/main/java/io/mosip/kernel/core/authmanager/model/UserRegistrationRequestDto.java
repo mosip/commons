@@ -2,7 +2,7 @@ package io.mosip.kernel.core.authmanager.model;
 
 import java.time.LocalDate;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
