@@ -510,7 +510,7 @@ public class LogfactoryTest {
 		mosipRollingFileAppender.setFileName(FILENAME);
 		mosipRollingFileAppender.setImmediateFlush(true);
 		mosipRollingFileAppender.setPrudent(false);
-		mosipRollingFileAppender.setFileNamePattern("src/test/resources/test/test-%d{aaaa}.txt");
+		mosipRollingFileAppender.setFileNamePattern("src/test/resources/test/test-%d{a}.txt");
 		mosipRollingFileAppender.setMaxHistory(5);
 		mosipRollingFileAppender.setTotalCap("100KB");
 		Logfactory.getDefaultRollingFileLogger(mosipRollingFileAppender, "LogfactoryTest");

@@ -1,6 +1,6 @@
 package io.mosip.kernel.emailnotification.dto;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import lombok.Data;
 
