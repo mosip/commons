@@ -18,7 +18,7 @@
 
 		<itextcore.version>7.1.0</itextcore.version>
 		<itexthtml2pdf.version>2.0.0</itexthtml2pdf.version>
-		<itext.version>5.5.13</itext.version>
+		<itext.version>5.5.13.3</itext.version>
 		<bouncycastle.version>1.66</bouncycastle.version>
 	</properties>
      	<dependencyManagement>
