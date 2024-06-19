@@ -12,9 +12,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
-import org.springframework.web.client.RestTemplate;
 
 import io.mosip.kernel.core.authmanager.authadapter.spi.VertxAuthenticationProvider;
+import io.mosip.kernel.core.signatureutil.spi.SignatureUtil;
 import io.mosip.kernel.idgenerator.config.HibernateDaoConfig;
 import io.mosip.kernel.uingenerator.entity.UinEntity;
 import io.mosip.kernel.uingenerator.exception.UinNotFoundException;
@@ -47,12 +47,12 @@ public class UinGeneratorServiceTest {
 
 	@MockBean
 	private RoutingContext routingContext;
+	
+	@MockBean
+	private SignatureUtil signatureutil;
 
 	@MockBean
 	private VertxAuthenticationProvider authHandler;
-
-	@MockBean
-	private RestTemplate restTemplate;
 
 	@Test(expected = UinNotFoundException.class)
 	public void getUinNotFoundTest() {

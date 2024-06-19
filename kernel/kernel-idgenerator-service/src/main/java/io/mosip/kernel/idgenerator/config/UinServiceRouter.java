@@ -33,7 +33,7 @@ import io.mosip.kernel.uingenerator.exception.UinNotFoundException;
 import io.mosip.kernel.uingenerator.exception.UinNotIssuedException;
 import io.mosip.kernel.uingenerator.exception.UinStatusNotFoundException;
 import io.mosip.kernel.uingenerator.service.UinService;
-import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.WorkerExecutor;
 import io.vertx.core.http.HttpMethod;
@@ -293,7 +293,7 @@ public class UinServiceRouter {
 		}
 	}
 
-	private void setError(RoutingContext routingContext, ServiceError error, Future<Object> blockingHandler) {
+	private void setError(RoutingContext routingContext, ServiceError error, Promise<Object> blockingHandler) {
 		ResponseWrapper<ServiceError> errorResponse = new ResponseWrapper<>();
 		errorResponse.getErrors().add(error);
 		objectMapper.registerModule(new JavaTimeModule());
