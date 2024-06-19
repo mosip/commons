@@ -22,7 +22,6 @@
 		<modelmapper.version>2.3.7</modelmapper.version>
 		<kernel.logger.version>1.2.1-SNAPSHOT</kernel.logger.version>
 		<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
-		<prometheus.version>1.4.2</prometheus.version>
 		<sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/verticle/**,**/spi/**,"**/proxy/**","**/entities/**","**/filter/**","**/util/**","**/verifier/**","**/IDGeneratorVertxApplication.java"</sonar.coverage.exclusions>
 	</properties>
      	<dependencyManagement>
@@ -149,8 +148,7 @@
 		</dependency>
 		<dependency>
 			<groupId>io.micrometer</groupId>
-			<artifactId>micrometer-registry-prometheus</artifactId>
-			<version>${prometheus.version}</version>
+			<artifactId>micrometer-registry-prometheus</artifactId>			
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
