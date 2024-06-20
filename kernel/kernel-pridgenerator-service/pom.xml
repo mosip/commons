@@ -10,21 +10,21 @@
 		<!-- maven -->
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
-		<kernel.core.version>1.2.1-SNAPSHOT</kernel.core.version>
-		<kernel.templatemanager-velocity.version>1.2.1-SNAPSHOT</kernel.templatemanager-velocity.version>
-		<kernel.logger.version>1.2.1-SNAPSHOT</kernel.logger.version>
-		<kernel.prid-generator.version>1.2.1-SNAPSHOT</kernel.prid-generator.version>
+		<kernel.core.version>1.2.1.0-SNAPSHOT</kernel.core.version>
+		<kernel.templatemanager-velocity.version>1.2.1.0-SNAPSHOT</kernel.templatemanager-velocity.version>
+		<kernel.logger.version>1.2.1.0-SNAPSHOT</kernel.logger.version>
+		<kernel.prid-generator.version>1.2.1.0-SNAPSHOT</kernel.prid-generator.version>
 		<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
 		<sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/verticle/**,**/spi/**,"**/proxy/**","**/entities/**","**/filter/**","**/util/**","**/verifier/**","**/KernelPridgeneratorServiceApplication.java"</sonar.coverage.exclusions>
 	</properties>
 	<artifactId>kernel-pridgenerator-service</artifactId>
-	<version>1.2.1-SNAPSHOT</version>
+	<version>1.2.1.0-SNAPSHOT</version>
      	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>io.mosip.kernel</groupId>
 				<artifactId>kernel-bom</artifactId>
-				<version>1.2.1-SNAPSHOT</version>
+				<version>1.2.1.0-SNAPSHOT</version>
 				<type>pom</type>
 			    <scope>import</scope>
 			</dependency>
