@@ -233,21 +233,21 @@ public class VidGeneratorServiceTest {
 
 	@Test
 	public void expireOrReleaseDataAccessExceptionTest() {
-		Mockito.when(vidRepository.findByStatusAndIsDeletedFalse(VidLifecycleStatus.ASSIGNED))
+		Mockito.when(vidRepository.findByStatusAndIsDeletedFalse(VidLifecycleStatus.ASSIGNED,20000))
 				.thenThrow(new DataRetrievalFailureException("DataBase error occur"));
 		vidService.expireAndRelease();
 	}
 
 	@Test
 	public void expireOrReleaseExceptionTest() {
-		Mockito.when(vidRepository.findByStatusAndIsDeletedFalse(VidLifecycleStatus.ASSIGNED))
+		Mockito.when(vidRepository.findByStatusAndIsDeletedFalse(VidLifecycleStatus.ASSIGNED,20000))
 				.thenThrow(new RuntimeException("DataBase error occur"));
 		vidService.expireAndRelease();
 	}
 
 	@Test
 	public void expireOrReleaseTest() {
-		Mockito.when(vidAssignedRepository.findByStatusAndIsDeletedFalse(VidLifecycleStatus.ASSIGNED))
+		Mockito.when(vidAssignedRepository.findByStatusAndIsDeletedFalse(VidLifecycleStatus.ASSIGNED,20000))
 			.thenReturn(Stream.of(expiredButAssignedStatusVAEntities, notExpiredButAssignedStatusVAEntities)
 				.flatMap(Collection::stream)
 				.collect(Collectors.toList()));
@@ -256,7 +256,7 @@ public class VidGeneratorServiceTest {
 				(List<VidAssignedEntity>) i.getArguments()[0]).spliterator(), false)
 				.collect(Collectors.toList()));
 		
-		Mockito.when(vidAssignedRepository.findByStatusAndIsDeletedFalse(VidLifecycleStatus.EXPIRED))
+		Mockito.when(vidAssignedRepository.findByStatusAndIsDeletedFalse(VidLifecycleStatus.EXPIRED,20000))
 			.thenReturn(Stream.of(releasableButExpiredStatusVAEntities, nonReleasableButExpiredStatusVAEntities)
 				.flatMap(Collection::stream)
 				.collect(Collectors.toList()));
@@ -326,7 +326,7 @@ public class VidGeneratorServiceTest {
 			Stream.of(nonExpiredButAssignedStatusEntities, expiredButAssignedStatusEntities)
 				.flatMap(Collection::stream)
 				.collect(Collectors.toList());
-		Mockito.when(vidRepository.findByStatusAndIsDeletedFalse(VidLifecycleStatus.ASSIGNED))
+		Mockito.when(vidRepository.findByStatusAndIsDeletedFalse(VidLifecycleStatus.ASSIGNED,20000))
 			.thenReturn(validTranserEntities);
 		Mockito.when(vidAssignedRepository.saveAll(vidAssignedEntityListCaptor.capture()))
 			.thenAnswer(i -> StreamSupport.stream((
