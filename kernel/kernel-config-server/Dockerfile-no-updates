@@ -1,4 +1,4 @@
-FROM openjdk:22
+FROM openjdk:11
 
 # can be passed during Docker build as build time environment for  keystore location for encryption
 ARG encrypt_keyStore_location
