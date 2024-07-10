@@ -1,6 +1,6 @@
-package io.mosip.kernel.vidgenerator.constant;
+package io.mosip.kernel.idgenerator.constant;
 
-public class VIDHealthConstants {
+public class HealthConstants {
 	/**
 	 * The string field ERROR
 	 */

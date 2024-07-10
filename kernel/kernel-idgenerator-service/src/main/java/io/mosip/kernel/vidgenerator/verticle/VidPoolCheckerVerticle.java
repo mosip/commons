@@ -35,7 +35,7 @@ public class VidPoolCheckerVerticle extends AbstractVerticle {
 		this.context = context;
 		this.vidService = this.context.getBean(VidService.class);
 		this.environment = this.context.getBean(Environment.class);
-		this.threshold = environment.getProperty("mosip.kernel.vid.min-unused-threshold", Long.class);
+		this.threshold = environment.getProperty("mosip.kernel.vid.min-unused-threshold", Long.class, 100000L);
 	}
 
 	private AtomicBoolean locked = new AtomicBoolean(false);
