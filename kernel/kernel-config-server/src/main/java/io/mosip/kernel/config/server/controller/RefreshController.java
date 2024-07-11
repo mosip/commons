@@ -37,7 +37,7 @@ public class RefreshController {
 
     @GetMapping("/refresh")
     public Map<String, String> refreshContext(@RequestParam("servicename") String serviceName) {
-        logger.info("refreshContext invoked with serviceName : {}", serviceName.replaceAll("[\n\r\t]", "_"));
+        logger.info("refreshContext invoked with (sanitized) serviceName : {}", serviceName.replaceAll("[\n\r\t]", "_"));
         Map<String, String> result = new HashMap<>();
 
         if(Objects.nonNull(discoveryClient)) {
