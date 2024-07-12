@@ -1,0 +1,19 @@
+notifier:
+  enabled: true
+  istio:
+    enabled: false
+
+idgenerator:
+  enabled: true
+  istio:
+    enabled: false
+
+ridgenerator:
+  enabled: true
+  istio:
+    enabled: false
+
+pridgenerator:
+  enabled: true
+  istio:
+    enabled: false
