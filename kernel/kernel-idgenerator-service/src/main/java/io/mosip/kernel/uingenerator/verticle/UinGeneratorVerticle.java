@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.springframework.context.ApplicationContext;
 
-import io.mosip.kernel.idgenerator.constant.HealthConstants;
+import io.mosip.kernel.uingenerator.constant.UINHealthConstants;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorConstant;
 import io.mosip.kernel.uingenerator.generator.UinProcesser;
 import io.vertx.core.AbstractVerticle;
@@ -68,7 +68,7 @@ public class UinGeneratorVerticle extends AbstractVerticle {
 			}else {
 				 LOGGER.info("Generated and persisted uins lock is true.");
 			}
-			receivedMessage.reply(HealthConstants.ACTIVE);
+			receivedMessage.reply(UINHealthConstants.ACTIVE);
 		});
 	}
 }
