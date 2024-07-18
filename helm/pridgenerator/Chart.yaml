@@ -1,0 +1,20 @@
+apiVersion: v2
+name: pridgenerator
+description: A Helm chart for MOSIP PRIDgenerator module
+type: application
+version: 12.0.1-develop
+appVersion: ""
+dependencies:
+  - name: common
+    repository: https://charts.bitnami.com/bitnami
+    tags:
+      - bitnami-common
+    version: 1.x.x
+home: https://mosip.io
+keywords:
+  - mosip
+  - pridgenerator
+  - kernel
+maintainers:
+  - email: info@mosip.io
+    name: MOSIP
