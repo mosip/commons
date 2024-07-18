@@ -23,7 +23,7 @@
 		<javax.validation-api.version>2.0.1.Final</javax.validation-api.version>
 		<javax.interceptor.version>1.2</javax.interceptor.version>
 		
-		<commons-io>2.6</commons-io>
+		<commons-io>2.7</commons-io>
 		<commons-math3>3.6.1</commons-math3>
 		
 		<bouncycastle.version>1.78.1</bouncycastle.version>
@@ -34,9 +34,9 @@
 		
 		<aspectjweaver-version>1.9.21.2</aspectjweaver-version>
 
-		<apache.httpcomponents.version>4.5.6</apache.httpcomponents.version>
+		<apache.httpcomponents.version>4.5.13</apache.httpcomponents.version>
 		
-		<vertx.version>3.9.13</vertx.version>
+		<vertx.version>4.4.9</vertx.version>
 		<hazelcast-version>3.9.4</hazelcast-version>
 		
 		<jwt.version> 3.8.1</jwt.version>
