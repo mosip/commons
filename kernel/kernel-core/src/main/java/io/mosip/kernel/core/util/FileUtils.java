@@ -452,13 +452,9 @@ public class FileUtils {
 	 * @throws IOException if an IO error occurs while checking the file.
 	 */
 	public static boolean isSymlink(File file) throws IOException {
-		try {
-			return org.apache.commons.io.FileUtils.isSymlink(file);
-		} catch (java.io.IOException e) {
-			throw new IOException(FileUtilConstants.IO_ERROR_CODE.getErrorCode(),
-					FileUtilConstants.IO_ERROR_CODE.getMessage(), e.getCause());
-		}
-	}
+    return org.apache.commons.io.FileUtils.isSymlink(file);
+}
+
 
 	/**
 	 * Allows iteration over the files in given directory (and optionally its sub
