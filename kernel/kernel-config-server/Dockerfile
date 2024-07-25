@@ -59,13 +59,15 @@ LABEL build_time=${BUILD_TIME}
 
 # install packages and create user
 RUN apt-get -y update \
-&& apt-get install -y unzip sudo\
+&& apt-get install -y unzip jq curl \
 && groupadd -g ${container_user_gid} ${container_user_group} \
-&& useradd -u ${container_user_uid} -g ${container_user_group} -s /bin/sh -m ${container_user} \
-&& adduser ${container_user} sudo \
-&& echo "%sudo ALL=(ALL) NOPASSWD:/home/${container_user}/${hsm_local_dir}/install.sh" >> /etc/sudoers \
-# change permissions of file inside working dir
-&& chown -R ${container_user}:${container_user} /home/${container_user}
+&& useradd -u ${container_user_uid} -g ${container_user_group} -s /bin/bash -m ${container_user} \
+&& curl -LO "https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl" \
+&& mkdir -p /home/${container_user} \
+&& chmod +x kubectl $work_dir/entrypoint.sh \
+&& mv kubectl /usr/local/bin/ \
+&& chown -R ${container_user}:${container_user} /home/${container_user} /etc/ssl/certs/java/cacerts \
+&& chmod 644 /etc/ssl/certs/java/cacerts
 
 #ADD execute-jar.sh execute-jar.sh
 
