@@ -1,16 +1,13 @@
-FROM eclipse-temurin:21-jre
+FROM mosipdev/openjdk-21-jre:latest
 
-# can be passed during Docker build as build time environment for  keystore location for encryption
-ARG encrypt_keyStore_location
-
-# can be passed during Docker build as build time environment for  keystore password for encryption
-ARG encrypt_keyStore_password
-
-# can be passed during Docker build as build time environment for  keystore alias for encryption
-ARG encrypt_keyStore_alias
-
-# can be passed during Docker build as build time environment for  keystore secret for encryption
-ARG encrypt_keyStore_secret
+ARG SOURCE
+ARG COMMIT_HASH
+ARG COMMIT_ID
+ARG BUILD_TIME
+LABEL source=${SOURCE}
+LABEL commit_hash=${COMMIT_HASH}
+LABEL commit_id=${COMMIT_ID}
+LABEL build_time=${BUILD_TIME}
 
 # can be passed during Docker build as build time environment for github branch to pickup configuration from.
 ARG container_user=mosip
@@ -19,43 +16,21 @@ ARG container_user=mosip
 ARG container_user_group=mosip
 
 # can be passed during Docker build as build time environment for github branch to pickup configuration from.
-ARG container_user_uid=1002
+ARG container_user_uid=1001
 
 # can be passed during Docker build as build time environment for github branch to pickup configuration from.
 ARG container_user_gid=1001
 
-ARG SOURCE
-ARG COMMIT_HASH
-ARG COMMIT_ID
-ARG BUILD_TIME
+ARG KUBECTL_VERSION=1.22.9
 
 # set working directory for the user
 WORKDIR /home/${container_user}
 
 ENV work_dir=/home/${container_user}
 
-# environment variable to pass GIT URL at docker runtime
-ENV git_url_env=${git_url}
+ADD ./apitest/target/ $work_dir
 
-# environment variable to pass github configuration folder to pickup configuration from, at docker runtime
-ENV git_config_folder_env=${git_config_folder}
-
-# environment variable to pass encryption keystore location at docker runtime
-ENV encrypt_keyStore_location_env=${encrypt_keyStore_location}
-
-# environment variable to pass encryption keystore password at docker runtime
-ENV encrypt_keyStore_password_env=${encrypt_keyStore_password}
-
-# environment variable to pass encryption keystore alias at docker runtime
-ENV encrypt_keyStore_alias_env=${encrypt_keyStore_alias}
-
-# environment variable to pass encryption keystore secret at docker runtime
-ENV encrypt_keyStore_secret_env=${encrypt_keyStore_secret}
-
-LABEL source=${SOURCE}
-LABEL commit_hash=${COMMIT_HASH}
-LABEL commit_id=${COMMIT_ID}
-LABEL build_time=${BUILD_TIME}
+ADD entrypoint.sh $work_dir/entrypoint.sh
 
 # install packages and create user
 RUN apt-get -y update \
@@ -69,16 +44,14 @@ RUN apt-get -y update \
 && chown -R ${container_user}:${container_user} /home/${container_user} /etc/ssl/certs/java/cacerts \
 && chmod 644 /etc/ssl/certs/java/cacerts
 
-#ADD execute-jar.sh execute-jar.sh
-
-#RUN chmod 777 execute-jar.sh
-
 # select container user for all tasks
 USER ${container_user_uid}:${container_user_gid}
 
-COPY ./target/kernel-config-server-*.jar kernel-config-server.jar
+EXPOSE 8083
 
-EXPOSE 51000
+ENV MODULES=
+ENV ENV_USER=
+ENV ENV_ENDPOINT=
+ENV ENV_TESTLEVEL=smokeAndRegression
 
-#CMD  ./execute-jar.sh
-CMD java -jar kernel-config-server.jar
+ENTRYPOINT ["./entrypoint.sh"]
