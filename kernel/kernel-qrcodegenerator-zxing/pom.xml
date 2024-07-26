@@ -19,7 +19,7 @@
 		<kernel.core.version>1.2.1-SNAPSHOT</kernel.core.version>
 		<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
 
-		<google.zxing.version>3.3.3</google.zxing.version>
+		<google.zxing.version>3.4.1</google.zxing.version>
 	</properties>
 
 	<dependencies>
