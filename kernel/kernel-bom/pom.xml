@@ -36,7 +36,7 @@
 
 		<apache.httpcomponents.version>4.5.13</apache.httpcomponents.version>
 		
-		<vertx.version>4.4.9</vertx.version>
+		<vertx.version>3.9.13</vertx.version>
 		<hazelcast-version>3.9.4</hazelcast-version>
 		
 		<jwt.version> 3.8.1</jwt.version>
