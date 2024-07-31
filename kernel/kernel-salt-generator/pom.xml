@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-salt-generator</artifactId>
-	<version>1.2.1-SNAPSHOT</version>
+	<version>1.3.0-B1-SNAPSHOT</version>
 	<name>Kernel Salt Generator</name>
 	<description>Batch Job Application to for one-time populating of salt values for MOSIP related application salt tables.</description>
 	<url>https://github.com/mosip/commons</url>
@@ -24,8 +24,8 @@
 		<maven.javadoc.version>3.2.0</maven.javadoc.version>
 		<maven-shade-plugin.version>2.3</maven-shade-plugin.version>
 
-		<kernel-core.version>1.2.1-SNAPSHOT</kernel-core.version>
-		<kernel-logger-logback.version>1.2.1-SNAPSHOT</kernel-logger-logback.version>
+		<kernel-core.version>1.3.0-B1-SNAPSHOT</kernel-core.version>
+		<kernel-logger-logback.version>1.3.0-B1-SNAPSHOT</kernel-logger-logback.version>
 		<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
 		<com.fasterxml.jackson.core.version>2.12.0</com.fasterxml.jackson.core.version>
 	</properties>
@@ -34,7 +34,7 @@
 			<dependency>
 				<groupId>io.mosip.kernel</groupId>
 				<artifactId>kernel-bom</artifactId>
-				<version>1.2.1-SNAPSHOT</version>
+				<version>1.3.0-B1-SNAPSHOT</version>
 				<type>pom</type>
 			    <scope>import</scope>
 			</dependency>

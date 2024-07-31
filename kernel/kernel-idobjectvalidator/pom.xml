@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>kernel-idobjectvalidator</artifactId>
-	<version>1.2.1-SNAPSHOT</version>
+	<version>1.3.0-B1-SNAPSHOT</version>
 <groupId>io.mosip.kernel</groupId>
 <properties>		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -11,7 +11,7 @@
 		<!-- maven -->
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
-		<kernel.core.version>1.2.1-SNAPSHOT</kernel.core.version>
+		<kernel.core.version>1.3.0-B1-SNAPSHOT</kernel.core.version>
 		<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
 
 		<json.schema.validator.version>2.2.14</json.schema.validator.version>
@@ -21,7 +21,7 @@
 			<dependency>
 				<groupId>io.mosip.kernel</groupId>
 				<artifactId>kernel-bom</artifactId>
-				<version>1.2.1-SNAPSHOT</version>
+				<version>1.3.0-B1-SNAPSHOT</version>
 				<type>pom</type>
 			    <scope>import</scope>
 			</dependency>
