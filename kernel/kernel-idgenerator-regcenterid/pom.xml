@@ -10,11 +10,11 @@
 		<!-- maven -->
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
-		<kernel.core.version>1.3.0-SNAPSHOT</kernel.core.version>
-		<kernel.dataaccess-hibernate.version>1.3.0-SNAPSHOT</kernel.dataaccess-hibernate.version>
-		<kernel.logger.version>1.3.0-SNAPSHOT</kernel.logger.version>
-		<kernel.idvalidator-prid.version>1.3.0-SNAPSHOT</kernel.idvalidator-prid.version>
-		<kernel.crypto-jce.version>1.3.0-SNAPSHOT</kernel.crypto-jce.version>
+		<kernel.core.version>1.3.0-beta.1</kernel.core.version>
+		<kernel.dataaccess-hibernate.version>1.3.0-beta.1</kernel.dataaccess-hibernate.version>
+		<kernel.logger.version>1.3.0-beta.1</kernel.logger.version>
+		<kernel.idvalidator-prid.version>1.3.0-beta.1</kernel.idvalidator-prid.version>
+		<kernel.crypto-jce.version>1.3.0-beta.1</kernel.crypto-jce.version>
 		<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
 	</properties>
      	<dependencyManagement>
@@ -22,14 +22,14 @@
 			<dependency>
 				<groupId>io.mosip.kernel</groupId>
 				<artifactId>kernel-bom</artifactId>
-				<version>1.3.0-SNAPSHOT</version>
+				<version>1.3.0-beta.1</version>
 				<type>pom</type>
 			    <scope>import</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<artifactId>kernel-idgenerator-regcenterid</artifactId>
-	<version>1.3.0-SNAPSHOT</version>
+	<version>1.3.0-beta.1</version>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
