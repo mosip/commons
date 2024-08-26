@@ -59,7 +59,7 @@ LABEL build_time=${BUILD_TIME}
 
 # install packages and create user
 RUN apt-get -y update \
-&& apt-get install -y unzip sudo\
+&& apt-get install -y unzip sudo git \
 && groupadd -g ${container_user_gid} ${container_user_group} \
 && useradd -u ${container_user_uid} -g ${container_user_group} -s /bin/sh -m ${container_user} \
 && usermod -aG sudo ${container_user} \
@@ -67,9 +67,9 @@ RUN apt-get -y update \
 # change permissions of file inside working dir
 && chown -R ${container_user}:${container_user} /home/${container_user}
 
-#ADD execute-jar.sh execute-jar.sh
+ADD execute-jar.sh execute-jar.sh
 
-#RUN chmod 777 execute-jar.sh
+RUN chmod 777 execute-jar.sh
 
 # select container user for all tasks
 USER ${container_user_uid}:${container_user_gid}
