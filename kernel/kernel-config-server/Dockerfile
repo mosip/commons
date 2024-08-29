@@ -78,5 +78,22 @@ COPY ./target/kernel-config-server-*.jar kernel-config-server.jar
 
 EXPOSE 51000
 
+# Set environment variables to override bootstrap.properties
+##
+# Uncomment spring.profiles.active and spring.cloud.config.server.native.search-locations for # connecting to local file system for configuration.
+ENV spring.profiles.active=native
+ENV spring.cloud.config.server.native.search-locations=file:///var/lib/config_repo
+# Server would return a HTTP 404 status, if the application is not found.By default, this flag is set to true.
+ENV spring.cloud.config.server.accept-empty=true
+#Spring Cloud Config Server makes a clone of the remote git repository and if somehow the local copy gets 
+#dirty (e.g. folder content changes by OS process) so Spring Cloud Config Server cannot update the local copy
+#from remote repository. For Force-pull in such case, we are setting the flag to true.
+ENV spring.cloud.config.server.git.force-pull=false
+# Setting up refresh rate to 5 seconds so that config server will check for updates in Git repo after every one minute,
+#can be lowered down for production.
+ENV spring.cloud.config.server.git.refreshRate=0
+# adding provision to clone on start of server instead of first request
+ENV spring.cloud.config.server.git.cloneOnStart=false
+
 #CMD  ./execute-jar.sh
 CMD java -jar kernel-config-server.jar
