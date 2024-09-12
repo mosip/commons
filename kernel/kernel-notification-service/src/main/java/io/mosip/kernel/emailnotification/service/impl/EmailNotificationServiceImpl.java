@@ -84,7 +84,7 @@ public class EmailNotificationServiceImpl implements EmailNotification<Multipart
 	}
 
 	@Async
-	private void send(String[] mailTo, String[] mailCc, String mailSubject, String mailContent,
+	public void send(String[] mailTo, String[] mailCc, String mailSubject, String mailContent,
 			MultipartFile[] attachments) {
 		EmailNotificationUtils.validateMailArguments(fromEmailAddress, mailTo, mailSubject, mailContent);
 		/**

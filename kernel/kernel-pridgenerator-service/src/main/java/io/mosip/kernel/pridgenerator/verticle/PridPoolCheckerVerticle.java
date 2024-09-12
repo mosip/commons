@@ -35,7 +35,7 @@ public class PridPoolCheckerVerticle extends AbstractVerticle {
 		this.context = context;
 		this.PridService = this.context.getBean(PridService.class);
 		this.environment = this.context.getBean(Environment.class);
-		this.threshold = environment.getProperty("mosip.kernel.prid.min-unused-threshold", Long.class);
+		this.threshold = environment.getProperty("mosip.kernel.prid.min-unused-threshold", Long.class, 1000L);
 	}
 
 	private AtomicBoolean locked = new AtomicBoolean(false);

@@ -31,7 +31,7 @@ public class PridPopulatorVerticle extends AbstractVerticle {
 	@SuppressWarnings("unchecked")
 	public PridPopulatorVerticle(final ApplicationContext context) {
 		this.environment = context.getBean(Environment.class);
-		this.pridToGenerate = environment.getProperty("mosip.kernel.prid.prids-to-generate", Long.class);
+		this.pridToGenerate = environment.getProperty("mosip.kernel.prid.prids-to-generate", Long.class, 2000L);
 		this.pridWriter = context.getBean("pridWriter", PridWriter.class);
 		this.metaDataUtil = context.getBean("metaDataUtil", MetaDataUtil.class);
 		this.pridGenerator = context.getBean(PridGenerator.class);

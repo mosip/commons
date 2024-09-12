@@ -3,7 +3,6 @@ package io.mosip.kernel.idgenerator.test.config;
 import java.util.HashMap;
 import java.util.Map;
 
-import jakarta.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.mockito.Mockito;
@@ -32,12 +31,8 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import io.mosip.kernel.core.authmanager.authadapter.spi.VertxAuthenticationProvider;
-import io.mosip.kernel.core.signatureutil.spi.SignatureUtil;
-import io.mosip.kernel.uingenerator.service.UinService;
-import io.mosip.kernel.uingenerator.service.impl.UinServiceImpl;
-import io.mosip.kernel.vidgenerator.constant.HibernatePersistenceConstant;
-import io.mosip.kernel.vidgenerator.service.VidService;
-import io.mosip.kernel.vidgenerator.service.impl.VidServiceImpl;
+import io.mosip.kernel.idgenerator.constant.HibernatePersistenceConstant;
+import jakarta.persistence.EntityManagerFactory;
 
 /**
  * Configuration class for IDGenerator
