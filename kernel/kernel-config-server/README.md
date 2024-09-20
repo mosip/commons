@@ -117,7 +117,7 @@ spring.cloud.config.server.accept-empty=false
 #from remote repository. For Force-pull in such case, we are setting the flag to true.
 # SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_FORCE_PULL=true
 
-# Setting up refresh rate to 5 seconds so that config server will check for updates in Git repo after every one minute,
+# Setting up refresh rate to 5 seconds so that config server will check for updates in Git repo after every 5 seconds,
 #can be lowered down for production.
 # SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_REFRESH_RATE=5
 
@@ -185,12 +185,10 @@ SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_TYPE=git
 SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_DEFAULT_LABEL=<your-git-repository-branch>
 ```
 
-**cloud config supported for svn type repository**
-
 ```
-SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_URI=<your-svn-repository-URL>
-SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_TYPE=git
-SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_DEFAULT_LABEL=<your-svn-repository-branch>
+SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_1_URI=<your-another-git-repository-URL>
+SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_1_TYPE=git
+SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_1_DEFAULT_LABEL=<your-another-git-repository-branch>
 ```
 
 **cloud config supported for native**
