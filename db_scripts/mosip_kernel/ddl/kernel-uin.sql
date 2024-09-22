@@ -15,6 +15,12 @@ CREATE TABLE kernel.uin(
 
 );
 -- ddl-end --
+
+--index section starts----
+CREATE INDEX IF NOT EXISTS uin_status ON kernel.uin using btree(uin_status) where uin_status='UNUSED';
+CREATE INDEX IF NOT EXISTS uin_uin ON kernel.uin using btree(uin);
+--index section ends------
+
 COMMENT ON TABLE kernel.uin IS 'UIN: Stores pre-generated UINs that are assigned to an individual as part of registration process.';
 -- ddl-end --
 COMMENT ON COLUMN kernel.uin.uin IS 'UIN: Pre-generated UINs (Unique Identification Number), which will be used to assign to an individual';
