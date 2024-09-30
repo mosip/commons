@@ -93,6 +93,8 @@ public class IntentVerificationFilter extends OncePerRequestFilter {
 	}
 
 	private String matchCallbackURL(String requestURI) {
+		logger.info("requestURI"+ requestURI);
+		logger.info("mappings"+mappings);
 		if(mappings.containsKey(requestURI)) {
 			return mappings.get(requestURI);
 		}else {
