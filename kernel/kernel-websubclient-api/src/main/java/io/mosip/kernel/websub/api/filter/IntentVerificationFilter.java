@@ -46,7 +46,9 @@ public class IntentVerificationFilter extends OncePerRequestFilter {
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {		
+			throws ServletException, IOException {
+		logger.debug("inside doFilterInternal");
+		logger.debug("HttpServletRequest request- "+request);
 		String topic=matchCallbackURL(request.getRequestURI());
 		if (request.getMethod().equals(HttpMethod.GET.name()) && topic!=null) {
 			String topicReq = request.getParameter(WebSubClientConstants.HUB_TOPIC);			
