@@ -51,7 +51,11 @@ public class IntentVerificationFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 		logger.info("inside doFilterInternal");
 		logger.info("HttpServletRequest request- "+request);
-		if(!request.getRequestURI().contains("health")) {
+
+		if (request.getRequestURI().contains("/health")) {
+			filterChain.doFilter(request, response);
+			return;
+		}
 			String topic = matchCallbackURL(request.getRequestURI());
 			if (request.getMethod().equals(HttpMethod.GET.name()) && topic != null) {
 				String topicReq = request.getParameter(WebSubClientConstants.HUB_TOPIC);
@@ -93,7 +97,6 @@ public class IntentVerificationFilter extends OncePerRequestFilter {
 			} else {
 				filterChain.doFilter(request, response);
 			}
-		}
 	}
 
 	private String matchCallbackURL(String requestURI) {
