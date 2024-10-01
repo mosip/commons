@@ -41,17 +41,12 @@ public class IntentVerificationFilter extends OncePerRequestFilter {
 	private Map<String, String> mappings = null;
 
 	public IntentVerificationFilter(IntentVerifier intentVerifier) {
-		logger.info("inside intentVerification filter intentverifier");
-		logger.info("intentVerifier"+ intentVerifier);
 		this.intentVerifier = intentVerifier;
 	}
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		logger.info("inside doFilterInternal");
-		logger.info("HttpServletRequest request- "+request);
-		if(!request.getRequestURI().contains("health")) {
 			String topic = matchCallbackURL(request.getRequestURI());
 			if (request.getMethod().equals(HttpMethod.GET.name()) && topic != null) {
 				String topicReq = request.getParameter(WebSubClientConstants.HUB_TOPIC);
@@ -94,11 +89,9 @@ public class IntentVerificationFilter extends OncePerRequestFilter {
 				filterChain.doFilter(request, response);
 			}
 		}
-	}
+
 
 	private String matchCallbackURL(String requestURI) {
-		logger.info("mappings"+ mappings);
-		logger.info("requestURI-"+requestURI);
 		if(mappings.containsKey(requestURI)) {
 			return mappings.get(requestURI);
 		}else {
