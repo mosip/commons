@@ -42,7 +42,6 @@ public class IntentVerificationConfig implements ApplicationContextAware, Embedd
 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		logger.info("inside setApplicationContext");
 		mappings = new HashMap<>();
 		for (String beanName : applicationContext.getBeanDefinitionNames()) {
 			//Skip processing this intentVerificationConfig bean.
@@ -52,25 +51,20 @@ public class IntentVerificationConfig implements ApplicationContextAware, Embedd
 			if (!((ConfigurableApplicationContext) applicationContext).getBeanFactory().getBeanDefinition(beanName)
 					.isLazyInit()) {
 				Object obj = applicationContext.getBean(beanName);
-				logger.info("bean-"+ beanName);
 				Class<?> objClazz = obj.getClass();
-				logger.info("objClazz"+ objClazz);
 				if (AopUtils.isAopProxy(obj)) {
 
 					objClazz = AopUtils.getTargetClass(obj);
 				}
 
 				for (Method method : objClazz.getDeclaredMethods()) {
-					logger.info("method name-"+method);
 					if (method.isAnnotationPresent(PreAuthenticateContentAndVerifyIntent.class)) {
 						PreAuthenticateContentAndVerifyIntent preAuthenticateContent = method
 								.getAnnotation(PreAuthenticateContentAndVerifyIntent.class);
 
 						String topic = preAuthenticateContent.topic();
-						logger.info("topic- "+topic);
 
 						String callback = preAuthenticateContent.callback();
-						logger.info("callback- "+callback);
 						if (topic.startsWith("${") && topic.endsWith("}")) {
 							topic = resolver.resolveStringValue(topic);
 						}
@@ -79,13 +73,11 @@ public class IntentVerificationConfig implements ApplicationContextAware, Embedd
 							callback = resolver.resolveStringValue(callback);
 						}
 						mappings.put(callback, topic);
-						logger.info("mapping"+ mappings);
 					}
 				}
 				IntentVerificationFilter intentVerificationFilter = applicationContext
 						.getBean(IntentVerificationFilter.class);
 				intentVerificationFilter.setMappings(mappings);
-				logger.info("mapping after setting value-"+mappings);
 			}
 		}
 	}
