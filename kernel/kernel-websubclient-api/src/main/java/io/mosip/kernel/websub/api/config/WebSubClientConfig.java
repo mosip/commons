@@ -51,6 +51,7 @@ public class WebSubClientConfig {
 
 	@Bean
 	public IntentVerificationFilter registerIntentVerificationFilter(IntentVerifier intentVerifier) {
+		System.out.println("inside intentVerification filter");
 		return new IntentVerificationFilter(intentVerifier);
 	}
 
