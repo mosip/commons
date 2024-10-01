@@ -41,16 +41,16 @@ public class IntentVerificationFilter extends OncePerRequestFilter {
 	private Map<String, String> mappings = null;
 
 	public IntentVerificationFilter(IntentVerifier intentVerifier) {
-		System.out.println("inside intentVerification filter intentverifie");
-		System.out.println("intentVerifier"+ intentVerifier);
+		logger.info("inside intentVerification filter intentverifier");
+		logger.info("intentVerifier"+ intentVerifier);
 		this.intentVerifier = intentVerifier;
 	}
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		System.out.println("inside doFilterInternal");
-		System.out.println("HttpServletRequest request- "+request);
+		logger.info("inside doFilterInternal");
+		logger.info("HttpServletRequest request- "+request);
 		String topic=matchCallbackURL(request.getRequestURI());
 		if (request.getMethod().equals(HttpMethod.GET.name()) && topic!=null) {
 			String topicReq = request.getParameter(WebSubClientConstants.HUB_TOPIC);			
