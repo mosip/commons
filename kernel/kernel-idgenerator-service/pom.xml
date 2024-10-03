@@ -22,6 +22,7 @@
 		<modelmapper.version>2.3.7</modelmapper.version>
 		<kernel.logger.version>1.3.0-beta.1</kernel.logger.version>
 		<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
+		<io.micrometer.prometheus.version>1.13.4</io.micrometer.prometheus.version>
 		<sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/verticle/**,**/spi/**,"**/proxy/**","**/entities/**","**/filter/**","**/util/**","**/verifier/**","**/IDGeneratorVertxApplication.java"</sonar.coverage.exclusions>
 	</properties>
      	<dependencyManagement>
@@ -51,6 +52,16 @@
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-idgenerator-vid</artifactId>
 			<version>${kernel.idgenerator.vid.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-core</artifactId>
+			<version>${io.micrometer.prometheus.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+			<version>${io.micrometer.prometheus.version}</version>
 		</dependency>
 
 		<dependency>
