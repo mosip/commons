@@ -5,27 +5,33 @@ import static io.mosip.kernel.saltgenerator.constant.SaltGeneratorConstant.DATAS
 import static io.mosip.kernel.saltgenerator.constant.SaltGeneratorConstant.DATASOURCE_PASSWORD;
 import static io.mosip.kernel.saltgenerator.constant.SaltGeneratorConstant.DATASOURCE_URL;
 import static io.mosip.kernel.saltgenerator.constant.SaltGeneratorConstant.DATASOURCE_USERNAME;
+import static io.mosip.kernel.saltgenerator.constant.SaltGeneratorConstant.DB_SCHEMA_NAME;
 import static io.mosip.kernel.saltgenerator.constant.SaltGeneratorConstant.PACKAGE_TO_SCAN;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-import org.springframework.batch.core.configuration.annotation.BatchConfigurer;
-import org.springframework.batch.core.configuration.annotation.DefaultBatchConfigurer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.batch.BatchDataSource;
 import org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import jakarta.persistence.EntityManagerFactory;
 
 /**
  * The Class SaltGeneratorConfig - Provides configuration for Salt
@@ -44,32 +50,6 @@ public class SaltGeneratorConfig {
 	/** The naming resolver. */
 	@Autowired
 	private PhysicalNamingStrategyResolver namingResolver;
-	
-	/**
-	 * Batch config
-	 *
-	 * @return the batch configurer
-	 */
-	@Bean
-	public BatchConfigurer batchConfig() {
-		return new DefaultBatchConfigurer(null) {
-			
-			/**
-			 * By default, Spring batch will try to create/update records 
-			 * in the provided datasource related to Job completion, schedule etc.
-			 * This override will stop spring batch to create/update any tables in provided
-			 * Datasource and instead use Map based implementation internally.
-			 *
-			 */
-			@Override
-			public void setDataSource(DataSource dataSource) {
-				// By default, Spring batch will try to create/update records in the provided
-				// datasource related to Job completion, schedule etc.
-				// This override will stop spring batch to create/update any tables in provided
-				// Datasource and instead use Map based implementation internally.
-			}
-		};
-	}
 	
 	/**
 	 * Entity manager factory.
@@ -100,6 +80,7 @@ public class SaltGeneratorConfig {
 		dataSource.setUrl(env.getProperty(String.format(DATASOURCE_URL.getValue(), alias)));
 		dataSource.setUsername(env.getProperty(String.format(DATASOURCE_USERNAME.getValue(), alias)));
 		dataSource.setPassword(env.getProperty(String.format(DATASOURCE_PASSWORD.getValue(), alias)));
+		dataSource.setSchema(env.getProperty(DB_SCHEMA_NAME.getValue()));
 		dataSource.setDriverClassName(env.getProperty(String.format(DATASOURCE_DRIVERCLASSNAME.getValue(), alias)));
 		return dataSource;
 	}
@@ -125,8 +106,24 @@ public class SaltGeneratorConfig {
 		Map<String, Object> jpaProperties = new HashMap<>();
 		jpaProperties.put("hibernate.implicit_naming_strategy", SpringImplicitNamingStrategy.class.getName());
 		jpaProperties.put("hibernate.physical_naming_strategy", namingResolver);
-		jpaProperties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect");
+		jpaProperties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
 		return jpaProperties;
+	}
+	
+	@Bean
+	public PlatformTransactionManager transactionManager() {
+		return new DataSourceTransactionManager(dataSource());
+	}
+	
+	@Bean
+	@BatchDataSource
+	public DataSource batchDatasource() {
+		EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
+		EmbeddedDatabase embeddedDatabase = builder
+				.setType(EmbeddedDatabaseType.H2)
+				.generateUniqueName(true)
+				.build();
+		return embeddedDatabase;
 	}
 	
 }

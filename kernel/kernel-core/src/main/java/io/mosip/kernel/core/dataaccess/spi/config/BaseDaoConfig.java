@@ -5,7 +5,6 @@ package io.mosip.kernel.core.dataaccess.spi.config;
 
 import java.util.Map;
 
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.FactoryBean;
@@ -13,6 +12,9 @@ import org.springframework.orm.jpa.JpaDialect;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
+
+import jakarta.persistence.EntityManagerFactory;
+
 
 /**
  * This class declares the interface for @Bean methods related to data access

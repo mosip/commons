@@ -1,7 +1,9 @@
 package io.mosip.kernel.websub.api.config;
 
-import javax.servlet.Filter;
+import jakarta.servlet.Filter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -32,6 +34,8 @@ import io.mosip.kernel.websub.api.verifier.IntentVerifier;
 @EnableAspectJAutoProxy
 public class WebSubClientConfig {
 
+	private static final Logger logger = LoggerFactory.getLogger(WebSubClientConfig.class);
+
 	@Bean
 	public IntentVerifier intentVerifier() {
 		return new IntentVerifier();
@@ -51,6 +55,7 @@ public class WebSubClientConfig {
 
 	@Bean
 	public IntentVerificationFilter registerIntentVerificationFilter(IntentVerifier intentVerifier) {
+		logger.info("inside intentVerification filter");
 		return new IntentVerificationFilter(intentVerifier);
 	}
 

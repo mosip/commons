@@ -32,6 +32,6 @@ jobs:
             DB_NAME: 'mosip_kernel'
       fail-fast: false
     name: ${{ matrix.DB_NAME }}
-    uses: mosip/kattu/.github/workflows/db-test.yml@master
+    uses: mosip/kattu/.github/workflows/db-test.yml@master-java21
     with:
       DB_LOCATION: ${{ matrix.DB_LOCATION}}

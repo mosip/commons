@@ -13,8 +13,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- maven -->
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
 		<maven.compiler.version>3.8.0</maven.compiler.version>
 		<maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version>
 		<maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
@@ -31,7 +31,8 @@
 	</properties>
 
 	<modules>
-	        <module>kernel-core</module>
+		<module>kernel-bom</module>
+		<module>kernel-core</module>
 		<module>kernel-logger-logback</module>
 		<module>kernel-dataaccess-hibernate</module>
 		<module>kernel-idgenerator-prid</module>
@@ -53,7 +54,6 @@
 		<module>kernel-pdfgenerator-itext</module>
 		<module>kernel-datamapper-orika</module>
 		<module>kernel-qrcodegenerator-zxing</module>
-		<module>kernel-cbeffutil-api</module>
 		<module>kernel-transliteration-icu4j</module>
 		<module>kernel-applicanttype-api</module>
 		<module>kernel-idobjectvalidator</module>
@@ -67,8 +67,8 @@
 		<module>kernel-idgenerator-service</module>
 		<module>kernel-pridgenerator-service</module>
 		<module>kernel-salt-generator</module>
-		<module>kernel-biosdk-provider</module>
 		<module>kernel-demographics-api</module>
+		<module>kernel-config-server</module>
 	</modules>
 
     <repositories>
@@ -240,7 +240,7 @@
                <plugin>
                   <groupId>org.sonatype.plugins</groupId>
                   <artifactId>nexus-staging-maven-plugin</artifactId>
-                  <version>1.6.7</version>
+                  <version>1.6.14</version>
                   <extensions>true</extensions>
                   <executions>
                     <execution>

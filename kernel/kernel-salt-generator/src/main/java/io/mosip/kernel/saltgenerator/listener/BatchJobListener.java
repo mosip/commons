@@ -3,7 +3,7 @@ package io.mosip.kernel.saltgenerator.listener;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.listener.JobExecutionListenerSupport;
+import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.core.logger.spi.Logger;
@@ -23,7 +23,7 @@ import io.mosip.kernel.saltgenerator.logger.SaltGeneratorLogger;
  * @author Manoj SP
  */
 @Component
-public class BatchJobListener extends JobExecutionListenerSupport {
+public class BatchJobListener implements JobExecutionListener {
 
 	/** The mosip logger. */
 	Logger mosipLogger = SaltGeneratorLogger.getLogger(BatchJobListener.class);
@@ -31,7 +31,6 @@ public class BatchJobListener extends JobExecutionListenerSupport {
 	/* (non-Javadoc)
 	 * @see org.springframework.batch.core.listener.JobExecutionListenerSupport#beforeJob(org.springframework.batch.core.JobExecution)
 	 */
-	@Override
 	public void beforeJob(JobExecution jobExecution) {
 		mosipLogger.debug("SALT_GENERATOR", "BatchJobListener", "BATCH JOB STARTED WITH STATUS : ",
 				jobExecution.getStatus().name());
@@ -40,7 +39,6 @@ public class BatchJobListener extends JobExecutionListenerSupport {
 	/* (non-Javadoc)
 	 * @see org.springframework.batch.core.listener.JobExecutionListenerSupport#afterJob(org.springframework.batch.core.JobExecution)
 	 */
-	@Override
 	public void afterJob(JobExecution jobExecution) {
 		mosipLogger.debug("SALT_GENERATOR", "BatchJobListener", "BATCH JOB COMPLETED WITH STATUS : ",
 				jobExecution.getStatus().name());

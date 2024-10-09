@@ -33,7 +33,7 @@ import io.mosip.kernel.licensekeygenerator.misp.util.MISPLicenseKeyGeneratorUtil
 @PowerMockRunnerDelegate(SpringRunner.class)
 @PowerMockIgnore({"com.sun.org.apache.xerces.*", 
 	  "javax.xml.*", "org.xml.*", "org.w3c.dom.*",
-	  "com.sun.org.apache.xalan.*", "javax.activation.*"})
+	  "com.sun.org.apache.xalan.*", "jakarta.activation.*"})
 @PrepareForTest(value = RandomStringUtils.class)
 public class MISPLicenseGeneratorExceptionTest {
 	/**

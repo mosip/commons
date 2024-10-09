@@ -4,7 +4,7 @@ import static io.mosip.kernel.idobjectvalidator.constant.IdObjectValidatorConsta
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

@@ -68,12 +68,12 @@ public class LoggerImpl implements Logger {
 		consoleAppender.setTarget(mosipConsoleAppender.getTarget());
 		consoleAppender.start();
 		if (logLevel != null) {
-			this.logger.setLevel(Level.valueOf(logLevel.getLevel()));
+			this.logger.setLevel(Level.valueOf(logLevel.getLevel()));    //NOSONAR Setting the loglevel here.
 		} else {
-			this.logger.setLevel(Level.valueOf(LogLevel.DEBUG.getLevel()));
+			this.logger.setLevel(Level.valueOf(LogLevel.DEBUG.getLevel()));    //NOSONAR Setting the loglevel to DEBUG here.
 		}
 		this.logger.setAdditive(false);
-		this.logger.addAppender(consoleAppender);
+		this.logger.addAppender(consoleAppender);    //NOSONAR Adding the console appender here.
 	}
 
 	/**
@@ -106,11 +106,11 @@ public class LoggerImpl implements Logger {
 					.get(mosipFileAppender.getAppenderName());
 		}
 		if (logLevel != null) {
-			this.logger.setLevel(Level.valueOf(logLevel.getLevel()));
+			this.logger.setLevel(Level.valueOf(logLevel.getLevel()));   //NOSONAR Setting the loglevel here.
 		} else {
-			this.logger.setLevel(Level.valueOf(LogLevel.DEBUG.getLevel()));
+			this.logger.setLevel(Level.valueOf(LogLevel.DEBUG.getLevel()));   //NOSONAR Setting the loglevel to DEBUG here.
 		}
-		this.logger.addAppender(fileAppender);
+		this.logger.addAppender(fileAppender);   //NOSONAR Adding the file appender here.
 	}
 
 	/**
@@ -148,11 +148,11 @@ public class LoggerImpl implements Logger {
 					.get(mosipRollingFileAppender.getAppenderName());
 		}
 		if (logLevel != null) {
-			this.logger.setLevel(Level.valueOf(logLevel.getLevel()));
+			this.logger.setLevel(Level.valueOf(logLevel.getLevel()));   //NOSONAR Setting the loglevel here.
 		} else {
-			this.logger.setLevel(Level.valueOf(LogLevel.DEBUG.getLevel()));
+			this.logger.setLevel(Level.valueOf(LogLevel.DEBUG.getLevel()));  //NOSONAR Setting the loglevel to DEBUG here.
 		}
-		this.logger.addAppender(rollingFileAppender);
+		this.logger.addAppender(rollingFileAppender);    //NOSONAR Adding the rolling file appender here. 
 
 	}
 

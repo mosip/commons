@@ -20,7 +20,7 @@ import io.mosip.kernel.pridgenerator.constant.PRIDGeneratorErrorCode;
 import io.mosip.kernel.pridgenerator.dto.PridFetchResponseDto;
 import io.mosip.kernel.pridgenerator.exception.PridGeneratorServiceException;
 import io.mosip.kernel.pridgenerator.service.PridService;
-import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.WorkerExecutor;
 import io.vertx.core.logging.Logger;
@@ -95,7 +95,7 @@ public class PridFetcherRouter {
 		return router;
 	}
 
-	private void setError(RoutingContext routingContext, ServiceError error, Future<Object> blockingCodeHandler) {
+	private void setError(RoutingContext routingContext, ServiceError error, Promise<Object> blockingCodeHandler) {
 		ResponseWrapper<ServiceError> errorResponse = new ResponseWrapper<>();
 		errorResponse.getErrors().add(error);
 		objectMapper.registerModule(new JavaTimeModule());

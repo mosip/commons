@@ -11,7 +11,7 @@ on:
         type: string
 jobs:
   delete-artifacts:
-    uses: mosip/kattu/.github/workflows/clear-artifacts.yml@master
+    uses: mosip/kattu/.github/workflows/clear-artifacts.yml@master-java21
     secrets:
       ACCESS_TOKEN: ${{ secrets.access_token }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}

@@ -5,10 +5,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Map;
 
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
 
 import org.springframework.util.StreamUtils;
 
@@ -20,9 +21,11 @@ import org.springframework.util.StreamUtils;
  */
 public class MultipleReadHttpRequest extends HttpServletRequestWrapper {
     private byte[] cachedBody;
+    private Map<String, String[]> parameterMap;
     public MultipleReadHttpRequest(HttpServletRequest request) throws IOException {
     	 super(request);
-         InputStream requestInputStream = request.getInputStream();
+        parameterMap = request.getParameterMap();
+        InputStream requestInputStream = request.getInputStream();
          this.cachedBody = StreamUtils.copyToByteArray(requestInputStream);
     }
 
@@ -31,11 +34,14 @@ public class MultipleReadHttpRequest extends HttpServletRequestWrapper {
     	return new MultipleReadServletInputStream(this.cachedBody);
     }
 
-    
-
     @Override
     public BufferedReader getReader() throws IOException {
     	ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(this.cachedBody);
         return new BufferedReader(new InputStreamReader(byteArrayInputStream));
+    }
+
+    @Override
+    public Map<String, String[]> getParameterMap() {
+        return this.parameterMap;
     }
 }

@@ -4,6 +4,8 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -31,6 +33,8 @@ public class IntentVerificationConfig implements ApplicationContextAware, Embedd
 	private Map<String, String> mappings = null;
 	private StringValueResolver resolver = null;
 
+	private static final Logger logger = LoggerFactory.getLogger(IntentVerificationConfig.class);
+
 	@Override
 	public void setEmbeddedValueResolver(StringValueResolver resolver) {
 		this.resolver = resolver;
@@ -40,6 +44,10 @@ public class IntentVerificationConfig implements ApplicationContextAware, Embedd
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		mappings = new HashMap<>();
 		for (String beanName : applicationContext.getBeanDefinitionNames()) {
+			//Skip processing this intentVerificationConfig bean.
+			if(beanName.equals("intentVerificationConfig")) {
+				continue;
+			}
 			if (!((ConfigurableApplicationContext) applicationContext).getBeanFactory().getBeanDefinition(beanName)
 					.isLazyInit()) {
 				Object obj = applicationContext.getBean(beanName);
@@ -55,6 +63,7 @@ public class IntentVerificationConfig implements ApplicationContextAware, Embedd
 								.getAnnotation(PreAuthenticateContentAndVerifyIntent.class);
 
 						String topic = preAuthenticateContent.topic();
+
 						String callback = preAuthenticateContent.callback();
 						if (topic.startsWith("${") && topic.endsWith("}")) {
 							topic = resolver.resolveStringValue(topic);
