@@ -1,4 +1,4 @@
-name: Maven Package upon a push
+name: Maven Package upon a push 
 
 on:
   release:
@@ -35,7 +35,7 @@ jobs:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
   publish_to_nexus:
-    if: "${{ !contains(github.ref, 'master') && github.event_name != 'pull_request' }}"
+    if: "${{ !contains(github.ref, 'master') && github.event_name != 'pull_request' && github.event_name != 'release' && github.event_name != 'prerelease' && github.event_name != 'publish' }}"
     needs: build-commons
     uses: mosip/kattu/.github/workflows/maven-publish-to-nexus.yml@master-java21
     with:
