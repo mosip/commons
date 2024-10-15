@@ -95,7 +95,8 @@ spec:
             - name: JDK_JAVA_OPTIONS
               value: {{ .Values.additionalResources.javaOpts }}
             {{- if .Values.extraEnvVars }}
-            {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 12 }}
+            {{- range .Values.extraEnvVars }}
+            {{- end }}
             {{- end }}
           envFrom:
             {{- if .Values.extraEnvVarsCM }}
@@ -105,8 +106,10 @@ spec:
             {{- end }}
             {{- end }}
             {{- if .Values.extraEnvVarsSecret }}
+            {{- range .Values.extraEnvVarsSecret }}
             - secretRef:
-                name: {{ include "common.tplvalues.render" (dict "value" .Values.extraEnvVarsSecret "context" $) }}
+                name: {{ . }}
+            {{- end }}
             {{- end }}
           ports:
             - name: spring-service
