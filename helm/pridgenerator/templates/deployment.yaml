@@ -95,8 +95,7 @@ spec:
             - name: JDK_JAVA_OPTIONS
               value: {{ .Values.additionalResources.javaOpts }}
             {{- if .Values.extraEnvVars }}
-            {{- range .Values.extraEnvVars }}
-            {{- end }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
           envFrom:
             {{- if .Values.extraEnvVarsCM }}
