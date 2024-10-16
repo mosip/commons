@@ -98,3 +98,36 @@ jobs:
       ACTOR_DOCKER_HUB: ${{ secrets.ACTOR_DOCKER_HUB }}
       RELEASE_DOCKER_HUB: ${{ secrets.RELEASE_DOCKER_HUB }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+  trivy_scan:
+    needs: build-dockers
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - SERVICE_NAME: 'kernel-ridgenerator-service'
+          - SERVICE_NAME: 'kernel-notification-service'
+          - SERVICE_NAME: 'kernel-pridgenerator-service'
+          - SERVICE_NAME: 'kernel-idgenerator-service'
+          - SERVICE_NAME: 'kernel-salt-generator'
+          - SERVICE_NAME: 'kernel-config-server'
+    steps:
+      - name: Set environment variables
+        run: |
+          echo "SERVICE_NAME=${{ matrix.SERVICE_NAME }}" >> $GITHUB_ENV
+          echo "VERSION=latest" >> $GITHUB_ENV
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: 'docker.io/${{ env.SERVICE_NAME }}:${{ env.VERSION }}'
+          format: 'sarif'
+          output: 'trivy-results-${{ matrix.SERVICE_NAME }}.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results-${{ matrix.SERVICE_NAME }}.sarif'
