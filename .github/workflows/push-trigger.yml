@@ -112,4 +112,4 @@ jobs:
         - SERVICE_NAME: 'kernel-config-server'
      with:
       service_name: ${{ matrix.SERVICE_NAME }}
-      version: $'{{ github.ref_name }}'
+      version: ${{ github.ref_name }}
