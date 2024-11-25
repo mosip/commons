@@ -117,9 +117,9 @@ spring.cloud.config.server.accept-empty=false
 #from remote repository. For Force-pull in such case, we are setting the flag to true.
 # SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_FORCE_PULL=true
 
-# Setting up refresh rate to 5 seconds so that config server will check for updates in Git repo after every 5 seconds,
+# Setting up refresh rate to 60 seconds so that config server will check for updates in Git repo after every 60 seconds,
 #can be lowered down for production.
-# SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_REFRESH_RATE=5
+# SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_REFRESH_RATE=60
 
 # adding provision to clone on start of server instead of first request
 # SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_CLONE_ON_START=true
@@ -127,8 +127,8 @@ spring.cloud.config.server.accept-empty=false
 #Path inside the GIT repo where config files are stored, in our case they are inside config directory
 #SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_SEARCH_PATHS=<folder-in-git-repository-containing-configuration>
 
-# Disabling health endpoints to improve performance of config server while in development, can be commented out in production.
-health.config.enabled=false
+# To disable health endpoint to improve performance of config server while in development
+# health.config.enabled=false
 
 #For encryption of properties
 ###########################################
