@@ -17,7 +17,8 @@ public interface VidRepository extends JpaRepository<VidEntity, String> {
 
 	long countByStatusAndIsDeletedFalse(String status);
 
-	List<VidEntity> findByStatusAndIsDeletedFalse(String status);
+	@Query(value = "select v.vid,v.vid_status,v.expiry_dtimes,v.cr_by, v.cr_dtimes, v.del_dtimes, v.is_deleted, v.upd_by, v.upd_dtimes from kernel.vid v where v.vid_status=:status limit :limit FOR UPDATE", nativeQuery = true)
+	List<VidEntity> findByStatusAndIsDeletedFalse(@Param("status") String status, @Param("limit") int limit);
 
 	@Modifying
 	@Query(value = "UPDATE kernel.vid SET vid_status=:status, upd_by=:contextUser, upd_dtimes=:uptimes where vid=:vid", nativeQuery = true)

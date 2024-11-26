@@ -36,6 +36,17 @@ public class VidServiceImpl implements VidService {
 
 	@Value("${mosip.kernel.vid.time-to-release-after-expiry}")
 	private long timeToRelaseAfterExpiry;
+	
+	
+	@Value("${mosip.kernel.vid-expire-limit:20000}")
+	private int vidExpireLimit;
+	
+	@Value("${mosip.kernel.vid-release-limit:20000}")
+	private int vidReleaseLimit;
+	
+	
+	@Value("${mosip.kernel.vid-isolate-limit:20000}")
+	private int vidIsolateLimit;
 
 	@Autowired
 	private VidRepository vidRepository;
@@ -122,14 +133,14 @@ public class VidServiceImpl implements VidService {
 
 	private void expireEligibleVids() {
 		List<VidAssignedEntity> vidAssignedEntities = vidAssignedRepository
-			.findByStatusAndIsDeletedFalse(VidLifecycleStatus.ASSIGNED);
+			.findByStatusAndIsDeletedFalse(VidLifecycleStatus.ASSIGNED,vidExpireLimit);
 		vidAssignedEntities.forEach(this::expireIfEligible);
 		vidAssignedRepository.saveAll(vidAssignedEntities);
 	}
 
 	private void releaseEligibleVids() {
 		List<VidAssignedEntity> vidExpiredEntities = vidAssignedRepository
-			.findByStatusAndIsDeletedFalse(VidLifecycleStatus.EXPIRED);
+			.findByStatusAndIsDeletedFalse(VidLifecycleStatus.EXPIRED,vidReleaseLimit);
 		List<VidAssignedEntity> releasableVidAssignedEntities = new ArrayList<VidAssignedEntity>();
 		vidExpiredEntities.forEach(entity -> {
 			if(isEligibleToRelease(entity)) {
@@ -186,7 +197,7 @@ public class VidServiceImpl implements VidService {
 	@Transactional(transactionManager = "transactionManager")
 	@Override
 	public void isolateAssignedVids() {
-		List<VidEntity> vidEntities = vidRepository.findByStatusAndIsDeletedFalse(VidLifecycleStatus.ASSIGNED);
+		List<VidEntity> vidEntities = vidRepository.findByStatusAndIsDeletedFalse(VidLifecycleStatus.ASSIGNED,vidIsolateLimit);
 		LOGGER.info("isolateAssignedVids called for entity count {} ", vidEntities.size());
 		List<VidAssignedEntity> vidEntitiesAssined = modelMapper.map(vidEntities, 
 			new TypeToken<List<VidAssignedEntity>>() {}.getType());
