@@ -31,7 +31,7 @@ public class VidPopulatorVerticle extends AbstractVerticle {
 	@SuppressWarnings("unchecked")
 	public VidPopulatorVerticle(final ApplicationContext context) {
 		this.environment = context.getBean(Environment.class);
-		this.vidToGenerate = environment.getProperty("mosip.kernel.vid.vids-to-generate", Long.class);
+		this.vidToGenerate = environment.getProperty("mosip.kernel.vid.vids-to-generate", Long.class, 200000L);
 		this.vidWriter = context.getBean("vidWriter", VidWriter.class);
 		this.metaDataUtil = context.getBean(VIDMetaDataUtil.class);
 		this.vidGenerator = context.getBean(VidGenerator.class);

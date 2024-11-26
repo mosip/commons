@@ -17,7 +17,7 @@ import org.springframework.jdbc.support.JdbcUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.kernel.uingenerator.constant.HibernatePersistenceConstant;
+import io.mosip.kernel.idgenerator.constant.HibernatePersistenceConstant;
 import io.mosip.kernel.uingenerator.constant.UINHealthConstants;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorConstant;
 import io.netty.handler.codec.http.HttpResponse;
