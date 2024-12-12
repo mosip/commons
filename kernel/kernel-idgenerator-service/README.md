@@ -3,7 +3,7 @@
 ## Overview
 MOSIP uses the cryptographically safe SecureRandom algorithm to generate UINs (Unique Identification Numbers) with high randomness. A checksum is added using the Verhoeff Algorithm to validate the UIN/VID. Generated UINs are filtered against [predefined patterns](#uin-generation-filters) as outlined below, to eliminate easily identifiable numbers and prevent repetitions or sequences. The random number seed is refreshed every 45 minutes or as configured via  `mosip.idgen.uin.secure-random-reinit-frequency` in minutes.
 
-This service is used to generate various IDs like UIN, APPID, RID (AID), VID.
+This service is used to generate various IDs like UIN and VID.
 
 ## UIN Generation Filters
 The UIN should follow the following filters and constraints:
