@@ -19,7 +19,7 @@ The UIN should follow the following filters and constraints:
 * List of restricted numbers with , seperation as specified in `mosip.kernel.uin.restricted-numbers` configuration.
 * List of numbers that should not be the starting digits in the id. Its a , separated list, as specified in `mosip.kernel.uin.not-start-with` configuration. For example, the number should not contain '0' or '1' as the first digit.
 * No alphanumeric characters allowed.
-* No cyclic numbers as mentioned below are allowed. "142857", "0588235294117647", "052631578947368421", "0434782608695652173913", "0344827586206896551724137931", "0212765957446808510638297872340425531914893617", "0169491525423728813559322033898305084745762711864406779661", "016393442622950819672131147540983606557377049180327868852459", "010309278350515463917525773195876288659793814432989690721649484536082474226804123711340206185567".
+* No cyclic numbers as mentioned below are allowed. `"142857", "0588235294117647", "052631578947368421", "0434782608695652173913", "0344827586206896551724137931", "0212765957446808510638297872340425531914893617", "0169491525423728813559322033898305084745762711864406779661", "016393442622950819672131147540983606557377049180327868852459", "010309278350515463917525773195876288659793814432989690721649484536082474226804123711340206185567"`.
 
 Note: Significant thought has been invested in the above design to ensure the generated numbers are both random and secure. We strongly recommend retaining the stated values to maintain the integrity and security of the same.
 
