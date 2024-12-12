@@ -1,7 +1,7 @@
 # ID Generator Service
 
 ## Overview
-MOSIP utilizes the Blum Blum Shub algorithm to generate random UINs (Unique Identification Numbers) ensuring a high degree of randomness. After generation, the UINs are filtered against the predefined patterns outlined below to maintain compliance and avoid unintended repetitions or sequences.
+MOSIP utilizes the SecureRandom algorithm to generate random UINs (Unique Identification Numbers) ensuring a high degree of randomness. After generation, the UINs are filtered against the predefined patterns outlined below to maintain compliance and avoid unintended repetitions or sequences.
 
 This service is used to generate various IDs like UIN, APPID, RID, VID.
 
