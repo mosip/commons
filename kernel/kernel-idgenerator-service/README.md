@@ -1,10 +1,12 @@
 # ID Generator Service
 
 ## Overview
-This service is used to generates various IDs like UIN, APPID, RID, VID.
+MOSIP utilizes the Blum Blum Shub algorithm to generate random UINs (Unique Identification Numbers) ensuring a high degree of randomness. After generation, the UINs are filtered against the predefined patterns outlined below to maintain compliance and avoid unintended repetitions or sequences.
 
-## UIN generation logic
-UIN should have the following properties:
+This service is used to generate various IDs like UIN, APPID, RID, VID.
+
+## UIN Generation Filters
+UIN should follow the following properties:
 * Only integers with length as specified in `mosip.kernel.uin.length` configuration in [application properties](https://docs.mosip.io/1.2.0/modules/module-configuration#application-properties)
 * No alphanumeric characters
 * No repeating numbers for 2 or more than 2 digits
@@ -20,6 +22,6 @@ UIN should have the following properties:
 * Should not contain three even adjacent digits (example - 3948613752)
 * Should not contain admin defined restricted number
 
-## Default context-path and port
+## Default Context-path and Port
 Refer [`bootstrap.properties`](src/main/resources/bootstrap.properties)
 
