@@ -2,7 +2,6 @@
 
 Kernel module provides common functionality required by all the functional modules of MOSIP. The key components provided by kernel are
 
- - Audit Manager
  - PKI infra
  - File System connectors (CEPH & HDFS)
  - UIN Generator
