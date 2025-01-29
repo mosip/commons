@@ -11,6 +11,7 @@ import io.mosip.kernel.pdfgenerator.util.FontPdfRendererBuilder;
 import io.mosip.kernel.pdfgenerator.util.SignatureHandler;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.io.IOUtils;
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.*;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.common.PDStream;
@@ -106,11 +107,15 @@ public class PDFGeneratorImpl implements PDFGenerator {
 	@Override
 	public OutputStream generate(String template) throws IOException {
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		if(template.isEmpty()){
+			throw new PDFGeneratorException(PDFGeneratorExceptionCodeConstant.INPUTSTREAM_NULL_EMPTY_EXCEPTION.getErrorCode(),
+					PDFGeneratorExceptionCodeConstant.INPUTSTREAM_NULL_EMPTY_EXCEPTION.getErrorMessage());
+		}
 		try {
 			Document document = Jsoup.parse(template);
 			document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
 			PdfRendererBuilder builder = FontPdfRendererBuilder.getBuilder();
-			builder.withHtmlContent(document.html(), null); // Convert InputStream to String
+			builder.withHtmlContent(document.html(), null);
 			builder.toStream(os);
 			builder.run();
 		}catch (Exception e) {
@@ -123,6 +128,8 @@ public class PDFGeneratorImpl implements PDFGenerator {
 	@Override
 	public void generate(String templatePath, String outputFilePath, String outputFileName) throws IOException {
 		File outputFile = new File(outputFilePath + outputFileName + OUTPUT_FILE_EXTENSION);
+		try {
+
 
 		try (PDDocument document = new PDDocument()) {
 			PDPage page = new PDPage(PDRectangle.A4);
@@ -144,6 +151,10 @@ public class PDFGeneratorImpl implements PDFGenerator {
 			}
 
 			document.save(outputFile);
+		}
+		}catch (Exception e){
+			throw new PDFGeneratorException(PDFGeneratorExceptionCodeConstant.PDF_EXCEPTION.getErrorCode(),
+					e.getMessage(), e);
 		}
 	}
 
@@ -175,21 +186,19 @@ public class PDFGeneratorImpl implements PDFGenerator {
 
 	@Override
 	public byte[] mergePDF(List<URL> pdfFiles) throws IOException {
-		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-			 PDDocument mergedDocument = new PDDocument()) {
-
+		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+			PDFMergerUtility merger = new PDFMergerUtility();
+			merger.setDestinationStream(byteArrayOutputStream);
 			for (URL url : pdfFiles) {
 				try (PDDocument tempDocument = PDDocument.load(url.openStream())) {
-					for (PDPage page : tempDocument.getPages()) {
-						mergedDocument.addPage(page);
-					}
+					merger.addSource(url.openStream());  // Add each file to the merger
 				}
 			}
-
-			mergedDocument.save(byteArrayOutputStream);
+			merger.mergeDocuments(null); // Merge all documents
 			return byteArrayOutputStream.toByteArray();
 		}
 	}
+
 	@Override
 	public OutputStream signAndEncryptPDF(byte[] pdf, io.mosip.kernel.core.pdfgenerator.model.Rectangle rectangle,
 										  String reason, int pageNumber, Provider provider,

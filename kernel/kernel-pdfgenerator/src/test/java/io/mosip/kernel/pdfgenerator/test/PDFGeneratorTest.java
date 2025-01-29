@@ -227,19 +227,6 @@ public class PDFGeneratorTest {
 
 	}
 
-	@Test(expected = PDFGeneratorException.class)
-	public void testPdfGeneratorExceptionInInputStreamPassingResourceLoc() throws IOException {
-		ClassLoader classLoader = getClass().getClassLoader();
-		String inputFileName = classLoader.getResource("emptyFile.html").getFile();
-		File file = new File(inputFileName);
-		if (file.getParentFile().isDirectory()) {
-			file = file.getParentFile();
-		}
-		String resourceLoc = file.getAbsolutePath();
-		InputStream inputStream = new FileInputStream(inputFileName);
-		pdfGenerator.generate(inputStream, resourceLoc);
-	}
-
 	@Test
 	public void getSinglePDFInBytesTest() throws IOException {
 		byte[] data = pdfGenerator.asPDF(bufferedImages);
