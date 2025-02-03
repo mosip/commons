@@ -7,6 +7,8 @@ import org.bouncycastle.cms.jcajce.JcaSignerInfoGeneratorBuilder;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +30,8 @@ public class SignatureHandler implements SignatureInterface {
 
     public static final String RSA_SIGN_KEY_ALGORITHM = "RSA";
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SignatureHandler.class);
+
 
     public SignatureHandler(PrivateKey privateKey, Certificate[] certificateChain, Provider provider) {
         this.privateKey = privateKey;
@@ -48,12 +52,12 @@ public class SignatureHandler implements SignatureInterface {
                 signAlgorithm = EC256_ALGORITHM;
             }
 
-            ContentSigner signer1 = new JcaContentSignerBuilder(signAlgorithm)
+            ContentSigner signer = new JcaContentSignerBuilder(signAlgorithm)
                     .setProvider(provider)
                     .build(privateKey);
             generator.addSignerInfoGenerator(new JcaSignerInfoGeneratorBuilder(
                     new org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder().build())
-                    .build(signer1, (java.security.cert.X509Certificate) certificateChain[0]));
+                    .build(signer, (java.security.cert.X509Certificate) certificateChain[0]));
 
             generator.addCertificates(new JcaCertStore(Arrays.asList(certificateChain)));
 
@@ -62,6 +66,7 @@ public class SignatureHandler implements SignatureInterface {
 
             return signedData.getEncoded();
         } catch (CMSException | OperatorCreationException | CertificateException | IOException e) {
+            LOGGER.error("Error while signing the content",e);
             throw new IOException("Error while signing the content",e);
         }
     }

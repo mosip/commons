@@ -113,9 +113,8 @@ public class PDFGeneratorTest {
 		certificateEntry = new CertificateEntry<X509Certificate, PrivateKey>(serverChain, keyPair.getPrivate());
 
 	}
-
 	@Test
-	public void testPdfGenerationWithInputStream() throws IOException {
+	public void pdfGeneration_WithInputStream_thenPass() throws IOException {
 		ClassLoader classLoader = getClass().getClassLoader();
 		String inputFile = classLoader.getResource("csshtml.html").getFile();
 		InputStream is = new FileInputStream(inputFile);
@@ -134,7 +133,7 @@ public class PDFGeneratorTest {
 	}
 
 	@Test(expected = PDFGeneratorException.class)
-	public void testPdfGeneratorExceptionInInputStream() throws IOException {
+	public void pdfGenerator_withInputStreamAsEmpty_thenFail() throws IOException {
 		ClassLoader classLoader = getClass().getClassLoader();
 		String inputFileName = classLoader.getResource("emptyFile.html").getFile();
 		File inputFile = new File(inputFileName);
@@ -143,7 +142,7 @@ public class PDFGeneratorTest {
 	}
 
 	@Test
-	public void testPdfGenerationWithTemplateAsStringAndOutStream() throws IOException {
+	public void pdfGeneration_WithTemplateAsStringAndOutStream_thenPass() throws IOException {
 		ClassLoader classLoader = getClass().getClassLoader();
 		String inputFileName = classLoader.getResource("test.html").getFile();
 		BufferedReader br = new BufferedReader(new FileReader(inputFileName));
@@ -168,7 +167,7 @@ public class PDFGeneratorTest {
 	}
 
 	@Test(expected = PDFGeneratorException.class)
-	public void testPDFGeneratorGenericExceptionWithTemplateAsString() throws IOException {
+	public void pdfGenerator_genericExceptionWithTemplateAsString_thenFail() throws IOException {
 		ClassLoader classLoader = getClass().getClassLoader();
 		String inputFileName = classLoader.getResource("emptyFile.html").getFile();
 		BufferedReader br = new BufferedReader(new FileReader(inputFileName));
@@ -181,7 +180,7 @@ public class PDFGeneratorTest {
 	}
 
 	@Test
-	public void testPdfGenerationWithFile() throws IOException {
+	public void pdfGeneration_withFile_thenPass() throws IOException {
 		String outputPath = System.getProperty("user.dir");
 		String outputFileExtension = ".pdf";
 		String fileSepetator = System.getProperty("file.separator");
@@ -194,17 +193,17 @@ public class PDFGeneratorTest {
 	}
 
 	@Test(expected = PDFGeneratorException.class)
-	public void testPdfGeneratorExceptionInFile() throws IOException {
+	public void pdfGenerator_withExceptionInFile_thenFail() throws IOException {
 		String outputPath = System.getProperty("user.dir");
 		ClassLoader classLoader = getClass().getClassLoader();
 		String inputFile = classLoader.getResource("").getFile();
 		String generatedPdfFileName = "Wiki";
-		pdfGenerator.generate(inputFile, "", generatedPdfFileName);
+		pdfGenerator.generate(inputFile, outputPath, generatedPdfFileName);
 
 	}
 
 	@Test
-	public void testPdfGenerationWithInputStreamPassingResourceLoc() throws IOException {
+	public void pdfGeneration_withInputStreamPassingResourceLoc_thenPass() throws IOException {
 		ClassLoader classLoader = getClass().getClassLoader();
 		String inputFile = classLoader.getResource("responsive.html").getFile();
 		File file = new File(inputFile);
@@ -228,10 +227,8 @@ public class PDFGeneratorTest {
 	}
 
 	@Test
-	public void getSinglePDFInBytesTest() throws IOException {
+	public void getSinglePDFInBytes_withValidInput_thenPass() throws IOException {
 		byte[] data = pdfGenerator.asPDF(bufferedImages);
-		String outputPath = System.getProperty("user.dir");
-		String fileSeperator = System.getProperty("file.separator");
 		File OutPutPdfFile = new File("merge.pdf");
 		FileOutputStream op = new FileOutputStream(OutPutPdfFile);
 		op.write(data);
@@ -244,13 +241,10 @@ public class PDFGeneratorTest {
 	}
 
 	@Test
-	public void mergePDFTest() throws IOException {
+	public void mergePDFTest_withValidInput_thenPass() throws IOException {
 		List<URL> pdfFiles = new ArrayList<URL>(Arrays.asList(PDFGeneratorTest.class.getResource("/sample.pdf"),
 				PDFGeneratorTest.class.getResource("/pdf-sample.pdf")));
 		byte[] byteArray = pdfGenerator.mergePDF(pdfFiles);
-
-		String outputPath = System.getProperty("user.dir");
-		String fileSeperator = System.getProperty("file.separator");
 		File OutPutPdfFile = new File("new_merged.pdf");
 		FileOutputStream op = new FileOutputStream(OutPutPdfFile);
 		op.write(byteArray);
@@ -262,7 +256,7 @@ public class PDFGeneratorTest {
 	}
 
 	@Test
-	public void testsignAndEncryptPDF()
+	public void signAndEncryptPDF_withValidInput_thenPass()
 			throws IOException, GeneralSecurityException, io.mosip.kernel.core.exception.IOException {
 		byte[] pdf = FileUtils.readFileToByteArray(resourceLoader.getResource("classpath:dummy.pdf").getFile());
 		Rectangle rectangle = new Rectangle(100, 100, 200, 200);

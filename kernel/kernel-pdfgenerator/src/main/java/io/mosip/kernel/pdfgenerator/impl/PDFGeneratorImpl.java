@@ -72,12 +72,15 @@ public class PDFGeneratorImpl implements PDFGenerator {
 	@Value("${mosip.kernel.pdf_owner_password:\"\"}")
 	private String pdfOwnerPassword;
 
+	@Value("${mosip.kernel.pdfgenerator.ttf.file.path:classpath:/pdf-generator/*.ttf}")
+	private String ttfFilePath;
+
 	@Override
 	public OutputStream generate(InputStream is) throws IOException {
 		isValidInputStream(is);
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		try {
-			PdfRendererBuilder builder = FontPdfRendererBuilder.getBuilder();
+			PdfRendererBuilder builder = FontPdfRendererBuilder.getBuilder(ttfFilePath);
 			String wellFormedHtml = preprocessHtml(is);
 			builder.withHtmlContent(wellFormedHtml, null); // Convert InputStream to String
 			builder.toStream(os);
@@ -114,7 +117,7 @@ public class PDFGeneratorImpl implements PDFGenerator {
 		try {
 			Document document = Jsoup.parse(template);
 			document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
-			PdfRendererBuilder builder = FontPdfRendererBuilder.getBuilder();
+			PdfRendererBuilder builder = FontPdfRendererBuilder.getBuilder(ttfFilePath);
 			builder.withHtmlContent(document.html(), null);
 			builder.toStream(os);
 			builder.run();
@@ -160,7 +163,7 @@ public class PDFGeneratorImpl implements PDFGenerator {
 
 	@Override
 	public OutputStream generate(InputStream is, String resourceLoc) throws IOException {
-		return generate(is); // Placeholder, as no specific resource handling is demonstrated in the existing implementation
+		return generate(is);
 	}
 
 	@Override
@@ -191,7 +194,7 @@ public class PDFGeneratorImpl implements PDFGenerator {
 			merger.setDestinationStream(byteArrayOutputStream);
 			for (URL url : pdfFiles) {
 				try (PDDocument tempDocument = PDDocument.load(url.openStream())) {
-					merger.addSource(url.openStream());  // Add each file to the merger
+					merger.appendDocument(tempDocument, tempDocument); // Merge document directly
 				}
 			}
 			merger.mergeDocuments(null); // Merge all documents
@@ -255,6 +258,7 @@ public class PDFGeneratorImpl implements PDFGenerator {
 		}
 		return os;
 	}
+
 	private String getCertificateCommonName(X500Principal x500CertPrincipal) {
 		X500Name x500Name = new X500Name(x500CertPrincipal.getName());
 		RDN[] rdns = x500Name.getRDNs(BCStyle.CN);
@@ -365,6 +369,7 @@ public class PDFGeneratorImpl implements PDFGenerator {
 
 		return lines;
 	}
+
 	private void isValidInputStream(InputStream dataInputStream) {
 		if (EmptyCheckUtils.isNullEmpty(dataInputStream)) {
 			throw new PDFGeneratorException("PDF_GENERATOR_001", "Input stream is null or empty");

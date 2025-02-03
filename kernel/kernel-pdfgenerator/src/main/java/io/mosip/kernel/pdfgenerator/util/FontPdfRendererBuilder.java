@@ -21,17 +21,17 @@ public class FontPdfRendererBuilder {
         // Private constructor to enforce singleton
     }
 
-    public static synchronized PdfRendererBuilder getBuilder() throws IOException {
+    public static synchronized PdfRendererBuilder getBuilder(String ttfFilePath) throws IOException {
         if (builderInstance == null) {
             builderInstance = new PdfRendererBuilder();
-            initializeFonts(builderInstance);
+            initializeFonts(builderInstance,ttfFilePath);
         }
         return builderInstance;
     }
 
-    private static void initializeFonts(PdfRendererBuilder builder) throws IOException {
+    private static void initializeFonts(PdfRendererBuilder builder,String ttfFilePath) throws IOException {
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-        Resource[] resources = resolver.getResources("classpath:/pdf-generator/*.ttf");
+        Resource[] resources = resolver.getResources(ttfFilePath);
 
         if (resources.length == 0) {
             LOGGER.info("Font family not found taking default font");
