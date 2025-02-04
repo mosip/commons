@@ -93,7 +93,7 @@ jobs:
             BUILD_ARTIFACT: 'commons'
             SQUASH_LAYERS: '6'
       fail-fast: false
-    uses: mosip/kattu/.github/workflows/docker-build.yml@master-java21
+    uses: Rakshithb1/kattu/.github/workflows/docker-build.yml@MOSIP-35637
     name: ${{ matrix.SERVICE_NAME }}
     with:
       SERVICE_LOCATION: ${{ matrix.SERVICE_LOCATION }}
