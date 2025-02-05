@@ -64,7 +64,6 @@ jobs:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
   build-dockers:
-    needs: build-commons
     strategy:
       matrix:
         include:
