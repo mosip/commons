@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-licensekeygenerator-misp</artifactId>
-	<version>1.3.0-RC</version>
+	<version>1.3.0-java21-SNAPSHOT</version>
 <properties>		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -21,7 +21,7 @@
 			<dependency>
 				<groupId>io.mosip.kernel</groupId>
 				<artifactId>kernel-bom</artifactId>
-				<version>1.3.0-RC</version>
+				<version>1.3.0-java21-SNAPSHOT</version>
 				<type>pom</type>
 			    <scope>import</scope>
 			</dependency>
