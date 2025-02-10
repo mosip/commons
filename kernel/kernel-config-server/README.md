@@ -83,7 +83,11 @@ And place the encrypted value in client application properties file with the for
 
 `curl http://<your-config-server-address>/<application-context-path-if-any>/decrypt -d <encrypted-value-to-decrypt>`
 
-**NOTE** There is no need to write decryption mechanism in client applications for encrypted values. They will be automatically decrypted by config server. 
+**NOTE** 
+1. There is no need to write decryption mechanism in client applications for encrypted values. They will be automatically decrypted by config server. 
+2. Config server doesn't support asterisk (*) in URL as supported in previous java versions. We need to provide the complete URL while fetching any config file from the config server. 
+	Example: **http:\/\/\<config-server-url\>\/\*\/\<profile\>\/\<label\>\/\<path-to-file\>** needs to be changed to **http:\/\/\<config-server-url\>\/application\/\<profile\>\/\<label\>\/\<path-to-file\>**
+3. Config server doesn't automatically trims the whitespace at the end in the proerty value. We need to be careful while providing the whitespace. 
 
 
 
