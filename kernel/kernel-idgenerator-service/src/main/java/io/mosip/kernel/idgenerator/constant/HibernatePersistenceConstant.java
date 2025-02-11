@@ -1,7 +1,7 @@
 /**
  * 
  */
-package io.mosip.kernel.vidgenerator.constant;
+package io.mosip.kernel.idgenerator.constant;
 
 /**
  * @author Dharmesh Khandelwal

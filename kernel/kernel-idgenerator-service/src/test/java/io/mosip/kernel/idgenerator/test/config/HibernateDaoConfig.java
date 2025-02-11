@@ -32,7 +32,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import io.mosip.kernel.core.authmanager.authadapter.spi.VertxAuthenticationProvider;
-import io.mosip.kernel.vidgenerator.constant.HibernatePersistenceConstant;
+import io.mosip.kernel.idgenerator.constant.HibernatePersistenceConstant;
 
 /**
  * Configuration class for IDGenerator
