@@ -12,13 +12,13 @@ LABEL build_time=${BUILD_TIME}
 # can be passed during Docker build as build time environment for github branch to pickup configuration from.
 ARG spring_config_label
 
-# can be passed during Docker build as build time environment for spring profiles active 
+# can be passed during Docker build as build time environment for spring profiles active
 ARG active_profile
 
-# can be passed during Docker build as build time environment for config server URL 
+# can be passed during Docker build as build time environment for config server URL
 ARG spring_config_url
 
-# can be passed during Docker build as build time environment for glowroot 
+# can be passed during Docker build as build time environment for glowroot
 ARG is_glowroot
 
 # can be passed during Docker build as build time environment for artifactory URL
@@ -80,17 +80,6 @@ USER ${container_user_uid}:${container_user_gid}
 
 EXPOSE 8083
 
-CMD if [ "$is_glowroot_env" = "present" ]; then \
-    wget -q --show-progress "${artifactory_url_env}"/artifactory/libs-release-local/io/mosip/testing/glowroot.zip ; \
-    unzip glowroot.zip ; \
-    rm -rf glowroot.zip ; \
-    sed -i 's/<service_name>/kernel-notification-service/g' glowroot/glowroot.properties ; \
-    wget -q --show-progress "${runtime_dep_url_env}/kernel-auth-adapter.jar" -O "${loader_path_env}"/kernel-auth-adapter.jar; \
+CMD wget -q --show-progress "${runtime_dep_url_env}/kernel-auth-adapter.jar" -O "${loader_path_env}"/kernel-auth-adapter.jar; \
     wget -q --show-progress "${runtime_dep_url_env}/kernel-smsserviceprovider-msg91.jar" -O "${loader_path_env}"/kernel-smsserviceprovider-msg91.jar; \
-    java -jar -javaagent:glowroot/glowroot.jar -Dloader.path="${loader_path_env}" -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" kernel-notification-service.jar ; \
-    else \
-    wget -q --show-progress "${runtime_dep_url_env}/kernel-auth-adapter.jar" -O "${loader_path_env}"/kernel-auth-adapter.jar; \
-    wget -q --show-progress "${runtime_dep_url_env}/kernel-smsserviceprovider-msg91.jar" -O "${loader_path_env}"/kernel-smsserviceprovider-msg91.jar; \
-    java -jar -Dloader.path="${loader_path_env}" -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" kernel-notification-service.jar ; \
-    fi
-
+    java -XX:-UseG1GC -XX:+ExplicitGCInvokesConcurrent -XX:-UseParallelGC -XX:+UseZGC -XX:+ZGenerational -XX:-UseShenandoahGC -XX:MaxGCPauseMillis=200 -Xms1g -Xmx2g -XX:+UnlockExperimentalVMOptions -XX:+UseStringDeduplication -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -XX:+UseCompressedOops -jar -Dloader.path="${loader_path_env}" -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" kernel-notification-service.jar ; \
