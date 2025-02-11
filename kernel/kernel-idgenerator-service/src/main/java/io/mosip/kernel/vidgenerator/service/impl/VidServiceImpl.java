@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
@@ -42,9 +41,6 @@ public class VidServiceImpl implements VidService {
 
 	@Autowired
 	private VidAssignedRepository vidAssignedRepository;
-
-	@Autowired
-	private ModelMapper modelMapper;
 
 	@Autowired
 	private VIDMetaDataUtil metaDataUtil;
