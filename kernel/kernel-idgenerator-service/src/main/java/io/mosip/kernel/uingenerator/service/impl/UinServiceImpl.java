@@ -6,6 +6,7 @@ package io.mosip.kernel.uingenerator.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -130,22 +131,10 @@ public class UinServiceImpl implements UinService {
 	}
 
 	private List<UinEntityAssigned> convertUinEntitiesListToUinEntitiesAssignedList(List<UinEntity> uinEntities) {
-		List<UinEntityAssigned> uinEntityAssignedList = new ArrayList<>();
-		for(UinEntity uinEntity:uinEntities){
-			UinEntityAssigned uinEntityAssigned = new UinEntityAssigned();
-			uinEntityAssigned.setStatus(uinEntity.getStatus());
-			uinEntityAssigned.setUin(uinEntity.getUin());
-			uinEntityAssigned.setDeletedtimes(uinEntity.getDeletedtimes());
-			uinEntityAssigned.setCreatedtimes(uinEntity.getCreatedtimes());
-			uinEntityAssigned.setCreatedBy(uinEntity.getCreatedBy());
-			uinEntityAssigned.setUpdatedtimes(uinEntity.getUpdatedtimes());
-			uinEntityAssigned.setUpdatedBy(uinEntity.getUpdatedBy());
-			uinEntityAssigned.setIsDeleted(uinEntity.getIsDeleted());
-			uinEntityAssignedList.add(uinEntityAssigned);
-		}
-		return uinEntityAssignedList;
+		return uinEntities.stream()
+				.map(UinEntityAssigned::new)
+				.collect(Collectors.toList());
 	}
-
 
 	@Override
 	public boolean uinExist(String uin) {
