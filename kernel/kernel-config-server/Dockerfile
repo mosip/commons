@@ -29,11 +29,6 @@ ARG COMMIT_HASH
 ARG COMMIT_ID
 ARG BUILD_TIME
 
-# set working directory for the user
-WORKDIR /home/${container_user}
-
-ENV work_dir=/home/${container_user}
-
 # environment variable to pass GIT URL at docker runtime
 ENV git_url_env=${git_url}
 
@@ -63,13 +58,19 @@ RUN apt-get -y update \
 && groupadd -g ${container_user_gid} ${container_user_group} \
 && useradd -u ${container_user_uid} -g ${container_user_group} -s /bin/sh -m ${container_user} \
 && usermod -aG sudo ${container_user} \
-&& echo "%sudo ALL=(ALL) NOPASSWD:/home/${container_user}/${hsm_local_dir}/install.sh" >> /etc/sudoers \
-# change permissions of file inside working dir
-&& chown -R ${container_user}:${container_user} /home/${container_user}
+&& echo "%sudo ALL=(ALL) NOPASSWD:/home/${container_user}/${hsm_local_dir}/install.sh" >> /etc/sudoers
+
+# set working directory for the user
+WORKDIR /home/${container_user}
+
+ENV work_dir=/home/${container_user}
 
 #ADD execute-jar.sh execute-jar.sh
 
 #RUN chmod 777 execute-jar.sh
+
+# change permissions of file inside working dir
+RUN chown -R ${container_user}:${container_user} /home/${container_user}
 
 # select container user for all tasks
 USER ${container_user_uid}:${container_user_gid}
