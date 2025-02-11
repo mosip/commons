@@ -3,9 +3,9 @@ package io.mosip.kernel.vidgenerator.service.impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
@@ -188,9 +188,14 @@ public class VidServiceImpl implements VidService {
 	public void isolateAssignedVids() {
 		List<VidEntity> vidEntities = vidRepository.findByStatusAndIsDeletedFalse(VidLifecycleStatus.ASSIGNED);
 		LOGGER.info("isolateAssignedVids called for entity count {} ", vidEntities.size());
-		List<VidAssignedEntity> vidEntitiesAssined = modelMapper.map(vidEntities, 
-			new TypeToken<List<VidAssignedEntity>>() {}.getType());
+		List<VidAssignedEntity> vidEntitiesAssined = convertVidEntitiesToVidAssignedEntity(vidEntities);
 		vidAssignedRepository.saveAll(vidEntitiesAssined);
 	    vidRepository.deleteAll(vidEntities);
+	}
+
+	private List<VidAssignedEntity> convertVidEntitiesToVidAssignedEntity(List<VidEntity> vidEntities) {
+		return vidEntities.stream()
+				.map(VidAssignedEntity::new)
+				.collect(Collectors.toList());
 	}
 }
