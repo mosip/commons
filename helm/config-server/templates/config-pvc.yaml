@@ -1,0 +1,21 @@
+{{- if .Values.spring_profiles.enabled }}
+  {{- if or .Values.localRepo.enabled (include "config-server.hasNative" . | eq "true") }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.volume.name }}
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  storageClassName: {{ .Values.volume.storageClass }}
+  accessModes:
+    {{- range .Values.volume.accessModes }}
+      - {{ . }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.volume.size }}
+  selector:
+    matchLabels:
+      name: {{ .Values.volume.name }}
+  {{- end }}
+{{- end }}
