@@ -10,10 +10,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.Objects;
 
 public class FontPdfRendererBuilder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FontPdfRendererBuilder.class);
+
+    private static final String CLASS_PATH = "classpath";
 
     private static PdfRendererBuilder builderInstance;
 
@@ -30,25 +33,63 @@ public class FontPdfRendererBuilder {
     }
 
     private static void initializeFonts(PdfRendererBuilder builder,String ttfFilePath) throws IOException {
+        File tempFontDir = Files.createTempDirectory("loaded-fonts").toFile();
+        tempFontDir.deleteOnExit();
+        if(ttfFilePath.contains(CLASS_PATH)) {
+            // Load fonts from classpath
+            loadFontsFromClasspath(builder, ttfFilePath, tempFontDir);
+        }
+        // Load fonts from external directory
+        loadFontsFromExternalDirectory(builder, ttfFilePath, tempFontDir);
+    }
+    /**
+     * Load fonts from classpath
+     */
+    private static void loadFontsFromClasspath(PdfRendererBuilder builder, String classpathTtfPath, File tempFontDir) throws IOException {
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-        Resource[] resources = resolver.getResources(ttfFilePath);
-
-        if (resources.length == 0) {
-            LOGGER.info("Font family not found taking default font");
-        }else {
-
-            File tempFontDir = Files.createTempDirectory("loaded-fonts").toFile();
-            tempFontDir.deleteOnExit();
-
+        try {
+            Resource[] resources = resolver.getResources(classpathTtfPath);
+            if (resources.length == 0) {
+                LOGGER.info("No fonts found in classpath at {}", classpathTtfPath);
+                return;
+            }
             for (Resource resource : resources) {
                 try (InputStream fontStream = resource.getInputStream()) {
-                    File tempFontFile = new File(tempFontDir, resource.getFilename());
+                    File tempFontFile = new File(tempFontDir, Objects.requireNonNull(resource.getFilename()));
                     Files.copy(fontStream, tempFontFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-                    LOGGER.info("Loading font: {}", tempFontFile.getAbsolutePath());
-                    builder.useFont(tempFontFile, resource.getFilename().replace(".ttf", ""));
+                    LOGGER.info("Loaded font from classpath: {}", tempFontFile.getAbsolutePath());
+                    builder.useFont(tempFontFile, tempFontFile.getName().replace(".ttf", ""));
                 }
             }
+        }catch (Exception e) {
+            LOGGER.error("Failed to load fonts from classpath: {}. Reason: {}", classpathTtfPath, e.getMessage());
         }
     }
+
+    /**
+     * Load fonts from external directory
+     */
+    private static void loadFontsFromExternalDirectory(PdfRendererBuilder builder, String externalTtfDir, File tempFontDir) throws IOException {
+        try {
+            File fontDir = new File(externalTtfDir);
+            if (!fontDir.exists() || !fontDir.isDirectory()) {
+                LOGGER.info("External font directory does not exist: {}. Skipping external font loading.", externalTtfDir);
+                return;
+            }
+            File[] fontFiles = fontDir.listFiles((dir, name) -> name.toLowerCase().endsWith(".ttf"));
+            if (fontFiles == null || fontFiles.length == 0) {
+                LOGGER.info("No TTF fonts found in external directory: {}", externalTtfDir);
+                return;
+            }
+            for (File fontFile : fontFiles) {
+                File tempFontFile = new File(tempFontDir, fontFile.getName());
+                Files.copy(fontFile.toPath(), tempFontFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                LOGGER.info("Loaded font from external directory: {}", tempFontFile.getAbsolutePath());
+                builder.useFont(tempFontFile, tempFontFile.getName().replace(".ttf", ""));
+            }
+        }catch (Exception e){
+            LOGGER.error("Failed to load fonts from external font directory: {}. Reason: {}", externalTtfDir, e.getMessage());
+        }
+    }
+
 }
