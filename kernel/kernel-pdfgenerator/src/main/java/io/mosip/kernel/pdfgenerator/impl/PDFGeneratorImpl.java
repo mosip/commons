@@ -370,8 +370,8 @@ public class PDFGeneratorImpl implements PDFGenerator {
 		return lines;
 	}
 
-	private void isValidInputStream(InputStream dataInputStream) {
-		if (EmptyCheckUtils.isNullEmpty(dataInputStream)) {
+	private void isValidInputStream(InputStream dataInputStream) throws IOException {
+		if (dataInputStream.read()==-1 || EmptyCheckUtils.isNullEmpty(dataInputStream)) {
 			throw new PDFGeneratorException("PDF_GENERATOR_001", "Input stream is null or empty");
 		}
 	}
