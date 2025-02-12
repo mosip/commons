@@ -29,7 +29,7 @@ import io.mosip.kernel.emailnotification.util.EmailNotificationUtils;
 @Service
 public class EmailNotificationServiceImpl implements EmailNotification<MultipartFile[], ResponseDto> {
 
-	Logger LOGGER = LoggerFactory.getLogger(EmailNotificationServiceImpl.class);
+	Logger logger = LoggerFactory.getLogger(EmailNotificationServiceImpl.class);
 	/**
 	 * Autowired reference for {@link JavaMailSender}
 	 */
@@ -74,7 +74,7 @@ public class EmailNotificationServiceImpl implements EmailNotification<Multipart
 	public ResponseDto sendEmail(String[] mailTo, String[] mailCc, String mailSubject, String mailContent,
 			MultipartFile[] attachments) {
 		ResponseDto dto = new ResponseDto();
-		LOGGER.info("To Request : " + String.join(",", mailTo));
+		logger.info("To Request : " + String.join(",", mailTo));
 		if(!isProxytrue) {
 		send(mailTo, mailCc, mailSubject, mailContent, attachments);
 		}
@@ -84,7 +84,7 @@ public class EmailNotificationServiceImpl implements EmailNotification<Multipart
 	}
 
 	@Async
-	private void send(String[] mailTo, String[] mailCc, String mailSubject, String mailContent,
+	public void send(String[] mailTo, String[] mailCc, String mailSubject, String mailContent,
 			MultipartFile[] attachments) {
 		EmailNotificationUtils.validateMailArguments(fromEmailAddress, mailTo, mailSubject, mailContent);
 		/**

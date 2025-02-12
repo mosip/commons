@@ -32,27 +32,25 @@ public class RefreshController {
     @Value("#{${mosip.config.dnd.services}}")
     private List<String> dndServices;
 
-    private String URL_TEMPLATE = "%s/actuator/refresh";
-    private RestTemplate restTemplate;
+    private String urlTemplate = "%s/actuator/refresh";
 
     @GetMapping("/refresh")
     public Map<String, String> refreshContext(@RequestParam("servicename") String serviceName) {
-        logger.info("refreshContext invoked with serviceName : {}", serviceName);
         Map<String, String> result = new HashMap<>();
 
         if(Objects.nonNull(discoveryClient)) {
             try {
                 List<String> serviceIds = serviceName.isBlank() ? discoveryClient.getServices() :
                         discoveryClient.getServices().stream()
-                                .filter(s -> s.contains(serviceName) || s.equals(serviceName)).collect(Collectors.toList());
+                                .filter(s -> s.contains(serviceName) || s.equals(serviceName)).toList();
 
                 logger.info("shortlisted serviceIds : {}", serviceIds);
 
                 serviceIds.stream()
-                        .dropWhile(s -> isDNDService(s) )
+                        .dropWhile(this ::isDNDService )
                         .forEach(s -> this.invokeRefreshActuatorEndpoint(s,discoveryClient.getInstances(s),result));
 
-            } catch (Throwable t) {
+            } catch (Exception t) {
                 logger.error("Failed to refresh contexts", t);
             }
         }
@@ -70,14 +68,14 @@ public class RefreshController {
 
     private void invokeRefreshActuatorEndpoint(String serviceId, List<ServiceInstance> instances, Map<String, String> result) {
         if(Objects.nonNull(instances)) {
-            restTemplate = new RestTemplate();
+        	RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<String> httpEntity = new HttpEntity<String>(null, headers);
+            HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
 
             for (ServiceInstance instance : instances) {
                 logger.info("Refresh actuator invoked on serviceId: {} and instance : {} ", serviceId, instance.getUri());
-                String url = String.format(URL_TEMPLATE, instance.getUri().toString());
+                String url = String.format(urlTemplate, instance.getUri().toString());
                 ResponseEntity<String> resp = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
                 result.put(url, resp.getStatusCode().toString());
                 logger.info("{} response : {}", url, resp);

@@ -1,5 +1,7 @@
 package io.mosip.kernel.pridgenerator.verticle;
 
+import java.util.Optional;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
@@ -31,7 +33,8 @@ public class PridPopulatorVerticle extends AbstractVerticle {
 	@SuppressWarnings("unchecked")
 	public PridPopulatorVerticle(final ApplicationContext context) {
 		this.environment = context.getBean(Environment.class);
-		this.pridToGenerate = environment.getProperty("mosip.kernel.prid.prids-to-generate", Long.class);
+		this.pridToGenerate = Optional.ofNullable(environment.getProperty("mosip.kernel.prid.prids-to-generate", Long.class))
+	            .orElseThrow(() -> new IllegalStateException("Property 'mosip.kernel.prid.prids-to-generate' is missing"));
 		this.pridWriter = context.getBean("pridWriter", PridWriter.class);
 		this.metaDataUtil = context.getBean("metaDataUtil", MetaDataUtil.class);
 		this.pridGenerator = context.getBean(PridGenerator.class);

@@ -1,5 +1,7 @@
 package io.mosip.kernel.vidgenerator.verticle;
 
+import java.util.Optional;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
@@ -31,7 +33,8 @@ public class VidPopulatorVerticle extends AbstractVerticle {
 	@SuppressWarnings("unchecked")
 	public VidPopulatorVerticle(final ApplicationContext context) {
 		this.environment = context.getBean(Environment.class);
-		this.vidToGenerate = environment.getProperty("mosip.kernel.vid.vids-to-generate", Long.class);
+		this.vidToGenerate = Optional.ofNullable(environment.getProperty("mosip.kernel.vid.vids-to-generate", Long.class))
+	            .orElseThrow(() -> new IllegalStateException("Property 'mosip.kernel.vid.vids-to-generate' is missing"));
 		this.vidWriter = context.getBean("vidWriter", VidWriter.class);
 		this.metaDataUtil = context.getBean(VIDMetaDataUtil.class);
 		this.vidGenerator = context.getBean(VidGenerator.class);
