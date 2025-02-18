@@ -38,9 +38,10 @@ public class FontPdfRendererBuilder {
         if(ttfFilePath.contains(CLASS_PATH)) {
             // Load fonts from classpath
             loadFontsFromClasspath(builder, ttfFilePath, tempFontDir);
+        }else {
+            // Load fonts from external directory
+            loadFontsFromExternalDirectory(builder, ttfFilePath, tempFontDir);
         }
-        // Load fonts from external directory
-        loadFontsFromExternalDirectory(builder, ttfFilePath, tempFontDir);
     }
     /**
      * Load fonts from classpath
@@ -72,10 +73,6 @@ public class FontPdfRendererBuilder {
     private static void loadFontsFromExternalDirectory(PdfRendererBuilder builder, String externalTtfDir, File tempFontDir) throws IOException {
         try {
             File fontDir = new File(externalTtfDir);
-            if (!fontDir.exists() || !fontDir.isDirectory()) {
-                LOGGER.info("External font directory does not exist: {}. Skipping external font loading.", externalTtfDir);
-                return;
-            }
             File[] fontFiles = fontDir.listFiles((dir, name) -> name.toLowerCase().endsWith(".ttf"));
             if (fontFiles == null || fontFiles.length == 0) {
                 LOGGER.info("No TTF fonts found in external directory: {}", externalTtfDir);
