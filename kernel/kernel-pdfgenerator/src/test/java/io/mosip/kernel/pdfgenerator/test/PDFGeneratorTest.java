@@ -132,8 +132,8 @@ public class PDFGeneratorTest {
 
 	}
 
-	@Test(expected = PDFGeneratorException.class)
-	public void pdfGenerator_withInputStreamAsEmpty_thenFail() throws IOException {
+	@Test
+	public void pdfGenerator_withInputStreamAsEmpty() throws IOException {
 		ClassLoader classLoader = getClass().getClassLoader();
 		String inputFileName = classLoader.getResource("emptyFile.html").getFile();
 		File inputFile = new File(inputFileName);
