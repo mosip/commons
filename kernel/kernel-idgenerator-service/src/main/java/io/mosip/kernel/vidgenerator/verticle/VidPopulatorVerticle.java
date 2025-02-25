@@ -14,6 +14,8 @@ import io.vertx.core.Future;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
+import java.util.Objects;
+
 public class VidPopulatorVerticle extends AbstractVerticle {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(VidPopulatorVerticle.class);
@@ -31,7 +33,7 @@ public class VidPopulatorVerticle extends AbstractVerticle {
 	@SuppressWarnings("unchecked")
 	public VidPopulatorVerticle(final ApplicationContext context) {
 		this.environment = context.getBean(Environment.class);
-		this.vidToGenerate = environment.getProperty("mosip.kernel.vid.vids-to-generate", Long.class);
+		this.vidToGenerate = Objects.requireNonNullElse(environment.getProperty("mosip.kernel.vid.vids-to-generate", Long.class), 0L);
 		this.vidWriter = context.getBean("vidWriter", VidWriter.class);
 		this.metaDataUtil = context.getBean(VIDMetaDataUtil.class);
 		this.vidGenerator = context.getBean(VidGenerator.class);
