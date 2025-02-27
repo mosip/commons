@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
+import io.mosip.kernel.core.exception.ExceptionUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -143,7 +144,7 @@ public class IDGeneratorVertxApplication {
 					vertx.close();
 					startApplication();
 				} else {
-					LOGGER.warn(json.cause().getMessage() + "\n");
+					LOGGER.warn(json.cause().getMessage() + "\n" + ExceptionUtils.getStackTrace(json.cause()));
 					json.otherwiseEmpty();
 					retriever.close();
 					vertx.close();
@@ -151,7 +152,7 @@ public class IDGeneratorVertxApplication {
 				}
 			});
 		} catch (Exception exception) {
-			LOGGER.warn(exception.getMessage() + "\n");
+			LOGGER.warn(exception.getMessage() + "\n" + ExceptionUtils.getStackTrace(exception));
 			vertx.close();
 			startApplication();
 		}
@@ -173,7 +174,7 @@ public class IDGeneratorVertxApplication {
 		Verticle[] workerVerticles = { new VidPoolCheckerVerticle(context), new VidPopulatorVerticle(context),
 				new VidExpiryVerticle(context), new VidIsolatorVerticle(context) };
 		Stream.of(workerVerticles).forEach(verticle -> deploy(verticle, workerOptions, vertx));
-		vertx.setTimer(1000, handler -> initVIDPool());
+		vertx.setTimer(10000, handler -> initVIDPool());
 		Verticle[] uinVerticles = { new UinGeneratorVerticle(context),new UinTransferVerticle(context)};
 		Stream.of(uinVerticles).forEach(verticle -> vertx.deployVerticle(verticle, stringAsyncResult -> {
 			if (stringAsyncResult.succeeded()) {
@@ -183,7 +184,7 @@ public class IDGeneratorVertxApplication {
 						+ stringAsyncResult.cause());
 			}
 		}));
-		vertx.setTimer(1000, handler -> initUINPool());
+		vertx.setTimer(10000, handler -> initUINPool());
 	}
 
 	@PostConstruct
