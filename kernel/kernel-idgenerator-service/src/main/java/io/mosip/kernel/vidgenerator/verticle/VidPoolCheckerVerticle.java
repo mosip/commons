@@ -1,5 +1,6 @@
 package io.mosip.kernel.vidgenerator.verticle;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.springframework.context.ApplicationContext;
@@ -35,7 +36,7 @@ public class VidPoolCheckerVerticle extends AbstractVerticle {
 		this.context = context;
 		this.vidService = this.context.getBean(VidService.class);
 		this.environment = this.context.getBean(Environment.class);
-		this.threshold = environment.getProperty("mosip.kernel.vid.min-unused-threshold", Long.class);
+		this.threshold = Objects.requireNonNullElse(environment.getProperty("mosip.kernel.vid.min-unused-threshold", Long.class), 0L);
 	}
 
 	private AtomicBoolean locked = new AtomicBoolean(false);
