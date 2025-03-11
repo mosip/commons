@@ -165,8 +165,8 @@ volume:
   # Dir where config and keys are written inside container
   mountDir: '/var/lib/config_repo'
   nfs:
-    path: '' ##Dir within the nfs server where config repo is cloned/maintained locally.
-    server: '' ##Ip address of nfs server.
+    path: ''## Dir within the nfs server where config repo is cloned/maintained locally.
+    server: ''## Ip address of nfs server.
 ## Init containers parameters:
 ## volumePermissions: Change the owner and group of the persistent volume mountpoint to runAsUser:fsGroup values from the securityContext section.
 ##
