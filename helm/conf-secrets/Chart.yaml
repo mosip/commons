@@ -2,7 +2,7 @@ apiVersion: v2
 name: conf-secrets
 description: A Helm chart for deploying secrets required by MOSIP config-server
 type: application
-version: 0.0.1-develop
+version: 1.3.0-beta.2
 appVersion: 1.1.2
 dependencies:
   - name: common
