@@ -14,6 +14,8 @@ import io.vertx.core.Future;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
+import java.util.Objects;
+
 public class PridPopulatorVerticle extends AbstractVerticle {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PridPopulatorVerticle.class);
@@ -31,7 +33,7 @@ public class PridPopulatorVerticle extends AbstractVerticle {
 	@SuppressWarnings("unchecked")
 	public PridPopulatorVerticle(final ApplicationContext context) {
 		this.environment = context.getBean(Environment.class);
-		this.pridToGenerate = environment.getProperty("mosip.kernel.prid.prids-to-generate", Long.class);
+		this.pridToGenerate = Objects.requireNonNullElse(environment.getProperty("mosip.kernel.prid.prids-to-generate", Long.class), 0L);
 		this.pridWriter = context.getBean("pridWriter", PridWriter.class);
 		this.metaDataUtil = context.getBean("metaDataUtil", MetaDataUtil.class);
 		this.pridGenerator = context.getBean(PridGenerator.class);
