@@ -37,7 +37,7 @@ public class RefreshController {
 
     @GetMapping("/refresh")
     public Map<String, String> refreshContext(@RequestParam("servicename") String serviceName) {
-        logger.info("refreshContext invoked with serviceName : {}", serviceName);
+        logger.info("refreshContext invoked with serviceName : {}", serviceName.replaceAll("[\n\r]", "_"));
         Map<String, String> result = new HashMap<>();
 
         if(Objects.nonNull(discoveryClient)) {
@@ -62,7 +62,7 @@ public class RefreshController {
 
     private boolean isDNDService(String serviceId) {
         if(serviceId.equals(applicationName) || (dndServices!=null && dndServices.contains(serviceId))) {
-            logger.info("DND service found, ignoring refresh attempt! serviceId : {} ", serviceId);
+            logger.info("DND service found, ignoring refresh attempt! serviceId : {} ", serviceId.replaceAll("[\n\r]", "_"));
             return true;
         }
         return false;
@@ -76,11 +76,11 @@ public class RefreshController {
             HttpEntity<String> httpEntity = new HttpEntity<String>(null, headers);
 
             for (ServiceInstance instance : instances) {
-                logger.info("Refresh actuator invoked on serviceId: {} and instance : {} ", serviceId, instance.getUri());
+                logger.info("Refresh actuator invoked on serviceId: {} and instance : {} ", serviceId.replaceAll("[\n\r]", "_"), instance.getUri());
                 String url = String.format(URL_TEMPLATE, instance.getUri().toString());
                 ResponseEntity<String> resp = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
                 result.put(url, resp.getStatusCode().toString());
-                logger.info("{} response : {}", url, resp);
+                logger.info("{} response : {}", url.replaceAll("[\n\r]", "_"), resp);
             }
         }
     }

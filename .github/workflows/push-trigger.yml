@@ -71,18 +71,23 @@ jobs:
           - SERVICE_LOCATION: 'kernel/kernel-ridgenerator-service'
             SERVICE_NAME: 'kernel-ridgenerator-service'
             BUILD_ARTIFACT: 'commons'
+            SQUASH_LAYERS: '10'
           - SERVICE_LOCATION: 'kernel/kernel-notification-service'
             SERVICE_NAME: 'kernel-notification-service'
             BUILD_ARTIFACT: 'commons'
+            SQUASH_LAYERS: '10'
           - SERVICE_LOCATION: 'kernel/kernel-pridgenerator-service'
             SERVICE_NAME: 'kernel-pridgenerator-service'
             BUILD_ARTIFACT: 'commons'
+            SQUASH_LAYERS: '11'
           - SERVICE_LOCATION: 'kernel/kernel-idgenerator-service'
             SERVICE_NAME: 'kernel-idgenerator-service'
             BUILD_ARTIFACT: 'commons'
+            SQUASH_LAYERS: '11'
           - SERVICE_LOCATION: 'kernel/kernel-salt-generator'
             SERVICE_NAME: 'kernel-salt-generator'
             BUILD_ARTIFACT: 'commons'
+            SQUASH_LAYERS: '9'
           - SERVICE_LOCATION: 'kernel/kernel-config-server'
             SERVICE_NAME: 'kernel-config-server'
             BUILD_ARTIFACT: 'commons'
@@ -93,6 +98,7 @@ jobs:
       SERVICE_LOCATION: ${{ matrix.SERVICE_LOCATION }}
       SERVICE_NAME: ${{ matrix.SERVICE_NAME }}
       BUILD_ARTIFACT: ${{ matrix.BUILD_ARTIFACT }}
+      SQUASH_LAYERS: ${{ matrix.SQUASH_LAYERS }}
     secrets:
       DEV_NAMESPACE_DOCKER_HUB: ${{ secrets.DEV_NAMESPACE_DOCKER_HUB }}
       ACTOR_DOCKER_HUB: ${{ secrets.ACTOR_DOCKER_HUB }}

@@ -46,49 +46,50 @@ public class IntentVerificationFilter extends OncePerRequestFilter {
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {		
-		String topic=matchCallbackURL(request.getRequestURI());
-		if (request.getMethod().equals(HttpMethod.GET.name()) && topic!=null) {
-			String topicReq = request.getParameter(WebSubClientConstants.HUB_TOPIC);			
-			String modeReq = request.getParameter(WebSubClientConstants.HUB_MODE);
-			String mode = request.getParameter("intentMode");
-	        if(modeReq.equals("denied")) {
-	        	String reason = request.getParameter("hub.reason");
-	        	reason = reason.replaceAll("[\n\r\t]", " - ");
-	        	LOGGER.error("intent verification failed : {}",reason);
-	        	response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-	        	response.getWriter().flush();
-				response.getWriter().close();
-	        }
-			if (intentVerifier.isIntentVerified(topic,
-					mode, topicReq, modeReq)) {
-				response.setStatus(HttpServletResponse.SC_ACCEPTED);
-				try {
-					String challange =request.getParameter(WebSubClientConstants.HUB_CHALLENGE);
-					String encodedChallange = Encode.forHtml(challange);
-					response.getWriter().write(encodedChallange);
+			throws ServletException, IOException {
+			String topic = matchCallbackURL(request.getRequestURI());
+			if (request.getMethod().equals(HttpMethod.GET.name()) && topic != null) {
+				String topicReq = request.getParameter(WebSubClientConstants.HUB_TOPIC);
+				String modeReq = request.getParameter(WebSubClientConstants.HUB_MODE);
+				String mode = request.getParameter("intentMode");
+				if (modeReq.equals("denied")) {
+					String reason = request.getParameter("hub.reason");
+					reason = reason.replaceAll("[\n\r\t]", " - ");
+					LOGGER.error("intent verification failed : {}", reason);
+					response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 					response.getWriter().flush();
 					response.getWriter().close();
-				} catch (IOException exception) {
-					LOGGER.error("error received while writing challange back"+exception.getMessage());
-					throw new WebSubClientException(WebSubClientErrorCode.IO_ERROR.getErrorCode(),
-							WebSubClientErrorCode.IO_ERROR.getErrorMessage().concat(exception.getMessage()));
+				}
+				if (intentVerifier.isIntentVerified(topic,
+						mode, topicReq, modeReq)) {
+					response.setStatus(HttpServletResponse.SC_ACCEPTED);
+					try {
+						String challange = request.getParameter(WebSubClientConstants.HUB_CHALLENGE);
+						String encodedChallange = Encode.forHtml(challange);
+						response.getWriter().write(encodedChallange);
+						response.getWriter().flush();
+						response.getWriter().close();
+					} catch (IOException exception) {
+						LOGGER.error("error received while writing challange back" + exception.getMessage());
+						throw new WebSubClientException(WebSubClientErrorCode.IO_ERROR.getErrorCode(),
+								WebSubClientErrorCode.IO_ERROR.getErrorMessage().concat(exception.getMessage()));
+					}
+
+				} else {
+					topicReq = topicReq.replaceAll("[\n\r\t]", " - ");
+					modeReq = modeReq.replaceAll("[\n\r\t]", " - ");
+					mode = mode.replaceAll("[\n\r\t]", " - ");
+					LOGGER.error("intent verification failed: {} {} {} {}", topic, mode, topicReq, modeReq);
+					response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+					response.getWriter().flush();
+					response.getWriter().close();
 				}
 
 			} else {
-				topicReq = topicReq.replaceAll("[\n\r\t]", " - ");			
-				modeReq = modeReq.replaceAll("[\n\r\t]", " - ");			
-				mode = mode.replaceAll("[\n\r\t]", " - ");
-				LOGGER.error("intent verification failed: {} {} {} {}",topic,mode,topicReq,modeReq);
-				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-				response.getWriter().flush();
-				response.getWriter().close();
+				filterChain.doFilter(request, response);
 			}
-
-		} else {
-			filterChain.doFilter(request, response);
 		}
-	}
+
 
 	private String matchCallbackURL(String requestURI) {
 		if(mappings.containsKey(requestURI)) {

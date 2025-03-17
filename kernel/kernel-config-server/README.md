@@ -24,34 +24,52 @@ For more information look [here]( https://cloud.spring.io/spring-cloud-config/si
 **How To Run**
 <br/>
 To run the application: <br/>
-Make sure you have configured ssh keys to connect to git, because it will take ssh keys from default location (${user.home}/.ssh) . 
+Make sure you have configured ssh keys to connect to git, because it will take ssh keys from default location (${user.home}/.ssh) .
+
+Set environment variables to support git repos for composite profile. Here 0,1 indicates list items.
+If any property exists in multiple repositories then repo at 0 index will have high priority and value will be referred from that repo.
+```
+export SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_URI=<git-repo-ssh-url>
+export SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_TYPE=git
+export SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_DEFAULT_LABEL=<branch-to-refer>
+
+export SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_1_URI=<git-repo-ssh-url>
+export SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_1_TYPE=git
+export SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_1_DEFAULT_LABEL=<branch-to-refer>
+```
 Now run the jar using the following command: <br/>
 <br/>
-`java -jar -Dspring.cloud.config.server.git.uri=< git-repo-ssh-url > -Dspring.cloud.config.server.git.search-paths=< config-folder-location-in-git-repo > -Dencrypt.keyStore.location=file:///< file-location-of-keystore > -Dencrypt.keyStore.password=< keystore-passowrd > -Dencrypt.keyStore.alias=< keystore-alias > -Dencrypt.keyStore.secret=< keystore-secret > < jar-name >`
+`java -jar -Dencrypt.keyStore.location=file:///< file-location-of-keystore > -Dencrypt.keyStore.password=< keystore-passowrd > -Dencrypt.keyStore.alias=< keystore-alias > -Dencrypt.keyStore.secret=< keystore-secret > < jar-name >`
 <br/>
 <br/>
-To run it inside Docker container provide the follwing run time arguments:
-1. git_url_env 
+To run it inside Docker container provide the following run time arguments:
+1. SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_URI 
 The URL of your Git repo
 
-2. git_config_folder_env
+2. SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_TYPE
+Repo type, which is git
+
+3. SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_DEFAULT_LABEL
+branch to refer in git repo. If not provided, it will default to `main` branch
+
+4. SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_SEARCH_PATHS
 The folder inside your git repo which contains the configuration
 
-3. encrypt_keyStore_location_env
+5. encrypt_keyStore_location_env
 The encrypt keystore location 
 
-4. encrypt_keyStore_password_env
+6. encrypt_keyStore_password_env
 The encryption keystore password
 
-5. encrypt_keyStore_alias_env
+7. encrypt_keyStore_alias_env
 The encryption keystore alias
 
-6. encrypt_keyStore_secret_env
+8. encrypt_keyStore_secret_env
 The encryption keyStore secret
 
 The final docker run command should look like:
 
-`docker run --name=<name-the-container> -d -v <location-of-encrypt-keystore>/server.keystore:<mount-keystore-location-inside-container>/server.keystore:z -v /home/madmin/<location of folder containing git ssh keys>:<mount-ssh-location-inside-container>/.ssh:z -e git_url_env=<git_ssh_url_env> -e git_config_folder_env=<git_config_folder_env> -e encrypt_keyStore_location_env=file:///<mount-keystore-location-inside-container>/server.keystore -e encrypt_keyStore_password_env=<encrypt_keyStore_password_env> -e encrypt_keyStore_alias_env=<encrypt_keyStore_alias_env> -e encrypt_keyStore_secret_env=<encrypt_keyStore_secret_env> -p 51000:51000 <name-of-docker-image-you-built>`
+`docker run --name=<name-the-container> -d -v <location-of-encrypt-keystore>/server.keystore:<mount-keystore-location-inside-container>/server.keystore:z -v /home/madmin/<location of folder containing git ssh keys>:<mount-ssh-location-inside-container>/.ssh:z -e SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_URI=<git_ssh_url_env> -e SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_TYPE=git -e SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_DEFAULT_LABEL=<branch-for-repo> -e encrypt_keyStore_location_env=file:///<mount-keystore-location-inside-container>/server.keystore -e encrypt_keyStore_password_env=<encrypt_keyStore_password_env> -e encrypt_keyStore_alias_env=<encrypt_keyStore_alias_env> -e encrypt_keyStore_secret_env=<encrypt_keyStore_secret_env> -p 51000:51000 <name-of-docker-image-you-built>`
 <br/>
 <br/>
 **To Encrypt any property:** <br/>
@@ -65,7 +83,11 @@ And place the encrypted value in client application properties file with the for
 
 `curl http://<your-config-server-address>/<application-context-path-if-any>/decrypt -d <encrypted-value-to-decrypt>`
 
-**NOTE** There is no need to write decryption mechanism in client applications for encrypted values. They will be automatically decrypted by config server. 
+**NOTE** 
+1. There is no need to write decryption mechanism in client applications for encrypted values. They will be automatically decrypted by config server. 
+2. Config server doesn't support asterisk (*) in URL as supported in previous java versions. We need to provide the complete URL while fetching any config file from the config server. 
+	Example: **http:\/\/\<config-server-url\>\/\*\/\<profile\>\/\<label\>\/\<path-to-file\>** needs to be changed to **http:\/\/\<config-server-url\>\/application\/\<profile\>\/\<label\>\/\<path-to-file\>**
+3. Config server doesn't automatically trims the whitespace at the end in the proerty value. We need to be careful while providing the whitespace. 
 
 
 
@@ -78,38 +100,39 @@ server.port = 51000
 #adding context path
 server.servlet.path=/config
 
-# Uncomment spring.cloud.config.server.git.uri and spring.cloud.config.server.git.search-paths for # connecting to git Repo for configuration.
-#################################################################
-#Git repository location where configuration files are stored
-#spring.cloud.config.server.git.uri=<your-git-repository-URL>
-
-#Path inside the GIT repo where config files are stored, in our case they are inside config directory
-#spring.cloud.config.server.git.search-paths=<folder-in-git-repository-containing-configuration>
-
-# Uncomment spring.profiles.active and spring.cloud.config.server.native.search-locations for     # connecting to local file system for configuration.
-#################################################################
-# spring.profiles.active=native
-
-# spring.cloud.config.server.native.search-locations=file:///<config-location-on-your-system>
+spring.profiles.active=composite
 
 #Server would return a HTTP 404 status, if the application is not found.By default, this flag is set to true.
 spring.cloud.config.server.accept-empty=false
 
-#Spring Cloud Config Server makes a clone of the remote git repository and if somehow the local copy gets 
+## As spring.profiles.active is composite, use env variable to provide values for git configuration as below
+##########################
+##Git repository location where configuration files are stored
+# SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_URI=<your-git-repository-URL>
+
+##Type of repository, possible types are git, svn, native
+# SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_TYPE=git
+
+##Branch/label to refer for in config repository
+# SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_DEFAULT_LABEL=<your-git-repository-branch>
+
+#Spring Cloud Config Server makes a clone of the remote git repository and if somehow the local copy gets
 #dirty (e.g. folder content changes by OS process) so Spring Cloud Config Server cannot update the local copy
 #from remote repository. For Force-pull in such case, we are setting the flag to true.
-spring.cloud.config.server.git.force-pull=true
+# SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_FORCE_PULL=true
+
+# Setting up refresh rate to 5 seconds so that config server will check for updates in Git repo after every 5 seconds,
+#can be lowered down for production.
+# SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_REFRESH_RATE=5
+
+# adding provision to clone on start of server instead of first request
+# SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_CLONE_ON_START=true
+
+#Path inside the GIT repo where config files are stored, in our case they are inside config directory
+#SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_SEARCH_PATHS=<folder-in-git-repository-containing-configuration>
 
 # Disabling health endpoints to improve performance of config server while in development, can be commented out in production.
 health.config.enabled=false
-
-# Setting up refresh rate to 1 minute so that config server will check for updates in Git repo after every one minute,
-#can be lowered down for production.
-spring.cloud.config.server.git.refreshRate=60
-
-
-# adding provision to clone on start of server instead of first request
-spring.cloud.config.server.git.cloneOnStart=true
 
 #For encryption of properties
 ###########################################
@@ -148,7 +171,7 @@ spring.cloud.config.uri=http://<config-host-url>:<config-port>
 spring.cloud.config.label=<git-branch>
 spring.application.name=<application-name>
 spring.cloud.config.name=<property-file-to-pick-up-configuration-from>
-spring.profiles.active=<active-profile>
+spring.profiles.active=composite
 management.endpoints.web.exposure.include=refresh
 #management.security.enabled=false
 
@@ -156,4 +179,25 @@ management.endpoints.web.exposure.include=refresh
 # 5 minutes (should not be done in production)
 spring.cloud.config.server.health.enabled=false
 
+```
+
+**cloud config supported for git type repository**
+
+```
+SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_URI=<your-git-repository-URL>
+SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_TYPE=git
+SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_DEFAULT_LABEL=<your-git-repository-branch>
+```
+
+```
+SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_1_URI=<your-another-git-repository-URL>
+SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_1_TYPE=git
+SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_1_DEFAULT_LABEL=<your-another-git-repository-branch>
+```
+
+**cloud config supported for native**
+
+```
+SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_URI=<file-path-for-local-properties>
+SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_TYPE=native
 ```
