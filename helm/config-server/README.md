@@ -41,26 +41,14 @@ $ helm install my-release mosip/config-server
         name: {{ .Values.overrides.secrets.secretName }}
         key: <key-name>
   ```
-  
-### Enable config-server to pull configurations from local git repo.
-
-Set the below configuration values as mentioned in the values.yaml file in-order to pull the configurations from local git repository
-* Set `localRepo` enabled to `true`.
-* Update the `spring.profiles.active` to `native` under localRepo.
-* Update the `spring.cloud.config.server.native.search-locations` to `file:///var/lib/config_repo` as this is the mountDir where your local configurations are cloned/maintained.
-* Update the `spring.cloud.config.server.accept-empty` to `true`.   # Server would return a HTTP 404 status, if the application is not found.By default, this flag is set to true.
-* Update the `spring.cloud.config.server.git.force-pull` to `false`. # Spring Cloud Config Server makes a clone of the remote git repository and if somehow the local copy gets dirty (e.g. folder content changes by OS process) so Spring Cloud Config Server cannot update the local copy from remote repository but as our configurations are maintained locally we are setting this to `false`.
-* Update the `spring.cloud.config.server.git.refreshRate` to `0`. # Setting up refresh rate to 5 seconds so that config server will check for updates in Git repo after every one minute, can be lowered down for production.
-* Update the `spring.cloud.config.server.git.cloneOnStart` to `false`. # Adding provision to clone on start of server instead of first request but our configurations are stored in local so no need to clone the repository on start of server so setting it to `false`.
 
 ### Enable config-server to pull configurations from multiple sources.
 
-In some scenarios, you may wish to pull configuration data from multiple environment repositories. To do so, you can enable the `composite profile` in your helm `values` YAML file, Composite Profiles in Spring Cloud Config Server provide a flexible mechanism for combining multiple profiles into a single effective profile. If, for example, you want to pull configuration data from a local repository as well as two Git repositories, you can set the following properties for your configuration server:
+Here the config-server is enabled to use `composite profile` by default. Composite Profiles in Spring Cloud Config Server provide a flexible mechanism for combining multiple profiles into a single effective profile. If, for example, you want to pull configuration data from a local repository as well as two Git repositories, you can set the following properties for your configuration server:
 
 ```
 spring_profiles:
   enabled: true
-  spring_profiles_active: composite
   spring_compositeRepos:
     - type: git     # Type "git" is to pull the configurations from remote git repository.
       uri: "https://github.com/mosip/inji-config"
@@ -86,3 +74,13 @@ spring_profiles:
 Using the above configuration, precedence is determined by the order in which repositories are listed under the composite key. In the above example, the git repository is listed first, so a value found in the git repository will override values found for the same property in the second configuration Git repository and third configuration local repository.
 
 Note: Based on the user requiremnt the number of multiple sources from where configuration needs to be pulled can be updated as mentioned in the above code block.
+
+### Enable config-server to pull configurations from local git repo.
+
+Set the below configuration values as mentioned in the values.yaml file in-order to pull the configurations from local git repository
+* Set `localRepo` enabled to `true`.
+* Update the `spring.cloud.config.server.native.search-locations` to `file:///var/lib/config_repo` as this is the mountDir where your local configurations are cloned/maintained.
+* Update the `spring.cloud.config.server.accept-empty` to `true`.   # Server would return a HTTP 404 status, if the application is not found.By default, this flag is set to true.
+* Update the `spring.cloud.config.server.git.force-pull` to `false`. # Spring Cloud Config Server makes a clone of the remote git repository and if somehow the local copy gets dirty (e.g. folder content changes by OS process) so Spring Cloud Config Server cannot update the local copy from remote repository but as our configurations are maintained locally we are setting this to `false`.
+* Update the `spring.cloud.config.server.git.refreshRate` to `0`. # Setting up refresh rate to 5 seconds so that config server will check for updates in Git repo after every one minute, can be lowered down for production.
+* Update the `spring.cloud.config.server.git.cloneOnStart` to `false`. # Adding provision to clone on start of server instead of first request but our configurations are stored in local so no need to clone the repository on start of server so setting it to `false`.
