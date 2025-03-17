@@ -9,16 +9,9 @@ gitRepo:
   token: ""
 
 spring_profiles:
-  enabled: false
-  spring_profiles_active: composite
+  enabled: true
   spring_compositeRepos:
   # Based on the user requiremnt the number of multiple sources from where configuration needs to be pulled can be updated below as mentioned.
-    - type: git
-      uri: "< config-repo url >"
-      version: < branch-name >
-      spring_cloud_config_server_git_cloneOnStart: true
-      spring_cloud_config_server_git_force_pull: true
-      spring_cloud_config_server_git_refreshRate: 5
     - type: git
       uri: "< config-repo url >"
       version: < branch-name >
