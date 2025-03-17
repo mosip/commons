@@ -4,15 +4,15 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-idgenerator-vid</artifactId>
-	<version>1.3.0-beta.2</version>
+	<version>1.3.0-SNAPSHOT</version>
 <properties>		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- maven -->
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
-		<kernel.core.version>1.3.0-beta.2</kernel.core.version>
-		<kernel.idvalidator-vid.version>1.3.0-beta.2</kernel.idvalidator-vid.version>
+		<kernel.core.version>1.3.0-SNAPSHOT</kernel.core.version>
+		<kernel.idvalidator-vid.version>1.3.0-SNAPSHOT</kernel.idvalidator-vid.version>
     	<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
 	</properties>
 	<dependencies>
