@@ -41,17 +41,4 @@ public class UinEntityAssigned extends BaseEntity {
 	@Column(name = "uin_status", nullable = false, length = 16)
 	private String status;
 
-	public UinEntityAssigned(UinEntity uinEntity) {
-		super(
-				uinEntity.getCreatedBy(),
-				uinEntity.getCreatedtimes(),
-				uinEntity.getUpdatedBy(),
-				uinEntity.getUpdatedtimes(),
-				uinEntity.getIsDeleted(),
-				uinEntity.getDeletedtimes()
-		);
-		this.uin = uinEntity.getUin();
-		this.status = uinEntity.getStatus();
-	}
-
 }

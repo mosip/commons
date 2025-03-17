@@ -3,12 +3,13 @@
  */
 package io.mosip.kernel.uingenerator.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,6 +52,9 @@ public class UinServiceImpl implements UinService {
 	
 	@Autowired
 	private UinRepositoryAssigned uinRepositoryAssigned;
+	
+	@Autowired
+	private ModelMapper modelMapper;
 
 	/**
 	 * instance of {@link UINMetaDataUtil}
@@ -125,17 +129,12 @@ public class UinServiceImpl implements UinService {
 	@Override
 	public void transferUin() {
 		List<UinEntity> uinEntities=uinRepository.findByStatus(UinGeneratorConstant.ASSIGNED);
-		List<UinEntityAssigned> uinEntitiesAssined = convertUinEntitiesListToUinEntitiesAssignedList(uinEntities);
+		List<UinEntityAssigned> uinEntitiesAssined = modelMapper.map(uinEntities, new TypeToken<List<UinEntityAssigned>>() {}.getType());
 		uinRepositoryAssigned.saveAll(uinEntitiesAssined);
 	    uinRepository.deleteAll(uinEntities);
 	}
-
-	private List<UinEntityAssigned> convertUinEntitiesListToUinEntitiesAssignedList(List<UinEntity> uinEntities) {
-		return uinEntities.stream()
-				.map(UinEntityAssigned::new)
-				.collect(Collectors.toList());
-	}
-
+	
+	
 	@Override
 	public boolean uinExist(String uin) {
 	Optional<UinEntityAssigned> uinEntityAssignedOptional=uinRepositoryAssigned.findById(uin);
