@@ -36,8 +36,6 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           {{- if .Values.spring_profiles.enabled }}
-            - name: SPRING_PROFILES_ACTIVE
-              value: "{{ .Values.spring_profiles.spring_profiles_active }}"
             {{- range $index, $repo := .Values.spring_profiles.spring_compositeRepos }}
             - name: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_URI
               value: "{{ $repo.uri }}"
