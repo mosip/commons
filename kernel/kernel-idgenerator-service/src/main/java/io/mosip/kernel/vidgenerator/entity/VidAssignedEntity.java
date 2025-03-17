@@ -45,18 +45,4 @@ public class VidAssignedEntity extends BaseEntity {
 	 */
 	@Column(name = "expiry_dtimes")
 	private LocalDateTime vidExpiry;
-
-	public VidAssignedEntity(VidEntity vidEntity) {
-		super(
-				vidEntity.getCreatedBy(),
-				vidEntity.getCreatedtimes(),
-				vidEntity.getUpdatedBy(),
-				vidEntity.getUpdatedtimes(),
-				vidEntity.getIsDeleted(),
-				vidEntity.getDeletedtimes()
-		);
-		this.vid = vidEntity.getVid();
-		this.status = vidEntity.getStatus();
-		this.vidExpiry = vidEntity.getVidExpiry();
-	}
 }
