@@ -51,7 +51,7 @@
 		<module>kernel-idvalidator-mispid</module>
 		<module>kernel-pinvalidator</module>
 		<module>kernel-templatemanager-velocity</module>
-		<module>kernel-pdfgenerator-itext</module>
+		<module>kernel-pdfgenerator</module>
 		<module>kernel-datamapper-orika</module>
 		<module>kernel-qrcodegenerator-zxing</module>
 		<module>kernel-transliteration-icu4j</module>
