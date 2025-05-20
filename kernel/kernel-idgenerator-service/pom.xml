@@ -88,9 +88,6 @@
 		<lombok.version>1.18.8</lombok.version>
 		<jsch.version>0.1.54</jsch.version>
 		<sshd.version>1.4.0</sshd.version>
-		<itextcore.version>7.1.0</itextcore.version>
-		<itexthtml2pdf.version>2.0.0</itexthtml2pdf.version>
-		<itext.version>5.5.13</itext.version>
 		<freemarker.version>2.3.23</freemarker.version>
 		<velocity.version>1.7</velocity.version>
 		<velocity.tool.version>2.0</velocity.tool.version>
@@ -113,19 +110,19 @@
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<kernel.core.version>1.2.0.1</kernel.core.version>
-		<kernel.idgenerator.vid.version>1.2.0.1</kernel.idgenerator.vid.version>
+		<kernel.core.version>1.2.1.0-SNAPSHOT</kernel.core.version>
+		<kernel.idgenerator.vid.version>1.2.1.0-SNAPSHOT</kernel.idgenerator.vid.version>
 		<ceylon.complete.version>1.3.2</ceylon.complete.version>
 		<vertx.lang.ceylon.version>3.4.1</vertx.lang.ceylon.version>
-		<kernel.templatemanager.velocity.version>1.2.0.1</kernel.templatemanager.velocity.version>
-		<kernel.crypto.signature.version>1.2.0.1</kernel.crypto.signature.version>
+		<kernel.templatemanager.velocity.version>1.2.1.0-SNAPSHOT</kernel.templatemanager.velocity.version>
+		<kernel.crypto.signature.version>1.2.1.0-SNAPSHOT</kernel.crypto.signature.version>
 		<modelmapper.version>2.3.7</modelmapper.version>
-		<kernel.logger.version>1.2.0.1</kernel.logger.version>
+		<kernel.logger.version>1.2.1.0-SNAPSHOT</kernel.logger.version>
 		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 		<sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/verticle/**,**/spi/**,"**/proxy/**","**/entities/**","**/filter/**","**/util/**","**/verifier/**","**/IDGeneratorVertxApplication.java"</sonar.coverage.exclusions>
 	</properties>
 	<artifactId>kernel-idgenerator-service</artifactId>
-	<version>1.2.0.1</version>
+	<version>1.2.1.0-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
