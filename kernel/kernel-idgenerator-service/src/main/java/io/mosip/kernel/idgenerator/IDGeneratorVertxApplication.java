@@ -173,7 +173,7 @@ public class IDGeneratorVertxApplication {
 		Verticle[] workerVerticles = { new VidPoolCheckerVerticle(context), new VidPopulatorVerticle(context),
 				new VidExpiryVerticle(context), new VidIsolatorVerticle(context) };
 		Stream.of(workerVerticles).forEach(verticle -> deploy(verticle, workerOptions, vertx));
-		vertx.setTimer(1000, handler -> initVIDPool());
+		vertx.setTimer(10000, handler -> initVIDPool());
 		Verticle[] uinVerticles = { new UinGeneratorVerticle(context),new UinTransferVerticle(context)};
 		Stream.of(uinVerticles).forEach(verticle -> vertx.deployVerticle(verticle, stringAsyncResult -> {
 			if (stringAsyncResult.succeeded()) {
@@ -183,7 +183,7 @@ public class IDGeneratorVertxApplication {
 						+ stringAsyncResult.cause());
 			}
 		}));
-		vertx.setTimer(1000, handler -> initUINPool());
+		vertx.setTimer(10000, handler -> initUINPool());
 	}
 
 	@PostConstruct
