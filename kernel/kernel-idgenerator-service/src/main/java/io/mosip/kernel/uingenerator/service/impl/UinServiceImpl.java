@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,6 +62,9 @@ public class UinServiceImpl implements UinService {
 	 */
 	@Autowired
 	private UINMetaDataUtil metaDataUtil;
+
+	@Value("${uin.fetch.limit : 100}")
+	private int fetchLimit;
 	
 	@Autowired
 	private VertxAuthenticationProvider authHandler;
@@ -128,10 +132,10 @@ public class UinServiceImpl implements UinService {
 	@Transactional(transactionManager = "transactionManager")
 	@Override
 	public void transferUin() {
-		List<UinEntity> uinEntities=uinRepository.findByStatus(UinGeneratorConstant.ISSUED);
+		List<UinEntity> uinEntities=uinRepository.findByStatus(UinGeneratorConstant.ISSUED,fetchLimit);
 		List<UinEntityAssigned> uinEntitiesAssined = modelMapper.map(uinEntities, new TypeToken<List<UinEntityAssigned>>() {}.getType());
 		uinRepositoryAssigned.saveAll(uinEntitiesAssined);
-	    //uinRepository.deleteAll(uinEntities);
+	    uinRepository.deleteAll(uinEntities);
 	}
 	
 	
