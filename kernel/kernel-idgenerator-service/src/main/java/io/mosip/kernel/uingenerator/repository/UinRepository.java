@@ -54,7 +54,7 @@ public interface UinRepository extends JpaRepository<UinEntity, String> {
 	public void updateStatus(@Param("status") String status, @Param("contextUser") String contextUser,
 			@Param("uptimes") LocalDateTime uptimes, @Param("uin") String uin);
 	
-	@Query(value = "select uu.uin, uu.cr_by, uu.cr_dtimes, uu.del_dtimes, uu.is_deleted, uu.upd_by, uu.upd_dtimes, uu.uin_status from kernel.uin uu where uu.uin_status=?", nativeQuery = true)
+	@Query(value = "select uu.uin, uu.cr_by, uu.cr_dtimes, uu.del_dtimes, uu.is_deleted, uu.upd_by, uu.upd_dtimes, uu.uin_status from kernel.uin uu where uu.uin_status=? LIMIT 100", nativeQuery = true)
 	public List<UinEntity> findByStatus(String status);
 	
 	long countByStatusAndIsDeletedFalse(String status);

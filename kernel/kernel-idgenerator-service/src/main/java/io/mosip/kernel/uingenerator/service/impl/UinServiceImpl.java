@@ -128,10 +128,10 @@ public class UinServiceImpl implements UinService {
 	@Transactional(transactionManager = "transactionManager")
 	@Override
 	public void transferUin() {
-		List<UinEntity> uinEntities=uinRepository.findByStatus(UinGeneratorConstant.ASSIGNED);
+		List<UinEntity> uinEntities=uinRepository.findByStatus(UinGeneratorConstant.ISSUED);
 		List<UinEntityAssigned> uinEntitiesAssined = modelMapper.map(uinEntities, new TypeToken<List<UinEntityAssigned>>() {}.getType());
 		uinRepositoryAssigned.saveAll(uinEntitiesAssined);
-	    uinRepository.deleteAll(uinEntities);
+	    //uinRepository.deleteAll(uinEntities);
 	}
 	
 	
