@@ -135,7 +135,7 @@ public class UinServiceImpl implements UinService {
 		List<UinEntity> uinEntities=uinRepository.findByStatus(UinGeneratorConstant.ISSUED,fetchLimit);
 		List<UinEntityAssigned> uinEntitiesAssined = modelMapper.map(uinEntities, new TypeToken<List<UinEntityAssigned>>() {}.getType());
 		uinRepositoryAssigned.saveAll(uinEntitiesAssined);
-	  //  uinRepository.deleteAll(uinEntities);
+	    uinRepository.deleteAll(uinEntities);
 	}
 	
 	
