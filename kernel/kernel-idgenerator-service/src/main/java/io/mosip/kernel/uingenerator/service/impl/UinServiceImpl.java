@@ -63,8 +63,8 @@ public class UinServiceImpl implements UinService {
 	@Autowired
 	private UINMetaDataUtil metaDataUtil;
 
-	@Value("${uin.fetch.limit : 100}")
-	private int fetchLimit;
+	@Value("${mosip.kernel.uin.page.size:50000}")
+	private int pageSize;
 	
 	@Autowired
 	private VertxAuthenticationProvider authHandler;
@@ -132,7 +132,7 @@ public class UinServiceImpl implements UinService {
 	@Transactional(transactionManager = "transactionManager")
 	@Override
 	public void transferUin() {
-		List<UinEntity> uinEntities=uinRepository.findByStatus(UinGeneratorConstant.ASSIGNED,fetchLimit);
+		List<UinEntity> uinEntities=uinRepository.findByStatus(UinGeneratorConstant.ASSIGNED,pageSize);
 		List<UinEntityAssigned> uinEntitiesAssined = modelMapper.map(uinEntities, new TypeToken<List<UinEntityAssigned>>() {}.getType());
 		uinRepositoryAssigned.saveAll(uinEntitiesAssined);
 	    uinRepository.deleteAll(uinEntities);
