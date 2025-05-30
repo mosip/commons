@@ -65,6 +65,12 @@ public class IDGeneratorVertxApplication {
 	 */
 	private static Logger LOGGER;
 
+	@Value("${mosip.kernel.vid.init-job-frequency:10000}")
+	private static long vidInitJobFrequency;
+
+	@Value("${mosip.kernel.uin.init-job-frequency:10000}")
+	private static long uinInitJobFrequency;
+
 	/**
 	 * Server context path.
 	 */
@@ -173,7 +179,7 @@ public class IDGeneratorVertxApplication {
 		Verticle[] workerVerticles = { new VidPoolCheckerVerticle(context), new VidPopulatorVerticle(context),
 				new VidExpiryVerticle(context), new VidIsolatorVerticle(context) };
 		Stream.of(workerVerticles).forEach(verticle -> deploy(verticle, workerOptions, vertx));
-		vertx.setTimer(1000, handler -> initVIDPool());
+		vertx.setTimer(vidInitJobFrequency, handler -> initVIDPool());
 		Verticle[] uinVerticles = { new UinGeneratorVerticle(context),new UinTransferVerticle(context)};
 		Stream.of(uinVerticles).forEach(verticle -> vertx.deployVerticle(verticle, stringAsyncResult -> {
 			if (stringAsyncResult.succeeded()) {
@@ -183,7 +189,7 @@ public class IDGeneratorVertxApplication {
 						+ stringAsyncResult.cause());
 			}
 		}));
-		vertx.setTimer(1000, handler -> initUINPool());
+		vertx.setTimer(uinInitJobFrequency, handler -> initUINPool());
 	}
 
 	@PostConstruct
