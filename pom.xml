@@ -35,13 +35,20 @@
         <repositories>        
           <repository>
             <id>ossrh</id>
-            <name>Central Repository</name>
-            <url>https://central.sonatype.com/repository/maven-snapshots</url>
+            <name>LegacyMavenSnapshot</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
             <layout>default</layout>
             <snapshots>
                   <enabled>true</enabled>
             </snapshots>
           </repository>
+            <name>MavenCentralRepository</name>
+            <url>https://central.sonatype.com/repository/maven-snapshots</url>
+            <layout>default</layout>
+            <snapshots>
+            <enabled>true</enabled>
+            </snapshots>
+        </repository>
         </repositories>
         <distributionManagement>
 		<snapshotRepository>
