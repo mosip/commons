@@ -42,11 +42,12 @@
                   <enabled>true</enabled>
             </snapshots>
           </repository>
+            <repository>
             <name>MavenCentralRepository</name>
             <url>https://central.sonatype.com/repository/maven-snapshots</url>
             <layout>default</layout>
             <snapshots>
-            <enabled>true</enabled>
+                <enabled>true</enabled>
             </snapshots>
         </repository>
         </repositories>
