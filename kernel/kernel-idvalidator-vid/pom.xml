@@ -65,7 +65,7 @@
 				<extensions>true</extensions>
 				<configuration>
 					<publishingServerId>ossrh</publishingServerId>
-					<autoPublish>false</autoPublish>>
+					<autoPublish>false</autoPublish>
 				</configuration>
 			</plugin>
 
