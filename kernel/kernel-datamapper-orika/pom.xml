@@ -72,18 +72,9 @@
 				<artifactId>central-publishing-maven-plugin</artifactId>
 				<version>0.7.0</version>
 				<extensions>true</extensions>
-				<executions>
-					<execution>
-						<id>default-deploy</id>
-						<phase>deploy</phase>
-						<goals>
-							<goal>deploy</goal>
-						</goals>
-					</execution>
-				</executions>
 				<configuration>
 					<publishingServerId>ossrh</publishingServerId>
-					<autoPublish>false</autoPublish>>
+					<autoPublish>false</autoPublish>
 				</configuration>
 			</plugin>
 
