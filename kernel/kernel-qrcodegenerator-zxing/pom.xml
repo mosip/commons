@@ -66,10 +66,10 @@
 				<extensions>true</extensions>
 				<executions>
 					<execution>
-						<id>default-deploy</id>
+						<id>default-publish</id>
 						<phase>deploy</phase>
 						<goals>
-							<goal>deploy</goal>
+							<goal>publish</goal>
 						</goals>
 					</execution>
 				</executions>
