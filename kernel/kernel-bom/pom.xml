@@ -9,6 +9,16 @@
 	<name>kernel-bom</name>
 	<description>Kernel Bill Of Materials</description>
 	<url>https://github.com/mosip/commons</url>
+	<distributionManagement>
+                <snapshotRepository>
+                        <id>ossrh</id>
+                        <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+                </snapshotRepository>
+                <repository>
+                        <id>ossrh</id>
+                        <url>https://central.sonatype.com/api/v1/publisher</url>
+                </repository>
+        </distributionManagement>
 	<properties>
 		<mockito-version>3.4.3</mockito-version>
 		<quartz-version>2.3.2</quartz-version>
