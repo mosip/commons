@@ -77,7 +77,16 @@
 			<artifactId>commons-collections4</artifactId>
 		</dependency>
 	</dependencies>
-
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://central.sonatype.com/repository/maven-snapshots/</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://central.sonatype.com/api/v1/publisher</url>
+		</repository>
+	</distributionManagement>
 	<build>
 		<resources>
 			<resource>
@@ -91,12 +100,21 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<layout>ZIP</layout>
-				</configuration>
+				<executions>
+					<!-- Standard repackage for Maven Central publishing -->
+					<execution>
+						<id>repackage</id>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+						<configuration>
+							<!-- Removed ZIP layout for Central compatibility -->
+							<!-- Standard JAR layout will be used -->
+							<attach>true</attach> <!-- Allow publishing to Central -->
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
-
-
 			<plugin>
 				<groupId>org.sonatype.central</groupId>
 				<artifactId>central-publishing-maven-plugin</artifactId>

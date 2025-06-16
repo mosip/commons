@@ -70,7 +70,7 @@ RUN mkdir -p ${loader_path}
 
 ENV loader_path_env=${loader_path}
 
-COPY ./target/kernel-ridgenerator-service-*.jar kernel-ridgenerator-service.jar
+COPY ./target/kernel-ridgenerator-service-*-executable.jar kernel-ridgenerator-service.jar
 
 # change permissions of file inside working dir
 RUN chown -R ${container_user}:${container_user} /home/${container_user}

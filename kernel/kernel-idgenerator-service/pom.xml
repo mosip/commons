@@ -168,23 +168,39 @@
 		</dependency>
 
 	</dependencies>
-
-
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://central.sonatype.com/repository/maven-snapshots/</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://central.sonatype.com/api/v1/publisher</url>
+		</repository>
+	</distributionManagement>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<executable>true</executable>
-					<layout>ZIP</layout>
-				</configuration>
+				<version>3.2.3</version>
 				<executions>
 					<execution>
+						<id>build-info</id>
 						<goals>
 							<goal>build-info</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>repackage</id> <!-- white_check_mark: Use the default ID to enable auto-detection -->
+						<goals>
 							<goal>repackage</goal>
 						</goals>
+						<configuration>
+							<classifier>executable</classifier> <!-- white_check_mark: Output JAR as -executable.jar -->
+							<executable>true</executable>
+							<attach>false</attach>  <!-- Do not deploy this to central -->
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
