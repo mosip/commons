@@ -97,24 +97,24 @@
 			</resource>
 		</resources>
 		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<executions>
-					<!-- Standard repackage for Maven Central publishing -->
-					<execution>
-						<id>repackage</id>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-						<configuration>
-							<!-- Removed ZIP layout for Central compatibility -->
-							<!-- Standard JAR layout will be used -->
-							<attach>true</attach> <!-- Allow publishing to Central -->
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+<!--			<plugin>-->
+<!--				<groupId>org.springframework.boot</groupId>-->
+<!--				<artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--				<executions>-->
+<!--					&lt;!&ndash; Standard repackage for Maven Central publishing &ndash;&gt;-->
+<!--					<execution>-->
+<!--						<id>repackage</id>-->
+<!--						<goals>-->
+<!--							<goal>repackage</goal>-->
+<!--						</goals>-->
+<!--						<configuration>-->
+<!--							&lt;!&ndash; Removed ZIP layout for Central compatibility &ndash;&gt;-->
+<!--							&lt;!&ndash; Standard JAR layout will be used &ndash;&gt;-->
+<!--							<attach>true</attach> &lt;!&ndash; Allow publishing to Central &ndash;&gt;-->
+<!--						</configuration>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--			</plugin>-->
 			<plugin>
 				<groupId>org.sonatype.central</groupId>
 				<artifactId>central-publishing-maven-plugin</artifactId>
