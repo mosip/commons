@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>io.mosip.kernel</groupId>
-	<version>1.2.1-SNAPSHOT</version>
+	<version>1.2.1-rc1</version>
 	<artifactId>kernel-config-server</artifactId>
 	<name>Kernel Config Server</name>
 		<url>https://github.com/mosip/commons</url>
@@ -35,7 +35,7 @@
 			<dependency>
 				<groupId>io.mosip.kernel</groupId>
 				<artifactId>kernel-bom</artifactId>
-				<version>1.2.1-SNAPSHOT</version>
+				<version>1.2.1-rc1</version>
 				<type>pom</type>
 			    <scope>import</scope>
 			</dependency>
@@ -69,20 +69,39 @@
 		    <artifactId>spring-cloud-starter-bootstrap</artifactId>
 		</dependency>
 	</dependencies>
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://central.sonatype.com/repository/maven-snapshots/</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://central.sonatype.com/api/v1/publisher</url>
+		</repository>
+	</distributionManagement>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>${spring-boot-maven-plugin.version}</version>
-				<configuration>
-					<executable>true</executable>
-				</configuration>
 				<executions>
 					<execution>
+						<id>build-info</id>
 						<goals>
-							<goal>repackage</goal>
+							<goal>build-info</goal> <!-- Generate build metadata -->
 						</goals>
+					</execution>
+					<execution>
+						<id>repackage</id>
+						<goals>
+							<goal>repackage</goal> <!-- Create executable JAR -->
+						</goals>
+						<configuration>
+							<classifier>executable</classifier> <!-- Secondary artifact -->
+							<executable>true</executable> <!-- Makes JAR file executable on Unix -->
+							<attach>false</attach> <!-- CRITICAL: Don't publish to Maven Central -->
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
