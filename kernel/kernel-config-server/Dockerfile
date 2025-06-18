@@ -74,7 +74,7 @@ RUN apt-get -y update \
 # select container user for all tasks
 USER ${container_user_uid}:${container_user_gid}
 
-COPY ./target/kernel-config-server-*-executable.jar kernel-config-server.jar
+COPY ./target/kernel-config-server-*.jar kernel-config-server.jar
 
 EXPOSE 51000
 
