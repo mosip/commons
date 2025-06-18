@@ -65,20 +65,7 @@ public class IDGeneratorVertxApplication {
 	 */
 	private static Logger LOGGER;
 
-	@Value("${mosip.kernel.vid.init-job-frequency:10000}")
-	private long vidInitJobFrequencyValue;
-
-	@Value("${mosip.kernel.uin.init-job-frequency:10000}")
-	private long uinInitJobFrequencyValue;
-
-	private static long vidInitJobFrequency;
-	private static long uinInitJobFrequency;
-
-	@PostConstruct
-	private void initFrequencies() {
-		vidInitJobFrequency = vidInitJobFrequencyValue;
-		uinInitJobFrequency = uinInitJobFrequencyValue;
-	}
+	private static final long DEFAULT_JOB_FREQUENCY = 10000L;
 
 	/**
 	 * Server context path.
@@ -188,8 +175,8 @@ public class IDGeneratorVertxApplication {
 		Verticle[] workerVerticles = { new VidPoolCheckerVerticle(context), new VidPopulatorVerticle(context),
 				new VidExpiryVerticle(context), new VidIsolatorVerticle(context) };
 		Stream.of(workerVerticles).forEach(verticle -> deploy(verticle, workerOptions, vertx));
-		LOGGER.info("VID INIT JOB FREQUENCY: "+vidInitJobFrequency);
-		vertx.setTimer(10000, handler -> initVIDPool());
+		LOGGER.info("VID INIT JOB FREQUENCY: "+DEFAULT_JOB_FREQUENCY);
+		vertx.setTimer(getVidInitJobFrequency(), handler -> initVIDPool());
 		Verticle[] uinVerticles = { new UinGeneratorVerticle(context),new UinTransferVerticle(context)};
 		Stream.of(uinVerticles).forEach(verticle -> vertx.deployVerticle(verticle, stringAsyncResult -> {
 			if (stringAsyncResult.succeeded()) {
@@ -199,8 +186,7 @@ public class IDGeneratorVertxApplication {
 						+ stringAsyncResult.cause());
 			}
 		}));
-		LOGGER.info("UIN INIT JOB FREQUENCY: "+uinInitJobFrequency);
-		vertx.setTimer(10000, handler -> initUINPool());
+		vertx.setTimer(getUinInitJobFrequency(), handler -> initUINPool());
 	}
 
 	@PostConstruct
@@ -221,5 +207,33 @@ public class IDGeneratorVertxApplication {
 
 			}
 		});
+	}
+
+	private static long getLongSystemProperty(String propertyKey) {
+		try {
+			String value = System.getProperty(propertyKey);
+			if (value == null || value.trim().isEmpty()) {
+				LOGGER.debug(propertyKey + " is missing. Using default: " + DEFAULT_JOB_FREQUENCY);
+				return DEFAULT_JOB_FREQUENCY;
+			}
+			return Long.parseLong(value.trim());
+		} catch (Exception e) {
+			LOGGER.warn("Error reading property " + propertyKey + ". Using default: " + DEFAULT_JOB_FREQUENCY, e);
+			return DEFAULT_JOB_FREQUENCY;
+		}
+	}
+
+	/**
+	 * Get VID init job frequency from system properties or default.
+	 */
+	private static long getVidInitJobFrequency() {
+		return getLongSystemProperty("mosip.kernel.vid.init-job-frequency");
+	}
+
+	/**
+	 * Get UIN init job frequency from system properties or default.
+	 */
+	private static long getUinInitJobFrequency() {
+		return getLongSystemProperty("mosip.kernel.uin.init-job-frequency");
 	}
 }
