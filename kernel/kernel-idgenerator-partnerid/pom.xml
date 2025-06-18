@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-idgenerator-partnerid</artifactId>
-	<version>1.2.1-rc1</version>
+	<version>1.2.1-SNAPSHOT</version>
 	<name>kernel-idgenerator-partnerid</name>
 	<description>Mosip commons project </description>
 	<url>http://maven.apache.org</url>
@@ -14,9 +14,9 @@
 		<!-- maven -->
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
-		<kernel.core.version>1.2.1-rc1</kernel.core.version>
-		<kernel.dataaccess-hibernate.version>1.2.1-rc1</kernel.dataaccess-hibernate.version>
-		<kernel.logger.version>1.2.1-rc1</kernel.logger.version>
+		<kernel.core.version>1.2.1-SNAPSHOT</kernel.core.version>
+		<kernel.dataaccess-hibernate.version>1.2.1-SNAPSHOT</kernel.dataaccess-hibernate.version>
+		<kernel.logger.version>1.2.1-SNAPSHOT</kernel.logger.version>
 		<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
 	</properties>
      	<dependencyManagement>
@@ -24,7 +24,7 @@
 			<dependency>
 				<groupId>io.mosip.kernel</groupId>
 				<artifactId>kernel-bom</artifactId>
-				<version>1.2.1-rc1</version>
+				<version>1.2.1-SNAPSHOT</version>
 				<type>pom</type>
 			    <scope>import</scope>
 			</dependency>
