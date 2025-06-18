@@ -8,7 +8,7 @@
 	<name>kernel-notification-service</name>
 	<description>Mosip commons project </description>
 	<url>https://github.com/mosip/commons</url>
-	<version>1.2.1-SNAPSHOT</version>
+	<version>1.2.1-rc1</version>
 	<groupId>io.mosip.kernel</groupId>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -17,10 +17,10 @@
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
 		<maven.compiler.version>3.8.0</maven.compiler.version>
-		<kernel.core.version>1.2.1-SNAPSHOT</kernel.core.version>
-		<kernel.applicant-type.version>1.2.1-SNAPSHOT</kernel.applicant-type.version>
-		<kernel.dataaccess-hibernate.version>1.2.1-SNAPSHOT</kernel.dataaccess-hibernate.version>
-		<kernel.logger.version>1.2.1-SNAPSHOT</kernel.logger.version>
+		<kernel.core.version>1.2.1-rc1</kernel.core.version>
+		<kernel.applicant-type.version>1.2.1-rc1</kernel.applicant-type.version>
+		<kernel.dataaccess-hibernate.version>1.2.1-rc1</kernel.dataaccess-hibernate.version>
+		<kernel.logger.version>1.2.1-rc1</kernel.logger.version>
 		<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
 		<springdoc.version>1.5.10</springdoc.version>
 	</properties>
@@ -29,7 +29,7 @@
 			<dependency>
 				<groupId>io.mosip.kernel</groupId>
 				<artifactId>kernel-bom</artifactId>
-				<version>1.2.1-SNAPSHOT</version>
+				<version>1.2.1-rc1</version>
 				<type>pom</type>
 			    <scope>import</scope>
 			</dependency>
@@ -86,7 +86,16 @@
 		    <artifactId>hibernate-validator</artifactId>
 		</dependency>
 	</dependencies>
-	
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://central.sonatype.com/repository/maven-snapshots/</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://central.sonatype.com/api/v1/publisher</url>
+		</repository>
+	</distributionManagement>
 	<build>
 		<plugins>
 			<plugin>
@@ -99,22 +108,6 @@
 		        </configuration>
 		    </plugin>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<executable>true</executable>
-					<layout>ZIP</layout>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>build-info</goal>
-							<goal>repackage</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>org.sonatype.central</groupId>
 				<artifactId>central-publishing-maven-plugin</artifactId>
 				<version>0.7.0</version>
@@ -124,7 +117,30 @@
 					<autoPublish>false</autoPublish>
 				</configuration>
 			</plugin>
-
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>3.2.3</version>
+				<executions>
+					<execution>
+						<id>build-info</id>
+						<goals>
+							<goal>build-info</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>repackage</id> <!-- white_check_mark: Use the default ID to enable auto-detection -->
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+						<configuration>
+							<classifier>executable</classifier> <!-- white_check_mark: Output JAR as -executable.jar -->
+							<executable>true</executable>
+							<attach>false</attach>  <!-- Do not deploy this to central -->
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -285,13 +301,33 @@
 						<groupId>org.springframework.boot</groupId>
 						<artifactId>spring-boot-maven-plugin</artifactId>
 						<version>${spring.boot.version}</version>
-						<configuration>
-							<executable>true</executable>
-							<layout>ZIP</layout>
-						</configuration>
 						<executions>
+							<!-- Build info generation -->
+							<execution>
+								<id>build-info</id>
+								<goals>
+									<goal>build-info</goal>
+								</goals>
+							</execution>
+
+							<!-- Create executable JAR but don't publish to Central -->
+							<execution>
+								<id>repackage</id>
+								<goals>
+									<goal>repackage</goal>
+								</goals>
+								<configuration>
+									<classifier>executable</classifier>
+									<executable>true</executable>
+									<!-- Removed ZIP layout for Central compatibility -->
+									<attach>false</attach> <!-- CRITICAL: Prevents publishing to Central -->
+								</configuration>
+							</execution>
+
+							<!-- Integration test startup -->
 							<execution>
 								<id>pre-integration-test</id>
+								<phase>pre-integration-test</phase>
 								<goals>
 									<goal>start</goal>
 								</goals>
@@ -306,19 +342,16 @@
 										<argument>--server.port=8090</argument>
 										<argument>--server.servlet.path=/app/generic</argument>
 									</arguments>
-
+									<!-- Plugin will auto-detect the executable JAR -->
 								</configuration>
 							</execution>
+
+							<!-- Integration test shutdown -->
 							<execution>
 								<id>post-integration-test</id>
+								<phase>post-integration-test</phase>
 								<goals>
 									<goal>stop</goal>
-								</goals>
-							</execution>
-							<execution>
-								<goals>
-									<goal>build-info</goal>
-									<goal>repackage</goal>
 								</goals>
 							</execution>
 						</executions>

@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<version>1.2.1-SNAPSHOT</version>
+	<version>1.2.1-rc1</version>
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-parent</artifactId>
 	<packaging>pom</packaging>
@@ -70,6 +70,46 @@
 		<module>kernel-demographics-api</module>
 		<module>kernel-config-server</module>
 	</modules>
+	<repositories>
+        <repository>
+            <id>ossrh</id>
+            <name>LegacyMavenSnapshot</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <layout>default</layout>
+            <snapshots>
+            <enabled>true</enabled>
+            </snapshots>
+        </repository>
+		<repository>
+            <id>ossrh-central</id>
+            <name>MavenCentralRepository</name>
+            <url>https://central.sonatype.com/repository/maven-snapshots</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>central</id>
+            <name>MavenCentral</name>
+            <layout>default</layout>
+            <url>https://repo1.maven.org/maven2</url>
+            <snapshots>
+            <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+	
+	<distributionManagement>
+                <snapshotRepository>
+                        <id>ossrh</id>
+                        <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+                </snapshotRepository>
+                <repository>
+                        <id>ossrh</id>
+                        <url>https://central.sonatype.com/api/v1/publisher</url>
+                </repository>
+        </distributionManagement>
         <build>
 			<pluginManagement>
 				<plugins>

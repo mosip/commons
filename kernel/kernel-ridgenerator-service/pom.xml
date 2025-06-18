@@ -1,39 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>io.mosip.kernel</groupId>
-
 	<artifactId>kernel-ridgenerator-service</artifactId>
-	<version>1.2.1-SNAPSHOT</version>
+	<version>1.2.1-rc1</version>
 	<name>kernel-ridgenerator-service</name>
 	<description>Mosip commons project </description>
 	<url>https://github.com/mosip/commons</url>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
 		<!-- maven -->
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
-		<kernel.core.version>1.2.1-SNAPSHOT</kernel.core.version>
-		<kernel.dataaccess-hibernate.version>1.2.1-SNAPSHOT</kernel.dataaccess-hibernate.version>
-		<kernel.logger.version>1.2.1-SNAPSHOT</kernel.logger.version>
+		<maven.compiler.version>3.8.0</maven.compiler.version>
+		<kernel.core.version>1.2.1-rc1</kernel.core.version>
+		<kernel.dataaccess-hibernate.version>1.2.1-rc1</kernel.dataaccess-hibernate.version>
+		<kernel.logger.version>1.2.1-rc1</kernel.logger.version>
 		<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
 		<springdoc.version>1.5.10</springdoc.version>
+		<spring-boot-maven-plugin.version>3.2.3</spring-boot-maven-plugin.version>
 	</properties>
-     	<dependencyManagement>
+
+	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>io.mosip.kernel</groupId>
 				<artifactId>kernel-bom</artifactId>
-				<version>1.2.1-SNAPSHOT</version>
+				<version>1.2.1-rc1</version>
 				<type>pom</type>
-			    <scope>import</scope>
+				<scope>import</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
@@ -63,9 +66,9 @@
 			<version>${kernel.logger.version}</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.springdoc</groupId>
-		    <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-		    <version>2.5.0</version>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.5.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -84,24 +87,31 @@
 		</dependency>
 	</dependencies>
 
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://central.sonatype.com/repository/maven-snapshots/</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://central.sonatype.com/api/v1/publisher</url>
+		</repository>
+	</distributionManagement>
+
 	<build>
 		<plugins>
+			<!-- Maven Compiler Plugin -->
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven.compiler.version}</version>
 				<configuration>
-					<executable>true</executable>
-					<layout>ZIP</layout>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+					<parameters>true</parameters>
 				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>build-info</goal>
-							<goal>repackage</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
+
+			<!-- Central Publishing Plugin -->
 			<plugin>
 				<groupId>org.sonatype.central</groupId>
 				<artifactId>central-publishing-maven-plugin</artifactId>
@@ -113,6 +123,33 @@
 				</configuration>
 			</plugin>
 
+			<!-- Spring Boot Plugin - MAIN BUILD (CRITICAL FOR DOCKER) -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>3.2.3</version>
+				<executions>
+					<execution>
+						<id>build-info</id>
+						<goals>
+							<goal>build-info</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>repackage</id>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+						<configuration>
+							<classifier>executable</classifier>
+							<executable>true</executable>
+							<attach>false</attach>  <!-- Do not deploy this to central -->
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Maven Source Plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -128,6 +165,7 @@
 				</executions>
 			</plugin>
 
+			<!-- Maven Javadoc Plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
@@ -144,6 +182,8 @@
 					<doclint>none</doclint>
 				</configuration>
 			</plugin>
+
+			<!-- Maven GPG Plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
@@ -164,6 +204,8 @@
 					</execution>
 				</executions>
 			</plugin>
+
+			<!-- Git Commit ID Plugin -->
 			<plugin>
 				<groupId>pl.project13.maven</groupId>
 				<artifactId>git-commit-id-plugin</artifactId>
@@ -186,9 +228,10 @@
 					</includeOnlyProperties>
 					<commitIdGenerationMode>full</commitIdGenerationMode>
 					<dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
-					<!-- <format>json</format> -->
 				</configuration>
 			</plugin>
+
+			<!-- Maven Surefire Plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -203,6 +246,8 @@
 					</argLine>
 				</configuration>
 			</plugin>
+
+			<!-- Jacoco Plugin -->
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
@@ -224,18 +269,21 @@
 			</plugin>
 		</plugins>
 	</build>
+
 	<scm>
 		<connection>scm:git:git://github.com/mosip/commons.git</connection>
 		<developerConnection>scm:git:ssh://github.com:mosip/commons.git</developerConnection>
 		<url>https://github.com/mosip/commons</url>
 		<tag>HEAD</tag>
 	</scm>
+
 	<licenses>
 		<license>
 			<name>MPL 2.0</name>
 			<url>https://www.mozilla.org/en-US/MPL/2.0/</url>
 		</license>
 	</licenses>
+
 	<developers>
 		<developer>
 			<name>Mosip</name>
@@ -244,6 +292,7 @@
 			<organizationUrl>https://github.com/mosip/commons</organizationUrl>
 		</developer>
 	</developers>
+
 	<profiles>
 		<profile>
 			<id>openapi-doc-generate-profile</id>
@@ -251,26 +300,42 @@
 				<dependency>
 					<groupId>io.mosip.kernel</groupId>
 					<artifactId>kernel-auth-adapter</artifactId>
-					<!--	Below version is only used for openapi-doc-generate-profile to generate api-docs.
-					    	It will be required only when running the below command
-						mvn clean verify -Dgpg.skip -DskipTests -Dmaven.javadoc.skip -P openapi-doc-generate-profile
-						Note:- It is not required to have the latest version of auth adapter.-->
-					<version>v1.2.0.1-B2</version>  <!-- Updating to last released version to remove circular dependency in release -->
+					<version>v1.2.0.1-B2</version>
 				</dependency>
 			</dependencies>
 			<build>
 				<plugins>
+					<!-- Spring Boot Plugin for OpenAPI Generation -->
 					<plugin>
 						<groupId>org.springframework.boot</groupId>
 						<artifactId>spring-boot-maven-plugin</artifactId>
 						<version>${spring.boot.version}</version>
-						<configuration>
-							<executable>true</executable>
-							<layout>ZIP</layout>
-						</configuration>
 						<executions>
+							<!-- Build info generation -->
+							<execution>
+								<id>build-info</id>
+								<goals>
+									<goal>build-info</goal>
+								</goals>
+							</execution>
+
+							<!-- Create executable JAR but don't publish to Central -->
+							<execution>
+								<id>repackage</id>
+								<goals>
+									<goal>repackage</goal>
+								</goals>
+								<configuration>
+									<classifier>executable</classifier>
+									<executable>true</executable>
+									<attach>false</attach>
+								</configuration>
+							</execution>
+
+							<!-- Integration test startup -->
 							<execution>
 								<id>pre-integration-test</id>
+								<phase>pre-integration-test</phase>
 								<goals>
 									<goal>start</goal>
 								</goals>
@@ -285,23 +350,21 @@
 										<argument>--server.port=8090</argument>
 										<argument>--server.servlet.path=/app/generic</argument>
 									</arguments>
-
 								</configuration>
 							</execution>
+
+							<!-- Integration test shutdown -->
 							<execution>
 								<id>post-integration-test</id>
+								<phase>post-integration-test</phase>
 								<goals>
 									<goal>stop</goal>
 								</goals>
 							</execution>
-							<execution>
-								<goals>
-									<goal>build-info</goal>
-									<goal>repackage</goal>
-								</goals>
-							</execution>
 						</executions>
 					</plugin>
+
+					<!-- SpringDoc OpenAPI Plugin -->
 					<plugin>
 						<groupId>org.springdoc</groupId>
 						<artifactId>springdoc-openapi-maven-plugin</artifactId>

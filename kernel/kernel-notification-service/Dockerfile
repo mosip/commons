@@ -68,7 +68,7 @@ RUN mkdir -p ${loader_path}
 
 ENV loader_path_env=${loader_path}
 
-COPY ./target/kernel-notification-service-*.jar kernel-notification-service.jar
+COPY ./target/kernel-notification-service-*-executable.jar kernel-notification-service.jar
 
 #RUN mkdir ./mosip-lib/
 

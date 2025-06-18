@@ -5,7 +5,7 @@
 	<groupId>io.mosip.kernel</groupId>
 
 	<artifactId>kernel-demographics-api</artifactId>
-	<version>1.2.1-SNAPSHOT</version>
+	<version>1.2.1-rc1</version>
 	<name>kernel-demographics-api</name>
 	<description>demographics api definitions</description>
 	<url>https://github.com/mosip/commons</url>
@@ -113,7 +113,7 @@
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<kernel.core.version>1.2.1-SNAPSHOT</kernel.core.version>
+		<kernel.core.version>1.2.1-rc1</kernel.core.version>
 		<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
 	</properties>
      	<dependencyManagement>
@@ -121,13 +121,12 @@
 			<dependency>
 				<groupId>io.mosip.kernel</groupId>
 				<artifactId>kernel-bom</artifactId>
-				<version>1.2.1-SNAPSHOT</version>
+				<version>1.2.1-rc1</version>
 				<type>pom</type>
 			    <scope>import</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
 
 	<dependencies>
 		<dependency>
@@ -140,6 +139,16 @@
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
 	</dependencies>
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://central.sonatype.com/repository/maven-snapshots/</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://central.sonatype.com/api/v1/publisher</url>
+		</repository>
+	</distributionManagement>
 	<build>
 		<plugins>
 			<plugin>
