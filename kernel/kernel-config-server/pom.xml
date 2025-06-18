@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>io.mosip.kernel</groupId>
-	<version>1.2.1-rc1</version>
+	<version>1.2.1-SNAPSHOT</version>
 	<artifactId>kernel-config-server</artifactId>
 	<name>Kernel Config Server</name>
 		<url>https://github.com/mosip/commons</url>
@@ -35,7 +35,7 @@
 			<dependency>
 				<groupId>io.mosip.kernel</groupId>
 				<artifactId>kernel-bom</artifactId>
-				<version>1.2.1-rc1</version>
+				<version>1.2.1-SNAPSHOT</version>
 				<type>pom</type>
 			    <scope>import</scope>
 			</dependency>
@@ -84,37 +84,33 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${spring-boot-maven-plugin.version}</version>
+				<version>3.2.3</version>
+				<configuration>
+					<executable>true</executable>
+					<layout>ZIP</layout>
+				</configuration>
 				<executions>
 					<execution>
-						<id>build-info</id>
 						<goals>
-							<goal>build-info</goal> <!-- Generate build metadata -->
-						</goals>
-					</execution>
-					<execution>
-						<id>repackage</id>
-						<goals>
-							<goal>repackage</goal> <!-- Create executable JAR -->
+							<goal>build-info</goal>
+							<goal>repackage</goal>
 						</goals>
 						<configuration>
-							<classifier>executable</classifier> <!-- Secondary artifact -->
-							<executable>true</executable> <!-- Makes JAR file executable on Unix -->
-							<attach>false</attach> <!-- CRITICAL: Don't publish to Maven Central -->
+							<attach>false</attach>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
-               <plugin>
-                  <groupId>org.sonatype.central</groupId>
-                  <artifactId>central-publishing-maven-plugin</artifactId>
-                  <version>0.7.0</version>
-                  <extensions>true</extensions>
-                  <configuration>
-                        <publishingServerId>ossrh</publishingServerId>
-                        <autoPublish>false</autoPublish>
-                  </configuration>
-                </plugin> 
+			<plugin>
+				<groupId>org.sonatype.central</groupId>
+				<artifactId>central-publishing-maven-plugin</artifactId>
+				<version>0.7.0</version>
+				<extensions>true</extensions>
+				<configuration>
+					<publishingServerId>ossrh</publishingServerId>
+					<autoPublish>false</autoPublish>
+				</configuration>
+			</plugin>
 
                <plugin>
                   <groupId>org.apache.maven.plugins</groupId>
