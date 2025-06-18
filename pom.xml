@@ -18,12 +18,11 @@
           </license>
         </licenses>
         <scm>
-                <connection>scm:git:git://github.com/mosip/commons.git</connection>
-                <developerConnection>scm:git:ssh://github.com:mosip/commons.git</developerConnection>
-                <url>https://github.com/mosip/commons</url>
-                <tag>HEAD</tag>
+            <connection>scm:git:git://github.com/mosip/commons.git</connection>
+            <developerConnection>scm:git:ssh://github.com:mosip/commons.git</developerConnection>
+            <url>https://github.com/mosip/commons</url>
+            <tag>HEAD</tag>
         </scm>
-
         <developers>
                 <developer>
                   <name>Mosip</name>

@@ -184,22 +184,18 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>3.2.3</version>
+				<configuration>
+					<executable>true</executable>
+					<layout>ZIP</layout>
+				</configuration>
 				<executions>
 					<execution>
-						<id>build-info</id>
 						<goals>
 							<goal>build-info</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>repackage</id> <!-- white_check_mark: Use the default ID to enable auto-detection -->
-						<goals>
 							<goal>repackage</goal>
 						</goals>
 						<configuration>
-							<classifier>executable</classifier> <!-- white_check_mark: Output JAR as -executable.jar -->
-							<executable>true</executable>
-							<attach>false</attach>  <!-- Do not deploy this to central -->
+							<attach>false</attach>
 						</configuration>
 					</execution>
 				</executions>

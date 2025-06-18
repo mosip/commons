@@ -121,22 +121,18 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>3.2.3</version>
+				<configuration>
+					<executable>true</executable>
+					<layout>ZIP</layout>
+				</configuration>
 				<executions>
 					<execution>
-						<id>build-info</id>
 						<goals>
 							<goal>build-info</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>repackage</id> <!-- white_check_mark: Use the default ID to enable auto-detection -->
-						<goals>
 							<goal>repackage</goal>
 						</goals>
 						<configuration>
-							<classifier>executable</classifier> <!-- white_check_mark: Output JAR as -executable.jar -->
-							<executable>true</executable>
-							<attach>false</attach>  <!-- Do not deploy this to central -->
+							<attach>false</attach>
 						</configuration>
 					</execution>
 				</executions>
@@ -301,26 +297,20 @@
 						<groupId>org.springframework.boot</groupId>
 						<artifactId>spring-boot-maven-plugin</artifactId>
 						<version>${spring.boot.version}</version>
+						<configuration>
+							<executable>true</executable>
+							<layout>ZIP</layout>
+						</configuration>
 						<executions>
-							<!-- Build info generation -->
+							<!-- Build info and repackage -->
 							<execution>
-								<id>build-info</id>
+								<id>build-info-repackage</id>
 								<goals>
 									<goal>build-info</goal>
-								</goals>
-							</execution>
-
-							<!-- Create executable JAR but don't publish to Central -->
-							<execution>
-								<id>repackage</id>
-								<goals>
 									<goal>repackage</goal>
 								</goals>
 								<configuration>
-									<classifier>executable</classifier>
-									<executable>true</executable>
-									<!-- Removed ZIP layout for Central compatibility -->
-									<attach>false</attach> <!-- CRITICAL: Prevents publishing to Central -->
+									<attach>false</attach>
 								</configuration>
 							</execution>
 
@@ -342,7 +332,6 @@
 										<argument>--server.port=8090</argument>
 										<argument>--server.servlet.path=/app/generic</argument>
 									</arguments>
-									<!-- Plugin will auto-detect the executable JAR -->
 								</configuration>
 							</execution>
 
@@ -355,8 +344,7 @@
 								</goals>
 							</execution>
 						</executions>
-					</plugin>
-					<plugin>
+					</plugin>					<plugin>
 						<groupId>org.springdoc</groupId>
 						<artifactId>springdoc-openapi-maven-plugin</artifactId>
 						<version>0.2</version>
