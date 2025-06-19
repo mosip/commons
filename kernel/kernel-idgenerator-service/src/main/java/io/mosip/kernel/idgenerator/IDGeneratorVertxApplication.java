@@ -175,8 +175,6 @@ public class IDGeneratorVertxApplication {
 		Verticle[] workerVerticles = { new VidPoolCheckerVerticle(context), new VidPopulatorVerticle(context),
 				new VidExpiryVerticle(context), new VidIsolatorVerticle(context) };
 		Stream.of(workerVerticles).forEach(verticle -> deploy(verticle, workerOptions, vertx));
-		LOGGER.info("VID INIT JOB FREQUENCY: "+DEFAULT_JOB_FREQUENCY);
-		LOGGER.info("GETVID"+getVidInitJobFrequency());
 		vertx.setTimer(getVidInitJobFrequency(), handler -> initVIDPool());
 		Verticle[] uinVerticles = { new UinGeneratorVerticle(context),new UinTransferVerticle(context)};
 		Stream.of(uinVerticles).forEach(verticle -> vertx.deployVerticle(verticle, stringAsyncResult -> {
@@ -214,12 +212,12 @@ public class IDGeneratorVertxApplication {
 		try {
 			String value = System.getProperty(propertyKey);
 			if (value == null || value.trim().isEmpty()) {
-				LOGGER.debug(propertyKey + " is missing. Using default: " + DEFAULT_JOB_FREQUENCY);
+				LOGGER.info(propertyKey + " is missing. Using default: " + DEFAULT_JOB_FREQUENCY);
 				return DEFAULT_JOB_FREQUENCY;
 			}
 			return Long.parseLong(value.trim());
 		} catch (Exception e) {
-			LOGGER.warn("Error reading property " + propertyKey + ". Using default: " + DEFAULT_JOB_FREQUENCY, e);
+			LOGGER.info("Error reading property " + propertyKey + ". Using default: " + DEFAULT_JOB_FREQUENCY, e);
 			return DEFAULT_JOB_FREQUENCY;
 		}
 	}
