@@ -176,6 +176,7 @@ public class IDGeneratorVertxApplication {
 				new VidExpiryVerticle(context), new VidIsolatorVerticle(context) };
 		Stream.of(workerVerticles).forEach(verticle -> deploy(verticle, workerOptions, vertx));
 		LOGGER.info("VID INIT JOB FREQUENCY: "+DEFAULT_JOB_FREQUENCY);
+		LOGGER.info("GETVID"+getVidInitJobFrequency());
 		vertx.setTimer(getVidInitJobFrequency(), handler -> initVIDPool());
 		Verticle[] uinVerticles = { new UinGeneratorVerticle(context),new UinTransferVerticle(context)};
 		Stream.of(uinVerticles).forEach(verticle -> vertx.deployVerticle(verticle, stringAsyncResult -> {
