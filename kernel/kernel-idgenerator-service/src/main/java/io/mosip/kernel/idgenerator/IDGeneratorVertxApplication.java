@@ -213,7 +213,6 @@ public class IDGeneratorVertxApplication {
 	private static long getPropertiesValue(String propertyKey , long default_job_value) {
 		try {
 			String value = System.getProperty(propertyKey);
-			LOGGER.info("value"+value);
 			if (value == null || value.trim().isEmpty()) {
 				LOGGER.info(propertyKey + " is missing. Using default: " + default_job_value);
 				return default_job_value;
