@@ -177,7 +177,6 @@ public class IDGeneratorVertxApplication {
 		Verticle[] workerVerticles = { new VidPoolCheckerVerticle(context), new VidPopulatorVerticle(context),
 				new VidExpiryVerticle(context), new VidIsolatorVerticle(context) };
 		Stream.of(workerVerticles).forEach(verticle -> deploy(verticle, workerOptions, vertx));
-		LOGGER.info("VIDVALUE"+getVidInitJobFrequency());
 		vertx.setTimer(getVidInitJobFrequency(), handler -> initVIDPool());
 		Verticle[] uinVerticles = { new UinGeneratorVerticle(context),new UinTransferVerticle(context)};
 		Stream.of(uinVerticles).forEach(verticle -> vertx.deployVerticle(verticle, stringAsyncResult -> {
@@ -188,7 +187,6 @@ public class IDGeneratorVertxApplication {
 						+ stringAsyncResult.cause());
 			}
 		}));
-		LOGGER.info("UINVALUE"+getUinInitJobFrequency());
 		vertx.setTimer(getUinInitJobFrequency(), handler -> initUINPool());
 	}
 
@@ -212,7 +210,7 @@ public class IDGeneratorVertxApplication {
 		});
 	}
 
-	private static long getLongSystemProperty(String propertyKey , long default_job_value) {
+	private static long getPropertiesValue(String propertyKey , long default_job_value) {
 		try {
 			String value = System.getProperty(propertyKey);
 			LOGGER.info("value"+value);
@@ -231,13 +229,13 @@ public class IDGeneratorVertxApplication {
 	 * Get VID init job frequency from system properties or default.
 	 */
 	private static long getVidInitJobFrequency() {
-		return getLongSystemProperty("mosip.kernel.vid.init-job-frequency",DEFAULT_VID_JOB_FREQUENCY);
+		return getPropertiesValue("mosip.kernel.vid.init-job-frequency",DEFAULT_VID_JOB_FREQUENCY);
 	}
 
 	/**
 	 * Get UIN init job frequency from system properties or default.
 	 */
 	private static long getUinInitJobFrequency() {
-		return getLongSystemProperty("mosip.kernel.uin.init-job-frequency",DEFAULT_UIN_JOB_FREQUENCY);
+		return getPropertiesValue("mosip.kernel.uin.init-job-frequency",DEFAULT_UIN_JOB_FREQUENCY);
 	}
 }
