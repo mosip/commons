@@ -14,6 +14,7 @@
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
 		<kernel.core.version>1.2.1-SNAPSHOT</kernel.core.version>
+		<spring.boot.maven.plugin.version>3.2.3</spring.boot.maven.plugin.version>
 		<kernel.idgenerator.vid.version>1.2.1-SNAPSHOT</kernel.idgenerator.vid.version>
 		<ceylon.complete.version>1.3.2</ceylon.complete.version>
 		<vertx.lang.ceylon.version>3.4.1</vertx.lang.ceylon.version>
@@ -183,7 +184,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>3.2.3</version>
+				<version>${spring.boot.maven.plugin.version}</version>
 				<configuration>
 					<executable>true</executable>
 					<layout>ZIP</layout>
