@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package io.mosip.kernel.uingenerator.service.impl;
 
@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,7 +49,7 @@ public class UinServiceImpl implements UinService {
 	 */
 	@Autowired
 	private UinRepository uinRepository;
-	
+
 	@Autowired
 	private UinRepositoryAssigned uinRepositoryAssigned;
 
@@ -57,13 +58,16 @@ public class UinServiceImpl implements UinService {
 	 */
 	@Autowired
 	private UINMetaDataUtil metaDataUtil;
-	
+
+	@Value("${mosip.kernel.uin.page.size:50000}")
+	private int pageSize;
+
 	@Autowired
 	private VertxAuthenticationProvider authHandler;
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.mosip.kernel.core.uingenerator.service.UinGeneratorService#getId()
 	 */
 	@Transactional
@@ -82,11 +86,11 @@ public class UinServiceImpl implements UinService {
 		return uinResponseDto;
 	}
 
-	
+
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * io.mosip.kernel.uingenerator.service.UinGeneratorService#updateUinStatus(io.
 	 * vertx.core.json.JsonObject)
@@ -124,7 +128,7 @@ public class UinServiceImpl implements UinService {
 	@Transactional(transactionManager = "transactionManager")
 	@Override
 	public void transferUin() {
-		List<UinEntity> uinEntities=uinRepository.findByStatus(UinGeneratorConstant.ASSIGNED);
+		List<UinEntity> uinEntities=uinRepository.findByStatus(UinGeneratorConstant.ISSUED, pageSize);
 		List<UinEntityAssigned> uinEntitiesAssined = convertUinEntitiesListToUinEntitiesAssignedList(uinEntities);
 		uinRepositoryAssigned.saveAll(uinEntitiesAssined);
 	    uinRepository.deleteAll(uinEntities);
@@ -141,5 +145,5 @@ public class UinServiceImpl implements UinService {
 	Optional<UinEntityAssigned> uinEntityAssignedOptional=uinRepositoryAssigned.findById(uin);
 	return uinEntityAssignedOptional.isPresent();
 	}
-	
+
 }
