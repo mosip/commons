@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import io.mosip.kernel.idgenerator.util.Utility;
 import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.io.IOUtils;
@@ -49,7 +50,7 @@ import io.vertx.micrometer.VertxPrometheusOptions;
 
 /**
  * ID Generator Vertx Application
- * 
+ *
  * @author Urvil Joshi
  * @since 1.0.0
  *
@@ -61,9 +62,13 @@ public class IDGeneratorVertxApplication {
 
 	/**
 	 * The field for Logger
-	 * 
+	 *
 	 */
 	private static Logger LOGGER;
+
+	private static final long DEFAULT_VID_JOB_FREQUENCY = 10000L;
+
+	private static final long DEFAULT_UIN_JOB_FREQUENCY=10000L;
 
 	/**
 	 * Server context path.
@@ -102,7 +107,7 @@ public class IDGeneratorVertxApplication {
 
 	/**
 	 * main method for the application
-	 * 
+	 *
 	 * @param args the argument
 	 */
 	public static void main(String[] args) {
@@ -159,7 +164,7 @@ public class IDGeneratorVertxApplication {
 
 	/**
 	 * This method sets the Application Context, deploys the verticles.
-	 * 
+	 *
 	 * @throws InterruptedException
 	 */
 	private static void startApplication() {
@@ -173,7 +178,7 @@ public class IDGeneratorVertxApplication {
 		Verticle[] workerVerticles = { new VidPoolCheckerVerticle(context), new VidPopulatorVerticle(context),
 				new VidExpiryVerticle(context), new VidIsolatorVerticle(context) };
 		Stream.of(workerVerticles).forEach(verticle -> deploy(verticle, workerOptions, vertx));
-		vertx.setTimer(1000, handler -> initVIDPool());
+		vertx.setTimer(getVidInitJobFrequency(), handler -> initVIDPool());
 		Verticle[] uinVerticles = { new UinGeneratorVerticle(context),new UinTransferVerticle(context)};
 		Stream.of(uinVerticles).forEach(verticle -> vertx.deployVerticle(verticle, stringAsyncResult -> {
 			if (stringAsyncResult.succeeded()) {
@@ -183,7 +188,7 @@ public class IDGeneratorVertxApplication {
 						+ stringAsyncResult.cause());
 			}
 		}));
-		vertx.setTimer(1000, handler -> initUINPool());
+		vertx.setTimer(getUinInitJobFrequency(), handler -> initUINPool());
 	}
 
 	@PostConstruct
@@ -204,5 +209,19 @@ public class IDGeneratorVertxApplication {
 
 			}
 		});
+	}
+
+	/**
+	 * Get VID init job frequency from system properties or default.
+	 */
+	private static long getVidInitJobFrequency() {
+		return Utility.getLongProperty("mosip.kernel.vid.init-job-frequency", DEFAULT_VID_JOB_FREQUENCY);
+	}
+
+	/**
+	 * Get UIN init job frequency from system properties or default.
+	 */
+	private static long getUinInitJobFrequency() {
+		return Utility.getLongProperty("mosip.kernel.uin.init-job-frequency", DEFAULT_UIN_JOB_FREQUENCY);
 	}
 }
