@@ -6,7 +6,7 @@
 
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-ridgenerator-service</artifactId>
-	<version>1.2.1-rc1</version>
+	<version>1.2.1-rc2</version>
 	<name>kernel-ridgenerator-service</name>
 	<description>Mosip commons project </description>
 	<url>https://github.com/mosip/commons</url>
@@ -17,9 +17,9 @@
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
 		<maven.compiler.version>3.8.0</maven.compiler.version>
-		<kernel.core.version>1.2.1-rc1</kernel.core.version>
-		<kernel.dataaccess-hibernate.version>1.2.1-rc1</kernel.dataaccess-hibernate.version>
-		<kernel.logger.version>1.2.1-rc1</kernel.logger.version>
+		<kernel.core.version>1.2.1-rc2</kernel.core.version>
+		<kernel.dataaccess-hibernate.version>1.2.1-rc2</kernel.dataaccess-hibernate.version>
+		<kernel.logger.version>1.2.1-rc2</kernel.logger.version>
 		<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
 		<springdoc.version>1.5.10</springdoc.version>
 		<spring-boot-maven-plugin.version>3.2.3</spring-boot-maven-plugin.version>
@@ -30,7 +30,7 @@
 			<dependency>
 				<groupId>io.mosip.kernel</groupId>
 				<artifactId>kernel-bom</artifactId>
-				<version>1.2.1-rc1</version>
+				<version>1.2.1-rc2</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
