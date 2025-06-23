@@ -103,16 +103,6 @@
 	</distributionManagement>
 	<build>
         <plugins>
-            <!-- Configure deploy plugin to use correct repository -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.1.2</version>
-                <configuration>
-                    <skip>false</skip>
-                    <updateReleaseInfo>true</updateReleaseInfo>
-                </configuration>
-            </plugin>
 			<plugin>
 				<groupId>org.sonatype.central</groupId>
 				<artifactId>central-publishing-maven-plugin</artifactId>
@@ -170,7 +160,7 @@
 			<dependency>
 			    <groupId>org.springframework.boot</groupId>
 			    <artifactId>spring-boot-dependencies</artifactId>
-			    <version>3.2.3</version>
+
 			    <type>pom</type>
 			    <scope>import</scope>
 			</dependency>

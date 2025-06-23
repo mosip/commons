@@ -293,7 +293,11 @@
 				<dependency>
 					<groupId>io.mosip.kernel</groupId>
 					<artifactId>kernel-auth-adapter</artifactId>
-					<version>v1.2.0.1-B2</version>
+					<!--	Below version is only used for openapi-doc-generate-profile to generate api-docs.
+					    	It will be required only when running the below command
+						mvn clean verify -Dgpg.skip -DskipTests -Dmaven.javadoc.skip -P openapi-doc-generate-profile
+						Note:- It is not required to have the latest version of auth adapter.-->
+					<version>v1.2.0.1-B2</version> <!-- Updating to last released version to remove circular dependency in release -->
 				</dependency>
 			</dependencies>
 			<build>
