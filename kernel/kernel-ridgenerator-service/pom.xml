@@ -22,7 +22,6 @@
 		<kernel.logger.version>1.2.1-SNAPSHOT</kernel.logger.version>
 		<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
 		<springdoc.version>1.5.10</springdoc.version>
-		<spring.boot.maven.plugin.version>3.2.3</spring.boot.maven.plugin.version>
 	</properties>
 
 	<dependencyManagement>
@@ -125,7 +124,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${spring.boot.maven.plugin.version}</version>
 				<configuration>
 					<executable>true</executable>
 					<layout>ZIP</layout>
@@ -305,7 +303,6 @@
 					<plugin>
 						<groupId>org.springframework.boot</groupId>
 						<artifactId>spring-boot-maven-plugin</artifactId>
-						<version>${spring.boot.version}</version>
 						<configuration>
 							<executable>true</executable>
 							<layout>ZIP</layout>
