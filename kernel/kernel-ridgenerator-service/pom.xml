@@ -7,7 +7,7 @@
 	<groupId>io.mosip.kernel</groupId>
 
 	<artifactId>kernel-ridgenerator-service</artifactId>
-	<version>1.2.1.0-rc1</version>
+	<version>1.2.1.0-SNAPSHOT</version>
 	<name>kernel-ridgenerator-service</name>
 	<description>Mosip commons project </description>
 	<url>https://github.com/mosip/commons</url>
@@ -114,9 +114,9 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.2.1.0-rc1</kernel.core.version>
-		<kernel.dataaccess-hibernate.version>1.2.1.0-rc1</kernel.dataaccess-hibernate.version>
-		<kernel.logger.version>1.2.1.0-rc1</kernel.logger.version>
+		<kernel.core.version>1.2.1.0-SNAPSHOT</kernel.core.version>
+		<kernel.dataaccess-hibernate.version>1.2.1.0-SNAPSHOT</kernel.dataaccess-hibernate.version>
+		<kernel.logger.version>1.2.1.0-SNAPSHOT</kernel.logger.version>
 		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 		<springdoc.version>1.5.10</springdoc.version>
 		<central.publishing.maven.plugin.version>0.7.0</central.publishing.maven.plugin.version>
@@ -374,7 +374,7 @@
 					    	It will be required only when running the below command
 						mvn clean verify -Dgpg.skip -DskipTests -Dmaven.javadoc.skip -P openapi-doc-generate-profile
 						Note:- It is not required to have the latest version of auth adapter.-->
-					<version>v1.2.1.0-rc1-B2</version>  <!-- Updating to last released version to remove circular dependency in release -->
+					<version>v1.2.1.0-SNAPSHOT-B2</version>  <!-- Updating to last released version to remove circular dependency in release -->
 				</dependency>
 			</dependencies>
 			<build>
