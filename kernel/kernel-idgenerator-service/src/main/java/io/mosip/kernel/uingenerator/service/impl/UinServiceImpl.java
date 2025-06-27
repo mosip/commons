@@ -30,6 +30,7 @@ import io.mosip.kernel.uingenerator.util.UINMetaDataUtil;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * @author Dharmesh Khandelwal
@@ -60,6 +61,9 @@ public class UinServiceImpl implements UinService {
 	
 	@Autowired
 	private VertxAuthenticationProvider authHandler;
+	
+	@Value("${mosip.kernel.uin.page.size:50000}")
+	private int pageSize;
 
 	/*
 	 * (non-Javadoc)
@@ -124,7 +128,7 @@ public class UinServiceImpl implements UinService {
 	@Transactional(transactionManager = "transactionManager")
 	@Override
 	public void transferUin() {
-		List<UinEntity> uinEntities=uinRepository.findByStatus(UinGeneratorConstant.ASSIGNED);
+		List<UinEntity> uinEntities=uinRepository.findByStatus(UinGeneratorConstant.ISSUED, pageSize);
 		List<UinEntityAssigned> uinEntitiesAssined = convertUinEntitiesListToUinEntitiesAssignedList(uinEntities);
 		uinRepositoryAssigned.saveAll(uinEntitiesAssined);
 	    uinRepository.deleteAll(uinEntities);
