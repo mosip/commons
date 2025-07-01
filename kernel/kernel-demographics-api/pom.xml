@@ -5,7 +5,7 @@
 	<groupId>io.mosip.kernel</groupId>
 
 	<artifactId>kernel-demographics-api</artifactId>
-	<version>1.2.0.1</version>
+	<version>1.2.0.2-SNAPSHOT</version>
 	<name>kernel-demographics-api</name>
 	<description>demographics api definitions</description>
 	<url>https://github.com/mosip/commons</url>

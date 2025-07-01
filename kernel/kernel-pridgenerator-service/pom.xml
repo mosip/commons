@@ -223,7 +223,7 @@
 		<sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/verticle/**,**/spi/**,"**/proxy/**","**/entities/**","**/filter/**","**/util/**","**/verifier/**","**/KernelPridgeneratorServiceApplication.java"</sonar.coverage.exclusions>
 	</properties>
 	<artifactId>kernel-pridgenerator-service</artifactId>
-	<version>1.2.0.1</version>
+	<version>1.2.0.2-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>

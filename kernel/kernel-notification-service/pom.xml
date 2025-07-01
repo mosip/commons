@@ -8,7 +8,7 @@
 	<name>kernel-notification-service</name>
 	<description>Mosip commons project </description>
 	<url>https://github.com/mosip/commons</url>
-	<version>1.2.0.1</version>
+	<version>1.2.0.2-SNAPSHOT</version>
 	<groupId>io.mosip.kernel</groupId>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
