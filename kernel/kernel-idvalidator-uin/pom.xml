@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.mosip.kernel</groupId>
   <artifactId>kernel-idvalidator-uin</artifactId>
-  <version>1.2.0.1</version>
+  <version>1.2.0.2-SNAPSHOT</version>
   <name>kernel-idvalidator-uin</name>
   <description>kernel-idvalidator-uin</description>
   <properties>		
@@ -111,7 +111,7 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.2.0.1</kernel.core.version>
+		<kernel.core.version>1.2.0.2-SNAPSHOT</kernel.core.version>
 		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 	</properties>
 	<dependencies>
