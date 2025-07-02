@@ -71,15 +71,6 @@
 		<module>kernel-config-server</module>
 	</modules>
 	<repositories>
-        <repository>
-            <id>ossrh</id>
-            <name>LegacyMavenSnapshot</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <layout>default</layout>
-            <snapshots>
-            <enabled>true</enabled>
-            </snapshots>
-        </repository>
 		<repository>
             <id>ossrh-central</id>
             <name>MavenCentralRepository</name>
