@@ -73,7 +73,7 @@
 	<repositories>
 		<repository>
 			<id>ossrh</id>
-			<name>CentralRepository</name>
+			<name>LegacyMavenSnapshot</name>
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 			<layout>default</layout>
 			<snapshots>
