@@ -26,7 +26,7 @@ and mvn version - 3.9.6
 ## Deployment in K8 cluster with other MOSIP services:
 ### Pre-requisites
 * Set KUBECONFIG variable to point to existing K8 cluster kubeconfig file:
-   * ```
+    * ```
         export KUBECONFIG=~/.kube/<my-cluster.config>
      ```
 ### Install
@@ -57,3 +57,5 @@ API documentation is available [here](https://mosip.github.io/documentation/1.2.
 
 ## License
 This project is licensed under the terms of [Mozilla Public License 2.0](LICENSE).
+
+
