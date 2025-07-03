@@ -482,7 +482,7 @@
 					    	It will be required only when running the below command
 						mvn clean verify -Dgpg.skip -DskipTests -Dmaven.javadoc.skip -P openapi-doc-generate-profile
 						Note:- It is not required to have the latest version of auth adapter.-->
-					<version>v1.2.1.0-SNAPSHOT-B2</version>  <!-- Updating to last released version to remove circular dependency in release -->
+					<version>v1.2.0.1-B2</version>  <!-- Updating to last released version to remove circular dependency in release -->
 				</dependency>
 				<dependency>
 					<groupId>io.mosip.kernel</groupId>
