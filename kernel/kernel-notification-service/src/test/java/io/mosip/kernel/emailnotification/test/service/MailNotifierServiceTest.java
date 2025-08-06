@@ -62,8 +62,8 @@ public class MailNotifierServiceTest {
 	}
 
 	@Test
-	@Ignore
 	public void verifySendMessageFunctionality() throws Exception {
+		String fromEmail = "from.test@mosip.io";
 		String[] mailTo = { "test@gmail.com" };
 		String[] mailCc = { "testTwo@gmail.com" };
 		String mailSubject = "Test Subject";
@@ -72,10 +72,12 @@ public class MailNotifierServiceTest {
 		MultipartFile[] attachments = { attachment };
 		MimeMessage message = emailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message, true);
+		//helper.setFrom(fromEmail);
 		helper.setTo(mailTo);
 		helper.setCc(mailCc);
 		helper.setSubject(mailSubject);
 		helper.setText(mailContent);
+		ReflectionTestUtils.setField(service, "fromEmailAddress", fromEmail);
 		doNothing().when(utils).sendMessage(Mockito.any(), Mockito.any());
 		service.sendEmail(mailTo, mailCc, mailSubject, mailContent, attachments);
 		verify(utils, times(1)).sendMessage(Mockito.any(), Mockito.any());
