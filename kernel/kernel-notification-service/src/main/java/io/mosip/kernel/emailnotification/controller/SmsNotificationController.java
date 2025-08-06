@@ -22,9 +22,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
- * This controller class receives contact number and message in data transfer
- * object and sends SMS on the provided contact number.
- * 
+ * <h1>SMS Notification Controller</h1>
+ *
+ * <p>This REST controller handles SMS sending requests with minimal overhead and optimized request validation.</p>
+ *
  * @author Ritesh Sinha
  * @since 1.0.0
  */
@@ -37,7 +38,7 @@ public class SmsNotificationController {
 	 * The reference that autowire sms notification service class.
 	 */
 	@Autowired
-	SmsNotification smsNotifierService;
+	private SmsNotification smsNotifierService;
 
 	/**
 	 * This method sends sms to the contact number provided.
