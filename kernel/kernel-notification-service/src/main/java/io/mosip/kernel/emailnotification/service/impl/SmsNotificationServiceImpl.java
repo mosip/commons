@@ -1,5 +1,7 @@
 package io.mosip.kernel.emailnotification.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -27,12 +29,14 @@ import io.mosip.kernel.emailnotification.service.SmsNotification;
 @Service
 public class SmsNotificationServiceImpl implements SmsNotification {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(SmsNotificationServiceImpl.class);
+
 	@Value("${spring.profiles.active}")
 	private String activeProfile;
 
 	@Autowired
 	private SMSServiceProvider smsServiceProvider;
-	
+
 	@Value("${mosip.kernel.sms.proxy-sms:false}")
 	private boolean isProxytrue;
 
@@ -67,16 +71,27 @@ public class SmsNotificationServiceImpl implements SmsNotification {
 	 * @return A {@link SMSResponseDto} indicating success or failure.
 	 */
 	@Override
-	@Async("smsExecutor")
 	public SMSResponseDto sendSmsNotification(String contactNumber, String contentMessage) {
 
 		// Check for proxy or local mode
 		boolean isLocalProfile = "local".equalsIgnoreCase(activeProfile);
-		if (isLocalProfile || isProxytrue) {
-			return getCachedSuccessResponse();
+		if (!isLocalProfile && !isProxytrue) {
+			send(contactNumber, contentMessage);  // async
 		}
 
-		// Delegate to real SMS service provider
-		return smsServiceProvider.sendSms(contactNumber, contentMessage);
+		return getCachedSuccessResponse();
+	}
+
+	/**
+	 * Asynchronously sends the SMS using the service provider.
+	 */
+	@Async("smsExecutor")
+	public void send(String contactNumber, String contentMessage) {
+		try {
+			smsServiceProvider.sendSms(contactNumber, contentMessage);
+		} catch (Exception e) {
+			LOGGER.error("Failed to send SMS to {}: {}", contactNumber, e.getMessage(), e);
+			// Optionally, send fallback or raise alert
+		}
 	}
 }
