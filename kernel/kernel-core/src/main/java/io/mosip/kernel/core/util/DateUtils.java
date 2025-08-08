@@ -190,7 +190,7 @@ public final class DateUtils {
 	 */
 	public static String formatDate(final Date date, final String pattern) {
 		try {
-			return getFormatter(pattern, UTC_TIME_ZONE, Locale.getDefault()).format(date);
+			return getFormatter(pattern, TimeZone.getDefault(), Locale.getDefault()).format(date);
 			//return DateFormatUtils.format(date, pattern, null, null);
 		} catch (java.lang.IllegalArgumentException | NullPointerException e) {
 			throw new IllegalArgumentException(DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getErrorCode(),
@@ -262,7 +262,7 @@ public final class DateUtils {
 	public static String formatCalendar(final Calendar calendar, final String pattern) {
 		try {
 			//return DateFormatUtils.format(calendar, pattern, null, null);
-			return getFormatter(pattern, UTC_TIME_ZONE, Locale.getDefault()).format(calendar.getTime());
+			return getFormatter(pattern, TimeZone.getDefault(), Locale.getDefault()).format(calendar.getTime());
 		} catch (java.lang.IllegalArgumentException | NullPointerException e) {
 			throw new IllegalArgumentException(DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getErrorCode(),
 					DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getEexceptionMessage(), e.getCause());
@@ -305,7 +305,7 @@ public final class DateUtils {
 	 */
 	public static String formatCalendar(final Calendar calendar, final String pattern, final Locale locale) {
 		try {
-			return getFormatter(pattern, UTC_TIME_ZONE, locale).format(calendar.getTime());
+			return getFormatter(pattern, TimeZone.getDefault(), locale).format(calendar.getTime());
 			//return DateFormatUtils.format(calendar, pattern, null, locale);
 		} catch (java.lang.IllegalArgumentException | NullPointerException e) {
 			throw new IllegalArgumentException(DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getErrorCode(),
