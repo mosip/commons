@@ -42,7 +42,7 @@ import io.mosip.kernel.core.util.exception.NumberIsTooLargeException;
 
 /**
  * Utilities for Mathematical operations.
- * 
+ *
  * @author Ritesh Sinha
  * @since 1.0.0
  */
@@ -57,7 +57,7 @@ public final class MathUtils {
 
 	/**
 	 * Raise an int to an int power.
-	 * 
+	 *
 	 * @param num Number to raise.
 	 * @param exp exponent (must be positive or zero)
 	 * @return num^exp
@@ -69,12 +69,9 @@ public final class MathUtils {
 			return ArithmeticUtils.pow(num, exp);
 
 		} catch (org.apache.commons.math3.exception.NotPositiveException e) {
-
 			throw new NotPositiveException(MathUtilConstants.NOTPOSITIVE_ERROR_CODE.getErrorCode(),
 					MathUtilConstants.NOTPOSITIVE_ERROR_CODE.getEexceptionMessage(), e.getCause());
-
 		} catch (MathArithmeticException e) {
-
 			throw new ArithmeticException(MathUtilConstants.ARITHMETIC_ERROR_CODE.getErrorCode(),
 					MathUtilConstants.ARITHMETIC_ERROR_CODE.getEexceptionMessage(), e.getCause());
 		}
@@ -82,20 +79,18 @@ public final class MathUtils {
 
 	/**
 	 * Power function. Compute num^exp.
-	 * 
+	 *
 	 * @param num a double
 	 * @param exp a double
 	 * @return double
 	 */
 	public static double getPow(double num, double exp) {
-
 		return FastMath.pow(num, exp);
-
 	}
 
 	/**
 	 * Raise a long to an int power.
-	 * 
+	 *
 	 * @param num Number to raise.
 	 * @param exp Exponent (must be positive or zero).
 	 * @return num^exp
@@ -135,7 +130,7 @@ public final class MathUtils {
 
 	/**
 	 * Raise a BigInteger to a BigInteger power.
-	 * 
+	 *
 	 * @param num Number to raise.
 	 * @param exp Exponent (must be positive or zero).
 	 * @return num^exp
@@ -155,7 +150,7 @@ public final class MathUtils {
 
 	/**
 	 * Generate random number
-	 * 
+	 *
 	 * @param lowerlimit starting value
 	 * @param upperlimit maximum value
 	 * @return random number between lowerlimit and upperlimit.
@@ -173,7 +168,7 @@ public final class MathUtils {
 
 	/**
 	 * Generate random number
-	 * 
+	 *
 	 * @param lowerlimit starting value
 	 * @param upperlimit maximum value
 	 * @return random number between lowerlimit and upperlimit.
@@ -190,7 +185,7 @@ public final class MathUtils {
 
 	/**
 	 * Generate random number
-	 * 
+	 *
 	 * @param lowerlimit starting value
 	 * @param upperlimit maximum value
 	 * @return random number between lowerlimit and upperlimit
@@ -215,133 +210,132 @@ public final class MathUtils {
 
 	/**
 	 * Generate random number
-	 * 
+	 *
 	 * @param lowerlimit starting value
 	 * @param upperlimit maximum value
 	 * @return random number between lowerlimit and upperlimit
 	 */
 	public static float getRandom(final float lowerlimit, final float upperlimit) {
-
 		float randomFloat = new RandomDataGenerator().getRandomGenerator().nextFloat();
 		return lowerlimit + randomFloat * (upperlimit - lowerlimit);
 	}
 
 	/**
 	 * Compute the square root of a number.
-	 * 
+	 *
 	 * @param num number on which evaluation is done
 	 * @return square root of num.
 	 */
-	public static final double getSqrt(final double num) {
+	public static double getSqrt(final double num) {
 		return FastMath.sqrt(num);
 	}
 
 	/**
 	 * Compute the maximum of two values
-	 * 
+	 *
 	 * @param firstnumber  first value
 	 * @param secondnumber second value
 	 * @return secondnumber if firstnumber is lesser or equal to secondnumber,
-	 *         firstnumber otherwise
+	 * firstnumber otherwise
 	 */
-	public static final int getMax(final int firstnumber, final int secondnumber) {
+	public static int getMax(final int firstnumber, final int secondnumber) {
 		return FastMath.max(firstnumber, secondnumber);
 	}
 
 	/**
 	 * Compute the maximum of two values
-	 * 
+	 *
 	 * @param firstnumber  first value
 	 * @param secondnumber second value
 	 * @return secondnumber if firstnumber is lesser or equal to secondnumber,
-	 *         firstnumber otherwise
+	 * firstnumber otherwise
 	 */
-	public static final double getMax(double firstnumber, double secondnumber) {
+	public static double getMax(double firstnumber, double secondnumber) {
 		return FastMath.max(firstnumber, secondnumber);
 	}
 
 	/**
 	 * Rounds the given value to the specified number of decimal places.
-	 * 
+	 *
 	 * @param num   Value to round.
 	 * @param place Number of digits to the right of the decimal point.
 	 * @return the rounded value.
 	 */
-	public static final double getRound(double num, int place) {
+	public static double getRound(double num, int place) {
 		return Precision.round(num, place);
 	}
 
 	/**
 	 * Rounds the given value to the specified number of decimal places.
-	 * 
+	 *
 	 * @param num   Value to round.
 	 * @param place Number of digits to the right of the decimal point.
 	 * @return the rounded value.
 	 */
-	public static final float getRound(float num, int place) {
+	public static float getRound(float num, int place) {
 		return Precision.round(num, place);
 	}
 
 	/**
 	 * Get the closest long to num.
-	 * 
+	 *
 	 * @param num number from which closest long is requested
 	 * @return closest long to num
 	 */
-	public static final long getRound(double num) {
+	public static long getRound(double num) {
 		return FastMath.round(num);
 	}
 
 	/**
 	 * Absolute value.
-	 * 
+	 *
 	 * @param num number from which absolute value is requested.
 	 * @return abs(num)
 	 */
-	public static final double getAbs(double num) {
+	public static double getAbs(double num) {
 		return FastMath.abs(num);
 	}
 
 	/**
 	 * Absolute value.
-	 * 
+	 *
 	 * @param num number from which absolute value is requested.
 	 * @return abs(num)
 	 */
-	public static final float getAbs(float num) {
+	public static float getAbs(float num) {
 		return FastMath.abs(num);
 	}
 
 	/**
 	 * Absolute value.
-	 * 
+	 *
 	 * @param num number from which absolute value is requested.
 	 * @return abs(num)
 	 */
-	public static final long getAbs(long num) {
+	public static long getAbs(long num) {
 		return FastMath.abs(num);
 	}
 
 	/**
 	 * Absolute value.
-	 * 
+	 *
 	 * @param num number from which absolute value is requested.
 	 * @return abs(num)
 	 */
-	public static final int getAbs(int num) {
+	public static int getAbs(int num) {
 		return FastMath.abs(num);
 	}
 
 	/**
 	 * Evaluate Factorial
-	 * 
+	 *
 	 * @param number argument
 	 * @return n!
 	 * @throws NotPositiveException -If number is not positive
 	 * @throws ArithmeticException  -If number is greator than 20 and result is too
 	 *                              large to fit in long type.
 	 */
-	public static final long getFactorial(final int number) {
+	public static long getFactorial(final int number) {
 		try {
 			return CombinatoricsUtils.factorial(number);
 		} catch (org.apache.commons.math3.exception.NotPositiveException e) {
@@ -356,14 +350,14 @@ public final class MathUtils {
 	/**
 	 * Computes the greatest common divisor of the absolute value of two numbers,
 	 * using a modified version of the "binary gcd" method.
-	 * 
+	 *
 	 * @param firstnumber  Number.
 	 * @param secondnumber Number.
 	 * @return the greatest common divisor (never negative).
 	 * @throws ArithmeticException if the result cannot be represented as a
 	 *                             non-negative integer value.
 	 */
-	public static final int getGcd(int firstnumber, int secondnumber) {
+	public static int getGcd(int firstnumber, int secondnumber) {
 		try {
 			return ArithmeticUtils.gcd(firstnumber, secondnumber);
 		} catch (MathArithmeticException e) {
@@ -375,14 +369,14 @@ public final class MathUtils {
 	/**
 	 * Gets the greatest common divisor of the absolute value of two numbers, using
 	 * the "binary gcd" method which avoids division and modulo operations
-	 * 
+	 *
 	 * @param firstnumber  Number.
 	 * @param secondnumber Number.
 	 * @return the greatest common divisor, never negative.
 	 * @throws ArithmeticException if the result cannot be represented as a
 	 *                             non-negative long type value.
 	 */
-	public static final long getGcd(long firstnumber, long secondnumber) {
+	public static long getGcd(long firstnumber, long secondnumber) {
 		try {
 			return ArithmeticUtils.gcd(firstnumber, secondnumber);
 		} catch (MathArithmeticException e) {
@@ -393,37 +387,39 @@ public final class MathUtils {
 
 	/**
 	 * Natural logarithm.
-	 * 
+	 *
 	 * @param num a double
 	 * @return log(x)
 	 */
-	public static final double getLog(double num) {
+	public static double getLog(double num) {
 		return FastMath.log(num);
 	}
 
 	/**
 	 * Compute the base 10 logarithm.
-	 * 
+	 *
 	 * @param num a number
 	 * @return log10(x)
 	 */
-	public static final double getLog10(double num) {
+	public static double getLog10(double num) {
 		return FastMath.log10(num);
 	}
 
 	/**
 	 * Creates a copy of source array
-	 * 
+	 *
 	 * @param source Array to be copied.
 	 * @return the copied array.
 	 */
 	public static int[] getCopyOfArray(int[] source) {
-		return MathArrays.copyOf(source);
+		int[] copy = new int[source.length];
+		System.arraycopy(source, 0, copy, 0, source.length);
+		return copy;
 	}
 
 	/**
 	 * Creates a copy of source array.
-	 * 
+	 *
 	 * @param source Array to be copied.
 	 * @param length Number of entries to copy. If smaller then the source length,
 	 *               the copy will be truncated, if larger it will padded with
@@ -431,22 +427,26 @@ public final class MathUtils {
 	 * @return the copied array.
 	 */
 	public static int[] getCopyOfArray(int[] source, int length) {
-		return MathArrays.copyOf(source, length);
+		int[] copy = new int[length];
+		System.arraycopy(source, 0, copy, 0, Math.min(source.length, length));
+		return copy;
 	}
 
 	/**
 	 * Creates a copy of source array
-	 * 
+	 *
 	 * @param source Array to be copied.
 	 * @return the copied array.
 	 */
 	public static double[] getCopyOfArray(double[] source) {
-		return MathArrays.copyOf(source);
+		double[] copy = new double[source.length];
+		System.arraycopy(source, 0, copy, 0, source.length);
+		return copy;
 	}
 
 	/**
 	 * Creates a copy of source array
-	 * 
+	 *
 	 * @param source Array to be copied.
 	 * @param length Number of entries to copy. If smaller then the source length,
 	 *               the copy will be truncated, if larger it will padded with
@@ -454,13 +454,15 @@ public final class MathUtils {
 	 * @return the copied array.
 	 */
 	public static double[] getCopyOfArray(double[] source, int length) {
-		return MathArrays.copyOf(source, length);
+		double[] copy = new double[length];
+		System.arraycopy(source, 0, copy, 0, Math.min(source.length, length));
+		return copy;
 	}
 
 	/**
 	 * Returns the maximum of the entries in the input array, or
 	 * <code>Double.NaN</code> if the array is empty.
-	 * 
+	 *
 	 * @param arr the input array
 	 * @return the maximum of the values or Double.NaN if the array is empty
 	 * @throws IllegalArgumentException if the array is null
@@ -477,7 +479,7 @@ public final class MathUtils {
 	/**
 	 * Returns the maximum of the entries in the specified portion of the input
 	 * array, or <code>Double.NaN</code> if the designated subarray is empty
-	 * 
+	 *
 	 * @param arr        the input array
 	 * @param startindex index of the first array element to include
 	 * @param length     the number of elements to include
@@ -497,7 +499,7 @@ public final class MathUtils {
 	/**
 	 * Returns the minimum of the entries in the input array, or
 	 * <code>Double.NaN</code> if the array is empty.
-	 * 
+	 *
 	 * @param arr the input array
 	 * @return the minimum of the values or Double.NaN if the array is empty
 	 * @throws IllegalArgumentException if the array is null
@@ -514,7 +516,7 @@ public final class MathUtils {
 	/**
 	 * Returns the minimum of the entries in the specified portion of the input
 	 * array, or <code>Double.NaN</code> if the designated subarray is empty.
-	 * 
+	 *
 	 * @param arr        the input array
 	 * @param startindex index of the first array element to include
 	 * @param length     the number of elements to include
@@ -529,16 +531,15 @@ public final class MathUtils {
 			throw new IllegalArgumentException(MathUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getErrorCode(),
 					MathUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getEexceptionMessage(), e.getCause());
 		}
-
 	}
 
 	/**
 	 * Returns the sum of the values in the input array, or <code>Double.NaN</code>
 	 * if the array is empty.
-	 * 
+	 *
 	 * @param arr array of values to sum
 	 * @return the sum of the values or <code>Double.NaN</code> if the array is
-	 *         empty
+	 * empty
 	 * @throws IllegalArgumentException if the array is null
 	 */
 	public static double getArrayValuesSum(double[] arr) {
@@ -548,13 +549,12 @@ public final class MathUtils {
 			throw new IllegalArgumentException(MathUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getErrorCode(),
 					MathUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getEexceptionMessage(), e.getCause());
 		}
-
 	}
 
 	/**
 	 * Returns the sum of the entries in the specified portion of the input array,
 	 * or <code>Double.NaN</code> if the designated subarray is empty.
-	 * 
+	 *
 	 * @param arr        the input array
 	 * @param startindex index of the first array element to include
 	 * @param length     the number of elements to include
@@ -569,13 +569,12 @@ public final class MathUtils {
 			throw new IllegalArgumentException(MathUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getErrorCode(),
 					MathUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getEexceptionMessage(), e.getCause());
 		}
-
 	}
 
 	/**
 	 * Returns the product of the entries in the input array, or
 	 * <code>Double.NaN</code> if the array is empty.
-	 * 
+	 *
 	 * @param arr the input array
 	 * @return the product of the values or Double.NaN if the array is empty
 	 * @throws IllegalArgumentException if the array is null
@@ -592,7 +591,7 @@ public final class MathUtils {
 	/**
 	 * Returns the product of the entries in the specified portion of the input
 	 * array, or <code>Double.NaN</code> if the designated subarray is empty.
-	 * 
+	 *
 	 * @param arr        the input array
 	 * @param startindex index of the first array element to include
 	 * @param length     the number of elements to include
@@ -612,7 +611,7 @@ public final class MathUtils {
 	/**
 	 * Returns the arithmetic mean of the entries in the input array, or
 	 * <code>Double.NaN</code> if the array is empty.
-	 * 
+	 *
 	 * @param arr the input array
 	 * @return the mean of the values or Double.NaN if the array is empty
 	 * @throws IllegalArgumentException if the array is null
@@ -645,7 +644,7 @@ public final class MathUtils {
 
 	/**
 	 * Primality test: tells if the argument is a (provable) prime or not.
-	 * 
+	 *
 	 * @param num number to test.
 	 * @return true if num is prime.
 	 */
@@ -655,7 +654,7 @@ public final class MathUtils {
 
 	/**
 	 * Return the smallest prime greater than or equal to n.
-	 * 
+	 *
 	 * @param num a positive number.
 	 * @return the smallest prime greater than or equal to n.
 	 * @throws IllegalArgumentException if num is less than 0.
@@ -671,7 +670,7 @@ public final class MathUtils {
 
 	/**
 	 * Prime factors decomposition
-	 * 
+	 *
 	 * @param num number to factorize: must be &ge; 2
 	 * @return list of prime factors of num
 	 * @throws IllegalArgumentException if num is less than 2.
@@ -687,10 +686,10 @@ public final class MathUtils {
 
 	/**
 	 * Get the smallest whole number larger than number.
-	 * 
+	 *
 	 * @param num number from which ceil is requested
 	 * @return a double number c such that c is an integer is greator than equal to
-	 *         num and num is greator than c-1.0
+	 * num and num is greator than c-1.0
 	 */
 	public static double ceil(double num) {
 		return FastMath.ceil(num);
@@ -698,13 +697,12 @@ public final class MathUtils {
 
 	/**
 	 * Get the largest whole number smaller than number.
-	 * 
+	 *
 	 * @param num number from which floor is requested
 	 * @return a double number f such that f is an integer f is less than or equal
-	 *         to num and num is less than f + 1.0
+	 * to num and num is less than f + 1.0
 	 */
 	public static double floor(double num) {
 		return FastMath.floor(num);
 	}
-
 }
