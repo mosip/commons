@@ -18,10 +18,10 @@
 		<maven.compiler.target>21</maven.compiler.target>
 		<maven.compiler.version>3.8.0</maven.compiler.version>
 
-		<kernel.core.version>1.2.1-SNAPSHOT</kernel.core.version>
-		<kernel.applicant-type.version>1.2.1-SNAPSHOT</kernel.applicant-type.version>
-		<kernel.dataaccess-hibernate.version>1.2.1-SNAPSHOT</kernel.dataaccess-hibernate.version>
-		<kernel.logger.version>1.2.1-SNAPSHOT</kernel.logger.version>
+		<kernel.core.version>1.2.2-SNAPSHOT</kernel.core.version>
+		<kernel.applicant-type.version>1.2.2-SNAPSHOT</kernel.applicant-type.version>
+		<kernel.dataaccess-hibernate.version>1.2.2-SNAPSHOT</kernel.dataaccess-hibernate.version>
+		<kernel.logger.version>1.2.2-SNAPSHOT</kernel.logger.version>
 		<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
 		<springdoc.version>1.5.10</springdoc.version>
 	</properties>
