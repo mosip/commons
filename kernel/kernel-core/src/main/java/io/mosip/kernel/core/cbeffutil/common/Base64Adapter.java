@@ -1,6 +1,3 @@
-/**
- *
- */
 package io.mosip.kernel.core.cbeffutil.common;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;

@@ -1,6 +1,3 @@
-/**
- *
- */
 package io.mosip.kernel.core.cbeffutil.common;
 
 import io.mosip.kernel.core.cbeffutil.exception.CbeffException;
