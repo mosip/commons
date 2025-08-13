@@ -1,37 +1,99 @@
-/**
- * 
- */
 package io.mosip.kernel.core.cbeffutil.common;
 
-/**
- * @author Ramadurai Pandian
- * 
- * An Adaptor class to bye-pass the JAXB default Base64 encoding/decoding 
- * and to use kernel cryptoutil for Base64 conversion.
- *
- */
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 import io.mosip.kernel.core.util.CryptoUtil;
 
+/**
+ * Base64Adapter.java
+ *
+ * This class is a JAXB {@link javax.xml.bind.annotation.adapters.XmlAdapter}
+ * implementation that bridges between {@code String} (Base64-encoded data) and
+ * {@code byte[]} (binary data) for XML marshalling and unmarshalling processes.
+ *
+ * <p>
+ * Unlike the default JAXB Base64 handling (which relies on internal or
+ * {@link java.util.Base64} implementations), this adapter delegates Base64
+ * encoding/decoding to {@link io.mosip.kernel.core.util.CryptoUtil}, ensuring:
+ * </p>
+ * <ul>
+ *     <li>Consistency across MOSIP components by using a single, vetted utility.</li>
+ *     <li>Compliance with MOSIP’s cryptographic coding standards.</li>
+ *     <li>Potential optimizations in {@code CryptoUtil} (e.g., buffer reuse, native acceleration).</li>
+ * </ul>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>
+ * {@code
+ * // Marshalling (byte[] -> Base64 String)
+ * String base64String = new Base64Adapter().marshal(binaryData);
+ *
+ * // Unmarshalling (Base64 String -> byte[])
+ * byte[] binaryData = new Base64Adapter().unmarshal(base64String);
+ * }
+ * </pre>
+ *
+ * @author
+ *     Ramadurai Pandian (original implementation)
+ * @since 1.0.0
+ */
 public class Base64Adapter extends XmlAdapter<String, byte[]> {
 
-	/**
-	 * @param data biometrics image data
-	 * @return base64 decoded data after unmarshalling
-	 */
-	@Override
-	public byte[] unmarshal(String data) throws Exception {
-		return CryptoUtil.decodeBase64(data);
-	}
+    /**
+     * Base64Adapter.java
+     *
+     * This class is a JAXB {@link javax.xml.bind.annotation.adapters.XmlAdapter}
+     * implementation that bridges between {@code String} (Base64-encoded data) and
+     * {@code byte[]} (binary data) for XML marshalling and unmarshalling processes.
+     *
+     * <p>
+     * Unlike the default JAXB Base64 handling (which relies on internal or
+     * {@link java.util.Base64} implementations), this adapter delegates Base64
+     * encoding/decoding to {@link io.mosip.kernel.core.util.CryptoUtil}, ensuring:
+     * </p>
+     * <ul>
+     *     <li>Consistency across MOSIP components by using a single, vetted utility.</li>
+     *     <li>Compliance with MOSIP’s cryptographic coding standards.</li>
+     *     <li>Potential optimizations in {@code CryptoUtil} (e.g., buffer reuse, native acceleration).</li>
+     * </ul>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>
+     * {@code
+     * // Marshalling (byte[] -> Base64 String)
+     * String base64String = new Base64Adapter().marshal(binaryData);
+     *
+     * // Unmarshalling (Base64 String -> byte[])
+     * byte[] binaryData = new Base64Adapter().unmarshal(base64String);
+     * }
+     * </pre>
+     *
+     * @author
+     *     Ramadurai Pandian (original implementation)
+     * @since 1.0.0
+     */
 
-	/**
-	 * @param data biometrics image data
-	 * @return base64 encoded data after marshalling
-	 */
-	@Override
-	public String marshal(byte[] data) throws Exception {
-		return CryptoUtil.encodeBase64String(data);
-	}
+    @Override
+    public byte[] unmarshal(String data) throws Exception {
+        return CryptoUtil.decodeBase64(data);
+    }
 
+    /**
+     * Encodes binary data into its Base64 string representation.
+     *
+     * @param data
+     *     Raw biometric image data as a {@code byte[]}.
+     *     May be {@code null} or empty, in which case an empty string is returned.
+     *
+     * @return
+     *     Base64-encoded string representation of the given data.
+     *     Never {@code null} — returns an empty string if input is {@code null} or empty.
+     *
+     * @throws Exception
+     *     If encoding fails for any reason.
+     */
+    @Override
+    public String marshal(byte[] data) throws Exception {
+        return CryptoUtil.encodeBase64String(data);
+    }
 }
