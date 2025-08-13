@@ -39,7 +39,7 @@ public class CbeffXSDValidator {
             SCHEMA_FACTORY.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
             SCHEMA_FACTORY.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
             // Some parsers also honor this for stylesheet imports; safe to set.
-            SCHEMA_FACTORY.setProperty(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+            // SCHEMA_FACTORY.setProperty(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
         } catch (Exception e) {
             // If a particular implementation does not support a property/feature,
             // we surface an explicit failure—better to fail closed than run insecurely.
