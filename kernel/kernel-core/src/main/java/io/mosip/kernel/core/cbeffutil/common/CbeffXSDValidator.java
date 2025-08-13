@@ -25,6 +25,9 @@ public class CbeffXSDValidator {
     /** Cache of compiled Schemas keyed by a fast checksum of XSD bytes. */
     private static final ConcurrentHashMap<String, Schema> SCHEMA_CACHE = new ConcurrentHashMap<>();
 
+    /** Pool of Validators for thread-safe validation, keyed by Schema. */
+    private static final ConcurrentHashMap<Schema, Validator> VALIDATOR_POOL = new ConcurrentHashMap<>();
+
     static {
         SCHEMA_FACTORY = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         try {
@@ -36,7 +39,7 @@ public class CbeffXSDValidator {
             SCHEMA_FACTORY.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
             SCHEMA_FACTORY.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
             // Some parsers also honor this for stylesheet imports; safe to set.
-            // SCHEMA_FACTORY.setProperty(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+            //SCHEMA_FACTORY.setProperty(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
         } catch (Exception e) {
             // If a particular implementation does not support a property/feature,
             // we surface an explicit failure—better to fail closed than run insecurely.
@@ -59,11 +62,9 @@ public class CbeffXSDValidator {
     public static boolean validateXML(byte[] xsdBytes, byte[] xmlBytes) throws Exception {
         requireNonEmpty(xsdBytes, "xsdBytes");
         requireNonEmpty(xmlBytes, "xmlBytes");
-        final Schema schema = getOrCompileSchema(xsdBytes);
-        final Validator validator = schema.newValidator();
-        // For consistent security posture, ensure the validator uses hardened defaults
-        // (inherits from SchemaFactory settings).
 
+        final Schema schema = getOrCompileSchema(xsdBytes);
+        final Validator validator = getValidator(schema);
         validator.validate(new StreamSource(new ByteArrayInputStream(xmlBytes)));
         return true;
     }
@@ -82,7 +83,7 @@ public class CbeffXSDValidator {
         Objects.requireNonNull(schema, "schema");
         requireNonEmpty(xmlBytes, "xmlBytes");
 
-        final Validator validator = schema.newValidator();
+        final Validator validator = getValidator(schema);
         validator.validate(new StreamSource(new ByteArrayInputStream(xmlBytes)));
         return true;
     }
@@ -122,6 +123,10 @@ public class CbeffXSDValidator {
         crc.update(data, 0, data.length);
         // format: "<len>:<crc>"
         return data.length + ":" + Long.toUnsignedString(crc.getValue());
+    }
+
+    private static Validator getValidator(Schema schema) {
+        return VALIDATOR_POOL.computeIfAbsent(schema, Schema::newValidator);
     }
 
     private static void requireNonEmpty(final byte[] arr, final String name) {
