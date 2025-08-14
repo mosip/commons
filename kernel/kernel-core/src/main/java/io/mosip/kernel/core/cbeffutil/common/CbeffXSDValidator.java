@@ -25,8 +25,7 @@ public class CbeffXSDValidator {
     /** Cache of compiled Schemas keyed by a fast checksum of XSD bytes. */
     private static final ConcurrentHashMap<String, Schema> SCHEMA_CACHE = new ConcurrentHashMap<>();
 
-    /** Pool of Validators for thread-safe validation, keyed by Schema. */
-    private static final ConcurrentHashMap<Schema, Validator> VALIDATOR_POOL = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Schema, ThreadLocal<Validator>> TL_VALIDATORS = new ConcurrentHashMap<>();
 
     static {
         SCHEMA_FACTORY = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -65,7 +64,7 @@ public class CbeffXSDValidator {
 
         final Schema schema = getOrCompileSchema(xsdBytes);
         final Validator validator = getValidator(schema);
-        validator.validate(new StreamSource(new ByteArrayInputStream(xmlBytes)));
+        validator.validate(new StreamSource(new ByteArrayInputStream(xmlBytes), "memory:xml"));
         return true;
     }
 
@@ -84,7 +83,7 @@ public class CbeffXSDValidator {
         requireNonEmpty(xmlBytes, "xmlBytes");
 
         final Validator validator = getValidator(schema);
-        validator.validate(new StreamSource(new ByteArrayInputStream(xmlBytes)));
+        validator.validate(new StreamSource(new ByteArrayInputStream(xmlBytes), "memory:xml"));
         return true;
     }
 
@@ -99,7 +98,7 @@ public class CbeffXSDValidator {
     public static Schema compileSchema(final byte[] xsdBytes) throws CbeffException {
         requireNonEmpty(xsdBytes, "xsdBytes");
         try {
-            return SCHEMA_FACTORY.newSchema(new StreamSource(new ByteArrayInputStream(xsdBytes)));
+            return SCHEMA_FACTORY.newSchema(new StreamSource(new ByteArrayInputStream(xsdBytes), "memory:xsd"));
         } catch (Exception e) {
             throw new CbeffException("Failed to compile XSD schema::"+ e.getLocalizedMessage());
         }
@@ -125,13 +124,15 @@ public class CbeffXSDValidator {
         return data.length + ":" + Long.toUnsignedString(crc.getValue());
     }
 
-    private static Validator getValidator(Schema schema) {
-        return VALIDATOR_POOL.computeIfAbsent(schema, Schema::newValidator);
-    }
-
     private static void requireNonEmpty(final byte[] arr, final String name) {
         if (arr == null || arr.length == 0) {
             throw new IllegalArgumentException(name + " must not be null or empty");
         }
+    }
+
+    private static Validator getValidator(Schema schema) {
+        return TL_VALIDATORS
+                .computeIfAbsent(schema, s -> ThreadLocal.withInitial(s::newValidator))
+                .get();
     }
 }
