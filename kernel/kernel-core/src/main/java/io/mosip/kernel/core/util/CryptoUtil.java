@@ -131,17 +131,19 @@ public class CryptoUtil {
 		return URL_SAFE_ENCODER.encodeToString(data);
 	}
 
-	/**
-	 * Encodes to BASE64 String
-	 *
-	 * @param data data to encode
-	 * @return encoded data
-	 */
-	@Deprecated(since = "1.1.5", forRemoval = true)
-	public static String encodeBase64String(byte[] data) {
-		if (EmptyCheckUtils.isNullEmpty(data)) return null;
-		return URL_SAFE_ENCODER.encodeToString(data);
-	}
+    /**
+     * Encodes to BASE64 
+     *
+     * @param data data to encode
+     * @return encoded data
+     * @deprecated since 1.1.5, for removal in a future release.
+     *             Use {@link #encodeToPlainBase64(byte[])} instead.
+     */
+    @Deprecated(since = "1.1.5", forRemoval = true)
+    public static String encodeBase64String(byte[] data) {
+        if (EmptyCheckUtils.isNullEmpty(data)) return null;
+        return STD_ENCODER.encodeToString(data);
+    }
 
 	/**
 	 * Decodes from BASE64
