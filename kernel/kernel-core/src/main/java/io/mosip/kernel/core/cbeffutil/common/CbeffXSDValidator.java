@@ -58,7 +58,8 @@ public class CbeffXSDValidator {
         LOGGER.debug("validateXML invoked with xsdBytes length={} and xmlBytes length={}",
                 (xsdBytes != null ? xsdBytes.length : null),
                 (xmlBytes != null ? xmlBytes.length : null));
-        LOGGER.debug("XML Content:\n{}", new String(xmlBytes, StandardCharsets.UTF_8));
+        LOGGER.debug("XML Content xml bytes :\n{}", new String(xmlBytes, StandardCharsets.UTF_8));
+        LOGGER.debug("XML Content xsd bytes :\n{}", new String(xsdBytes, StandardCharsets.UTF_8));
 
 
         requireNonEmpty(xsdBytes, "xsdBytes");
