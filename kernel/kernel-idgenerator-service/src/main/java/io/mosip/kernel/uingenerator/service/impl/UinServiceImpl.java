@@ -3,13 +3,12 @@
  */
 package io.mosip.kernel.uingenerator.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +30,7 @@ import io.mosip.kernel.uingenerator.util.UINMetaDataUtil;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * @author Dharmesh Khandelwal
@@ -52,9 +52,6 @@ public class UinServiceImpl implements UinService {
 	
 	@Autowired
 	private UinRepositoryAssigned uinRepositoryAssigned;
-	
-	@Autowired
-	private ModelMapper modelMapper;
 
 	/**
 	 * instance of {@link UINMetaDataUtil}
@@ -64,6 +61,9 @@ public class UinServiceImpl implements UinService {
 	
 	@Autowired
 	private VertxAuthenticationProvider authHandler;
+	
+	@Value("${mosip.kernel.uin.page.size:50000}")
+	private int pageSize;
 
 	/*
 	 * (non-Javadoc)
@@ -128,13 +128,18 @@ public class UinServiceImpl implements UinService {
 	@Transactional(transactionManager = "transactionManager")
 	@Override
 	public void transferUin() {
-		List<UinEntity> uinEntities=uinRepository.findByStatus(UinGeneratorConstant.ASSIGNED);
-		List<UinEntityAssigned> uinEntitiesAssined = modelMapper.map(uinEntities, new TypeToken<List<UinEntityAssigned>>() {}.getType());
+		List<UinEntity> uinEntities=uinRepository.findByStatus(UinGeneratorConstant.ISSUED, pageSize);
+		List<UinEntityAssigned> uinEntitiesAssined = convertUinEntitiesListToUinEntitiesAssignedList(uinEntities);
 		uinRepositoryAssigned.saveAll(uinEntitiesAssined);
 	    uinRepository.deleteAll(uinEntities);
 	}
-	
-	
+
+	private List<UinEntityAssigned> convertUinEntitiesListToUinEntitiesAssignedList(List<UinEntity> uinEntities) {
+		return uinEntities.stream()
+				.map(UinEntityAssigned::new)
+				.collect(Collectors.toList());
+	}
+
 	@Override
 	public boolean uinExist(String uin) {
 	Optional<UinEntityAssigned> uinEntityAssignedOptional=uinRepositoryAssigned.findById(uin);

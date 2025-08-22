@@ -1,5 +1,5 @@
-[![Maven Package upon a push](https://github.com/mosip/commons/actions/workflows/push_trigger.yml/badge.svg?branch=release-1.2.0.1)](https://github.com/mosip/commons/actions/workflows/push_trigger.yml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mosip_commons&metric=alert_status)](https://sonarcloud.io/dashboard?branch=release-1.2.0.1&id=mosip_commons)
+[![Maven Package upon a push](https://github.com/mosip/commons/actions/workflows/push-trigger.yml/badge.svg?branch=release-1.3.x)](https://github.com/mosip/commons/actions/workflows/push-trigger.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mosip_commons&metric=alert_status)](https://sonarcloud.io/dashboard?branch=release-1.3.x&id=mosip_commons)
 
 
 # Commons
@@ -26,7 +26,7 @@ and mvn version - 3.9.6
 ## Deployment in K8 cluster with other MOSIP services:
 ### Pre-requisites
 * Set KUBECONFIG variable to point to existing K8 cluster kubeconfig file:
-   * ```
+    * ```
         export KUBECONFIG=~/.kube/<my-cluster.config>
      ```
 ### Install
