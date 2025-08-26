@@ -630,7 +630,7 @@ public final class DateUtils {
 	 * @return a date String
 	 */
 	public static String getUTCCurrentDateTimeString() {
-		return OffsetDateTime.now().toInstant().toString();
+		return getUTCCurrentDateTimeString(UTC_DATETIME_PATTERN);
 	}
 
 	/**
