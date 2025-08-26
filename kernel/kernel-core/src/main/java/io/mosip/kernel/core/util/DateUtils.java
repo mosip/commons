@@ -649,9 +649,13 @@ public final class DateUtils {
 	 *
 	 * @return a date String
 	 */
-	public static String getUTCCurrentDateTimeString() {
-		return OffsetDateTime.now().toInstant().toString();
-	}
+    public static String getUTCCurrentDateTimeString() {
+        return OffsetDateTime.now().toInstant().toString();
+    }
+
+    public static String getUTCCurrentDateTimeWithZString() {
+        return getUTCCurrentDateTimeString(UTC_DATETIME_PATTERN);
+    }
 
 	/**
 	 * Provides UTC Current DateTime string in given pattern.
