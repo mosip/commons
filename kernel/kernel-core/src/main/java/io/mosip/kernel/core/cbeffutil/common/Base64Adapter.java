@@ -3,6 +3,8 @@ package io.mosip.kernel.core.cbeffutil.common;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 import io.mosip.kernel.core.util.CryptoUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Base64Adapter.java
@@ -38,6 +40,9 @@ import io.mosip.kernel.core.util.CryptoUtil;
  * @since 1.0.0
  */
 public class Base64Adapter extends XmlAdapter<String, byte[]> {
+
+    private static final Logger logger = LoggerFactory.getLogger(Base64Adapter.class);
+
 
     /**
      * Base64Adapter.java
@@ -75,6 +80,10 @@ public class Base64Adapter extends XmlAdapter<String, byte[]> {
 
     @Override
     public byte[] unmarshal(String data) throws Exception {
+        logger.info("Unmarshalling Base64 data");
+        logger.info("start unmarshal");
+        logger.info("data: {}", data);
+        logger.info("end unmarshal");
         return CryptoUtil.decodeBase64(data);
     }
 
@@ -94,6 +103,11 @@ public class Base64Adapter extends XmlAdapter<String, byte[]> {
      */
     @Override
     public String marshal(byte[] data) throws Exception {
-        return CryptoUtil.encodeBase64String(data);
+        String value = CryptoUtil.encodeBase64String(data);
+        logger.info("marshalling Base64 data");
+        logger.info("start marshal");
+        logger.info("value: {}", value);
+        logger.info("end marshal");
+        return value;
     }
 }
