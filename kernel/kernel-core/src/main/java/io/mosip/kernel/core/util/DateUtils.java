@@ -633,26 +633,60 @@ public final class DateUtils {
 		return ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime();
 	}
 
-	/**
-	 * Provides UTC Current DateTime string in default ISO pattern.
-	 *
-	 * Obtains the current date-time from the system clock in the default time-zone.
-	 * <p>
-	 * This will query the {@link Clock#systemDefaultZone() system clock} in the
-	 * default time-zone to obtain the current date-time. The offset will be
-	 * calculated from the time-zone in the clock.
-	 * <p>
-	 * Using this method will prevent the ability to use an alternate clock for
-	 * testing because the clock is hard-coded.
-	 *
-	 * @return the current date-time using the system clock, not null
-	 *
-	 * @return a date String
-	 */
-	public static String getUTCCurrentDateTimeString() {
-		return OffsetDateTime.now().toInstant().toString();
-	}
+    /**
+     * Provides the current UTC date-time as a {@link String} in ISO-8601 format.
+     * <p>
+     * This method obtains the current {@link OffsetDateTime} from the system clock
+     * in the default time-zone, converts it to an {@link java.time.Instant}, and
+     * then returns its ISO-8601 string representation. The output will always be
+     * in UTC (denoted by the trailing {@code 'Z'}).
+     * </p>
+     * <p>
+     * Note: {@link java.time.Instant#toString()} may include up to nanosecond
+     * precision (up to 9 fractional digits). If only millisecond precision
+     * is required (3 fractional digits), consider truncating the {@code Instant}
+     * before calling {@code toString()}.
+     * </p>
+     *
+     * <pre>
+     * Example output:
+     *  2025-08-26T06:30:41.055195136Z
+     * </pre>
+     *
+     * @return the current UTC date-time as an ISO-8601 string
+     *
+     * @see java.time.OffsetDateTime#now()
+     * @see java.time.OffsetDateTime#toInstant()
+     * @see java.time.Instant#toString()
+     */
+    public static String getUTCCurrentDateTimeString() {
+        return OffsetDateTime.now().toInstant().toString();
+    }
 
+    /**
+     * Provides the current UTC date-time as a {@link String} in the default ISO pattern
+     * <b>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</b>.
+     * <p>
+     * This method internally invokes {@link #getUTCCurrentDateTimeString(String)} with
+     * the default UTC pattern {@code UTC_DATETIME_PATTERN}.
+     * </p>
+     * <p>
+     * The output is always in UTC, truncated to milliseconds, and ends with a literal
+     * {@code 'Z'} to indicate UTC time.
+     * </p>
+     *
+     * <pre>
+     * Example output:
+     *  2025-08-26T07:25:41.123Z
+     * </pre>
+     *
+     * @return the current UTC date-time as a formatted string in pattern
+     *         {@code yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}
+     */
+    public static String getUTCCurrentDateTimeWithZString() {
+        return getUTCCurrentDateTimeString(UTC_DATETIME_PATTERN);
+    }
+	
 	/**
 	 * Provides UTC Current DateTime string in given pattern.
 	 *
