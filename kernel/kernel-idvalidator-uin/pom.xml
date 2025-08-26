@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.mosip.kernel</groupId>
   <artifactId>kernel-idvalidator-uin</artifactId>
-  <version>1.3.0-beta.3</version>
+  <version>1.3.2-SNAPSHOT</version>
   <name>kernel-idvalidator-uin</name>
   <description>kernel-idvalidator-uin</description>
   <properties>		
