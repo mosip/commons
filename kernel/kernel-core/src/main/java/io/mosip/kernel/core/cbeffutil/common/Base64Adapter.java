@@ -103,10 +103,11 @@ public class Base64Adapter extends XmlAdapter<String, byte[]> {
      */
     @Override
     public String marshal(byte[] data) throws Exception {
+        String value = CryptoUtil.encodeBase64String(data);
         logger.info("marshalling Base64 data");
         logger.info("start marshal");
-        logger.info("data: {}", data);
+        logger.info("value: {}", value);
         logger.info("end marshal");
-        return CryptoUtil.encodeBase64String(data);
+        return value;
     }
 }
