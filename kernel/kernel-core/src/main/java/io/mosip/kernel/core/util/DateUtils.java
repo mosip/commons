@@ -21,6 +21,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -631,6 +632,81 @@ public final class DateUtils {
 	 */
 	public static LocalDateTime getUTCCurrentDateTime() {
 		return ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime();
+	}
+
+	/**
+	 * Returns the current UTC time as a {@link LocalDateTime}, with precision
+	 * truncated to the smallest time unit implied by the supplied date-time
+	 * pattern.
+	 *
+	 * <p>The truncation is determined by scanning the pattern for time fields:
+	 * <ul>
+	 *   <li>Contains {@code 'S'} → truncate to <b>milliseconds</b></li>
+	 *   <li>Else contains {@code 's'} → truncate to <b>seconds</b></li>
+	 *   <li>Else contains {@code 'm'} → truncate to <b>minutes</b></li>
+	 *   <li>Else contains any of {@code 'H','h','k','K'} → truncate to <b>hours</b></li>
+	 *   <li>Else (date-only pattern) → <b>no time truncation</b></li>
+	 * </ul>
+	 *
+	 * <p>This method does not format or parse the value; it works directly on
+	 * {@link Instant} and converts to UTC {@link LocalDateTime}, minimizing
+	 * allocations and avoiding formatter overhead.
+	 *
+	 * <p><b>Examples</b>
+	 * <pre>
+	 * getUTCCurrentDateTime("yyyy-MM-dd")                 // no time truncation
+	 * getUTCCurrentDateTime("yyyy-MM-dd HH")              // truncated to hours
+	 * getUTCCurrentDateTime("yyyy-MM-dd HH:mm")           // truncated to minutes
+	 * getUTCCurrentDateTime("yyyy-MM-dd HH:mm:ss")        // truncated to seconds
+	 * getUTCCurrentDateTime("yyyy-MM-dd HH:mm:ss.SSS")    // truncated to milliseconds
+	 * </pre>
+	 *
+	 * @param pattern a {@link java.time.format.DateTimeFormatter}-compatible pattern
+	 *                used only to infer the desired precision; if {@code null} or empty,
+	 *                the current UTC time is returned without truncation.
+	 * @return current UTC time as {@link LocalDateTime}, truncated to the resolution
+	 *         implied by {@code pattern}
+	 */
+	public static LocalDateTime getUTCCurrentDateTime(String pattern) {
+		Instant now = Instant.now();
+		Instant truncated = truncateToPattern(now, pattern);
+		return LocalDateTime.ofInstant(truncated, ZoneOffset.UTC);
+	}
+
+	/**
+	 * Truncates the given {@link Instant} to the smallest time unit implied by the
+	 * provided date-time pattern.
+	 *
+	 * <p>Resolution detection rules:
+	 * <ul>
+	 *   <li>If the pattern contains {@code 'S'} (fraction), truncate to milliseconds.</li>
+	 *   <li>Else if it contains {@code 's'} (seconds), truncate to seconds.</li>
+	 *   <li>Else if it contains {@code 'm'} (minutes), truncate to minutes.</li>
+	 *   <li>Else if it contains any of {@code 'H','h','k','K'} (hours), truncate to hours.</li>
+	 *   <li>Else return the {@code instant} unchanged (date-only pattern).</li>
+	 * </ul>
+	 *
+	 * <p>This method is purely computational and does not allocate formatters.
+	 *
+	 * @param instant the instant to truncate (must not be {@code null})
+	 * @param pattern the date-time pattern from which to infer resolution; if {@code null}
+	 *                or empty, the {@code instant} is returned unmodified
+	 * @return a truncated {@link Instant} according to the resolution implied by {@code pattern}
+	 */
+	public static Instant truncateToPattern(Instant instant, String pattern) {
+		if (pattern == null || pattern.isEmpty()) return instant;
+
+		boolean hasMillis  = pattern.indexOf('S') >= 0;                         // fraction of second
+		boolean hasSecond  = pattern.indexOf('s') >= 0;
+		boolean hasMinute  = pattern.indexOf('m') >= 0;
+		boolean hasHour    = pattern.indexOf('H') >= 0 || pattern.indexOf('h') >= 0
+				|| pattern.indexOf('k') >= 0 || pattern.indexOf('K') >= 0;
+
+		if (hasMillis)      return instant.truncatedTo(ChronoUnit.MILLIS);
+		else if (hasSecond) return instant.truncatedTo(ChronoUnit.SECONDS);
+		else if (hasMinute) return instant.truncatedTo(ChronoUnit.MINUTES);
+		else if (hasHour)   return instant.truncatedTo(ChronoUnit.HOURS);
+		else                return instant; // date-only patterns: no time truncation needed
 	}
 
     /**
