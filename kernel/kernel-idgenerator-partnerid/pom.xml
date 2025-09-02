@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-idgenerator-partnerid</artifactId>
-	<version>1.2.0.2-SNAPSHOT</version>
+	<version>1.2.0.2</version>
 	<name>kernel-idgenerator-partnerid</name>
 	<description>Mosip commons project </description>
 	<url>http://maven.apache.org</url>
@@ -220,8 +220,8 @@
 		<aspectjweaver.version>1.8.12</aspectjweaver.version>
 		<micrometer.core.version>1.4.2</micrometer.core.version>
 		<micrometer.registry.prometheus.version>1.4.2</micrometer.registry.prometheus.version>
-		<kernel.core.version>1.2.0.2-SNAPSHOT</kernel.core.version>
-		<kernel.dataaccess-hibernate.version>1.2.0.2-SNAPSHOT</kernel.dataaccess-hibernate.version>
+		<kernel.core.version>1.2.0.2</kernel.core.version>
+		<kernel.dataaccess-hibernate.version>1.2.0.2</kernel.dataaccess-hibernate.version>
 		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 	</properties>
 	<dependencies>
