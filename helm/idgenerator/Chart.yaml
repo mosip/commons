@@ -2,7 +2,7 @@ apiVersion: v2
 name: idgenerator
 description: A Helm chart for MOSIP Idgenerator module
 type: application
-version: 12.0.2
+version: 12.0.2-develop
 appVersion: ""
 dependencies:
   - name: common
