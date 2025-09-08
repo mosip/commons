@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,7 +62,10 @@ public class UinServiceImpl implements UinService {
 	 */
 	@Autowired
 	private UINMetaDataUtil metaDataUtil;
-	
+
+    @Value("${mosip.kernel.uin.page.size:50000}")
+    private int pageSize;
+
 	@Autowired
 	private VertxAuthenticationProvider authHandler;
 
@@ -128,7 +132,7 @@ public class UinServiceImpl implements UinService {
 	@Transactional(transactionManager = "transactionManager")
 	@Override
 	public void transferUin() {
-		List<UinEntity> uinEntities=uinRepository.findByStatus(UinGeneratorConstant.ASSIGNED);
+		List<UinEntity> uinEntities=uinRepository.findByStatus(UinGeneratorConstant.ISSUED,pageSize);
 		List<UinEntityAssigned> uinEntitiesAssined = modelMapper.map(uinEntities, new TypeToken<List<UinEntityAssigned>>() {}.getType());
 		uinRepositoryAssigned.saveAll(uinEntitiesAssined);
 	    uinRepository.deleteAll(uinEntities);
