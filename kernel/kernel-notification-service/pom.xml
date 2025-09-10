@@ -476,7 +476,7 @@
 					    	It will be required only when running the below command
 						mvn clean verify -Dgpg.skip -DskipTests -Dmaven.javadoc.skip -P openapi-doc-generate-profile
 						Note:- It is not required to have the latest version of auth adapter.-->
-					<version>v1.2.1.0-SNAPSHOT</version>  <!-- Updating to last released version to remove circular dependency in release -->
+					<version>1.2.0.1</version>  <!-- Updating to last released version to remove circular dependency in release -->
 				</dependency>
 				<dependency>
 					<groupId>io.mosip.kernel</groupId>
@@ -485,7 +485,7 @@
 						mvn clean verify -Dgpg.skip -DskipTests -Dmaven.javadoc.skip -P openapi-doc-generate-profile
 						Note:- It is not required to have the latest version of kernel-smsserviceprovider-msg91.-->
 					<artifactId>kernel-smsserviceprovider-msg91</artifactId>
-					<version>1.2.1.0-SNAPSHOT</version>
+					<version>1.2.0.1</version>
 				</dependency>
 			</dependencies>
 			<build>
