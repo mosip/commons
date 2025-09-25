@@ -104,3 +104,18 @@ jobs:
       ACTOR_DOCKER_HUB: ${{ secrets.ACTOR_DOCKER_HUB }}
       RELEASE_DOCKER_HUB: ${{ secrets.RELEASE_DOCKER_HUB }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+  trivy-scan:
+     uses: mosip/kattu/.github/workflows/trivy.yml@develop
+     strategy:
+      matrix:
+       include:
+        - SERVICE_NAME: 'kernel-ridgenerator-service'
+        - SERVICE_NAME: 'kernel-notification-service'
+        - SERVICE_NAME: 'kernel-pridgenerator-service'
+        - SERVICE_NAME: 'kernel-idgenerator-service'
+        - SERVICE_NAME: 'kernel-salt-generator'
+        - SERVICE_NAME: 'kernel-config-server'
+     with:
+      service_name: ${{ matrix.SERVICE_NAME }}
+      version: ${{ github.ref_name }}
