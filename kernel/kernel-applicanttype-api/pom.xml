@@ -9,7 +9,7 @@
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
-		<json.version>20180813</json.version>
+		<json.version>20230227</json.version>
 		<jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
 		<central.publishing.maven.plugin.version>0.7.0</central.publishing.maven.plugin.version>
 	</properties>
