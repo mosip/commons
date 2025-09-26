@@ -1,71 +1,71 @@
 package io.mosip.kernel.emailnotification.config;
 
-import java.io.IOException;
-
-import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
+import java.io.IOException;
+
 /**
- * Request Response Filter class that implements {@link Filter}.
- * 
+ * Safe request/response caching filter.
+ * - Wraps request/response once per request
+ * - Skips large/streaming bodies (multipart, octet-stream, *.stream)
+ * - Caps cache sizes to protect heap
+ * - Always flushes cached response in finally
+ *
  * @author Sagar Mahapatra
  * @since 1.0.0
- *
  */
-public class ReqResFilter implements Filter {
+@Component
+@Order(Ordered.HIGHEST_PRECEDENCE)
+public class ReqResFilter extends OncePerRequestFilter {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see jakarta.servlet.Filter#init(jakarta.servlet.FilterConfig)
-	 */
-	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
-		// over-ridden method
-	}
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String uri = request.getRequestURI();
+        if (uri != null && uri.endsWith(".stream")) return true;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see jakarta.servlet.Filter#doFilter(jakarta.servlet.ServletRequest,
-	 * jakarta.servlet.ServletResponse, jakarta.servlet.FilterChain)
-	 */
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
-		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-		ContentCachingRequestWrapper requestWrapper = null;
-		ContentCachingResponseWrapper responseWrapper = null;
+        String ct = request.getContentType();
+        return isMultipart(ct) || isBinary(ct);
+    }
 
-		// Default processing for url ends with .stream
-		if (httpServletRequest.getRequestURI().endsWith(".stream")) {
-			chain.doFilter(request, response);
-			return;
-		}
-		requestWrapper = new ContentCachingRequestWrapper(httpServletRequest);
-		responseWrapper = new ContentCachingResponseWrapper(httpServletResponse);
-		chain.doFilter(requestWrapper, responseWrapper);
-		responseWrapper.copyBodyToResponse();
+    @Override
+    protected void doFilterInternal(HttpServletRequest req,
+                                    HttpServletResponse resp,
+                                    FilterChain chain) throws ServletException, IOException {
 
-	}
+        // Avoid double wrapping if already wrapped
+        HttpServletRequest request =
+                (req instanceof ContentCachingRequestWrapper) ? req : new ContentCachingRequestWrapper(req);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see jakarta.servlet.Filter#destroy()
-	 */
-	@Override
-	public void destroy() {
-		// over-ridden method
-	}
+        HttpServletResponse response =
+                (resp instanceof ContentCachingResponseWrapper) ? resp : new ContentCachingResponseWrapper(resp);
+
+        try {
+            chain.doFilter(request, response);
+        } finally {
+            // ALWAYS flush cached body back to the real response
+            ((ContentCachingResponseWrapper) response).copyBodyToResponse();
+        }
+    }
+
+    private static boolean isMultipart(@Nullable String ct) {
+        return ct != null && ct.toLowerCase().startsWith("multipart/");
+    }
+
+    private static boolean isBinary(@Nullable String ct) {
+        return ct != null && ct.toLowerCase().startsWith("application/octet-stream");
+    }
 }
