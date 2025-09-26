@@ -69,7 +69,7 @@ public class EmailNotificationServiceImpl implements EmailNotification<Multipart
     public ResponseDto sendEmail(String[] mailTo, String[] mailCc, String mailSubject, String mailContent,
                                  MultipartFile[] attachments) {
         ResponseDto dto = new ResponseDto();
-        LOGGER.info("To Request : " + String.join(",", mailTo));
+        LOGGER.debug("To Request : " + String.join(",", mailTo));
 
         if (!isProxytrue) {
             send(mailTo, mailCc, mailSubject, mailContent, attachments);
