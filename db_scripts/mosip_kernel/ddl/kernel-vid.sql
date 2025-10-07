@@ -39,6 +39,3 @@ COMMENT ON COLUMN kernel.vid.del_dtimes IS 'Deleted DateTimestamp : Date and Tim
 -- PERFORMANCE OPTIMIZATION INDEXES
 CREATE INDEX idx_vid_status_not_deleted ON kernel.vid (vid_status) WHERE is_deleted = false;
 CREATE INDEX CONCURRENTLY idx_vid_status_isdeleted ON kernel.vid (vid_status, is_deleted);
-
-CREATE INDEX IF NOT EXISTS IDX_JOB_EXEC_INSTANCE ON BATCH_JOB_EXECUTION (JOB_INSTANCE_ID);
-CREATE INDEX IF NOT EXISTS IDX_STEP_EXEC_JOBID_STEPNAME ON BATCH_STEP_EXECUTION (JOB_EXECUTION_ID, STEP_NAME);
