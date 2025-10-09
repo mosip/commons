@@ -66,6 +66,8 @@ public class EmailNotificationController {
 		ResponseWrapper<ResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper
 				.setResponse(emailNotificationService.sendEmail(mailTo, mailCc, mailSubject, mailContent, attachments));
-		return responseWrapper;
+        responseWrapper.setErrors(null); // Explicitly set errors to null
+        // id and version are not set as the request is multipart form-data, not a RequestWrapper
+        return responseWrapper;
 	}
 }

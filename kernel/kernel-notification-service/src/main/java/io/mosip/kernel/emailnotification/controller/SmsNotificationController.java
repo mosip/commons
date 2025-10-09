@@ -60,6 +60,9 @@ public class SmsNotificationController {
 		ResponseWrapper<SMSResponseDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(smsNotifierService.sendSmsNotification(smsRequestDto.getRequest().getNumber(),
 				smsRequestDto.getRequest().getMessage()));
-		return responseWrapper;
+        responseWrapper.setId(smsRequestDto.getId()); // Copy id from request
+        responseWrapper.setVersion(smsRequestDto.getVersion()); // Copy version from request
+        responseWrapper.setErrors(null); // Explicitly set errors to null
+        return responseWrapper;
 	}
 }
