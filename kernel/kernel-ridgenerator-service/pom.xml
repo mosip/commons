@@ -6,7 +6,7 @@
 
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-ridgenerator-service</artifactId>
-	<version>1.3.0-beta.3</version>
+	<version>1.3.0-SNAPSHOT</version>
 	<name>kernel-ridgenerator-service</name>
 	<description>Mosip commons project </description>
 	<url>https://github.com/mosip/commons</url>
@@ -29,7 +29,7 @@
 			<dependency>
 				<groupId>io.mosip.kernel</groupId>
 				<artifactId>kernel-bom</artifactId>
-				<version>1.3.0-beta.3</version>
+				<version>1.3.0-SNAPSHOT</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -303,7 +303,6 @@
 					<plugin>
 						<groupId>org.springframework.boot</groupId>
 						<artifactId>spring-boot-maven-plugin</artifactId>
-						<version>${spring.boot.version}</version>
 						<configuration>
 							<executable>true</executable>
 							<layout>ZIP</layout>

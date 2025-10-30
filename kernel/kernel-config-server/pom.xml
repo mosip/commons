@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>io.mosip.kernel</groupId>
-	<version>1.3.0-beta.3</version>
+	<version>1.3.0-SNAPSHOT</version>
 	<artifactId>kernel-config-server</artifactId>
 	<name>Kernel Config Server</name>
 		<url>https://github.com/mosip/commons</url>
@@ -34,7 +34,7 @@
 			<dependency>
 				<groupId>io.mosip.kernel</groupId>
 				<artifactId>kernel-bom</artifactId>
-				<version>1.3.0-beta.3</version>
+				<version>1.3.0-SNAPSHOT</version>
 				<type>pom</type>
 			    <scope>import</scope>
 			</dependency>
@@ -83,7 +83,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${spring-boot-maven-plugin.version}</version>
+				<version>3.2.3</version>
 				<configuration>
 					<executable>true</executable>
 					<layout>ZIP</layout>

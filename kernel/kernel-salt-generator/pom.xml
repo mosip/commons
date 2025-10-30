@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-salt-generator</artifactId>
-	<version>1.3.0-beta.3</version>
+	<version>1.3.0-SNAPSHOT</version>
 	<name>Kernel Salt Generator</name>
 	<description>Batch Job Application to for one-time populating of salt values for MOSIP related application salt tables.</description>
 	<url>https://github.com/mosip/commons</url>
@@ -34,7 +34,7 @@
 			<dependency>
 				<groupId>io.mosip.kernel</groupId>
 				<artifactId>kernel-bom</artifactId>
-				<version>1.3.0-beta.3</version>
+				<version>1.3.0-SNAPSHOT</version>
 				<type>pom</type>
 			    <scope>import</scope>
 			</dependency>
