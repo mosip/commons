@@ -22,6 +22,7 @@
 		<modelmapper.version>2.3.7</modelmapper.version>
 		<kernel.logger.version>1.3.0-SNAPSHOT</kernel.logger.version>
 		<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
+		<spring-boot-maven-plugin.version>3.2.3</spring-boot-maven-plugin.version>
 		<sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/verticle/**,**/spi/**,"**/proxy/**","**/entities/**","**/filter/**","**/util/**","**/verifier/**","**/IDGeneratorVertxApplication.java"</sonar.coverage.exclusions>
 	</properties>
      	<dependencyManagement>
@@ -183,6 +184,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${spring-boot-maven-plugin.version}</version>
 				<configuration>
 					<executable>true</executable>
 					<layout>ZIP</layout>
