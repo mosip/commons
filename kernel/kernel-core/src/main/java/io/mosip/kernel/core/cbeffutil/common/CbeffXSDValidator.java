@@ -35,7 +35,7 @@ public class CbeffXSDValidator {
     static {
         SCHEMA_FACTORY = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         try {
-            LOGGER.info("Initializing hardened SchemaFactory...");
+            LOGGER.debug("Initializing hardened SchemaFactory...");
             // Security features
             SCHEMA_FACTORY.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             SCHEMA_FACTORY.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
@@ -43,7 +43,7 @@ public class CbeffXSDValidator {
             // Block all external resource resolution
             SCHEMA_FACTORY.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
             SCHEMA_FACTORY.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-            LOGGER.info("SchemaFactory initialized with security features.");
+            LOGGER.debug("SchemaFactory initialized with security features.");
         } catch (Exception e) {
             LOGGER.error("Failed to harden SchemaFactory: {}", e.getMessage(), e);
             throw new IllegalStateException("Failed to harden SchemaFactory for XSD validation", e);
@@ -73,7 +73,7 @@ public class CbeffXSDValidator {
 
         try {
             validator.validate(new StreamSource(new ByteArrayInputStream(xmlBytes), "memory:xml"));
-            LOGGER.info("XML validation successful.");
+            LOGGER.debug("XML validation successful.");
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -94,7 +94,7 @@ public class CbeffXSDValidator {
 
         try {
             validator.validate(new StreamSource(new ByteArrayInputStream(xmlBytes), "memory:xml"));
-            LOGGER.info("XML validation successful with precompiled schema.");
+            LOGGER.debug("XML validation successful with precompiled schema.");
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -108,7 +108,7 @@ public class CbeffXSDValidator {
         LOGGER.debug("Compiling schema from xsdBytes length={}", xsdBytes.length);
         try {
             Schema schema = SCHEMA_FACTORY.newSchema(new StreamSource(new ByteArrayInputStream(xsdBytes), "memory:xsd"));
-            LOGGER.info("XSD schema compiled successfully: {}", schema);
+            LOGGER.debug("XSD schema compiled successfully: {}", schema);
             return schema;
         } catch (Exception e) {
             LOGGER.error("Failed to compile XSD schema: {}", e.getMessage(), e);
