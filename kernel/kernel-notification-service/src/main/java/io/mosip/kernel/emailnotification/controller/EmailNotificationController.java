@@ -19,8 +19,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
- * Controller class for sending mail.
- * 
+ * <h1>Email Notification Controller</h1>
+ *
+ * <p>This controller exposes REST endpoints for sending emails with support for:
+ * <ul>
+ *     <li>Multiple recipients (TO, CC)</li>
+ *     <li>Attachments</li>
+ *     <li>Async email delivery for high throughput</li>
+ * </ul>
+ *
  * @author Sagar Mahapatra
  * @since 1.0.0
  *
@@ -29,35 +36,38 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @Tag(name = "emailnotification", description = "Operation related to email notification")
 public class EmailNotificationController {
-	/**
-	 * Autowired reference for MailNotifierService.
-	 */
-	@Autowired
-	EmailNotification<MultipartFile[], ResponseDto> emailNotificationService;
+    /**
+     * Autowired reference for MailNotifierService.
+     */
+    @Autowired
+    private EmailNotification<MultipartFile[], ResponseDto> emailNotificationService;
 
-	/**
-	 * @param mailTo      array of email id's, to which mail should be sent.
-	 * @param mailCc      array of email id's, to which the email should be sent as
-	 *                    carbon copy.
-	 * @param mailSubject the subject.
-	 * @param mailContent the content.
-	 * @param attachments the attachments.
-	 * @return the dto response.
-	 */
-	@ResponseFilter
-	@Operation(summary = "Endpoint for sending a email", description = "Endpoint for sending a email", tags = { "emailnotification" })
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
-			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostemailsend())")
-	@PostMapping(value = "/email/send", consumes = "multipart/form-data")
-	public @ResponseBody ResponseWrapper<ResponseDto> sendEMail(String[] mailTo, String[] mailCc, String mailSubject,
-			String mailContent, MultipartFile[] attachments) {
-		ResponseWrapper<ResponseDto> responseWrapper = new ResponseWrapper<>();
-		responseWrapper
-				.setResponse(emailNotificationService.sendEmail(mailTo, mailCc, mailSubject, mailContent, attachments));
-		return responseWrapper;
-	}
+    /**
+     * Sends an email with optional attachments asynchronously.
+     *
+     * @param mailTo      Array of recipient email addresses (TO). Mandatory.
+     * @param mailCc      Array of CC recipient email addresses. Optional.
+     * @param mailSubject Subject line of the email. Mandatory.
+     * @param mailContent Body content of the email. Mandatory.
+     * @param attachments Files to be attached with the email. Optional.
+     * @return A response wrapper containing the delivery status.
+     */
+    @ResponseFilter
+    @Operation(summary = "Endpoint for sending a email", description = "Endpoint for sending a email", tags = { "emailnotification" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getPostemailsend())")
+    @PostMapping(value = "/email/send", consumes = "multipart/form-data")
+    public @ResponseBody ResponseWrapper<ResponseDto> sendEMail(String[] mailTo, String[] mailCc, String mailSubject,
+                                                                String mailContent, MultipartFile[] attachments) {
+        ResponseWrapper<ResponseDto> responseWrapper = new ResponseWrapper<>();
+        responseWrapper
+                .setResponse(emailNotificationService.sendEmail(mailTo, mailCc, mailSubject, mailContent, attachments));
+        responseWrapper.setErrors(null); // Explicitly set errors to null
+        // id and version are not set as the request is multipart form-data, not a RequestWrapper
+        return responseWrapper;
+    }
 }
