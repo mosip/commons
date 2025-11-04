@@ -22,9 +22,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
- * This controller class receives contact number and message in data transfer
- * object and sends SMS on the provided contact number.
- * 
+ * <h1>SMS Notification Controller</h1>
+ *
+ * <p>This REST controller handles SMS sending requests with minimal overhead and optimized request validation.</p>
+ *
  * @author Ritesh Sinha
  * @since 1.0.0
  */
@@ -33,32 +34,35 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "smsnotification", description = "Operation related to sms notification")
 public class SmsNotificationController {
 
-	/**
-	 * The reference that autowire sms notification service class.
-	 */
-	@Autowired
-	SmsNotification smsNotifierService;
+    /**
+     * The reference that autowire sms notification service class.
+     */
+    @Autowired
+    private SmsNotification smsNotifierService;
 
-	/**
-	 * This method sends sms to the contact number provided.
-	 * 
-	 * @param smsRequestDto the request dto for sms-notification.
-	 * @return the status and message as dto response.
-	 */
-	@ResponseFilter
-	@Operation(summary = "Endpoint for sending a sms", description = "Endpoint for sending a sms", tags = { "smsnotification" })
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
-			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostsmssend())")
-	@PostMapping(value = "/sms/send")
-	public ResponseWrapper<SMSResponseDto> sendSmsNotification(
-			@Valid @RequestBody RequestWrapper<SmsRequestDto> smsRequestDto) {
-		ResponseWrapper<SMSResponseDto> responseWrapper = new ResponseWrapper<>();
-		responseWrapper.setResponse(smsNotifierService.sendSmsNotification(smsRequestDto.getRequest().getNumber(),
-				smsRequestDto.getRequest().getMessage()));
-		return responseWrapper;
-	}
+    /**
+     * This method sends sms to the contact number provided.
+     *
+     * @param smsRequestDto the request dto for sms-notification.
+     * @return the status and message as dto response.
+     */
+    @ResponseFilter
+    @Operation(summary = "Endpoint for sending a sms", description = "Endpoint for sending a sms", tags = { "smsnotification" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success or you may find errors in error array in response"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getPostsmssend())")
+    @PostMapping(value = "/sms/send")
+    public ResponseWrapper<SMSResponseDto> sendSmsNotification(
+            @Valid @RequestBody RequestWrapper<SmsRequestDto> smsRequestDto) {
+        ResponseWrapper<SMSResponseDto> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setResponse(smsNotifierService.sendSmsNotification(smsRequestDto.getRequest().getNumber(),
+                smsRequestDto.getRequest().getMessage()));
+        responseWrapper.setId(smsRequestDto.getId()); // Copy id from request
+        responseWrapper.setVersion(smsRequestDto.getVersion()); // Copy version from request
+        responseWrapper.setErrors(null); // Explicitly set errors to null
+        return responseWrapper;
+    }
 }
