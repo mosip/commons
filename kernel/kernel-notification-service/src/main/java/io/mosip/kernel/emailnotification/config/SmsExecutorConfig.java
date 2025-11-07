@@ -90,6 +90,11 @@ public class SmsExecutorConfig {
         executor.setMaxPoolSize(maxPoolSize);
         executor.setQueueCapacity(queueCapacity);
         executor.setThreadNamePrefix(threadNamePrefix);
+        /**
+         * Allows core threads to terminate when idle, reducing memory usage during low traffic.
+         * Required for {@code keepAliveSeconds} to apply to core pool.
+         * if set to true
+         */
 //        executor.setAllowCoreThreadTimeOut(true);
 //        executor.setKeepAliveSeconds(keepAliveSeconds);
         executor.setAwaitTerminationSeconds(awaitTerminationSeconds);
