@@ -40,7 +40,7 @@ public final class HMACUtils {
      * data and output a fixed-length hash value
      */
     private static final ThreadLocal<MessageDigest> SHA256_TL = ThreadLocal.withInitial(() -> getDigest(HMAC_ALGORITHM_NAME));
-    private static final ThreadLocal<SecureRandom> SECURE_RANDOM =
+    private static final ThreadLocal<SecureRandom> SECURE_RANDOM_TL =
             ThreadLocal.withInitial(SecureRandom::new);
 
     private static final java.util.Base64.Encoder BASE64_ENCODER = java.util.Base64.getEncoder();
@@ -67,8 +67,10 @@ public final class HMACUtils {
      * @param bytes bytes to be hash generation
      * @return byte[] generated hash bytes
      */
-    public static synchronized byte[] generateHash(final byte[] bytes) {
-        return SHA256_TL.get().digest(bytes);
+    public static byte[] generateHash(final byte[] bytes) {
+        byte[] digest = SHA256_TL.get().digest(bytes);
+        SHA256_TL.get().reset();
+        return digest;
     }
 
     /**
@@ -86,7 +88,9 @@ public final class HMACUtils {
      * @return byte[] updated hash bytes
      */
     public static byte[] updatedHash() {
-        return SHA256_TL.get().digest();
+        byte[] digest = SHA256_TL.get().digest();
+        SHA256_TL.get().reset();
+        return digest;
     }
 
     /**
@@ -96,10 +100,12 @@ public final class HMACUtils {
      * @param salt  digest bytes
      * @return String converted digest as plain text
      */
-    public static synchronized String digestAsPlainTextWithSalt(final byte[] password, final byte[] salt) {
+    public static String digestAsPlainTextWithSalt(final byte[] password, final byte[] salt) {
         SHA256_TL.get().update(password);
         SHA256_TL.get().update(salt);
-        return DatatypeConverter.printHexBinary(SHA256_TL.get().digest());
+        String digest = DatatypeConverter.printHexBinary(SHA256_TL.get().digest());
+        SHA256_TL.get().reset();
+        return digest;
 //		KeySpec spec = null;
 //        try {
 //        	spec = new PBEKeySpec(new String(password,"UTF-8").toCharArray(), salt, 27500, 512);
@@ -131,7 +137,7 @@ public final class HMACUtils {
      */
     public static byte[] generateSalt() {
         byte[] randomBytes = new byte[16];
-        SECURE_RANDOM.get().nextBytes(randomBytes);
+        SECURE_RANDOM_TL.get().nextBytes(randomBytes);
         return randomBytes;
     }
 
@@ -143,7 +149,7 @@ public final class HMACUtils {
      */
     public static byte[] generateSalt(int bytes) {
         byte[] randomBytes = new byte[bytes];
-        SECURE_RANDOM.get().nextBytes(randomBytes);
+        SECURE_RANDOM_TL.get().nextBytes(randomBytes);
         return randomBytes;
     }
 
@@ -168,7 +174,7 @@ public final class HMACUtils {
     }
 
     private static String encode(String password, byte[] salt) {
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 27500, 512);
+        KeySpec spec = new PBEKeySpec(password.toCharArray(), Base64.decodeBase64(salt), 27500, 512);
         try {
             byte[] key = PBKDF2_FACTORY_TL.get().generateSecret(spec).getEncoded();
             return Base64.encodeBase64String(key);
@@ -182,9 +188,9 @@ public final class HMACUtils {
     private static MessageDigest getDigest(String algo) {
         try {
             return MessageDigest.getInstance(algo);
-        } catch (java.security.NoSuchAlgorithmException e) {
-            // Should not happen for standard algorithms
-            throw new IllegalStateException(algo + " not supported", e);
+        } catch (java.security.NoSuchAlgorithmException exception) {
+            throw new NoSuchAlgorithmException(HMACUtilConstants.MOSIP_NO_SUCH_ALGORITHM_ERROR_CODE.getErrorCode(),
+                    HMACUtilConstants.MOSIP_NO_SUCH_ALGORITHM_ERROR_CODE.getErrorMessage(), exception.getCause());
         }
     }
 }
