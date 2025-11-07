@@ -87,51 +87,48 @@ public class EmailNotificationUtils {
      * @throws InvalidArgumentsException if one or more validation errors occur
      */
     public static void validateMailArguments(String fromEmail, String[] mailTo, String mailSubject, String mailContent){
-        Set<ServiceError> validationErrors = Collections.newSetFromMap(new ConcurrentHashMap<>());
+        Set<ServiceError> validationErrorsList = new HashSet<>();
 
-        // Validate sender email
-        if (fromEmail == null || !safeValidateEmail(fromEmail)) {
-            validationErrors.add(new ServiceError(
-                    MailNotifierArgumentErrorConstants.SENDER_ADDRESS_NOT_FOUND.getErrorCode(),
-                    MailNotifierArgumentErrorConstants.SENDER_ADDRESS_NOT_FOUND.getErrorMessage()
-            ));
+        if (null != fromEmail ) {
+
+            try {
+                validateEmailAddress(fromEmail);
+            }
+            catch(AddressException ex){
+                validationErrorsList.add(new ServiceError(MailNotifierArgumentErrorConstants.SENDER_ADDRESS_NOT_FOUND.getErrorCode(),
+                        MailNotifierArgumentErrorConstants.SENDER_ADDRESS_NOT_FOUND.getErrorMessage()));
+            }
+
         }
 
-        // Validate recipient emails
         if (mailTo == null || mailTo.length == Integer.parseInt(MailNotifierConstants.DIGIT_ZERO.getValue())) {
-            validationErrors.add(new ServiceError(
-                    MailNotifierArgumentErrorConstants.RECEIVER_ADDRESS_NOT_FOUND.getErrorCode(),
-                    MailNotifierArgumentErrorConstants.RECEIVER_ADDRESS_NOT_FOUND.getErrorMessage()
-            ));
+            validationErrorsList
+                    .add(new ServiceError(MailNotifierArgumentErrorConstants.RECEIVER_ADDRESS_NOT_FOUND.getErrorCode(),
+                            MailNotifierArgumentErrorConstants.RECEIVER_ADDRESS_NOT_FOUND.getErrorMessage()));
         } else {
-            Arrays.stream(mailTo).parallel().forEach(to -> {
-                if (!safeValidateEmail(to)) {
-                    validationErrors.add(new ServiceError(
-                            MailNotifierArgumentErrorConstants.RECEIVER_ADDRESS_NOT_FOUND.getErrorCode(),
-                            MailNotifierArgumentErrorConstants.RECEIVER_ADDRESS_NOT_FOUND.getErrorMessage()
-                    ));
+            List<String> tos = Arrays.asList(mailTo);
+            tos.forEach(to -> {
+                try {
+                    validateEmailAddress(to);
+                }
+                catch(AddressException ex){
+                    validationErrorsList.add(new ServiceError(MailNotifierArgumentErrorConstants.SENDER_ADDRESS_NOT_FOUND.getErrorCode(),
+                            MailNotifierArgumentErrorConstants.SENDER_ADDRESS_NOT_FOUND.getErrorMessage()));
                 }
             });
         }
-
-        // Validate subject
         if (mailSubject == null || mailSubject.trim().isEmpty()) {
-            validationErrors.add(new ServiceError(
-                    MailNotifierArgumentErrorConstants.SUBJECT_NOT_FOUND.getErrorCode(),
-                    MailNotifierArgumentErrorConstants.SUBJECT_NOT_FOUND.getErrorMessage()
-            ));
+            validationErrorsList
+                    .add(new ServiceError(MailNotifierArgumentErrorConstants.SUBJECT_NOT_FOUND.getErrorCode(),
+                            MailNotifierArgumentErrorConstants.SUBJECT_NOT_FOUND.getErrorMessage()));
         }
-
-        // Validate content
         if (mailContent == null || mailContent.trim().isEmpty()) {
-            validationErrors.add(new ServiceError(
-                    MailNotifierArgumentErrorConstants.CONTENT_NOT_FOUND.getErrorCode(),
-                    MailNotifierArgumentErrorConstants.CONTENT_NOT_FOUND.getErrorMessage()
-            ));
+            validationErrorsList
+                    .add(new ServiceError(MailNotifierArgumentErrorConstants.CONTENT_NOT_FOUND.getErrorCode(),
+                            MailNotifierArgumentErrorConstants.CONTENT_NOT_FOUND.getErrorMessage()));
         }
-
-        if (!validationErrors.isEmpty()) {
-            throw new InvalidArgumentsException(new ArrayList<>(validationErrors));
+        if (!validationErrorsList.isEmpty()) {
+            throw new InvalidArgumentsException(new ArrayList<ServiceError>(validationErrorsList));
         }
     }
 
