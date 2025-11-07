@@ -79,7 +79,13 @@ public class EmailNotificationServiceImpl implements EmailNotification<Multipart
         LOGGER.debug("To Request : " + String.join(",", mailTo));
 
         if (!isProxytrue) {
-            send(mailTo, mailCc, mailSubject, mailContent, attachments);
+            mailExecutor.execute(() -> {
+                try {
+                    send(mailTo, mailCc, mailSubject, mailContent, attachments);
+                } catch (Exception e) {
+                    LOGGER.error("Error sending email async: {}", e.getMessage(), e);
+                }
+            });
         }
 
         dto.setStatus(MailNotifierConstants.MESSAGE_SUCCESS_STATUS.getValue());
@@ -96,7 +102,6 @@ public class EmailNotificationServiceImpl implements EmailNotification<Multipart
      * @param mailContent content
      * @param attachments files to attach
      */
-    @Async("mailExecutor")
     public void send(String[] mailTo, String[] mailCc, String mailSubject, String mailContent,
                      MultipartFile[] attachments) {
         EmailNotificationUtils.validateMailArguments(fromEmailAddress, mailTo, mailSubject, mailContent);
