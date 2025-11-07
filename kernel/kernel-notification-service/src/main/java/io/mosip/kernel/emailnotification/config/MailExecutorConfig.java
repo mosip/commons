@@ -90,8 +90,8 @@ public class MailExecutorConfig {
         executor.setMaxPoolSize(maxPoolSize);
         executor.setQueueCapacity(queueCapacity);
         executor.setThreadNamePrefix(threadNamePrefix);
-        executor.setAllowCoreThreadTimeOut(true);
-        executor.setKeepAliveSeconds(keepAliveSeconds);
+//        executor.setAllowCoreThreadTimeOut(true);
+//        executor.setKeepAliveSeconds(keepAliveSeconds);
         executor.setAwaitTerminationSeconds(awaitTerminationSeconds);
         executor.initialize();
         return executor;
