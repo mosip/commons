@@ -76,7 +76,6 @@ public class CbeffXSDValidator {
             LOGGER.debug("XML validation successful.");
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
             LOGGER.error("XML validation failed: {}", e.getMessage(), e);
             throw e;
         }
@@ -97,7 +96,6 @@ public class CbeffXSDValidator {
             LOGGER.debug("XML validation successful with precompiled schema.");
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
             LOGGER.error("Validation failed with precompiled schema: {}", e.getMessage(), e);
             throw e;
         }
