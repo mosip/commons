@@ -41,7 +41,7 @@ public class EmailNotificationUtils {
      * @param message     the MimeMessage object containing the email details
      * @param emailSender the JavaMailSender instance used to send the email
      */
-    @Async
+    
     public void sendMessage(MimeMessage message, JavaMailSender emailSender) {
         emailSender.send(message);
     }

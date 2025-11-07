@@ -40,7 +40,7 @@ public class SmsNotificationServiceImpl implements SmsNotification {
     @Value("${mosip.kernel.sms.proxy-sms:false}")
     private boolean isProxytrue;
 
-    @Value("${mosip.kernel.sms.success-message:Sms Request Sent}")
+    @Value("${mosip.kernel.sms.success-message:SMS request sent")
     private String sucessMessage;
 
     /**
