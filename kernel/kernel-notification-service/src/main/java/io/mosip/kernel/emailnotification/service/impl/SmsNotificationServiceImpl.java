@@ -1,8 +1,10 @@
 package io.mosip.kernel.emailnotification.service.impl;
 
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.scheduling.annotation.Async;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Service;
 import io.mosip.kernel.core.notification.model.SMSResponseDto;
 import io.mosip.kernel.core.notification.spi.SMSServiceProvider;
 import io.mosip.kernel.emailnotification.service.SmsNotification;
+
+import java.util.concurrent.Executor;
 
 /**
  * <h1>SMS Notification Service Implementation</h1>
@@ -46,21 +50,20 @@ public class SmsNotificationServiceImpl implements SmsNotification {
     /**
      * Pre-built static success response for proxy/local mode to reduce allocations.
      */
-    private volatile SMSResponseDto cachedSuccessResponse;
+    private SMSResponseDto cachedSuccessResponse;
 
-    /**
-     * Initializes the cached success response for local/proxy mode.
-     */
-    private SMSResponseDto getCachedSuccessResponse() {
-        if (cachedSuccessResponse == null) {
-            SMSResponseDto response = new SMSResponseDto();
-            response.setMessage(sucessMessage);
-            response.setStatus("success");
-            cachedSuccessResponse = response;
-        }
-        return cachedSuccessResponse;
+    @Autowired
+    @Qualifier("smsExecutor")
+    private Executor smsExecutor;
+
+    @PostConstruct
+    private void initSuccessResponse() {
+        SMSResponseDto response = new SMSResponseDto();
+        response.setMessage(sucessMessage);
+        response.setStatus("success");
+        cachedSuccessResponse = response;
     }
-
+    
     /**
      * Sends an SMS notification to the specified contact number.
      * In local or proxy mode, a simulated success response is returned without
@@ -79,19 +82,19 @@ public class SmsNotificationServiceImpl implements SmsNotification {
             send(contactNumber, contentMessage);  // async
         }
 
-        return getCachedSuccessResponse();
+        return cachedSuccessResponse;
     }
 
     /**
      * Asynchronously sends the SMS using the service provider.
      */
-    @Async("smsExecutor")
     public void send(String contactNumber, String contentMessage) {
-        try {
-            smsServiceProvider.sendSms(contactNumber, contentMessage);
-        } catch (Exception e) {
-            LOGGER.error("Failed to send SMS to {}: {}", contactNumber, e.getMessage(), e);
-            // Optionally, send fallback or raise alert
-        }
+        smsExecutor.execute(() -> {
+            try {
+                smsServiceProvider.sendSms(contactNumber, contentMessage);
+            } catch (Exception e) {
+                LOGGER.error("SMS send failed: {}", e.getMessage(), e);
+            }
+        });
     }
 }

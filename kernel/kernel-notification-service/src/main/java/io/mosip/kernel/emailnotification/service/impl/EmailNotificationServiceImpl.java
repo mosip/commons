@@ -6,6 +6,7 @@ import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.Nullable;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,6 +20,8 @@ import io.mosip.kernel.emailnotification.constant.MailNotifierConstants;
 import io.mosip.kernel.emailnotification.dto.ResponseDto;
 import io.mosip.kernel.emailnotification.exception.NotificationException;
 import io.mosip.kernel.emailnotification.util.EmailNotificationUtils;
+
+import java.util.concurrent.Executor;
 
 /**
  * Service implementation class for {@link EmailNotification}.
@@ -54,6 +57,10 @@ public class EmailNotificationServiceImpl implements EmailNotification<Multipart
 
     @Value("${mosip.kernel.mail.content.html.enable:true}")
     private boolean isHtmlEnable;
+
+    @Autowired
+    @Qualifier("mailExecutor")
+    private Executor mailExecutor;
 
     /**
      * Sends an email with the specified parameters. In proxy mode, skips actual sending.
