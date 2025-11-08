@@ -39,27 +39,7 @@ public final class HMACUtils {
      * Message digests are secure one-way hash functions that take arbitrary-sized
      * data and output a fixed-length hash value
      */
-    private static final ThreadLocal<MessageDigest> SHA256_TL = ThreadLocal.withInitial(() -> getDigest(HMAC_ALGORITHM_NAME));
-    private static final ThreadLocal<SecureRandom> SECURE_RANDOM_TL =
-            ThreadLocal.withInitial(SecureRandom::new);
-
-    private static final java.util.Base64.Encoder BASE64_ENCODER = java.util.Base64.getEncoder();
-    private static final java.util.Base64.Decoder BASE64_DECODER = java.util.Base64.getDecoder();
-
-    private static final ThreadLocal<SecretKeyFactory> PBKDF2_FACTORY_TL =
-            ThreadLocal.withInitial(() -> {
-                try {
-                    return SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-                } catch (NoSuchAlgorithmException | java.security.NoSuchAlgorithmException e) {
-                    throw new RuntimeException("PBKDF2 algorithm not found", e);
-                }
-            });
-
-    /*
-     * No object initialization.
-     */
-    private HMACUtils() {
-    }
+    private static MessageDigest messageDigest;
 
     /**
      * Performs a digest using the specified array of bytes.
@@ -67,10 +47,8 @@ public final class HMACUtils {
      * @param bytes bytes to be hash generation
      * @return byte[] generated hash bytes
      */
-    public static byte[] generateHash(final byte[] bytes) {
-        byte[] digest = SHA256_TL.get().digest(bytes);
-        SHA256_TL.get().reset();
-        return digest;
+    public static synchronized byte[] generateHash(final byte[] bytes) {
+        return messageDigest.digest(bytes);
     }
 
     /**
@@ -79,7 +57,7 @@ public final class HMACUtils {
      * @param bytes updates the digest using the specified byte
      */
     public static void update(final byte[] bytes) {
-        SHA256_TL.get().update(bytes);
+        messageDigest.update(bytes);
     }
 
     /**
@@ -88,24 +66,20 @@ public final class HMACUtils {
      * @return byte[] updated hash bytes
      */
     public static byte[] updatedHash() {
-        byte[] digest = SHA256_TL.get().digest();
-        SHA256_TL.get().reset();
-        return digest;
+        return messageDigest.digest();
     }
 
     /**
      * Return the digest as a plain text with Salt
      *
-     * @param password digest bytes
+     * @param bytes digest bytes
      * @param salt  digest bytes
      * @return String converted digest as plain text
      */
-    public static String digestAsPlainTextWithSalt(final byte[] password, final byte[] salt) {
-        SHA256_TL.get().update(password);
-        SHA256_TL.get().update(salt);
-        String digest = DatatypeConverter.printHexBinary(SHA256_TL.get().digest());
-        SHA256_TL.get().reset();
-        return digest;
+    public static synchronized String digestAsPlainTextWithSalt(final byte[] password, final byte[] salt) {
+        messageDigest.update(password);
+        messageDigest.update(salt);
+        return DatatypeConverter.printHexBinary(messageDigest.digest());
 //		KeySpec spec = null;
 //        try {
 //        	spec = new PBEKeySpec(new String(password,"UTF-8").toCharArray(), salt, 27500, 512);
@@ -131,13 +105,31 @@ public final class HMACUtils {
     }
 
     /**
+     * Creates a message digest with the specified algorithm name.
+     *
+     * @param algorithm the standard name of the digest algorithm.
+     *
+     * @throws NoSuchAlgorithmException if specified algorithm went wrong
+     * @description loaded messageDigest with specified algorithm
+     */
+    static {
+        try {
+            messageDigest = messageDigest != null ? messageDigest : MessageDigest.getInstance(HMAC_ALGORITHM_NAME);
+        } catch (java.security.NoSuchAlgorithmException exception) {
+            throw new NoSuchAlgorithmException(HMACUtilConstants.MOSIP_NO_SUCH_ALGORITHM_ERROR_CODE.getErrorCode(),
+                    HMACUtilConstants.MOSIP_NO_SUCH_ALGORITHM_ERROR_CODE.getErrorMessage(), exception.getCause());
+        }
+    }
+
+    /**
      * Generate Random Salt (with default 16 bytes of length).
      *
      * @return Random Salt
      */
     public static byte[] generateSalt() {
+        SecureRandom random = new SecureRandom();
         byte[] randomBytes = new byte[16];
-        SECURE_RANDOM_TL.get().nextBytes(randomBytes);
+        random.nextBytes(randomBytes);
         return randomBytes;
     }
 
@@ -148,8 +140,9 @@ public final class HMACUtils {
      * @return Random Salt of given length
      */
     public static byte[] generateSalt(int bytes) {
+        SecureRandom random = new SecureRandom();
         byte[] randomBytes = new byte[bytes];
-        SECURE_RANDOM_TL.get().nextBytes(randomBytes);
+        random.nextBytes(randomBytes);
         return randomBytes;
     }
 
@@ -160,7 +153,7 @@ public final class HMACUtils {
      * @return encoded data
      */
     public static String encodeBase64String(byte[] data) {
-        return BASE64_ENCODER.encodeToString(data);
+        return Base64.encodeBase64String(data);
     }
 
     /**
@@ -170,13 +163,20 @@ public final class HMACUtils {
      * @return decoded data
      */
     public static byte[] decodeBase64(String data) {
-        return BASE64_DECODER.decode(data);
+        return Base64.decodeBase64(data);
+    }
+
+    /*
+     * No object initialization.
+     */
+    private HMACUtils() {
     }
 
     private static String encode(String password, byte[] salt) {
         KeySpec spec = new PBEKeySpec(password.toCharArray(), Base64.decodeBase64(salt), 27500, 512);
+
         try {
-            byte[] key = PBKDF2_FACTORY_TL.get().generateSecret(spec).getEncoded();
+            byte[] key = getSecretKeyFactory().generateSecret(spec).getEncoded();
             return Base64.encodeBase64String(key);
         } catch (InvalidKeySpecException e) {
             throw new RuntimeException("Credential could not be encoded", e);
@@ -185,12 +185,11 @@ public final class HMACUtils {
         }
     }
 
-    private static MessageDigest getDigest(String algo) {
+    private static SecretKeyFactory getSecretKeyFactory() throws java.security.NoSuchAlgorithmException {
         try {
-            return MessageDigest.getInstance(algo);
-        } catch (java.security.NoSuchAlgorithmException exception) {
-            throw new NoSuchAlgorithmException(HMACUtilConstants.MOSIP_NO_SUCH_ALGORITHM_ERROR_CODE.getErrorCode(),
-                    HMACUtilConstants.MOSIP_NO_SUCH_ALGORITHM_ERROR_CODE.getErrorMessage(), exception.getCause());
+            return SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("PBKDF2 algorithm not found", e);
         }
     }
 }

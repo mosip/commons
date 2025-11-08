@@ -80,21 +80,17 @@ public final class DateAdapter extends XmlAdapter<String, LocalDateTime> {
      */
     @Override
     public LocalDateTime unmarshal(String v) {
-        if (v == null || v.isEmpty()) {
-            return null;
-        }
-        try {
+       
             // Fast path: ends with 'Z' → direct instant parse
             if (v.charAt(v.length() - 1) == 'Z') {
                 Instant instant = Instant.from(Z_PARSER.parse(v));
                 return LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
             }
             // Fallback: full ISO-8601 with offset or [ZoneId]
-            ZonedDateTime zdt = ZonedDateTime.parse(v); // Uses ISO_ZONED_DATE_TIME
-            return zdt.withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
-        } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("Invalid datetime format: " + v, e);
-        }
+            ZonedDateTime parse = ZonedDateTime.parse(v, DateTimeFormatter.ISO_DATE_TIME)
+                    .withZoneSameInstant(ZoneId.of("UTC"));
+            LocalDateTime locale = parse.toLocalDateTime();
+            return locale;
     }
     /**
      * Formats a UTC {@link LocalDateTime} as ISO-8601 with trailing {@code Z}.
