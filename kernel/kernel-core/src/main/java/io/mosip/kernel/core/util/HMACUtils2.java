@@ -3,8 +3,6 @@
  */
 package io.mosip.kernel.core.util;
 
-import io.mosip.kernel.core.util.constant.HMACUtilConstants;
-
 import java.nio.ByteOrder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -38,14 +36,14 @@ public final class HMACUtils2 {
             0x39, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46 };
 
     // Thread-local digests (MessageDigest is NOT thread-safe)
-    private static final ThreadLocal<MessageDigest> MESSAGE_DIGEST_SHA256_TL = ThreadLocal.withInitial(() -> getDigest(HASH_ALGORITHM_NAME));
-    private static final ThreadLocal<SecureRandom> SECURE_RANDOM_TL =
+    private static final ThreadLocal<MessageDigest> SHA256_TL = ThreadLocal.withInitial(() -> getDigest(HASH_ALGORITHM_NAME));
+    private static final ThreadLocal<SecureRandom> SECURE_RANDOM =
             ThreadLocal.withInitial(SecureRandom::new);
 
     private static final Base64.Encoder BASE64_ENCODER = Base64.getEncoder();
     private static final Base64.Decoder BASE64_DECODER = Base64.getDecoder();
 
-    private static final ThreadLocal<SecretKeyFactory> PBKDF2_WITH_HMAC_SHA256_FACTORY_TL =
+    private static final ThreadLocal<SecretKeyFactory> PBKDF2_FACTORY =
             ThreadLocal.withInitial(() -> {
                 try {
                     return SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
@@ -86,9 +84,8 @@ public final class HMACUtils2 {
      * @return byte[] generated hash bytes
      */
     public static byte[] generateHash(final byte[] bytes) throws NoSuchAlgorithmException {
-        byte[] digest = MESSAGE_DIGEST_SHA256_TL.get().digest(bytes);
-        MESSAGE_DIGEST_SHA256_TL.get().reset();
-        return digest;
+        final MessageDigest messageDigest = SHA256_TL.get();
+        return messageDigest.digest(bytes);
     }
 
     /**
@@ -101,11 +98,10 @@ public final class HMACUtils2 {
      */
     public static String digestAsPlainTextWithSalt(final byte[] pwd, final byte[] salt)
             throws NoSuchAlgorithmException {
-        MESSAGE_DIGEST_SHA256_TL.get().update(pwd);
-        MESSAGE_DIGEST_SHA256_TL.get().update(salt);
-        String digest = encodeBytesToHex(MESSAGE_DIGEST_SHA256_TL.get().digest(), true, ByteOrder.BIG_ENDIAN);
-        MESSAGE_DIGEST_SHA256_TL.get().reset();
-        return digest;
+        final MessageDigest messageDigest = SHA256_TL.get();
+        messageDigest.update(pwd);
+        messageDigest.update(salt);
+        return encodeBytesToHex(messageDigest.digest(), true, ByteOrder.BIG_ENDIAN);
     }
 
     /**
@@ -136,7 +132,7 @@ public final class HMACUtils2 {
      */
     public static byte[] generateSalt(int bytes) {
         byte[] randomBytes = new byte[bytes];
-        SECURE_RANDOM_TL.get().nextBytes(randomBytes);
+        SECURE_RANDOM.get().nextBytes(randomBytes);
         return randomBytes;
     }
 
@@ -162,9 +158,9 @@ public final class HMACUtils2 {
 
 
     private static String encode(String password, byte[] salt) {
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), Base64.getDecoder().decode(salt), ITERATION_COUNT, 512);
+        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, ITERATION_COUNT, 512);
         try {
-            byte[] key = PBKDF2_WITH_HMAC_SHA256_FACTORY_TL.get().generateSecret(spec).getEncoded();
+            byte[] key = PBKDF2_FACTORY.get().generateSecret(spec).getEncoded();
             return encodeBase64String(key);
         } catch (InvalidKeySpecException e) {
             throw new RuntimeException("Credential could not be encoded", e);
@@ -198,9 +194,9 @@ public final class HMACUtils2 {
     private static MessageDigest getDigest(String algo) {
         try {
             return MessageDigest.getInstance(algo);
-        } catch (NoSuchAlgorithmException exception) {
-            throw new io.mosip.kernel.core.exception.NoSuchAlgorithmException(HMACUtilConstants.MOSIP_NO_SUCH_ALGORITHM_ERROR_CODE.getErrorCode(),
-                    HMACUtilConstants.MOSIP_NO_SUCH_ALGORITHM_ERROR_CODE.getErrorMessage(), exception.getCause());
+        } catch (NoSuchAlgorithmException e) {
+            // Should not happen for standard algorithms
+            throw new IllegalStateException(algo + " not supported", e);
         }
     }
 }

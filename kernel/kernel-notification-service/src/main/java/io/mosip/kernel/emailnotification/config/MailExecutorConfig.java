@@ -3,7 +3,6 @@ package io.mosip.kernel.emailnotification.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
@@ -53,7 +52,6 @@ import java.util.concurrent.Executor;
  * @since 1.3.0
  */
 @Configuration
-@EnableAsync
 public class MailExecutorConfig {
 
     @Value("${mail.executor.core-pool-size:2}")
@@ -92,13 +90,8 @@ public class MailExecutorConfig {
         executor.setMaxPoolSize(maxPoolSize);
         executor.setQueueCapacity(queueCapacity);
         executor.setThreadNamePrefix(threadNamePrefix);
-        /**
-         * Allows core threads to terminate when idle, reducing memory usage during low traffic.
-         * Required for {@code keepAliveSeconds} to apply to core pool.
-         * if set to true
-         */
-//        executor.setAllowCoreThreadTimeOut(true);
-//        executor.setKeepAliveSeconds(keepAliveSeconds);
+        executor.setAllowCoreThreadTimeOut(true);
+        executor.setKeepAliveSeconds(keepAliveSeconds);
         executor.setAwaitTerminationSeconds(awaitTerminationSeconds);
         executor.initialize();
         return executor;

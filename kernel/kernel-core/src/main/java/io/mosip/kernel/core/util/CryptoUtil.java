@@ -116,10 +116,7 @@ public class CryptoUtil {
                 }
             }
         }
-        /*
-        it's a wrong way it should always return -1 but to follow backward compatibility returning keyDelimiterIndex
-         */
-        return keyDelimiterIndex;
+        return -1; // Not found
     }
 
     /**
@@ -208,7 +205,7 @@ public class CryptoUtil {
      * @return fingerprint
      */
     public static String computeFingerPrint(byte[] data, String metaData) {
-        byte[] combined = EmptyCheckUtils.isNullEmpty(metaData) ? ArrayUtils.addAll(data) :
+        byte[] combined = EmptyCheckUtils.isNullEmpty(metaData) ? data :
                 ArrayUtils.addAll(data, metaData.getBytes(StandardCharsets.UTF_8));
 
         return Hex.encodeHexString(HMACUtils.generateHash(combined)).replaceAll("..(?!$)", "$0:");
@@ -241,6 +238,7 @@ public class CryptoUtil {
 
     private static byte[] generateIV(int blockSize) {
         byte[] byteIV = new byte[blockSize];
+
         SECURE_RANDOM_TL.get().nextBytes(byteIV);
         return byteIV;
     }

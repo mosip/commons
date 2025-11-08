@@ -412,7 +412,9 @@ public final class MathUtils {
      * @return the copied array.
      */
     public static int[] getCopyOfArray(int[] source) {
-        return MathArrays.copyOf(source);
+        int[] copy = new int[source.length];
+        System.arraycopy(source, 0, copy, 0, source.length);
+        return copy;
     }
 
     /**
@@ -425,7 +427,9 @@ public final class MathUtils {
      * @return the copied array.
      */
     public static int[] getCopyOfArray(int[] source, int length) {
-        return MathArrays.copyOf(source, length);
+        int[] copy = new int[length];
+        System.arraycopy(source, 0, copy, 0, Math.min(source.length, length));
+        return copy;
     }
 
     /**
@@ -435,7 +439,9 @@ public final class MathUtils {
      * @return the copied array.
      */
     public static double[] getCopyOfArray(double[] source) {
-        return MathArrays.copyOf(source);
+        double[] copy = new double[source.length];
+        System.arraycopy(source, 0, copy, 0, source.length);
+        return copy;
     }
 
     /**
@@ -448,7 +454,9 @@ public final class MathUtils {
      * @return the copied array.
      */
     public static double[] getCopyOfArray(double[] source, int length) {
-        return MathArrays.copyOf(source, length);
+        double[] copy = new double[length];
+        System.arraycopy(source, 0, copy, 0, Math.min(source.length, length));
+        return copy;
     }
 
     /**

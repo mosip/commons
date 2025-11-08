@@ -67,8 +67,7 @@ public class EmailNotificationController {
         responseWrapper
                 .setResponse(emailNotificationService.sendEmail(mailTo, mailCc, mailSubject, mailContent, attachments));
         responseWrapper.setErrors(null); // Explicitly set errors to null
-        // id and version are being fetched from RequestWrapper and copied to ResponseWrapper. As RequestWrapper  is not 
-        // present in multi form data hence it is not required.
+        // id and version are not set as the request is multipart form-data, not a RequestWrapper
         return responseWrapper;
     }
 }
