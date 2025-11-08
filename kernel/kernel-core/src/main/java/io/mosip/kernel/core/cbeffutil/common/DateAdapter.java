@@ -80,17 +80,16 @@ public final class DateAdapter extends XmlAdapter<String, LocalDateTime> {
      */
     @Override
     public LocalDateTime unmarshal(String v) {
-       
-            // Fast path: ends with 'Z' → direct instant parse
-            if (v.charAt(v.length() - 1) == 'Z') {
-                Instant instant = Instant.from(Z_PARSER.parse(v));
-                return LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
-            }
-            // Fallback: full ISO-8601 with offset or [ZoneId]
-            ZonedDateTime parse = ZonedDateTime.parse(v, DateTimeFormatter.ISO_DATE_TIME)
-                    .withZoneSameInstant(ZoneId.of("UTC"));
-            LocalDateTime locale = parse.toLocalDateTime();
-            return locale;
+        // Fast path: ends with 'Z' → direct instant parse
+        if (v.charAt(v.length() - 1) == 'Z') {
+            Instant instant = Instant.from(Z_PARSER.parse(v));
+            return LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
+        }
+        // Fallback: full ISO-8601 with offset or [ZoneId]
+        ZonedDateTime parse = ZonedDateTime.parse(v, DateTimeFormatter.ISO_DATE_TIME)
+                .withZoneSameInstant(ZoneId.of("UTC"));
+        LocalDateTime locale = parse.toLocalDateTime();
+        return locale;
     }
     /**
      * Formats a UTC {@link LocalDateTime} as ISO-8601 with trailing {@code Z}.
@@ -100,6 +99,6 @@ public final class DateAdapter extends XmlAdapter<String, LocalDateTime> {
      */
     @Override
     public String marshal(LocalDateTime v) {
-        return v == null ? null : Z_PARSER.format(v.atOffset(ZoneOffset.UTC).toInstant());
+        return Z_PARSER.format(v.atOffset(ZoneOffset.UTC).toInstant());
     }
 }

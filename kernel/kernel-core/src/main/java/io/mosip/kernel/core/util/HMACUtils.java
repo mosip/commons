@@ -28,7 +28,7 @@ import io.mosip.kernel.core.util.constant.HMACUtilConstants;
  *
  * @since 1.0.0
  */
-@Deprecated
+@Deprecated(since = "1.3.0", forRemoval = true)
 public final class HMACUtils {
     /**
      * SHA-256 Algorithm

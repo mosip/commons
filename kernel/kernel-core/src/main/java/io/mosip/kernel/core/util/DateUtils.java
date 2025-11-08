@@ -57,7 +57,7 @@ import io.mosip.kernel.core.util.constant.DateUtilConstants;
  * @author Ritesh Sinha
  * @since 1.0.0
  */
-@Deprecated(since = "1.2.0", forRemoval = true)
+@Deprecated(since = "1.3.0", forRemoval = true)
 public final class DateUtils {
 
     /**
