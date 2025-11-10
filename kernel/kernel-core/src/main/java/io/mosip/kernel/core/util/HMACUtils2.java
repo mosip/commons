@@ -101,6 +101,7 @@ public final class HMACUtils2 {
      */
     public static String digestAsPlainTextWithSalt(final byte[] pwd, final byte[] salt)
             throws NoSuchAlgorithmException {
+        MESSAGE_DIGEST_SHA256_TL.get().reset();
         MESSAGE_DIGEST_SHA256_TL.get().update(pwd);
         MESSAGE_DIGEST_SHA256_TL.get().update(salt);
         String digest = encodeBytesToHex(MESSAGE_DIGEST_SHA256_TL.get().digest(), true, ByteOrder.BIG_ENDIAN);
