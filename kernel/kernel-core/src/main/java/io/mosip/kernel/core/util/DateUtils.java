@@ -19,11 +19,20 @@ package io.mosip.kernel.core.util;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.*;
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.TimeZone;
+
+import org.apache.commons.lang3.time.DateFormatUtils;
 
 import io.mosip.kernel.core.exception.IllegalArgumentException;
 import io.mosip.kernel.core.util.constant.CalendarUtilConstants;
@@ -39,6 +48,16 @@ import io.mosip.kernel.core.util.constant.DateUtilConstants;
  * @author Bal Vikash Sharma
  * @since 1.0.0
  */
+/**
+ * @deprecated This class is deprecated and will be removed in future releases.
+ *             Please use {@link io.mosip.kernel.core.util.DateUtils2} instead.
+ *
+ * Utilities for Date operations.
+ *
+ * @author Ritesh Sinha
+ * @since 1.0.0
+ */
+@Deprecated(since = "1.3.0", forRemoval = true)
 public final class DateUtils {
 
     /**
@@ -54,31 +73,8 @@ public final class DateUtils {
      */
     private static final String UTC_DATETIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
-    /** Cached thread-local formatters for high performance */
-    private static final ThreadLocal<SimpleDateFormat> DEFAULT_UTC_FORMATTER =
-            ThreadLocal.withInitial(() -> {
-                SimpleDateFormat sdf = new SimpleDateFormat(UTC_DATETIME_PATTERN);
-                sdf.setTimeZone(UTC_TIME_ZONE);
-                return sdf;
-            });
-
-    private static final ConcurrentHashMap<String, ThreadLocal<SimpleDateFormat>> FORMATTER_CACHE = new ConcurrentHashMap<>();
-
-    private static final DateTimeFormatter ISO_FORMATTER = DateTimeFormatter.ofPattern(UTC_DATETIME_PATTERN);
-
-    private static final ConcurrentHashMap<String, DateTimeFormatter> FORMATTER_CACHE_01 = new ConcurrentHashMap<>();
-
     private DateUtils() {
 
-    }
-
-    private static SimpleDateFormat getFormatter(String pattern, TimeZone tz, Locale locale) {
-        return FORMATTER_CACHE.computeIfAbsent(pattern + tz.getID() + locale.toLanguageTag(),
-                k -> ThreadLocal.withInitial(() -> {
-                    SimpleDateFormat sdf = new SimpleDateFormat(pattern, locale);
-                    sdf.setTimeZone(tz);
-                    return sdf;
-                })).get();
     }
 
     /**
@@ -191,8 +187,7 @@ public final class DateUtils {
      */
     public static String formatDate(final Date date, final String pattern) {
         try {
-            return getFormatter(pattern, TimeZone.getDefault(), Locale.getDefault()).format(date);
-            //return DateFormatUtils.format(date, pattern, null, null);
+            return DateFormatUtils.format(date, pattern, null, null);
         } catch (java.lang.IllegalArgumentException | NullPointerException e) {
             throw new IllegalArgumentException(DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getErrorCode(),
                     DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getEexceptionMessage(), e.getCause());
@@ -215,8 +210,7 @@ public final class DateUtils {
      */
     public static String formatDate(final Date date, final String pattern, final TimeZone timeZone) {
         try {
-            //return DateFormatUtils.format(date, pattern, timeZone, null);
-            return getFormatter(pattern, timeZone, Locale.getDefault()).format(date);
+            return DateFormatUtils.format(date, pattern, timeZone, null);
         } catch (java.lang.IllegalArgumentException | NullPointerException e) {
             throw new IllegalArgumentException(DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getErrorCode(),
                     DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getEexceptionMessage(), e.getCause());
@@ -241,8 +235,7 @@ public final class DateUtils {
     public static String formatDate(final Date date, final String pattern, final TimeZone timeZone,
                                     final Locale locale) {
         try {
-            //return DateFormatUtils.format(date, pattern, timeZone, locale);
-            return getFormatter(pattern, timeZone, locale).format(date);
+            return DateFormatUtils.format(date, pattern, timeZone, locale);
         } catch (java.lang.IllegalArgumentException | NullPointerException e) {
             throw new IllegalArgumentException(DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getErrorCode(),
                     DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getEexceptionMessage(), e.getCause());
@@ -262,8 +255,7 @@ public final class DateUtils {
      */
     public static String formatCalendar(final Calendar calendar, final String pattern) {
         try {
-            //return DateFormatUtils.format(calendar, pattern, null, null);
-            return getFormatter(pattern, TimeZone.getDefault(), Locale.getDefault()).format(calendar.getTime());
+            return DateFormatUtils.format(calendar, pattern, null, null);
         } catch (java.lang.IllegalArgumentException | NullPointerException e) {
             throw new IllegalArgumentException(DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getErrorCode(),
                     DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getEexceptionMessage(), e.getCause());
@@ -284,8 +276,7 @@ public final class DateUtils {
      */
     public static String formatCalendar(final Calendar calendar, final String pattern, final TimeZone timeZone) {
         try {
-            //return DateFormatUtils.format(calendar, pattern, timeZone, null);
-            return getFormatter(pattern, timeZone, Locale.getDefault()).format(calendar.getTime());
+            return DateFormatUtils.format(calendar, pattern, timeZone, null);
         } catch (java.lang.IllegalArgumentException | NullPointerException e) {
             throw new IllegalArgumentException(DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getErrorCode(),
                     DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getEexceptionMessage(), e.getCause());
@@ -306,8 +297,7 @@ public final class DateUtils {
      */
     public static String formatCalendar(final Calendar calendar, final String pattern, final Locale locale) {
         try {
-            return getFormatter(pattern, TimeZone.getDefault(), locale).format(calendar.getTime());
-            //return DateFormatUtils.format(calendar, pattern, null, locale);
+            return DateFormatUtils.format(calendar, pattern, null, locale);
         } catch (java.lang.IllegalArgumentException | NullPointerException e) {
             throw new IllegalArgumentException(DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getErrorCode(),
                     DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getEexceptionMessage(), e.getCause());
@@ -330,8 +320,7 @@ public final class DateUtils {
     public static String formatCalendar(final Calendar calendar, final String pattern, final TimeZone timeZone,
                                         final Locale locale) {
         try {
-            return getFormatter(pattern, timeZone, locale).format(calendar.getTime());
-            //return DateFormatUtils.format(calendar, pattern, timeZone, locale);
+            return DateFormatUtils.format(calendar, pattern, timeZone, locale);
         } catch (java.lang.IllegalArgumentException | NullPointerException e) {
             throw new IllegalArgumentException(DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getErrorCode(),
                     DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getEexceptionMessage(), e.getCause());
@@ -620,7 +609,7 @@ public final class DateUtils {
      */
 
     public static String formatToISOString(LocalDateTime localDateTime) {
-        return localDateTime.format(ISO_FORMATTER);
+        return localDateTime.format(DateTimeFormatter.ofPattern(UTC_DATETIME_PATTERN));
     }
 
     /**
@@ -635,132 +624,23 @@ public final class DateUtils {
     }
 
     /**
-     * Returns the current UTC time as a {@link LocalDateTime}, with precision
-     * truncated to the smallest time unit implied by the supplied date-time
-     * pattern.
+     * Provides UTC Current DateTime string in default ISO pattern.
      *
-     * <p>The truncation is determined by scanning the pattern for time fields:
-     * <ul>
-     *   <li>Contains {@code 'S'} → truncate to <b>milliseconds</b></li>
-     *   <li>Else contains {@code 's'} → truncate to <b>seconds</b></li>
-     *   <li>Else contains {@code 'm'} → truncate to <b>minutes</b></li>
-     *   <li>Else contains any of {@code 'H','h','k','K'} → truncate to <b>hours</b></li>
-     *   <li>Else (date-only pattern) → <b>no time truncation</b></li>
-     * </ul>
-     *
-     * <p>This method does not format or parse the value; it works directly on
-     * {@link Instant} and converts to UTC {@link LocalDateTime}, minimizing
-     * allocations and avoiding formatter overhead.
-     *
-     * <p><b>Examples</b>
-     * <pre>
-     * getUTCCurrentDateTime("yyyy-MM-dd")                 // no time truncation
-     * getUTCCurrentDateTime("yyyy-MM-dd HH")              // truncated to hours
-     * getUTCCurrentDateTime("yyyy-MM-dd HH:mm")           // truncated to minutes
-     * getUTCCurrentDateTime("yyyy-MM-dd HH:mm:ss")        // truncated to seconds
-     * getUTCCurrentDateTime("yyyy-MM-dd HH:mm:ss.SSS")    // truncated to milliseconds
-     * </pre>
-     *
-     * @param pattern a {@link java.time.format.DateTimeFormatter}-compatible pattern
-     *                used only to infer the desired precision; if {@code null} or empty,
-     *                the current UTC time is returned without truncation.
-     * @return current UTC time as {@link LocalDateTime}, truncated to the resolution
-     *         implied by {@code pattern}
-     */
-    public static LocalDateTime getUTCCurrentDateTime(String pattern) {
-        Instant now = Instant.now();
-        Instant truncated = truncateToPattern(now, pattern);
-        return LocalDateTime.ofInstant(truncated, ZoneOffset.UTC);
-    }
-
-    /**
-     * Truncates the given {@link Instant} to the smallest time unit implied by the
-     * provided date-time pattern.
-     *
-     * <p>Resolution detection rules:
-     * <ul>
-     *   <li>If the pattern contains {@code 'S'} (fraction), truncate to milliseconds.</li>
-     *   <li>Else if it contains {@code 's'} (seconds), truncate to seconds.</li>
-     *   <li>Else if it contains {@code 'm'} (minutes), truncate to minutes.</li>
-     *   <li>Else if it contains any of {@code 'H','h','k','K'} (hours), truncate to hours.</li>
-     *   <li>Else return the {@code instant} unchanged (date-only pattern).</li>
-     * </ul>
-     *
-     * <p>This method is purely computational and does not allocate formatters.
-     *
-     * @param instant the instant to truncate (must not be {@code null})
-     * @param pattern the date-time pattern from which to infer resolution; if {@code null}
-     *                or empty, the {@code instant} is returned unmodified
-     * @return a truncated {@link Instant} according to the resolution implied by {@code pattern}
-     */
-    public static Instant truncateToPattern(Instant instant, String pattern) {
-        if (pattern == null || pattern.isEmpty()) return instant;
-
-        boolean hasMillis  = pattern.indexOf('S') >= 0;                         // fraction of second
-        boolean hasSecond  = pattern.indexOf('s') >= 0;
-        boolean hasMinute  = pattern.indexOf('m') >= 0;
-        boolean hasHour    = pattern.indexOf('H') >= 0 || pattern.indexOf('h') >= 0
-                || pattern.indexOf('k') >= 0 || pattern.indexOf('K') >= 0;
-
-        if (hasMillis)      return instant.truncatedTo(ChronoUnit.MILLIS);
-        else if (hasSecond) return instant.truncatedTo(ChronoUnit.SECONDS);
-        else if (hasMinute) return instant.truncatedTo(ChronoUnit.MINUTES);
-        else if (hasHour)   return instant.truncatedTo(ChronoUnit.HOURS);
-        else                return instant; // date-only patterns: no time truncation needed
-    }
-
-    /**
-     * Provides the current UTC date-time as a {@link String} in ISO-8601 format.
+     * Obtains the current date-time from the system clock in the default time-zone.
      * <p>
-     * This method obtains the current {@link OffsetDateTime} from the system clock
-     * in the default time-zone, converts it to an {@link java.time.Instant}, and
-     * then returns its ISO-8601 string representation. The output will always be
-     * in UTC (denoted by the trailing {@code 'Z'}).
-     * </p>
+     * This will query the {@link Clock#systemDefaultZone() system clock} in the
+     * default time-zone to obtain the current date-time. The offset will be
+     * calculated from the time-zone in the clock.
      * <p>
-     * Note: {@link java.time.Instant#toString()} may include up to nanosecond
-     * precision (up to 9 fractional digits). If only millisecond precision
-     * is required (3 fractional digits), consider truncating the {@code Instant}
-     * before calling {@code toString()}.
-     * </p>
+     * Using this method will prevent the ability to use an alternate clock for
+     * testing because the clock is hard-coded.
      *
-     * <pre>
-     * Example output:
-     *  2025-08-26T06:30:41.055195136Z
-     * </pre>
+     * @return the current date-time using the system clock, not null
      *
-     * @return the current UTC date-time as an ISO-8601 string
-     *
-     * @see java.time.OffsetDateTime#now()
-     * @see java.time.OffsetDateTime#toInstant()
-     * @see java.time.Instant#toString()
+     * @return a date String
      */
     public static String getUTCCurrentDateTimeString() {
-        return getUTCCurrentDateTimeString(UTC_DATETIME_PATTERN);
-    }
-
-    /**
-     * Provides the current UTC date-time as a {@link String} in the default ISO pattern
-     * <b>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</b>.
-     * <p>
-     * This method internally invokes {@link #getUTCCurrentDateTimeString(String)} with
-     * the default UTC pattern {@code UTC_DATETIME_PATTERN}.
-     * </p>
-     * <p>
-     * The output is always in UTC, truncated to milliseconds, and ends with a literal
-     * {@code 'Z'} to indicate UTC time.
-     * </p>
-     *
-     * <pre>
-     * Example output:
-     *  2025-08-26T07:25:41.123Z
-     * </pre>
-     *
-     * @return the current UTC date-time as a formatted string in pattern
-     *         {@code yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}
-     */
-    public static String getUTCCurrentDateTimeWithZString() {
-        return getUTCCurrentDateTimeString(UTC_DATETIME_PATTERN);
+        return OffsetDateTime.now().toInstant().toString();
     }
 
     /**
@@ -771,11 +651,7 @@ public final class DateUtils {
      * @return date String
      */
     public static String getUTCCurrentDateTimeString(String pattern) {
-        DateTimeFormatter formatter = FORMATTER_CACHE_01.computeIfAbsent(pattern,
-                p -> DateTimeFormatter.ofPattern(p).withZone(ZoneOffset.UTC));
-
-        // Use cached formatter for high-speed conversion
-        return formatter.format(Instant.now());
+        return ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern(pattern));
     }
 
     /**
@@ -837,10 +713,11 @@ public final class DateUtils {
      */
     public static LocalDateTime parseToLocalDateTime(String dateTime) {
         try {
-            return LocalDateTime.parse(dateTime, ISO_FORMATTER);
+            return LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern(UTC_DATETIME_PATTERN));
         } catch (Exception e) {
             return LocalDateTime.parse(dateTime);
         }
+
     }
 
     /**
@@ -861,17 +738,16 @@ public final class DateUtils {
      * @see java.time.LocalDateTime
      */
     public static LocalDateTime parseUTCToLocalDateTime(String utcDateTime, String pattern) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        simpleDateFormat.setTimeZone(UTC_TIME_ZONE);
         try {
-            SimpleDateFormat formatter = getFormatter(pattern, UTC_TIME_ZONE, Locale.getDefault());
-            return formatter.parse(utcDateTime)
-                    .toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDateTime();
+            return simpleDateFormat.parse(utcDateTime).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
         } catch (ParseException e) {
             throw new io.mosip.kernel.core.exception.ParseException(
                     DateUtilConstants.PARSE_EXCEPTION_ERROR_CODE.getErrorCode(),
                     DateUtilConstants.PARSE_EXCEPTION_ERROR_CODE.getEexceptionMessage(), e);
         }
+
     }
 
     /**
@@ -906,13 +782,16 @@ public final class DateUtils {
      * @see io.mosip.kernel.core.exception.ParseException
      */
     public static Date parseUTCToDate(String utcDateTime) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(UTC_DATETIME_PATTERN);
+        simpleDateFormat.setTimeZone(UTC_TIME_ZONE);
         try {
-            return DEFAULT_UTC_FORMATTER.get().parse(utcDateTime);
+            return simpleDateFormat.parse(utcDateTime);
         } catch (ParseException e) {
             throw new io.mosip.kernel.core.exception.ParseException(
                     DateUtilConstants.PARSE_EXCEPTION_ERROR_CODE.getErrorCode(),
                     DateUtilConstants.PARSE_EXCEPTION_ERROR_CODE.getEexceptionMessage(), e);
         }
+
     }
 
     /**
@@ -931,9 +810,10 @@ public final class DateUtils {
      * @see io.mosip.kernel.core.exception.ParseException
      */
     public static Date parseUTCToDate(String utcDateTime, String pattern) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        simpleDateFormat.setTimeZone(UTC_TIME_ZONE);
         try {
-            SimpleDateFormat sdf = getFormatter(pattern, UTC_TIME_ZONE, Locale.getDefault());
-            return sdf.parse(utcDateTime);
+            return simpleDateFormat.parse(utcDateTime);
         } catch (ParseException e) {
             throw new io.mosip.kernel.core.exception.ParseException(
                     DateUtilConstants.PARSE_EXCEPTION_ERROR_CODE.getErrorCode(),
@@ -961,9 +841,10 @@ public final class DateUtils {
      * @see java.util.TimeZone
      */
     public static Date parseToDate(String dateTime, String pattern, TimeZone timeZone) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        simpleDateFormat.setTimeZone(timeZone);
         try {
-            SimpleDateFormat sdf = getFormatter(pattern, timeZone, Locale.getDefault());
-            return sdf.parse(dateTime);
+            return simpleDateFormat.parse(dateTime);
         } catch (ParseException e) {
             throw new io.mosip.kernel.core.exception.ParseException(
                     DateUtilConstants.PARSE_EXCEPTION_ERROR_CODE.getErrorCode(),
@@ -1000,9 +881,10 @@ public final class DateUtils {
         }
         try {
 
-            SimpleDateFormat sdf = getFormatter(pattern, TimeZone.getDefault(), Locale.getDefault());
-            sdf.setLenient(false); // Prevent auto-conversion of invalid dates
-            return sdf.parse(dateString);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            simpleDateFormat.setLenient(false); // Don't automatically convert invalid date.
+            return simpleDateFormat.parse(dateString);
+
         } catch (Exception e) {
             throw new io.mosip.kernel.core.exception.ParseException(
                     DateUtilConstants.PARSE_EXCEPTION_ERROR_CODE.getErrorCode(),
@@ -1018,6 +900,9 @@ public final class DateUtils {
      *
      */
     public static String getUTCTimeFromDate(Date date) {
-        return DEFAULT_UTC_FORMATTER.get().format(date);
+        SimpleDateFormat dateFormatter = new SimpleDateFormat(UTC_DATETIME_PATTERN);
+        dateFormatter.setTimeZone(TimeZone.getTimeZone(UTC_ZONE_ID));
+        return dateFormatter.format(date);
     }
+
 }

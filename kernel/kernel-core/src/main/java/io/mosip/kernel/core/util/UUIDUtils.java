@@ -1,5 +1,7 @@
 package io.mosip.kernel.core.util;
 
+import io.mosip.kernel.core.util.constant.HMACUtilConstants;
+
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -63,14 +65,14 @@ public class UUIDUtils {
      *                              <code>name</code> is null.
      */
     public static UUID getUUIDFromBytes(UUID namespace, byte[] name) {
-        if (namespace == null) throw new NullPointerException("namespace is null");
-        if (name == null)      throw new NullPointerException("name is null");
-
-        final MessageDigest md = SHA256_TL.get();
-        md.reset();
-        md.update(toBytes(namespace));
-        md.update(name);
-        byte[] sha1Bytes = md.digest(); // 32 bytes
+        byte[] nsBytes = fastNamespaceBytes(Objects.requireNonNull(namespace, "namespace is null"));
+        if (nsBytes == null) {
+            nsBytes = toBytes(Objects.requireNonNull(namespace, "namespace is null")); // fallback for custom namespace
+        }
+        SHA256_TL.get().update(nsBytes);
+        SHA256_TL.get().update(Objects.requireNonNull(name, "name is null"));
+        byte[] sha1Bytes = SHA256_TL.get().digest(); // 32 bytes
+        SHA256_TL.get().reset();
         sha1Bytes[6] &= 0x0f; /* clear version */
         sha1Bytes[6] |= 0x50; /* set to version 5 */
         sha1Bytes[8] &= 0x3f; /* clear variant */
@@ -114,9 +116,9 @@ public class UUIDUtils {
     private static MessageDigest getDigest(String algo) {
         try {
             return MessageDigest.getInstance(algo);
-        } catch (NoSuchAlgorithmException e) {
-            // Should not happen for standard algorithms
-            throw new IllegalStateException(algo + " not supported", e);
+        } catch (NoSuchAlgorithmException exception) {
+            throw new io.mosip.kernel.core.exception.NoSuchAlgorithmException(HMACUtilConstants.MOSIP_NO_SUCH_ALGORITHM_ERROR_CODE.getErrorCode(),
+                    HMACUtilConstants.MOSIP_NO_SUCH_ALGORITHM_ERROR_CODE.getErrorMessage(), exception.getCause());
         }
     }
 }
