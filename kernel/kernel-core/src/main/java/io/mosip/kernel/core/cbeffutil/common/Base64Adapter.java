@@ -78,7 +78,7 @@ public class Base64Adapter extends XmlAdapter<String, byte[]> {
     public byte[] unmarshal(String data) throws Exception {
         LOGGER.info("Unmarshalling Base64 data");
         LOGGER.info("start unmarshal");
-        LOGGER.info("data: {}", data);
+        LOGGER.info("data: {}", data.substring(0,10));
         LOGGER.info("end unmarshal");
         return CryptoUtil.decodeBase64(data);
     }
@@ -104,7 +104,7 @@ public class Base64Adapter extends XmlAdapter<String, byte[]> {
         String value = CryptoUtil.encodeBase64String(data);
         LOGGER.info("marshalling Base64 data");
         LOGGER.info("start marshal");
-        LOGGER.info("value: {}", value);
+        LOGGER.info("value: {}", value.substring(0,10));
         LOGGER.info("end marshal");
         return value;
     }
