@@ -92,7 +92,7 @@
 		<sshd.version>1.4.0</sshd.version>
 		<itextcore.version>7.2.0</itextcore.version>
 		<itexthtml2pdf.version>2.0.0</itexthtml2pdf.version>
-		<itext.version>5.5.13</itext.version>
+		<itext.version>5.5.13.3</itext.version>
 		<freemarker.version>2.3.23</freemarker.version>
 		<velocity.version>1.7</velocity.version>
 		<velocity.tool.version>2.0</velocity.tool.version>
