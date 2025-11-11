@@ -1,6 +1,9 @@
 package io.mosip.kernel.core.cbeffutil.common;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import io.mosip.kernel.core.util.CryptoUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * <b>Base64Adapter</b> is a JAXB {@link XmlAdapter} implementation that customizes
  * the marshalling and unmarshalling of {@code byte[]} data to/from Base64-encoded
@@ -50,6 +53,8 @@ import io.mosip.kernel.core.util.CryptoUtil;
  * @see <a href="https://www.ibm.com/docs/en/was-liberty/base?topic=liberty-common-biometric-exchange-formats-framework-cbeff">CBEFF Specification</a>
  */
 public class Base64Adapter extends XmlAdapter<String, byte[]> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Base64Adapter.class);
     /**
      * Converts a Base64-encoded {@link String} from XML into a {@code byte[]} during
      * JAXB unmarshalling.
@@ -71,6 +76,10 @@ public class Base64Adapter extends XmlAdapter<String, byte[]> {
      */
     @Override
     public byte[] unmarshal(String data) throws Exception {
+        LOGGER.info("Unmarshalling Base64 data");
+        LOGGER.info("start unmarshal");
+        LOGGER.info("data: {}", data);
+        LOGGER.info("end unmarshal");
         return CryptoUtil.decodeBase64(data);
     }
     /**
@@ -92,6 +101,11 @@ public class Base64Adapter extends XmlAdapter<String, byte[]> {
      */
     @Override
     public String marshal(byte[] data) throws Exception {
-        return CryptoUtil.encodeBase64String(data);
+        String value = CryptoUtil.encodeBase64String(data);
+        LOGGER.info("marshalling Base64 data");
+        LOGGER.info("start marshal");
+        LOGGER.info("value: {}", value);
+        LOGGER.info("end marshal");
+        return value;
     }
 }
