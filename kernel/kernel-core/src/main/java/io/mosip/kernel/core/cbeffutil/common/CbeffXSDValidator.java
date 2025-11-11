@@ -93,13 +93,14 @@ public final class CbeffXSDValidator {
         SCHEMA_FACTORY = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         try {
             LOGGER.info("Initializing hardened SchemaFactory for CBEFF XSD validation...");
+            
             // Enable secure processing
             SCHEMA_FACTORY.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             // Block DOCTYPE declarations (Apache Xerces specific)
             SCHEMA_FACTORY.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
             // Disable all external resource resolution
             SCHEMA_FACTORY.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-            SCHEMA_FACTORY.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+            SCHEMA_FACTORY.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "http,https");
             LOGGER.info("SchemaFactory successfully hardened against XXE and external entities.");
         } catch (Exception e) {
             LOGGER.error("Failed to configure secure SchemaFactory: {}", e.getMessage(), e);
@@ -134,6 +135,7 @@ public final class CbeffXSDValidator {
         // Log content in.info mode (useful for troubleshooting CBEFF structures)
         LOGGER.info("XSD Content:\n{}", new String(xsdBytes, StandardCharsets.UTF_8));
         LOGGER.info("XML Content:\n{}", new String(xmlBytes, StandardCharsets.UTF_8));
+        
         final Schema schema = getOrCompileSchema(xsdBytes);
         final Validator validator = getValidator(schema);
         try (ByteArrayInputStream xmlStream = new ByteArrayInputStream(xmlBytes)) {
