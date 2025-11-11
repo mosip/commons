@@ -191,13 +191,15 @@ public final class CbeffXSDValidator {
     public static Schema compileSchema(final byte[] xsdBytes) throws CbeffException {
         requireNonEmpty(xsdBytes, "xsdBytes");
         LOGGER.info("Compiling XSD schema from {} bytes", xsdBytes.length);
-        try (ByteArrayInputStream xsdStream = new ByteArrayInputStream(xsdBytes)) {
-            Schema schema = SCHEMA_FACTORY.newSchema(new StreamSource(xsdStream, "memory:cbeff-xsd"));
-            LOGGER.info("XSD schema compiled successfully: {}", schema);
-            return schema;
-        } catch (Exception e) {
-            LOGGER.error("Failed to compile XSD schema: {}", e.getMessage(), e);
-            throw new CbeffException("XSD compilation failed: " + e.getLocalizedMessage());
+        synchronized (SCHEMA_FACTORY) {
+            try (ByteArrayInputStream xsdStream = new ByteArrayInputStream(xsdBytes)) {
+                Schema schema = SCHEMA_FACTORY.newSchema(new StreamSource(xsdStream, "memory:cbeff-xsd"));
+                LOGGER.info("XSD schema compiled successfully: {}", schema);
+                return schema;
+            } catch (Exception e) {
+                LOGGER.error("Failed to compile XSD schema: {}", e.getMessage(), e);
+                throw new CbeffException("XSD compilation failed: " + e.getLocalizedMessage());
+            }
         }
     }
     /**
