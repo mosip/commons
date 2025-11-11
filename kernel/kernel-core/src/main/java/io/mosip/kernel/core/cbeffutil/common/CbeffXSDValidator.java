@@ -27,7 +27,7 @@ import java.util.zip.CRC32;
  *       per {@link Schema} to prevent race conditions during parallel validation.</li>
  *   <li><b>Zero Allocation Streams</b>: Uses in-memory {@link ByteArrayInputStream}
  *       with system IDs for better error reporting.</li>
- *   <li><b>Comprehensive Logging</b>: Debug traces for inputs, cache hits, and validation flow.</li>
+ *   <li><b>Comprehensive Logging</b>:.info traces for inputs, cache hits, and validation flow.</li>
  * </ul>
  *
  * <h3>Security Hardening</h3>
@@ -92,7 +92,7 @@ public final class CbeffXSDValidator {
     static {
         SCHEMA_FACTORY = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         try {
-            LOGGER.debug("Initializing hardened SchemaFactory for CBEFF XSD validation...");
+            LOGGER.info("Initializing hardened SchemaFactory for CBEFF XSD validation...");
             // Enable secure processing
             SCHEMA_FACTORY.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             // Block DOCTYPE declarations (Apache Xerces specific)
@@ -100,7 +100,7 @@ public final class CbeffXSDValidator {
             // Disable all external resource resolution
             SCHEMA_FACTORY.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
             SCHEMA_FACTORY.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-            LOGGER.debug("SchemaFactory successfully hardened against XXE and external entities.");
+            LOGGER.info("SchemaFactory successfully hardened against XXE and external entities.");
         } catch (Exception e) {
             LOGGER.error("Failed to configure secure SchemaFactory: {}", e.getMessage(), e);
             throw new IllegalStateException("Unable to initialize secure XML schema validator", e);
@@ -126,19 +126,19 @@ public final class CbeffXSDValidator {
      * @throws IllegalArgumentException if either input is {@code null} or empty
      */
     public static boolean validateXML(byte[] xsdBytes, byte[] xmlBytes) throws Exception {
-        LOGGER.debug("validateXML invoked with xsdBytes length={} and xmlBytes length={}",
+        LOGGER.info("validateXML invoked with xsdBytes length={} and xmlBytes length={}",
                 (xsdBytes != null ? xsdBytes.length : "null"),
                 (xmlBytes != null ? xmlBytes.length : "null"));
         requireNonEmpty(xsdBytes, "xsdBytes");
         requireNonEmpty(xmlBytes, "xmlBytes");
-        // Log content in debug mode (useful for troubleshooting CBEFF structures)
-        LOGGER.debug("XSD Content:\n{}", new String(xsdBytes, StandardCharsets.UTF_8));
-        LOGGER.debug("XML Content:\n{}", new String(xmlBytes, StandardCharsets.UTF_8));
+        // Log content in.info mode (useful for troubleshooting CBEFF structures)
+        LOGGER.info("XSD Content:\n{}", new String(xsdBytes, StandardCharsets.UTF_8));
+        LOGGER.info("XML Content:\n{}", new String(xmlBytes, StandardCharsets.UTF_8));
         final Schema schema = getOrCompileSchema(xsdBytes);
         final Validator validator = getValidator(schema);
         try (ByteArrayInputStream xmlStream = new ByteArrayInputStream(xmlBytes)) {
             validator.validate(new StreamSource(xmlStream, "memory:cbeff-xml"));
-            LOGGER.debug("XML successfully validated against XSD (schema cache key: {})", checksumKey(xsdBytes));
+            LOGGER.info("XML successfully validated against XSD (schema cache key: {})", checksumKey(xsdBytes));
             return true;
         } catch (Exception e) {
             LOGGER.error("XML validation failed: {}", e.getMessage(), e);
@@ -163,11 +163,11 @@ public final class CbeffXSDValidator {
     public static boolean validateXML(final Schema schema, final byte[] xmlBytes) throws Exception {
         Objects.requireNonNull(schema, "schema must not be null");
         requireNonEmpty(xmlBytes, "xmlBytes");
-        LOGGER.debug("validateXML using precompiled schema={} with xmlBytes length={}", schema, xmlBytes.length);
+        LOGGER.info("validateXML using precompiled schema={} with xmlBytes length={}", schema, xmlBytes.length);
         final Validator validator = getValidator(schema);
         try (ByteArrayInputStream xmlStream = new ByteArrayInputStream(xmlBytes)) {
             validator.validate(new StreamSource(xmlStream, "memory:cbeff-xml"));
-            LOGGER.debug("XML validation successful with precompiled schema.");
+            LOGGER.info("XML validation successful with precompiled schema.");
             return true;
         } catch (Exception e) {
             LOGGER.error("Validation failed with precompiled schema: {}", e.getMessage(), e);
@@ -188,10 +188,10 @@ public final class CbeffXSDValidator {
      */
     public static Schema compileSchema(final byte[] xsdBytes) throws CbeffException {
         requireNonEmpty(xsdBytes, "xsdBytes");
-        LOGGER.debug("Compiling XSD schema from {} bytes", xsdBytes.length);
+        LOGGER.info("Compiling XSD schema from {} bytes", xsdBytes.length);
         try (ByteArrayInputStream xsdStream = new ByteArrayInputStream(xsdBytes)) {
             Schema schema = SCHEMA_FACTORY.newSchema(new StreamSource(xsdStream, "memory:cbeff-xsd"));
-            LOGGER.debug("XSD schema compiled successfully: {}", schema);
+            LOGGER.info("XSD schema compiled successfully: {}", schema);
             return schema;
         } catch (Exception e) {
             LOGGER.error("Failed to compile XSD schema: {}", e.getMessage(), e);
@@ -209,10 +209,10 @@ public final class CbeffXSDValidator {
         final String key = checksumKey(xsdBytes);
         Schema cached = SCHEMA_CACHE.get(key);
         if (cached != null) {
-            LOGGER.debug("Cache HIT: Reusing schema for key={}", key);
+            LOGGER.info("Cache HIT: Reusing schema for key={}", key);
             return cached;
         }
-        LOGGER.debug("Cache MISS: Compiling and caching new schema for key={}", key);
+        LOGGER.info("Cache MISS: Compiling and caching new schema for key={}", key);
         final Schema compiled = compileSchema(xsdBytes);
         final Schema previous = SCHEMA_CACHE.putIfAbsent(key, compiled);
         return (previous != null) ? previous : compiled;
