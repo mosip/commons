@@ -192,7 +192,6 @@ public final class DateUtils2 {
     public static String formatDate(final Date date, final String pattern) {
         try {
             return getFormatter(pattern, TimeZone.getDefault(), Locale.getDefault()).format(date);
-            //return DateFormatUtils.format(date, pattern, null, null);
         } catch (java.lang.IllegalArgumentException | NullPointerException e) {
             throw new IllegalArgumentException(DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getErrorCode(),
                     DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getEexceptionMessage(), e.getCause());
@@ -215,7 +214,6 @@ public final class DateUtils2 {
      */
     public static String formatDate(final Date date, final String pattern, final TimeZone timeZone) {
         try {
-            //return DateFormatUtils.format(date, pattern, timeZone, null);
             return getFormatter(pattern, timeZone, Locale.getDefault()).format(date);
         } catch (java.lang.IllegalArgumentException | NullPointerException e) {
             throw new IllegalArgumentException(DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getErrorCode(),
@@ -241,7 +239,6 @@ public final class DateUtils2 {
     public static String formatDate(final Date date, final String pattern, final TimeZone timeZone,
                                     final Locale locale) {
         try {
-            //return DateFormatUtils.format(date, pattern, timeZone, locale);
             return getFormatter(pattern, timeZone, locale).format(date);
         } catch (java.lang.IllegalArgumentException | NullPointerException e) {
             throw new IllegalArgumentException(DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getErrorCode(),
@@ -262,7 +259,6 @@ public final class DateUtils2 {
      */
     public static String formatCalendar(final Calendar calendar, final String pattern) {
         try {
-            //return DateFormatUtils.format(calendar, pattern, null, null);
             return getFormatter(pattern, TimeZone.getDefault(), Locale.getDefault()).format(calendar.getTime());
         } catch (java.lang.IllegalArgumentException | NullPointerException e) {
             throw new IllegalArgumentException(DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getErrorCode(),
@@ -284,7 +280,6 @@ public final class DateUtils2 {
      */
     public static String formatCalendar(final Calendar calendar, final String pattern, final TimeZone timeZone) {
         try {
-            //return DateFormatUtils.format(calendar, pattern, timeZone, null);
             return getFormatter(pattern, timeZone, Locale.getDefault()).format(calendar.getTime());
         } catch (java.lang.IllegalArgumentException | NullPointerException e) {
             throw new IllegalArgumentException(DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getErrorCode(),
@@ -307,7 +302,6 @@ public final class DateUtils2 {
     public static String formatCalendar(final Calendar calendar, final String pattern, final Locale locale) {
         try {
             return getFormatter(pattern, TimeZone.getDefault(), locale).format(calendar.getTime());
-            //return DateFormatUtils.format(calendar, pattern, null, locale);
         } catch (java.lang.IllegalArgumentException | NullPointerException e) {
             throw new IllegalArgumentException(DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getErrorCode(),
                     DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getEexceptionMessage(), e.getCause());
@@ -331,7 +325,6 @@ public final class DateUtils2 {
                                         final Locale locale) {
         try {
             return getFormatter(pattern, timeZone, locale).format(calendar.getTime());
-            //return DateFormatUtils.format(calendar, pattern, timeZone, locale);
         } catch (java.lang.IllegalArgumentException | NullPointerException e) {
             throw new IllegalArgumentException(DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getErrorCode(),
                     DateUtilConstants.ILLEGALARGUMENT_ERROR_CODE.getEexceptionMessage(), e.getCause());
@@ -605,9 +598,7 @@ public final class DateUtils2 {
      * @return a date String
      */
     public static String toISOString(Date date) {
-        DateFormat df = new SimpleDateFormat(UTC_DATETIME_PATTERN);
-        df.setTimeZone(UTC_TIME_ZONE);
-        return df.format(date);
+        return DEFAULT_UTC_FORMATTER.get().format(date);
     }
 
     /**

@@ -24,6 +24,8 @@ import io.mosip.kernel.emailnotification.constant.MailNotifierConstants;
 import io.mosip.kernel.emailnotification.exception.InvalidArgumentsException;
 import io.mosip.kernel.emailnotification.exception.NotificationException;
 
+import javax.inject.Qualifier;
+
 /**
  * This class provides with the utility methods for email-notifier service.
  *
@@ -42,6 +44,7 @@ public class EmailNotificationUtils {
      * @param emailSender the JavaMailSender instance used to send the email
      */
     
+    @Async("mailExecutor")
     public void sendMessage(MimeMessage message, JavaMailSender emailSender) {
         emailSender.send(message);
     }
@@ -143,19 +146,5 @@ public class EmailNotificationUtils {
         InternetAddress fromEmailAddr = new InternetAddress(emailId);
         fromEmailAddr.validate();
         return true;
-    }
-
-    /**
-     * Wrapper around validateEmailAddress() to avoid throwing checked exceptions inside streams.
-     *
-     * @param email email address
-     * @return true if valid, false otherwise
-     */
-    private static boolean safeValidateEmail(String email) {
-        try {
-            return validateEmailAddress(email);
-        } catch (AddressException e) {
-            return false;
-        }
     }
 }

@@ -1,5 +1,7 @@
 package io.mosip.kernel.emailnotification.service.impl;
 
+import io.mosip.kernel.emailnotification.util.EmailNotificationUtils;
+import io.mosip.kernel.emailnotification.util.SmsNotificationUtils;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,23 +40,19 @@ public class SmsNotificationServiceImpl implements SmsNotification {
     @Value("${spring.profiles.active}")
     private String activeProfile;
 
-    @Autowired
-    private SMSServiceProvider smsServiceProvider;
-
     @Value("${mosip.kernel.sms.proxy-sms:false}")
     private boolean isProxytrue;
 
     @Value("${mosip.kernel.sms.success-message:SMS request sent}")
     private String sucessMessage;
-
+    
+    @Autowired
+    private SmsNotificationUtils smsNotificationUtils;
+    
     /**
      * Pre-built static success response for proxy/local mode to reduce allocations.
      */
     private SMSResponseDto cachedSuccessResponse;
-
-    @Autowired
-    @Qualifier("smsExecutor")
-    private Executor smsExecutor;
 
     @PostConstruct
     private void initSuccessResponse() {
@@ -79,22 +77,13 @@ public class SmsNotificationServiceImpl implements SmsNotification {
         // Check for proxy or local mode
         boolean isLocalProfile = "local".equalsIgnoreCase(activeProfile);
         if (!isLocalProfile && !isProxytrue) {
-            send(contactNumber, contentMessage);  // async
+            send(contactNumber, contentMessage);
         }
 
         return cachedSuccessResponse;
     }
-
-    /**
-     * Asynchronously sends the SMS using the service provider.
-     */
+    
     public void send(String contactNumber, String contentMessage) {
-        smsExecutor.execute(() -> {
-            try {
-                smsServiceProvider.sendSms(contactNumber, contentMessage);
-            } catch (Exception e) {
-                LOGGER.error("SMS send failed: {}", e.getMessage(), e);
-            }
-        });
+        smsNotificationUtils.sendSms(contactNumber, contentMessage);
     }
 }

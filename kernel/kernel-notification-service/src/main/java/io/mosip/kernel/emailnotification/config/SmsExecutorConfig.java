@@ -98,7 +98,7 @@ public class SmsExecutorConfig {
          * if set to true
          */
 //        executor.setAllowCoreThreadTimeOut(true);
-//        executor.setKeepAliveSeconds(keepAliveSeconds);
+        executor.setKeepAliveSeconds(keepAliveSeconds);
         executor.setAwaitTerminationSeconds(awaitTerminationSeconds);
         executor.initialize();
         return executor;
