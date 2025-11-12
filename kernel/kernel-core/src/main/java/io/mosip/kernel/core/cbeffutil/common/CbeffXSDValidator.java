@@ -105,7 +105,7 @@ public class CbeffXSDValidator {
             SCHEMA_FACTORY.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
             // Disable all external resource resolution
             SCHEMA_FACTORY.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-            SCHEMA_FACTORY.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+            SCHEMA_FACTORY.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "http,https");
             LOGGER.debug("SchemaFactory successfully hardened against XXE and external entities.");
         } catch (Exception e) {
             LOGGER.error("Failed to configure secure SchemaFactory: {}", e.getMessage(), e);

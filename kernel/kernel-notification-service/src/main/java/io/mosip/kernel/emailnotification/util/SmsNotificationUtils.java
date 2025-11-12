@@ -1,6 +1,11 @@
 package io.mosip.kernel.emailnotification.util;
 
+import io.mosip.kernel.core.exception.ExceptionUtils;
+import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.notification.spi.SMSServiceProvider;
+import io.mosip.kernel.emailnotification.config.LoggerConfiguration;
+import io.mosip.kernel.emailnotification.constant.MailNotifierArgumentErrorConstants;
+import io.mosip.kernel.emailnotification.constant.SmsExceptionConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -25,7 +30,7 @@ import java.util.*;
  */
 @Component
 public class SmsNotificationUtils {
-    
+    private final static Logger mosipLogger = LoggerConfiguration.logConfig(SmsNotificationUtils.class);
     @Autowired
     private SMSServiceProvider smsServiceProvider;
 
@@ -44,6 +49,12 @@ public class SmsNotificationUtils {
      */
     @Async("smsExecutor")
     public void sendSms(String contactNumber, String contentMessage) {
-        smsServiceProvider.sendSms(contactNumber, contentMessage);
+        try {
+            smsServiceProvider.sendSms(contactNumber, contentMessage);
+        } catch(Exception exception){
+            mosipLogger.error(SmsExceptionConstant.INTERNAL_SERVER_ERROR.getErrorCode(),
+                    SmsExceptionConstant.INTERNAL_SERVER_ERROR.getErrorMessage(),
+                    ExceptionUtils.getStackTrace(exception));
+        }
     }
 }
