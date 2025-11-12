@@ -58,10 +58,6 @@ public class EmailNotificationServiceImpl implements EmailNotification<Multipart
     @Value("${mosip.kernel.mail.content.html.enable:true}")
     private boolean isHtmlEnable;
 
-    @Autowired
-    @Qualifier("mailExecutor")
-    private Executor mailExecutor;
-
     /**
      * Sends an email with the specified parameters. In proxy mode, skips actual sending.
      *
@@ -79,14 +75,7 @@ public class EmailNotificationServiceImpl implements EmailNotification<Multipart
         LOGGER.debug("To Request : " + String.join(",", mailTo));
 
         if (!isProxytrue) {
-            EmailNotificationUtils.validateMailArguments(fromEmailAddress, mailTo, mailSubject, mailContent);
-            mailExecutor.execute(() -> {
-                try {
-                    send(mailTo, mailCc, mailSubject, mailContent, attachments);
-                } catch (Exception e) {
-                    LOGGER.error("Error sending email async: {}", e.getMessage(), e);
-                }
-            });
+            send(mailTo, mailCc, mailSubject, mailContent, attachments);
         }
 
         dto.setStatus(MailNotifierConstants.MESSAGE_SUCCESS_STATUS.getValue());
@@ -105,6 +94,7 @@ public class EmailNotificationServiceImpl implements EmailNotification<Multipart
      */
     public void send(String[] mailTo, String[] mailCc, String mailSubject, String mailContent,
                      MultipartFile[] attachments) {
+        EmailNotificationUtils.validateMailArguments(fromEmailAddress, mailTo, mailSubject, mailContent);
         /**
          * Creates the message.
          */

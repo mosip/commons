@@ -86,7 +86,7 @@ public final class HMACUtils2 {
      * @return byte[] generated hash bytes
      * @throws NoSuchAlgorithmException if no algorithm found
      */
-    public static synchronized byte[] generateHash(final byte[] bytes) throws NoSuchAlgorithmException {
+    public static byte[] generateHash(final byte[] bytes) throws NoSuchAlgorithmException {
         return MESSAGE_DIGEST_SHA256_TL.get().digest(bytes);
     }
 
@@ -98,13 +98,13 @@ public final class HMACUtils2 {
      * @return String converted digest as plain text
      * @throws NoSuchAlgorithmException if no algorithm found
      */
-    public static synchronized String digestAsPlainTextWithSalt(final byte[] pwd, final byte[] salt)
+    public static String digestAsPlainTextWithSalt(final byte[] pwd, final byte[] salt)
             throws NoSuchAlgorithmException {
         MessageDigest digest = MESSAGE_DIGEST_SHA256_TL.get();
         digest.reset();
         digest.update(pwd);
         digest.update(salt);
-        return encodeBytesToHex(MESSAGE_DIGEST_SHA256_TL.get().digest(), true, ByteOrder.BIG_ENDIAN);
+        return encodeBytesToHex(digest.digest(), true, ByteOrder.BIG_ENDIAN);
     }
 
     /**

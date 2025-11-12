@@ -69,10 +69,12 @@ public class UUIDUtils {
         if (nsBytes == null) {
             nsBytes = toBytes(Objects.requireNonNull(namespace, "namespace is null")); // fallback for custom namespace
         }
-        SHA256_TL.get().update(nsBytes);
-        SHA256_TL.get().update(Objects.requireNonNull(name, "name is null"));
-        byte[] sha1Bytes = SHA256_TL.get().digest(); // 32 bytes
-        SHA256_TL.get().reset();
+        MessageDigest digest = SHA256_TL.get();
+        digest.reset();
+        digest.update(nsBytes);
+        digest.update(Objects.requireNonNull(name, "name is null"));
+        
+        byte[] sha1Bytes = digest.digest(); // 32 bytes
         sha1Bytes[6] &= 0x0f; /* clear version */
         sha1Bytes[6] |= 0x50; /* set to version 5 */
         sha1Bytes[8] &= 0x3f; /* clear variant */
