@@ -130,7 +130,6 @@ public class CryptoUtil {
      */
     @Deprecated(since = "1.1.5", forRemoval = true)
     public static String encodeBase64(byte[] data) {
-        if (EmptyCheckUtils.isNullEmpty(data)) return null;
         return URL_SAFE_ENCODER.encodeToString(data);
     }
 
@@ -144,7 +143,6 @@ public class CryptoUtil {
      */
     @Deprecated(since = "1.1.5", forRemoval = true)
     public static String encodeBase64String(byte[] data) {
-        if (EmptyCheckUtils.isNullEmpty(data)) return null;
         return STD_ENCODER.encodeToString(data);
     }
 

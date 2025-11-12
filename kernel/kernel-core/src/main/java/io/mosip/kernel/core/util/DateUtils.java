@@ -43,20 +43,15 @@ import io.mosip.kernel.core.util.constant.DateUtilConstants;
  *
  * Provide Date and Time utility for usage across the application to manipulate
  * dates or calendars
- *
- * @author Ravi C Balaji
- * @author Bal Vikash Sharma
- * @since 1.0.0
- */
-/**
  * @deprecated This class is deprecated and will be removed in future releases.
  *             Please use {@link io.mosip.kernel.core.util.DateUtils2} instead.
  *
- * Utilities for Date operations.
- *
+ * @author Ravi C Balaji
+ * @author Bal Vikash Sharma
  * @author Ritesh Sinha
  * @since 1.0.0
  */
+
 @Deprecated(since = "1.3.0", forRemoval = true)
 public final class DateUtils {
 

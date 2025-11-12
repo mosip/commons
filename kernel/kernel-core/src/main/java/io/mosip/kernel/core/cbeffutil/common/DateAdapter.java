@@ -1,7 +1,6 @@
 package io.mosip.kernel.core.cbeffutil.common;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 /**
  * <h2>DateAdapter</h2>
@@ -68,7 +67,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
  * @see DateTimeFormatter#ISO_INSTANT
  * @see <a href="https://datatracker.ietf.org/doc/html/rfc3339">RFC 3339</a>
  */
-public final class DateAdapter extends XmlAdapter<String, LocalDateTime> {
+public class DateAdapter extends XmlAdapter<String, LocalDateTime> {
     /** Thread-safe formatter for 'Z' suffix (fast path). */
     private static final DateTimeFormatter Z_PARSER = DateTimeFormatter.ISO_INSTANT;
     /**
@@ -76,10 +75,10 @@ public final class DateAdapter extends XmlAdapter<String, LocalDateTime> {
      *
      * @param v the datetime string; may be {@code null} or empty
      * @return {@link LocalDateTime} in UTC, or {@code null} if input is {@code null}/empty
-     * @throws IllegalArgumentException if parsing fails
+     * @throws Exception if parsing fails
      */
     @Override
-    public LocalDateTime unmarshal(String v) {
+    public LocalDateTime unmarshal(String v) throws Exception {
         // Fast path: ends with 'Z' → direct instant parse
         if (v.charAt(v.length() - 1) == 'Z') {
             Instant instant = Instant.from(Z_PARSER.parse(v));
@@ -96,9 +95,10 @@ public final class DateAdapter extends XmlAdapter<String, LocalDateTime> {
      *
      * @param v the UTC {@link LocalDateTime}; may be {@code null}
      * @return ISO-8601 string ending in {@code Z}, or {@code null} if input is {@code null}
+     * @throws Exception if parsing fails
      */
     @Override
-    public String marshal(LocalDateTime v) {
+    public String marshal(LocalDateTime v) throws Exception {
         return Z_PARSER.format(v.atOffset(ZoneOffset.UTC).toInstant());
     }
 }

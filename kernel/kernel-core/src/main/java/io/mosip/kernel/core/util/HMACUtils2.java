@@ -84,11 +84,10 @@ public final class HMACUtils2 {
      *
      * @param bytes bytes to be hash generation
      * @return byte[] generated hash bytes
+     * @throws NoSuchAlgorithmException if no algorithm found
      */
-    public static byte[] generateHash(final byte[] bytes) throws NoSuchAlgorithmException {
-        byte[] digest = MESSAGE_DIGEST_SHA256_TL.get().digest(bytes);
-        MESSAGE_DIGEST_SHA256_TL.get().reset();
-        return digest;
+    public static synchronized byte[] generateHash(final byte[] bytes) throws NoSuchAlgorithmException {
+        return MESSAGE_DIGEST_SHA256_TL.get().digest(bytes);
     }
 
     /**
@@ -97,16 +96,15 @@ public final class HMACUtils2 {
      * @param pwd digest bytes
      * @param salt  digest bytes
      * @return String converted digest as plain text
-     * @throws java.security.NoSuchAlgorithmException
+     * @throws NoSuchAlgorithmException if no algorithm found
      */
-    public static String digestAsPlainTextWithSalt(final byte[] pwd, final byte[] salt)
+    public static synchronized String digestAsPlainTextWithSalt(final byte[] pwd, final byte[] salt)
             throws NoSuchAlgorithmException {
-        MESSAGE_DIGEST_SHA256_TL.get().reset();
-        MESSAGE_DIGEST_SHA256_TL.get().update(pwd);
-        MESSAGE_DIGEST_SHA256_TL.get().update(salt);
-        String digest = encodeBytesToHex(MESSAGE_DIGEST_SHA256_TL.get().digest(), true, ByteOrder.BIG_ENDIAN);
-        MESSAGE_DIGEST_SHA256_TL.get().reset();
-        return digest;
+        MessageDigest digest = MESSAGE_DIGEST_SHA256_TL.get();
+        digest.reset();
+        digest.update(pwd);
+        digest.update(salt);
+        return encodeBytesToHex(MESSAGE_DIGEST_SHA256_TL.get().digest(), true, ByteOrder.BIG_ENDIAN);
     }
 
     /**

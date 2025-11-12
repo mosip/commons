@@ -1,7 +1,8 @@
 package io.mosip.kernel.core.cbeffutil.common;
-import io.mosip.kernel.core.cbeffutil.exception.CbeffException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -12,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.CRC32;
+
 /**
  * <b>CbeffXSDValidator</b> is a high-performance, secure, and thread-safe utility
  * for validating CBEFF (Common Biometric Exchange Formats Framework) XML documents
@@ -67,17 +69,20 @@ import java.util.zip.CRC32;
  * </p>
  *
  * @author M1049825
- * @since 1.0.0
- *
  * @see Schema
  * @see Validator
- * @see CbeffException
+ * @see Exception
  * @see <a href="https://docs.oasis-open.org/bioserv/cbeff/v3.0/cbeff-v3.0.html">CBEFF v3.0 Specification</a>
+ * @since 1.0.0
  */
-public final class CbeffXSDValidator {
-    /** SLF4J Logger for diagnostic and security event logging. */
+public class CbeffXSDValidator {
+    /**
+     * SLF4J Logger for diagnostic and security event logging.
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(CbeffXSDValidator.class);
-    /** Secure SchemaFactory instance for W3C XML Schema (XSD). */
+    /**
+     * Secure SchemaFactory instance for W3C XML Schema (XSD).
+     */
     private static final SchemaFactory SCHEMA_FACTORY;
     /**
      * Cache of compiled {@link Schema} objects.
@@ -89,6 +94,7 @@ public final class CbeffXSDValidator {
      * Prevents validator reuse issues in multi-threaded environments.
      */
     private static final ConcurrentHashMap<Schema, ThreadLocal<Validator>> TL_VALIDATORS = new ConcurrentHashMap<>();
+
     static {
         SCHEMA_FACTORY = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         try {
@@ -106,10 +112,14 @@ public final class CbeffXSDValidator {
             throw new IllegalStateException("Unable to initialize secure XML schema validator", e);
         }
     }
-    /** Private constructor to prevent instantiation. */
+
+    /**
+     * Private constructor to prevent instantiation.
+     */
     private CbeffXSDValidator() {
         throw new UnsupportedOperationException("CbeffXSDValidator is a utility class and cannot be instantiated");
     }
+
     /**
      * Validates an XML document against an XSD schema provided as byte arrays.
      *
@@ -121,8 +131,8 @@ public final class CbeffXSDValidator {
      * @param xsdBytes the XSD schema as a non-empty byte array
      * @param xmlBytes the XML document to validate as a non-empty byte array
      * @return {@code true} if XML is valid against the XSD
-     * @throws Exception if validation fails or input is invalid
-     *                   (includes {@link org.xml.sax.SAXException}, {@link java.io.IOException})
+     * @throws Exception                if validation fails or input is invalid
+     *                                  (includes {@link org.xml.sax.SAXException}, {@link java.io.IOException})
      * @throws IllegalArgumentException if either input is {@code null} or empty
      */
     public static boolean validateXML(byte[] xsdBytes, byte[] xmlBytes) throws Exception {
@@ -145,6 +155,7 @@ public final class CbeffXSDValidator {
             throw e;
         }
     }
+
     /**
      * Validates an XML document against a pre-compiled {@link Schema}.
      *
@@ -156,8 +167,8 @@ public final class CbeffXSDValidator {
      * @param schema   the pre-compiled XSD schema; must not be {@code null}
      * @param xmlBytes the XML document to validate as a non-empty byte array
      * @return {@code true} if XML is valid
-     * @throws Exception if validation fails
-     * @throws NullPointerException if {@code schema} is {@code null}
+     * @throws Exception                if validation fails
+     * @throws NullPointerException     if {@code schema} is {@code null}
      * @throws IllegalArgumentException if {@code xmlBytes} is {@code null} or empty
      */
     public static boolean validateXML(final Schema schema, final byte[] xmlBytes) throws Exception {
@@ -174,6 +185,7 @@ public final class CbeffXSDValidator {
             throw e;
         }
     }
+
     /**
      * Compiles an XSD schema from byte array without caching.
      *
@@ -183,29 +195,31 @@ public final class CbeffXSDValidator {
      *
      * @param xsdBytes the XSD schema as a non-empty byte array
      * @return a compiled {@link Schema} instance
-     * @throws CbeffException if schema compilation fails
-     * @throws IllegalArgumentException if {@code xsdBytes} is {@code null} or empty
+     * @throws Exception if {@code xsdBytes} is {@code null} or empty
      */
-    public static Schema compileSchema(final byte[] xsdBytes) throws CbeffException {
+    public static Schema compileSchema(final byte[] xsdBytes) throws Exception {
         requireNonEmpty(xsdBytes, "xsdBytes");
         LOGGER.debug("Compiling XSD schema from {} bytes", xsdBytes.length);
-        try (ByteArrayInputStream xsdStream = new ByteArrayInputStream(xsdBytes)) {
-            Schema schema = SCHEMA_FACTORY.newSchema(new StreamSource(xsdStream, "memory:cbeff-xsd"));
-            LOGGER.debug("XSD schema compiled successfully: {}", schema);
-            return schema;
-        } catch (Exception e) {
-            LOGGER.error("Failed to compile XSD schema: {}", e.getMessage(), e);
-            throw new CbeffException("XSD compilation failed: " + e.getLocalizedMessage());
+        synchronized (SCHEMA_FACTORY) {
+            try (ByteArrayInputStream xsdStream = new ByteArrayInputStream(xsdBytes)) {
+                Schema schema = SCHEMA_FACTORY.newSchema(new StreamSource(xsdStream, "memory:cbeff-xsd"));
+                LOGGER.debug("XSD schema compiled successfully: {}", schema);
+                return schema;
+            } catch (Exception e) {
+                LOGGER.error("Failed to compile XSD schema: {}", e.getMessage(), e);
+                throw e;
+            }
         }
     }
+
     /**
      * Retrieves a cached {@link Schema} or compiles and caches a new one.
      *
      * @param xsdBytes the XSD byte content
      * @return cached or newly compiled {@link Schema}
-     * @throws CbeffException if compilation fails
+     * @throws Exception if compilation fails
      */
-    private static Schema getOrCompileSchema(final byte[] xsdBytes) throws CbeffException {
+    private static Schema getOrCompileSchema(final byte[] xsdBytes) throws Exception {
         final String key = checksumKey(xsdBytes);
         Schema cached = SCHEMA_CACHE.get(key);
         if (cached != null) {
@@ -217,6 +231,7 @@ public final class CbeffXSDValidator {
         final Schema previous = SCHEMA_CACHE.putIfAbsent(key, compiled);
         return (previous != null) ? previous : compiled;
     }
+
     /**
      * Generates a cache key using length + CRC32 checksum.
      *
@@ -230,6 +245,7 @@ public final class CbeffXSDValidator {
         LOGGER.trace("Generated cache key: {}", key);
         return key;
     }
+
     /**
      * Ensures input byte array is non-null and non-empty.
      *
@@ -244,6 +260,7 @@ public final class CbeffXSDValidator {
         }
         LOGGER.trace("Input {} has length={}", name, arr.length);
     }
+
     /**
      * Returns a thread-local {@link Validator} for the given {@link Schema}.
      *
