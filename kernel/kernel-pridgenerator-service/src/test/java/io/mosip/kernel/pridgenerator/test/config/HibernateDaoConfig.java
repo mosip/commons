@@ -87,7 +87,6 @@ public class HibernateDaoConfig implements EnvironmentAware {
 	 * @return dataSource
 	 */
 	@Bean
-	@Autowired
 	public DataSource dataSource() {
 		HikariConfig hikariConfig = new HikariConfig();
 		hikariConfig.setDriverClassName(env.getProperty(HibernatePersistenceConstant.JAVAX_PERSISTENCE_JDBC_DRIVER));
@@ -110,7 +109,6 @@ public class HibernateDaoConfig implements EnvironmentAware {
 	 * @return LocalContainerEntityManagerFactoryBean
 	 */
 	@Bean
-	@Autowired
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(final DataSource dataSource) {
 		LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
 		entityManagerFactory.setDataSource(dataSource);
@@ -127,7 +125,6 @@ public class HibernateDaoConfig implements EnvironmentAware {
 	 * @return PlatformTransactionManager
 	 */
 	@Bean
-	@Autowired
 	public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
 		JpaTransactionManager jpaTransactionManager = new JpaTransactionManager(entityManagerFactory);
 		jpaTransactionManager.setDataSource(dataSource());
@@ -183,5 +180,4 @@ public class HibernateDaoConfig implements EnvironmentAware {
 		}
 		return jpaProperties;
 	}
-
 }
