@@ -13,15 +13,16 @@
 		<!-- maven -->
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
-		<kernel.core.version>1.3.0-beta.3</kernel.core.version>
-		<kernel.idgenerator.vid.version>1.3.0-beta.3</kernel.idgenerator.vid.version>
+		<kernel.core.version>1.3.0-SNAPSHOT</kernel.core.version>
+		<kernel.idgenerator.vid.version>1.3.0-SNAPSHOT</kernel.idgenerator.vid.version>
 		<ceylon.complete.version>1.3.2</ceylon.complete.version>
 		<vertx.lang.ceylon.version>3.4.1</vertx.lang.ceylon.version>
-		<kernel.templatemanager.velocity.version>1.3.0-beta.3</kernel.templatemanager.velocity.version>
-		<kernel.crypto.signature.version>1.3.0-beta.3</kernel.crypto.signature.version>
+		<kernel.templatemanager.velocity.version>1.3.0-SNAPSHOT</kernel.templatemanager.velocity.version>
+		<kernel.crypto.signature.version>1.3.0-SNAPSHOT</kernel.crypto.signature.version>
 		<modelmapper.version>2.3.7</modelmapper.version>
-		<kernel.logger.version>1.3.0-beta.3</kernel.logger.version>
+		<kernel.logger.version>1.3.0-SNAPSHOT</kernel.logger.version>
 		<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
+		<spring-boot-maven-plugin.version>3.2.3</spring-boot-maven-plugin.version>
 		<sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/verticle/**,**/spi/**,"**/proxy/**","**/entities/**","**/filter/**","**/util/**","**/verifier/**","**/IDGeneratorVertxApplication.java"</sonar.coverage.exclusions>
 	</properties>
      	<dependencyManagement>
@@ -29,14 +30,14 @@
 			<dependency>
 				<groupId>io.mosip.kernel</groupId>
 				<artifactId>kernel-bom</artifactId>
-				<version>1.3.0-beta.3</version>
+				<version>1.3.0-SNAPSHOT</version>
 				<type>pom</type>
 			    <scope>import</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<artifactId>kernel-idgenerator-service</artifactId>
-	<version>1.3.0-beta.3</version>
+	<version>1.3.0-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
@@ -183,6 +184,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${spring-boot-maven-plugin.version}</version>
 				<configuration>
 					<executable>true</executable>
 					<layout>ZIP</layout>
