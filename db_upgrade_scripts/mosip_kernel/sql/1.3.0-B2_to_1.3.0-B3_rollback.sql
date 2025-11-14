@@ -1,7 +1,1 @@
--- ROLLBACK FOR PERFORMANCE OPTIMIZATION INDEXES
-
-DROP INDEX IF EXISTS kernel.idx_vid_status_not_deleted;
-
-DROP INDEX CONCURRENTLY IF EXISTS kernel.idx_vid_status_isdeleted;
-
--- END ROLLBACK FOR PERFORMANCE OPTIMIZATION INDEXES
+\echo 'rollback Queries not required for transition from $CURRENT_VERSION to $UPGRADE_VERSION'
