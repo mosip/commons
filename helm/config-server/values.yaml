@@ -73,7 +73,7 @@ lifecycleHooks:
         - -c
         - sleep 30
 
-## Termination grace perios : the maximum amount of time (in seconds) Kubernetes will wait for a container to gracefully shut down
+## Termination grace periods : the maximum amount of time (in seconds) Kubernetes will wait for a container to gracefully shut down
 terminationGracePeriodSeconds: 60
 
 ## Config server docker runs as non-root user by default, so enabling the below may not be required.
