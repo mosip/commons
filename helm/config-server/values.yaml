@@ -200,7 +200,7 @@ volumePermissions:
   enabled: true
   image:
     registry: docker.io
-    repository: bitnami/bitnami-shell
+    repository: mosipid/bitnami-shell
     tag: "10"
     pullPolicy: Always
     ## Optionally specify an array of imagePullSecrets.
