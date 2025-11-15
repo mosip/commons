@@ -75,7 +75,14 @@
         </repository>
     </distributionManagement>
         <build>
-            <pluginManagement>
+       	<pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>3.2.3</version>
+			</plugin>
+		</plugins>
                 <plugins>
                     <plugin>
                         <groupId>org.jacoco</groupId>
