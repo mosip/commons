@@ -217,7 +217,16 @@ podAnnotations: {}
 
 ## lifecycleHooks for the  container to automate configuration before or after startup.
 ##
-lifecycleHooks: {}
+lifecycleHooks:
+  preStop:
+    exec:
+      command:
+        - sh
+        - -c
+        - sleep 30
+
+## Termination grace perios : the maximum amount of time (in seconds) Kubernetes will wait for a container to gracefully shut down
+terminationGracePeriodSeconds: 60
 
 ## Custom Liveness probes for
 ##
