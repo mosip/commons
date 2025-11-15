@@ -64,6 +64,18 @@ readinessProbe:
 
 podAnnotations: {}
 
+## LifeCycle addition
+lifecycleHooks:
+  preStop:
+    exec:
+      command:
+        - sh
+        - -c
+        - sleep 30
+
+## Termination grace periods : the maximum amount of time (in seconds) Kubernetes will wait for a container to gracefully shut down
+terminationGracePeriodSeconds: 60
+
 ## Config server docker runs as non-root user by default, so enabling the below may not be required.
 podSecurityContext:
   enabled: false
@@ -188,8 +200,8 @@ volumePermissions:
   enabled: true
   image:
     registry: docker.io
-    repository: bitnami/bitnami-shell
-    tag: "10"
+    repository: mosipid/os-shell
+    tag: "12-debian-12-r46"
     pullPolicy: Always
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.

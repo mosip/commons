@@ -23,7 +23,7 @@
 		<!-- <maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version> -->
 		<maven.javadoc.version>3.2.0</maven.javadoc.version>
 		<maven-shade-plugin.version>2.3</maven-shade-plugin.version>
-
+		<spring.boot.maven.plugin.version>3.2.3</spring.boot.maven.plugin.version>
 		<kernel-core.version>1.2.1-SNAPSHOT</kernel-core.version>
 		<kernel-logger-logback.version>1.2.1-SNAPSHOT</kernel-logger-logback.version>
 		<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
@@ -116,6 +116,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+                                <version>${spring.boot.maven.plugin.version}</version>
 				<configuration>
 					<executable>true</executable>
 					<layout>ZIP</layout>
