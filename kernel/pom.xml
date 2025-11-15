@@ -22,7 +22,6 @@
 		<maven.jacoco.version>0.8.5</maven.jacoco.version>
 		<maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version>
 		<maven.javadoc.version>3.2.0</maven.javadoc.version>
-		<spring.boot.maven.plugin.version>3.2.3</spring.boot.maven.plugin.version>
 		<maven-shade-plugin.version>2.3</maven-shade-plugin.version>
 
 
@@ -114,14 +113,6 @@
         <build>
 			<pluginManagement>
 				<plugins>
-					<plugin>
-						<groupId>org.springframework.boot</groupId>
-						<artifactId>spring-boot-maven-plugin</artifactId>
-						<version>${spring.boot.maven.plugin.version}</version>
-					</plugin>
-				</plugins>
-			</pluginManagement>
-			<plugins>
                                         <plugin>
                                                 <groupId>org.jacoco</groupId>
                                                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -134,6 +125,8 @@
                                                         </execution>
                                                 </executions>
                                         </plugin>
+				</plugins>
+			</pluginManagement>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
