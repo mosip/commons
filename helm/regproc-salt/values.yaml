@@ -27,7 +27,7 @@ replicaCount: 1
 image:
   registry: docker.io
   repository: mosipid/kernel-salt-generator
-  tag: 1.3.0-beta.3
+  tag: 1.3.x
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -222,8 +222,8 @@ volumePermissions:
   enabled: false
   image:
     registry: docker.io
-    repository: bitnami/bitnami-shell
-    tag: "10"
+    repository: mosipid/os-shell
+    tag: "12-debian-12-r46"
     pullPolicy: Always
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
