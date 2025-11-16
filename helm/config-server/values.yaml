@@ -8,7 +8,7 @@ image:
   repository: mosipqa/kernel-config-server
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: develop
+  tag: 1.3.x
 
 imagePullSecrets: []
 nameOverride: ""
