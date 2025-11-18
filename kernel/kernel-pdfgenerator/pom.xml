@@ -1,28 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<groupId>io.mosip.kernel</groupId>
+		<artifactId>kernel-parent</artifactId>
+		<version>1.3.0-SNAPSHOT</version>
+	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-pdfgenerator</artifactId>
 	<version>1.3.0-SNAPSHOT</version>
 	<name>kernel-pdfgenerator</name>
 	<description>generate pdf for given  template</description>
+	<url>https://github.com/mosip/commons</url>
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-		<!-- maven -->
-		<maven.compiler.source>21</maven.compiler.source>
-		<maven.compiler.target>21</maven.compiler.target>
-		<kernel.core.version>1.3.0-SNAPSHOT</kernel.core.version>
-		<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
+		<!-- others -->
 		<bouncycastle.version>1.66</bouncycastle.version>
+		<apache.pdfbox.version>2.0.29</apache.pdfbox.version>
+		<openhtmltopdf.pdfbox.version>1.0.10</openhtmltopdf.pdfbox.version>
+		<jsoup.version>1.18.1</jsoup.version>
+		<commons-io>2.16.1</commons-io>
+
+		<!-- mosip -->
+		<kernel.core.version>1.3.0-SNAPSHOT</kernel.core.version>
 	</properties>
      	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>io.mosip.kernel</groupId>
 				<artifactId>kernel-bom</artifactId>
-				<version>1.3.0-SNAPSHOT</version>
+				<version>${kernel.core.version}</version>
 				<type>pom</type>
 			    <scope>import</scope>
 			</dependency>
@@ -45,37 +52,37 @@
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>
-			<version>2.0.29</version>
+			<version>${apache.pdfbox.version}</version>
 		</dependency>
 
 		<!-- Tools for Image and Rendering -->
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox-tools</artifactId>
-			<version>2.0.29</version>
+			<version>${apache.pdfbox.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.openhtmltopdf</groupId>
 			<artifactId>openhtmltopdf-pdfbox</artifactId>
-			<version>1.0.10</version>
+			<version>${openhtmltopdf.pdfbox.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
-			<version>1.18.1</version>
+			<version>${jsoup.version}</version>
 		</dependency>
 		<!-- FontBox for Advanced Font Operations -->
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>fontbox</artifactId>
-			<version>2.0.29</version>
+			<version>${apache.pdfbox.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.13.0</version>
+			<version>${commons-io}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
@@ -88,22 +95,12 @@
 			<version>${bouncycastle.version}</version>
 		</dependency>
 	</dependencies>
-	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://central.sonatype.com/repository/maven-snapshots/</url>
-		</snapshotRepository>
-		<repository>
-			<id>ossrh</id>
-			<url>https://central.sonatype.com/api/v1/publisher</url>
-		</repository>
-	</distributionManagement>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.sonatype.central</groupId>
 				<artifactId>central-publishing-maven-plugin</artifactId>
-				<version>0.7.0</version>
+				<version>${maven.central.publishing.plugin.version}</version>
 				<extensions>true</extensions>
 				<configuration>
 					<publishingServerId>ossrh</publishingServerId>
@@ -115,7 +112,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
 				<inherited>true</inherited>
-				<version>2.2.1</version>
+				<version>${maven.source.plugin.version}</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -129,7 +126,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>${maven.javadoc.plugin.version}</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -145,7 +142,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
-				<version>1.5</version>
+				<version>${maven.gpg.plugin.version}</version>
 				<executions>
 					<execution>
 						<id>sign-artifacts</id>
@@ -165,7 +162,7 @@
 			<plugin>
 				<groupId>pl.project13.maven</groupId>
 				<artifactId>git-commit-id-plugin</artifactId>
-				<version>3.0.1</version>
+				<version>${git.commit.id.plugin.version}</version>
 				<executions>
 					<execution>
 						<id>get-the-git-infos</id>
@@ -190,7 +187,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.22.0</version>
+				<version>${maven.surefire.plugin.version}</version>
 				<configuration>
 					<skipTests>false</skipTests>
 					<skip>false</skip>
@@ -204,7 +201,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>${jacoco.maven.plugin.version}</version>
+				<version>${maven.jacoco.plugin.version}</version>
 				<executions>
 					<execution>
 						<goals>
@@ -222,25 +219,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<scm>
-		<connection>scm:git:git://github.com/mosip/commons.git</connection>
-		<developerConnection>scm:git:ssh://github.com:mosip/commons.git</developerConnection>
-		<url>https://github.com/mosip/commons</url>
-		<tag>HEAD</tag>
-	</scm>
-	<licenses>
-		<license>
-			<name>MPL 2.0</name>
-			<url>https://www.mozilla.org/en-US/MPL/2.0/</url>
-		</license>
-	</licenses>
-	<developers>
-		<developer>
-			<name>Mosip</name>
-			<email>mosip.emailnotifier@gmail.com</email>
-			<organization>io.mosip</organization>
-			<organizationUrl>https://github.com/mosip/commons</organizationUrl>
-		</developer>
-	</developers>
-	<url>https://github.com/mosip/commons</url>
 </project>

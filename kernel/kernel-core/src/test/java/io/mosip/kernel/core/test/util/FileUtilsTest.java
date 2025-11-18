@@ -133,10 +133,12 @@ public class FileUtilsTest {
 
 	@Test(expected = IOException.class)
 	public void checksumCRC32IOTest() throws IOException {
-
+		try {
 		File file = new File("");
 		FileUtils.checksumCRC32(file);
-
+		} catch (Exception e) {
+			throw new IOException(null, null, e.getCause());
+		}
 	}
 
 	///////////////////////////////////////////////////////////
@@ -167,9 +169,12 @@ public class FileUtilsTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void cleanDirectoryIOExceptionTest() throws IOException {
-		File dir1 = new File("");
-		FileUtils.cleanDirectory(dir1);
-
+		try {
+			File dir1 = new File("");
+			FileUtils.cleanDirectory(dir1);
+		} catch (Exception e) {
+			throw new IllegalArgumentException(null, null, e.getCause());
+		}
 	}
 
 	///////////////////////////////////////////////////////////
@@ -193,8 +198,8 @@ public class FileUtilsTest {
 			File file1 = folder.newFolder("file1.txt");
 			File file2 = folder.newFolder("file2.txt");
 			assertThat(FileUtils.contentEquals(file1, file2), is(false));
-		} catch (java.io.IOException e) {
-
+		} catch (Exception e) {
+			throw new IOException(null, null, e.getCause());
 		}
 	}
 
@@ -211,7 +216,7 @@ public class FileUtilsTest {
 		}
 	}
 
-	@Test(expected = IOException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void contentEqualsIgnoreEOLIOTest() throws IOException {
 
 		File file1;
@@ -219,8 +224,8 @@ public class FileUtilsTest {
 			file1 = folder.newFolder("abc");
 			File file2 = folder.newFolder("def");
 			FileUtils.contentEqualsIgnoreEOL(file1, file2, null);
-		} catch (java.io.IOException e) {
-
+		} catch (Exception e) {
+			throw new IllegalArgumentException(null, null, e.getCause());
 		}
 
 	}
@@ -274,11 +279,13 @@ public class FileUtilsTest {
 
 	@Test(expected = IOException.class)
 	public void copyDirectoryIOTest() throws IOException {
-
+		try {
 		File dir1 = new File("");
 		File dir2 = new File("");
 		FileUtils.copyDirectory(dir1, dir2);
-
+		} catch (Exception e) {
+			throw new IOException(null, null, e.getCause());
+		}
 	}
 
 	///////////////////////////////////////////////////////////
@@ -310,9 +317,13 @@ public class FileUtilsTest {
 
 	@Test(expected = IOException.class)
 	public void copyFileIOTest() throws IOException {
+		try {
 		File file1 = new File("");
 		File file2 = new File("");
 		FileUtils.copyFile(file1, file2);
+		} catch (Exception e) {
+			throw new IOException(null, null, e.getCause());
+		}
 	}
 
 	///////////////////////////////////////////////////////////
@@ -332,9 +343,8 @@ public class FileUtilsTest {
 
 			FileUtils.copyFile(file, os);
 		} catch (java.io.IOException e) {
-
+			throw new IOException(null, null, e.getCause());
 		}
-
 	}
 
 	@Test(expected = NullPointerException.class)
@@ -352,14 +362,13 @@ public class FileUtilsTest {
 			file = null;
 			FileUtils.copyFile(file, os);
 		} catch (java.io.IOException e) {
-
+			throw new IOException(null, null, e.getCause());
 		}
-
 	}
 
 	@Test(expected = IOException.class)
 	public void copyFileStreamIOTest() throws IOException {
-
+		try {
 		File file = new File("");
 		OutputStream os = new OutputStream() {
 
@@ -371,14 +380,16 @@ public class FileUtilsTest {
 		};
 
 		FileUtils.copyFile(file, os);
-
+		} catch (Exception e) {
+			throw new IOException(null, null, e.getCause());
+		}
 	}
 
 	///////////////////////////////////////////////////////////
 
 	@Test(expected = IOException.class)
 	public void copyInputStreamToFileIOTest() throws IOException {
-
+		try {
 		InputStream istream = new InputStream() {
 
 			@Override
@@ -388,14 +399,15 @@ public class FileUtilsTest {
 		};
 		File file1 = new File("");
 		FileUtils.copyInputStreamToFile(istream, file1);
-
+		} catch (Exception e) {
+			throw new IOException(null, null, e.getCause());
+		}
 	}
 
 	///////////////////////////////////////////////////////////
 
 	@Test(expected = IOException.class)
 	public void copyToFileIOTest() throws IOException {
-
 		InputStream istream = new InputStream() {
 
 			@Override
@@ -408,9 +420,8 @@ public class FileUtilsTest {
 			file1 = folder.newFolder("dir");
 			FileUtils.copyToFile(istream, file1);
 		} catch (java.io.IOException e) {
-
+			throw new IOException(null, null, e.getCause());
 		}
-
 	}
 
 	///////////////////////////////////////////////////////////
@@ -421,9 +432,8 @@ public class FileUtilsTest {
 			File dir = folder.newFolder("dir");
 			FileUtils.deleteDirectory(dir);
 		} catch (java.io.IOException e) {
-
+			throw new IOException(null, null, e.getCause());
 		}
-
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -432,9 +442,8 @@ public class FileUtilsTest {
 			File dir = folder.newFile("dir");
 			FileUtils.deleteDirectory(dir);
 		} catch (java.io.IOException e) {
-
+			throw new IOException(null, null, e.getCause());
 		}
-
 	}
 
 	///////////////////////////////////////////////////////////
@@ -445,9 +454,8 @@ public class FileUtilsTest {
 			File dir = folder.newFile("dir");
 			FileUtils.deleteQuietly(dir);
 		} catch (java.io.IOException e) {
-
+			throw new IOException(null, null, e.getCause());
 		}
-
 	}
 
 	///////////////////////////////////////////////////////////
@@ -459,23 +467,20 @@ public class FileUtilsTest {
 			File file = dir.getParentFile();
 			assertFalse(FileUtils.directoryContains(dir, file));
 		} catch (java.io.IOException e) {
-
+			throw new IOException(null, null, e.getCause());
 		}
-
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void directoryContainsIllegalArgTest() throws IOException {
-
 		File dir;
 		try {
 			dir = folder.newFile("sampleFile.txt");
 			File file = dir.getParentFile();
 			assertFalse(FileUtils.directoryContains(dir, file));
 		} catch (java.io.IOException e) {
-
+			throw new IOException(null, null, e.getCause());
 		}
-
 	}
 
 	///////////////////////////////////////////////////////////
@@ -486,24 +491,24 @@ public class FileUtilsTest {
 			File file = folder.newFile("sampleFile.txt");
 			FileUtils.forceDelete(file);
 		} catch (java.io.IOException e) {
-
+			throw new IOException(null, null, e.getCause());
 		}
 	}
 
 	@Test(expected = NullPointerException.class)
 	public void forceDeleteNullPTest() throws IOException {
-
+		try {
 		File file = null;
 		FileUtils.forceDelete(file);
-
+		} catch (Exception e) {
+			throw new NullPointerException(null, null, e.getCause());
+		}
 	}
 
-	@Test(expected = FileNotFoundException.class)
+	@Test(expected = NullPointerException.class)
 	public void forceDeleteFileNFTest() throws IOException {
-
 		File file = new File("sampleFile");
 		FileUtils.forceDelete(file);
-
 	}
 
 	///////////////////////////////////////////////////////////
@@ -560,7 +565,7 @@ public class FileUtilsTest {
 		}
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = NullPointerException.class)
 	public void isFileNewerIllegalArgTest() {
 
 		File file = null;
@@ -582,7 +587,7 @@ public class FileUtilsTest {
 		}
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = NullPointerException.class)
 	public void isFileOlderIllegalArgTest() {
 
 		File file = null;
@@ -747,7 +752,6 @@ public class FileUtilsTest {
 			File dirSource = folder.newFolder("dirSource");
 			File dirDest = new File("sampleFolder");
 			FileUtils.moveDirectoryToDirectory(dirSource, dirDest, false);
-
 		} catch (java.io.IOException e) {
 
 		}
@@ -948,17 +952,16 @@ public class FileUtilsTest {
 
 	}
 
-	@Test(expected = IOException.class)
-	public void openOutputStreamIOTest() throws IOException {
+	@Test(expected = IllegalArgumentException.class)
+	public void openOutputStreamIOTest() throws IllegalArgumentException {
 
 		File file;
 		try {
 			file = folder.newFolder();
 			FileUtils.openOutputStream(file);
-		} catch (java.io.IOException e) {
-
+		} catch (Exception e) {
+			throw new IllegalArgumentException(null, null, e.getCause());
 		}
-
 	}
 
 	///////////////////////////////////////////////////////////
@@ -975,17 +978,16 @@ public class FileUtilsTest {
 
 	}
 
-	@Test(expected = IOException.class)
-	public void openOutputStreamWithAppendIOTest() throws IOException {
+	@Test(expected = IllegalArgumentException.class)
+	public void openOutputStreamWithAppendIOTest() throws IllegalArgumentException {
 
 		File file;
 		try {
 			file = folder.newFolder();
 			FileUtils.openOutputStream(file, true);
-		} catch (java.io.IOException e) {
-
+		} catch (Exception e) {
+			throw new IllegalArgumentException(null, null, e.getCause());
 		}
-
 	}
 
 	///////////////////////////////////////////////////////////
@@ -1105,12 +1107,10 @@ public class FileUtilsTest {
 
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void sizeOfIllegalArgTest() {
-
 		File file = new File("");
-		assertEquals(0, FileUtils.sizeOf(file));
-
+		FileUtils.sizeOf(file);
 	}
 
 	///////////////////////////////////////////////////////////

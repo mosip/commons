@@ -142,6 +142,9 @@ public class FileUtils {
 	public static boolean contentEquals(File file1, File file2) throws IOException {
 		try {
 			return org.apache.commons.io.FileUtils.contentEquals(file1, file2);
+		} catch (java.lang.IllegalArgumentException e) {
+			throw new IllegalArgumentException(FileUtilConstants.ILLEGAL_ARGUMENT_ERROR_CODE.getErrorCode(),
+					FileUtilConstants.ILLEGAL_ARGUMENT_ERROR_CODE.getMessage(), e.getCause());
 		} catch (java.io.IOException e) {
 			throw new IOException(FileUtilConstants.IO_ERROR_CODE.getErrorCode(),
 					FileUtilConstants.IO_ERROR_CODE.getMessage(), e.getCause());
@@ -164,9 +167,16 @@ public class FileUtils {
 	public static boolean contentEqualsIgnoreEOL(File file1, File file2, String charsetName) throws IOException {
 		try {
 			return org.apache.commons.io.FileUtils.contentEqualsIgnoreEOL(file1, file2, charsetName);
+		} catch (java.io.FileNotFoundException e) {
+			throw new FileNotFoundException(FileUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getErrorCode(),
+					FileUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getMessage(), e.getCause());
 		} catch (java.io.IOException e) {
 			throw new IOException(FileUtilConstants.IO_ERROR_CODE.getErrorCode(),
 					FileUtilConstants.IO_ERROR_CODE.getMessage(), e.getCause());
+		}
+		catch (java.lang.IllegalArgumentException e) {
+			throw new IllegalArgumentException(FileUtilConstants.ILLEGAL_ARGUMENT_ERROR_CODE.getErrorCode(),
+					FileUtilConstants.ILLEGAL_ARGUMENT_ERROR_CODE.getMessage(), e.getCause());
 		}
 	}
 
@@ -419,6 +429,9 @@ public class FileUtils {
 	public static boolean isFileNewer(File file, Date date) {
 		try {
 			return org.apache.commons.io.FileUtils.isFileNewer(file, date);
+		} catch (java.lang.NullPointerException e) {
+			throw new NullPointerException(FileUtilConstants.NULL_POINTER_ERROR_CODE.getErrorCode(),
+					FileUtilConstants.NULL_POINTER_ERROR_CODE.getMessage(), e.getCause());
 		} catch (java.lang.IllegalArgumentException e) {
 			throw new IllegalArgumentException(FileUtilConstants.ILLEGAL_ARGUMENT_ERROR_CODE.getErrorCode(),
 					FileUtilConstants.ILLEGAL_ARGUMENT_ERROR_CODE.getMessage(), e.getCause());
@@ -437,6 +450,9 @@ public class FileUtils {
 	public static boolean isFileOlder(File file, Date date) {
 		try {
 			return org.apache.commons.io.FileUtils.isFileOlder(file, date);
+		} catch (java.lang.NullPointerException e) {
+			throw new NullPointerException(FileUtilConstants.NULL_POINTER_ERROR_CODE.getErrorCode(),
+					FileUtilConstants.NULL_POINTER_ERROR_CODE.getMessage(), e.getCause());
 		} catch (java.lang.IllegalArgumentException e) {
 			throw new IllegalArgumentException(FileUtilConstants.ILLEGAL_ARGUMENT_ERROR_CODE.getErrorCode(),
 					FileUtilConstants.ILLEGAL_ARGUMENT_ERROR_CODE.getMessage(), e.getCause());
@@ -454,7 +470,7 @@ public class FileUtils {
 	public static boolean isSymlink(File file) throws IOException {
 		try {
 			return org.apache.commons.io.FileUtils.isSymlink(file);
-		} catch (java.io.IOException e) {
+		} catch (Exception e) {
 			throw new IOException(FileUtilConstants.IO_ERROR_CODE.getErrorCode(),
 					FileUtilConstants.IO_ERROR_CODE.getMessage(), e.getCause());
 		}
@@ -707,9 +723,16 @@ public class FileUtils {
 	public static FileOutputStream openOutputStream(File file) throws IOException {
 		try {
 			return org.apache.commons.io.FileUtils.openOutputStream(file);
+		} catch (java.io.FileNotFoundException e) {
+			throw new FileNotFoundException(FileUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getErrorCode(),
+					FileUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getMessage(), e.getCause());
 		} catch (java.io.IOException e) {
 			throw new IOException(FileUtilConstants.IO_ERROR_CODE.getErrorCode(),
 					FileUtilConstants.IO_ERROR_CODE.getMessage(), e.getCause());
+		}
+		catch (java.lang.IllegalArgumentException e) {
+			throw new IllegalArgumentException(FileUtilConstants.ILLEGAL_ARGUMENT_ERROR_CODE.getErrorCode(),
+					FileUtilConstants.ILLEGAL_ARGUMENT_ERROR_CODE.getMessage(), e.getCause());
 		}
 	}
 
@@ -730,9 +753,16 @@ public class FileUtils {
 	public static FileOutputStream openOutputStream(File file, boolean append) throws IOException {
 		try {
 			return org.apache.commons.io.FileUtils.openOutputStream(file, append);
+		} catch (java.io.FileNotFoundException e) {
+			throw new FileNotFoundException(FileUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getErrorCode(),
+					FileUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getMessage(), e.getCause());
 		} catch (java.io.IOException e) {
 			throw new IOException(FileUtilConstants.IO_ERROR_CODE.getErrorCode(),
 					FileUtilConstants.IO_ERROR_CODE.getMessage(), e.getCause());
+		}
+		catch (java.lang.IllegalArgumentException e) {
+			throw new IllegalArgumentException(FileUtilConstants.ILLEGAL_ARGUMENT_ERROR_CODE.getErrorCode(),
+					FileUtilConstants.ILLEGAL_ARGUMENT_ERROR_CODE.getMessage(), e.getCause());
 		}
 	}
 

@@ -1,73 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>io.mosip.kernel</groupId>
+        <artifactId>kernel-parent</artifactId>
+        <version>1.3.0-SNAPSHOT</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
-
     <version>1.3.0-SNAPSHOT</version>
-    <groupId>io.mosip.kernel</groupId>
     <artifactId>kernel-bom</artifactId>
     <packaging>pom</packaging>
     <name>kernel-bom</name>
     <description>Kernel Bill Of Materials</description>
     <url>https://github.com/mosip/commons</url>
     <properties>
-        <mockito-version>3.4.3</mockito-version>
-        <quartz-version>2.3.2</quartz-version>
-        <javax.servlet-api-version>3.1.0</javax.servlet-api-version>
-        <javassist-version>3.27.0-GA</javassist-version>
-        <jaxb-runtime-version>2.3.1</jaxb-runtime-version>
-        <activation-version>1.1</activation-version>
-        <jaxb-api-version>2.3.1</jaxb-api-version>
-        <lombok-version>1.18.30</lombok-version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- ====================== Maven Compiler & Core Plugins ====================== -->
+        <maven.compiler.source>21</maven.compiler.source>                          <!-- Java source version -->
+        <maven.compiler.target>21</maven.compiler.target>                          <!-- Java bytecode version -->
+        <maven.compiler.version>3.8.0</maven.compiler.version>                     <!-- Maven Compiler Plugin version -->
+        <maven.source.plugin.version>2.2.1</maven.source.plugin.version>           <!-- maven-source-plugin (attaches sources) -->
+        <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>                 <!-- maven-jar-plugin (default JAR creation) -->
+        <maven.war.plugin.version>3.1.0</maven.war.plugin.version>                 <!-- maven-war-plugin (for WAR packaging) -->
+        <maven.javadoc.plugin.version>3.6.3</maven.javadoc.plugin.version>         <!-- maven-javadoc-plugin (attaches javadocs) -->
+        <maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version>      <!-- Unit test runner -->
+        <maven.shade.plugin.version>2.3</maven.shade.plugin.version>               <!-- For fat/uber JARs (rarely used in kernel) -->
+        <maven.deploy.plugin.version>2.8.1</maven.deploy.plugin.version>           <!-- Deployment to repository -->
+        <maven.central.publishing.plugin.version>0.7.0</maven.central.publishing.plugin.version> <!-- Sonatype Central Publishing -->
+        <maven.jacoco.plugin.version>0.8.11</maven.jacoco.plugin.version>          <!-- Code coverage -->
+        <maven.gpg.plugin.version>1.5</maven.gpg.plugin.version>                   <!-- Signing artifacts with GPG -->
+        <maven.spring.boot.plugin.version>3.2.3</maven.spring.boot.plugin.version>         <!-- Injects spring boot maven info into build -->
+        <git.commit.id.plugin.version>3.0.1</git.commit.id.plugin.version>         <!-- Injects git info into build -->
+
+        <!-- ====================== Third-Party Library Versions ====================== -->
+        <!-- Testing -->
+        <mockito-version>3.4.3</mockito-version>                                   <!-- Mockito (compatible with PowerMock 2.0.9) -->
+
+        <!-- Scheduling -->
+        <quartz-version>2.3.2</quartz-version>                                      <!-- Quartz Scheduler -->
+
+        <!-- Servlet / Jakarta EE APIs -->
+        <javax.servlet-api-version>3.1.0</javax.servlet-api-version>               <!-- Servlet API (provided scope) -->
+
+        <!-- Bytecode / JAXB -->
+        <javassist-version>3.27.0-GA</javassist-version>                           <!-- Bytecode manipulation -->
+        <jaxb-runtime-version>2.3.1</jaxb-runtime-version>                         <!-- JAXB runtime (GlassFish) -->
+        <activation-version>1.1</activation-version>                               <!-- JAF Activation -->
+        <jaxb-api-version>2.3.1</jaxb-api-version>                                  <!-- JAXB API -->
+
+        <!-- Lombok -->
+        <lombok-version>1.18.30</lombok-version>                                   <!-- Project Lombok -->
+
+        <!-- JPA / Transaction / Validation (legacy javax) -->
         <javax.transaction.api.version>1.3</javax.transaction.api.version>
         <javax.persistence.api.version>2.2</javax.persistence.api.version>
         <javax.validation-api.version>2.0.1.Final</javax.validation-api.version>
         <javax.interceptor.version>1.2</javax.interceptor.version>
 
-        <commons-io>2.6</commons-io>
-        <commons-math3>3.6.1</commons-math3>
+        <!-- Apache Commons -->
+        <commons-io>2.16.1</commons-io>                                               <!-- Commons IO -->
+        <commons-math3>3.6.1</commons-math3>                                       <!-- Commons Math -->
+        <commons-lang3>3.18.0</commons-lang3>                                       <!-- Commons lang -->
 
-        <bouncycastle.version>1.78.1</bouncycastle.version>
+        <!-- Cryptography -->
+        <bouncycastle.version>1.78.1</bouncycastle.version>                        <!-- Bouncy Castle (JDK 18+) -->
 
-        <findbugs.version>3.0.1</findbugs.version>
+        <!-- Static Analysis / Annotations -->
+        <findbugs.version>3.0.1</findbugs.version>                                 <!-- FindBugs annotations -->
 
-        <swagger.annotations.version>1.5.21</swagger.annotations.version>
+        <!-- Swagger / OpenAPI -->
+        <swagger.annotations.version>1.5.21</swagger.annotations.version>         <!-- Legacy Swagger annotations -->
+        <swagger.core.version>2.0.7</swagger.core.version>                         <!-- Swagger core v3 -->
 
-        <aspectjweaver-version>1.9.21.2</aspectjweaver-version>
+        <!-- AspectJ -->
+        <aspectjweaver-version>1.9.21.2</aspectjweaver-version>                    <!-- AspectJ Weaver -->
 
-        <apache.httpcomponents.version>4.5.13</apache.httpcomponents.version>
+        <!-- HTTP Client -->
+        <apache.httpcomponents.version>4.5.13</apache.httpcomponents.version>     <!-- Apache HttpClient -->
 
-        <vertx.version>3.9.13</vertx.version>
-        <hazelcast-version>3.9.4</hazelcast-version>
+        <!-- Vert.x (legacy stack) -->
+        <vertx.version>3.9.13</vertx.version>                                      <!-- Vert.x core & web -->
+        <hazelcast-version>3.9.4</hazelcast-version>                                <!-- Hazelcast (used with Vert.x) -->
 
-        <jwt.version> 3.8.1</jwt.version>
-        <jwks-rsa-version>0.18.0</jwks-rsa-version>
+        <!-- JWT -->
+        <jwt.version>3.8.1</jwt.version>                                           <!-- Auth0 Java-JWT -->
+        <jwks-rsa-version>0.18.0</jwks-rsa-version>                                <!-- JWKS RSA utils -->
 
-        <logstash-logback-encoder-version>6.4</logstash-logback-encoder-version>
+        <!-- Logging -->
+        <logstash-logback-encoder-version>6.4</logstash-logback-encoder-version>   <!-- Logstash Logback Encoder -->
 
-        <powermock.version>2.0.9</powermock.version>
+        <!-- Testing (PowerMock) -->
+        <powermock.version>2.0.9</powermock.version>                               <!-- PowerMock (final version supporting Mockito 2) -->
 
-        <json.version>20231013</json.version>
-        <json-simple-version>1.1.1</json-simple-version>
-        <io.jsonwebtoken.jjwt.version>0.6.0</io.jsonwebtoken.jjwt.version>
-        <commons-collections.version>3.2.2</commons-collections.version>
-        <modelmapper.version>2.1.1</modelmapper.version>
+        <!-- JSON Handling -->
+        <json.version>20231013</json.version>                                      <!-- org.json -->
+        <json-simple-version>1.1.1</json-simple-version>                           <!-- JSON-Simple -->
+        <io.jsonwebtoken.jjwt.version>0.6.0</io.jsonwebtoken.jjwt.version>         <!-- Old jjwt (legacy, kept for compatibility) -->
+
+        <!-- Collections / Mapping -->
+        <commons-collections.version>3.2.2</commons-collections.version>          <!-- Legacy Commons Collections -->
+        <modelmapper.version>2.1.1</modelmapper.version>                           <!-- ModelMapper -->
+
+        <!-- SpringDoc OpenAPI (replaces Swagger UI in newer modules) -->
         <springdoc.version>1.7.0</springdoc.version>
 
-        <guava.version>19.0</guava.version>
+        <!-- Google Guava -->
+        <guava.version>33.5.0-jre</guava.version>                                        <!-- Legacy Guava version (intentionally old) -->
 
-        <swagger.core.version>2.0.7</swagger.core.version>
-
-        <sonar.coverage.exclusions>**/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/entity/**,**/model/**,**/exception/**,**/repository/**,**/verticle/**,**/spi/**,"**/proxy/**","**/entities/**","**/filter/**","**/util/**","**/verifier/**"</sonar.coverage.exclusions>
+        <!-- ====================== Sonar / Jacoco Configuration ====================== -->
+        <sonar.coverage.exclusions>
+            **/constant/**,**/config/**,**/httpfilter/**,**/cache/**,**/entity/**,**/model/**,
+            **/exception/**,**/repository/**,**/verticle/**,**/spi/**,**/proxy/**,**/entities/**,
+            **/filter/**,**/util/**,**/verifier/**
+        </sonar.coverage.exclusions>
         <sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**</sonar.cpd.exclusions>
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../</sonar.coverage.jacoco.xmlReportPaths>
 
-        <maven.javadoc.version>3.6.3</maven.javadoc.version>
-        <jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
-
-        <spring.boot.version>3.5.7</spring.boot.version>
-        <spring.cloud.version>2025.0.0</spring.cloud.version>
+        <!-- ====================== Spring Boot & Cloud ====================== -->
+        <spring.boot.version>3.5.7</spring.boot.version>                           <!-- Spring Boot (managed via BOM import) -->
+        <spring.cloud.version>2025.0.0</spring.cloud.version>                      <!-- Spring Cloud 2025 (Hoxton) -->
         <spring.cloud.starter.loadbalancer.version>5.1.0</spring.cloud.starter.loadbalancer.version>
-        <tomcat.version>10.1.49</tomcat.version>
+        <tomcat.version>10.1.49</tomcat.version>                                   <!-- Embedded Tomcat fix for vulnerabilities -->
 
     </properties>
     <repositories>
@@ -384,11 +437,21 @@
 
         </dependencies>
     </dependencyManagement>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://central.sonatype.com/api/v1/publisher</url>
+        </repository>
+    </distributionManagement>
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8.1</version>
+                <version>${maven.deploy.plugin.version}</version>
                 <executions>
                     <execution>
                         <id>default-deploy</id>
@@ -402,7 +465,7 @@
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
-                <version>0.7.0</version>
+                <version>${maven.central.publishing.plugin.version}</version>
                 <extensions>true</extensions>
                 <configuration>
                     <publishingServerId>ossrh</publishingServerId>
@@ -413,7 +476,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <inherited>true</inherited>
-                <version>2.2.1</version>
+                <version>${maven.source.plugin.version}</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -427,7 +490,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven.javadoc.version}</version>
+                <version>${maven.javadoc.plugin.version}</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -443,7 +506,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.5</version>
+                <version>${maven.gpg.plugin.version}</version>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>
@@ -463,7 +526,7 @@
             <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>${git.commit.id.plugin.version}</version>
                 <executions>
                     <execution>
                         <id>get-the-git-infos</id>
@@ -488,7 +551,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.0</version>
+                <version>${maven.surefire.plugin.version}</version>
                 <configuration>
                     <skipTests>false</skipTests>
                     <skip>false</skip>
@@ -502,7 +565,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco.maven.plugin.version}</version>
+                <version>${maven.jacoco.plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -540,14 +603,4 @@
             <organizationUrl>https://github.com/mosip/commons</organizationUrl>
         </developer>
     </developers>
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://central.sonatype.com/api/v1/publisher</url>
-        </repository>
-    </distributionManagement>
 </project>

@@ -1,39 +1,44 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+		xmlns="http://maven.apache.org/POM/4.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<parent>
+		<groupId>io.mosip.kernel</groupId>
+		<artifactId>kernel-parent</artifactId>
+		<version>1.3.0-SNAPSHOT</version>
+	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>io.mosip.kernel</groupId>
 	<artifactId>kernel-transliteration-icu4j</artifactId>
 	<packaging>jar</packaging>
 	<version>1.3.0-SNAPSHOT</version>
 	<name>kernel transliteration icu4j</name>
 	<url>https://github.com/mosip/commons</url>	
 	<description>kernel-transliteration-icu4j</description>
-
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-		<!-- maven -->
-		<maven.compiler.source>21</maven.compiler.source>
-		<maven.compiler.target>21</maven.compiler.target>
-		<kernel.core.version>1.3.0-SNAPSHOT</kernel.core.version>
-		<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
+		<!-- others -->
 		<icu4j.version>73.2</icu4j.version>
+
+		<!-- mosip -->
+		<kernel.core.version>1.3.0-SNAPSHOT</kernel.core.version>
 	</properties>
      	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>io.mosip.kernel</groupId>
 				<artifactId>kernel-bom</artifactId>
-				<version>1.3.0-SNAPSHOT</version>
+				<version>${kernel.core.version}</version>
 				<type>pom</type>
 			    <scope>import</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
+		<dependency>
+			<groupId>io.mosip.kernel</groupId>
+			<artifactId>kernel-core</artifactId>
+			<version>${kernel.core.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -48,28 +53,13 @@
 			<artifactId>icu4j</artifactId>
 			<version>${icu4j.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-core</artifactId>
-			<version>${kernel.core.version}</version>
-		</dependency>
 	</dependencies>
-	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://central.sonatype.com/repository/maven-snapshots/</url>
-		</snapshotRepository>
-		<repository>
-			<id>ossrh</id>
-			<url>https://central.sonatype.com/api/v1/publisher</url>
-		</repository>
-	</distributionManagement>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.sonatype.central</groupId>
 				<artifactId>central-publishing-maven-plugin</artifactId>
-				<version>0.7.0</version>
+				<version>${maven.central.publishing.plugin.version}</version>
 				<extensions>true</extensions>
 				<configuration>
 					<publishingServerId>ossrh</publishingServerId>
@@ -81,7 +71,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
 				<inherited>true</inherited>
-				<version>2.2.1</version>
+				<version>${maven.source.plugin.version}</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -95,7 +85,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>${maven.javadoc.plugin.version}</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -112,7 +102,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
-				<version>1.5</version>
+				<version>${maven.gpg.plugin.version}</version>
 				<executions>
 					<execution>
 						<id>sign-artifacts</id>
@@ -132,7 +122,7 @@
 			<plugin>
 				<groupId>pl.project13.maven</groupId>
 				<artifactId>git-commit-id-plugin</artifactId>
-				<version>3.0.1</version>
+				<version>${git.commit.id.plugin.version}</version>
 				<executions>
 					<execution>
 						<id>get-the-git-infos</id>
@@ -157,7 +147,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.22.0</version>
+				<version>${maven.surefire.plugin.version}</version>
 				<configuration>
 					<skipTests>false</skipTests>
 					<skip>false</skip>
@@ -171,7 +161,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>${jacoco.maven.plugin.version}</version>
+				<version>${maven.jacoco.plugin.version}</version>
 				<executions>
 					<execution>
 						<goals>
@@ -189,24 +179,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<scm>
-		<connection>scm:git:git://github.com/mosip/commons.git</connection>
-		<developerConnection>scm:git:ssh://github.com:mosip/commons.git</developerConnection>
-		<url>https://github.com/mosip/commons</url>
-		<tag>HEAD</tag>
-	</scm>
-	<licenses>
-		<license>
-			<name>MPL 2.0</name>
-			<url>https://www.mozilla.org/en-US/MPL/2.0/</url>
-		</license>
-	</licenses>
-	<developers>
-		<developer>
-			<name>Mosip</name>
-			<email>mosip.emailnotifier@gmail.com</email>
-			<organization>io.mosip</organization>
-			<organizationUrl>https://github.com/mosip/commons</organizationUrl>
-		</developer>
-	</developers>
 </project>
