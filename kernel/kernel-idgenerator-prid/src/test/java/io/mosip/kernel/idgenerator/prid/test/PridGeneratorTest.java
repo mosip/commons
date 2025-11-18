@@ -24,7 +24,6 @@ import io.mosip.kernel.core.idgenerator.spi.PridGenerator;
 import io.mosip.kernel.core.idvalidator.spi.PridValidator;
 import io.mosip.kernel.idgenerator.prid.entity.PridSeed;
 import io.mosip.kernel.idgenerator.prid.entity.PridSequence;
-import io.mosip.kernel.idgenerator.prid.impl.PridGeneratorImpl;
 import io.mosip.kernel.idgenerator.prid.repository.PridSeedRepository;
 import io.mosip.kernel.idgenerator.prid.repository.PridSequenceRepository;
 
