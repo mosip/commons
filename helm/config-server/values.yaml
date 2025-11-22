@@ -296,7 +296,14 @@ envVariables:
         name: global
         key: mosip-esignet-host
     enabled: true
-
+    
+  - name: SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_MOSIP_SIGNUP_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: global
+        key: mosip-signup-host
+    enabled: true
+   
   - name: SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_DB_DBUSER_PASSWORD
     valueFrom:
       secretKeyRef:
