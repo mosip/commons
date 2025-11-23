@@ -4,7 +4,7 @@
 DROP INDEX IF EXISTS idx_uin_status ON kernel.uin;
 DROP INDEX IF EXISTS idx_uin_uin ON kernel.uin;
 
--- ROLLBACK FOR PERFORMANCE OPTIMIZATION INDEXES
+-- Below script required to rollback from 1.3.0-beta.3 to 1.3.0.
 
 DROP INDEX IF EXISTS kernel.idx_vid_status_not_deleted;
 
