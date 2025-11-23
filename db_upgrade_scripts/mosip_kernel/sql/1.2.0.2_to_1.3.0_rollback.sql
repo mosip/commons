@@ -10,4 +10,4 @@ DROP INDEX IF EXISTS kernel.idx_vid_status_not_deleted;
 
 DROP INDEX CONCURRENTLY IF EXISTS kernel.idx_vid_status_isdeleted;
 
--- END ROLLBACK FOR PERFORMANCE OPTIMIZATION INDEXES
+
