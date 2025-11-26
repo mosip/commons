@@ -11,4 +11,8 @@ DROP INDEX IF EXISTS kernel.idx_vid_status_not_deleted;
 
 DROP INDEX CONCURRENTLY IF EXISTS kernel.idx_vid_status_isdeleted;
 
+ALTER TABLE uin RESET (autovacuum_vacuum_scale_factor, autovacuum_vacuum_threshold, autovacuum_analyze_scale_factor, autovacuum_analyze_threshold);
+
+ALTER TABLE vid RESET (autovacuum_vacuum_scale_factor, autovacuum_vacuum_threshold, autovacuum_analyze_scale_factor, autovacuum_analyze_threshold);
+
 -- END ROLLBACK FOR PERFORMANCE OPTIMIZATION INDEXES
