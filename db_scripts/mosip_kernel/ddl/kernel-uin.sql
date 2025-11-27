@@ -19,7 +19,6 @@ CREATE TABLE kernel.uin(
 --index section starts----
 CREATE INDEX IF NOT EXISTS idx_uin_status ON kernel.uin using btree(uin_status) where uin_status='UNUSED';
 CREATE INDEX IF NOT EXISTS idx_uin_uin ON kernel.uin using btree(uin);
-ALTER TABLE uin SET (autovacuum_vacuum_scale_factor = 0.05, autovacuum_vacuum_threshold = 1000, autovacuum_analyze_scale_factor = 0.03, autovacuum_analyze_threshold = 500);
 --index section ends------
 
 COMMENT ON TABLE kernel.uin IS 'UIN: Stores pre-generated UINs that are assigned to an individual as part of registration process.';
@@ -41,3 +40,7 @@ COMMENT ON COLUMN kernel.uin.is_deleted IS 'IS_Deleted : Flag to mark whether th
 COMMENT ON COLUMN kernel.uin.del_dtimes IS 'Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE';
 -- ddl-end --
 
+
+-- autovacuum tuning section starts --
+ALTER TABLE uin SET (autovacuum_vacuum_scale_factor = 0.05, autovacuum_vacuum_threshold = 1000, autovacuum_analyze_scale_factor = 0.03, autovacuum_analyze_threshold = 500);
+-- autovacuum tuning section ends --
