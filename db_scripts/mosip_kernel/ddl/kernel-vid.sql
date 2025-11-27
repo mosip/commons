@@ -39,3 +39,4 @@ COMMENT ON COLUMN kernel.vid.del_dtimes IS 'Deleted DateTimestamp : Date and Tim
 -- PERFORMANCE OPTIMIZATION INDEXES
 CREATE INDEX idx_vid_status_not_deleted ON kernel.vid (vid_status) WHERE is_deleted = false;
 CREATE INDEX CONCURRENTLY idx_vid_status_isdeleted ON kernel.vid (vid_status, is_deleted);
+ALTER TABLE vid SET (autovacuum_vacuum_scale_factor = 0.05, autovacuum_vacuum_threshold = 1000, autovacuum_analyze_scale_factor = 0.03, autovacuum_analyze_threshold = 500);
