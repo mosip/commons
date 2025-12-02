@@ -1,0 +1,50 @@
+NOTICES
+
+Copyright © MOSIP.
+All rights reserved.
+
+This project includes third-party components distributed under licenses
+that require attribution. Only those components with attribution-required
+licenses are listed below.
+
+===========================
+MIT License
+===========
+
+• com.auth0:java-jwt
+• org.slf4j:slf4j-api
+• org.mockito:mockito-core
+• org.projectlombok:lombok
+
+===========================
+Eclipse Public License (EPL)
+============================
+
+• jakarta.validation:jakarta.validation-api (EPL-2.0)
+• jakarta.persistence:jakarta.persistence-api (EPL-2.0)
+• junit:junit (EPL-1.0)
+• org.junit.vintage:junit-vintage-engine (EPL-2.0)
+• org.aspectj:aspectjweaver (EPL-1.0)
+• ch.qos.logback:logback-classic (EPL-1.0 component)
+
+===========================
+LGPL-2.1
+========
+
+• ch.qos.logback:logback-classic (LGPL-2.1 component)
+
+===========================
+CDDL 1.1 / GPL-2.0 with Classpath Exception
+===========================================
+
+• javax.activation:activation
+
+===========================
+BSD Licenses
+============
+
+(None in this SBOM extract — included only if needed later.)
+
+---
+
+## Full license texts are available in the `license/` directory.
