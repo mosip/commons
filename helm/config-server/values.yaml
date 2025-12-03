@@ -134,6 +134,17 @@ tolerations: []
 
 affinity: {}
 
+## Git repository from where config server will read the properties etc.  This repo could public or private
+## For private repos access token is required.
+## version: branch/tag of the repo to be used
+gitRepo:
+  ## Folders within the base repo where properties may be found.
+  searchFolders: ""
+  private: false
+ ## User name of user who has access to the private repo. Ignore for public repo
+  username: ""
+  token: ""
+
 spring_profiles:
   enabled: true
   spring_compositeRepos:
