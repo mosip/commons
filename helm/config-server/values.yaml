@@ -134,19 +134,6 @@ tolerations: []
 
 affinity: {}
 
-## Git repository from where config server will read the properties etc.  This repo could public or private
-## For private repos access token is required.
-## version: branch/tag of the repo to be used
-gitRepo:
-  uri: https://github.com/mosip/mosip-config
-  version: develop
-  ## Folders within the base repo where properties may be found.
-  searchFolders: ""
-  private: false
- ## User name of user who has access to the private repo. Ignore for public repo
-  username: ""
-  token: ""
-
 spring_profiles:
   enabled: true
   spring_compositeRepos:
@@ -818,12 +805,11 @@ extraEnvVars:
   - name: SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_AUTH_SERVER_ADMIN_ALLOWED_AUDIENCE_KERNEL_OVERRIDE
     value: "mosip-regproc-client,mosip-prereg-client,mosip-admin-client,mosip-crereq-client,mosip-creser-client,mosip-datsha-client,mosip-ida-client,mosip-resident-client,mosip-reg-client,mpartner-default-print,mosip-idrepo-client,mpartner-default-auth,mosip-syncdata-client,mosip-masterdata-client,mosip-idrepo-client,mosip-pms-client,mosip-hotlist-client,opencrvs-partner,mpartner-default-digitalcard,mpartner-default-mobile,mosip-signup-client,mosip-testrig-client"
   - name: SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_MOSIP_KERNEL_VID_MIN_UNUSED_THRESHOLD_OVERRIDE
-    value: "10000"  
+    value: "10000"
   - name: SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_MOSIP_PREREGISTRATION_CAPTCHA_ENABLE_OVERRIDE
     value: "false"
   - name: SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_MOSIP_ESIGNET_CAPTCHA_REQUIRED_ESIGNET_OVERRIDE
     value: ""
-
 
 ## The active profile env if you have another set of properties. Correspondingly, properties in Git repo will
 ## have names of type "*-default.properties"
