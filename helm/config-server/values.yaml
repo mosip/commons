@@ -821,6 +821,8 @@ extraEnvVars:
     value: "10000"  
   - name: SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_MOSIP_PREREGISTRATION_CAPTCHA_ENABLE_OVERRIDE
     value: "false"
+  - name: SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_MOSIP_ESIGNET_CAPTCHA_REQUIRED_ESIGNET_OVERRIDE
+    value: ""
 
 
 ## The active profile env if you have another set of properties. Correspondingly, properties in Git repo will
