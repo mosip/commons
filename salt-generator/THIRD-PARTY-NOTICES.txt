@@ -10,6 +10,27 @@ Homepage: https://github.com/FasterXML/jackson-annotations
 ================================================================================
 
 ================================================================================
+Package: org.postgresql:postgresql
+Version: Not specified in SBOM
+License: BSD 2-Clause License
+Homepage: https://jdbc.postgresql.org/
+================================================================================
+
+================================================================================
+Package: com.h2database:h2
+Version: Not specified in SBOM
+License: Eclipse Public License 1.0 OR Mozilla Public License 2.0 (Dual Licensed)
+Homepage: https://www.h2database.com/
+================================================================================
+
+================================================================================
+Package: org.hibernate.validator:hibernate-validator
+Version: Not specified in SBOM
+License: Apache License 2.0
+Homepage: https://hibernate.org/validator/
+================================================================================
+
+================================================================================
 Package: com.fasterxml.jackson.core:jackson-core
 Version: Not specified in SBOM
 License: Apache License 2.0 (Inferred from project’s official repository)
