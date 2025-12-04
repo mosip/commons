@@ -233,5 +233,11 @@ License: Eclipse Public License 1.0 (Inferred from project’s official reposito
 Homepage: https://www.eclipse.org/aspectj/
 ================================================================================
 
+================================================================================
+Package: com.fasterxml.jackson.datatype:jackson-datatype-jsr310
+Version: Not specified in SBOM
+License: Apache License 2.0 (Inferred from project's official repository)
+Homepage: https://github.com/FasterXML/jackson-modules-java8
+================================================================================
 
 Full license texts and additional details for each of the above packages are available in the license/ directory of this repository. Please refer to those files or the original source of each package for complete legal terms and conditions.
