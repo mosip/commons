@@ -10,6 +10,13 @@ DROP INDEX IF EXISTS idx_uin_uin ON kernel.uin;
 DROP INDEX IF EXISTS kernel.idx_vid_status_not_deleted;
 
 DROP INDEX CONCURRENTLY IF EXISTS kernel.idx_vid_status_isdeleted;
+DROP INDEX IF EXISTS kernel.idx_uin_status_all;
+DROP INDEX IF EXISTS kernel.idx_uin_status_crdtime;
+DROP INDEX IF EXISTS kernel.idx_uin_status_isdeleted;
+DROP INDEX IF EXISTS kernel.idx_vid_status_available_not_deleted;
+DROP INDEX IF EXISTS kernel.idx_vid_status_crdtime;
+DROP INDEX IF EXISTS kernel.idx_vid_status_unused;
+
 
 ALTER TABLE uin RESET (autovacuum_vacuum_scale_factor, autovacuum_vacuum_threshold, autovacuum_analyze_scale_factor, autovacuum_analyze_threshold);
 

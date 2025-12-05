@@ -39,6 +39,9 @@ COMMENT ON COLUMN kernel.vid.del_dtimes IS 'Deleted DateTimestamp : Date and Tim
 -- PERFORMANCE OPTIMIZATION INDEXES
 CREATE INDEX idx_vid_status_not_deleted ON kernel.vid (vid_status) WHERE is_deleted = false;
 CREATE INDEX CONCURRENTLY idx_vid_status_isdeleted ON kernel.vid (vid_status, is_deleted);
+CREATE INDEX IF NOT EXISTS idx_vid_status_available_not_deleted ON kernel.vid USING btree (vid_status) WHERE vid_status = 'AVAILABLE' AND is_deleted = false;
+CREATE INDEX IF NOT EXISTS idx_vid_status_crdtime ON kernel.vid USING btree (vid_status, cr_dtimes);
+CREATE INDEX IF NOT EXISTS idx_vid_status_unused ON kernel.vid USING btree (cr_dtimes) WHERE vid_status = 'UNUSED';
 
 
 -- autovacuum tuning section starts --

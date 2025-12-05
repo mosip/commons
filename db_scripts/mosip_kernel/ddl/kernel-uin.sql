@@ -19,6 +19,9 @@ CREATE TABLE kernel.uin(
 --index section starts----
 CREATE INDEX IF NOT EXISTS idx_uin_status ON kernel.uin using btree(uin_status) where uin_status='UNUSED';
 CREATE INDEX IF NOT EXISTS idx_uin_uin ON kernel.uin using btree(uin);
+CREATE INDEX IF NOT EXISTS idx_uin_status_all ON kernel.uin USING btree (uin_status);
+CREATE INDEX IF NOT EXISTS idx_uin_status_crdtime ON kernel.uin USING btree (uin_status, cr_dtimes);
+CREATE INDEX IF NOT EXISTS idx_uin_status_isdeleted ON kernel.uin USING btree (uin_status, is_deleted);
 --index section ends------
 
 COMMENT ON TABLE kernel.uin IS 'UIN: Stores pre-generated UINs that are assigned to an individual as part of registration process.';
