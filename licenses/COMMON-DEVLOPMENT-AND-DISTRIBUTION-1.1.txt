@@ -1,6 +1,6 @@
 Common Development and Distribution License 1.1
 
-Copyright © 2025 <COPYRIGHT HOLDER>
+Copyright © 1997-2010 Oracle Corporation (formerly Sun Microsystems, Inc.)
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
