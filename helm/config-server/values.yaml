@@ -134,8 +134,6 @@ tolerations: []
 
 affinity: {}
 
-
-
 spring_profiles:
   enabled: true
   spring_compositeRepos:
