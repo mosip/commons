@@ -104,7 +104,20 @@ spec:
             {{- range .Values.extraEnvVars }}
             {{- if .enabled }}
             - name: {{ .name }}
+              {{- if .valueFrom }}
+              valueFrom:
+                {{- if .valueFrom.configMapKeyRef }}
+                configMapKeyRef:
+                  name: {{ .valueFrom.configMapKeyRef.name }}
+                  key: {{ .valueFrom.configMapKeyRef.key }}
+                {{- else if .valueFrom.secretKeyRef }}
+                secretKeyRef:
+                  name: {{ .valueFrom.secretKeyRef.name }}
+                  key: {{ .valueFrom.secretKeyRef.key }}
+                {{- end }}
+              {{- else }}
               value: {{ .value | quote }}
+              {{- end }}
             {{- end }}
             {{- end }}
             {{- end }}
