@@ -792,7 +792,7 @@ envVariables:
 
 ## The active profile env if you have another set of properties. Correspondingly, properties in Git repo will
 ## have names of type "*-default.properties"
-activeProfileEnv: default
+activeProfileEnv: new
 
 ## Extra environment variables to be passed to the config-server container
 ## By default, these are disabled in helm chart. Override in deploy values.yaml as needed.
