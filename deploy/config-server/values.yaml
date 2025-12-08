@@ -3,7 +3,7 @@ spring_profiles:
   spring_compositeRepos:
   # Based on the user requiremnt the number of multiple sources from where configuration needs to be pulled can be updated below as mentioned.
     - type: git
-      uri: "< config-repo url >"
+      uri: "<config-repo-url>"
       version: "<branch-name>"
       ## Folders within the base repo where properties may be found.
       searchFolders: ""
