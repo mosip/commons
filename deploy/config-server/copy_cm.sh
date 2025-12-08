@@ -9,6 +9,7 @@ function copying_cm() {
   wget -q $UTIL_URL -O copy_cm_func.sh && chmod +x copy_cm_func.sh
 
   $COPY_UTIL configmap global default $DST_NS
+  $COPY_UTIL configmap postgres-setup-config postgres $DST_NS
   $COPY_UTIL configmap keycloak-host keycloak $DST_NS
   $COPY_UTIL configmap activemq-activemq-artemis-share activemq $DST_NS
   $COPY_UTIL configmap s3 s3 $DST_NS

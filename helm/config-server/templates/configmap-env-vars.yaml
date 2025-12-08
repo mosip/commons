@@ -4,15 +4,14 @@ metadata:
   name: {{ printf "%s-env-vars" (include "config-server.fullname" .) }}
   namespace: {{ .Release.Namespace }}
 data:
-  SPRING_CLOUD_CONFIG_SERVER_GIT_SEARCHPATHS: {{ .Values.gitRepo.searchFolders  | quote }}
   {{- if .Values.spring_profiles.enabled }}
   {{- range $index, $repo := .Values.spring_profiles.spring_compositeRepos }}
   SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_URI: "{{ $repo.uri }}"
+  SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_SEARCHPATHS: {{ $repo.searchFolders | default "" | quote }}
+  {{- if $repo.username }}
+  SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_USERNAME: {{ $repo.username | quote }}
+  {{- end }}
   {{- end }}
   {{- else if .Values.localRepo.enabled }}
   SPRING_CLOUD_CONFIG_SERVER_GIT_URI: {{ .Values.volume.mountDir | quote }}
-  
-  {{- else }}
-  SPRING_CLOUD_CONFIG_SERVER_GIT_URI: {{ .Values.gitRepo.uri | quote }}
   {{- end }}
-  SPRING_CLOUD_CONFIG_SERVER_GIT_USERNAME: {{ .Values.gitRepo.username | quote  }}

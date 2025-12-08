@@ -60,6 +60,7 @@ if [ $yn = "Y" ]
     --set volume.nfs.path="$NFS_PATH" \
     --set volume.nfs.server="$NFS_SERVER" \
     -f values.yaml \
+    --timeout 10m \
     --wait --version $CHART_VERSION
     echo "Installed Config-server".
   else
