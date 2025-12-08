@@ -69,12 +69,21 @@ spec:
             - name: spring_cloud_config_server_git_cloneOnStart
               value: {{ .Values.localRepo.spring_cloud_config_server_git_cloneOnStart | quote }}          
           {{- end }}
- 
-            - name: SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD
+          {{- if .Values.spring_profiles.enabled }}
+          {{- range $index, $repo := .Values.spring_profiles.spring_compositeRepos }}
+          {{- if $repo.token }}
+            - name: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_PASSWORD
               valueFrom:
                  secretKeyRef:
-                   name: {{ include "config-server.fullname" . }}
-                   key: github-token
+                   name: {{ include "config-server.fullname" $ }}
+                   key: github-token-{{ $index }}
+          {{- end }}
+          {{- if $repo.username }}
+            - name: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_USERNAME
+              value: {{ $repo.username | quote }}
+          {{- end }}
+          {{- end }}
+          {{- end }}
             {{- range .Values.envVariables }}
             {{- if .enabled }}
             - name: {{ .name }}
@@ -91,9 +100,26 @@ spec:
             {{- end }}
             {{- end }}
 
-
             {{- if .Values.extraEnvVars }}
-            {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 12 }}
+            {{- range .Values.extraEnvVars }}
+            {{- if .enabled }}
+            - name: {{ .name }}
+              {{- if .valueFrom }}
+              valueFrom:
+                {{- if .valueFrom.configMapKeyRef }}
+                configMapKeyRef:
+                  name: {{ .valueFrom.configMapKeyRef.name }}
+                  key: {{ .valueFrom.configMapKeyRef.key }}
+                {{- else if .valueFrom.secretKeyRef }}
+                secretKeyRef:
+                  name: {{ .valueFrom.secretKeyRef.name }}
+                  key: {{ .valueFrom.secretKeyRef.key }}
+                {{- end }}
+              {{- else }}
+              value: {{ .value | quote }}
+              {{- end }}
+            {{- end }}
+            {{- end }}
             {{- end }}
           envFrom:
             - configMapRef:
