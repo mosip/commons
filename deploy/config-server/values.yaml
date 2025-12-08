@@ -74,3 +74,15 @@ extraEnvVars:
   - name: SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_MOSIP_ESIGNET_CAPTCHA_REQUIRED_ESIGNET_OVERRIDE
     value: ""
     enabled: true
+  - name: SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_MOSIP_DATABASE_HOSTNAME_OVERRIDE
+    valueFrom:
+      configMapKeyRef:
+        key: mosip-database-hostname-override
+        name: postgres-setup-config
+    enabled: true
+  - name: SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_MOSIP_DATABASE_PORT_OVERRIDE
+    valueFrom:
+      configMapKeyRef:
+        key: mosip-database-port-override
+        name: postgres-setup-config
+    enabled: true
