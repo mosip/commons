@@ -264,6 +264,13 @@ envVariables:
         key: mosip-pmp-host
     enabled: true
 
+  - name: SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_MOSIP_PMP_REVAMP_UI_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: global
+        key: mosip-pmp-revamp-ui-host
+    enabled: true
+
   - name: SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_MOSIP_COMPLIANCE_HOST
     valueFrom:
       configMapKeyRef:
