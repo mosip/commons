@@ -96,20 +96,91 @@ The following core services are part of MOSIP Commons:
 
 ---
 
-# Configuration
+# Required Configuration
 
-All Commons services rely on centralized configuration from the MOSIP Config Server.
+MOSIP Commons services obtain their configuration from the **MOSIP Config Server**.
+Configuration is centrally managed to ensure consistency across environments.
 
-Required configuration files:
+Only the **minimum required configuration** is documented here.
 
-- **kernel-default.properties**
-- **application-default.properties**
+---
 
-These must exist in the MOSIP Config repository:  
-https://github.com/mosip/mosip-config
+### Configuration Files
 
+The following configuration files are required and must be available in the MOSIP Config repository:
+
+- `kernel-default.properties`
+- `application-default.properties`
+
+---
+
+### Configuration via Config Server Overrides
+
+Certain sensitive and environment-specific properties **must not be defined in property files**.
+These values are provided to the Config Server using **override environment variables**, as defined in the Config Server Helm chart.
+
+**The following properties must be supplied via overrides:**
+
+- `db.dbuser.password`
+- `keycloak.internal.url`
+- `keycloak.external.url`
+- `keycloak.admin.password`
+- `mosip.auth.client.secret`
+- `mosip.ida.client.secret`
+- `mosip.admin.client.secret`
+- `mosip.reg.client.secret`
+- `mosip.prereg.client.secret`
+- `softhsm.kernel.security.pin`
+- `email.smtp.host`
+- `email.smtp.username`
+- `email.smtp.secret`
+- `mosip.api.internal.url`
+
+---
+
+### Common Database Configuration
+
+```properties
+mosip.kernel.database.hostname=postgres-postgresql.postgres
+mosip.kernel.database.port=5432
+```
+
+---
+
+### Kernel Config Server
+
+```properties
+spring.application.name=kernel-config-server
+```
+
+The Config Server must be running before starting any Commons service.
+
+---
+
+### Notification Service
+
+```properties
+mosip.kernel.sms.enabled=true
+mosip.kernel.notification.email.from=do-not-reply@mosip.io
+```
+
+---
+
+### ID / RID / PRID Generator Services
+
+```properties
+mosip.kernel.prid.min-unused-threshold=1000
+mosip.kernel.prid.prids-to-generate=2000
+```
+
+---
+
+### Key and Salt Management
+
+```properties
+mosip.kernel.keymanager.hsm.keystore-type=PKCS11
+```
 > **Note:** Config Server must be running before starting any Commons service.
-
 ---
 
 # Local Setup
