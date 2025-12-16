@@ -34,7 +34,7 @@ LGPL-2.1
 • ch.qos.logback:logback-classic (LGPL-2.1 component)
 
 ===========================
-CDDL 1.1 / GPL-2.0 with Classpath Exception
+ GPL-2.0 with Classpath Exception
 ===========================================
 
 • javax.activation:activation
