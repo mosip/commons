@@ -26,6 +26,9 @@ The following core services are part of MOSIP Commons:
 
 ---
 
+## Database
+Before starting the local setup, execute the required SQL scripts to initialize the database.
+All database SQL scripts are available in the [db scripts](./db_scripts) directory.
 
 # Local Setup
 
@@ -41,7 +44,7 @@ The following core services are part of MOSIP Commons:
 ### Runtime Dependencies
 Add below runtime dependencies to the classpath, or include it as a Maven dependency:
 - Add `kernel-auth-adapter.jar` 
-- Add `kernel-sms-provide.jar`
+- Add `kernel-smsserviceprovider-msg91.jar`
 
 ### Configuration
 
