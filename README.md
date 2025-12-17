@@ -26,8 +26,6 @@ The following core services are part of MOSIP Commons:
 
 ---
 
----
-
 # Required Configuration
 
 ### Configuration
