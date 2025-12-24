@@ -1,0 +1,243 @@
+THIRD-PARTY-NOTICES
+
+This project includes third-party packages that are distributed under various open-source licenses. Below is a list of packages and their associated licenses.
+
+================================================================================
+Package: com.fasterxml.jackson.core:jackson-annotations
+Version: Not specified in SBOM
+License: Apache License 2.0 (Inferred from project’s official repository)
+Homepage: https://github.com/FasterXML/jackson-annotations
+================================================================================
+
+================================================================================
+Package: org.postgresql:postgresql
+Version: Not specified in SBOM
+License: BSD 2-Clause License
+Homepage: https://jdbc.postgresql.org/
+================================================================================
+
+================================================================================
+Package: com.h2database:h2
+Version: Not specified in SBOM
+License: Eclipse Public License 1.0 
+Homepage: https://www.h2database.com/
+================================================================================
+
+================================================================================
+Package: org.hibernate.validator:hibernate-validator
+Version: Not specified in SBOM
+License: Apache License 2.0
+Homepage: https://hibernate.org/validator/
+================================================================================
+
+================================================================================
+Package: com.fasterxml.jackson.core:jackson-core
+Version: Not specified in SBOM
+License: Apache License 2.0 (Inferred from project’s official repository)
+Homepage: https://github.com/FasterXML/jackson-core
+================================================================================
+
+================================================================================
+Package: com.fasterxml.jackson.core:jackson-databind
+Version: Not specified in SBOM
+License: Apache License 2.0 (Inferred from project’s official repository)
+Homepage: https://github.com/FasterXML/jackson-databind
+================================================================================
+
+================================================================================
+Package: org.springframework.boot:spring-boot-starter-batch
+Version: Not specified in SBOM
+License: Apache License 2.0 (Inferred from project’s official repository)
+Homepage: https://spring.io/projects/spring-boot
+================================================================================
+
+================================================================================
+Package: org.springframework:spring-aspects
+Version: Not specified in SBOM
+License: Apache License 2.0 (Inferred from project’s official repository)
+Homepage: https://spring.io/projects/spring-framework
+================================================================================
+
+================================================================================
+Package: org.springframework.retry:spring-retry
+Version: Not specified in SBOM
+License: Apache License 2.0 (Inferred from project’s official repository)
+Homepage: https://github.com/spring-projects/spring-retry
+================================================================================
+
+================================================================================
+Package: org.apache.velocity:velocity
+Version: 1.7
+License: Apache License 2.0
+Homepage: https://velocity.apache.org/engine/releases/velocity-1.7/
+================================================================================
+
+================================================================================
+Package: org.apache.velocity:velocity-tools
+Version: 2.0
+License: Apache License 2.0
+Homepage: https://velocity.apache.org/tools/releases/velocity-tools-2.0/
+================================================================================
+
+================================================================================
+Package: javax.activation:activation
+Version: Not specified in SBOM
+License: Common Development and Distribution License 1.1 
+Homepage: https://github.com/javaee/activation
+================================================================================
+
+================================================================================
+Package: io.micrometer:micrometer-tracing-bridge-brave
+Version: Not specified in SBOM
+License: Apache License 2.0 (Inferred from project’s official repository)
+Homepage: https://micrometer.io
+================================================================================
+
+================================================================================
+Package: io.micrometer:micrometer-tracing
+Version: Not specified in SBOM
+License: Apache License 2.0 (Inferred from project’s official repository)
+Homepage: https://micrometer.io
+================================================================================
+
+================================================================================
+Package: net.colesico.framework:colesico-hikaricp
+Version: 5.3.0
+License: Apache License 2.0 (Inferred from project’s official repository)
+Homepage: https://github.com/colesico/colesico-framework
+================================================================================
+
+================================================================================
+Package: jakarta.validation:jakarta.validation-api
+Version: Not specified in SBOM
+License: Eclipse Public License 2.0 (Inferred from project’s official repository)
+Homepage: https://github.com/eclipse-ee4j/validation-api
+================================================================================
+
+================================================================================
+Package: javax.validation:validation-api
+Version: Not specified in SBOM
+License: Apache License 2.0 (Inferred from project’s official repository)
+Homepage: https://github.com/javax-validation/validation-api
+================================================================================
+
+================================================================================
+Package: jakarta.persistence:jakarta.persistence-api
+Version: Not specified in SBOM
+License: Eclipse Public License 2.0 (Inferred from project’s official repository)
+Homepage: https://github.com/eclipse-ee4j/jpa-api
+================================================================================
+
+================================================================================
+Package: com.auth0:java-jwt
+Version: Not specified in SBOM
+License: MIT License (Inferred from project’s official repository)
+Homepage: https://github.com/auth0/java-jwt
+================================================================================
+
+================================================================================
+Package: org.apache.commons:commons-lang3
+Version: Not specified in SBOM
+License: Apache License 2.0
+Homepage: https://commons.apache.org/proper/commons-lang/
+================================================================================
+
+================================================================================
+Package: commons-io:commons-io
+Version: Not specified in SBOM
+License: Apache License 2.0 (Inferred from project’s official repository)
+Homepage: https://commons.apache.org/proper/commons-io/
+================================================================================
+
+================================================================================
+Package: commons-codec:commons-codec
+Version: Not specified in SBOM
+License: Apache License 2.0 (Inferred from project’s official repository)
+Homepage: https://commons.apache.org/proper/commons-codec/
+================================================================================
+
+================================================================================
+Package: org.apache.httpcomponents:httpclient
+Version: Not specified in SBOM
+License: Apache License 2.0 (Inferred from project’s official repository)
+Homepage: https://hc.apache.org/httpcomponents-client-ga/
+================================================================================
+
+================================================================================
+Package: org.apache.httpcomponents.client5:httpclient5
+Version: Not specified in SBOM
+License: Apache License 2.0 (Inferred from project’s official repository)
+Homepage: https://hc.apache.org/httpcomponents-client-5.0.x/
+================================================================================
+
+================================================================================
+Package: org.apache.logging.log4j:log4j-core
+Version: Not specified in SBOM
+License: Apache License 2.0 (Inferred from project’s official repository)
+Homepage: https://logging.apache.org/log4j/2.x/
+================================================================================
+
+================================================================================
+Package: io.vertx:vertx-web
+Version: Not specified in SBOM
+License: Apache License 2.0 (Inferred from project’s official repository)
+Homepage: https://vertx.io
+================================================================================
+
+================================================================================
+Package: ch.qos.logback:logback-classic
+Version: Not specified in SBOM
+License: Eclipse Public License 1.0 AND GNU Lesser General Public License 2.1 (Inferred from project’s official repository)
+Homepage: https://logback.qos.ch
+================================================================================
+
+================================================================================
+Package: org.slf4j:slf4j-api
+Version: Not specified in SBOM
+License: MIT License (Inferred from project’s official repository)
+Homepage: http://www.slf4j.org
+================================================================================
+
+================================================================================
+Package: junit:junit
+Version: Not specified in SBOM
+License: Eclipse Public License 1.0 (Inferred from project’s official repository)
+Homepage: https://junit.org/junit4
+================================================================================
+
+================================================================================
+Package: org.junit.vintage:junit-vintage-engine
+Version: Not specified in SBOM
+License: Eclipse Public License 2.0 (Inferred from project’s official repository)
+Homepage: https://junit.org/junit5
+================================================================================
+
+================================================================================
+Package: org.mockito:mockito-core
+Version: Not specified in SBOM
+License: MIT License (Inferred from project’s official repository)
+Homepage: https://github.com/mockito/mockito
+================================================================================
+
+================================================================================
+Package: org.projectlombok:lombok
+Version: Not specified in SBOM
+License: MIT License (Inferred from project’s official repository)
+Homepage: https://projectlombok.org
+================================================================================
+
+================================================================================
+Package: org.aspectj:aspectjweaver
+Version: Not specified in SBOM
+License: Eclipse Public License 1.0 (Inferred from project’s official repository)
+Homepage: https://www.eclipse.org/aspectj/
+================================================================================
+
+================================================================================
+Package: com.fasterxml.jackson.datatype:jackson-datatype-jsr310
+Version: Not specified in SBOM
+License: Apache License 2.0 (Inferred from project's official repository)
+Homepage: https://github.com/FasterXML/jackson-modules-java8
+================================================================================
+
+Full license texts and additional details for each of the above packages are available in the license/ directory of this repository. Please refer to those files or the original source of each package for complete legal terms and conditions.
