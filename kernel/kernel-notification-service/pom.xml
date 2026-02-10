@@ -118,7 +118,7 @@
 							<layout>ZIP</layout>
 						</configuration>
 						<executions>
-							<!-- Build info and repackage -->
+							<!-- Build info and repackage only; removed automatic start/stop to avoid JMX/MBean connection issues during CI/publish -->
 							<execution>
 								<id>build-info-repackage</id>
 								<goals>
@@ -128,34 +128,6 @@
 								<configuration>
 									<attach>false</attach>
 								</configuration>
-							</execution>
-							<!-- Integration test startup -->
-							<execution>
-								<id>pre-integration-test</id>
-								<phase>pre-integration-test</phase>
-								<goals>
-									<goal>start</goal>
-								</goals>
-								<configuration>
-									<folders>
-										<folder>src/test/resources</folder>
-									</folders>
-									<profiles>
-										<profile>openapi-profile</profile>
-									</profiles>
-									<arguments>
-										<argument>--server.port=8090</argument>
-										<argument>--server.servlet.path=/app/generic</argument>
-									</arguments>
-								</configuration>
-							</execution>
-							<!-- Integration test shutdown -->
-							<execution>
-								<id>post-integration-test</id>
-								<phase>post-integration-test</phase>
-								<goals>
-									<goal>stop</goal>
-								</goals>
 							</execution>
 						</executions>
 					</plugin>
@@ -168,25 +140,6 @@
 					<publishingServerId>ossrh</publishingServerId>
 					<autoPublish>false</autoPublish>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<executable>true</executable>
-					<layout>ZIP</layout>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>build-info</goal>
-							<goal>repackage</goal>
-						</goals>
-						<configuration>
-							<attach>false</attach>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -347,13 +300,13 @@
 					<plugin>
 						<groupId>org.springframework.boot</groupId>
 						<artifactId>spring-boot-maven-plugin</artifactId>
-						<version>${spring.boot.version}</version>
+						<version>${spring.boot.maven.plugin.version}</version>
 						<configuration>
 							<executable>true</executable>
 							<layout>ZIP</layout>
 						</configuration>
 						<executions>
-							<!-- Build info and repackage -->
+							<!-- Build info and repackage only; removed automatic start/stop to avoid JMX/MBean connection issues during CI/publish -->
 							<execution>
 								<id>build-info-repackage</id>
 								<goals>
@@ -364,55 +317,7 @@
 									<attach>false</attach>
 								</configuration>
 							</execution>
-
-							<!-- Integration test startup -->
-							<execution>
-								<id>pre-integration-test</id>
-								<phase>pre-integration-test</phase>
-								<goals>
-									<goal>start</goal>
-								</goals>
-								<configuration>
-									<folders>
-										<folder>src/test/resources</folder>
-									</folders>
-									<profiles>
-										<profile>openapi-profile</profile>
-									</profiles>
-									<arguments>
-										<argument>--server.port=8090</argument>
-										<argument>--server.servlet.path=/app/generic</argument>
-									</arguments>
-								</configuration>
-							</execution>
-
-							<!-- Integration test shutdown -->
-							<execution>
-								<id>post-integration-test</id>
-								<phase>post-integration-test</phase>
-								<goals>
-									<goal>stop</goal>
-								</goals>
-							</execution>
 						</executions>
-					</plugin>					<plugin>
-						<groupId>org.springdoc</groupId>
-						<artifactId>springdoc-openapi-maven-plugin</artifactId>
-						<version>0.2</version>
-						<executions>
-							<execution>
-								<id>integration-test</id>
-								<goals>
-									<goal>generate</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<apiDocsUrl>http://localhost:8090/app/generic/v3/api-docs</apiDocsUrl>
-							<outputFileName>${name}-openapi.json</outputFileName>
-							<outputDir>${project.build.directory}</outputDir>
-							<skip>false</skip>
-						</configuration>
 					</plugin>
 				</plugins>
 			</build>
