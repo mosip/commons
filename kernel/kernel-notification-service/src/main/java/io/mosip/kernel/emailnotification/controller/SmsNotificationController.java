@@ -66,6 +66,7 @@ public class SmsNotificationController {
 					smsRequestDto.getRequest().getMessage()));
 		} catch (Throwable t) {
 			LOGGER.error("Error occurred while sending SMS notification", t);
+			throw t;
 		}
 		return responseWrapper;
 	}
