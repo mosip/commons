@@ -20,7 +20,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
+import io.mosip.kernel.emailnotification.service.impl.EmailNotificationServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * <h1>SMS Notification Controller</h1>
  *
@@ -33,6 +35,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @Tag(name = "smsnotification", description = "Operation related to sms notification")
 public class SmsNotificationController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SmsNotificationController.class);
 
     /**
      * The reference that autowire sms notification service class.
@@ -58,11 +61,17 @@ public class SmsNotificationController {
     public ResponseWrapper<SMSResponseDto> sendSmsNotification(
             @Valid @RequestBody RequestWrapper<SmsRequestDto> smsRequestDto) {
         ResponseWrapper<SMSResponseDto> responseWrapper = new ResponseWrapper<>();
-        responseWrapper.setResponse(smsNotifierService.sendSmsNotification(smsRequestDto.getRequest().getNumber(),
-                smsRequestDto.getRequest().getMessage()));
-        responseWrapper.setId(smsRequestDto.getId()); // Copy id from request
-        responseWrapper.setVersion(smsRequestDto.getVersion()); // Copy version from request
-        responseWrapper.setErrors(null); // Explicitly set errors to null
+        try {
+            responseWrapper.setResponse(smsNotifierService.sendSmsNotification(smsRequestDto.getRequest().getNumber(),
+                    smsRequestDto.getRequest().getMessage()));
+            responseWrapper.setId(smsRequestDto.getId()); // Copy id from request
+            responseWrapper.setVersion(smsRequestDto.getVersion()); // Copy version from request
+            responseWrapper.setErrors(null); // Explicitly set errors to null
+        } catch (Throwable t) {
+            LOGGER.error("Error occurred while sending SMS notification", t);
+            throw t;
+        }
+
         return responseWrapper;
     }
 }
