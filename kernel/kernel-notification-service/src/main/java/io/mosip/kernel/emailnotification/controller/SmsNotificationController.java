@@ -2,8 +2,6 @@ package io.mosip.kernel.emailnotification.controller;
 
 import jakarta.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +14,6 @@ import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.notification.model.SMSResponseDto;
 import io.mosip.kernel.emailnotification.dto.SmsRequestDto;
 import io.mosip.kernel.emailnotification.service.SmsNotification;
-import io.mosip.kernel.emailnotification.service.impl.EmailNotificationServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -36,7 +33,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "smsnotification", description = "Operation related to sms notification")
 public class SmsNotificationController {
 
-	Logger LOGGER = LoggerFactory.getLogger(SmsNotificationController.class);
 	/**
 	 * The reference that autowire sms notification service class.
 	 */
@@ -60,16 +56,9 @@ public class SmsNotificationController {
 	@PostMapping(value = "/sms/send")
 	public ResponseWrapper<SMSResponseDto> sendSmsNotification(
 			@Valid @RequestBody RequestWrapper<SmsRequestDto> smsRequestDto) {
-
 		ResponseWrapper<SMSResponseDto> responseWrapper = new ResponseWrapper<>();
-		try {
-			responseWrapper.setResponse(smsNotifierService.sendSmsNotification(smsRequestDto.getRequest().getNumber(),
-					smsRequestDto.getRequest().getMessage()));
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-			e.printStackTrace();
-			responseWrapper.setResponse(null);
-		}
+		responseWrapper.setResponse(smsNotifierService.sendSmsNotification(smsRequestDto.getRequest().getNumber(),
+				smsRequestDto.getRequest().getMessage()));
 		return responseWrapper;
 	}
 }
