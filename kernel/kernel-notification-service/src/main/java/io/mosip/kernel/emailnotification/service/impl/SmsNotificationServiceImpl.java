@@ -73,17 +73,23 @@ public class SmsNotificationServiceImpl implements SmsNotification {
      */
     @Override
     public SMSResponseDto sendSmsNotification(String contactNumber, String contentMessage) {
-
+        LOGGER.info("sendSmsNotification called for contactNumber: {}", contactNumber);
         // Check for proxy or local mode
         boolean isLocalProfile = "local".equalsIgnoreCase(activeProfile);
+
+        LOGGER.info("Active profile: {}, isProxytrue: {}", activeProfile, isProxytrue);
         if (!isLocalProfile && !isProxytrue) {
+            LOGGER.info("Sending SMS to {}", contactNumber);
             send(contactNumber, contentMessage);
+        } else {
+            LOGGER.info("SMS sending skipped due to local/proxy mode for {}", contactNumber);
         }
 
         return cachedSuccessResponse;
     }
-    
+
     public void send(String contactNumber, String contentMessage) {
+        LOGGER.info("Calling smsNotificationUtils.sendSms for {}", contactNumber);
         smsNotificationUtils.sendSms(contactNumber, contentMessage);
     }
 }
