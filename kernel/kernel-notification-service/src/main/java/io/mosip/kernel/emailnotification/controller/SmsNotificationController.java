@@ -20,7 +20,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.mosip.kernel.emailnotification.service.impl.EmailNotificationServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 /**

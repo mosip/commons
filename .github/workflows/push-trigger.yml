@@ -20,6 +20,7 @@ on:
       - 1.*
       - develop*
       - MOSIP*
+      - ES-2909
 
 jobs:
   build-commons:
