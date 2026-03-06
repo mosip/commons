@@ -50,8 +50,11 @@ public class SmsNotificationUtils {
     @Async("smsExecutor")
     public void sendSms(String contactNumber, String contentMessage) {
         try {
+            mosipLogger.info("SMS send initiated for contactNumber: {}", contactNumber);
             smsServiceProvider.sendSms(contactNumber, contentMessage);
-        } catch(Exception exception){
+            mosipLogger.info("SMS send request completed for contactNumber: {}", contactNumber);
+        } catch (Exception exception) {
+            mosipLogger.error("Error occurred while sending SMS to {}", contactNumber, exception);
             mosipLogger.error(SmsExceptionConstant.INTERNAL_SERVER_ERROR.getErrorCode(),
                     SmsExceptionConstant.INTERNAL_SERVER_ERROR.getErrorMessage(),
                     ExceptionUtils.getStackTrace(exception));
