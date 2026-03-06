@@ -1,7 +1,9 @@
 package io.mosip.kernel.emailnotification.controller;
 
+import io.mosip.kernel.emailnotification.service.impl.EmailNotificationServiceImpl;
 import jakarta.validation.Valid;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +22,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.LoggerFactory;
 
 /**
  * This controller class receives contact number and message in data transfer
@@ -33,6 +36,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "smsnotification", description = "Operation related to sms notification")
 public class SmsNotificationController {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(SmsNotificationController.class);
 	/**
 	 * The reference that autowire sms notification service class.
 	 */
@@ -57,8 +61,13 @@ public class SmsNotificationController {
 	public ResponseWrapper<SMSResponseDto> sendSmsNotification(
 			@Valid @RequestBody RequestWrapper<SmsRequestDto> smsRequestDto) {
 		ResponseWrapper<SMSResponseDto> responseWrapper = new ResponseWrapper<>();
-		responseWrapper.setResponse(smsNotifierService.sendSmsNotification(smsRequestDto.getRequest().getNumber(),
-				smsRequestDto.getRequest().getMessage()));
+		try {
+			responseWrapper.setResponse(smsNotifierService.sendSmsNotification(smsRequestDto.getRequest().getNumber(),
+					smsRequestDto.getRequest().getMessage()));
+		} catch (Throwable t) {
+			LOGGER.error("Error occurred while sending SMS notification", t);
+			throw t;
+		}
 		return responseWrapper;
 	}
 }
