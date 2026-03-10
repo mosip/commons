@@ -48,49 +48,65 @@ public class VidPoolCheckerVerticle extends AbstractVerticle {
 		DeliveryOptions deliveryOptions = new DeliveryOptions();
 		deliveryOptions.setSendTimeout(environment.getProperty("mosip.kernel.vid.pool-population-timeout", Long.class));
 		checkPoolConsumer.handler(handler -> {
-			long noOfFreeVids = vidService.fetchVidCount(VidLifecycleStatus.AVAILABLE);
-			LOGGER.info("no of vid free present are {}", noOfFreeVids);
-			if (noOfFreeVids < threshold && !locked.get()) {
-				locked.set(true);
-				eventBus.send(EventType.GENERATEPOOL, noOfFreeVids, deliveryOptions, replyHandler -> {
-					if (replyHandler.succeeded()) {
-						locked.set(false);
-						LOGGER.info("population of pool done");
-					} else if (replyHandler.failed()) {
-						locked.set(false);
-						LOGGER.error("population failed with cause ", replyHandler.cause());
-					}
-				});
-			} else {
-				LOGGER.info("event type is send {} eventBus{}", handler.isSend(), eventBus);
-				LOGGER.info("locked generation");
-			}
+			vertx.executeBlocking(future -> {
+				future.complete(vidService.fetchVidCount(VidLifecycleStatus.AVAILABLE));
+			}, false, result -> {
+				if (result.failed()) {
+					LOGGER.error("failed to fetch vid count ", result.cause());
+					return;
+				}
+				long noOfFreeVids = (Long) result.result();
+				LOGGER.info("no of vid free present are {}", noOfFreeVids);
+				if (noOfFreeVids < threshold && !locked.get()) {
+					locked.set(true);
+					eventBus.send(EventType.GENERATEPOOL, noOfFreeVids, deliveryOptions, replyHandler -> {
+						if (replyHandler.succeeded()) {
+							locked.set(false);
+							LOGGER.info("population of pool done");
+						} else if (replyHandler.failed()) {
+							locked.set(false);
+							LOGGER.error("population failed with cause ", replyHandler.cause());
+						}
+					});
+				} else {
+					LOGGER.info("event type is send {} eventBus{}", handler.isSend(), eventBus);
+					LOGGER.info("locked generation");
+				}
+			});
 		});
 
 		MessageConsumer<String> initPoolConsumer = eventBus.consumer(EventType.INITPOOL);
 		initPoolConsumer.handler(initPoolHandler -> {
 			long start = System.currentTimeMillis();
-			long noOfFreeVids = vidService.fetchVidCount(VidLifecycleStatus.AVAILABLE);
-			LOGGER.info("no of vid free present are {}", noOfFreeVids);
-			LOGGER.info("value of threshold is {} and lock is {}", threshold, locked.get());
-			boolean isEligibleForPool = noOfFreeVids < threshold && !locked.get();
-			LOGGER.info("is eligible for pool {}", isEligibleForPool);
-			if (isEligibleForPool) {
-				locked.set(true);
-				eventBus.send(EventType.GENERATEPOOL, noOfFreeVids, deliveryOptions, replyHandler -> {
-					if (replyHandler.succeeded()) {
-						locked.set(false);
-						deployHttpVerticle(start);
-						LOGGER.info("population of init pool done");
-					} else if (replyHandler.failed()) {
-						locked.set(false);
-						LOGGER.error("population failed with cause ", replyHandler.cause());
-						initPoolHandler.fail(100, replyHandler.cause().getMessage());
-					}
-				});
-			} else {
-				deployHttpVerticle(start);
-			}
+			vertx.executeBlocking(future -> {
+				future.complete(vidService.fetchVidCount(VidLifecycleStatus.AVAILABLE));
+			}, false, result -> {
+				if (result.failed()) {
+					LOGGER.error("failed to fetch vid count ", result.cause());
+					return;
+				}
+				long noOfFreeVids = (Long) result.result();
+				LOGGER.info("no of vid free present are {}", noOfFreeVids);
+				LOGGER.info("value of threshold is {} and lock is {}", threshold, locked.get());
+				boolean isEligibleForPool = noOfFreeVids < threshold && !locked.get();
+				LOGGER.info("is eligible for pool {}", isEligibleForPool);
+				if (isEligibleForPool) {
+					locked.set(true);
+					eventBus.send(EventType.GENERATEPOOL, noOfFreeVids, deliveryOptions, replyHandler -> {
+						if (replyHandler.succeeded()) {
+							locked.set(false);
+							deployHttpVerticle(start);
+							LOGGER.info("population of init pool done");
+						} else if (replyHandler.failed()) {
+							locked.set(false);
+							LOGGER.error("population failed with cause ", replyHandler.cause());
+							initPoolHandler.fail(100, replyHandler.cause().getMessage());
+						}
+					});
+				} else {
+					deployHttpVerticle(start);
+				}
+			});
 		});
 	}
 

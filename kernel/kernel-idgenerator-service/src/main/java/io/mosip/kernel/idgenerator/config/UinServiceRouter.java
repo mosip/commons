@@ -119,9 +119,9 @@ public class UinServiceRouter {
 		UinServiceHealthCheckerhandler healthCheckHandler = new UinServiceHealthCheckerhandler(vertx, null,
 				objectMapper, environment);
 		router.get(servletPath + UinGeneratorConstant.HEALTH_ENDPOINT).handler(healthCheckHandler);
-		healthCheckHandler.register("db", healthCheckHandler::databaseHealthChecker);
-		healthCheckHandler.register("diskspace", healthCheckHandler::dispSpaceHealthChecker);
-		healthCheckHandler.register("uingeneratorverticle",
+		healthCheckHandler.register("db", 3000, healthCheckHandler::databaseHealthChecker);
+		healthCheckHandler.register("diskspace", 3000, healthCheckHandler::dispSpaceHealthChecker);
+		healthCheckHandler.register("uingeneratorverticle", 3000,
 				future -> healthCheckHandler.verticleHealthHandler(future, vertx));
 	}
 
