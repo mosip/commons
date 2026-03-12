@@ -64,15 +64,15 @@ public class HibernateDaoConfig implements EnvironmentAware {
 	@Autowired
 	private Environment env;
 
-	@Value("${mosip.kernel.vid.hikari_maximumPoolSize:10}")
+	@Value("${mosip.kernel.vid.hikari_maximumPoolSize:50}")
 	private int maximumPoolSize;
 	@Value("${hikari.validationTimeout:3000}")
 	private int validationTimeout;
-	@Value("${hikari.connectionTimeout:60000}")
+	@Value("${hikari.connectionTimeout:10000}")
 	private int connectionTimeout;
 	@Value("${hikari.idleTimeout:200000}")
 	private int idleTimeout;
-	@Value("${hikari.minimumIdle:0}")
+	@Value("${hikari.minimumIdle:5}")
 	private int minimumIdle;
 
 	/*
