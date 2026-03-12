@@ -55,7 +55,14 @@ public class UinTransferVerticle extends AbstractVerticle {
 		MessageConsumer<JsonObject> consumer = eventBus.consumer(UinSchedulerConstants.NAME_VALUE);
 
 		// handle chime event
-		consumer.handler(message -> uinService.transferUin());
+		consumer.handler(message -> vertx.executeBlocking(future -> {
+			uinService.transferUin();
+			future.complete();
+		}, false, result -> {
+			if (result.failed()) {
+				LOGGER.error("UIN transfer failed", result.cause());
+			}
+		}));
 
 		JsonObject timer = new JsonObject()
 				.put(UinSchedulerConstants.TYPE, environment.getProperty(UinSchedulerConstants.TYPE_VALUE))
