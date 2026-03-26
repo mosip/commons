@@ -23,7 +23,7 @@ import io.mosip.kernel.core.signatureutil.exception.SignatureUtilClientException
 import io.mosip.kernel.core.signatureutil.exception.SignatureUtilException;
 import io.mosip.kernel.core.signatureutil.model.SignatureResponse;
 import io.mosip.kernel.core.signatureutil.spi.SignatureUtil;
-import io.mosip.kernel.core.util.DateUtils;
+import io.mosip.kernel.core.util.DateUtils2;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorConstant;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorErrorCode;
 import io.mosip.kernel.uingenerator.dto.UinResponseDto;
@@ -128,14 +128,14 @@ public class UinServiceRouter {
 	private void getRouter(Vertx vertx, RoutingContext routingContext, boolean isSignEnable, String profile,
 			Router router, int workerExecutorPool) {
 		ResponseWrapper<UinResponseDto> reswrp = new ResponseWrapper<>();
-		String timestamp = DateUtils.getUTCCurrentDateTimeString();
+		String timestamp = DateUtils2.getUTCCurrentDateTimeString();
 		WorkerExecutor executor = vertx.createSharedWorkerExecutor("get-uin", workerExecutorPool);
 		executor.executeBlocking(blockingCodeHandler -> {
 			try {
 				checkAndGenerateUins(vertx);
 				UinResponseDto uin = new UinResponseDto();
 				uin = uinGeneratorService.getUin(routingContext);
-				reswrp.setResponsetime(DateUtils.convertUTCToLocalDateTime(timestamp));
+				reswrp.setResponsetime(DateUtils2.convertUTCToLocalDateTime(timestamp));
 				reswrp.setResponse(uin);
 				reswrp.setErrors(null);
 				blockingCodeHandler.complete();
@@ -196,7 +196,6 @@ public class UinServiceRouter {
 	/**
 	 * update router for update the status of the given UIN
 	 * 
-	 * @param vertx vertx
 	 * @return Router
 	 */
 	private void updateRouter(RoutingContext routingContext) {
