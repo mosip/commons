@@ -65,7 +65,7 @@ public class VidPopulatorVerticle extends AbstractVerticle {
 					handler.reply(result.result());
 				} else {
 					LOGGER.error("VID pool population failed", result.cause());
-					handler.fail(500, result.cause().getMessage());
+					handler.fail(500, result.cause().getMessage()); // 500 is the error code
 				}
 			});
 		});
