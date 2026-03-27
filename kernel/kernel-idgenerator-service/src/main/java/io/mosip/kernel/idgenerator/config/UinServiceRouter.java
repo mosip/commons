@@ -5,6 +5,7 @@ import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
@@ -66,6 +67,9 @@ public class UinServiceRouter {
 	@Autowired
 	ObjectMapper objectMapper;
 
+	@Value("mosip.kernel.uin.health.checker.time.ms:3000")
+	private String healthCheckerTime;
+
 	@Autowired
 	private VertxAuthenticationProvider authHandler;
 
@@ -116,12 +120,13 @@ public class UinServiceRouter {
 	}
 
 	private void configureHealthCheckEndpoint(Vertx vertx, Router router, final String servletPath) {
+		long healthCheckerTimeMs=Long.parseLong(healthCheckerTime);
 		UinServiceHealthCheckerhandler healthCheckHandler = new UinServiceHealthCheckerhandler(vertx, null,
 				objectMapper, environment);
 		router.get(servletPath + UinGeneratorConstant.HEALTH_ENDPOINT).handler(healthCheckHandler);
-		healthCheckHandler.register("db", 3000, healthCheckHandler::databaseHealthChecker);
-		healthCheckHandler.register("diskspace", 3000, healthCheckHandler::dispSpaceHealthChecker);
-		healthCheckHandler.register("uingeneratorverticle", 3000,
+		healthCheckHandler.register("db", healthCheckerTimeMs, healthCheckHandler::databaseHealthChecker);
+		healthCheckHandler.register("diskspace", healthCheckerTimeMs, healthCheckHandler::dispSpaceHealthChecker);
+		healthCheckHandler.register("uingeneratorverticle", healthCheckerTimeMs,
 				future -> healthCheckHandler.verticleHealthHandler(future, vertx));
 	}
 
