@@ -50,23 +50,23 @@ public class UinGeneratorVerticle extends AbstractVerticle {
 	@Override
 	public void start() {
 		vertx.eventBus().consumer(UinGeneratorConstant.UIN_GENERATOR_ADDRESS, receivedMessage -> {
-			if (receivedMessage.body().equals(UinGeneratorConstant.GENERATE_UIN) && uinProcesser.shouldGenerateUins()
-					&& !locked.get()) {
+			if (receivedMessage.body().equals(UinGeneratorConstant.GENERATE_UIN) && !locked.get()) {
 				vertx.executeBlocking(future -> {
 					locked.set(true);
-					uinProcesser.generateUins();
+					if (uinProcesser.shouldGenerateUins()) {
+						uinProcesser.generateUins();
+					}
 					future.complete();
 				}, result -> {
+					locked.set(false);
 					if (result.succeeded()) {
-						locked.set(false);
-						 LOGGER.info("Generated and persisted uins lock set to false");
+						LOGGER.info("Generated and persisted uins lock set to false");
 					} else {
-
-						 LOGGER.error("Uin Genaration failed", result.cause());
+						LOGGER.error("Uin Genaration failed", result.cause());
 					}
 				});
-			}else {
-				 LOGGER.info("Generated and persisted uins lock is true.");
+			} else {
+				LOGGER.info("Generated and persisted uins lock is true.");
 			}
 			receivedMessage.reply(UINHealthConstants.ACTIVE);
 		});

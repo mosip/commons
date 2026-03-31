@@ -55,7 +55,14 @@ public class VidExpiryVerticle extends AbstractVerticle {
 		MessageConsumer<JsonObject> consumer = eventBus.consumer(VidSchedulerConstants.NAME_VALUE);
 
 		// handle chime event
-		consumer.handler(message -> vidService.expireAndRelease());
+		consumer.handler(message -> vertx.executeBlocking(future -> {
+			vidService.expireAndRelease();
+			future.complete();
+		}, false, result -> {
+			if (result.failed()) {
+				LOGGER.error("VID expiry and release failed", result.cause());
+			}
+		}));
 
 		JsonObject timer = new JsonObject()
 				.put(VidSchedulerConstants.TYPE, environment.getProperty(VidSchedulerConstants.TYPE_VALUE))

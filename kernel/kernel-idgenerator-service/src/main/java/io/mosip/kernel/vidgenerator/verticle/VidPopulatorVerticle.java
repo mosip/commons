@@ -45,21 +45,29 @@ public class VidPopulatorVerticle extends AbstractVerticle {
 			long noOfFreeVids = Long.parseLong(handler.body().toString());
 			long noOfVidsToGenerate = vidToGenerate - noOfFreeVids;
 			LOGGER.info("Persisting {} vids in pool", noOfVidsToGenerate);
-			long count = 0;
-			while (count < vidToGenerate) {
-				String vid = vidGenerator.generateId();
-				VidEntity entity = new VidEntity();
-				entity.setVid(vid);
-				entity.setStatus(VidLifecycleStatus.AVAILABLE);
-				metaDataUtil.setCreateMetaData(entity);
-				boolean isPersisted = vidWriter.persistVids(entity);
-				if (isPersisted) {
-					count++;
+			vertx.executeBlocking(future -> {
+				long count = 0;
+				while (count < vidToGenerate) {
+					String vid = vidGenerator.generateId();
+					VidEntity entity = new VidEntity();
+					entity.setVid(vid);
+					entity.setStatus(VidLifecycleStatus.AVAILABLE);
+					metaDataUtil.setCreateMetaData(entity);
+					boolean isPersisted = vidWriter.persistVids(entity);
+					if (isPersisted) {
+						count++;
+					}
 				}
-			}
-			handler.reply("pool population successfull");
-
-			LOGGER.info("No of vids persisted are {}", count);
+				LOGGER.info("No of vids persisted are {}", count);
+				future.complete("pool population successfull");
+			}, false, result -> {
+				if (result.succeeded()) {
+					handler.reply(result.result());
+				} else {
+					LOGGER.error("VID pool population failed", result.cause());
+					handler.fail(500, result.cause().getMessage()); // 500 is the error code
+				}
+			});
 		});
 	}
 }

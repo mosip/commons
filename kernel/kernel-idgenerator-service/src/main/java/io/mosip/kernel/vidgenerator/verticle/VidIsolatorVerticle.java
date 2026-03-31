@@ -55,7 +55,14 @@ public class VidIsolatorVerticle extends AbstractVerticle {
 		MessageConsumer<JsonObject> consumer = eventBus.consumer(VidIsolatorSchedulerConstants.NAME_VALUE);
 
 		// handle chime event
-		consumer.handler(message -> vidService.isolateAssignedVids());
+		consumer.handler(message -> vertx.executeBlocking(future -> {
+			vidService.isolateAssignedVids();
+			future.complete();
+		}, false, result -> {
+			if (result.failed()) {
+				LOGGER.error("VID isolation failed", result.cause());
+			}
+		}));
 
 		JsonObject timer = new JsonObject()
 			.put(VidIsolatorSchedulerConstants.TYPE, environment.getProperty(VidIsolatorSchedulerConstants.TYPE_VALUE))
