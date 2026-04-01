@@ -117,17 +117,17 @@ resources:
     cpu: 300m
     memory: 1750Mi
   requests:
-    cpu: 150m
-    memory: 1050Mi
+    cpu: 300m
+    memory: 1750Mi
 additionalResources:
   ## Specify any JAVA_OPTS string here. These typically will be specified in conjunction with above resources
   ## Example: java_opts: "-Xms500M -Xmx500M"
   javaOpts: >-
     -XX:+UseZGC -XX:+ZGenerational -XX:+ZUncommit -XX:+ZProactive
-    -XX:ZUncommitDelay=60 -XX:SoftMaxHeapSize=550m -Xms1050m -Xmx1050m
-    -XX:+UseContainerSupport -XX:MaxMetaspaceSize=120m
-    -XX:MetaspaceSize=128m
-    -XX:ReservedCodeCacheSize=45m -XX:InitialCodeCacheSize=32m
+    -XX:ZUncommitDelay=60 -XX:SoftMaxHeapSize=875m -Xms1050m -Xmx1050m
+    -XX:+UseContainerSupport -XX:MaxMetaspaceSize=140m
+    -XX:MetaspaceSize=35m
+    -XX:ReservedCodeCacheSize=52m -XX:InitialCodeCacheSize=13m
     -XX:+UseCodeCacheFlushing -XX:+HeapDumpOnOutOfMemoryError
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
 ## Clamav container already runs as 'mosip' user, so we may not need to enable this
