@@ -37,6 +37,9 @@ public final class VIDGeneratorConstant {
 	 */
 	public static final String SERVER_SERVLET_PATH = "server.servlet.path";
 
+
+	public static final String UIN_HEALTH_CHECKER ="mosip.kernel.uin.health.checker.time.ms";
+
 	/**
 	 * The string field V1_0_VID
 	 */
