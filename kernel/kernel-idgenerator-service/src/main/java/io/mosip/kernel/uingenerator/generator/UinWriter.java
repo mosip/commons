@@ -3,6 +3,8 @@ package io.mosip.kernel.uingenerator.generator;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -75,6 +77,35 @@ public class UinWriter {
 			setSession();
 		}
 		return session;
+	}
+
+	public int saveBatch(List<UinEntity> batch) {
+		int successCount = 0;
+		EntityManager em = entityManager.getEntityManagerFactory().createEntityManager();
+		Session localSession = em.unwrap(Session.class);
+
+		try {
+			localSession.beginTransaction();
+			for (int i = 0; i < batch.size(); i++) {
+				localSession.persist(batch.get(i));
+				successCount++;
+
+				// Flush and clear periodically to avoid memory overhead
+				if (i % 50 == 0) {
+					localSession.flush();
+					localSession.clear();
+				}
+			}
+			localSession.getTransaction().commit();
+		} catch (Exception e) {
+			if (localSession.getTransaction().isActive()) {
+				localSession.getTransaction().rollback();
+			}
+			throw e;
+		} finally {
+			localSession.close();
+		}
+		return successCount;
 	}
 
 	public void closeSession() {

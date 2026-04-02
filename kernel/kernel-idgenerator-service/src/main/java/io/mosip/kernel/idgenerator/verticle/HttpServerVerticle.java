@@ -77,10 +77,9 @@ public class HttpServerVerticle extends AbstractVerticle {
 				new ObjectMapper(), environment);
 		healthCheckRouter.get(UinGeneratorConstant.HEALTH_ENDPOINT)
 				.handler(healthCheckHandler);
-		long healthcheckertime= Long.parseLong(environment.getProperty(VIDGeneratorConstant.UIN_HEALTH_CHECKER));
-		healthCheckHandler.register("db", healthcheckertime, healthCheckHandler::databaseHealthChecker);
-		healthCheckHandler.register("diskspace", healthcheckertime, healthCheckHandler::dispSpaceHealthChecker);
-		healthCheckHandler.register("idgenerator", healthcheckertime, f -> healthCheckHandler.verticleHealthHandler(f, vertx));
+		healthCheckHandler.register("db", healthCheckHandler::databaseHealthChecker);
+		healthCheckHandler.register("diskspace", healthCheckHandler::dispSpaceHealthChecker);
+		healthCheckHandler.register("idgenerator", f -> healthCheckHandler.verticleHealthHandler(f, vertx));
 
 		metricRouter.route("/metrics").handler(PrometheusScrapingHandler.create());
 
@@ -117,6 +116,8 @@ public class HttpServerVerticle extends AbstractVerticle {
 
 	}
 
-	
-
+	@Override
+	public void stop() {
+		LOGGER.info("Shutting down HttpServerVerticle...");
+	}
 }

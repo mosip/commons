@@ -2,12 +2,13 @@ package io.mosip.kernel.vidgenerator.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,9 @@ import io.mosip.kernel.vidgenerator.utils.VIDMetaDataUtil;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 
 @Service
 public class VidServiceImpl implements VidService {
@@ -48,6 +52,9 @@ public class VidServiceImpl implements VidService {
 	@Autowired
 	private VertxAuthenticationProvider authHandler;
 
+	@Autowired
+	private EntityManagerFactory entityManagerFactory;
+
 	@Override
 	@Transactional
 	public VidFetchResponseDto fetchVid(LocalDateTime vidExpiry, RoutingContext routingContext) {
@@ -55,10 +62,6 @@ public class VidServiceImpl implements VidService {
 		VidEntity vidEntity = null;
 		try {
 			vidEntity = vidRepository.findFirstByStatus(VidLifecycleStatus.AVAILABLE);
-		} catch (DataAccessException exception) {
-			LOGGER.error(ExceptionUtils.parseException(exception));
-			throw new VidGeneratorServiceException(VIDGeneratorErrorCode.INTERNAL_SERVER_ERROR.getErrorCode(),
-					exception.getMessage(), exception.getCause());
 		} catch (Exception exception) {
 			LOGGER.error(ExceptionUtils.parseException(exception));
 			throw new VidGeneratorServiceException(VIDGeneratorErrorCode.INTERNAL_SERVER_ERROR.getErrorCode(),
@@ -72,10 +75,6 @@ public class VidServiceImpl implements VidService {
 			try {
 				vidRepository.updateVid(VidLifecycleStatus.ASSIGNED, authHandler.getContextUser(routingContext),
 						DateUtils.getUTCCurrentDateTime(), vidEntity.getVid());
-			} catch (DataAccessException exception) {
-				LOGGER.error(ExceptionUtils.parseException(exception));
-				throw new VidGeneratorServiceException(VIDGeneratorErrorCode.INTERNAL_SERVER_ERROR.getErrorCode(),
-						exception.getMessage(), exception.getCause());
 			} catch (Exception exception) {
 				LOGGER.error(ExceptionUtils.parseException(exception));
 				throw new VidGeneratorServiceException(VIDGeneratorErrorCode.INTERNAL_SERVER_ERROR.getErrorCode(),
@@ -94,13 +93,10 @@ public class VidServiceImpl implements VidService {
 		long vidCount = 0;
 		try {
 			vidCount = vidRepository.countByStatusAndIsDeletedFalse(status);
-		} catch (DataAccessException exception) {
-			LOGGER.error(ExceptionUtils.parseException(exception));
 		} catch (Exception exception) {
 			LOGGER.error(ExceptionUtils.parseException(exception));
 		}
 		return vidCount;
-
 	}
 
 	@Override
@@ -108,12 +104,9 @@ public class VidServiceImpl implements VidService {
 		try {
 			expireEligibleVids();
 			releaseEligibleVids();
-		} catch (DataAccessException exception) {
-			LOGGER.error(ExceptionUtils.parseException(exception));
 		} catch (Exception exception) {
 			LOGGER.error(ExceptionUtils.parseException(exception));
 		}
-
 	}
 
 	private void expireEligibleVids() {
@@ -165,9 +158,6 @@ public class VidServiceImpl implements VidService {
 				this.vidAssignedRepository.existsById(vid.getVid()))) {
 			try {
 				this.vidRepository.saveAndFlush(vid);
-			} catch (DataAccessException exception) {
-				LOGGER.error(ExceptionUtils.parseException(exception));
-				return false;
 			} catch (Exception exception) {
 				LOGGER.error(ExceptionUtils.parseException(exception));
 				return false;
@@ -176,7 +166,60 @@ public class VidServiceImpl implements VidService {
 		} else {
 			return false;
 		}
+	}
 
+	@Override
+	@Transactional
+	public int saveVIDsInBulk(List<VidEntity> vidList) {
+		if (vidList == null || vidList.isEmpty()) return 0;
+
+		List<String> vidIds = vidList.stream().map(VidEntity::getVid).toList();
+
+		// Check for already existing VIDs
+		Set<String> existingVids = new HashSet<>();
+		existingVids.addAll(
+				vidRepository.findAllById(vidIds).stream().map(VidEntity::getVid).toList()
+		);
+		existingVids.addAll(
+				vidAssignedRepository.findAllById(vidIds).stream().map(VidAssignedEntity::getVid).toList()
+		);
+
+		List<VidEntity> filtered = vidList.stream()
+				.filter(vid -> !existingVids.contains(vid.getVid()))
+				.toList();
+
+		if (filtered.isEmpty()) return 0;
+
+		// Perform batch insert with thread-local EntityManager
+		EntityManager em = entityManagerFactory.createEntityManager();
+		EntityTransaction tx = null;
+		int inserted = 0;
+
+		try {
+			tx = em.getTransaction();
+			tx.begin();
+
+			for (int i = 0; i < filtered.size(); i++) {
+				em.persist(filtered.get(i));
+				inserted++;
+
+				// Flush and clear periodically to avoid memory issues
+				if (i % 50 == 0) {
+					em.flush();
+					em.clear();
+				}
+			}
+
+			tx.commit();
+		} catch (Exception e) {
+			if (tx != null && tx.isActive()) tx.rollback();
+			LOGGER.error("❌ Error in saveVIDsInBulk: {}", ExceptionUtils.parseException(e));
+			inserted = 0;
+		} finally {
+			em.close();
+		}
+
+		return inserted;
 	}
 
 	@Transactional(transactionManager = "transactionManager")

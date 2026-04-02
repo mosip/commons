@@ -1,7 +1,7 @@
 package io.mosip.kernel.uingenerator.generator;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -12,8 +12,7 @@ import io.mosip.kernel.uingenerator.repository.UinRepository;
 
 @Component
 public class UinProcesser {
-	// private static final Logger LOGGER =
-	// LoggerFactory.getLogger(UinProcesser.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UinProcesser.class);
 
 	/**
 	 * Field for uinRepository
@@ -42,9 +41,9 @@ public class UinProcesser {
 	 * @return true, if needs to generate uin
 	 */
 	public boolean shouldGenerateUins() {
-		// LOGGER.info("Uin threshold is {}", thresholdUinCount);
+		LOGGER.info("Uin threshold is {}", thresholdUinCount);
 		long freeUinsCount = uinRepository.countByStatus(UinGeneratorConstant.UNUSED);
-		// LOGGER.info("Number of free UINs in database is {}", freeUinsCount);
+		LOGGER.info("Number of free UINs in database is {}", freeUinsCount);
 		return freeUinsCount < thresholdUinCount;
 	}
 
@@ -53,6 +52,7 @@ public class UinProcesser {
 	 */
 	public void generateUins() {
 		long noOfUnUsedUins = uinRepository.countByStatusAndIsDeletedFalse(UinGeneratorConstant.UNUSED);
+		LOGGER.info("noOfUnUsedUins is {} and uinsCount is {}", noOfUnUsedUins, uinsCount);
 		uinGeneratorImpl.generateId(uinsCount <= noOfUnUsedUins ? 0 : uinsCount - noOfUnUsedUins);
 	}
 
