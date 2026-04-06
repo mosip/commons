@@ -84,17 +84,19 @@ RUN find /target -name '*.jar' -executable -type f "-print0" | xargs "-0" cp -t 
     && rm -rf /target \
     && mv /*.jar ${work_dir}/kernel-idgenerator-service.jar
 
-ADD configure_start.sh configure_start.sh
+COPY configure_start.sh ${work_dir}/configure_start.sh
 
 # change permissions of file inside working dir
-RUN chown -R ${container_user}:${container_user} /home/${container_user}
+RUN sed -i 's/\r$//' ${work_dir}/configure_start.sh \
+    && chmod +x ${work_dir}/configure_start.sh \
+    && chown -R ${container_user}:${container_user} ${work_dir}
 
 # select container user for all tasks
 USER ${container_user_uid}:${container_user_gid}
 
 EXPOSE 8080
 
-ENTRYPOINT ["./configure_start.sh"]
+ENTRYPOINT ["sh", "configure_start.sh"]
 
 #Below 4 lines is added only as a temporary fix to downloaded the ceylon dependencies for chime scheduler
 #later this chime to be replaced with something else
