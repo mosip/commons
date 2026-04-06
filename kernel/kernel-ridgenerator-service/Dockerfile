@@ -72,6 +72,8 @@ ENV loader_path_env=${loader_path}
 
 COPY ./target/kernel-ridgenerator-service-*.jar kernel-ridgenerator-service.jar
 
+ADD configure_start.sh configure_start.sh
+
 # change permissions of file inside working dir
 RUN chown -R ${container_user}:${container_user} /home/${container_user}
 
