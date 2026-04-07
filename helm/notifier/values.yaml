@@ -117,13 +117,13 @@ resources:
     memory: 5000Mi
   requests:
     cpu: 750m
-    memory: 2500Mi
+    memory: 3000Mi
 additionalResources:
   ## Specify any JAVA_OPTS string here. These typically will be specified in conjunction with above resources
   ## Example: java_opts: "-Xms500M -Xmx500M"
   javaOpts: >-
     -XX:+UseZGC -XX:+ZGenerational -XX:+ZUncommit -XX:+ZProactive
-    -XX:ZUncommitDelay=60 -XX:SoftMaxHeapSize=2500m -Xms1900m -Xmx3300m
+    -XX:ZUncommitDelay=60 -XX:SoftMaxHeapSize=2500m -Xms2300m -Xmx3300m
     -XX:+UseContainerSupport -XX:MaxMetaspaceSize=400m
     -XX:MetaspaceSize=100m
     -XX:ReservedCodeCacheSize=150m -XX:InitialCodeCacheSize=37m
