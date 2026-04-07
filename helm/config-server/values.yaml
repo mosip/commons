@@ -4,10 +4,10 @@
 
 replicaCount: 1
 image:
-  repository: mosipid/kernel-config-server
+  repository: mosipqa/kernel-config-server
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 1.3.0
+  tag: 1.3.x
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
@@ -101,11 +101,18 @@ resources:
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
-    cpu: 200m
-    memory: 1500Mi
+    cpu: 300m
+    memory: 3000Mi
   requests:
-    cpu: 100m
-    memory: 900Mi
+    cpu: 150m
+    memory: 1500Mi
+  javaOpts: >-
+    -XX:+UseZGC -XX:+ZGenerational -XX:+ZUncommit -XX:+ZProactive
+    -XX:ZUncommitDelay=60 -XX:SoftMaxHeapSize=1500m -Xms1200m -Xmx2000m
+    -XX:+UseContainerSupport -XX:MaxMetaspaceSize=240m
+    -XX:MetaspaceSize=60m
+    -XX:ReservedCodeCacheSize=90m -XX:InitialCodeCacheSize=22m
+    -XX:+UseCodeCacheFlushing -XX:+HeapDumpOnOutOfMemoryError
 autoscaling:
   enabled: false
   minReplicas: 1
