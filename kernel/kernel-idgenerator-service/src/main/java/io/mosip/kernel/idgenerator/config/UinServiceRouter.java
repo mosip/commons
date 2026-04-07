@@ -67,7 +67,7 @@ public class UinServiceRouter {
 	@Autowired
 	ObjectMapper objectMapper;
 
-	@Value("mosip.kernel.uin.health.checker.time.ms:3000")
+	@Value("${mosip.kernel.uin.health.checker.time.ms:3000}")
 	private String healthCheckerTime;
 
 	@Autowired
