@@ -104,25 +104,48 @@ public class VidPoolCheckerVerticle extends AbstractVerticle {
 						}
 					});
 				} else {
+					System.out.println("DEBUG >>> Pool already sufficient, skipping generation. Calling deployHttpVerticle directly.");
+					System.out.println("DEBUG >>> noOfFreeVids=" + noOfFreeVids + " threshold=" + threshold + " locked=" + locked.get());
 					deployHttpVerticle(start);
 				}
 			});
 		});
 	}
 
+	
 	private void deployHttpVerticle(long start) {
-		Verticle httpVerticle = new HttpServerVerticle(context);
-		DeploymentOptions opts = new DeploymentOptions();
-		vertx.deployVerticle(httpVerticle, opts, res -> {
-			if (res.failed()) {
-				LOGGER.info("Failed to deploy verticle " + httpVerticle.getClass().getSimpleName() + " " + res.cause());
-			} else if (res.succeeded()) {
-				LOGGER.info("population of pool is done starting fetcher verticle");
-				LOGGER.info("Starting vidgenerator service... ");
-				LOGGER.info("service took {} ms to pool and start", (System.currentTimeMillis() - start));
-				LOGGER.info("Deployed verticle " + httpVerticle.getClass().getSimpleName());
-			}
-		});
+		System.out.println("DEBUG >>> Starting deployHttpVerticle");
 
+		try {
+			System.out.println("DEBUG >>> Creating HttpServerVerticle instance");
+			Verticle httpVerticle = new HttpServerVerticle(context);
+			System.out.println("DEBUG >>> HttpServerVerticle created successfully: " + httpVerticle);
+
+			DeploymentOptions opts = new DeploymentOptions();
+			System.out.println("DEBUG >>> DeploymentOptions created: " + opts.toJson());
+
+			System.out.println("DEBUG >>> Attempting to deploy verticle: " + httpVerticle.getClass().getSimpleName());
+
+			vertx.deployVerticle(httpVerticle, opts, res -> {
+				if (res.failed()) {
+					System.out.println("DEBUG >>> Failed to deploy verticle: " + httpVerticle.getClass().getSimpleName());
+					System.out.println("DEBUG >>> Failure cause: " + res.cause());
+					System.out.println("DEBUG >>> Failure message: " + res.cause().getMessage());
+					System.out.println("DEBUG >>> Failure stack trace: ");
+					res.cause().printStackTrace();  // <-- This will show exact line causing NumberFormatException
+					LOGGER.info("Failed to deploy verticle " + httpVerticle.getClass().getSimpleName() + " " + res.cause());
+				} else if (res.succeeded()) {
+					System.out.println("DEBUG >>> Successfully deployed verticle: " + httpVerticle.getClass().getSimpleName());
+					LOGGER.info("population of pool is done starting fetcher verticle");
+					LOGGER.info("Starting vidgenerator service... ");
+					LOGGER.info("service took {} ms to pool and start", (System.currentTimeMillis() - start));
+					LOGGER.info("Deployed verticle " + httpVerticle.getClass().getSimpleName());
+				}
+			});
+
+		} catch (Exception e) {
+			System.out.println("DEBUG >>> Exception during deployHttpVerticle setup: " + e.getMessage());
+			e.printStackTrace();
+		}
 	}
 }
