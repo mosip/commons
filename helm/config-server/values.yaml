@@ -104,11 +104,11 @@ resources:
     cpu: 300m
     memory: 3000Mi
   requests:
-    cpu: 300m
-    memory: 3000Mi
+    cpu: 150m
+    memory: 1500Mi
   javaOpts: >-
     -XX:+UseZGC -XX:+ZGenerational -XX:+ZUncommit -XX:+ZProactive
-    -XX:ZUncommitDelay=60 -XX:SoftMaxHeapSize=1500m -Xms1800m -Xmx1800m
+    -XX:ZUncommitDelay=60 -XX:SoftMaxHeapSize=1500m -Xms1200m -Xmx2000m
     -XX:+UseContainerSupport -XX:MaxMetaspaceSize=240m
     -XX:MetaspaceSize=60m
     -XX:ReservedCodeCacheSize=90m -XX:InitialCodeCacheSize=22m
