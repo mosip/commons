@@ -1,5 +1,7 @@
 package io.mosip.kernel.vidgenerator.verticle;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
@@ -22,6 +24,8 @@ public class VidIsolatorVerticle extends AbstractVerticle {
 	private VidService vidService;
 
 	private Environment environment;
+
+	private final AtomicBoolean isolationInProgress = new AtomicBoolean(false);
 
 	public VidIsolatorVerticle(final ApplicationContext context) {
 		this.environment = context.getBean(Environment.class);
@@ -54,15 +58,27 @@ public class VidIsolatorVerticle extends AbstractVerticle {
 
 		MessageConsumer<JsonObject> consumer = eventBus.consumer(VidIsolatorSchedulerConstants.NAME_VALUE);
 
-		// handle chime event
-		consumer.handler(message -> vertx.executeBlocking(future -> {
-			vidService.isolateAssignedVids();
-			future.complete();
-		}, false, result -> {
-			if (result.failed()) {
-				LOGGER.error("VID isolation failed", result.cause());
+		// handle chime event — single-flight: skip tick if previous run still in progress
+		consumer.handler(message -> {
+			if (!isolationInProgress.compareAndSet(false, true)) {
+				LOGGER.info("VID isolation skipped: previous run still in progress; will run on next schedule ({})",
+						VidIsolatorSchedulerConstants.NAME_VALUE);
+				return;
 			}
-		}));
+			vertx.executeBlocking(future -> {
+				try {
+					vidService.isolateAssignedVids();
+					future.complete();
+				} catch (Exception e) {
+					future.fail(e);
+				}
+			}, false, result -> {
+				isolationInProgress.set(false);
+				if (result.failed()) {
+					LOGGER.error("VID isolation failed", result.cause());
+				}
+			});
+		});
 
 		JsonObject timer = new JsonObject()
 			.put(VidIsolatorSchedulerConstants.TYPE, environment.getProperty(VidIsolatorSchedulerConstants.TYPE_VALUE))

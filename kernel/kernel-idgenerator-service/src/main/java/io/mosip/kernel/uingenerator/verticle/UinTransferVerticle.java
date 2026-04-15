@@ -1,5 +1,7 @@
 package io.mosip.kernel.uingenerator.verticle;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
@@ -22,6 +24,8 @@ public class UinTransferVerticle extends AbstractVerticle {
 	private UinService uinService;
 
 	private Environment environment;
+
+	private final AtomicBoolean transferInProgress = new AtomicBoolean(false);
 
 	public UinTransferVerticle(final ApplicationContext context) {
 		this.environment = context.getBean(Environment.class);
@@ -54,15 +58,26 @@ public class UinTransferVerticle extends AbstractVerticle {
 
 		MessageConsumer<JsonObject> consumer = eventBus.consumer(UinSchedulerConstants.NAME_VALUE);
 
-		// handle chime event
-		consumer.handler(message -> vertx.executeBlocking(future -> {
-			uinService.transferUin();
-			future.complete();
-		}, false, result -> {
-			if (result.failed()) {
-				LOGGER.error("UIN transfer failed", result.cause());
+		// handle chime event — single-flight: skip tick if a transfer is still running (next schedule will retry)
+		consumer.handler(message -> {
+			if (!transferInProgress.compareAndSet(false, true)) {
+				LOGGER.info("UIN transfer skipped: previous transfer still in progress; will run on next schedule");
+				return;
 			}
-		}));
+			vertx.executeBlocking(future -> {
+				try {
+					uinService.transferUin();
+					future.complete();
+				} catch (Exception e) {
+					future.fail(e);
+				}
+			}, false, result -> {
+				transferInProgress.set(false);
+				if (result.failed()) {
+					LOGGER.error("UIN transfer failed", result.cause());
+				}
+			});
+		});
 
 		JsonObject timer = new JsonObject()
 				.put(UinSchedulerConstants.TYPE, environment.getProperty(UinSchedulerConstants.TYPE_VALUE))
