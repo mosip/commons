@@ -115,8 +115,8 @@ public class EmailNotificationUtils {
                     validateEmailAddress(to);
                 }
                 catch(AddressException ex){
-                    validationErrorsList.add(new ServiceError(MailNotifierArgumentErrorConstants.SENDER_ADDRESS_NOT_FOUND.getErrorCode(),
-                            MailNotifierArgumentErrorConstants.SENDER_ADDRESS_NOT_FOUND.getErrorMessage()));
+                    validationErrorsList.add(new ServiceError(MailNotifierArgumentErrorConstants.RECEIVER_ADDRESS_NOT_FOUND.getErrorCode(),
+                            MailNotifierArgumentErrorConstants.RECEIVER_ADDRESS_NOT_FOUND.getErrorMessage()));
                 }
             });
         }
