@@ -3,7 +3,7 @@ package io.mosip.kernel.saltgenerator.step;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
