@@ -2,6 +2,7 @@ package io.mosip.kernel.vidgenerator.verticle;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
@@ -24,6 +25,8 @@ public class VidPoolCheckerVerticle extends AbstractVerticle {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(VidPoolCheckerVerticle.class);
 
+	private static final long DEFAULT_POOL_CHECK_INTERVAL_MS = 180_000L;
+
 	private VidService vidService;
 
 	private Environment environment;
@@ -44,48 +47,23 @@ public class VidPoolCheckerVerticle extends AbstractVerticle {
 	@Override
 	public void start(Future<Void> startFuture) {
 		EventBus eventBus = vertx.eventBus();
-		MessageConsumer<String> checkPoolConsumer = eventBus.consumer(EventType.CHECKPOOL);
-		DeliveryOptions deliveryOptions = new DeliveryOptions();
-		deliveryOptions.setSendTimeout(environment.getProperty("mosip.kernel.vid.pool-population-timeout", Long.class));
-		checkPoolConsumer.handler(handler -> {
-			vertx.executeBlocking(future -> {
-				future.complete(vidService.fetchVidCount(VidLifecycleStatus.AVAILABLE));
-			}, false, result -> {
-				if (result.failed()) {
-					LOGGER.error("failed to fetch vid count ", result.cause());
-					return;
-				}
-				long noOfFreeVids = (Long) result.result();
-				LOGGER.info("no of vid free present are {}", noOfFreeVids);
-				if (noOfFreeVids < threshold && !locked.get()) {
-					locked.set(true);
-					eventBus.send(EventType.GENERATEPOOL, noOfFreeVids, deliveryOptions, replyHandler -> {
-						if (replyHandler.succeeded()) {
-							locked.set(false);
-							LOGGER.info("population of pool done");
-						} else if (replyHandler.failed()) {
-							locked.set(false);
-							LOGGER.error("population failed with cause ", replyHandler.cause());
-						}
-					});
-				} else {
-					LOGGER.info("event type is send {} eventBus{}", handler.isSend(), eventBus);
-					LOGGER.info("locked generation");
-				}
-			});
-		});
+		DeliveryOptions deliveryOptions = createPoolDeliveryOptions();
+
+		Long intervalProperty = environment.getProperty("mosip.kernel.vid.pool-check-interval-ms", Long.class);
+		long periodMs = intervalProperty != null ? intervalProperty : DEFAULT_POOL_CHECK_INTERVAL_MS;
+		if (periodMs <= 0) {
+			LOGGER.warn(
+					"mosip.kernel.vid.pool-check-interval-ms is {}; scheduled VID pool checks are disabled",
+					periodMs);
+		} else {
+			vertx.setPeriodic(periodMs, timerId -> runScheduledPoolCheck(eventBus, deliveryOptions));
+			LOGGER.info("VID pool checker runs every {} ms", periodMs);
+		}
 
 		MessageConsumer<String> initPoolConsumer = eventBus.consumer(EventType.INITPOOL);
 		initPoolConsumer.handler(initPoolHandler -> {
 			long start = System.currentTimeMillis();
-			vertx.executeBlocking(future -> {
-				future.complete(vidService.fetchVidCount(VidLifecycleStatus.AVAILABLE));
-			}, false, result -> {
-				if (result.failed()) {
-					LOGGER.error("failed to fetch vid count ", result.cause());
-					return;
-				}
-				long noOfFreeVids = (Long) result.result();
+			runVidCountCheck(noOfFreeVids -> {
 				LOGGER.info("no of vid free present are {}", noOfFreeVids);
 				LOGGER.info("value of threshold is {} and lock is {}", threshold, locked.get());
 				boolean isEligibleForPool = noOfFreeVids < threshold && !locked.get();
@@ -107,6 +85,45 @@ public class VidPoolCheckerVerticle extends AbstractVerticle {
 					deployHttpVerticle(start);
 				}
 			});
+		});
+		startFuture.complete();
+	}
+
+	private DeliveryOptions createPoolDeliveryOptions() {
+		DeliveryOptions deliveryOptions = new DeliveryOptions();
+		deliveryOptions.setSendTimeout(environment.getProperty("mosip.kernel.vid.pool-population-timeout", Long.class));
+		return deliveryOptions;
+	}
+
+	private void runVidCountCheck(Consumer<Long> onCount) {
+		vertx.executeBlocking(future -> {
+			future.complete(vidService.fetchVidCount(VidLifecycleStatus.AVAILABLE));
+		}, false, result -> {
+			if (result.failed()) {
+				LOGGER.error("failed to fetch vid count ", result.cause());
+				return;
+			}
+			onCount.accept((Long) result.result());
+		});
+	}
+
+	private void runScheduledPoolCheck(EventBus eventBus, DeliveryOptions deliveryOptions) {
+		runVidCountCheck(noOfFreeVids -> {
+			LOGGER.info("scheduled VID pool check: free vids {}", noOfFreeVids);
+			if (noOfFreeVids < threshold && !locked.get()) {
+				locked.set(true);
+				eventBus.send(EventType.GENERATEPOOL, noOfFreeVids, deliveryOptions, replyHandler -> {
+					if (replyHandler.succeeded()) {
+						locked.set(false);
+						LOGGER.info("population of pool done");
+					} else if (replyHandler.failed()) {
+						locked.set(false);
+						LOGGER.error("population failed with cause ", replyHandler.cause());
+					}
+				});
+			} else {
+				LOGGER.debug("scheduled VID pool check skipped: threshold satisfied or generation locked");
+			}
 		});
 	}
 

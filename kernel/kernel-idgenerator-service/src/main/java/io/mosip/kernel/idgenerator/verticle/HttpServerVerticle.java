@@ -9,7 +9,6 @@ import io.mosip.kernel.idgenerator.config.AccessLogHandler;
 import io.mosip.kernel.idgenerator.config.UinServiceHealthCheckerhandler;
 import io.mosip.kernel.idgenerator.config.UinServiceRouter;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorConstant;
-import io.mosip.kernel.vidgenerator.constant.EventType;
 import io.mosip.kernel.vidgenerator.constant.VIDGeneratorConstant;
 import io.mosip.kernel.vidgenerator.router.VidFetcherRouter;
 import io.vertx.core.AbstractVerticle;
@@ -98,7 +97,6 @@ public class HttpServerVerticle extends AbstractVerticle {
 		httpServer.listen(Integer.parseInt(environment.getProperty(VIDGeneratorConstant.SERVER_PORT)), result -> {
 			if (result.succeeded()) {
 				LOGGER.debug("vid fetcher verticle deployed");
-				vertx.eventBus().publish(EventType.CHECKPOOL, EventType.CHECKPOOL);
 				future.complete();
 			} else if (result.failed()) {
 				LOGGER.error("vid fetcher verticle deployment failed with cause ", result.cause());
