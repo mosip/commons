@@ -25,7 +25,7 @@ public class VidPoolCheckerVerticle extends AbstractVerticle {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(VidPoolCheckerVerticle.class);
 
-	private static final long DEFAULT_POOL_CHECK_INTERVAL_MS = 180_000L;
+	private static final long DEFAULT_POOL_CHECK_INTERVAL_SECONDS = 900L;
 
 	private VidService vidService;
 
@@ -48,17 +48,7 @@ public class VidPoolCheckerVerticle extends AbstractVerticle {
 	public void start(Future<Void> startFuture) {
 		EventBus eventBus = vertx.eventBus();
 		DeliveryOptions deliveryOptions = createPoolDeliveryOptions();
-
-		Long intervalProperty = environment.getProperty("mosip.kernel.vid.pool-check-interval-ms", Long.class);
-		long periodMs = intervalProperty != null ? intervalProperty : DEFAULT_POOL_CHECK_INTERVAL_MS;
-		if (periodMs <= 0) {
-			LOGGER.warn(
-					"mosip.kernel.vid.pool-check-interval-ms is {}; scheduled VID pool checks are disabled",
-					periodMs);
-		} else {
-			vertx.setPeriodic(periodMs, timerId -> runScheduledPoolCheck(eventBus, deliveryOptions));
-			LOGGER.info("VID pool checker runs every {} ms", periodMs);
-		}
+		scheduleVidPoolCheck(eventBus, deliveryOptions);
 
 		MessageConsumer<String> initPoolConsumer = eventBus.consumer(EventType.INITPOOL);
 		initPoolConsumer.handler(initPoolHandler -> {
@@ -87,6 +77,23 @@ public class VidPoolCheckerVerticle extends AbstractVerticle {
 			});
 		});
 		startFuture.complete();
+	}
+
+	/**
+	 * Schedules periodic VID pool checks based on configured interval.
+	 */
+	private void scheduleVidPoolCheck(EventBus eventBus, DeliveryOptions deliveryOptions) {
+		Long intervalProperty = environment.getProperty("kernel.vid.pool-check-interval-seconds", Long.class);
+		long periodSeconds = intervalProperty != null ? intervalProperty : DEFAULT_POOL_CHECK_INTERVAL_SECONDS;
+		if (periodSeconds <= 0) {
+			LOGGER.warn(
+					"kernel.vid.pool-check-interval-seconds is {}; scheduled VID pool checks are disabled",
+					periodSeconds);
+		} else {
+			long periodMs = periodSeconds * 1000;
+			vertx.setPeriodic(periodMs, timerId -> runScheduledPoolCheck(eventBus, deliveryOptions));
+			LOGGER.info("VID pool checker runs every {} seconds", periodSeconds);
+		}
 	}
 
 	private DeliveryOptions createPoolDeliveryOptions() {
