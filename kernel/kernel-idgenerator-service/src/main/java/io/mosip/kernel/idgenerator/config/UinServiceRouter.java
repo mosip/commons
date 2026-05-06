@@ -137,7 +137,6 @@ public class UinServiceRouter {
 		WorkerExecutor executor = vertx.createSharedWorkerExecutor("get-uin", workerExecutorPool);
 		executor.executeBlocking(blockingCodeHandler -> {
 			try {
-				checkAndGenerateUins(vertx);
 				UinResponseDto uin = new UinResponseDto();
 				uin = uinGeneratorService.getUin(routingContext);
 				reswrp.setResponsetime(DateUtils2.convertUTCToLocalDateTime(timestamp));
@@ -252,15 +251,6 @@ public class UinServiceRouter {
 			setError(routingContext, error, reqwrp);
 		}
 
-	}
-
-	/**
-	 * Checks and generate uins
-	 * 
-	 * @param vertx vertx
-	 */
-	public void checkAndGenerateUins(Vertx vertx) {
-		vertx.eventBus().publish(UinGeneratorConstant.UIN_GENERATOR_ADDRESS, UinGeneratorConstant.GENERATE_UIN);
 	}
 
 	private void setError(RoutingContext routingContext, ServiceError error) {
