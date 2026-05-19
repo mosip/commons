@@ -1,17 +1,16 @@
-\c mosip_authdevice 
+\c :mosipdbname
 
 GRANT CONNECT
-   ON DATABASE mosip_authdevice
-   TO authdeviceuser;
+   ON DATABASE :mosipdbname
+   TO :dbuname;
 
 GRANT USAGE
    ON SCHEMA authdevice
-   TO authdeviceuser;
+   TO :dbuname;
 
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES
-   ON ALL TABLES IN SCHEMA authdevice
-   TO authdeviceuser;
+      ON ALL TABLES IN SCHEMA authdevice
+          TO :dbuname;
 
-ALTER DEFAULT PRIVILEGES IN SCHEMA authdevice 
-	GRANT SELECT,INSERT,UPDATE,DELETE,REFERENCES ON TABLES TO authdeviceuser;
-
+ALTER DEFAULT PRIVILEGES IN SCHEMA authdevice
+	GRANT SELECT,INSERT,UPDATE,DELETE,REFERENCES ON TABLES TO :dbuname;

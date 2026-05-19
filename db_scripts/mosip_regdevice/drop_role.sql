@@ -1,1 +1,1 @@
-drop role if exists regdeviceuser; 
+drop role if exists :dbuname;

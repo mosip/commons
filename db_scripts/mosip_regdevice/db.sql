@@ -1,16 +1,16 @@
-CREATE DATABASE mosip_regdevice
+CREATE DATABASE :mosipdbname
 	ENCODING = 'UTF8'
 	LC_COLLATE = 'en_US.UTF-8'
 	LC_CTYPE = 'en_US.UTF-8'
 	TABLESPACE = pg_default
 	OWNER = postgres
 	TEMPLATE  = template0;
-COMMENT ON DATABASE mosip_regdevice IS 'Database to store all registration device management data, look-up data, configuration data, metadata...etc.';
+COMMENT ON DATABASE :mosipdbname IS 'Database to store all registration device management data, look-up data, configuration data, metadata...etc.';
 
-\c mosip_regdevice 
+\c :mosipdbname
 
-DROP SCHEMA IF EXISTS regdevice CASCADE;
-CREATE SCHEMA regdevice;
-ALTER SCHEMA regdevice OWNER TO postgres;
+DROP SCHEMA IF EXISTS :dbuname CASCADE;
+CREATE SCHEMA :dbuname;
+ALTER SCHEMA :dbuname OWNER TO postgres;
 
-ALTER DATABASE mosip_regdevice SET search_path TO regdevice,pg_catalog,public;
+ALTER DATABASE :mosipdbname SET search_path TO :dbuname,pg_catalog,public;
