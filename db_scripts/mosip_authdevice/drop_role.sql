@@ -1,1 +1,1 @@
-drop role if exists authdeviceuser; 
+drop role if exists :dbuname;

@@ -1,1 +1,1 @@
-drop role if exists kerneluser;
+drop role if exists :dbuname;

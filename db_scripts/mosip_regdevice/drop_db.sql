@@ -1,2 +1,1 @@
-DROP DATABASE IF EXISTS mosip_regdevice;
-
+DROP DATABASE IF EXISTS :mosipdbname;

@@ -1,4 +1,4 @@
-\c mosip_authdevice 
+\c :mosipdbname
 
 \ir ddl/authdevice-device_detail.sql
 \ir ddl/authdevice-ftp_chip_detail.sql

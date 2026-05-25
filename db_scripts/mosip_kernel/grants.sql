@@ -1,17 +1,16 @@
-\c mosip_kernel 
+\c :mosipdbname
 
 GRANT CONNECT
-   ON DATABASE mosip_kernel
-   TO kerneluser;
+   ON DATABASE :mosipdbname
+   TO :dbuname;
 
 GRANT USAGE
-   ON SCHEMA kernel 
-   TO kerneluser;
+   ON SCHEMA kernel
+   TO :dbuname;
 
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES
-   ON ALL TABLES IN SCHEMA kernel 
-   TO kerneluser;
+      ON ALL TABLES IN SCHEMA kernel
+          TO :dbuname;
 
 ALTER DEFAULT PRIVILEGES IN SCHEMA kernel
-	GRANT SELECT,INSERT,UPDATE,DELETE,REFERENCES ON TABLES TO kerneluser;
-
+	GRANT SELECT,INSERT,UPDATE,DELETE,REFERENCES ON TABLES TO :dbuname;

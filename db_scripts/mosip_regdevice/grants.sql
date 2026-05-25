@@ -1,17 +1,16 @@
-\c mosip_regdevice 
+\c :mosipdbname
 
 GRANT CONNECT
-   ON DATABASE mosip_regdevice
-   TO regdeviceuser;
+   ON DATABASE :mosipdbname
+   TO :dbunameuser;
 
 GRANT USAGE
-   ON SCHEMA regdevice
-   TO regdeviceuser;
+   ON SCHEMA :dbuname
+   TO :dbunameuser;
 
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES
-   ON ALL TABLES IN SCHEMA regdevice
-   TO regdeviceuser;
+      ON ALL TABLES IN SCHEMA :dbuname
+          TO :dbunameuser;
 
-ALTER DEFAULT PRIVILEGES IN SCHEMA regdevice 
-	GRANT SELECT,INSERT,UPDATE,DELETE,REFERENCES ON TABLES TO regdeviceuser;
-
+ALTER DEFAULT PRIVILEGES IN SCHEMA :dbuname
+	GRANT SELECT,INSERT,UPDATE,DELETE,REFERENCES ON TABLES TO :dbunameuser;
