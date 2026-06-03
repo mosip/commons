@@ -59,7 +59,7 @@ LABEL build_time=${BUILD_TIME}
 
 # install packages and create user
 RUN apt-get -y update \
-&& apt-get install -y unzip sudo git \
+&& apt-get install -y unzip sudo\
 && groupadd -g ${container_user_gid} ${container_user_group} \
 && useradd -u ${container_user_uid} -g ${container_user_group} -s /bin/sh -m ${container_user} \
 && usermod -aG sudo ${container_user} \
@@ -79,5 +79,4 @@ COPY ./target/kernel-config-server-*.jar kernel-config-server.jar
 EXPOSE 51000
 
 #CMD  ./execute-jar.sh
-CMD java -XX:-UseG1GC -XX:+ExplicitGCInvokesConcurrent -XX:-UseParallelGC -XX:+UseZGC -XX:+ZGenerational -XX:-UseShenandoahGC -XX:MaxGCPauseMillis=200  -XX:+UnlockExperimentalVMOptions -XX:+UseStringDeduplication -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -XX:+UseCompressedOops \
-         -Dloader.path="${loader_path_env}" -jar kernel-config-server.jar
+CMD java -jar kernel-config-server.jar

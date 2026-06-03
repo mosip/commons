@@ -39,6 +39,8 @@ spec:
           lifecycle: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleHooks "context" $) | nindent 12 }}
           {{- end }}
           env:
+            - name: JDK_JAVA_OPTIONS
+              value: {{ .Values.additionalResources.javaOpts }}
           {{- if .Values.spring_profiles.enabled }}
             {{- range $index, $repo := .Values.spring_profiles.spring_compositeRepos }}
             - name: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_URI

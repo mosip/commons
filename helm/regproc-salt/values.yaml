@@ -12,23 +12,18 @@
 ##
 commonLabels:
   app.kubernetes.io/component: mosip
-
 ## Add annotations to all the deployed resources
 ##
 commonAnnotations: {}
-
 ## Kubernetes Cluster Domain
 ##
 clusterDomain: cluster.local
-
 ## Extra objects to deploy (value evaluated as a template)
 ##
 extraDeploy: []
-
 ## Number of nodes
 ##
 replicaCount: 1
-
 image:
   registry: docker.io
   repository: mosipqa/kernel-salt-generator
@@ -44,7 +39,6 @@ image:
   ##
   # pullSecrets:
   #   - myRegistryKeySecretName
-
 ##
 # existingConfigmap:
 
@@ -52,12 +46,10 @@ image:
 ##
 command: []
 args: []
-
 ## Deployment pod host aliases
 ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
 ##
 hostAliases: []
-
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
 ##
 resources:
@@ -71,37 +63,31 @@ resources:
   requests: {}
   #   cpu: 200m
   #   memory: 10Mi
-
 additionalResources:
   ## Specify any JAVA_OPTS string here. These typically will be specified in conjunction with above resources
   ## Example: java_opts: "-Xms500M -Xmx500M"
   javaOpts: ""
-
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
 ## Clamav container already runs as 'mosip' user, so we may not need to enable this
 containerSecurityContext:
   enabled: false
   runAsUser: mosip
   runAsNonRoot: true
-
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
 ##
 podSecurityContext:
   enabled: false
   fsGroup: 1001
-
 ## Pod affinity preset
 ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
 ## Allowed values: soft, hard
 ##
 podAffinityPreset: ""
-
 ## Pod anti-affinity preset
 ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
 ## Allowed values: soft, hard
 ##
 podAntiAffinityPreset: soft
-
 ## Node affinity preset
 ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity
 ## Allowed values: soft, hard
@@ -123,32 +109,26 @@ nodeAffinityPreset:
   ##   - e2e-az2
   ##
   values: []
-
 ## Affinity for pod assignment. Evaluated as a template.
 ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 ##
 affinity: {}
-
 ## Node labels for pod assignment. Evaluated as a template.
 ## ref: https://kubernetes.io/docs/user-guide/node-selection/
 ##
 nodeSelector: {}
-
 ## Tolerations for pod assignment. Evaluated as a template.
 ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
 ##
 tolerations: []
-
 ## Pod extra labels
 ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
 ##
 podLabels: {}
-
 ## Annotations for server pods.
 ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
 ##
 podAnnotations: {}
-
 ##  pods' priority.
 ## ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
 ##
@@ -157,15 +137,12 @@ podAnnotations: {}
 ## lifecycleHooks for the  container to automate configuration before or after startup.
 ##
 lifecycleHooks: {}
-
 ## Custom Liveness probes for
 ##
 customLivenessProbe: {}
-
 ## Custom Rediness probes
 ##
 customReadinessProbe: {}
-
 ## Update strategy - only really applicable for deployments with RWO PVs attached
 ## If replicas = 1, an update can get "stuck", as the previous pod remains attached to the
 ## PV, and the "incoming" pod can never start. Changing the strategy to "Recreate" will
@@ -173,7 +150,6 @@ customReadinessProbe: {}
 ##
 updateStrategy:
   type: RollingUpdate
-
 ## Additional environment variables to set
 ## Example:
 ## extraEnvVars:
@@ -181,26 +157,21 @@ updateStrategy:
 ##     value: "bar"
 ##
 extraEnvVars: []
-
 ## ConfigMap with extra environment variables that used
 ##
 extraEnvVarsCM:
   - global
   - config-server-share
   - artifactory-share
-
 ## Secret with extra environment variables
 ##
-extraEnvVarsSecret: []
-
+extraEnvVarsSecret:
 ## Extra volumes to add to the deployment
 ##
 extraVolumes: []
-
 ## Extra volume mounts to add to the container
 ##
 extraVolumeMounts: []
-
 ## Add init containers to the  pods.
 ## Example:
 ## initContainers:
@@ -212,7 +183,6 @@ extraVolumeMounts: []
 ##         containerPort: 1234
 ##
 initContainers: {}
-
 ## Add sidecars to the  pods.
 ## Example:
 ## sidecars:
@@ -224,7 +194,6 @@ initContainers: {}
 ##         containerPort: 1234
 ##
 sidecars: {}
-
 persistence:
   enabled: false
   ## If defined, storageClassName: <storageClass>
@@ -246,7 +215,6 @@ persistence:
   existingClaim:
   # Dir where config and keys are written inside container
   mountDir:
-
 ## Init containers parameters:
 ## volumePermissions: Change the owner and group of the persistent volume mountpoint to runAsUser:fsGroup values from the securityContext section.
 ##
@@ -280,12 +248,10 @@ volumePermissions:
     ##   cpu: 100m
     ##   memory: 128Mi
     ##
-
 ## Specifies whether RBAC resources should be created
 ##
 rbac:
   create: true
-
 ## Specifies whether a ServiceAccount should be created
 ##
 serviceAccount:

@@ -1,5 +1,7 @@
 package io.mosip.kernel.vidgenerator.verticle;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
@@ -22,6 +24,8 @@ public class VidExpiryVerticle extends AbstractVerticle {
 	private VidService vidService;
 
 	private Environment environment;
+
+	private final AtomicBoolean expireAndReleaseInProgress = new AtomicBoolean(false);
 
 	public VidExpiryVerticle(final ApplicationContext context) {
 		this.environment = context.getBean(Environment.class);
@@ -54,8 +58,28 @@ public class VidExpiryVerticle extends AbstractVerticle {
 
 		MessageConsumer<JsonObject> consumer = eventBus.consumer(VidSchedulerConstants.NAME_VALUE);
 
-		// handle chime event
-		consumer.handler(message -> vidService.expireAndRelease());
+		// handle chime event — single-flight: skip tick if previous run still in progress
+		consumer.handler(message -> {
+			if (!expireAndReleaseInProgress.compareAndSet(false, true)) {
+				LOGGER.info(
+						"VID expire-and-release skipped: previous run still in progress; will run on next schedule ({})",
+						VidSchedulerConstants.NAME_VALUE);
+				return;
+			}
+			vertx.executeBlocking(future -> {
+				try {
+					vidService.expireAndRelease();
+					future.complete();
+				} catch (Exception e) {
+					future.fail(e);
+				}
+			}, false, result -> {
+				expireAndReleaseInProgress.set(false);
+				if (result.failed()) {
+					LOGGER.error("VID expiry and release failed", result.cause());
+				}
+			});
+		});
 
 		JsonObject timer = new JsonObject()
 				.put(VidSchedulerConstants.TYPE, environment.getProperty(VidSchedulerConstants.TYPE_VALUE))

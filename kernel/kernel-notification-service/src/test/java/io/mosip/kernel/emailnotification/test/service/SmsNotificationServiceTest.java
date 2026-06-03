@@ -33,7 +33,7 @@ public class SmsNotificationServiceTest {
 
 		SMSResponseDto dto = new SMSResponseDto();
 		dto.setStatus("success");
-		dto.setMessage("Sms Request Sent");
+		dto.setMessage("SMS request sent");
 
 		when(smsServiceProvider.sendSms(Mockito.anyString(), Mockito.anyString())).thenReturn(dto);
 
