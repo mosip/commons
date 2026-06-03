@@ -53,17 +53,6 @@ spec:
         - name: spring_cloud_config_server_git_cloneOnStart
           value: {{ .Values.localRepo.spring_cloud_config_server_git_cloneOnStart | quote }}
         {{- end }}
-        {{- if .Values.spring_profiles.enabled }}
-        {{- range $index, $repo := .Values.spring_profiles.spring_compositeRepos }}
-        {{- if $repo.token }}
-        - name: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "config-server.fullname" $ }}
-              key: github-token-{{ $index }}
-        {{- end }}
-        {{- end }}
-        {{- end }}
         {{- range .Values.envVariables }}
         {{- if .enabled }}
         - name: {{ .name }}
@@ -103,6 +92,11 @@ spec:
         envFrom:
         - configMapRef:
             name: {{ printf "%s-env-vars" (include "config-server.fullname" .) }}
+        {{- if .Values.spring_profiles.enabled }}
+        - secretRef:
+            name: {{ include "config-server.fullname" . }}
+            optional: true
+        {{- end }}
         ports:
         - name: http
           containerPort: {{ .Values.springServicePort }}
