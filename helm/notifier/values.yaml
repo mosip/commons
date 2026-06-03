@@ -12,23 +12,18 @@
 ##
 commonLabels:
   app.kubernetes.io/component: mosip
-
 ## Add annotations to all the deployed resources
 ##
-commonAnnotations: {}
-
+commonAnnotations: { }
 ## Kubernetes Cluster Domain
 ##
 clusterDomain: cluster.local
-
 ## Extra objects to deploy (value evaluated as a template)
 ##
-extraDeploy: []
-
+extraDeploy: [ ]
 ## Number of nodes
 ##
 replicaCount: 1
-
 service:
   type: ClusterIP
   port: 80
@@ -49,7 +44,6 @@ service:
   ## ref http://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
   ##
   externalTrafficPolicy: Cluster
-
 image:
   registry: docker.io
   repository: mosipqa/kernel-notification-service
@@ -65,10 +59,8 @@ image:
   ##
   # pullSecrets:
   #   - myRegistryKeySecretName
-
 ## Port on which this particular spring service module is running.
 springServicePort: 8083
-
 ## Configure extra options for liveness and readiness probes
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
 ##
@@ -82,7 +74,6 @@ startupProbe:
   timeoutSeconds: 5
   failureThreshold: 30
   successThreshold: 1
-
 livenessProbe:
   enabled: true
   httpGet:
@@ -93,7 +84,6 @@ livenessProbe:
   timeoutSeconds: 5
   failureThreshold: 6
   successThreshold: 1
-
 readinessProbe:
   enabled: true
   httpGet:
@@ -104,20 +94,17 @@ readinessProbe:
   timeoutSeconds: 5
   failureThreshold: 6
   successThreshold: 1
-
 ##
 # existingConfigmap:
 
 ## Command and args for running the container (set to default if not set). Use array form
 ##
-command: []
-args: []
-
+command: [ ]
+args: [ ]
 ## Deployment pod host aliases
 ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
 ##
-hostAliases: []
-
+hostAliases: [ ]
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
 ##
 resources:
@@ -126,42 +113,37 @@ resources:
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
-    cpu: 1500m
-    memory: 5000Mi
-  requests:
-    cpu: 500m
+    cpu: 800m
     memory: 2000Mi
-
+  requests:
+    cpu: 400m
+    memory: 1000Mi
 additionalResources:
   ## Specify any JAVA_OPTS string here. These typically will be specified in conjunction with above resources
   ## Example: java_opts: "-Xms500M -Xmx500M"
-  javaOpts: "-Xms4200M -Xmx4200M"
-
+  javaOpts: >-
+    -XX:+UseZGC -XX:+ZGenerational -XX:+ZUncommit -XX:+ZProactive -XX:ZUncommitDelay=60 -XX:SoftMaxHeapSize=900m -Xms900m -Xmx1250m -XX:+UseContainerSupport -XX:MaxMetaspaceSize=400m -XX:MetaspaceSize=100m -XX:ReservedCodeCacheSize=150m -XX:InitialCodeCacheSize=37m -XX:+UseCodeCacheFlushing -XX:+HeapDumpOnOutOfMemoryError
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
 ## Clamav container already runs as 'mosip' user, so we may not need to enable this
 containerSecurityContext:
   enabled: false
   runAsUser: mosip
   runAsNonRoot: true
-
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
 ##
 podSecurityContext:
   enabled: false
   fsGroup: 1001
-
 ## Pod affinity preset
 ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
 ## Allowed values: soft, hard
 ##
 podAffinityPreset: ""
-
 ## Pod anti-affinity preset
 ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
 ## Allowed values: soft, hard
 ##
 podAntiAffinityPreset: soft
-
 ## Node affinity preset
 ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity
 ## Allowed values: soft, hard
@@ -182,33 +164,27 @@ nodeAffinityPreset:
   ##   - e2e-az1
   ##   - e2e-az2
   ##
-  values: []
-
+  values: [ ]
 ## Affinity for pod assignment. Evaluated as a template.
 ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 ##
-affinity: {}
-
+affinity: { }
 ## Node labels for pod assignment. Evaluated as a template.
 ## ref: https://kubernetes.io/docs/user-guide/node-selection/
 ##
-nodeSelector: {}
-
+nodeSelector: { }
 ## Tolerations for pod assignment. Evaluated as a template.
 ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
 ##
-tolerations: []
-
+tolerations: [ ]
 ## Pod extra labels
 ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
 ##
-podLabels: {}
-
+podLabels: { }
 ## Annotations for server pods.
 ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
 ##
-podAnnotations: {}
-
+podAnnotations: { }
 ##  pods' priority.
 ## ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
 ##
@@ -216,7 +192,6 @@ podAnnotations: {}
 
 ## lifecycleHooks for the  container to automate configuration before or after startup.
 ##
-
 lifecycleHooks:
   preStop:
     exec:
@@ -224,18 +199,14 @@ lifecycleHooks:
         - sh
         - -c
         - sleep 30
-
 ## Termination grace perios : the maximum amount of time (in seconds) Kubernetes will wait for a container to gracefully shut down
 terminationGracePeriodSeconds: 60
-
 ## Custom Liveness probes for
 ##
-customLivenessProbe: {}
-
+customLivenessProbe: { }
 ## Custom Rediness probes
 ##
-customReadinessProbe: {}
-
+customReadinessProbe: { }
 ## Update strategy - only really applicable for deployments with RWO PVs attached
 ## If replicas = 1, an update can get "stuck", as the previous pod remains attached to the
 ## PV, and the "incoming" pod can never start. Changing the strategy to "Recreate" will
@@ -243,7 +214,6 @@ customReadinessProbe: {}
 ##
 updateStrategy:
   type: RollingUpdate
-
 ## Additional environment variables to set
 ## Example:
 # extraEnvVars:
@@ -251,27 +221,22 @@ updateStrategy:
 ##     value: "bar"
 ##
 ## The runtime url below is assumed to be artifactory url for default installation. Change as per your deployment.
-extraEnvVars: []
-
+extraEnvVars: [ ]
 ## ConfigMap with extra environment variables that used
 ##
 extraEnvVarsCM:
   - global
   - config-server-share
   - artifactory-share
-
 ## Secret with extra environment variables
 ##
-extraEnvVarsSecret: []
-
+extraEnvVarsSecret: [ ]
 ## Extra volumes to add to the deployment
 ##
-extraVolumes: []
-
+extraVolumes: [ ]
 ## Extra volume mounts to add to the container
 ##
-extraVolumeMounts: []
-
+extraVolumeMounts: [ ]
 ## Add init containers to the  pods.
 ## Example:
 ## initContainers:
@@ -282,8 +247,7 @@ extraVolumeMounts: []
 ##       - name: portname
 ##         containerPort: 1234
 ##
-initContainers: {}
-
+initContainers: { }
 ## Add sidecars to the  pods.
 ## Example:
 ## sidecars:
@@ -294,8 +258,7 @@ initContainers: {}
 ##       - name: portname
 ##         containerPort: 1234
 ##
-sidecars: {}
-
+sidecars: { }
 persistence:
   enabled: false
   ## If defined, storageClassName: <storageClass>
@@ -317,7 +280,6 @@ persistence:
   existingClaim:
   # Dir where config and keys are written inside container
   mountDir:
-
 ## Init containers parameters:
 ## volumePermissions: Change the owner and group of the persistent volume mountpoint to runAsUser:fsGroup values from the securityContext section.
 ##
@@ -332,7 +294,7 @@ volumePermissions:
     ## Secrets must be manually created in the namespace.
     ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
     ##
-    pullSecrets: []
+    pullSecrets: [ ]
     ##   - myRegistryKeySecretName
   ## Init containers' resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
@@ -343,20 +305,18 @@ volumePermissions:
     ## resources, such as Minikube. If you do want to specify resources, uncomment the following
     ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     ##
-    limits: {}
+    limits: { }
     ##   cpu: 100m
     ##   memory: 128Mi
     ##
-    requests: {}
+    requests: { }
     ##   cpu: 100m
     ##   memory: 128Mi
     ##
-
 ## Specifies whether RBAC resources should be created
 ##
 rbac:
   create: true
-
 ## Specifies whether a ServiceAccount should be created
 ##
 serviceAccount:
@@ -365,7 +325,6 @@ serviceAccount:
   ## If not set and create is true, a name is generated using the fullname template
   ##
   name:
-
 ## Prometheus Metrics
 ##
 metrics:
@@ -375,9 +334,7 @@ metrics:
   ##
   podAnnotations:
     prometheus.io/scrape: "true"
-
   endpointPath: /v1/notifier/actuator/prometheus
-
   ## Prometheus Service Monitor
   ## ref: https://github.com/coreos/prometheus-operator
   ##
@@ -403,15 +360,14 @@ metrics:
     ## Used to pass Labels that are used by the Prometheus installed in your cluster to select Service Monitors to work with
     ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#prometheusspec
     ##
-    additionalLabels: {}
-
+    additionalLabels: { }
   ## Custom PrometheusRule to be defined
   ## The value is evaluated as a template, so, for example, the value can depend on .Release or .Chart
   ## ref: https://github.com/coreos/prometheus-operator#customresourcedefinitions
   ##
   prometheusRule:
     enabled: false
-    additionalLabels: {}
+    additionalLabels: { }
     namespace: ''
     ## List of rules, used as template by Helm.
     ## These are just examples rules inspired from https://awesome-prometheus-alerts.grep.to/rules.html
@@ -421,8 +377,7 @@ metrics:
     #     for: 5m
     #     labels:
     #       severity: error
-    rules: []
-
+    rules: [ ]
 # runtimeDepUrlpath: http://artifactory-service/artifactory/libs-release-local/io/mosip/kernel/
 
 ## Only internal access

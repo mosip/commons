@@ -149,21 +149,25 @@ public class UinServiceHealthCheckerhandler implements HealthCheckHandler {
 	}
 
 	/**
-	 * Consumer Verticle health check handler
-	 * 
-	 * @param future {@link Future} instance from handler
-	 * @param vertx  {@link Vertx} instance
+	 * Consumer Verticle health check handler.
+	 * Sends a ping to UIN_GENERATOR_ADDRESS on the event bus and completes the promise with the result.
+	 *
+	 * @param future {@link Promise<Status>} instance to complete with health check result
+	 * @param vertx  {@link Vertx} instance used to send the ping
 	 */
 	public void verticleHealthHandler(Promise<Status> future, Vertx vertx) {
-
 		vertx.eventBus().send(UinGeneratorConstant.UIN_GENERATOR_ADDRESS, UINHealthConstants.PING, response -> {
-
 			if (response.succeeded()) {
-				final JsonObject result = resultBuilder.create()
-						.add(UINHealthConstants.RESPONSE, response.result().body()).build();
-				future.complete(Status.OK(result));
+				JsonObject result = resultBuilder.create()
+						.add(UINHealthConstants.RESPONSE, response.result().body())
+						.build();
+				if (!future.tryComplete(Status.OK(result))) {
+					LOGGER.warn("Verticle health check promise already completed successfully. Duplicate completion ignored.");
+				}
 			} else {
-				future.complete(Status.KO());
+				if (!future.tryComplete(Status.KO())) {
+					LOGGER.warn("Verticle health check promise already completed with failure. Duplicate completion ignored.");
+				}
 			}
 		});
 	}

@@ -43,29 +43,29 @@ Now run the jar using the following command: <br/>
 <br/>
 <br/>
 To run it inside Docker container provide the following run time arguments:
-1. SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_URI 
-The URL of your Git repo
+1. SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_URI
+   The URL of your Git repo
 
 2. SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_TYPE
-Repo type, which is git
+   Repo type, which is git
 
 3. SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_DEFAULT_LABEL
-branch to refer in git repo. If not provided, it will default to `main` branch
+   branch to refer in git repo. If not provided, it will default to `main` branch
 
 4. SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_SEARCH_PATHS
-The folder inside your git repo which contains the configuration
+   The folder inside your git repo which contains the configuration
 
 5. encrypt_keyStore_location_env
-The encrypt keystore location 
+   The encrypt keystore location
 
 6. encrypt_keyStore_password_env
-The encryption keystore password
+   The encryption keystore password
 
 7. encrypt_keyStore_alias_env
-The encryption keystore alias
+   The encryption keystore alias
 
 8. encrypt_keyStore_secret_env
-The encryption keyStore secret
+   The encryption keyStore secret
 
 The final docker run command should look like:
 
@@ -87,7 +87,7 @@ And place the encrypted value in client application properties file with the for
 1. There is no need to write decryption mechanism in client applications for encrypted values. They will be automatically decrypted by config server. 
 2. Config server doesn't support asterisk (*) in URL as supported in previous java versions. We need to provide the complete URL while fetching any config file from the config server. 
 	Example: **http:\/\/\<config-server-url\>\/\*\/\<profile\>\/\<label\>\/\<path-to-file\>** needs to be changed to **http:\/\/\<config-server-url\>\/application\/\<profile\>\/\<label\>\/\<path-to-file\>**
-3. Config server doesn't automatically trims the whitespace at the end in the proerty value. We need to be careful while providing the whitespace. 
+3. Config server doesn't automatically trims the whitespace at the end in the proerty value. We need to be careful while providing the whitespace.
 
 
 
@@ -121,9 +121,9 @@ spring.cloud.config.server.accept-empty=false
 #from remote repository. For Force-pull in such case, we are setting the flag to true.
 # SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_FORCE_PULL=true
 
-# Setting up refresh rate to 5 seconds so that config server will check for updates in Git repo after every 5 seconds,
+# Setting up refresh rate to 60 seconds so that config server will check for updates in Git repo after every 60 seconds,
 #can be lowered down for production.
-# SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_REFRESH_RATE=5
+# SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_REFRESH_RATE=60
 
 # adding provision to clone on start of server instead of first request
 # SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_CLONE_ON_START=true
@@ -131,8 +131,8 @@ spring.cloud.config.server.accept-empty=false
 #Path inside the GIT repo where config files are stored, in our case they are inside config directory
 #SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_SEARCH_PATHS=<folder-in-git-repository-containing-configuration>
 
-# Disabling health endpoints to improve performance of config server while in development, can be commented out in production.
-health.config.enabled=false
+# To disable health endpoint to improve performance of config server while in development
+# health.config.enabled=false
 
 #For encryption of properties
 ###########################################

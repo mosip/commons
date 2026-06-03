@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import jakarta.annotation.PostConstruct;
 import io.mosip.kernel.idgenerator.util.Utility;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +22,6 @@ import io.mosip.kernel.core.templatemanager.spi.TemplateManager;
 import io.mosip.kernel.core.util.FileUtils;
 import io.mosip.kernel.idgenerator.config.ConfigUrlsBuilder;
 import io.mosip.kernel.idgenerator.config.HibernateDaoConfig;
-import io.mosip.kernel.idgenerator.verticle.HttpServerVerticle;
 import io.mosip.kernel.templatemanager.velocity.builder.TemplateManagerBuilderImpl;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorConstant;
 import io.mosip.kernel.uingenerator.verticle.UinGeneratorVerticle;
