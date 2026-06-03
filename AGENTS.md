@@ -118,20 +118,6 @@ All services pull runtime configuration from the MOSIP Config Server at startup.
 ### Database schemas
 Each service uses its own PostgreSQL schema (e.g., `kernel` for UIN/VID tables). DDL/DML bootstrap scripts are in `db_scripts/`. Tests use H2 in-memory with the same Hibernate configuration.
 
-### Versioning convention
-- `develop` branch: `*-SNAPSHOT` versions (currently `1.4.0-SNAPSHOT`)
-- Release candidates: `1.x.x-rc.y`
-- Production releases: `1.x.x`
-- Helm chart versions for develop stay at `0.0.x-develop`; Docker image `tag: develop`, repo `mosipqa/...` (not `mosipid/...` which is production)
-
-### Branch merge strategy
-When merging a release tag into develop (`PROMPT.md` pattern):
-- Default to release tag for all code changes
-- Keep develop's SNAPSHOT versions in all `pom.xml`
-- Keep develop's Helm chart versions (`0.0.x-develop`) and `mosipqa/` image repos in `values.yaml`
-- Take resource limits / javaOpts from the release tag
-- Version bump is done separately (`Snapshot.md` pattern): find-replace SNAPSHOT version strings in `pom.xml` files only
-
 ---
 
 ## Runtime Prerequisites (Local Dev)
