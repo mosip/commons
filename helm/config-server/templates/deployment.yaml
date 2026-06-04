@@ -118,20 +118,16 @@ spec:
         {{- end }}
         resources:
           {{- toYaml .Values.resources | nindent 12 }}
-        {{- if .Values.spring_profiles.enabled }}
-        {{- if or .Values.localRepo.enabled (include "config-server.hasNative" . | eq "true") }}
+        {{- if .Values.localRepo.enabled }}
         volumeMounts:
         - name: {{ .Values.volume.name }}
           mountPath: {{ .Values.volume.mountDir }}
         {{- end }}
-        {{- end }}
-      {{- if .Values.spring_profiles.enabled }}
-      {{- if or .Values.localRepo.enabled (include "config-server.hasNative" . | eq "true") }}
+      {{- if .Values.localRepo.enabled }}
       volumes:
       - name: {{ .Values.volume.name }}
         persistentVolumeClaim:
           claimName: {{ .Values.volume.name }}
-      {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
