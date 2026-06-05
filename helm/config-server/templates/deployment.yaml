@@ -41,6 +41,16 @@ spec:
         env:
         - name: JDK_JAVA_OPTIONS
           value: {{ .Values.additionalResources.javaOpts }}
+        {{- if and .Values.spring_profiles.enabled .Values.localRepo.enabled }}
+        - name: SPRING_PROFILES_ACTIVE
+          value: "{{ .Values.spring_profiles.spring_profiles_active }},{{ .Values.localRepo.spring_profiles_active }}"
+        {{- else if .Values.spring_profiles.enabled }}
+        - name: SPRING_PROFILES_ACTIVE
+          value: {{ .Values.spring_profiles.spring_profiles_active | quote }}
+        {{- else if .Values.localRepo.enabled }}
+        - name: SPRING_PROFILES_ACTIVE
+          value: {{ .Values.localRepo.spring_profiles_active | quote }}
+        {{- end }}
         {{- if .Values.localRepo.enabled }}
         - name: spring_cloud_config_server_native_search-locations
           value: {{ .Values.localRepo.spring_cloud_config_server_native_search_locations | quote }}
