@@ -18,15 +18,8 @@ fi
 
 if [ "$local_enabled" = "Y" ]; then
   LOCALREPO="true"
-  read -p "Provide the NFS path where the local repository is cloned/maintained: " path
-  NFS_PATH="$path"
-
-  read -p "Provide the NFS IP address of the server where the local repository is cloned: " ip
-  NFS_SERVER="$ip"
 else
   LOCALREPO="false"
-  NFS_PATH=""
-  NFS_SERVER=""
 fi
 
 if [ $conf_installed = "Y" ]; then read -p "Is values.yaml for config-server chart set correctly as part of Pre-requisites?(Y/n) " yn; fi
@@ -57,8 +50,6 @@ if [ $yn = "Y" ]
     echo "Installing config-server"
     helm -n $NS install config-server mosip/config-server \
     --set localRepo.enabled="$LOCALREPO" \
-    --set volume.nfs.path="$NFS_PATH" \
-    --set volume.nfs.server="$NFS_SERVER" \
     -f values.yaml \
     --timeout 10m \
     --wait --version $CHART_VERSION
