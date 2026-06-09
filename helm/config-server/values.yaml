@@ -537,6 +537,12 @@ envVariables:
         name: conf-secrets-various
         key: print-websub-hub-secret
     enabled: true
+  - name: SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_PREREG_AUTH_JWT_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: conf-secrets-various
+        key: prereg-auth-jwt-secret
+    enabled: true
   - name: SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_HUB_SECRET_ENCRYPTION_KEY
     valueFrom:
       secretKeyRef:
