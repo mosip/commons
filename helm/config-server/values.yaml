@@ -127,6 +127,7 @@ tolerations: []
 affinity: {}
 spring_profiles:
   enabled: true
+  spring_profiles_active: "composite"
   spring_compositeRepos:
     # Based on the user requiremnt the number of multiple sources from where configuration needs to be pulled can be updated below as mentioned.
     - type: git
@@ -164,18 +165,13 @@ volume:
   # existingClaim: your-claim
   ## ReadWriteMany not supported by AWS gp2
   name: config-server
-  storageClass: nfs-client
+  storageClass: nfs-csi
   accessModes:
     - ReadWriteMany
   size: 10Mi
   existingClaim:
   # Dir where config and keys are written inside container
   mountDir: '/var/lib/config_repo'
-  nfs:
-    path: ''
-    # Dir within the nfs server where config repo is cloned/maintained locally.
-    server: ''
-    # Ip address of nfs server.
 ## Init containers parameters:
 ## volumePermissions: Change the owner and group of the persistent volume mountpoint to runAsUser:fsGroup values from the securityContext section.
 ##
