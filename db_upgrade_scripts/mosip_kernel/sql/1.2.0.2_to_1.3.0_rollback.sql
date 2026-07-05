@@ -1,4 +1,4 @@
-\c mosip_kernel
+\c :mosipdbname
 
 --#INDEX--
 DROP INDEX IF EXISTS kernel.idx_uin_status;

@@ -1,4 +1,4 @@
-\c mosip_kernel
+\c :mosipdbname
 
 --#INDEX--
 CREATE INDEX IF NOT EXISTS idx_uin_status ON kernel.uin using btree(uin_status) where uin_status='UNUSED';
