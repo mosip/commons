@@ -24,6 +24,7 @@ import io.mosip.kernel.vidgenerator.repository.VidRepository;
 import io.mosip.kernel.vidgenerator.service.VidService;
 import io.mosip.kernel.vidgenerator.utils.ExceptionUtils;
 import io.mosip.kernel.vidgenerator.utils.VIDMetaDataUtil;
+import io.mosip.kernel.vidgenerator.utils.VidBloomFilter;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
@@ -44,9 +45,12 @@ public class VidServiceImpl implements VidService {
 
 	@Autowired
 	private VIDMetaDataUtil metaDataUtil;
-	
+
 	@Autowired
 	private VertxAuthenticationProvider authHandler;
+
+	@Autowired
+	private VidBloomFilter vidBloomFilter;
 
 	@Override
 	@Transactional
@@ -160,23 +164,68 @@ public class VidServiceImpl implements VidService {
 
 	@Override
 	public boolean saveVID(VidEntity vid) {
-
-		if (!(this.vidRepository.existsById(vid.getVid()) || 
-				this.vidAssignedRepository.existsById(vid.getVid()))) {
-			try {
-				this.vidRepository.saveAndFlush(vid);
-			} catch (DataAccessException exception) {
-				LOGGER.error(ExceptionUtils.parseException(exception));
-				return false;
-			} catch (Exception exception) {
-				LOGGER.error(ExceptionUtils.parseException(exception));
+		// Fast path: bloom filter says definitely not in either table — skip both DB checks.
+		// Slow path: might exist (or ghost entry from expired VID) — fall through to DB confirmation.
+		if (vidBloomFilter.mightContain(vid.getVid())) {
+			if (this.vidRepository.existsById(vid.getVid()) ||
+					this.vidAssignedRepository.existsById(vid.getVid())) {
 				return false;
 			}
+		}
+		try {
+			this.vidRepository.saveAndFlush(vid);
+			vidBloomFilter.put(vid.getVid());
 			return true;
-		} else {
+		} catch (DataAccessException exception) {
+			LOGGER.error(ExceptionUtils.parseException(exception));
+			return false;
+		} catch (Exception exception) {
+			LOGGER.error(ExceptionUtils.parseException(exception));
 			return false;
 		}
+	}
 
+	/**
+	 * Batch-saves VIDs in a single transaction after filtering out duplicates via
+	 * bloom filter (fast path) and DB check (slow path for bloom false positives).
+	 * On constraint violation, falls back to per-row inserts for the batch.
+	 */
+	@Override
+	@Transactional(transactionManager = "transactionManager")
+	public int saveAllVIDs(List<VidEntity> vids) {
+		if (vids == null || vids.isEmpty()) {
+			return 0;
+		}
+		List<VidEntity> toSave = new ArrayList<>(vids.size());
+		for (VidEntity vid : vids) {
+			if (!vidBloomFilter.mightContain(vid.getVid())) {
+				toSave.add(vid);
+			} else if (!vidRepository.existsById(vid.getVid()) &&
+					!vidAssignedRepository.existsById(vid.getVid())) {
+				toSave.add(vid);
+			}
+		}
+		if (toSave.isEmpty()) {
+			return 0;
+		}
+		try {
+			vidRepository.saveAll(toSave);
+			toSave.forEach(v -> vidBloomFilter.put(v.getVid()));
+			return toSave.size();
+		} catch (DataAccessException e) {
+			LOGGER.error("Batch VID save failed ({}), falling back to per-row inserts", e.getMessage());
+			return saveVIDsPerRow(toSave);
+		}
+	}
+
+	private int saveVIDsPerRow(List<VidEntity> vids) {
+		int count = 0;
+		for (VidEntity vid : vids) {
+			if (saveVID(vid)) {
+				count++;
+			}
+		}
+		return count;
 	}
 
 	@Transactional(transactionManager = "transactionManager")

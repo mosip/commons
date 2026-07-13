@@ -1,13 +1,13 @@
 /**
- * 
+ *
  */
 package io.mosip.kernel.uingenerator.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,10 +26,10 @@ import io.mosip.kernel.uingenerator.repository.UinRepository;
 import io.mosip.kernel.uingenerator.repository.UinRepositoryAssigned;
 import io.mosip.kernel.uingenerator.service.UinService;
 import io.mosip.kernel.uingenerator.util.UINMetaDataUtil;
+import io.mosip.kernel.uingenerator.util.UinBloomFilter;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
-import org.springframework.beans.factory.annotation.Value;
 
 /**
  * @author Dharmesh Khandelwal
@@ -43,30 +43,27 @@ public class UinServiceImpl implements UinService {
 
 	private Logger LOGGER = LoggerFactory.getLogger(UinServiceImpl.class);
 
-	/**
-	 * Field for {@link #uinRepository}
-	 */
 	@Autowired
 	private UinRepository uinRepository;
-	
+
 	@Autowired
 	private UinRepositoryAssigned uinRepositoryAssigned;
 
-	/**
-	 * instance of {@link UINMetaDataUtil}
-	 */
 	@Autowired
 	private UINMetaDataUtil metaDataUtil;
-	
+
 	@Autowired
 	private VertxAuthenticationProvider authHandler;
-	
+
+	@Autowired
+	private UinBloomFilter uinBloomFilter;
+
 	@Value("${mosip.kernel.uin.page.size:50000}")
 	private int pageSize;
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.mosip.kernel.core.uingenerator.service.UinGeneratorService#getId()
 	 */
 	@Transactional
@@ -85,11 +82,9 @@ public class UinServiceImpl implements UinService {
 		return uinResponseDto;
 	}
 
-	
-
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * io.mosip.kernel.uingenerator.service.UinGeneratorService#updateUinStatus(io.
 	 * vertx.core.json.JsonObject)
@@ -127,10 +122,18 @@ public class UinServiceImpl implements UinService {
 	@Transactional(transactionManager = "transactionManager")
 	@Override
 	public void transferUin() {
-		List<UinEntity> uinEntities=uinRepository.findByStatus(UinGeneratorConstant.ISSUED, pageSize);
-		List<UinEntityAssigned> uinEntitiesAssined = convertUinEntitiesListToUinEntitiesAssignedList(uinEntities);
-		uinRepositoryAssigned.saveAll(uinEntitiesAssined);
-	    uinRepository.deleteAll(uinEntities);
+		List<UinEntity> uinEntities = uinRepository.findByStatus(UinGeneratorConstant.ISSUED, pageSize);
+		if (uinEntities.isEmpty()) {
+			return;
+		}
+		List<UinEntityAssigned> uinEntitiesAssigned = convertUinEntitiesListToUinEntitiesAssignedList(uinEntities);
+		uinRepositoryAssigned.saveAll(uinEntitiesAssigned);
+		uinRepository.deleteAll(uinEntities);
+		// Update bloom filter after DB writes succeed within the transaction.
+		// If the transaction rolls back, phantom entries in the filter are harmless:
+		// they cause an extra DB lookup (false positive path) which correctly returns false.
+		uinEntities.forEach(u -> uinBloomFilter.put(u.getUin()));
+		LOGGER.info("Transferred {} UIns to assigned table and updated bloom filter", uinEntities.size());
 	}
 
 	private List<UinEntityAssigned> convertUinEntitiesListToUinEntitiesAssignedList(List<UinEntity> uinEntities) {
@@ -139,10 +142,18 @@ public class UinServiceImpl implements UinService {
 				.collect(Collectors.toList());
 	}
 
+	/**
+	 * Checks if a UIN has already been assigned.
+	 *
+	 * Fast path: bloom filter returns false → UIN is definitely new, skip DB.
+	 * Slow path: bloom filter returns true → confirm with DB (handles false positives).
+	 */
 	@Override
 	public boolean uinExist(String uin) {
-	Optional<UinEntityAssigned> uinEntityAssignedOptional=uinRepositoryAssigned.findById(uin);
-	return uinEntityAssignedOptional.isPresent();
+		if (!uinBloomFilter.mightContain(uin)) {
+			return false;
+		}
+		return uinRepositoryAssigned.existsById(uin);
 	}
-	
+
 }

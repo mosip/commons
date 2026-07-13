@@ -3,6 +3,8 @@ package io.mosip.kernel.vidgenerator.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,6 +13,9 @@ import org.springframework.data.repository.query.Param;
 import io.mosip.kernel.vidgenerator.entity.VidEntity;
 
 public interface VidRepository extends JpaRepository<VidEntity, String> {
+
+	@Query("SELECT v.vid FROM VidEntity v")
+	Page<String> findAllVids(Pageable pageable);
 
 	@Query(value = "select v.vid,v.vid_status,v.expiry_dtimes,v.cr_by, v.cr_dtimes, v.del_dtimes, v.is_deleted, v.upd_by, v.upd_dtimes from kernel.vid v where v.vid_status=? limit 1 FOR UPDATE", nativeQuery = true)
 	VidEntity findFirstByStatus(String status);

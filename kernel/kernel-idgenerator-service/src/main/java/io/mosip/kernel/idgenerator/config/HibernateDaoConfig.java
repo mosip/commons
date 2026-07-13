@@ -144,9 +144,11 @@ public class HibernateDaoConfig implements EnvironmentAware {
 		getProperty(jpaProperties, HibernatePersistenceConstant.HIBERNATE_HBM2DDL_AUTO,
 				HibernatePersistenceConstant.UPDATE);
 		getProperty(jpaProperties, HibernatePersistenceConstant.HIBERNATE_DIALECT, null);
-		getProperty(jpaProperties, HibernatePersistenceConstant.HIBERNATE_SHOW_SQL, HibernatePersistenceConstant.TRUE);
+		// Default to false — show_sql=true logs every statement and causes severe
+		// throughput degradation during bulk UIN/VID generation runs.
+		getProperty(jpaProperties, HibernatePersistenceConstant.HIBERNATE_SHOW_SQL, HibernatePersistenceConstant.FALSE);
 		getProperty(jpaProperties, HibernatePersistenceConstant.HIBERNATE_FORMAT_SQL,
-				HibernatePersistenceConstant.TRUE);
+				HibernatePersistenceConstant.FALSE);
 		getProperty(jpaProperties, HibernatePersistenceConstant.HIBERNATE_CONNECTION_CHAR_SET,
 				HibernatePersistenceConstant.UTF8);
 		getProperty(jpaProperties, HibernatePersistenceConstant.HIBERNATE_CACHE_USE_SECOND_LEVEL_CACHE,
@@ -163,6 +165,12 @@ public class HibernateDaoConfig implements EnvironmentAware {
 				HibernatePersistenceConstant.JTA);
 		getProperty(jpaProperties, HibernatePersistenceConstant.HIBERNATE_EJB_INTERCEPTOR,
 				HibernatePersistenceConstant.EMPTY_INTERCEPTOR);
+		// JDBC batching — groups multiple inserts into a single round-trip per batch.
+		// order_inserts groups same-entity inserts together so the driver can pipeline them.
+		jpaProperties.put("hibernate.jdbc.batch_size",
+				env.getProperty("mosip.kernel.idgen.hibernate.batch-size", "500"));
+		jpaProperties.put("hibernate.order_inserts", "true");
+		jpaProperties.put("hibernate.order_updates", "true");
 		return jpaProperties;
 	}
 

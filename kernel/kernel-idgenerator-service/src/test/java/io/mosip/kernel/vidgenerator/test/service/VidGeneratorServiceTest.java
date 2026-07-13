@@ -43,6 +43,7 @@ import io.mosip.kernel.vidgenerator.exception.VidGeneratorServiceException;
 import io.mosip.kernel.vidgenerator.repository.VidAssignedRepository;
 import io.mosip.kernel.vidgenerator.repository.VidRepository;
 import io.mosip.kernel.vidgenerator.service.VidService;
+import io.mosip.kernel.vidgenerator.utils.VidBloomFilter;
 import io.vertx.ext.web.RoutingContext;
 
 @SpringBootTest
@@ -72,6 +73,9 @@ public class VidGeneratorServiceTest {
 	@MockBean
 	private RestTemplate restTemplate;
 
+	@MockBean
+	private VidBloomFilter vidBloomFilter;
+
 	private List<VidAssignedEntity> expiredButAssignedStatusVAEntities;
 
 	private List<VidAssignedEntity> notExpiredButAssignedStatusVAEntities;
@@ -100,6 +104,10 @@ public class VidGeneratorServiceTest {
 
 	@Before
 	public void init() {
+		// mightContain=true forces the DB fallback path in saveVID so existing
+		// duplicate-detection tests keep their original assertions.
+		Mockito.when(vidBloomFilter.mightContain(Mockito.anyString())).thenReturn(true);
+
 		availableEntityWithExpiry = new VidEntity("3650694284580734", VidLifecycleStatus.AVAILABLE, null);
 		availableEntity = new VidEntity("3650694284580734", VidLifecycleStatus.AVAILABLE, null);
 		
