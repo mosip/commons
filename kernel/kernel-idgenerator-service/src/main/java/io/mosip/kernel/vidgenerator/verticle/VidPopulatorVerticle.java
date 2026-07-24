@@ -11,8 +11,9 @@ import io.mosip.kernel.core.idgenerator.spi.VidGenerator;
 import io.mosip.kernel.vidgenerator.constant.EventType;
 import io.mosip.kernel.vidgenerator.constant.VidLifecycleStatus;
 import io.mosip.kernel.vidgenerator.entity.VidEntity;
-import io.mosip.kernel.vidgenerator.service.VidService;
+import io.mosip.kernel.vidgenerator.generator.VidWriter;
 import io.mosip.kernel.vidgenerator.utils.VIDMetaDataUtil;
+import io.mosip.kernel.vidgenerator.utils.VidBloomFilter;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.logging.Logger;
@@ -26,7 +27,9 @@ public class VidPopulatorVerticle extends AbstractVerticle {
 
 	private int batchWriteSize;
 
-	private VidService vidService;
+	private VidWriter vidWriter;
+
+	private VidBloomFilter vidBloomFilter;
 
 	private VIDMetaDataUtil metaDataUtil;
 
@@ -40,7 +43,8 @@ public class VidPopulatorVerticle extends AbstractVerticle {
 				environment.getProperty("mosip.kernel.vid.vids-to-generate", Long.class), 0L);
 		this.batchWriteSize = Objects.requireNonNullElse(
 				environment.getProperty("mosip.kernel.vid.batch-write-size", Integer.class), 1000);
-		this.vidService = context.getBean(VidService.class);
+		this.vidWriter = context.getBean(VidWriter.class);
+		this.vidBloomFilter = context.getBean(VidBloomFilter.class);
 		this.metaDataUtil = context.getBean(VIDMetaDataUtil.class);
 		this.vidGenerator = context.getBean(VidGenerator.class);
 	}
@@ -53,29 +57,37 @@ public class VidPopulatorVerticle extends AbstractVerticle {
 			LOGGER.info("Persisting {} VIDs in pool (free={}, target={})", noOfVidsToGenerate, noOfFreeVids, vidToGenerate);
 
 			vertx.executeBlocking(future -> {
-				long persisted = 0;
+				long vidCount = 0;
 				List<VidEntity> batch = new ArrayList<>(batchWriteSize);
 
-				while (persisted < noOfVidsToGenerate) {
-					String vid = vidGenerator.generateId();
-					VidEntity entity = new VidEntity();
-					entity.setVid(vid);
-					entity.setStatus(VidLifecycleStatus.AVAILABLE);
-					metaDataUtil.setCreateMetaData(entity);
-					batch.add(entity);
+				vidWriter.setSession();
+				try {
+					while (vidCount < noOfVidsToGenerate) {
+						String vid = vidGenerator.generateId();
+						if (!vidBloomFilter.mightContain(vid)) {
+							vidBloomFilter.put(vid);
+							VidEntity entity = new VidEntity();
+							entity.setVid(vid);
+							entity.setStatus(VidLifecycleStatus.AVAILABLE);
+							metaDataUtil.setCreateMetaData(entity);
+							batch.add(entity);
+							vidCount++;
 
-					if (batch.size() >= batchWriteSize) {
-						persisted += vidService.saveAllVIDs(batch);
+							if (batch.size() >= batchWriteSize) {
+								vidWriter.persistVidBatch(batch);
+								batch.clear();
+							}
+						}
+					}
+					if (!batch.isEmpty()) {
+						vidWriter.persistVidBatch(batch);
 						batch.clear();
 					}
+				} finally {
+					vidWriter.closeSession();
 				}
 
-				if (!batch.isEmpty()) {
-					persisted += vidService.saveAllVIDs(batch);
-					batch.clear();
-				}
-
-				LOGGER.info("Persisted {} VIDs in pool", persisted);
+				LOGGER.info("Persisted {} VIDs in pool", vidCount);
 				future.complete("pool population successful");
 			}, false, result -> {
 				if (result.succeeded()) {
