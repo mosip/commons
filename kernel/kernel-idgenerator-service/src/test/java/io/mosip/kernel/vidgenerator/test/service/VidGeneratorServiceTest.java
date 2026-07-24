@@ -308,9 +308,8 @@ public class VidGeneratorServiceTest {
 
 	@Test
 	public void saveVIDTest() {
-		Mockito.when(vidRepository.existsById(availableEntity.getVid())).thenReturn(false);
-		Mockito.when(vidAssignedRepository.existsById(availableEntity.getVid())).thenReturn(false);
-		Mockito.when(vidRepository.saveAndFlush(availableEntity)).thenReturn(availableEntity);
+		// mightContain=false means bloom filter has no record of this VID → new VID, should be persisted
+		Mockito.when(vidBloomFilter.mightContain(availableEntity.getVid())).thenReturn(false);
 		assertThat(vidService.saveVID(availableEntity), is(true));
 	}
 
