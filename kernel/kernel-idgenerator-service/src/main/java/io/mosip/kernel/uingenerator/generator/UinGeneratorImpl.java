@@ -20,6 +20,7 @@ import io.mosip.kernel.uingenerator.constant.UinGeneratorConstant;
 import io.mosip.kernel.uingenerator.entity.UinEntity;
 import io.mosip.kernel.uingenerator.service.UinService;
 import io.mosip.kernel.uingenerator.util.UINMetaDataUtil;
+import io.mosip.kernel.uingenerator.util.UinBloomFilter;
 import io.mosip.kernel.uingenerator.util.UinFilterUtil;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
@@ -45,6 +46,9 @@ public class UinGeneratorImpl implements UinGenerator {
 
 	@Autowired
 	private UinWriter uinWriter;
+
+	@Autowired
+	private UinBloomFilter uinBloomFilter;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UinGeneratorImpl.class);
 
@@ -101,6 +105,7 @@ public class UinGeneratorImpl implements UinGenerator {
 			while (uinCount < noOfUINToGenerate) {
 				String generatedUIN = generateSingleId(generatedIdLength, lowerBound, upperBound);
 				if (uinFilterUtils.isValidId(generatedUIN) && !uinService.uinExist(generatedUIN)) {
+					uinBloomFilter.put(generatedUIN);
 					UinEntity uinBean = new UinEntity(generatedUIN, uinDefaultStatus);
 					metaDataUtil.setCreateMetaData(uinBean);
 					batch.add(uinBean);
