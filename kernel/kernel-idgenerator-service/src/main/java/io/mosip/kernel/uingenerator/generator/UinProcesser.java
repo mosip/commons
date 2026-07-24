@@ -49,11 +49,15 @@ public class UinProcesser {
 	}
 
 	/**
-	 * Create list of uins
+	 * Create list of uins.
+	 *
+	 * Always generates the full uinsCount target so the batch writer operates at
+	 * full batchWriteSize efficiency. UIns that already exist in the pool or
+	 * assigned table are skipped by uinExist() — only genuinely new UIns are
+	 * inserted.
 	 */
 	public void generateUins() {
-		long noOfUnUsedUins = uinRepository.countByStatusAndIsDeletedFalse(UinGeneratorConstant.UNUSED);
-		uinGeneratorImpl.generateId(uinsCount <= noOfUnUsedUins ? 0 : uinsCount - noOfUnUsedUins);
+		uinGeneratorImpl.generateId(uinsCount);
 	}
 
 }
