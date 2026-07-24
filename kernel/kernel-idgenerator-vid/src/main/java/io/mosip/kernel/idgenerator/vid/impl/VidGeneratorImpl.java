@@ -1,6 +1,7 @@
 package io.mosip.kernel.idgenerator.vid.impl;
 
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.util.concurrent.TimeUnit;
 
@@ -114,8 +115,8 @@ public class VidGeneratorImpl implements VidGenerator<String> {
 		SecretKey secretKey = new SecretKeySpec(counter.getBytes(),
 				VidPropertyConstant.ENCRYPTION_ALGORITHM.getProperty());
 		byte[] encryptedData = CryptoUtil.symmetricEncrypt(secretKey, randomSeed.getBytes());
-		BigInteger bigInteger = new BigInteger(encryptedData);
-		vid = String.valueOf(bigInteger.abs());
+		long rawLong = ByteBuffer.wrap(encryptedData).getLong() & Long.MAX_VALUE;
+		vid = String.format("%019d", rawLong);
 		vid = vid.substring(0, vidLength - 1);
 		String verhoeffDigit = ChecksumUtils.generateChecksumDigit(vid);
 		return appendChecksum(vid, verhoeffDigit);
