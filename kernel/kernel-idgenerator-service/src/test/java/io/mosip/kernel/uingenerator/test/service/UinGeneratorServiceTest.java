@@ -22,6 +22,7 @@ import io.mosip.kernel.uingenerator.exception.UinNotIssuedException;
 import io.mosip.kernel.uingenerator.exception.UinStatusNotFoundException;
 import io.mosip.kernel.uingenerator.repository.UinRepository;
 import io.mosip.kernel.uingenerator.service.UinService;
+import io.mosip.kernel.uingenerator.util.UinBloomFilter;
 import io.vertx.ext.web.RoutingContext;
 
 /**
@@ -44,6 +45,9 @@ public class UinGeneratorServiceTest {
 
 	@MockBean
 	private UinRepository uinRepository;
+
+	@MockBean
+	private UinBloomFilter uinBloomFilter;
 
 	@MockBean
 	private RoutingContext routingContext;

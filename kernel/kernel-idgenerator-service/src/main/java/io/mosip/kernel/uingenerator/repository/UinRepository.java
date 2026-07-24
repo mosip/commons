@@ -3,6 +3,8 @@ package io.mosip.kernel.uingenerator.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -42,12 +44,15 @@ public interface UinRepository extends JpaRepository<UinEntity, String> {
 
 	/**
 	 * find a UIN in pool
-	 * 
+	 *
 	 * @param uin pass uin as param
-	 * 
+	 *
 	 * @return an unused uin
 	 */
 	public UinEntity findByUin(String uin);
+
+	@Query("SELECT u.uin FROM UinEntity u")
+	Page<String> findAllUins(Pageable pageable);
 
 	@Modifying
 	@Query(value = "UPDATE kernel.uin SET uin_status=:status, upd_by=:contextUser, upd_dtimes=:uptimes where uin=:uin", nativeQuery = true)
