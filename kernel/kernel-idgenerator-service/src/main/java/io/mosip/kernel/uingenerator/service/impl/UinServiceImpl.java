@@ -145,17 +145,14 @@ public class UinServiceImpl implements UinService {
 	/**
 	 * Checks if a UIN already exists in either the active pool or the assigned table.
 	 *
-	 * Fast path: bloom filter covers both tables at startup — a definite miss means
-	 * the UIN is new and safe to insert.
-	 * Slow path: bloom filter returns true (possible match or false positive) —
-	 * confirm with DB against both tables.
+	 * The bloom filter is the sole authority:
+	 * - At startup it is seeded from both tables (no false negatives for DB-existing UIns).
+	 * - During generation, put() is called before the UIN is flushed to DB, so
+	 *   within-batch duplicates are also caught without a DB round-trip.
 	 */
 	@Override
 	public boolean uinExist(String uin) {
-		if (!uinBloomFilter.mightContain(uin)) {
-			return false;
-		}
-		return uinRepository.existsById(uin) || uinRepositoryAssigned.existsById(uin);
+		return uinBloomFilter.mightContain(uin);
 	}
 
 }

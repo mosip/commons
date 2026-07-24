@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
@@ -51,6 +54,9 @@ public class VidServiceImpl implements VidService {
 
 	@Autowired
 	private VidBloomFilter vidBloomFilter;
+
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	@Override
 	@Transactional
@@ -163,22 +169,16 @@ public class VidServiceImpl implements VidService {
 	}
 
 	@Override
+	@Transactional(transactionManager = "transactionManager")
 	public boolean saveVID(VidEntity vid) {
-		// Fast path: bloom filter says definitely not in either table — skip both DB checks.
-		// Slow path: might exist (or ghost entry from expired VID) — fall through to DB confirmation.
 		if (vidBloomFilter.mightContain(vid.getVid())) {
-			if (this.vidRepository.existsById(vid.getVid()) ||
-					this.vidAssignedRepository.existsById(vid.getVid())) {
-				return false;
-			}
-		}
-		try {
-			this.vidRepository.saveAndFlush(vid);
-			vidBloomFilter.put(vid.getVid());
-			return true;
-		} catch (DataAccessException exception) {
-			LOGGER.error(ExceptionUtils.parseException(exception));
 			return false;
+		}
+		vidBloomFilter.put(vid.getVid());
+		try {
+			entityManager.persist(vid);
+			entityManager.flush();
+			return true;
 		} catch (Exception exception) {
 			LOGGER.error(ExceptionUtils.parseException(exception));
 			return false;
@@ -186,9 +186,9 @@ public class VidServiceImpl implements VidService {
 	}
 
 	/**
-	 * Batch-saves VIDs in a single transaction after filtering out duplicates via
-	 * bloom filter (fast path) and DB check (slow path for bloom false positives).
-	 * On constraint violation, falls back to per-row inserts for the batch.
+	 * Batch-saves VIDs using direct persist() (no SELECT-before-INSERT from merge()).
+	 * put() is called before persist so within-batch duplicate VIDs are caught by the
+	 * bloom filter on their second occurrence.
 	 */
 	@Override
 	@Transactional(transactionManager = "transactionManager")
@@ -199,9 +199,7 @@ public class VidServiceImpl implements VidService {
 		List<VidEntity> toSave = new ArrayList<>(vids.size());
 		for (VidEntity vid : vids) {
 			if (!vidBloomFilter.mightContain(vid.getVid())) {
-				toSave.add(vid);
-			} else if (!vidRepository.existsById(vid.getVid()) &&
-					!vidAssignedRepository.existsById(vid.getVid())) {
+				vidBloomFilter.put(vid.getVid());
 				toSave.add(vid);
 			}
 		}
@@ -209,23 +207,15 @@ public class VidServiceImpl implements VidService {
 			return 0;
 		}
 		try {
-			vidRepository.saveAll(toSave);
-			toSave.forEach(v -> vidBloomFilter.put(v.getVid()));
-			return toSave.size();
-		} catch (DataAccessException e) {
-			LOGGER.error("Batch VID save failed ({}), falling back to per-row inserts", e.getMessage());
-			return saveVIDsPerRow(toSave);
-		}
-	}
-
-	private int saveVIDsPerRow(List<VidEntity> vids) {
-		int count = 0;
-		for (VidEntity vid : vids) {
-			if (saveVID(vid)) {
-				count++;
+			for (VidEntity v : toSave) {
+				entityManager.persist(v);
 			}
+			entityManager.flush();
+			return toSave.size();
+		} catch (Exception e) {
+			LOGGER.warn("Batch VID save failed: {}", e.getMessage());
+			return 0;
 		}
-		return count;
 	}
 
 	@Transactional(transactionManager = "transactionManager")
