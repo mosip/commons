@@ -24,7 +24,7 @@ on:
 
 jobs:
   build-commons:
-    uses: mosip/kattu/.github/workflows/maven-build.yml@master-java21
+    uses: mosip/kattu/.github/workflows/maven-build.yml@gpgupdate-masterj21
     with:
       SERVICE_LOCATION: ./
       BUILD_ARTIFACT: commons
@@ -39,7 +39,7 @@ jobs:
   publish_to_nexus:
     if: "${{ !contains(github.ref, 'master') && github.event_name != 'pull_request' }}"
     needs: build-commons
-    uses: mosip/kattu/.github/workflows/maven-publish-to-nexus.yml@master-java21
+    uses: mosip/kattu/.github/workflows/maven-publish-to-nexus.yml@gpgupdate-masterj21
     with:
       SERVICE_LOCATION: ./
     secrets:
