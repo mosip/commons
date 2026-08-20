@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import jakarta.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +38,11 @@ public class ApiExceptionalHandler {
 	 */
 	@Autowired
 	private ObjectMapper objectMapper;
+
+	@PostConstruct
+	private void init() {
+		objectMapper.registerModule(new JavaTimeModule());
+	}
 
 	public static final String WHITESPACE = " ";
 
@@ -121,7 +128,6 @@ public class ApiExceptionalHandler {
 		if (EmptyCheckUtils.isNullEmpty(requestBody)) {
 			return responseWrapper;
 		}
-		objectMapper.registerModule(new JavaTimeModule());
 		JsonNode reqNode = objectMapper.readTree(requestBody);
 		responseWrapper.setId(reqNode.path("id").asText());
 		responseWrapper.setVersion(reqNode.path("version").asText());
