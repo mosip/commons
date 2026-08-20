@@ -24,7 +24,6 @@ import io.mosip.kernel.emailnotification.constant.MailNotifierConstants;
 import io.mosip.kernel.emailnotification.exception.InvalidArgumentsException;
 import io.mosip.kernel.emailnotification.exception.NotificationException;
 
-import javax.inject.Qualifier;
 
 /**
  * This class provides with the utility methods for email-notifier service.
