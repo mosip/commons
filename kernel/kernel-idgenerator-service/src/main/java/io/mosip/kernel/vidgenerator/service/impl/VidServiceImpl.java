@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
@@ -24,6 +27,7 @@ import io.mosip.kernel.vidgenerator.repository.VidRepository;
 import io.mosip.kernel.vidgenerator.service.VidService;
 import io.mosip.kernel.vidgenerator.utils.ExceptionUtils;
 import io.mosip.kernel.vidgenerator.utils.VIDMetaDataUtil;
+import io.mosip.kernel.vidgenerator.utils.VidBloomFilter;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
@@ -44,9 +48,15 @@ public class VidServiceImpl implements VidService {
 
 	@Autowired
 	private VIDMetaDataUtil metaDataUtil;
-	
+
 	@Autowired
 	private VertxAuthenticationProvider authHandler;
+
+	@Autowired
+	private VidBloomFilter vidBloomFilter;
+
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	@Override
 	@Transactional
@@ -159,24 +169,53 @@ public class VidServiceImpl implements VidService {
 	}
 
 	@Override
+	@Transactional(transactionManager = "transactionManager")
 	public boolean saveVID(VidEntity vid) {
-
-		if (!(this.vidRepository.existsById(vid.getVid()) || 
-				this.vidAssignedRepository.existsById(vid.getVid()))) {
-			try {
-				this.vidRepository.saveAndFlush(vid);
-			} catch (DataAccessException exception) {
-				LOGGER.error(ExceptionUtils.parseException(exception));
-				return false;
-			} catch (Exception exception) {
-				LOGGER.error(ExceptionUtils.parseException(exception));
-				return false;
-			}
-			return true;
-		} else {
+		if (vidBloomFilter.mightContain(vid.getVid())) {
 			return false;
 		}
+		vidBloomFilter.put(vid.getVid());
+		try {
+			entityManager.persist(vid);
+			entityManager.flush();
+			return true;
+		} catch (Exception exception) {
+			LOGGER.error(ExceptionUtils.parseException(exception));
+			return false;
+		}
+	}
 
+	/**
+	 * Batch-saves VIDs using direct persist() (no SELECT-before-INSERT from merge()).
+	 * put() is called before persist so within-batch duplicate VIDs are caught by the
+	 * bloom filter on their second occurrence.
+	 */
+	@Override
+	@Transactional(transactionManager = "transactionManager")
+	public int saveAllVIDs(List<VidEntity> vids) {
+		if (vids == null || vids.isEmpty()) {
+			return 0;
+		}
+		List<VidEntity> toSave = new ArrayList<>(vids.size());
+		for (VidEntity vid : vids) {
+			if (!vidBloomFilter.mightContain(vid.getVid())) {
+				vidBloomFilter.put(vid.getVid());
+				toSave.add(vid);
+			}
+		}
+		if (toSave.isEmpty()) {
+			return 0;
+		}
+		try {
+			for (VidEntity v : toSave) {
+				entityManager.persist(v);
+			}
+			entityManager.flush();
+			return toSave.size();
+		} catch (Exception e) {
+			LOGGER.warn("Batch VID save failed: {}", e.getMessage());
+			return 0;
+		}
 	}
 
 	@Transactional(transactionManager = "transactionManager")

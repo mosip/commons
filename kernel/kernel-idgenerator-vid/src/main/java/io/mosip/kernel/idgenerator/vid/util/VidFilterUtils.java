@@ -138,7 +138,7 @@ public class VidFilterUtils {
 	 * @return true if the id matches the filter
 	 */
 	private boolean restrictedAdminFilter(String id) {
-		return restrictedAdminDigits.parallelStream().anyMatch(id::contains);
+		return restrictedAdminDigits.stream().anyMatch(id::contains);
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class VidFilterUtils {
 	 */
 	private boolean sequenceFilter(String id) {
 		if (sequenceLimit > 0)
-			return IntStream.rangeClosed(0, id.length() - sequenceLimit).parallel()
+			return IntStream.rangeClosed(0, id.length() - sequenceLimit)
 					.mapToObj(index -> id.subSequence(index, index + sequenceLimit))
 					.anyMatch(idSubSequence -> SEQ_ASC.contains(idSubSequence) || SEQ_DEC.contains(idSubSequence));
 		return false;
