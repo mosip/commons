@@ -2,249 +2,125 @@
 COPYRIGHT NOTICES
 ================================================================================
 
-Kernel uses Spring Boot 4.1.1 on Java 21.
-This software incorporates components from the projects listed below.
-Versions are those pinned in kernel/pom.xml or inherited from Spring Boot
-4.1.1 / Spring Cloud 2025.1.3. License texts live in this directory.
+Kernel is MPL 2.0 (see LICENSE). Spring Boot 4.1.1 / Java 21.
+Versions match kernel/pom.xml or Spring Boot 4.1.1 / Spring Cloud 2025.1.3.
+License texts in this directory. Dual-licensed components: MOSIP elects the
+option marked below (never EPL, GPL, AGPL, LGPLv3, or Creative Commons software).
 
-Spring Framework 7.0.9 & Spring Boot 4.1.1
-  Copyright © 2002-2026 Broadcom Inc. and VMware, Inc. or its affiliates.
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
-  Also: Spring Cloud 2025.1.3, Spring Retry, Spring Security, Spring Data JPA,
-  Spring Web / WebFlux / Mail, Springdoc OpenAPI 3.1.1
+MOSIP matrix (Use with MOSIP = Yes): Apache-2.0, MIT, BSD-2/3, MPL-2.0,
+CDDL-1.0, ISC, Python-2.0, AFL-2.1, Unicode-DFS-2016, BlueOak-1.0.0,
+OFL-1.1, Zlib, 0BSD. CDDL-1.1 treated as CDDL-1.0 successor. Unicode-3.0
+treated as Unicode-DFS-2016 successor. Public Domain allowed by analogy.
 
-Jackson 3.1.5 (tools.jackson, Boot default)
-  Copyright © 2007-present Tatu Saloranta
-  Copyright © 2008-2026 FasterXML, LLC
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
+================================================================================
+ELECTED / ALLOWED
+================================================================================
 
-Jackson 2.21.5 (com.fasterxml.jackson; MOSIP ObjectMapper / afterburner)
-  Copyright © 2007-present Tatu Saloranta
-  Copyright © 2008-2026 FasterXML, LLC
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
-  Components: jackson-core, jackson-databind, jackson-annotations,
-  jackson-datatype-jsr310, jackson-module-afterburner
+Apache License 2.0 (Apache-2.0.txt)
+  Spring Framework 7.0.9, Spring Boot 4.1.1, Spring Cloud 2025.1.3,
+  Spring Retry, Spring Security, Spring Data JPA, Spring Web / WebFlux / Mail,
+  Springdoc OpenAPI 3.1.1
+  Jackson 3.1.5 (tools.jackson) and Jackson 2.21.5 (com.fasterxml.jackson)
+  Hibernate ORM 7.4.5.Final, Hibernate Validator 9.1.3.Final, HikariCP 7.0.2
+  Velocity 2.4.1, Commons Lang 3.20.0, Commons IO 2.22.0, Commons Codec 1.21.0,
+  Commons Math 3.6.1, Commons Collections 3.2.2
+  HttpClient 4.5.14, HttpClient 5.6.4, PDFBox 2.0.37, Log4j Core 2.25.5,
+  Tomcat Embed 11.0.24, Logstash Logback Encoder 9.0
+  JJWT 0.9.1, Bean Validation API 2.0.1.Final (javax.validation)
+  Micrometer 1.17.1, Micrometer Tracing 1.7.1 / Brave
+  Vert.x 3.9.16, vertx-lang-ceylon 3.4.1 (Vert.x artifact; Apache-2.0)
+  Quartz 2.5.2, Guava 33.7.1-jre, ZXing 3.5.4, Orika 1.5.4, MVEL 2.5.4.Final
+  json-schema-validator 2.2.14 / json-schema-core 1.2.14 (Apache-2.0 OR LGPLv3;
+    MOSIP elects Apache-2.0)
+  javassist 3.33.0-GA (Apache-2.0 OR MPL-1.1 OR LGPL-2.1; MOSIP elects Apache-2.0)
+  json-simple 1.1.1, Swagger 1.6.16 / Swagger Core v3 2.2.55, ModelMapper 2.4.5
+  jakarta.validation-api 3.1.1 (Apache-2.0 — not EPL)
 
-Hibernate ORM 7.4.5.Final (incl. hibernate-hikaricp)
-  Copyright © 2001-2026 Red Hat, Inc. and contributors
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
+MIT License (MIT.txt)
+  Lombok 1.18.48, SLF4J 2.0.18, Mockito 5.23.0
+  Bouncy Castle 1.85.2 (bcprov-jdk18on) / 1.85 (bcpkix, bcutil)
+  Auth0 java-jwt 3.19.4 / jwks-rsa 0.24.1, jsoup 1.23.2
 
-Hibernate Validator 9.1.3.Final
-  Copyright © 2009-present Red Hat, Inc. and contributors
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
+BSD / EDL 1.0 (BSD-2-Clause.txt)
+  PostgreSQL JDBC 42.7.13 (BSD-2-Clause)
+  OWASP Java Encoder 1.4.0
+  JAXB API 2.3.1 / JAXB Runtime 2.3.9 (EDL 1.0)
+  jakarta.persistence-api 3.2.0 (EPL-2.0 OR EDL-1.0 / BSD-3-Clause;
+    MOSIP elects EDL 1.0)
+  javax.persistence-api 2.2 (EDL 1.0)
 
-HikariCP 7.0.2
-  Copyright © 2013-2026 Brett Wooldridge
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
+Mozilla Public License 2.0 (project LICENSE)
+  Rhino 1.8.1
+  H2 2.4.240 (EPL-1.0 OR MPL-2.0; MOSIP elects MPL-2.0; idgenerator runtime)
 
-PostgreSQL JDBC Driver 42.7.13
-  Copyright © 1997-present PostgreSQL Global Development Group
-  Licensed under the BSD 2-Clause License (BSD-2-Clause.txt)
+CDDL 1.1 (COMMON-DEVLOPMENT-AND-DISTRIBUTION-1.1.txt)
+  JavaBeans Activation Framework 1.1.1 (CDDL-1.1 OR GPL-2.0-with-CPE;
+    MOSIP elects CDDL-1.1)
+  javax.transaction-api 1.3, javax.servlet-api 3.1.0, javax.interceptor-api 1.2.2
+    (CDDL OR GPL-2.0-with-CPE; MOSIP elects CDDL)
 
-H2 Database Engine 2.4.240
-  Copyright © 2004-present Thomas Müller
-  Licensed under the Eclipse Public License 1.0 OR Mozilla Public License 2.0
-  (EPL-1.0.txt)
+Unicode License v3 (Unicode-3.0; successor to Unicode-DFS-2016)
+  ICU4J 78.3
+  Copyright (c) 2016-2026 Unicode, Inc.
+  SPDX-License-Identifier: Unicode-3.0
+  Full text: https://www.unicode.org/license.txt
 
-Project Lombok 1.18.48
-  Copyright © 2009-2026 The Project Lombok Authors
-  Licensed under the MIT License (MIT.txt)
+Public Domain (JSON-java LICENSE since 20220924)
+  org.json 20260814 — Public Domain (not the historical JSON “good not evil”
+  license). Not on the MOSIP matrix; permissive / no copyleft.
 
-Apache Velocity Engine 2.4.1
-  Copyright © 2000-2026 The Apache Software Foundation
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
+================================================================================
+MOSIP MATRIX: DO NOT USE (still on classpath — exception or replace)
+================================================================================
 
-Apache Commons Lang 3.20.0
-  Copyright © 2001-2026 The Apache Software Foundation
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
+EPL is incompatible with MPL 2.0 on the MOSIP matrix. LGPLv3 is compatible
+with MPL but MOSIP Use = No. LGPL-2.1 is not listed; treated like LGPLv3.
+GPLv2 is incompatible.
 
-Apache Commons IO 2.22.0
-  Copyright © 2002-2026 The Apache Software Foundation
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
+EPL-2.0 only (no allowed dual option)
+  org.aspectj:aspectjweaver 1.9.25.1 — Boot AOP / spring-aspects
+  org.junit.jupiter:junit-jupiter 6.0.3 (test)
+  org.junit.vintage:junit-vintage-engine 6.0.3 (test)
 
-Apache Commons Codec 1.21.0
-  Copyright © 2002-2026 The Apache Software Foundation
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
+EPL-1.0 only (no allowed dual option)
+  junit:junit 4.13.2 (test)
 
-Apache Commons Math 3.6.1
-  Copyright © 2003-2026 The Apache Software Foundation
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
+EPL-2.0 OR LGPL-2.1 (both MOSIP No)
+  ch.qos.logback:logback-classic / logback-core 1.5.38 — Boot default logger.
+  Neither election is allowed. Log4j 2 (Apache-2.0) is already a kernel-core
+  compile dep; swapping the Boot logging starter would clear this.
 
-Apache Commons Collections 3.2.2
-  Copyright © 2001-2026 The Apache Software Foundation
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
+EPL-1.0 OR LGPL-2.1-or-later (both MOSIP No)
+  com.mchange:c3p0 0.14.1 (managed; excluded from Quartz in kernel-core)
+  com.mchange:mchange-commons-java 0.6.1 (kernel-core compile; no Java imports)
 
-Apache HttpComponents Client 4.5.14
-  Copyright © 1999-2026 The Apache Software Foundation
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
+LGPL-2.1 only (not on matrix; MOSIP LGPLv3 Use = No)
+  com.openhtmltopdf:openhtmltopdf-pdfbox 1.0.10 — PDFGeneratorImpl runtime
+  com.google.code.findbugs:annotations 3.0.1 — unused in kernel Java sources
 
-Apache HttpComponents Client 5.6.4
-  Copyright © 1999-2026 The Apache Software Foundation
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
+GPLv2 / mixed (ceylon-complete bundles GPL+CP compiler bits)
+  org.ceylon-lang:ceylon-complete 1.3.2 — idgenerator Vert.x Chime scheduler
+    (ceylon:herd.schedule.chime). GPLv2 is MOSIP No even with Classpath
+    Exception. vertx-lang-ceylon itself is Apache-2.0.
 
-Apache PDFBox 2.0.37 (pdfbox, pdfbox-tools, fontbox)
-  Copyright © 2002-2026 The Apache Software Foundation
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
+================================================================================
+BUILD PLUGINS (not shipped in runtime JARs; for CI / release only)
+================================================================================
 
-Apache Log4j Core 2.25.5
-  Copyright © 1999-2026 The Apache Software Foundation
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
+  org.apache.maven.plugins:maven-compiler-plugin 3.16.0
+  org.apache.maven.plugins:maven-surefire-plugin 3.6.0
+  org.apache.maven.plugins:maven-jar-plugin / maven-war-plugin 3.5.1
+  org.apache.maven.plugins:maven-javadoc-plugin 3.12.0
+  org.apache.maven.plugins:maven-source-plugin 3.4.0
+  org.apache.maven.plugins:maven-gpg-plugin 3.2.8
+  org.apache.maven.plugins:maven-deploy-plugin 3.1.4
+  org.jacoco:jacoco-maven-plugin 0.8.15
+  org.sonarsource.scanner.maven:sonar-maven-plugin 5.8.0.7211
+  org.sonatype.central:central-publishing-maven-plugin 0.11.0
+  pl.project13.maven:git-commit-id-plugin 4.9.10
+    (kattu CI greps these coordinates; do not rename to io.github.git-commit-id)
 
-Apache Tomcat Embed 11.0.24
-  Copyright © 1999-2026 The Apache Software Foundation
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
-
-Bouncy Castle 1.85.2 (bcprov-jdk18on) / 1.85 (bcpkix, bcutil)
-  Copyright © 2000-2026 Legion of the Bouncy Castle Inc.
-  Licensed under the MIT License (MIT.txt)
-
-SLF4J 2.0.18
-  Copyright © 2004-2026 QOS.ch
-  Licensed under the MIT License (MIT.txt)
-
-Logback 1.5.38
-  Copyright © 1999-2026 QOS.ch
-  Licensed under the Eclipse Public License 1.0 AND GNU Lesser General Public
-  License 2.1 (EPL-1.0.txt)
-
-Logstash Logback Encoder 9.0
-  Copyright © 2013-2026 elastic
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
-
-AspectJ Weaver 1.9.25.1
-  Copyright © 1997-2026 Eclipse Foundation and Contributors
-  Licensed under the Eclipse Public License 1.0 (EPL-1.0.txt)
-
-JUnit 4.13.2
-  Copyright © 2002-2026 JUnit Contributors
-  Licensed under the Eclipse Public License 1.0 (EPL-1.0.txt)
-
-JUnit Jupiter / Vintage 6.0.3
-  Copyright © 2015-2026 The original author or authors
-  Licensed under the Eclipse Public License 2.0 (EPL-2.0.txt)
-
-Mockito 5.23.0
-  Copyright © 2007-2026 Mockito contributors
-  Licensed under the MIT License (MIT.txt)
-
-Auth0 Java JWT 3.19.4 / JWKS RSA 0.24.1
-  Copyright © 2015-2026 Auth0, Inc.
-  Licensed under the MIT License (MIT.txt)
-
-JJWT 0.9.1
-  Copyright © 2014-2026 jsonwebtoken.io
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
-
-Jakarta Validation API 3.1.1
-  Copyright © 2019-2026 Eclipse Foundation
-  Licensed under the Eclipse Public License 2.0 (EPL-2.0.txt)
-
-Jakarta Persistence API 3.2.0
-  Copyright © 2019-2026 Eclipse Foundation
-  Licensed under the Eclipse Public License 2.0 (EPL-2.0.txt)
-
-Bean Validation API 2.0.1.Final (javax.validation)
-  Copyright © 2007-2026 Red Hat, Inc. and the Bean Validation contributors
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
-
-JavaBeans Activation Framework 1.1.1 (javax.activation)
-  Copyright © 1997-2010 Oracle Corporation (formerly Sun Microsystems, Inc.)
-  Licensed under the Common Development and Distribution License 1.1 OR
-  GNU General Public License 2.0 with Classpath Exception
-  (COMMON-DEVLOPMENT-AND-DISTRIBUTION-1.1.txt)
-
-JAXB API 2.3.1 / JAXB Runtime 2.3.9
-  Copyright © 2013-2026 Eclipse Foundation / Oracle
-  Licensed under the Eclipse Distribution License 1.0 (BSD-2-Clause.txt)
-
-Micrometer 1.17.1 (core, prometheus, prometheus-simpleclient)
-  Copyright © 2017-2026 VMware, Inc. and Micrometer Authors
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
-  prometheus-simpleclient keeps io.micrometer.prometheus.PrometheusMeterRegistry for Vert.x 3.9.
-
-Micrometer Tracing 1.7.1 / Brave bridge
-  Copyright © 2017-2026 VMware, Inc. and Micrometer Authors
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
-
-Eclipse Vert.x 3.9.16 (web, web-client, config, health-check, micrometer)
-  Copyright © 2011-2026 Eclipse Foundation and Vert.x Contributors
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
-  vertx-lang-ceylon 3.4.1 · Ceylon 1.3.2 (idgenerator verticles)
-
-Quartz Scheduler 2.5.2
-  Copyright © 2001-2026 Terracotta, Inc. / Software AG
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
-
-c3p0 0.14.1 / mchange-commons-java 0.6.1
-  Copyright © 2015-2026 Machinery For Change, Inc.
-  Licensed under the Eclipse Public License 1.0 (EPL-1.0.txt)
-
-Google Guava 33.7.1-jre
-  Copyright © 2007-2026 The Guava Authors
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
-
-jsoup 1.23.2
-  Copyright © 2009-2026 Jonathan Hedley
-  Licensed under the MIT License (MIT.txt)
-
-Open HTML to PDF 1.0.10
-  Copyright © 2016-2026 danfickle / OpenHTMLToPDF authors
-  Licensed under the GNU Lesser General Public License 2.1 or later
-
-ZXing Java SE 3.5.4
-  Copyright © 2007-2026 ZXing authors
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
-
-ICU4J 78.3
-  Copyright © 1991-2026 Unicode, Inc.
-  Licensed under the Unicode License v3 / ICU License
-
-Orika 1.5.4
-  Copyright © 2008-2026 Orika authors
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
-
-OWASP Java Encoder 1.4.0
-  Copyright © 2012-2026 OWASP
-  Licensed under the BSD License (BSD-2-Clause.txt)
-
-MVEL 2.5.4.Final
-  Copyright © 2007-2026 The Codehaus / MVEL authors
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
-
-JSON Schema Validator 2.2.14 / json-schema-core 1.2.14
-  Copyright © 2011-2026 Francis Galiegue and contributors
-  Licensed under the Apache License, Version 2.0 OR LGPLv3 (Apache-2.0.txt)
-
-Mozilla Rhino 1.8.1
-  Copyright © 1997-2026 Mozilla Foundation
-  Licensed under the Mozilla Public License 2.0
-
-org.json 20260814
-  Copyright © 2002-2026 JSON.org
-  Public Domain / JSON License
-
-json-simple 1.1.1
-  Copyright © 2006-2026 Yidong Fang / json-simple authors
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
-
-Swagger 1.6.16 (annotations, models) / Swagger Core v3 2.2.55
-  Copyright © 2015-2026 SmartBear Software
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
-
-Javassist 3.33.0-GA
-  Copyright © 1999-2026 Shigeru Chiba
-  Licensed under the Apache License, Version 2.0 / MPL 1.1 / LGPL 2.1
-  (Apache-2.0.txt)
-
-ModelMapper 2.4.5
-  Copyright © 2011-2026 Jonathan Halterman
-  Licensed under the Apache License, Version 2.0 (Apache-2.0.txt)
-
-FindBugs Annotations 3.0.1
-  Copyright © 2005-2026 University of Maryland
-  Licensed under the GNU Lesser General Public License 2.1
-
-Complete license texts for Apache-2.0, BSD-2-Clause, CDDL 1.1, EPL-1.0,
-EPL-2.0, and MIT are in this licenses/ directory.
+Complete texts: Apache-2.0, BSD-2-Clause, CDDL 1.1, EPL-1.0, EPL-2.0, MIT
+in this directory. Project MPL-2.0 is LICENSE at the repo root.
 
 ================================================================================
