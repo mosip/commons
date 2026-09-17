@@ -16,7 +16,8 @@
 	</modules>
 
 	<properties>
-		<!-- â”€â”€ Maven plugins & build tooling (keep in lockstep with kernel/pom.xml) â”€ -->
+		<!-- Empty default required for Surefire late replacement @{argLine} (JaCoCo agent). -->
+		<argLine/>
 		<maven.surefire.plugin.version>3.6.0</maven.surefire.plugin.version>
 		<maven.jacoco.version>0.8.15</maven.jacoco.version>
 		<maven.javadoc.version>3.12.0</maven.javadoc.version>
@@ -88,7 +89,8 @@
 				<configuration>
 					<skipTests>${skipTests}</skipTests>
 					<skip>false</skip>
-					<argLine>@{argLine} --add-opens java.xml/jdk.xml.internal=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED</argLine>
+					<!-- JDK 21: @{argLine} keeps JaCoCo; no --illegal-access (removed after JDK 16). -->
+					<argLine>@{argLine} --add-opens java.xml/jdk.xml.internal=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED</argLine>
 				</configuration>
 			</plugin>
 			<plugin>
