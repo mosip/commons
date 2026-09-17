@@ -1,18 +1,24 @@
 package io.mosip.kernel.core.idgenerator.spi;
 
 /**
- * Interface that provides method to generate Registration Center ID.
- * 
+ * Generates a MOSIP registration-center identifier.
+ * <p>
+ * Contract: implementations typically increment a sequence in masterdata.
+ * Call when creating a registration center. Returned id is never null.
+ * </p>
+ *
+ * @param <T> generated center-id type, typically {@link String}
  * @author Sagar Mahapatra
  * @since 1.0.0
- *
- * @param <T> the id type.
  */
 public interface RegistrationCenterIdGenerator<T> {
 	/**
-	 * This method generates registration center id.
-	 * 
-	 * @return the generated registration center id.
+	 * Generates the next registration-center identifier.
+	 * <p>
+	 * Contract: may perform database I/O.
+	 * </p>
+	 *
+	 * @return never-null registration-center id
 	 */
 	public T generateRegistrationCenterId();
 }

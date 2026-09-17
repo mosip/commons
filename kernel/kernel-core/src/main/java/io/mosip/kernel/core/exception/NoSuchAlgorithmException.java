@@ -1,8 +1,13 @@
 package io.mosip.kernel.core.exception;
 
 /**
- * Base class for all preconditions violation exceptions.
- * 
+ * Unchecked MOSIP wrapper when a requested cryptographic or hash algorithm is
+ * unavailable on the JRE.
+ * <p>
+ * Contract: wraps {@code java.security.NoSuchAlgorithmException}. Raised by
+ * HMAC, crypto, and hash utilities.
+ * </p>
+ *
  * @author Urvil Joshi
  * @author Omsaieswar Mulakaluri
  * @since 1.0.0
@@ -15,10 +20,10 @@ public class NoSuchAlgorithmException extends BaseUncheckedException {
 	private static final long serialVersionUID = 8768923778001408221L;
 
 	/**
-	 * Constructor with errorCode and errorMessage
-	 * 
-	 * @param errorCode    The error code for this exception
-	 * @param errorMessage The error message for this exception
+	 * Constructs the exception with MOSIP error code and message.
+	 *
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
 	 */
 	public NoSuchAlgorithmException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);
@@ -26,11 +31,11 @@ public class NoSuchAlgorithmException extends BaseUncheckedException {
 	}
 
 	/**
-	 * Constructor with errorCode, errorMessage, and rootCause
-	 * 
-	 * @param errorCode    The error code for this exception
-	 * @param errorMessage The error message for this exception
-	 * @param cause        Cause of this exception
+	 * Constructs the exception with MOSIP error code, message, and cause.
+	 *
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
+	 * @param cause        underlying cause; may be null
 	 */
 	public NoSuchAlgorithmException(String errorCode, String errorMessage, Throwable cause) {
 		super(errorCode, errorMessage, cause);

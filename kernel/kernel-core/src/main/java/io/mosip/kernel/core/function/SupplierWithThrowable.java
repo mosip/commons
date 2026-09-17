@@ -1,7 +1,11 @@
 package io.mosip.kernel.core.function;
 
 /**
- * The Supplier FunctionalInterface with Throwable.
+ * Supplier that returns a result and may throw a checked exception.
+ * <p>
+ * Contract: use in place of {@link java.util.function.Supplier} when the
+ * lambda performs I/O or MOSIP operations that throw {@code E}.
+ * </p>
  *
  * @param <R> the generic type that is returned
  * @param <E> the element type that can be any Throwable
@@ -12,10 +16,10 @@ package io.mosip.kernel.core.function;
 public interface SupplierWithThrowable<R, E extends Throwable> {
 
 	/**
-	 * Get expression.
+	 * Supplies a value.
 	 *
-	 * @return the return value
-	 * @throws E the exception
+	 * @return the result; may be null
+	 * @throws E if the operation fails
 	 */
 	R get() throws E;
 

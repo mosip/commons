@@ -4,11 +4,10 @@
 
 replicaCount: 1
 image:
-  repository: mosipqa/kernel-config-server
+  repository: mosipid/kernel-config-server
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: develop
-
+  tag: 1.4.1-SNAPSHOT
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
@@ -102,16 +101,11 @@ resources:
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
-    cpu: 300m
-    memory: 3000Mi
-  requests:
-    cpu: 150m
+    cpu: 200m
     memory: 1500Mi
-additionalResources:
-  ## Specify any JAVA_OPTS string here. These typically will be specified in conjunction with above resources
-  ## Example: javaOpts: "-Xms500M -Xmx500M"
-  javaOpts: >-
-    -XX:+UseZGC -XX:+ZGenerational -XX:+ZUncommit -XX:+ZProactive -XX:ZUncommitDelay=60 -XX:SoftMaxHeapSize=1500m -Xms1200m -Xmx2000m -XX:+UseContainerSupport -XX:MaxMetaspaceSize=240m -XX:MetaspaceSize=60m -XX:ReservedCodeCacheSize=90m -XX:InitialCodeCacheSize=22m -XX:+UseCodeCacheFlushing -XX:+HeapDumpOnOutOfMemoryError
+  requests:
+    cpu: 100m
+    memory: 900Mi
 autoscaling:
   enabled: false
   minReplicas: 1
@@ -123,7 +117,6 @@ tolerations: []
 affinity: {}
 spring_profiles:
   enabled: true
-  spring_profiles_active: "composite"
   spring_compositeRepos:
     # Based on the user requiremnt the number of multiple sources from where configuration needs to be pulled can be updated below as mentioned.
     - type: git
@@ -161,13 +154,18 @@ volume:
   # existingClaim: your-claim
   ## ReadWriteMany not supported by AWS gp2
   name: config-server
-  storageClass: nfs-csi
+  storageClass: nfs-client
   accessModes:
     - ReadWriteMany
   size: 10Mi
   existingClaim:
   # Dir where config and keys are written inside container
   mountDir: '/var/lib/config_repo'
+  nfs:
+    path: ''
+    # Dir within the nfs server where config repo is cloned/maintained locally.
+    server: ''
+    # Ip address of nfs server.
 ## Init containers parameters:
 ## volumePermissions: Change the owner and group of the persistent volume mountpoint to runAsUser:fsGroup values from the securityContext section.
 ##
@@ -532,12 +530,6 @@ envVariables:
       secretKeyRef:
         name: conf-secrets-various
         key: print-websub-hub-secret
-    enabled: true
-  - name: SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_PREREG_AUTH_JWT_SECRET
-    valueFrom:
-      secretKeyRef:
-        name: conf-secrets-various
-        key: prereg-auth-jwt-secret
     enabled: true
   - name: SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_HUB_SECRET_ENCRYPTION_KEY
     valueFrom:

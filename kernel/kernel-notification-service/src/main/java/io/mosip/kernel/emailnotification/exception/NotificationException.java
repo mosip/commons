@@ -3,7 +3,8 @@ package io.mosip.kernel.emailnotification.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * Exception class for {@link NotificationException}.
+ * Unchecked exception wrapping mail MIME or attachment failures during email
+ * send.
  * 
  * @author Sagar Mahapatra
  * @since 1.0.0
@@ -16,9 +17,10 @@ public class NotificationException extends BaseUncheckedException {
 	private static final long serialVersionUID = 3949838534862481500L;
 
 	/**
-	 * Constructor for NotificationException.
+	 * Instantiates the exception from a wrapped mail or attachment failure.
 	 * 
-	 * @param notificationException the exception argument.
+	 * @param notificationException the cause whose localized message and message
+	 *                              are copied onto this exception
 	 */
 	public NotificationException(Throwable notificationException) {
 		super(notificationException.getLocalizedMessage(), notificationException.getMessage());

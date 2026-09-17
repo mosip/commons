@@ -1,7 +1,5 @@
 package io.mosip.kernel.vidgenerator.verticle;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
@@ -17,6 +15,13 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
+/**
+ * Worker verticle that schedules isolation of assigned VIDs into {@code vid_assigned}.
+ * <p>
+ * Consumes {@link VidIsolatorSchedulerConstants#NAME_VALUE} and invokes
+ * {@link VidService#isolateAssignedVids()}.
+ * </p>
+ */
 public class VidIsolatorVerticle extends AbstractVerticle {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(VidIsolatorVerticle.class);
@@ -25,18 +30,32 @@ public class VidIsolatorVerticle extends AbstractVerticle {
 
 	private Environment environment;
 
-	private final AtomicBoolean isolationInProgress = new AtomicBoolean(false);
-
+	/**
+	 * Resolves {@link VidService} and isolator scheduler properties from {@code context}.
+	 *
+	 * @param context Spring context
+	 */
 	public VidIsolatorVerticle(final ApplicationContext context) {
 		this.environment = context.getBean(Environment.class);
 		this.vidService = context.getBean(VidService.class);
 	}
 
+	/**
+	 * Deploys the Ceylon Chime scheduler verticle.
+	 *
+	 * @param startFuture unused Vert.x start future
+	 * @throws Exception unused; Vert.x {@code start} contract
+	 */
 	@Override
 	public void start(Future<Void> startFuture) throws Exception {
 		vertx.deployVerticle(VidIsolatorSchedulerConstants.CEYLON_SCHEDULER, this::schedulerResult);
 	}
 
+	/**
+	 * Starts cron scheduling when Chime deployment succeeds.
+	 *
+	 * @param result Chime deploy result
+	 */
 	public void schedulerResult(AsyncResult<String> result) {
 		if (result.succeeded()) {
 			LOGGER.info("VidIsolatorVerticle deployment successfull");
@@ -58,27 +77,8 @@ public class VidIsolatorVerticle extends AbstractVerticle {
 
 		MessageConsumer<JsonObject> consumer = eventBus.consumer(VidIsolatorSchedulerConstants.NAME_VALUE);
 
-		// handle chime event — single-flight: skip tick if previous run still in progress
-		consumer.handler(message -> {
-			if (!isolationInProgress.compareAndSet(false, true)) {
-				LOGGER.info("VID isolation skipped: previous run still in progress; will run on next schedule ({})",
-						VidIsolatorSchedulerConstants.NAME_VALUE);
-				return;
-			}
-			vertx.executeBlocking(future -> {
-				try {
-					vidService.isolateAssignedVids();
-					future.complete();
-				} catch (Exception e) {
-					future.fail(e);
-				}
-			}, false, result -> {
-				isolationInProgress.set(false);
-				if (result.failed()) {
-					LOGGER.error("VID isolation failed", result.cause());
-				}
-			});
-		});
+		// handle chime event
+		consumer.handler(message -> vidService.isolateAssignedVids());
 
 		JsonObject timer = new JsonObject()
 			.put(VidIsolatorSchedulerConstants.TYPE, environment.getProperty(VidIsolatorSchedulerConstants.TYPE_VALUE))

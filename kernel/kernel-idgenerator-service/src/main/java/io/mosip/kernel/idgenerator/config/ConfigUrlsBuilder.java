@@ -13,7 +13,11 @@ import io.mosip.kernel.vidgenerator.exception.VidGeneratorServiceException;
 
 /**
  * Utility class to fetch config server related URLs.
- * 
+ * <p>
+ * Resolution order for each key is JVM system property, then environment
+ * variable, then {@code bootstrap.properties}.
+ * </p>
+ *
  * @author Sagar Mahapatra
  * @author Raj Jha
  * @since 1.0.0
@@ -34,9 +38,9 @@ public class ConfigUrlsBuilder {
 	private static String propertyFileName = "bootstrap.properties";
 
 	/**
-	 * Method to get URL's.
-	 * 
-	 * @return the URLs.
+	 * Builds Spring Cloud Config URLs for each application name in {@code spring.cloud.config.name}.
+	 *
+	 * @return config-server URLs of the form {@code uri/name/profile/label}
 	 */
 	public static List<String> getURLs() {
 		List<String> urlS = new ArrayList<>();
@@ -51,12 +55,11 @@ public class ConfigUrlsBuilder {
 	}
 
 	/**
-	 * Method to get property values.
-	 * 
-	 * @param clazz    the class.
-	 * @param fileName file name from which property values are to be fetched.
-	 * @param key      the key for which value needs to be fetched.
-	 * @return the property value.
+	 * Resolves {@code key} from a JVM property, environment variable, then {@code bootstrap.properties}.
+	 *
+	 * @param key property name
+	 * @return resolved value, which may be {@code null} if absent from the file
+	 * @throws VidGeneratorServiceException when {@code bootstrap.properties} cannot be read
 	 */
 	private static String getProperty(String key) {
 		String value = System.getProperty(key);
@@ -81,9 +84,9 @@ public class ConfigUrlsBuilder {
 	}
 
 	/**
-	 * Method to get the cloud config names.
-	 * 
-	 * @return the app names.
+	 * Splits {@code spring.cloud.config.name} on commas into config-server application names.
+	 *
+	 * @return ordered application names sent to config-server
 	 */
 	public static List<String> getConfigNames() {
 		String names = System.getProperty(VIDGeneratorConstant.SPRING_CLOUD_CONFIG_NAME);

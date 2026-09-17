@@ -1,13 +1,13 @@
 # MOSIP Commons
 
-[![Maven Package upon a push](https://github.com/mosip/commons/actions/workflows/push-trigger.yml/badge.svg?branch=release-1.3.x)](https://github.com/mosip/commons/actions/workflows/push-trigger.yml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=release-1.3.x&project=mosip_commons&metric=alert_status)](https://sonarcloud.io/dashboard?branch=release-1.3.x&id=mosip_commons)
+[![Maven Package upon a push](https://github.com/mosip/commons/actions/workflows/push-trigger.yml/badge.svg?branch=master)](https://github.com/mosip/commons/actions/workflows/push-trigger.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=master)](https://sonarcloud.io/dashboard?branch=master)
 
 ## Overview
 
 **MOSIP Commons** is a collection of foundational libraries used across all MOSIP microservices.
 
-It contains services to support configuration management, ID generation, notifications, and cryptographic salt generation.
+It contains services to support configuration management, ID generation, and notifications.
 
 ---
 # Services
@@ -18,11 +18,63 @@ The following core services are part of MOSIP Commons:
 
 1. **[Kernel Notification Service](kernel/kernel-notification-service)** - Centralized notification service for sending messages such as SMS, emails.
 2. **[Kernel Config Server](kernel/kernel-config-server)** - Centralized configuration service used by all MOSIP microservices.
-3. **[Kernel RID Generator Service](kernel/kernel-ridgenerator-service)** - Generates globally unique Registration IDs (RID).
-4. **[Kernel ID Generator Service](kernel/kernel-idgenerator-service)** - Generates unique IDs required across MOSIP service.
-5. **[Kernel PRID Generator Service](kernel/kernel-pridgenerator-service)** - Generates Pre-Registration IDs (PRID).
-6. **[Kernel Salt Generator](kernel/kernel-salt-generator)** - Generates cryptographically strong salts for cryptographic operation.
+3. **[Kernel ID Generator Service](kernel/kernel-idgenerator-service)** - Generates RID and UIN/VID over one HTTP process (`/v1/ridgenerator`, `/v1/idgenerator`).
 
+---
+
+## Retired modules
+
+These modules are **not** in this repository. Implementations that are still needed live in `kernel-core` or in another MOSIP repo. Do not add them back here.
+
+### Folded into `kernel-core` (no longer published separately)
+
+| Former module | Notes |
+|---------------|--------|
+| `kernel-bom` | Versions live on `kernel/pom.xml` (`spring-boot-starter-parent`) |
+| `kernel-applicanttype-api` | Implementation in `kernel-core` |
+| `kernel-dataaccess-hibernate` | Implementation in `kernel-core` |
+| `kernel-datamapper-orika` | Implementation in `kernel-core` |
+| `kernel-demographics-api` | Implementation in `kernel-core` |
+| `kernel-idgenerator-machineid` | Implementation in `kernel-core` |
+| `kernel-idgenerator-mispid` | Implementation in `kernel-core` |
+| `kernel-idgenerator-partnerid` | Implementation in `kernel-core` |
+| `kernel-idgenerator-rid` | Implementation in `kernel-core` |
+| `kernel-idgenerator-tokenid` | Implementation in `kernel-core` |
+| `kernel-idgenerator-vid` | Implementation in `kernel-core` |
+| `kernel-idgenerator-regcenterid` | Implementation in `kernel-core` |
+| `kernel-idobjectvalidator` | Implementation in `kernel-core` |
+| `kernel-idvalidator-mispid` | Implementation in `kernel-core` |
+| `kernel-idvalidator-prid` | Implementation in `kernel-core` |
+| `kernel-idvalidator-rid` | Implementation in `kernel-core` |
+| `kernel-idvalidator-uin` | Implementation in `kernel-core` |
+| `kernel-idvalidator-vid` | Implementation in `kernel-core` |
+| `kernel-licensekeygenerator-misp` | Implementation in `kernel-core` |
+| `kernel-logger-logback` | Implementation in `kernel-core` |
+| `kernel-pdfgenerator` | Implementation in `kernel-core` |
+| `kernel-pinvalidator` | Implementation in `kernel-core` |
+| `kernel-qrcodegenerator-zxing` | Implementation in `kernel-core` |
+| `kernel-templatemanager-velocity` | Implementation in `kernel-core` |
+| `kernel-transliteration-icu4j` | Implementation in `kernel-core` |
+| `kernel-websubclient-api` | Implementation in `kernel-core` |
+
+### Merged into `kernel-idgenerator-service`
+
+| Former module | Preserved path |
+|---------------|----------------|
+| `kernel-ridgenerator-service` | `/v1/ridgenerator` |
+| (UIN/VID HTTP) | `/v1/idgenerator` |
+
+Helm chart `helm/ridgenerator` is retired. Use `helm/idgenerator`. `helm/pridgenerator` is retired; PRID generation moved to Pre-Registration.
+
+### Moved out of commons
+
+| Former module | Destination |
+|---------------|-------------|
+| `kernel-salt-generator` / `helm/regproc-salt` | Consuming repos that own salt tables (Job, not this repo) |
+| `kernel-otpmanager-service` | [otp-manager](https://github.com/mosip/otp-manager) |
+| `kernel-authcodeflowproxy-api` | [mosip-openid-bridge](https://github.com/mosip/mosip-openid-bridge) |
+| `kernel-biometrics-api` / `kernel-bioapi-provider` | [commons-packet-manager](https://github.com/mosip/commons-packet-manager) / bio-utils |
+| `kernel-idgenerator-prid` / `kernel-pridgenerator-service` | [pre-registration](https://github.com/mosip/pre-registration) |
 
 ---
 
@@ -42,9 +94,7 @@ All database SQL scripts are available in the [db scripts](./db_scripts) directo
 
 
 ### Runtime Dependencies
-Add below runtime dependencies to the classpath, or include it as a Maven dependency:
-- Add `kernel-auth-adapter.jar` 
-- Add `kernel-smsserviceprovider-msg91.jar`
+`kernel-auth-adapter` (1.4.1-SNAPSHOT) is a Maven dependency of both HTTP services. `kernel-smsserviceprovider-msg91` (1.3.1-rc.1) is a Maven dependency of `kernel-notification-service`. They are packaged in the service JARs; do not download them at container start.
 
 ### Configuration
 
@@ -90,8 +140,9 @@ Recommended for users who want a quick, ready-to-use setup — testers, students
 Pull the latest pre-built images from Docker Hub using the following commands:
 
 ```text
-docker pull mosipid/kernel-notification-service:1.3.0
-
+docker pull mosipid/kernel-notification-service:1.4.1-SNAPSHOT
+docker pull mosipid/kernel-idgenerator-service:1.4.1-SNAPSHOT
+docker pull mosipid/kernel-config-server:1.4.1-SNAPSHOT
 ```
 
 #### Option 2: Build Docker Images Locally

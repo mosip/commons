@@ -30,7 +30,13 @@ import java.util.*;
  */
 @Component
 public class SmsNotificationUtils {
+    /**
+     * MOSIP logger for SMS send failures on the async executor.
+     */
     private final static Logger mosipLogger = LoggerConfiguration.logConfig(SmsNotificationUtils.class);
+    /**
+     * SMS gateway SPI implementation loaded from the SMS provider jar.
+     */
     @Autowired
     private SMSServiceProvider smsServiceProvider;
 

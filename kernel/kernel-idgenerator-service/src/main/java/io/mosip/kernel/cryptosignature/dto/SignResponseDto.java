@@ -9,7 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 
+ * Keymanager sign API response mapped by {@link io.mosip.kernel.cryptosignature.service.impl.SignatureUtilImpl}.
+ *
  * @author Srinivasan
  * @since 1.0.0
  *
@@ -20,12 +21,12 @@ import lombok.NoArgsConstructor;
 public class SignResponseDto {
 
 	/**
-	 * encrypted data
+	 * Digital signature of the requested payload.
 	 */
 	private String signature;
 
 	/**
-	 * response time.
+	 * UTC timestamp returned by keymanager with the signature.
 	 */
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private LocalDateTime timestamp;

@@ -10,8 +10,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Superclass for entities
- * 
+ * Audit columns shared by VID JPA entities.
+ *
  * @author Urvil Joshi
  * @since 1.0.0
  *

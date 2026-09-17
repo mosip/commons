@@ -10,8 +10,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Superclass for entities
- * 
+ * Audit columns shared by UIN JPA entities.
+ *
  * @author Dharmesh Khandelwal
  * @since 1.0.0
  *

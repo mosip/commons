@@ -4,13 +4,15 @@ import io.mosip.kernel.core.exception.BaseCheckedException;
 import io.mosip.kernel.core.idobjectvalidator.constant.IdObjectValidatorErrorConstant;
 
 /**
- * Exception class when there is any IO interrupt while reading/converting Id
- * Object String.
- * 
+ * Checked exception thrown when identity JSON cannot be read or converted.
+ * <p>
+ * Contract: raised by {@link io.mosip.kernel.core.idobjectvalidator.spi.IdObjectValidator}
+ * on parse or I/O failures. Prefer {@link IdObjectValidatorErrorConstant}.
+ * </p>
+ *
  * @author Manoj SP
  * @author Swati Raj
  * @since 1.0.0
- *
  */
 public class IdObjectIOException extends BaseCheckedException {
 
@@ -20,40 +22,40 @@ public class IdObjectIOException extends BaseCheckedException {
 	private static final long serialVersionUID = 795618868850353876L;
 
 	/**
-	 * Instantiates a new id object IO exception.
+	 * Constructs the exception from an error constant.
 	 *
-	 * @param errorConstant the error constant
+	 * @param errorConstant never-null constant supplying code and message
 	 */
 	public IdObjectIOException(IdObjectValidatorErrorConstant errorConstant) {
 		super(errorConstant.getErrorCode(), errorConstant.getMessage());
 	}
 
 	/**
-	 * Constructor for JsonIOException class.
-	 * 
-	 * @param errorCode    the error code of the exception.
-	 * @param errorMessage the error message associated with the exception.
+	 * Constructs the exception with MOSIP error code and message.
+	 *
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
 	 */
 	public IdObjectIOException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);
 	}
 
 	/**
-	 * Instantiates a new id object IO exception.
+	 * Constructs the exception from an error constant and cause.
 	 *
-	 * @param errorConstant the error constant
-	 * @param rootCause     the root cause
+	 * @param errorConstant never-null constant supplying code and message
+	 * @param rootCause     underlying cause; may be null
 	 */
 	public IdObjectIOException(IdObjectValidatorErrorConstant errorConstant, Throwable rootCause) {
 		super(errorConstant.getErrorCode(), errorConstant.getMessage(), rootCause);
 	}
 
 	/**
-	 * Constructor for JsonIOException class.
-	 * 
-	 * @param errorCode    the error code of the exception.
-	 * @param errorMessage the error message associated with the exception.
-	 * @param rootCause    root cause of exception.
+	 * Constructs the exception with MOSIP error code, message, and cause.
+	 *
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
+	 * @param rootCause    underlying cause; may be null
 	 */
 	public IdObjectIOException(String errorCode, String errorMessage, Throwable rootCause) {
 		super(errorCode, errorMessage, rootCause);

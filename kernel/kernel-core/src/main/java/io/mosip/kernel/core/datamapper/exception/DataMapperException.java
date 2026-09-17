@@ -3,12 +3,14 @@ package io.mosip.kernel.core.datamapper.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * 
- * Custom class for DataMapper Exception
- * 
+ * Unchecked exception thrown when bean mapping fails.
+ * <p>
+ * Contract: raised by {@link io.mosip.kernel.core.datamapper.spi.DataMapper}
+ * implementations on type mismatch, missing properties, or converter errors.
+ * </p>
+ *
  * @author Neha
  * @since 1.0.0
- *
  */
 public class DataMapperException extends BaseUncheckedException {
 
@@ -18,30 +20,30 @@ public class DataMapperException extends BaseUncheckedException {
 	private static final long serialVersionUID = 2L;
 
 	/**
-	 * Constructor for DataMapperException
-	 * 
-	 * @param errorCode    The error code
-	 * @param errorMessage The error message
-	 * @param rootCause    the specified cause
+	 * Constructs the exception with MOSIP error code, message, and cause.
+	 *
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
+	 * @param rootCause    underlying cause; may be null
 	 */
 	public DataMapperException(String errorCode, String errorMessage, Throwable rootCause) {
 		super(errorCode, errorMessage, rootCause);
 	}
 
 	/**
-	 * Constructor for DataMapperException
-	 * 
-	 * @param errorCode    The error code
-	 * @param errorMessage The error message
+	 * Constructs the exception with MOSIP error code and message.
+	 *
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
 	 */
 	public DataMapperException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);
 	}
 
 	/**
-	 * Constructor for DataMapperException
-	 * 
-	 * @param errorMessage The error message
+	 * Constructs the exception with a detail message only.
+	 *
+	 * @param errorMessage never-null human-readable description
 	 */
 	public DataMapperException(String errorMessage) {
 		super(errorMessage);

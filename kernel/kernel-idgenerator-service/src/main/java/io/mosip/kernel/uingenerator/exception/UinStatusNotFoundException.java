@@ -3,8 +3,8 @@ package io.mosip.kernel.uingenerator.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * Custom exception for Uin Not Found Exception
- * 
+ * Thrown when a UIN status update uses an unknown lifecycle value.
+ *
  * @author Megha Tanga
  * @since 1.0.0
  *

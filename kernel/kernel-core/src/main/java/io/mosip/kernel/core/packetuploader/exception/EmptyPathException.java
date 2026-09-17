@@ -3,8 +3,12 @@ package io.mosip.kernel.core.packetuploader.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * Exception to be thrown when Path is Empty
- * 
+ * Unchecked exception thrown when the packet upload source path is empty.
+ * <p>
+ * Contract: raised by {@link io.mosip.kernel.core.packetuploader.spi.PacketUploader}
+ * when {@code source} is blank. Does not perform I/O.
+ * </p>
+ *
  * @author Urvil Joshi
  * @since 1.0.0
  */

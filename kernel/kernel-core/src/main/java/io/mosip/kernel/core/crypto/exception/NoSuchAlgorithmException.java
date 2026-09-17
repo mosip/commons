@@ -9,7 +9,12 @@ package io.mosip.kernel.core.crypto.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * {@link Exception} to be thrown when data is invalid
+ * Unchecked exception thrown when a requested cryptographic algorithm is
+ * unavailable.
+ * <p>
+ * Contract: wraps JRE {@code NoSuchAlgorithmException}. Prefer
+ * {@link io.mosip.kernel.core.crypto.constant.CryptoExceptionCodeConstants#NO_SUCH_ALGORITHM_EXCEPTION}.
+ * </p>
  * 
  * @author Urvil Joshi
  * @since 1.0.0

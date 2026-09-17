@@ -7,11 +7,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Certificate Parameters for generating Certficate.
- * 
+ * X.500 subject and validity used when generating a keystore certificate.
+ * <p>
+ * Contract: {@code commonName} should be non-blank. Other DN fields may be
+ * null. {@code notBefore} / {@code notAfter} should be UTC. Does not perform
+ * I/O.
+ * </p>
+ *
  * @author Mahammed Taheer
  * @since 1.1.2
- * 
  */
 @Data
 @NoArgsConstructor
@@ -19,43 +23,43 @@ import lombok.NoArgsConstructor;
 public class CertificateParameters {
 
     /**
-	 * Field for Certficate Attribute - CN
-	 */
+     * Certificate attribute CN (common name); should be non-blank.
+     */
     private String commonName;
 
     /**
-	 * Field for Certficate Attribute - OU
-	 */
+     * Certificate attribute OU (organization unit); may be null.
+     */
     private String organizationUnit;
 
     /**
-	 * Field for Certficate Attribute - O
-	 */
+     * Certificate attribute O (organization); may be null.
+     */
     private String organization;
 
     /**
-	 * Field for Certficate Attribute - L
-	 */
+     * Certificate attribute L (locality); may be null.
+     */
     private String location;
     
     /**
-	 * Field for Certficate Attribute - S
-	 */
+     * Certificate attribute S / ST (state); may be null.
+     */
     private String state;
 
     /**
-	 * Field for Certficate Attribute - C
-	 */
+     * Certificate attribute C (country); may be null.
+     */
     private String country;
 
     /**
-	 * Field for Certficate Attribute - notBefore
-	 */
+     * Certificate not-before instant; should be UTC; may be null.
+     */
     private LocalDateTime notBefore;
 
     /**
-	 * Field for Certficate Attribute - notAfter
-	 */
+     * Certificate not-after instant; should be UTC; may be null.
+     */
     private LocalDateTime notAfter;
 
 }

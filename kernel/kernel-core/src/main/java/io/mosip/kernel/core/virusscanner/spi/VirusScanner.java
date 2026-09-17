@@ -1,6 +1,5 @@
 /**
- * 
- * 
+ * Virus-scan SPI for MOSIP packets and documents.
  */
 package io.mosip.kernel.core.virusscanner.spi;
 
@@ -8,54 +7,59 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * @author Mukul Puspam
+ * Scans files, folders, and byte arrays for malware.
+ * <p>
+ * Contract: implementations typically perform HTTP or a local daemon call to
+ * an antivirus engine. Paths and arrays must be non-null. Call before
+ * accepting registration packets or uploaded documents. Return type
+ * {@code U} is implementation-defined (often {@link Boolean}).
+ * </p>
  *
- * @param <U> Return type
- * 
- * @param <V> file path
+ * @param <U> scan result type
+ * @param <V> file-handle type used by {@link #scanFile(Object)}
+ * @author Mukul Puspam
  */
-
 public interface VirusScanner<U, V> {
 
 	/**
-	 * Scan file.
+	 * Scans the file at the given path.
 	 *
-	 * @param fileName the file name
-	 * @return the u
+	 * @param fileName never-null, never-blank file-system path
+	 * @return scan result; never null on a completed scan
 	 */
 	U scanFile(String fileName);
 
+	/**
+	 * Scans the given file handle.
+	 *
+	 * @param file never-null file handle of type {@code V}
+	 * @return scan result; never null on a completed scan
+	 */
 	U scanFile(V file);
 
 	/**
-	 * Scan folder.
+	 * Recursively scans all files under the given folder.
 	 *
-	 * @param folderPath the folder path
-	 * @return the u
+	 * @param folderPath never-null, never-blank directory path
+	 * @return scan result; never null on a completed scan
 	 */
 	U scanFolder(String folderPath);
 
 	/**
-	 * Scan byte array.
+	 * Scans an in-memory document.
 	 *
-	 * @param array array
-	 * 
-	 * @return the u
-	 * 
-	 * @throws IOException if exception occurs while failed or interrupted I/O
-	 *                     operations
+	 * @param array never-null document bytes; may be empty
+	 * @return scan result; never null on a completed scan
+	 * @throws IOException when the scanner I/O fails
 	 */
 	U scanDocument(byte[] array) throws IOException;
 
 	/**
-	 * Scan File.
+	 * Scans the given {@link File}.
 	 *
-	 * @param doc object
-	 * 
-	 * @return the u
-	 * 
-	 * @throws IOException if exception occurs while failed or interrupted I/O
-	 *                     operations
+	 * @param doc never-null existing file
+	 * @return scan result; never null on a completed scan
+	 * @throws IOException when the scanner I/O fails
 	 */
 	U scanDocument(File doc) throws IOException;
 }

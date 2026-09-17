@@ -43,8 +43,8 @@ public class SmsNotificationController {
     /**
      * This method sends sms to the contact number provided.
      *
-     * @param smsRequestDto the request dto for sms-notification.
-     * @return the status and message as dto response.
+     * @param smsRequestDto the request dto for sms-notification
+     * @return the status and message as dto response
      */
     @ResponseFilter
     @Operation(summary = "Endpoint for sending a sms", description = "Endpoint for sending a sms", tags = { "smsnotification" })
@@ -53,7 +53,7 @@ public class SmsNotificationController {
             @ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getPostsmssend())")
+    @PreAuthorize("@authorizedRoles.hasSmsSendAccess()")
     @PostMapping(value = "/sms/send")
     public ResponseWrapper<SMSResponseDto> sendSmsNotification(
             @Valid @RequestBody RequestWrapper<SmsRequestDto> smsRequestDto) {

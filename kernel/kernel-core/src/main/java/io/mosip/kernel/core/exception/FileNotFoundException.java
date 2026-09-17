@@ -1,18 +1,37 @@
 package io.mosip.kernel.core.exception;
 
 /**
- * @author Priya Soni
+ * Checked exception thrown when a file path cannot be found.
+ * <p>
+ * Contract: raised by {@link io.mosip.kernel.core.util.FileUtils} and
+ * {@link io.mosip.kernel.core.util.ZipUtils}. Extends {@link IOException}.
+ * </p>
  *
+ * @author Priya Soni
+ * @see io.mosip.kernel.core.util.constant.FileUtilConstants
  */
 public class FileNotFoundException extends IOException {
 
 	private static final long serialVersionUID = -1762806620894866489L;
 
+	/**
+	 * Constructs the exception with MOSIP error code, message, and cause.
+	 *
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
+	 * @param rootCause    underlying cause; may be null
+	 */
 	public FileNotFoundException(String errorCode, String errorMessage, Throwable rootCause) {
 		super(errorCode, errorMessage, rootCause);
 
 	}
 
+	/**
+	 * Constructs the exception with MOSIP error code and message.
+	 *
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
+	 */
 	public FileNotFoundException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);
 

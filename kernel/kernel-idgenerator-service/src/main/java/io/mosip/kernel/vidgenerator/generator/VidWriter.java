@@ -19,6 +19,12 @@ public class VidWriter {
 	@Autowired
 	private VidService vidService;
 
+	/**
+	 * Inserts {@code vid} when it is not already present.
+	 *
+	 * @param vid entity to persist
+	 * @return {@code true} when the row was inserted
+	 */
 	public boolean persistVids(VidEntity vid) {
 		return this.vidService.saveVID(vid);
 	}

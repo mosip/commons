@@ -13,7 +13,7 @@ import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
 
 /**
- * Class for swagger configuration.
+ * Swagger / OpenAPI configuration for the notification HTTP service.
  * 
  * @author Sagar Mahapatra
  * @since 1.0.0
@@ -22,11 +22,23 @@ import io.swagger.v3.oas.models.servers.Server;
 @Configuration
 public class SwaggerConfig {
 
+	/**
+	 * Logger for OpenAPI bean construction diagnostics.
+	 */
 	private static final Logger logger = LoggerFactory.getLogger(SwaggerConfig.class);
 
+	/**
+	 * OpenAPI properties bound from {@code openapi.*} configuration.
+	 */
 	@Autowired
 	private OpenApiProperties openApiProperties;
 
+	/**
+	 * Builds the OpenAPI bean from {@link OpenApiProperties} for Swagger UI under
+	 * {@code /v1/notifier}.
+	 *
+	 * @return the configured OpenAPI model including info and servers
+	 */
 	@Bean
 	public OpenAPI openApi() {
 		OpenAPI api = new OpenAPI().components(new Components())

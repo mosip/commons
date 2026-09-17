@@ -1,52 +1,54 @@
 package io.mosip.kernel.core.templatemanager.spi;
 
 /**
- * TemplateManagerBuilder will build the {@link TemplateManager} with the
- * configuration either custom or default.
- * 
+ * Fluent builder for a {@link TemplateManager} instance.
+ * <p>
+ * Contract: each setter returns {@code this} for chaining. {@link #build()}
+ * produces a manager with the accumulated settings (classpath loader, UTF-8,
+ * cache enabled unless overridden). Does not perform MOSIP HTTP.
+ * </p>
+ *
  * @author Abhishek Kumar
  * @version 1.0.0
  * @since 22-11-2018
- *
  */
 public interface TemplateManagerBuilder {
 	/**
-	 * Method for overriding the resourceLoader, default is classPath
-	 * 
-	 * @param resourceLoader the resourceLoader will specify from where to load
-	 *                       templates ,default value is classPath
-	 * @return {@link TemplateManagerBuilder}
+	 * Sets where templates are loaded from (for example {@code classpath} or {@code file}).
+	 *
+	 * @param resourceLoader never-null loader name; default is classpath
+	 * @return this builder
 	 */
 	TemplateManagerBuilder resourceLoader(String resourceLoader);
 
 	/**
-	 * Method for overriding the template location
-	 * 
-	 * @param templatePath as String , template location
-	 * @return {@link TemplateManagerBuilder}
+	 * Sets the root path or classpath prefix for templates.
+	 *
+	 * @param templatePath never-null template location
+	 * @return this builder
 	 */
 	TemplateManagerBuilder resourcePath(String templatePath);
 
 	/**
-	 * Method to disable or enable cache
-	 * 
-	 * @param cache cache template in memory , default is true
-	 * @return {@link TemplateManagerBuilder}
+	 * Enables or disables in-memory template caching.
+	 *
+	 * @param cache {@code true} to cache compiled templates; default is {@code true}
+	 * @return this builder
 	 */
 	TemplateManagerBuilder enableCache(boolean cache);
 
 	/**
-	 * Method for setting up encoding type
-	 * 
-	 * @param defaultEncoding template encoding type, default is UTF-8
-	 * @return {@link TemplateManagerBuilder}
+	 * Sets the charset used to read template files.
+	 *
+	 * @param defaultEncoding never-null charset name; default is UTF-8
+	 * @return this builder
 	 */
 	TemplateManagerBuilder encodingType(String defaultEncoding);
 
 	/**
-	 * Method to build the {@link TemplateManager} with required configuration
-	 * 
-	 * @return {@link TemplateManager}
+	 * Creates a {@link TemplateManager} with the configured settings.
+	 *
+	 * @return never-null manager
 	 */
 	TemplateManager build();
 }

@@ -12,8 +12,13 @@ import io.mosip.kernel.core.exception.NullPointerException;
 import io.mosip.kernel.core.util.constant.CalendarUtilConstants;
 
 /**
- * This class provides the calendar utilities for MOSIP implementations.
- * 
+ * Calendar helpers that wrap Apache Commons DateUtils and rethrow MOSIP exceptions.
+ * <p>
+ * Contract: static helpers only; this class is not instantiable. Null calendars
+ * or dates become {@link IllegalArgumentException} or {@link NullPointerException}.
+ * Year overflow becomes {@link ArithmeticException}. Does not perform I/O.
+ * </p>
+ *
  * @author Sagar Mahapatra
  * @since version 1.0.0
  */

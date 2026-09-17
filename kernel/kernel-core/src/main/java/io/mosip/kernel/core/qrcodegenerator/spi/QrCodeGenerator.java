@@ -5,39 +5,39 @@ import java.io.IOException;
 import io.mosip.kernel.core.qrcodegenerator.exception.QrcodeGenerationException;
 
 /**
- * Interface for QR-Code-Generation
- * 
- * @author Urvil Joshi
+ * Encodes payload data as a PNG QR code image.
+ * <p>
+ * Contract: implementations perform CPU-bound encoding with no MOSIP HTTP.
+ * {@code data} must be non-null; empty data may be rejected as
+ * {@link io.mosip.kernel.core.qrcodegenerator.exception.InvalidInputException}.
+ * Call when printing receipts or ID cards that embed a QR.
+ * </p>
  *
+ * @param <T> QR version / size type used by the implementation
+ * @author Urvil Joshi
  * @since 1.0.0
- * 
- * @param <T> the type of QR-Version
  */
 public interface QrCodeGenerator<T> {
 
 	/**
-	 * Method to generate QR Code
-	 * 
-	 * @param data    data to encode in the QR code
-	 * @param version QR Code version
-	 * @return array of byte containing QR Code in PNG format
-	 * @throws QrcodeGenerationException exceptions which may occur when encoding a
-	 *                                   QRcode using the Writer framework.
-	 * @throws IOException               exceptions which may occur when write to
-	 *                                   the byte stream fail
+	 * Encodes {@code data} as a PNG QR image.
+	 *
+	 * @param data    never-null text to encode
+	 * @param version never-null QR version / size hint
+	 * @return never-null PNG bytes
+	 * @throws QrcodeGenerationException when encoding fails
+	 * @throws IOException               when writing PNG bytes fails
 	 */
 	byte[] generateQrCode(String data, T version) throws QrcodeGenerationException, IOException;
 
 	/**
-	 * Method to generate QR Code
-	 * 
-	 * @param data    binary data to encode in the QR code
-	 * @param version QR Code version
-	 * @return array of byte containing QR Code in PNG format
-	 * @throws QrcodeGenerationException exceptions which may occur when encoding a
-	 *                                   QRcode using the Writer framework.
-	 * @throws IOException               exceptions which may occur when write to
-	 *                                   the byte stream fail
+	 * Encodes binary {@code data} (typically hex or Base64) as a PNG QR image.
+	 *
+	 * @param data    never-null binary payload represented as text
+	 * @param version never-null QR version / size hint
+	 * @return never-null PNG bytes
+	 * @throws QrcodeGenerationException when encoding fails
+	 * @throws IOException               when writing PNG bytes fails
 	 */
 	byte[] generateQrCodeFromBinaryData(String data, T version) throws QrcodeGenerationException, IOException;
 }

@@ -5,7 +5,6 @@ import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +23,7 @@ import io.mosip.kernel.core.signatureutil.exception.SignatureUtilClientException
 import io.mosip.kernel.core.signatureutil.exception.SignatureUtilException;
 import io.mosip.kernel.core.signatureutil.model.SignatureResponse;
 import io.mosip.kernel.core.signatureutil.spi.SignatureUtil;
-import io.mosip.kernel.core.util.DateUtils2;
+import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorConstant;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorErrorCode;
 import io.mosip.kernel.uingenerator.dto.UinResponseDto;
@@ -46,8 +45,14 @@ import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.StaticHandler;
 
 /**
- * Router for vertx server
- * 
+ * Vert.x router for the UIN fetch and status-update APIs under {@code /v1/idgenerator}.
+ * <p>
+ * GET issues a unused UIN (HTTP 200 with MOSIP {@code ResponseWrapper}). PUT updates
+ * UIN lifecycle status. Errors are written as HTTP 200 bodies with
+ * {@code errors} populated. Optional response signing uses
+ * {@code mosip.kernel.signature.signature-request-id} via {@link SignatureUtil}.
+ * </p>
+ *
  * @author Dharmesh Khandelwal
  * @author Urvil Joshi
  * @author Megha Tanga
@@ -67,9 +72,6 @@ public class UinServiceRouter {
 	@Autowired
 	ObjectMapper objectMapper;
 
-	@Value("${mosip.kernel.uin.health.checker.time.ms:3000}")
-	private String healthCheckerTime;
-
 	@Autowired
 	private VertxAuthenticationProvider authHandler;
 
@@ -85,10 +87,15 @@ public class UinServiceRouter {
 	private Logger LOGGER = LoggerFactory.getLogger(UinServiceRouter.class);
 
 	/**
-	 * Creates router for vertx server
-	 * 
-	 * @param vertx vertx
-	 * @return Router
+	 * Builds the UIN GET/PUT router, health endpoint, and Swagger static handler.
+	 * <p>
+	 * GET and PUT require {@code ID_REPOSITORY}. Successful GET is HTTP 200 JSON;
+	 * MOSIP errors are also HTTP 200 with {@code errors}. Health is registered at
+	 * {@code {servletPath}/actuator/health}.
+	 * </p>
+	 *
+	 * @param vertx Vert.x instance used for worker executors and health checks
+	 * @return configured Vert.x router
 	 */
 	public Router createRouter(Vertx vertx) {
 		Router router = Router.router(vertx);
@@ -119,27 +126,44 @@ public class UinServiceRouter {
 		return router;
 	}
 
+	/**
+	 * Registers DB, disk-space, and UIN-verticle health procedures on {@code router}.
+	 *
+	 * @param vertx       Vert.x instance
+	 * @param router      parent router
+	 * @param servletPath servlet context path from {@code server.servlet.path}
+	 */
 	private void configureHealthCheckEndpoint(Vertx vertx, Router router, final String servletPath) {
-		long healthCheckerTimeMs=Long.parseLong(healthCheckerTime);
 		UinServiceHealthCheckerhandler healthCheckHandler = new UinServiceHealthCheckerhandler(vertx, null,
 				objectMapper, environment);
 		router.get(servletPath + UinGeneratorConstant.HEALTH_ENDPOINT).handler(healthCheckHandler);
-		healthCheckHandler.register("db", healthCheckerTimeMs, healthCheckHandler::databaseHealthChecker);
-		healthCheckHandler.register("diskspace", healthCheckerTimeMs, healthCheckHandler::dispSpaceHealthChecker);
-		healthCheckHandler.register("uingeneratorverticle", healthCheckerTimeMs,
+		healthCheckHandler.register("db", healthCheckHandler::databaseHealthChecker);
+		healthCheckHandler.register("diskspace", healthCheckHandler::dispSpaceHealthChecker);
+		healthCheckHandler.register("uingeneratorverticle",
 				future -> healthCheckHandler.verticleHealthHandler(future, vertx));
 	}
 
+	/**
+	 * Issues a UIN on a worker thread and writes HTTP 200 JSON, optionally with {@code response-signature}.
+	 *
+	 * @param vertx              Vert.x instance
+	 * @param routingContext     current request
+	 * @param isSignEnable       whether to sign the response body
+	 * @param profile            unused active Spring profile
+	 * @param router             unused parent router
+	 * @param workerExecutorPool size of the shared {@code get-uin} worker pool
+	 */
 	private void getRouter(Vertx vertx, RoutingContext routingContext, boolean isSignEnable, String profile,
 			Router router, int workerExecutorPool) {
 		ResponseWrapper<UinResponseDto> reswrp = new ResponseWrapper<>();
-		String timestamp = DateUtils2.getUTCCurrentDateTimeString();
+		String timestamp = DateUtils.getUTCCurrentDateTimeString();
 		WorkerExecutor executor = vertx.createSharedWorkerExecutor("get-uin", workerExecutorPool);
 		executor.executeBlocking(blockingCodeHandler -> {
 			try {
+				checkAndGenerateUins(vertx);
 				UinResponseDto uin = new UinResponseDto();
 				uin = uinGeneratorService.getUin(routingContext);
-				reswrp.setResponsetime(DateUtils2.convertUTCToLocalDateTime(timestamp));
+				reswrp.setResponsetime(DateUtils.convertUTCToLocalDateTime(timestamp));
 				reswrp.setResponse(uin);
 				reswrp.setErrors(null);
 				blockingCodeHandler.complete();
@@ -198,9 +222,9 @@ public class UinServiceRouter {
 	}
 
 	/**
-	 * update router for update the status of the given UIN
-	 * 
-	 * @return Router
+	 * Updates UIN status from the PUT body and writes HTTP 200 JSON or a MOSIP error wrapper.
+	 *
+	 * @param routingContext current PUT request
 	 */
 	private void updateRouter(RoutingContext routingContext) {
 		UinStatusUpdateReponseDto uinresponse = null;
@@ -253,6 +277,21 @@ public class UinServiceRouter {
 
 	}
 
+	/**
+	 * Publishes {@link UinGeneratorConstant#GENERATE_UIN} on {@link UinGeneratorConstant#UIN_GENERATOR_ADDRESS}.
+	 *
+	 * @param vertx Vert.x instance whose event bus is used
+	 */
+	public void checkAndGenerateUins(Vertx vertx) {
+		vertx.eventBus().publish(UinGeneratorConstant.UIN_GENERATOR_ADDRESS, UinGeneratorConstant.GENERATE_UIN);
+	}
+
+	/**
+	 * Writes HTTP 200 MOSIP error JSON using id/version from the request body when present.
+	 *
+	 * @param routingContext current request
+	 * @param error          MOSIP service error to include
+	 */
 	private void setError(RoutingContext routingContext, ServiceError error) {
 		ResponseWrapper<ServiceError> errorResponse = new ResponseWrapper<>();
 		errorResponse.getErrors().add(error);
@@ -274,6 +313,13 @@ public class UinServiceRouter {
 		}
 	}
 
+	/**
+	 * Writes HTTP 200 MOSIP error JSON using id/version from {@code reqwrp}.
+	 *
+	 * @param routingContext current request
+	 * @param error          MOSIP service error to include
+	 * @param reqwrp         original request wrapper
+	 */
 	private void setError(RoutingContext routingContext, ServiceError error, RequestWrapper<UinEntity> reqwrp) {
 		ResponseWrapper<ServiceError> errorResponse = new ResponseWrapper<>();
 		errorResponse.getErrors().add(error);
@@ -287,6 +333,13 @@ public class UinServiceRouter {
 		}
 	}
 
+	/**
+	 * Writes HTTP 200 MOSIP error JSON and fails the Vert.x blocking promise.
+	 *
+	 * @param routingContext  current request
+	 * @param error           MOSIP service error to include
+	 * @param blockingHandler worker promise to fail after writing the body
+	 */
 	private void setError(RoutingContext routingContext, ServiceError error, Promise<Object> blockingHandler) {
 		ResponseWrapper<ServiceError> errorResponse = new ResponseWrapper<>();
 		errorResponse.getErrors().add(error);

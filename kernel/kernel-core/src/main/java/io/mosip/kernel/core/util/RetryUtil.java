@@ -10,52 +10,56 @@ import io.mosip.kernel.core.function.RunnableWithThrowable;
 import io.mosip.kernel.core.function.SupplierWithThrowable;
 
 /**
- * The RetryUtil - an Utility to invoke any method / expression with retries as per the
- * configuration.
+ * Executes lambdas through the kernel {@link RetryTemplate}.
+ * <p>
+ * Contract: retry limits and exception lists come from
+ * {@link io.mosip.kernel.core.retry.RetryConfig}. The last exception is
+ * rethrown when retries are exhausted. Does not perform MOSIP HTTP itself.
+ * </p>
  */
 @Component
 public class RetryUtil {
 	
-	/** The retry template. */
+	/** Spring Retry template configured by {@link io.mosip.kernel.core.retry.RetryConfig}. */
 	@Autowired
 	private RetryTemplate retryTemplate;
 	
 	/**
-	 * Invoke the function with retry.
+	 * Retries {@code func.apply(t)} until it succeeds or the policy is exhausted.
 	 *
-	 * @param <R> the generic type
-	 * @param <T> the generic type
-	 * @param <E> the element type
-	 * @param func the {@link FunctionWithThrowable} instance or its lambda expression
-	 * @param t the t
-	 * @return the r
-	 * @throws E the e
+	 * @param <R>  result type
+	 * @param <T>  argument type
+	 * @param <E>  throwable type declared by {@code func}
+	 * @param func never-null function to invoke
+	 * @param t    argument passed to {@code func}; may be null
+	 * @return result of {@code func}; may be null
+	 * @throws E the last failure after retries are exhausted
 	 */
 	public <R, T, E extends Throwable> R doWithRetry(FunctionWithThrowable<R, T, E> func, T t) throws E {
 		return doProcessWithRetry(func, t);
 	}
 	
 	/**
-	 * Invoke the supplier with retry.
+	 * Retries {@code func.get()} until it succeeds or the policy is exhausted.
 	 *
-	 * @param <R> the generic type
-	 * @param <E> the element type
-	 * @param func the {@link SupplierWithThrowable} instance or its lambda expression
-	 * @return the r
-	 * @throws E the e
+	 * @param <R>  result type
+	 * @param <E>  throwable type declared by {@code func}
+	 * @param func never-null supplier to invoke
+	 * @return result of {@code func}; may be null
+	 * @throws E the last failure after retries are exhausted
 	 */
 	public <R, E extends Throwable> R doWithRetry(SupplierWithThrowable<R, E> func) throws E {
 		return doProcessWithRetry(t -> func.get(), null);
 	}
 	
 	/**
-	 * Invoke the consumer with retry.
+	 * Retries {@code func.accept(t)} until it succeeds or the policy is exhausted.
 	 *
-	 * @param <T> the generic type
-	 * @param <E> the element type
-	 * @param func the {@link ConsumerWithThrowable} instance or its lambda expression
-	 * @param t the t
-	 * @throws E the e
+	 * @param <T>  argument type
+	 * @param <E>  throwable type declared by {@code func}
+	 * @param func never-null consumer to invoke
+	 * @param t    argument passed to {@code func}; may be null
+	 * @throws E the last failure after retries are exhausted
 	 */
 	public <T, E extends Throwable> void doWithRetry(ConsumerWithThrowable<T, E> func,T t) throws E {
 		this.<Void, T, E>doProcessWithRetry(t1 -> {
@@ -65,11 +69,11 @@ public class RetryUtil {
 	}
 	
 	/**
-	 * Invoke the supplier with retry.
+	 * Retries {@code func.run()} until it succeeds or the policy is exhausted.
 	 *
-	 * @param <E> the element type
-	 * @param func the {@link RunnableWithThrowable} instance or its lambda expression
-	 * @throws E the e
+	 * @param <E>  throwable type declared by {@code func}
+	 * @param func never-null runnable to invoke
+	 * @throws E the last failure after retries are exhausted
 	 */
 	public <E extends Throwable> void doWithRetry(RunnableWithThrowable<E> func) throws E {
 		this.<Void, Void, E>doProcessWithRetry(t -> {
@@ -79,15 +83,15 @@ public class RetryUtil {
 	}
 	
 	/**
-	 * Do process with retry.
+	 * Executes {@code func} through {@link RetryTemplate}.
 	 *
-	 * @param <R> the generic type
-	 * @param <T> the generic type
-	 * @param <E> the element type
-	 * @param func the func
-	 * @param t the t
-	 * @return the r
-	 * @throws E the e
+	 * @param <R>  result type
+	 * @param <T>  argument type
+	 * @param <E>  throwable type declared by {@code func}
+	 * @param func never-null function to invoke
+	 * @param t    argument passed to {@code func}; may be null
+	 * @return result of {@code func}; may be null
+	 * @throws E the last failure after retries are exhausted
 	 */
 	private <R, T, E extends Throwable> R doProcessWithRetry(FunctionWithThrowable<R, T, E> func, T t) throws E {
 		R result = retryTemplate.execute(context -> func.apply(t));

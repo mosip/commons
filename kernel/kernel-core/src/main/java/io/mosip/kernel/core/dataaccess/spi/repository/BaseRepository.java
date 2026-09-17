@@ -7,11 +7,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
 /**
- * Central repository marker interface. Captures the domain type to manage as
- * well as the domain type's id type. General purpose is to hold type
- * information as well as being able to discover interfaces that extend this one
- * during classpath scanning for easy Spring bean creation.
- * 
+ * MOSIP JPA repository SPI extending Spring Data {@link JpaRepository} with
+ * create, update, JPQL, and named-query helpers.
+ * <p>
+ * Contract: implementations perform database I/O. Entity arguments must be
+ * non-null. {@code findById} returns null when no row exists. Scan
+ * implementations as Spring beans via {@link NoRepositoryBean} subclasses.
+ * </p>
+ *
  * @author Dharmesh Khandelwal
  * @author Shashank Agrawal
  * @since 1.0.0

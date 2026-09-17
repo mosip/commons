@@ -27,11 +27,11 @@ public class AsyncConfiguration implements AsyncConfigurer {
 	@Autowired
 	EmailNotificationAsyncHandler mailNotifierAsyncHandler;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.scheduling.annotation.AsyncConfigurer#
-	 * getAsyncUncaughtExceptionHandler()
+	/**
+	 * Returns the handler that logs uncaught exceptions from asynchronous mail
+	 * send operations.
+	 *
+	 * @return the {@link EmailNotificationAsyncHandler} bean
 	 */
 	@Override
 	public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {

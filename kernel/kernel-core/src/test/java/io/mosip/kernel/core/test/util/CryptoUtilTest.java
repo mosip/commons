@@ -11,6 +11,7 @@ import java.security.SecureRandom;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.junit.After;
 import org.junit.Test;
 
 import io.mosip.kernel.core.crypto.exception.InvalidKeyException;
@@ -18,6 +19,11 @@ import io.mosip.kernel.core.crypto.exception.NullDataException;
 import io.mosip.kernel.core.util.CryptoUtil;
 
 public class CryptoUtilTest {
+
+	@After
+	public void cleanup() {
+		CryptoUtil.removeThreadLocals();
+	}
 	
 	private SecretKeySpec setSymmetricUp(int length, String algo) throws java.security.NoSuchAlgorithmException {
 		SecureRandom random = new SecureRandom();

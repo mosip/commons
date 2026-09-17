@@ -27,7 +27,12 @@ import io.mosip.kernel.core.crypto.exception.NoSuchAlgorithmException;
 import io.mosip.kernel.core.crypto.exception.NullDataException;
 
 /**
- * Crypto Util for common methods in various module
+ * Base64, fingerprint, and AES-GCM helpers shared across MOSIP crypto modules.
+ * <p>
+ * Contract: static helpers only; this class is not instantiable. Empty inputs
+ * to encode/decode methods return null. AES-GCM uses a random IV appended to
+ * ciphertext. Does not perform MOSIP HTTP.
+ * </p>
  *
  * @author Urvil Joshi
  * @since 1.0.0
@@ -72,12 +77,21 @@ public class CryptoUtil {
     }
 
     /**
-     * Combine data,key and key splitter
+     * Drops this thread's cached {@link SecureRandom} and AES-GCM {@link Cipher}
+     * so pooled threads do not retain them after the request ends.
+     */
+    public static void removeThreadLocals() {
+        SECURE_RANDOM_TL.remove();
+        AES_GCM_CIPHER_TL.remove();
+    }
+
+    /**
+     * Concatenates encrypted key, UTF-8 {@code keySplitter}, and encrypted data.
      *
-     * @param data        encrypted Data
-     * @param key         encrypted Key
-     * @param keySplitter keySplitter
-     * @return byte array consisting data,key and key splitter
+     * @param data        never-null ciphertext
+     * @param key         never-null encrypted session key
+     * @param keySplitter never-null delimiter string
+     * @return never-null concatenated bytes
      */
     public static byte[] combineByteArray(byte[] data, byte[] key, String keySplitter) {
         byte[] keySplitterBytes = keySplitter.getBytes(StandardCharsets.UTF_8);
@@ -89,12 +103,12 @@ public class CryptoUtil {
     }
 
     /**
-     * Get splitter index for detaching key splitter from key and data
+     * Finds the index of {@code keySplitter} inside {@code encryptedData}.
      *
-     * @param encryptedData     whole encrypted data
-     * @param keyDelimiterIndex keySplitterindex initialization value
-     * @param keySplitter       keysplitter value
-     * @return keyDemiliterIndex
+     * @param encryptedData     never-null combined key+splitter+data bytes
+     * @param keyDelimiterIndex search start index, typically 0
+     * @param keySplitter       never-null delimiter to locate
+     * @return index of the splitter, or {@code keyDelimiterIndex} if not found (backward compatible)
      */
     public static int getSplitterIndex(byte[] encryptedData, int keyDelimiterIndex, String keySplitter) {
         byte[] splitterBytes = keySplitter.getBytes(StandardCharsets.UTF_8);
@@ -123,10 +137,11 @@ public class CryptoUtil {
     }
 
     /**
-     * Encodes to BASE64 URL Safe
+     * Encodes {@code data} as URL-safe Base64 without padding.
      *
-     * @param data data to encode
-     * @return encoded data
+     * @param data never-null bytes to encode
+     * @return never-null URL-safe Base64 string
+     * @deprecated since 1.1.5; use {@link #encodeToURLSafeBase64(byte[])}
      */
     @Deprecated(since = "1.1.5", forRemoval = true)
     public static String encodeBase64(byte[] data) {
@@ -134,12 +149,11 @@ public class CryptoUtil {
     }
 
     /**
-     * Encodes to BASE64 
+     * Encodes {@code data} as standard Base64.
      *
-     * @param data data to encode
-     * @return encoded data
-     * @deprecated since 1.1.5, for removal in a future release.
-     *             Use {@link #encodeToPlainBase64(byte[])} instead.
+     * @param data never-null bytes to encode
+     * @return never-null Base64 string
+     * @deprecated since 1.1.5; use {@link #encodeToPlainBase64(byte[])}
      */
     @Deprecated(since = "1.1.5", forRemoval = true)
     public static String encodeBase64String(byte[] data) {
@@ -147,15 +161,11 @@ public class CryptoUtil {
     }
 
     /**
-     * Decodes from BASE64
+     * Decodes URL-safe or standard Base64 text.
      *
-     * @param data data to decode
-     * @return decoded data
-     */
-    /*
-     * This impl was a upgrade from apache coded to java 8 as apache has a single
-     * decoder for decoding both url safe and standard base64 encoding but java 8
-     * has two decoders we are follwing this approach.
+     * @param data Base64 text; null or empty yields null
+     * @return decoded bytes, or null if {@code data} is null or empty
+     * @deprecated since 1.1.5; use {@link #decodeURLSafeBase64(String)} or {@link #decodePlainBase64(String)}
      */
     @Deprecated(since = "1.1.5", forRemoval = true)
     public static byte[] decodeBase64(String data) {
@@ -167,43 +177,67 @@ public class CryptoUtil {
         }
     }
 
+    /**
+     * Encodes {@code data} as URL-safe Base64 without padding.
+     *
+     * @param data bytes to encode; null or empty yields null
+     * @return URL-safe Base64 string, or null if {@code data} is null or empty
+     */
     public static String encodeToURLSafeBase64(byte[] data) {
         if (EmptyCheckUtils.isNullEmpty(data)) return null;
         return URL_SAFE_ENCODER.encodeToString(data);
     }
 
+    /**
+     * Decodes URL-safe Base64 text.
+     *
+     * @param data Base64 text; null or empty yields null
+     * @return decoded bytes, or null if {@code data} is null or empty
+     */
     public static byte[] decodeURLSafeBase64(String data) {
         if (EmptyCheckUtils.isNullEmpty(data)) return null;
         return URL_SAFE_DECODER.decode(data);
     }
 
+    /**
+     * Encodes {@code data} as standard Base64.
+     *
+     * @param data bytes to encode; null or empty yields null
+     * @return Base64 string, or null if {@code data} is null or empty
+     */
     public static String encodeToPlainBase64(byte[] data) {
         if (EmptyCheckUtils.isNullEmpty(data)) return null;
         return STD_ENCODER.encodeToString(data);
     }
 
+    /**
+     * Decodes standard Base64 text.
+     *
+     * @param data Base64 text; null or empty yields null
+     * @return decoded bytes, or null if {@code data} is null or empty
+     */
     public static byte[] decodePlainBase64(String data) {
         if (EmptyCheckUtils.isNullEmpty(data)) return null;
         return STD_DECODER.decode(data);
     }
 
     /**
-     * Compute Fingerprint of a key
+     * Computes a colon-separated hex fingerprint of UTF-8 {@code data} plus optional metadata.
      *
-     * @param data     key data
-     * @param metaData metadata related to key
-     * @return fingerprint
+     * @param data     never-null key material as text
+     * @param metaData optional metadata concatenated before hashing; may be null or empty
+     * @return never-null colon-separated hex digest
      */
     public static String computeFingerPrint(String data, String metaData) {
         return computeFingerPrint(data.getBytes(), metaData);
     }
 
     /**
-     * Compute Fingerprint of a key
+     * Computes a colon-separated hex fingerprint of {@code data} plus optional metadata.
      *
-     * @param data     key data
-     * @param metaData metadata related to key
-     * @return fingerprint
+     * @param data     never-null key material
+     * @param metaData optional metadata concatenated before hashing; may be null or empty
+     * @return never-null colon-separated hex digest
      */
     public static String computeFingerPrint(byte[] data, String metaData) {
         byte[] combined = EmptyCheckUtils.isNullEmpty(metaData) ? ArrayUtils.addAll(data) :
@@ -212,7 +246,15 @@ public class CryptoUtil {
         return Hex.encodeHexString(HMACUtils.generateHash(combined)).replaceAll("..(?!$)", "$0:");
     }
 
-    // Added below method for temporarily to fix the build issue causing cross dependency between core & keymanager service.
+    /**
+     * AES-GCM encrypts {@code data} with {@code key}; the random IV is appended to the ciphertext.
+     *
+     * @param key  never-null AES secret key
+     * @param data never-null, never-empty plaintext
+     * @return never-null ciphertext with IV suffix
+     * @throws io.mosip.kernel.core.crypto.exception.NullDataException when {@code data} is null or empty
+     * @throws io.mosip.kernel.core.crypto.exception.InvalidKeyException when encryption fails
+     */
     public static byte[] symmetricEncrypt(SecretKey key, byte[] data) {
         Objects.requireNonNull(key, CryptoExceptionCodeConstants.INVALID_KEY_EXCEPTION.getErrorMessage());
         if (Objects.isNull(data) || data.length == 0) {
@@ -237,6 +279,12 @@ public class CryptoUtil {
         }
     }
 
+    /**
+     * Fills a random IV of {@code blockSize} bytes.
+     *
+     * @param blockSize IV length in bytes
+     * @return never-null IV
+     */
     private static byte[] generateIV(int blockSize) {
         byte[] byteIV = new byte[blockSize];
         SECURE_RANDOM_TL.get().nextBytes(byteIV);

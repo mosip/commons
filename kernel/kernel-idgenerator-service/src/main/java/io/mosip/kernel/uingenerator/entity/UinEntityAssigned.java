@@ -11,8 +11,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * Entity class for uin bean
- * 
+ * Assigned UIN row in schema {@code kernel}, table {@code uin_assigned}.
+ *
  * @author Dharmesh Khandelwal
  * @author Megha Tanga
  * @since 1.0.0
@@ -41,6 +41,11 @@ public class UinEntityAssigned extends BaseEntity {
 	@Column(name = "uin_status", nullable = false, length = 16)
 	private String status;
 
+	/**
+	 * Copies identifier, status, and audit columns from a pool {@link UinEntity}.
+	 *
+	 * @param uinEntity source pool row
+	 */
 	public UinEntityAssigned(UinEntity uinEntity) {
 		super(
 				uinEntity.getCreatedBy(),

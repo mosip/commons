@@ -17,16 +17,22 @@ spec:
   gateways:
   - {{ .Values.istio.gateway }}
   http:
+  {{- $prefixes := list .Values.istio.prefix }}
+  {{- if .Values.istio.extraPrefixes }}
+  {{- $prefixes = concat $prefixes .Values.istio.extraPrefixes }}
+  {{- end }}
+  {{- range $prefixes }}
   - match:
       - uri:
-          prefix: {{ .Values.istio.prefix }}
+          prefix: {{ . }}
     route:
     - destination:
-        host: {{ template "common.names.fullname" . }}
+        host: {{ template "common.names.fullname" $ }}
         port:
-          number: {{ .Values.service.port }}
+          number: {{ $.Values.service.port }}
     headers:
       request:
         set:
           x-forwarded-proto: https
+  {{- end }}
 {{- end }}

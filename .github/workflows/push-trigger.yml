@@ -68,20 +68,11 @@ jobs:
     strategy:
       matrix:
         include:
-          - SERVICE_LOCATION: 'kernel/kernel-ridgenerator-service'
-            SERVICE_NAME: 'kernel-ridgenerator-service'
-            BUILD_ARTIFACT: 'commons'
           - SERVICE_LOCATION: 'kernel/kernel-notification-service'
             SERVICE_NAME: 'kernel-notification-service'
             BUILD_ARTIFACT: 'commons'
-          - SERVICE_LOCATION: 'kernel/kernel-pridgenerator-service'
-            SERVICE_NAME: 'kernel-pridgenerator-service'
-            BUILD_ARTIFACT: 'commons'
           - SERVICE_LOCATION: 'kernel/kernel-idgenerator-service'
             SERVICE_NAME: 'kernel-idgenerator-service'
-            BUILD_ARTIFACT: 'commons'
-          - SERVICE_LOCATION: 'kernel/kernel-salt-generator'
-            SERVICE_NAME: 'kernel-salt-generator'
             BUILD_ARTIFACT: 'commons'
           - SERVICE_LOCATION: 'kernel/kernel-config-server'
             SERVICE_NAME: 'kernel-config-server'

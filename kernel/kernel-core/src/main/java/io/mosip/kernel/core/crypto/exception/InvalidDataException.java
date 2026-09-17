@@ -9,7 +9,12 @@ package io.mosip.kernel.core.crypto.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * {@link Exception} to be thrown when data is invalid
+ * Unchecked exception thrown when cryptographic input data is invalid.
+ * <p>
+ * Contract: raised by {@link io.mosip.kernel.core.crypto.spi.CryptoCoreSpec}
+ * implementations for malformed plaintext, ciphertext, or AAD. Prefer
+ * {@link io.mosip.kernel.core.crypto.constant.CryptoExceptionCodeConstants}.
+ * </p>
  * 
  * @author Urvil Joshi
  * @since 1.0.0

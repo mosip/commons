@@ -30,7 +30,7 @@ import io.mosip.kernel.emailnotification.constant.MailNotifierArgumentErrorConst
 import io.mosip.kernel.emailnotification.constant.SmsExceptionConstant;
 
 /**
- * Central exception handler for mail-notifier service.
+ * Central exception handler for the notification service (email and SMS).
  * 
  * @author Sagar Mahapatra
  * @since 1.0.0
@@ -44,15 +44,20 @@ public class EmailNotificationApiExceptionHandler {
 	@Autowired
 	private ObjectMapper objectMapper;
 	
+	/**
+	 * Separator used when concatenating a validation field name and its default
+	 * message.
+	 */
 	private static final String WHITESPACE = " ";
 
 	/**
-	 * This method handles {@link InvalidArgumentsException}.
+	 * Handles {@link InvalidArgumentsException} raised when email arguments fail
+	 * validation.
 	 * 
-	 * @param httpServletRequest the servlet request.
-	 * @param exception          the exception.
-	 * @return the error response.
-	 * @throws IOException when the response is not mapped.
+	 * @param httpServletRequest the servlet request
+	 * @param exception          the exception
+	 * @return the error response wrapped in {@link ResponseWrapper}
+	 * @throws IOException when the cached request body cannot be read
 	 */
 	@ExceptionHandler(InvalidArgumentsException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> mailNotifierArgumentsValidation(
@@ -63,12 +68,13 @@ public class EmailNotificationApiExceptionHandler {
 	}
 	
 	/**
-	 * This method handles MethodArgumentNotValidException type of exceptions.
+	 * Handles {@link MethodArgumentNotValidException} from Bean Validation on SMS
+	 * request fields.
 	 * 
 	 * @param httpServletRequest the request
-	 * @param exception          The exception
-	 * @return The response entity.
-	 * @throws IOException the IOException
+	 * @param exception          the exception
+	 * @return the error response wrapped in {@link ResponseWrapper}
+	 * @throws IOException when the cached request body cannot be read
 	 */
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> smsInvalidInputsFound(
@@ -86,10 +92,13 @@ public class EmailNotificationApiExceptionHandler {
 	}
 
 	/**
-	 * @param httpServletRequest the servlet request.
-	 * @param exception          the exception.
-	 * @return the error response.
-	 * @throws IOException when the response is not mapped.
+	 * Handles {@link HttpMessageNotReadableException} when the request body cannot
+	 * be parsed.
+	 *
+	 * @param httpServletRequest the servlet request
+	 * @param exception          the exception
+	 * @return the error response wrapped in {@link ResponseWrapper}
+	 * @throws IOException when the cached request body cannot be read
 	 */
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<ResponseWrapper<ServiceError>> onHttpMessageNotReadable(
@@ -103,10 +112,13 @@ public class EmailNotificationApiExceptionHandler {
 	}
 
 	/**
-	 * @param httpServletRequest the servlet request.
-	 * @param exception          the exception.
-	 * @return the error response.
-	 * @throws IOException when the response is not mapped.
+	 * Handles uncaught {@link Exception} and {@link RuntimeException} and returns
+	 * an internal-server-error payload.
+	 *
+	 * @param httpServletRequest the servlet request
+	 * @param exception          the exception
+	 * @return the error response wrapped in {@link ResponseWrapper}
+	 * @throws IOException when the cached request body cannot be read
 	 */
 	@ExceptionHandler(value = { Exception.class, RuntimeException.class })
 	public ResponseEntity<ResponseWrapper<ServiceError>> defaultErrorHandler(
@@ -120,11 +132,12 @@ public class EmailNotificationApiExceptionHandler {
 	}
 
 	/**
-	 * This method sets the error response.
+	 * Copies request {@code id} and {@code version} from the cached servlet body
+	 * onto the error {@link ResponseWrapper}.
 	 * 
-	 * @param httpServletRequest the servlet request.
-	 * @return the error response wrapped in {@link ResponseWrapper}.
-	 * @throws IOException when the response is not mapped.
+	 * @param httpServletRequest the servlet request
+	 * @return the error response wrapper with id and version set when present
+	 * @throws IOException when the cached request body cannot be parsed
 	 */
 	private ResponseWrapper<ServiceError> setErrors(HttpServletRequest httpServletRequest) throws IOException {
 		ResponseWrapper<ServiceError> responseWrapper = new ResponseWrapper<>();

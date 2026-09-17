@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import java.nio.charset.Charset;
 import java.util.UUID;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,6 +19,11 @@ public class UUIDGeneratorUtilsTest {
 
 	@Before
 	public void setUp() throws Exception {
+	}
+
+	@After
+	public void cleanup() {
+		UUIDUtils.removeThreadLocals();
 	}
 
 	@Test

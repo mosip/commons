@@ -5,11 +5,17 @@ import static org.junit.Assert.assertNotNull;
 
 import java.security.NoSuchAlgorithmException;
 
+import org.junit.After;
 import org.junit.Test;
 
 import io.mosip.kernel.core.util.HMACUtils2;
 
 public class HMACUtilsTest {
+
+	@After
+	public void cleanup() {
+		HMACUtils2.removeThreadLocals();
+	}
 
 	@Test
 	public void testGenerateHash() throws NoSuchAlgorithmException{

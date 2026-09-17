@@ -51,6 +51,8 @@ public class EmailNotificationController {
      * @param mailContent Body content of the email. Mandatory.
      * @param attachments Files to be attached with the email. Optional.
      * @return A response wrapper containing the delivery status.
+     * @throws io.mosip.kernel.emailnotification.exception.InvalidArgumentsException if mail arguments fail validation
+     * @throws io.mosip.kernel.emailnotification.exception.NotificationException if the MIME message cannot be built
      */
     @ResponseFilter
     @Operation(summary = "Endpoint for sending a email", description = "Endpoint for sending a email", tags = { "emailnotification" })
@@ -59,7 +61,7 @@ public class EmailNotificationController {
             @ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
-    @PreAuthorize("hasAnyRole(@authorizedRoles.getPostemailsend())")
+    @PreAuthorize("@authorizedRoles.hasEmailSendAccess()")
     @PostMapping(value = "/email/send", consumes = "multipart/form-data")
     public @ResponseBody ResponseWrapper<ResponseDto> sendEMail(String[] mailTo, String[] mailCc, String mailSubject,
                                                                 String mailContent, MultipartFile[] attachments) {

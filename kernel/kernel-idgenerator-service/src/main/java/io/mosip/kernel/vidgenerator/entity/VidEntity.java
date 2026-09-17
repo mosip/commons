@@ -13,8 +13,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * Entity class for vid bean
- * 
+ * Unused or assigned VID row in schema {@code kernel}, table {@code vid}.
+ *
  * @author Urvil Joshi
  * @since 1.0.0
  *
@@ -42,7 +42,7 @@ public class VidEntity extends BaseEntity {
 	private String status;
 
 	/**
-	 * The field createdtimes
+	 * UTC expiry after which the VID may be marked {@code EXPIRED}.
 	 */
 	@Column(name = "expiry_dtimes")
 	private LocalDateTime vidExpiry;

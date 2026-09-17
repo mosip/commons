@@ -73,9 +73,15 @@ public class UinGeneratorImpl implements UinGenerator {
 	private final String uinDefaultStatus;
 	private SecureRandom random;
 
+	/**
+	 * Minutes between {@link SecureRandom} re-initialization ({@code mosip.idgen.uin.secure-random-reinit-frequency}).
+	 */
 	@Value("${mosip.idgen.uin.secure-random-reinit-frequency:45}")
 	private int reInitSecureRandomFrequency;
 
+	/**
+	 * Schedules periodic {@link SecureRandom} re-initialization.
+	 */
 	@PostConstruct
 	private void init() {
 		ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
@@ -85,13 +91,22 @@ public class UinGeneratorImpl implements UinGenerator {
 				TimeUnit.MINUTES.toMillis(reInitSecureRandomFrequency));
 	}
 
+	/**
+	 * Periodic task that replaces the {@link SecureRandom} instance.
+	 */
 	private class ReInitSecureRandomTask implements Runnable {
 
+		/**
+		 * Re-initializes the random generator.
+		 */
 		public void run() {
 			initializeSecureRandom();
 		}
 	}
 
+	/**
+	 * Creates a new {@link SecureRandom} instance.
+	 */
 	private void initializeSecureRandom() {
 		random = new SecureRandom();
 	}
@@ -112,10 +127,10 @@ public class UinGeneratorImpl implements UinGenerator {
 	// private static final RandomDataGenerator RANDOM_DATA_GENERATOR = new
 	// RandomDataGenerator();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.mosip.kernel.core.spi.idgenerator.IdGenerator#generateId()
+	/**
+	 * Generates {@code noOfUINToGenerate} unused UINs that pass {@link UinFilterUtil} and persist them.
+	 *
+	 * @param noOfUINToGenerate number of unused UINs to create
 	 */
 	@Override
 	public void generateId(long noOfUINToGenerate) {

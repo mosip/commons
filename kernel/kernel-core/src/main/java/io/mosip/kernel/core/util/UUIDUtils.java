@@ -10,19 +10,34 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * This class is used to generate UUID of Type 5.
+ * RFC 4122 type-5 UUID generation from a namespace and name.
+ * <p>
+ * Contract: uses SHA-256 then truncates to 128 bits with version 5 and IETF
+ * variant bits. {@code namespace} and {@code name} must be non-null. Does not
+ * perform I/O.
+ * </p>
  *
  * @author Bal Vikash Sharma
- *
  */
 public class UUIDUtils {
 
     private static final Charset UTF8 = StandardCharsets.UTF_8;
 
-    // RFC 4122 namespaces
+    /**
+     * RFC 4122 DNS namespace UUID.
+     */
     public static final UUID NAMESPACE_DNS = UUID.fromString("6ba7b810-9dad-11d1-80b4-00c04fd430c8");
+    /**
+     * RFC 4122 URL namespace UUID.
+     */
     public static final UUID NAMESPACE_URL = UUID.fromString("6ba7b811-9dad-11d1-80b4-00c04fd430c8");
+    /**
+     * RFC 4122 OID namespace UUID.
+     */
     public static final UUID NAMESPACE_OID = UUID.fromString("6ba7b812-9dad-11d1-80b4-00c04fd430c8");
+    /**
+     * RFC 4122 X.500 namespace UUID.
+     */
     public static final UUID NAMESPACE_X500 = UUID.fromString("6ba7b814-9dad-11d1-80b4-00c04fd430c8");
 
     // Precompute namespace bytes once (hot path win)
@@ -34,35 +49,40 @@ public class UUIDUtils {
     // Thread-local digests (MessageDigest is NOT thread-safe)
     private static final ThreadLocal<MessageDigest> SHA256_TL = ThreadLocal.withInitial(() -> getDigest("SHA-256"));
 
+    /**
+     * Prevents instantiation of this utility.
+     */
     private UUIDUtils() {
         super();
     }
 
     /**
-     * This method takes UUID <code>namespace</code> and a <code>name</code> and
-     * generate Type 5 UUID.
+     * Drops this thread's cached SHA-256 digest so pooled threads do not retain it
+     * after the request ends.
+     */
+    public static void removeThreadLocals() {
+        SHA256_TL.remove();
+    }
+
+    /**
+     * Builds a type-5 UUID from UTF-8 bytes of {@code name} under {@code namespace}.
      *
-     * @param namespace is the {@link UUID}
-     * @param name      for which UUID needs to be generated.
-     * @return type 5 UUID as per given <code>namespace</code> and <code>name</code>
-     * @throws NullPointerException when either <code>namespace</code> or
-     *                              <code>name</code> is null.
+     * @param namespace never-null RFC 4122 namespace UUID
+     * @param name      never-null name string
+     * @return never-null type-5 UUID
+     * @throws NullPointerException when {@code namespace} or {@code name} is null
      */
     public static UUID getUUID(UUID namespace, String name) {
         return getUUIDFromBytes(namespace, Objects.requireNonNull(name, "name == null").getBytes(UTF8));
     }
 
     /**
+     * Builds a type-5 UUID from {@code name} bytes under {@code namespace}.
      *
-     * This method takes UUID <code>namespace</code> and a <code>name</code> as a
-     * byte array and generate Type 5 UUID.
-     *
-     * @param namespace is the {@link UUID}
-     * @param name      is a byte array
-     * @return type 5 UUID as per given <code>namespace</code> and <code>name</code>
-     *
-     * @throws NullPointerException when either <code>namespace</code> or
-     *                              <code>name</code> is null.
+     * @param namespace never-null RFC 4122 namespace UUID
+     * @param name      never-null name bytes
+     * @return never-null type-5 UUID
+     * @throws NullPointerException when {@code namespace} or {@code name} is null
      */
     public static UUID getUUIDFromBytes(UUID namespace, byte[] name) {
         byte[] nsBytes = fastNamespaceBytes(Objects.requireNonNull(namespace, "namespace is null"));
@@ -82,6 +102,12 @@ public class UUIDUtils {
         return fromBytes(sha1Bytes);
     }
 
+    /**
+     * Converts the first 16 digest bytes into a {@link UUID}.
+     *
+     * @param data never-null digest at least 16 bytes long
+     * @return never-null UUID
+     */
     private static UUID fromBytes(byte[] data) {
         // Based on the private UUID(bytes[]) constructor
         long msb = 0;
@@ -94,6 +120,12 @@ public class UUIDUtils {
         return new UUID(msb, lsb);
     }
 
+    /**
+     * Encodes a UUID as 16 big-endian bytes.
+     *
+     * @param uuid never-null UUID
+     * @return never-null 16-byte array
+     */
     private static byte[] toBytes(UUID uuid) {
         // inverted logic of fromBytes()
         byte[] out = new byte[16];
@@ -106,6 +138,12 @@ public class UUIDUtils {
         return out;
     }
 
+    /**
+     * Returns precomputed bytes for RFC 4122 namespace constants.
+     *
+     * @param ns namespace UUID; may be a custom value
+     * @return cached bytes for well-known namespaces, otherwise null
+     */
     private static byte[] fastNamespaceBytes(UUID ns) {
         // Identity compares are fine; constants are interned singletons
         if (ns == NAMESPACE_DNS)  return NS_DNS_BYTES;
@@ -115,6 +153,13 @@ public class UUIDUtils {
         return null;
     }
 
+    /**
+     * Returns a {@link MessageDigest} for {@code algo}.
+     *
+     * @param algo never-null JCA algorithm name
+     * @return never-null digest instance
+     * @throws io.mosip.kernel.core.exception.NoSuchAlgorithmException when the algorithm is unavailable
+     */
     private static MessageDigest getDigest(String algo) {
         try {
             return MessageDigest.getInstance(algo);

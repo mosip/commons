@@ -56,25 +56,45 @@ import java.util.concurrent.Executor;
 @EnableAsync
 public class SmsExecutorConfig {
 
+    /**
+     * Minimum number of threads kept in the pool. Bound to
+     * {@code sms.executor.core-pool-size}.
+     */
     @Value("${sms.executor.core-pool-size:1}")
     private int corePoolSize;
 
+    /**
+     * Maximum number of threads allowed under load. Bound to
+     * {@code sms.executor.max-pool-size}.
+     */
     @Value("${sms.executor.max-pool-size:2}")
     private int maxPoolSize;
 
+    /**
+     * Capacity of the queue that holds pending SMS tasks. Bound to
+     * {@code sms.executor.queue-capacity}.
+     */
     @Value("${sms.executor.queue-capacity:500}")
     private int queueCapacity;
 
+    /**
+     * Idle time in seconds before extra threads are terminated. Bound to
+     * {@code sms.executor.keep-alive-seconds}.
+     */
     @Value("${sms.executor.keep-alive-seconds:20}")
     private int keepAliveSeconds;
 
+    /**
+     * Seconds to wait for in-flight tasks on shutdown. Bound to
+     * {@code sms.executor.await-termination-seconds}.
+     */
     @Value("${sms.executor.await-termination-seconds:20}")
     private int awaitTerminationSeconds;
 
     /**
-     * Prefix to name each thread in this executor.
-     * Helps in log tracing and debugging concurrent tasks.
-     * Default: SmsSender-
+     * Prefix for worker thread names. Bound to
+     * {@code sms.executor.thread-name-prefix}. Helps in log tracing and debugging
+     * concurrent tasks. Default: SmsSender-
      */
     @Value("${sms.executor.thread-name-prefix:SmsSender-}")
     private String threadNamePrefix;

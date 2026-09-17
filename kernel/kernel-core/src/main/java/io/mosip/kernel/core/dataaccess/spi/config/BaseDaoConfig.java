@@ -17,13 +17,16 @@ import jakarta.persistence.EntityManagerFactory;
 
 
 /**
- * This class declares the interface for @Bean methods related to data access
- * and will be processed by the Spring container to generate bean definitions
- * and service requests for those beans at runtime
- * 
+ * Spring bean-definition SPI for MOSIP JPA data sources and entity-manager
+ * factories.
+ * <p>
+ * Contract: implementations are {@code @Configuration} classes processed at
+ * startup. Beans perform JDBC/JPA wiring; call is automatic via Spring. Do
+ * not invoke these methods as ordinary APIs.
+ * </p>
+ *
  * @author Dharmesh Khandelwal
  * @since 1.0.0
- *
  */
 public interface BaseDaoConfig {
 

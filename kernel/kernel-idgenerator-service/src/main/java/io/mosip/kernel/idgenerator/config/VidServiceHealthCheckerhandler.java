@@ -1,3 +1,13 @@
+/**
+ * Retired Vert.x health-check handler for the VID fetch API.
+ * <p>
+ * The type is fully commented out. Live health checks use
+ * {@link UinServiceHealthCheckerhandler} mounted by {@code HttpServerVerticle}.
+ * </p>
+ *
+ * @author Urvil Joshi
+ * @since 1.0.0
+ */
 /*
  * package io.mosip.kernel.idgenerator.config;
  * 

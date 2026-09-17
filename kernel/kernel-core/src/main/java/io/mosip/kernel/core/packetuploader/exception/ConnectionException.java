@@ -3,8 +3,12 @@ package io.mosip.kernel.core.packetuploader.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * Exception to be thrown when Connection is not made with server
- * 
+ * Unchecked exception thrown when the SFTP server cannot be reached.
+ * <p>
+ * Contract: wraps network, timeout, or handshake failures from
+ * {@link io.mosip.kernel.core.packetuploader.spi.PacketUploader#createSFTPChannel(Object)}.
+ * </p>
+ *
  * @author Urvil Joshi
  * @since 1.0.0
  */

@@ -12,7 +12,11 @@ package io.mosip.kernel.core.crypto.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * {@link Exception} to be thrown when key is null
+ * Unchecked exception thrown when a cryptographic key argument is null.
+ * <p>
+ * Contract: raised when a public, private, or secret key is null. Prefer
+ * {@link io.mosip.kernel.core.crypto.constant.CryptoExceptionCodeConstants#NULL_KEY_EXCEPTION}.
+ * </p>
  * 
  * @author Urvil Joshi
  * @since 1.0.0

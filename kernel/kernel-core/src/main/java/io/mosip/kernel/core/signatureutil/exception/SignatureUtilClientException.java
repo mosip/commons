@@ -6,9 +6,13 @@ import io.mosip.kernel.core.exception.BaseUncheckedException;
 import io.mosip.kernel.core.exception.ServiceError;
 
 /**
- * 
- * @author Srinivasan
+ * Unchecked exception carrying keymanager {@link ServiceError} entries from a failed signature call.
+ * <p>
+ * Contract: {@link #getList()} is never null after construction. Raised when
+ * the remote service returns MOSIP errors instead of a signature.
+ * </p>
  *
+ * @author Srinivasan
  */
 public class SignatureUtilClientException extends BaseUncheckedException {
 
@@ -18,21 +22,23 @@ public class SignatureUtilClientException extends BaseUncheckedException {
 	private static final long serialVersionUID = 8152409863253682472L;
 
 	/**
-	 * This variable holds the MosipErrors list.
+	 * MOSIP service errors from the keymanager response; never null after construction.
 	 */
 	private final List<ServiceError> list;
 
 	/**
-	 * @param list The error list.
+	 * Constructs the exception with the remote error list.
+	 *
+	 * @param list never-null list of {@link ServiceError}; may be empty
 	 */
 	public SignatureUtilClientException(List<ServiceError> list) {
 		this.list = list;
 	}
 
 	/**
-	 * Getter for error list.
-	 * 
-	 * @return The error list.
+	 * Returns the remote MOSIP errors.
+	 *
+	 * @return never-null error list supplied at construction
 	 */
 	public List<ServiceError> getList() {
 		return list;

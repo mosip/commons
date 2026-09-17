@@ -56,25 +56,45 @@ import java.util.concurrent.Executor;
 @EnableAsync
 public class MailExecutorConfig {
 
+    /**
+     * Minimum number of threads kept in the pool. Bound to
+     * {@code mail.executor.core-pool-size}.
+     */
     @Value("${mail.executor.core-pool-size:2}")
     private int corePoolSize;
 
+    /**
+     * Maximum number of threads allowed under load. Bound to
+     * {@code mail.executor.max-pool-size}.
+     */
     @Value("${mail.executor.max-pool-size:3}")
     private int maxPoolSize;
 
+    /**
+     * Capacity of the queue that holds pending email tasks. Bound to
+     * {@code mail.executor.queue-capacity}.
+     */
     @Value("${mail.executor.queue-capacity:1000}")
     private int queueCapacity;
 
+    /**
+     * Idle time in seconds before extra threads are terminated. Bound to
+     * {@code mail.executor.keep-alive-seconds}.
+     */
     @Value("${mail.executor.keep-alive-seconds:30}")
     private int keepAliveSeconds;
 
+    /**
+     * Seconds to wait for in-flight tasks on shutdown. Bound to
+     * {@code mail.executor.await-termination-seconds}.
+     */
     @Value("${mail.executor.await-termination-seconds:30}")
     private int awaitTerminationSeconds;
 
     /**
-     * Prefix to name each thread in this executor.
-     * Helps in log tracing and debugging concurrent tasks.
-     * Default: MailSender-
+     * Prefix for worker thread names. Bound to
+     * {@code mail.executor.thread-name-prefix}. Helps in log tracing and debugging
+     * concurrent tasks. Default: MailSender-
      */
     @Value("${mail.executor.thread-name-prefix:MailSender-}")
     private String threadNamePrefix;

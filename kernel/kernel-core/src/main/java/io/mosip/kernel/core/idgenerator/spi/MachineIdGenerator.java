@@ -1,18 +1,25 @@
 package io.mosip.kernel.core.idgenerator.spi;
 
 /**
- * Interface that provides methods to generate Machine ID.
- * 
+ * Generates a MOSIP registration-client machine identifier.
+ * <p>
+ * Contract: implementations typically increment a sequence in masterdata or
+ * {@code mosip_kernel}. Call when registering a new machine. Returned id is
+ * never null.
+ * </p>
+ *
+ * @param <T> generated machine-id type, typically {@link String}
  * @author Sagar Mahapatra
  * @since 1.0.0
- *
- * @param <T> the id type.
  */
 public interface MachineIdGenerator<T> {
 	/**
-	 * This method generates machine ID.
-	 * 
-	 * @return the generated machine ID.
+	 * Generates the next machine identifier.
+	 * <p>
+	 * Contract: may perform database I/O.
+	 * </p>
+	 *
+	 * @return never-null machine id
 	 */
 	public T generateMachineId();
 

@@ -7,8 +7,12 @@ package io.mosip.kernel.core.logger.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * {@link Exception} to be thrown when pattern is empty or null
- * 
+ * Unchecked exception thrown when a logger filename date pattern is null or
+ * empty.
+ * <p>
+ * Contract: raised during Logback XML / MOSIP logger configuration.
+ * </p>
+ *
  * @author Urvil Joshi
  * @since 1.0.0
  */
@@ -20,8 +24,10 @@ public class EmptyPatternException extends BaseUncheckedException {
 	private static final long serialVersionUID = 105555532L;
 
 	/**
-	 * @param errorCode    unique exception code
-	 * @param errorMessage exception message
+	 * Constructs the exception with MOSIP error code and message.
+	 *
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
 	 */
 	public EmptyPatternException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);

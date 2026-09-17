@@ -5,52 +5,56 @@ import java.util.List;
 import io.mosip.kernel.core.datamapper.model.IncludeDataField;
 
 /**
- * DataMapperBuilder interface for building a configured {@link DataMapper}
- * 
- * @author Urvil Joshi
+ * Fluent builder for a configured {@link DataMapper}.
+ * <p>
+ * Contract: each method returns {@code this}. Call {@link #build()} when
+ * configuration is complete. Does not perform I/O.
+ * </p>
  *
+ * @param <S> source bean type
+ * @param <D> destination bean type
+ * @author Urvil Joshi
  * @since 1.0.0
- * 
  * @see DataMapper
  */
 public interface DataMapperBuilder<S, D> {
 
 	/**
-	 * Configure map null in mapping
-	 * 
-	 * @param mapNulls map null true or not
-	 * @return {@link DataMapperBuilder}
+	 * Configures whether null source values are copied onto the destination.
+	 *
+	 * @param mapNulls {@code true} to map nulls
+	 * @return this builder; never null
 	 */
 	DataMapperBuilder<S, D> mapNulls(boolean mapNulls);
 
 	/**
-	 * Configure byDefault in mapping
-	 * 
-	 * @param byDefault byDefault true or not
-	 * @return {@link DataMapperBuilder}
+	 * Configures whether unlisted fields are mapped by default.
+	 *
+	 * @param byDefault {@code true} to map remaining fields automatically
+	 * @return this builder; never null
 	 */
 	DataMapperBuilder<S, D> byDefault(boolean byDefault);
 
 	/**
-	 * Configure included field in mapping
-	 * 
-	 * @param includeFields list of included fields
-	 * @return {@link DataMapperBuilder}
+	 * Restricts mapping to the given source/destination field pairs.
+	 *
+	 * @param includeFields never-null list; may be empty
+	 * @return this builder; never null
 	 */
 	DataMapperBuilder<S, D> includeFields(List<IncludeDataField> includeFields);
 
 	/**
-	 * Configure excluded fields in mapping
-	 * 
-	 * @param excludeFields list of excluded fields
-	 * @return {@link DataMapperBuilder}
+	 * Excludes the given destination field names from mapping.
+	 *
+	 * @param excludeFields never-null list of field names; may be empty
+	 * @return this builder; never null
 	 */
 	DataMapperBuilder<S, D> excludeFields(List<String> excludeFields);
 
 	/**
-	 * Build a Configured {@link DataMapper} instance
-	 * 
-	 * @return {@link DataMapper}
+	 * Builds a configured {@link DataMapper}.
+	 *
+	 * @return never-null mapper
 	 */
 	DataMapper<S, D> build();
 

@@ -3,11 +3,14 @@ package io.mosip.kernel.core.qrcodegenerator.exception;
 import io.mosip.kernel.core.exception.BaseCheckedException;
 
 /**
- * A base class which covers the range of exceptions which may occur when
- * encoding a QRcode using the Writer framework.
- * 
- * @author Urvil Joshi
+ * Checked exception thrown when QR-code encoding fails.
+ * <p>
+ * Contract: wraps Writer-framework failures from
+ * {@link io.mosip.kernel.core.qrcodegenerator.spi.QrCodeGenerator}. Callers
+ * must handle or declare this exception.
+ * </p>
  *
+ * @author Urvil Joshi
  * @since 1.0.0
  */
 public class QrcodeGenerationException extends BaseCheckedException {
@@ -18,11 +21,11 @@ public class QrcodeGenerationException extends BaseCheckedException {
 	private static final long serialVersionUID = 473719335574042491L;
 
 	/**
-	 * Constructor with errorCode, errorMessage, and rootCause
-	 * 
-	 * @param errorCode    The error code for this exception
-	 * @param errorMessage The error message for this exception
-	 * @param rootCause    Cause of this exception
+	 * Constructs the exception with MOSIP error code, message, and cause.
+	 *
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
+	 * @param rootCause    underlying Writer / I/O cause; may be null
 	 */
 	public QrcodeGenerationException(String errorCode, String errorMessage, Throwable rootCause) {
 		super(errorCode, errorMessage, rootCause);

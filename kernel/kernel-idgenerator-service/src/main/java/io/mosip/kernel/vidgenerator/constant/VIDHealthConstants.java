@@ -1,5 +1,8 @@
 package io.mosip.kernel.vidgenerator.constant;
 
+/**
+ * JSON field names used by Vert.x VID health-check responses.
+ */
 public class VIDHealthConstants {
 	/**
 	 * The string field ERROR

@@ -1,38 +1,44 @@
 package io.mosip.kernel.core.deviceprovidermanager.spi;
 
 /**
- * @author M1046464
+ * Creates, updates, and validates MOSIP device providers.
+ * <p>
+ * Contract: implementations typically perform HTTP or database I/O against
+ * masterdata. DTOs must be non-null and satisfy bean validation. Call from
+ * partner / device-provider APIs.
+ * </p>
  *
- * @param <T> -
- * @param <D>
- * @param <S>
- * @param <U>
+ * @param <ResponseDto>           validation-result type
+ * @param <ValidateDeviceDto>     device-validation request type
+ * @param <DeviceProviderDto>     create request type
+ * @param <DeviceProviderExtnDto> created/updated provider type
+ * @param <DeviceProviderPutDto>  update request type
+ * @author M1046464
  */
-
 public interface DeviceProviderService<ResponseDto, ValidateDeviceDto, DeviceProviderDto, DeviceProviderExtnDto, DeviceProviderPutDto> {
 
 	/**
-	 * Validate device providers.
+	 * Validates that the given devices belong to registered providers.
 	 *
-	 * @param validateDeviceDto the validate device dto
-	 * @return {@link ResponseDto}
+	 * @param validateDeviceDto never-null validation request
+	 * @return never-null validation result
 	 */
 	public ResponseDto validateDeviceProviders(ValidateDeviceDto validateDeviceDto);
 
 
 	/**
-	 * Method to create Device Provider
-	 * 
-	 * @param dto Device Provider dto from user
-	 * @return DeviceProviderExtnDto device Provider dto which has created
+	 * Creates a device provider.
+	 *
+	 * @param dto never-null create payload
+	 * @return never-null created provider including generated identifiers
 	 */
 	public DeviceProviderExtnDto createDeviceProvider(DeviceProviderDto dto);
 
 	/**
-	 * Method to update Device Provider
-	 * 
-	 * @param dto Device Provider dto from user
-	 * @return DeviceProviderExtnDto device Provider dto which has updated
+	 * Updates an existing device provider.
+	 *
+	 * @param dto never-null update payload identifying the provider
+	 * @return never-null updated provider
 	 */
 	public DeviceProviderExtnDto updateDeviceProvider(DeviceProviderPutDto dto);
 }

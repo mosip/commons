@@ -23,15 +23,14 @@ import io.mosip.kernel.core.exception.IOException;
 import io.mosip.kernel.core.util.constant.ZipUtilConstants;
 
 /**
- * Utilities for Zip and UnZip operations.
- * 
- * Provide Zip utility for usage across the application to Zip and unZip Files
- * and Directory
- * 
- * Size of the files and Folders according to business needs
- * 
- * This ZipUtil will not applicable for RAR or 7Z etc.
- * 
+ * Deflate/inflate byte arrays and extract zip archives with zip-slip guards.
+ * <p>
+ * Contract: static helpers only; this class is not instantiable. Does not
+ * handle RAR or 7z. {@link #unZipDirectory(String, String)} is deprecated;
+ * prefer the overload with entry/size/ratio thresholds. Does not perform MOSIP
+ * HTTP.
+ * </p>
+ *
  * @author Megha Tanga
  * @since 1.0.0
  */
@@ -45,14 +44,11 @@ public class ZipUtils {
 	}
 
 	/**
-	 * Method used for zipping a Byte Array
-	 * 
-	 * @param input pass Byte Array want to zip it
-	 * 
-	 * @return zipped Byte Array
-	 * 
-	 * @throws IOException when file unable to read
-	 * 
+	 * Deflates {@code input} with {@link Deflater#DEFLATED}.
+	 *
+	 * @param input never-null bytes to compress
+	 * @return never-null compressed bytes
+	 * @throws IOException when the deflate stream cannot be written
 	 */
 	public static byte[] zipByteArray(byte[] input) throws IOException {
 		byte[] byReturn = null;
@@ -81,17 +77,12 @@ public class ZipUtils {
 	}
 
 	/**
-	 * Method used for unzipping a zipped Byte Array
-	 * 
-	 * @param input pass zipped Byte Array want to unzip it
-	 * 
-	 * @return returned unzipped Byte Array
-	 * 
-	 * @throws IOException         when file unable to read
-	 * 
-	 * @throws DataFormatException Attempting to unzip file that is not zipped
-	 * 
-	 * @see io.mosip.kernel.core.exception.IOException
+	 * Inflates a previously {@link #zipByteArray(byte[])} payload.
+	 *
+	 * @param input never-null deflated bytes
+	 * @return never-null original bytes
+	 * @throws IOException         when inflate I/O fails
+	 * @throws DataFormatException when {@code input} is not valid deflate data
 	 */
 	public static byte[] unzipByteArray(byte[] input) throws IOException {
 		byte[] byReturn = null;
@@ -332,20 +323,16 @@ public class ZipUtils {
 	 */
 
 	/**
-	 * Extracts a zip file specified by the zipFilePath to a directory specified by
-	 * destDirectory (will be created if does not exists)
-	 * 
-	 * @param zipFilePath   input zipped directory example: zipFilePath =
-	 *                      "D:\\Testfiles\\test.zip";
-	 * @param destDirectory output unziped Directory example : outputUnZipDir =
-	 *                      "D:\\Testfiles\\unZipDir";
-	 * 
-	 * @return true zip file extracted in given directory
-	 * 
-	 * @throws FileNotFoundException when file is not found
-	 * @throws IOException           when file unable to read
+	 * Extracts {@code zipFilePath} into {@code destDirectory} with a basic zip-slip check.
+	 *
+	 * @param zipFilePath   never-null, never-blank path to the zip file
+	 * @param destDirectory never-null destination directory (created if missing)
+	 * @return {@code true} if extraction completed
+	 * @throws FileNotFoundException when the zip file is missing
+	 * @throws IOException           when extraction I/O fails
+	 * @throws Exception             zip-slip or other archive errors
+	 * @deprecated use {@link #unZipDirectory(String, String, int, long, int)} with thresholds
 	 */
-
 	@Deprecated
 	public static boolean unZipDirectory(String zipFilePath, String destDirectory) throws Exception {
 		File destDir = new File(destDirectory);
@@ -400,6 +387,19 @@ public class ZipUtils {
 		return true;
 	}
 
+	/**
+	 * Extracts {@code zipFilePath} with zip-slip protection and bomb thresholds.
+	 *
+	 * @param zipFilePath      never-null, never-blank path to the zip file
+	 * @param destDirectory    never-null destination under the current working directory
+	 * @param thresholdEntries maximum number of zip entries allowed
+	 * @param thresholdSize    maximum total uncompressed bytes allowed
+	 * @param thresholdRatio   maximum uncompressed/compressed ratio per entry
+	 * @return {@code true} if extraction completed
+	 * @throws FileNotFoundException when the zip file is missing
+	 * @throws IOException           when extraction I/O fails
+	 * @throws Exception             zip-slip, threshold, or other archive errors
+	 */
 	public static boolean unZipDirectory(String zipFilePath, String destDirectory, int thresholdEntries,
 			long thresholdSize, int thresholdRatio) throws Exception {
 		zipSlipCheck(destDirectory);
@@ -461,6 +461,15 @@ public class ZipUtils {
 		return true;
 	}
 
+	/**
+	 * Resolves {@code zipEntry} under {@code targetDir} and rejects path traversal.
+	 *
+	 * @param zipEntry  never-null archive entry
+	 * @param targetDir never-null extraction root
+	 * @return never-null normalized path inside {@code targetDir}
+	 * @throws IOException  when path resolution fails
+	 * @throws ZipException when the entry would escape {@code targetDir}
+	 */
 	public static Path zipSlipProtect(ZipEntry zipEntry, Path targetDir) throws IOException, ZipException {
 		Path targetDirResolved = targetDir.resolve(zipEntry.getName());
 		Path normalizePath = targetDirResolved.normalize();
@@ -471,6 +480,12 @@ public class ZipUtils {
 		return normalizePath;
 	}
 
+	/**
+	 * Rejects {@code destDirectory} that is not under the current working directory.
+	 *
+	 * @param destDirectory never-null destination path
+	 * @throws java.io.IOException when the path cannot be canonicalized or traverses outside CWD
+	 */
 	private static void zipSlipCheck(String destDirectory) throws java.io.IOException {
 		String canonicalDestinationPath = new File(destDirectory).getCanonicalPath();
 		String canonicalCurrentPath = new File(".").getCanonicalPath();

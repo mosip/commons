@@ -29,6 +29,9 @@ public enum VIDGeneratorErrorCode {
 	 * INTERNAL_SERVER_ERROR
 	 */
 	INTERNAL_SERVER_ERROR("KER-VID-005", "Internal Server Error"),
+	/**
+	 * Failure while retrieving properties from Spring Cloud Config.
+	 */
 	CONFIG_SERVER_FETCH_FAILED("KER-VID-006", "Error in retrieving from config server");
 
 	/**

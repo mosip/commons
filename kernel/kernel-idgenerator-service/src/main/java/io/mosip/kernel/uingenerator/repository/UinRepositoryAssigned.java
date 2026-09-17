@@ -13,8 +13,8 @@ import io.mosip.kernel.uingenerator.entity.UinEntity;
 import io.mosip.kernel.uingenerator.entity.UinEntityAssigned;
 
 /**
- * Repository having function to count free uins and find an unused uin
- * 
+ * Repository for assigned UINs in {@code kernel.uin_assigned}.
+ *
  * @author Dharmesh Khandelwal
  * @since 1.0.0
  *

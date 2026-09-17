@@ -1,4 +1,4 @@
-CREATE ROLE :dbunameuser WITH
-    INHERIT
-    LOGIN
-    PASSWORD :dbuserpwd;
+CREATE ROLE regdeviceuser WITH 
+	INHERIT
+	LOGIN
+	PASSWORD :dbuserpwd;

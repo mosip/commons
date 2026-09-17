@@ -8,10 +8,19 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
 
+/**
+ * Writes a JSON access log line after a Vert.x HTTP request completes.
+ */
 public class AccessLogHandler {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AccessLogHandler.class);
 	
+	/**
+	 * Logs method, path, remote host, status, and elapsed time for {@code context}.
+	 *
+	 * @param context       completed routing context
+	 * @param startTSmillis request start time in epoch milliseconds
+	 */
 	public void log(final RoutingContext context, long startTSmillis) {
 
 		final HttpServerRequest request = context.request();

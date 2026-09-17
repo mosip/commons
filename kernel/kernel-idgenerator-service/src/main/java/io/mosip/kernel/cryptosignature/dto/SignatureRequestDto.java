@@ -13,8 +13,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Crypto-Manager-Request model
- * 
+ * Request body sent to keymanager when signing an ID-generator HTTP response.
+ *
  * @author Urvil Joshi
  *
  * @since 1.0.0
@@ -26,6 +26,9 @@ import lombok.NoArgsConstructor;
 public class SignatureRequestDto {
 
 	
+	/**
+	 * Payload that keymanager must sign.
+	 */
 	@ApiModelProperty(notes = "Data to sign", required = true)
 	// @NotBlank(message = CryptomanagerConstant.INVALID_REQUEST)
 	private String data;

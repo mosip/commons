@@ -3,6 +3,7 @@
  */
 package io.mosip.kernel.uingenerator.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,6 +33,8 @@ import io.vertx.ext.web.RoutingContext;
 import org.springframework.beans.factory.annotation.Value;
 
 /**
+ * Issues unused UINs, updates status, and transfers assigned rows to {@code uin_assigned}.
+ *
  * @author Dharmesh Khandelwal
  * @author Megha Tanga
  * @author Urvil Joshi
@@ -61,13 +64,18 @@ public class UinServiceImpl implements UinService {
 	@Autowired
 	private VertxAuthenticationProvider authHandler;
 	
+	/**
+	 * Page size for assigned-UIN transfer ({@code mosip.kernel.uin.page.size}).
+	 */
 	@Value("${mosip.kernel.uin.page.size:50000}")
 	private int pageSize;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.mosip.kernel.core.uingenerator.service.UinGeneratorService#getId()
+	/**
+	 * Marks one {@code UNUSED} UIN as {@code ISSUED} and returns it.
+	 *
+	 * @param routingContext Vert.x routing context of the fetch request
+	 * @return issued UIN
+	 * @throws UinNotFoundException when no unused UIN remains
 	 */
 	@Transactional
 	@Override
@@ -87,12 +95,15 @@ public class UinServiceImpl implements UinService {
 
 	
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.mosip.kernel.uingenerator.service.UinGeneratorService#updateUinStatus(io.
-	 * vertx.core.json.JsonObject)
+	/**
+	 * Updates UIN status from {@code ISSUED} to {@code ASSIGNED} or {@code UNUSED}.
+	 *
+	 * @param uinAck         entity carrying the UIN and target status
+	 * @param routingContext Vert.x routing context of the update request
+	 * @return updated UIN and status
+	 * @throws UinNotFoundException       when the UIN is unknown
+	 * @throws UinNotIssuedException      when the UIN is not {@code ISSUED}
+	 * @throws UinStatusNotFoundException when the target status is invalid
 	 */
 	@Override
 	public UinStatusUpdateReponseDto updateUinStatus(UinEntity uinAck, RoutingContext routingContext) {
@@ -124,6 +135,9 @@ public class UinServiceImpl implements UinService {
 		return uinResponseDto;
 	}
 
+	/**
+	 * Copies {@code ISSUED} rows to {@code uin_assigned} and deletes them from {@code uin}.
+	 */
 	@Transactional(transactionManager = "transactionManager")
 	@Override
 	public void transferUin() {
@@ -133,12 +147,24 @@ public class UinServiceImpl implements UinService {
 	    uinRepository.deleteAll(uinEntities);
 	}
 
+	/**
+	 * Maps pool entities to assigned-table entities.
+	 *
+	 * @param uinEntities source pool rows
+	 * @return assigned-table copies
+	 */
 	private List<UinEntityAssigned> convertUinEntitiesListToUinEntitiesAssignedList(List<UinEntity> uinEntities) {
 		return uinEntities.stream()
 				.map(UinEntityAssigned::new)
 				.collect(Collectors.toList());
 	}
 
+	/**
+	 * Returns whether {@code uin} exists in {@code uin_assigned}.
+	 *
+	 * @param uin identifier to look up
+	 * @return {@code true} when present
+	 */
 	@Override
 	public boolean uinExist(String uin) {
 	Optional<UinEntityAssigned> uinEntityAssignedOptional=uinRepositoryAssigned.findById(uin);

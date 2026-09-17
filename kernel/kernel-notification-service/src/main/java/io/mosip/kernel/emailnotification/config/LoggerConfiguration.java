@@ -20,10 +20,10 @@ public class LoggerConfiguration {
 	}
 
 	/**
-	 * This method sets the logger target, and returns appender.
+	 * Returns a MOSIP SLF4J {@link Logger} for the given class.
 	 * 
-	 * @param clazz the class.
-	 * @return the appender.
+	 * @param clazz the class requesting the logger
+	 * @return the logger instance
 	 */
 	public static Logger logConfig(Class<?> clazz) {
 		return Logfactory.getSlf4jLogger(clazz);

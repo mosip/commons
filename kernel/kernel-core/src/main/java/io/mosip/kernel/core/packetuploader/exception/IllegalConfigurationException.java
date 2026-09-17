@@ -3,8 +3,12 @@ package io.mosip.kernel.core.packetuploader.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * Exception to be thrown when Configuration are not valid
- * 
+ * Unchecked exception thrown when SFTP server configuration values are invalid.
+ * <p>
+ * Contract: raised when host, port, user, or key settings fail validation
+ * before a channel is opened.
+ * </p>
+ *
  * @author Urvil Joshi
  * @since 1.0.0
  */

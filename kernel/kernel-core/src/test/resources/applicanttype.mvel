@@ -1,0 +1,153 @@
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.Period;
+import java.util.List;
+import java.time.ZoneId;
+import java.time.temporal.ValueRange;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+String CHILD = "CHL";
+String ADULT = "ADL";
+String MALE = 'MLE';
+String FEMALE = 'FLE';
+String NonResident = "FR";
+String Resident = "NFR";
+String Others = "OTH";
+String DATE_PATTERN = "yyyy/MM/dd";
+String regex = "^\\d{4}(\\/)(((0){0,1}[1-9])|((1)[0-2]))(\\/)([0-2][0-9]|(3)[0-1])$";
+Pattern pattern = Pattern.compile(regex);
+
+def isUpdateFlow(identity) {
+  Object val = identity.getOrDefault('_flow', null);
+  return (val == 'Update') ? true : false;
+}
+
+def getResidenceStatus(identity) {
+    if(identity.containsKey('residenceStatusCode')) {
+        return identity.getOrDefault('residenceStatusCode', null);
+    }
+
+    if(identity.containsKey('residenceStatus')) {
+        Object val = identity.getOrDefault('residenceStatus', null);
+        return val == null ? null :
+            (val instanceof String ? ; (String)val : (String) ((List)val).get(0).value);
+    }
+
+    return null;
+}
+
+def getGenderType(identity) {
+    if(identity.containsKey('genderCode')) {
+        return identity.getOrDefault('genderCode', null);
+    }
+
+    if(identity.containsKey('gender')) {
+        Object val = identity.getOrDefault('gender', null);
+        return val == null ? null :
+            (val instanceof String ? ; (String)val : (String) ((List)val).get(0).value);
+    }
+
+    return null;
+}
+
+def getAgeCode(identity) {
+    if(ageGroups == null || !identity.containsKey('dateOfBirth'))
+        return null;
+
+    String dob = identity.get('dateOfBirth');
+    if(!pattern.matcher(dob).matches())
+        return null;
+        
+    LocalDate date = LocalDate.parse(dob, DateTimeFormatter.ofPattern(DATE_PATTERN));
+    LocalDate currentDate = LocalDate.now(ZoneId.of("UTC"));
+    
+    if(date.isAfter(currentDate)) { return 'KER-MSD-151'; }
+    
+    int ageInYears = Period.between(date, currentDate).getYears();
+    
+    String ageGroup = null;
+    for(String groupName : ageGroups.keySet()) {
+        String[] range = ((String)ageGroups.get(groupName)).split('-');
+        if(ValueRange.of(Long.valueOf(range[0]), Long.valueOf(range[1])).isValidIntValue(ageInYears)) {
+            ageGroup = groupName;
+        }
+    }
+
+   return ageGroup == null ? null : (ageGroup == 'INFANT' ? CHILD : ADULT);
+}
+
+
+def getBioExceptionFlag(identity) {
+    if(!identity.containsKey('isBioException')) { return false; }
+    Object val = identity.getOrDefault('isBioException', null);
+    return (val == 'true') ? true : (( val == 'false' ) ? false : null);
+}
+
+def getApplicantType() {
+  String itc = getResidenceStatus(identity);
+  String genderType = getGenderType(identity);
+  String ageCode = getAgeCode(identity);
+  boolean isBioExPresent = getBioExceptionFlag(identity);
+  
+  if( ageCode == 'KER-MSD-151' ) { return "KER-MSD-151"; }
+  
+  if(itc == null || genderType == null || ageCode == null || isBioExPresent == null ) { 
+      return isUpdateFlow(identity) ? "000" : "KER-MSD-147";
+  }
+  
+  System.out.println(itc + " - " + genderType + " - " + ageCode + " - " + isBioExPresent);
+
+  if (itc == NonResident && genderType == MALE && ageCode == CHILD && !isBioExPresent) {
+    return "001";
+  } else if (itc == NonResident && genderType == MALE && ageCode == ADULT && !isBioExPresent) {
+    return "002";
+  } else if (itc == Resident && genderType == MALE && ageCode == CHILD && !isBioExPresent) {
+    return "003";
+  } else if (itc == Resident && genderType == MALE && ageCode == ADULT && !isBioExPresent) {
+    return "004";
+  } else if (itc == NonResident && genderType == FEMALE && ageCode == CHILD && !isBioExPresent) {
+    return "005";
+  } else if (itc == NonResident && genderType == FEMALE && ageCode == ADULT && !isBioExPresent) {
+    return "006";
+  } else if (itc == Resident && genderType == FEMALE && ageCode == CHILD && !isBioExPresent) {
+    return "007";
+  } else if (itc == Resident && genderType == FEMALE && ageCode == ADULT && !isBioExPresent) {
+    return "008";
+  } else if (itc == NonResident && genderType == Others && ageCode == CHILD && !isBioExPresent) {
+    return "005";
+  } else if (itc == NonResident && genderType == Others && ageCode == ADULT && !isBioExPresent) {
+    return "006";
+  } else if (itc == Resident && genderType == Others && ageCode == CHILD && !isBioExPresent) {
+    return "007";
+  } else if (itc == Resident && genderType == Others && ageCode == ADULT && !isBioExPresent) {
+    return "008";
+  } else if (itc == NonResident && genderType == MALE && ageCode == CHILD && isBioExPresent) {
+    return "009";
+  } else if (itc == NonResident && genderType == MALE && ageCode == ADULT && isBioExPresent) {
+    return "010";
+  } else if (itc == Resident && genderType == MALE && ageCode == CHILD && isBioExPresent) {
+    return "011";
+  } else if (itc == Resident && genderType == MALE && ageCode == ADULT && isBioExPresent) {
+    return "012";
+  } else if (itc == NonResident && genderType == FEMALE && ageCode == CHILD && isBioExPresent) {
+    return "013";
+  } else if (itc == NonResident && genderType == FEMALE && ageCode == ADULT && isBioExPresent) {
+    return "014";
+  } else if (itc == Resident && genderType == FEMALE && ageCode == CHILD && isBioExPresent) {
+    return "015";
+  } else if (itc == Resident && genderType == FEMALE && ageCode == ADULT && isBioExPresent) {
+    return "016";
+  } else if (itc == NonResident && genderType == Others && ageCode == CHILD && isBioExPresent) {
+    return "013";
+  } else if (itc == NonResident && genderType == Others && ageCode == ADULT && isBioExPresent) {
+    return "014";
+  } else if (itc == Resident && genderType == Others && ageCode == CHILD && isBioExPresent) {
+    return "015";
+  } else if (itc == Resident && genderType == Others && ageCode == ADULT && isBioExPresent) {
+    return "016";
+  }
+  return "000";
+}

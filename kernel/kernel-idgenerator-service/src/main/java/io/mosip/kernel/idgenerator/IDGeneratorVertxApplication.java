@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import io.mosip.kernel.idgenerator.util.Utility;
 import jakarta.annotation.PostConstruct;
+import io.mosip.kernel.idgenerator.util.Utility;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +22,7 @@ import io.mosip.kernel.core.templatemanager.spi.TemplateManager;
 import io.mosip.kernel.core.util.FileUtils;
 import io.mosip.kernel.idgenerator.config.ConfigUrlsBuilder;
 import io.mosip.kernel.idgenerator.config.HibernateDaoConfig;
+import io.mosip.kernel.idgenerator.verticle.HttpServerVerticle;
 import io.mosip.kernel.templatemanager.velocity.builder.TemplateManagerBuilderImpl;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorConstant;
 import io.mosip.kernel.uingenerator.verticle.UinGeneratorVerticle;
@@ -48,8 +49,14 @@ import io.vertx.micrometer.MicrometerMetricsOptions;
 import io.vertx.micrometer.VertxPrometheusOptions;
 
 /**
- * ID Generator Vertx Application
- * 
+ * Sole entry point for the ID generator HTTP service (RID + UIN/VID).
+ * <p>
+ * Loads configuration from Spring Cloud Config, deploys UIN/VID worker
+ * verticles, and publishes pool-init events on the Vert.x event bus.
+ * {@link HttpServerVerticle} serves {@code /v1/idgenerator} (UIN/VID) and
+ * {@code /v1/ridgenerator} (RID).
+ * </p>
+ *
  * @author Urvil Joshi
  * @since 1.0.0
  *
@@ -60,13 +67,13 @@ public class IDGeneratorVertxApplication {
 	private static Vertx vertx;
 
 	/**
-	 * The field for Logger
+	 * Vert.x logger bound after the SLF4J delegate factory is installed.
 	 * 
 	 */
 	private static Logger LOGGER;
 
 	/**
-	 * Server context path.
+	 * Servlet context path used when rendering Swagger UI JSON ({@code server.servlet.path}).
 	 */
 	@Value("${server.servlet.path}")
 	private String contextPath;
@@ -76,7 +83,7 @@ public class IDGeneratorVertxApplication {
 	private static final long DEFAULT_UIN_JOB_FREQUENCY=10000L;
 
 	/**
-	 * This method create or update swagger json for swagger ui after service start.
+	 * Merges {@code server.servlet.path} into the Swagger JSON template after the bean is constructed.
 	 */
 	@PostConstruct
 	private void swaggerJSONFileUpdate() {
@@ -96,6 +103,9 @@ public class IDGeneratorVertxApplication {
 		}
 	}
 
+	/**
+	 * Publishes {@link EventType#INITPOOL} so {@code VidPoolCheckerVerticle} fills the VID pool.
+	 */
 	@PostConstruct
 	private static void initVIDPool() {
 		LOGGER.info("Service will be started after pooling vids..");
@@ -105,9 +115,9 @@ public class IDGeneratorVertxApplication {
 	}
 
 	/**
-	 * main method for the application
-	 * 
-	 * @param args the argument
+	 * Installs the Vert.x SLF4J log delegate and loads Cloud Config before deploying verticles.
+	 *
+	 * @param args unused command-line arguments
 	 */
 	public static void main(String[] args) {
 		System.setProperty("vertx.logger-delegate-factory-class-name", SLF4JLogDelegateFactory.class.getName());
@@ -116,10 +126,11 @@ public class IDGeneratorVertxApplication {
 	}
 
 	/**
-	 * This method retrieves and loads the configuration fetched from
-	 * spring-config-server. If retrievation succeeds, then the local properties
-	 * present are over-ridden. If retrievation fails, the local properties are used
-	 * for running the application.
+	 * Fetches properties from Spring Cloud Config and overlays them onto system properties.
+	 * <p>
+	 * On success or failure the local JVM properties remain as fallback and
+	 * {@link #startApplication()} is invoked.
+	 * </p>
 	 */
 	private static void loadPropertiesFromConfigServer() {
 		Vertx vertx = Vertx.vertx();
@@ -162,9 +173,7 @@ public class IDGeneratorVertxApplication {
 	}
 
 	/**
-	 * This method sets the Application Context, deploys the verticles.
-	 * 
-	 * @throws InterruptedException
+	 * Builds the Hibernate Spring context and deploys VID and UIN worker verticles.
 	 */
 	private static void startApplication() {
 		ApplicationContext context = new AnnotationConfigApplicationContext(HibernateDaoConfig.class);
@@ -190,6 +199,9 @@ public class IDGeneratorVertxApplication {
 		vertx.setTimer(getUinInitJobFrequency(), handler -> initUINPool());
 	}
 
+	/**
+	 * Publishes {@link UinGeneratorConstant#GENERATE_UIN} on {@link UinGeneratorConstant#UIN_GENERATOR_ADDRESS}.
+	 */
 	@PostConstruct
 	private static void initUINPool() {
 		LOGGER.info("Service will be started after pooling vids..");
@@ -199,6 +211,13 @@ public class IDGeneratorVertxApplication {
 	}
 
 
+	/**
+	 * Deploys {@code verticle} with {@code opts} and logs success or failure.
+	 *
+	 * @param verticle the verticle to deploy
+	 * @param opts     deployment options (worker vs event-loop)
+	 * @param vertx    Vert.x instance
+	 */
 	private static void deploy(Verticle verticle, DeploymentOptions opts, Vertx vertx) {
 		vertx.deployVerticle(verticle, opts, res -> {
 			if (res.failed()) {
@@ -211,14 +230,18 @@ public class IDGeneratorVertxApplication {
 	}
 	
 	/**
-	 * Get VID init job frequency from system properties or default.
+	 * Reads {@code mosip.kernel.vid.init-job-frequency} or {@link #DEFAULT_VID_JOB_FREQUENCY}.
+	 *
+	 * @return delay in milliseconds before the first VID pool-init event
 	 */
 	private static long getVidInitJobFrequency() {
 		return Utility.getLongProperty("mosip.kernel.vid.init-job-frequency", DEFAULT_VID_JOB_FREQUENCY);
 	}
 
 	/**
-	 * Get UIN init job frequency from system properties or default.
+	 * Reads {@code mosip.kernel.uin.init-job-frequency} or {@link #DEFAULT_UIN_JOB_FREQUENCY}.
+	 *
+	 * @return delay in milliseconds before the first UIN pool-init event
 	 */
 	private static long getUinInitJobFrequency() {
 		return Utility.getLongProperty("mosip.kernel.uin.init-job-frequency", DEFAULT_UIN_JOB_FREQUENCY);

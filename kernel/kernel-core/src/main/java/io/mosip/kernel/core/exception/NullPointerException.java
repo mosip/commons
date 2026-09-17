@@ -1,8 +1,12 @@
 package io.mosip.kernel.core.exception;
 
 /**
- * Exception to be thrown when a null argument found.
- * 
+ * Unchecked MOSIP wrapper thrown when a required argument is null.
+ * <p>
+ * Contract: raised by kernel utilities when a never-null parameter is null.
+ * Treat as a client-input error.
+ * </p>
+ *
  * @author Urvil Joshi
  * @author Ritesh Sinha
  * @author Sagar Mahapatra
@@ -15,19 +19,21 @@ public class NullPointerException extends BaseUncheckedException {
 	private static final long serialVersionUID = 784321102100630614L;
 
 	/**
-	 * Constructor with errorCode, and rootCause
-	 * 
-	 * @param errorCode    The error code for this exception
-	 * @param errorMessage The error message for this exception
+	 * Constructs the exception with MOSIP error code and message.
+	 *
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
 	 */
 	public NullPointerException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);
 	}
 
 	/**
-	 * @param arg0 Error Code Corresponds to Particular Exception
-	 * @param arg1 Message providing the specific context of the error.
-	 * @param arg2 Cause of exception
+	 * Constructs the exception with MOSIP error code, message, and cause.
+	 *
+	 * @param arg0 never-null MOSIP error code
+	 * @param arg1 never-null human-readable description
+	 * @param arg2 underlying cause; may be null
 	 */
 	public NullPointerException(String arg0, String arg1, Throwable arg2) {
 		super(arg0, arg1, arg2);

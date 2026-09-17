@@ -3,19 +3,33 @@ package io.mosip.kernel.core.bioapi.model;
 import lombok.Data;
 
 /**
- * The Class QualityScore.
- * 
+ * Quality-check result for a single biometric sample.
+ * <p>
+ * Contract: returned by
+ * {@link io.mosip.kernel.core.bioapi.spi.IBioApi#checkQuality}. {@code score}
+ * is a 0–100 percentage. {@code analyticsInfo} may be null. Does not perform
+ * I/O.
+ * </p>
+ *
  * @author Sanjay Murali
  */
 @Data
 public class QualityScore {
 	
-	/** The score - 0 - 100 score that represents quality as a percentage */
+	/**
+	 * Quality as a percentage in the range 0–100.
+	 */
 	private float score; 
 	
-	/** Added for backward compatibility 0.7 */
+	/**
+	 * Provider-internal unscaled score retained for Bio API 0.7; {@code 0} if
+	 * unused.
+	 */
 	private long internalScore;
 	
-	/** The analytics info - detailed breakdown and other information */
+	/**
+	 * Optional analytics breakdown from the quality checker; may be null or
+	 * empty.
+	 */
 	private KeyValuePair[] analyticsInfo;
 }

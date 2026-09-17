@@ -7,10 +7,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Used to process filter on request and response for a REST service.
- * 
- * @author Bal Vikash Sharma
+ * Marks a controller method so MOSIP HTTP request/response wrapping is applied.
+ * <p>
+ * Contract: place on REST handler methods. The runtime filter wraps the return
+ * value in {@link ResponseWrapper} and unwraps {@link RequestWrapper} bodies.
+ * Retention is runtime; target is methods only.
+ * </p>
  *
+ * @author Bal Vikash Sharma
+ * @see RequestWrapper
+ * @see ResponseWrapper
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

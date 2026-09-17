@@ -1,12 +1,14 @@
 package io.mosip.kernel.core.util;
 
 /**
- * This class provides functions to generate Verhoeff's checksum and validate
- * Verhoeff's checksum compliance
- * 
+ * Verhoeff checksum generation and validation for numeric MOSIP identifiers.
+ * <p>
+ * Contract: {@code num} must be a non-null string of digits. Validation expects
+ * the check digit as the last character. Does not perform I/O.
+ * </p>
+ *
  * @author Dharmesh Khandelwal
  * @since 1.0.0
- *
  */
 public final class ChecksumUtils {
 
@@ -37,11 +39,10 @@ public final class ChecksumUtils {
 	private static int[] inv = { 0, 4, 3, 2, 1, 5, 6, 7, 8, 9 };
 
 	/**
-	 * Generates the Verhoeff checksum digit for the provided numeric string.
-	 * 
-	 * @param num Number input
-	 * @return The generated Verhoeff checksum digit for the provided numeric
-	 *         string.
+	 * Computes the Verhoeff check digit for {@code num} without appending it.
+	 *
+	 * @param num never-null digit string (without check digit)
+	 * @return never-null single-digit check character
 	 */
 	public static String generateChecksumDigit(String num) {
 		int c = 0;
@@ -53,11 +54,10 @@ public final class ChecksumUtils {
 	}
 
 	/**
-	 * Validates that an entered number is Verhoeff checksum compliant. Make sure
-	 * the check digit is the last one.
-	 * 
-	 * @param num The numeric string data for Verhoeff checksum compliance check.
-	 * @return true if the provided number is Verhoeff checksum compliant.
+	 * Returns whether {@code num} (including its last check digit) is Verhoeff-valid.
+	 *
+	 * @param num never-null digit string whose last character is the check digit
+	 * @return {@code true} if the checksum is compliant
 	 */
 	public static boolean validateChecksum(String num) {
 		int c = 0;

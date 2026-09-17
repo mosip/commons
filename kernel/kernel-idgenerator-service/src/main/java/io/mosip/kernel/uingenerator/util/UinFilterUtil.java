@@ -77,6 +77,9 @@ public class UinFilterUtil {
 	@Value("#{'${mosip.kernel.uin.restricted-numbers}'.split(',')}")
 	private List<String> restrictedAdminDigits;
 
+	/**
+	 * Digits a UIN must not start with ({@code mosip.kernel.uin.not-start-with}).
+	 */
 	@Value("#{'${mosip.kernel.uin.not-start-with}'.split(',')}")
 	private List<String> notStartWith;
 
@@ -140,6 +143,9 @@ public class UinFilterUtil {
 	 */
 	private Pattern conjugativeEvenDigitsLimitPattern = null;
 
+	/**
+	 * Compiles repeating-digit, repeating-block, and even-adjacent regexes from configured limits.
+	 */
 	@PostConstruct
 	public void initializeRegEx() {
 		String repeatingRegEx = "(\\d)\\d{0," + (repeatingLimit - 1) + "}\\1";

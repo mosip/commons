@@ -16,31 +16,94 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @author Ramadurai Pandian
+ * CBEFF Biometric Data Block (BDB) metadata for a {@link BIR}.
+ * <p>
+ * Contract: describes type, subtype, quality, purpose, validity window, and
+ * algorithm registry ids. All fields may be null. Use {@link BDBInfoBuilder}
+ * to construct and {@link #toBDBInfo()} to marshal to JAXB.
+ * </p>
  *
+ * @author Ramadurai Pandian
+ * @see BIR
  */
 @Data
 @NoArgsConstructor
 public class BDBInfo {
 
+	/**
+	 * Optional challenge-response bytes used with encrypted BDBs; may be null.
+	 */
 	private byte[] challengeResponse;
+	/**
+	 * Unique index of this BDB within the CBEFF; may be null.
+	 */
 	private String index;
+	/**
+	 * Whether the BDB payload is encrypted; may be null if unspecified.
+	 */
 	private Boolean encryption;
+	/**
+	 * UTC creation timestamp; may be null.
+	 */
 	private LocalDateTime creationDate;
+	/**
+	 * Inclusive start of validity; may be null.
+	 */
 	private LocalDateTime notValidBefore;
+	/**
+	 * Inclusive end of validity; may be null.
+	 */
 	private LocalDateTime notValidAfter;
+	/**
+	 * Biometric types such as Finger, Iris, Face; may be null or empty.
+	 */
 	private List<SingleType> type;
+	/**
+	 * Subtypes such as Left or Right Index; may be null or empty.
+	 */
 	private List<String> subtype;
+	/**
+	 * Processed level (raw, intermediate, processed); may be null.
+	 */
 	private ProcessedLevelType level;
+	/**
+	 * Product registry identifier; may be null.
+	 */
 	private RegistryIDType product;
+	/**
+	 * Capture or match purpose; may be null.
+	 */
 	private PurposeType purpose;
+	/**
+	 * Quality score and algorithm; may be null.
+	 */
 	private QualityType quality;
+	/**
+	 * BDB format registry identifier; may be null.
+	 */
 	private RegistryIDType format;
+	/**
+	 * Capture-device registry identifier; may be null.
+	 */
 	private RegistryIDType captureDevice;
+	/**
+	 * Feature-extraction algorithm registry identifier; may be null.
+	 */
 	private RegistryIDType featureExtractionAlgorithm;
+	/**
+	 * Comparison algorithm registry identifier; may be null.
+	 */
 	private RegistryIDType comparisonAlgorithm;
+	/**
+	 * Compression algorithm registry identifier; may be null.
+	 */
 	private RegistryIDType compressionAlgorithm;
 
+	/**
+	 * Builds BDB metadata from the given builder.
+	 *
+	 * @param bDBInfoBuilder never-null builder
+	 */
 	public BDBInfo(BDBInfoBuilder bDBInfoBuilder) {
 		this.challengeResponse = bDBInfoBuilder.challengeResponse;
 		this.index = bDBInfoBuilder.index;
@@ -141,6 +204,13 @@ public class BDBInfo {
 		return compressionAlgorithm;
 	}
 
+	/**
+	 * Fluent builder for {@link BDBInfo}.
+	 * <p>
+	 * Contract: each {@code with*} method returns {@code this}. Fields default
+	 * to null.
+	 * </p>
+	 */
 	public static class BDBInfoBuilder {
 		private byte[] challengeResponse;
 		private String index;
@@ -160,6 +230,12 @@ public class BDBInfo {
 		private RegistryIDType comparisonAlgorithm;
 		private RegistryIDType compressionAlgorithm;
 
+		/**
+		 * Sets challenge-response bytes for encrypted BDBs.
+		 *
+		 * @param challengeResponse bytes; may be null
+		 * @return this builder
+		 */
 		public BDBInfoBuilder withChallengeResponse(byte[] challengeResponse) {
 			this.challengeResponse = challengeResponse;
 			return this;
@@ -251,6 +327,11 @@ public class BDBInfo {
 
 	}
 
+	/**
+	 * Converts this instance to the JAXB {@link BDBInfoType}.
+	 *
+	 * @return never-null JAXB type; null fields omitted
+	 */
 	public BDBInfoType toBDBInfo() {
 		BDBInfoType bDBInfoType = new BDBInfoType();
 		challengeIndexFormatPopolation(bDBInfoType);
@@ -278,6 +359,11 @@ public class BDBInfo {
 		return bDBInfoType;
 	}
 
+	/**
+	 * Copies feature-extraction and comparison algorithm ids onto the JAXB type.
+	 *
+	 * @param bDBInfoType never-null target JAXB type
+	 */
 	private void featureExtractionComparissionAlgoPopolation(BDBInfoType bDBInfoType) {
 		if (getFeatureExtractionAlgorithm() != null) {
 			bDBInfoType.setFeatureExtractionAlgorithm(getFeatureExtractionAlgorithm());
@@ -287,6 +373,11 @@ public class BDBInfo {
 		}
 	}
 
+	/**
+	 * Copies type, subtype, and processed level onto the JAXB type.
+	 *
+	 * @param bDBInfoType never-null target JAXB type
+	 */
 	private void typeSubTypeLevelPopolation(BDBInfoType bDBInfoType) {
 		if (getType() != null) {
 			bDBInfoType.setType(getType());
@@ -299,6 +390,11 @@ public class BDBInfo {
 		}
 	}
 
+	/**
+	 * Copies challenge response, index, and format onto the JAXB type.
+	 *
+	 * @param bDBInfoType never-null target JAXB type
+	 */
 	private void challengeIndexFormatPopolation(BDBInfoType bDBInfoType) {
 		if (getChallengeResponse() != null && getChallengeResponse().length > 0) {
 			bDBInfoType.setChallengeResponse(getChallengeResponse());
@@ -311,6 +407,11 @@ public class BDBInfo {
 		}
 	}
 
+	/**
+	 * Copies creation and validity timestamps onto the JAXB type.
+	 *
+	 * @param bDBInfoType never-null target JAXB type
+	 */
 	private void bdbTimePopolation(BDBInfoType bDBInfoType) {
 		if (getCreationDate() != null) {
 			bDBInfoType.setCreationDate(getCreationDate());

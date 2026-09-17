@@ -7,7 +7,7 @@ if [ $# -ge 1 ] ; then
 fi
 
 NS=kernel
-CHART_VERSION=0.0.1-develop
+CHART_VERSION=1.4.1-SNAPSHOT
 
 echo Create $NS namespace
 kubectl create ns $NS
@@ -23,12 +23,6 @@ function installing_kernel() {
 
   echo Installing idgenerator
   helm -n $NS install idgenerator mosip/idgenerator --version $CHART_VERSION
-
-  echo Installing pridgenerator
-  helm -n $NS install pridgenerator mosip/pridgenerator --version $CHART_VERSION
-
-  echo Installing ridgenerator
-  helm -n $NS install ridgenerator mosip/ridgenerator --version $CHART_VERSION
 
   echo Installing notifier
   helm -n $NS install notifier mosip/notifier --version $CHART_VERSION

@@ -46,8 +46,8 @@ service:
   externalTrafficPolicy: Cluster
 image:
   registry: docker.io
-  repository: mosipqa/kernel-notification-service
-  tag: develop
+  repository: mosipid/kernel-notification-service
+  tag: 1.4.1-SNAPSHOT
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -113,16 +113,15 @@ resources:
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
-    cpu: 800m
-    memory: 2000Mi
+    cpu: 1500m
+    memory: 5000Mi
   requests:
-    cpu: 400m
-    memory: 1000Mi
+    cpu: 750m
+    memory: 3000Mi
 additionalResources:
   ## Specify any JAVA_OPTS string here. These typically will be specified in conjunction with above resources
   ## Example: java_opts: "-Xms500M -Xmx500M"
-  javaOpts: >-
-    -XX:+UseZGC -XX:+ZGenerational -XX:+ZUncommit -XX:+ZProactive -XX:ZUncommitDelay=60 -XX:SoftMaxHeapSize=900m -Xms900m -Xmx1250m -XX:+UseContainerSupport -XX:MaxMetaspaceSize=400m -XX:MetaspaceSize=100m -XX:ReservedCodeCacheSize=150m -XX:InitialCodeCacheSize=37m -XX:+UseCodeCacheFlushing -XX:+HeapDumpOnOutOfMemoryError
+  javaOpts: "-Xms2250M -Xmx2250M"
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
 ## Clamav container already runs as 'mosip' user, so we may not need to enable this
 containerSecurityContext:
@@ -220,7 +219,6 @@ updateStrategy:
 ##   - name: FOO
 ##     value: "bar"
 ##
-## The runtime url below is assumed to be artifactory url for default installation. Change as per your deployment.
 extraEnvVars: []
 ## ConfigMap with extra environment variables that used
 ##
@@ -378,8 +376,6 @@ metrics:
     #     labels:
     #       severity: error
     rules: []
-# runtimeDepUrlpath: http://artifactory-service/artifactory/libs-release-local/io/mosip/kernel/
-
 ## Only internal access
 istio:
   enabled: true

@@ -4,7 +4,11 @@ import io.mosip.kernel.core.exception.BaseUncheckedException;
 import io.mosip.kernel.core.saltgenerator.constant.SaltGeneratorErrorConstants;
 
 /**
- * The Class SaltGeneratorException.
+ * Unchecked exception thrown when the salt-generator job cannot populate salt rows.
+ * <p>
+ * Contract: {@link #getOperation()} is optional context for the failing step.
+ * Raised instead of continuing the job when records already exist or insert fails.
+ * </p>
  *
  * @author Manoj SP
  */
@@ -13,62 +17,62 @@ public class SaltGeneratorException extends BaseUncheckedException {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 6748760277721155095L;
 
-	/** The operation. */
+	/** Optional name of the failing salt-generator operation; may be null. */
 	private String operation;
 
 	/**
-	 * Instantiates a new SaltGeneratorException.
+	 * Constructs an empty exception with no error code.
 	 */
 	public SaltGeneratorException() {
 		super();
 	}
 
 	/**
-	 * Instantiates a new SaltGeneratorException.
+	 * Constructs the exception with MOSIP error code and message.
 	 *
-	 * @param errorCode    the error code
-	 * @param errorMessage the error message
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
 	 */
 	public SaltGeneratorException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);
 	}
 
 	/**
-	 * Instantiates a new SaltGeneratorException.
+	 * Constructs the exception with MOSIP error code, message, and cause.
 	 *
-	 * @param errorCode    the error code
-	 * @param errorMessage the error message
-	 * @param rootCause    the root cause
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
+	 * @param rootCause    underlying cause; may be null
 	 */
 	public SaltGeneratorException(String errorCode, String errorMessage, Throwable rootCause) {
 		super(errorCode, errorMessage, rootCause);
 	}
 
 	/**
-	 * Instantiates a new SaltGeneratorException.
+	 * Constructs the exception from a {@link SaltGeneratorErrorConstants} value.
 	 *
-	 * @param exceptionConstant the exception constant
+	 * @param exceptionConstant never-null error constant
 	 */
 	public SaltGeneratorException(SaltGeneratorErrorConstants exceptionConstant) {
 		this(exceptionConstant.getErrorCode(), exceptionConstant.getErrorMessage());
 	}
 
 	/**
-	 * Instantiates a new SaltGeneratorException.
+	 * Constructs the exception from a constant and cause.
 	 *
-	 * @param exceptionConstant the exception constant
-	 * @param rootCause         the root cause
+	 * @param exceptionConstant never-null error constant
+	 * @param rootCause         underlying cause; may be null
 	 */
 	public SaltGeneratorException(SaltGeneratorErrorConstants exceptionConstant, Throwable rootCause) {
 		this(exceptionConstant.getErrorCode(), exceptionConstant.getErrorMessage(), rootCause);
 	}
 
 	/**
-	 * Instantiates a new SaltGeneratorException.
+	 * Constructs the exception with an operation label.
 	 *
-	 * @param errorCode    the error code
-	 * @param errorMessage the error message
-	 * @param operation    the operation
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
+	 * @param operation    failing step name; may be null
 	 */
 	public SaltGeneratorException(String errorCode, String errorMessage, String operation) {
 		super(errorCode, errorMessage);
@@ -76,12 +80,12 @@ public class SaltGeneratorException extends BaseUncheckedException {
 	}
 
 	/**
-	 * Instantiates a new SaltGeneratorException.
+	 * Constructs the exception with cause and an operation label.
 	 *
-	 * @param errorCode    the error code
-	 * @param errorMessage the error message
-	 * @param rootCause    the root cause
-	 * @param operation    the operation
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
+	 * @param rootCause    underlying cause; may be null
+	 * @param operation    failing step name; may be null
 	 */
 	public SaltGeneratorException(String errorCode, String errorMessage, Throwable rootCause, String operation) {
 		super(errorCode, errorMessage, rootCause);
@@ -89,10 +93,10 @@ public class SaltGeneratorException extends BaseUncheckedException {
 	}
 
 	/**
-	 * Instantiates a new SaltGeneratorException.
+	 * Constructs the exception from a constant and an operation label.
 	 *
-	 * @param exceptionConstant the exception constant
-	 * @param operation         the operation
+	 * @param exceptionConstant never-null error constant
+	 * @param operation         failing step name; may be null
 	 */
 	public SaltGeneratorException(SaltGeneratorErrorConstants exceptionConstant, String operation) {
 		this(exceptionConstant.getErrorCode(), exceptionConstant.getErrorMessage());
@@ -100,11 +104,11 @@ public class SaltGeneratorException extends BaseUncheckedException {
 	}
 
 	/**
-	 * Instantiates a new SaltGeneratorException.
+	 * Constructs the exception from a constant, cause, and operation label.
 	 *
-	 * @param exceptionConstant the exception constant
-	 * @param rootCause         the root cause
-	 * @param operation         the operation
+	 * @param exceptionConstant never-null error constant
+	 * @param rootCause         underlying cause; may be null
+	 * @param operation         failing step name; may be null
 	 */
 	public SaltGeneratorException(SaltGeneratorErrorConstants exceptionConstant, Throwable rootCause,
 			String operation) {
@@ -113,9 +117,9 @@ public class SaltGeneratorException extends BaseUncheckedException {
 	}
 
 	/**
-	 * Gets the operation.
+	 * Returns the optional failing-step label.
 	 *
-	 * @return the operation
+	 * @return operation name; may be null
 	 */
 	public String getOperation() {
 		return operation;

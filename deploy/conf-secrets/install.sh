@@ -7,7 +7,7 @@ if [ $# -ge 1 ] ; then
 fi
 
 NS=conf-secrets
-CHART_VERSION=0.0.1-develop
+CHART_VERSION=1.4.1-SNAPSHOT
 
 echo Create $NS namespace
 kubectl create ns $NS

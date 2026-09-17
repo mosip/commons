@@ -24,8 +24,6 @@ ARG is_glowroot
 # can be passed during Docker build as build time environment for artifactory URL
 ARG artifactory_url
 
-ARG iam_adapter_url
-
 # can be passed during Docker build as build time environment management rmi server hostname
 ARG management_rmi_server_hostname
 
@@ -47,9 +45,6 @@ ENV is_glowroot_env=${is_glowroot}
 # environment variable to pass artifactory url, at docker runtime
 ENV artifactory_url_env=${artifactory_url}
 
-# environment variable to pass iam_adapter url, at docker runtime
-ENV iam_adapter_url_env=${iam_adapter_url}
-
 # can be passed during Docker build as build time environment for github branch to pickup configuration from.
 ARG container_user=mosip
 
@@ -64,7 +59,7 @@ ARG container_user_gid=1001
 
 # install packages and create user
 RUN apk -q update \
-&& apk add -q unzip wget \
+&& apk add -q unzip wget bash \
 && addgroup -g ${container_user_gid} ${container_user_group} \
 && adduser -s /bin/sh -u ${container_user_uid} -G ${container_user_group} -h /home/${container_user} --disabled-password ${container_user}
 
@@ -75,20 +70,18 @@ ENV work_dir=/home/${container_user}
 
 ARG loader_path=${work_dir}/additional_jars/
 
-RUN mkdir -p ${loader_path}
-
 ENV loader_path_env=${loader_path}
 
+ENV current_module_env=kernel-idgenerator-service
+
 ADD ./target/*.jar /target/
+ADD configure_start.sh configure_start.sh
+
 RUN find /target -name '*.jar' -executable -type f "-print0" | xargs "-0" cp -t / \
     && rm -rf /target \
-    && mv /*.jar ${work_dir}/kernel-idgenerator-service.jar
-
-COPY configure_start.sh ${work_dir}/configure_start.sh
-
-# change permissions of file inside working dir
-RUN sed -i 's/\r$//' ${work_dir}/configure_start.sh \
-    && chmod +x ${work_dir}/configure_start.sh \
+    && mv /*.jar ${work_dir}/${current_module_env}.jar \
+    && mkdir -p ${loader_path} \
+    && chmod +x configure_start.sh \
     && chown -R ${container_user}:${container_user} ${work_dir}
 
 # select container user for all tasks
@@ -96,8 +89,6 @@ USER ${container_user_uid}:${container_user_gid}
 
 EXPOSE 8080
 
-ENTRYPOINT ["sh", "configure_start.sh"]
+ENTRYPOINT [ "./configure_start.sh" ]
 
-#Below 4 lines is added only as a temporary fix to downloaded the ceylon dependencies for chime scheduler
-#later this chime to be replaced with something else
-CMD java -Dloader.path="${loader_path_env}" -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -Dceylon.cache.repo=./regproc-reprocessor-ceylon-cache-repo -jar kernel-idgenerator-service.jar ; \
+CMD java -XX:-UseG1GC -XX:+ExplicitGCInvokesConcurrent -XX:-UseParallelGC -XX:+UseZGC -XX:+ZGenerational -XX:-UseShenandoahGC -XX:MaxGCPauseMillis=200  -XX:+UnlockExperimentalVMOptions -XX:+UseStringDeduplication -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -XX:+UseCompressedOops -Dloader.path="${loader_path_env}" -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -Dceylon.cache.repo=./regproc-reprocessor-ceylon-cache-repo -jar ${current_module_env}.jar

@@ -18,11 +18,15 @@ import io.mosip.kernel.core.util.exception.JsonParseException;
 import io.mosip.kernel.core.util.exception.JsonProcessingException;
 
 /**
- * This class contains methods used for operations on JSON type data
- * 
+ * Jackson JSON serialize/deserialize helpers with MOSIP checked exceptions.
+ * <p>
+ * Contract: static helpers only; this class is not instantiable. Uses a shared
+ * {@link ObjectMapper} with JavaTime and Afterburner modules. {@code jsonString}
+ * must be non-null valid JSON. Does not perform MOSIP HTTP.
+ * </p>
+ *
  * @author Sidhant Agarwal
  * @since 1.0.0
- *
  */
 public class JsonUtils {
 
@@ -35,6 +39,9 @@ public class JsonUtils {
 		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 	}
 
+	/**
+	 * Prevents instantiation of this utility.
+	 */
 	private JsonUtils() {
 
 	}
@@ -76,11 +83,11 @@ public class JsonUtils {
 	 */
 
 	/**
-	 * This function converts the java object and returns a JSON String
-	 * 
-	 * @param className object of the class to be converted to JSON File
-	 * @return generated JSON String
-	 * @throws JsonProcessingException when JSON is not properly processed
+	 * Serializes {@code className} to an indented JSON string.
+	 *
+	 * @param className never-null Java value to serialize
+	 * @return never-null JSON text
+	 * @throws JsonProcessingException when Jackson cannot serialize {@code className}
 	 */
 	public static String javaObjectToJsonString(Object className) throws JsonProcessingException {
 		String outputJson = null;
@@ -97,15 +104,14 @@ public class JsonUtils {
 	}
 
 	/**
-	 * This method converts the JSON String input and maps it to the java object
-	 * 
-	 * @param className  class name to which the JSON String is to be mapped
-	 * @param jsonString input JSON String(always in double quotes)
-	 *                   (eg."{color=Black, type=FIAT}")
-	 * @return class object with the JSON string parsed to object
-	 * @throws JsonParseException   when JSON is not properly parsed
-	 * @throws JsonMappingException when JSON is not properly mapped
-	 * @throws IOException          when location is not found
+	 * Deserializes {@code jsonString} into an instance of {@code className}.
+	 *
+	 * @param className  never-null target type
+	 * @param jsonString never-null JSON object text
+	 * @return never-null mapped instance
+	 * @throws JsonParseException   when the text is not valid JSON
+	 * @throws JsonMappingException when the JSON does not match {@code className}
+	 * @throws IOException          when Jackson I/O fails
 	 */
 	public static Object jsonStringToJavaObject(Class<?> className, String jsonString)
 			throws JsonParseException, JsonMappingException, IOException {
@@ -160,13 +166,12 @@ public class JsonUtils {
 	 * e.getCause()); } return returnObject; }
 	 */
 	/**
-	 * This function returns the value associated with the label of the input JSON
-	 * 
-	 * @param jsonString input JSON String(always in double quotes)
-	 *                   (eg."{color=Black, type=FIAT}")
-	 * @param key        label of the JSON String whose value is to be retrieved
-	 * @return value of the corresponding key input
-	 * @throws IOException when file is not found
+	 * Returns the text value of {@code key} from {@code jsonString}.
+	 *
+	 * @param jsonString never-null JSON object text
+	 * @param key        never-null field name
+	 * @return field text; may be empty
+	 * @throws IOException when the text cannot be parsed as JSON
 	 */
 	public static String jsonToJacksonJson(String jsonString, String key) throws IOException {
 		JsonNode jsonNode = null;
@@ -180,16 +185,13 @@ public class JsonUtils {
 	}
 
 	/**
-	 * This method converts a JSON String containing multiple JSON and stores them
-	 * in a java list
-	 * 
-	 * @param jsonArray input String containing array of JSON string(always in
-	 *                  double quotes) (eg."[{color=Black, type=BMW}, {color=Red,
-	 *                  type=FIAT}]")
-	 * @return list of JSON string
-	 * @throws JsonParseException   when JSON is not properly parsed
-	 * @throws JsonMappingException when JSON is not properly mapped
-	 * @throws IOException          when file is not found
+	 * Deserializes a JSON array into a list of untyped objects.
+	 *
+	 * @param jsonArray never-null JSON array text
+	 * @return never-null list; may be empty
+	 * @throws JsonParseException   when the text is not valid JSON
+	 * @throws JsonMappingException when the JSON cannot be mapped to a list
+	 * @throws IOException          when Jackson I/O fails
 	 */
 	public static List<Object> jsonStringToJavaList(String jsonArray)
 			throws JsonParseException, JsonMappingException, IOException {
@@ -211,16 +213,13 @@ public class JsonUtils {
 	}
 
 	/**
-	 * This method converts a JSON String containing multiple JSON and stores them
-	 * in a java Map
-	 * 
-	 * @param jsonString input String containing array of JSON string(always in
-	 *                   double quotes) (eg."[{color=Black, type=BMW}, {color=Red,
-	 *                   type=FIAT}]")
-	 * @return java map containing JSON inputs
-	 * @throws JsonParseException   when JSON is not properly parsed
-	 * @throws JsonMappingException when JSON is not properly mapped
-	 * @throws IOException          when file is not found
+	 * Deserializes a JSON object into an untyped string-to-object map.
+	 *
+	 * @param jsonString never-null JSON object text
+	 * @return never-null map; may be empty
+	 * @throws JsonParseException   when the text is not valid JSON
+	 * @throws JsonMappingException when the JSON cannot be mapped to a map
+	 * @throws IOException          when Jackson I/O fails
 	 */
 	public static Map<String, Object> jsonStringToJavaMap(String jsonString)
 			throws JsonParseException, JsonMappingException, IOException {

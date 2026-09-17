@@ -16,30 +16,37 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 
 /**
- * 
- * @author Srinivasan
+ * Offline JWT bearer-token checks against issuer, client id, and expiry.
+ * <p>
+ * Contract: does not call an authorization server. Decode failures return
+ * {@code false} rather than throwing. {@link #decodedTokens} is a process-wide
+ * cache keyed by raw token string.
+ * </p>
  *
+ * @author Srinivasan
  */
-
 public class TokenHandlerUtil {
 	  private static Logger LOGGER= LoggerFactory.getLogger(TokenHandlerUtil.class);
 	  
 	  
+	  /**
+	   * Process-wide cache of decoded JWTs keyed by the raw access-token string.
+	   */
 	  public static ConcurrentMap<String,DecodedJWT> decodedTokens = new ConcurrentHashMap<>();
+	  /**
+	   * Prevents instantiation of this utility.
+	   */
 	  private TokenHandlerUtil() {
 		  
 	  }
 
 	/**
-	 * Validates the token offline based on the Oauth2 standards.
-	 * 
-	 * @param accessToken
-	 *            - Bearer token
-	 * @param issuerUrl
-	 *            - issuer URL to be read from the properties,
-	 * @param clientId
-	 *            - client Id to be read from the properties
-	 * @return Boolean
+	 * Returns whether {@code accessToken} matches {@code issuerUrl} and {@code clientId} and is not expired.
+	 *
+	 * @param accessToken never-null JWT compact serialization
+	 * @param issuerUrl   never-null expected issuer claim
+	 * @param clientId    never-null expected {@code clientId} claim
+	 * @return {@code true} if issuer, client, and UTC expiry all match; {@code false} on mismatch or decode failure
 	 */
 	public static boolean isValidBearerToken(String accessToken, String issuerUrl, String clientId) {
 

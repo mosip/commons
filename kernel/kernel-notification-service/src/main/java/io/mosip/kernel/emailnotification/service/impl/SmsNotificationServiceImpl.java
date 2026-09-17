@@ -35,17 +35,35 @@ import java.util.concurrent.Executor;
 @Service
 public class SmsNotificationServiceImpl implements SmsNotification {
 
+    /**
+     * Logger for SMS send diagnostics.
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(SmsNotificationServiceImpl.class);
 
+    /**
+     * Active Spring profile. Bound to {@code spring.profiles.active}. Local
+     * profile skips the SMS provider.
+     */
     @Value("${spring.profiles.active}")
     private String activeProfile;
 
+    /**
+     * When {@code true}, the SMS provider is not invoked. Bound to
+     * {@code mosip.kernel.sms.proxy-sms}.
+     */
     @Value("${mosip.kernel.sms.proxy-sms:false}")
     private boolean isProxytrue;
 
+    /**
+     * Success message returned to the caller. Bound to
+     * {@code mosip.kernel.sms.success-message}.
+     */
     @Value("${mosip.kernel.sms.success-message:SMS request sent}")
     private String sucessMessage;
     
+    /**
+     * Utility that performs the asynchronous SMS send through the provider SPI.
+     */
     @Autowired
     private SmsNotificationUtils smsNotificationUtils;
     
@@ -54,6 +72,9 @@ public class SmsNotificationServiceImpl implements SmsNotification {
      */
     private SMSResponseDto cachedSuccessResponse;
 
+    /**
+     * Builds the cached success DTO used in local and proxy SMS modes.
+     */
     @PostConstruct
     private void initSuccessResponse() {
         SMSResponseDto response = new SMSResponseDto();
@@ -83,6 +104,12 @@ public class SmsNotificationServiceImpl implements SmsNotification {
         return cachedSuccessResponse;
     }
     
+    /**
+     * Delegates to {@link SmsNotificationUtils} / {@link SMSServiceProvider} for a real send.
+     *
+     * @param contactNumber  destination MSISDN
+     * @param contentMessage SMS body
+     */
     public void send(String contactNumber, String contentMessage) {
         smsNotificationUtils.sendSms(contactNumber, contentMessage);
     }

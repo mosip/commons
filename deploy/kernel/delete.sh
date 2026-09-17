@@ -13,8 +13,6 @@ function deleting_kernel() {
       if [ $yn = "Y" ]
         then
           helm -n $NS delete idgenerator
-          helm -n $NS delete pridgenerator
-          helm -n $NS delete ridgenerator
           helm -n $NS delete notifier
           break
         else

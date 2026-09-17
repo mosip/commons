@@ -24,7 +24,9 @@ import io.mosip.kernel.emailnotification.util.EmailNotificationUtils;
 import java.util.concurrent.Executor;
 
 /**
- * Service implementation class for {@link EmailNotification}.
+ * Service implementation class for {@link EmailNotification}. Sends mail through
+ * {@link JavaMailSender}, or returns success immediately when proxy mail is
+ * enabled.
  *
  * @author Sagar Mahapatra
  * @since 1.0.0
@@ -32,6 +34,9 @@ import java.util.concurrent.Executor;
 @Service
 public class EmailNotificationServiceImpl implements EmailNotification<MultipartFile[], ResponseDto> {
 
+    /**
+     * Logger for email send diagnostics.
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailNotificationServiceImpl.class);
     /**
      * Autowired reference for {@link JavaMailSender}
@@ -46,15 +51,24 @@ public class EmailNotificationServiceImpl implements EmailNotification<Multipart
     private EmailNotificationUtils emailNotificationUtils;
 
     /**
-     * Optionally an email address can be configured.
+     * Optional SMTP From address. Bound to
+     * {@code mosip.kernel.notification.email.from}.
      */
     @Nullable
     @Value("${mosip.kernel.notification.email.from:#{null}}")
     private String fromEmailAddress;
 
+    /**
+     * When {@code true}, the SMTP send is skipped and a success response is
+     * returned. Bound to {@code mosip.kernel.mail.proxy-mail}.
+     */
     @Value("${mosip.kernel.mail.proxy-mail:false}")
     private boolean isProxytrue;
 
+    /**
+     * When {@code true}, the mail body is sent as HTML. Bound to
+     * {@code mosip.kernel.mail.content.html.enable}.
+     */
     @Value("${mosip.kernel.mail.content.html.enable:true}")
     private boolean isHtmlEnable;
 
@@ -67,6 +81,8 @@ public class EmailNotificationServiceImpl implements EmailNotification<Multipart
      * @param mailContent body content of the email
      * @param attachments optional attachments
      * @return a {@link ResponseDto} indicating send status
+     * @throws io.mosip.kernel.emailnotification.exception.InvalidArgumentsException if mail arguments fail validation
+     * @throws NotificationException     if the MIME message cannot be built
      */
     @Override
     public ResponseDto sendEmail(String[] mailTo, String[] mailCc, String mailSubject, String mailContent,
@@ -91,6 +107,8 @@ public class EmailNotificationServiceImpl implements EmailNotification<Multipart
      * @param mailSubject subject
      * @param mailContent content
      * @param attachments files to attach
+     * @throws io.mosip.kernel.emailnotification.exception.InvalidArgumentsException if mail arguments fail validation
+     * @throws NotificationException     if the MIME message cannot be built
      */
     public void send(String[] mailTo, String[] mailCc, String mailSubject, String mailContent,
                      MultipartFile[] attachments) {
