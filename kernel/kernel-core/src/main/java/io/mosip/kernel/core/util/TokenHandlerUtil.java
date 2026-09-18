@@ -68,6 +68,11 @@ public class TokenHandlerUtil {
 
 			DecodedJWT decodedJWT = verifier.verify(accessToken);
 
+			if (decodedJWT.getExpiresAt() == null) {
+				LOGGER.error("JWT validation failed: 'exp' claim is missing");
+				return false;
+			}
+
 			// Validate the clientId claim
 			Claim clientIdClaim = decodedJWT.getClaim("clientId");
 			if (clientIdClaim.isNull() || clientIdClaim.asString() == null) {

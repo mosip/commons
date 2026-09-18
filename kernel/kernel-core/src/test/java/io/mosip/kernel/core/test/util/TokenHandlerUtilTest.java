@@ -34,7 +34,7 @@ public class TokenHandlerUtilTest {
 	}
 
 	@Test
-	public void validTokenWithCorrectSignatureReturnsTrue() {
+	public void should_returnTrue_when_tokenHasCorrectSignature() {
 		Date futureDate = new Date(System.currentTimeMillis() + 60_000); // 1 min in future
 		String token = createToken(ISSUER, CLIENT_ID, futureDate, algorithm);
 
@@ -43,7 +43,7 @@ public class TokenHandlerUtilTest {
 	}
 
 	@Test
-	public void tokenWithInvalidSignatureReturnsFalse() {
+	public void should_returnFalse_when_tokenHasInvalidSignature() {
 		Date futureDate = new Date(System.currentTimeMillis() + 60_000);
 		// Signed with different secret
 		String forgedToken = createToken(ISSUER, CLIENT_ID, futureDate, wrongAlgorithm);
@@ -53,7 +53,7 @@ public class TokenHandlerUtilTest {
 	}
 
 	@Test
-	public void expiredTokenReturnsFalse() {
+	public void should_returnFalse_when_tokenIsExpired() {
 		Date pastDate = new Date(System.currentTimeMillis() - 60_000); // 1 min in past
 		String expiredToken = createToken(ISSUER, CLIENT_ID, pastDate, algorithm);
 
@@ -62,7 +62,19 @@ public class TokenHandlerUtilTest {
 	}
 
 	@Test
-	public void mismatchedIssuerReturnsFalse() {
+	public void should_returnFalse_when_expClaimIsMissing() {
+		// Token without withExpiresAt
+		String tokenWithoutExp = JWT.create()
+				.withIssuer(ISSUER)
+				.withClaim("clientId", CLIENT_ID)
+				.sign(algorithm);
+
+		boolean isValid = TokenHandlerUtil.isValidBearerToken(tokenWithoutExp, ISSUER, CLIENT_ID, algorithm);
+		assertFalse("Token without exp claim must be rejected", isValid);
+	}
+
+	@Test
+	public void should_returnFalse_when_issuerDoesNotMatch() {
 		Date futureDate = new Date(System.currentTimeMillis() + 60_000);
 		String token = createToken("https://evil-issuer.com", CLIENT_ID, futureDate, algorithm);
 
@@ -71,7 +83,7 @@ public class TokenHandlerUtilTest {
 	}
 
 	@Test
-	public void mismatchedClientIdReturnsFalse() {
+	public void should_returnFalse_when_clientIdDoesNotMatch() {
 		Date futureDate = new Date(System.currentTimeMillis() + 60_000);
 		String token = createToken(ISSUER, "wrong-client", futureDate, algorithm);
 
@@ -80,7 +92,7 @@ public class TokenHandlerUtilTest {
 	}
 
 	@Test
-	public void missingClientIdClaimReturnsFalse() {
+	public void should_returnFalse_when_clientIdClaimIsMissing() {
 		Date futureDate = new Date(System.currentTimeMillis() + 60_000);
 		String token = JWT.create()
 				.withIssuer(ISSUER)
@@ -92,14 +104,14 @@ public class TokenHandlerUtilTest {
 	}
 
 	@Test
-	public void nullOrEmptyInputsReturnFalse() {
+	public void should_returnFalse_when_inputsAreNullOrEmpty() {
 		assertFalse(TokenHandlerUtil.isValidBearerToken(null, ISSUER, CLIENT_ID, algorithm));
 		assertFalse(TokenHandlerUtil.isValidBearerToken("", ISSUER, CLIENT_ID, algorithm));
 		assertFalse(TokenHandlerUtil.isValidBearerToken("some.token.value", ISSUER, CLIENT_ID, null));
 	}
 
 	@Test
-	public void deprecatedMethodAlwaysReturnsFalse() {
+	public void should_returnFalse_when_deprecatedMethodIsUsed() {
 		Date futureDate = new Date(System.currentTimeMillis() + 60_000);
 		String token = createToken(ISSUER, CLIENT_ID, futureDate, algorithm);
 
