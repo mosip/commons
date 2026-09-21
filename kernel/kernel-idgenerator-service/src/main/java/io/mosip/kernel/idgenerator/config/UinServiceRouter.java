@@ -42,7 +42,6 @@ import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
-import io.vertx.ext.web.handler.StaticHandler;
 
 /**
  * Vert.x router for the UIN fetch and status-update APIs under {@code /v1/idgenerator}.
@@ -87,11 +86,12 @@ public class UinServiceRouter {
 	private Logger LOGGER = LoggerFactory.getLogger(UinServiceRouter.class);
 
 	/**
-	 * Builds the UIN GET/PUT router, health endpoint, and Swagger static handler.
+	 * Builds the UIN GET/PUT router and health endpoint.
 	 * <p>
 	 * GET and PUT require {@code ID_REPOSITORY}. Successful GET is HTTP 200 JSON;
 	 * MOSIP errors are also HTTP 200 with {@code errors}. Health is registered at
-	 * {@code {servletPath}/actuator/health}.
+	 * {@code {servletPath}/actuator/health}. Swagger UI is mounted on the parent
+	 * HTTP router (see {@code HttpServerVerticle}).
 	 * </p>
 	 *
 	 * @param vertx Vert.x instance used for worker executors and health checks
@@ -119,10 +119,6 @@ public class UinServiceRouter {
 		router.put().consumes(UinGeneratorConstant.APPLICATION_JSON).handler(this::updateRouter);
 
 		configureHealthCheckEndpoint(vertx, router, servletPath);
-
-		router.route(environment.getProperty(UinGeneratorConstant.SERVER_SERVLET_PATH) + "/*").handler(
-				StaticHandler.create().setCachingEnabled(false).setWebRoot(UinGeneratorConstant.SWAGGER_UI_PATH)
-						.setAlwaysAsyncFS(true).setAllowRootFileSystemAccess(true));
 		return router;
 	}
 

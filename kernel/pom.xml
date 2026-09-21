@@ -558,7 +558,7 @@
 				<configuration>
 					<skipTests>${skipTests}</skipTests>
 					<skip>false</skip>
-					<!-- JDK 21: @{argLine} keeps JaCoCo; no --illegal-access (removed after JDK 16). -->
+					<!-- JDK 21: @{argLine} keeps JaCoCo; illegal-access flag removed after JDK 16. -->
 					<argLine>@{argLine} --add-opens java.xml/jdk.xml.internal=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED</argLine>
 				</configuration>
 			</plugin>

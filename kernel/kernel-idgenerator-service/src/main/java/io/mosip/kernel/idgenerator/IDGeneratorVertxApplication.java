@@ -1,29 +1,18 @@
 package io.mosip.kernel.idgenerator;
 
-import java.io.File;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 import jakarta.annotation.PostConstruct;
 import io.mosip.kernel.idgenerator.util.Utility;
 
-import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import io.mosip.kernel.core.templatemanager.spi.TemplateManager;
-import io.mosip.kernel.core.util.FileUtils;
 import io.mosip.kernel.idgenerator.config.ConfigUrlsBuilder;
 import io.mosip.kernel.idgenerator.config.HibernateDaoConfig;
-import io.mosip.kernel.idgenerator.verticle.HttpServerVerticle;
-import io.mosip.kernel.templatemanager.velocity.builder.TemplateManagerBuilderImpl;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorConstant;
 import io.mosip.kernel.uingenerator.verticle.UinGeneratorVerticle;
 import io.mosip.kernel.uingenerator.verticle.UinTransferVerticle;
@@ -72,36 +61,9 @@ public class IDGeneratorVertxApplication {
 	 */
 	private static Logger LOGGER;
 
-	/**
-	 * Servlet context path used when rendering Swagger UI JSON ({@code server.servlet.path}).
-	 */
-	@Value("${server.servlet.path}")
-	private String contextPath;
-	
 	private static final long DEFAULT_VID_JOB_FREQUENCY = 10000L;
 
 	private static final long DEFAULT_UIN_JOB_FREQUENCY=10000L;
-
-	/**
-	 * Merges {@code server.servlet.path} into the Swagger JSON template after the bean is constructed.
-	 */
-	@PostConstruct
-	private void swaggerJSONFileUpdate() {
-		try {
-			TemplateManager templateManager;
-			File swaggerJsonnFile = new File(VIDGeneratorConstant.SWAGGER_UI_JSON_PATH);
-			templateManager = new TemplateManagerBuilderImpl().build();
-			Map<String, Object> map = new HashMap<>();
-			map.put("servletpath", contextPath);
-			InputStream is = this.getClass().getClassLoader()
-					.getResourceAsStream(VIDGeneratorConstant.SWAGGER_JSON_TEMPLATE);
-			InputStream out = templateManager.merge(is, map);
-			String merged = IOUtils.toString(out, StandardCharsets.UTF_8.name());
-			FileUtils.writeStringToFile(swaggerJsonnFile, merged, StandardCharsets.UTF_8.name());
-		} catch (Exception e) {
-			LOGGER.warn(e.getMessage());
-		}
-	}
 
 	/**
 	 * Publishes {@link EventType#INITPOOL} so {@code VidPoolCheckerVerticle} fills the VID pool.

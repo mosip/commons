@@ -23,4 +23,3 @@ local.properties
 .local/
 logs/
 *.log
-swagger-ui/

@@ -162,25 +162,6 @@ public final class VIDGeneratorConstant {
 	public static final String TIME_OUT = "timeout";
 
 	/**
-	 * Swagger UI JSON file name.
-	 */
-	public static final String SWAGGER_UI_JSON_FILENAME = "swagger.json";
-
-	/**
-	 * Directory that holds generated Swagger UI assets.
-	 */
-	public static final String SWAGGER_UI_PATH = "swagger-ui";
-
-	/**
-	 * The swagger ui json file path.
-	 */
-	public static final String SWAGGER_UI_JSON_PATH = SWAGGER_UI_PATH + "/" + SWAGGER_UI_JSON_FILENAME;
-
-	/**
-	 * The swagger json template file.
-	 */
-	public static final String SWAGGER_JSON_TEMPLATE = "swagger-template.vm";
-	/**
 	 * The enable signing property key
 	 */
 	public static final String SIGNING_ENABLE = "mosip.kernel.vid.response-signing-enable";

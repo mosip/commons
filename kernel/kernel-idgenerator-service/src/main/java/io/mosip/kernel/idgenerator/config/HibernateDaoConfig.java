@@ -74,7 +74,7 @@ import jakarta.persistence.EntityManagerFactory;
 @ComponentScan(basePackages = { "io.mosip.kernel.vidgenerator.*","io.mosip.kernel.uingenerator.*", "io.mosip.kernel.idgenerator.vid.*",
 		"io.mosip.kernel.crypto.*", "${mosip.auth.adapter.impl.basepackage}.*","io.mosip.kernel.cryptosignature.*","io.mosip.kernel.idgenerator.*",
 		"io.mosip.kernel.ridgenerator.service","io.mosip.kernel.ridgenerator.router","io.mosip.kernel.ridgenerator.repository",
-		"io.mosip.kernel.ridgenerator.entity","io.mosip.kernel.keygenerator.bouncycastle"}, 
+		"io.mosip.kernel.ridgenerator.entity","io.mosip.kernel.ridgenerator.config","io.mosip.kernel.keygenerator.bouncycastle"}, 
 excludeFilters = {
 		@Filter(type=FilterType.REGEX,pattern="io\\.mosip\\.kernel\\.idgenerator\\.test\\..*"),
 		@Filter(type=FilterType.REGEX,pattern="io\\.mosip\\.kernel\\.idgenerator\\.rid\\..*"),

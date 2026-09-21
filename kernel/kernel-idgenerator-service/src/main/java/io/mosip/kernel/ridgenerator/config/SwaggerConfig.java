@@ -1,14 +1,7 @@
 package io.mosip.kernel.ridgenerator.config;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,23 +12,16 @@ import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
 
 /**
- * Builds the OpenAPI bean for the RID servlet from {@link OpenApiProperties}.
- *
- * @author Dharmesh Khandelwal
- * @since 1.0.0
- *
+ * Springdoc OpenAPI / Swagger UI configuration (embedded via {@code springdoc-openapi-starter-webmvc-ui}).
  */
 @Configuration
 public class SwaggerConfig {
 
-	/**
-	 * OpenAPI title, license, and server URLs bound from {@code openapi.*}.
-	 */
 	@Autowired
 	private OpenApiProperties openApiProperties;
 
 	/**
-	 * Creates the Springdoc {@link OpenAPI} document for {@code /v1/ridgenerator}.
+	 * Creates the OpenAPI document from {@code openapi.*} bootstrap properties.
 	 *
 	 * @return OpenAPI model
 	 */
@@ -48,9 +34,19 @@ public class SwaggerConfig {
 						.license(new License().name(openApiProperties.getInfo().getLicense().getName())
 								.url(openApiProperties.getInfo().getLicense().getUrl())));
 
-		openApiProperties.getService().getServers().forEach(server -> {
-			api.addServersItem(new Server().description(server.getDescription()).url(server.getUrl()));
-		});
+		openApiProperties.getService().getServers().forEach(server -> api
+				.addServersItem(new Server().description(server.getDescription()).url(server.getUrl())));
 		return api;
+	}
+
+	/**
+	 * Groups all servlet paths into one Swagger UI document ({@code openapi.group.*}).
+	 *
+	 * @return grouped OpenAPI definition
+	 */
+	@Bean
+	public GroupedOpenApi groupedOpenApi() {
+		return GroupedOpenApi.builder().group(openApiProperties.getGroup().getName())
+				.pathsToMatch(openApiProperties.getGroup().getPaths().toArray(String[]::new)).build();
 	}
 }

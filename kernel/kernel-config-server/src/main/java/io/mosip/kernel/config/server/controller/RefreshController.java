@@ -16,6 +16,13 @@ import org.springframework.web.client.RestTemplate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 /**
  * Config-server operator API that triggers Spring Cloud {@code /actuator/refresh} on
  * discovered MOSIP services so they reload configuration without a restart.
@@ -28,6 +35,7 @@ import java.util.stream.Collectors;
  * @since 1.0.0
  */
 @RestController
+@Tag(name = "config-refresh", description = "Operations related to configuration refresh")
 public class RefreshController {
 
     private static final Logger logger = LoggerFactory.getLogger(RefreshController.class);
@@ -71,6 +79,14 @@ public class RefreshController {
      * @param serviceName substring or exact service id to refresh; blank means all eligible services
      * @return map of refresh URL to HTTP status string; empty if discovery is unavailable
      */
+    @Operation(summary = "Refresh configuration on discovered services",
+            description = "Triggers /actuator/refresh on matching discovered services",
+            tags = { "config-refresh" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Refresh attempted; see body for per-URL status"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true))) })
     @GetMapping("/refresh")
     public Map<String, String> refreshContext(@RequestParam("servicename") String serviceName) {
         logger.info("refreshContext invoked with serviceName : {}", serviceName.replaceAll("[\n\r]", "_"));

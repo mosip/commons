@@ -135,6 +135,7 @@ if not errorlevel 1 (
   set /p OLD_PID=<"%PID_FILE%"
   echo config-server already running ^(pid !OLD_PID!^) on port %CONFIG_SERVER_PORT%
   echo   health  http://127.0.0.1:%CONFIG_SERVER_PORT%/config/actuator/health
+  echo   swagger http://127.0.0.1:%CONFIG_SERVER_PORT%/config/swagger-ui/index.html
   echo   config  http://127.0.0.1:%CONFIG_SERVER_PORT%/config/application/local
   exit /b 0
 )
@@ -144,6 +145,7 @@ if not errorlevel 1 (
   echo config-server already listening on port %CONFIG_SERVER_PORT% ^(pid !PORT_PID!^)
   if defined PORT_PID > "%PID_FILE%" echo !PORT_PID!
   echo   health  http://127.0.0.1:%CONFIG_SERVER_PORT%/config/actuator/health
+  echo   swagger http://127.0.0.1:%CONFIG_SERVER_PORT%/config/swagger-ui/index.html
   echo   config  http://127.0.0.1:%CONFIG_SERVER_PORT%/config/application/local
   exit /b 0
 )
@@ -204,6 +206,7 @@ echo.
 echo config-server ready
 echo   port    %CONFIG_SERVER_PORT%
 echo   health  http://127.0.0.1:%CONFIG_SERVER_PORT%/config/actuator/health
+echo   swagger http://127.0.0.1:%CONFIG_SERVER_PORT%/config/swagger-ui/index.html
 echo   config  http://127.0.0.1:%CONFIG_SERVER_PORT%/config/application/local
 exit /b 0
 

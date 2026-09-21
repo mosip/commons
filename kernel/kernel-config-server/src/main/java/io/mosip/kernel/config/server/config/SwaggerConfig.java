@@ -1,4 +1,4 @@
-package io.mosip.kernel.emailnotification.config;
+package io.mosip.kernel.config.server.config;
 
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Autowired;

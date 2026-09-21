@@ -126,6 +126,7 @@ cmd_start() {
   if is_running; then
     echo "config-server already running (pid $(cat "$PID_FILE")) on port ${PORT}"
     echo "  health  http://127.0.0.1:${PORT}/config/actuator/health"
+    echo "  swagger http://127.0.0.1:${PORT}/config/swagger-ui/index.html"
     echo "  config  http://127.0.0.1:${PORT}/config/application/local"
     return 0
   fi
@@ -157,6 +158,7 @@ cmd_start() {
   echo "config-server ready"
   echo "  port    ${PORT}"
   echo "  health  http://127.0.0.1:${PORT}/config/actuator/health"
+  echo "  swagger http://127.0.0.1:${PORT}/config/swagger-ui/index.html"
   echo "  config  http://127.0.0.1:${PORT}/config/application/local"
 }
 
