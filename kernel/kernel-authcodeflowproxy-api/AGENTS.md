@@ -1,3 +1,3 @@
-# authcodeflowproxy-api
+# authcodeflowproxy
 
-Auth-code login/logout. Don't fold into service.
+Auth-code login/logout lib. Don't fold into adapter/service.

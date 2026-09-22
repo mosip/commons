@@ -29,6 +29,7 @@ Apache License 2.0 (Apache-2.0.txt)
   JJWT 0.9.1, Bean Validation API 2.0.1.Final (javax.validation)
   Micrometer 1.17.1, Micrometer Tracing 1.7.1 / Brave
   Vert.x 3.9.16, vertx-lang-ceylon 3.4.1 (Vert.x artifact; Apache-2.0)
+  Apache Directory API `api-all` 2.1.8 (auth-service LDAP/PasswordUtil leftover)
   Quartz 2.5.2, Guava 33.7.1-jre, ZXing 3.5.4, Orika 1.5.4, MVEL 2.5.4.Final
   json-schema-validator 2.2.14 / json-schema-core 1.2.14 (Apache-2.0 OR LGPLv3;
     MOSIP elects Apache-2.0)

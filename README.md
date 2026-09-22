@@ -57,8 +57,12 @@ These modules are **not** in this repository. Implementations that are still nee
 | `kernel-templatemanager-velocity` | Implementation in `kernel-core` |
 | `kernel-transliteration-icu4j` | Implementation in `kernel-core` |
 | `kernel-websubclient-api` | Implementation in `kernel-core` |
-| `kernel-openid-bridge-api` | Folded into `kernel-auth-adapter` (`io.mosip.kernel.openid.bridge.*`) |
-| `kernel-openid-bridge-api` | Folded into `kernel-auth-adapter` (`io.mosip.kernel.openid.bridge.*`) |
+
+### Folded into `kernel-auth-adapter`
+
+| Former module | Notes |
+|---------------|--------|
+| `kernel-openid-bridge-api` | Packages remain `io.mosip.kernel.openid.bridge.*` |
 
 ### Merged into `kernel-idgenerator-service`
 
@@ -145,7 +149,7 @@ mvn clean install -Dmaven.javadoc.skip=true -Dgpg.skip=true
     - Click the Run button in your IDE, or
     - Run via command: `java -jar target/specific-service:<$version>.jar`
 
-5. Verify Swagger is accessible.
+5. Verify health (and Swagger where the service is servlet-based — not Vert.x idgenerator).
 
 ### Local Setup with Docker (Easy Setup for Demos)
 
@@ -159,6 +163,7 @@ Pull the latest pre-built images from Docker Hub using the following commands:
 docker pull mosipid/kernel-notification-service:1.4.1-SNAPSHOT
 docker pull mosipid/kernel-idgenerator-service:1.4.1-SNAPSHOT
 docker pull mosipid/kernel-config-server:1.4.1-SNAPSHOT
+docker pull mosipid/kernel-auth-service:1.4.1-SNAPSHOT
 ```
 
 #### Option 2: Build Docker Images Locally
@@ -196,7 +201,7 @@ Check that all containers are running:
 docker ps
 ```
 
-Access the services at `http://localhost:<port>` using the port mappings listed abov
+Access the services at `http://localhost:<port>` using the port mappings listed above.
 
 
 ---

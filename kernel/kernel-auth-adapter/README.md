@@ -10,7 +10,7 @@ It is a **Maven dependency**, not a Docker wget extra. `kernel-core` is `provide
 
 Parent: [`../README.md`](../README.md)
 
-Do not merge this module into `kernel-auth-service`. Spring Security 7 matchers: `AnyRequestMatcher` + `PathPatternSupport`. Same Boot 3.4 switch as MVC: `spring.mvc.pathmatch.matching-strategy=PATH_PATTERN_PARSER` (default) or `ANT_PATH_MATCHER`.
+Do not merge this module into `kernel-auth-service`. Spring Security matchers: `AnyRequestMatcher` + `PathPatternSupport`. Path matching: `spring.mvc.pathmatch.matching-strategy=PATH_PATTERN_PARSER` (Boot 4 default) or `ANT_PATH_MATCHER`.
 
 ---
 
@@ -77,7 +77,7 @@ mosip-config `application-default.properties` can still set `ANT_PATH_MATCHER`; 
 
 • If you have questions or encounter issues, visit the [MOSIP Community](https://community.mosip.io/) for support.
 
-• For any GitHub issues: [Report here](https://github.com/mosip/mosip-openid-bridge/issues)
+• For any GitHub issues: [Report here](https://github.com/mosip/commons/issues)
 
 ---
 

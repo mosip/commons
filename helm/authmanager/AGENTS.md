@@ -1,7 +1,3 @@
-# helm/authmanager
+# authmanager
 
-Image `kernel-auth-service`; Istio `prefix` `/v1/authmanager`; port `8091`; health `/v1/authmanager/actuator/health`.
-
-Align `Chart.yaml` `version` with `deploy/kernel/install.sh` `CHART_VERSION`.
-
-Ban: change `/v1/authmanager` sans deploy/Istio; wget auth-adapter at container start (bake in image).
+Image `kernel-auth-service` · `:8091` · `/v1/authmanager` · health `/v1/authmanager/actuator/health`. Align Chart `version` w/ `deploy/kernel` `CHART_VERSION`. Path Δ → deploy/Istio. Bake adapter (no wget).

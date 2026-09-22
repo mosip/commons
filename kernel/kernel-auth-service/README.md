@@ -1,12 +1,12 @@
 # Kernel Auth Service
 
-[![Maven Package upon a push](https://github.com/mosip/mosip-openid-bridge/actions/workflows/push-trigger.yml/badge.svg?branch=develop)](https://github.com/mosip/mosip-openid-bridge/actions/workflows/push-trigger.yml)
+[![Maven Package upon a push](https://github.com/mosip/commons/actions/workflows/push-trigger.yml/badge.svg?branch=master)](https://github.com/mosip/commons/actions/workflows/push-trigger.yml)
 
 ## Overview
 
 **Kernel Auth Service** is the MOSIP auth manager HTTP process. It issues and validates tokens against Keycloak (or a compatible IdP) for MOSIP modules.
 
-Parent: [`../README.md`](../README.md) · Helm: [`../../helm/authmanager`](../../helm/authmanager/README.md) · Deploy: [`../../deploy`](../../deploy/README.md)
+Parent: [`../README.md`](../README.md) · Helm: [`../../helm/authmanager`](../../helm/authmanager/README.md) · Deploy: [`../../deploy/kernel`](../../deploy/kernel/README.md)
 
 Do not change `/v1/authmanager` without Helm/deploy. Boot 4 uses ZIP layout. Embedded server is Tomcat.
 
@@ -202,7 +202,7 @@ Hub: `docker pull mosipid/kernel-auth-service:<$version>` then the same `docker 
 
 ### Kubernetes
 
-Cluster install: [`deploy/`](../../deploy/README.md) (`./install.sh [kubeconfig]`). Chart [`helm/authmanager`](../../helm/authmanager/README.md). Sandbox: [v3 installation](https://docs.mosip.io/1.2.0/deploymentnew/v3-installation).
+Cluster install: [`deploy/kernel`](../../deploy/kernel/README.md) (`./install.sh [kubeconfig]`). Chart [`helm/authmanager`](../../helm/authmanager/README.md). Sandbox: [v3 installation](https://docs.mosip.io/1.2.0/deploymentnew/v3-installation).
 
 ---
 
@@ -224,7 +224,7 @@ Cluster install: [`deploy/`](../../deploy/README.md) (`./install.sh [kubeconfig]
 
 • If you have questions or encounter issues, visit the [MOSIP Community](https://community.mosip.io/) for support.
 
-• For any GitHub issues: [Report here](https://github.com/mosip/mosip-openid-bridge/issues)
+• For any GitHub issues: [Report here](https://github.com/mosip/commons/issues)
 
 ---
 

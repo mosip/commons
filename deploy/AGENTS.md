@@ -1,5 +1,7 @@
 # deploy/
 
-Order: `conf-secrets` → `config-server` → `kernel` (authmanager+idgenerator+notifier, NS `kernel`). `install.sh [kubeconfig]` · `restart.sh` · `delete.sh`. Pin `CHART_VERSION`. Smoke: `/config` `/v1/authmanager` `/v1/notifier` `/v1/idgenerator` `/v1/ridgenerator`.
+Order: conf-secrets → config-server → kernel (authmanager+idgen+notifier, NS `kernel`). `install|restart|delete.sh [kubeconfig]`. Pin `CHART_VERSION`.
 
-`conf-secrets/delete.sh` destructive — not part of restart. Kernel delete ≠ remove `conf-secrets`. No salt Job, no hardcoded secrets, no separate RID/PRID releases.
+Smoke: `/config` `/v1/authmanager` `/v1/notifier` `/v1/idgenerator` `/v1/ridgenerator`.
+
+Ban: conf-secrets in restart/delete-kernel; salt Job; hardcoded secrets; split RID/PRID releases.

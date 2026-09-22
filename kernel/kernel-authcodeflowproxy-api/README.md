@@ -4,9 +4,9 @@
 
 **Kernel Auth Code Flow Proxy API** provides server-side login using the OAuth 2.0 [Authorization Code](https://oauth.net/2/grant-types/authorization-code/) grant: login, login-redirect, logout, and token validation against Keycloak (or a compatible IdP).
 
-It is a **library** (not a Docker service). Do not fold it into `kernel-auth-service`. It depends on `kernel-auth-adapter` (OpenID bridge API packages) with **no** `<version>`.
+It is a **library** (not a Docker service). Do not fold it into `kernel-auth-service` or `kernel-auth-adapter`. It depends on `kernel-auth-adapter` (OpenID bridge API packages) with **no** `<version>`.
 
-This module previously lived in [commons](https://github.com/mosip/commons/tree/develop/kernel/kernel-authcodeflowproxy-api).
+Moved into this reactor from [mosip-openid-bridge](https://github.com/mosip/mosip-openid-bridge).
 
 Parent: [`../README.md`](../README.md)
 
@@ -83,7 +83,7 @@ io.mosip.kernel.authcodeflowproxy.api
 
 • If you have questions or encounter issues, visit the [MOSIP Community](https://community.mosip.io/) for support.
 
-• For any GitHub issues: [Report here](https://github.com/mosip/mosip-openid-bridge/issues)
+• For any GitHub issues: [Report here](https://github.com/mosip/commons/issues)
 
 ---
 

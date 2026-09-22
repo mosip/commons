@@ -26,6 +26,7 @@ Apache-2.0 (licenses/Apache-2.0.txt)
 - com.github.java-json-tools:json-schema-validator 2.2.14 (elect Apache over LGPLv3)
 - org.javassist:javassist 3.33.0-GA (elect Apache over MPL-1.1 / LGPL-2.1)
 - Spring Boot 4.1.1 / Spring Framework 7.0.9 / Vert.x 3.9.16 / Guava 33.7.1-jre
+- org.apache.directory.api:api-all 2.1.8 (auth-service)
   (and other Apache-2.0 components listed in licenses/NOTICE)
 
 ===========================
