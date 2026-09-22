@@ -74,13 +74,11 @@ ENV loader_path_env=${loader_path}
 
 ENV current_module_env=kernel-idgenerator-service
 
-ADD ./target/*.jar /target/
+# Boot 4 ZIP layout JARs are not marked executable; copy by name
+COPY ./target/${current_module_env}-*.jar ${current_module_env}.jar
 ADD configure_start.sh configure_start.sh
 
-RUN find /target -name '*.jar' -executable -type f "-print0" | xargs "-0" cp -t / \
-    && rm -rf /target \
-    && mv /*.jar ${work_dir}/${current_module_env}.jar \
-    && mkdir -p ${loader_path} \
+RUN mkdir -p ${loader_path} \
     && chmod +x configure_start.sh \
     && chown -R ${container_user}:${container_user} ${work_dir}
 

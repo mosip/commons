@@ -37,12 +37,10 @@ ENV work_dir=/home/${container_user}
 
 ENV current_module_env=kernel-auth-service
 
-ADD ./target/*.jar /target/
+# Boot 4 ZIP layout JARs are not marked executable; copy by name (same as notifier / config-server)
+COPY ./target/${current_module_env}-*.jar ${current_module_env}.jar
 
-RUN find /target -name '*.jar' -executable -type f "-print0" | xargs "-0" cp -t / \
-    && rm -rf /target \
-    && mv /*.jar ${work_dir}/${current_module_env}.jar \
-    && chown -R ${container_user}:${container_user} ${work_dir}
+RUN chown -R ${container_user}:${container_user} ${work_dir}
 
 USER ${container_user_uid}:${container_user_gid}
 
