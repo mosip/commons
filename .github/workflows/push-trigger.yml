@@ -20,6 +20,7 @@ on:
       - 1.*
       - develop*
       - MOSIP*
+      - issue*
 
 jobs:
   build-commons:
