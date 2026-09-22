@@ -27,6 +27,9 @@ jobs:
     with:
       SERVICE_LOCATION: ./
       BUILD_ARTIFACT: commons
+      # Boot 4 ZIP layout: spring-boot repackage no longer sets the executable bit; kattu only
+      # auto-zips -executable JARs. List service Boot JARs so the commons artifact is uploaded.
+      MAVEN_NON_EXEC_ARTIFACTS: "kernel-notification-service.jar,kernel-idgenerator-service.jar,kernel-config-server.jar,kernel-auth-service.jar"
     secrets:
       OSSRH_USER: ${{ secrets.OSSRH_USER }}
       OSSRH_SECRET: ${{ secrets.OSSRH_SECRET }}
@@ -68,23 +71,17 @@ jobs:
     strategy:
       matrix:
         include:
-          - SERVICE_LOCATION: 'kernel/kernel-ridgenerator-service'
-            SERVICE_NAME: 'kernel-ridgenerator-service'
-            BUILD_ARTIFACT: 'commons'
           - SERVICE_LOCATION: 'kernel/kernel-notification-service'
             SERVICE_NAME: 'kernel-notification-service'
-            BUILD_ARTIFACT: 'commons'
-          - SERVICE_LOCATION: 'kernel/kernel-pridgenerator-service'
-            SERVICE_NAME: 'kernel-pridgenerator-service'
             BUILD_ARTIFACT: 'commons'
           - SERVICE_LOCATION: 'kernel/kernel-idgenerator-service'
             SERVICE_NAME: 'kernel-idgenerator-service'
             BUILD_ARTIFACT: 'commons'
-          - SERVICE_LOCATION: 'kernel/kernel-salt-generator'
-            SERVICE_NAME: 'kernel-salt-generator'
-            BUILD_ARTIFACT: 'commons'
           - SERVICE_LOCATION: 'kernel/kernel-config-server'
             SERVICE_NAME: 'kernel-config-server'
+            BUILD_ARTIFACT: 'commons'
+          - SERVICE_LOCATION: 'kernel/kernel-auth-service'
+            SERVICE_NAME: 'kernel-auth-service'
             BUILD_ARTIFACT: 'commons'
       fail-fast: false
     uses: mosip/kattu/.github/workflows/docker-build.yml@master-java21

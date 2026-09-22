@@ -4,53 +4,57 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This is the base class for all MOSIP checked exceptions.
- * 
- * The class and its subclasses are a form that indicates conditions that a
- * reasonable application might want to catch.
- *
+ * Superclass of all MOSIP checked exceptions that carry an error code and
+ * message chain.
  * <p>
- * The class {@code BaseCheckedException} and any subclasses that are not also
- * subclasses of {@link BaseUncheckedException} are <em>checked exceptions</em>.
- * Checked exceptions need to be declared in a method or constructor's
- * {@code throws} clause if they can be thrown by the execution of the method or
- * constructor and propagate outside the method or constructor boundary.
+ * Contract: callers typically construct with a MOSIP {@code errorCode} and
+ * {@code errorMessage}. {@link #addInfo(String, String)} appends nested error
+ * items. {@link #getErrorCode()} and {@link #getErrorText()} return the
+ * first-added item and throw if none were added. Does not perform I/O.
+ * </p>
  *
  * @author Shashank Agrawal
  * @since 1.0
- *
+ * @see InfoItem
+ * @see ExceptionUtils
  */
 public class BaseCheckedException extends Exception {
 
 	/**
-	 * 
+	 * Serializable version ID.
 	 */
 	private static final long serialVersionUID = -924722202100630614L;
 
+	/**
+	 * Ordered error-code / error-text pairs accumulated on this exception.
+	 */
 	private final List<InfoItem> infoItems = new ArrayList<>();
 
 	/**
-	 * Constructs a new checked exception
+	 * Constructs a new checked exception with no detail or error items.
 	 */
 	public BaseCheckedException() {
 		super();
 	}
 
 	/**
-	 * Constructs a new checked exception with errorMessage
-	 * 
-	 * @param errorMessage the detail message.
+	 * Constructs a new checked exception with a detail message only.
+	 * <p>
+	 * Contract: does not populate {@link #infoItems}; {@link #getErrorCode()} is
+	 * unsafe until {@link #addInfo(String, String)} is called.
+	 * </p>
+	 *
+	 * @param errorMessage the detail message; may be null
 	 */
 	public BaseCheckedException(String errorMessage) {
 		super(errorMessage);
 	}
 
 	/**
-	 * Constructs a new checked exception with the specified detail message and
-	 * error code.
-	 * 
-	 * @param errorCode    the error code
-	 * @param errorMessage the detail message.
+	 * Constructs a new checked exception with MOSIP error code and message.
+	 *
+	 * @param errorCode    never-null MOSIP error code such as {@code KER-UTL-001}
+	 * @param errorMessage never-null human-readable description; may be empty
 	 */
 	public BaseCheckedException(String errorCode, String errorMessage) {
 		super(errorCode + " --> " + errorMessage);
@@ -58,13 +62,12 @@ public class BaseCheckedException extends Exception {
 	}
 
 	/**
-	 * Constructs a new checked exception with the specified detail message and
-	 * error code and specified cause.
-	 * 
-	 * @param errorCode    the error code
-	 * @param errorMessage the detail message.
-	 * @param rootCause    the specified cause
-	 * 
+	 * Constructs a new checked exception with MOSIP error code, message, and
+	 * cause. Nested {@link BaseCheckedException} info items are copied.
+	 *
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
+	 * @param rootCause    underlying cause; may be null
 	 */
 	public BaseCheckedException(String errorCode, String errorMessage, Throwable rootCause) {
 		super(errorCode + " --> " + errorMessage, rootCause);
@@ -76,22 +79,22 @@ public class BaseCheckedException extends Exception {
 	}
 
 	/**
-	 * This method add error code and error message.
-	 * 
-	 * @param errorCode the error code
-	 * @param errorText the detail message.
-	 * 
-	 * @return the current instance of BaseCheckedException
+	 * Appends an error-code / error-text pair to this exception.
+	 *
+	 * @param errorCode never-null MOSIP error code
+	 * @param errorText never-null detail message; may be empty
+	 * @return this instance for chaining; never null
 	 */
 	public BaseCheckedException addInfo(String errorCode, String errorText) {
 		this.infoItems.add(new InfoItem(errorCode, errorText));
 		return this;
 	}
 
-	/*
-	 * Returns a String object that can be used to get the exception message.
-	 * 
-	 * @see java.lang.Throwable#getMessage()
+	/**
+	 * Returns the detail message, appending the nested cause when present.
+	 *
+	 * @return composed message; may be null if neither message nor cause exists
+	 * @see ExceptionUtils#buildMessage(String, Throwable)
 	 */
 	@Override
 	public String getMessage() {
@@ -99,9 +102,9 @@ public class BaseCheckedException extends Exception {
 	}
 
 	/**
-	 * Returns the list of exception codes.
-	 * 
-	 * @return list of exception codes
+	 * Returns error codes in reverse insertion order (most recently added first).
+	 *
+	 * @return never-null new list; empty if no info items were added
 	 */
 	public List<String> getCodes() {
 		List<String> codes = new ArrayList<>();
@@ -111,9 +114,9 @@ public class BaseCheckedException extends Exception {
 	}
 
 	/**
-	 * Returns the list of exception messages.
-	 * 
-	 * @return list of exception messages
+	 * Returns error texts in reverse insertion order (most recently added first).
+	 *
+	 * @return never-null new list; empty if no info items were added
 	 */
 	public List<String> getErrorTexts() {
 		List<String> errorTexts = new ArrayList<>();
@@ -123,18 +126,22 @@ public class BaseCheckedException extends Exception {
 	}
 
 	/**
-	 * Return the last error code.
-	 * 
-	 * @return the last error code
+	 * Returns the first-added error code (the original constructor code).
+	 *
+	 * @return first error code; never null if this exception was constructed with
+	 *         a code
+	 * @throws java.lang.IndexOutOfBoundsException if no info items exist
 	 */
 	public String getErrorCode() {
 		return infoItems.get(0).errorCode;
 	}
 
 	/**
-	 * Return the last exception message.
-	 * 
-	 * @return the last exception message
+	 * Returns the first-added error text.
+	 *
+	 * @return first error text; never null if this exception was constructed with
+	 *         a message
+	 * @throws java.lang.IndexOutOfBoundsException if no info items exist
 	 */
 	public String getErrorText() {
 		return infoItems.get(0).errorText;

@@ -37,9 +37,6 @@ public final class VIDGeneratorConstant {
 	 */
 	public static final String SERVER_SERVLET_PATH = "server.servlet.path";
 
-
-	public static final String UIN_HEALTH_CHECKER ="mosip.kernel.uin.health.checker.time.ms";
-
 	/**
 	 * The string field V1_0_VID
 	 */
@@ -141,6 +138,9 @@ public final class VIDGeneratorConstant {
 	 */
 	public static final String CURRENT_WORKING_DIRECTORY = "user.dir";
 
+	/**
+	 * JSON media type used by Vert.x VID routes.
+	 */
 	public static final String APPLICATION_JSON = "application/json";
 
 	/**
@@ -161,25 +161,18 @@ public final class VIDGeneratorConstant {
 	 */
 	public static final String TIME_OUT = "timeout";
 
-	public static final String SWAGGER_UI_JSON_FILENAME = "swagger.json";
-
-	public static final String SWAGGER_UI_PATH = "swagger-ui";
-
-	/**
-	 * The swagger ui json file path.
-	 */
-	public static final String SWAGGER_UI_JSON_PATH = SWAGGER_UI_PATH + "/" + SWAGGER_UI_JSON_FILENAME;
-
-	/**
-	 * The swagger json template file.
-	 */
-	public static final String SWAGGER_JSON_TEMPLATE = "swagger-template.vm";
 	/**
 	 * The enable signing property key
 	 */
 	public static final String SIGNING_ENABLE = "mosip.kernel.vid.response-signing-enable";
 
+	/**
+	 * Query parameter name for optional VID expiry on fetch.
+	 */
 	public static final String VIDEXPIRY = "videxpiry";
 
+	/**
+	 * Vert.x worker pool size for VID fetch ({@code mosip.kernel.vid.get_executor_pool}).
+	 */
 	public static final String GET_EXECUTOR_POOL_ENABLE = "mosip.kernel.vid.get_executor_pool";
 }

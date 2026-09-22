@@ -1,19 +1,28 @@
 package io.mosip.kernel.core.otpmanager.spi;
 
 /**
- * This interface provides the methods which can be used for OTP generation.
- * 
+ * Generates a MOSIP one-time password for a key.
+ * <p>
+ * Contract: implementations typically persist OTP state in
+ * {@code mosip_kernel} (or a dedicated OTP store) and may freeze a key after
+ * repeated requests. Call from OTP-manager. {@code otpDto} must be non-null
+ * with a non-blank key.
+ * </p>
+ *
+ * @param <S> OTP request DTO type
+ * @param <D> generated OTP / response type
  * @author Ritesh Sinha
  * @since 1.0.0
- *
  */
 public interface OtpGenerator<S, D> {
 	/**
-	 * This method can be used to generate OTP against a particular key. OTP against
-	 * a particular key is generated only if the key is not freezed.
-	 * 
-	 * @param otpDto the OTP generation DTO.
-	 * @return the generated OTP.
+	 * Generates an OTP for the key in {@code otpDto} unless the key is frozen.
+	 * <p>
+	 * Contract: may perform database I/O.
+	 * </p>
+	 *
+	 * @param otpDto never-null generation request containing the key
+	 * @return never-null generated OTP or response DTO
 	 */
 	public D getOtp(S otpDto);
 }

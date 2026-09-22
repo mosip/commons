@@ -1,36 +1,45 @@
 package io.mosip.kernel.core.packetuploader.spi;
 
 /**
- * Interface for Packet Uploader SFTP
- * 
+ * Uploads MOSIP registration packets over SFTP.
+ * <p>
+ * Contract: implementations open an SFTP channel, upload a local file, and
+ * release the connection. {@code source} must be a non-blank existing path.
+ * The remote destination folder must already exist. Call from registration
+ * client when sending packets to the landing zone.
+ * </p>
+ *
+ * @param <S> SFTP server configuration type
+ * @param <C> SFTP channel / session type
  * @author Urvil Joshi
- * @param <S> the type of packet server configurations
- * @param <C> the type of SFTP-channel
  * @since 1.0.0
  */
 public interface PacketUploader<S, C> {
 
 	/**
-	 * This creates and connects SFTP channel based on configutaions
-	 * 
-	 * @param sftpServer packet server configurations provided by user
-	 * @return configured SFTP-channel instance
+	 * Connects an SFTP channel using the given server configuration.
+	 *
+	 * @param sftpServer never-null host/user/key configuration
+	 * @return never-null connected channel
+	 * @throws io.mosip.kernel.core.packetuploader.exception.ConnectionException when the server cannot be reached
 	 */
 	C createSFTPChannel(S sftpServer);
 
 	/**
-	 * Uploads file to server <i>(this method will not create destination folder it
-	 * should be already present)</i>
-	 * 
-	 * @param sftpChannel configured SFTP-channel instance
-	 * @param source      path of packet to be uploaded
+	 * Uploads the local packet at {@code source} through {@code sftpChannel}.
+	 *
+	 * @param sftpChannel never-null connected channel
+	 * @param source      never-null, never-blank local packet path
+	 * @throws io.mosip.kernel.core.packetuploader.exception.NullPathException when {@code source} is null
+	 * @throws io.mosip.kernel.core.packetuploader.exception.EmptyPathException when {@code source} is empty
+	 * @throws io.mosip.kernel.core.packetuploader.exception.SFTPException when the transfer fails
 	 */
 	void upload(C sftpChannel, String source);
 
 	/**
-	 * This releases the obtained Connection to server
-	 * 
-	 * @param sftpChannel configured SFTP-channel instance
+	 * Closes the SFTP channel.
+	 *
+	 * @param sftpChannel never-null channel previously returned by {@link #createSFTPChannel(Object)}
 	 */
 	void releaseConnection(C sftpChannel);
 

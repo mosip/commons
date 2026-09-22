@@ -6,9 +6,18 @@ import io.mosip.kernel.core.exception.BaseUncheckedException;
 import io.mosip.kernel.core.exception.ServiceError;
 
 /**
- * 
- * @author Srinivasan
+ * Unchecked exception thrown when authorization (AuthZ) fails with one or more
+ * MOSIP service errors.
+ * <p>
+ * Contract: constructed with a non-null error list from the authorization
+ * provider. Callers should inspect {@link #getList()} rather than relying on
+ * {@link #getMessage()}. Does not perform I/O.
+ * </p>
  *
+ * @see ServiceError
+ * @see AuthNException
+ *
+ * @author Srinivasan
  */
 public class AuthZException extends BaseUncheckedException {
 
@@ -18,21 +27,25 @@ public class AuthZException extends BaseUncheckedException {
 	private static final long serialVersionUID = 8152409863253682472L;
 
 	/**
-	 * This variable holds the MosipErrors list.
+	 * Service errors returned by the authorization provider; never mutated after
+	 * construction.
 	 */
 	private final List<ServiceError> list;
 
 	/**
-	 * @param list The error list.
+	 * Constructs an authorization exception wrapping the given service errors.
+	 *
+	 * @param list never-null list of {@link ServiceError}; may be empty
 	 */
 	public AuthZException(List<ServiceError> list) {
 		this.list = list;
 	}
 
 	/**
-	 * Getter for error list.
-	 * 
-	 * @return The error list.
+	 * Returns the authorization errors supplied at construction.
+	 *
+	 * @return the error list; never null, but may be empty; same instance as
+	 *         passed to the constructor
 	 */
 	public List<ServiceError> getList() {
 		return list;

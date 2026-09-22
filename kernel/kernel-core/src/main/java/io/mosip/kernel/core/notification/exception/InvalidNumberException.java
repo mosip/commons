@@ -3,11 +3,14 @@ package io.mosip.kernel.core.notification.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * This exception class for invalid contact number.
- * 
+ * Unchecked exception thrown when an SMS destination number is invalid.
+ * <p>
+ * Contract: raised by {@link io.mosip.kernel.core.notification.spi.SMSServiceProvider}
+ * when {@code contactNumber} is null, empty, or fails format rules.
+ * </p>
+ *
  * @author Ritesh Sinha
  * @since 1.0.0
- *
  */
 public class InvalidNumberException extends BaseUncheckedException {
 
@@ -17,10 +20,10 @@ public class InvalidNumberException extends BaseUncheckedException {
 	private static final long serialVersionUID = -6174268206879672695L;
 
 	/**
-	 * Constructor for MosipInvalidNumberException class.
-	 * 
-	 * @param errorCode    the error code
-	 * @param errorMessage the error message
+	 * Constructs an invalid-number exception with MOSIP error code and message.
+	 *
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
 	 */
 	public InvalidNumberException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);

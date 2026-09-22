@@ -3,11 +3,14 @@ package io.mosip.kernel.core.keymanager.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * Custom exception for NoSuchAliasException
- * 
+ * Unchecked exception thrown when a keystore alias does not exist.
+ * <p>
+ * Contract: raised by {@link io.mosip.kernel.core.keymanager.spi.KeyStore}
+ * getters when {@code alias} is unknown.
+ * </p>
+ *
  * @author Dharmesh Khandelwal
  * @since 1.0.0
- *
  */
 public class NoSuchAliasException extends BaseUncheckedException {
 	/**
@@ -16,10 +19,10 @@ public class NoSuchAliasException extends BaseUncheckedException {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Constructor initialize NoSuchAliasException
-	 * 
-	 * @param errorCode    The errorcode for this exception
-	 * @param errorMessage The error message for this exception
+	 * Constructs the exception with MOSIP error code and message.
+	 *
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
 	 */
 	public NoSuchAliasException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);

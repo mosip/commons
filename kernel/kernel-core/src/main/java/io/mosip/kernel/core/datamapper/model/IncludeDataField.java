@@ -5,24 +5,32 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * This Class contains the source and destination classes field names that needs
- * to be included with mapNull configuration.
- * 
- * @author Neha
+ * Source-to-destination field pair used when configuring
+ * {@link io.mosip.kernel.core.datamapper.spi.DataMapperBuilder#includeFields}.
+ * <p>
+ * Contract: field names must be non-blank Java property names.
+ * {@code mapIncludeFieldNull} controls whether a null source value is copied.
+ * Does not perform I/O.
+ * </p>
  *
+ * @author Neha
  */
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class IncludeDataField {
 
+	/**
+	 * Source bean property name; must be non-blank when used in a builder.
+	 */
 	private String sourceField;
+	/**
+	 * Destination bean property name; must be non-blank when used in a builder.
+	 */
 	private String destinationField;
 
 	/**
-	 * Field to Configure whether to map nulls in generated mapper code of included
-	 * fields
+	 * Whether null source values are mapped for this included field.
 	 */
 	private boolean mapIncludeFieldNull;
 

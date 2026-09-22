@@ -12,7 +12,12 @@ package io.mosip.kernel.core.crypto.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * {@link Exception} to be thrown when key is null
+ * Unchecked exception thrown when the MOSIP security method argument is null.
+ * <p>
+ * Contract: raised when the caller omits the encryption/signature method
+ * enum. Prefer
+ * {@link io.mosip.kernel.core.crypto.constant.CryptoExceptionCodeConstants#NULL_METHOD_EXCEPTION}.
+ * </p>
  * 
  * @author Urvil Joshi
  * @since 1.0.0

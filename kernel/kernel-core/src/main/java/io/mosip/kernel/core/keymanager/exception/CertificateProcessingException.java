@@ -3,11 +3,15 @@ package io.mosip.kernel.core.keymanager.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * Custom exception for CertificateProcessingException
- * 
+ * Unchecked exception thrown when X.509 certificate generation or parsing
+ * fails.
+ * <p>
+ * Contract: raised by {@link io.mosip.kernel.core.keymanager.spi.KeyStore}
+ * when building or storing a certificate.
+ * </p>
+ *
  * @author Dharmesh Khandelwal
  * @since 1.0.0
- *
  */
 public class CertificateProcessingException extends BaseUncheckedException {
 	/**
@@ -16,10 +20,10 @@ public class CertificateProcessingException extends BaseUncheckedException {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Constructor initialize CertificateProcessingException
-	 * 
-	 * @param errorCode    The errorcode for this exception
-	 * @param errorMessage The error message for this exception
+	 * Constructs the exception with MOSIP error code and message.
+	 *
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
 	 */
 	public CertificateProcessingException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);

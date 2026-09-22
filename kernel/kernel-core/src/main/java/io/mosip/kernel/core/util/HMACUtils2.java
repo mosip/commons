@@ -17,12 +17,14 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 /**
- * This class defines the alternate safer HMAC Util to be used in MOSIP Project.
- * The HMAC Util is implemented using desired methods of MessageDigest class of
- * java security package
+ * Thread-safe SHA-256 digest, salt, and Base64 helpers.
+ * <p>
+ * Contract: uses thread-local {@link MessageDigest} instances. PBKDF2 iteration
+ * count is {@code 27500} unless env {@code hashiteration} is a larger integer.
+ * Does not perform MOSIP HTTP.
+ * </p>
  *
  * @author Sasikumar Ganesan
- *
  * @since 1.1.4
  */
 public final class HMACUtils2 {
@@ -73,30 +75,40 @@ public final class HMACUtils2 {
         ITERATION_COUNT = envCount;
     }
 
-    /*
-     * No object initialization.
+    /**
+     * Prevents instantiation of this utility.
      */
     private HMACUtils2() {
     }
 
     /**
-     * Performs a digest using the specified array of bytes.
+     * Drops this thread's cached digest, PRNG, and PBKDF2 factory so pooled threads
+     * do not retain them after the request ends.
+     */
+    public static void removeThreadLocals() {
+        MESSAGE_DIGEST_SHA256_TL.remove();
+        SECURE_RANDOM_TL.remove();
+        PBKDF2_WITH_HMAC_SHA256_FACTORY_TL.remove();
+    }
+
+    /**
+     * SHA-256 digests {@code bytes}.
      *
-     * @param bytes bytes to be hash generation
-     * @return byte[] generated hash bytes
-     * @throws NoSuchAlgorithmException if no algorithm found
+     * @param bytes never-null input
+     * @return never-null 32-byte digest
+     * @throws NoSuchAlgorithmException unused; digest is created at class init
      */
     public static byte[] generateHash(final byte[] bytes) throws NoSuchAlgorithmException {
         return MESSAGE_DIGEST_SHA256_TL.get().digest(bytes);
     }
 
     /**
-     * Return the digest as a plain text with Salt
+     * SHA-256 digests {@code pwd} then {@code salt} and returns uppercase hex.
      *
-     * @param pwd digest bytes
-     * @param salt  digest bytes
-     * @return String converted digest as plain text
-     * @throws NoSuchAlgorithmException if no algorithm found
+     * @param pwd  never-null password bytes
+     * @param salt never-null salt bytes
+     * @return never-null uppercase hex digest
+     * @throws NoSuchAlgorithmException unused; digest is created at class init
      */
     public static String digestAsPlainTextWithSalt(final byte[] pwd, final byte[] salt)
             throws NoSuchAlgorithmException {
@@ -108,30 +120,30 @@ public final class HMACUtils2 {
     }
 
     /**
-     * Return the digest as a plain text
+     * SHA-256 digests {@code bytes} and returns uppercase hex.
      *
-     * @param bytes digest bytes
-     * @return String converted digest as plain text
-     * @throws NoSuchAlgorithmException
+     * @param bytes never-null input
+     * @return never-null uppercase hex digest
+     * @throws NoSuchAlgorithmException unused; digest is created at class init
      */
     public static String digestAsPlainText(final byte[] bytes) throws NoSuchAlgorithmException {
         return encodeBytesToHex(generateHash(bytes), true, ByteOrder.BIG_ENDIAN);
     }
 
     /**
-     * Generate Random Salt (with default 16 bytes of length).
+     * Returns 16 cryptographically random salt bytes.
      *
-     * @return Random Salt
+     * @return never-null 16-byte salt
      */
     public static byte[] generateSalt() {
         return generateSalt(16);
     }
 
     /**
-     * Generate Random Salt (with given length)
+     * Returns {@code bytes} cryptographically random salt bytes.
      *
-     * @param bytes length of random salt
-     * @return Random Salt of given length
+     * @param bytes salt length; must be positive
+     * @return never-null salt of length {@code bytes}
      */
     public static byte[] generateSalt(int bytes) {
         byte[] randomBytes = new byte[bytes];
@@ -140,26 +152,33 @@ public final class HMACUtils2 {
     }
 
     /**
-     * Encodes to BASE64 String
+     * Encodes {@code data} as standard Base64.
      *
-     * @param data data to encode
-     * @return encoded data
+     * @param data never-null bytes to encode
+     * @return never-null Base64 string
      */
     public static String encodeBase64String(byte[] data) {
         return BASE64_ENCODER.encodeToString(data);
     }
 
     /**
-     * Decodes from BASE64
+     * Decodes standard Base64 text.
      *
-     * @param data data to decode
-     * @return decoded data
+     * @param data never-null Base64 text
+     * @return never-null decoded bytes
      */
     public static byte[] decodeBase64(String data) {
         return BASE64_DECODER.decode(data);
     }
 
 
+    /**
+     * PBKDF2-encodes {@code password} with Base64 {@code salt}.
+     *
+     * @param password never-null password
+     * @param salt     never-null Base64-encoded salt
+     * @return never-null Base64-encoded derived key
+     */
     private static String encode(String password, byte[] salt) {
         KeySpec spec = new PBEKeySpec(password.toCharArray(), Base64.getDecoder().decode(salt), ITERATION_COUNT, 512);
         try {
@@ -172,6 +191,14 @@ public final class HMACUtils2 {
         }
     }
 
+    /**
+     * Encodes {@code byteArray} as hex using {@code byteOrder}.
+     *
+     * @param byteArray never-null bytes
+     * @param upperCase {@code true} for A-F, {@code false} for a-f
+     * @param byteOrder never-null {@link ByteOrder#BIG_ENDIAN} or {@link ByteOrder#LITTLE_ENDIAN}
+     * @return never-null hex string of length {@code byteArray.length * 2}
+     */
     public static String encodeBytesToHex(byte[] byteArray, boolean upperCase, ByteOrder byteOrder) {
         final int len = byteArray.length;
 
@@ -194,6 +221,13 @@ public final class HMACUtils2 {
         return new String(buffer);
     }
 
+    /**
+     * Returns a {@link MessageDigest} for {@code algo}.
+     *
+     * @param algo never-null JCA algorithm name
+     * @return never-null digest instance
+     * @throws io.mosip.kernel.core.exception.NoSuchAlgorithmException when the algorithm is unavailable
+     */
     private static MessageDigest getDigest(String algo) {
         try {
             return MessageDigest.getInstance(algo);

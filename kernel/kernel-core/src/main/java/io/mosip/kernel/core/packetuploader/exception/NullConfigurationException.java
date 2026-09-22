@@ -3,8 +3,12 @@ package io.mosip.kernel.core.packetuploader.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * Exception to be thrown when configuration is null
- * 
+ * Unchecked exception thrown when SFTP configuration is null.
+ * <p>
+ * Contract: raised when {@code createSFTPChannel} is called with a null
+ * configuration object.
+ * </p>
+ *
  * @author Urvil Joshi
  * @since 1.0.0
  */

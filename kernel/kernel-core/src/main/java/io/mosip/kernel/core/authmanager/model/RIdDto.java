@@ -5,21 +5,23 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 
+ * Holds the registration ID (RID) associated with a MOSIP user.
+ * <p>
+ * Contract: returned by
+ * {@link io.mosip.kernel.core.authmanager.spi.AuthService#getRidBasedOnUid(String, String)}.
+ * {@code rId} is null when no mapping exists. Does not perform I/O.
+ * </p>
+ *
  * @author Srinivasan
  * @since 1.0.0
- *
- */
-/*
- * (non-Javadoc)
- * 
- * @see java.lang.Object#toString()
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class RIdDto {
 
-	/** The r id. */
+	/**
+	 * Registration ID for the user; null if unmapped.
+	 */
 	private String rId;
 }

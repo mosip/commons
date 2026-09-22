@@ -29,3 +29,7 @@ test.txt
 /.recommenders/
 **/*.iml
 .vscode
+kernel/kernel-config-server/.local/
+kernel/kernel-config-server/**/*.log
+.mvn/
+

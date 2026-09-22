@@ -3,8 +3,12 @@ package io.mosip.kernel.core.packetuploader.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * Exception to be thrown when Private key is not valid
- * 
+ * Unchecked exception thrown when the SFTP private-key identity is invalid.
+ * <p>
+ * Contract: raised when the configured key cannot be loaded or does not match
+ * the server. Does not retry automatically.
+ * </p>
+ *
  * @author Urvil Joshi
  * @since 1.0.0
  */

@@ -25,20 +25,23 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import io.mosip.kernel.dataaccess.hibernate.repository.impl.HibernateRepositoryImpl;
 import io.mosip.kernel.vidgenerator.constant.HibernatePersistenceConstant;
 import jakarta.persistence.EntityManagerFactory;
 
 /**
- * Configuration class for IDGenerator
- * 
+ * Spring Hibernate configuration for the Vert.x ID generator process.
+ * <p>
+ * Scans UIN, VID, and RID repositories and entities. Spring MVC RID
+ * types are excluded; RID HTTP is served by Vert.x {@code RidFetcherRouter}.
+ * </p>
+ *
  * @author Dharmesh Khandelwal
  * @author Raj Jha
  * @since 1.0.0
@@ -48,11 +51,46 @@ import jakarta.persistence.EntityManagerFactory;
 @Configuration
 @PropertySource({ "classpath:bootstrap.properties" })
 @PropertySource(value = "classpath:application-${spring.profiles.active}.properties", ignoreResourceNotFound = true)
-@EnableJpaRepositories(basePackages = { "io.mosip.kernel.vidgenerator.repository", "io.mosip.kernel.uingenerator.repository"})
-@EnableAutoConfiguration
+@EnableJpaRepositories(basePackages = { "io.mosip.kernel.vidgenerator.repository", "io.mosip.kernel.uingenerator.repository",
+		"io.mosip.kernel.ridgenerator.repository" }, repositoryBaseClass = HibernateRepositoryImpl.class)
+@EnableAutoConfiguration(excludeName = {
+		"io.mosip.kernel.applicanttype.api.impl.ApplicantTypeImpl",
+		"io.mosip.kernel.idobjectvalidator.config.IdObjectValidatorConfig",
+		"io.mosip.kernel.websub.api.config.IntentVerificationConfig",
+		"io.mosip.kernel.websub.api.config.WebSubClientConfig",
+		"io.mosip.kernel.websub.api.config.publisher.WebSubPublisherClientConfig",
+		"io.mosip.kernel.websub.api.config.publisher.RestTemplateHelper",
+		"io.mosip.kernel.idgenerator.rid.impl.RidGeneratorImpl",
+		"io.mosip.kernel.idgenerator.tokenid.impl.TokenIdGeneratorImpl",
+		"io.mosip.kernel.idgenerator.machineid.impl.MachineIdGeneratorImpl",
+		"io.mosip.kernel.idgenerator.regcenterid.impl.RegistrationCenterIdGeneratorImpl",
+		"io.mosip.kernel.idgenerator.mispid.impl.MispIdGeneratorImpl",
+		"io.mosip.kernel.idvalidator.mispid.impl.MispIdValidatorImpl",
+		"io.mosip.kernel.idvalidator.rid.impl.RidValidatorImpl",
+		"io.mosip.kernel.idvalidator.prid.impl.PridValidatorImpl",
+		"io.mosip.kernel.licensekeygenerator.misp.impl.MISPLicenseKeyGeneratorImpl",
+		"io.mosip.kernel.licensekeygenerator.misp.util.MISPLicenseKeyGeneratorUtil"
+})
 @ComponentScan(basePackages = { "io.mosip.kernel.vidgenerator.*","io.mosip.kernel.uingenerator.*", "io.mosip.kernel.idgenerator.vid.*",
-		"io.mosip.kernel.crypto.*", "${mosip.auth.adapter.impl.basepackage}.*","io.mosip.kernel.cryptosignature.*","io.mosip.kernel.idgenerator.*","io.mosip.kernel.keygenerator.bouncycastle"}, 
-excludeFilters = @Filter(type=FilterType.REGEX,pattern="io\\.mosip\\.kernel\\.idgenerator\\.test\\..*"))
+		"io.mosip.kernel.crypto.*", "${mosip.auth.adapter.impl.basepackage}.*","io.mosip.kernel.cryptosignature.*","io.mosip.kernel.idgenerator.*",
+		"io.mosip.kernel.ridgenerator.service","io.mosip.kernel.ridgenerator.router","io.mosip.kernel.ridgenerator.repository",
+		"io.mosip.kernel.ridgenerator.entity","io.mosip.kernel.ridgenerator.config","io.mosip.kernel.keygenerator.bouncycastle"}, 
+excludeFilters = {
+		@Filter(type=FilterType.REGEX,pattern="io\\.mosip\\.kernel\\.idgenerator\\.test\\..*"),
+		@Filter(type=FilterType.REGEX,pattern="io\\.mosip\\.kernel\\.idgenerator\\.rid\\..*"),
+		@Filter(type=FilterType.REGEX,pattern="io\\.mosip\\.kernel\\.idgenerator\\.tokenid\\..*"),
+		@Filter(type=FilterType.REGEX,pattern="io\\.mosip\\.kernel\\.idgenerator\\.machineid\\..*"),
+		@Filter(type=FilterType.REGEX,pattern="io\\.mosip\\.kernel\\.idgenerator\\.regcenterid\\..*"),
+		@Filter(type=FilterType.REGEX,pattern="io\\.mosip\\.kernel\\.idgenerator\\.mispid\\..*"),
+		@Filter(type=FilterType.REGEX,pattern="io\\.mosip\\.kernel\\.idgenerator\\.partnerid\\..*"),
+		@Filter(type=FilterType.ASSIGNABLE_TYPE, classes = {
+				io.mosip.kernel.ridgenerator.exception.ApiExceptionalHandler.class,
+				io.mosip.kernel.ridgenerator.dto.AuthorizedRolesDto.class,
+				// springdoc is servlet-only; Vert.x / AnnotationConfig tests must not load these
+				io.mosip.kernel.ridgenerator.config.SwaggerConfig.class,
+				io.mosip.kernel.ridgenerator.config.OpenApiProperties.class
+		})
+})
 @EnableTransactionManagement
 public class HibernateDaoConfig implements EnvironmentAware {
 	
@@ -64,22 +102,36 @@ public class HibernateDaoConfig implements EnvironmentAware {
 	@Autowired
 	private Environment env;
 
-	@Value("${mosip.kernel.vid.hikari_maximumPoolSize:50}")
+	/**
+	 * Hikari maximum pool size ({@code mosip.kernel.vid.hikari_maximumPoolSize}).
+	 */
+	@Value("${mosip.kernel.vid.hikari_maximumPoolSize:10}")
 	private int maximumPoolSize;
+	/**
+	 * Hikari connection validation timeout in milliseconds ({@code hikari.validationTimeout}).
+	 */
 	@Value("${hikari.validationTimeout:3000}")
 	private int validationTimeout;
-	@Value("${hikari.connectionTimeout:10000}")
+	/**
+	 * Hikari connection acquisition timeout in milliseconds ({@code hikari.connectionTimeout}).
+	 */
+	@Value("${hikari.connectionTimeout:60000}")
 	private int connectionTimeout;
+	/**
+	 * Hikari idle timeout in milliseconds ({@code hikari.idleTimeout}).
+	 */
 	@Value("${hikari.idleTimeout:200000}")
 	private int idleTimeout;
-	@Value("${hikari.minimumIdle:5}")
+	/**
+	 * Hikari minimum idle connections ({@code hikari.minimumIdle}).
+	 */
+	@Value("${hikari.minimumIdle:0}")
 	private int minimumIdle;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.context.EnvironmentAware#setEnvironment(org.
-	 * springframework.core.env.Environment)
+	/**
+	 * Stores the Spring {@link Environment} used to resolve JDBC and Hibernate properties.
+	 *
+	 * @param environment active Spring environment
 	 */
 	@Override
 	public void setEnvironment(final Environment environment) {
@@ -93,7 +145,6 @@ public class HibernateDaoConfig implements EnvironmentAware {
 	 * @return dataSource
 	 */
 	@Bean
-	@Autowired
 	public DataSource dataSource() {
 		HikariConfig hikariConfig = new HikariConfig();
 		hikariConfig.setDriverClassName(env.getProperty(HibernatePersistenceConstant.JAVAX_PERSISTENCE_JDBC_DRIVER));
@@ -115,11 +166,11 @@ public class HibernateDaoConfig implements EnvironmentAware {
 	 * @return LocalContainerEntityManagerFactoryBean
 	 */
 	@Bean
-	@Autowired
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(final DataSource dataSource) {
 		LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
 		entityManagerFactory.setDataSource(dataSource);
-		entityManagerFactory.setPackagesToScan("io.mosip.kernel.vidgenerator.entity","io.mosip.kernel.uingenerator.entity");
+		entityManagerFactory.setPackagesToScan("io.mosip.kernel.vidgenerator.entity","io.mosip.kernel.uingenerator.entity",
+				"io.mosip.kernel.ridgenerator.entity");
 		entityManagerFactory.setJpaPropertyMap(jpaProperties());
 		entityManagerFactory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 		return entityManagerFactory;
@@ -132,13 +183,17 @@ public class HibernateDaoConfig implements EnvironmentAware {
 	 * @return PlatformTransactionManager
 	 */
 	@Bean(name = "transactionManager")
-	@Autowired
 	public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
 		JpaTransactionManager jpaTransactionManager = new JpaTransactionManager(entityManagerFactory);
 		jpaTransactionManager.setDataSource(dataSource());
 		return jpaTransactionManager;
 	}
 
+	/**
+	 * Builds Hibernate JPA properties from the environment, applying MOSIP defaults when a key is absent.
+	 *
+	 * @return Hibernate property map used by the entity manager factory
+	 */
 	public Map<String, Object> jpaProperties() {
 		HashMap<String, Object> jpaProperties = new HashMap<>();
 		getProperty(jpaProperties, HibernatePersistenceConstant.HIBERNATE_HBM2DDL_AUTO,
@@ -166,6 +221,14 @@ public class HibernateDaoConfig implements EnvironmentAware {
 		return jpaProperties;
 	}
 
+	/**
+	 * Puts {@code property} from the environment into {@code jpaProperties}, or {@code defaultValue} when absent.
+	 *
+	 * @param jpaProperties accumulator map
+	 * @param property      Hibernate / JPA property key
+	 * @param defaultValue  fallback when the environment does not define {@code property}
+	 * @return {@code jpaProperties} for chaining
+	 */
 	private HashMap<String, Object> getProperty(HashMap<String, Object> jpaProperties, String property,
 			String defaultValue) {
 		/**

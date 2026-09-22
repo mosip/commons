@@ -29,9 +29,21 @@ public final class UinGeneratorConstant {
 	 */
 	public static final String DEFAULTADMIN_MOSIP_IO = "defaultadmin@mosip.io";
 
+	/**
+	 * Unused UIN that may be issued.
+	 */
 	public static final String UNUSED = "UNUSED";
+	/**
+	 * UIN issued to a caller and not yet assigned to an identity.
+	 */
 	public static final String ISSUED = "ISSUED";
+	/**
+	 * UIN assigned to an identity.
+	 */
 	public static final String ASSIGNED = "ASSIGNED";
+	/**
+	 * UIN returned to the unused pool.
+	 */
 	public static final String UNASSIGNED = "UNASSIGNED";
 	/**
 	 * The string field for http port
@@ -144,6 +156,9 @@ public final class UinGeneratorConstant {
 	 */
 	public static final String CURRENT_WORKING_DIRECTORY = "user.dir";
 
+	/**
+	 * JSON media type used by Vert.x UIN routes.
+	 */
 	public static final String APPLICATION_JSON = "application/json";
 
 	/**
@@ -164,23 +179,13 @@ public final class UinGeneratorConstant {
 	 */
 	public static final String TIME_OUT = "timeout";
 
-	public static final String SWAGGER_UI_JSON_FILENAME = "swagger.json";
-
-	public static final String SWAGGER_UI_PATH = "swagger-ui";
-
-	/**
-	 * The swagger ui json file path.
-	 */
-	public static final String SWAGGER_UI_JSON_PATH = SWAGGER_UI_PATH + "/" + SWAGGER_UI_JSON_FILENAME;
-
-	/**
-	 * The swagger json template file.
-	 */
-	public static final String SWAGGER_JSON_TEMPLATE = "swagger-template.vm";
 	/**
 	 * The enable signing property key
 	 */
 	public static final String SIGNING_ENABLE = "mosip.kernel.uin.response-signing-enable";
 
+	/**
+	 * Vert.x worker pool size for UIN fetch ({@code mosip.kernel.uin.get_executor_pool}).
+	 */
 	public static final String GET_EXECUTOR_POOL_ENABLE = "mosip.kernel.uin.get_executor_pool";
 }

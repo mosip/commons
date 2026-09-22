@@ -1,39 +1,56 @@
 package io.mosip.kernel.core.bioapi.constant;
 
 /**
- * Enum containing custom error codes and the respective messages.
- * 
- * @author Manoj SP
+ * MOSIP error codes and messages for biometric API (quality, match, input)
+ * failures.
+ * <p>
+ * Contract: use {@link #getErrorCode()} and {@link #getMessage()} when
+ * constructing {@link io.mosip.kernel.core.bioapi.exception.BiometricException}.
+ * Message values may contain {@code %s} placeholders for parameter names.
+ * </p>
  *
+ * @author Manoj SP
  */
 public enum BioApiErrorConstant {
 
-	/** Thrown when data provided as input is invalid. */
+	/**
+	 * Input data is present but fails validation; message placeholder is the
+	 * parameter name.
+	 */
 	INVALID_INPUT_PARAMETER("KER-BIO-001", "Invalid Input Parameter - %s"),
 
-	/** Thrown when data required as input is missing. */
+	/**
+	 * A required input parameter is missing; message placeholder is the
+	 * parameter name.
+	 */
 	MISSING_INPUT_PARAMETER("KER-BIO-002", "Missing Input Parameter - %s"),
 
-	/** Thrown when data provided is valid but quality check cannot be performed. */
+	/**
+	 * Quality check could not be performed on otherwise valid biometric data.
+	 */
 	QUALITY_CHECK_FAILED("KER-BIO-003", "Quality check of Biometric data failed"),
 
-	/** Thrown when data provided is valid but matching cannot be performed. */
+	/**
+	 * Matching could not be performed on otherwise valid biometric data.
+	 */
 	MATCHING_FAILED("KER-BIO-004", "Matching of Biometric data failed"),
 
-	/** Thrown when some other error occurred. */
+	/**
+	 * Catch-all when no more specific biometric API error applies.
+	 */
 	UNKNOWN_ERROR("KER-BIO-005", "Unknown error occurred");
 
-	/** The error code. */
+	/** The MOSIP error code, for example {@code KER-BIO-001}. */
 	private final String errorCode;
 
-	/** The message. */
+	/** The human-readable message, possibly with {@code %s} placeholders. */
 	private final String message;
 
 	/**
 	 * Instantiates a new error constant.
 	 *
-	 * @param errorCode the error code
-	 * @param message   the message
+	 * @param errorCode never-null MOSIP error code
+	 * @param message   never-null message template
 	 */
 	BioApiErrorConstant(final String errorCode, final String message) {
 		this.errorCode = errorCode;
@@ -41,18 +58,18 @@ public enum BioApiErrorConstant {
 	}
 
 	/**
-	 * Gets the error code.
+	 * Returns the MOSIP error code.
 	 *
-	 * @return the error code
+	 * @return never-null error code such as {@code KER-BIO-001}
 	 */
 	public String getErrorCode() {
 		return errorCode;
 	}
 
 	/**
-	 * Gets the message.
+	 * Returns the message template associated with this constant.
 	 *
-	 * @return the message
+	 * @return never-null message; may contain {@code %s}
 	 */
 	public String getMessage() {
 		return message;

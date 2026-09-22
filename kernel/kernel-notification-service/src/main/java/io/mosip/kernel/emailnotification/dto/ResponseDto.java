@@ -3,7 +3,8 @@ package io.mosip.kernel.emailnotification.dto;
 import lombok.Data;
 
 /**
- * The class for ResponseDto.
+ * Response payload returned by the email send API after an email request is
+ * accepted.
  * 
  * @author Sagar Mahapatra
  * @since 1.0.0
@@ -11,12 +12,12 @@ import lombok.Data;
 @Data
 public class ResponseDto {
 	/**
-	 * The status.
+	 * Delivery status, typically {@code success} when the request is accepted.
 	 */
 	private String status;
 
 	/**
-	 * The message.
+	 * Human-readable status message, typically {@code Email Request submitted}.
 	 */
 	private String message;
 }

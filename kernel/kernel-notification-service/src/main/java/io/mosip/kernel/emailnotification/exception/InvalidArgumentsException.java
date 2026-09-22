@@ -6,7 +6,8 @@ import io.mosip.kernel.core.exception.BaseUncheckedException;
 import io.mosip.kernel.core.exception.ServiceError;
 
 /**
- * Exception class to handle invalid arguments.
+ * Exception class to handle invalid email arguments. Carries a list of
+ * {@link ServiceError} entries for the failed request.
  * 
  * @author Sagar Mahapatra
  * @since 1.0.0
@@ -14,25 +15,27 @@ import io.mosip.kernel.core.exception.ServiceError;
  */
 public class InvalidArgumentsException extends BaseUncheckedException {
 	/**
-	 * Generated serial version.
+	 * Generated serial version UID.
 	 */
 	private static final long serialVersionUID = -1416474253520030879L;
 	/**
-	 * This variable holds the MosipErrors list.
+	 * Validation errors collected for the failed mail request.
 	 */
 	private final List<ServiceError> list;
 
 	/**
-	 * @param list The error list.
+	 * Instantiates the exception with the given validation errors.
+	 *
+	 * @param list the error list; must not be {@code null}
 	 */
 	public InvalidArgumentsException(List<ServiceError> list) {
 		this.list = list;
 	}
 
 	/**
-	 * Getter for error list.
+	 * Returns the validation error list.
 	 * 
-	 * @return The error list.
+	 * @return the error list
 	 */
 	public List<ServiceError> getList() {
 		return list;

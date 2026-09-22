@@ -46,7 +46,7 @@ public class UinWriter {
 		if (!currentSession.getTransaction().isActive()) {
 			currentSession.getTransaction().begin();
 		}
-		currentSession.save(item);
+		currentSession.persist(item);
 		try {
 			currentSession.flush();
 			currentSession.getTransaction().commit();
@@ -77,6 +77,9 @@ public class UinWriter {
 		return session;
 	}
 
+	/**
+	 * Clears the Hibernate session after a generation batch.
+	 */
 	public void closeSession() {
 		if (session != null) {
 			session.clear();

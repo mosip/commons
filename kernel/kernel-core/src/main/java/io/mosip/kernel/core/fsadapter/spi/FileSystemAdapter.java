@@ -5,111 +5,118 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * File adapter interface for connecting to DFS
+ * Stores and retrieves MOSIP registration packets on a distributed file system
+ * (DFS / HDFS / object store).
+ * <p>
+ * Contract: implementations perform remote I/O. {@code id} is the packet /
+ * RID correlation key and must be non-blank. Streams returned by getters
+ * must be closed by the caller. Call from registration processor when
+ * persisting or unpacking packets.
+ * </p>
  *
  * @author Pranav Kumar
  * @author Dharmesh Khandelwal
  * @since 1.0.0
+ * @see io.mosip.kernel.core.fsadapter.exception.FSAdapterException
  */
 public interface FileSystemAdapter {
 
 	/**
-	 * This method checks whether a file exists in DFS.
+	 * Returns whether a named file exists under the given packet id.
 	 *
-	 * @param id       The ID for which file needs to be checked
-	 * @param fileName File that needs to checked
-	 * @return True if file is found, false otherwise
+	 * @param id       never-null, never-blank packet identifier
+	 * @param fileName never-null, never-blank relative file name
+	 * @return {@code true} if the file exists
 	 */
 	public boolean checkFileExistence(String id, String fileName);
 
 	/**
-	 * This method copy document from one folder to another
-	 * 
-	 * @param sourceFolderName      The source folder
-	 * @param sourceFileName        The source file
-	 * @param destinationFolderName The destination folder
-	 * @param destinationFileName   The destination file
-	 * @return True if document copy is successful
+	 * Copies a file from one packet folder to another.
+	 *
+	 * @param sourceFolderName      never-null source packet id
+	 * @param sourceFileName        never-null source relative path
+	 * @param destinationFolderName never-null destination packet id
+	 * @param destinationFileName   never-null destination relative path
+	 * @return {@code true} if the copy succeeded
 	 */
 	public boolean copyFile(String sourceFolderName, String sourceFileName, String destinationFolderName,
 			String destinationFileName);
 
 	/**
-	 * This method deletes a particular file related to an ID.
+	 * Deletes a named file under the given packet id.
 	 *
-	 * @param id       The id
-	 * @param fileName The file which needs to be deleted
-	 * @return True if the file is successfully deleted
+	 * @param id       never-null, never-blank packet identifier
+	 * @param fileName never-null, never-blank relative file name
+	 * @return {@code true} if the file was deleted
 	 */
 	public boolean deleteFile(String id, String fileName);
 
 	/**
-	 * This method deletes the packet corresponding to an ID.
+	 * Deletes the entire packet corresponding to {@code id}.
 	 *
-	 * @param id The id
-	 * @return True if the packet is deleted successfully
+	 * @param id never-null, never-blank packet identifier
+	 * @return {@code true} if the packet was deleted
 	 */
 	public boolean deletePacket(String id);
 
 	/**
-	 * This method fetches a file corresponding to an ID and returns it.
+	 * Opens a named file under the given packet id.
 	 *
-	 * @param id       The id
-	 * @param fileName Required file name
-	 * @return the required file
+	 * @param id       never-null, never-blank packet identifier
+	 * @param fileName never-null, never-blank relative file name
+	 * @return never-null input stream; caller must close
 	 */
 	public InputStream getFile(String id, String fileName);
 
 	/**
-	 * This method fetches the packet corresponding to an ID and returns it.
+	 * Opens the packed packet corresponding to {@code id}.
 	 *
-	 * @param id The id
-	 * @return The packet in specified format
+	 * @param id never-null, never-blank packet identifier
+	 * @return never-null packet stream; caller must close
 	 */
 	public InputStream getPacket(String id);
 
 	/**
-	 * Checks if is packet present.
+	 * Returns whether a packet exists for {@code id}.
 	 *
-	 * @param id the id
-	 * @return the boolean
+	 * @param id never-null, never-blank packet identifier
+	 * @return {@code true} if the packet is present
 	 */
 	public boolean isPacketPresent(String id);
 
 	/**
-	 * This method stores the packet corresponding to an ID
-	 * 
-	 * @param id       The id
-	 * @param key      Physical path of the packet which needs to be stored
-	 * @param document document to be stored
-	 * @return True If the packet is stored successfully
+	 * Stores a document under the given packet id and key.
+	 *
+	 * @param id       never-null, never-blank packet identifier
+	 * @param key      never-null relative path / object key
+	 * @param document never-null document stream; not closed by this method
+	 * @return {@code true} if the store succeeded
 	 */
 	public boolean storeFile(String id, String key, InputStream document);
 
 	/**
-	 * This method stores the packet corresponding to an ID.
+	 * Stores a packet stream under the given id.
 	 *
-	 * @param id   The id
-	 * @param file Packet which needs to be stored
-	 * @return True If the packet is stored successfully
+	 * @param id   never-null, never-blank packet identifier
+	 * @param file never-null packet stream; not closed by this method
+	 * @return {@code true} if the store succeeded
 	 */
 	public boolean storePacket(String id, InputStream file);
 
 	/**
-	 * This method stores the packet corresponding to an enrolment ID.
+	 * Stores a packet file from the local file system under the given id.
 	 *
-	 * @param id       The id
-	 * @param filePath Physical path of the packet which needs to be stored
-	 * @return True If the packet is stored successfully
+	 * @param id       never-null, never-blank packet identifier
+	 * @param filePath never-null existing local packet file
+	 * @return {@code true} if the store succeeded
 	 */
 	public boolean storePacket(String id, File filePath);
 
 	/**
-	 * This method unzips the packet corresponding to an enrolment ID and uploads
-	 * individual files of that packet.
+	 * Unzips the stored packet and uploads its individual files.
 	 *
-	 * @param id The id
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param id never-null, never-blank packet identifier
+	 * @throws IOException when unzip or store I/O fails
 	 */
 	public void unpackPacket(String id) throws IOException;
 

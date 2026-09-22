@@ -1,11 +1,17 @@
 package io.mosip.kernel.core.function;
 
 /**
- * The Function Functional Throwable which can throw a Throwable.
+ * Function that accepts one argument, returns a result, and may throw a
+ * checked exception.
+ * <p>
+ * Contract: use in place of {@link java.util.function.Function} when the
+ * lambda performs I/O or MOSIP operations that throw {@code E}. {@code t} may
+ * be null if the caller allows it.
+ * </p>
  *
- * @param <R> the generic type of return value
- * @param <T> the generic type of argument
- * @param <E> the element type which can be a Throwable
+ * @param <R> return type
+ * @param <T> argument type
+ * @param <E> checked exception type the function may throw
  * 
  * @author Loganathan Sekar
  * 
@@ -14,11 +20,11 @@ package io.mosip.kernel.core.function;
 public interface FunctionWithThrowable<R, T, E extends Throwable> {
 
 	/**
-	 * Expression that accepts an argument and returns a value.
+	 * Applies this function to the given argument.
 	 *
-	 * @param t the argument
-	 * @return the return value
-	 * @throws E the exception
+	 * @param t the argument; nullability is caller-defined
+	 * @return the result; may be null
+	 * @throws E if the operation fails
 	 */
 	R apply(T t) throws E;
 

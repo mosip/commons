@@ -5,7 +5,7 @@ import java.util.Map;
 import lombok.Data;
 
 /**
- * Base Model for health check
+ * Actuator-style health check payload written by Vert.x health handlers.
  * 
  * @author Urvil joshi
  * 

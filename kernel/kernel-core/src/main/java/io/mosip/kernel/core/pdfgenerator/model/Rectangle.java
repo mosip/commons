@@ -5,10 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Rectangle model for pdf generator
- * 
- * @author Urvil Joshi
+ * Axis-aligned box used as the visible PDF signature rectangle.
+ * <p>
+ * Contract: coordinates are PDF user-space points. {@code llx}/{@code lly} is
+ * the lower-left corner; {@code urx}/{@code ury} is the upper-right. Does not
+ * perform I/O.
+ * </p>
  *
+ * @author Urvil Joshi
  */
 @Data
 @NoArgsConstructor
@@ -16,19 +20,19 @@ import lombok.NoArgsConstructor;
 public class Rectangle {
 
 	/**
-	 * The lower left x value of rectangle.
+	 * Lower-left X in PDF user-space points.
 	 */
 	private float llx;
 	/**
-	 * The lower left y value of rectangle.
+	 * Lower-left Y in PDF user-space points.
 	 */
 	private float lly;
 	/**
-	 * The upper right x value of rectangle.
+	 * Upper-right X in PDF user-space points.
 	 */
 	private float urx;
 	/**
-	 * The upper right y value of rectangle.
+	 * Upper-right Y in PDF user-space points.
 	 */
 	private float ury;
 

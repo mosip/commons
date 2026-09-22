@@ -25,11 +25,15 @@ import io.mosip.kernel.core.util.constant.CalendarUtilConstants;
 import io.mosip.kernel.core.util.constant.StringUtilConstants;
 
 /**
- * This class contains methods used for operations on String type data
- * 
+ * String helpers wrapping Apache Commons Lang {@code StringUtils} with MOSIP exceptions.
+ * <p>
+ * Contract: static helpers only; this class is not instantiable. Null-safe
+ * unless a method documents otherwise. Regex methods may throw MOSIP
+ * {@link PatternSyntaxException}. Does not perform I/O.
+ * </p>
+ *
  * @author Sidhant Agarwal
  * @since 1.0.0
- *
  */
 
 public final class StringUtils {

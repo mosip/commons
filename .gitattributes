@@ -1,0 +1,16 @@
+# MOSIP CI runs on Linux. Keep text as LF even on Windows (avoids "LF will be replaced by CRLF").
+* text=auto eol=lf
+
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.jar binary
+*.war binary
+*.zip binary
+*.gz binary
+*.class binary

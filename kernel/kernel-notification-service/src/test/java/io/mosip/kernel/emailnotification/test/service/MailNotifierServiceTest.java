@@ -7,13 +7,13 @@ import io.mosip.kernel.emailnotification.service.impl.EmailNotificationServiceIm
 import io.mosip.kernel.emailnotification.test.NotificationTestBootApplication;
 import io.mosip.kernel.emailnotification.util.EmailNotificationUtils;
 import jakarta.mail.internet.MimeMessage;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -31,14 +31,19 @@ public class MailNotifierServiceTest {
     private EmailNotificationServiceImpl service;
     @Autowired
     private JavaMailSender emailSender;
-    @MockBean
+    @MockitoBean
     private EmailNotificationUtils utils;
-    @MockBean
+    @MockitoBean
     private SMSServiceProvider sMSServiceProvider;
-    @MockBean(name = "mailExecutor")
+    @MockitoBean(name = "mailExecutor")
     private Executor mailExecutor;
-    @Captor
     private ArgumentCaptor<MimeMessage> messageCaptor;
+
+    @BeforeEach
+    void initCaptors() {
+        messageCaptor = ArgumentCaptor.forClass(MimeMessage.class);
+    }
+
     // Helper to sync async executor
     private void runExecutorSync() {
         doAnswer(invocation -> {

@@ -1,7 +1,5 @@
 package io.mosip.kernel.vidgenerator.verticle;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
@@ -17,6 +15,13 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
+/**
+ * Worker verticle that schedules VID expiry and release via Ceylon Chime.
+ * <p>
+ * Consumes {@link VidSchedulerConstants#NAME_VALUE} and invokes
+ * {@link VidService#expireAndRelease()}.
+ * </p>
+ */
 public class VidExpiryVerticle extends AbstractVerticle {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(VidExpiryVerticle.class);
@@ -25,18 +30,32 @@ public class VidExpiryVerticle extends AbstractVerticle {
 
 	private Environment environment;
 
-	private final AtomicBoolean expireAndReleaseInProgress = new AtomicBoolean(false);
-
+	/**
+	 * Resolves {@link VidService} and scheduler properties from {@code context}.
+	 *
+	 * @param context Spring context
+	 */
 	public VidExpiryVerticle(final ApplicationContext context) {
 		this.environment = context.getBean(Environment.class);
 		this.vidService = context.getBean(VidService.class);
 	}
 
+	/**
+	 * Deploys the Ceylon Chime scheduler verticle.
+	 *
+	 * @param startFuture unused Vert.x start future
+	 * @throws Exception unused; Vert.x {@code start} contract
+	 */
 	@Override
 	public void start(Future<Void> startFuture) throws Exception {
 		vertx.deployVerticle(VidSchedulerConstants.CEYLON_SCHEDULER, this::schedulerResult);
 	}
 
+	/**
+	 * Starts cron scheduling when Chime deployment succeeds.
+	 *
+	 * @param result Chime deploy result
+	 */
 	public void schedulerResult(AsyncResult<String> result) {
 		if (result.succeeded()) {
 			LOGGER.debug("scheduler verticle deployment successfull");
@@ -58,28 +77,8 @@ public class VidExpiryVerticle extends AbstractVerticle {
 
 		MessageConsumer<JsonObject> consumer = eventBus.consumer(VidSchedulerConstants.NAME_VALUE);
 
-		// handle chime event — single-flight: skip tick if previous run still in progress
-		consumer.handler(message -> {
-			if (!expireAndReleaseInProgress.compareAndSet(false, true)) {
-				LOGGER.info(
-						"VID expire-and-release skipped: previous run still in progress; will run on next schedule ({})",
-						VidSchedulerConstants.NAME_VALUE);
-				return;
-			}
-			vertx.executeBlocking(future -> {
-				try {
-					vidService.expireAndRelease();
-					future.complete();
-				} catch (Exception e) {
-					future.fail(e);
-				}
-			}, false, result -> {
-				expireAndReleaseInProgress.set(false);
-				if (result.failed()) {
-					LOGGER.error("VID expiry and release failed", result.cause());
-				}
-			});
-		});
+		// handle chime event
+		consumer.handler(message -> vidService.expireAndRelease());
 
 		JsonObject timer = new JsonObject()
 				.put(VidSchedulerConstants.TYPE, environment.getProperty(VidSchedulerConstants.TYPE_VALUE))

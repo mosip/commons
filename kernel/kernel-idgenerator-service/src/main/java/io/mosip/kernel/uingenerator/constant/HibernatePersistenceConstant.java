@@ -1,9 +1,8 @@
-/**
- * 
- */
 package io.mosip.kernel.uingenerator.constant;
 
 /**
+ * Hibernate and JDBC property keys used by the UIN Vert.x process.
+ *
  * @author Dharmesh Khandelwal
  * @since 1.0.0
  *
@@ -33,11 +32,11 @@ public class HibernatePersistenceConstant {
 	 */
 	public static final String JAVAX_PERSISTENCE_JDBC_DRIVER = "javax.persistence.jdbc.driver";
 	/**
-	 * The string constant my sql dialect
+	 * Hibernate MySQL 5 dialect class name.
 	 */
 	public static final String MY_SQL5_DIALECT = "org.hibernate.dialect.MySQL5Dialect";
 	/**
-	 * The string constant my sql dialect
+	 * Hibernate PostgreSQL dialect class name.
 	 */
 	public static final String POSTGRESQL_95_DIALECT = "org.hibernate.dialect.PostgreSQLDialect";
 	/**
@@ -116,11 +115,11 @@ public class HibernatePersistenceConstant {
 	 */
 	public static final String HIBERNATE = "hibernate";
 	/**
-	 * 
+	 * Hibernate interceptor class name property.
 	 */
 	public static final String HIBERNATE_EJB_INTERCEPTOR = "hibernate.ejb.interceptor";
 	/**
-	 * 
+	 * Default empty interceptor property key.
 	 */
 	public static final String EMPTY_INTERCEPTOR = "hibernate.empty.interceptor";
 

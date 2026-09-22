@@ -18,14 +18,18 @@ import io.mosip.kernel.core.exception.NoSuchAlgorithmException;
 import io.mosip.kernel.core.util.constant.HMACUtilConstants;
 
 /**
- * This class defines the HMAC Util to be used in MOSIP Project. The HMAC Util
- * is implemented using desired methods of MessageDigest class of java security
- * package
+ * SHA-256 digest and Base64 helpers used across MOSIP modules.
+ * <p>
+ * Contract: deprecated since 1.3.0; new code must use {@link HMACUtils2}.
+ * {@link #generateHash(byte[])} and {@link #update(byte[])} share a static
+ * {@link MessageDigest} and are not thread-safe unless callers synchronize.
+ * Does not perform I/O.
+ * </p>
+ *
  * @deprecated This class is deprecated and will be removed in future releases.
  *             Please use {@link io.mosip.kernel.core.util.HMACUtils2} instead.
  * @author Omsaieswar Mulaklauri
  * @author Urvil Joshi
- *
  * @since 1.0.0
  */
 @Deprecated(since = "1.3.0", forRemoval = true)
@@ -35,6 +39,9 @@ public final class HMACUtils {
      */
     private static final String HMAC_ALGORITHM_NAME = "SHA-256";
 
+    /** Reused PRNG; constructing {@link SecureRandom} per call is expensive and weakly seeded. */
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+
     /**
      * Message digests are secure one-way hash functions that take arbitrary-sized
      * data and output a fixed-length hash value
@@ -42,39 +49,39 @@ public final class HMACUtils {
     private static MessageDigest messageDigest;
 
     /**
-     * Performs a digest using the specified array of bytes.
+     * Digests {@code bytes} with the shared SHA-256 {@link MessageDigest}.
      *
-     * @param bytes bytes to be hash generation
-     * @return byte[] generated hash bytes
+     * @param bytes never-null input
+     * @return never-null 32-byte digest
      */
     public static synchronized byte[] generateHash(final byte[] bytes) {
         return messageDigest.digest(bytes);
     }
 
     /**
-     * Updates the digest using the specified byte
+     * Feeds {@code bytes} into the shared digest without finishing it.
      *
-     * @param bytes updates the digest using the specified byte
+     * @param bytes never-null chunk to append
      */
     public static void update(final byte[] bytes) {
         messageDigest.update(bytes);
     }
 
     /**
-     * Return the whole update digest
+     * Finishes the shared digest and returns the accumulated hash.
      *
-     * @return byte[] updated hash bytes
+     * @return never-null 32-byte digest
      */
     public static byte[] updatedHash() {
         return messageDigest.digest();
     }
 
     /**
-     * Return the digest as a plain text with Salt
+     * SHA-256 digests {@code password} then {@code salt} and returns uppercase hex.
      *
-     * @param bytes digest bytes
-     * @param salt  digest bytes
-     * @return String converted digest as plain text
+     * @param password never-null password bytes
+     * @param salt     never-null salt bytes
+     * @return never-null uppercase hex digest
      */
     public static synchronized String digestAsPlainTextWithSalt(final byte[] password, final byte[] salt) {
         messageDigest.update(password);
@@ -95,10 +102,10 @@ public final class HMACUtils {
     }
 
     /**
-     * Return the digest as a plain text
+     * Encodes {@code bytes} as uppercase hex (does not hash them).
      *
-     * @param bytes digest bytes
-     * @return String converted digest as plain text
+     * @param bytes never-null digest bytes
+     * @return never-null uppercase hex
      */
     public static synchronized String digestAsPlainText(final byte[] bytes) {
         return DatatypeConverter.printHexBinary(bytes).toUpperCase();
@@ -122,56 +129,61 @@ public final class HMACUtils {
     }
 
     /**
-     * Generate Random Salt (with default 16 bytes of length).
+     * Returns 16 cryptographically random salt bytes.
      *
-     * @return Random Salt
+     * @return never-null 16-byte salt
      */
     public static byte[] generateSalt() {
-        SecureRandom random = new SecureRandom();
         byte[] randomBytes = new byte[16];
-        random.nextBytes(randomBytes);
+        SECURE_RANDOM.nextBytes(randomBytes);
         return randomBytes;
     }
 
     /**
-     * Generate Random Salt (with given length)
+     * Returns {@code bytes} cryptographically random salt bytes.
      *
-     * @param bytes length of random salt
-     * @return Random Salt of given length
+     * @param bytes salt length; must be positive
+     * @return never-null salt of length {@code bytes}
      */
     public static byte[] generateSalt(int bytes) {
-        SecureRandom random = new SecureRandom();
         byte[] randomBytes = new byte[bytes];
-        random.nextBytes(randomBytes);
+        SECURE_RANDOM.nextBytes(randomBytes);
         return randomBytes;
     }
 
     /**
-     * Encodes to BASE64 String
+     * Encodes {@code data} as standard Base64.
      *
-     * @param data data to encode
-     * @return encoded data
+     * @param data never-null bytes to encode
+     * @return never-null Base64 string
      */
     public static String encodeBase64String(byte[] data) {
         return Base64.encodeBase64String(data);
     }
 
     /**
-     * Decodes from BASE64
+     * Decodes standard Base64 text.
      *
-     * @param data data to decode
-     * @return decoded data
+     * @param data never-null Base64 text
+     * @return never-null decoded bytes
      */
     public static byte[] decodeBase64(String data) {
         return Base64.decodeBase64(data);
     }
 
-    /*
-     * No object initialization.
+    /**
+     * Prevents instantiation of this utility.
      */
     private HMACUtils() {
     }
 
+    /**
+     * PBKDF2-encodes {@code password} with Base64 {@code salt}.
+     *
+     * @param password never-null password
+     * @param salt     never-null Base64-encoded salt
+     * @return never-null Base64-encoded derived key
+     */
     private static String encode(String password, byte[] salt) {
         KeySpec spec = new PBEKeySpec(password.toCharArray(), Base64.decodeBase64(salt), 27500, 512);
 
@@ -185,6 +197,12 @@ public final class HMACUtils {
         }
     }
 
+    /**
+     * Returns a PBKDF2WithHmacSHA256 {@link SecretKeyFactory}.
+     *
+     * @return never-null factory
+     * @throws java.security.NoSuchAlgorithmException when the algorithm is unavailable
+     */
     private static SecretKeyFactory getSecretKeyFactory() throws java.security.NoSuchAlgorithmException {
         try {
             return SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");

@@ -4,14 +4,19 @@ package io.mosip.kernel.core.applicanttype.exception;
 import io.mosip.kernel.core.exception.BaseCheckedException;
 
 /**
- * Thrown when null/empty/invalid query passed for getting applicant type id.
- * 
- * @see io.mosip.kernel.core.exception.BaseUncheckedException
- * 
- * @author Bal Vikash Sharma
- * 
- * @since 1.0.0
+ * Checked exception thrown when applicant-type resolution receives a null,
+ * empty, or otherwise invalid attribute map.
+ * <p>
+ * Contract: raised by {@link io.mosip.kernel.core.applicanttype.spi.ApplicantType}
+ * when the caller omits required demographic keys or supplies null values.
+ * Callers should treat this as a client-input error, not a system failure.
+ * </p>
  *
+ * @see io.mosip.kernel.core.exception.BaseCheckedException
+ * @see io.mosip.kernel.core.applicanttype.spi.ApplicantType
+ *
+ * @author Bal Vikash Sharma
+ * @since 1.0.0
  */
 public class InvalidApplicantArgumentException extends BaseCheckedException {
 

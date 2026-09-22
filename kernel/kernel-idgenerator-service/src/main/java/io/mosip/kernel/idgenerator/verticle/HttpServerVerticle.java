@@ -8,7 +8,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.idgenerator.config.AccessLogHandler;
 import io.mosip.kernel.idgenerator.config.UinServiceHealthCheckerhandler;
 import io.mosip.kernel.idgenerator.config.UinServiceRouter;
+import io.mosip.kernel.ridgenerator.router.RidFetcherRouter;
 import io.mosip.kernel.uingenerator.constant.UinGeneratorConstant;
+import io.mosip.kernel.vidgenerator.constant.EventType;
 import io.mosip.kernel.vidgenerator.constant.VIDGeneratorConstant;
 import io.mosip.kernel.vidgenerator.router.VidFetcherRouter;
 import io.vertx.core.AbstractVerticle;
@@ -21,8 +23,13 @@ import io.vertx.ext.web.RoutingContext;
 import io.vertx.micrometer.PrometheusScrapingHandler;
 
 /**
- * Http Verticle for fetching UIN and VID
- * 
+ * Vert.x HTTP server that mounts UIN, VID, and RID fetch routers.
+ * <p>
+ * Listens on {@code server.port}. After a successful bind it publishes
+ * {@link EventType#CHECKPOOL} so VID pooling can start. Servlet paths default
+ * to {@code /v1/idgenerator} and {@code /v1/ridgenerator}.
+ * </p>
+ *
  * @author Urvil Joshi
  * @since 1.0.0
  *
@@ -41,21 +48,24 @@ public class HttpServerVerticle extends AbstractVerticle {
 
 	private UinServiceRouter uinServiceRouter;
 
+	private RidFetcherRouter ridFetcherRouter;
+
 	/**
-	 * Initialize beans
-	 * 
-	 * @param context context
+	 * Resolves fetch routers and the Spring environment from {@code context}.
+	 *
+	 * @param context Spring context created by {@code HibernateDaoConfig}
 	 */
 	public HttpServerVerticle(final ApplicationContext context) {
 		vidFetcherRouter = (VidFetcherRouter) context.getBean("vidFetcherRouter");
 		uinServiceRouter = (UinServiceRouter) context.getBean("uinServiceRouter");
+		ridFetcherRouter = (RidFetcherRouter) context.getBean("ridFetcherRouter");
 		environment = context.getEnvironment();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.vertx.core.AbstractVerticle#start(io.vertx.core.Future)
+	/**
+	 * Starts the HTTP server and mounts VID, UIN, RID, health, and metrics routers.
+	 *
+	 * @param future completed when the server binds, or failed when listen fails
 	 */
 	@Override
 	public void start(Future<Void> future) {
@@ -76,27 +86,27 @@ public class HttpServerVerticle extends AbstractVerticle {
 				new ObjectMapper(), environment);
 		healthCheckRouter.get(UinGeneratorConstant.HEALTH_ENDPOINT)
 				.handler(healthCheckHandler);
-		long healthcheckertime= Long.parseLong(environment.getProperty(VIDGeneratorConstant.UIN_HEALTH_CHECKER));
-		healthCheckHandler.register("db", healthcheckertime, healthCheckHandler::databaseHealthChecker);
-		healthCheckHandler.register("diskspace", healthcheckertime, healthCheckHandler::dispSpaceHealthChecker);
-		healthCheckHandler.register("idgenerator", healthcheckertime, f -> healthCheckHandler.verticleHealthHandler(f, vertx));
+		healthCheckHandler.register("db", healthCheckHandler::databaseHealthChecker);
+		healthCheckHandler.register("diskspace", healthCheckHandler::dispSpaceHealthChecker);
+		healthCheckHandler.register("idgenerator", f -> healthCheckHandler.verticleHealthHandler(f, vertx));
 
 		metricRouter.route("/metrics").handler(PrometheusScrapingHandler.create());
 
+		String idPath = environment.getProperty(VIDGeneratorConstant.SERVER_SERVLET_PATH, "/v1/idgenerator");
+		String ridPath = environment.getProperty("mosip.kernel.rid.servlet.path", "/v1/ridgenerator");
+
 		// mount all the routers to parent router
-		parentRouter.mountSubRouter(
-				environment.getProperty(VIDGeneratorConstant.SERVER_SERVLET_PATH) + VIDGeneratorConstant.VVID,
-				vidFetcherRouter.createRouter(vertx));
-		parentRouter.mountSubRouter(
-				environment.getProperty(VIDGeneratorConstant.SERVER_SERVLET_PATH) + UinGeneratorConstant.VUIN,
-				uinServiceRouter.createRouter(vertx));
-		parentRouter.mountSubRouter(environment.getProperty(VIDGeneratorConstant.SERVER_SERVLET_PATH), healthCheckRouter);
-		parentRouter.mountSubRouter(environment.getProperty(VIDGeneratorConstant.SERVER_SERVLET_PATH), metricRouter);
+		parentRouter.mountSubRouter(idPath + VIDGeneratorConstant.VVID, vidFetcherRouter.createRouter(vertx));
+		parentRouter.mountSubRouter(idPath + UinGeneratorConstant.VUIN, uinServiceRouter.createRouter(vertx));
+		parentRouter.mountSubRouter(ridPath, ridFetcherRouter.createRouter(vertx));
+		parentRouter.mountSubRouter(idPath, healthCheckRouter);
+		parentRouter.mountSubRouter(idPath, metricRouter);
 
 		httpServer.requestHandler(parentRouter);
 		httpServer.listen(Integer.parseInt(environment.getProperty(VIDGeneratorConstant.SERVER_PORT)), result -> {
 			if (result.succeeded()) {
 				LOGGER.debug("vid fetcher verticle deployed");
+				vertx.eventBus().publish(EventType.CHECKPOOL, EventType.CHECKPOOL);
 				future.complete();
 			} else if (result.failed()) {
 				LOGGER.error("vid fetcher verticle deployment failed with cause ", result.cause());
@@ -105,16 +115,15 @@ public class HttpServerVerticle extends AbstractVerticle {
 		});
 	}
 
+	/**
+	 * Registers an access-log callback that runs when the response body is fully written.
+	 *
+	 * @param context          current request
+	 * @param accessLogHandler writer for the JSON access line
+	 */
 	private void addAccessLogHandler(final RoutingContext context, AccessLogHandler accessLogHandler) {
-
 		long startMillis = System.currentTimeMillis();
-
 		context.addBodyEndHandler(x -> accessLogHandler.log(context, startMillis));
-
 		context.next();
-
 	}
-
-	
-
 }

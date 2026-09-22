@@ -3,20 +3,31 @@ package io.mosip.kernel.core.bioapi.model;
 import lombok.Data;
 
 /**
- * The Class Response.
+ * Generic Bio API envelope carrying an HTTP-like status and a typed body.
+ * <p>
+ * Contract: returned by every {@link io.mosip.kernel.core.bioapi.spi.IBioApi}
+ * method. {@code statusCode} follows HTTP semantics (2xx success).
+ * {@code response} may be null when the call failed. Does not perform I/O.
+ * </p>
  *
+ * @param <T> type of the success payload
  * @author Manoj SP
- * @param <T> the generic type
  */
 @Data
 public class Response<T> {
 	
-	/** The status code. */
+	/**
+	 * HTTP-like status code; typically 200 on success; may be null if unset.
+	 */
 	private Integer statusCode;
 	
-	/** The status message. */
+	/**
+	 * Human-readable status description; may be null or empty.
+	 */
 	private String statusMessage;
 	
-	/** The response. */
+	/**
+	 * Operation payload; null when the call failed.
+	 */
 	private T response;
 }

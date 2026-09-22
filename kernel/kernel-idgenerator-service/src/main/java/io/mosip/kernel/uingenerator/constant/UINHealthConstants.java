@@ -1,5 +1,8 @@
 package io.mosip.kernel.uingenerator.constant;
 
+/**
+ * JSON field names used by Vert.x UIN health-check responses.
+ */
 public class UINHealthConstants {
 	/**
 	 * The string field ERROR

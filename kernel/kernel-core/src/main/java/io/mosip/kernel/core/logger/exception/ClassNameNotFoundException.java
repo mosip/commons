@@ -10,8 +10,12 @@ package io.mosip.kernel.core.logger.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * {@link Exception} to be thrown when a class name is not found
- * 
+ * Unchecked exception thrown when a logger class name cannot be resolved.
+ * <p>
+ * Contract: raised during MOSIP logger factory lookup when the configured
+ * class is missing from the classpath.
+ * </p>
+ *
  * @author Urvil Joshi
  * @since 1.0.0
  */
@@ -23,8 +27,10 @@ public class ClassNameNotFoundException extends BaseUncheckedException {
 	private static final long serialVersionUID = 105555532L;
 
 	/**
-	 * @param errorCode    unique exception code
-	 * @param errorMessage exception message
+	 * Constructs the exception with MOSIP error code and message.
+	 *
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
 	 */
 	public ClassNameNotFoundException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);

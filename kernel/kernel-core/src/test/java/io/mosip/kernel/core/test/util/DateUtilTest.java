@@ -380,7 +380,7 @@ public final class DateUtilTest {
 
 	private void compareTwoLocalDateTime(LocalDateTime exp, LocalDateTime act) {
 		assertTrue(exp.getDayOfMonth() == act.getDayOfMonth());
-		assertTrue(exp.getMonth() == act.getMonth());
+		assertEquals(exp.getMonth(), act.getMonth());
 		assertTrue(exp.getYear() == act.getYear());
 		assertTrue(exp.getHour() == act.getHour());
 		assertTrue(exp.getMinute() == act.getMinute());

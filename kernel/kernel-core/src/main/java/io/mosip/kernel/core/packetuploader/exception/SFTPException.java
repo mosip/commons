@@ -3,8 +3,12 @@ package io.mosip.kernel.core.packetuploader.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * Exception to be thrown when there is violation with SFTP protocol
- * 
+ * Unchecked exception thrown when an SFTP protocol or transfer error occurs.
+ * <p>
+ * Contract: wraps JSch / SFTP failures during channel create, upload, or
+ * disconnect. Callers should treat the transfer as failed.
+ * </p>
+ *
  * @author Urvil Joshi
  * @since 1.0.0
  */

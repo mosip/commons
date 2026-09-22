@@ -41,7 +41,12 @@ import io.mosip.kernel.core.util.exception.NotPositiveException;
 import io.mosip.kernel.core.util.exception.NumberIsTooLargeException;
 
 /**
- * Utilities for Mathematical operations.
+ * Math helpers wrapping Apache Commons Math with MOSIP numeric exceptions.
+ * <p>
+ * Contract: static helpers only; this class is not instantiable. Invalid
+ * exponents or overflow become {@link NotPositiveException} or
+ * {@link ArithmeticException}. Does not perform I/O.
+ * </p>
  *
  * @author Ritesh Sinha
  * @since 1.0.0

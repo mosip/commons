@@ -39,9 +39,13 @@ import io.vertx.ext.healthchecks.impl.HealthChecksImpl;
 import io.vertx.ext.web.RoutingContext;
 
 /**
- * Health check Handler for uingenerator which check database health,disk space,
- * verticle health
- * 
+ * Vert.x health-check handler for UIN pool, database, and disk space.
+ * <p>
+ * HTTP contracts: 200 when all procedures are UP, 503 when DOWN, 500 when a
+ * procedure threw, 204 when no procedures are registered, 404 when the check id
+ * is unknown, 400 on other invoke failures, and 403 when auth fails.
+ * </p>
+ *
  * @author Urvil Joshi
  * 
  * @since 1.0.0
@@ -67,6 +71,14 @@ public class UinServiceHealthCheckerhandler implements HealthCheckHandler {
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(UinServiceHealthCheckerhandler.class);
 
+	/**
+	 * Builds JDBC settings from {@code environment} and an empty {@link HealthChecks} registry.
+	 *
+	 * @param vertx       Vert.x instance for health-check timers
+	 * @param provider    optional Vert.x auth provider; {@code null} skips auth
+	 * @param objectMapper Jackson mapper for actuator-style detail objects
+	 * @param environment Spring environment for JDBC properties
+	 */
 	public UinServiceHealthCheckerhandler(Vertx vertx, AuthProvider provider, ObjectMapper objectMapper,
 			Environment environment) {
 		this.healthChecks = new HealthChecksImpl(vertx);
@@ -80,12 +92,27 @@ public class UinServiceHealthCheckerhandler implements HealthCheckHandler {
 		this.resultBuilder = new UinServiceHealthCheckerhandler.JSONResultBuilder();
 	}
 
+	/**
+	 * Registers a named health procedure with the default timeout.
+	 *
+	 * @param name      procedure id used in the health URL path
+	 * @param procedure async procedure that completes {@code Promise<Status>}
+	 * @return this handler
+	 */
 	@Override
 	public HealthCheckHandler register(String name, Handler<Promise<Status>> procedure) {
 		healthChecks.register(name, procedure);
 		return this;
 	}
 
+	/**
+	 * Registers a named health procedure with a custom timeout.
+	 *
+	 * @param name      procedure id used in the health URL path
+	 * @param timeout   timeout in milliseconds
+	 * @param procedure async procedure that completes {@code Promise<Status>}
+	 * @return this handler
+	 */
 	@Override
 	public HealthCheckHandler register(String name, long timeout, Handler<Promise<Status>> procedure) {
 		healthChecks.register(name, timeout, procedure);
@@ -172,6 +199,14 @@ public class UinServiceHealthCheckerhandler implements HealthCheckHandler {
 		});
 	}
 
+	/**
+	 * Serves the health JSON for the procedure id derived from the request path.
+	 * <p>
+	 * Returns HTTP 403 when {@code authProvider} rejects the request.
+	 * </p>
+	 *
+	 * @param rc current routing context
+	 */
 	@Override
 	public void handle(RoutingContext rc) {
 		String path = rc.request().path();
@@ -296,6 +331,12 @@ public class UinServiceHealthCheckerhandler implements HealthCheckHandler {
 		}
 	}
 
+	/**
+	 * Removes a previously registered health procedure.
+	 *
+	 * @param name procedure id
+	 * @return this handler
+	 */
 	@Override
 	public synchronized HealthCheckHandler unregister(String name) {
 		healthChecks.unregister(name);
@@ -340,20 +381,40 @@ public class UinServiceHealthCheckerhandler implements HealthCheckHandler {
 		return json.encode();
 	}
 
+	/**
+	 * Fluent builder for Vert.x {@link JsonObject} health-check detail maps.
+	 */
 	static class JSONResultBuilder {
 
 		private JsonObject jsonObject;
 
+		/**
+		 * Starts a new JSON object.
+		 *
+		 * @return this builder
+		 */
 		public JSONResultBuilder create() {
 			jsonObject = new JsonObject();
 			return this;
 		}
 
+		/**
+		 * Puts {@code key} with {@code object}.
+		 *
+		 * @param key    JSON field name
+		 * @param object JSON value
+		 * @return this builder
+		 */
 		public JSONResultBuilder add(String key, Object object) {
 			jsonObject.put(key, object);
 			return this;
 		}
 
+		/**
+		 * Returns the accumulated JSON object.
+		 *
+		 * @return health-check detail JSON
+		 */
 		public JsonObject build() {
 			return jsonObject;
 		}

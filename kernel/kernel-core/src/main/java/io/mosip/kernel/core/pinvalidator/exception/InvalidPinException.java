@@ -7,8 +7,12 @@ package io.mosip.kernel.core.pinvalidator.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * {@link Exception} to be thrown when Pin is invalid
- * 
+ * Unchecked exception thrown when a MOSIP PIN fails validation.
+ * <p>
+ * Contract: raised by {@link io.mosip.kernel.core.pinvalidator.spi.PinValidator}
+ * for null, wrong length, or non-numeric PINs.
+ * </p>
+ *
  * @author Uday Kumar
  * @since 1.0.0
  */
@@ -20,10 +24,10 @@ public class InvalidPinException extends BaseUncheckedException {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Constructor for this class
-	 * 
-	 * @param errorCode    exception code
-	 * @param errorMessage exception message
+	 * Constructs an invalid-PIN exception with MOSIP error code and message.
+	 *
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
 	 */
 	public InvalidPinException(String errorCode, String errorMessage) {
 

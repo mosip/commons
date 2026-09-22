@@ -23,7 +23,7 @@ import org.mockito.Captor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
@@ -57,19 +57,19 @@ public class VidGeneratorServiceTest {
 	@Autowired
 	private VidService vidService;
 
-	@MockBean
+	@MockitoBean
 	private VidRepository vidRepository;
 
-	@MockBean
+	@MockitoBean
 	private VidAssignedRepository vidAssignedRepository;
 
-	@MockBean
+	@MockitoBean
 	private RoutingContext routingContext;
 
-	@MockBean
+	@MockitoBean
 	private VertxAuthenticationProvider authHandler;
 
-	@MockBean
+	@MockitoBean
 	private RestTemplate restTemplate;
 
 	private List<VidAssignedEntity> expiredButAssignedStatusVAEntities;
@@ -100,6 +100,9 @@ public class VidGeneratorServiceTest {
 
 	@Before
 	public void init() {
+		vidEntityListCaptor = ArgumentCaptor.forClass((Class) List.class);
+		vidAssignedEntityListCaptor = ArgumentCaptor.forClass((Class) List.class);
+		vidAssignedEntityListCaptor2 = ArgumentCaptor.forClass((Class) List.class);
 		availableEntityWithExpiry = new VidEntity("3650694284580734", VidLifecycleStatus.AVAILABLE, null);
 		availableEntity = new VidEntity("3650694284580734", VidLifecycleStatus.AVAILABLE, null);
 		

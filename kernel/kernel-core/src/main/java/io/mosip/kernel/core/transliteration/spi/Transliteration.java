@@ -1,22 +1,34 @@
 package io.mosip.kernel.core.transliteration.spi;
 
 /**
- * This interface contains method that perform transliteration based on language
- * code provided.
- * 
+ * Transliterates text from one MOSIP language code to another.
+ * <p>
+ * Contract: implementations typically call ICU4J locally (no HTTP). Language
+ * codes must be non-null MOSIP lang codes; {@code text} must be non-null.
+ * Invalid language ids throw
+ * {@link io.mosip.kernel.core.transliteration.exception.InvalidTransliterationException}.
+ * </p>
+ *
+ * @param <T> language-code type, typically {@link String}
  * @author Ritesh Sinha
  * @since 1.0.0
- * @param <T> is a type parameter
  */
 public interface Transliteration<T> {
 
 	/**
-	 * This method perform transliteration based on language code provided.
-	 * 
-	 * @param fromLanguage the input language code.
-	 * @param toLanguage   the output language code.
-	 * @param text         the string to be transliterated.
-	 * @return the transliterated string.
+	 * Transliterates {@code text} from {@code fromLanguage} to {@code toLanguage}.
+	 *
+	 * @param fromLanguage never-null source language code
+	 * @param toLanguage   never-null target language code
+	 * @param text         never-null source text; empty string yields empty result
+	 * @return never-null transliterated text
+	 * @throws io.mosip.kernel.core.transliteration.exception.InvalidTransliterationException
+	 *                                                                                        when
+	 *                                                                                        a
+	 *                                                                                        language
+	 *                                                                                        id
+	 *                                                                                        is
+	 *                                                                                        unsupported
 	 */
 	public String transliterate(T fromLanguage, T toLanguage, String text);
 

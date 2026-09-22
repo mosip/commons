@@ -3,8 +3,13 @@ package io.mosip.kernel.core.signatureutil.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * The Class SignatureUtilException.
- * 
+ * Unchecked exception thrown when kernel signature sign or verify fails.
+ * <p>
+ * Contract: wraps keymanager or crypto failures from
+ * {@link io.mosip.kernel.core.signatureutil.spi.SignatureUtil}. Callers should
+ * treat the signature as not produced or not valid.
+ * </p>
+ *
  * @author Srinivasan
  */
 public class SignatureUtilException extends BaseUncheckedException {
@@ -13,11 +18,11 @@ public class SignatureUtilException extends BaseUncheckedException {
 	private static final long serialVersionUID = 6291038762313595129L;
 
 	/**
-	 * Instantiates a new signature util exception.
+	 * Constructs the exception with MOSIP error code, message, and cause.
 	 *
-	 * @param errorCode    the error code
-	 * @param errorMessage the error message
-	 * @param rootCause    the root cause
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
+	 * @param rootCause    underlying cause; may be null
 	 */
 	public SignatureUtilException(String errorCode, String errorMessage, Throwable rootCause) {
 		super(errorCode, errorMessage, rootCause);
@@ -25,10 +30,10 @@ public class SignatureUtilException extends BaseUncheckedException {
 	}
 
 	/**
-	 * Instantiates a new signature util exception.
+	 * Constructs the exception with MOSIP error code and message.
 	 *
-	 * @param errorCode    the error code
-	 * @param errorMessage the error message
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
 	 */
 	public SignatureUtilException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);

@@ -27,8 +27,12 @@ import io.mosip.kernel.cryptosignature.dto.SignatureRequestDto;
 import io.mosip.kernel.cryptosignature.exception.ExceptionHandler;
 
 /**
- * SignatureUtilImpl implements {@link SignatureUtil} .
- * 
+ * Signs ID-generator HTTP payloads by posting them to the keymanager sign API.
+ * <p>
+ * Local public-key validation ({@link #validateWithPublicKey} and {@link #validate})
+ * is not supported and always throws {@link SignatureUtilException}.
+ * </p>
+ *
  * @author Srinivasan
  * @author Urvil Joshi
  * @author Raj Jha
@@ -37,15 +41,21 @@ import io.mosip.kernel.cryptosignature.exception.ExceptionHandler;
 @Component
 public class SignatureUtilImpl implements SignatureUtil {
 
-	/** The sync data request id. */
+	/**
+	 * MOSIP request wrapper id sent to keymanager ({@code mosip.kernel.signature.signature-request-id}).
+	 */
 	@Value("${mosip.kernel.signature.signature-request-id}")
 	private String signDataRequestId;
 
-	/** The sync data version id. */
+	/**
+	 * MOSIP request wrapper version sent to keymanager ({@code mosip.kernel.signature.signature-version-id}).
+	 */
 	@Value("${mosip.kernel.signature.signature-version-id}")
 	private String signDataVersionId;
 
-	/** The encrypt url. */
+	/**
+	 * Keymanager sign endpoint ({@code mosip.kernel.keymanager-service-sign-url}).
+	 */
 	@Value("${mosip.kernel.keymanager-service-sign-url}")
 	private String signUrl;
 	
@@ -60,12 +70,19 @@ public class SignatureUtilImpl implements SignatureUtil {
 
 	private static final String RESPONSE_SOURCE = "Keymanager";
 
-    /*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.mosip.kernel.core.signatureutil.spi.SignatureUtil#validateWithPublicKey(
-	 * java.lang.String, java.lang.String, java.lang.String)
+	/**
+	 * Validates a signature with a caller-supplied public key.
+	 * <p>
+	 * Not implemented in this service.
+	 * </p>
+	 *
+	 * @param signature the signature to verify
+	 * @param data      the signed payload
+	 * @param publickey the public key
+	 * @return never returns; always throws
+	 * @throws InvalidKeySpecException    declared by the SPI
+	 * @throws NoSuchAlgorithmException   declared by the SPI
+	 * @throws SignatureUtilException always, with {@link SigningDataErrorCode#REST_NOT_SUPPORTED_EXCEPTION}
 	 */
 	@Override
 	public boolean validateWithPublicKey(String signature, String data, String publickey)
@@ -74,6 +91,15 @@ public class SignatureUtilImpl implements SignatureUtil {
                 SigningDataErrorCode.REST_NOT_SUPPORTED_EXCEPTION.getErrorMessage());
 	}
 
+	/**
+	 * Posts {@code response} to keymanager and returns the signature and timestamp.
+	 *
+	 * @param response JSON (or other text) to sign
+	 * @return signature bytes and timestamp from keymanager
+	 * @throws SignatureUtilClientException when keymanager returns MOSIP service errors
+	 * @throws SignatureUtilException       when the REST call fails without service errors
+	 * @throws ParseResponseException       when the HTTP entity is missing or cannot be parsed
+	 */
 	@Override
 	public SignatureResponse sign(String response) {
 		SignatureRequestDto signatureRequestDto = new SignatureRequestDto();
@@ -106,6 +132,18 @@ public class SignatureUtilImpl implements SignatureUtil {
 		return signatureResp;
 	}
 
+	/**
+	 * Validates a signature against data and timestamp.
+	 * <p>
+	 * Not implemented in this service.
+	 * </p>
+	 *
+	 * @param signature  the signature to verify
+	 * @param actualData the signed payload
+	 * @param timestamp  signing timestamp
+	 * @return never returns; always throws
+	 * @throws SignatureUtilException always, with {@link SigningDataErrorCode#REST_NOT_SUPPORTED_EXCEPTION}
+	 */
 	@Override
 	public boolean validate(String signature, String actualData, String timestamp){
 		throw new SignatureUtilException(SigningDataErrorCode.REST_NOT_SUPPORTED_EXCEPTION.getErrorCode(),

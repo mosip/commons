@@ -12,10 +12,9 @@ function deleting_kernel() {
       read -p "Are you sure you want to delete all kernel helm charts?(Y/n) " yn
       if [ $yn = "Y" ]
         then
-          helm -n $NS delete idgenerator
-          helm -n $NS delete pridgenerator
-          helm -n $NS delete ridgenerator
-          helm -n $NS delete notifier
+          helm -n $NS delete authmanager || true
+          helm -n $NS delete idgenerator || true
+          helm -n $NS delete notifier || true
           break
         else
           break

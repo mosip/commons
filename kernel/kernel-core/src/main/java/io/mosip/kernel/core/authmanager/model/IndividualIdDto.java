@@ -5,21 +5,23 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 
+ * Holds the individual identifier (UIN or VID) associated with a MOSIP user.
+ * <p>
+ * Contract: returned by
+ * {@link io.mosip.kernel.core.authmanager.spi.AuthService#getIndividualIdBasedOnUserID(String, String)}.
+ * {@code individualId} is null when no mapping exists. Does not perform I/O.
+ * </p>
+ *
  * @author Srinivasan
  * @since 1.0.0
- *
- */
-/*
- * (non-Javadoc)
- * 
- * @see java.lang.Object#toString()
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class IndividualIdDto {
 
-	/** The virtual ID. */
+	/**
+	 * Individual identifier (UIN or VID) for the user; null if unmapped.
+	 */
 	private String individualId;
 }

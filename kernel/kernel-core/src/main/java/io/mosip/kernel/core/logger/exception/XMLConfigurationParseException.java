@@ -10,8 +10,12 @@ package io.mosip.kernel.core.logger.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * {@link Exception} to be thrown when XML is not parsed correctly
- * 
+ * Unchecked exception thrown when Logback XML configuration cannot be parsed.
+ * <p>
+ * Contract: raised when {@code logback.xml} (or MOSIP XML logger config) is
+ * malformed.
+ * </p>
+ *
  * @author Urvil Joshi
  * @since 1.0.0
  */
@@ -23,21 +27,21 @@ public class XMLConfigurationParseException extends BaseUncheckedException {
 	private static final long serialVersionUID = 1509212463362472896L;
 
 	/**
-	 * Constructor with errorCode, errorMessage
-	 * 
-	 * @param errorCode    The error code for this exception
-	 * @param errorMessage The error message for this exception
+	 * Constructs the exception with MOSIP error code and message.
+	 *
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
 	 */
 	public XMLConfigurationParseException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);
 	}
 
 	/**
-	 * Constructor with errorCode, errorMessage, and rootCause
-	 * 
-	 * @param errorCode    The error code for this exception
-	 * @param errorMessage The error message for this exception
-	 * @param rootCause    Cause of this exception
+	 * Constructs the exception with MOSIP error code, message, and cause.
+	 *
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
+	 * @param rootCause    underlying cause; may be null
 	 */
 	public XMLConfigurationParseException(String errorCode, String errorMessage, Throwable rootCause) {
 		super(errorCode, errorMessage, rootCause);

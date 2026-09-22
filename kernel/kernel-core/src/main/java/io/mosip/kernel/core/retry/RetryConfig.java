@@ -33,9 +33,13 @@ import org.springframework.retry.support.RetryTemplate;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 
 /**
- * The Class RetryConfig - to configure retry template with retry/back off
- * policies as per configuration.
- * 
+ * Spring configuration that builds the kernel {@link RetryTemplate}.
+ * <p>
+ * Contract: reads {@link RetryConfigKeyConstants} from the Environment.
+ * Unknown exception class names in the comma-separated lists are skipped.
+ * Does not perform MOSIP HTTP.
+ * </p>
+ *
  * @author Loganathan Sekar
  */
 @Configuration
@@ -44,22 +48,23 @@ public class RetryConfig {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ExceptionUtils.class);
 
-	/** The Constant DEFAULT_RETRYABLE_EXCEPTIONS. */
+	/** Fallback retryable class list when {@code kernel.retry.retryable.exceptions} is unset. */
 	private static final String DEFAULT_RETRYABLE_EXCEPTIONS = Exception.class.getName();
 
-	/** The Constant DEFAULT_NONRETRYABLE_EXCEPTIONS. */
+	/** Fallback non-retryable class list when {@code kernel.retry.nonretryable.exceptions} is unset. */
 	private static final String DEFAULT_NONRETRYABLE_EXCEPTIONS = Runtime.class.getName();
 
-	/** The environment. */
+	/** Spring Environment used to resolve retry property keys. */
 	@Autowired
 	private Environment environment;
 
 	
 	/**
-	 * Retry policy.
+	 * Builds a composite policy of inclusive retryable and exclusive non-retryable exceptions.
 	 *
-	 * @param retryLimit the retry limit
-	 * @return the retry policy
+	 * @param retryLimit        extra attempts after the first; property {@code kernel.retry.attempts.limit}, default 5
+	 * @param traverseRootCause whether to walk the cause chain; property {@code kernel.retry.traverse.root.cause.enabled}, default true
+	 * @return never-null composite retry policy
 	 */
 	@Bean
 	public RetryPolicy retryPolicy(@Value("${" + KERNEL_RETRY_ATTEMPTS_LIMIT + ":5}") int retryLimit,
@@ -84,30 +89,30 @@ public class RetryConfig {
 	}
 
 	/**
-	 * Gets the retryable exceptions from config.
+	 * Parses {@code kernel.retry.retryable.exceptions} into a retry-allowed map.
 	 *
-	 * @return the retryable exceptions from config
+	 * @return never-null map of exception class to {@code true}
 	 */
 	protected Map<Class<? extends Throwable>, Boolean> getRetryableExceptionsFromConfig() {
 		return getExceptionsMapFromConfig(KERNEL_RETRYABLE_EXCEPTIONS, DEFAULT_RETRYABLE_EXCEPTIONS, true);
 	}
 
 	/**
-	 * Gets the non retryable exceptions from config.
+	 * Parses {@code kernel.retry.nonretryable.exceptions} into a retry-denied map.
 	 *
-	 * @return the non retryable exceptions from config
+	 * @return never-null map of exception class to {@code false}
 	 */
 	private Map<Class<? extends Throwable>, Boolean> getNonRetryableExceptionsFromConfig() {
 		return getExceptionsMapFromConfig(KERNEL_NONRETRYABLE_EXCEPTIONS, DEFAULT_NONRETRYABLE_EXCEPTIONS, false);
 	}
 
 	/**
-	 * Gets the exceptions map from config.
+	 * Splits a comma-separated class-name property into a retry map.
 	 *
-	 * @param configProperty  the config property
-	 * @param defaulPropValue the defaul prop value
-	 * @param shouldRetry     the should retry
-	 * @return the exceptions map from config
+	 * @param configProperty  never-null Environment key
+	 * @param defaulPropValue never-null fallback when the property is unset
+	 * @param shouldRetry     {@code true} for retryable classes, {@code false} for non-retryable
+	 * @return never-null map; unknown class names are omitted
 	 */
 	private Map<Class<? extends Throwable>, Boolean> getExceptionsMapFromConfig(String configProperty,
 			String defaulPropValue, boolean shouldRetry) {
@@ -127,12 +132,12 @@ public class RetryConfig {
 	}
 
 	/**
-	 * Back off policy.
+	 * Builds exponential backoff from kernel retry interval properties.
 	 *
-	 * @param initialIntervalMilliSecs the initial interval milli secs
-	 * @param multiplier               the multiplier
-	 * @param maxIntervalMilliSecs     the max interval milli secs
-	 * @return the back off policy
+	 * @param initialIntervalMilliSecs first wait; property {@code kernel.retry.exponential.backoff.initial.interval.millisecs}, default 200
+	 * @param multiplier               growth factor; property {@code kernel.retry.exponential.backoff.multiplier}, default 1.0
+	 * @param maxIntervalMilliSecs     wait cap; property {@code kernel.retry.exponential.backoff.max.interval.millisecs}, default 5000
+	 * @return never-null exponential backoff policy
 	 */
 	@Bean
 	public BackOffPolicy backOffPolicy(
@@ -148,12 +153,12 @@ public class RetryConfig {
 	}
 
 	/**
-	 * Retry template.
+	 * Assembles the kernel {@link RetryTemplate} used by {@link RetryAspect}.
 	 *
-	 * @param retryPolicy   the retry policy
-	 * @param backOffPolicy the back off policy
-	 * @param retryListener the retry listener
-	 * @return the retry template
+	 * @param retryPolicy   never-null policy from {@link #retryPolicy(int, boolean)}
+	 * @param backOffPolicy never-null policy from {@link #backOffPolicy(long, double, long)}
+	 * @param retryListener never-null listener, typically {@link RetryListenerImpl}
+	 * @return never-null template that rethrows the last exception when retries are exhausted
 	 */
 	@Bean
 	public RetryTemplate retryTemplate(RetryPolicy retryPolicy, BackOffPolicy backOffPolicy,

@@ -26,13 +26,16 @@ import io.mosip.kernel.core.exception.UnsupportedEncodingException;
 import io.mosip.kernel.core.util.constant.FileUtilConstants;
 
 /**
- * This class defines the File Utils to be used in MOSIP Project The File Utils
- * are implemented using methods of org.apache.commons.io.FileUtils class of
- * Apache commons.io package
- * 
+ * File I/O helpers wrapping Apache Commons IO {@code FileUtils} with MOSIP exceptions.
+ * <p>
+ * Contract: static helpers only; this class is not instantiable. Java
+ * {@code IOException} / NPE / illegal arguments are rethrown as MOSIP
+ * {@link IOException}, {@link NullPointerException}, or
+ * {@link IllegalArgumentException}. Call when copying, moving, or reading files.
+ * </p>
+ *
  * @author Priya Soni
  * @since 1.0.0
- *
  */
 
 public class FileUtils {
@@ -117,6 +120,10 @@ public class FileUtils {
 	 *                                  directory.
 	 */
 	public static void cleanDirectory(File directory) throws IOException {
+		if (directory == null || directory.getPath().isEmpty() || !directory.exists() || !directory.isDirectory()) {
+			throw new IllegalArgumentException(FileUtilConstants.ILLEGAL_ARGUMENT_ERROR_CODE.getErrorCode(),
+					FileUtilConstants.ILLEGAL_ARGUMENT_ERROR_CODE.getMessage(), null);
+		}
 		try {
 			org.apache.commons.io.FileUtils.cleanDirectory(directory);
 		} catch (java.lang.IllegalArgumentException e) {
@@ -142,7 +149,7 @@ public class FileUtils {
 	public static boolean contentEquals(File file1, File file2) throws IOException {
 		try {
 			return org.apache.commons.io.FileUtils.contentEquals(file1, file2);
-		} catch (java.io.IOException e) {
+		} catch (java.lang.IllegalArgumentException | java.io.IOException e) {
 			throw new IOException(FileUtilConstants.IO_ERROR_CODE.getErrorCode(),
 					FileUtilConstants.IO_ERROR_CODE.getMessage(), e.getCause());
 		}
@@ -164,7 +171,7 @@ public class FileUtils {
 	public static boolean contentEqualsIgnoreEOL(File file1, File file2, String charsetName) throws IOException {
 		try {
 			return org.apache.commons.io.FileUtils.contentEqualsIgnoreEOL(file1, file2, charsetName);
-		} catch (java.io.IOException e) {
+		} catch (java.lang.IllegalArgumentException | java.io.IOException e) {
 			throw new IOException(FileUtilConstants.IO_ERROR_CODE.getErrorCode(),
 					FileUtilConstants.IO_ERROR_CODE.getMessage(), e.getCause());
 		}
@@ -357,12 +364,24 @@ public class FileUtils {
 		try {
 			org.apache.commons.io.FileUtils.forceDelete(file);
 		} catch (java.lang.NullPointerException e) {
-			throw new NullPointerException(FileUtilConstants.NULL_POINTER_ERROR_CODE.getErrorCode(),
-					FileUtilConstants.NULL_POINTER_ERROR_CODE.getMessage(), e.getCause());
+			if (file == null) {
+				throw new NullPointerException(FileUtilConstants.NULL_POINTER_ERROR_CODE.getErrorCode(),
+						FileUtilConstants.NULL_POINTER_ERROR_CODE.getMessage(), e.getCause());
+			}
+			throw new FileNotFoundException(FileUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getErrorCode(),
+					FileUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getMessage(), e.getCause());
 		} catch (java.io.FileNotFoundException e) {
 			throw new FileNotFoundException(FileUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getErrorCode(),
 					FileUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getMessage(), e.getCause());
-		} catch (java.io.IOException e) {
+		} catch (java.io.UncheckedIOException | java.io.IOException e) {
+			if (e instanceof java.io.FileNotFoundException
+					|| e instanceof java.nio.file.NoSuchFileException
+					|| e.getCause() instanceof java.nio.file.NoSuchFileException
+					|| e.getCause() instanceof java.io.FileNotFoundException
+					|| (file != null && !file.exists())) {
+				throw new FileNotFoundException(FileUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getErrorCode(),
+						FileUtilConstants.FILE_NOT_FOUND_ERROR_CODE.getMessage(), e.getCause());
+			}
 			throw new IOException(FileUtilConstants.IO_ERROR_CODE.getErrorCode(),
 					FileUtilConstants.IO_ERROR_CODE.getMessage(), e.getCause());
 		}
@@ -419,7 +438,7 @@ public class FileUtils {
 	public static boolean isFileNewer(File file, Date date) {
 		try {
 			return org.apache.commons.io.FileUtils.isFileNewer(file, date);
-		} catch (java.lang.IllegalArgumentException e) {
+		} catch (java.lang.NullPointerException | java.lang.IllegalArgumentException e) {
 			throw new IllegalArgumentException(FileUtilConstants.ILLEGAL_ARGUMENT_ERROR_CODE.getErrorCode(),
 					FileUtilConstants.ILLEGAL_ARGUMENT_ERROR_CODE.getMessage(), e.getCause());
 		}
@@ -437,7 +456,7 @@ public class FileUtils {
 	public static boolean isFileOlder(File file, Date date) {
 		try {
 			return org.apache.commons.io.FileUtils.isFileOlder(file, date);
-		} catch (java.lang.IllegalArgumentException e) {
+		} catch (java.lang.NullPointerException | java.lang.IllegalArgumentException e) {
 			throw new IllegalArgumentException(FileUtilConstants.ILLEGAL_ARGUMENT_ERROR_CODE.getErrorCode(),
 					FileUtilConstants.ILLEGAL_ARGUMENT_ERROR_CODE.getMessage(), e.getCause());
 		}
@@ -452,12 +471,7 @@ public class FileUtils {
 	 * @throws IOException if an IO error occurs while checking the file.
 	 */
 	public static boolean isSymlink(File file) throws IOException {
-		try {
-			return org.apache.commons.io.FileUtils.isSymlink(file);
-		} catch (java.io.IOException e) {
-			throw new IOException(FileUtilConstants.IO_ERROR_CODE.getErrorCode(),
-					FileUtilConstants.IO_ERROR_CODE.getMessage(), e.getCause());
-		}
+		return org.apache.commons.io.FileUtils.isSymlink(file);
 	}
 
 	/**
@@ -484,10 +498,10 @@ public class FileUtils {
 	 */
 	public static LineIterator lineIterator(File file) throws IOException {
 		try {
-			return org.apache.commons.io.FileUtils.lineIterator(file);
-		} catch (java.io.IOException e) {
+			return openLineIterator(org.apache.commons.io.FileUtils.lineIterator(file));
+		} catch (java.io.IOException | IllegalStateException e) {
 			throw new IOException(FileUtilConstants.IO_ERROR_CODE.getErrorCode(),
-					FileUtilConstants.IO_ERROR_CODE.getMessage(), e.getCause());
+					FileUtilConstants.IO_ERROR_CODE.getMessage(), e);
 		}
 	}
 
@@ -502,10 +516,29 @@ public class FileUtils {
 	 */
 	public static LineIterator lineIterator(File file, String encoding) throws IOException {
 		try {
-			return org.apache.commons.io.FileUtils.lineIterator(file, encoding);
-		} catch (java.io.IOException e) {
+			return openLineIterator(org.apache.commons.io.FileUtils.lineIterator(file, encoding));
+		} catch (java.io.IOException | IllegalStateException e) {
 			throw new IOException(FileUtilConstants.IO_ERROR_CODE.getErrorCode(),
-					FileUtilConstants.IO_ERROR_CODE.getMessage(), e.getCause());
+					FileUtilConstants.IO_ERROR_CODE.getMessage(), e);
+		}
+	}
+
+	/**
+	 * Primes {@link LineIterator#hasNext()} so platform-deferred open failures
+	 * (commons-io wraps them as {@link IllegalStateException} on Linux for bad paths)
+	 * surface as {@link IOException} from the factory methods.
+	 */
+	private static LineIterator openLineIterator(LineIterator iterator) throws IOException {
+		try {
+			iterator.hasNext();
+			return iterator;
+		} catch (IllegalStateException e) {
+			try {
+				iterator.close();
+			} catch (java.io.IOException closeEx) {
+				e.addSuppressed(closeEx);
+			}
+			throw e;
 		}
 	}
 
@@ -707,7 +740,7 @@ public class FileUtils {
 	public static FileOutputStream openOutputStream(File file) throws IOException {
 		try {
 			return org.apache.commons.io.FileUtils.openOutputStream(file);
-		} catch (java.io.IOException e) {
+		} catch (java.lang.IllegalArgumentException | java.io.IOException e) {
 			throw new IOException(FileUtilConstants.IO_ERROR_CODE.getErrorCode(),
 					FileUtilConstants.IO_ERROR_CODE.getMessage(), e.getCause());
 		}
@@ -730,7 +763,7 @@ public class FileUtils {
 	public static FileOutputStream openOutputStream(File file, boolean append) throws IOException {
 		try {
 			return org.apache.commons.io.FileUtils.openOutputStream(file, append);
-		} catch (java.io.IOException e) {
+		} catch (java.lang.IllegalArgumentException | java.io.IOException e) {
 			throw new IOException(FileUtilConstants.IO_ERROR_CODE.getErrorCode(),
 					FileUtilConstants.IO_ERROR_CODE.getMessage(), e.getCause());
 		}
@@ -827,6 +860,14 @@ public class FileUtils {
 	 *         (in bytes)
 	 */
 	public static long sizeOf(File file) {
+		if (file == null) {
+			throw new NullPointerException(FileUtilConstants.NULL_POINTER_ERROR_CODE.getErrorCode(),
+					FileUtilConstants.NULL_POINTER_ERROR_CODE.getMessage(), null);
+		}
+		if (file.getPath().isEmpty() || !file.exists()) {
+			throw new IllegalArgumentException(FileUtilConstants.ILLEGAL_ARGUMENT_ERROR_CODE.getErrorCode(),
+					FileUtilConstants.ILLEGAL_ARGUMENT_ERROR_CODE.getMessage(), null);
+		}
 		try {
 			return org.apache.commons.io.FileUtils.sizeOf(file);
 		} catch (java.lang.NullPointerException e) {

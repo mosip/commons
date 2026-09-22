@@ -1,48 +1,70 @@
 NOTICES
 
-Copyright © MOSIP.
+Copyright (c) MOSIP.
 All rights reserved.
 
-This project includes third-party components distributed under licenses
-that require attribution. Only those components with attribution-required
-licenses are listed below.
+This project is MPL 2.0. Third-party versions match kernel/pom.xml and
+Spring Boot 4.1.1. Full texts and MOSIP dual-license elections: licenses/.
 
 ===========================
-MIT License
+MIT License (licenses/MIT.txt)
 ===========
 
-• com.auth0:java-jwt
-• org.slf4j:slf4j-api
-• org.mockito:mockito-core
-• org.projectlombok:lombok
+- org.projectlombok:lombok 1.18.48
+- org.slf4j:slf4j-api 2.0.18
+- org.mockito:mockito-core 5.23.0
+- com.auth0:java-jwt 3.19.4
+- com.auth0:jwks-rsa 0.24.1
+- org.bouncycastle:bcprov-jdk18on 1.85.2
+- org.jsoup:jsoup 1.23.2
 
 ===========================
-Eclipse Public License (EPL)
-============================
+Apache-2.0 (licenses/Apache-2.0.txt)
+===========================
 
-• jakarta.validation:jakarta.validation-api (EPL-2.0)
-• jakarta.persistence:jakarta.persistence-api (EPL-2.0)
-• junit:junit (EPL-1.0)
-• org.junit.vintage:junit-vintage-engine (EPL-2.0)
-• org.aspectj:aspectjweaver (EPL-1.0)
-• ch.qos.logback:logback-classic (EPL-1.0 component)
+- jakarta.validation:jakarta.validation-api 3.1.1
+- com.github.java-json-tools:json-schema-validator 2.2.14 (elect Apache over LGPLv3)
+- org.javassist:javassist 3.33.0-GA (elect Apache over MPL-1.1 / LGPL-2.1)
+- Spring Boot 4.1.1 / Spring Framework 7.0.9 / Vert.x 3.9.16 / Guava 33.7.1-jre
+- org.apache.directory.api:api-all 2.1.8 (auth-service)
+  (and other Apache-2.0 components listed in licenses/NOTICE)
 
 ===========================
-LGPL-2.1
-========
-
-• ch.qos.logback:logback-classic (LGPL-2.1 component)
-
-===========================
- GPL-2.0 with Classpath Exception
-===========================================
-
-• javax.activation:activation
-
-===========================
-BSD Licenses
+BSD / EDL 1.0 (licenses/BSD-2-Clause.txt)
 ============
 
----
+- org.postgresql:postgresql 42.7.13 (BSD-2-Clause)
+- org.owasp.encoder:encoder 1.4.0
+- org.glassfish.jaxb:jaxb-runtime 2.3.9 (EDL 1.0)
+- jakarta.persistence:jakarta.persistence-api 3.2.0 (elect EDL 1.0 over EPL-2.0)
 
-## Full license texts are available in the `license/` directory.
+===========================
+Mozilla Public License 2.0 (LICENSE)
+===========================
+
+- org.mozilla:rhino 1.8.1
+- com.h2database:h2 2.4.240 (elect MPL-2.0 over EPL-1.0)
+
+===========================
+CDDL 1.1 (licenses/COMMON-DEVLOPMENT-AND-DISTRIBUTION-1.1.txt)
+===========
+
+- javax.activation:activation 1.1.1 (elect CDDL-1.1 over GPL-2.0-with-CPE)
+
+===========================
+Unicode-3.0 (successor to Unicode-DFS-2016)
+===========
+
+- com.ibm.icu:icu4j 78.3
+
+===========================
+MOSIP matrix: remaining No (see licenses/NOTICE)
+============================
+
+- org.aspectj:aspectjweaver 1.9.25.1 (EPL-2.0 only)
+- ch.qos.logback:logback-classic 1.5.38 (EPL-2.0 OR LGPL-2.1)
+- org.junit.jupiter / junit-vintage 6.0.3, junit:junit 4.13.2 (EPL; test)
+- com.openhtmltopdf:openhtmltopdf-pdfbox 1.0.10 (LGPL-2.1)
+- com.google.code.findbugs:annotations 3.0.1 (LGPL-2.1; unused)
+- org.ceylon-lang:ceylon-complete 1.3.2 (GPL+CP mix; idgenerator Chime)
+- com.mchange:c3p0 / mchange-commons-java (EPL-1.0 OR LGPL-2.1)

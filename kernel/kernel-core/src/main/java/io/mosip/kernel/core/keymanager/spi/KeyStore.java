@@ -15,112 +15,140 @@ import javax.security.auth.x500.X500Principal;
 import io.mosip.kernel.core.keymanager.model.CertificateParameters;
 
 /**
- * Keymanager interface that handles and stores its cryptographic keys.
- * 
+ * Stores and retrieves MOSIP cryptographic keys from a JCA / HSM keystore.
+ * <p>
+ * Contract: implementations access a PKCS#11 or software keystore. Aliases
+ * must be non-blank. Missing aliases throw
+ * {@link io.mosip.kernel.core.keymanager.exception.NoSuchAliasException}.
+ * Private keys and secrets are sensitive; do not log them. Call from kernel
+ * keymanager.
+ * </p>
+ *
  * @author Dharmesh Khandelwal
  * @since 1.0.0
- *
  */
 public interface KeyStore {
 
 	/**
-	 * Get private key from keystore
-	 * 
-	 * @param alias the alias
-	 * @return The private key
+	 * Returns the private key for {@code alias}.
+	 *
+	 * @param alias never-null, never-blank keystore alias
+	 * @return never-null private key
+	 * @throws io.mosip.kernel.core.keymanager.exception.NoSuchAliasException when
+	 *                                                                         the
+	 *                                                                         alias
+	 *                                                                         is
+	 *                                                                         missing
 	 */
 	PrivateKey getPrivateKey(String alias);
 
 	/**
-	 * Get public key from keystore
-	 * 
-	 * @param alias the alias
-	 * @return The public key
+	 * Returns the public key for {@code alias}.
+	 *
+	 * @param alias never-null, never-blank keystore alias
+	 * @return never-null public key
+	 * @throws io.mosip.kernel.core.keymanager.exception.NoSuchAliasException when
+	 *                                                                         the
+	 *                                                                         alias
+	 *                                                                         is
+	 *                                                                         missing
 	 */
 	PublicKey getPublicKey(String alias);
 
 	/**
-	 * Get certificate from keystore
-	 * 
-	 * @param alias the alias
-	 * @return The certificate
+	 * Returns the certificate for {@code alias}.
+	 *
+	 * @param alias never-null, never-blank keystore alias
+	 * @return never-null certificate
+	 * @throws io.mosip.kernel.core.keymanager.exception.NoSuchAliasException when
+	 *                                                                         the
+	 *                                                                         alias
+	 *                                                                         is
+	 *                                                                         missing
 	 */
 	Certificate getCertificate(String alias);
 
 	/**
-	 * Get Symmetric key from keystore
-	 * 
-	 * @param alias the alias
-	 * @return The Symmetric key
+	 * Returns the secret key for {@code alias}.
+	 *
+	 * @param alias never-null, never-blank keystore alias
+	 * @return never-null symmetric key
+	 * @throws io.mosip.kernel.core.keymanager.exception.NoSuchAliasException when
+	 *                                                                         the
+	 *                                                                         alias
+	 *                                                                         is
+	 *                                                                         missing
 	 */
 	SecretKey getSymmetricKey(String alias);
 
 	/**
-	 * Get Asymmetric key from keystore
-	 * 
-	 * @param alias the alias
-	 * @return The asymmetric key
+	 * Returns the private-key entry (key plus certificate chain) for {@code alias}.
+	 *
+	 * @param alias never-null, never-blank keystore alias
+	 * @return never-null private-key entry
+	 * @throws io.mosip.kernel.core.keymanager.exception.NoSuchAliasException when
+	 *                                                                         the
+	 *                                                                         alias
+	 *                                                                         is
+	 *                                                                         missing
 	 */
 	PrivateKeyEntry getAsymmetricKey(String alias);
 
 	/**
-	 * Lists all the alias names of this keystore.
-	 * 
-	 * @return list of all alias in keystore
+	 * Lists every alias in the keystore.
+	 *
+	 * @return never-null list; may be empty
 	 */
 	List<String> getAllAlias();
 
 	/**
-	 * Returns the key associated with the given alias, using the given password to
-	 * recover it. The key must have been associated with the alias by a call to
-	 * setKeyEntry, or by a call to setEntry with a PrivateKeyEntry or
-	 * SecretKeyEntry.
-	 * 
-	 * @param alias the alias
-	 * @return the requested key, or null if the given alias does not exist or does
-	 *         not identify a key-related entry
+	 * Returns the key associated with {@code alias}, or null if none exists.
+	 *
+	 * @param alias never-null, never-blank keystore alias
+	 * @return key, or null if the alias is absent or is not a key entry
 	 */
 	Key getKey(String alias);
 
 	/**
-	 * Symmetric key will be generated based on the provider specified and Store the key in provider specific keystore
-	 * 
-	 * @param secretKey the secret key
-	 * @param alias     the alias
+	 * Generates a symmetric key and stores it under {@code alias}.
+	 *
+	 * @param alias never-null, never-blank alias to create
 	 */
 	void generateAndStoreSymmetricKey(String alias);
 
 	/**
-	 * Asymmetric(keypair) keys will be generated based on the provider specified and Store the keys 
-	 * along with self-signed certificate in provider specific keystore
-	 * 
-	 * @param alias        the alias
-	 * @param signKeyAlias alias used to sign the generated key
-	 * @param certParams   required Certificate Parameters to create the certificate
+	 * Generates an asymmetric key pair, signs it with {@code signKeyAlias}, and
+	 * stores it under {@code alias}.
+	 *
+	 * @param alias        never-null, never-blank alias to create
+	 * @param signKeyAlias never-null alias of the signing key
+	 * @param certParams   never-null certificate subject and validity
 	 */
 	void generateAndStoreAsymmetricKey(String alias, String signKeyAlias, CertificateParameters certParams);
 
 	/**
-	 * Delete key form keystore
-	 * 
-	 * @param alias the alias
+	 * Deletes the key entry for {@code alias}.
+	 *
+	 * @param alias never-null, never-blank alias to remove
 	 */
 	void deleteKey(String alias);
 
 	//void storeCertificate(String alias, Certificate[] chain, PrivateKey privateKey);
 
 	/**
-	 * Stores the given trusted certificate to the given alias
-	 * 
-	 * @param alias        the alias
-	 * @param privateKey   privateKey reference of the provided certificate
-	 * @param certificate  Certificate to be stored
+	 * Stores a trusted certificate and optional private key under {@code alias}.
+	 *
+	 * @param alias       never-null, never-blank alias
+	 * @param privateKey  private key matching the certificate; may be null for
+	 *                    trusted-cert-only entries
+	 * @param certificate never-null certificate to store
 	 */
 	void storeCertificate(String alias, PrivateKey privateKey, Certificate certificate);
 
 	/**
-	 * Gets the keyStore provider name.
-	 * 
+	 * Returns the JCA provider name backing this keystore.
+	 *
+	 * @return never-null provider name such as {@code SunJCE} or PKCS#11 name
 	 */
 	String getKeystoreProviderName();
 }

@@ -41,10 +41,12 @@ public class UINMetaDataUtil {
 	}
 
 	/**
-	 * Function to set metadata for update operation
-	 * 
-	 * @param entity entity
-	 * @return <T> Entity with metadata
+	 * Copies request user onto update audit columns.
+	 *
+	 * @param <T>            entity type
+	 * @param entity         entity to update
+	 * @param routingContext request used to resolve the authenticated user
+	 * @return {@code entity} with update metadata set
 	 */
 	public <T extends BaseEntity> T setUpdateMetaData(T entity, RoutingContext routingContext) {
 		String contextUser = authHandler.getContextUser(routingContext);

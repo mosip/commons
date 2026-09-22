@@ -10,32 +10,35 @@ import org.springframework.stereotype.Component;
 import io.mosip.kernel.core.util.RetryUtil;
 
 /**
- * The Aspect Class RetryAspect that applies the retry mechanism on methods with
- *  {@link WithRetry} annotation.
- * 
+ * Around-advice that retries methods annotated with {@link WithRetry}.
+ * <p>
+ * Contract: delegates to {@link RetryUtil#doWithRetry}. The join point must be
+ * a Spring bean method. Thrown exceptions follow the configured retry policy.
+ * </p>
+ *
  * @author Loganathan Sekar
  */
 @Aspect
 @Component
 public class RetryAspect {
 
-	/** The retry util. */
+	/** Retry helper that executes the join point through {@link RetryTemplate}. */
 	@Autowired
 	private RetryUtil retryUtil;
 
 	/**
-	 * With retry methods.
+	 * Matches methods annotated with {@link WithRetry}.
 	 */
 	@Pointcut("@annotation(WithRetry)")
 	public void withRetryMethods() {
 	}
 
 	/**
-	 * Process methods with retry.
+	 * Proceeds the join point through the kernel retry template.
 	 *
-	 * @param pjp the pjp
-	 * @return the object
-	 * @throws Throwable the throwable
+	 * @param pjp never-null intercepted method
+	 * @return the method result; may be null
+	 * @throws Throwable the last exception after retries are exhausted, or the method's own throwable
 	 */
 	@Around("withRetryMethods()")
 	public Object processMethodsWithRetry(final ProceedingJoinPoint pjp) throws Throwable {

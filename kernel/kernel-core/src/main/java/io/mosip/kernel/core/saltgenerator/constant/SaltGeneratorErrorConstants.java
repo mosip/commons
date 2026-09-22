@@ -6,29 +6,38 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * The Enum SaltGeneratorErrorConstants - contains error constants for kernel
- * salt generator.
+ * MOSIP error codes for the kernel salt-generator job.
+ * <p>
+ * Contract: codes follow {@code KER-SGR-nnn}. Used by
+ * {@link io.mosip.kernel.core.saltgenerator.exception.SaltGeneratorException}.
+ * Does not perform I/O.
+ * </p>
  *
  * @author Manoj SP
  */
 public enum SaltGeneratorErrorConstants {
 
+	/**
+	 * Target salt rows already exist in the database.
+	 */
 	RECORD_EXISTS("KER-SGR-001", "Record(s) already exists in DB"),
 
+	/**
+	 * Salt population job failed for a reason other than existing rows.
+	 */
 	JOB_FAILED("KER-SGR-002", "Failed to populate salt");
 
-	/** The error code. */
+	/** MOSIP error code such as {@code KER-SGR-001}. */
 	private final String errorCode;
 
-	/** The error message. */
+	/** Short human-readable description. */
 	private final String errorMessage;
 
 	/**
-	 * Constructor for {@link SaltGeneratorErrorConstants}.
+	 * Binds an error code to its message.
 	 *
-	 * @param errorCode    - id-usage error codes which follows
-	 *                     "<product>-<component>-<number>" pattern
-	 * @param errorMessage - short error message
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null short description
 	 */
 	private SaltGeneratorErrorConstants(String errorCode, String errorMessage) {
 		this.errorCode = errorCode;
@@ -36,27 +45,27 @@ public enum SaltGeneratorErrorConstants {
 	}
 
 	/**
-	 * Getter for errorCode.
+	 * Returns the MOSIP error code.
 	 *
-	 * @return the errorCode
+	 * @return never-null code such as {@code KER-SGR-001}
 	 */
 	public String getErrorCode() {
 		return errorCode;
 	}
 
 	/**
-	 * Getter for errorMessage.
+	 * Returns the short error message.
 	 *
-	 * @return the errorMessage
+	 * @return never-null description
 	 */
 	public String getErrorMessage() {
 		return errorMessage;
 	}
 
 	/**
-	 * Gets the all error codes.
+	 * Returns every error code defined by this enum.
 	 *
-	 * @return the all error codes
+	 * @return never-null unmodifiable list of codes
 	 */
 	public static List<String> getAllErrorCodes() {
 		return Collections.unmodifiableList(Arrays.asList(SaltGeneratorErrorConstants.values()).parallelStream()

@@ -11,8 +11,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * Entity class for uin bean
- * 
+ * Unused or issued UIN row in schema {@code kernel}, table {@code uin}.
+ *
  * @author Dharmesh Khandelwal
  * @author Megha Tanga
  * @since 1.0.0

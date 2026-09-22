@@ -1,7 +1,5 @@
 package io.mosip.kernel.uingenerator.verticle;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
@@ -17,6 +15,13 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
+/**
+ * Worker verticle that schedules transfer of assigned UINs to {@code uin_assigned}.
+ * <p>
+ * Deploys Ceylon Chime and consumes {@link UinSchedulerConstants#NAME_VALUE} to
+ * invoke {@link UinService#transferUin()}.
+ * </p>
+ */
 public class UinTransferVerticle extends AbstractVerticle {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UinTransferVerticle.class);
@@ -25,18 +30,32 @@ public class UinTransferVerticle extends AbstractVerticle {
 
 	private Environment environment;
 
-	private final AtomicBoolean transferInProgress = new AtomicBoolean(false);
-
+	/**
+	 * Resolves {@link UinService} and scheduler properties from {@code context}.
+	 *
+	 * @param context Spring context
+	 */
 	public UinTransferVerticle(final ApplicationContext context) {
 		this.environment = context.getBean(Environment.class);
 		this.uinService = context.getBean(UinService.class);
 	}
 
+	/**
+	 * Deploys the Ceylon Chime scheduler verticle.
+	 *
+	 * @param startFuture unused Vert.x start future
+	 * @throws Exception unused; Vert.x {@code start} contract
+	 */
 	@Override
 	public void start(Future<Void> startFuture) throws Exception {
 		vertx.deployVerticle(UinSchedulerConstants.CEYLON_SCHEDULER, this::schedulerResult);
 	}
 
+	/**
+	 * Starts cron scheduling when Chime deployment succeeds.
+	 *
+	 * @param result Chime deploy result
+	 */
 	public void schedulerResult(AsyncResult<String> result) {
 		if (result.succeeded()) {
 			LOGGER.debug("scheduler verticle deployment successfull");
@@ -58,26 +77,8 @@ public class UinTransferVerticle extends AbstractVerticle {
 
 		MessageConsumer<JsonObject> consumer = eventBus.consumer(UinSchedulerConstants.NAME_VALUE);
 
-		// handle chime event — single-flight: skip tick if a transfer is still running (next schedule will retry)
-		consumer.handler(message -> {
-			if (!transferInProgress.compareAndSet(false, true)) {
-				LOGGER.info("UIN transfer skipped: previous transfer still in progress; will run on next schedule");
-				return;
-			}
-			vertx.executeBlocking(future -> {
-				try {
-					uinService.transferUin();
-					future.complete();
-				} catch (Exception e) {
-					future.fail(e);
-				}
-			}, false, result -> {
-				transferInProgress.set(false);
-				if (result.failed()) {
-					LOGGER.error("UIN transfer failed", result.cause());
-				}
-			});
-		});
+		// handle chime event
+		consumer.handler(message -> uinService.transferUin());
 
 		JsonObject timer = new JsonObject()
 				.put(UinSchedulerConstants.TYPE, environment.getProperty(UinSchedulerConstants.TYPE_VALUE))

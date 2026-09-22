@@ -1,18 +1,25 @@
 package io.mosip.kernel.core.idgenerator.spi;
 
 /**
- * This is an interface for the generation of MISPID
- * 
+ * Generates a MOSIP MISP (MOSIP Identity Service Provider) identifier.
+ * <p>
+ * Contract: implementations typically increment a sequence. Call from
+ * partner-management when creating a MISP. Returned id is never null.
+ * </p>
+ *
+ * @param <T> generated MISP-id type, typically {@link String}
  * @author Sidhant Agarwal
  * @author Ritesh Sinha
  * @since 1.0.0
- *
  */
 public interface MispIdGenerator<T> {
 	/**
-	 * Function to generate an Id
-	 * 
-	 * @return The generated id
+	 * Generates the next MISP identifier.
+	 * <p>
+	 * Contract: may perform database I/O.
+	 * </p>
+	 *
+	 * @return never-null MISP id
 	 */
 	public T generateId();
 

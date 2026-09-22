@@ -79,4 +79,4 @@ COPY ./target/kernel-config-server-*.jar kernel-config-server.jar
 EXPOSE 51000
 
 #CMD  ./execute-jar.sh
-CMD java -jar kernel-config-server.jar
+CMD java -XX:-UseG1GC -XX:+ExplicitGCInvokesConcurrent -XX:-UseParallelGC -XX:+UseZGC -XX:+ZGenerational -XX:-UseShenandoahGC -XX:MaxGCPauseMillis=200  -XX:+UnlockExperimentalVMOptions -XX:+UseStringDeduplication -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -XX:+UseCompressedOops -jar kernel-config-server.jar

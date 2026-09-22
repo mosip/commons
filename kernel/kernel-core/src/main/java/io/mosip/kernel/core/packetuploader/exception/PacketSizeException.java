@@ -3,8 +3,12 @@ package io.mosip.kernel.core.packetuploader.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * Exception to be thrown when Packet is not right
- * 
+ * Unchecked exception thrown when the packet file size is outside allowed bounds.
+ * <p>
+ * Contract: raised before upload when the local file is empty or exceeds the
+ * configured maximum size.
+ * </p>
+ *
  * @author Urvil Joshi
  * @since 1.0.0
  */

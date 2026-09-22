@@ -3,8 +3,11 @@ package io.mosip.kernel.core.packetuploader.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * Exception to be thrown when there is no session
- * 
+ * Unchecked exception thrown when an SFTP session is missing or already closed.
+ * <p>
+ * Contract: raised if upload or disconnect is attempted without a live session.
+ * </p>
+ *
  * @author Urvil Joshi
  * @since 1.0.0
  */

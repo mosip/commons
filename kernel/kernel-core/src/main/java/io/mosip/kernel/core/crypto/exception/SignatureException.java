@@ -9,7 +9,12 @@ package io.mosip.kernel.core.crypto.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * {@link Exception} to be thrown when params are invalid
+ * Unchecked exception thrown when digital-signature create or verify fails.
+ * <p>
+ * Contract: raised by {@link io.mosip.kernel.core.crypto.spi.CryptoCoreSpec}
+ * {@code sign} / {@code verifySignature} implementations. Prefer
+ * {@link io.mosip.kernel.core.crypto.constant.CryptoExceptionCodeConstants}.
+ * </p>
  * 
  * @author Urvil Joshi
  * @since 1.0.0

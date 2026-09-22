@@ -38,16 +38,19 @@ import io.mosip.kernel.core.cbeffutil.exception.CbeffException;
 public class CbeffISOReader {
 
     /**
-     * Method used for reading ISO Image
+     * Reads an ISO biometric image from the file system and returns its full
+     * bytes.
+     * <p>
+     * Contract: performs local file I/O. {@code path} must point to an existing
+     * readable file. {@code type} is reserved for format-identifier checks and
+     * is currently unused. The first four bytes are consumed as a big-endian
+     * format identifier but are not validated.
+     * </p>
      *
-     * @param path of the ISO image
-     *
-     * @param type of ISO image
-     *
-     * @return return byte array of image data
-     *
-     * @exception Exception exception
-     *
+     * @param path never-null file-system path to the ISO image
+     * @param type biometric type such as Finger, Iris, or Face; currently unused
+     * @return never-null complete file contents including the format header
+     * @throws Exception when the file cannot be read
      */
     public static byte[] readISOImage(String path, String type) throws Exception {
         File testFile = new File(path);

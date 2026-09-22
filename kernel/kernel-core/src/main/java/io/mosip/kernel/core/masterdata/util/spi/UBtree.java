@@ -14,19 +14,25 @@ import java.util.stream.Collectors;
 import io.mosip.kernel.core.masterdata.util.model.Node;
 
 /**
- * Unbalanced tree implementation to manage hierarchy data
- * 
+ * Unbalanced tree helpers for MOSIP master-data location / hierarchy graphs.
+ * <p>
+ * Contract: default methods operate in memory (no HTTP/DB). {@code convertToNode}
+ * must map a domain object to a {@link Node} with id and parentId. Null lists
+ * and nodes yield empty results rather than throwing, except
+ * {@link #getParentHierarchy(Node)} which requires a non-null node.
+ * </p>
+ *
+ * @param <T> domain type stored on each {@link Node}
  * @author Abhishek Kumar
  * @since 1.0.0
- * 
  */
 public interface UBtree<T> {
 
 	/**
-	 * Method to create an unbalanced tree using the input list
-	 * 
-	 * @param list input list
-	 * @return list of {@link Node}
+	 * Builds parent/child links from a flat list of domain objects.
+	 *
+	 * @param list domain objects; null yields an empty list
+	 * @return never-null list of linked nodes
 	 */
 	public default List<Node<T>> createTree(List<T> list) {
 		if (list == null) {
@@ -57,10 +63,10 @@ public interface UBtree<T> {
 	}
 
 	/**
-	 * Method to find the leaf nodes using the passed node
-	 * 
-	 * @param node input node
-	 * @return {@link List} of leaf {@link Node}
+	 * Returns leaf descendants of {@code node} (nodes with no children).
+	 *
+	 * @param node subtree root; null yields an empty list
+	 * @return never-null leaf list; empty if {@code node} is null or has no leaves
 	 */
 	public default List<Node<T>> findLeafs(Node<T> node) {
 		if (node == null) {
@@ -86,9 +92,10 @@ public interface UBtree<T> {
 	}
 
 	/**
-	 * 
-	 * @param node
-	 * @return
+	 * Returns the domain values of leaf descendants of {@code node}.
+	 *
+	 * @param node subtree root; null yields an empty list
+	 * @return never-null list of leaf values
 	 */
 	public default List<T> findLeafsValue(Node<T> node) {
 		if (node == null) {
@@ -99,10 +106,10 @@ public interface UBtree<T> {
 	}
 
 	/**
-	 * Method to find the root node for the input node
-	 * 
-	 * @param node input node
-	 * @return root {@link Node}
+	 * Walks parent links from {@code node} until a node with no parent is found.
+	 *
+	 * @param node starting node; null is returned as-is
+	 * @return the root node, or {@code node} itself if it is already a root or null
 	 */
 	public default Node<T> findRootNode(Node<T> node) {
 		if (node == null) {
@@ -122,10 +129,10 @@ public interface UBtree<T> {
 	}
 
 	/**
-	 * Method to find the root node and their value
-	 * 
-	 * @param node input node
-	 * @return node value
+	 * Returns the domain value of the root ancestor of {@code node}.
+	 *
+	 * @param node starting node; null yields null
+	 * @return root payload; may be null
 	 */
 	public default T findRootNodeValue(Node<T> node) {
 		if (node == null) {
@@ -135,10 +142,10 @@ public interface UBtree<T> {
 	}
 
 	/**
-	 * Method to fetch the hierarchy for the input node
-	 * 
-	 * @param node input node
-	 * @return {@link List} of node value
+	 * Returns {@code node} plus all descendant domain values (breadth-first).
+	 *
+	 * @param node subtree root; null yields an empty list
+	 * @return never-null list of values from {@code node} downward
 	 */
 	public default List<T> getChildHierarchy(Node<T> node) {
 		if (node == null) {
@@ -163,6 +170,13 @@ public interface UBtree<T> {
 
 	}
 
+	/**
+	 * Returns {@code node} plus all ancestor domain values up to the root.
+	 *
+	 * @param node never-null starting node
+	 * @return never-null list from {@code node} to root
+	 * @throws NullPointerException if {@code node} is null
+	 */
 	public default List<T> getParentHierarchy(Node<T> node) {
 		Objects.requireNonNull(node);
 		// get the root
@@ -182,11 +196,11 @@ public interface UBtree<T> {
 	}
 
 	/**
-	 * Method to Search Node the specified node
-	 * 
-	 * @param root input root node
-	 * @param id   id of the node
-	 * @return {@link Node}
+	 * Depth-first search for a node with {@code id} under {@code root}.
+	 *
+	 * @param root subtree to search; null yields null
+	 * @param id   never-null node identifier to match
+	 * @return matching node, or null if not found
 	 */
 	public default Node<T> searchNode(Node<T> root, String id) {
 		if (root == null) {
@@ -211,16 +225,22 @@ public interface UBtree<T> {
 	}
 
 	/**
-	 * Method to find the {@link Node} from the list of {@link Node}
-	 * 
-	 * @param list input list of {@link Node}
-	 * @param id   input to search the Node
-	 * @return {@link Node}
+	 * Finds the first node in {@code list} whose id equals {@code id}.
+	 *
+	 * @param list never-null node list; must not contain null elements
+	 * @param id   never-null identifier to match
+	 * @return matching node, or null if none matches
 	 */
 	public default Node<T> findNode(List<Node<T>> list, String id) {
 		Optional<Node<T>> node = list.stream().filter(i -> i.getId().equals(id)).findAny();
 		return node.isPresent() ? node.get() : null;
 	}
 
+	/**
+	 * Converts a domain object into a tree {@link Node}.
+	 *
+	 * @param node never-null domain object
+	 * @return never-null node with id and parentId populated
+	 */
 	public Node<T> convertToNode(T node);
 }

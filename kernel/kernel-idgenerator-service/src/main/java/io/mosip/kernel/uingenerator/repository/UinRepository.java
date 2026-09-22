@@ -49,13 +49,34 @@ public interface UinRepository extends JpaRepository<UinEntity, String> {
 	 */
 	public UinEntity findByUin(String uin);
 
+	/**
+	 * Updates lifecycle status and audit columns for {@code uin}.
+	 *
+	 * @param status      new lifecycle status
+	 * @param contextUser updated-by user
+	 * @param uptimes     update timestamp
+	 * @param uin         identifier to update
+	 */
 	@Modifying
 	@Query(value = "UPDATE kernel.uin SET uin_status=:status, upd_by=:contextUser, upd_dtimes=:uptimes where uin=:uin", nativeQuery = true)
 	public void updateStatus(@Param("status") String status, @Param("contextUser") String contextUser,
 			@Param("uptimes") LocalDateTime uptimes, @Param("uin") String uin);
 	
+	/**
+	 * Returns up to {@code pageSize} UINs in {@code status}.
+	 *
+	 * @param status   lifecycle status
+	 * @param pageSize maximum rows
+	 * @return matching entities
+	 */
 	@Query(value = "select uu.uin, uu.cr_by, uu.cr_dtimes, uu.del_dtimes, uu.is_deleted, uu.upd_by, uu.upd_dtimes, uu.uin_status from kernel.uin uu where uu.uin_status=:status LIMIT :pageSize", nativeQuery = true)
 	public List<UinEntity> findByStatus(@Param("status") String status, @Param("pageSize") int pageSize);
 	
+	/**
+	 * Counts non-deleted UINs in {@code status}.
+	 *
+	 * @param status lifecycle status
+	 * @return row count
+	 */
 	long countByStatusAndIsDeletedFalse(String status);
 }

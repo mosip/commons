@@ -3,48 +3,35 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>io.mosip.kernel</groupId>
+		<artifactId>kernel-parent</artifactId>
+		<version>1.4.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
 
-	<groupId>io.mosip.kernel</groupId>
-	<version>1.4.0-SNAPSHOT</version>
 	<artifactId>kernel-config-server</artifactId>
+	<version>1.4.1-SNAPSHOT</version>
 	<name>Kernel Config Server</name>
-		<url>https://github.com/mosip/commons</url>
-	<description>Config Server for Mosip</description>
+	<description>Spring Cloud Config Server for all MOSIP microservices (servlet path /config). Install after conf-secrets. Not merged into other kernel HTTP services.</description>
+	<url>https://github.com/mosip/commons</url>
+
+	<!-- Inherits all version properties from kernel-parent; no module-specific version overrides. -->
+	<!-- Parent excludes **/config/** which would wipe this module's package from Sonar/JaCoCo. -->
 	<properties>
-
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-		<!-- maven -->
-		<maven.compiler.source>21</maven.compiler.source>
-		<maven.compiler.target>21</maven.compiler.target>
-		<maven.compiler.version>3.8.0</maven.compiler.version>
-		<maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version>
-
-		<maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
-		<maven.war.plugin.version>3.1.0</maven.war.plugin.version>
-		<maven.jacoco.plugin.version>0.8.1</maven.jacoco.plugin.version>
-		<maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version>
-		<maven.javadoc.version>3.2.0</maven.javadoc.version>
-		<maven-shade-plugin.version>2.3</maven-shade-plugin.version>
-		<spring-boot-maven-plugin.version>3.2.3</spring-boot-maven-plugin.version>
+		<sonar.coverage.exclusions>**/*BootApplication.java</sonar.coverage.exclusions>
+		<sonar.cpd.exclusions></sonar.cpd.exclusions>
 	</properties>
-	
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>io.mosip.kernel</groupId>
-				<artifactId>kernel-bom</artifactId>
-				<version>1.4.0-SNAPSHOT</version>
-				<type>pom</type>
-			    <scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -59,37 +46,73 @@
 			<artifactId>spring-cloud-starter-config</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-bootstrap</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
+			<artifactId>spring-boot-starter-webmvc-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-		    <groupId>org.springframework.cloud</groupId>
-		    <artifactId>spring-cloud-starter-bootstrap</artifactId>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
-	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://central.sonatype.com/repository/maven-snapshots/</url>
-		</snapshotRepository>
-		<repository>
-			<id>ossrh</id>
-			<url>https://central.sonatype.com/api/v1/publisher</url>
-		</repository>
-	</distributionManagement>
+
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<configuration>
+					<!-- Do not inherit parent **/config/** exclude for this module. -->
+					<excludes>
+						<exclude>**/*BootApplication.class</exclude>
+					</excludes>
+					<rules>
+						<rule>
+							<element>BUNDLE</element>
+							<limits>
+								<limit>
+									<counter>LINE</counter>
+									<value>COVEREDRATIO</value>
+									<minimum>1.0</minimum>
+								</limit>
+								<limit>
+									<counter>BRANCH</counter>
+									<value>COVEREDRATIO</value>
+									<minimum>1.0</minimum>
+								</limit>
+							</limits>
+						</rule>
+					</rules>
+				</configuration>
+				<executions>
+					<execution>
+						<id>jacoco-check</id>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>${spring-boot-maven-plugin.version}</version>
 				<configuration>
-					<executable>true</executable>
+					<!-- Boot 4 removed executable launch scripts; ZIP layout supports java -jar -->
 					<layout>ZIP</layout>
 				</configuration>
 				<executions>
 					<execution>
+						<id>repackage</id>
 						<goals>
 							<goal>build-info</goal>
 							<goal>repackage</goal>
@@ -100,114 +123,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.sonatype.central</groupId>
-				<artifactId>central-publishing-maven-plugin</artifactId>
-				<version>0.11.0</version>
-				<extensions>true</extensions>
-				<configuration>
-					<publishingServerId>ossrh</publishingServerId>
-					<autoPublish>false</autoPublish>
-				</configuration>
-			</plugin>
-
-               <plugin>
-                  <groupId>org.apache.maven.plugins</groupId>
-                  <artifactId>maven-source-plugin</artifactId>
-                  <inherited>true</inherited>
-                  <version>2.2.1</version>
-                  <executions>
-                        <execution>
-                          <id>attach-sources</id>
-                          <goals>
-                                <goal>jar-no-fork</goal>
-                          </goals>
-                        </execution>
-                  </executions>
-                </plugin>
-
-              <plugin>
-                  <groupId>org.apache.maven.plugins</groupId>
-                  <artifactId>maven-javadoc-plugin</artifactId>
-                  <version>3.2.0</version>
-                  <executions>
-                        <execution>
-                          <id>attach-javadocs</id>
-                          <goals>
-                                <goal>jar</goal>
-                          </goals>
-                        </execution>
-                  </executions>
-                  <configuration>
-                          <doclint>none</doclint>
-                  </configuration>
-                </plugin>
-                <plugin>
-                  <groupId>org.apache.maven.plugins</groupId>
-                  <artifactId>maven-gpg-plugin</artifactId>
-                  <version>1.5</version>
-                  <executions>
-                        <execution>
-                          <id>sign-artifacts</id>
-                          <phase>verify</phase>
-                          <goals>
-                                <goal>sign</goal>
-                          </goals>
-		          <configuration>
-                		<gpgArguments>
-                    			<arg>--pinentry-mode</arg>
-                    			<arg>loopback</arg>
-                		</gpgArguments>
-            		 </configuration>
-                        </execution>
-                  </executions>
-                </plugin>
-		<plugin>
-    			<groupId>pl.project13.maven</groupId>
-			<artifactId>git-commit-id-plugin</artifactId>
-			<version>3.0.1</version>
-			<executions>
-        			<execution>
-			        	<id>get-the-git-infos</id>
-					<goals>
-						<goal>revision</goal>
-            				</goals>
-            				<phase>validate</phase>
- 				</execution>
- 			</executions>
- 			<configuration>
-				<generateGitPropertiesFile>true</generateGitPropertiesFile>
-				<generateGitPropertiesFilename>${project.build.outputDirectory}/service-git.properties</generateGitPropertiesFilename>
-                    		<includeOnlyProperties>
-                        		<includeOnlyProperty>^git.build.(time|version)$</includeOnlyProperty>
-                        		<includeOnlyProperty>^git.commit.id.(abbrev|full)$</includeOnlyProperty>
-                    		</includeOnlyProperties>
-                    		<commitIdGenerationMode>full</commitIdGenerationMode>
- 				<dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
-				<!-- <format>json</format> -->
-			</configuration>
-		</plugin>
-          </plugins>
-        </build>
-		<scm>
-                <connection>scm:git:git://github.com/mosip/commons.git</connection>
-                <developerConnection>scm:git:ssh://github.com:mosip/commons.git</developerConnection>
-                <url>https://github.com/mosip/commons</url>
-                <tag>HEAD</tag>
-        </scm>
-		<licenses>
-          <license>
-                <name>MPL 2.0</name>
-                <url>https://www.mozilla.org/en-US/MPL/2.0/</url>
-          </license>
-        </licenses>
-		<developers>
-                <developer>
-                  <name>Mosip</name>
-                  <email>mosip.emailnotifier@gmail.com</email>
-                  <organization>io.mosip</organization>
-                  <organizationUrl>https://github.com/mosip/commons</organizationUrl>
-                </developer>
-        </developers>
-		
-	</project>
+		</plugins>
+	</build>
+</project>

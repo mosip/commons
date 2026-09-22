@@ -27,6 +27,13 @@ public class VidGeneratorServiceException extends BaseUncheckedException {
 		super(errorCode, errorMessage);
 	}
 
+	/**
+	 * Instantiates the exception with a MOSIP error code, message, and cause.
+	 *
+	 * @param errorCode    MOSIP error code
+	 * @param errorMessage MOSIP error message
+	 * @param cause        underlying cause
+	 */
 	public VidGeneratorServiceException(String errorCode, String errorMessage, Throwable cause) {
 		super(errorCode, errorMessage, cause);
 	}

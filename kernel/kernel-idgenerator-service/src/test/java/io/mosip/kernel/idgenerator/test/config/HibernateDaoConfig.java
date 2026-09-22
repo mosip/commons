@@ -46,9 +46,12 @@ import io.mosip.kernel.vidgenerator.constant.HibernatePersistenceConstant;
 @Configuration
 @PropertySource({ "classpath:bootstrap.properties" })
 @PropertySource(value = "classpath:application-${spring.profiles.active}.properties", ignoreResourceNotFound = true)
-@EnableJpaRepositories(basePackages = { "io.mosip.kernel.vidgenerator.repository", "io.mosip.kernel.uingenerator.repository"})
+@EnableJpaRepositories(basePackages = { "io.mosip.kernel.vidgenerator.repository", "io.mosip.kernel.uingenerator.repository",
+		"io.mosip.kernel.ridgenerator.repository"})
 @ComponentScan(basePackages = { "io.mosip.kernel.vidgenerator.*","io.mosip.kernel.uingenerator.*", "io.mosip.kernel.idgenerator.vid.*",
-		"io.mosip.kernel.crypto.*", "${mosip.auth.adapter.impl.basepackage}","io.mosip.kernel.idgenerator.*","io.mosip.kernel.cryptosignature.*","io.mosip.kernel.keygenerator.bouncycastle"},excludeFilters={
+		"io.mosip.kernel.crypto.*", "${mosip.auth.adapter.impl.basepackage}","io.mosip.kernel.idgenerator.*","io.mosip.kernel.cryptosignature.*",
+		"io.mosip.kernel.ridgenerator.service","io.mosip.kernel.ridgenerator.router","io.mosip.kernel.ridgenerator.repository",
+		"io.mosip.kernel.ridgenerator.entity","io.mosip.kernel.keygenerator.bouncycastle"},excludeFilters={
 				  @ComponentScan.Filter(type=FilterType.ASSIGNABLE_TYPE, value=ExceptionDaoConfig.class),@ComponentScan.Filter(type=FilterType.ASSIGNABLE_TYPE, value=io.mosip.kernel.idgenerator.config.HibernateDaoConfig.class),@ComponentScan.Filter(type=FilterType.ASSIGNABLE_TYPE, value=UinNullDaoConfig.class)})
 @EnableTransactionManagement
 public class HibernateDaoConfig implements EnvironmentAware {
@@ -90,7 +93,6 @@ public class HibernateDaoConfig implements EnvironmentAware {
 	 * @return dataSource
 	 */
 	@Bean
-	@Autowired
 	public DataSource dataSource() {
 		HikariConfig hikariConfig = new HikariConfig();
 		hikariConfig.setDriverClassName(env.getProperty(HibernatePersistenceConstant.JAVAX_PERSISTENCE_JDBC_DRIVER));
@@ -112,11 +114,11 @@ public class HibernateDaoConfig implements EnvironmentAware {
 	 * @return LocalContainerEntityManagerFactoryBean
 	 */
 	@Bean
-	@Autowired
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(final DataSource dataSource) {
 		LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
 		entityManagerFactory.setDataSource(dataSource);
-		entityManagerFactory.setPackagesToScan("io.mosip.kernel.vidgenerator.entity","io.mosip.kernel.uingenerator.entity");
+		entityManagerFactory.setPackagesToScan("io.mosip.kernel.vidgenerator.entity","io.mosip.kernel.uingenerator.entity",
+				"io.mosip.kernel.ridgenerator.entity");
 		entityManagerFactory.setJpaPropertyMap(jpaProperties());
 		entityManagerFactory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 		return entityManagerFactory;
@@ -129,7 +131,6 @@ public class HibernateDaoConfig implements EnvironmentAware {
 	 * @return PlatformTransactionManager
 	 */
 	@Bean(name = "transactionManager")
-	@Autowired
 	public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
 		JpaTransactionManager jpaTransactionManager = new JpaTransactionManager(entityManagerFactory);
 		jpaTransactionManager.setDataSource(dataSource());

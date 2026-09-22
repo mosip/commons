@@ -1,6 +1,3 @@
-/**
- * 
- */
 package io.mosip.kernel.core.util;
 
 import java.security.MessageDigest;
@@ -9,22 +6,13 @@ import io.mosip.kernel.core.util.constant.HashUtilConstants;
 import io.mosip.kernel.core.util.exception.HashUtilException;
 
 /**
+ * Incremental hash-code builder modelled on Apache Commons HashCodeBuilder.
  * <p>
- * Assists in implementing {@link Object#hashCode()} methods.
+ * Contract: {@link #append} methods accept null arrays by multiplying the
+ * running total without adding an element. {@link #HashUtils(long, long)}
+ * requires odd initial and multiplier values. Does not perform I/O.
  * </p>
- * <p>
- * In this class <a href=
- * "https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/builder/HashCodeBuilder.html">HashCodeBuilder</a>
- * is referred to build a good hashCode method for any class.
- * </p>
- * <p>
- * The following is the approach taken. When appending a data field, the current
- * total is multiplied by the multiplier then a relevant value for that data
- * type is added. For example, if the current hashCode is 17, and the multiplier
- * is 37, then appending the integer 45 will create a hash code of 674, namely
- * 17 * 37 + 45.
- * </p>
- * 
+ *
  * @version 1.0 10 August 2018
  * @author Jyoti Prakash Nayak
  */
@@ -40,10 +28,7 @@ public class HashUtils {
 	private long total = 0;
 
 	/**
-	 * A constructor of HashUtil class without any parameters. Here the created
-	 * HashCodeBuilder object is initialized without any parameters. The
-	 * initializing odd number and multiplying odd number are assigned default
-	 * values 7919l, 7664345821815920749l respectively.
+	 * Constructs a builder with default odd initial value 7919 and multiplier 7664345821815920749.
 	 */
 	public HashUtils() {
 		multiplierConstant = 7664345821815920749l;
@@ -51,13 +36,11 @@ public class HashUtils {
 	}
 
 	/**
-	 * A constructor of HashUtil class with parameters. Here the created
-	 * HashCodeBuilder object is initialized with the given initializing odd number
-	 * and multiplying odd number .
-	 * 
-	 * @param initialOddNumber    an odd number used as the initial value
-	 * @param multiplierOddNumber an odd number used as the multiplier
-	 * @throws HashUtilException if the number is even
+	 * Constructs a builder with caller-supplied odd initial and multiplier values.
+	 *
+	 * @param initialOddNumber    odd starting total
+	 * @param multiplierOddNumber odd multiplier applied before each append
+	 * @throws HashUtilException if either number is even
 	 */
 	public HashUtils(final long initialOddNumber, final long multiplierOddNumber) throws HashUtilException {
 		if (initialOddNumber % 2 == 0) {
@@ -394,11 +377,11 @@ public class HashUtils {
 	}
 
 	/**
-	 * This method checks whether two digest are equal or not.
-	 * 
-	 * @param source the digest to be compared.
-	 * @param target the digest to be compared with.
-	 * @return true if they are equal.
+	 * Constant-time comparison of two digests.
+	 *
+	 * @param source never-null first digest
+	 * @param target never-null second digest
+	 * @return {@code true} if the arrays are equal
 	 */
 	public boolean isDigestEqual(byte[] source, byte[] target) {
 		return MessageDigest.isEqual(source, target);

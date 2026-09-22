@@ -1,0 +1,39 @@
+# Defaults when mosip-config omits mosip.global.end-points (pause_play_config is empty).
+# Same list as kernel-auth-adapter. Cluster mosip-config overrides this.
+mosip:
+  global:
+    end-points:
+      - /assets/**
+      - /icons/**
+      - /screenshots/**
+      - /favicon*
+      - /css/**
+      - /js/**
+      - /error*
+      - /webjars/**
+      - /csrf
+      - /*/
+      - /authenticate/**
+      - /actuator/**
+      - /sendOtp
+      - /validateOtp
+      - /invalidateToken
+      - /config
+      - /login
+      - /logout
+      - /validateOTP
+      - /sendOTP
+      - /login/**
+      - /login-redirect/**
+      - /h2-console/**
+      - /license/**
+      - /callback/**
+      - /authmanager/**
+      - /v2/api-docs
+      - /swagger-resources/**
+      - /configuration/ui
+      - /configuration/security
+      - /v3/api-docs
+      - /v3/api-docs/**
+      - /swagger-ui.html
+      - /swagger-ui/**

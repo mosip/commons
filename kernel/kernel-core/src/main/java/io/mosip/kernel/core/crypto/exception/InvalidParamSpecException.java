@@ -9,7 +9,12 @@ package io.mosip.kernel.core.crypto.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * {@link Exception} to be thrown when params are invalid
+ * Unchecked exception thrown when cryptographic algorithm parameters are
+ * invalid.
+ * <p>
+ * Contract: raised for invalid IV, AAD, or algorithm parameter specs. Prefer
+ * {@link io.mosip.kernel.core.crypto.constant.CryptoExceptionCodeConstants}.
+ * </p>
  * 
  * @author Urvil Joshi
  * @since 1.0.0

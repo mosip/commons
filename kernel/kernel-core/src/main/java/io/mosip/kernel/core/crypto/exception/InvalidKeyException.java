@@ -12,7 +12,12 @@ package io.mosip.kernel.core.crypto.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * {@link Exception} to be thrown when key is invalid
+ * Unchecked exception thrown when a cryptographic key is invalid.
+ * <p>
+ * Contract: raised when key material fails validation or is the wrong type
+ * (public vs private). Prefer
+ * {@link io.mosip.kernel.core.crypto.constant.CryptoExceptionCodeConstants}.
+ * </p>
  * 
  * @author Urvil Joshi
  * @since 1.0.0

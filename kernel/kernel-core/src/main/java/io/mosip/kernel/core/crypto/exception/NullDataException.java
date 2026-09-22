@@ -9,7 +9,11 @@ package io.mosip.kernel.core.crypto.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * {@link Exception} to be thrown when data is null
+ * Unchecked exception thrown when cryptographic data is null.
+ * <p>
+ * Contract: raised when plaintext, ciphertext, AAD, or salt is null. Prefer
+ * {@link io.mosip.kernel.core.crypto.constant.CryptoExceptionCodeConstants#NULL_DATA_EXCEPTION}.
+ * </p>
  * 
  * @author Urvil Joshi
  * @since 1.0.0

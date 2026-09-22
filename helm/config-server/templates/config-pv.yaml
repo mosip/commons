@@ -1,0 +1,21 @@
+{{- if .Values.spring_profiles.enabled }}
+  {{- if or .Values.localRepo.enabled (include "config-server.hasNative" . | eq "true") }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Values.volume.name }}
+  labels:
+    name: {{ .Values.volume.name }}
+spec:
+  storageClassName: {{ .Values.volume.storageClass }}
+  capacity:
+    storage: {{ .Values.volume.size }}
+  accessModes:
+    {{- range .Values.volume.accessModes }}
+      - {{ . }}
+    {{- end }}
+  nfs:
+    server: {{ .Values.volume.nfs.server }}
+    path: {{ .Values.volume.nfs.path }}
+  {{- end }}
+{{- end }}

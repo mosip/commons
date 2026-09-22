@@ -1,56 +1,83 @@
 package io.mosip.kernel.core.idvalidator.spi;
 
 /**
- * This interface provide method for RID validation.
- * 
+ * Validates a MOSIP Registration ID (RID).
+ * <p>
+ * Contract: implementations check length, center id, machine id, sequence, and
+ * timestamp fields locally (no HTTP). String arguments must be non-null;
+ * length arguments must be positive and match the corresponding field widths.
+ * </p>
+ *
+ * @param <T> RID / field type, typically {@link String}
  * @author Ritesh Sinha
  * @author Abhishek Kumar
- *
- * @param <T> is of custom type
+ * @see io.mosip.kernel.core.idvalidator.exception.InvalidIDException
  */
 public interface RidValidator<T> {
 	/**
-	 * This method validate given RID against specified generation logic.
-	 * 
-	 * @param id        the RID.
-	 * @param centerId  the centerId.
-	 * @param machineId the dongleId.
-	 * @return true if RID satisfied the specified generation logic.
+	 * Validates a RID against the given center and machine identifiers using
+	 * configured field lengths.
+	 *
+	 * @param id        never-null RID
+	 * @param centerId  never-null registration-center id expected in the RID
+	 * @param machineId never-null machine id expected in the RID
+	 * @return {@code true} if the RID matches the expected structure
+	 * @throws io.mosip.kernel.core.idvalidator.exception.InvalidIDException when
+	 *                                                                       the RID
+	 *                                                                       is null
+	 *                                                                       or
+	 *                                                                       malformed
 	 */
 	boolean validateId(T id, T centerId, T machineId);
 
 	/**
-	 * This method validate given RID only against specified generation logic.
-	 * 
-	 * @param id the RID.
-	 * @return true if RID satisfied the specified generation logic.
+	 * Validates a RID using configured default field lengths.
+	 *
+	 * @param id never-null RID
+	 * @return {@code true} if the RID is valid
+	 * @throws io.mosip.kernel.core.idvalidator.exception.InvalidIDException when
+	 *                                                                       the RID
+	 *                                                                       is null
+	 *                                                                       or
+	 *                                                                       malformed
 	 */
 	boolean validateId(T id);
 
 	/**
-	 * This method validate given RID against specified generation logic.
-	 * 
-	 * @param id              the rid
-	 * @param centerId        the center id
-	 * @param machineId       the machine id
-	 * @param centerIdLength  the center id length
-	 * @param machineIdLength the machine id length
-	 * @param sequenceLength  length of the sequence
-	 * @param timeStampLength timeStamp length
-	 * @return true if RID satisfied the specified generation logic.
+	 * Validates a RID against center, machine, and explicit field lengths.
+	 *
+	 * @param id              never-null RID
+	 * @param centerId        never-null registration-center id
+	 * @param machineId       never-null machine id
+	 * @param centerIdLength  expected center-id length; must be positive
+	 * @param machineIdLength expected machine-id length; must be positive
+	 * @param sequenceLength  expected sequence length; must be positive
+	 * @param timeStampLength expected timestamp length; must be positive
+	 * @return {@code true} if the RID is valid
+	 * @throws io.mosip.kernel.core.idvalidator.exception.InvalidIDException when
+	 *                                                                       the RID
+	 *                                                                       is null
+	 *                                                                       or
+	 *                                                                       malformed
 	 */
 	boolean validateId(T id, T centerId, T machineId, int centerIdLength, int machineIdLength, int sequenceLength,
 			int timeStampLength);
 
 	/**
-	 * This method validate given RID against specified generation logic.
-	 * 
-	 * @param id              the rid
-	 * @param centerIdLength  the center id length
-	 * @param machineIdLength the machine id length
-	 * @param sequenceLength  length of the sequence
-	 * @param timeStampLength timeStamp length
-	 * @return true if RID satisfied the specified generation logic.
+	 * Validates a RID using explicit field lengths without checking center or
+	 * machine values.
+	 *
+	 * @param id              never-null RID
+	 * @param centerIdLength  expected center-id length; must be positive
+	 * @param machineIdLength expected machine-id length; must be positive
+	 * @param sequenceLength  expected sequence length; must be positive
+	 * @param timeStampLength expected timestamp length; must be positive
+	 * @return {@code true} if the RID is valid
+	 * @throws io.mosip.kernel.core.idvalidator.exception.InvalidIDException when
+	 *                                                                       the RID
+	 *                                                                       is null
+	 *                                                                       or
+	 *                                                                       malformed
 	 */
 	public boolean validateId(T id, int centerIdLength, int machineIdLength, int sequenceLength, int timeStampLength);
 }

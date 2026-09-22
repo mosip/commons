@@ -16,6 +16,13 @@ import io.vertx.core.logging.LoggerFactory;
 
 import java.util.Objects;
 
+/**
+ * Worker verticle that generates unused VIDs into {@code kernel.vid}.
+ * <p>
+ * Consumes {@link EventType#GENERATEPOOL}. Target pool size is
+ * {@code mosip.kernel.vid.vids-to-generate}.
+ * </p>
+ */
 public class VidPopulatorVerticle extends AbstractVerticle {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(VidPopulatorVerticle.class);
@@ -30,6 +37,11 @@ public class VidPopulatorVerticle extends AbstractVerticle {
 
 	private VidGenerator<String> vidGenerator;
 
+	/**
+	 * Resolves generator, writer, and {@code mosip.kernel.vid.vids-to-generate} from {@code context}.
+	 *
+	 * @param context Spring context
+	 */
 	@SuppressWarnings("unchecked")
 	public VidPopulatorVerticle(final ApplicationContext context) {
 		this.environment = context.getBean(Environment.class);
@@ -39,35 +51,33 @@ public class VidPopulatorVerticle extends AbstractVerticle {
 		this.vidGenerator = context.getBean(VidGenerator.class);
 	}
 
+	/**
+	 * Registers the GENERATEPOOL consumer that persists unused VIDs until the target count is reached.
+	 *
+	 * @param startFuture completed after the consumer is registered
+	 * @throws Exception unused; Vert.x {@code start} contract
+	 */
 	@Override
 	public void start(Future<Void> startFuture) throws Exception {
 		vertx.eventBus().consumer(EventType.GENERATEPOOL, handler -> {
 			long noOfFreeVids = Long.parseLong(handler.body().toString());
 			long noOfVidsToGenerate = vidToGenerate - noOfFreeVids;
 			LOGGER.info("Persisting {} vids in pool", noOfVidsToGenerate);
-			vertx.executeBlocking(future -> {
-				long count = 0;
-				while (count < vidToGenerate) {
-					String vid = vidGenerator.generateId();
-					VidEntity entity = new VidEntity();
-					entity.setVid(vid);
-					entity.setStatus(VidLifecycleStatus.AVAILABLE);
-					metaDataUtil.setCreateMetaData(entity);
-					boolean isPersisted = vidWriter.persistVids(entity);
-					if (isPersisted) {
-						count++;
-					}
+			long count = 0;
+			while (count < vidToGenerate) {
+				String vid = vidGenerator.generateId();
+				VidEntity entity = new VidEntity();
+				entity.setVid(vid);
+				entity.setStatus(VidLifecycleStatus.AVAILABLE);
+				metaDataUtil.setCreateMetaData(entity);
+				boolean isPersisted = vidWriter.persistVids(entity);
+				if (isPersisted) {
+					count++;
 				}
-				LOGGER.info("No of vids persisted are {}", count);
-				future.complete("pool population successfull");
-			}, false, result -> {
-				if (result.succeeded()) {
-					handler.reply(result.result());
-				} else {
-					LOGGER.error("VID pool population failed", result.cause());
-					handler.fail(500, result.cause().getMessage()); // 500 is the error code
-				}
-			});
+			}
+			handler.reply("pool population successfull");
+
+			LOGGER.info("No of vids persisted are {}", count);
 		});
 	}
 }

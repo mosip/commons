@@ -10,19 +10,46 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @author Ramadurai Pandian
+ * Record-level CBEFF BIR metadata (creator, integrity, validity).
+ * <p>
+ * Contract: all fields may be null. Use {@link BIRInfoBuilder} to construct
+ * and {@link #toBIRInfo()} to marshal to JAXB.
+ * </p>
  *
+ * @author Ramadurai Pandian
+ * @see BIR
  */
 @Data
 @NoArgsConstructor
 public class BIRInfo {
 
+	/**
+	 * Creator of the BIR; may be null.
+	 */
 	private String creator;
+	/**
+	 * Unique index of this BIR; may be null.
+	 */
 	private String index;
+	/**
+	 * Optional integrity payload bytes; may be null.
+	 */
 	private byte[] payload;
+	/**
+	 * Whether integrity of the BIR is asserted; may be null.
+	 */
 	private Boolean integrity;
+	/**
+	 * UTC creation timestamp; may be null.
+	 */
 	private LocalDateTime creationDate;
+	/**
+	 * Inclusive start of validity; may be null.
+	 */
 	private LocalDateTime notValidBefore;
+	/**
+	 * Inclusive end of validity; may be null.
+	 */
 	private LocalDateTime notValidAfter;
 
 	public String getCreator() {
@@ -53,6 +80,11 @@ public class BIRInfo {
 		return notValidAfter;
 	}
 
+	/**
+	 * Builds BIR metadata from the given builder.
+	 *
+	 * @param bIRInfoBuilder never-null builder
+	 */
 	public BIRInfo(BIRInfoBuilder bIRInfoBuilder) {
 		this.creator = bIRInfoBuilder.creator;
 		this.index = bIRInfoBuilder.index;
@@ -63,6 +95,9 @@ public class BIRInfo {
 		this.notValidAfter = bIRInfoBuilder.notValidAfter;
 	}
 
+	/**
+	 * Fluent builder for {@link BIRInfo}.
+	 */
 	public static class BIRInfoBuilder {
 		private String creator;
 		private String index;
@@ -113,6 +148,11 @@ public class BIRInfo {
 
 	}
 
+	/**
+	 * Converts this instance to the JAXB {@link BIRInfoType}.
+	 *
+	 * @return never-null JAXB type; null fields omitted
+	 */
 	public BIRInfoType toBIRInfo() {
 		BIRInfoType bIRInfoType = new BIRInfoType();
 		createrPopolation(bIRInfoType);
@@ -136,6 +176,11 @@ public class BIRInfo {
 		return bIRInfoType;
 	}
 
+	/**
+	 * Copies a non-empty creator onto the JAXB type.
+	 *
+	 * @param bIRInfoType never-null target JAXB type
+	 */
 	private void createrPopolation(BIRInfoType bIRInfoType) {
 		if (getCreator() != null && getCreator().length() > 0) {
 			bIRInfoType.setCreator(getCreator());

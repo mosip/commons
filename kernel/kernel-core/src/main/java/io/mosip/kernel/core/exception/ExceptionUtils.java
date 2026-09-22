@@ -15,32 +15,46 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 
 /**
- * This utils contains exception utilities.
- * 
+ * Helpers for composing MOSIP exception messages, stack traces, and
+ * {@link ServiceError} lists from HTTP JSON bodies.
+ * <p>
+ * Contract: this type is not instantiable. Methods are side-effect free except
+ * {@link #logRootCause(Throwable)}, which writes to SLF4J. Call from exception
+ * handlers and REST clients when unwrapping MOSIP error envelopes.
+ * </p>
+ *
  * @author Shashank Agrawal
  * @author Ritesh Sinha
  * @since 1.0.0
- *
  */
 public final class ExceptionUtils {
 
+	/**
+	 * Logger used by {@link #logRootCause(Throwable)}.
+	 */
 	private static final Logger logger = LoggerFactory.getLogger(ExceptionUtils.class);
 
+	/**
+	 * Jackson mapper used to parse MOSIP error JSON; never null.
+	 */
 	private static  ObjectMapper objectMapper=JsonMapper.builder()
 		    .addModule(new AfterburnerModule())
 		    .build();
 	
+	/**
+	 * Prevents instantiation of this utility class.
+	 */
 	private ExceptionUtils() {
 
 	}
 
 	/**
-	 * Returns an String object that can be used after building the exception stack
-	 * trace.
-	 * 
-	 * @param message the exception message
-	 * @param cause   the cause
-	 * @return the exception stack
+	 * Composes a detail message that appends the nested cause when present.
+	 *
+	 * @param message the outer exception message; may be null
+	 * @param cause   the nested cause; may be null
+	 * @return {@code message} unchanged when {@code cause} is null; otherwise a
+	 *         never-null string that includes the cause
 	 */
 	public static String buildMessage(String message, Throwable cause) {
 		if (cause != null) {
@@ -57,10 +71,10 @@ public final class ExceptionUtils {
 	}
 
 	/**
-	 * This method returns the stack trace
-	 * 
-	 * @param throwable the exception to be added to the list of exception
-	 * @return the stack trace
+	 * Renders the full stack trace of {@code throwable} as a string.
+	 *
+	 * @param throwable never-null exception whose stack to capture
+	 * @return never-null stack-trace text
 	 */
 	public static String getStackTrace(Throwable throwable) {
 		StringWriter sw = new StringWriter();
@@ -70,10 +84,14 @@ public final class ExceptionUtils {
 	}
 
 	/**
-	 * This method gives service error list for response receive from service.
-	 * 
-	 * @param responseBody the service response body.
-	 * @return the list of {@link ServiceError}
+	 * Parses a MOSIP HTTP response body and extracts the {@code errors} array.
+	 * <p>
+	 * Contract: returns an empty list when the body is not JSON, has no
+	 * {@code errors} node, or parsing fails. Does not throw.
+	 * </p>
+	 *
+	 * @param responseBody raw JSON response; may be null or empty
+	 * @return never-null list of {@link ServiceError}; empty when none are found
 	 */
 	public static List<ServiceError> getServiceErrorList(String responseBody) {
 
@@ -104,11 +122,11 @@ public final class ExceptionUtils {
 	}
 
 	/**
-	 * This method provide jsonvalue based on propname mention.
-	 * 
-	 * @param node     the jsonnode.
-	 * @param propName the property name.
-	 * @return the property value.
+	 * Reads a JSON property as text, or null if the property is absent.
+	 *
+	 * @param node     never-null JSON object node
+	 * @param propName never-null property name such as {@code errorCode}
+	 * @return property text; null if missing
 	 */
 	private static String getJsonValue(JsonNode node, String propName) {
 		if (node.get(propName) != null) {
@@ -117,6 +135,11 @@ public final class ExceptionUtils {
 		return null;
 	}
 
+	/**
+	 * Logs the exception message at ERROR and the full stack at DEBUG.
+	 *
+	 * @param exception never-null throwable to log
+	 */
 	public static void logRootCause(Throwable exception) {
 		logger.error("Exception Root Cause: {} ", exception.getMessage());
 		logger.debug("Exception Root Cause:", exception);

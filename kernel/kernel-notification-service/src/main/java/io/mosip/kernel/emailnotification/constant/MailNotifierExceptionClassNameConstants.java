@@ -18,11 +18,13 @@ public final class MailNotifierExceptionClassNameConstants {
 	}
 
 	/**
-	 * Constant for {@link MailSendException}
+	 * Fully qualified class name string of {@link MailSendException}, used by the
+	 * async handler switch.
 	 */
 	public static final String MAIL_SENDMAIL_SEND_EXCEPTION_CLASS_NAME = "class org.springframework.mail.MailSendException";
 	/**
-	 * Constant for {@link MailAuthenticationException}
+	 * Fully qualified class name string of {@link MailAuthenticationException},
+	 * used by the async handler switch.
 	 */
 	public static final String MAIL_AUTH_EXCEPTION_CLASS_NAME = "class org.springframework.mail.MailAuthenticationException";
 }

@@ -3,11 +3,14 @@ package io.mosip.kernel.core.fsadapter.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * Custom class for HDFSAdapterException
- * 
+ * Unchecked exception thrown when DFS / HDFS packet storage fails.
+ * <p>
+ * Contract: raised by {@link io.mosip.kernel.core.fsadapter.spi.FileSystemAdapter}
+ * implementations on connectivity, permission, or I/O failures.
+ * </p>
+ *
  * @author Dharmesh Khandelwal
  * @since 1.0.0
- *
  */
 public class FSAdapterException extends BaseUncheckedException {
 
@@ -17,21 +20,21 @@ public class FSAdapterException extends BaseUncheckedException {
 	private static final long serialVersionUID = 5074628123959874252L;
 
 	/**
-	 * Constructor for HDFSAdapterException
-	 * 
-	 * @param errorCode    The errorcode
-	 * @param errorMessage The errormessage
-	 * @param cause        The cause
+	 * Constructs the exception with MOSIP error code, message, and cause.
+	 *
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
+	 * @param cause        underlying cause; may be null
 	 */
 	public FSAdapterException(String errorCode, String errorMessage, Throwable cause) {
 		super(errorCode, errorMessage, cause);
 	}
 
 	/**
-	 * Constructor for HDFSAdapterException
-	 * 
-	 * @param errorCode    The errorcode
-	 * @param errorMessage The errormessage
+	 * Constructs the exception with MOSIP error code and message.
+	 *
+	 * @param errorCode    never-null MOSIP error code
+	 * @param errorMessage never-null human-readable description
 	 */
 	public FSAdapterException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);

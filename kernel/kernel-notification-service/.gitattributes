@@ -1,0 +1,2 @@
+run-local.sh text eol=lf
+run-local.bat text eol=crlf

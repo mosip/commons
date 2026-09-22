@@ -47,6 +47,7 @@ import java.util.zip.CRC32;
  * Schema compilation is expensive. This class:
  * <ul>
  *   <li>Caches compiled {@link Schema} objects using a content-based key</li>
+ *   <li>Reuses one hardened {@link SchemaFactory} for the process lifetime</li>
  *   <li>Reuses {@link Validator} instances per thread via {@link ThreadLocal}</li>
  *   <li>Avoids disk I/O by working purely with byte arrays</li>
  * </ul>
@@ -64,8 +65,8 @@ import java.util.zip.CRC32;
  *
  * <h3>Thread Safety</h3>
  * <p>
- * Fully thread-safe. No mutable shared state. Validators are stored in
- * {@link ThreadLocal} containers to avoid synchronization overhead.
+ * Fully thread-safe. {@link SchemaFactory#newSchema} is serialized on the
+ * process-wide factory. Validators are stored in {@link ThreadLocal} containers.
  * </p>
  *
  * @author M1049825
@@ -81,10 +82,6 @@ public class CbeffXSDValidator {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(CbeffXSDValidator.class);
     /**
-     * Secure SchemaFactory instance for W3C XML Schema (XSD).
-     */
-    private static final SchemaFactory SCHEMA_FACTORY;
-    /**
      * Cache of compiled {@link Schema} objects.
      * Key: "length:checksum" (CRC32), Value: Compiled {@link Schema}.
      */
@@ -95,29 +92,44 @@ public class CbeffXSDValidator {
      */
     private static final ConcurrentHashMap<Schema, ThreadLocal<Validator>> TL_VALIDATORS = new ConcurrentHashMap<>();
 
-    static {
-        SCHEMA_FACTORY = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+    /**
+     * Process-wide holder so {@link #schemaFactory} is an instance field (not a
+     * static non-thread-safe factory) and is created only once.
+     */
+    private static final CbeffXSDValidator INSTANCE = new CbeffXSDValidator();
+
+    /**
+     * Hardened factory reused for the JVM lifetime. {@link SchemaFactory} is not
+     * thread-safe; {@link #compileSchema(byte[])} synchronizes on this instance.
+     */
+    private final SchemaFactory schemaFactory;
+
+    /**
+     * Builds the single hardened {@link SchemaFactory} for this process.
+     */
+    private CbeffXSDValidator() {
+        this.schemaFactory = newSecureSchemaFactory();
+    }
+
+    /**
+     * Builds a hardened {@link SchemaFactory}.
+     *
+     * @return never-null factory with XXE protections enabled
+     */
+    private static SchemaFactory newSecureSchemaFactory() {
+        SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         try {
             LOGGER.debug("Initializing hardened SchemaFactory for CBEFF XSD validation...");
-            // Enable secure processing
-            SCHEMA_FACTORY.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-            // Block DOCTYPE declarations (Apache Xerces specific)
-            SCHEMA_FACTORY.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-            // Disable all external resource resolution
-            SCHEMA_FACTORY.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-            SCHEMA_FACTORY.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "http,https");
+            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "http,https");
             LOGGER.debug("SchemaFactory successfully hardened against XXE and external entities.");
+            return factory;
         } catch (Exception e) {
             LOGGER.error("Failed to configure secure SchemaFactory: {}", e.getMessage(), e);
             throw new IllegalStateException("Unable to initialize secure XML schema validator", e);
         }
-    }
-
-    /**
-     * Private constructor to prevent instantiation.
-     */
-    private CbeffXSDValidator() {
-        throw new UnsupportedOperationException("CbeffXSDValidator is a utility class and cannot be instantiated");
     }
 
     /**
@@ -200,9 +212,9 @@ public class CbeffXSDValidator {
     public static Schema compileSchema(final byte[] xsdBytes) throws Exception {
         requireNonEmpty(xsdBytes, "xsdBytes");
         LOGGER.debug("Compiling XSD schema from {} bytes", xsdBytes.length);
-        synchronized (SCHEMA_FACTORY) {
+        synchronized (INSTANCE.schemaFactory) {
             try (ByteArrayInputStream xsdStream = new ByteArrayInputStream(xsdBytes)) {
-                Schema schema = SCHEMA_FACTORY.newSchema(new StreamSource(xsdStream, "memory:cbeff-xsd"));
+                Schema schema = INSTANCE.schemaFactory.newSchema(new StreamSource(xsdStream, "memory:cbeff-xsd"));
                 LOGGER.debug("XSD schema compiled successfully: {}", schema);
                 return schema;
             } catch (Exception e) {

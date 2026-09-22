@@ -24,14 +24,18 @@ import io.mosip.kernel.emailnotification.constant.MailNotifierExceptionClassName
 @Component
 public class EmailNotificationAsyncHandler implements AsyncUncaughtExceptionHandler {
 
+	/**
+	 * MOSIP logger used to record asynchronous mail send failures.
+	 */
 	Logger mosipLogger = LoggerConfiguration.logConfig(EmailNotificationAsyncHandler.class);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler#
-	 * handleUncaughtException(java.lang.Throwable, java.lang.reflect.Method,
-	 * java.lang.Object[])
+	/**
+	 * Logs uncaught exceptions from asynchronous mail send operations, mapping
+	 * Spring Mail exception types to notifier error codes.
+	 *
+	 * @param ex     the uncaught throwable
+	 * @param method the asynchronous method that threw
+	 * @param params the method arguments
 	 */
 	@Override
 	public void handleUncaughtException(Throwable ex, Method method, Object... params) {

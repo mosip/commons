@@ -1,4 +1,4 @@
-CREATE ROLE :dbuname WITH
-    INHERIT
-    LOGIN
-    PASSWORD :dbuserpwd;
+CREATE ROLE kerneluser WITH 
+	INHERIT
+	LOGIN
+	PASSWORD :dbuserpwd;

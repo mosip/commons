@@ -3,11 +3,15 @@ package io.mosip.kernel.core.dataaccess.exception;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 
 /**
- * Custom class for DataAccessLayerException
- * 
+ * Unchecked exception thrown when JPA / Hibernate data access fails.
+ * <p>
+ * Contract: raised by {@link io.mosip.kernel.core.dataaccess.spi.repository.BaseRepository}
+ * implementations wrapping persistence-provider exceptions. Callers should
+ * treat this as a system error, not a client-input error.
+ * </p>
+ *
  * @author Dharmesh Khandelwal
  * @since 1.0.0
- *
  */
 public class DataAccessLayerException extends BaseUncheckedException {
 

@@ -39,10 +39,13 @@ import io.mosip.kernel.core.util.constant.CalendarUtilConstants;
 import io.mosip.kernel.core.util.constant.DateUtilConstants;
 
 /**
- * Utilities for Date Time operations.
+ * Date and calendar helpers wrapping Apache Commons DateUtils plus UTC ISO helpers.
+ * <p>
+ * Contract: deprecated since 1.3.0; new code must use {@link DateUtils2}. Static
+ * helpers only. Null dates become MOSIP {@link IllegalArgumentException}. Does
+ * not perform I/O.
+ * </p>
  *
- * Provide Date and Time utility for usage across the application to manipulate
- * dates or calendars
  * @deprecated This class is deprecated and will be removed in future releases.
  *             Please use {@link io.mosip.kernel.core.util.DateUtils2} instead.
  *
@@ -68,6 +71,9 @@ public final class DateUtils {
      */
     private static final String UTC_DATETIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
+    /**
+     * Prevents instantiation of this utility.
+     */
     private DateUtils() {
 
     }

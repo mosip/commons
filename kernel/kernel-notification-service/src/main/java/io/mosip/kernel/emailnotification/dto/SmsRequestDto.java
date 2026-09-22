@@ -5,7 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 /**
- * The DTO class for sms notification request.
+ * Request body for {@code POST /sms/send}, wrapped in a MOSIP
+ * {@code RequestWrapper}.
  * 
  * @author Ritesh Sinha
  * @since 1.0.0
@@ -15,14 +16,14 @@ import lombok.Data;
 public class SmsRequestDto {
 
 	/**
-	 * Contact number of recipient.
+	 * Destination contact number (MSISDN). Must not be blank.
 	 */
 
 	@NotBlank
 	private String number;
 
 	/**
-	 * Message need to send.
+	 * SMS body to send. Must not be blank.
 	 */
 
 	@NotBlank
