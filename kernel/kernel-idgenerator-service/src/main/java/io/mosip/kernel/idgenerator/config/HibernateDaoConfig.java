@@ -85,7 +85,10 @@ excludeFilters = {
 		@Filter(type=FilterType.REGEX,pattern="io\\.mosip\\.kernel\\.idgenerator\\.partnerid\\..*"),
 		@Filter(type=FilterType.ASSIGNABLE_TYPE, classes = {
 				io.mosip.kernel.ridgenerator.exception.ApiExceptionalHandler.class,
-				io.mosip.kernel.ridgenerator.dto.AuthorizedRolesDto.class
+				io.mosip.kernel.ridgenerator.dto.AuthorizedRolesDto.class,
+				// springdoc is servlet-only; Vert.x / AnnotationConfig tests must not load these
+				io.mosip.kernel.ridgenerator.config.SwaggerConfig.class,
+				io.mosip.kernel.ridgenerator.config.OpenApiProperties.class
 		})
 })
 @EnableTransactionManagement

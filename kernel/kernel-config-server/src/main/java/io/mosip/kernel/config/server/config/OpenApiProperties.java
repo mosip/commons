@@ -18,8 +18,6 @@ public class OpenApiProperties {
 	private InfoProperty info;
 	/** Published server URLs for the OpenAPI document. */
 	private Service service;
-	/** Springdoc group name and path matchers ({@code openapi.group.*}). */
-	private Group group;
 }
 
 /** OpenAPI info block bound from {@code openapi.info.*}. */
@@ -49,11 +47,4 @@ class Service {
 class Server {
 	private String description;
 	private String url;
-}
-
-/** GroupedOpenApi settings bound from {@code openapi.group.*}. */
-@Data
-class Group {
-	private String name;
-	private List<String> paths;
 }

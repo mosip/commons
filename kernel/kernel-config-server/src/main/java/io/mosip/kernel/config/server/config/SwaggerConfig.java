@@ -1,6 +1,5 @@
 package io.mosip.kernel.config.server.config;
 
-import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +12,10 @@ import io.swagger.v3.oas.models.servers.Server;
 
 /**
  * Springdoc OpenAPI / Swagger UI configuration (embedded via {@code springdoc-openapi-starter-webmvc-ui}).
+ * <p>
+ * Swagger UI is on the management port ({@code springdoc.use-management-port=true}) so Config Server
+ * {@code EnvironmentController} {@code /{name}/{profiles}} does not swallow {@code /swagger-ui/**}.
+ * </p>
  */
 @Configuration
 public class SwaggerConfig {
@@ -37,16 +40,5 @@ public class SwaggerConfig {
 		openApiProperties.getService().getServers().forEach(server -> api
 				.addServersItem(new Server().description(server.getDescription()).url(server.getUrl())));
 		return api;
-	}
-
-	/**
-	 * Groups all servlet paths into one Swagger UI document ({@code openapi.group.*}).
-	 *
-	 * @return grouped OpenAPI definition
-	 */
-	@Bean
-	public GroupedOpenApi groupedOpenApi() {
-		return GroupedOpenApi.builder().group(openApiProperties.getGroup().getName())
-				.pathsToMatch(openApiProperties.getGroup().getPaths().toArray(String[]::new)).build();
 	}
 }

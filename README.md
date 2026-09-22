@@ -7,7 +7,7 @@
 
 **MOSIP Commons** is a collection of foundational libraries used across all MOSIP microservices.
 
-It contains services to support configuration management, ID generation, and notifications.
+It contains services to support configuration management, ID generation, notifications, and OpenID/auth (including `kernel-auth-adapter`).
 
 ---
 # Services
@@ -19,6 +19,7 @@ The following core services are part of MOSIP Commons:
 1. **[Kernel Notification Service](kernel/kernel-notification-service)** - Centralized notification service for sending messages such as SMS, emails.
 2. **[Kernel Config Server](kernel/kernel-config-server)** - Centralized configuration service used by all MOSIP microservices.
 3. **[Kernel ID Generator Service](kernel/kernel-idgenerator-service)** - Generates RID and UIN/VID over one HTTP process (`/v1/ridgenerator`, `/v1/idgenerator`).
+4. **[Kernel Auth Service](kernel/kernel-auth-service)** - Auth manager HTTP (`/v1/authmanager`), with sibling libs `kernel-auth-adapter` (includes OpenID bridge API) and `kernel-authcodeflowproxy-api`.
 
 ---
 
@@ -56,6 +57,8 @@ These modules are **not** in this repository. Implementations that are still nee
 | `kernel-templatemanager-velocity` | Implementation in `kernel-core` |
 | `kernel-transliteration-icu4j` | Implementation in `kernel-core` |
 | `kernel-websubclient-api` | Implementation in `kernel-core` |
+| `kernel-openid-bridge-api` | Folded into `kernel-auth-adapter` (`io.mosip.kernel.openid.bridge.*`) |
+| `kernel-openid-bridge-api` | Folded into `kernel-auth-adapter` (`io.mosip.kernel.openid.bridge.*`) |
 
 ### Merged into `kernel-idgenerator-service`
 
@@ -66,13 +69,26 @@ These modules are **not** in this repository. Implementations that are still nee
 
 Helm chart `helm/ridgenerator` is retired. Use `helm/idgenerator`. `helm/pridgenerator` is retired; PRID generation moved to Pre-Registration.
 
+### Moved into commons (from mosip-openid-bridge)
+
+> **Future reference:** OpenID / auth Java modules were relocated from [mosip-openid-bridge](https://github.com/mosip/mosip-openid-bridge) `kernel/` into `commons/kernel/` so this reactor can publish and consume **`kernel-auth-adapter`** (and related APIs) without an external dependency. Keep them in this reactor; do not split them back out solely because other commons services depend on the adapter.
+
+| Module | Role |
+|--------|------|
+| `kernel-auth-adapter` | Spring Security adapter + OpenID bridge API (`io.mosip.kernel.openid.bridge.*`; former `kernel-openid-bridge-api`) |
+| `kernel-authcodeflowproxy-api` | OAuth 2.0 authorization-code proxy APIs |
+| `kernel-auth-service` | Auth manager HTTP (`/v1/authmanager`) |
+| `helm/authmanager` + `deploy/kernel` authmanager install | Cluster chart/scripts (also from mosip-openid-bridge) |
+
+
+See [kernel/README.md](kernel/README.md#openid--auth-moved-from-mosip-openid-bridge).
+
 ### Moved out of commons
 
 | Former module | Destination |
 |---------------|-------------|
 | `kernel-salt-generator` / `helm/regproc-salt` | Consuming repos that own salt tables (Job, not this repo) |
 | `kernel-otpmanager-service` | [otp-manager](https://github.com/mosip/otp-manager) |
-| `kernel-authcodeflowproxy-api` | [mosip-openid-bridge](https://github.com/mosip/mosip-openid-bridge) |
 | `kernel-biometrics-api` / `kernel-bioapi-provider` | [commons-packet-manager](https://github.com/mosip/commons-packet-manager) / bio-utils |
 | `kernel-idgenerator-prid` / `kernel-pridgenerator-service` | [pre-registration](https://github.com/mosip/pre-registration) |
 
@@ -94,7 +110,7 @@ All database SQL scripts are available in the [db scripts](./db_scripts) directo
 
 
 ### Runtime Dependencies
-`kernel-auth-adapter` (1.4.1-SNAPSHOT) is a Maven dependency of both HTTP services. `kernel-smsserviceprovider-msg91` (1.3.1-rc.1) is a Maven dependency of `kernel-notification-service`. They are packaged in the service JARs; do not download them at container start.
+`kernel-auth-adapter` (includes former `kernel-openid-bridge-api`) is **built in this reactor** and consumed by notifier / idgenerator / auth-service / authcodeflowproxy. `kernel-smsserviceprovider-msg91` (1.3.1-rc.1) remains an external Maven dependency of `kernel-notification-service`. They are packaged in the service JARs; do not download them at container start.
 
 ### Configuration
 

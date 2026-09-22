@@ -498,10 +498,10 @@ public class FileUtils {
 	 */
 	public static LineIterator lineIterator(File file) throws IOException {
 		try {
-			return org.apache.commons.io.FileUtils.lineIterator(file);
-		} catch (java.io.IOException e) {
+			return openLineIterator(org.apache.commons.io.FileUtils.lineIterator(file));
+		} catch (java.io.IOException | IllegalStateException e) {
 			throw new IOException(FileUtilConstants.IO_ERROR_CODE.getErrorCode(),
-					FileUtilConstants.IO_ERROR_CODE.getMessage(), e.getCause());
+					FileUtilConstants.IO_ERROR_CODE.getMessage(), e);
 		}
 	}
 
@@ -516,10 +516,29 @@ public class FileUtils {
 	 */
 	public static LineIterator lineIterator(File file, String encoding) throws IOException {
 		try {
-			return org.apache.commons.io.FileUtils.lineIterator(file, encoding);
-		} catch (java.io.IOException e) {
+			return openLineIterator(org.apache.commons.io.FileUtils.lineIterator(file, encoding));
+		} catch (java.io.IOException | IllegalStateException e) {
 			throw new IOException(FileUtilConstants.IO_ERROR_CODE.getErrorCode(),
-					FileUtilConstants.IO_ERROR_CODE.getMessage(), e.getCause());
+					FileUtilConstants.IO_ERROR_CODE.getMessage(), e);
+		}
+	}
+
+	/**
+	 * Primes {@link LineIterator#hasNext()} so platform-deferred open failures
+	 * (commons-io wraps them as {@link IllegalStateException} on Linux for bad paths)
+	 * surface as {@link IOException} from the factory methods.
+	 */
+	private static LineIterator openLineIterator(LineIterator iterator) throws IOException {
+		try {
+			iterator.hasNext();
+			return iterator;
+		} catch (IllegalStateException e) {
+			try {
+				iterator.close();
+			} catch (java.io.IOException closeEx) {
+				e.addSuppressed(closeEx);
+			}
+			throw e;
 		}
 	}
 

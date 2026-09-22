@@ -6,7 +6,8 @@
 		</encoder>
 	</appender>
 	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
-		<file>logs/kernel-config-server.log</file>
+		<!-- Local/dev file log; run-local.* also captures stdout under .local/logs/ -->
+		<file>${LOG_FILE:-.local/logs/kernel-config-server.log}</file>
 		<append>true</append>
 		<immediateFlush>true</immediateFlush>
 		<encoder>

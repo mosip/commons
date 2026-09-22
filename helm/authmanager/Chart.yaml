@@ -1,0 +1,21 @@
+apiVersion: v2
+name: authmanager
+description: A Helm chart for MOSIP Authentication Manager module
+type: application
+version: 1.4.1-SNAPSHOT
+appVersion: ""
+dependencies:
+  - name: common
+    repository: https://charts.bitnami.com/bitnami
+    tags:
+      - bitnami-common
+    version: 1.x.x
+home: https://mosip.io
+keywords:
+  - mosip
+  - auth
+  - authmanager
+  - kernel
+maintainers:
+  - email: info@mosip.io
+    name: MOSIP

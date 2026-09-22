@@ -2,6 +2,8 @@ package io.mosip.kernel.ridgenerator.config;
 
 import java.util.List;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,8 +11,10 @@ import lombok.Data;
 
 /**
  * Binds {@code openapi.*} properties used by {@link SwaggerConfig} (Biosdk / springdoc style).
+ * Servlet-only — skipped under Vert.x / non-web AnnotationConfig test contexts.
  */
 @Configuration
+@ConditionalOnWebApplication(type = Type.SERVLET)
 @ConfigurationProperties(prefix = "openapi")
 @Data
 public class OpenApiProperties {

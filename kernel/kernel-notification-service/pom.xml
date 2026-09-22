@@ -33,10 +33,6 @@
 			<artifactId>kernel-auth-adapter</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-openid-bridge-api</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.auth0</groupId>
 			<artifactId>jwks-rsa</artifactId>
 		</dependency>

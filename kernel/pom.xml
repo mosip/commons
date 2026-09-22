@@ -21,7 +21,12 @@
 	<url>https://github.com/mosip/commons</url>
 
 	<modules>
+		<!-- Build order: core → auth-adapter deps → auth-adapter → auth-service → remaining services -->
 		<module>kernel-core</module>
+		<module>kernel-openid-bridge-api</module>
+		<module>kernel-auth-adapter</module>
+		<module>kernel-auth-service</module>
+		<module>kernel-authcodeflowproxy-api</module>
 		<module>kernel-notification-service</module>
 		<module>kernel-idgenerator-service</module>
 		<module>kernel-config-server</module>
@@ -48,6 +53,8 @@
 		<maven.surefire.plugin.version>3.6.0</maven.surefire.plugin.version>
 		<!-- Empty default required for Surefire late replacement @{argLine} (JaCoCo agent). -->
 		<argLine/>
+		<!-- Explicit default so IDE resolves ${skipTests}; override with -DskipTests=true. -->
+		<skipTests>false</skipTests>
 		<maven.jacoco.version>0.8.15</maven.jacoco.version>
 		<maven.sonar.plugin.version>5.8.0.7211</maven.sonar.plugin.version>
 		<maven.javadoc.version>3.12.0</maven.javadoc.version>
@@ -161,11 +168,13 @@
 		<!-- Must match ${project.version} so reactor builds use local kernel-core,
 		     not an older published artifact from Maven Central (CI classpath mismatch). -->
 		<kernel.core.version>${project.version}</kernel.core.version>
-		<!-- mosip-openid-bridge; not published from this repo. Source: https://central.sonatype.com/artifact/io.mosip.kernel/kernel-auth-adapter -->
-		<kernel.auth.adapter.version>1.4.1-SNAPSHOT</kernel.auth.adapter.version>
-		<kernel.openid.bridge.api.version>1.3.1</kernel.openid.bridge.api.version>
+		<!-- OpenID / auth modules live in this reactor (moved from mosip-openid-bridge). -->
+		<kernel.auth.adapter.version>${project.version}</kernel.auth.adapter.version>
+		<kernel.openid.bridge.api.version>${project.version}</kernel.openid.bridge.api.version>
 		<!-- kernel-ref-impl MSG91 SMS provider. Source: https://central.sonatype.com/artifact/io.mosip.kernel/kernel-smsserviceprovider-msg91 -->
 		<kernel.sms.provider.version>1.3.1-rc.1</kernel.sms.provider.version>
+		<!-- LDAP leftovers (PasswordUtil in auth-service KeycloakImpl). Source: https://central.sonatype.com/artifact/org.apache.directory.api/api-all -->
+		<apache.directory.api.version>2.1.8</apache.directory.api.version>
 	</properties>
 
 	<dependencyManagement>
@@ -187,18 +196,28 @@
 			</dependency>
 			<dependency>
 				<groupId>io.mosip.kernel</groupId>
-				<artifactId>kernel-auth-adapter</artifactId>
-				<version>${kernel.auth.adapter.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.mosip.kernel</groupId>
 				<artifactId>kernel-openid-bridge-api</artifactId>
 				<version>${kernel.openid.bridge.api.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>io.mosip.kernel</groupId>
+				<artifactId>kernel-authcodeflowproxy-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.mosip.kernel</groupId>
+				<artifactId>kernel-auth-adapter</artifactId>
+				<version>${kernel.auth.adapter.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.mosip.kernel</groupId>
 				<artifactId>kernel-smsserviceprovider-msg91</artifactId>
 				<version>${kernel.sms.provider.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.directory.api</groupId>
+				<artifactId>api-all</artifactId>
+				<version>${apache.directory.api.version}</version>
 			</dependency>
 
 			<dependency>
@@ -521,6 +540,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- JUnit 4 tests in auth / openid modules (Boot 4 defaults to JUnit 5 only). -->
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

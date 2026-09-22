@@ -1,0 +1,39 @@
+# Global endpoints to access without authentication.
+# matching-strategy: PATH_PATTERN_PARSER (default) or ANT_PATH_MATCHER (Boot 3.4 Ant).
+mosip:
+  global:
+    end-points:
+      - /assets/**
+      - /icons/**
+      - /screenshots/**
+      - /favicon*
+      - /css/**
+      - /js/**
+      - /error*
+      - /webjars/**
+      - /csrf
+      - /*/
+      - /authenticate/**
+      - /actuator/**
+      - /sendOtp
+      - /validateOtp
+      - /invalidateToken
+      - /config
+      - /login
+      - /logout
+      - /validateOTP
+      - /sendOTP
+      - /login/**
+      - /login-redirect/**
+      - /h2-console/**
+      - /license/**
+      - /callback/**
+      - /authmanager/**
+      - /v2/api-docs
+      - /swagger-resources/**
+      - /configuration/ui
+      - /configuration/security
+      - /v3/api-docs
+      - /v3/api-docs/**
+      - /swagger-ui.html
+      - /swagger-ui/**
