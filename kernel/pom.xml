@@ -704,6 +704,12 @@
 				</executions>
 				<configuration>
 					<doclint>none</doclint>
+					<!-- GraalVM / strict javadoc: provided-scope deps (lombok, kernel-core) may be omitted from -classpath -->
+					<failOnError>false</failOnError>
+					<failOnWarnings>false</failOnWarnings>
+					<additionalJOptions>
+						<additionalJOption>--ignore-source-errors</additionalJOption>
+					</additionalJOptions>
 				</configuration>
 			</plugin>
 			<plugin>

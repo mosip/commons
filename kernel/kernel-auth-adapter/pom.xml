@@ -32,6 +32,15 @@
 			<artifactId>kernel-core</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<!-- Direct imports (not only via provided kernel-core) so compile + javadoc classpath stay complete -->
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
 		<!-- OpenID bridge API (DTOs, SPIs, JWT utils) lives in this module — packages io.mosip.kernel.openid.bridge.* -->
 		<!-- ── Spring (servlet filter + WebClient + Security 7). Boot 4: jackson2 ─ -->
 		<dependency>
