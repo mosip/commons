@@ -21,9 +21,8 @@
 	<url>https://github.com/mosip/commons</url>
 
 	<modules>
-		<!-- Build order: core → auth-adapter deps → auth-adapter → auth-service → remaining services -->
+		<!-- Build order: core → auth-adapter → auth-service → remaining services -->
 		<module>kernel-core</module>
-		<module>kernel-openid-bridge-api</module>
 		<module>kernel-auth-adapter</module>
 		<module>kernel-auth-service</module>
 		<module>kernel-authcodeflowproxy-api</module>
@@ -170,7 +169,6 @@
 		<kernel.core.version>${project.version}</kernel.core.version>
 		<!-- OpenID / auth modules live in this reactor (moved from mosip-openid-bridge). -->
 		<kernel.auth.adapter.version>${project.version}</kernel.auth.adapter.version>
-		<kernel.openid.bridge.api.version>${project.version}</kernel.openid.bridge.api.version>
 		<!-- kernel-ref-impl MSG91 SMS provider. Source: https://central.sonatype.com/artifact/io.mosip.kernel/kernel-smsserviceprovider-msg91 -->
 		<kernel.sms.provider.version>1.3.1-rc.1</kernel.sms.provider.version>
 		<!-- LDAP leftovers (PasswordUtil in auth-service KeycloakImpl). Source: https://central.sonatype.com/artifact/org.apache.directory.api/api-all -->
@@ -193,11 +191,6 @@
 				<groupId>io.mosip.kernel</groupId>
 				<artifactId>kernel-core</artifactId>
 				<version>${kernel.core.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.mosip.kernel</groupId>
-				<artifactId>kernel-openid-bridge-api</artifactId>
-				<version>${kernel.openid.bridge.api.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>io.mosip.kernel</groupId>
