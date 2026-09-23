@@ -15,16 +15,19 @@ import jakarta.servlet.http.HttpServletRequest;
  * <p>
  * Uses the same Boot 3.4 switch as MVC:
  * {@code spring.mvc.pathmatch.matching-strategy}.
- * {@code ANT_PATH_MATCHER} keeps Ant ({@code **} in the middle of a path).
- * {@code PATH_PATTERN_PARSER} (Boot 4 default) uses {@link PathPatternParser}
- * against the servlet path (context path is ignored, so
- * {@code /v1/authmanager/actuator/health} matches {@code /actuator/**}).
+ * {@code ANT_PATH_MATCHER} keeps Ant (double-star in the middle of a path).
+ * {@code PATH_PATTERN_PARSER} (Boot 4 default) uses {@link PathPatternParser}.
+ * PathPattern forbids middle double-star, so Ant any-depth + actuator patterns
+ * are normalized to {@code /actuator/**}; matching also tries path suffixes so a
+ * request like {@code /v1/notifier/actuator/health} still matches when the
+ * servlet context path was left as {@code /}.
  * <p>
- * PathPattern is relative to the servlet context path, so a leading Ant
- * any-depth prefix ({@code /}**{@code /}) is stripped. Double-star is only
- * valid as a full path segment unless Ant mode is on.
+ * PathPattern is relative to the servlet context path. A leading Ant any-depth
+ * prefix is stripped. Double-star is only valid as a full path segment unless
+ * Ant mode is on.
  */
 public final class PathPatternSupport {
+
 
 	/**
 	 * Boot 3.4 / 4 property that selects Ant vs PathPattern.
@@ -134,7 +137,7 @@ public final class PathPatternSupport {
 		}
 		try {
 			PathPattern parsed = PATH_PATTERNS.parse(toPathPattern(pattern));
-			return request -> parsed.matches(PathContainer.parsePath(servletPath(request)));
+			return request -> matchesPathPattern(parsed, servletPath(request));
 		} catch (IllegalArgumentException | IllegalStateException ex) {
 			return request -> false;
 		}
@@ -179,10 +182,32 @@ public final class PathPatternSupport {
 				return ANT.match(toAntPattern(pattern), servletPath(request));
 			}
 			PathPattern parsed = PATH_PATTERNS.parse(toPathPattern(pattern));
-			return parsed.matches(PathContainer.parsePath(servletPath(request)));
+			return matchesPathPattern(parsed, servletPath(request));
 		} catch (IllegalArgumentException | IllegalStateException ex) {
 			return false;
 		}
+	}
+
+	/**
+	 * PathPattern match against the full path, then against each slash-separated
+	 * suffix. Suffix checks emulate Ant any-depth-prefix + {@code /actuator/**}
+	 * when the hosting service left {@code server.servlet.context-path=/} and the
+	 * URI still carries {@code /v1/...} prefixes.
+	 *
+	 * @param parsed compiled PathPattern (no middle double-star)
+	 * @param path   application path starting with {@code /}
+	 * @return {@code true} if the pattern matches the path or a suffix
+	 */
+	private static boolean matchesPathPattern(PathPattern parsed, String path) {
+		if (parsed.matches(PathContainer.parsePath(path))) {
+			return true;
+		}
+		for (int i = 1; i < path.length(); i++) {
+			if (path.charAt(i) == '/' && parsed.matches(PathContainer.parsePath(path.substring(i)))) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
