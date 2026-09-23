@@ -41,7 +41,6 @@ public class PathPatternSupportTest {
 
 	@Test
 	public void matchesActuatorUnderServicePrefixWhenContextPathIsRoot() {
-		// Cluster notifier: Tomcat context-path=/ but URI still /v1/notifier/actuator/...
 		MockHttpServletRequest request = new MockHttpServletRequest("GET", "/v1/notifier/actuator/health");
 		request.setContextPath("");
 		request.setServletPath("/v1/notifier/actuator/health");

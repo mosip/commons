@@ -17,10 +17,9 @@ import jakarta.servlet.http.HttpServletRequest;
  * {@code spring.mvc.pathmatch.matching-strategy}.
  * {@code ANT_PATH_MATCHER} keeps Ant (double-star in the middle of a path).
  * {@code PATH_PATTERN_PARSER} (Boot 4 default) uses {@link PathPatternParser}.
- * PathPattern forbids middle double-star, so Ant any-depth + actuator patterns
- * are normalized to {@code /actuator/**}; matching also tries path suffixes so a
- * request like {@code /v1/notifier/actuator/health} still matches when the
- * servlet context path was left as {@code /}.
+ * PathPattern forbids middle double-star, so Ant any-depth patterns are
+ * normalized (leading any-depth prefix stripped); matching also tries path
+ * suffixes so service-prefixed URIs still match the normalized pattern.
  * <p>
  * PathPattern is relative to the servlet context path. A leading Ant any-depth
  * prefix is stripped. Double-star is only valid as a full path segment unless
@@ -190,9 +189,7 @@ public final class PathPatternSupport {
 
 	/**
 	 * PathPattern match against the full path, then against each slash-separated
-	 * suffix. Suffix checks emulate Ant any-depth-prefix + {@code /actuator/**}
-	 * when the hosting service left {@code server.servlet.context-path=/} and the
-	 * URI still carries {@code /v1/...} prefixes.
+	 * suffix so any-depth Ant patterns still apply after normalization.
 	 *
 	 * @param parsed compiled PathPattern (no middle double-star)
 	 * @param path   application path starting with {@code /}

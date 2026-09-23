@@ -14,7 +14,7 @@ mosip:
       - /csrf
       - /*/
       - /authenticate/**
-      # any-depth + /actuator/** (kube/Prometheus when context-path is /)
+      # any-depth + /actuator/**
       - /**/actuator/**
       - /actuator/**
       - /sendOtp
