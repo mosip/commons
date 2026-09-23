@@ -35,7 +35,23 @@ public class PathPatternSupportTest {
 		MockHttpServletRequest request = new MockHttpServletRequest("GET", "/actuator/health");
 		request.setServletPath("/actuator/health");
 		assertTrue(PathPatternSupport.matches(request, "/actuator/**"));
+		assertTrue(PathPatternSupport.matches(request, "/**/actuator/**"));
 		assertFalse(PathPatternSupport.matches(request, "/swagger-ui/**"));
+	}
+
+	@Test
+	public void matchesActuatorUnderServicePrefixWhenContextPathIsRoot() {
+		MockHttpServletRequest request = new MockHttpServletRequest("GET", "/v1/notifier/actuator/health");
+		request.setContextPath("");
+		request.setServletPath("/v1/notifier/actuator/health");
+		assertTrue(PathPatternSupport.matches(request, "/actuator/**"));
+		assertTrue(PathPatternSupport.matches(request, "/**/actuator/**"));
+		assertTrue(PathPatternSupport.requestMatcher("/actuator/**", false).matches(request));
+		assertTrue(PathPatternSupport.requestMatcher("/**/actuator/**", false).matches(request));
+
+		MockHttpServletRequest prometheus = new MockHttpServletRequest("GET", "/v1/notifier/actuator/prometheus");
+		prometheus.setServletPath("/v1/notifier/actuator/prometheus");
+		assertTrue(PathPatternSupport.matches(prometheus, "/**/actuator/**"));
 	}
 
 	@Test
