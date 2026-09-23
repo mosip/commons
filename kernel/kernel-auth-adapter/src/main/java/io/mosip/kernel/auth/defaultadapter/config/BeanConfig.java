@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.client.loadbalancer.reactive.ReactorLoadBalancerExchangeFilterFunction;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -34,7 +33,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.ClientRequest;
-import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -148,12 +146,6 @@ public class BeanConfig {
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(BeanConfig.class);
 	
-	/**
-	 * Optional reactive load-balancer filter for {@link #plainWebClient()}.
-	 */
-	@Autowired(required = false)
-	private ReactorLoadBalancerExchangeFilterFunction lbFilterFunction;
-
 	/**
 	 * Default RestTemplate that forwards the inbound requester token via
 	 * {@link RequesterTokenRestInterceptor}. When {@link #sslBypass} is true,
@@ -315,19 +307,13 @@ public class BeanConfig {
 	}
 
 	/**
-	 * WebClient used to fetch tokens, optionally wrapped with a reactive
-	 * load-balancer filter.
+	 * WebClient used to fetch tokens through normal DNS.
 	 *
 	 * @return the plain WebClient
 	 */
 	@Bean
 	public WebClient plainWebClient() {
-		ExchangeFilterFunction filterFunction = (lbFilterFunction != null)
-				? lbFilterFunction
-				: (req, next) -> {
-					return next.exchange(req);
-				};
-		return WebClient.builder().filter(filterFunction).build();
+		return WebClient.builder().build();
 	}
 
 	/**
