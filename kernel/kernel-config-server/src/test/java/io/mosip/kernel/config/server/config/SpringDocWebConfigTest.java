@@ -85,7 +85,9 @@ class SpringDocWebConfigTest {
 		filter.doFilter(request, response, chain);
 
 		assertEquals(200, response.getStatus());
-		assertTrue(response.getContentAsString().contains("/config/apidocs"));
+		String body = response.getContentAsString();
+		assertTrue(body.contains("/config/apidocs"));
+		assertTrue(body.contains("validatorUrl: null"));
 		assertTrue(response.getContentType().startsWith("text/html"));
 		verify(chain, never()).doFilter(any(HttpServletRequest.class), any(HttpServletResponse.class));
 	}
