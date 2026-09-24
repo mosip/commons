@@ -9,6 +9,8 @@ import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 
 /**
@@ -17,17 +19,25 @@ import io.swagger.v3.oas.models.servers.Server;
 @Configuration
 public class SwaggerConfig {
 
+	/**
+	 * Scheme name shown by Swagger UI as Authorize (same as auth-service).
+	 */
+	public static final String AUTHORIZATION_SCHEME = "Authorization";
+
 	@Autowired
 	private OpenApiProperties openApiProperties;
 
 	/**
-	 * Creates the OpenAPI document from {@code openapi.*} bootstrap properties.
+	 * Creates the OpenAPI document from {@code openapi.*} bootstrap properties,
+	 * including the Authorization header apiKey for Swagger UI Authorize.
 	 *
 	 * @return OpenAPI model
 	 */
 	@Bean
 	public OpenAPI openApi() {
-		OpenAPI api = new OpenAPI().components(new Components())
+		OpenAPI api = new OpenAPI()
+				.components(new Components().addSecuritySchemes(AUTHORIZATION_SCHEME, authorizationApiKey()))
+				.addSecurityItem(new SecurityRequirement().addList(AUTHORIZATION_SCHEME))
 				.info(new Info().title(openApiProperties.getInfo().getTitle())
 						.version(openApiProperties.getInfo().getVersion())
 						.description(openApiProperties.getInfo().getDescription())
@@ -37,6 +47,16 @@ public class SwaggerConfig {
 		openApiProperties.getService().getServers().forEach(server -> api
 				.addServersItem(new Server().description(server.getDescription()).url(server.getUrl())));
 		return api;
+	}
+
+	/**
+	 * Header apiKey named {@code Authorization} so Swagger UI shows Authorize.
+	 *
+	 * @return the security scheme
+	 */
+	private static SecurityScheme authorizationApiKey() {
+		return new SecurityScheme().type(SecurityScheme.Type.APIKEY).in(SecurityScheme.In.HEADER)
+				.name(AUTHORIZATION_SCHEME);
 	}
 
 	/**

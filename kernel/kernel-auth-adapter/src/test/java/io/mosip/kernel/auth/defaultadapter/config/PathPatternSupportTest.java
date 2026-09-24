@@ -55,6 +55,21 @@ public class PathPatternSupportTest {
 	}
 
 	@Test
+	public void matchesSwaggerUiUnderServicePrefixWhenContextPathIsRoot() {
+		MockHttpServletRequest request = new MockHttpServletRequest("GET", "/v1/notifier/swagger-ui/index.html");
+		request.setContextPath("");
+		request.setServletPath("/v1/notifier/swagger-ui/index.html");
+		assertTrue(PathPatternSupport.matches(request, "/swagger-ui/**"));
+		assertTrue(PathPatternSupport.matches(request, "/**/swagger-ui/**"));
+		assertTrue(PathPatternSupport.requestMatcher("/swagger-ui/**", false).matches(request));
+
+		MockHttpServletRequest apiDocs = new MockHttpServletRequest("GET", "/v1/notifier/v3/api-docs");
+		apiDocs.setServletPath("/v1/notifier/v3/api-docs");
+		assertTrue(PathPatternSupport.matches(apiDocs, "/v3/api-docs"));
+		assertTrue(PathPatternSupport.matches(apiDocs, "/**/v3/api-docs"));
+	}
+
+	@Test
 	public void matchesSwaggerUiWithEmptyServletPath() {
 		MockHttpServletRequest request = new MockHttpServletRequest("GET", "/v1/authmanager/swagger-ui/index.html");
 		request.setContextPath("/v1/authmanager");
