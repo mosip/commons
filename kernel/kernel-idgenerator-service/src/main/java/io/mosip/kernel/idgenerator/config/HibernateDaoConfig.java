@@ -19,6 +19,8 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -38,8 +40,10 @@ import jakarta.persistence.EntityManagerFactory;
 /**
  * Spring Hibernate configuration for the Vert.x ID generator process.
  * <p>
- * Scans UIN, VID, and RID repositories and entities. Spring MVC RID
- * types are excluded; RID HTTP is served by Vert.x {@code RidFetcherRouter}.
+ * Scans UIN and VID repositories and entities against {@code id_database_url}.
+ * RID has its own datasource in {@link RidHibernateDaoConfig} (see there for
+ * why). Spring MVC RID types are excluded; RID HTTP is served by Vert.x
+ * {@code RidFetcherRouter}.
  * </p>
  *
  * @author Dharmesh Khandelwal
@@ -51,8 +55,8 @@ import jakarta.persistence.EntityManagerFactory;
 @Configuration
 @PropertySource({ "classpath:bootstrap.properties" })
 @PropertySource(value = "classpath:application-${spring.profiles.active}.properties", ignoreResourceNotFound = true)
-@EnableJpaRepositories(basePackages = { "io.mosip.kernel.vidgenerator.repository", "io.mosip.kernel.uingenerator.repository",
-		"io.mosip.kernel.ridgenerator.repository" }, repositoryBaseClass = HibernateRepositoryImpl.class)
+@EnableJpaRepositories(basePackages = { "io.mosip.kernel.vidgenerator.repository", "io.mosip.kernel.uingenerator.repository" },
+		repositoryBaseClass = HibernateRepositoryImpl.class)
 @EnableAutoConfiguration(excludeName = {
 		"io.mosip.kernel.applicanttype.api.impl.ApplicantTypeImpl",
 		"io.mosip.kernel.idobjectvalidator.config.IdObjectValidatorConfig",
@@ -145,6 +149,7 @@ public class HibernateDaoConfig implements EnvironmentAware {
 	 * @return dataSource
 	 */
 	@Bean
+	@Primary
 	public DataSource dataSource() {
 		HikariConfig hikariConfig = new HikariConfig();
 		hikariConfig.setDriverClassName(env.getProperty(HibernatePersistenceConstant.JAVAX_PERSISTENCE_JDBC_DRIVER));
@@ -166,11 +171,11 @@ public class HibernateDaoConfig implements EnvironmentAware {
 	 * @return LocalContainerEntityManagerFactoryBean
 	 */
 	@Bean
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory(final DataSource dataSource) {
+	@Primary
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory(@Qualifier("dataSource") final DataSource dataSource) {
 		LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
 		entityManagerFactory.setDataSource(dataSource);
-		entityManagerFactory.setPackagesToScan("io.mosip.kernel.vidgenerator.entity","io.mosip.kernel.uingenerator.entity",
-				"io.mosip.kernel.ridgenerator.entity");
+		entityManagerFactory.setPackagesToScan("io.mosip.kernel.vidgenerator.entity","io.mosip.kernel.uingenerator.entity");
 		entityManagerFactory.setJpaPropertyMap(jpaProperties());
 		entityManagerFactory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 		return entityManagerFactory;
@@ -183,7 +188,9 @@ public class HibernateDaoConfig implements EnvironmentAware {
 	 * @return PlatformTransactionManager
 	 */
 	@Bean(name = "transactionManager")
-	public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+	@Primary
+	public PlatformTransactionManager transactionManager(
+			@Qualifier("entityManagerFactory") EntityManagerFactory entityManagerFactory) {
 		JpaTransactionManager jpaTransactionManager = new JpaTransactionManager(entityManagerFactory);
 		jpaTransactionManager.setDataSource(dataSource());
 		return jpaTransactionManager;
