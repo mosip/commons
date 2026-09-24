@@ -89,4 +89,6 @@ EXPOSE 8080
 
 ENTRYPOINT [ "./configure_start.sh" ]
 
-CMD java -XX:-UseG1GC -XX:+ExplicitGCInvokesConcurrent -XX:-UseParallelGC -XX:+UseZGC -XX:+ZGenerational -XX:-UseShenandoahGC -XX:MaxGCPauseMillis=200  -XX:+UnlockExperimentalVMOptions -XX:+UseStringDeduplication -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -XX:+UseCompressedOops -Dloader.path="${loader_path_env}" -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -Dceylon.cache.repo=./regproc-reprocessor-ceylon-cache-repo -jar ${current_module_env}.jar
+# GC/heap/encoding flags come from JDK_JAVA_OPTIONS (Helm additionalResources.javaOpts / cluster env).
+# Local: omit them; Temurin 21 defaults are enough. Optional: docker run -e JDK_JAVA_OPTIONS="..."
+CMD java -Dloader.path="${loader_path_env}" -Dspring.cloud.config.label="${spring_config_label_env}" -Dspring.profiles.active="${active_profile_env}" -Dspring.cloud.config.uri="${spring_config_url_env}" -Dceylon.cache.repo=./regproc-reprocessor-ceylon-cache-repo -jar ${current_module_env}.jar
