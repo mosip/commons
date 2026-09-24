@@ -79,4 +79,6 @@ COPY ./target/kernel-config-server-*.jar kernel-config-server.jar
 EXPOSE 51000
 
 #CMD  ./execute-jar.sh
-CMD java -XX:-UseG1GC -XX:+ExplicitGCInvokesConcurrent -XX:-UseParallelGC -XX:+UseZGC -XX:+ZGenerational -XX:-UseShenandoahGC -XX:MaxGCPauseMillis=200  -XX:+UnlockExperimentalVMOptions -XX:+UseStringDeduplication -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -XX:+UseCompressedOops -jar kernel-config-server.jar
+# GC/heap/encoding flags come from JDK_JAVA_OPTIONS (Helm additionalResources.javaOpts / cluster env).
+# Local: omit them; Temurin 21 defaults are enough. Optional: docker run -e JDK_JAVA_OPTIONS="..."
+CMD java -jar kernel-config-server.jar
