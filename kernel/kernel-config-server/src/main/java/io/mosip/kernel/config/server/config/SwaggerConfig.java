@@ -11,11 +11,9 @@ import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
 
 /**
- * Springdoc OpenAPI / Swagger UI configuration (embedded via {@code springdoc-openapi-starter-webmvc-ui}).
- * <p>
- * Swagger UI is on the management port ({@code springdoc.use-management-port=true}) so Config Server
- * {@code EnvironmentController} {@code /{name}/{profiles}} does not swallow {@code /swagger-ui/**}.
- * </p>
+ * Springdoc OpenAPI configuration (Swagger UI is served on the main port by
+ * {@link SpringDocWebConfig} so Config Server {@code EnvironmentController}
+ * {@code /{name}/{profiles}} does not swallow {@code /swagger-ui/**}).
  */
 @Configuration
 public class SwaggerConfig {

@@ -50,6 +50,7 @@ public class SpringDocWebConfig {
 			        url: "%s/apidocs",
 			        dom_id: "#swagger-ui",
 			        deepLinking: true,
+			        validatorUrl: null,
 			        presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
 			        layout: "StandaloneLayout"
 			      });
