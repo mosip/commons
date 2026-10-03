@@ -6,12 +6,18 @@ metadata:
 data:
   {{- if .Values.spring_profiles.enabled }}
   {{- range $index, $repo := .Values.spring_profiles.spring_compositeRepos }}
-  SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_URI: "{{ $repo.uri }}"
+  SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_URI: {{ $repo.uri | quote }}
+  SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_TYPE: {{ $repo.type | quote }}
+  SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_DEFAULT_LABEL: {{ $repo.version | quote }}
   SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_SEARCHPATHS: {{ $repo.searchFolders | default "" | quote }}
+  SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_CLONE_ON_START: {{ $repo.spring_cloud_config_server_git_cloneOnStart | quote }}
+  SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_FORCE_PULL: {{ $repo.spring_cloud_config_server_git_force_pull | quote }}
+  SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_REFRESH_RATE: {{ $repo.spring_cloud_config_server_git_refreshRate | quote }}
   {{- if $repo.username }}
   SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_USERNAME: {{ $repo.username | quote }}
   {{- end }}
   {{- end }}
+  SPRING_CLOUD_CONFIG_SERVER_FAILONCOMPOSITEERROR: {{ .Values.spring_profiles.spring_fail_on_composite_error | quote }}
   {{- else if .Values.localRepo.enabled }}
   SPRING_CLOUD_CONFIG_SERVER_GIT_URI: {{ .Values.volume.mountDir | quote }}
   {{- end }}
