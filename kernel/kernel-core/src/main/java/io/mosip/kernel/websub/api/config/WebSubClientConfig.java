@@ -3,13 +3,10 @@ package io.mosip.kernel.websub.api.config;
 import jakarta.servlet.Filter;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.websub.spi.SubscriptionClient;
 import io.mosip.kernel.core.websub.spi.SubscriptionExtendedClient;
@@ -34,17 +31,6 @@ import io.mosip.kernel.websub.api.verifier.IntentVerifier;
 @Configuration
 @EnableAspectJAutoProxy
 public class WebSubClientConfig {
-
-	/**
-	 * Jackson mapper for failed-content JSON when no application {@link ObjectMapper} exists.
-	 *
-	 * @return new {@link ObjectMapper}
-	 */
-	@Bean
-	@ConditionalOnMissingBean(ObjectMapper.class)
-	public ObjectMapper objectMapper() {
-		return new ObjectMapper();
-	}
 
 	/**
 	 * Hub intent-verification helper (topic / mode match).

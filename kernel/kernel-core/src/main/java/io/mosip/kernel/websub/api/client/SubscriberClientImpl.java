@@ -70,8 +70,8 @@ public class SubscriberClientImpl
 	@Autowired
 	private RestTemplateHelper restTemplateHelper;
 
-	@Autowired
-	private ObjectMapper objectMapper;
+	/** Local mapper so this library does not register/steal the application {@link ObjectMapper}. */
+	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	/**
 	 * When {@code true}, callback URLs include {@code intentMode} for hub verification
