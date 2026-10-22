@@ -70,16 +70,16 @@ spec:
               value: "{{ .Values.spring_profiles.spring_fail_on_composite_error }}"
           {{- end }}
           {{- if .Values.localRepo.enabled }}
-            - name: spring_cloud_config_server_native_search-locations
+            - name: SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCHLOCATIONS
               value: {{ .Values.localRepo.spring_cloud_config_server_native_search_locations | quote }}
-            - name: spring_cloud_config_server_accept-empty
+            - name: SPRING_CLOUD_CONFIG_SERVER_ACCEPTEMPTY
               value: {{ .Values.localRepo.spring_cloud_config_server_accept_empty | quote }}
-            - name: spring_cloud_config_server_git_force-pull
+            - name: SPRING_CLOUD_CONFIG_SERVER_GIT_FORCEPULL
               value: {{ .Values.localRepo.spring_cloud_config_server_git_force_pull | quote }}
-            - name: spring_cloud_config_server_git_refreshRate
+            - name: SPRING_CLOUD_CONFIG_SERVER_GIT_REFRESHRATE
               value: {{ .Values.localRepo.spring_cloud_config_server_git_refreshRate | quote }}
-            - name: spring_cloud_config_server_git_cloneOnStart
-              value: {{ .Values.localRepo.spring_cloud_config_server_git_cloneOnStart | quote }}          
+            - name: SPRING_CLOUD_CONFIG_SERVER_GIT_CLONEONSTART
+              value: {{ .Values.localRepo.spring_cloud_config_server_git_cloneOnStart | quote }}
           {{- end }}
           {{- if .Values.spring_profiles.enabled }}
           {{- range $index, $repo := .Values.spring_profiles.spring_compositeRepos }}
