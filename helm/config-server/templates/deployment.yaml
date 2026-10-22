@@ -64,10 +64,6 @@ spec:
               value: "{{ $repo.uri }}"
             - name: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_DEFAULT_LABEL
               value: "{{ $repo.version }}"
-            {{- if $repo.searchFolders }}
-            - name: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_SEARCHPATHS
-              value: {{ $repo.searchFolders | quote }}
-            {{- end }}
             - name: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_CLONE_ON_START
               value: "{{ $repo.spring_cloud_config_server_git_cloneOnStart }}"
             - name: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_FORCE_PULL
