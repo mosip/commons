@@ -157,12 +157,12 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-      {{- if .Values.localRepo.enabled }}
+      {{- if eq (include "config-server.needsVolume" .) "true" }}
           volumeMounts:
             - name: {{ .Values.volume.name }}
               mountPath: {{ .Values.volume.mountDir }}
       {{- end }}
-  {{- if .Values.localRepo.enabled }}
+  {{- if eq (include "config-server.needsVolume" .) "true" }}
       volumes:
       - name: {{ .Values.volume.name }}
         persistentVolumeClaim:

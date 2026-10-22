@@ -73,3 +73,15 @@ Determine if there are any native repos in the spring composite repos.
 {{- end }}
 {{- $hasNative -}}
 {{- end -}}
+
+{{/*
+Return "true" when the config repo volume must be mounted: local repo is enabled,
+or a composite repo of type native is configured.
+*/}}
+{{- define "config-server.needsVolume" -}}
+{{- if or .Values.localRepo.enabled (and .Values.spring_profiles.enabled (eq (include "config-server.hasNative" .) "true")) -}}
+true
+{{- else -}}
+false
+{{- end -}}
+{{- end -}}
