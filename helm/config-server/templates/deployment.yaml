@@ -53,10 +53,15 @@ spec:
             {{- end }}
           {{- if .Values.spring_profiles.enabled }}
             {{- range $index, $repo := .Values.spring_profiles.spring_compositeRepos }}
-            - name: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_URI
-              value: "{{ $repo.uri }}"
             - name: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_TYPE
               value: "{{ $repo.type }}"
+            {{- if eq $repo.type "native" }}
+            # Native repositories read search-locations, not uri.
+            - name: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_SEARCHLOCATIONS
+              value: "{{ $repo.uri }}"
+            {{- else }}
+            - name: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_URI
+              value: "{{ $repo.uri }}"
             - name: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_DEFAULT_LABEL
               value: "{{ $repo.version }}"
             - name: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_CLONE_ON_START
@@ -65,6 +70,7 @@ spec:
               value: "{{ $repo.spring_cloud_config_server_git_force_pull }}"
             - name: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_REFRESH_RATE
               value: "{{ $repo.spring_cloud_config_server_git_refreshRate }}"
+            {{- end }}
             {{- end }}
             - name: SPRING_CLOUD_CONFIG_SERVER_FAILONCOMPOSITEERROR
               value: "{{ .Values.spring_profiles.spring_fail_on_composite_error }}"
