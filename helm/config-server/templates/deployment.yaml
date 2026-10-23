@@ -41,12 +41,27 @@ spec:
           env:
             - name: JDK_JAVA_OPTIONS
               value: {{ .Values.additionalResources.javaOpts }}
+            {{- if and .Values.spring_profiles.enabled .Values.localRepo.enabled }}
+            - name: SPRING_PROFILES_ACTIVE
+              value: "{{ .Values.spring_profiles.spring_profiles_active }},{{ .Values.localRepo.spring_profiles_active }}"
+            {{- else if .Values.spring_profiles.enabled }}
+            - name: SPRING_PROFILES_ACTIVE
+              value: {{ .Values.spring_profiles.spring_profiles_active | quote }}
+            {{- else if .Values.localRepo.enabled }}
+            - name: SPRING_PROFILES_ACTIVE
+              value: {{ .Values.localRepo.spring_profiles_active | quote }}
+            {{- end }}
           {{- if .Values.spring_profiles.enabled }}
             {{- range $index, $repo := .Values.spring_profiles.spring_compositeRepos }}
-            - name: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_URI
-              value: "{{ $repo.uri }}"
             - name: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_TYPE
               value: "{{ $repo.type }}"
+            {{- if eq $repo.type "native" }}
+            # Native repositories read search-locations, not uri.
+            - name: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_SEARCHLOCATIONS
+              value: "{{ $repo.uri }}"
+            {{- else }}
+            - name: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_URI
+              value: "{{ $repo.uri }}"
             - name: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_DEFAULT_LABEL
               value: "{{ $repo.version }}"
             - name: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_CLONE_ON_START
@@ -56,20 +71,21 @@ spec:
             - name: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_REFRESH_RATE
               value: "{{ $repo.spring_cloud_config_server_git_refreshRate }}"
             {{- end }}
+            {{- end }}
             - name: SPRING_CLOUD_CONFIG_SERVER_FAILONCOMPOSITEERROR
               value: "{{ .Values.spring_profiles.spring_fail_on_composite_error }}"
           {{- end }}
           {{- if .Values.localRepo.enabled }}
-            - name: spring_cloud_config_server_native_search-locations
+            - name: SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCHLOCATIONS
               value: {{ .Values.localRepo.spring_cloud_config_server_native_search_locations | quote }}
-            - name: spring_cloud_config_server_accept-empty
+            - name: SPRING_CLOUD_CONFIG_SERVER_ACCEPTEMPTY
               value: {{ .Values.localRepo.spring_cloud_config_server_accept_empty | quote }}
-            - name: spring_cloud_config_server_git_force-pull
+            - name: SPRING_CLOUD_CONFIG_SERVER_GIT_FORCEPULL
               value: {{ .Values.localRepo.spring_cloud_config_server_git_force_pull | quote }}
-            - name: spring_cloud_config_server_git_refreshRate
+            - name: SPRING_CLOUD_CONFIG_SERVER_GIT_REFRESHRATE
               value: {{ .Values.localRepo.spring_cloud_config_server_git_refreshRate | quote }}
-            - name: spring_cloud_config_server_git_cloneOnStart
-              value: {{ .Values.localRepo.spring_cloud_config_server_git_cloneOnStart | quote }}          
+            - name: SPRING_CLOUD_CONFIG_SERVER_GIT_CLONEONSTART
+              value: {{ .Values.localRepo.spring_cloud_config_server_git_cloneOnStart | quote }}
           {{- end }}
           {{- if .Values.spring_profiles.enabled }}
           {{- range $index, $repo := .Values.spring_profiles.spring_compositeRepos }}
@@ -78,7 +94,7 @@ spec:
               valueFrom:
                  secretKeyRef:
                    name: {{ include "config-server.fullname" $ }}
-                   key: github-token-{{ $index }}
+                   key: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_PASSWORD
           {{- end }}
           {{- if $repo.username }}
             - name: SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_{{ $index }}_USERNAME
@@ -147,20 +163,16 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-      {{- if .Values.spring_profiles.enabled }}
-        {{- if or .Values.localRepo.enabled (include "config-server.hasNative" . | eq "true") }}
+      {{- if eq (include "config-server.needsVolume" .) "true" }}
           volumeMounts:
             - name: {{ .Values.volume.name }}
               mountPath: {{ .Values.volume.mountDir }}
-        {{- end }}
       {{- end }}
-  {{- if .Values.spring_profiles.enabled }}
-    {{- if or .Values.localRepo.enabled (include "config-server.hasNative" . | eq "true") }}
+  {{- if eq (include "config-server.needsVolume" .) "true" }}
       volumes:
       - name: {{ .Values.volume.name }}
         persistentVolumeClaim:
           claimName: {{ .Values.volume.name }}
-    {{- end }}
   {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

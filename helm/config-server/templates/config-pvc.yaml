@@ -1,5 +1,4 @@
-{{- if .Values.spring_profiles.enabled }}
-  {{- if or .Values.localRepo.enabled (include "config-server.hasNative" . | eq "true") }}
+{{- if eq (include "config-server.needsVolume" .) "true" }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -14,8 +13,5 @@ spec:
   resources:
     requests:
       storage: {{ .Values.volume.size }}
-  selector:
-    matchLabels:
-      name: {{ .Values.volume.name }}
+  
   {{- end }}
-{{- end }}
