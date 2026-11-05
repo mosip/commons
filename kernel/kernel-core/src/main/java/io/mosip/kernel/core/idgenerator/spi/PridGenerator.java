@@ -14,7 +14,12 @@ package io.mosip.kernel.core.idgenerator.spi;
  */
 public interface PridGenerator<T> {
 	/**
-	 * Generates a PRID.
+	 * Generates the next Pre-Registration ID.
+	 * <p>
+	 * Contract: may perform database I/O in the implementing module. Never returns
+	 * {@code null}. Throws a MOSIP unchecked exception when generation fails
+	 * (implementation-defined).
+	 * </p>
 	 *
 	 * @return never-null generated PRID
 	 */

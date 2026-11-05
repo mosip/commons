@@ -6,11 +6,16 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.Provider;
 import java.security.PublicKey;
+import java.security.interfaces.ECPrivateKey;
+import java.security.interfaces.ECPublicKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.ECGenParameterSpec;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
@@ -40,18 +45,33 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSObject;
+import com.nimbusds.jose.Payload;
+import com.nimbusds.jose.crypto.ECDSASigner;
+import com.nimbusds.jose.crypto.Ed25519Signer;
+import com.nimbusds.jose.jwk.Curve;
+import com.nimbusds.jose.jwk.ECKey;
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.OctetKeyPair;
+import com.nimbusds.jose.jwk.gen.ECKeyGenerator;
+import com.nimbusds.jose.jwk.gen.OctetKeyPairGenerator;
+import com.nimbusds.jose.util.Base64URL;
 
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterConstant;
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterErrorCode;
 import io.mosip.kernel.auth.defaultadapter.exception.AuthManagerException;
 import io.mosip.kernel.auth.defaultadapter.helper.ValidateTokenHelper;
 import io.mosip.kernel.openid.bridge.model.MosipUserDto;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import reactor.core.publisher.Mono;
 
 /**
  * Tests {@link ValidateTokenHelper} online userinfo validation (RestTemplate and
- * WebClient), unsigned-token offline rejection, RSA algorithm variants, expiry
- * / issuer / signature / audience failures, and JWKS public-key lookup.
+ * WebClient), unsigned-token offline rejection, RS/PS/ES/Ed25519/HMAC
+ * algorithms, expiry / issuer / signature / audience failures, and JWKS
+ * public-key lookup.
  */
 @SpringBootTest(classes = { AuthTestBootApplication.class })
 @RunWith(SpringRunner.class)
@@ -433,6 +453,210 @@ public class ValidateTokenHelperTest {
 		Assert.assertNull(publicKey);
 	}
 
+	/**
+	 * Asserts a PS256-signed token verifies with the matching RSA public key.
+	 *
+	 * @throws Exception if key generation or validation fails
+	 */
+	@Test
+	public void isTokenValidWithPS256AlgoThenPassTest() throws Exception {
+		KeyPair kp = generateKeyPair("RSA", 2048);
+		String token = signedToken(Algorithm.RSA256PSS((RSAPublicKey) kp.getPublic(), (RSAPrivateKey) kp.getPrivate()),
+				"PS256");
 
+		ImmutablePair<Boolean, AuthAdapterErrorCode> res = validateTokenHelper.isTokenValid(JWT.decode(token),
+				kp.getPublic());
+		assertThat(res.left, is(true));
+	}
+
+	/**
+	 * Asserts an ES256-signed token verifies with the matching EC public key.
+	 *
+	 * @throws Exception if key generation or validation fails
+	 */
+	@Test
+	public void isTokenValidWithES256AlgoThenPassTest() throws Exception {
+		KeyPair kp = generateKeyPair("EC", 256);
+		String token = signedToken(Algorithm.ECDSA256((ECPublicKey) kp.getPublic(), (ECPrivateKey) kp.getPrivate()),
+				"ES256");
+
+		ImmutablePair<Boolean, AuthAdapterErrorCode> res = validateTokenHelper.isTokenValid(JWT.decode(token),
+				kp.getPublic());
+		assertThat(res.left, is(true));
+	}
+
+	/**
+	 * Asserts a PS256 token is unauthorized when verified with a different RSA key.
+	 *
+	 * @throws Exception if key generation or validation fails
+	 */
+	@Test
+	public void isTokenValidWithPS256TokenAndWrongKeyThenUnauthorizedTest() throws Exception {
+		KeyPair kp = generateKeyPair("RSA", 2048);
+		KeyPair otherKp = generateKeyPair("RSA", 2048);
+		String token = signedToken(Algorithm.RSA256PSS((RSAPublicKey) kp.getPublic(), (RSAPrivateKey) kp.getPrivate()),
+				"PS256");
+
+		ImmutablePair<Boolean, AuthAdapterErrorCode> res = validateTokenHelper.isTokenValid(JWT.decode(token),
+				otherKp.getPublic());
+		assertThat(res.left, is(false));
+		assertThat(res.right, is(AuthAdapterErrorCode.UNAUTHORIZED));
+	}
+
+	/**
+	 * Asserts HS512 succeeds when {@code auth.server.admin.hmac.secret} is at least
+	 * 64 bytes.
+	 */
+	@Test
+	public void isTokenValidWithHS512AndConfiguredSecretThenPassTest() {
+		String secret = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
+		ReflectionTestUtils.setField(validateTokenHelper, "hmacSecret", secret);
+		String token = signedToken(Algorithm.HMAC512(secret.getBytes(StandardCharsets.UTF_8)), "HS512");
+
+		assertThat(validateTokenHelper.isTokenValid(JWT.decode(token), null).left, is(true));
+		ReflectionTestUtils.setField(validateTokenHelper, "hmacSecret", "");
+	}
+
+	/**
+	 * Asserts HS384 is unauthorized when the configured HMAC secret does not match
+	 * the signing secret.
+	 */
+	@Test
+	public void isTokenValidWithHS384AndWrongSecretThenUnauthorizedTest() {
+		String secret = "0123456789abcdef0123456789abcdef0123456789abcdef";
+		ReflectionTestUtils.setField(validateTokenHelper, "hmacSecret", secret.replace('0', '9'));
+		String token = signedToken(Algorithm.HMAC384(secret.getBytes(StandardCharsets.UTF_8)), "HS384");
+
+		assertThat(validateTokenHelper.isTokenValid(JWT.decode(token), null).left, is(false));
+		ReflectionTestUtils.setField(validateTokenHelper, "hmacSecret", "");
+	}
+
+	/**
+	 * Asserts an {@code alg=Ed25519} token verifies with the matching OKP JWK and
+	 * fails with a different key.
+	 *
+	 * @throws Exception if key generation or validation fails
+	 */
+	@Test
+	public void isTokenValidWithEd25519ThenPassTest() throws Exception {
+		assertEd25519Family("Ed25519");
+	}
+
+	/**
+	 * Asserts the legacy {@code alg=EdDSA} name is accepted as Ed25519.
+	 *
+	 * @throws Exception if key generation or validation fails
+	 */
+	@Test
+	public void isTokenValidWithEdDSAThenPassTest() throws Exception {
+		assertEd25519Family("EdDSA");
+	}
+
+	/**
+	 * Signs a token with Ed25519, caches the public OKP, then asserts valid then
+	 * invalid after swapping the cached key.
+	 *
+	 * @param alg JWT {@code alg} header ({@code Ed25519} or {@code EdDSA})
+	 * @throws Exception if nimbus key generation or signing fails
+	 */
+	private void assertEd25519Family(String alg) throws Exception {
+		OctetKeyPair key = new OctetKeyPairGenerator(Curve.Ed25519).keyID("ed-key").generate();
+		String header = Base64URL.encode("{\"alg\":\"" + alg + "\",\"kid\":\"ed-key\"}").toString();
+		String payload = Base64URL.encode(nimbusClaims()).toString();
+		String signature = new Ed25519Signer(key).sign(new JWSHeader(JWSAlgorithm.EdDSA),
+				(header + "." + payload).getBytes(StandardCharsets.US_ASCII)).toString();
+		cacheJWK("ed-key", key.toPublicJWK());
+
+		assertThat(validateTokenHelper.isTokenValid(JWT.decode(header + "." + payload + "." + signature), null).left,
+				is(true));
+		cacheJWK("ed-key", new OctetKeyPairGenerator(Curve.Ed25519).generate().toPublicJWK());
+		assertThat(validateTokenHelper.isTokenValid(JWT.decode(header + "." + payload + "." + signature), null).left,
+				is(false));
+	}
+
+	/**
+	 * Asserts ES256K verifies with the matching secp256k1 JWK and fails with a
+	 * different key.
+	 *
+	 * @throws Exception if BouncyCastle key generation or signing fails
+	 */
+	@Test
+	public void isTokenValidWithES256KThenPassTest() throws Exception {
+		Provider bc = new BouncyCastleProvider();
+		ECKey key = new ECKeyGenerator(Curve.SECP256K1).provider(bc).keyID("es256k-key").generate();
+		JWSObject jws = new JWSObject(new JWSHeader.Builder(JWSAlgorithm.ES256K).keyID("es256k-key").build(),
+				new Payload(nimbusClaims()));
+		ECDSASigner signer = new ECDSASigner(key);
+		signer.getJCAContext().setProvider(bc);
+		jws.sign(signer);
+		cacheJWK("es256k-key", key.toPublicJWK());
+
+		assertThat(validateTokenHelper.isTokenValid(JWT.decode(jws.serialize()), null).left, is(true));
+		cacheJWK("es256k-key", new ECKeyGenerator(Curve.SECP256K1).provider(bc).generate().toPublicJWK());
+		assertThat(validateTokenHelper.isTokenValid(JWT.decode(jws.serialize()), null).left, is(false));
+	}
+
+	/**
+	 * Injects {@code jwk} into {@code publicJWKs} under {@code http://localhost/certs#keyId}
+	 * so nimbus verification does not download JWKS.
+	 *
+	 * @param keyId JWT {@code kid}
+	 * @param jwk   public JWK to cache
+	 */
+	private void cacheJWK(String keyId, JWK jwk) {
+		ReflectionTestUtils.setField(validateTokenHelper, "certsUrl", "http://localhost/certs");
+		Map<String, JWK> cache = new HashMap<>();
+		cache.put("http://localhost/certs#" + keyId, jwk);
+		ReflectionTestUtils.setField(validateTokenHelper, "publicJWKs", cache);
+	}
+
+	/**
+	 * Compact JSON claims matching the test issuer, audience, and a one-hour expiry.
+	 *
+	 * @return JWT payload JSON
+	 */
+	private String nimbusClaims() {
+		long now = Instant.now().getEpochSecond();
+		return "{\"preferred_username\":\"mock-user\",\"roles\":\"ADMIN\",\"azp\":\"account\","
+				+ "\"iss\":\"https://iam.mosip.net/auth/realms/\",\"sub\":\"mock-user\",\"aud\":[\"account\"],"
+				+ "\"iat\":" + now + ",\"exp\":" + (now + 3600) + "}";
+	}
+
+	/**
+	 * Generates an RSA or EC key pair. EC uses {@code secp{size}r1} (e.g. 256 → P-256).
+	 *
+	 * @param algorithm {@code RSA} or {@code EC}
+	 * @param size      RSA modulus bits, or EC curve size in bits
+	 * @return never-null key pair
+	 * @throws Exception if the JCA provider cannot generate the pair
+	 */
+	private KeyPair generateKeyPair(String algorithm, int size) throws Exception {
+		KeyPairGenerator kpg = KeyPairGenerator.getInstance(algorithm);
+		if ("EC".equals(algorithm)) {
+			kpg.initialize(new ECGenParameterSpec("secp" + size + "r1"));
+		} else {
+			kpg.initialize(size);
+		}
+		return kpg.generateKeyPair();
+	}
+
+	/**
+	 * Builds a compact JWT with MOSIP test claims and the given {@code alg} header.
+	 *
+	 * @param algorithm Auth0 signer
+	 * @param tokenAlgo value written to the {@code alg} header
+	 * @return compact JWT
+	 */
+	private String signedToken(Algorithm algorithm, String tokenAlgo) {
+		Map<String, Object> headers = new HashMap<>();
+		headers.put("alg", tokenAlgo);
+		return JWT.create().withHeader(headers).withClaim(AuthAdapterConstant.EMAIL, "mockuser!mosip.com")
+				.withClaim(AuthAdapterConstant.MOBILE, "9210283991")
+				.withClaim(AuthAdapterConstant.PREFERRED_USERNAME, "mock-user")
+				.withClaim(AuthAdapterConstant.ROLES, "ADMIN").withClaim(AuthAdapterConstant.AZP, "account")
+				.withClaim(AuthAdapterConstant.ISSUER, "https://iam.mosip.net/auth/realms/").withSubject("mock-user")
+				.withIssuedAt(Date.from(Instant.now())).withExpiresAt(Date.from(Instant.now().plusSeconds(345600)))
+				.withAudience(new String[] { "account" }).sign(algorithm);
+	}
 
 }
