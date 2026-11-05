@@ -36,7 +36,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTDecodeException;
-import com.auth0.jwt.impl.NullClaim;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
@@ -207,7 +206,7 @@ public class AuthHandler extends AbstractUserDetailsAuthenticationProvider {
 			return Optional.empty();
 		}
 		Claim claim = decodedJWT.getClaim(AuthAdapterConstant.SCOPE);
-		if(claim != null && !(claim instanceof NullClaim)) {
+		if(claim != null && !claim.isMissing() && !claim.isNull()) {
 			String scopesStr = claim.asString();
 			return Optional.of(scopesStr);
 		}

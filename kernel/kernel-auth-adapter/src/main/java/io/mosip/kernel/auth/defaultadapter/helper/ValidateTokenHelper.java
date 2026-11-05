@@ -6,18 +6,24 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.security.Provider;
 import java.security.PublicKey;
+import java.security.interfaces.ECPublicKey;
 import java.security.interfaces.RSAPublicKey;
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,12 +48,24 @@ import com.auth0.jwk.JwkProvider;
 import com.auth0.jwk.UrlJwkProvider;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.AlgorithmMismatchException;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSVerifier;
+import com.nimbusds.jose.crypto.ECDSAVerifier;
+import com.nimbusds.jose.crypto.Ed25519Verifier;
+import com.nimbusds.jose.jwk.ECKey;
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.OctetKeyPair;
+import com.nimbusds.jose.util.Base64URL;
 
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterConstant;
 import io.mosip.kernel.auth.defaultadapter.constant.AuthAdapterErrorCode;
@@ -65,7 +83,7 @@ import jakarta.annotation.PostConstruct;
  * <p>
  * Online validation calls the user-info endpoint (RestTemplate or WebClient
  * {@code retrieve()} with Jackson 2 on a String body). Offline validation uses
- * JWKS, expiry, issuer host, RSA signature, and audience/{@code azp} checks.
+ * JWKS, expiry, issuer host, JWS signature (RS/PS/ES/Ed25519/HMAC), and audience/{@code azp} checks.
  * Dates use {@code DateUtils2}.
  * <p>
  * This adapter is a library other MOSIP services put on the classpath.
@@ -82,6 +100,19 @@ public class ValidateTokenHelper {
 	 * Cache of JWKS public keys keyed by JWT {@code kid}.
 	 */
 	private Map<String, PublicKey> publicKeys = new HashMap<>();
+
+	private static final String ED25519_ALGORITHM = "Ed25519";
+	private static final String EDDSA_ALGORITHM = "EdDSA";
+	private static final String ES256K_ALGORITHM = "ES256K";
+	private static final int JWKS_TIMEOUT_MS = 5000;
+	private static final int JWKS_SIZE_LIMIT = 51200;
+
+	/** Shared HMAC secret for HS384/HS512 tokens; empty rejects those algorithms. */
+	@Value("${auth.server.admin.hmac.secret:}")
+	private String hmacSecret;
+
+	/** Cached JWKS keys for Ed25519 / ES256K, keyed by certs URL and {@code kid}. */
+	private Map<String, JWK> publicJWKs = new ConcurrentHashMap<>();
 
 	/**
 	 * Path appended after issuer+realm when {@link #certsUrl} is blank.
@@ -196,7 +227,7 @@ public class ValidateTokenHelper {
 	}
 
 	/**
-	 * Checks expiry, issuer host, RSA signature, and audience/{@code azp}.
+	 * Checks expiry, issuer host, JWS signature, and audience/{@code azp}.
 	 *
 	 * @param decodedJWT the decoded access token
 	 * @param publicKey  JWKS public key for the token {@code kid}
@@ -223,10 +254,19 @@ public class ValidateTokenHelper {
 
 		// Third, signature validation.
 		try {
+			boolean signatureValid = true;
 			String tokenAlgo = decodedJWT.getAlgorithm();
-			Algorithm algorithm = getVerificationAlgorithm(tokenAlgo, publicKey);
-			algorithm.verify(decodedJWT);
-		} catch (SignatureVerificationException signatureException) {
+			if (isEd25519(tokenAlgo) || ES256K_ALGORITHM.equals(tokenAlgo)) {
+				signatureValid = isNimbusSignatureValid(decodedJWT);
+			} else {
+				Algorithm algorithm = getVerificationAlgorithm(tokenAlgo, publicKey);
+				algorithm.verify(decodedJWT);
+			}
+			if (!signatureValid) {
+				LOGGER.error("Signature validation failed, Throwing Authentication Exception. UserName: " + userName);
+				return ImmutablePair.of(Boolean.FALSE, AuthAdapterErrorCode.UNAUTHORIZED);
+			}
+		} catch (SignatureVerificationException | AlgorithmMismatchException signatureException) {
 			LOGGER.error("Signature validation failed, Throwing Authentication Exception. UserName: " + userName,
 					signatureException);
 			return ImmutablePair.of(Boolean.FALSE, AuthAdapterErrorCode.UNAUTHORIZED);
@@ -311,6 +351,58 @@ public class ValidateTokenHelper {
 		return publicKey;
 	}
 
+	/** {@code Ed25519} is the current name; {@code EdDSA} is still sent by some servers. */
+	private static boolean isEd25519(String tokenAlgo) {
+		return ED25519_ALGORITHM.equals(tokenAlgo) || EDDSA_ALGORITHM.equals(tokenAlgo);
+	}
+
+	private boolean isNimbusSignatureValid(DecodedJWT decodedJWT) {
+		String tokenAlgo = decodedJWT.getAlgorithm();
+		try {
+			JWK jwk = getPublicJWK(decodedJWT);
+			JWSVerifier verifier;
+			JWSAlgorithm algorithm;
+			if (isEd25519(tokenAlgo) && jwk instanceof OctetKeyPair octetKeyPair) {
+				verifier = new Ed25519Verifier(octetKeyPair);
+				algorithm = JWSAlgorithm.EdDSA;
+			} else if (ES256K_ALGORITHM.equals(tokenAlgo) && jwk instanceof ECKey ecKey) {
+				ECDSAVerifier ecdsaVerifier = new ECDSAVerifier(ecKey);
+				ecdsaVerifier.getJCAContext().setProvider(BouncyCastleHolder.PROVIDER);
+				verifier = ecdsaVerifier;
+				algorithm = JWSAlgorithm.ES256K;
+			} else {
+				return false;
+			}
+			byte[] signingInput = (decodedJWT.getHeader() + "." + decodedJWT.getPayload())
+					.getBytes(StandardCharsets.US_ASCII);
+			return verifier.verify(new JWSHeader(algorithm), signingInput, new Base64URL(decodedJWT.getSignature()));
+		} catch (JOSEException | IOException | ParseException | URISyntaxException e) {
+			LOGGER.error("Signature check of a " + tokenAlgo + " token failed", e);
+			return false;
+		}
+	}
+
+	private JWK getPublicJWK(DecodedJWT decodedJWT) throws IOException, ParseException, URISyntaxException {
+		String certsUrIPath = (certsUrl == null || certsUrl.isEmpty())
+				? issuerInternalURI + getRealM(decodedJWT) + certsPath
+				: certsUrl;
+		String cacheKey = certsUrIPath + "#" + decodedJWT.getKeyId();
+		JWK publicJWK = publicJWKs.get(cacheKey);
+		if (publicJWK == null) {
+			JWK jwk = JWKSet.load(new URI(certsUrIPath).normalize().toURL(), JWKS_TIMEOUT_MS, JWKS_TIMEOUT_MS,
+					JWKS_SIZE_LIMIT).getKeyByKeyId(decodedJWT.getKeyId());
+			if (jwk != null) {
+				publicJWK = jwk.toPublicJWK();
+				publicJWKs.put(cacheKey, publicJWK);
+			}
+		}
+		return publicJWK;
+	}
+
+	private static final class BouncyCastleHolder {
+		private static final Provider PROVIDER = new BouncyCastleProvider();
+	}
+
 	/**
 	 * Reads the Keycloak realm as the last path segment of the {@code iss} claim.
 	 *
@@ -355,15 +447,13 @@ public class ValidateTokenHelper {
 	}
 
 	/**
-	 * Maps JWT {@code alg} to Auth0 RSA verification (RS256/RS384/RS512; default
-	 * RS256).
+	 * Maps JWT {@code alg} to an Auth0 verifier (RS/PS/ES/HS; unknown uses RS256).
 	 *
 	 * @param tokenAlgo JWT algorithm name
-	 * @param publicKey RSA public key
+	 * @param publicKey RSA or EC public key (unused for HMAC)
 	 * @return the verification algorithm
 	 */
 	private Algorithm getVerificationAlgorithm(String tokenAlgo, PublicKey publicKey) {
-		// Later will add other Algorithms.
 		switch (tokenAlgo) {
 		case "RS256":
 			return Algorithm.RSA256((RSAPublicKey) publicKey, null);
@@ -371,9 +461,33 @@ public class ValidateTokenHelper {
 			return Algorithm.RSA384((RSAPublicKey) publicKey, null);
 		case "RS512":
 			return Algorithm.RSA512((RSAPublicKey) publicKey, null);
+		case "PS256":
+			return Algorithm.RSA256PSS((RSAPublicKey) publicKey, null);
+		case "PS384":
+			return Algorithm.RSA384PSS((RSAPublicKey) publicKey, null);
+		case "PS512":
+			return Algorithm.RSA512PSS((RSAPublicKey) publicKey, null);
+		case "ES256":
+			return Algorithm.ECDSA256((ECPublicKey) publicKey, null);
+		case "ES384":
+			return Algorithm.ECDSA384((ECPublicKey) publicKey, null);
+		case "ES512":
+			return Algorithm.ECDSA512((ECPublicKey) publicKey, null);
+		case "HS384":
+			return Algorithm.HMAC384(hmacKey(48));
+		case "HS512":
+			return Algorithm.HMAC512(hmacKey(64));
 		default:
 			return Algorithm.RSA256((RSAPublicKey) publicKey, null);
 		}
+	}
+
+	private byte[] hmacKey(int minLength) {
+		byte[] key = hmacSecret.getBytes(StandardCharsets.UTF_8);
+		if (key.length < minLength) {
+			throw new AlgorithmMismatchException("The HMAC secret is not set or is shorter than " + minLength + " bytes");
+		}
+		return key;
 	}
 
 	/**
@@ -393,7 +507,7 @@ public class ValidateTokenHelper {
 		mosipUserDto.setMobile(decodedJWT.getClaim(AuthAdapterConstant.MOBILE).asString());
 		mosipUserDto.setUserId(decodedJWT.getClaim(AuthAdapterConstant.PREFERRED_USERNAME).asString());
 		Claim realmAccess = decodedJWT.getClaim(AuthAdapterConstant.REALM_ACCESS);
-		if (!realmAccess.isNull()) {
+		if (!realmAccess.isMissing() && !realmAccess.isNull()) {
 			List<String> roles = (List<String>) realmAccess.asMap().get("roles");
 			StringBuilder strBuilder = new StringBuilder();
 

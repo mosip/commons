@@ -138,8 +138,12 @@
 		<javax.interceptor.version>1.2.2</javax.interceptor.version>
 		<!-- httpclient 4.5.x is the last 4.x; 5.x is httpclient5 -->
 		<httpclient4.version>4.5.14</httpclient4.version>
-		<!-- java-jwt 3.x; 4.x is a breaking rewrite. Source: https://central.sonatype.com/artifact/com.auth0/java-jwt -->
-		<jwt.version>3.19.4</jwt.version>
+		<!-- java-jwt 4.6.2: PS256/PS384/PS512 (eSignet). Source: https://central.sonatype.com/artifact/com.auth0/java-jwt -->
+		<jwt.version>4.6.2</jwt.version>
+		<!-- Ed25519 / ES256K (java-jwt does not verify these). Source: https://central.sonatype.com/artifact/com.nimbusds/nimbus-jose-jwt -->
+		<nimbus.jose.jwt.version>9.37.4</nimbus.jose.jwt.version>
+		<!-- nimbus Ed25519 verifier. Source: https://central.sonatype.com/artifact/com.google.crypto.tink/tink -->
+		<tink.version>1.10.0</tink.version>
 		<!-- Source: https://central.sonatype.com/artifact/com.auth0/jwks-rsa -->
 		<jwks-rsa-version>0.24.1</jwks-rsa-version>
 		<powermock.version>2.0.9</powermock.version>
@@ -321,6 +325,26 @@
 				<groupId>com.auth0</groupId>
 				<artifactId>java-jwt</artifactId>
 				<version>${jwt.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.nimbusds</groupId>
+				<artifactId>nimbus-jose-jwt</artifactId>
+				<version>${nimbus.jose.jwt.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.crypto.tink</groupId>
+				<artifactId>tink</artifactId>
+				<version>${tink.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>com.google.protobuf</groupId>
+						<artifactId>protobuf-java</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>com.google.code.gson</groupId>
+						<artifactId>gson</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>com.auth0</groupId>
