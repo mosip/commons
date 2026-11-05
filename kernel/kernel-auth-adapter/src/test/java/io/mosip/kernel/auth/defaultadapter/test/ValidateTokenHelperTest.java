@@ -69,8 +69,9 @@ import reactor.core.publisher.Mono;
 
 /**
  * Tests {@link ValidateTokenHelper} online userinfo validation (RestTemplate and
- * WebClient), unsigned-token offline rejection, RSA algorithm variants, expiry
- * / issuer / signature / audience failures, and JWKS public-key lookup.
+ * WebClient), unsigned-token offline rejection, RS/PS/ES/Ed25519/HMAC
+ * algorithms, expiry / issuer / signature / audience failures, and JWKS
+ * public-key lookup.
  */
 @SpringBootTest(classes = { AuthTestBootApplication.class })
 @RunWith(SpringRunner.class)
@@ -452,6 +453,11 @@ public class ValidateTokenHelperTest {
 		Assert.assertNull(publicKey);
 	}
 
+	/**
+	 * Asserts a PS256-signed token verifies with the matching RSA public key.
+	 *
+	 * @throws Exception if key generation or validation fails
+	 */
 	@Test
 	public void isTokenValidWithPS256AlgoThenPassTest() throws Exception {
 		KeyPair kp = generateKeyPair("RSA", 2048);
@@ -463,6 +469,11 @@ public class ValidateTokenHelperTest {
 		assertThat(res.left, is(true));
 	}
 
+	/**
+	 * Asserts an ES256-signed token verifies with the matching EC public key.
+	 *
+	 * @throws Exception if key generation or validation fails
+	 */
 	@Test
 	public void isTokenValidWithES256AlgoThenPassTest() throws Exception {
 		KeyPair kp = generateKeyPair("EC", 256);
@@ -474,6 +485,11 @@ public class ValidateTokenHelperTest {
 		assertThat(res.left, is(true));
 	}
 
+	/**
+	 * Asserts a PS256 token is unauthorized when verified with a different RSA key.
+	 *
+	 * @throws Exception if key generation or validation fails
+	 */
 	@Test
 	public void isTokenValidWithPS256TokenAndWrongKeyThenUnauthorizedTest() throws Exception {
 		KeyPair kp = generateKeyPair("RSA", 2048);
@@ -487,6 +503,10 @@ public class ValidateTokenHelperTest {
 		assertThat(res.right, is(AuthAdapterErrorCode.UNAUTHORIZED));
 	}
 
+	/**
+	 * Asserts HS512 succeeds when {@code auth.server.admin.hmac.secret} is at least
+	 * 64 bytes.
+	 */
 	@Test
 	public void isTokenValidWithHS512AndConfiguredSecretThenPassTest() {
 		String secret = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
@@ -497,6 +517,10 @@ public class ValidateTokenHelperTest {
 		ReflectionTestUtils.setField(validateTokenHelper, "hmacSecret", "");
 	}
 
+	/**
+	 * Asserts HS384 is unauthorized when the configured HMAC secret does not match
+	 * the signing secret.
+	 */
 	@Test
 	public void isTokenValidWithHS384AndWrongSecretThenUnauthorizedTest() {
 		String secret = "0123456789abcdef0123456789abcdef0123456789abcdef";
@@ -507,16 +531,34 @@ public class ValidateTokenHelperTest {
 		ReflectionTestUtils.setField(validateTokenHelper, "hmacSecret", "");
 	}
 
+	/**
+	 * Asserts an {@code alg=Ed25519} token verifies with the matching OKP JWK and
+	 * fails with a different key.
+	 *
+	 * @throws Exception if key generation or validation fails
+	 */
 	@Test
 	public void isTokenValidWithEd25519ThenPassTest() throws Exception {
 		assertEd25519Family("Ed25519");
 	}
 
+	/**
+	 * Asserts the legacy {@code alg=EdDSA} name is accepted as Ed25519.
+	 *
+	 * @throws Exception if key generation or validation fails
+	 */
 	@Test
 	public void isTokenValidWithEdDSAThenPassTest() throws Exception {
 		assertEd25519Family("EdDSA");
 	}
 
+	/**
+	 * Signs a token with Ed25519, caches the public OKP, then asserts valid then
+	 * invalid after swapping the cached key.
+	 *
+	 * @param alg JWT {@code alg} header ({@code Ed25519} or {@code EdDSA})
+	 * @throws Exception if nimbus key generation or signing fails
+	 */
 	private void assertEd25519Family(String alg) throws Exception {
 		OctetKeyPair key = new OctetKeyPairGenerator(Curve.Ed25519).keyID("ed-key").generate();
 		String header = Base64URL.encode("{\"alg\":\"" + alg + "\",\"kid\":\"ed-key\"}").toString();
@@ -532,6 +574,12 @@ public class ValidateTokenHelperTest {
 				is(false));
 	}
 
+	/**
+	 * Asserts ES256K verifies with the matching secp256k1 JWK and fails with a
+	 * different key.
+	 *
+	 * @throws Exception if BouncyCastle key generation or signing fails
+	 */
 	@Test
 	public void isTokenValidWithES256KThenPassTest() throws Exception {
 		Provider bc = new BouncyCastleProvider();
@@ -548,6 +596,13 @@ public class ValidateTokenHelperTest {
 		assertThat(validateTokenHelper.isTokenValid(JWT.decode(jws.serialize()), null).left, is(false));
 	}
 
+	/**
+	 * Injects {@code jwk} into {@code publicJWKs} under {@code http://localhost/certs#keyId}
+	 * so nimbus verification does not download JWKS.
+	 *
+	 * @param keyId JWT {@code kid}
+	 * @param jwk   public JWK to cache
+	 */
 	private void cacheJWK(String keyId, JWK jwk) {
 		ReflectionTestUtils.setField(validateTokenHelper, "certsUrl", "http://localhost/certs");
 		Map<String, JWK> cache = new HashMap<>();
@@ -555,6 +610,11 @@ public class ValidateTokenHelperTest {
 		ReflectionTestUtils.setField(validateTokenHelper, "publicJWKs", cache);
 	}
 
+	/**
+	 * Compact JSON claims matching the test issuer, audience, and a one-hour expiry.
+	 *
+	 * @return JWT payload JSON
+	 */
 	private String nimbusClaims() {
 		long now = Instant.now().getEpochSecond();
 		return "{\"preferred_username\":\"mock-user\",\"roles\":\"ADMIN\",\"azp\":\"account\","
@@ -562,6 +622,14 @@ public class ValidateTokenHelperTest {
 				+ "\"iat\":" + now + ",\"exp\":" + (now + 3600) + "}";
 	}
 
+	/**
+	 * Generates an RSA or EC key pair. EC uses {@code secp{size}r1} (e.g. 256 → P-256).
+	 *
+	 * @param algorithm {@code RSA} or {@code EC}
+	 * @param size      RSA modulus bits, or EC curve size in bits
+	 * @return never-null key pair
+	 * @throws Exception if the JCA provider cannot generate the pair
+	 */
 	private KeyPair generateKeyPair(String algorithm, int size) throws Exception {
 		KeyPairGenerator kpg = KeyPairGenerator.getInstance(algorithm);
 		if ("EC".equals(algorithm)) {
@@ -572,6 +640,13 @@ public class ValidateTokenHelperTest {
 		return kpg.generateKeyPair();
 	}
 
+	/**
+	 * Builds a compact JWT with MOSIP test claims and the given {@code alg} header.
+	 *
+	 * @param algorithm Auth0 signer
+	 * @param tokenAlgo value written to the {@code alg} header
+	 * @return compact JWT
+	 */
 	private String signedToken(Algorithm algorithm, String tokenAlgo) {
 		Map<String, Object> headers = new HashMap<>();
 		headers.put("alg", tokenAlgo);

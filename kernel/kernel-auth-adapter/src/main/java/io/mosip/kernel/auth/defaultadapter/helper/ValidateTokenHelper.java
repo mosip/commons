@@ -101,17 +101,47 @@ public class ValidateTokenHelper {
 	 */
 	private Map<String, PublicKey> publicKeys = new HashMap<>();
 
+	/**
+	 * JWT {@code alg} for Edwards-curve Ed25519 (RFC 9864 name).
+	 */
 	private static final String ED25519_ALGORITHM = "Ed25519";
+
+	/**
+	 * Legacy JWT {@code alg} still sent by some IdPs for the same Ed25519 curve.
+	 */
 	private static final String EDDSA_ALGORITHM = "EdDSA";
+
+	/**
+	 * JWT {@code alg} for ECDSA on secp256k1 (not in the JDK; needs BouncyCastle).
+	 */
 	private static final String ES256K_ALGORITHM = "ES256K";
+
+	/**
+	 * Connect and read timeout in milliseconds when downloading a JWKS document
+	 * for nimbus (Ed25519 / ES256K).
+	 */
 	private static final int JWKS_TIMEOUT_MS = 5000;
+
+	/**
+	 * Maximum JWKS document size in bytes accepted by nimbus {@link JWKSet#load}.
+	 */
 	private static final int JWKS_SIZE_LIMIT = 51200;
 
-	/** Shared HMAC secret for HS384/HS512 tokens; empty rejects those algorithms. */
+	/**
+	 * Shared HMAC secret for HS384 / HS512 tokens, bound from
+	 * {@code auth.server.admin.hmac.secret}.
+	 * <p>
+	 * Empty or shorter than the algorithm minimum (48 bytes HS384, 64 bytes HS512)
+	 * causes {@link AlgorithmMismatchException} and the token is rejected.
+	 * </p>
+	 */
 	@Value("${auth.server.admin.hmac.secret:}")
 	private String hmacSecret;
 
-	/** Cached JWKS keys for Ed25519 / ES256K, keyed by certs URL and {@code kid}. */
+	/**
+	 * Cache of nimbus public JWKs for Ed25519 / ES256K, keyed by
+	 * {@code certsUrl#kid} (or issuer+realm+certs path when {@link #certsUrl} is blank).
+	 */
 	private Map<String, JWK> publicJWKs = new ConcurrentHashMap<>();
 
 	/**
@@ -351,11 +381,32 @@ public class ValidateTokenHelper {
 		return publicKey;
 	}
 
-	/** {@code Ed25519} is the current name; {@code EdDSA} is still sent by some servers. */
+	/**
+	 * Returns whether {@code tokenAlgo} is Ed25519 under either JWT name.
+	 * <p>
+	 * {@code Ed25519} is the current header value; {@code EdDSA} is the older name
+	 * still sent by some servers. java-jwt cannot verify either; nimbus is used.
+	 * </p>
+	 *
+	 * @param tokenAlgo JWT {@code alg} header, may be {@code null}
+	 * @return {@code true} if the algorithm is Ed25519 / EdDSA
+	 */
 	private static boolean isEd25519(String tokenAlgo) {
 		return ED25519_ALGORITHM.equals(tokenAlgo) || EDDSA_ALGORITHM.equals(tokenAlgo);
 	}
 
+	/**
+	 * Verifies an Ed25519 or ES256K JWS with nimbus using the JWKS key for the
+	 * token {@code kid}.
+	 * <p>
+	 * ES256K uses {@link BouncyCastleHolder} because the JDK has no secp256k1
+	 * curve. Signing input is {@code header.payload} as US-ASCII, matching JWS.
+	 * </p>
+	 *
+	 * @param decodedJWT token whose {@code alg} is Ed25519, EdDSA, or ES256K
+	 * @return {@code true} if the signature matches the JWKS public key;
+	 *         {@code false} on key mismatch, wrong key type, or download/parse errors
+	 */
 	private boolean isNimbusSignatureValid(DecodedJWT decodedJWT) {
 		String tokenAlgo = decodedJWT.getAlgorithm();
 		try {
@@ -382,6 +433,21 @@ public class ValidateTokenHelper {
 		}
 	}
 
+	/**
+	 * Returns the public JWK for {@code decodedJWT}'s {@code kid}, downloading the
+	 * JWKS set on a cache miss.
+	 * <p>
+	 * URL is {@link #certsUrl} when set, otherwise
+	 * {@link #issuerInternalURI}{@code + realm + }{@link #certsPath}. Cache key is
+	 * that URL plus {@code #} plus {@code kid}.
+	 * </p>
+	 *
+	 * @param decodedJWT token whose {@code kid} selects the JWK
+	 * @return public JWK, or {@code null} if the set has no matching {@code kid}
+	 * @throws IOException        if the JWKS HTTP download fails
+	 * @throws ParseException     if the JWKS document is not valid JSON
+	 * @throws URISyntaxException if the certs URL is not a valid URI
+	 */
 	private JWK getPublicJWK(DecodedJWT decodedJWT) throws IOException, ParseException, URISyntaxException {
 		String certsUrIPath = (certsUrl == null || certsUrl.isEmpty())
 				? issuerInternalURI + getRealM(decodedJWT) + certsPath
@@ -399,7 +465,15 @@ public class ValidateTokenHelper {
 		return publicJWK;
 	}
 
+	/**
+	 * Lazy holder for a single {@link BouncyCastleProvider} used by ES256K
+	 * verification. The JDK does not ship the secp256k1 curve.
+	 */
 	private static final class BouncyCastleHolder {
+
+		/**
+		 * Shared BouncyCastle JCA provider installed on the nimbus ECDSA verifier.
+		 */
 		private static final Provider PROVIDER = new BouncyCastleProvider();
 	}
 
@@ -447,11 +521,21 @@ public class ValidateTokenHelper {
 	}
 
 	/**
-	 * Maps JWT {@code alg} to an Auth0 verifier (RS/PS/ES/HS; unknown uses RS256).
+	 * Maps JWT {@code alg} to an Auth0 verifier.
+	 * <p>
+	 * RS256/384/512 and PS256/384/512 use {@code publicKey} as RSA. ES256/384/512
+	 * use it as EC. HS384/HS512 use {@link #hmacSecret} and ignore {@code publicKey}.
+	 * Unknown algorithms fall back to RS256 (same behaviour as before this change).
+	 * Ed25519 / ES256K are not handled here; see {@link #isNimbusSignatureValid}.
+	 * </p>
 	 *
-	 * @param tokenAlgo JWT algorithm name
-	 * @param publicKey RSA or EC public key (unused for HMAC)
-	 * @return the verification algorithm
+	 * @param tokenAlgo JWT {@code alg} header
+	 * @param publicKey RSA or EC public key from JWKS; unused for HMAC
+	 * @return Auth0 {@link Algorithm} used by {@link Algorithm#verify(DecodedJWT)}
+	 * @throws AlgorithmMismatchException if HMAC is selected and {@link #hmacSecret}
+	 *                                    is missing or shorter than the minimum
+	 * @throws ClassCastException         if {@code publicKey} is the wrong type for
+	 *                                    {@code tokenAlgo}
 	 */
 	private Algorithm getVerificationAlgorithm(String tokenAlgo, PublicKey publicKey) {
 		switch (tokenAlgo) {
@@ -482,6 +566,15 @@ public class ValidateTokenHelper {
 		}
 	}
 
+	/**
+	 * UTF-8 bytes of {@link #hmacSecret}, rejecting secrets shorter than
+	 * {@code minLength}.
+	 *
+	 * @param minLength minimum secret length in bytes (48 for HS384, 64 for HS512)
+	 * @return never-null secret bytes
+	 * @throws AlgorithmMismatchException if the configured secret is blank or shorter
+	 *                                    than {@code minLength}
+	 */
 	private byte[] hmacKey(int minLength) {
 		byte[] key = hmacSecret.getBytes(StandardCharsets.UTF_8);
 		if (key.length < minLength) {
