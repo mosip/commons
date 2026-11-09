@@ -154,6 +154,15 @@
                   <artifactId>central-publishing-maven-plugin</artifactId>
                   <version>0.11.0</version>
                   <extensions>true</extensions>
+                  <executions>
+                      <execution>
+                          <id>default-publish</id>
+                          <phase>none</phase>
+                          <goals>
+                              <goal>publish</goal>
+                          </goals>
+                      </execution>
+                  </executions>
                   <configuration>
                       <publishingServerId>ossrh</publishingServerId>
                       <autoPublish>false</autoPublish>

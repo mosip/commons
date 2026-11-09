@@ -27,6 +27,8 @@
 		<maven.javadoc.version>3.2.0</maven.javadoc.version>
 		<maven-shade-plugin.version>2.3</maven-shade-plugin.version>
 		<spring-boot-maven-plugin.version>3.2.3</spring-boot-maven-plugin.version>
+		<maven.deploy.plugin.version>3.1.1</maven.deploy.plugin.version>
+		<central.publishing.maven.plugin.version>0.7.0</central.publishing.maven.plugin.version>
 	</properties>
 	
 	<dependencyManagement>
@@ -105,6 +107,15 @@
 				<artifactId>central-publishing-maven-plugin</artifactId>
 				<version>0.11.0</version>
 				<extensions>true</extensions>
+				<executions>
+					<execution>
+						<id>default-publish</id>
+						<phase>none</phase>
+						<goals>
+							<goal>publish</goal>
+						</goals>
+					</execution>
+				</executions>
 				<configuration>
 					<publishingServerId>ossrh</publishingServerId>
 					<autoPublish>false</autoPublish>
@@ -126,7 +137,27 @@
                   </executions>
                 </plugin>
 
-              <plugin>
+			<plugin>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>${maven.deploy.plugin.version}</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+				<executions>
+					<execution>
+						<id>default-deploy</id>
+						<phase>none</phase>
+						<goals>
+							<goal>deploy</goal>
+						</goals>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
                   <groupId>org.apache.maven.plugins</groupId>
                   <artifactId>maven-javadoc-plugin</artifactId>
                   <version>3.2.0</version>
