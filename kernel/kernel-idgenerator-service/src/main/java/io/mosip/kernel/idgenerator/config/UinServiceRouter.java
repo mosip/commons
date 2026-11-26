@@ -89,9 +89,9 @@ public class UinServiceRouter {
 	 * Builds the UIN GET/PUT router and health endpoint.
 	 * <p>
 	 * GET and PUT require {@code ID_REPOSITORY}. Successful GET is HTTP 200 JSON;
-	 * MOSIP errors are also HTTP 200 with {@code errors}. Health is registered at
-	 * {@code {servletPath}/actuator/health}. Swagger UI is mounted on the parent
-	 * HTTP router (see {@code HttpServerVerticle}).
+	 * MOSIP errors are also HTTP 200 with {@code errors}. Process health is on the
+	 * parent HTTP router at {@code /v1/idgenerator/actuator/health}
+	 * (see {@code HttpServerVerticle}).
 	 * </p>
 	 *
 	 * @param vertx Vert.x instance used for worker executors and health checks
@@ -124,9 +124,10 @@ public class UinServiceRouter {
 
 	/**
 	 * Registers DB, disk-space, and UIN-verticle health procedures on {@code router}.
+	 * Public probes use {@code /v1/idgenerator/actuator/health} on the parent router.
 	 *
 	 * @param vertx       Vert.x instance
-	 * @param router      parent router
+	 * @param router      UIN sub-router
 	 * @param servletPath servlet context path from {@code server.servlet.path}
 	 */
 	private void configureHealthCheckEndpoint(Vertx vertx, Router router, final String servletPath) {
