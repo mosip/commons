@@ -27,7 +27,9 @@ import io.vertx.micrometer.PrometheusScrapingHandler;
  * <p>
  * Listens on {@code server.port}. After a successful bind it publishes
  * {@link EventType#CHECKPOOL} so VID pooling can start. Servlet paths default
- * to {@code /v1/idgenerator} and {@code /v1/ridgenerator}.
+ * to {@code /v1/idgenerator} and {@code /v1/ridgenerator}. Health
+ * ({@code /actuator/health}) and Prometheus ({@code /metrics}) are mounted on
+ * the id, rid, UIN ({@code /uin}), and VID ({@code /vid}) prefixes.
  * </p>
  *
  * @author Urvil Joshi
@@ -77,30 +79,27 @@ public class HttpServerVerticle extends AbstractVerticle {
 		parentRouter.route().handler(routingContext -> {
 			addAccessLogHandler(routingContext,accessLogHandler);
 		});
-		Router metricRouter = Router.router(vertx);
 		// giving the root to parent router
 		parentRouter.route().consumes(VIDGeneratorConstant.APPLICATION_JSON)
 				.produces(VIDGeneratorConstant.APPLICATION_JSON);
-		Router healthCheckRouter = Router.router(vertx);
 		UinServiceHealthCheckerhandler healthCheckHandler = new UinServiceHealthCheckerhandler(vertx, null,
 				new ObjectMapper(), environment);
-		healthCheckRouter.get(UinGeneratorConstant.HEALTH_ENDPOINT)
-				.handler(healthCheckHandler);
 		healthCheckHandler.register("db", healthCheckHandler::databaseHealthChecker);
 		healthCheckHandler.register("diskspace", healthCheckHandler::dispSpaceHealthChecker);
 		healthCheckHandler.register("idgenerator", f -> healthCheckHandler.verticleHealthHandler(f, vertx));
 
-		metricRouter.route("/metrics").handler(PrometheusScrapingHandler.create());
-
 		String idPath = environment.getProperty(VIDGeneratorConstant.SERVER_SERVLET_PATH, "/v1/idgenerator");
 		String ridPath = environment.getProperty("mosip.kernel.rid.servlet.path", "/v1/ridgenerator");
 
-		// mount all the routers to parent router
+		// Exact health/metrics routes first so UIN/VID catch-all GET cannot swallow them
+		mountHealthAndMetrics(parentRouter, idPath, healthCheckHandler);
+		mountHealthAndMetrics(parentRouter, ridPath, healthCheckHandler);
+		mountHealthAndMetrics(parentRouter, idPath + UinGeneratorConstant.VUIN, healthCheckHandler);
+		mountHealthAndMetrics(parentRouter, idPath + VIDGeneratorConstant.VVID, healthCheckHandler);
+
 		parentRouter.mountSubRouter(idPath + VIDGeneratorConstant.VVID, vidFetcherRouter.createRouter(vertx));
 		parentRouter.mountSubRouter(idPath + UinGeneratorConstant.VUIN, uinServiceRouter.createRouter(vertx));
 		parentRouter.mountSubRouter(ridPath, ridFetcherRouter.createRouter(vertx));
-		parentRouter.mountSubRouter(idPath, healthCheckRouter);
-		parentRouter.mountSubRouter(idPath, metricRouter);
 
 		httpServer.requestHandler(parentRouter);
 		httpServer.listen(Integer.parseInt(environment.getProperty(VIDGeneratorConstant.SERVER_PORT)), result -> {
@@ -113,6 +112,22 @@ public class HttpServerVerticle extends AbstractVerticle {
 				future.fail(result.cause());
 			}
 		});
+	}
+
+	/**
+	 * Registers {@code GET {mountPath}/actuator/health} and {@code {mountPath}/metrics}
+	 * on the parent router (not a sub-router) so they win over UIN/VID catch-all GET.
+	 *
+	 * @param parent             root Vert.x router
+	 * @param mountPath          servlet prefix ({@code /v1/idgenerator},
+	 *                           {@code /v1/ridgenerator}, {@code /v1/idgenerator/uin},
+	 *                           or {@code /v1/idgenerator/vid})
+	 * @param healthCheckHandler shared Vert.x health handler (DB, disk, verticle)
+	 */
+	private void mountHealthAndMetrics(Router parent, String mountPath,
+			UinServiceHealthCheckerhandler healthCheckHandler) {
+		parent.get(mountPath + UinGeneratorConstant.HEALTH_ENDPOINT).handler(healthCheckHandler);
+		parent.route(mountPath + "/metrics").handler(PrometheusScrapingHandler.create());
 	}
 
 	/**

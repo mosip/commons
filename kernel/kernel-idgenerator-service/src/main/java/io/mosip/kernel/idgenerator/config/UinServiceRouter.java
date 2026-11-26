@@ -90,8 +90,9 @@ public class UinServiceRouter {
 	 * <p>
 	 * GET and PUT require {@code ID_REPOSITORY}. Successful GET is HTTP 200 JSON;
 	 * MOSIP errors are also HTTP 200 with {@code errors}. Health is registered at
-	 * {@code {servletPath}/actuator/health}. Swagger UI is mounted on the parent
-	 * HTTP router (see {@code HttpServerVerticle}).
+	 * {@code /actuator/health} on this sub-router (full path
+	 * {@code /v1/idgenerator/uin/actuator/health}); the parent HTTP router also
+	 * mounts that path (see {@code HttpServerVerticle}).
 	 * </p>
 	 *
 	 * @param vertx Vert.x instance used for worker executors and health checks
@@ -103,9 +104,9 @@ public class UinServiceRouter {
 		final int workerExecutorPool = environment.getProperty(UinGeneratorConstant.GET_EXECUTOR_POOL_ENABLE,
 				Integer.class, 400);
 		LOGGER.info("worker executor pool {}", workerExecutorPool);
-		final String servletPath = environment.getProperty(UinGeneratorConstant.SERVER_SERVLET_PATH);
 		String profile = environment.getProperty(UinGeneratorConstant.SPRING_PROFILES_ACTIVE);
 		boolean isSignEnable = environment.getProperty(UinGeneratorConstant.SIGNING_ENABLE, boolean.class, false);
+		configureHealthCheckEndpoint(vertx, router);
 		router.route().handler(routingContext -> {
 			routingContext.response().headers().add(CONTENT_TYPE, UinGeneratorConstant.APPLICATION_JSON);
 			routingContext.next();
@@ -118,21 +119,20 @@ public class UinServiceRouter {
 		router.route().handler(BodyHandler.create());
 		router.put().consumes(UinGeneratorConstant.APPLICATION_JSON).handler(this::updateRouter);
 
-		configureHealthCheckEndpoint(vertx, router, servletPath);
 		return router;
 	}
 
 	/**
-	 * Registers DB, disk-space, and UIN-verticle health procedures on {@code router}.
+	 * Registers DB, disk-space, and UIN-verticle health on {@code GET /actuator/health}
+	 * before the catch-all UIN GET so probes are not treated as fetch.
 	 *
-	 * @param vertx       Vert.x instance
-	 * @param router      parent router
-	 * @param servletPath servlet context path from {@code server.servlet.path}
+	 * @param vertx  Vert.x instance
+	 * @param router UIN sub-router (mounted at {@code /v1/idgenerator/uin})
 	 */
-	private void configureHealthCheckEndpoint(Vertx vertx, Router router, final String servletPath) {
+	private void configureHealthCheckEndpoint(Vertx vertx, Router router) {
 		UinServiceHealthCheckerhandler healthCheckHandler = new UinServiceHealthCheckerhandler(vertx, null,
 				objectMapper, environment);
-		router.get(servletPath + UinGeneratorConstant.HEALTH_ENDPOINT).handler(healthCheckHandler);
+		router.get(UinGeneratorConstant.HEALTH_ENDPOINT).handler(healthCheckHandler);
 		healthCheckHandler.register("db", healthCheckHandler::databaseHealthChecker);
 		healthCheckHandler.register("diskspace", healthCheckHandler::dispSpaceHealthChecker);
 		healthCheckHandler.register("uingeneratorverticle",
