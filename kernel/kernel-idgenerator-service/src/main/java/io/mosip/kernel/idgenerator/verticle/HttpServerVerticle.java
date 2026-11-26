@@ -29,7 +29,7 @@ import io.vertx.micrometer.PrometheusScrapingHandler;
  * {@link EventType#CHECKPOOL} so VID pooling can start. Servlet paths default
  * to {@code /v1/idgenerator} and {@code /v1/ridgenerator}. Health
  * ({@code /actuator/health}) and Prometheus ({@code /metrics}) are mounted on
- * the id, rid, UIN ({@code /uin}), and VID ({@code /vid}) prefixes.
+ * both prefixes.
  * </p>
  *
  * @author Urvil Joshi
@@ -91,15 +91,11 @@ public class HttpServerVerticle extends AbstractVerticle {
 		String idPath = environment.getProperty(VIDGeneratorConstant.SERVER_SERVLET_PATH, "/v1/idgenerator");
 		String ridPath = environment.getProperty("mosip.kernel.rid.servlet.path", "/v1/ridgenerator");
 
-		// Exact health/metrics routes first so UIN/VID catch-all GET cannot swallow them
-		mountHealthAndMetrics(parentRouter, idPath, healthCheckHandler);
-		mountHealthAndMetrics(parentRouter, ridPath, healthCheckHandler);
-		mountHealthAndMetrics(parentRouter, idPath + UinGeneratorConstant.VUIN, healthCheckHandler);
-		mountHealthAndMetrics(parentRouter, idPath + VIDGeneratorConstant.VVID, healthCheckHandler);
-
 		parentRouter.mountSubRouter(idPath + VIDGeneratorConstant.VVID, vidFetcherRouter.createRouter(vertx));
 		parentRouter.mountSubRouter(idPath + UinGeneratorConstant.VUIN, uinServiceRouter.createRouter(vertx));
 		parentRouter.mountSubRouter(ridPath, ridFetcherRouter.createRouter(vertx));
+		mountHealthAndMetrics(parentRouter, idPath, healthCheckHandler);
+		mountHealthAndMetrics(parentRouter, ridPath, healthCheckHandler);
 
 		httpServer.requestHandler(parentRouter);
 		httpServer.listen(Integer.parseInt(environment.getProperty(VIDGeneratorConstant.SERVER_PORT)), result -> {
@@ -115,19 +111,22 @@ public class HttpServerVerticle extends AbstractVerticle {
 	}
 
 	/**
-	 * Registers {@code GET {mountPath}/actuator/health} and {@code {mountPath}/metrics}
-	 * on the parent router (not a sub-router) so they win over UIN/VID catch-all GET.
+	 * Mounts {@code GET /actuator/health} and {@code /metrics} under {@code mountPath}
+	 * so both {@code /v1/idgenerator} and {@code /v1/ridgenerator} expose them.
 	 *
 	 * @param parent             root Vert.x router
-	 * @param mountPath          servlet prefix ({@code /v1/idgenerator},
-	 *                           {@code /v1/ridgenerator}, {@code /v1/idgenerator/uin},
-	 *                           or {@code /v1/idgenerator/vid})
+	 * @param mountPath          servlet prefix ({@code /v1/idgenerator} or
+	 *                           {@code /v1/ridgenerator})
 	 * @param healthCheckHandler shared Vert.x health handler (DB, disk, verticle)
 	 */
 	private void mountHealthAndMetrics(Router parent, String mountPath,
 			UinServiceHealthCheckerhandler healthCheckHandler) {
-		parent.get(mountPath + UinGeneratorConstant.HEALTH_ENDPOINT).handler(healthCheckHandler);
-		parent.route(mountPath + "/metrics").handler(PrometheusScrapingHandler.create());
+		Router healthCheckRouter = Router.router(vertx);
+		healthCheckRouter.get(UinGeneratorConstant.HEALTH_ENDPOINT).handler(healthCheckHandler);
+		Router metricRouter = Router.router(vertx);
+		metricRouter.route("/metrics").handler(PrometheusScrapingHandler.create());
+		parent.mountSubRouter(mountPath, healthCheckRouter);
+		parent.mountSubRouter(mountPath, metricRouter);
 	}
 
 	/**
