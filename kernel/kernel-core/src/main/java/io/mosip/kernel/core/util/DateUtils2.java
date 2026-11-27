@@ -829,24 +829,54 @@ public final class DateUtils2 {
     }
 
     /**
-     * Parses UTC string of pattern <b>yyyy-MM-dd'T'HH:mm:ss.SSS</b> or
-     * <b>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</b> to java.time.LocalDateTime.
+     * Parses a UTC / ISO date-time string to {@link LocalDateTime}.
+     * <p>
+     * Accepts the MOSIP pattern {@code yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}, the same
+     * without {@code Z}, and ISO-8601 with variable fractional-second precision
+     * (0–9 digits) with or without a trailing {@code Z}. WebSub / partner payloads
+     * often emit nanosecond precision that fails a fixed {@code SSS} formatter.
+     * </p>
      *
-     * @param dateTime is of type String
-     *
-     * @return a LocalDateTime
-     *
-     * @throws java.time.format.DateTimeParseException if not able to parse the
-     *                                                 utcDateTime string for the
-     *                                                 pattern
-     *
+     * @param dateTime timestamp text
+     * @return parsed local date-time (UTC wall clock when {@code Z} was present)
+     * @throws java.time.format.DateTimeParseException if not able to parse
      * @see LocalDateTime
      */
     public static LocalDateTime parseToLocalDateTime(String dateTime) {
+        if (dateTime == null || dateTime.isBlank()) {
+            throw new DateTimeParseException("dateTime is blank", String.valueOf(dateTime), 0);
+        }
+        String trimmed = dateTime.trim();
         try {
-            return LocalDateTime.parse(dateTime, ISO_FORMATTER);
-        } catch (Exception e) {
-            return LocalDateTime.parse(dateTime);
+            return LocalDateTime.parse(trimmed, ISO_FORMATTER);
+        } catch (DateTimeParseException ignored) {
+            String local = (trimmed.endsWith("Z") || trimmed.endsWith("z"))
+                    ? trimmed.substring(0, trimmed.length() - 1)
+                    : trimmed;
+            try {
+                return LocalDateTime.parse(local, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            } catch (DateTimeParseException e) {
+                return LocalDateTime.parse(local);
+            }
+        }
+    }
+
+    /**
+     * Parses {@code dateTime} with {@link #parseToLocalDateTime(String)} and formats it
+     * as UTC millis {@code yyyy-MM-dd'T'HH:mm:ss.SSS'Z'} (for Jackson / DTO binding that
+     * expects a fixed three-digit fraction).
+     *
+     * @param dateTime raw timestamp (may have nanosecond fraction)
+     * @return normalized UTC millis string, or the original text when blank / unparsable
+     */
+    public static String toUTCMillisString(String dateTime) {
+        if (dateTime == null || dateTime.isBlank()) {
+            return dateTime;
+        }
+        try {
+            return formatToISOString(parseToLocalDateTime(dateTime));
+        } catch (DateTimeParseException e) {
+            return dateTime;
         }
     }
 
